@@ -6974,34 +6974,6 @@ ruleN4MemberAnnotationList:
 	+
 ;
 
-// Rule TypeReference
-ruleTypeReference:
-	(
-		ruleTypeReferenceName
-		'.'
-	)?
-	ruleTypeReferenceName
-;
-
-// Rule TypeReferenceName
-ruleTypeReferenceName:
-	(
-		'void'
-		    |
-		'This'
-		    |
-		'await'
-		    |
-		'Promisify'
-		    |
-		'target'
-		    |
-		'default'
-		    |
-		RULE_IDENTIFIER
-	)
-;
-
 // Rule N4ClassDeclaration
 ruleN4ClassDeclaration:
 	(
@@ -9468,6 +9440,15 @@ ruleEmptyIterableTypeExpressionTail:
 	']'
 ;
 
+// Rule TypeReference
+ruleTypeReference:
+	(
+		RULE_IDENTIFIER
+		'.'
+	)*
+	ruleTypeReferenceName
+;
+
 // Rule TypeArguments
 ruleTypeArguments:
 	'<'
@@ -9639,6 +9620,25 @@ ruleTypeTypeRef:
 	'{'
 	ruleTypeArgInTypeTypeRef
 	'}'
+;
+
+// Rule TypeReferenceName
+ruleTypeReferenceName:
+	(
+		'void'
+		    |
+		'This'
+		    |
+		'await'
+		    |
+		'Promisify'
+		    |
+		'target'
+		    |
+		'default'
+		    |
+		RULE_IDENTIFIER
+	)
 ;
 
 // Rule TypeArgument

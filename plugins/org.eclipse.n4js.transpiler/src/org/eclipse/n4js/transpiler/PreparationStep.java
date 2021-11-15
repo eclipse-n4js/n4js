@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.TreeIterator;
@@ -362,9 +363,9 @@ public class PreparationStep {
 		private boolean isDynamicNamespaceReference(EObject eObject) {
 			if (eObject instanceof ParameterizedTypeRef) {
 				ParameterizedTypeRef ptr = (ParameterizedTypeRef) eObject;
-				Type astQualifier = ptr.getAstDeclaredTypeQualifier();
-				if (astQualifier instanceof ModuleNamespaceVirtualType) {
-					return ((ModuleNamespaceVirtualType) astQualifier).isDeclaredDynamic();
+				List<Type> astQualifiers = ptr.getAstDeclaredTypeQualifiers();
+				if (!astQualifiers.isEmpty() && astQualifiers.get(0) instanceof ModuleNamespaceVirtualType) {
+					return ((ModuleNamespaceVirtualType) astQualifiers.get(0)).isDeclaredDynamic();
 				}
 			}
 			return false;

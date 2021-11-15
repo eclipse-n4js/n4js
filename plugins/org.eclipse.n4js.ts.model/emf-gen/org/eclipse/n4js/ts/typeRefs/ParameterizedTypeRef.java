@@ -38,7 +38,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeArgs <em>Declared Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifiers <em>Ast Declared Type Qualifiers</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -161,7 +161,8 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	void setArrayNTypeExpression(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
+	 * Returns the value of the '<em><b>Ast Declared Type Qualifiers</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.Type}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -172,23 +173,12 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
 	 * </ol>
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Ast Declared Type Qualifier</em>' reference.
-	 * @see #setAstDeclaredTypeQualifier(Type)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstDeclaredTypeQualifier()
+	 * @return the value of the '<em>Ast Declared Type Qualifiers</em>' reference list.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstDeclaredTypeQualifiers()
 	 * @model transient="true"
 	 * @generated
 	 */
-	Type getAstDeclaredTypeQualifier();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Ast Declared Type Qualifier</em>' reference.
-	 * @see #getAstDeclaredTypeQualifier()
-	 * @generated
-	 */
-	void setAstDeclaredTypeQualifier(Type value);
+	EList<Type> getAstDeclaredTypeQualifiers();
 
 	/**
 	 * Returns the value of the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.

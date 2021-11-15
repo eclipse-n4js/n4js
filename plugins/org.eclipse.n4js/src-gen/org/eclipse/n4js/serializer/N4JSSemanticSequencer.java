@@ -7351,64 +7351,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     TypeRef returns ParameterizedTypeRef
-	 *     TypeRef.UnionTypeExpression_1_0 returns ParameterizedTypeRef
-	 *     IntersectionTypeExpression returns ParameterizedTypeRef
-	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRef
-	 *     ArrayTypeExpression returns ParameterizedTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns ParameterizedTypeRef
-	 *     PrimaryTypeExpression returns ParameterizedTypeRef
-	 *     TypeArgument returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *             declaredType=[Type|TypeReferenceName] 
-	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *             dynamic?='+'? 
-	 *             followedByQuestionMark?='?'?
-	 *         ) | 
-	 *         (declaredTypeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[') | 
-	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_0_4_0_0 arrayTypeExpression?='[') | 
-	 *         (declaredTypeArgs+=Wildcard arrayTypeExpression?='[') | 
-	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0 arrayTypeExpression?='[') | 
-	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_2_1_0_0 arrayTypeExpression?='[') | 
-	 *         (
-	 *             arrayNTypeExpression?='[' 
-	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
-	 *         )
-	 *     )
-	 */
-	protected void sequence_ArrayNTypeExpression_ArrayTypeExpression_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *             declaredType=[Type|TypeReferenceName] 
-	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?
-	 *         ) | 
-	 *         (
-	 *             arrayNTypeExpression?='[' 
-	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
-	 *         )
-	 *     )
-	 */
-	protected void sequence_ArrayNTypeExpression_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     ArrayPadding returns ArrayPadding
 	 *
 	 * Constraint:
@@ -21503,73 +21445,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     TypeRef returns ParameterizedTypeRefStructural
-	 *     TypeRef.UnionTypeExpression_1_0 returns ParameterizedTypeRefStructural
-	 *     IntersectionTypeExpression returns ParameterizedTypeRefStructural
-	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRefStructural
-	 *     ArrayTypeExpression returns ParameterizedTypeRefStructural
-	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0 returns ParameterizedTypeRefStructural
-	 *     PrimaryTypeExpression returns ParameterizedTypeRefStructural
-	 *     TypeRefWithModifiers returns ParameterizedTypeRefStructural
-	 *     TypeArgument returns ParameterizedTypeRefStructural
-	 *
-	 * Constraint:
-	 *     (
-	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *         astStructuralMembers+=TStructMember* 
-	 *         dynamic?='+'? 
-	 *         followedByQuestionMark?='?'?
-	 *     )
-	 */
-	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefWithoutModifiers returns ParameterizedTypeRefStructural
-	 *
-	 * Constraint:
-	 *     (
-	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *         astStructuralMembers+=TStructMember* 
-	 *         dynamic?='+'?
-	 *     )
-	 */
-	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRefStructural
-	 *     ParameterizedTypeRef returns ParameterizedTypeRefStructural
-	 *     ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural
-	 *
-	 * Constraint:
-	 *     (
-	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *         astStructuralMembers+=TStructMember*
-	 *     )
-	 */
-	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     PrimaryExpression<Yield> returns ParenExpression
 	 *     PrimaryExpression returns ParenExpression
 	 *     ParenExpression<Yield> returns ParenExpression
@@ -27393,59 +27268,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (block=Block ((catch=CatchBlock finally=FinallyBlock?) | finally=FinallyBlock))
 	 */
 	protected void sequence_TryStatement(ISerializationContext context, TryStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefWithModifiers returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *         dynamic?='+'? 
-	 *         followedByQuestionMark?='?'?
-	 *     )
-	 */
-	protected void sequence_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefWithoutModifiers returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *         dynamic?='+'?
-	 *     )
-	 */
-	protected void sequence_TypeArguments_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeArgInTypeTypeRef returns ParameterizedTypeRef
-	 *     ParameterizedTypeRef returns ParameterizedTypeRef
-	 *     ParameterizedTypeRefNominal returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?
-	 *     )
-	 */
-	protected void sequence_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

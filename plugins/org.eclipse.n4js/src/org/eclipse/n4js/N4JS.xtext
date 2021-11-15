@@ -1240,22 +1240,6 @@ N4MemberAnnotationList:
 	{N4MemberAnnotationList} annotations+=Annotation+
 ;
 
-// ****************************************************************************************************
-// N4JS versions of type references and expressions, overriding rules in Types.xtext
-// ****************************************************************************************************
-
-// override to support referencing types via the namespace of namespace imports
-@Override
-fragment TypeReference*:
-	(astDeclaredTypeQualifier=[types::Type|TypeReferenceName] '.')?
-	declaredType=[types::Type|TypeReferenceName]
-;
-
-// override to disallow fully-qualified names in N4JS
-@Override
-TypeReferenceName:
-	'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
-;
 
 // ****************************************************************************************************
 // New Expressions, Statements, and other Features

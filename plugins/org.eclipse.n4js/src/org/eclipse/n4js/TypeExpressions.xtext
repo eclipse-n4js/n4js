@@ -196,6 +196,7 @@ EmptyIterableTypeExpressionTail returns Wildcard:
 	{Wildcard} ']';
 
 fragment TypeReference *:
+	(astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
 	declaredType=[Type|TypeReferenceName]
 ;
 
@@ -268,7 +269,8 @@ TypeTypeRef returns TypeTypeRef:
 	'{' typeArg=TypeArgInTypeTypeRef '}';
 
 TypeReferenceName:
-	IDENTIFIER ('.' IDENTIFIER)*;
+	'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
+;
 
 TypeArgument returns TypeArgument:
 	Wildcard | TypeRef;

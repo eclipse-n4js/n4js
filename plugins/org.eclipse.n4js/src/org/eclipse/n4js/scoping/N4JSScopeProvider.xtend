@@ -218,7 +218,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
 	private def getScopeByShortcut(EObject context, EReference reference) {
-		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER) {
+		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS) {
 			return new FilteringScope(getTypeScope(context, false), [
 				TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
 				|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)
@@ -226,10 +226,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			]);
 		} else if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
-				val astQualifier = context.astDeclaredTypeQualifier;
+				val astQualifier = context.astDeclaredTypeQualifiers?.tail;
 				switch (astQualifier) {
 					ModuleNamespaceVirtualType:
 						return createScopeForNamespaceAccess(astQualifier, context)
+					TNamespace:
+						return scope_AllTopLevelElementsFromAbstractNamespace(astQualifier, context)
 					TEnum:
 						return new DynamicPseudoScope()
 				}

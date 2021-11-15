@@ -1383,23 +1383,49 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	public class TypeReferenceElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeReference");
-		private final Assignment cDeclaredTypeAssignment = (Assignment)rule.eContents().get(0);
-		private final CrossReference cDeclaredTypeTypeCrossReference_0 = (CrossReference)cDeclaredTypeAssignment.eContents().get(0);
-		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_0.eContents().get(1);
+		private final Group cGroup = (Group)rule.eContents().get(0);
+		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
+		private final Assignment cAstDeclaredTypeQualifiersAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
+		private final CrossReference cAstDeclaredTypeQualifiersTypeCrossReference_0_0_0 = (CrossReference)cAstDeclaredTypeQualifiersAssignment_0_0.eContents().get(0);
+		private final RuleCall cAstDeclaredTypeQualifiersTypeIDENTIFIERTerminalRuleCall_0_0_0_1 = (RuleCall)cAstDeclaredTypeQualifiersTypeCrossReference_0_0_0.eContents().get(1);
+		private final Keyword cFullStopKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
+		private final Assignment cDeclaredTypeAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final CrossReference cDeclaredTypeTypeCrossReference_1_0 = (CrossReference)cDeclaredTypeAssignment_1.eContents().get(0);
+		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_1_0.eContents().get(1);
 		
 		//fragment TypeReference *:
+		//    (astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
 		//    declaredType=[Type|TypeReferenceName]
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//(astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
 		//declaredType=[Type|TypeReferenceName]
-		public Assignment getDeclaredTypeAssignment() { return cDeclaredTypeAssignment; }
+		public Group getGroup() { return cGroup; }
+		
+		//(astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//astDeclaredTypeQualifiers+=[Type|IDENTIFIER]
+		public Assignment getAstDeclaredTypeQualifiersAssignment_0_0() { return cAstDeclaredTypeQualifiersAssignment_0_0; }
+		
+		//[Type|IDENTIFIER]
+		public CrossReference getAstDeclaredTypeQualifiersTypeCrossReference_0_0_0() { return cAstDeclaredTypeQualifiersTypeCrossReference_0_0_0; }
+		
+		//IDENTIFIER
+		public RuleCall getAstDeclaredTypeQualifiersTypeIDENTIFIERTerminalRuleCall_0_0_0_1() { return cAstDeclaredTypeQualifiersTypeIDENTIFIERTerminalRuleCall_0_0_0_1; }
+		
+		//'.'
+		public Keyword getFullStopKeyword_0_1() { return cFullStopKeyword_0_1; }
+		
+		//declaredType=[Type|TypeReferenceName]
+		public Assignment getDeclaredTypeAssignment_1() { return cDeclaredTypeAssignment_1; }
 		
 		//[Type|TypeReferenceName]
-		public CrossReference getDeclaredTypeTypeCrossReference_0() { return cDeclaredTypeTypeCrossReference_0; }
+		public CrossReference getDeclaredTypeTypeCrossReference_1_0() { return cDeclaredTypeTypeCrossReference_1_0; }
 		
 		//TypeReferenceName
-		public RuleCall getDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1() { return cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1; }
+		public RuleCall getDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1() { return cDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1; }
 	}
 	public class TypeArgumentsElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeArguments");
@@ -1935,30 +1961,43 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	public class TypeReferenceNameElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeReferenceName");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cIDENTIFIERTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
-		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Keyword cFullStopKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final RuleCall cIDENTIFIERTerminalRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Keyword cVoidKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
+		private final Keyword cThisKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword cAwaitKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
+		private final Keyword cPromisifyKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
+		private final Keyword cTargetKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
+		private final Keyword cDefaultKeyword_5 = (Keyword)cAlternatives.eContents().get(5);
+		private final RuleCall cIDENTIFIERTerminalRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
 		
 		//TypeReferenceName:
-		//    IDENTIFIER ('.' IDENTIFIER)*;
+		//    'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
+		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//IDENTIFIER ('.' IDENTIFIER)*
-		public Group getGroup() { return cGroup; }
+		//'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//'void'
+		public Keyword getVoidKeyword_0() { return cVoidKeyword_0; }
+		
+		//'This'
+		public Keyword getThisKeyword_1() { return cThisKeyword_1; }
+		
+		//'await'
+		public Keyword getAwaitKeyword_2() { return cAwaitKeyword_2; }
+		
+		//'Promisify'
+		public Keyword getPromisifyKeyword_3() { return cPromisifyKeyword_3; }
+		
+		//'target'
+		public Keyword getTargetKeyword_4() { return cTargetKeyword_4; }
+		
+		//'default'
+		public Keyword getDefaultKeyword_5() { return cDefaultKeyword_5; }
 		
 		//IDENTIFIER
-		public RuleCall getIDENTIFIERTerminalRuleCall_0() { return cIDENTIFIERTerminalRuleCall_0; }
-		
-		//('.' IDENTIFIER)*
-		public Group getGroup_1() { return cGroup_1; }
-		
-		//'.'
-		public Keyword getFullStopKeyword_1_0() { return cFullStopKeyword_1_0; }
-		
-		//IDENTIFIER
-		public RuleCall getIDENTIFIERTerminalRuleCall_1_1() { return cIDENTIFIERTerminalRuleCall_1_1; }
+		public RuleCall getIDENTIFIERTerminalRuleCall_6() { return cIDENTIFIERTerminalRuleCall_6; }
 	}
 	public class TypeArgumentElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeArgument");
@@ -3195,6 +3234,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//fragment TypeReference *:
+	//    (astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
 	//    declaredType=[Type|TypeReferenceName]
 	//;
 	public TypeReferenceElements getTypeReferenceAccess() {
@@ -3361,7 +3401,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//TypeReferenceName:
-	//    IDENTIFIER ('.' IDENTIFIER)*;
+	//    'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
+	//;
 	public TypeReferenceNameElements getTypeReferenceNameAccess() {
 		return pTypeReferenceName;
 	}

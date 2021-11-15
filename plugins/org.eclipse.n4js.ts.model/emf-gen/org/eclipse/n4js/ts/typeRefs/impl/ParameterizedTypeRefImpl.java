@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
@@ -59,7 +60,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDeclaredTypeArgs <em>Declared Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getAstDeclaredTypeQualifiers <em>Ast Declared Type Qualifiers</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -148,14 +149,14 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	protected boolean arrayNTypeExpression = ARRAY_NTYPE_EXPRESSION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getAstDeclaredTypeQualifier() <em>Ast Declared Type Qualifier</em>}' reference.
+	 * The cached value of the '{@link #getAstDeclaredTypeQualifiers() <em>Ast Declared Type Qualifiers</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getAstDeclaredTypeQualifier()
+	 * @see #getAstDeclaredTypeQualifiers()
 	 * @generated
 	 * @ordered
 	 */
-	protected Type astDeclaredTypeQualifier;
+	protected EList<Type> astDeclaredTypeQualifiers;
 
 	/**
 	 * The default value of the '{@link #getASTNodeOptionalFieldStrategy() <em>AST Node Optional Field Strategy</em>}' attribute.
@@ -344,38 +345,11 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public Type getAstDeclaredTypeQualifier() {
-		if (astDeclaredTypeQualifier != null && astDeclaredTypeQualifier.eIsProxy()) {
-			InternalEObject oldAstDeclaredTypeQualifier = (InternalEObject)astDeclaredTypeQualifier;
-			astDeclaredTypeQualifier = (Type)eResolveProxy(oldAstDeclaredTypeQualifier);
-			if (astDeclaredTypeQualifier != oldAstDeclaredTypeQualifier) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER, oldAstDeclaredTypeQualifier, astDeclaredTypeQualifier));
-			}
+	public EList<Type> getAstDeclaredTypeQualifiers() {
+		if (astDeclaredTypeQualifiers == null) {
+			astDeclaredTypeQualifiers = new EObjectResolvingEList<Type>(Type.class, this, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS);
 		}
-		return astDeclaredTypeQualifier;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Type basicGetAstDeclaredTypeQualifier() {
-		return astDeclaredTypeQualifier;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setAstDeclaredTypeQualifier(Type newAstDeclaredTypeQualifier) {
-		Type oldAstDeclaredTypeQualifier = astDeclaredTypeQualifier;
-		astDeclaredTypeQualifier = newAstDeclaredTypeQualifier;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER, oldAstDeclaredTypeQualifier, astDeclaredTypeQualifier));
+		return astDeclaredTypeQualifiers;
 	}
 
 	/**
@@ -617,9 +591,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return isArrayTypeExpression();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
 				return isArrayNTypeExpression();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
-				if (resolve) return getAstDeclaredTypeQualifier();
-				return basicGetAstDeclaredTypeQualifier();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS:
+				return getAstDeclaredTypeQualifiers();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return getASTNodeOptionalFieldStrategy();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY:
@@ -653,8 +626,9 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
 				setArrayNTypeExpression((Boolean)newValue);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
-				setAstDeclaredTypeQualifier((Type)newValue);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS:
+				getAstDeclaredTypeQualifiers().clear();
+				getAstDeclaredTypeQualifiers().addAll((Collection<? extends Type>)newValue);
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				setASTNodeOptionalFieldStrategy((OptionalFieldStrategy)newValue);
@@ -689,8 +663,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
 				setArrayNTypeExpression(ARRAY_NTYPE_EXPRESSION_EDEFAULT);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
-				setAstDeclaredTypeQualifier((Type)null);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS:
+				getAstDeclaredTypeQualifiers().clear();
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				setASTNodeOptionalFieldStrategy(AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT);
@@ -720,8 +694,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return arrayTypeExpression != ARRAY_TYPE_EXPRESSION_EDEFAULT;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
 				return arrayNTypeExpression != ARRAY_NTYPE_EXPRESSION_EDEFAULT;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
-				return astDeclaredTypeQualifier != null;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS:
+				return astDeclaredTypeQualifiers != null && !astDeclaredTypeQualifiers.isEmpty();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return aSTNodeOptionalFieldStrategy != AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY:

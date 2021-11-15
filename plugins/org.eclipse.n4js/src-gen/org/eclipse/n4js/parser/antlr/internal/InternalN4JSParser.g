@@ -29316,119 +29316,6 @@ ruleN4MemberAnnotationList returns [EObject current=null]
 	)
 ;
 
-
-// Rule TypeReference
-ruleTypeReference[EObject in_current]  returns [EObject current=in_current]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			(
-				(
-					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getTypeReferenceRule());
-						}
-					}
-					{
-						newCompositeNode(grammarAccess.getTypeReferenceAccess().getAstDeclaredTypeQualifierTypeCrossReference_0_0_0());
-					}
-					ruleTypeReferenceName
-					{
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-			otherlv_1=FullStop
-			{
-				newLeafNode(otherlv_1, grammarAccess.getTypeReferenceAccess().getFullStopKeyword_0_1());
-			}
-		)?
-		(
-			(
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getTypeReferenceRule());
-					}
-				}
-				{
-					newCompositeNode(grammarAccess.getTypeReferenceAccess().getDeclaredTypeTypeCrossReference_1_0());
-				}
-				ruleTypeReferenceName
-				{
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-	)
-;
-
-// Entry rule entryRuleTypeReferenceName
-entryRuleTypeReferenceName returns [String current=null]:
-	{ newCompositeNode(grammarAccess.getTypeReferenceNameRule()); }
-	iv_ruleTypeReferenceName=ruleTypeReferenceName
-	{ $current=$iv_ruleTypeReferenceName.current.getText(); }
-	EOF;
-
-// Rule TypeReferenceName
-ruleTypeReferenceName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		kw=Void
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getVoidKeyword_0());
-		}
-		    |
-		kw=This
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getThisKeyword_1());
-		}
-		    |
-		kw=Await
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getAwaitKeyword_2());
-		}
-		    |
-		kw=Promisify
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getPromisifyKeyword_3());
-		}
-		    |
-		kw=Target
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getTargetKeyword_4());
-		}
-		    |
-		kw=Default
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getDefaultKeyword_5());
-		}
-		    |
-		this_IDENTIFIER_6=RULE_IDENTIFIER
-		{
-			$current.merge(this_IDENTIFIER_6);
-		}
-		{
-			newLeafNode(this_IDENTIFIER_6, grammarAccess.getTypeReferenceNameAccess().getIDENTIFIERTerminalRuleCall_6());
-		}
-	)
-;
-
 // Entry rule entryRuleN4ClassDeclaration
 entryRuleN4ClassDeclaration returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getN4ClassDeclarationRule()); }
@@ -38564,7 +38451,7 @@ ruleDefaultFormalParameter[EObject in_current]  returns [EObject current=in_curr
 						$current,
 						"astInitializer",
 						lv_astInitializer_1_0,
-						"org.eclipse.n4js.N4JS.TypeReferenceName");
+						"org.eclipse.n4js.TypeExpressions.TypeReferenceName");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -39028,6 +38915,54 @@ ruleEmptyIterableTypeExpressionTail returns [EObject current=null]
 		{
 			newLeafNode(otherlv_1, grammarAccess.getEmptyIterableTypeExpressionTailAccess().getRightSquareBracketKeyword_1());
 		}
+	)
+;
+
+
+// Rule TypeReference
+ruleTypeReference[EObject in_current]  returns [EObject current=in_current]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				(
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getTypeReferenceRule());
+						}
+					}
+					otherlv_0=RULE_IDENTIFIER
+					{
+						newLeafNode(otherlv_0, grammarAccess.getTypeReferenceAccess().getAstDeclaredTypeQualifiersTypeCrossReference_0_0_0());
+					}
+				)
+			)
+			otherlv_1=FullStop
+			{
+				newLeafNode(otherlv_1, grammarAccess.getTypeReferenceAccess().getFullStopKeyword_0_1());
+			}
+		)*
+		(
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getTypeReferenceRule());
+					}
+				}
+				{
+					newCompositeNode(grammarAccess.getTypeReferenceAccess().getDeclaredTypeTypeCrossReference_1_0());
+				}
+				ruleTypeReferenceName
+				{
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
 	)
 ;
 
@@ -39894,6 +39829,68 @@ ruleTypeTypeRef returns [EObject current=null]
 		otherlv_5=RightCurlyBracket
 		{
 			newLeafNode(otherlv_5, grammarAccess.getTypeTypeRefAccess().getRightCurlyBracketKeyword_4());
+		}
+	)
+;
+
+// Entry rule entryRuleTypeReferenceName
+entryRuleTypeReferenceName returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getTypeReferenceNameRule()); }
+	iv_ruleTypeReferenceName=ruleTypeReferenceName
+	{ $current=$iv_ruleTypeReferenceName.current.getText(); }
+	EOF;
+
+// Rule TypeReferenceName
+ruleTypeReferenceName returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		kw=Void
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getVoidKeyword_0());
+		}
+		    |
+		kw=This
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getThisKeyword_1());
+		}
+		    |
+		kw=Await
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getAwaitKeyword_2());
+		}
+		    |
+		kw=Promisify
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getPromisifyKeyword_3());
+		}
+		    |
+		kw=Target
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getTargetKeyword_4());
+		}
+		    |
+		kw=Default
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getTypeReferenceNameAccess().getDefaultKeyword_5());
+		}
+		    |
+		this_IDENTIFIER_6=RULE_IDENTIFIER
+		{
+			$current.merge(this_IDENTIFIER_6);
+		}
+		{
+			newLeafNode(this_IDENTIFIER_6, grammarAccess.getTypeReferenceNameAccess().getIDENTIFIERTerminalRuleCall_6());
 		}
 	)
 ;
