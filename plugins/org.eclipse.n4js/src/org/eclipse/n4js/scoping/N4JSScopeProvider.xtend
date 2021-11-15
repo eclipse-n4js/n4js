@@ -226,7 +226,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			]);
 		} else if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
-				val astQualifier = context.astDeclaredTypeQualifiers?.tail;
+				val astQualifier = context.astDeclaredTypeQualifiers?.last;
 				switch (astQualifier) {
 					ModuleNamespaceVirtualType:
 						return createScopeForNamespaceAccess(astQualifier, context)

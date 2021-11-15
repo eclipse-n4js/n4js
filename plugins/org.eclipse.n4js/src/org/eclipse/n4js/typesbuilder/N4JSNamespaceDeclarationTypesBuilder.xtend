@@ -22,8 +22,13 @@ public class N4JSNamespaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 			return false;
 		}
 
-		val TNamespace namespaceType = target.topLevelTypes.get(idx) as TNamespace
-		//namespaceType.relinkClassifierAndMembers(n4Namespace, preLinkingPhase);
+		val TNamespace namespaceType = target.namespaces.get(idx)
+		ensureEqualName(n4Namespace, namespaceType);
+				
+		namespaceType.astElement = n4Namespace
+
+		n4Namespace.definedType = namespaceType
+		
 		return true;
 	}
 

@@ -145,7 +145,7 @@ public class N4JSTypesBuilder {
 
 			script.buildTypesFromTypeRefs(module, preLinkingPhase);
 
-			script.relinkTypes(module, preLinkingPhase);
+			script.relinkTypes(module, preLinkingPhase, new RelinkIndices());
 
 			module.astElement = script;
 			script.module = module;
@@ -278,26 +278,30 @@ public class N4JSTypesBuilder {
 			}
 		}
 	}
+	
+	static class RelinkIndices {
+		package var namespacesIdx = 0;
+		package var topLevelTypesIdx = 0;
+		package var variableIdx = 0;
+	}
 
-	def private void relinkTypes(EObject container, AbstractNamespace target, boolean preLinkingPhase) {
-		var topLevelTypesIdx = 0;
-		var variableIndex = 0;
+	def private void relinkTypes(EObject container, AbstractNamespace target, boolean preLinkingPhase, RelinkIndices rlis) {
 		for (n : container.eContents) {
 			switch n {
 				N4NamespaceDeclaration: {
-					n.createType(target, preLinkingPhase);
+					rlis.namespacesIdx = n.relinkType(target, preLinkingPhase, rlis.namespacesIdx);
 					val namespaceType = n.definedType as TNamespace;
-					relinkTypes(n, namespaceType, preLinkingPhase);
+					relinkTypes(n, namespaceType, preLinkingPhase, new RelinkIndices());
 				}
 				TypeDefiningElement: {
-					topLevelTypesIdx = n.relinkType(target, preLinkingPhase, topLevelTypesIdx);
+					rlis.topLevelTypesIdx = n.relinkType(target, preLinkingPhase, rlis.topLevelTypesIdx);
 				}
 				ExportedVariableStatement: {
-					variableIndex = n.relinkType(target, preLinkingPhase, variableIndex)
+					rlis.variableIdx = n.relinkType(target, preLinkingPhase, rlis.variableIdx)
 				}
 			}
 			if (!(n instanceof N4NamespaceDeclaration)) {
-				relinkTypes(n, target, preLinkingPhase)
+				relinkTypes(n, target, preLinkingPhase, rlis)
 			}
 		}
 	}
@@ -309,6 +313,14 @@ public class N4JSTypesBuilder {
 	def protected dispatch int relinkType(NamespaceImportSpecifier nsImpSpec, AbstractNamespace target, boolean preLinkingPhase,
 		int idx) {
 		// already handled up-front in N4JSNamespaceImportTypesBuilder#relinkNamespaceTypes
+		return idx;
+	}
+
+	def protected dispatch int relinkType(N4NamespaceDeclaration n4Namespace, AbstractNamespace target, boolean preLinkingPhase,
+		int idx) {
+		if (n4Namespace.relinkTNamespace(target, preLinkingPhase, idx)) {
+			return idx + 1;
+		}
 		return idx;
 	}
 
