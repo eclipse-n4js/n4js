@@ -248,7 +248,7 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	 * @generated
 	 */
 	@Override
-	public boolean isCallableConstructor() {
+	public boolean isCallSignature() {
 		return false;
 	}
 
@@ -481,8 +481,8 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 				return isFinal();
 			case N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCTOR:
 				return isConstructor();
-			case N4JSPackage.N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR:
-				return isCallableConstructor();
+			case N4JSPackage.N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE:
+				return isCallSignature();
 			case N4JSPackage.N4_MEMBER_DECLARATION___GET_NAME:
 				return getName();
 		}

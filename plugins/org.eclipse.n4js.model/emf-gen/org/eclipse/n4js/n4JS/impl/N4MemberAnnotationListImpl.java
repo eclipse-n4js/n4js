@@ -269,7 +269,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * @generated
 	 */
 	@Override
-	public boolean isCallableConstructor() {
+	public boolean isCallSignature() {
 		return false;
 	}
 
@@ -520,7 +520,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_FINAL: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_FINAL;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_FINAL: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_FINAL;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCTOR: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCTOR;
-				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CALLABLE_CONSTRUCTOR;
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CALL_SIGNATURE;
 				default: return -1;
 			}
 		}
@@ -553,8 +553,8 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 				return isFinal();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCTOR:
 				return isConstructor();
-			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CALLABLE_CONSTRUCTOR:
-				return isCallableConstructor();
+			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CALL_SIGNATURE:
+				return isCallSignature();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_ALL_ANNOTATIONS:
 				return getAllAnnotations();
 		}

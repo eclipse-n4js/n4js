@@ -247,12 +247,12 @@ public interface TFunction extends GenericType, AccessibleTypeElement, SyntaxRel
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Tells whether this function is a method that represents a callable constructor.
+	 * Tells whether this function is a method that represents a call signature.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	boolean isCallableConstructor();
+	boolean isCallSignature();
 
 	/**
 	 * <!-- begin-user-doc -->

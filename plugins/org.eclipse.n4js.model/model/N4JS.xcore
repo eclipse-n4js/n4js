@@ -2047,10 +2047,10 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 	 */
 	contains N4MemberDeclaration[] ownedMembersRaw opposite owner
 	/**
-	 * Returns a view on ownedMembersRaw filtering out non-members and callable constructors.
+	 * Returns a view on ownedMembersRaw filtering out non-members and call signatures.
  	 */
 	op N4MemberDeclaration[] getOwnedMembers() {
-		val methods = ownedMembersRaw.filter(N4MemberDeclaration).filter[!isCallableConstructor]
+		val methods = ownedMembersRaw.filter(N4MemberDeclaration).filter[!isCallSignature]
 		return new BasicEList(methods.toList)
 	}
 	/**
@@ -2060,17 +2060,17 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isConstructor]
 	}
 	/**
-	 * Returns explicitly defined callable constructor of receiving class or <code>null</code> if none was defined.
-	 * This is *not* the actual constructor but instead the function used for direct invocations in call expressions.
+	 * Returns explicitly defined call signature of receiving class or <code>null</code> if none was defined.
+	 * This is *not* the actual constructor but instead the signature used for direct invocations in call expressions.
  	 */
-	op N4MethodDeclaration getOwnedCallableCtor() {
-		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isCallableConstructor]
+	op N4MethodDeclaration getOwnedCallSignature() {
+		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isCallSignature]
 	}
 	/**
 	 * Returns a view on ownedMembersRaw filtering out non-methods.
  	 */
 	op N4MethodDeclaration[] getOwnedMethods() {
-		val methods = ownedMembersRaw.filter(N4MethodDeclaration).filter[!isConstructor && !isCallableConstructor]
+		val methods = ownedMembersRaw.filter(N4MethodDeclaration).filter[!isConstructor && !isCallSignature]
 		return new BasicEList(methods.toList)
 	}
 	/**
@@ -2255,7 +2255,7 @@ abstract class N4MemberDeclaration extends AnnotableElement, ModifiableElement, 
 	op boolean isConstructor() {
 		false // will be overridden below in N4MethodDeclaration
 	}
-	op boolean isCallableConstructor() {
+	op boolean isCallSignature() {
 		false // will be overridden below in N4MethodDeclaration
 	}
 }
@@ -2349,7 +2349,7 @@ class N4MethodDeclaration extends AnnotableN4MemberDeclaration, MethodDeclaratio
 	op boolean isConstructor() {
 		return name == 'constructor' && !isStatic
 	}
-	op boolean isCallableConstructor() {
+	op boolean isCallSignature() {
 		return declaredName === null;
 	}
 	op boolean isStatic() {

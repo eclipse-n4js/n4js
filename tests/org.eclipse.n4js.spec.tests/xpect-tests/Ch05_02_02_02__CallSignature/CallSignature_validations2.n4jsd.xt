@@ -14,7 +14,7 @@
 
 export external public interface ~I {
 
-	// XPECT errors --> "Callable constructors may only be used in classes (not in interfaces)." at "()"
+	// XPECT errors --> "Call signatures may only be used in classes (not in interfaces)." at "()"
 	()
 
 	// XPECT noerrors -->
@@ -34,8 +34,8 @@ export external public class C {
 
 export external public class D {
 
-	// XPECT errors --> "Duplicate callable constructor." at "() {}"
+	// XPECT errors --> "Duplicate call signature." at "() {}"
 	() {}
-	// XPECT errors --> "Duplicate callable constructor." at "() {}"
+	// XPECT errors --> "Duplicate call signature." at "() {}"
 	() {}
 }

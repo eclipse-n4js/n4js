@@ -350,7 +350,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		if(isClassConstructorFunction(G, typeRef)) {
 			// don't allow direct invocation of class constructors
 			if(getCallableClassConstructorFunction(G, typeRef)!==null)
-				return true; // exception: this is a class that provides a callable constructor function
+				return true; // exception: this is a class that provides a callable signature
 			return false;
 		}
 		if(typeRef.declaredType instanceof TFunction)
@@ -408,7 +408,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 				type = cls;
 		}
 		if(type instanceof ContainerType<?>) {
-			return type.callableCtor;
+			return type.callSignature;
 		}
 		return null;
 	}

@@ -9574,7 +9574,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cN4SetterDeclarationParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cN4MethodDeclarationParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cN4FieldDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cN4CallableConstructorDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cN4CallSignatureDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		
 		//N4MemberDeclaration <Yield>:
 		//    AnnotatedN4MemberDeclaration<Yield>
@@ -9582,7 +9582,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    | N4SetterDeclaration<Yield>
 		//    | N4MethodDeclaration<Yield>
 		//    | N4FieldDeclaration<Yield>
-		//    | N4CallableConstructorDeclaration<Yield>
+		//    | N4CallSignatureDeclaration<Yield>
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -9591,7 +9591,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//| N4SetterDeclaration<Yield>
 		//| N4MethodDeclaration<Yield>
 		//| N4FieldDeclaration<Yield>
-		//| N4CallableConstructorDeclaration<Yield>
+		//| N4CallSignatureDeclaration<Yield>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//AnnotatedN4MemberDeclaration<Yield>
@@ -9609,8 +9609,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//N4FieldDeclaration<Yield>
 		public RuleCall getN4FieldDeclarationParserRuleCall_4() { return cN4FieldDeclarationParserRuleCall_4; }
 		
-		//N4CallableConstructorDeclaration<Yield>
-		public RuleCall getN4CallableConstructorDeclarationParserRuleCall_5() { return cN4CallableConstructorDeclarationParserRuleCall_5; }
+		//N4CallSignatureDeclaration<Yield>
+		public RuleCall getN4CallSignatureDeclarationParserRuleCall_5() { return cN4CallSignatureDeclarationParserRuleCall_5; }
 	}
 	public class AnnotatedN4MemberDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotatedN4MemberDeclaration");
@@ -10105,13 +10105,13 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//';'?
 		public Keyword getSemicolonKeyword_1() { return cSemicolonKeyword_1; }
 	}
-	public class N4CallableConstructorDeclarationElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4CallableConstructorDeclaration");
+	public class N4CallSignatureDeclarationElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4CallSignatureDeclaration");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Keyword cSemicolonKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		
-		//N4CallableConstructorDeclaration <Yield> returns N4MethodDeclaration:
+		//N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
 		//    MethodParamsReturnAndBody <Generator=false> ';'?
 		//;
 		@Override public ParserRule getRule() { return rule; }
@@ -11873,7 +11873,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	private final FieldDeclarationImplElements pFieldDeclarationImpl;
 	private final N4FieldDeclarationElements pN4FieldDeclaration;
 	private final N4MethodDeclarationElements pN4MethodDeclaration;
-	private final N4CallableConstructorDeclarationElements pN4CallableConstructorDeclaration;
+	private final N4CallSignatureDeclarationElements pN4CallSignatureDeclaration;
 	private final MethodParamsAndBodyElements pMethodParamsAndBody;
 	private final MethodParamsReturnAndBodyElements pMethodParamsReturnAndBody;
 	private final N4GetterDeclarationElements pN4GetterDeclaration;
@@ -12128,7 +12128,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		this.pFieldDeclarationImpl = new FieldDeclarationImplElements();
 		this.pN4FieldDeclaration = new N4FieldDeclarationElements();
 		this.pN4MethodDeclaration = new N4MethodDeclarationElements();
-		this.pN4CallableConstructorDeclaration = new N4CallableConstructorDeclarationElements();
+		this.pN4CallSignatureDeclaration = new N4CallSignatureDeclarationElements();
 		this.pMethodParamsAndBody = new MethodParamsAndBodyElements();
 		this.pMethodParamsReturnAndBody = new MethodParamsReturnAndBodyElements();
 		this.pN4GetterDeclaration = new N4GetterDeclarationElements();
@@ -14903,7 +14903,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | N4SetterDeclaration<Yield>
 	//    | N4MethodDeclaration<Yield>
 	//    | N4FieldDeclaration<Yield>
-	//    | N4CallableConstructorDeclaration<Yield>
+	//    | N4CallSignatureDeclaration<Yield>
 	//;
 	public N4MemberDeclarationElements getN4MemberDeclarationAccess() {
 		return pN4MemberDeclaration;
@@ -14988,15 +14988,15 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getN4MethodDeclarationAccess().getRule();
 	}
 	
-	//N4CallableConstructorDeclaration <Yield> returns N4MethodDeclaration:
+	//N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
 	//    MethodParamsReturnAndBody <Generator=false> ';'?
 	//;
-	public N4CallableConstructorDeclarationElements getN4CallableConstructorDeclarationAccess() {
-		return pN4CallableConstructorDeclaration;
+	public N4CallSignatureDeclarationElements getN4CallSignatureDeclarationAccess() {
+		return pN4CallSignatureDeclaration;
 	}
 	
-	public ParserRule getN4CallableConstructorDeclarationRule() {
-		return getN4CallableConstructorDeclarationAccess().getRule();
+	public ParserRule getN4CallSignatureDeclarationRule() {
+		return getN4CallSignatureDeclarationAccess().getRule();
 	}
 	
 	//fragment MethodParamsAndBody <Generator>*:

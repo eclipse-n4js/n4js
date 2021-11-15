@@ -29,7 +29,7 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getOwnedMembersByNameAndAccess <em>Owned Members By Name And Access</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getOwnedMembers <em>Owned Members</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getCallableCtor <em>Callable Ctor</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getCallSignature <em>Call Signature</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getContainerType()
@@ -71,26 +71,26 @@ public interface ContainerType<MT extends TMember> extends GenericType {
 	EList<MT> getOwnedMembers();
 
 	/**
-	 * Returns the value of the '<em><b>Callable Ctor</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Call Signature</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Callable Ctor</em>' containment reference.
-	 * @see #setCallableCtor(TMethod)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getContainerType_CallableCtor()
+	 * @return the value of the '<em>Call Signature</em>' containment reference.
+	 * @see #setCallSignature(TMethod)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getContainerType_CallSignature()
 	 * @model containment="true"
 	 * @generated
 	 */
-	TMethod getCallableCtor();
+	TMethod getCallSignature();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.ContainerType#getCallableCtor <em>Callable Ctor</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.ContainerType#getCallSignature <em>Call Signature</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Callable Ctor</em>' containment reference.
-	 * @see #getCallableCtor()
+	 * @param value the new value of the '<em>Call Signature</em>' containment reference.
+	 * @see #getCallSignature()
 	 * @generated
 	 */
-	void setCallableCtor(TMethod value);
+	void setCallSignature(TMethod value);
 
 	/**
 	 * <!-- begin-user-doc -->

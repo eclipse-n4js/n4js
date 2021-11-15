@@ -964,7 +964,10 @@ stderr:
 In this example, the interface `I` is defined in the `Inf.n4jsd` file without the `@N4JS` annotation. As a result, its field `m` cannot be initialized via the `@Spec` constructor and hence the output of `console.log(c.m)` is `undefined`. On the other hand,  since the interface `J` is declared with the annotation `@N4JS`, it is possible to initialize its field `n` in the `@Spec` constructor. That's why the result of `console.log(d.n)` is `Bye`.
 
 
-=== Callable Constructors
+=== Call Signatures
+
+FIXME GH-2265
+
 
 === Covariant Constructors
 

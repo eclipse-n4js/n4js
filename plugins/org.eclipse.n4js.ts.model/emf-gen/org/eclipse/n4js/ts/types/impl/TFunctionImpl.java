@@ -592,12 +592,12 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 * @generated
 	 */
 	@Override
-	public boolean isCallableConstructor() {
+	public boolean isCallSignature() {
 		final EObject parent = this.eContainer();
 		boolean _xifexpression = false;
 		if ((parent instanceof ContainerType<?>)) {
-			TMethod _callableCtor = ((ContainerType<?>)parent).getCallableCtor();
-			_xifexpression = (_callableCtor == this);
+			TMethod _callSignature = ((ContainerType<?>)parent).getCallSignature();
+			_xifexpression = (_callSignature == this);
 		}
 		else {
 			_xifexpression = false;
@@ -975,8 +975,8 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 		switch (operationID) {
 			case TypesPackage.TFUNCTION___IS_RETURN_VALUE_OPTIONAL:
 				return isReturnValueOptional();
-			case TypesPackage.TFUNCTION___IS_CALLABLE_CONSTRUCTOR:
-				return isCallableConstructor();
+			case TypesPackage.TFUNCTION___IS_CALL_SIGNATURE:
+				return isCallSignature();
 			case TypesPackage.TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT:
 				return getFparForArgIdx((Integer)arguments.get(0));
 			case TypesPackage.TFUNCTION___GET_FUNCTION_AS_STRING:

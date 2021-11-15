@@ -43274,7 +43274,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         EObject this_N4SetterDeclaration_2 = null;
         EObject this_N4MethodDeclaration_3 = null;
         EObject this_N4FieldDeclaration_4 = null;
-        EObject this_N4CallableConstructorDeclaration_5 = null;
+        EObject this_N4CallSignatureDeclaration_5 = null;
         	enterRule();
         try {
             {
@@ -43365,14 +43365,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 6 :
                     {
                     if ( state.backtracking==0 ) {
-                      			newCompositeNode(grammarAccess.getN4MemberDeclarationAccess().getN4CallableConstructorDeclarationParserRuleCall_5());
+                      			newCompositeNode(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_5());
                     }
                     pushFollow(FOLLOW_2);
-                    this_N4CallableConstructorDeclaration_5=ruleN4CallableConstructorDeclaration();
+                    this_N4CallSignatureDeclaration_5=ruleN4CallSignatureDeclaration();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
-                      			current = this_N4CallableConstructorDeclaration_5;
+                      			current = this_N4CallSignatureDeclaration_5;
                       			afterParserOrEnumRuleCall();
                     }
                     }
@@ -43398,7 +43398,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         EObject this_N4SetterDeclaration_2 = null;
         EObject this_N4MethodDeclaration_3 = null;
         EObject this_N4FieldDeclaration_4 = null;
-        EObject this_N4CallableConstructorDeclaration_5 = null;
+        EObject this_N4CallSignatureDeclaration_5 = null;
         	enterRule();
         try {
             {
@@ -43489,14 +43489,14 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                 case 6 :
                     {
                     if ( state.backtracking==0 ) {
-                      			newCompositeNode(grammarAccess.getN4MemberDeclarationAccess().getN4CallableConstructorDeclarationParserRuleCall_5());
+                      			newCompositeNode(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_5());
                     }
                     pushFollow(FOLLOW_2);
-                    this_N4CallableConstructorDeclaration_5=norm1_N4CallableConstructorDeclaration();
+                    this_N4CallSignatureDeclaration_5=norm1_N4CallSignatureDeclaration();
                     state._fsp--;
                     if (state.failed) return current;
                     if ( state.backtracking==0 ) {
-                      			current = this_N4CallableConstructorDeclaration_5;
+                      			current = this_N4CallSignatureDeclaration_5;
                       			afterParserOrEnumRuleCall();
                     }
                     }
@@ -45717,20 +45717,20 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    public final EObject entryRuleN4CallableConstructorDeclaration() throws RecognitionException {
+    public final EObject entryRuleN4CallSignatureDeclaration() throws RecognitionException {
         EObject current = null;
-        EObject iv_ruleN4CallableConstructorDeclaration = null;
+        EObject iv_ruleN4CallSignatureDeclaration = null;
         try {
             {
             if ( state.backtracking==0 ) {
-               newCompositeNode(grammarAccess.getN4CallableConstructorDeclarationRule()); 
+               newCompositeNode(grammarAccess.getN4CallSignatureDeclarationRule()); 
             }
             pushFollow(FOLLOW_1);
-            iv_ruleN4CallableConstructorDeclaration=ruleN4CallableConstructorDeclaration();
+            iv_ruleN4CallSignatureDeclaration=ruleN4CallSignatureDeclaration();
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
-               current =iv_ruleN4CallableConstructorDeclaration; 
+               current =iv_ruleN4CallSignatureDeclaration; 
             }
             match(input,EOF,FOLLOW_2); if (state.failed) return current;
             }
@@ -45743,7 +45743,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    public final EObject ruleN4CallableConstructorDeclaration() throws RecognitionException {
+    public final EObject ruleN4CallSignatureDeclaration() throws RecognitionException {
         EObject current = null;
         Token otherlv_1=null;
         EObject this_MethodParamsReturnAndBody_0 = null;
@@ -45753,9 +45753,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             if ( state.backtracking==0 ) {
               			if (current==null) {
-              				current = createModelElement(grammarAccess.getN4CallableConstructorDeclarationRule());
+              				current = createModelElement(grammarAccess.getN4CallSignatureDeclarationRule());
               			}
-              			newCompositeNode(grammarAccess.getN4CallableConstructorDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0());
+              			newCompositeNode(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0());
             }
             pushFollow(FOLLOW_98);
             this_MethodParamsReturnAndBody_0=ruleMethodParamsReturnAndBody(current);
@@ -45775,7 +45775,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     otherlv_1=(Token)match(input,Semicolon,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
-                      				newLeafNode(otherlv_1, grammarAccess.getN4CallableConstructorDeclarationAccess().getSemicolonKeyword_1());
+                      				newLeafNode(otherlv_1, grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_1());
                     }
                     }
                     break;
@@ -45794,7 +45794,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         }
         return current;
     }
-    public final EObject norm1_N4CallableConstructorDeclaration() throws RecognitionException {
+    public final EObject norm1_N4CallSignatureDeclaration() throws RecognitionException {
         EObject current = null;
         Token otherlv_1=null;
         EObject this_MethodParamsReturnAndBody_0 = null;
@@ -45804,9 +45804,9 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             if ( state.backtracking==0 ) {
               			if (current==null) {
-              				current = createModelElement(grammarAccess.getN4CallableConstructorDeclarationRule());
+              				current = createModelElement(grammarAccess.getN4CallSignatureDeclarationRule());
               			}
-              			newCompositeNode(grammarAccess.getN4CallableConstructorDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0());
+              			newCompositeNode(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0());
             }
             pushFollow(FOLLOW_98);
             this_MethodParamsReturnAndBody_0=ruleMethodParamsReturnAndBody(current);
@@ -45826,7 +45826,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                     {
                     otherlv_1=(Token)match(input,Semicolon,FOLLOW_2); if (state.failed) return current;
                     if ( state.backtracking==0 ) {
-                      				newLeafNode(otherlv_1, grammarAccess.getN4CallableConstructorDeclarationAccess().getSemicolonKeyword_1());
+                      				newLeafNode(otherlv_1, grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_1());
                     }
                     }
                     break;
@@ -80369,7 +80369,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_307;
         }
         public String getDescription() {
-            return "30077:2: (this_AnnotatedN4MemberDeclaration_0= ruleAnnotatedN4MemberDeclaration | ( ( ( () ( ( ruleN4Modifier ) )* ruleGetterHeader[null] ) )=>this_N4GetterDeclaration_1= ruleN4GetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_N4SetterDeclaration_2= ruleN4SetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeParameters[null] )? ruleAsyncNoTrailingLineBreak[null] ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_N4MethodDeclaration_3= ruleN4MethodDeclaration ) | this_N4FieldDeclaration_4= ruleN4FieldDeclaration | this_N4CallableConstructorDeclaration_5= ruleN4CallableConstructorDeclaration )";
+            return "30077:2: (this_AnnotatedN4MemberDeclaration_0= ruleAnnotatedN4MemberDeclaration | ( ( ( () ( ( ruleN4Modifier ) )* ruleGetterHeader[null] ) )=>this_N4GetterDeclaration_1= ruleN4GetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_N4SetterDeclaration_2= ruleN4SetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeParameters[null] )? ruleAsyncNoTrailingLineBreak[null] ( ( ( ( Asterisk ) ) ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( ruleLiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_N4MethodDeclaration_3= ruleN4MethodDeclaration ) | this_N4FieldDeclaration_4= ruleN4FieldDeclaration | this_N4CallSignatureDeclaration_5= ruleN4CallSignatureDeclaration )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;
@@ -81137,7 +81137,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_307;
         }
         public String getDescription() {
-            return "30352:2: (this_AnnotatedN4MemberDeclaration_0= norm1_AnnotatedN4MemberDeclaration | ( ( ( () ( ( ruleN4Modifier ) )* norm1_GetterHeader[null] ) )=>this_N4GetterDeclaration_1= norm1_N4GetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_N4SetterDeclaration_2= norm1_N4SetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeParameters[null] )? ruleAsyncNoTrailingLineBreak[null] ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_N4MethodDeclaration_3= norm1_N4MethodDeclaration ) | this_N4FieldDeclaration_4= norm1_N4FieldDeclaration | this_N4CallableConstructorDeclaration_5= norm1_N4CallableConstructorDeclaration )";
+            return "30352:2: (this_AnnotatedN4MemberDeclaration_0= norm1_AnnotatedN4MemberDeclaration | ( ( ( () ( ( ruleN4Modifier ) )* norm1_GetterHeader[null] ) )=>this_N4GetterDeclaration_1= norm1_N4GetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* Set ( Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT ) ) )=>this_N4SetterDeclaration_2= norm1_N4SetterDeclaration ) | ( ( ( () ( ( ruleN4Modifier ) )* ( ruleTypeParameters[null] )? ruleAsyncNoTrailingLineBreak[null] ( ( ( ( Asterisk ) ) ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) | ( ( ( norm1_LiteralOrComputedPropertyName ) ) LeftParenthesis ) ) ) )=>this_N4MethodDeclaration_3= norm1_N4MethodDeclaration ) | this_N4FieldDeclaration_4= norm1_N4FieldDeclaration | this_N4CallSignatureDeclaration_5= norm1_N4CallSignatureDeclaration )";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;

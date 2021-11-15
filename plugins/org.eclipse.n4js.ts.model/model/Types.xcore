@@ -485,11 +485,11 @@ class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElemen
 	 */
 	boolean constructor
 	/**
-	 * Tells whether this function is a method that represents a callable constructor.
+	 * Tells whether this function is a method that represents a call signature.
 	 */
-	op boolean isCallableConstructor() {
+	op boolean isCallSignature() {
 		val parent = eContainer;
-		return if(parent instanceof ContainerType<?>) parent.callableCtor===this else false;
+		return if(parent instanceof ContainerType<?>) parent.callSignature===this else false;
 	}
 	/**
 	 * Returns the formal parameter corresponding to the argument at index 'argIndex' in a function call
@@ -744,7 +744,7 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 	transient EMap<NameAndAccess, ? extends TMember> ownedMembersByNameAndAccess
 
 	contains MT[] ownedMembers
-	contains TMethod callableCtor // required in TClass
+	contains TMethod callSignature
 
 	/**
 	 * Convenience method returning the owned constructor or <code>null</code> if not available.

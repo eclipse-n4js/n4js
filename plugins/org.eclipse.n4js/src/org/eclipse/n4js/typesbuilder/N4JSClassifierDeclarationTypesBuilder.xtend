@@ -42,7 +42,7 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		val n4Methods = definition.ownedMembers.filter(N4MethodDeclaration);
 		val methods = n4Methods.map[createMethod(preLinkingPhase)].filterNull; 
 		classifier.ownedMembers.addAll(methods);
-		classifier.callableCtor = definition.ownedCallableCtor?.createMethod(preLinkingPhase);
+		classifier.callSignature = definition.ownedCallSignature?.createMethod(preLinkingPhase);
 	}
 
 	def protected void addGetters(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
@@ -63,8 +63,8 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		ensureEqualName(declaration, classifier);
 
 		// members
-		if (declaration.ownedCallableCtor !== null ) {
-			relinkCallableCtor(declaration.ownedCallableCtor, classifier, preLinkingPhase)
+		if (declaration.ownedCallSignature !== null ) {
+			relinkCallSignature(declaration.ownedCallSignature, classifier, preLinkingPhase)
 		}
 
 		// OWNED members

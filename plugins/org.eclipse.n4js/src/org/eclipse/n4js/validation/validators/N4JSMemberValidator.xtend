@@ -141,7 +141,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 
-		holdsCallableConstructorConstraints(n4Method)
+		holdsCallSignatureConstraints(n4Method)
 
 		// wrong parsed
 		if (n4Method.definedTypeElement === null) {
@@ -381,21 +381,21 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
-	def private boolean holdsCallableConstructorConstraints(N4MethodDeclaration method) {
-		if (method.isCallableConstructor) {
+	def private boolean holdsCallSignatureConstraints(N4MethodDeclaration method) {
+		if (method.isCallSignature) {
 			// constraint: only in classes
 			if (!(method.eContainer instanceof N4ClassDefinition)) {
-				addIssue(getMessageForCLF_CTOR_CALLABLE_ONLY_IN_CLASS, method, CLF_CTOR_CALLABLE_ONLY_IN_CLASS);
+				addIssue(getMessageForCLF_CALL_SIG_ONLY_IN_CLASS, method, CLF_CALL_SIG_ONLY_IN_CLASS);
 				return false;
 			}
 			// constraint: only in .n4jsd files
 			if (!jsVariantHelper.isExternalMode(method)) {
-				addIssue(getMessageForCLF_CTOR_CALLABLE_ONLY_IN_N4JSD, method, CLF_CTOR_CALLABLE_ONLY_IN_N4JSD);
+				addIssue(getMessageForCLF_CALL_SIG_ONLY_IN_N4JSD, method, CLF_CALL_SIG_ONLY_IN_N4JSD);
 				return false;
 			}
-			// constraint: not more than one callable constructor per class
-			if ((method.eContainer as N4ClassifierDefinition).ownedMembersRaw.filter[isCallableConstructor].size >= 2) {
-				addIssue(getMessageForCLF_CTOR_CALLABLE_DUPLICATE, method, CLF_CTOR_CALLABLE_DUPLICATE);
+			// constraint: not more than one call signature per class
+			if ((method.eContainer as N4ClassifierDefinition).ownedMembersRaw.filter[isCallSignature].size >= 2) {
+				addIssue(getMessageForCLF_CALL_SIG_DUPLICATE, method, CLF_CALL_SIG_DUPLICATE);
 			}
 		}
 		return true;

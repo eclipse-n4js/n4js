@@ -58,7 +58,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getOwnedMembersByNameAndAccess <em>Owned Members By Name And Access</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getOwnedMembers <em>Owned Members</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getCallableCtor <em>Callable Ctor</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getCallSignature <em>Call Signature</em>}</li>
  * </ul>
  *
  * @generated
@@ -85,14 +85,14 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	protected EList<MT> ownedMembers;
 
 	/**
-	 * The cached value of the '{@link #getCallableCtor() <em>Callable Ctor</em>}' containment reference.
+	 * The cached value of the '{@link #getCallSignature() <em>Call Signature</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCallableCtor()
+	 * @see #getCallSignature()
 	 * @generated
 	 * @ordered
 	 */
-	protected TMethod callableCtor;
+	protected TMethod callSignature;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -155,8 +155,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	 * @generated
 	 */
 	@Override
-	public TMethod getCallableCtor() {
-		return callableCtor;
+	public TMethod getCallSignature() {
+		return callSignature;
 	}
 
 	/**
@@ -164,11 +164,11 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetCallableCtor(TMethod newCallableCtor, NotificationChain msgs) {
-		TMethod oldCallableCtor = callableCtor;
-		callableCtor = newCallableCtor;
+	public NotificationChain basicSetCallSignature(TMethod newCallSignature, NotificationChain msgs) {
+		TMethod oldCallSignature = callSignature;
+		callSignature = newCallSignature;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR, oldCallableCtor, newCallableCtor);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE, oldCallSignature, newCallSignature);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -180,18 +180,18 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	 * @generated
 	 */
 	@Override
-	public void setCallableCtor(TMethod newCallableCtor) {
-		if (newCallableCtor != callableCtor) {
+	public void setCallSignature(TMethod newCallSignature) {
+		if (newCallSignature != callSignature) {
 			NotificationChain msgs = null;
-			if (callableCtor != null)
-				msgs = ((InternalEObject)callableCtor).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR, null, msgs);
-			if (newCallableCtor != null)
-				msgs = ((InternalEObject)newCallableCtor).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR, null, msgs);
-			msgs = basicSetCallableCtor(newCallableCtor, msgs);
+			if (callSignature != null)
+				msgs = ((InternalEObject)callSignature).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE, null, msgs);
+			if (newCallSignature != null)
+				msgs = ((InternalEObject)newCallSignature).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE, null, msgs);
+			msgs = basicSetCallSignature(newCallSignature, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR, newCallableCtor, newCallableCtor));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE, newCallSignature, newCallSignature));
 	}
 
 	/**
@@ -298,8 +298,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 		switch (featureID) {
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS:
 				return ((InternalEList<?>)getOwnedMembers()).basicRemove(otherEnd, msgs);
-			case TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR:
-				return basicSetCallableCtor(null, msgs);
+			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
+				return basicSetCallSignature(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -316,8 +316,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 				return getOwnedMembersByNameAndAccess();
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS:
 				return getOwnedMembers();
-			case TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR:
-				return getCallableCtor();
+			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
+				return getCallSignature();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -338,8 +338,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 				getOwnedMembers().clear();
 				getOwnedMembers().addAll((Collection<? extends MT>)newValue);
 				return;
-			case TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR:
-				setCallableCtor((TMethod)newValue);
+			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
+				setCallSignature((TMethod)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -359,8 +359,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS:
 				getOwnedMembers().clear();
 				return;
-			case TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR:
-				setCallableCtor((TMethod)null);
+			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
+				setCallSignature((TMethod)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -378,8 +378,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 				return ownedMembersByNameAndAccess != null;
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS:
 				return ownedMembers != null && !ownedMembers.isEmpty();
-			case TypesPackage.CONTAINER_TYPE__CALLABLE_CTOR:
-				return callableCtor != null;
+			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
+				return callSignature != null;
 		}
 		return super.eIsSet(featureID);
 	}

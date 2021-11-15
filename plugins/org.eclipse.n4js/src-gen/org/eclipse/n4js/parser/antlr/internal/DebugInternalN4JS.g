@@ -7198,7 +7198,7 @@ ruleN4MemberDeclaration:
 		    |
 		ruleN4FieldDeclaration
 		    |
-		ruleN4CallableConstructorDeclaration
+		ruleN4CallSignatureDeclaration
 	)
 ;
 
@@ -7385,7 +7385,7 @@ norm1_N4MemberDeclaration:
 		    |
 		norm1_N4FieldDeclaration
 		    |
-		norm1_N4CallableConstructorDeclaration
+		norm1_N4CallSignatureDeclaration
 	)
 ;
 
@@ -7959,14 +7959,14 @@ norm1_N4MethodDeclaration:
 	';'?
 ;
 
-// Rule N4CallableConstructorDeclaration
-ruleN4CallableConstructorDeclaration:
+// Rule N4CallSignatureDeclaration
+ruleN4CallSignatureDeclaration:
 	ruleMethodParamsReturnAndBody
 	';'?
 ;
 
-// Rule N4CallableConstructorDeclaration
-norm1_N4CallableConstructorDeclaration:
+// Rule N4CallSignatureDeclaration
+norm1_N4CallSignatureDeclaration:
 	ruleMethodParamsReturnAndBody
 	';'?
 ;

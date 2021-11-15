@@ -1344,13 +1344,13 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_MEMBER___IS_CONSTRUCTOR = N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCTOR;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELEGATING_MEMBER___IS_CALLABLE_CONSTRUCTOR = N4JSPackage.N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR;
+	int DELEGATING_MEMBER___IS_CALL_SIGNATURE = N4JSPackage.N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE;
 
 	/**
 	 * The number of operations of the '<em>Delegating Member</em>' class.
@@ -1669,13 +1669,13 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_GETTER_DECLARATION___IS_CONSTRUCTOR = N4JSPackage.N4_GETTER_DECLARATION___IS_CONSTRUCTOR;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELEGATING_GETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = N4JSPackage.N4_GETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR;
+	int DELEGATING_GETTER_DECLARATION___IS_CALL_SIGNATURE = N4JSPackage.N4_GETTER_DECLARATION___IS_CALL_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -2030,13 +2030,13 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_SETTER_DECLARATION___IS_CONSTRUCTOR = N4JSPackage.N4_SETTER_DECLARATION___IS_CONSTRUCTOR;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELEGATING_SETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = N4JSPackage.N4_SETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR;
+	int DELEGATING_SETTER_DECLARATION___IS_CALL_SIGNATURE = N4JSPackage.N4_SETTER_DECLARATION___IS_CALL_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -2427,13 +2427,13 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION___IS_CONSTRUCTOR = N4JSPackage.N4_METHOD_DECLARATION___IS_CONSTRUCTOR;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELEGATING_METHOD_DECLARATION___IS_CALLABLE_CONSTRUCTOR = N4JSPackage.N4_METHOD_DECLARATION___IS_CALLABLE_CONSTRUCTOR;
+	int DELEGATING_METHOD_DECLARATION___IS_CALL_SIGNATURE = N4JSPackage.N4_METHOD_DECLARATION___IS_CALL_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.

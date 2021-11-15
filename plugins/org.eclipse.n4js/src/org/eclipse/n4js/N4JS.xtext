@@ -1347,7 +1347,7 @@ N4MemberDeclaration <Yield>:
 	| N4SetterDeclaration<Yield>
 	| N4MethodDeclaration<Yield>
 	| N4FieldDeclaration<Yield>
-	| N4CallableConstructorDeclaration<Yield>
+	| N4CallSignatureDeclaration<Yield>
 ;
 
 /**
@@ -1397,7 +1397,7 @@ N4MethodDeclaration <Yield>:
 	) ';'?
 ;
 
-N4CallableConstructorDeclaration <Yield> returns N4MethodDeclaration:
+N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
 	MethodParamsReturnAndBody <Generator=false> ';'?
 ;
 

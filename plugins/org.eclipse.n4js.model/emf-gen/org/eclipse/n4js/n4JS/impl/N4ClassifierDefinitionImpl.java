@@ -109,8 +109,8 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	public EList<N4MemberDeclaration> getOwnedMembers() {
 		final Function1<N4MemberDeclaration, Boolean> _function = new Function1<N4MemberDeclaration, Boolean>() {
 			public Boolean apply(final N4MemberDeclaration it) {
-				boolean _isCallableConstructor = it.isCallableConstructor();
-				return Boolean.valueOf((!_isCallableConstructor));
+				boolean _isCallSignature = it.isCallSignature();
+				return Boolean.valueOf((!_isCallSignature));
 			}
 		};
 		final Iterable<N4MemberDeclaration> methods = IterableExtensions.<N4MemberDeclaration>filter(Iterables.<N4MemberDeclaration>filter(this.getOwnedMembersRaw(), N4MemberDeclaration.class), _function);
@@ -139,10 +139,10 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * @generated
 	 */
 	@Override
-	public N4MethodDeclaration getOwnedCallableCtor() {
+	public N4MethodDeclaration getOwnedCallSignature() {
 		final Function1<N4MethodDeclaration, Boolean> _function = new Function1<N4MethodDeclaration, Boolean>() {
 			public Boolean apply(final N4MethodDeclaration it) {
-				return Boolean.valueOf(it.isCallableConstructor());
+				return Boolean.valueOf(it.isCallSignature());
 			}
 		};
 		return IterableExtensions.<N4MethodDeclaration>findFirst(Iterables.<N4MethodDeclaration>filter(this.getOwnedMembersRaw(), N4MethodDeclaration.class), _function);
@@ -157,7 +157,7 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	public EList<N4MethodDeclaration> getOwnedMethods() {
 		final Function1<N4MethodDeclaration, Boolean> _function = new Function1<N4MethodDeclaration, Boolean>() {
 			public Boolean apply(final N4MethodDeclaration it) {
-				return Boolean.valueOf(((!it.isConstructor()) && (!it.isCallableConstructor())));
+				return Boolean.valueOf(((!it.isConstructor()) && (!it.isCallSignature())));
 			}
 		};
 		final Iterable<N4MethodDeclaration> methods = IterableExtensions.<N4MethodDeclaration>filter(Iterables.<N4MethodDeclaration>filter(this.getOwnedMembersRaw(), N4MethodDeclaration.class), _function);
@@ -322,8 +322,8 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 				return getOwnedMembers();
 			case N4JSPackage.N4_CLASSIFIER_DEFINITION___GET_OWNED_CTOR:
 				return getOwnedCtor();
-			case N4JSPackage.N4_CLASSIFIER_DEFINITION___GET_OWNED_CALLABLE_CTOR:
-				return getOwnedCallableCtor();
+			case N4JSPackage.N4_CLASSIFIER_DEFINITION___GET_OWNED_CALL_SIGNATURE:
+				return getOwnedCallSignature();
 			case N4JSPackage.N4_CLASSIFIER_DEFINITION___GET_OWNED_METHODS:
 				return getOwnedMethods();
 			case N4JSPackage.N4_CLASSIFIER_DEFINITION___GET_OWNED_FIELDS:

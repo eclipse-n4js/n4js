@@ -861,7 +861,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeParameters(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getN4CallableConstructorDeclarationRule()) {
+				else if (rule == grammarAccess.getN4CallSignatureDeclarationRule()) {
 					sequence_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
@@ -9858,8 +9858,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     N4CallableConstructorDeclaration<Yield> returns N4MethodDeclaration
-	 *     N4CallableConstructorDeclaration returns N4MethodDeclaration
+	 *     N4CallSignatureDeclaration<Yield> returns N4MethodDeclaration
+	 *     N4CallSignatureDeclaration returns N4MethodDeclaration
 	 *
 	 * Constraint:
 	 *     ((fpars+=FormalParameter fpars+=FormalParameter*)? declaredReturnTypeRefNode=TypeReferenceNode? body=Block?)

@@ -14,7 +14,7 @@
 
 interface I {
 
-	// XPECT errors --> "Callable constructors may only be used in classes (not in interfaces)." at "() {}"
+	// XPECT errors --> "Call signatures may only be used in classes (not in interfaces)." at "() {}"
 	() {}
 
 	// XPECT noerrors -->
@@ -24,7 +24,7 @@ interface I {
 
 class C {
 
-	// XPECT errors --> "Callable constructors may only be used in .n4jsd files." at "() {}"
+	// XPECT errors --> "Call signatures may only be used in .n4jsd files." at "() {}"
 	() {}
 
 	// XPECT noerrors -->

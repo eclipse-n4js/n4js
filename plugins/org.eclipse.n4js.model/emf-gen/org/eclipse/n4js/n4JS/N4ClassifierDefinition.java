@@ -59,7 +59,7 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns a view on ownedMembersRaw filtering out non-members and callable constructors.
+	 * Returns a view on ownedMembersRaw filtering out non-members and call signatures.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
@@ -83,13 +83,13 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns explicitly defined callable constructor of receiving class or <code>null</code> if none was defined.
-	 * This is *not* the actual constructor but instead the function used for direct invocations in call expressions.
+	 * Returns explicitly defined call signature of receiving class or <code>null</code> if none was defined.
+	 * This is *not* the actual constructor but instead the signature used for direct invocations in call expressions.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	N4MethodDeclaration getOwnedCallableCtor();
+	N4MethodDeclaration getOwnedCallSignature();
 
 	/**
 	 * <!-- begin-user-doc -->

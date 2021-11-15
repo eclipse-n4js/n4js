@@ -41,7 +41,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		if (methodDefinedType !== null && ! methodDefinedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
-		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callableConstructor) {
+		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callSignature) {
 			return false
 		}
 		val methodType = classifier.ownedMembers.get(idx) as TMethod;
@@ -56,24 +56,24 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		return true;
 	}
 	
-	def package boolean relinkCallableCtor(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase) {
+	def package boolean relinkCallSignature(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase) {
 		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
 		if (methodDefinedType !== null && ! methodDefinedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
 
-		if (!methodDecl.callableConstructor) {
-			throw new RuntimeException("Provided method was neither constructor nor callable constructor.");
+		if (!methodDecl.callSignature) {
+			throw new RuntimeException("Provided method was neither constructor nor call signature.");
 		}
 
 		if (!methodDecl.name.isNullOrEmpty) {
-			throw new RuntimeException("Callable ctor cannot have a name, had " + methodDecl.name);
+			throw new RuntimeException("Call signature cannot have a name, had " + methodDecl.name);
 		}
 		if (methodDecl.hasComputedPropertyName) {
-			throw new RuntimeException("Callable constructor cannot have computed name.");
+			throw new RuntimeException("Call signature cannot have computed name.");
 		}
 
-		val methodType = classifier.callableCtor
+		val methodType = classifier.callSignature
 		methodType.relinkFormalParameters(methodDecl, preLinkingPhase)
 
 		// link
@@ -94,7 +94,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		if (methodDefinedType !== null && !methodDefinedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
-		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callableConstructor) {
+		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callSignature) {
 			return null
 		}
 		val methodType = TypesFactory::eINSTANCE.createTMethod();

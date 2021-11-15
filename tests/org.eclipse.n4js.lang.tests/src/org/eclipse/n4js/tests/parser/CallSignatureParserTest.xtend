@@ -16,68 +16,68 @@ import org.junit.Test
 
 /**
  */
-class CallableCtorParserTest extends AbstractParserTest {
+class CallSignatureParserTest extends AbstractParserTest {
 
 
 	@Test
-	def void testCallableCtor_withSemicolon() {
+	def void testCallSignature_withSemicolon() {
 		'''
 			export external public class C {
 				field: N4Object;
 				(param: string): void;
 				constructor(param: number);
 			}
-		'''.parseESSuccessfully.assertCallableCtor;
+		'''.parseESSuccessfully.assertCallSignature;
 	}
 
 	@Test
-	def void testCallableCtor_withoutSemicolon() {
+	def void testCallSignature_withoutSemicolon() {
 		'''
 			export external public class C {
 				field: N4Object;
 				(param: string): void
 				constructor(param: number)
 			}
-		'''.parseESSuccessfully.assertCallableCtor;
+		'''.parseESSuccessfully.assertCallSignature;
 	}
 
 	@Test
-	def void testCallableCtor_withoutArgsAndReturnType() {
+	def void testCallSignature_withoutArgsAndReturnType() {
 		'''
 			export external public class C {
 				field: N4Object;
 				()
 				constructor()
 			}
-		'''.parseESSuccessfully.assertCallableCtor;
+		'''.parseESSuccessfully.assertCallSignature;
 	}
 
 	@Test
-	def void testCallableCtor_betweenAccessors() {
+	def void testCallSignature_betweenAccessors() {
 		'''
 			export external public class C {
 				set s(value)()get g()
 			}
-		'''.parseESSuccessfully.assertCallableCtor;
+		'''.parseESSuccessfully.assertCallSignature;
 	}
 
 	@Test
-	def void testCallableCtor_betweenMethods() {
+	def void testCallSignature_betweenMethods() {
 		'''
 			export external public class C {
 				m1()()m2()
 			}
-		'''.parseESSuccessfully.assertCallableCtor;
+		'''.parseESSuccessfully.assertCallSignature;
 	}
 
-	def private void assertCallableCtor(Script script) {
+	def private void assertCallSignature(Script script) {
 		val C = script.eAllContents.filter(N4ClassDeclaration).head;
 		assertEquals(3, C.ownedMembersRaw.size);
 		assertEquals(2, C.ownedMembers.size);
-		val callableCtor = C.ownedCallableCtor;
-		assertNotNull(callableCtor);
-		assertTrue(callableCtor.isCallableConstructor);
-		assertEquals(1, C.ownedMembersRaw.indexOf(callableCtor));
-		assertFalse(C.ownedMembers.contains(callableCtor));
+		val callSig = C.ownedCallSignature;
+		assertNotNull(callSig);
+		assertTrue(callSig.isCallSignature);
+		assertEquals(1, C.ownedMembersRaw.indexOf(callSig));
+		assertFalse(C.ownedMembers.contains(callSig));
 	}
 }

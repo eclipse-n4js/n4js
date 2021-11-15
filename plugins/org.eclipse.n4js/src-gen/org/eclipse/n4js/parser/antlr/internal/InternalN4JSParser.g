@@ -30330,11 +30330,11 @@ ruleN4MemberDeclaration returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getN4MemberDeclarationAccess().getN4CallableConstructorDeclarationParserRuleCall_5());
+			newCompositeNode(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_5());
 		}
-		this_N4CallableConstructorDeclaration_5=ruleN4CallableConstructorDeclaration
+		this_N4CallSignatureDeclaration_5=ruleN4CallSignatureDeclaration
 		{
-			$current = $this_N4CallableConstructorDeclaration_5.current;
+			$current = $this_N4CallSignatureDeclaration_5.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -30605,11 +30605,11 @@ norm1_N4MemberDeclaration returns [EObject current=null]
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getN4MemberDeclarationAccess().getN4CallableConstructorDeclarationParserRuleCall_5());
+			newCompositeNode(grammarAccess.getN4MemberDeclarationAccess().getN4CallSignatureDeclarationParserRuleCall_5());
 		}
-		this_N4CallableConstructorDeclaration_5=norm1_N4CallableConstructorDeclaration
+		this_N4CallSignatureDeclaration_5=norm1_N4CallSignatureDeclaration
 		{
-			$current = $this_N4CallableConstructorDeclaration_5.current;
+			$current = $this_N4CallSignatureDeclaration_5.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -32511,15 +32511,15 @@ norm1_N4MethodDeclaration returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleN4CallableConstructorDeclaration
-entryRuleN4CallableConstructorDeclaration returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getN4CallableConstructorDeclarationRule()); }
-	iv_ruleN4CallableConstructorDeclaration=ruleN4CallableConstructorDeclaration
-	{ $current=$iv_ruleN4CallableConstructorDeclaration.current; }
+// Entry rule entryRuleN4CallSignatureDeclaration
+entryRuleN4CallSignatureDeclaration returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getN4CallSignatureDeclarationRule()); }
+	iv_ruleN4CallSignatureDeclaration=ruleN4CallSignatureDeclaration
+	{ $current=$iv_ruleN4CallSignatureDeclaration.current; }
 	EOF;
 
-// Rule N4CallableConstructorDeclaration
-ruleN4CallableConstructorDeclaration returns [EObject current=null]
+// Rule N4CallSignatureDeclaration
+ruleN4CallSignatureDeclaration returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -32529,9 +32529,9 @@ ruleN4CallableConstructorDeclaration returns [EObject current=null]
 	(
 		{
 			if ($current==null) {
-				$current = createModelElement(grammarAccess.getN4CallableConstructorDeclarationRule());
+				$current = createModelElement(grammarAccess.getN4CallSignatureDeclarationRule());
 			}
-			newCompositeNode(grammarAccess.getN4CallableConstructorDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0());
+			newCompositeNode(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0());
 		}
 		this_MethodParamsReturnAndBody_0=ruleMethodParamsReturnAndBody[$current]
 		{
@@ -32541,15 +32541,15 @@ ruleN4CallableConstructorDeclaration returns [EObject current=null]
 		(
 			otherlv_1=Semicolon
 			{
-				newLeafNode(otherlv_1, grammarAccess.getN4CallableConstructorDeclarationAccess().getSemicolonKeyword_1());
+				newLeafNode(otherlv_1, grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_1());
 			}
 		)?
 	)
 ;
 
 
-// Rule N4CallableConstructorDeclaration
-norm1_N4CallableConstructorDeclaration returns [EObject current=null]
+// Rule N4CallSignatureDeclaration
+norm1_N4CallSignatureDeclaration returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -32559,9 +32559,9 @@ norm1_N4CallableConstructorDeclaration returns [EObject current=null]
 	(
 		{
 			if ($current==null) {
-				$current = createModelElement(grammarAccess.getN4CallableConstructorDeclarationRule());
+				$current = createModelElement(grammarAccess.getN4CallSignatureDeclarationRule());
 			}
-			newCompositeNode(grammarAccess.getN4CallableConstructorDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0());
+			newCompositeNode(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0());
 		}
 		this_MethodParamsReturnAndBody_0=ruleMethodParamsReturnAndBody[$current]
 		{
@@ -32571,7 +32571,7 @@ norm1_N4CallableConstructorDeclaration returns [EObject current=null]
 		(
 			otherlv_1=Semicolon
 			{
-				newLeafNode(otherlv_1, grammarAccess.getN4CallableConstructorDeclarationAccess().getSemicolonKeyword_1());
+				newLeafNode(otherlv_1, grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_1());
 			}
 		)?
 	)
