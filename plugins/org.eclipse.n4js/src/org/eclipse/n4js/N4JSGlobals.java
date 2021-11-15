@@ -15,6 +15,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableCollection;
 
 import java.math.BigDecimal;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -132,7 +133,7 @@ public final class N4JSGlobals {
 	 * Path to the folder in the N4JS Git repository containing the source code of the "n4js-libs", relative to the
 	 * repository's root folder.
 	 */
-	public static final String N4JS_LIBS_SOURCES_PATH = N4JS_LIBS_FOLDER_NAME + "/" + "packages";
+	public static final Path N4JS_LIBS_SOURCES_PATH = Path.of(N4JS_LIBS_FOLDER_NAME, "packages");
 
 	/**
 	 * Name of the npm package containing the N4JS bootstrap and runtime code, i.e. the code defining internal low-level
@@ -157,6 +158,11 @@ public final class N4JSGlobals {
 	 * Runtime for HTML5 DOM definitions, i.e. <code>window</code>, <code>document</code>, etc.
 	 */
 	public static final N4JSPackageName N4JS_RUNTIME_HTML5 = new N4JSPackageName("n4js-runtime-html5");
+
+	/**
+	 * The wrapper npm package for the N4JS command line interface.
+	 */
+	public static final N4JSPackageName N4JS_CLI = new N4JSPackageName("n4js-cli");
 
 	/**
 	 * Project types for which a dependency to the {@link #N4JS_RUNTIME n4js-runtime} is mandatory.
@@ -345,6 +351,16 @@ public final class N4JSGlobals {
 	 * Mandatory import for every generated d.ts file used by the d.ts generator.
 	 */
 	public static final String IMPORT_N4JSGLOBALS = "import 'n4js-runtime'";
+
+	/**
+	 * Standard maven target folder-name, the base of maven-compile results.
+	 */
+	public static final String TARGET = "target";
+
+	/**
+	 * Name of the N4JS headless builder JAR.
+	 */
+	public static final String N4JSC_JAR = "n4jsc.jar";
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.

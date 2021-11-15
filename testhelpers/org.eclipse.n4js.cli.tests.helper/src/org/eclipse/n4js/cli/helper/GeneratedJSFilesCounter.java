@@ -126,11 +126,11 @@ public class GeneratedJSFilesCounter {
 	 */
 	static private File findN4jsLibRoot() {
 		File base = new File(new File("").getAbsolutePath());
-		File n4jsLibrariesRoot = new File(base, N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
+		File n4jsLibrariesRoot = base.toPath().resolve(N4JSGlobals.N4JS_LIBS_SOURCES_PATH).toFile();
 
 		while (base.getParentFile() != null && !n4jsLibrariesRoot.isDirectory()) {
 			base = base.getParentFile();
-			n4jsLibrariesRoot = new File(base, N4JSGlobals.N4JS_LIBS_SOURCES_PATH);
+			n4jsLibrariesRoot = base.toPath().resolve(N4JSGlobals.N4JS_LIBS_SOURCES_PATH).toFile();
 		}
 		return n4jsLibrariesRoot;
 	}
