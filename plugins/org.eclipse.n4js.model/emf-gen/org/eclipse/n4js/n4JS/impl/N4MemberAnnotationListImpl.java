@@ -279,6 +279,16 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * @generated
 	 */
 	@Override
+	public boolean isConstructSignature() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<Annotation> getAllAnnotations() {
 		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
 		final EObject parent = this.eContainer();
@@ -521,6 +531,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_FINAL: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_FINAL;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCTOR: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCTOR;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CALL_SIGNATURE;
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCT_SIGNATURE;
 				default: return -1;
 			}
 		}
@@ -555,6 +566,8 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 				return isConstructor();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CALL_SIGNATURE:
 				return isCallSignature();
+			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCT_SIGNATURE:
+				return isConstructSignature();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_ALL_ANNOTATIONS:
 				return getAllAnnotations();
 		}

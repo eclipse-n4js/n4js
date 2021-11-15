@@ -37,6 +37,10 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase, int idx) {
+		relinkMethod(methodDecl, classifier.ownedMembers.get(idx) as TMethod, preLinkingPhase);
+	}
+
+	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TMethod tMethod, boolean preLinkingPhase) {
 		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
 		if (methodDefinedType !== null && ! methodDefinedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
@@ -44,36 +48,9 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callSignature) {
 			return false
 		}
-		val methodType = classifier.ownedMembers.get(idx) as TMethod;
+		val methodType = tMethod;
 		ensureEqualName(methodDecl, methodType);
 
-		methodType.relinkFormalParameters(methodDecl, preLinkingPhase)
-
-		// link
-		methodType.astElement = methodDecl
-		methodDecl.definedType = methodType
-
-		return true;
-	}
-	
-	def package boolean relinkCallSignature(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase) {
-		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
-		if (methodDefinedType !== null && ! methodDefinedType.eIsProxy) {
-			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
-		}
-
-		if (!methodDecl.callSignature) {
-			throw new RuntimeException("Provided method was neither constructor nor call signature.");
-		}
-
-		if (!methodDecl.name.isNullOrEmpty) {
-			throw new RuntimeException("Call signature cannot have a name, had " + methodDecl.name);
-		}
-		if (methodDecl.hasComputedPropertyName) {
-			throw new RuntimeException("Call signature cannot have computed name.");
-		}
-
-		val methodType = classifier.callSignature
 		methodType.relinkFormalParameters(methodDecl, preLinkingPhase)
 
 		// link
@@ -104,7 +81,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		methodType.declaredFinal = methodDecl.declaredFinal
 		methodType.declaredOverride = AnnotationDefinition.OVERRIDE.hasAnnotation(methodDecl);
 		methodType.constructor = methodDecl.constructor
-		methodType.declaredAsync = methodDecl.async // TODO change to declaredAsync one the annotation is gone
+		methodType.declaredAsync = methodDecl.async
 		methodType.declaredGenerator = methodDecl.generator
 
 		val providesDefaultImpl = AnnotationDefinition.PROVIDES_DEFAULT_IMPLEMENTATION.hasAnnotation(methodDecl);
@@ -112,7 +89,6 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 
 		methodType.lacksThisOrSuperUsage = hasNonNullBody(methodDecl.body) && !containsThisOrSuperUsage(methodDecl.body)
 
-		// TODO if possible, remove, see AbstractFunctionDefinitionTypesBuilder
 		val builtInTypeScope = BuiltInTypeScope.get(methodDecl.eResource.resourceSet)
 
 		methodType.setMemberAccessModifier(methodDecl)

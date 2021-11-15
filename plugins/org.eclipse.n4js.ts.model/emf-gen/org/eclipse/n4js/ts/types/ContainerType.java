@@ -30,6 +30,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getOwnedMembersByNameAndAccess <em>Owned Members By Name And Access</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getOwnedMembers <em>Owned Members</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getCallSignature <em>Call Signature</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.ContainerType#getConstructSignature <em>Construct Signature</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getContainerType()
@@ -91,6 +92,28 @@ public interface ContainerType<MT extends TMember> extends GenericType {
 	 * @generated
 	 */
 	void setCallSignature(TMethod value);
+
+	/**
+	 * Returns the value of the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Construct Signature</em>' containment reference.
+	 * @see #setConstructSignature(TMethod)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getContainerType_ConstructSignature()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TMethod getConstructSignature();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.ContainerType#getConstructSignature <em>Construct Signature</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Construct Signature</em>' containment reference.
+	 * @see #getConstructSignature()
+	 * @generated
+	 */
+	void setConstructSignature(TMethod value);
 
 	/**
 	 * <!-- begin-user-doc -->

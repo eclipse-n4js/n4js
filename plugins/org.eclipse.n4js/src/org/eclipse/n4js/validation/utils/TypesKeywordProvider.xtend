@@ -120,8 +120,12 @@ class TypesKeywordProvider {
 	}
 
 	def dispatch String keyword(TMethod tMethod) {
-		if(tMethod.isConstructor) {
+		if (tMethod.isConstructor) {
 			"constructor"
+		} else if (tMethod.isCallSignature) {
+			"call signature"
+		} else if (tMethod.isConstructSignature) {
+			"construct signature"
 		} else {
 			"method"
 		}

@@ -492,6 +492,13 @@ class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElemen
 		return if(parent instanceof ContainerType<?>) parent.callSignature===this else false;
 	}
 	/**
+	 * Tells whether this function is a method that represents a construct signature.
+	 */
+	op boolean isConstructSignature() {
+		val parent = eContainer;
+		return if(parent instanceof ContainerType<?>) parent.constructSignature===this else false;
+	}
+	/**
 	 * Returns the formal parameter corresponding to the argument at index 'argIndex' in a function call
 	 * or 'null' if 'argIndex' is invalid. This method takes into account optional and variadic parameters.
 	 */
@@ -745,6 +752,7 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 
 	contains MT[] ownedMembers
 	contains TMethod callSignature
+	contains TMethod constructSignature
 
 	/**
 	 * Convenience method returning the owned constructor or <code>null</code> if not available.

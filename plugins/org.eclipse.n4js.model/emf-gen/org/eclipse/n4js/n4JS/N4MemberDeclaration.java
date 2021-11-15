@@ -144,4 +144,12 @@ public interface N4MemberDeclaration extends AnnotableElement, ModifiableElement
 	 */
 	boolean isCallSignature();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isConstructSignature();
+
 } // N4MemberDeclaration

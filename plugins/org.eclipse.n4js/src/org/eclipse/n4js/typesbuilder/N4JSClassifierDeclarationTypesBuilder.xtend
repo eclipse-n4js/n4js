@@ -39,10 +39,11 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 	}
 
 	def protected void addMethods(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
-		val n4Methods = definition.ownedMembers.filter(N4MethodDeclaration);
+		val n4Methods = definition.ownedMembers.filter(N4MethodDeclaration); // note: won't include call/construct signatures
 		val methods = n4Methods.map[createMethod(preLinkingPhase)].filterNull; 
 		classifier.ownedMembers.addAll(methods);
 		classifier.callSignature = definition.ownedCallSignature?.createMethod(preLinkingPhase);
+		classifier.constructSignature = definition.ownedConstructSignature?.createMethod(preLinkingPhase);
 	}
 
 	def protected void addGetters(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
@@ -63,8 +64,13 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		ensureEqualName(declaration, classifier);
 
 		// members
-		if (declaration.ownedCallSignature !== null ) {
-			relinkCallSignature(declaration.ownedCallSignature, classifier, preLinkingPhase)
+		val astCallSig = declaration.ownedCallSignature;
+		if (astCallSig !== null ) {
+			relinkMethod(astCallSig, classifier.callSignature, preLinkingPhase)
+		}
+		val astConstructSig = declaration.ownedConstructSignature;
+		if (astConstructSig !== null) {
+			relinkMethod(astConstructSig, classifier.constructSignature, preLinkingPhase)
 		}
 
 		// OWNED members

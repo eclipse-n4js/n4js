@@ -611,6 +611,25 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 * @generated
 	 */
 	@Override
+	public boolean isConstructSignature() {
+		final EObject parent = this.eContainer();
+		boolean _xifexpression = false;
+		if ((parent instanceof ContainerType<?>)) {
+			TMethod _constructSignature = ((ContainerType<?>)parent).getConstructSignature();
+			_xifexpression = (_constructSignature == this);
+		}
+		else {
+			_xifexpression = false;
+		}
+		return _xifexpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public TFormalParameter getFparForArgIdx(final int argIndex) {
 		final int fparsSize = this.getFpars().size();
 		if (((argIndex >= 0) && (argIndex < fparsSize))) {
@@ -977,6 +996,8 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return isReturnValueOptional();
 			case TypesPackage.TFUNCTION___IS_CALL_SIGNATURE:
 				return isCallSignature();
+			case TypesPackage.TFUNCTION___IS_CONSTRUCT_SIGNATURE:
+				return isConstructSignature();
 			case TypesPackage.TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT:
 				return getFparForArgIdx((Integer)arguments.get(0));
 			case TypesPackage.TFUNCTION___GET_FUNCTION_AS_STRING:

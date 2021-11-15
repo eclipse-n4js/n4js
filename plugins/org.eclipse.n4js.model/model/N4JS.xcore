@@ -2044,14 +2044,15 @@ abstract class N4ClassifierDeclaration extends N4TypeDeclaration, N4ClassifierDe
 abstract class N4ClassifierDefinition extends N4TypeDefinition {
 	/**
 	 * Members directly defined in this classifier, i.e. w/o inherited members.
+	 * Includes also constructors and call/construct signatures.
 	 */
 	contains N4MemberDeclaration[] ownedMembersRaw opposite owner
 	/**
-	 * Returns a view on ownedMembersRaw filtering out non-members and call signatures.
+	 * Returns a view on ownedMembersRaw filtering out call/construct signatures.
  	 */
 	op N4MemberDeclaration[] getOwnedMembers() {
-		val methods = ownedMembersRaw.filter(N4MemberDeclaration).filter[!isCallSignature]
-		return new BasicEList(methods.toList)
+		val methods = ownedMembersRaw.filter[!isCallSignature && !isConstructSignature];
+		return new BasicEList(methods.toList);
 	}
 	/**
 	 * Returns explicitly defined constructor of receiving class or <code>null</code> if none was defined.
@@ -2060,14 +2061,20 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isConstructor]
 	}
 	/**
-	 * Returns explicitly defined call signature of receiving class or <code>null</code> if none was defined.
+	 * Returns the explicitly defined call signature of the receiving class or <code>null</code> if none was defined.
 	 * This is *not* the actual constructor but instead the signature used for direct invocations in call expressions.
  	 */
 	op N4MethodDeclaration getOwnedCallSignature() {
 		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isCallSignature]
 	}
 	/**
-	 * Returns a view on ownedMembersRaw filtering out non-methods.
+	 * Returns the explicitly defined construct signature of the receiving class or <code>null</code> if none was defined.
+ 	 */
+	op N4MethodDeclaration getOwnedConstructSignature() {
+		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isConstructSignature]
+	}
+	/**
+	 * Returns a view on ownedMembersRaw filtering out non-methods and call/construct signatures.
  	 */
 	op N4MethodDeclaration[] getOwnedMethods() {
 		val methods = ownedMembersRaw.filter(N4MethodDeclaration).filter[!isConstructor && !isCallSignature]
@@ -2258,6 +2265,9 @@ abstract class N4MemberDeclaration extends AnnotableElement, ModifiableElement, 
 	op boolean isCallSignature() {
 		false // will be overridden below in N4MethodDeclaration
 	}
+	op boolean isConstructSignature() {
+		false // will be overridden below in N4MethodDeclaration
+	}
 }
 
 abstract class AnnotableN4MemberDeclaration extends N4MemberDeclaration {
@@ -2351,6 +2361,9 @@ class N4MethodDeclaration extends AnnotableN4MemberDeclaration, MethodDeclaratio
 	}
 	op boolean isCallSignature() {
 		return declaredName === null;
+	}
+	op boolean isConstructSignature() {
+		return name == 'new' && !isStatic && eContainer instanceof N4InterfaceDeclaration;
 	}
 	op boolean isStatic() {
 		return declaredModifiers.contains(N4Modifier.STATIC)

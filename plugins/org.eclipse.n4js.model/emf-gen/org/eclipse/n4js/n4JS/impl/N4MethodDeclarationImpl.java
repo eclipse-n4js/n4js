@@ -564,6 +564,16 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @generated
 	 */
 	@Override
+	public boolean isConstructSignature() {
+		return ((Objects.equal(this.getName(), "new") && (!this.isStatic())) && (this.eContainer() instanceof N4InterfaceDeclaration));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isStatic() {
 		return this.getDeclaredModifiers().contains(N4Modifier.STATIC);
 	}
@@ -1118,6 +1128,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_STATIC: return N4JSPackage.N4_METHOD_DECLARATION___IS_STATIC;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCTOR: return N4JSPackage.N4_METHOD_DECLARATION___IS_CONSTRUCTOR;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE: return N4JSPackage.N4_METHOD_DECLARATION___IS_CALL_SIGNATURE;
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE: return N4JSPackage.N4_METHOD_DECLARATION___IS_CONSTRUCT_SIGNATURE;
 				case N4JSPackage.N4_MEMBER_DECLARATION___GET_NAME: return N4JSPackage.N4_METHOD_DECLARATION___GET_NAME;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
@@ -1196,6 +1207,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return isConstructor();
 			case N4JSPackage.N4_METHOD_DECLARATION___IS_CALL_SIGNATURE:
 				return isCallSignature();
+			case N4JSPackage.N4_METHOD_DECLARATION___IS_CONSTRUCT_SIGNATURE:
+				return isConstructSignature();
 			case N4JSPackage.N4_METHOD_DECLARATION___IS_STATIC:
 				return isStatic();
 			case N4JSPackage.N4_METHOD_DECLARATION___IS_VALID_NAME:

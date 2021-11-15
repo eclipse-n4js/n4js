@@ -59,6 +59,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getOwnedMembersByNameAndAccess <em>Owned Members By Name And Access</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getOwnedMembers <em>Owned Members</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getCallSignature <em>Call Signature</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getConstructSignature <em>Construct Signature</em>}</li>
  * </ul>
  *
  * @generated
@@ -93,6 +94,16 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	 * @ordered
 	 */
 	protected TMethod callSignature;
+
+	/**
+	 * The cached value of the '{@link #getConstructSignature() <em>Construct Signature</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConstructSignature()
+	 * @generated
+	 * @ordered
+	 */
+	protected TMethod constructSignature;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -192,6 +203,51 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE, newCallSignature, newCallSignature));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TMethod getConstructSignature() {
+		return constructSignature;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetConstructSignature(TMethod newConstructSignature, NotificationChain msgs) {
+		TMethod oldConstructSignature = constructSignature;
+		constructSignature = newConstructSignature;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.CONTAINER_TYPE__CONSTRUCT_SIGNATURE, oldConstructSignature, newConstructSignature);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setConstructSignature(TMethod newConstructSignature) {
+		if (newConstructSignature != constructSignature) {
+			NotificationChain msgs = null;
+			if (constructSignature != null)
+				msgs = ((InternalEObject)constructSignature).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.CONTAINER_TYPE__CONSTRUCT_SIGNATURE, null, msgs);
+			if (newConstructSignature != null)
+				msgs = ((InternalEObject)newConstructSignature).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.CONTAINER_TYPE__CONSTRUCT_SIGNATURE, null, msgs);
+			msgs = basicSetConstructSignature(newConstructSignature, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.CONTAINER_TYPE__CONSTRUCT_SIGNATURE, newConstructSignature, newConstructSignature));
 	}
 
 	/**
@@ -300,6 +356,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 				return ((InternalEList<?>)getOwnedMembers()).basicRemove(otherEnd, msgs);
 			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
 				return basicSetCallSignature(null, msgs);
+			case TypesPackage.CONTAINER_TYPE__CONSTRUCT_SIGNATURE:
+				return basicSetConstructSignature(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -318,6 +376,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 				return getOwnedMembers();
 			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
 				return getCallSignature();
+			case TypesPackage.CONTAINER_TYPE__CONSTRUCT_SIGNATURE:
+				return getConstructSignature();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -341,6 +401,9 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
 				setCallSignature((TMethod)newValue);
 				return;
+			case TypesPackage.CONTAINER_TYPE__CONSTRUCT_SIGNATURE:
+				setConstructSignature((TMethod)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -362,6 +425,9 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
 				setCallSignature((TMethod)null);
 				return;
+			case TypesPackage.CONTAINER_TYPE__CONSTRUCT_SIGNATURE:
+				setConstructSignature((TMethod)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -380,6 +446,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 				return ownedMembers != null && !ownedMembers.isEmpty();
 			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
 				return callSignature != null;
+			case TypesPackage.CONTAINER_TYPE__CONSTRUCT_SIGNATURE:
+				return constructSignature != null;
 		}
 		return super.eIsSet(featureID);
 	}

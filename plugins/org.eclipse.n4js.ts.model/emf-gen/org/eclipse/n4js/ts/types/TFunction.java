@@ -259,6 +259,18 @@ public interface TFunction extends GenericType, AccessibleTypeElement, SyntaxRel
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
+	 * Tells whether this function is a method that represents a construct signature.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isConstructSignature();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
 	 * Returns the formal parameter corresponding to the argument at index 'argIndex' in a function call
 	 * or 'null' if 'argIndex' is invalid. This method takes into account optional and variadic parameters.
 	 * <!-- end-model-doc -->

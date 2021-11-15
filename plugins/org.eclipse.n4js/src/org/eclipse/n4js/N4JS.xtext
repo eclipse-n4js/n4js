@@ -1397,6 +1397,11 @@ N4MethodDeclaration <Yield>:
 	) ';'?
 ;
 
+/*
+ * NOTE: while constructors and construct signatures are handled as ordinary methods
+ * by the parser (i.e. they do not have dedicated grammar rules), call signatures need
+ * this special grammar rule.
+ */
 N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
 	MethodParamsReturnAndBody <Generator=false> ';'?
 ;

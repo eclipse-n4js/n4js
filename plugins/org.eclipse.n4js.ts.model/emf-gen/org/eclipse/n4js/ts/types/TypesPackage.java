@@ -2185,13 +2185,22 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION___IS_CALL_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 4;
 
 	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___IS_CONSTRUCT_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 5;
+
+	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 5;
+	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Function As String</em>' operation.
@@ -2200,7 +2209,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 6;
+	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -2209,7 +2218,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 7;
+	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>TFunction</em>' class.
@@ -2218,7 +2227,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 8;
+	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AccessibleTypeElementImpl <em>Accessible Type Element</em>}' class.
@@ -2367,13 +2376,22 @@ public interface TypesPackage extends EPackage {
 	int CONTAINER_TYPE__CALL_SIGNATURE = GENERIC_TYPE_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE__CONSTRUCT_SIGNATURE = GENERIC_TYPE_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Container Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 3;
+	int CONTAINER_TYPE_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -4094,6 +4112,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCTURAL_TYPE__CALL_SIGNATURE = CONTAINER_TYPE__CALL_SIGNATURE;
 
 	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE__CONSTRUCT_SIGNATURE = CONTAINER_TYPE__CONSTRUCT_SIGNATURE;
+
+	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4372,6 +4399,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASSIFIER__CALL_SIGNATURE = CONTAINER_TYPE__CALL_SIGNATURE;
+
+	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER__CONSTRUCT_SIGNATURE = CONTAINER_TYPE__CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -4743,6 +4779,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER__CALL_SIGNATURE = TCLASSIFIER__CALL_SIGNATURE;
+
+	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER__CONSTRUCT_SIGNATURE = TCLASSIFIER__CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -5122,6 +5167,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASS__CALL_SIGNATURE = TN4_CLASSIFIER__CALL_SIGNATURE;
+
+	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS__CONSTRUCT_SIGNATURE = TN4_CLASSIFIER__CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -5582,6 +5636,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE__CALL_SIGNATURE = TN4_CLASSIFIER__CALL_SIGNATURE;
+
+	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE__CONSTRUCT_SIGNATURE = TN4_CLASSIFIER__CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -7181,6 +7244,15 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___IS_CALL_SIGNATURE = TFUNCTION___IS_CALL_SIGNATURE;
 
 	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___IS_CONSTRUCT_SIGNATURE = TFUNCTION___IS_CONSTRUCT_SIGNATURE;
+
+	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7774,6 +7846,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___IS_CALL_SIGNATURE = TMETHOD___IS_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_CONSTRUCT_SIGNATURE = TMETHOD___IS_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -12424,6 +12505,16 @@ public interface TypesPackage extends EPackage {
 	EOperation getTFunction__IsCallSignature();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TFunction#isConstructSignature() <em>Is Construct Signature</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Construct Signature</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TFunction#isConstructSignature()
+	 * @generated
+	 */
+	EOperation getTFunction__IsConstructSignature();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TFunction#getFparForArgIdx(int) <em>Get Fpar For Arg Idx</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12728,6 +12819,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getContainerType_CallSignature();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.ContainerType#getConstructSignature <em>Construct Signature</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Construct Signature</em>'.
+	 * @see org.eclipse.n4js.ts.types.ContainerType#getConstructSignature()
+	 * @see #getContainerType()
+	 * @generated
+	 */
+	EReference getContainerType_ConstructSignature();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.ContainerType#getOwnedCtor() <em>Get Owned Ctor</em>}' operation.
@@ -15129,6 +15231,14 @@ public interface TypesPackage extends EPackage {
 		EOperation TFUNCTION___IS_CALL_SIGNATURE = eINSTANCE.getTFunction__IsCallSignature();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Construct Signature</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TFUNCTION___IS_CONSTRUCT_SIGNATURE = eINSTANCE.getTFunction__IsConstructSignature();
+
+		/**
 		 * The meta object literal for the '<em><b>Get Fpar For Arg Idx</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -15375,6 +15485,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference CONTAINER_TYPE__CALL_SIGNATURE = eINSTANCE.getContainerType_CallSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Construct Signature</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONTAINER_TYPE__CONSTRUCT_SIGNATURE = eINSTANCE.getContainerType_ConstructSignature();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Owned Ctor</b></em>' operation.

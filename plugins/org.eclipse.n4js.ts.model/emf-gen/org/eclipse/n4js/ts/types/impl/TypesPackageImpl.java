@@ -1376,7 +1376,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTFunction__GetFparForArgIdx__int() {
+	public EOperation getTFunction__IsConstructSignature() {
 		return tFunctionEClass.getEOperations().get(2);
 	}
 
@@ -1386,7 +1386,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTFunction__GetFunctionAsString() {
+	public EOperation getTFunction__GetFparForArgIdx__int() {
 		return tFunctionEClass.getEOperations().get(3);
 	}
 
@@ -1396,8 +1396,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTFunction__IsFinal() {
+	public EOperation getTFunction__GetFunctionAsString() {
 		return tFunctionEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTFunction__IsFinal() {
+		return tFunctionEClass.getEOperations().get(5);
 	}
 
 	/**
@@ -1668,6 +1678,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EReference getContainerType_CallSignature() {
 		return (EReference)containerTypeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getContainerType_ConstructSignature() {
+		return (EReference)containerTypeEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -3470,6 +3490,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(tFunctionEClass, TFUNCTION__CONSTRUCTOR);
 		createEOperation(tFunctionEClass, TFUNCTION___IS_RETURN_VALUE_OPTIONAL);
 		createEOperation(tFunctionEClass, TFUNCTION___IS_CALL_SIGNATURE);
+		createEOperation(tFunctionEClass, TFUNCTION___IS_CONSTRUCT_SIGNATURE);
 		createEOperation(tFunctionEClass, TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT);
 		createEOperation(tFunctionEClass, TFUNCTION___GET_FUNCTION_AS_STRING);
 		createEOperation(tFunctionEClass, TFUNCTION___IS_FINAL);
@@ -3504,6 +3525,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(containerTypeEClass, CONTAINER_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS);
 		createEReference(containerTypeEClass, CONTAINER_TYPE__OWNED_MEMBERS);
 		createEReference(containerTypeEClass, CONTAINER_TYPE__CALL_SIGNATURE);
+		createEReference(containerTypeEClass, CONTAINER_TYPE__CONSTRUCT_SIGNATURE);
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___GET_OWNED_CTOR);
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING);
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING_BOOLEAN_BOOLEAN);
@@ -3945,6 +3967,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getTFunction__IsCallSignature(), theEcorePackage.getEBoolean(), "isCallSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getTFunction__IsConstructSignature(), theEcorePackage.getEBoolean(), "isConstructSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		op = initEOperation(getTFunction__GetFparForArgIdx__int(), this.getTFormalParameter(), "getFparForArgIdx", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theEcorePackage.getEInt(), "argIndex", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -4008,6 +4032,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		g1 = createEGenericType(containerTypeEClass_MT);
 		initEReference(getContainerType_OwnedMembers(), g1, null, "ownedMembers", null, 0, -1, ContainerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getContainerType_CallSignature(), this.getTMethod(), null, "callSignature", null, 0, 1, ContainerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getContainerType_ConstructSignature(), this.getTMethod(), null, "constructSignature", null, 0, 1, ContainerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getContainerType__GetOwnedCtor(), this.getTMethod(), "getOwnedCtor", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

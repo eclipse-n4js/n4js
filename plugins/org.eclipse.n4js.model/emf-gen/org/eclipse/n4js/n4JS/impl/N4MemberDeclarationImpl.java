@@ -258,6 +258,16 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	 * @generated
 	 */
 	@Override
+	public boolean isConstructSignature() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String getName() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
@@ -483,6 +493,8 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 				return isConstructor();
 			case N4JSPackage.N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE:
 				return isCallSignature();
+			case N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE:
+				return isConstructSignature();
 			case N4JSPackage.N4_MEMBER_DECLARATION___GET_NAME:
 				return getName();
 		}

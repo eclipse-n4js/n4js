@@ -1353,6 +1353,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_MEMBER___IS_CALL_SIGNATURE = N4JSPackage.N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE;
 
 	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_MEMBER___IS_CONSTRUCT_SIGNATURE = N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE;
+
+	/**
 	 * The number of operations of the '<em>Delegating Member</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1676,6 +1685,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_GETTER_DECLARATION___IS_CALL_SIGNATURE = N4JSPackage.N4_GETTER_DECLARATION___IS_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_GETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE = N4JSPackage.N4_GETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -2037,6 +2055,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_SETTER_DECLARATION___IS_CALL_SIGNATURE = N4JSPackage.N4_SETTER_DECLARATION___IS_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_SETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE = N4JSPackage.N4_SETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -2434,6 +2461,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION___IS_CALL_SIGNATURE = N4JSPackage.N4_METHOD_DECLARATION___IS_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION___IS_CONSTRUCT_SIGNATURE = N4JSPackage.N4_METHOD_DECLARATION___IS_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
