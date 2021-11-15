@@ -303,6 +303,16 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
@@ -669,6 +679,7 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 		if (baseClass == N4TypeDeclaration.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.N4_TYPE_DECLARATION___IS_EXTERNAL: return N4JSPackage.N4_CLASS_DECLARATION___IS_EXTERNAL;
+				case N4JSPackage.N4_TYPE_DECLARATION___IS_HOLLOW: return N4JSPackage.N4_CLASS_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
 		}
@@ -697,6 +708,8 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				return isAbstract();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXTERNAL:
 				return isExternal();
+			case N4JSPackage.N4_CLASS_DECLARATION___IS_HOLLOW:
+				return isHollow();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXPORTED_AS_DEFAULT:

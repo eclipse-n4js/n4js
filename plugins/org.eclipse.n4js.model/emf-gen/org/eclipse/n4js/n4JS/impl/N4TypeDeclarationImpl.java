@@ -218,6 +218,16 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
@@ -535,6 +545,8 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 		switch (operationID) {
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_EXTERNAL:
 				return isExternal();
+			case N4JSPackage.N4_TYPE_DECLARATION___IS_HOLLOW:
+				return isHollow();
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT:

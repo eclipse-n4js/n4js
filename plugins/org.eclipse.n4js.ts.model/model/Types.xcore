@@ -680,6 +680,10 @@ class Type extends TExportableElement, TAnnotableElement {
 			name
 		}
 	}
+	
+	op boolean isHollow() {
+		return false;
+	}
 
 //	op String getTypeAsHTML() {
 //		return UtilN4.sanitizeForHTML(getTypeAsString());
@@ -1082,6 +1086,10 @@ class TInterface extends TN4Classifier {
 	 */
 	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
 		return superInterfaceRefs;
+	}
+	
+	op boolean isHollow() {
+		return isExternal() && !annotations.exists[it.name == "N4JS"]
 	}
 }
 
@@ -1621,6 +1629,10 @@ class TEnumLiteral extends SyntaxRelatedTElement, IdentifiableElement {
 class TypeAlias extends GenericType, AccessibleTypeElement, TTypedElement, SyntaxRelatedTElement {
 
 	op boolean isAlias() {
+		return true;
+	}
+	
+	op boolean isHollow() {
 		return true;
 	}
 }

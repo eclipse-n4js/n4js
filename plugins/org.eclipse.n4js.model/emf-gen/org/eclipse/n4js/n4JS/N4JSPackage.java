@@ -11483,13 +11483,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
+
+	/**
 	 * The number of operations of the '<em>N4 Type Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
+	int N4_TYPE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassifierDeclarationImpl <em>N4 Classifier Declaration</em>}' class.
@@ -11644,6 +11653,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_CLASSIFIER_DECLARATION___IS_EXTERNAL = N4_TYPE_DECLARATION___IS_EXTERNAL;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DECLARATION___IS_HOLLOW = N4_TYPE_DECLARATION___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Owned Members</em>' operation.
@@ -12216,41 +12234,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_NAMESPACE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
+
+	/**
 	 * The number of operations of the '<em>N4 Namespace Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.NamespaceElementImpl <em>Namespace Element</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.NamespaceElementImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getNamespaceElement()
-	 * @generated
-	 */
-	int NAMESPACE_ELEMENT = 148;
-
-	/**
-	 * The number of structural features of the '<em>Namespace Element</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NAMESPACE_ELEMENT_FEATURE_COUNT = 0;
-
-	/**
-	 * The number of operations of the '<em>Namespace Element</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NAMESPACE_ELEMENT_OPERATION_COUNT = 0;
+	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl <em>N4 Class Declaration</em>}' class.
@@ -12260,7 +12259,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4ClassDeclaration()
 	 * @generated
 	 */
-	int N4_CLASS_DECLARATION = 149;
+	int N4_CLASS_DECLARATION = 148;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -12524,13 +12523,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___IS_HOLLOW = N4_CLASS_DEFINITION_OPERATION_COUNT + 7;
+
+	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 7;
+	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>N4 Class Declaration</em>' class.
@@ -12539,7 +12547,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 8;
+	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassExpressionImpl <em>N4 Class Expression</em>}' class.
@@ -12549,7 +12557,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4ClassExpression()
 	 * @generated
 	 */
-	int N4_CLASS_EXPRESSION = 150;
+	int N4_CLASS_EXPRESSION = 149;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -12775,7 +12783,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4InterfaceDeclaration()
 	 * @generated
 	 */
-	int N4_INTERFACE_DECLARATION = 151;
+	int N4_INTERFACE_DECLARATION = 150;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -13021,13 +13029,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_INTERFACE_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___IS_HOLLOW = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 3;
+
+	/**
 	 * The number of operations of the '<em>N4 Interface Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INTERFACE_DECLARATION_OPERATION_COUNT = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 3;
+	int N4_INTERFACE_DECLARATION_OPERATION_COUNT = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4EnumDeclarationImpl <em>N4 Enum Declaration</em>}' class.
@@ -13037,7 +13054,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4EnumDeclaration()
 	 * @generated
 	 */
-	int N4_ENUM_DECLARATION = 152;
+	int N4_ENUM_DECLARATION = 151;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -13175,13 +13192,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM = N4_TYPE_DECLARATION_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___IS_HOLLOW = N4_TYPE_DECLARATION_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>N4 Enum Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_ENUM_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 1;
+	int N4_ENUM_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4EnumLiteralImpl <em>N4 Enum Literal</em>}' class.
@@ -13191,7 +13217,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4EnumLiteral()
 	 * @generated
 	 */
-	int N4_ENUM_LITERAL = 153;
+	int N4_ENUM_LITERAL = 152;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -13255,7 +13281,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4TypeAliasDeclaration()
 	 * @generated
 	 */
-	int N4_TYPE_ALIAS_DECLARATION = 154;
+	int N4_TYPE_ALIAS_DECLARATION = 153;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -13429,13 +13455,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS = N4_TYPE_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_ALIAS_DECLARATION___IS_HOLLOW = N4_TYPE_DECLARATION_OPERATION_COUNT + 6;
+
+	/**
 	 * The number of operations of the '<em>N4 Type Alias Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 6;
+	int N4_TYPE_ALIAS_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ModifiableElementImpl <em>Modifiable Element</em>}' class.
@@ -13445,7 +13480,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getModifiableElement()
 	 * @generated
 	 */
-	int MODIFIABLE_ELEMENT = 155;
+	int MODIFIABLE_ELEMENT = 154;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -13482,7 +13517,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4MemberDeclaration()
 	 * @generated
 	 */
-	int N4_MEMBER_DECLARATION = 156;
+	int N4_MEMBER_DECLARATION = 155;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -13636,7 +13671,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAnnotableN4MemberDeclaration()
 	 * @generated
 	 */
-	int ANNOTABLE_N4_MEMBER_DECLARATION = 157;
+	int ANNOTABLE_N4_MEMBER_DECLARATION = 156;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -13799,7 +13834,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4MemberAnnotationList()
 	 * @generated
 	 */
-	int N4_MEMBER_ANNOTATION_LIST = 158;
+	int N4_MEMBER_ANNOTATION_LIST = 157;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -13962,7 +13997,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4FieldDeclaration()
 	 * @generated
 	 */
-	int N4_FIELD_DECLARATION = 159;
+	int N4_FIELD_DECLARATION = 158;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -14233,7 +14268,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMethodDeclaration()
 	 * @generated
 	 */
-	int METHOD_DECLARATION = 160;
+	int METHOD_DECLARATION = 159;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -14486,7 +14521,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4MethodDeclaration()
 	 * @generated
 	 */
-	int N4_METHOD_DECLARATION = 161;
+	int N4_METHOD_DECLARATION = 160;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -14829,7 +14864,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4FieldAccessor()
 	 * @generated
 	 */
-	int N4_FIELD_ACCESSOR = 162;
+	int N4_FIELD_ACCESSOR = 161;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -15136,7 +15171,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4GetterDeclaration()
 	 * @generated
 	 */
-	int N4_GETTER_DECLARATION = 163;
+	int N4_GETTER_DECLARATION = 162;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -15461,7 +15496,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4SetterDeclaration()
 	 * @generated
 	 */
-	int N4_SETTER_DECLARATION = 164;
+	int N4_SETTER_DECLARATION = 163;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -15786,7 +15821,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBindingPattern()
 	 * @generated
 	 */
-	int BINDING_PATTERN = 165;
+	int BINDING_PATTERN = 164;
 
 	/**
 	 * The number of structural features of the '<em>Binding Pattern</em>' class.
@@ -15814,7 +15849,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getObjectBindingPattern()
 	 * @generated
 	 */
-	int OBJECT_BINDING_PATTERN = 166;
+	int OBJECT_BINDING_PATTERN = 165;
 
 	/**
 	 * The feature id for the '<em><b>Properties</b></em>' containment reference list.
@@ -15851,7 +15886,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getArrayBindingPattern()
 	 * @generated
 	 */
-	int ARRAY_BINDING_PATTERN = 167;
+	int ARRAY_BINDING_PATTERN = 166;
 
 	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
@@ -15888,7 +15923,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBindingProperty()
 	 * @generated
 	 */
-	int BINDING_PROPERTY = 168;
+	int BINDING_PROPERTY = 167;
 
 	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
@@ -15961,7 +15996,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBindingElement()
 	 * @generated
 	 */
-	int BINDING_ELEMENT = 169;
+	int BINDING_ELEMENT = 168;
 
 	/**
 	 * The feature id for the '<em><b>Rest</b></em>' attribute.
@@ -16034,7 +16069,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXChild()
 	 * @generated
 	 */
-	int JSX_CHILD = 170;
+	int JSX_CHILD = 169;
 
 	/**
 	 * The number of structural features of the '<em>JSX Child</em>' class.
@@ -16062,7 +16097,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXElementName()
 	 * @generated
 	 */
-	int JSX_ELEMENT_NAME = 171;
+	int JSX_ELEMENT_NAME = 170;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -16099,7 +16134,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXText()
 	 * @generated
 	 */
-	int JSX_TEXT = 172;
+	int JSX_TEXT = 171;
 
 	/**
 	 * The number of structural features of the '<em>JSX Text</em>' class.
@@ -16127,7 +16162,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXExpression()
 	 * @generated
 	 */
-	int JSX_EXPRESSION = 173;
+	int JSX_EXPRESSION = 172;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -16164,7 +16199,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXAttribute()
 	 * @generated
 	 */
-	int JSX_ATTRIBUTE = 174;
+	int JSX_ATTRIBUTE = 173;
 
 	/**
 	 * The number of structural features of the '<em>JSX Attribute</em>' class.
@@ -16192,7 +16227,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXPropertyAttribute()
 	 * @generated
 	 */
-	int JSX_PROPERTY_ATTRIBUTE = 175;
+	int JSX_PROPERTY_ATTRIBUTE = 174;
 
 	/**
 	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
@@ -16256,7 +16291,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXSpreadAttribute()
 	 * @generated
 	 */
-	int JSX_SPREAD_ATTRIBUTE = 176;
+	int JSX_SPREAD_ATTRIBUTE = 175;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -16293,7 +16328,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXAbstractElement()
 	 * @generated
 	 */
-	int JSX_ABSTRACT_ELEMENT = 177;
+	int JSX_ABSTRACT_ELEMENT = 176;
 
 	/**
 	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
@@ -16339,7 +16374,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXElement()
 	 * @generated
 	 */
-	int JSX_ELEMENT = 178;
+	int JSX_ELEMENT = 177;
 
 	/**
 	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
@@ -16412,7 +16447,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXFragment()
 	 * @generated
 	 */
-	int JSX_FRAGMENT = 179;
+	int JSX_FRAGMENT = 178;
 
 	/**
 	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
@@ -16458,7 +16493,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getModuleSpecifierForm()
 	 * @generated
 	 */
-	int MODULE_SPECIFIER_FORM = 180;
+	int MODULE_SPECIFIER_FORM = 179;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}' enum.
@@ -16468,7 +16503,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVariableStatementKeyword()
 	 * @generated
 	 */
-	int VARIABLE_STATEMENT_KEYWORD = 181;
+	int VARIABLE_STATEMENT_KEYWORD = 180;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PropertyNameKind <em>Property Name Kind</em>}' enum.
@@ -16478,7 +16513,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPropertyNameKind()
 	 * @generated
 	 */
-	int PROPERTY_NAME_KIND = 182;
+	int PROPERTY_NAME_KIND = 181;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PostfixOperator <em>Postfix Operator</em>}' enum.
@@ -16488,7 +16523,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPostfixOperator()
 	 * @generated
 	 */
-	int POSTFIX_OPERATOR = 183;
+	int POSTFIX_OPERATOR = 182;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.UnaryOperator <em>Unary Operator</em>}' enum.
@@ -16498,7 +16533,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getUnaryOperator()
 	 * @generated
 	 */
-	int UNARY_OPERATOR = 184;
+	int UNARY_OPERATOR = 183;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.MultiplicativeOperator <em>Multiplicative Operator</em>}' enum.
@@ -16508,7 +16543,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMultiplicativeOperator()
 	 * @generated
 	 */
-	int MULTIPLICATIVE_OPERATOR = 185;
+	int MULTIPLICATIVE_OPERATOR = 184;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AdditiveOperator <em>Additive Operator</em>}' enum.
@@ -16518,7 +16553,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAdditiveOperator()
 	 * @generated
 	 */
-	int ADDITIVE_OPERATOR = 186;
+	int ADDITIVE_OPERATOR = 185;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.RelationalOperator <em>Relational Operator</em>}' enum.
@@ -16528,7 +16563,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getRelationalOperator()
 	 * @generated
 	 */
-	int RELATIONAL_OPERATOR = 187;
+	int RELATIONAL_OPERATOR = 186;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.EqualityOperator <em>Equality Operator</em>}' enum.
@@ -16538,7 +16573,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getEqualityOperator()
 	 * @generated
 	 */
-	int EQUALITY_OPERATOR = 188;
+	int EQUALITY_OPERATOR = 187;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryBitwiseOperator <em>Binary Bitwise Operator</em>}' enum.
@@ -16548,7 +16583,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryBitwiseOperator()
 	 * @generated
 	 */
-	int BINARY_BITWISE_OPERATOR = 189;
+	int BINARY_BITWISE_OPERATOR = 188;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryLogicalOperator <em>Binary Logical Operator</em>}' enum.
@@ -16558,7 +16593,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryLogicalOperator()
 	 * @generated
 	 */
-	int BINARY_LOGICAL_OPERATOR = 190;
+	int BINARY_LOGICAL_OPERATOR = 189;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.ShiftOperator <em>Shift Operator</em>}' enum.
@@ -16568,7 +16603,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getShiftOperator()
 	 * @generated
 	 */
-	int SHIFT_OPERATOR = 191;
+	int SHIFT_OPERATOR = 190;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AssignmentOperator <em>Assignment Operator</em>}' enum.
@@ -16578,7 +16613,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAssignmentOperator()
 	 * @generated
 	 */
-	int ASSIGNMENT_OPERATOR = 192;
+	int ASSIGNMENT_OPERATOR = 191;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.N4Modifier <em>N4 Modifier</em>}' enum.
@@ -16588,7 +16623,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4Modifier()
 	 * @generated
 	 */
-	int N4_MODIFIER = 193;
+	int N4_MODIFIER = 192;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Expression</em>' data type.
@@ -16598,7 +16633,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfExpression()
 	 * @generated
 	 */
-	int ITERATOR_OF_EXPRESSION = 194;
+	int ITERATOR_OF_EXPRESSION = 193;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Yield Expression</em>' data type.
@@ -16608,7 +16643,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfYieldExpression()
 	 * @generated
 	 */
-	int ITERATOR_OF_YIELD_EXPRESSION = 195;
+	int ITERATOR_OF_YIELD_EXPRESSION = 194;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Statement</em>' data type.
@@ -16618,7 +16653,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfStatement()
 	 * @generated
 	 */
-	int ITERATOR_OF_STATEMENT = 196;
+	int ITERATOR_OF_STATEMENT = 195;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Return Statement</em>' data type.
@@ -16628,7 +16663,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfReturnStatement()
 	 * @generated
 	 */
-	int ITERATOR_OF_RETURN_STATEMENT = 197;
+	int ITERATOR_OF_RETURN_STATEMENT = 196;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Node Iterable</em>' data type.
@@ -16638,7 +16673,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getParameterizedTypeRefNodeIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 198;
+	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 197;
 
 
 	/**
@@ -21408,6 +21443,16 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4TypeDeclaration__IsExternal();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4TypeDeclaration#isHollow() <em>Is Hollow</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4TypeDeclaration#isHollow()
+	 * @generated
+	 */
+	EOperation getN4TypeDeclaration__IsHollow();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4ClassifierDeclaration <em>N4 Classifier Declaration</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -21665,14 +21710,14 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4NamespaceDeclaration__GetAnnotations();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.NamespaceElement <em>Namespace Element</em>}'.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4NamespaceDeclaration#isHollow() <em>Is Hollow</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Namespace Element</em>'.
-	 * @see org.eclipse.n4js.n4JS.NamespaceElement
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4NamespaceDeclaration#isHollow()
 	 * @generated
 	 */
-	EClass getNamespaceElement();
+	EOperation getN4NamespaceDeclaration__IsHollow();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4ClassDeclaration <em>N4 Class Declaration</em>}'.
@@ -21767,6 +21812,16 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4InterfaceDeclaration#isHollow() <em>Is Hollow</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4InterfaceDeclaration#isHollow()
+	 * @generated
+	 */
+	EOperation getN4InterfaceDeclaration__IsHollow();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4EnumDeclaration <em>N4 Enum Declaration</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -21796,6 +21851,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getN4EnumDeclaration__GetDefinedTypeAsEnum();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4EnumDeclaration#isHollow() <em>Is Hollow</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4EnumDeclaration#isHollow()
+	 * @generated
+	 */
+	EOperation getN4EnumDeclaration__IsHollow();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4EnumLiteral <em>N4 Enum Literal</em>}'.
@@ -21859,6 +21924,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getN4TypeAliasDeclaration__GetDefinedTypeAsTypeAlias();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4TypeAliasDeclaration#isHollow() <em>Is Hollow</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4TypeAliasDeclaration#isHollow()
+	 * @generated
+	 */
+	EOperation getN4TypeAliasDeclaration__IsHollow();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ModifiableElement <em>Modifiable Element</em>}'.
@@ -26854,6 +26929,14 @@ public interface N4JSPackage extends EPackage {
 		EOperation N4_TYPE_DECLARATION___IS_EXTERNAL = eINSTANCE.getN4TypeDeclaration__IsExternal();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_TYPE_DECLARATION___IS_HOLLOW = eINSTANCE.getN4TypeDeclaration__IsHollow();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassifierDeclarationImpl <em>N4 Classifier Declaration</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -27062,14 +27145,12 @@ public interface N4JSPackage extends EPackage {
 		EOperation N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = eINSTANCE.getN4NamespaceDeclaration__GetAnnotations();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.NamespaceElementImpl <em>Namespace Element</em>}' class.
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4JS.impl.NamespaceElementImpl
-		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getNamespaceElement()
 		 * @generated
 		 */
-		EClass NAMESPACE_ELEMENT = eINSTANCE.getNamespaceElement();
+		EOperation N4_NAMESPACE_DECLARATION___IS_HOLLOW = eINSTANCE.getN4NamespaceDeclaration__IsHollow();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl <em>N4 Class Declaration</em>}' class.
@@ -27150,6 +27231,14 @@ public interface N4JSPackage extends EPackage {
 		EOperation N4_INTERFACE_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = eINSTANCE.getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_INTERFACE_DECLARATION___IS_HOLLOW = eINSTANCE.getN4InterfaceDeclaration__IsHollow();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4EnumDeclarationImpl <em>N4 Enum Declaration</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -27174,6 +27263,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM = eINSTANCE.getN4EnumDeclaration__GetDefinedTypeAsEnum();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_ENUM_DECLARATION___IS_HOLLOW = eINSTANCE.getN4EnumDeclaration__IsHollow();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4EnumLiteralImpl <em>N4 Enum Literal</em>}' class.
@@ -27226,6 +27323,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS = eINSTANCE.getN4TypeAliasDeclaration__GetDefinedTypeAsTypeAlias();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_TYPE_ALIAS_DECLARATION___IS_HOLLOW = eINSTANCE.getN4TypeAliasDeclaration__IsHollow();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ModifiableElementImpl <em>Modifiable Element</em>}' class.

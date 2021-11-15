@@ -49,6 +49,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
@@ -1215,13 +1216,10 @@ public class N4JSLanguageUtils {
 	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
 	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
 	 */
-	def static boolean isHollowElement(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
-			&& javaScriptVariantHelper.isExternalMode(typeDecl)
-			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
-		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
-		// TODO: namespace
-		return typeDecl !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
+	def static boolean isHollowElement(TypeDefiningElement typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isHollowType = typeDecl instanceof N4TypeDeclaration && (typeDecl as N4TypeDeclaration).isHollow;
+		val isHollowNamespace = typeDecl instanceof N4NamespaceDeclaration && (typeDecl as N4NamespaceDeclaration).isHollow;
+		return isHollowNamespace || isHollowType;
 	}
 	
 	
@@ -1230,12 +1228,8 @@ public class N4JSLanguageUtils {
 	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
 	 */
 	def static boolean isHollowElement(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
-			&& javaScriptVariantHelper.isExternalMode(element)
-			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
-		val isTypeAlias = element instanceof TypeAlias;
-		// TODO: namespace
-		return element !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
+		val isHollowElement = element instanceof Type && (element as Type).isHollow;
+		return isHollowElement;
 	}
 
 	/**

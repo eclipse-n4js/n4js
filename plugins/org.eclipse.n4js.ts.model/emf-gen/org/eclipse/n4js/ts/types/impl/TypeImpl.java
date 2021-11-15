@@ -272,6 +272,16 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TYPE__ANNOTATIONS:
@@ -408,6 +418,8 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 				return getRawTypeAsString();
 			case TypesPackage.TYPE___GET_TYPE_AS_STRING:
 				return getTypeAsString();
+			case TypesPackage.TYPE___IS_HOLLOW:
+				return isHollow();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

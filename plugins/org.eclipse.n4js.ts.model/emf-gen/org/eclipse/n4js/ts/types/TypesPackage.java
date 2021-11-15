@@ -1182,13 +1182,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE___GET_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 13;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE___IS_HOLLOW = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 14;
+
+	/**
 	 * The number of operations of the '<em>Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 14;
+	int TYPE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl <em>Type Variable</em>}' class.
@@ -1406,6 +1415,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_VARIABLE___GET_RAW_TYPE_AS_STRING = TYPE___GET_RAW_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE___IS_HOLLOW = TYPE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Variance</em>' operation.
@@ -1670,6 +1688,15 @@ public interface TypesPackage extends EPackage {
 	int INFERENCE_VARIABLE___GET_RAW_TYPE_AS_STRING = TYPE_VARIABLE___GET_RAW_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE___IS_HOLLOW = TYPE_VARIABLE___IS_HOLLOW;
+
+	/**
 	 * The operation id for the '<em>Get Variance</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1912,6 +1939,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERIC_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
 
 	/**
 	 * The number of operations of the '<em>Generic Type</em>' class.
@@ -2183,6 +2219,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFUNCTION___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -2565,6 +2610,15 @@ public interface TypesPackage extends EPackage {
 	int CONTAINER_TYPE___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
+
+	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2827,6 +2881,15 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___IS_HOLLOW = TYPE___IS_HOLLOW;
+
+	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3080,6 +3143,15 @@ public interface TypesPackage extends EPackage {
 	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3315,6 +3387,15 @@ public interface TypesPackage extends EPackage {
 	int PRIMITIVE_TYPE___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
+
+	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3523,6 +3604,15 @@ public interface TypesPackage extends EPackage {
 	int BUILT_IN_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
+
+	/**
 	 * The number of operations of the '<em>Built In Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3711,6 +3801,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int ANY_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -3921,6 +4020,15 @@ public interface TypesPackage extends EPackage {
 	int UNDEFINED_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
+
+	/**
 	 * The number of operations of the '<em>Undefined Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4120,6 +4228,15 @@ public interface TypesPackage extends EPackage {
 	int NULL_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
+
+	/**
 	 * The number of operations of the '<em>Null Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4317,6 +4434,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int VOID_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
 
 	/**
 	 * The number of operations of the '<em>Void Type</em>' class.
@@ -4552,6 +4678,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCTURAL_TYPE___GET_TYPE_AS_STRING = CONTAINER_TYPE___GET_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE___IS_HOLLOW = CONTAINER_TYPE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
@@ -4841,6 +4976,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASSIFIER___GET_TYPE_AS_STRING = CONTAINER_TYPE___GET_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___IS_HOLLOW = CONTAINER_TYPE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
@@ -5221,6 +5365,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___GET_TYPE_AS_STRING = TCLASSIFIER___GET_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___IS_HOLLOW = TCLASSIFIER___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
@@ -5663,6 +5816,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASS___GET_TYPE_AS_STRING = TN4_CLASSIFIER___GET_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___IS_HOLLOW = TN4_CLASSIFIER___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
@@ -6206,13 +6368,22 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = TN4_CLASSIFIER_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___IS_HOLLOW = TN4_CLASSIFIER_OPERATION_COUNT + 3;
+
+	/**
 	 * The number of operations of the '<em>TInterface</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE_OPERATION_COUNT = TN4_CLASSIFIER_OPERATION_COUNT + 3;
+	int TINTERFACE_OPERATION_COUNT = TN4_CLASSIFIER_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMemberImpl <em>TMember</em>}' class.
@@ -7443,6 +7614,15 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_TYPE_AS_STRING = TFUNCTION___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___IS_HOLLOW = TFUNCTION___IS_HOLLOW;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8036,6 +8216,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___GET_TYPE_AS_STRING = TMETHOD___GET_TYPE_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_HOLLOW = TMETHOD___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -11243,6 +11432,15 @@ public interface TypesPackage extends EPackage {
 	int TENUM___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___IS_HOLLOW = TYPE___IS_HOLLOW;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11624,13 +11822,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE_ALIAS___IS_ALIAS = GENERIC_TYPE_OPERATION_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___IS_HOLLOW = GENERIC_TYPE_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>Type Alias</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 4;
+	int TYPE_ALIAS_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TConstableElementImpl <em>TConstable Element</em>}' class.
@@ -12936,6 +13143,16 @@ public interface TypesPackage extends EPackage {
 	EOperation getType__GetTypeAsString();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.Type#isHollow() <em>Is Hollow</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.Type#isHollow()
+	 * @generated
+	 */
+	EOperation getType__IsHollow();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.GenericType <em>Generic Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13713,6 +13930,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTInterface__GetImplementedOrExtendedInterfaceRefs();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TInterface#isHollow() <em>Is Hollow</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TInterface#isHollow()
+	 * @generated
+	 */
+	EOperation getTInterface__IsHollow();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TMember <em>TMember</em>}'.
@@ -14658,6 +14885,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTypeAlias__IsAlias();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TypeAlias#isHollow() <em>Is Hollow</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TypeAlias#isHollow()
+	 * @generated
+	 */
+	EOperation getTypeAlias__IsHollow();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.SyntaxRelatedTElement <em>Syntax Related TElement</em>}'.
@@ -15673,6 +15910,14 @@ public interface TypesPackage extends EPackage {
 		EOperation TYPE___GET_TYPE_AS_STRING = eINSTANCE.getType__GetTypeAsString();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE___IS_HOLLOW = eINSTANCE.getType__IsHollow();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.GenericTypeImpl <em>Generic Type</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -16307,6 +16552,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TINTERFACE___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = eINSTANCE.getTInterface__GetImplementedOrExtendedInterfaceRefs();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TINTERFACE___IS_HOLLOW = eINSTANCE.getTInterface__IsHollow();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TMemberImpl <em>TMember</em>}' class.
@@ -17077,6 +17330,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TYPE_ALIAS___IS_ALIAS = eINSTANCE.getTypeAlias__IsAlias();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_ALIAS___IS_HOLLOW = eINSTANCE.getTypeAlias__IsHollow();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.SyntaxRelatedTElementImpl <em>Syntax Related TElement</em>}' class.

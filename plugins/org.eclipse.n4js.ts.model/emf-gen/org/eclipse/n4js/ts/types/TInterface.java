@@ -98,4 +98,12 @@ public interface TInterface extends TN4Classifier {
 	 */
 	Iterable<ParameterizedTypeRef> getImplementedOrExtendedInterfaceRefs();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isHollow();
+
 } // TInterface

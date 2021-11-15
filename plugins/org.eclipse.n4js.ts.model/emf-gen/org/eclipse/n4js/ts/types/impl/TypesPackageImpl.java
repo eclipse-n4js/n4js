@@ -1562,6 +1562,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getType__IsHollow() {
+		return typeEClass.getEOperations().get(14);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getGenericType() {
 		return genericTypeEClass;
 	}
@@ -2304,6 +2314,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EOperation getTInterface__GetImplementedOrExtendedInterfaceRefs() {
 		return tInterfaceEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTInterface__IsHollow() {
+		return tInterfaceEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -3232,6 +3252,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getTypeAlias__IsHollow() {
+		return typeAliasEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getSyntaxRelatedTElement() {
 		return syntaxRelatedTElementEClass;
 	}
@@ -3564,6 +3594,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(typeEClass, TYPE___GET_VARIANCE_OF_TYPE_VAR__INT);
 		createEOperation(typeEClass, TYPE___GET_RAW_TYPE_AS_STRING);
 		createEOperation(typeEClass, TYPE___GET_TYPE_AS_STRING);
+		createEOperation(typeEClass, TYPE___IS_HOLLOW);
 
 		genericTypeEClass = createEClass(GENERIC_TYPE);
 		createEReference(genericTypeEClass, GENERIC_TYPE__TYPE_VARS);
@@ -3657,6 +3688,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tInterfaceEClass, TINTERFACE___IS_ABSTRACT);
 		createEOperation(tInterfaceEClass, TINTERFACE___GET_SUPER_CLASSIFIER_REFS);
 		createEOperation(tInterfaceEClass, TINTERFACE___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS);
+		createEOperation(tInterfaceEClass, TINTERFACE___IS_HOLLOW);
 
 		tMemberEClass = createEClass(TMEMBER);
 		createEAttribute(tMemberEClass, TMEMBER__DECLARED_FINAL);
@@ -3766,6 +3798,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		typeAliasEClass = createEClass(TYPE_ALIAS);
 		createEOperation(typeAliasEClass, TYPE_ALIAS___IS_ALIAS);
+		createEOperation(typeAliasEClass, TYPE_ALIAS___IS_HOLLOW);
 
 		syntaxRelatedTElementEClass = createEClass(SYNTAX_RELATED_TELEMENT);
 		createEReference(syntaxRelatedTElementEClass, SYNTAX_RELATED_TELEMENT__AST_ELEMENT);
@@ -4072,6 +4105,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getType__GetTypeAsString(), theEcorePackage.getEString(), "getTypeAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getType__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(genericTypeEClass, GenericType.class, "GenericType", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getGenericType_TypeVars(), this.getTypeVariable(), null, "typeVars", null, 0, -1, GenericType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -4212,6 +4247,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTInterface__GetSuperClassifierRefs(), this.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTInterface__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTInterface__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tMemberEClass, TMember.class, "TMember", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTMember_DeclaredFinal(), theEcorePackage.getEBoolean(), "declaredFinal", null, 0, 1, TMember.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4375,6 +4412,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(typeAliasEClass, TypeAlias.class, "TypeAlias", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getTypeAlias__IsAlias(), theEcorePackage.getEBoolean(), "isAlias", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTypeAlias__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(syntaxRelatedTElementEClass, SyntaxRelatedTElement.class, "SyntaxRelatedTElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSyntaxRelatedTElement_AstElement(), theEcorePackage.getEObject(), null, "astElement", null, 0, 1, SyntaxRelatedTElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -67,4 +67,12 @@ public interface N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElem
 	 */
 	boolean isExternal();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isHollow();
+
 } // N4TypeDeclaration

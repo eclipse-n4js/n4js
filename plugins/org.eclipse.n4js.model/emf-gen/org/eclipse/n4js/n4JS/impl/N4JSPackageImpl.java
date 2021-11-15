@@ -153,7 +153,6 @@ import org.eclipse.n4js.n4JS.N4TypeDefinition;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
-import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.NewTarget;
@@ -1268,13 +1267,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass n4NamespaceDeclarationEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass namespaceElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -6278,6 +6270,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getN4TypeDeclaration__IsHollow() {
+		return n4TypeDeclarationEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getN4ClassifierDeclaration() {
 		return n4ClassifierDeclarationEClass;
 	}
@@ -6528,8 +6530,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getNamespaceElement() {
-		return namespaceElementEClass;
+	public EOperation getN4NamespaceDeclaration__IsHollow() {
+		return n4NamespaceDeclarationEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -6628,6 +6630,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getN4InterfaceDeclaration__IsHollow() {
+		return n4InterfaceDeclarationEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getN4EnumDeclaration() {
 		return n4EnumDeclarationEClass;
 	}
@@ -6650,6 +6662,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EOperation getN4EnumDeclaration__GetDefinedTypeAsEnum() {
 		return n4EnumDeclarationEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4EnumDeclaration__IsHollow() {
+		return n4EnumDeclarationEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -6710,6 +6732,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EOperation getN4TypeAliasDeclaration__GetDefinedTypeAsTypeAlias() {
 		return n4TypeAliasDeclarationEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4TypeAliasDeclaration__IsHollow() {
+		return n4TypeAliasDeclarationEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -8332,6 +8364,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4TypeDeclarationEClass = createEClass(N4_TYPE_DECLARATION);
 		createEAttribute(n4TypeDeclarationEClass, N4_TYPE_DECLARATION__NAME);
 		createEOperation(n4TypeDeclarationEClass, N4_TYPE_DECLARATION___IS_EXTERNAL);
+		createEOperation(n4TypeDeclarationEClass, N4_TYPE_DECLARATION___IS_HOLLOW);
 
 		n4ClassifierDeclarationEClass = createEClass(N4_CLASSIFIER_DECLARATION);
 		createEAttribute(n4ClassifierDeclarationEClass, N4_CLASSIFIER_DECLARATION__TYPING_STRATEGY);
@@ -8361,8 +8394,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___IS_EXTERNAL);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS);
-
-		namespaceElementEClass = createEClass(NAMESPACE_ELEMENT);
+		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___IS_HOLLOW);
 
 		n4ClassDeclarationEClass = createEClass(N4_CLASS_DECLARATION);
 		createEOperation(n4ClassDeclarationEClass, N4_CLASS_DECLARATION___IS_ABSTRACT);
@@ -8375,10 +8407,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(n4InterfaceDeclarationEClass, N4_INTERFACE_DECLARATION___GET_DEFINED_TYPE_AS_INTERFACE);
 		createEOperation(n4InterfaceDeclarationEClass, N4_INTERFACE_DECLARATION___GET_SUPER_CLASSIFIER_REFS);
 		createEOperation(n4InterfaceDeclarationEClass, N4_INTERFACE_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS);
+		createEOperation(n4InterfaceDeclarationEClass, N4_INTERFACE_DECLARATION___IS_HOLLOW);
 
 		n4EnumDeclarationEClass = createEClass(N4_ENUM_DECLARATION);
 		createEReference(n4EnumDeclarationEClass, N4_ENUM_DECLARATION__LITERALS);
 		createEOperation(n4EnumDeclarationEClass, N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM);
+		createEOperation(n4EnumDeclarationEClass, N4_ENUM_DECLARATION___IS_HOLLOW);
 
 		n4EnumLiteralEClass = createEClass(N4_ENUM_LITERAL);
 		createEAttribute(n4EnumLiteralEClass, N4_ENUM_LITERAL__NAME);
@@ -8387,6 +8421,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		n4TypeAliasDeclarationEClass = createEClass(N4_TYPE_ALIAS_DECLARATION);
 		createEOperation(n4TypeAliasDeclarationEClass, N4_TYPE_ALIAS_DECLARATION___GET_DEFINED_TYPE_AS_TYPE_ALIAS);
+		createEOperation(n4TypeAliasDeclarationEClass, N4_TYPE_ALIAS_DECLARATION___IS_HOLLOW);
 
 		modifiableElementEClass = createEClass(MODIFIABLE_ELEMENT);
 		createEAttribute(modifiableElementEClass, MODIFIABLE_ELEMENT__DECLARED_MODIFIERS);
@@ -9576,6 +9611,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4TypeDeclaration__IsExternal(), theEcorePackage.getEBoolean(), "isExternal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getN4TypeDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(n4ClassifierDeclarationEClass, N4ClassifierDeclaration.class, "N4ClassifierDeclaration", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getN4ClassifierDeclaration_TypingStrategy(), theTypesPackage.getTypingStrategy(), "typingStrategy", null, 0, 1, N4ClassifierDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -9625,7 +9662,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4NamespaceDeclaration__GetAnnotations(), this.getAnnotation(), "getAnnotations", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(namespaceElementEClass, NamespaceElement.class, "NamespaceElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEOperation(getN4NamespaceDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4ClassDeclarationEClass, N4ClassDeclaration.class, "N4ClassDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -9646,10 +9683,14 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefNodeIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getN4InterfaceDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(n4EnumDeclarationEClass, N4EnumDeclaration.class, "N4EnumDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getN4EnumDeclaration_Literals(), this.getN4EnumLiteral(), null, "literals", null, 0, -1, N4EnumDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4EnumDeclaration__GetDefinedTypeAsEnum(), theTypesPackage.getTEnum(), "getDefinedTypeAsEnum", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4EnumDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4EnumLiteralEClass, N4EnumLiteral.class, "N4EnumLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getN4EnumLiteral_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4EnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -9659,6 +9700,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(n4TypeAliasDeclarationEClass, N4TypeAliasDeclaration.class, "N4TypeAliasDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getN4TypeAliasDeclaration__GetDefinedTypeAsTypeAlias(), theTypesPackage.getTypeAlias(), "getDefinedTypeAsTypeAlias", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4TypeAliasDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(modifiableElementEClass, ModifiableElement.class, "ModifiableElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModifiableElement_DeclaredModifiers(), this.getN4Modifier(), "declaredModifiers", null, 0, -1, ModifiableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

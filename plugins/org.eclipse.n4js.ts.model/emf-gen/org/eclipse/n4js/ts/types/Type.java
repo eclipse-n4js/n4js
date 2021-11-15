@@ -217,4 +217,12 @@ public interface Type extends TExportableElement, TAnnotableElement {
 	 */
 	String getTypeAsString();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isHollow();
+
 } // Type

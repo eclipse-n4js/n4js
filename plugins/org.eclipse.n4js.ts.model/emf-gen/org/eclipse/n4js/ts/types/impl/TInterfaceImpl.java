@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import com.google.common.base.Objects;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -29,9 +31,15 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 
+import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TInterface;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * <!-- begin-user-doc -->
@@ -169,6 +177,21 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return (this.isExternal() && (!IterableExtensions.<TAnnotation>exists(this.getAnnotations(), new Function1<TAnnotation, Boolean>() {
+			public Boolean apply(final TAnnotation it) {
+				String _name = it.getName();
+				return Boolean.valueOf(Objects.equal(_name, "N4JS"));
+			}
+		})));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
@@ -254,6 +277,12 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == Type.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TYPE___IS_HOLLOW: return TypesPackage.TINTERFACE___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == TClassifier.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TCLASSIFIER___IS_ABSTRACT: return TypesPackage.TINTERFACE___IS_ABSTRACT;
@@ -279,6 +308,8 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 				return getSuperClassifierRefs();
 			case TypesPackage.TINTERFACE___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS:
 				return getImplementedOrExtendedInterfaceRefs();
+			case TypesPackage.TINTERFACE___IS_HOLLOW:
+				return isHollow();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

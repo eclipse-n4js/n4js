@@ -39,6 +39,7 @@ import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDefinition;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -46,6 +47,10 @@ import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * <!-- begin-user-doc -->
@@ -189,6 +194,22 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	@Override
 	public EList<Annotation> getAnnotations() {
 		return XcoreCollectionLiterals.<Annotation>emptyEList();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isHollow() {
+		final Function1<ScriptElement, Boolean> _function = new Function1<ScriptElement, Boolean>() {
+			public Boolean apply(final ScriptElement it) {
+				return Boolean.valueOf((((it instanceof N4NamespaceDeclaration) && ((N4NamespaceDeclaration) it).isHollow()) || ((it instanceof N4TypeDeclaration) && ((N4TypeDeclaration) it).isHollow())));
+			}
+		};
+		final boolean hollow = IterableExtensions.<ScriptElement>forall(this.getOwnedElementsRaw(), _function);
+		return hollow;
 	}
 
 	/**
@@ -503,6 +524,8 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				return isExternal();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS:
 				return getAnnotations();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW:
+				return isHollow();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT:

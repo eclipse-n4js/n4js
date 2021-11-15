@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.Type;
@@ -96,6 +97,16 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	public TEnum getDefinedTypeAsEnum() {
 		Type _definedType = this.getDefinedType();
 		return ((TEnum) _definedType);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isHollow() {
+		return true;
 	}
 
 	/**
@@ -178,10 +189,28 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	 * @generated
 	 */
 	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == N4TypeDeclaration.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.N4_TYPE_DECLARATION___IS_HOLLOW: return N4JSPackage.N4_ENUM_DECLARATION___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case N4JSPackage.N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM:
 				return getDefinedTypeAsEnum();
+			case N4JSPackage.N4_ENUM_DECLARATION___IS_HOLLOW:
+				return isHollow();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

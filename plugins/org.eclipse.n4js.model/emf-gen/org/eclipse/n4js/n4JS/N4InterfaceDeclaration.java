@@ -72,4 +72,12 @@ public interface N4InterfaceDeclaration extends N4ClassifierDeclaration {
 	 */
 	Iterable<TypeReferenceNode<ParameterizedTypeRef>> getImplementedOrExtendedInterfaceRefs();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isHollow();
+
 } // N4InterfaceDeclaration

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import com.google.common.base.Objects;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -24,16 +26,22 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.Type;
+
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * <!-- begin-user-doc -->
@@ -128,6 +136,21 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return (this.isExternal() && (!IterableExtensions.<Annotation>exists(this.getAnnotations(), new Function1<Annotation, Boolean>() {
+			public Boolean apply(final Annotation it) {
+				String _name = it.getName();
+				return Boolean.valueOf(Objects.equal(_name, "N4JS"));
+			}
+		})));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS:
@@ -203,6 +226,12 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == N4TypeDeclaration.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.N4_TYPE_DECLARATION___IS_HOLLOW: return N4JSPackage.N4_INTERFACE_DECLARATION___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == N4ClassifierDefinition.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.N4_CLASSIFIER_DEFINITION___GET_SUPER_CLASSIFIER_REFS: return N4JSPackage.N4_INTERFACE_DECLARATION___GET_SUPER_CLASSIFIER_REFS;
@@ -234,6 +263,8 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 				return getSuperClassifierRefs();
 			case N4JSPackage.N4_INTERFACE_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS:
 				return getImplementedOrExtendedInterfaceRefs();
+			case N4JSPackage.N4_INTERFACE_DECLARATION___IS_HOLLOW:
+				return isHollow();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

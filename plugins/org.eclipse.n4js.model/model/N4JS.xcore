@@ -2031,6 +2031,10 @@ abstract class N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElemen
 	op boolean isExternal() {
 		declaredModifiers.contains(N4Modifier.EXTERNAL)
 	}
+	
+	op boolean isHollow() {
+		return false;
+	}
 }
 
 abstract class N4ClassifierDeclaration extends N4TypeDeclaration, N4ClassifierDefinition , GenericDeclaration, ThisTarget {
@@ -2148,11 +2152,16 @@ class N4NamespaceDeclaration extends N4TypeDefinition, VariableEnvironmentElemen
 	op Annotation[] getAnnotations() {
 		emptyEList
 	}
+	
+	op boolean isHollow() {
+		val hollow = ownedElementsRaw.forall[
+			(it instanceof N4NamespaceDeclaration && (it as N4NamespaceDeclaration).isHollow)
+			|| (it instanceof N4TypeDeclaration && (it as N4TypeDeclaration).isHollow)
+		];
+		return hollow
+	}
 }
 
-class NamespaceElement {
-	
-}
 
 class N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration {
 	/**
@@ -2184,6 +2193,10 @@ class N4InterfaceDeclaration extends N4ClassifierDeclaration {
 	op ParameterizedTypeRefNodeIterable getImplementedOrExtendedInterfaceRefs() {
 		return superInterfaceRefs;
 	}
+	
+	op boolean isHollow() {
+		return isExternal() && !annotations.exists[it.name == "N4JS"]
+	}
 }
 
 class N4EnumDeclaration extends N4TypeDeclaration {
@@ -2193,6 +2206,11 @@ class N4EnumDeclaration extends N4TypeDeclaration {
 	 */
 	op TEnum getDefinedTypeAsEnum() {
 		return definedType as TEnum;
+	}
+	
+	
+	op boolean isHollow() {
+		return true;
 	}
 }
 
@@ -2207,6 +2225,11 @@ class N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration, Type
 
 	op TypeAlias getDefinedTypeAsTypeAlias() {
 		return definedType as TypeAlias;
+	}
+	
+	
+	op boolean isHollow() {
+		return true;
 	}
 }
 
