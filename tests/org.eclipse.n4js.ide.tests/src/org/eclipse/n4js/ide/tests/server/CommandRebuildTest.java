@@ -36,7 +36,6 @@ import com.google.common.collect.Lists;
  * Tests the client command 'n4js.rebuild'
  */
 public class CommandRebuildTest extends AbstractStructuredIdeTest<Void> {
-	static final String PROBANDS_NAME = "probands";
 	static final String PROJECT_STATE_NAME = N4JSGlobals.N4JS_PROJECT_STATE;
 
 	static final long FILE_TIME_MILLISECONDS = 8472000;
