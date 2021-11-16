@@ -192,16 +192,17 @@ import com.google.inject.Inject;
 					// compute ctor
 					final TypeRef ctorTypeRefPlain = ts.type(G, expr.getCallee());
 					final Type ctorTypeRefDeclType = ctorTypeRefPlain.getDeclaredType();
+					final TMethod constructSig = ctorTypeRefDeclType instanceof TInterface
+							? tsh.getConstructSignature((TInterface) ctorTypeRefDeclType)
+							: null;
 
 					final TMethod ctor;
-					if (ctorTypeRefDeclType instanceof TInterface
-							&& ((TInterface) ctorTypeRefDeclType).getConstructSignature() != null) {
+					if (constructSig != null) {
 						// special case: interface with construct signature
-						ctor = ((TInterface) ctorTypeRefDeclType).getConstructSignature();
+						ctor = constructSig;
 
 					} else if (ctorTypeRefPlain instanceof TypeTypeRef) {
 						// standard case:
-
 						final TypeTypeRef ctorTypeRef = (TypeTypeRef) ctorTypeRefPlain;
 
 						// add type variable mappings based on the type

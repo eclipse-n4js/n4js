@@ -36,7 +36,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
-import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
@@ -52,6 +51,7 @@ import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo
+import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
@@ -93,6 +93,8 @@ class TypeSystemHelper {
 	@Inject private ThisTypeComputer thisTypeComputer;
 	@Inject private IterableComputer iterableComputer;
 	@Inject private TypeAliasComputer typeAliasComputer;
+
+	@Inject private ContainerTypesHelper containerTypesHelper;
 
 
 @Inject private StructuralTypesHelper structuralTypesHelper;
@@ -356,7 +358,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		}
 		val declType = typeRef.declaredType;
 		if(declType instanceof TInterface) {
-			if(declType.callSignature !== null) {
+			if(getCallSignature(declType) !== null) {
 				return true;
 			}
 		}
@@ -414,10 +416,18 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			if(cls instanceof TClass)
 				type = cls;
 		}
-		if(type instanceof ContainerType<?>) {
+		if(type instanceof TClass) {
 			return type.callSignature;
 		}
 		return null;
+	}
+
+	def public TMethod getCallSignature(TInterface tInterface) {
+		return containerTypesHelper.fromContext(tInterface).findCallSignature(tInterface);
+	}
+
+	def public TMethod getConstructSignature(TInterface tInterface) {
+		return containerTypesHelper.fromContext(tInterface).findConstructSignature(tInterface);
 	}
 
 	/** Same as {@link #getStaticType(RuleEnvironment, TypeTypeRef, boolean)} without resolving type variables. */

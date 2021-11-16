@@ -27,3 +27,6 @@ export external interface ~IfcBoth {
 	(p: string): CallResultCls;
 	new(p1: string, p2: boolean): ConstructResultCls;
 }
+
+export external interface ~SubIfcOnlyCall extends IfcOnlyCall {}
+export external interface ~SubIfcOnlyConstruct extends IfcOnlyConstruct {}

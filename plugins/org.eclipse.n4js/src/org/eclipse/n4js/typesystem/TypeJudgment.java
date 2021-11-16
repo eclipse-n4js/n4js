@@ -726,7 +726,7 @@ import com.google.inject.Inject;
 				} else {
 					final Type declTypeOfT = T.getDeclaredType();
 					if (declTypeOfT instanceof TInterface) {
-						final TMethod callSigOfT = ((TInterface) declTypeOfT).getCallSignature();
+						final TMethod callSigOfT = typeSystemHelper.getCallSignature((TInterface) declTypeOfT);
 						if (callSigOfT != null) {
 							T = ref(callSigOfT);
 						}
@@ -1174,7 +1174,7 @@ import com.google.inject.Inject;
 			} else {
 				Type declType = T.getDeclaredType();
 				if (declType instanceof TInterface) {
-					TMethod constructSig = ((TInterface) declType).getConstructSignature();
+					TMethod constructSig = typeSystemHelper.getConstructSignature((TInterface) declType);
 					if (constructSig != null) {
 						TypeRef returnTypeRef = constructSig.getReturnTypeRef();
 						if (returnTypeRef != null && !TypeUtils.isVoid(returnTypeRef)) {
