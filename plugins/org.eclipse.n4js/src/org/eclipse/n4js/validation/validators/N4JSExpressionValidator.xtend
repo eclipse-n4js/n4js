@@ -386,8 +386,14 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				val message = IssueCodes.getMessageForEXP_CALL_CLASS_CTOR;
 				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CLASS_CTOR);
 			} else {
-				val message = IssueCodes.getMessageForEXP_CALL_NOT_A_FUNCTION(typeRef.typeRefAsString);
-				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_NOT_A_FUNCTION);
+				val staticType = if (typeRef instanceof TypeTypeRef) tsh.getStaticType(G, typeRef);
+				if (staticType instanceof TInterface && (staticType as TInterface).callSignature !== null) {
+					val message = IssueCodes.getMessageForEXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED("invoke", staticType.name, "call");
+					addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED);
+				} else {
+					val message = IssueCodes.getMessageForEXP_CALL_NOT_A_FUNCTION(typeRef.typeRefAsString);
+					addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_NOT_A_FUNCTION);
+				}
 			}
 			return;
 		}
@@ -570,8 +576,15 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		} else if (!isCtor && staticType instanceof TInterface && isDirectRef) {
 			// error case #2: trying to instantiate an interface
-			val message = IssueCodes.
-				getMessageForEXP_NEW_CANNOT_INSTANTIATE(staticType.keyword, staticType.name);
+			val tInterface = staticType as TInterface;
+			if (tInterface.constructSignature !== null) {
+				// special case: trying to directly instantiate an interface with a construct signature
+				val message = IssueCodes.getMessageForEXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED("instantiate", staticType.name, "construct");
+				addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
+					IssueCodes.EXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED);
+				return;
+			}
+			val message = IssueCodes.getMessageForEXP_NEW_CANNOT_INSTANTIATE(staticType.keyword, staticType.name);
 			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
 				IssueCodes.EXP_NEW_CANNOT_INSTANTIATE);
 			return;
