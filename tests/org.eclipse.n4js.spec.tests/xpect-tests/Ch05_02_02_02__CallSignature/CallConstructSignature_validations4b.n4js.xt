@@ -1,0 +1,33 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+	ResourceSet {
+		ThisFile {}
+		File "Ext.n4jsd" { from="CallConstructSignature_validations4.n4jsd.xt" }
+	}
+
+END_SETUP */
+
+
+// same as in file "CallConstructSignature_validations4.n4jsd.xt", but tested inside an N4JS file:
+
+
+import { SubIfcCall } from "Ch05_02_02_02__CallSignature/Ext"
+import { SubIfcConstruct } from "Ch05_02_02_02__CallSignature/Ext"
+
+
+// XPECT errors --> "An interface with a call or construct signature cannot be implemented by a class." at "SubIfcCall"
+export class Cls1 implements SubIfcCall {}
+
+// XPECT errors --> "An interface with a call or construct signature cannot be implemented by a class." at "SubIfcConstruct"
+export class Cls2 implements SubIfcConstruct {}

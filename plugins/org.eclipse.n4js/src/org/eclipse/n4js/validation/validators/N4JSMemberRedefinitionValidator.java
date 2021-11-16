@@ -851,6 +851,9 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 				Iterators.addAll(l, mm.actuallyInheritedAndMixedMembers());
 				for (SourceAwareIterator iter = mm.actuallyInheritedAndMixedMembers(); iter.hasNext();) {
 					TMember m = iter.next();
+					if (isCallConstructSignature(m)) {
+						continue; // avoid duplicate error messages (covered by CLF_CALL_CONSTRUCT_SIG_CANNOT_IMPLEMENT)
+					}
 					if (m.isAbstract()) {
 						if (abstractMembers == null) {
 							abstractMembers = new ArrayList<>();
@@ -865,6 +868,11 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 			return false;
 		}
 		return true;
+	}
+
+	private boolean isCallConstructSignature(TMember m) {
+		return m instanceof TMethod
+				&& (((TMethod) m).isCallSignature() || ((TMethod) m).isConstructSignature());
 	}
 
 	private void messageMissingImplementations(List<TMember> abstractMembers) {

@@ -171,6 +171,16 @@ public class ContainerTypesHelper {
 							includePolyfills).getResult());
 		}
 
+		public TMethod findCallSignature(TInterface tInterface) {
+			return cache.get(Arrays.asList("findCallSignature", tInterface), contextResource,
+					() -> new FindCallConstructSignatureHelper(tInterface, false).getResult());
+		}
+
+		public TMethod findConstructSignature(TInterface tInterface) {
+			return cache.get(Arrays.asList("findConstructSignature", tInterface), contextResource,
+					() -> new FindCallConstructSignatureHelper(tInterface, true).getResult());
+		}
+
 		/**
 		 * Returns true if the given member is actually mixed in the given classifier. This is only the case if the
 		 * member is (indirectly) contained in an interface which is directly implemented by the given classifier and if
@@ -1027,6 +1037,40 @@ public class ContainerTypesHelper {
 
 			@Override
 			protected TMember doGetResult() {
+				return foundMember;
+			}
+		}
+
+		private class FindCallConstructSignatureHelper extends AbstractMemberCollector<TMethod> {
+			private final boolean searchConstructSig;
+			private TMethod foundMember = null;
+
+			FindCallConstructSignatureHelper(TInterface type, boolean searchConstructSig) {
+				super(type, false, true);
+				this.searchConstructSig = searchConstructSig;
+			}
+
+			@Override
+			protected boolean process(ContainerType<?> type) {
+				if (type instanceof TInterface) {
+					TMethod sig = searchConstructSig ? type.getConstructSignature() : type.getCallSignature();
+					if (sig != null) {
+						foundMember = sig;
+						return true;
+					}
+				}
+				return false;
+
+			}
+
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
+
+			@Override
+			protected TMethod doGetResult() {
 				return foundMember;
 			}
 		}
