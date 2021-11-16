@@ -389,7 +389,6 @@ class N4JSScopingTest {
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
 				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="Supplier" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" packageName="org.eclipse.n4js.lang.tests" projectID="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
-				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="Supplier" exportedName="Supplier">
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
 				      <astElement href="#/0/@scriptElements.0/@exportedElement/@ownedMembersRaw.0"/>
@@ -397,6 +396,7 @@ class N4JSScopingTest {
 				    </ownedMembers>
 				    <astElement href="#/0/@scriptElements.0/@exportedElement"/>
 				  </topLevelTypes>
+				  <astElement href="#/0"/>
 				</types:TModule>
 			'''.toString,
 			UserDataMapper.getDeserializedModuleFromDescriptionAsString(eoDescs.head, supplierResource.URI));
