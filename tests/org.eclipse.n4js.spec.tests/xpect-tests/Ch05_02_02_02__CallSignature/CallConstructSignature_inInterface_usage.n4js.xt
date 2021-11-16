@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+	ResourceSet {
+		ThisFile {}
+		File "Ext.n4jsd" { from="CallConstructSignature_inInterface_usage__Ext.n4jsd" }
+	}
+
+END_SETUP */
+
+
+import { IfcNone } from "Ch05_02_02_02__CallSignature/Ext"
+import { IfcOnlyCall } from "Ch05_02_02_02__CallSignature/Ext"
+import { IfcOnlyConstruct } from "Ch05_02_02_02__CallSignature/Ext"
+import { IfcBoth } from "Ch05_02_02_02__CallSignature/Ext"
+
+
+let ifcNone: IfcNone;
+let ifcOnlyCall: IfcOnlyCall;
+let ifcOnlyConstruct: IfcOnlyConstruct;
+let ifcBoth: IfcBoth;
+
+
+// no special signatures:
+
+// XPECT errors --> "Not a function or method: IfcNone." at "ifcNone"
+ifcNone();
+// XPECT errors --> "Not a reference to a constructor: IfcNone." at "ifcNone"
+new ifcNone();
+
+
+// only call signature:
+
+// XPECT noerrors -->
+ifcOnlyCall("");
+// XPECT errors --> "Not a reference to a constructor: IfcOnlyCall." at "ifcOnlyCall"
+new ifcOnlyCall();
+
+
+// only construct signature:
+
+// XPECT errors --> "Not a function or method: IfcOnlyConstruct." at "ifcOnlyConstruct"
+ifcOnlyConstruct();
+// XPECT noerrors -->
+new ifcOnlyConstruct("", true);
+
+
+// both kinds of special signatures:
+
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "ifcBoth()"
+ifcBoth();
+// XPECT errors --> "42 is not a subtype of string." at "42"
+ifcBoth(42);
+// XPECT noerrors -->
+let resultCallIfcBoth = ifcBoth("");
+// XPECT type of 'resultCallIfcBoth' --> CallResultCls
+resultCallIfcBoth;
+
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 0." at "new ifcBoth()"
+new ifcBoth();
+// XPECT errors --> "42 is not a subtype of boolean." at "42"
+new ifcBoth("", 42);
+// XPECT noerrors -->
+let resultConstructIfcBoth = new ifcBoth("", true);
+// XPECT type of 'resultConstructIfcBoth' --> ConstructResultCls
+resultConstructIfcBoth;

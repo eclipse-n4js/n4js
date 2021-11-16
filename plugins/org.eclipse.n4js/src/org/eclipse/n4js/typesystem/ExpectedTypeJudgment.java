@@ -90,6 +90,7 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFormalParameter;
+import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.types.utils.TypeUtils;
@@ -186,31 +187,44 @@ import com.google.inject.Inject;
 				} else {
 					// expected type of argument
 
+					final RuleEnvironment G2 = wrap(G);
+
 					// compute ctor
 					final TypeRef ctorTypeRefPlain = ts.type(G, expr.getCallee());
-					if (!(ctorTypeRefPlain instanceof TypeTypeRef)) {
+					final Type ctorTypeRefDeclType = ctorTypeRefPlain.getDeclaredType();
+
+					final TMethod ctor;
+					if (ctorTypeRefDeclType instanceof TInterface
+							&& ((TInterface) ctorTypeRefDeclType).getConstructSignature() != null) {
+						// special case: interface with construct signature
+						ctor = ((TInterface) ctorTypeRefDeclType).getConstructSignature();
+
+					} else if (ctorTypeRefPlain instanceof TypeTypeRef) {
+						// standard case:
+
+						final TypeTypeRef ctorTypeRef = (TypeTypeRef) ctorTypeRefPlain;
+
+						// add type variable mappings based on the type
+						// of the instance to be created
+						// --> for this, create a ParameterizedTypeRef taking the staticType from
+						// the CtorTypeRef and the type arguments from the NewExpression
+						final TypeRef typeRefOfInstanceToCreate = typeSystemHelper.createTypeRefFromStaticType(
+								G, ctorTypeRef, expr);
+						final Type typeOfInstanceToCreatePlain = typeRefOfInstanceToCreate.getDeclaredType();
+						if (!(typeOfInstanceToCreatePlain instanceof ContainerType<?>)) {
+							return unknown();
+						}
+						final ContainerType<?> typeOfInstanceToCreate = (ContainerType<?>) typeOfInstanceToCreatePlain;
+						typeSystemHelper.addSubstitutions(G2, typeRefOfInstanceToCreate);
+
+						// required if we refer to a ctor with a parameter of type [~]~this (esp. default ctor)
+						setThisBinding(G2, typeRefOfInstanceToCreate);
+
+						ctor = containerTypesHelper.fromContext(expr.eResource())
+								.findConstructor(typeOfInstanceToCreate);
+					} else {
 						return unknown();
 					}
-					final TypeTypeRef ctorTypeRef = (TypeTypeRef) ctorTypeRefPlain;
-
-					// add type variable mappings based on the type
-					// of the instance to be created
-					// --> for this, create a ParameterizedTypeRef taking the staticType from
-					// the CtorTypeRef and the type arguments from the NewExpression
-					final TypeRef typeRefOfInstanceToCreate = typeSystemHelper.createTypeRefFromStaticType(
-							G, ctorTypeRef, expr);
-					final Type typeOfInstanceToCreatePlain = typeRefOfInstanceToCreate.getDeclaredType();
-					if (!(typeOfInstanceToCreatePlain instanceof ContainerType<?>)) {
-						return unknown();
-					}
-					final ContainerType<?> typeOfInstanceToCreate = (ContainerType<?>) typeOfInstanceToCreatePlain;
-					final RuleEnvironment G2 = wrap(G);
-					typeSystemHelper.addSubstitutions(G2, typeRefOfInstanceToCreate);
-					setThisBinding(G2, typeRefOfInstanceToCreate); // required if we refer to a ctor with a parameter of
-																	// type [~]~this (esp. default ctor)
-
-					final TMethod ctor = containerTypesHelper.fromContext(expr.eResource())
-							.findConstructor(typeOfInstanceToCreate);
 
 					final TFormalParameter fpar = ctor != null
 							? ctor.getFparForArgIdx(ECollections.indexOf(expr.getArguments(), argument, 0))

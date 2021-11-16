@@ -41,6 +41,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
@@ -350,10 +351,16 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		if(isClassConstructorFunction(G, typeRef)) {
 			// don't allow direct invocation of class constructors
 			if(getCallableClassConstructorFunction(G, typeRef)!==null)
-				return true; // exception: this is a class that provides a callable signature
+				return true; // exception: this is a class that provides a call signature
 			return false;
 		}
-		if(typeRef.declaredType instanceof TFunction)
+		val declType = typeRef.declaredType;
+		if(declType instanceof TInterface) {
+			if(declType.callSignature !== null) {
+				return true;
+			}
+		}
+		if(declType instanceof TFunction)
 			return true;
 		if(typeRef instanceof FunctionTypeExprOrRef)
 			return true;

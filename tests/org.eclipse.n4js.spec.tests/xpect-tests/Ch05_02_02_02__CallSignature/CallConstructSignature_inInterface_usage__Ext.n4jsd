@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+export external class CallResultCls {}
+export external class ConstructResultCls {}
+
+export external interface ~IfcNone {}
+
+export external interface ~IfcOnlyCall {
+	(p: string): CallResultCls;
+}
+
+export external interface ~IfcOnlyConstruct {
+	new(p1: string, p2: boolean): ConstructResultCls;
+}
+
+export external interface ~IfcBoth {
+	(p: string): CallResultCls;
+	new(p1: string, p2: boolean): ConstructResultCls;
+}

@@ -538,6 +538,13 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 					return;
 				}
 			}
+			val declType = typeRef.declaredType;
+			val constructSig = if (declType instanceof TInterface) declType.constructSignature;
+			if (constructSig !== null) {
+				// special success case; but perform some further checks
+				internalCheckConstructSignatureInvocation(newExpression, constructSig);
+				return;
+			}
 			issueNotACtor(typeRef, newExpression);
 			return;
 		}
@@ -549,6 +556,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (staticType !== null && staticType.eIsProxy) {
 			return;
 		}
+
 		val isCtor = classifierTypeRef.isConstructorRef;
 		val isDirectRef = callee instanceof IdentifierRef && (callee as IdentifierRef).id === staticType;
 		val isConcreteOrCovariant =
@@ -603,11 +611,17 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		// success case; but perform some further checks
 		internalCheckTypeArgumentsNodes(staticType.typeVars, newExpression.typeArgs, false, staticType, newExpression,
 			N4JSPackage.eINSTANCE.newExpression_Callee);
-			
-		
+
 		if (staticType instanceof TClassifier) {
 			internalCheckNewParameters(newExpression, staticType);
 		}
+	}
+
+	private def void internalCheckConstructSignatureInvocation(NewExpression newExpression, TMethod constructSig) {
+		internalCheckTypeArgumentsNodes(constructSig.typeVars, newExpression.typeArgs, false, constructSig, newExpression,
+			N4JSPackage.eINSTANCE.newExpression_Callee);
+
+		internalCheckNewParameters(newExpression, constructSig);
 	}
 
 	private def Type changeToCovariantUpperBoundIfTypeVar(Type type) {
@@ -801,10 +815,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	def private internalCheckNewParameters(NewExpression newExpression, TClassifier staticType) {
 		val maybeConstructor = containerTypesHelper.fromContext(newExpression).findConstructor(staticType);
 		if (maybeConstructor !== null) {
-			internalCheckNumberOfArguments((maybeConstructor as TFunction).fpars, newExpression.arguments,
-				newExpression)
-			return;
+			internalCheckNewParameters(newExpression, maybeConstructor);
 		}
+	}
+
+	def private internalCheckNewParameters(NewExpression newExpression, TFunction ctor) {
+		internalCheckNumberOfArguments(ctor.fpars, newExpression.arguments, newExpression);
 	}
 
 	def private void internalCheckNumberOfArguments(List<TFormalParameter> fpars, List<Argument> args,

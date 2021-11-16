@@ -157,6 +157,7 @@ import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TGetter;
+import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
@@ -722,6 +723,14 @@ import com.google.inject.Inject;
 				final TMethod callableCtorFunction = typeSystemHelper.getCallableClassConstructorFunction(G, T);
 				if (callableCtorFunction != null) {
 					T = ref(callableCtorFunction);
+				} else {
+					final Type declTypeOfT = T.getDeclaredType();
+					if (declTypeOfT instanceof TInterface) {
+						final TMethod callSigOfT = ((TInterface) declTypeOfT).getCallSignature();
+						if (callSigOfT != null) {
+							T = ref(callSigOfT);
+						}
+					}
 				}
 			}
 
@@ -1162,6 +1171,19 @@ import com.google.inject.Inject;
 			TypeRef T = ts.type(G, e.getCallee());
 			if (T instanceof TypeTypeRef) {
 				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T, e);
+			} else {
+				Type declType = T.getDeclaredType();
+				if (declType instanceof TInterface) {
+					TMethod constructSig = ((TInterface) declType).getConstructSignature();
+					if (constructSig != null) {
+						TypeRef returnTypeRef = constructSig.getReturnTypeRef();
+						if (returnTypeRef != null && !TypeUtils.isVoid(returnTypeRef)) {
+							T = returnTypeRef;
+						} else {
+							T = unknown();
+						}
+					}
+				}
 			}
 			return T;
 		}
