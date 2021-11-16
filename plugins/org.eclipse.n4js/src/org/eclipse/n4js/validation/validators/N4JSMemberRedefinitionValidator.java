@@ -113,6 +113,7 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.IssueUserDataKeys;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
@@ -991,9 +992,11 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 					extraMessage);
 		} else if (overriding.isMethod() && overridden.isMethod()) {
 			code = CLF_REDEFINED_METHOD_TYPE_CONFLICT;
-
+			String descRaw = validatorMessageHelper.descriptionDifferentFrom(overriding, overridden);
+			String desc = (descRaw.toLowerCase().contains("signature") ? "" : "signature of ")
+					+ overridingSource + descRaw;
 			message = getMessageForCLF_REDEFINED_METHOD_TYPE_CONFLICT(
-					overridingSource + validatorMessageHelper.descriptionDifferentFrom(overriding, overridden),
+					UtilN4.toUpperCaseFirst(desc),
 					redefinitionTypeName,
 					validatorMessageHelper.descriptionDifferentFrom(overridden, overriding),
 					validatorMessageHelper.trimTypesystemMessage(result),

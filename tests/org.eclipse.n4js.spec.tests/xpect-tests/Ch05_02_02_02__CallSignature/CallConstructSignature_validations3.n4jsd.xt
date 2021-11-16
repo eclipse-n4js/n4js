@@ -1,0 +1,66 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// inheritance of call/construct signatures in interfaces
+// (call signatures in classes are not inherited to subclasses, so the below cases do not apply to them)
+
+
+export external class ResultCls {}
+
+export external interface ~Ifc1 {
+	(p: string);
+
+	new(p: string): ResultCls;
+}
+export external interface ~Ifc2 {
+	(p: number);
+
+	new(p: number): ResultCls;
+}
+
+export external interface ~SubIfc1 extends Ifc1 {
+	// XPECT errors --> "The call signature SubIfc1.() overriding call signature Ifc1.() must be annotated with @Override." at "(p: string);"
+	(p: string);
+	// XPECT errors --> "The construct signature SubIfc1.new overriding construct signature Ifc1.new must be annotated with @Override." at "new"
+	new(p: string): ResultCls;
+}
+
+export external interface ~SubIfc2 extends Ifc1 {
+	// XPECT errors --> "Call signature SubIfc2.() does not conform to implemented call signature Ifc1.(): {function(number):void} is not a subtype of {function(string):void}." at "@Override() (p: number);"
+	@Override() (p: number);
+	// XPECT errors --> "Construct signature SubIfc2.new does not conform to implemented construct signature Ifc1.new: {function(number):ResultCls} is not a subtype of {function(string):ResultCls}." at "new"
+	@Override new(p: number): ResultCls;
+}
+
+export external interface ~SubIfc3 extends Ifc1 {
+	// XPECT noerrors -->
+	@Override() (p: string);
+	// XPECT noerrors -->
+	@Override new(p: string): ResultCls;
+}
+
+/* XPECT errors ---
+"Redefine ambiguously consumed members: call signature Ifc1.() and call signature Ifc2.()." at "SubIfc4"
+"Redefine ambiguously consumed members: construct signature Ifc1.new and construct signature Ifc2.new." at "SubIfc4"
+--- */
+export external interface ~SubIfc4 extends Ifc1, Ifc2 {}
+
+// XPECT noerrors -->
+export external interface ~SubIfc5 extends Ifc1, Ifc2 {
+	// XPECT noerrors -->
+	@Override() (p: string | number);
+
+	// XPECT noerrors -->
+	@Override new(p: string | number): ResultCls;
+}
