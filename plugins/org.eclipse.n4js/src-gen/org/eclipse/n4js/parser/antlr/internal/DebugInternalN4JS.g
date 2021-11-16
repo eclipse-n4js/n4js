@@ -6688,9 +6688,10 @@ ruleAnnotationNoAtSign:
 	ruleAnnotationName
 	(
 		(
-			('(')=>
-			'('
+			(ruleNoLineTerminator)=>
+			ruleNoLineTerminator
 		)
+		'('
 		(
 			ruleAnnotationArgument
 			(
@@ -7196,9 +7197,9 @@ ruleN4MemberDeclaration:
 			ruleN4MethodDeclaration
 		)
 		    |
-		ruleN4FieldDeclaration
-		    |
 		ruleN4CallSignatureDeclaration
+		    |
+		ruleN4FieldDeclaration
 	)
 ;
 
@@ -7383,9 +7384,9 @@ norm1_N4MemberDeclaration:
 			norm1_N4MethodDeclaration
 		)
 		    |
-		norm1_N4FieldDeclaration
-		    |
 		norm1_N4CallSignatureDeclaration
+		    |
+		norm1_N4FieldDeclaration
 	)
 ;
 
@@ -7608,6 +7609,16 @@ ruleAnnotatedN4MemberDeclaration:
 					('(')=>
 					ruleMethodParamsReturnAndBody
 				)
+			)
+		)
+		';'?
+		    |
+		(
+			('('
+			)=>
+			(
+				('(')=>
+				ruleMethodParamsReturnAndBody
 			)
 		)
 		';'?
@@ -7835,6 +7846,16 @@ norm1_AnnotatedN4MemberDeclaration:
 					('(')=>
 					ruleMethodParamsReturnAndBody
 				)
+			)
+		)
+		';'?
+		    |
+		(
+			('('
+			)=>
+			(
+				('(')=>
+				ruleMethodParamsReturnAndBody
 			)
 		)
 		';'?

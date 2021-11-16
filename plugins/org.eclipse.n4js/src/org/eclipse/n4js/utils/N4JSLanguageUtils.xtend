@@ -153,6 +153,13 @@ public class N4JSLanguageUtils {
 	public static boolean OPAQUE_JS_MODULES = true;
 
 	/**
+	 * Special name used for {@link TMethod}s that represent a call signature. Only used in type model
+	 * (not in AST). Do not use this name to check if a {@code TMethod} is a call signature; use
+	 * {@link TFunction#isCallSignature() #isCallSignature()} for this purpose.
+	 */
+	public static final String CALL_SIGNATURE_NAME = "()";
+
+	/**
 	 * Prefix used in names of members that are identified by a built-in symbol.
 	 * <p>
 	 * Take this example:

@@ -16,6 +16,7 @@ import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.MIXEDIN
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.OWNED;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillAware;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -67,6 +68,7 @@ import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
@@ -244,7 +246,12 @@ public class ContainerTypesHelper {
 		 * Similar to {@link #members(ContainerType)} but with a filter to only accept certain elements.
 		 */
 		private MemberList<TMember> members(ContainerType<?> type, Predicate<TMember> filter) {
-			return new CollectMembersHelper(type, true, true, filter).getResult();
+			return new CollectMembersHelper(type, true, true, false, filter).getResult();
+		}
+
+		public MemberList<TMember> members(ContainerType<?> type, boolean includeImplicitSuperTypes,
+				boolean includePolyfills) {
+			return members(type, includeImplicitSuperTypes, includePolyfills, false);
 		}
 
 		/**
@@ -254,11 +261,13 @@ public class ContainerTypesHelper {
 		 *            if set to {@code true}, members defined in dynamic or static polyfills are collected as well
 		 */
 		public MemberList<TMember> members(ContainerType<?> type, boolean includeImplicitSuperTypes,
-				boolean includePolyfills) {
-			return cache.get(Arrays.asList("members", type, includeImplicitSuperTypes, includePolyfills),
+				boolean includePolyfills, boolean includeCallConstructSignatures) {
+			return cache.get(
+					Arrays.asList("members", type, includeImplicitSuperTypes, includePolyfills,
+							includeCallConstructSignatures),
 					contextResource,
-					() -> new CollectMembersHelper(type, includeImplicitSuperTypes, includePolyfills, m -> true)
-							.getResult());
+					() -> new CollectMembersHelper(type, includeImplicitSuperTypes, includePolyfills,
+							includeCallConstructSignatures, m -> true).getResult());
 		}
 
 		/**
@@ -338,6 +347,10 @@ public class ContainerTypesHelper {
 			return allInheritedMembers;
 		}
 
+		public MemberList<TMember> membersOfImplementedInterfacesForConsumption(TClassifier classifier) {
+			return membersOfImplementedInterfacesForConsumption(classifier, false);
+		}
+
 		/**
 		 * Returns all members of (directly) implemented interfaces that are candidates for being consumed by an
 		 * implementing class. This list does not contain any duplicates. Note that the members may not actually be
@@ -351,7 +364,8 @@ public class ContainerTypesHelper {
 		 * never be consumed (currently, N4Object only has a single non-static member, i.e. its constructor, so this
 		 * applies only to this one member).
 		 */
-		public MemberList<TMember> membersOfImplementedInterfacesForConsumption(TClassifier classifier) {
+		public MemberList<TMember> membersOfImplementedInterfacesForConsumption(TClassifier classifier,
+				boolean includeCallConstructSignatures) {
 
 			Iterator<ParameterizedTypeRef> iter = classifier.getImplementedOrExtendedInterfaceRefs().iterator();
 			if (!iter.hasNext()) {
@@ -361,7 +375,7 @@ public class ContainerTypesHelper {
 			if (!iter.hasNext()) { // only one interface, simply create members of that interface directly
 				if (first.getDeclaredType() instanceof TInterface) {
 					TInterface tinterface = (TInterface) first.getDeclaredType();
-					return members(tinterface, false, true);
+					return members(tinterface, false, true, includeCallConstructSignatures);
 				}
 				return MemberList.emptyList();
 			}
@@ -370,7 +384,7 @@ public class ContainerTypesHelper {
 			for (ParameterizedTypeRef interfaceRef : classifier.getImplementedOrExtendedInterfaceRefs()) {
 				if (interfaceRef.getDeclaredType() instanceof TInterface) {
 					TInterface tinterface = (TInterface) interfaceRef.getDeclaredType();
-					memberList.addAll(members(tinterface, false, true));
+					memberList.addAll(members(tinterface, false, true, includeCallConstructSignatures));
 				}
 			}
 			return memberList;
@@ -838,6 +852,11 @@ public class ContainerTypesHelper {
 		 */
 		private class CollectMembersHelper extends AbstractMemberCollector<MemberList<TMember>> {
 
+			/**
+			 * Flag indicating whether call/construct signatures are collected as well.
+			 */
+			protected final boolean includeCallConstructSignatures;
+
 			private final Map<NameAndAccess, TMember> nameAccessToMember;
 			private final Predicate<TMember> filter;
 
@@ -845,12 +864,14 @@ public class ContainerTypesHelper {
 			 * Creates a new collector that is used to safely traverse a potentially cyclic inheritance tree and collect
 			 * the members of the type.
 			 *
-			 * @filter only members passing the filter are added to the collection. If the filter is null, everything is
-			 *         accepted
+			 * @param filter
+			 *            only members passing the filter are added to the collection. If the filter is null, everything
+			 *            is accepted
 			 */
-			public CollectMembersHelper(ContainerType<?> type,
-					boolean includeImplicitSuperTypes, boolean includePolyfills, Predicate<TMember> filter) {
+			public CollectMembersHelper(ContainerType<?> type, boolean includeImplicitSuperTypes,
+					boolean includePolyfills, boolean includeCallConstructSignatures, Predicate<TMember> filter) {
 				super(type, includeImplicitSuperTypes, includePolyfills);
+				this.includeCallConstructSignatures = includeCallConstructSignatures;
 				this.filter = filter == null ? m -> true : filter;
 				nameAccessToMember = Maps.newLinkedHashMap();
 			}
@@ -862,9 +883,27 @@ public class ContainerTypesHelper {
 
 			@Override
 			protected boolean process(ContainerType<?> containerType) {
-				for (Entry<NameAndAccess, ? extends TMember> entry : containerType
-						.getOrCreateOwnedMembersByNameAndAccess()
-						.entrySet()) {
+				List<Entry<NameAndAccess, ? extends TMember>> ownedMembers = Lists.newArrayList(
+						containerType.getOrCreateOwnedMembersByNameAndAccess().entrySet());
+
+				if (includeCallConstructSignatures) {
+					// include call/construct signatures of interfaces
+					// (NOTE: call signatures in classes are *not* inherited (similarly to class constructors) and
+					// are therefore never included here)
+					if (containerType instanceof TInterface) {
+						TMethod callSig = containerType.getCallSignature();
+						TMethod constructSig = containerType.getConstructSignature();
+						if (callSig != null) {
+							ownedMembers.add(new SimpleImmutableEntry<>(NameAndAccess.of(callSig)[0], callSig));
+						}
+						if (constructSig != null) {
+							ownedMembers
+									.add(new SimpleImmutableEntry<>(NameAndAccess.of(constructSig)[0], constructSig));
+						}
+					}
+				}
+
+				for (Entry<NameAndAccess, ? extends TMember> entry : ownedMembers) {
 					final NameAndAccess key = entry.getKey();
 					final TMember m = entry.getValue();
 

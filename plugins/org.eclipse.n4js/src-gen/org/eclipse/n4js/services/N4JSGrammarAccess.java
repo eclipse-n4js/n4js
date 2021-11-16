@@ -8568,21 +8568,22 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final RuleCall cNameAnnotationNameParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Keyword cLeftParenthesisKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
-		private final Assignment cArgsAssignment_1_1_0 = (Assignment)cGroup_1_1.eContents().get(0);
-		private final RuleCall cArgsAnnotationArgumentParserRuleCall_1_1_0_0 = (RuleCall)cArgsAssignment_1_1_0.eContents().get(0);
-		private final Group cGroup_1_1_1 = (Group)cGroup_1_1.eContents().get(1);
-		private final Keyword cCommaKeyword_1_1_1_0 = (Keyword)cGroup_1_1_1.eContents().get(0);
-		private final Assignment cArgsAssignment_1_1_1_1 = (Assignment)cGroup_1_1_1.eContents().get(1);
-		private final RuleCall cArgsAnnotationArgumentParserRuleCall_1_1_1_1_0 = (RuleCall)cArgsAssignment_1_1_1_1.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
+		private final RuleCall cNoLineTerminatorParserRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
+		private final Group cGroup_1_2 = (Group)cGroup_1.eContents().get(2);
+		private final Assignment cArgsAssignment_1_2_0 = (Assignment)cGroup_1_2.eContents().get(0);
+		private final RuleCall cArgsAnnotationArgumentParserRuleCall_1_2_0_0 = (RuleCall)cArgsAssignment_1_2_0.eContents().get(0);
+		private final Group cGroup_1_2_1 = (Group)cGroup_1_2.eContents().get(1);
+		private final Keyword cCommaKeyword_1_2_1_0 = (Keyword)cGroup_1_2_1.eContents().get(0);
+		private final Assignment cArgsAssignment_1_2_1_1 = (Assignment)cGroup_1_2_1.eContents().get(1);
+		private final RuleCall cArgsAnnotationArgumentParserRuleCall_1_2_1_1_0 = (RuleCall)cArgsAssignment_1_2_1_1.eContents().get(0);
+		private final Keyword cRightParenthesisKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
 		
 		//AnnotationNoAtSign returns Annotation:
-		//    name=AnnotationName (=> '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
+		//    name=AnnotationName (=> NoLineTerminator '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//name=AnnotationName (=> '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?
+		//name=AnnotationName (=> NoLineTerminator '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?
 		public Group getGroup() { return cGroup; }
 		
 		//name=AnnotationName
@@ -8591,35 +8592,38 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//AnnotationName
 		public RuleCall getNameAnnotationNameParserRuleCall_0_0() { return cNameAnnotationNameParserRuleCall_0_0; }
 		
-		//(=> '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?
+		//(=> NoLineTerminator '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//=> '('
-		public Keyword getLeftParenthesisKeyword_1_0() { return cLeftParenthesisKeyword_1_0; }
+		//=> NoLineTerminator
+		public RuleCall getNoLineTerminatorParserRuleCall_1_0() { return cNoLineTerminatorParserRuleCall_1_0; }
+		
+		//'('
+		public Keyword getLeftParenthesisKeyword_1_1() { return cLeftParenthesisKeyword_1_1; }
 		
 		//(args+=AnnotationArgument (',' args+=AnnotationArgument)*)?
-		public Group getGroup_1_1() { return cGroup_1_1; }
+		public Group getGroup_1_2() { return cGroup_1_2; }
 		
 		//args+=AnnotationArgument
-		public Assignment getArgsAssignment_1_1_0() { return cArgsAssignment_1_1_0; }
+		public Assignment getArgsAssignment_1_2_0() { return cArgsAssignment_1_2_0; }
 		
 		//AnnotationArgument
-		public RuleCall getArgsAnnotationArgumentParserRuleCall_1_1_0_0() { return cArgsAnnotationArgumentParserRuleCall_1_1_0_0; }
+		public RuleCall getArgsAnnotationArgumentParserRuleCall_1_2_0_0() { return cArgsAnnotationArgumentParserRuleCall_1_2_0_0; }
 		
 		//(',' args+=AnnotationArgument)*
-		public Group getGroup_1_1_1() { return cGroup_1_1_1; }
+		public Group getGroup_1_2_1() { return cGroup_1_2_1; }
 		
 		//','
-		public Keyword getCommaKeyword_1_1_1_0() { return cCommaKeyword_1_1_1_0; }
+		public Keyword getCommaKeyword_1_2_1_0() { return cCommaKeyword_1_2_1_0; }
 		
 		//args+=AnnotationArgument
-		public Assignment getArgsAssignment_1_1_1_1() { return cArgsAssignment_1_1_1_1; }
+		public Assignment getArgsAssignment_1_2_1_1() { return cArgsAssignment_1_2_1_1; }
 		
 		//AnnotationArgument
-		public RuleCall getArgsAnnotationArgumentParserRuleCall_1_1_1_1_0() { return cArgsAnnotationArgumentParserRuleCall_1_1_1_1_0; }
+		public RuleCall getArgsAnnotationArgumentParserRuleCall_1_2_1_1_0() { return cArgsAnnotationArgumentParserRuleCall_1_2_1_1_0; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_1_2() { return cRightParenthesisKeyword_1_2; }
+		public Keyword getRightParenthesisKeyword_1_3() { return cRightParenthesisKeyword_1_3; }
 	}
 	public class AnnotationArgumentElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotationArgument");
@@ -9573,16 +9577,16 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cN4GetterDeclarationParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cN4SetterDeclarationParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cN4MethodDeclarationParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cN4FieldDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cN4CallSignatureDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cN4CallSignatureDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cN4FieldDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		
 		//N4MemberDeclaration <Yield>:
 		//    AnnotatedN4MemberDeclaration<Yield>
 		//    | N4GetterDeclaration<Yield>
 		//    | N4SetterDeclaration<Yield>
 		//    | N4MethodDeclaration<Yield>
-		//    | N4FieldDeclaration<Yield>
 		//    | N4CallSignatureDeclaration<Yield>
+		//    | N4FieldDeclaration<Yield>
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -9590,8 +9594,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//| N4GetterDeclaration<Yield>
 		//| N4SetterDeclaration<Yield>
 		//| N4MethodDeclaration<Yield>
-		//| N4FieldDeclaration<Yield>
 		//| N4CallSignatureDeclaration<Yield>
+		//| N4FieldDeclaration<Yield>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//AnnotatedN4MemberDeclaration<Yield>
@@ -9606,11 +9610,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//N4MethodDeclaration<Yield>
 		public RuleCall getN4MethodDeclarationParserRuleCall_3() { return cN4MethodDeclarationParserRuleCall_3; }
 		
-		//N4FieldDeclaration<Yield>
-		public RuleCall getN4FieldDeclarationParserRuleCall_4() { return cN4FieldDeclarationParserRuleCall_4; }
-		
 		//N4CallSignatureDeclaration<Yield>
-		public RuleCall getN4CallSignatureDeclarationParserRuleCall_5() { return cN4CallSignatureDeclarationParserRuleCall_5; }
+		public RuleCall getN4CallSignatureDeclarationParserRuleCall_4() { return cN4CallSignatureDeclarationParserRuleCall_4; }
+		
+		//N4FieldDeclaration<Yield>
+		public RuleCall getN4FieldDeclarationParserRuleCall_5() { return cN4FieldDeclarationParserRuleCall_5; }
 	}
 	public class AnnotatedN4MemberDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotatedN4MemberDeclaration");
@@ -9666,8 +9670,14 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_3_1_2 = (RuleCall)cGroup_1_2_0_0_3_1.eContents().get(2);
 		private final Keyword cSemicolonKeyword_1_2_1 = (Keyword)cGroup_1_2.eContents().get(1);
 		private final Group cGroup_1_3 = (Group)cAlternatives_1.eContents().get(3);
-		private final Action cN4FieldDeclarationAnnotationListAction_1_3_0 = (Action)cGroup_1_3.eContents().get(0);
-		private final RuleCall cFieldDeclarationImplParserRuleCall_1_3_1 = (RuleCall)cGroup_1_3.eContents().get(1);
+		private final Group cGroup_1_3_0 = (Group)cGroup_1_3.eContents().get(0);
+		private final Group cGroup_1_3_0_0 = (Group)cGroup_1_3_0.eContents().get(0);
+		private final Action cN4MethodDeclarationAnnotationListAction_1_3_0_0_0 = (Action)cGroup_1_3_0_0.eContents().get(0);
+		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_1 = (RuleCall)cGroup_1_3_0_0.eContents().get(1);
+		private final Keyword cSemicolonKeyword_1_3_1 = (Keyword)cGroup_1_3.eContents().get(1);
+		private final Group cGroup_1_4 = (Group)cAlternatives_1.eContents().get(4);
+		private final Action cN4FieldDeclarationAnnotationListAction_1_4_0 = (Action)cGroup_1_4.eContents().get(0);
+		private final RuleCall cFieldDeclarationImplParserRuleCall_1_4_1 = (RuleCall)cGroup_1_4.eContents().get(1);
 		
 		///**
 		// * Left factored, annotated member declarations.
@@ -9688,6 +9698,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//                    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 		//                )
 		//                )';'?
+		//        |    => ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
 		//        |     {N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 		//    )
 		//;
@@ -9704,6 +9715,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//                |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 		//            )
 		//            )';'?
+		//    |    => ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
 		//    |     {N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 		//)
 		public Group getGroup() { return cGroup; }
@@ -9722,6 +9734,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//                   |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 		//               )
 		//               )';'?
+		//       |    => ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
 		//       |     {N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 		//   )
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
@@ -9890,14 +9903,32 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//';'?
 		public Keyword getSemicolonKeyword_1_2_1() { return cSemicolonKeyword_1_2_1; }
 		
-		//{N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
+		//=> ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
 		public Group getGroup_1_3() { return cGroup_1_3; }
 		
+		//=> ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>)
+		public Group getGroup_1_3_0() { return cGroup_1_3_0; }
+		
+		//{N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>
+		public Group getGroup_1_3_0_0() { return cGroup_1_3_0_0; }
+		
+		//{N4MethodDeclaration.annotationList=current}
+		public Action getN4MethodDeclarationAnnotationListAction_1_3_0_0_0() { return cN4MethodDeclarationAnnotationListAction_1_3_0_0_0; }
+		
+		//-> MethodParamsReturnAndBody <Generator=false>
+		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_1() { return cMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_1; }
+		
+		//';'?
+		public Keyword getSemicolonKeyword_1_3_1() { return cSemicolonKeyword_1_3_1; }
+		
+		//{N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
+		public Group getGroup_1_4() { return cGroup_1_4; }
+		
 		//{N4FieldDeclaration.annotationList=current}
-		public Action getN4FieldDeclarationAnnotationListAction_1_3_0() { return cN4FieldDeclarationAnnotationListAction_1_3_0; }
+		public Action getN4FieldDeclarationAnnotationListAction_1_4_0() { return cN4FieldDeclarationAnnotationListAction_1_4_0; }
 		
 		//FieldDeclarationImpl<Yield>
-		public RuleCall getFieldDeclarationImplParserRuleCall_1_3_1() { return cFieldDeclarationImplParserRuleCall_1_3_1; }
+		public RuleCall getFieldDeclarationImplParserRuleCall_1_4_1() { return cFieldDeclarationImplParserRuleCall_1_4_1; }
 	}
 	public class FieldDeclarationImplElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.FieldDeclarationImpl");
@@ -10111,6 +10142,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Keyword cSemicolonKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		
+		///*
+		// * NOTE: while constructors and construct signatures are handled as ordinary methods
+		// * by the parser (i.e. they do not have dedicated grammar rules), call signatures need
+		// * this special grammar rule.
+		// */
 		//N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
 		//    MethodParamsReturnAndBody <Generator=false> ';'?
 		//;
@@ -14578,7 +14614,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//AnnotationNoAtSign returns Annotation:
-	//    name=AnnotationName (=> '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
+	//    name=AnnotationName (=> NoLineTerminator '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
 	public AnnotationNoAtSignElements getAnnotationNoAtSignAccess() {
 		return pAnnotationNoAtSign;
 	}
@@ -14902,8 +14938,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | N4GetterDeclaration<Yield>
 	//    | N4SetterDeclaration<Yield>
 	//    | N4MethodDeclaration<Yield>
-	//    | N4FieldDeclaration<Yield>
 	//    | N4CallSignatureDeclaration<Yield>
+	//    | N4FieldDeclaration<Yield>
 	//;
 	public N4MemberDeclarationElements getN4MemberDeclarationAccess() {
 		return pN4MemberDeclaration;
@@ -14932,6 +14968,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//                    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 	//                )
 	//                )';'?
+	//        |    => ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
 	//        |     {N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 	//    )
 	//;
@@ -14988,6 +15025,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getN4MethodDeclarationAccess().getRule();
 	}
 	
+	///*
+	// * NOTE: while constructors and construct signatures are handled as ordinary methods
+	// * by the parser (i.e. they do not have dedicated grammar rules), call signatures need
+	// * this special grammar rule.
+	// */
 	//N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
 	//    MethodParamsReturnAndBody <Generator=false> ';'?
 	//;

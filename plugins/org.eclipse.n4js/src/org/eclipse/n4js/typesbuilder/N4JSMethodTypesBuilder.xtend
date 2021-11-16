@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 @Singleton
 package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuilder {
@@ -75,7 +76,11 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 			return null
 		}
 		val methodType = TypesFactory::eINSTANCE.createTMethod();
-		methodType.setMemberName(methodDecl);
+		if (methodDecl.isCallSignature) {
+			methodType.name = N4JSLanguageUtils.CALL_SIGNATURE_NAME;
+		} else {
+			methodType.setMemberName(methodDecl);
+		}
 		methodType.declaredAbstract = methodDecl.abstract
 		methodType.declaredStatic = methodDecl.declaredStatic
 		methodType.declaredFinal = methodDecl.declaredFinal
