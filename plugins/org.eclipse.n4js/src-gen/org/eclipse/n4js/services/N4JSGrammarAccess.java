@@ -9673,7 +9673,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup_1_3_0 = (Group)cGroup_1_3.eContents().get(0);
 		private final Group cGroup_1_3_0_0 = (Group)cGroup_1_3_0.eContents().get(0);
 		private final Action cN4MethodDeclarationAnnotationListAction_1_3_0_0_0 = (Action)cGroup_1_3_0_0.eContents().get(0);
-		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_1 = (RuleCall)cGroup_1_3_0_0.eContents().get(1);
+		private final RuleCall cTypeParametersParserRuleCall_1_3_0_0_1 = (RuleCall)cGroup_1_3_0_0.eContents().get(1);
+		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_2 = (RuleCall)cGroup_1_3_0_0.eContents().get(2);
 		private final Keyword cSemicolonKeyword_1_3_1 = (Keyword)cGroup_1_3.eContents().get(1);
 		private final Group cGroup_1_4 = (Group)cAlternatives_1.eContents().get(4);
 		private final Action cN4FieldDeclarationAnnotationListAction_1_4_0 = (Action)cGroup_1_4.eContents().get(0);
@@ -9698,7 +9699,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//                    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 		//                )
 		//                )';'?
-		//        |    => ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
+		//        |    => ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
 		//        |     {N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 		//    )
 		//;
@@ -9715,7 +9716,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//                |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 		//            )
 		//            )';'?
-		//    |    => ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
+		//    |    => ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
 		//    |     {N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 		//)
 		public Group getGroup() { return cGroup; }
@@ -9734,7 +9735,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//                   |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 		//               )
 		//               )';'?
-		//       |    => ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
+		//       |    => ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
 		//       |     {N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 		//   )
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
@@ -9903,20 +9904,23 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//';'?
 		public Keyword getSemicolonKeyword_1_2_1() { return cSemicolonKeyword_1_2_1; }
 		
-		//=> ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
+		//=> ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
 		public Group getGroup_1_3() { return cGroup_1_3; }
 		
-		//=> ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>)
+		//=> ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>)
 		public Group getGroup_1_3_0() { return cGroup_1_3_0; }
 		
-		//{N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>
+		//{N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		public Group getGroup_1_3_0_0() { return cGroup_1_3_0_0; }
 		
 		//{N4MethodDeclaration.annotationList=current}
 		public Action getN4MethodDeclarationAnnotationListAction_1_3_0_0_0() { return cN4MethodDeclarationAnnotationListAction_1_3_0_0_0; }
 		
+		//TypeParameters?
+		public RuleCall getTypeParametersParserRuleCall_1_3_0_0_1() { return cTypeParametersParserRuleCall_1_3_0_0_1; }
+		
 		//-> MethodParamsReturnAndBody <Generator=false>
-		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_1() { return cMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_1; }
+		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_2() { return cMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_2; }
 		
 		//';'?
 		public Keyword getSemicolonKeyword_1_3_1() { return cSemicolonKeyword_1_3_1; }
@@ -10139,8 +10143,9 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	public class N4CallSignatureDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4CallSignatureDeclaration");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
-		private final Keyword cSemicolonKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final RuleCall cTypeParametersParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final Keyword cSemicolonKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		
 		///*
 		// * NOTE: while constructors and construct signatures are handled as ordinary methods
@@ -10148,18 +10153,21 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		// * this special grammar rule.
 		// */
 		//N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
-		//    MethodParamsReturnAndBody <Generator=false> ';'?
+		//    TypeParameters? MethodParamsReturnAndBody <Generator=false> ';'?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//MethodParamsReturnAndBody <Generator=false> ';'?
+		//TypeParameters? MethodParamsReturnAndBody <Generator=false> ';'?
 		public Group getGroup() { return cGroup; }
 		
+		//TypeParameters?
+		public RuleCall getTypeParametersParserRuleCall_0() { return cTypeParametersParserRuleCall_0; }
+		
 		//MethodParamsReturnAndBody <Generator=false>
-		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_0() { return cMethodParamsReturnAndBodyParserRuleCall_0; }
+		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_1() { return cMethodParamsReturnAndBodyParserRuleCall_1; }
 		
 		//';'?
-		public Keyword getSemicolonKeyword_1() { return cSemicolonKeyword_1; }
+		public Keyword getSemicolonKeyword_2() { return cSemicolonKeyword_2; }
 	}
 	public class MethodParamsAndBodyElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.MethodParamsAndBody");
@@ -14968,7 +14976,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//                    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 	//                )
 	//                )';'?
-	//        |    => ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
+	//        |    => ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
 	//        |     {N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 	//    )
 	//;
@@ -15031,7 +15039,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	// * this special grammar rule.
 	// */
 	//N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
-	//    MethodParamsReturnAndBody <Generator=false> ';'?
+	//    TypeParameters? MethodParamsReturnAndBody <Generator=false> ';'?
 	//;
 	public N4CallSignatureDeclarationElements getN4CallSignatureDeclarationAccess() {
 		return pN4CallSignatureDeclaration;

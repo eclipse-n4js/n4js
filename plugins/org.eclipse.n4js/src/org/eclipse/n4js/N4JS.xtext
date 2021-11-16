@@ -1369,7 +1369,7 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 				)
 				)';'?
-		|	=> ({N4MethodDeclaration.annotationList=current} -> MethodParamsReturnAndBody <Generator=false>) ';'?
+		|	=> ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
 		| 	{N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 	)
 ;
@@ -1404,7 +1404,7 @@ N4MethodDeclaration <Yield>:
  * this special grammar rule.
  */
 N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
-	MethodParamsReturnAndBody <Generator=false> ';'?
+	TypeParameters? MethodParamsReturnAndBody <Generator=false> ';'?
 ;
 
 fragment MethodParamsAndBody <Generator>*:

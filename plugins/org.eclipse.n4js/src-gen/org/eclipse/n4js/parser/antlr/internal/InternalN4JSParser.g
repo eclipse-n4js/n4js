@@ -31213,6 +31213,9 @@ ruleAnnotatedN4MemberDeclaration returns [EObject current=null]
 					((
 						(
 						)
+						(
+							ruleTypeParameters[null]
+						)?
 						LeftParenthesis
 					)
 					)=>
@@ -31225,25 +31228,38 @@ ruleAnnotatedN4MemberDeclaration returns [EObject current=null]
 							}
 						)
 						(
+							{
+								if ($current==null) {
+									$current = createModelElement(grammarAccess.getAnnotatedN4MemberDeclarationRule());
+								}
+								newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getTypeParametersParserRuleCall_1_3_0_0_1());
+							}
+							this_TypeParameters_27=ruleTypeParameters[$current]
+							{
+								$current = $this_TypeParameters_27.current;
+								afterParserOrEnumRuleCall();
+							}
+						)?
+						(
 							(LeftParenthesis)=>
 							{
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedN4MemberDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_1());
+								newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_2());
 							}
-							this_MethodParamsReturnAndBody_27=ruleMethodParamsReturnAndBody[$current]
+							this_MethodParamsReturnAndBody_28=ruleMethodParamsReturnAndBody[$current]
 							{
-								$current = $this_MethodParamsReturnAndBody_27.current;
+								$current = $this_MethodParamsReturnAndBody_28.current;
 								afterParserOrEnumRuleCall();
 							}
 						)
 					)
 				)
 				(
-					otherlv_28=Semicolon
+					otherlv_29=Semicolon
 					{
-						newLeafNode(otherlv_28, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getSemicolonKeyword_1_3_1());
+						newLeafNode(otherlv_29, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getSemicolonKeyword_1_3_1());
 					}
 				)?
 			)
@@ -31262,9 +31278,9 @@ ruleAnnotatedN4MemberDeclaration returns [EObject current=null]
 					}
 					newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getFieldDeclarationImplParserRuleCall_1_4_1());
 				}
-				this_FieldDeclarationImpl_30=ruleFieldDeclarationImpl[$current]
+				this_FieldDeclarationImpl_31=ruleFieldDeclarationImpl[$current]
 				{
-					$current = $this_FieldDeclarationImpl_30.current;
+					$current = $this_FieldDeclarationImpl_31.current;
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -31853,6 +31869,9 @@ norm1_AnnotatedN4MemberDeclaration returns [EObject current=null]
 					((
 						(
 						)
+						(
+							ruleTypeParameters[null]
+						)?
 						LeftParenthesis
 					)
 					)=>
@@ -31865,25 +31884,38 @@ norm1_AnnotatedN4MemberDeclaration returns [EObject current=null]
 							}
 						)
 						(
+							{
+								if ($current==null) {
+									$current = createModelElement(grammarAccess.getAnnotatedN4MemberDeclarationRule());
+								}
+								newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getTypeParametersParserRuleCall_1_3_0_0_1());
+							}
+							this_TypeParameters_27=ruleTypeParameters[$current]
+							{
+								$current = $this_TypeParameters_27.current;
+								afterParserOrEnumRuleCall();
+							}
+						)?
+						(
 							(LeftParenthesis)=>
 							{
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getAnnotatedN4MemberDeclarationRule());
 								}
-								newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_1());
+								newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_1_3_0_0_2());
 							}
-							this_MethodParamsReturnAndBody_27=ruleMethodParamsReturnAndBody[$current]
+							this_MethodParamsReturnAndBody_28=ruleMethodParamsReturnAndBody[$current]
 							{
-								$current = $this_MethodParamsReturnAndBody_27.current;
+								$current = $this_MethodParamsReturnAndBody_28.current;
 								afterParserOrEnumRuleCall();
 							}
 						)
 					)
 				)
 				(
-					otherlv_28=Semicolon
+					otherlv_29=Semicolon
 					{
-						newLeafNode(otherlv_28, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getSemicolonKeyword_1_3_1());
+						newLeafNode(otherlv_29, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getSemicolonKeyword_1_3_1());
 					}
 				)?
 			)
@@ -31902,9 +31934,9 @@ norm1_AnnotatedN4MemberDeclaration returns [EObject current=null]
 					}
 					newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getFieldDeclarationImplParserRuleCall_1_4_1());
 				}
-				this_FieldDeclarationImpl_30=norm1_FieldDeclarationImpl[$current]
+				this_FieldDeclarationImpl_31=norm1_FieldDeclarationImpl[$current]
 				{
-					$current = $this_FieldDeclarationImpl_30.current;
+					$current = $this_FieldDeclarationImpl_31.current;
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -32618,21 +32650,34 @@ ruleN4CallSignatureDeclaration returns [EObject current=null]
 	leaveRule();
 }:
 	(
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getN4CallSignatureDeclarationRule());
+				}
+				newCompositeNode(grammarAccess.getN4CallSignatureDeclarationAccess().getTypeParametersParserRuleCall_0());
+			}
+			this_TypeParameters_0=ruleTypeParameters[$current]
+			{
+				$current = $this_TypeParameters_0.current;
+				afterParserOrEnumRuleCall();
+			}
+		)?
 		{
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getN4CallSignatureDeclarationRule());
 			}
-			newCompositeNode(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0());
+			newCompositeNode(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_1());
 		}
-		this_MethodParamsReturnAndBody_0=ruleMethodParamsReturnAndBody[$current]
+		this_MethodParamsReturnAndBody_1=ruleMethodParamsReturnAndBody[$current]
 		{
-			$current = $this_MethodParamsReturnAndBody_0.current;
+			$current = $this_MethodParamsReturnAndBody_1.current;
 			afterParserOrEnumRuleCall();
 		}
 		(
-			otherlv_1=Semicolon
+			otherlv_2=Semicolon
 			{
-				newLeafNode(otherlv_1, grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_1());
+				newLeafNode(otherlv_2, grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_2());
 			}
 		)?
 	)
@@ -32648,21 +32693,34 @@ norm1_N4CallSignatureDeclaration returns [EObject current=null]
 	leaveRule();
 }:
 	(
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getN4CallSignatureDeclarationRule());
+				}
+				newCompositeNode(grammarAccess.getN4CallSignatureDeclarationAccess().getTypeParametersParserRuleCall_0());
+			}
+			this_TypeParameters_0=ruleTypeParameters[$current]
+			{
+				$current = $this_TypeParameters_0.current;
+				afterParserOrEnumRuleCall();
+			}
+		)?
 		{
 			if ($current==null) {
 				$current = createModelElement(grammarAccess.getN4CallSignatureDeclarationRule());
 			}
-			newCompositeNode(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_0());
+			newCompositeNode(grammarAccess.getN4CallSignatureDeclarationAccess().getMethodParamsReturnAndBodyParserRuleCall_1());
 		}
-		this_MethodParamsReturnAndBody_0=ruleMethodParamsReturnAndBody[$current]
+		this_MethodParamsReturnAndBody_1=ruleMethodParamsReturnAndBody[$current]
 		{
-			$current = $this_MethodParamsReturnAndBody_0.current;
+			$current = $this_MethodParamsReturnAndBody_1.current;
 			afterParserOrEnumRuleCall();
 		}
 		(
-			otherlv_1=Semicolon
+			otherlv_2=Semicolon
 			{
-				newLeafNode(otherlv_1, grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_1());
+				newLeafNode(otherlv_2, grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_2());
 			}
 		)?
 	)

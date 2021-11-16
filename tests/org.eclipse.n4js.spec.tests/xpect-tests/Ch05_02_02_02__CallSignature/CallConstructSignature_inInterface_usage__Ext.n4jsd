@@ -12,6 +12,8 @@
 
 export external class CallResultCls {}
 export external class ConstructResultCls {}
+export external class CallResultGenCls<T> { getValue(): T; }
+export external class ConstructResultGenCls<T> { getValue(): T; }
 
 export external interface ~IfcNone {}
 
@@ -30,3 +32,8 @@ export external interface ~IfcBoth {
 
 export external interface ~SubIfcOnlyCall extends IfcOnlyCall {}
 export external interface ~SubIfcOnlyConstruct extends IfcOnlyConstruct {}
+
+export external interface ~IfcGen {
+	<T> (p: T): CallResultGenCls<T>;
+	<T> new(p: T): ConstructResultGenCls<T>;
+}

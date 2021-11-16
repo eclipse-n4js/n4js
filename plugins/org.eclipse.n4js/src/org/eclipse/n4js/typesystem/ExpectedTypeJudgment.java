@@ -199,6 +199,7 @@ import com.google.inject.Inject;
 					final TMethod ctor;
 					if (constructSig != null) {
 						// special case: interface with construct signature
+						typeSystemHelper.addSubstitutions(G2, expr, constructSig);
 						ctor = constructSig;
 
 					} else if (ctorTypeRefPlain instanceof TypeTypeRef) {

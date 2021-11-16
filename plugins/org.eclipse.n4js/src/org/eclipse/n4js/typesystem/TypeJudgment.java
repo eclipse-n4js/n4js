@@ -1123,7 +1123,7 @@ import com.google.inject.Inject;
 						T = rtr != null ? rtr : anyTypeRef(G);
 					}
 
-					typeSystemHelper.addSubstitutions(G2, expr, targetTypeRef);
+					typeSystemHelper.addSubstitutions(G2, expr, F);
 					T = ts.substTypeVariables(G2, T);
 					if (T == null) {
 						return unknown();
@@ -1178,7 +1178,10 @@ import com.google.inject.Inject;
 					if (constructSig != null) {
 						TypeRef returnTypeRef = constructSig.getReturnTypeRef();
 						if (returnTypeRef != null && !TypeUtils.isVoid(returnTypeRef)) {
-							T = returnTypeRef;
+							RuleEnvironment G2 = wrap(G);
+							tsh.addSubstitutions(G2, e, constructSig);
+							TypeRef returnTypeRefSubst = ts.substTypeVariablesWithFullCapture(G2, returnTypeRef);
+							T = returnTypeRefSubst;
 						} else {
 							T = unknown();
 						}

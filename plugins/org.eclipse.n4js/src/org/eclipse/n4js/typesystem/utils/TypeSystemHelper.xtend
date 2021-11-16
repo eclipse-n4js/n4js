@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
+import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ParameterizedAccess
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
@@ -106,8 +107,11 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
 		genericsComputer.addSubstitutions(G,typeRef)
 	}
-	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, TypeRef targetTypeRef) {
+	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, FunctionTypeExprOrRef targetTypeRef) {
 		genericsComputer.addSubstitutions(G,callExpr,targetTypeRef)
+	}
+	def void addSubstitutions(RuleEnvironment G, NewExpression newExpr, TMethod constructSignature) {
+		genericsComputer.addSubstitutions(G, newExpr, constructSignature);
 	}
 	def void addSubstitutions(RuleEnvironment G, ParameterizedPropertyAccessExpression accessExpr) {
 		genericsComputer.addSubstitutions(G,accessExpr)

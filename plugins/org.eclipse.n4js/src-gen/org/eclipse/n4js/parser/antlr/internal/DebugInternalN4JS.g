@@ -7614,8 +7614,10 @@ ruleAnnotatedN4MemberDeclaration:
 		';'?
 		    |
 		(
-			('('
+			(ruleTypeParameters?
+			'('
 			)=>
+			ruleTypeParameters?
 			(
 				('(')=>
 				ruleMethodParamsReturnAndBody
@@ -7851,8 +7853,10 @@ norm1_AnnotatedN4MemberDeclaration:
 		';'?
 		    |
 		(
-			('('
+			(ruleTypeParameters?
+			'('
 			)=>
+			ruleTypeParameters?
 			(
 				('(')=>
 				ruleMethodParamsReturnAndBody
@@ -7982,12 +7986,14 @@ norm1_N4MethodDeclaration:
 
 // Rule N4CallSignatureDeclaration
 ruleN4CallSignatureDeclaration:
+	ruleTypeParameters?
 	ruleMethodParamsReturnAndBody
 	';'?
 ;
 
 // Rule N4CallSignatureDeclaration
 norm1_N4CallSignatureDeclaration:
+	ruleTypeParameters?
 	ruleMethodParamsReturnAndBody
 	';'?
 ;
