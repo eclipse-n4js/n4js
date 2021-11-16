@@ -1,0 +1,106 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// positive cases:
+
+export external interface ~I {
+
+	// XPECT noerrors -->
+	();
+
+	// XPECT noerrors -->
+	new();
+}
+
+export external class C {
+
+	// XPECT noerrors -->
+	();
+
+	// treated as an ordinary method with name "new" XPECT noerrors -->
+	new();
+}
+
+
+// @N4JS
+
+@N4JS
+export external interface ~I4 {
+
+	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "();"
+	();
+
+	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "new();"
+	new();
+}
+
+@N4JS
+export external class C4 {
+
+	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "();"
+	();
+
+	// treated as an ordinary method with name "new" XPECT noerrors -->
+	new();
+}
+
+
+// bodies:
+
+export external interface ~I2 {
+
+	// XPECT errors --> "Call and construct signatures must not have a body." at "() {}"
+	() {}
+
+	// XPECT errors --> "Call and construct signatures must not have a body." at "new() {}"
+	new() {}
+}
+
+export external class C2 {
+
+	// XPECT errors --> "Call and construct signatures must not have a body." at "() {}"
+	() {}
+
+	// treated as an ordinary method with name "new" XPECT errors --> "Methods in external classes have to have no body." at "new"
+	new() {}
+}
+
+
+// duplicates:
+
+export external interface ~I3 {
+
+	// XPECT errors --> "Duplicate call signature." at "();"
+	();
+	// XPECT errors --> "Duplicate call signature." at "();"
+	();
+
+	// XPECT errors --> "Duplicate construct signature." at "new();"
+	new();
+	// XPECT errors --> "Duplicate construct signature." at "new();"
+	new();
+}
+
+export external class C3 {
+
+	// XPECT errors --> "Duplicate call signature." at "();"
+	();
+	// XPECT errors --> "Duplicate call signature." at "();"
+	();
+
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 103) duplicates method new (line 105)." at "new"
+	new();
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 105) duplicates method new (line 103)." at "new"
+	new();
+}

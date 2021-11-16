@@ -11,12 +11,13 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import java.util.Collection
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
-import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -141,7 +142,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 
-		holdsCallSignatureConstraints(n4Method)
+		if (n4Method.isCallSignature || n4Method.isConstructSignature) {
+			return; // checked below in a dedicated check method
+		}
 
 		// wrong parsed
 		if (n4Method.definedTypeElement === null) {
@@ -152,6 +155,19 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 
 		holdsAbstractAndBodyPropertiesOfMethod(tmethod)
 		holdsConstructorConstraints(tmethod)
+	}
+
+	@Check
+	def void checkCallConstructSignatures(N4ClassifierDefinition n4ClassifierDef) {
+		val allCallSigs = n4ClassifierDef.ownedMembersRaw.filter[isCallSignature].map[it as N4MethodDeclaration].toList;
+		val allConstructSigs = n4ClassifierDef.ownedMembersRaw.filter[isConstructSignature].map[it as N4MethodDeclaration].toList;
+
+		for (callSig : allCallSigs) {
+			holdsCallConstructSignatureConstraints(callSig, true, false, allCallSigs, allConstructSigs);
+		}
+		for (constructSig : allConstructSigs) {
+			holdsCallConstructSignatureConstraints(constructSig, false, true, allCallSigs, allConstructSigs);
+		}
 	}
 
 	@Check
@@ -381,21 +397,39 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
-	def private boolean holdsCallSignatureConstraints(N4MethodDeclaration method) {
-		if (method.isCallSignature) {
-			// constraint: only in classes
-			if (!(method.eContainer instanceof N4ClassDefinition)) {
-				addIssue(getMessageForCLF_CALL_SIG_ONLY_IN_CLASS, method, CLF_CALL_SIG_ONLY_IN_CLASS);
-				return false;
-			}
+	def private boolean holdsCallConstructSignatureConstraints(N4MethodDeclaration method, boolean isCallSig, boolean isConstructSig,
+		Collection<N4MethodDeclaration> allCallSigs, Collection<N4MethodDeclaration> allConstructSigs) {
+
+		if (isCallSig || isConstructSig) {
 			// constraint: only in .n4jsd files
 			if (!jsVariantHelper.isExternalMode(method)) {
-				addIssue(getMessageForCLF_CALL_SIG_ONLY_IN_N4JSD, method, CLF_CALL_SIG_ONLY_IN_N4JSD);
+				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD, method, CLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD);
 				return false;
 			}
-			// constraint: not more than one call signature per class
-			if ((method.eContainer as N4ClassifierDefinition).ownedMembersRaw.filter[isCallSignature].size >= 2) {
-				addIssue(getMessageForCLF_CALL_SIG_DUPLICATE, method, CLF_CALL_SIG_DUPLICATE);
+			// constraint: not in classifiers with @N4JS
+			val owner = method.owner;
+			if (owner !== null && AnnotationDefinition.N4JS.hasAnnotation(owner)) {
+				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS, method, CLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS);
+				return false;
+			}
+			// constraint: must not have a body
+			if (method.body !== null) {
+				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_BODY, method, CLF_CALL_CONSTRUCT_SIG_BODY);
+				return false;
+			}
+			// constraint: not more than one call/construct signature per class
+			val haveDuplicate = (if (isCallSig) allCallSigs else allConstructSigs).size >= 2;
+			if (haveDuplicate) {
+				val kind = if (isCallSig) "call" else "construct";
+				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_DUPLICATE(kind), method, CLF_CALL_CONSTRUCT_SIG_DUPLICATE);
+				return false;
+			}
+		}
+		if (isConstructSig) {
+			// constraint: only in classes
+			if (!(method.eContainer instanceof N4InterfaceDeclaration)) {
+				addIssue(messageForCLF_CONSTRUCT_SIG_ONLY_IN_INTERFACE, method, CLF_CONSTRUCT_SIG_ONLY_IN_INTERFACE);
+				return false;
 			}
 		}
 		return true;
