@@ -39,6 +39,7 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.VoidType
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -429,6 +430,12 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			// constraint: only in classes
 			if (!(method.eContainer instanceof N4InterfaceDeclaration)) {
 				addIssue(messageForCLF_CONSTRUCT_SIG_ONLY_IN_INTERFACE, method, CLF_CONSTRUCT_SIG_ONLY_IN_INTERFACE);
+				return false;
+			}
+			// constraint: must have non-void return type
+			val returnTypeRef = method.definedFunction?.returnTypeRef;
+			if (returnTypeRef === null || TypeUtils.isVoid(returnTypeRef)) {
+				addIssue(messageForCLF_CONSTRUCT_SIG_VOID_RETURN_TYPE, method, CLF_CONSTRUCT_SIG_VOID_RETURN_TYPE);
 				return false;
 			}
 		}

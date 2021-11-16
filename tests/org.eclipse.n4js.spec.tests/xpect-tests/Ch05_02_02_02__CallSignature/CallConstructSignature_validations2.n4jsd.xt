@@ -12,47 +12,50 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
 
 
+export external class SomeCls {}
+
+
 // positive cases:
 
 export external interface ~I {
 
 	// XPECT noerrors -->
-	();
+	(): number;
 
 	// XPECT noerrors -->
-	new();
+	new(): SomeCls;
 }
 
 export external class C {
 
 	// XPECT noerrors -->
-	();
+	(): number;
 
 	// treated as an ordinary method with name "new" XPECT noerrors -->
-	new();
+	new(): SomeCls;
 }
 
 
 // @N4JS
 
 @N4JS
-export external interface ~I4 {
+export external interface ~I1 {
 
-	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "();"
-	();
+	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "(): number;"
+	(): number;
 
-	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "new();"
-	new();
+	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "new(): SomeCls;"
+	new(): SomeCls;
 }
 
 @N4JS
-export external class C4 {
+export external class C1 {
 
-	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "();"
-	();
+	// XPECT errors --> "Call and construct signatures are not allowed in classifiers annotated with @N4JS." at "(): number;"
+	(): number;
 
 	// treated as an ordinary method with name "new" XPECT noerrors -->
-	new();
+	new(): SomeCls;
 }
 
 
@@ -60,20 +63,20 @@ export external class C4 {
 
 export external interface ~I2 {
 
-	// XPECT errors --> "Call and construct signatures must not have a body." at "() {}"
-	() {}
+	// XPECT errors --> "Call and construct signatures must not have a body." at "(): number { return 0; }"
+	(): number { return 0; }
 
-	// XPECT errors --> "Call and construct signatures must not have a body." at "new() {}"
-	new() {}
+	// XPECT errors --> "Call and construct signatures must not have a body." at "new(): SomeCls { return undefined; }"
+	new(): SomeCls { return undefined; }
 }
 
 export external class C2 {
 
-	// XPECT errors --> "Call and construct signatures must not have a body." at "() {}"
-	() {}
+	// XPECT errors --> "Call and construct signatures must not have a body." at "(): number { return 0; }"
+	(): number { return 0; }
 
 	// treated as an ordinary method with name "new" XPECT errors --> "Methods in external classes have to have no body." at "new"
-	new() {}
+	new(): SomeCls { return undefined; }
 }
 
 
@@ -81,26 +84,65 @@ export external class C2 {
 
 export external interface ~I3 {
 
-	// XPECT errors --> "Duplicate call signature." at "();"
-	();
-	// XPECT errors --> "Duplicate call signature." at "();"
-	();
+	// XPECT errors --> "Duplicate call signature." at "(): number;"
+	(): number;
+	// XPECT errors --> "Duplicate call signature." at "(): number;"
+	(): number;
 
-	// XPECT errors --> "Duplicate construct signature." at "new();"
-	new();
-	// XPECT errors --> "Duplicate construct signature." at "new();"
-	new();
+	// XPECT errors --> "Duplicate construct signature." at "new(): SomeCls;"
+	new(): SomeCls;
+	// XPECT errors --> "Duplicate construct signature." at "new(): SomeCls;"
+	new(): SomeCls;
 }
 
 export external class C3 {
 
-	// XPECT errors --> "Duplicate call signature." at "();"
-	();
-	// XPECT errors --> "Duplicate call signature." at "();"
+	// XPECT errors --> "Duplicate call signature." at "(): number;"
+	(): number;
+	// XPECT errors --> "Duplicate call signature." at "(): number;"
+	(): number;
+
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 106) duplicates method new (line 108)." at "new"
+	new(): SomeCls;
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 108) duplicates method new (line 106)." at "new"
+	new(): SomeCls;
+}
+
+
+// void as return type
+
+export external interface ~I4a {
+
+	// XPECT noerrors -->
 	();
 
-	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 103) duplicates method new (line 105)." at "new"
+	// XPECT errors --> "Construct signatures must have a non-void return type." at "new();"
 	new();
-	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 105) duplicates method new (line 103)." at "new"
+}
+
+export external interface ~I4b {
+
+	// XPECT noerrors -->
+	(): void;
+
+	// XPECT errors --> "Construct signatures must have a non-void return type." at "new(): void;"
+	new(): void;
+}
+
+export external class C4a {
+
+	// XPECT noerrors -->
+	();
+
+	// treated as an ordinary method with name "new" XPECT noerrors -->
 	new();
+}
+
+export external class C4b {
+
+	// XPECT noerrors -->
+	(): void;
+
+	// treated as an ordinary method with name "new" XPECT noerrors -->
+	new(): void;
 }
