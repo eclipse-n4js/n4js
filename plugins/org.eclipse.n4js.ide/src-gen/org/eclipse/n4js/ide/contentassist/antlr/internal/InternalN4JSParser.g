@@ -15511,6 +15511,12 @@ rule__N4Keyword__Alternatives
 		Out
 		{ after(grammarAccess.getN4KeywordAccess().getOutKeyword_24()); }
 	)
+	|
+	(
+		{ before(grammarAccess.getN4KeywordAccess().getNamespaceKeyword_25()); }
+		Namespace
+		{ after(grammarAccess.getN4KeywordAccess().getNamespaceKeyword_25()); }
+	)
 ;
 finally {
 	restoreStackSize(stackSize);

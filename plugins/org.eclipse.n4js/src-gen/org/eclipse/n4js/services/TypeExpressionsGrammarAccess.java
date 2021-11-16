@@ -2532,6 +2532,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Keyword cProtectedKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
 		private final Keyword cPublicKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
 		private final Keyword cOutKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cNamespaceKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
 		
 		//N4Keyword:
 		//    'get' | 'set'
@@ -2550,6 +2551,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    | 'private' | 'protected' | 'public' // package not used in N4JS
 		//    // definition-site variance
 		//    | 'out'
+		//    // namespace keyword
+		//    | 'namespace'
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -2569,6 +2572,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//| 'private' | 'protected' | 'public' // package not used in N4JS
 		//// definition-site variance
 		//| 'out'
+		//// namespace keyword
+		//| 'namespace'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'get'
@@ -2645,6 +2650,9 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//'out'
 		public Keyword getOutKeyword_24() { return cOutKeyword_24; }
+		
+		//'namespace'
+		public Keyword getNamespaceKeyword_25() { return cNamespaceKeyword_25; }
 	}
 	public class ArrowElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.Arrow");
@@ -3546,6 +3554,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    | 'private' | 'protected' | 'public' // package not used in N4JS
 	//    // definition-site variance
 	//    | 'out'
+	//    // namespace keyword
+	//    | 'namespace'
 	//;
 	public N4KeywordElements getN4KeywordAccess() {
 		return pN4Keyword;

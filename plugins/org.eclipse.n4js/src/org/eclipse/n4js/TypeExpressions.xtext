@@ -344,6 +344,8 @@ N4Keyword:
 	| 'private' | 'protected' | 'public' // package not used in N4JS
 	// definition-site variance
 	| 'out'
+	// namespace keyword
+	| 'namespace'
 ;
 
 Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()
