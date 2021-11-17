@@ -263,9 +263,6 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	}
 
 	def private void addSubstitutions(RuleEnvironment G, ParameterizedAccess paramAccessExpr, boolean isCallExpr, FunctionTypeExprOrRef targetTypeRef) {
-		if (G===null || paramAccessExpr===null || targetTypeRef===null)
-			return;
-
 		// restore type mappings from postponed substitutions
 		// TODO what if the structural type ref is contained in another typeRef (e.g. in a ComposedTypeRef)???
 		// TODO is there a better place to do this???
