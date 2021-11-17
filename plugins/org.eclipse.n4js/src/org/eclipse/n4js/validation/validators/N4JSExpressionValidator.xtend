@@ -93,7 +93,6 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.BuiltInType
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.FieldAccessor
-import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.PrimitiveType
@@ -633,17 +632,25 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private def void internalCheckConstructSignatureInvocation(NewExpression newExpression, TypeRef calleeTypeRef, TMethod constructSig) {
-		if (!memberVisibilityChecker.isVisible(newExpression, calleeTypeRef, constructSig).visibility) {
-			val containerName = (constructSig.eContainer as IdentifiableElement).name;
-			val message = IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR("construct signature", containerName);
-			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, IssueCodes.VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR);
-			return;
+		if (holdsConstructSignatureIsAccessible(newExpression, calleeTypeRef, constructSig)) {
+
+			internalCheckTypeArgumentsNodes(constructSig.typeVars, newExpression.typeArgs, false, constructSig, newExpression,
+				N4JSPackage.eINSTANCE.newExpression_Callee);
+	
+			internalCheckNewParameters(newExpression, constructSig);
 		}
+	}
 
-		internalCheckTypeArgumentsNodes(constructSig.typeVars, newExpression.typeArgs, false, constructSig, newExpression,
-			N4JSPackage.eINSTANCE.newExpression_Callee);
-
-		internalCheckNewParameters(newExpression, constructSig);
+	private def boolean holdsConstructSignatureIsAccessible(NewExpression newExpression, TypeRef calleeTypeRef, TMethod constructSig) {
+		val container = constructSig.eContainer;
+		if (container instanceof TInterface) { // avoid checking accessibility of construct signatures in StructuralTypeRefs/TStructuralTypes (they're always public)
+			if (!memberVisibilityChecker.isVisible(newExpression, calleeTypeRef, constructSig).visibility) {
+				val message = IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR("construct signature", container.name);
+				addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, IssueCodes.VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private def Type changeToCovariantUpperBoundIfTypeVar(Type type) {
