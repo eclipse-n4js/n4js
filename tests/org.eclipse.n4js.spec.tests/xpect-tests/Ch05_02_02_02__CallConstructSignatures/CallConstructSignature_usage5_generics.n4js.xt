@@ -13,14 +13,14 @@
 
 	ResourceSet {
 		ThisFile {}
-		File "Ext.n4jsd" { from="CallConstructSignature_inInterface_usage__Ext.n4jsd" }
+		File "Ext.n4jsd" { from="CallConstructSignature_usage__Ext.n4jsd" }
 	}
 
 END_SETUP */
 
 
-import { IfcGen } from "Ch05_02_02_02__CallSignature/Ext"
-import { structTypeRefGen } from "Ch05_02_02_02__CallSignature/Ext"
+import { IfcGen } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { structTypeRefGen } from "Ch05_02_02_02__CallConstructSignatures/Ext"
 
 class ClsArg {}
 let clsArg: ClsArg;

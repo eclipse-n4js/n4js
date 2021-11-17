@@ -20,8 +20,8 @@
 */
 
 
-import express from "Ch05_02_02_02__CallSignature/express"
-import {expressAbstract} from "Ch05_02_02_02__CallSignature/express"
+import express from "Ch05_02_02_02__CallConstructSignatures/express"
+import {expressAbstract} from "Ch05_02_02_02__CallConstructSignatures/express"
 
 
 // XPECT type of 'result00' --> App
