@@ -2596,6 +2596,26 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getTStructMember__IsASTCallSignature() {
+		return tStructMemberEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTStructMember__IsASTConstructSignature() {
+		return tStructMemberEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTMethod() {
 		return tMethodEClass;
 	}
@@ -3632,6 +3652,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER);
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___IS_STATIC);
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___GET_MEMBER_ACCESS_MODIFIER);
+		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___IS_AST_CALL_SIGNATURE);
+		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE);
 
 		tMethodEClass = createEClass(TMETHOD);
 		createEAttribute(tMethodEClass, TMETHOD__DECLARED_ABSTRACT);
@@ -4201,6 +4223,10 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTStructMember__IsStatic(), theEcorePackage.getEBoolean(), "isStatic", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTStructMember__GetMemberAccessModifier(), this.getMemberAccessModifier(), "getMemberAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTStructMember__IsASTCallSignature(), theEcorePackage.getEBoolean(), "isASTCallSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTStructMember__IsASTConstructSignature(), theEcorePackage.getEBoolean(), "isASTConstructSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tMethodEClass, TMethod.class, "TMethod", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTMethod_DeclaredAbstract(), theEcorePackage.getEBoolean(), "declaredAbstract", null, 0, 1, TMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

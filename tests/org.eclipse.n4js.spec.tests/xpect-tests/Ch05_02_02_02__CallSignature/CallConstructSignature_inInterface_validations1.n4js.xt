@@ -29,3 +29,12 @@ class C {
 	// treated as an ordinary method with name "new" XPECT noerrors -->
 	new() {}
 }
+
+let o: ~Object with {
+	
+	// XPECT errors --> "Call and construct signatures may only be used in .n4jsd files." at "()"
+	();
+
+	// XPECT errors --> "Call and construct signatures may only be used in .n4jsd files." at "new()"
+	new();
+};

@@ -6838,13 +6838,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_MEMBER___GET_MEMBER_ACCESS_MODIFIER = TMEMBER_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER___IS_AST_CALL_SIGNATURE = TMEMBER_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE = TMEMBER_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>TStruct Member</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_MEMBER_OPERATION_COUNT = TMEMBER_OPERATION_COUNT + 3;
+	int TSTRUCT_MEMBER_OPERATION_COUNT = TMEMBER_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMethodImpl <em>TMethod</em>}' class.
@@ -8046,13 +8064,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___GET_MEMBER_ACCESS_MODIFIER = TMETHOD_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_AST_CALL_SIGNATURE = TMETHOD_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_AST_CONSTRUCT_SIGNATURE = TMETHOD_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>TStruct Method</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_METHOD_OPERATION_COUNT = TMETHOD_OPERATION_COUNT + 3;
+	int TSTRUCT_METHOD_OPERATION_COUNT = TMETHOD_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TFormalParameterImpl <em>TFormal Parameter</em>}' class.
@@ -9058,13 +9094,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_FIELD___GET_MEMBER_ACCESS_MODIFIER = TFIELD_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD___IS_AST_CALL_SIGNATURE = TFIELD_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD___IS_AST_CONSTRUCT_SIGNATURE = TFIELD_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>TStruct Field</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_FIELD_OPERATION_COUNT = TFIELD_OPERATION_COUNT + 3;
+	int TSTRUCT_FIELD_OPERATION_COUNT = TFIELD_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.FieldAccessorImpl <em>Field Accessor</em>}' class.
@@ -10096,13 +10150,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_GETTER___GET_MEMBER_ACCESS_MODIFIER = TGETTER_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER___IS_AST_CALL_SIGNATURE = TGETTER_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER___IS_AST_CONSTRUCT_SIGNATURE = TGETTER_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>TStruct Getter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_GETTER_OPERATION_COUNT = TGETTER_OPERATION_COUNT + 3;
+	int TSTRUCT_GETTER_OPERATION_COUNT = TGETTER_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TSetterImpl <em>TSetter</em>}' class.
@@ -10791,13 +10863,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_SETTER___GET_MEMBER_ACCESS_MODIFIER = TSETTER_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER___IS_AST_CALL_SIGNATURE = TSETTER_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER___IS_AST_CONSTRUCT_SIGNATURE = TSETTER_OPERATION_COUNT + 4;
+
+	/**
 	 * The operation id for the '<em>Is Writeable</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_SETTER___IS_WRITEABLE = TSETTER_OPERATION_COUNT + 3;
+	int TSTRUCT_SETTER___IS_WRITEABLE = TSETTER_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>TStruct Setter</em>' class.
@@ -10806,7 +10896,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_SETTER_OPERATION_COUNT = TSETTER_OPERATION_COUNT + 4;
+	int TSTRUCT_SETTER_OPERATION_COUNT = TSETTER_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TEnumImpl <em>TEnum</em>}' class.
@@ -13760,6 +13850,26 @@ public interface TypesPackage extends EPackage {
 	EOperation getTStructMember__GetMemberAccessModifier();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TStructMember#isASTCallSignature() <em>Is AST Call Signature</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is AST Call Signature</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TStructMember#isASTCallSignature()
+	 * @generated
+	 */
+	EOperation getTStructMember__IsASTCallSignature();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TStructMember#isASTConstructSignature() <em>Is AST Construct Signature</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is AST Construct Signature</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TStructMember#isASTConstructSignature()
+	 * @generated
+	 */
+	EOperation getTStructMember__IsASTConstructSignature();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TMethod <em>TMethod</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16245,6 +16355,22 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TSTRUCT_MEMBER___GET_MEMBER_ACCESS_MODIFIER = eINSTANCE.getTStructMember__GetMemberAccessModifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Is AST Call Signature</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TSTRUCT_MEMBER___IS_AST_CALL_SIGNATURE = eINSTANCE.getTStructMember__IsASTCallSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Is AST Construct Signature</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE = eINSTANCE.getTStructMember__IsASTConstructSignature();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TMethodImpl <em>TMethod</em>}' class.

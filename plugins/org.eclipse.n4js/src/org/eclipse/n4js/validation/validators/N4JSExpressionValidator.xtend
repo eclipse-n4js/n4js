@@ -387,7 +387,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CLASS_CTOR);
 			} else {
 				val staticType = if (typeRef instanceof TypeTypeRef) tsh.getStaticType(G, typeRef);
-				if (staticType instanceof TInterface && tsh.getCallSignature(staticType as TInterface) !== null) {
+				if (staticType instanceof TInterface && tsh.getCallSignature(callExpression.eResource, TypeUtils.createTypeRef(staticType)) !== null) {
 					val message = IssueCodes.getMessageForEXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED("invoke", staticType.name, "call");
 					addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED);
 				} else {
@@ -544,8 +544,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 					return;
 				}
 			}
-			val declType = typeRef.declaredType;
-			val constructSig = if (declType instanceof TInterface) tsh.getConstructSignature(declType);
+			val constructSig = tsh.getConstructSignature(newExpression.eResource, typeRef);
 			if (constructSig !== null) {
 				// special success case; but perform some further checks
 				internalCheckConstructSignatureInvocation(newExpression, constructSig);

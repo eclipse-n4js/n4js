@@ -15792,7 +15792,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    =>
 	//    ({TStructMethod}
 	//        ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-	//        name=IdentifierName '('
+	//        (name=IdentifierName)? '('
 	//    )
 	//    TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 	//;

@@ -248,6 +248,8 @@ public interface TFunction extends GenericType, AccessibleTypeElement, SyntaxRel
 	 * <!-- begin-model-doc -->
 	 * *
 	 * Tells whether this function is a method that represents a call signature.
+	 * <p>
+	 * Does not work in case the receiver is an AST node (use {@link TStructMember#isASTCallSignature()} instead).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
@@ -260,6 +262,8 @@ public interface TFunction extends GenericType, AccessibleTypeElement, SyntaxRel
 	 * <!-- begin-model-doc -->
 	 * *
 	 * Tells whether this function is a method that represents a construct signature.
+	 * <p>
+	 * Does not work in case the receiver is an AST node (use {@link TStructMember#isASTConstructSignature()} instead).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

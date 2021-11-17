@@ -38198,7 +38198,7 @@ ruleTStructMember returns [EObject current=null]
 					(
 						ruleIdentifierName
 					)
-				)
+				)?
 				LeftParenthesis
 			)
 			)=>
@@ -38264,7 +38264,7 @@ ruleTStructMethod returns [EObject current=null]
 					(
 						ruleIdentifierName
 					)
-				)
+				)?
 				LeftParenthesis
 			)
 			)=>
@@ -38348,7 +38348,7 @@ ruleTStructMethod returns [EObject current=null]
 							afterParserOrEnumRuleCall();
 						}
 					)
-				)
+				)?
 				otherlv_7=LeftParenthesis
 				{
 					newLeafNode(otherlv_7, grammarAccess.getTStructMethodAccess().getLeftParenthesisKeyword_0_0_3());

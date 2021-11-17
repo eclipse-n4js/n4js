@@ -90,7 +90,6 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFormalParameter;
-import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.types.utils.TypeUtils;
@@ -191,10 +190,7 @@ import com.google.inject.Inject;
 
 					// compute ctor
 					final TypeRef ctorTypeRefPlain = ts.type(G, expr.getCallee());
-					final Type ctorTypeRefDeclType = ctorTypeRefPlain.getDeclaredType();
-					final TMethod constructSig = ctorTypeRefDeclType instanceof TInterface
-							? tsh.getConstructSignature((TInterface) ctorTypeRefDeclType)
-							: null;
+					final TMethod constructSig = tsh.getConstructSignature(G, ctorTypeRefPlain);
 
 					final TMethod ctor;
 					if (constructSig != null) {

@@ -9,7 +9,6 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-
 export external class CallResultCls {}
 export external class ConstructResultCls {}
 export external class CallResultGenCls<T> { getValue(): T; }
@@ -37,3 +36,36 @@ export external interface ~IfcGen {
 	<T> (p: T): CallResultGenCls<T>;
 	<T> new(p: T): ConstructResultGenCls<T>;
 }
+
+
+
+export let structTypeRefNone: ~Object with {};
+
+export let structTypeRefOnlyCall: ~Object with {
+	(p: string): CallResultCls;
+};
+
+export let structTypeRefOnlyConstruct: ~Object with {
+	new(p1: string, p2: boolean): ConstructResultCls;
+};
+
+export let structTypeRefBoth: ~Object with {
+	(p: string): CallResultCls;
+	new(p1: string, p2: boolean): ConstructResultCls;
+};
+
+export let structTypeRefGen: ~Object with {
+	<T> (p: T): CallResultGenCls<T>;
+	<T> new(p: T): ConstructResultGenCls<T>;
+}
+
+
+
+export external type AliasedIfcOnlyCall = IfcOnlyCall;
+export external type AliasedIfcOnlyConstruct = IfcOnlyConstruct;
+export external type AliasedStructTypeRefOnlyCall = ~Object with {
+	(p: string): CallResultCls;
+};
+export external type AliasedStructTypeRefOnlyConstruct = ~Object with {
+	new(p1: string, p2: boolean): ConstructResultCls;
+};

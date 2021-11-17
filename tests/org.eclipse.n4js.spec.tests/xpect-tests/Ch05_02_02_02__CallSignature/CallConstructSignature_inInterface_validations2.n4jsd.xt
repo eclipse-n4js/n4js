@@ -15,6 +15,7 @@
 export external class SomeCls {}
 
 
+// ------------------------------------------------------------------------------------------------------------------------
 // positive cases:
 
 export external interface ~I {
@@ -35,7 +36,17 @@ export external class C {
 	new(): SomeCls;
 }
 
+export let o: ~Object with {
 
+	// XPECT noerrors -->
+	(): number;
+
+	// XPECT noerrors -->
+	new(): SomeCls;
+};
+
+
+// ------------------------------------------------------------------------------------------------------------------------
 // @N4JS
 
 @N4JS
@@ -58,7 +69,12 @@ export external class C1 {
 	new(): SomeCls;
 }
 
+export let o1: ~Object with {
+	// does not apply here (cannot annotate a StructuralTypeRef with @N4JS)
+};
 
+
+// ------------------------------------------------------------------------------------------------------------------------
 // bodies:
 
 export external interface ~I2 {
@@ -79,7 +95,12 @@ export external class C2 {
 	new(): SomeCls { return undefined; }
 }
 
+export let o2: ~Object with {
+	// does not apply here (grammar does not allow bodies for methods in StructuralTypeRef)
+};
 
+
+// ------------------------------------------------------------------------------------------------------------------------
 // duplicates:
 
 export external interface ~I3 {
@@ -102,13 +123,27 @@ export external class C3 {
 	// XPECT errors --> "Duplicate call signature." at "(): number;"
 	(): number;
 
-	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 106) duplicates method new (line 108)." at "new"
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 127) duplicates method new (line 129)." at "new"
 	new(): SomeCls;
-	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 108) duplicates method new (line 106)." at "new"
+	// treated as an ordinary method with name "new" XPECT errors --> "The method new (line 129) duplicates method new (line 127)." at "new"
 	new(): SomeCls;
 }
 
+export let o3: ~Object with {
 
+	// XPECT errors --> "Duplicate call signature." at "(): number"
+	(): number;
+	// XPECT errors --> "Duplicate call signature." at "(): number"
+	(): number;
+
+	// XPECT errors --> "Duplicate construct signature." at "new(): SomeCls"
+	new(): SomeCls;
+	// XPECT errors --> "Duplicate construct signature." at "new(): SomeCls"
+	new(): SomeCls;
+};
+
+
+// ------------------------------------------------------------------------------------------------------------------------
 // void as return type
 
 export external interface ~I4a {
@@ -144,5 +179,23 @@ export external class C4b {
 	(): void;
 
 	// treated as an ordinary method with name "new" XPECT noerrors -->
+	new(): void;
+}
+
+export let o4a: ~Object with {
+
+	// XPECT noerrors -->
+	();
+
+	// XPECT errors --> "Construct signatures must have a non-void return type." at "new()"
+	new();
+}
+
+export let o4b: ~Object with {
+
+	// XPECT noerrors -->
+	(): void;
+
+	// XPECT errors --> "Construct signatures must have a non-void return type." at "new(): void"
 	new(): void;
 }

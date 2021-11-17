@@ -820,14 +820,15 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
 	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
 	op String internalGetTypeRefAsString() {
+		val membersWithCallConstructSigs = #[ structuralType?.callSignature, structuralType?.constructSignature ].filterNull + getStructuralMembers();
 		return typingStrategy + declaredType?.rawTypeAsString + (if (declaredTypeArgs.empty) {
 			""
 		} else {
 			"<" + declaredTypeArgs.map[typeRefAsString].join(",") + ">"
-		}) + (if (structuralMembers.empty) {
+		}) + (if (membersWithCallConstructSigs.empty) {
 			""
 		} else {
-			" with { " + structuralMembers.map[memberAsString].join("; ") + " }" +
+			" with { " + (#[] + membersWithCallConstructSigs).map[memberAsString].join("; ") + " }" +
 			(if (postponedSubstitutions.empty) "" else " [[" + postponedSubstitutions.map[it.typeVar.typeAsString + "->" + it.typeArg.typeRefAsString].join(", ") + "]]")
 		});
 	}

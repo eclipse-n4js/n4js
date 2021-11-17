@@ -1550,7 +1550,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    =>
 		//    ({TStructMethod}
 		//        ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-		//        name=IdentifierName '('
+		//        (name=IdentifierName)? '('
 		//    )
 		//    TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 		//;
@@ -1559,7 +1559,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//=>
 		//({TStructMethod}
 		//    ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-		//    name=IdentifierName '('
+		//    (name=IdentifierName)? '('
 		//)
 		//TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 		public Group getGroup() { return cGroup; }
@@ -1567,13 +1567,13 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//=>
 		//({TStructMethod}
 		//    ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-		//    name=IdentifierName '('
+		//    (name=IdentifierName)? '('
 		//)
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//{TStructMethod}
 		//        ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-		//        name=IdentifierName '('
+		//        (name=IdentifierName)? '('
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{TStructMethod}
@@ -1606,7 +1606,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'>'
 		public Keyword getGreaterThanSignKeyword_0_0_1_3() { return cGreaterThanSignKeyword_0_0_1_3; }
 		
-		//name=IdentifierName
+		//(name=IdentifierName)?
 		public Assignment getNameAssignment_0_0_2() { return cNameAssignment_0_0_2; }
 		
 		//IdentifierName
@@ -3246,7 +3246,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    =>
 	//    ({TStructMethod}
 	//        ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-	//        name=IdentifierName '('
+	//        (name=IdentifierName)? '('
 	//    )
 	//    TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 	//;

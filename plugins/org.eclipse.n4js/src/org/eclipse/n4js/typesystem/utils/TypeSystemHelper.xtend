@@ -18,6 +18,7 @@ import java.util.Arrays
 import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
@@ -360,12 +361,10 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 				return true; // exception: this is a class that provides a call signature
 			return false;
 		}
-		val declType = typeRef.declaredType;
-		if(declType instanceof TInterface) {
-			if(getCallSignature(declType) !== null) {
-				return true;
-			}
+		if(getCallSignature(G, typeRef) !== null) {
+			return true;
 		}
+		val declType = typeRef.declaredType;
 		if(declType instanceof TFunction)
 			return true;
 		if(typeRef instanceof FunctionTypeExprOrRef)
@@ -426,12 +425,42 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return null;
 	}
 
-	def public TMethod getCallSignature(TInterface tInterface) {
-		return containerTypesHelper.fromContext(tInterface).findCallSignature(tInterface);
+	def public TMethod getCallSignature(RuleEnvironment G, TypeRef calleeTypeRef) {
+		return getCallSignature(G.contextResource, calleeTypeRef);
 	}
 
-	def public TMethod getConstructSignature(TInterface tInterface) {
-		return containerTypesHelper.fromContext(tInterface).findConstructSignature(tInterface);
+	def public TMethod getCallSignature(Resource context, TypeRef calleeTypeRef) {
+		return getCallConstructSignature(context, calleeTypeRef, false);
+	}
+
+	def public TMethod getConstructSignature(RuleEnvironment G, TypeRef calleeTypeRef) {
+		return getConstructSignature(G.contextResource, calleeTypeRef);
+	}
+
+	def public TMethod getConstructSignature(Resource context, TypeRef calleeTypeRef) {
+		return getCallConstructSignature(context, calleeTypeRef, true);
+	}
+
+	def private TMethod getCallConstructSignature(Resource context, TypeRef calleeTypeRef, boolean searchConstructSig) {
+		val declType = calleeTypeRef.declaredType;
+		if (declType instanceof TInterface) {
+			return if (searchConstructSig) {
+				containerTypesHelper.fromContext(context).findConstructSignature(declType);
+			} else {
+				containerTypesHelper.fromContext(context).findCallSignature(declType);
+			};
+		}
+		if (calleeTypeRef instanceof StructuralTypeRef) {
+			val structType = calleeTypeRef.structuralType;
+			if (structType !== null) {
+				return if (searchConstructSig) {
+					structType.constructSignature
+				} else {
+					structType.callSignature
+				};
+			}
+		}
+		return null;
 	}
 
 	/** Same as {@link #getStaticType(RuleEnvironment, TypeTypeRef, boolean)} without resolving type variables. */

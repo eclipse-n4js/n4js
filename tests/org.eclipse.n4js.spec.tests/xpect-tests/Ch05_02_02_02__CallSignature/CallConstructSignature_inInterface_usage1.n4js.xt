@@ -23,6 +23,10 @@ import { IfcNone } from "Ch05_02_02_02__CallSignature/Ext"
 import { IfcOnlyCall } from "Ch05_02_02_02__CallSignature/Ext"
 import { IfcOnlyConstruct } from "Ch05_02_02_02__CallSignature/Ext"
 import { IfcBoth } from "Ch05_02_02_02__CallSignature/Ext"
+import { structTypeRefNone } from "Ch05_02_02_02__CallSignature/Ext"
+import { structTypeRefOnlyCall } from "Ch05_02_02_02__CallSignature/Ext"
+import { structTypeRefOnlyConstruct } from "Ch05_02_02_02__CallSignature/Ext"
+import { structTypeRefBoth } from "Ch05_02_02_02__CallSignature/Ext"
 
 
 let ifcNone: IfcNone;
@@ -31,6 +35,7 @@ let ifcOnlyConstruct: IfcOnlyConstruct;
 let ifcBoth: IfcBoth;
 
 
+// ------------------------------------------------------------------------------------------------------------------------
 // no special signatures:
 
 // XPECT errors --> "Not a function or method: IfcNone." at "ifcNone"
@@ -38,7 +43,13 @@ ifcNone();
 // XPECT errors --> "Not a reference to a constructor: IfcNone." at "ifcNone"
 new ifcNone();
 
+// XPECT errors --> "Not a function or method: ~Object." at "structTypeRefNone"
+structTypeRefNone();
+// XPECT errors --> "Not a reference to a constructor: ~Object." at "structTypeRefNone"
+new structTypeRefNone();
 
+
+// ------------------------------------------------------------------------------------------------------------------------
 // only call signature:
 
 // XPECT noerrors -->
@@ -46,7 +57,13 @@ ifcOnlyCall("");
 // XPECT errors --> "Not a reference to a constructor: IfcOnlyCall." at "ifcOnlyCall"
 new ifcOnlyCall();
 
+// XPECT noerrors -->
+structTypeRefOnlyCall("");
+// XPECT errors --> "Not a reference to a constructor: ~Object with { (p: string): CallResultCls }." at "structTypeRefOnlyCall"
+new structTypeRefOnlyCall();
 
+
+// ------------------------------------------------------------------------------------------------------------------------
 // only construct signature:
 
 // XPECT errors --> "Not a function or method: IfcOnlyConstruct." at "ifcOnlyConstruct"
@@ -54,7 +71,13 @@ ifcOnlyConstruct();
 // XPECT noerrors -->
 new ifcOnlyConstruct("", true);
 
+// XPECT errors --> "Not a function or method: ~Object with { new(p1: string, p2: boolean): ConstructResultCls }." at "structTypeRefOnlyConstruct"
+structTypeRefOnlyConstruct();
+// XPECT noerrors -->
+new structTypeRefOnlyConstruct("", true);
 
+
+// ------------------------------------------------------------------------------------------------------------------------
 // both kinds of special signatures:
 
 // XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "ifcBoth()"
@@ -74,3 +97,21 @@ new ifcBoth("", 42);
 let resultConstructIfcBoth = new ifcBoth("", true);
 // XPECT type of 'resultConstructIfcBoth' --> ConstructResultCls
 resultConstructIfcBoth;
+
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "structTypeRefBoth()"
+structTypeRefBoth();
+// XPECT errors --> "42 is not a subtype of string." at "42"
+structTypeRefBoth(42);
+// XPECT noerrors -->
+let resultCallStructTypeRefBoth = structTypeRefBoth("");
+// XPECT type of 'resultCallStructTypeRefBoth' --> CallResultCls
+resultCallStructTypeRefBoth;
+
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 0." at "new structTypeRefBoth()"
+new structTypeRefBoth();
+// XPECT errors --> "42 is not a subtype of boolean." at "42"
+new structTypeRefBoth("", 42);
+// XPECT noerrors -->
+let resultConstructStructTypeRefBoth = new structTypeRefBoth("", true);
+// XPECT type of 'resultConstructStructTypeRefBoth' --> ConstructResultCls
+resultConstructStructTypeRefBoth;

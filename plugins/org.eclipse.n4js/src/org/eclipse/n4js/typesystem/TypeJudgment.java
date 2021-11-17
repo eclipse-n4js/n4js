@@ -157,7 +157,6 @@ import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TGetter;
-import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
@@ -724,12 +723,9 @@ import com.google.inject.Inject;
 				if (callableCtorFunction != null) {
 					T = ref(callableCtorFunction);
 				} else {
-					final Type declTypeOfT = T.getDeclaredType();
-					if (declTypeOfT instanceof TInterface) {
-						final TMethod callSigOfT = typeSystemHelper.getCallSignature((TInterface) declTypeOfT);
-						if (callSigOfT != null) {
-							T = ref(callSigOfT);
-						}
+					final TMethod callSigOfT = typeSystemHelper.getCallSignature(G, T);
+					if (callSigOfT != null) {
+						T = ref(callSigOfT);
 					}
 				}
 			}
@@ -1172,19 +1168,16 @@ import com.google.inject.Inject;
 			if (T instanceof TypeTypeRef) {
 				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T, e);
 			} else {
-				Type declType = T.getDeclaredType();
-				if (declType instanceof TInterface) {
-					TMethod constructSig = typeSystemHelper.getConstructSignature((TInterface) declType);
-					if (constructSig != null) {
-						TypeRef returnTypeRef = constructSig.getReturnTypeRef();
-						if (returnTypeRef != null && !TypeUtils.isVoid(returnTypeRef)) {
-							RuleEnvironment G2 = wrap(G);
-							tsh.addSubstitutions(G2, e, constructSig);
-							TypeRef returnTypeRefSubst = ts.substTypeVariablesWithFullCapture(G2, returnTypeRef);
-							T = returnTypeRefSubst;
-						} else {
-							T = unknown();
-						}
+				TMethod constructSig = typeSystemHelper.getConstructSignature(G, T);
+				if (constructSig != null) {
+					TypeRef returnTypeRef = constructSig.getReturnTypeRef();
+					if (returnTypeRef != null && !TypeUtils.isVoid(returnTypeRef)) {
+						RuleEnvironment G2 = wrap(G);
+						tsh.addSubstitutions(G2, e, constructSig);
+						TypeRef returnTypeRefSubst = ts.substTypeVariablesWithFullCapture(G2, returnTypeRef);
+						T = returnTypeRefSubst;
+					} else {
+						T = unknown();
 					}
 				}
 			}

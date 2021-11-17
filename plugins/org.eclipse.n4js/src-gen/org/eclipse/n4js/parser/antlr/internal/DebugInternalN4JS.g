@@ -9243,6 +9243,7 @@ ruleTStructMember:
 				'>'
 			)?
 			ruleIdentifierName
+			?
 			'('
 			)=>
 			ruleTStructMethod
@@ -9265,6 +9266,7 @@ ruleTStructMethod:
 			'>'
 		)?
 		ruleIdentifierName
+		?
 		'('
 		)=>
 		(
@@ -9277,6 +9279,7 @@ ruleTStructMethod:
 			'>'
 		)?
 		ruleIdentifierName
+		?
 		'('
 	)
 	ruleTAnonymousFormalParameterList

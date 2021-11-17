@@ -76484,7 +76484,7 @@ rule__TStructMethod__Group_0_0__2__Impl
 :
 (
 	{ before(grammarAccess.getTStructMethodAccess().getNameAssignment_0_0_2()); }
-	(rule__TStructMethod__NameAssignment_0_0_2)
+	(rule__TStructMethod__NameAssignment_0_0_2)?
 	{ after(grammarAccess.getTStructMethodAccess().getNameAssignment_0_0_2()); }
 )
 ;

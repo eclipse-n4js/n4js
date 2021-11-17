@@ -12,6 +12,8 @@ package org.eclipse.n4js.ts.typeRefs.impl;
 
 import com.google.common.base.Objects;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -40,6 +42,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
 
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
@@ -271,6 +275,19 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 	 */
 	@Override
 	public String internalGetTypeRefAsString() {
+		TStructuralType _structuralType = this.getStructuralType();
+		TMethod _callSignature = null;
+		if (_structuralType!=null) {
+			_callSignature=_structuralType.getCallSignature();
+		}
+		TStructuralType _structuralType_1 = this.getStructuralType();
+		TMethod _constructSignature = null;
+		if (_structuralType_1!=null) {
+			_constructSignature=_structuralType_1.getConstructSignature();
+		}
+		Iterable<TMethod> _filterNull = IterableExtensions.<TMethod>filterNull(java.util.Collections.<TMethod>unmodifiableList(org.eclipse.xtext.xbase.lib.CollectionLiterals.<TMethod>newArrayList(_callSignature, _constructSignature)));
+		EList<TStructMember> _structuralMembers = this.getStructuralMembers();
+		final Iterable<TMember> membersWithCallConstructSigs = Iterables.<TMember>concat(_filterNull, _structuralMembers);
 		TypingStrategy _typingStrategy = this.getTypingStrategy();
 		Type _declaredType = this.getDeclaredType();
 		String _rawTypeAsString = null;
@@ -295,17 +312,17 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 		}
 		String _plus_2 = (_plus + _xifexpression);
 		String _xifexpression_1 = null;
-		boolean _isEmpty_1 = this.getStructuralMembers().isEmpty();
+		boolean _isEmpty_1 = IterableExtensions.isEmpty(membersWithCallConstructSigs);
 		if (_isEmpty_1) {
 			_xifexpression_1 = "";
 		}
 		else {
-			final Function1<TStructMember, String> _function_1 = new Function1<TStructMember, String>() {
-				public String apply(final TStructMember it) {
+			final Function1<TMember, String> _function_1 = new Function1<TMember, String>() {
+				public String apply(final TMember it) {
 					return it.getMemberAsString();
 				}
 			};
-			String _join_1 = IterableExtensions.join(XcoreEListExtensions.<TStructMember, String>map(this.getStructuralMembers(), _function_1), "; ");
+			String _join_1 = IterableExtensions.join(IterableExtensions.<TMember, String>map(Iterables.<TMember>concat(java.util.Collections.<TMember>unmodifiableList(org.eclipse.xtext.xbase.lib.CollectionLiterals.<TMember>newArrayList()), membersWithCallConstructSigs), _function_1), "; ");
 			String _plus_3 = (" with { " + _join_1);
 			String _plus_4 = (_plus_3 + " }");
 			String _xifexpression_2 = null;
