@@ -37,6 +37,10 @@ export external interface ~IfcGen {
 	<T> new(p: T): ConstructResultGenCls<T>;
 }
 
+export external interface ~IfcPrivateConstruct {
+	private new(p1: string, p2: boolean): ConstructResultCls;
+}
+
 
 
 export let structTypeRefNone: ~Object with {};

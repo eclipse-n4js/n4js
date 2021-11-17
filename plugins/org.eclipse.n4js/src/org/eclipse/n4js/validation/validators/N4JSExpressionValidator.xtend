@@ -66,6 +66,7 @@ import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
+import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
@@ -92,6 +93,7 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.BuiltInType
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.FieldAccessor
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.PrimitiveType
@@ -152,6 +154,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject ContainerTypesHelper containerTypesHelper;
 
 	@Inject private MemberScopingHelper memberScopingHelper;
+	@Inject private MemberVisibilityChecker memberVisibilityChecker;
 
 	@Inject private PromisifyHelper promisifyHelper;
 
@@ -547,7 +550,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			val constructSig = tsh.getConstructSignature(newExpression.eResource, typeRef);
 			if (constructSig !== null) {
 				// special success case; but perform some further checks
-				internalCheckConstructSignatureInvocation(newExpression, constructSig);
+				internalCheckConstructSignatureInvocation(newExpression, typeRef, constructSig);
 				return;
 			}
 			issueNotACtor(typeRef, newExpression);
@@ -629,7 +632,14 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	private def void internalCheckConstructSignatureInvocation(NewExpression newExpression, TMethod constructSig) {
+	private def void internalCheckConstructSignatureInvocation(NewExpression newExpression, TypeRef calleeTypeRef, TMethod constructSig) {
+		if (!memberVisibilityChecker.isVisible(newExpression, calleeTypeRef, constructSig).visibility) {
+			val containerName = (constructSig.eContainer as IdentifiableElement).name;
+			val message = IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR("construct signature", containerName);
+			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, IssueCodes.VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR);
+			return;
+		}
+
 		internalCheckTypeArgumentsNodes(constructSig.typeVars, newExpression.typeArgs, false, constructSig, newExpression,
 			N4JSPackage.eINSTANCE.newExpression_Callee);
 
