@@ -152,6 +152,22 @@ public class ContainerTypesHelper {
 		}
 
 		/**
+		 * Finds the owned or inherited call signature of the given {@link TInterface}.
+		 */
+		public TMethod findCallSignature(TInterface tInterface) {
+			return cache.get(Arrays.asList("findCallSignature", tInterface), contextResource,
+					() -> new FindCallConstructSignatureHelper(tInterface, false).getResult());
+		}
+
+		/**
+		 * Finds the owned or inherited construct signature of the given {@link TInterface}.
+		 */
+		public TMethod findConstructSignature(TInterface tInterface) {
+			return cache.get(Arrays.asList("findConstructSignature", tInterface), contextResource,
+					() -> new FindCallConstructSignatureHelper(tInterface, true).getResult());
+		}
+
+		/**
 		 * Convenience method, finds a member with a given name in members (owned and members of super types and
 		 * polyfills).
 		 */
@@ -169,16 +185,6 @@ public class ContainerTypesHelper {
 					includePolyfills), contextResource,
 					() -> new FindMemberHelper(type, name, writable, staticAccess, includeImplicitSuperTypes,
 							includePolyfills).getResult());
-		}
-
-		public TMethod findCallSignature(TInterface tInterface) {
-			return cache.get(Arrays.asList("findCallSignature", tInterface), contextResource,
-					() -> new FindCallConstructSignatureHelper(tInterface, false).getResult());
-		}
-
-		public TMethod findConstructSignature(TInterface tInterface) {
-			return cache.get(Arrays.asList("findConstructSignature", tInterface), contextResource,
-					() -> new FindCallConstructSignatureHelper(tInterface, true).getResult());
 		}
 
 		/**
@@ -259,6 +265,10 @@ public class ContainerTypesHelper {
 			return new CollectMembersHelper(type, true, true, false, filter).getResult();
 		}
 
+		/**
+		 * Same as {@link #members(ContainerType, boolean, boolean, boolean)}, but never includes call/construct
+		 * signatures.
+		 */
 		public MemberList<TMember> members(ContainerType<?> type, boolean includeImplicitSuperTypes,
 				boolean includePolyfills) {
 			return members(type, includeImplicitSuperTypes, includePolyfills, false);
@@ -269,6 +279,10 @@ public class ContainerTypesHelper {
 		 *
 		 * @param includePolyfills
 		 *            if set to {@code true}, members defined in dynamic or static polyfills are collected as well
+		 * @param includeCallConstructSignatures
+		 *            if set, call/construct signatures of interfaces will be included as well. Call signatures in
+		 *            classes are not inherited and are therefore never included, even if this is set to
+		 *            <code>true</code>.
 		 */
 		public MemberList<TMember> members(ContainerType<?> type, boolean includeImplicitSuperTypes,
 				boolean includePolyfills, boolean includeCallConstructSignatures) {
@@ -357,6 +371,10 @@ public class ContainerTypesHelper {
 			return allInheritedMembers;
 		}
 
+		/**
+		 * Same as {@link #membersOfImplementedInterfacesForConsumption(TClassifier, boolean)}, but never includes
+		 * call/construct signatures.
+		 */
 		public MemberList<TMember> membersOfImplementedInterfacesForConsumption(TClassifier classifier) {
 			return membersOfImplementedInterfacesForConsumption(classifier, false);
 		}
@@ -373,6 +391,11 @@ public class ContainerTypesHelper {
 		 * Members of the implicit super type of interfaces (i.e. N4Object) are not included, because those members will
 		 * never be consumed (currently, N4Object only has a single non-static member, i.e. its constructor, so this
 		 * applies only to this one member).
+		 *
+		 * @param includeCallConstructSignatures
+		 *            if set, call/construct signatures of interfaces will be included as well. Call signatures in
+		 *            classes are not inherited and are therefore never included, even if this is set to
+		 *            <code>true</code>.
 		 */
 		public MemberList<TMember> membersOfImplementedInterfacesForConsumption(TClassifier classifier,
 				boolean includeCallConstructSignatures) {
@@ -997,6 +1020,40 @@ public class ContainerTypesHelper {
 			}
 		}
 
+		private class FindCallConstructSignatureHelper extends AbstractMemberCollector<TMethod> {
+			private final boolean searchConstructSig;
+			private TMethod foundMember = null;
+
+			FindCallConstructSignatureHelper(TInterface type, boolean searchConstructSig) {
+				super(type, true, true);
+				this.searchConstructSig = searchConstructSig;
+			}
+
+			@Override
+			protected boolean process(ContainerType<?> type) {
+				if (type instanceof TInterface) {
+					TMethod sig = searchConstructSig ? type.getConstructSignature() : type.getCallSignature();
+					if (sig != null) {
+						foundMember = sig;
+						return true;
+					}
+				}
+				return false;
+
+			}
+
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
+
+			@Override
+			protected TMethod doGetResult() {
+				return foundMember;
+			}
+		}
+
 		private class FindMemberHelper extends AbstractMemberCollector<TMember> {
 			private TMember foundMember = null;
 			private final String name;
@@ -1037,40 +1094,6 @@ public class ContainerTypesHelper {
 
 			@Override
 			protected TMember doGetResult() {
-				return foundMember;
-			}
-		}
-
-		private class FindCallConstructSignatureHelper extends AbstractMemberCollector<TMethod> {
-			private final boolean searchConstructSig;
-			private TMethod foundMember = null;
-
-			FindCallConstructSignatureHelper(TInterface type, boolean searchConstructSig) {
-				super(type, false, true);
-				this.searchConstructSig = searchConstructSig;
-			}
-
-			@Override
-			protected boolean process(ContainerType<?> type) {
-				if (type instanceof TInterface) {
-					TMethod sig = searchConstructSig ? type.getConstructSignature() : type.getCallSignature();
-					if (sig != null) {
-						foundMember = sig;
-						return true;
-					}
-				}
-				return false;
-
-			}
-
-			@Override
-			protected boolean process(PrimitiveType type) {
-				// nothing to do in this case
-				return false;
-			}
-
-			@Override
-			protected TMethod doGetResult() {
 				return foundMember;
 			}
 		}

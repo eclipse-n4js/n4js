@@ -420,6 +420,9 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 				type = cls;
 		}
 		if(type instanceof TClass) {
+			// note: "callable constructors" (i.e. call signatures in classes) are not inherited
+			// and cannot appear in StructuralTypeRefs, so no need for ContainerTypesHelper or
+			// checking for TStructuralType here:
 			return type.callSignature;
 		}
 		return null;
@@ -441,6 +444,10 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return getCallConstructSignature(context, calleeTypeRef, true);
 	}
 
+	/**
+	 * NOTE: does not cover "callable constructors" (i.e. call signatures in classes); use method
+	 * {@link #getCallableClassConstructorFunction(RuleEnvironment,TypeRef)} for this purpose.
+	 */
 	def private TMethod getCallConstructSignature(Resource context, TypeRef calleeTypeRef, boolean searchConstructSig) {
 		val declType = calleeTypeRef.declaredType;
 		if (declType instanceof TInterface) {
