@@ -7784,21 +7784,22 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
 		private final Action cPromisifyExpressionAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
 		private final Keyword cCommercialAtKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
-		private final Keyword cPromisifyKeyword_0_0_2 = (Keyword)cGroup_0_0.eContents().get(2);
+		private final RuleCall cNoWhiteSpaceParserRuleCall_0_0_2 = (RuleCall)cGroup_0_0.eContents().get(2);
+		private final Keyword cPromisifyKeyword_0_0_3 = (Keyword)cGroup_0_0.eContents().get(3);
 		private final Assignment cExpressionAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cExpressionAssignmentExpressionParserRuleCall_1_0 = (RuleCall)cExpressionAssignment_1.eContents().get(0);
 		
 		//PromisifyExpression <In, Yield> returns Expression:
-		//    =>({PromisifyExpression} '@' 'Promisify') expression=AssignmentExpression<In,Yield>;
+		//    =>({PromisifyExpression} '@' NoWhiteSpace 'Promisify') expression=AssignmentExpression<In,Yield>;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=>({PromisifyExpression} '@' 'Promisify') expression=AssignmentExpression<In,Yield>
+		//=>({PromisifyExpression} '@' NoWhiteSpace 'Promisify') expression=AssignmentExpression<In,Yield>
 		public Group getGroup() { return cGroup; }
 		
-		//=>({PromisifyExpression} '@' 'Promisify')
+		//=>({PromisifyExpression} '@' NoWhiteSpace 'Promisify')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{PromisifyExpression} '@' 'Promisify'
+		//{PromisifyExpression} '@' NoWhiteSpace 'Promisify'
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{PromisifyExpression}
@@ -7807,8 +7808,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'@'
 		public Keyword getCommercialAtKeyword_0_0_1() { return cCommercialAtKeyword_0_0_1; }
 		
+		//NoWhiteSpace
+		public RuleCall getNoWhiteSpaceParserRuleCall_0_0_2() { return cNoWhiteSpaceParserRuleCall_0_0_2; }
+		
 		//'Promisify'
-		public Keyword getPromisifyKeyword_0_0_2() { return cPromisifyKeyword_0_0_2; }
+		public Keyword getPromisifyKeyword_0_0_3() { return cPromisifyKeyword_0_0_3; }
 		
 		//expression=AssignmentExpression<In,Yield>
 		public Assignment getExpressionAssignment_1() { return cExpressionAssignment_1; }
@@ -8536,7 +8540,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.Annotation");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cCommercialAtKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final RuleCall cAnnotationNoAtSignParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final RuleCall cNoWhiteSpaceParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final RuleCall cAnnotationNoAtSignFragmentParserRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
 		
 		//// ****************************************************************************************************
 		//// N4JS Specific
@@ -8545,38 +8550,56 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//// Annotations
 		//// ****************************************************************************************************
 		//// cf. N4JSSpec §9
-		//Annotation: '@' AnnotationNoAtSign;
+		//Annotation: '@' NoWhiteSpace AnnotationNoAtSignFragment;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'@' AnnotationNoAtSign
+		//'@' NoWhiteSpace AnnotationNoAtSignFragment
 		public Group getGroup() { return cGroup; }
 		
 		//'@'
 		public Keyword getCommercialAtKeyword_0() { return cCommercialAtKeyword_0; }
 		
-		//AnnotationNoAtSign
-		public RuleCall getAnnotationNoAtSignParserRuleCall_1() { return cAnnotationNoAtSignParserRuleCall_1; }
+		//NoWhiteSpace
+		public RuleCall getNoWhiteSpaceParserRuleCall_1() { return cNoWhiteSpaceParserRuleCall_1; }
+		
+		//AnnotationNoAtSignFragment
+		public RuleCall getAnnotationNoAtSignFragmentParserRuleCall_2() { return cAnnotationNoAtSignFragmentParserRuleCall_2; }
 	}
 	public class ScriptAnnotationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ScriptAnnotation");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cCommercialAtCommercialAtKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final RuleCall cAnnotationNoAtSignParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final RuleCall cNoWhiteSpaceParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
+		private final RuleCall cAnnotationNoAtSignFragmentParserRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
 		
-		//ScriptAnnotation returns Annotation: '@@' AnnotationNoAtSign;
+		//ScriptAnnotation returns Annotation: '@@' NoWhiteSpace AnnotationNoAtSignFragment;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'@@' AnnotationNoAtSign
+		//'@@' NoWhiteSpace AnnotationNoAtSignFragment
 		public Group getGroup() { return cGroup; }
 		
 		//'@@'
 		public Keyword getCommercialAtCommercialAtKeyword_0() { return cCommercialAtCommercialAtKeyword_0; }
 		
-		//AnnotationNoAtSign
-		public RuleCall getAnnotationNoAtSignParserRuleCall_1() { return cAnnotationNoAtSignParserRuleCall_1; }
+		//NoWhiteSpace
+		public RuleCall getNoWhiteSpaceParserRuleCall_1() { return cNoWhiteSpaceParserRuleCall_1; }
+		
+		//AnnotationNoAtSignFragment
+		public RuleCall getAnnotationNoAtSignFragmentParserRuleCall_2() { return cAnnotationNoAtSignFragmentParserRuleCall_2; }
 	}
 	public class AnnotationNoAtSignElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotationNoAtSign");
+		private final RuleCall cAnnotationNoAtSignFragmentParserRuleCall = (RuleCall)rule.eContents().get(1);
+		
+		//AnnotationNoAtSign returns Annotation:
+		//    AnnotationNoAtSignFragment;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//AnnotationNoAtSignFragment
+		public RuleCall getAnnotationNoAtSignFragmentParserRuleCall() { return cAnnotationNoAtSignFragmentParserRuleCall; }
+	}
+	public class AnnotationNoAtSignFragmentElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotationNoAtSignFragment");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final RuleCall cNameAnnotationNameParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
@@ -8592,7 +8615,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cArgsAnnotationArgumentParserRuleCall_1_2_1_1_0 = (RuleCall)cArgsAssignment_1_2_1_1.eContents().get(0);
 		private final Keyword cRightParenthesisKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
 		
-		//AnnotationNoAtSign returns Annotation:
+		//fragment AnnotationNoAtSignFragment returns Annotation:
 		//    name=AnnotationName (=> NoWhiteSpace '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -8697,23 +8720,24 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
 		private final Action cAnnotationListAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
 		private final Keyword cCommercialAtKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
-		private final Assignment cAnnotationsAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
-		private final RuleCall cAnnotationsAnnotationNoAtSignParserRuleCall_0_0_2_0 = (RuleCall)cAnnotationsAssignment_0_0_2.eContents().get(0);
+		private final RuleCall cNoWhiteSpaceParserRuleCall_0_0_2 = (RuleCall)cGroup_0_0.eContents().get(2);
+		private final Assignment cAnnotationsAssignment_0_0_3 = (Assignment)cGroup_0_0.eContents().get(3);
+		private final RuleCall cAnnotationsAnnotationNoAtSignParserRuleCall_0_0_3_0 = (RuleCall)cAnnotationsAssignment_0_0_3.eContents().get(0);
 		private final Assignment cAnnotationsAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cAnnotationsAnnotationParserRuleCall_1_0 = (RuleCall)cAnnotationsAssignment_1.eContents().get(0);
 		
 		//AnnotationList:
-		//    =>({AnnotationList} '@' -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
+		//    =>({AnnotationList} '@' NoWhiteSpace -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=>({AnnotationList} '@' -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
+		//=>({AnnotationList} '@' NoWhiteSpace -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
 		public Group getGroup() { return cGroup; }
 		
-		//=>({AnnotationList} '@' -> annotations+=AnnotationNoAtSign)
+		//=>({AnnotationList} '@' NoWhiteSpace -> annotations+=AnnotationNoAtSign)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{AnnotationList} '@' -> annotations+=AnnotationNoAtSign
+		//{AnnotationList} '@' NoWhiteSpace -> annotations+=AnnotationNoAtSign
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{AnnotationList}
@@ -8722,11 +8746,14 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'@'
 		public Keyword getCommercialAtKeyword_0_0_1() { return cCommercialAtKeyword_0_0_1; }
 		
+		//NoWhiteSpace
+		public RuleCall getNoWhiteSpaceParserRuleCall_0_0_2() { return cNoWhiteSpaceParserRuleCall_0_0_2; }
+		
 		//-> annotations+=AnnotationNoAtSign
-		public Assignment getAnnotationsAssignment_0_0_2() { return cAnnotationsAssignment_0_0_2; }
+		public Assignment getAnnotationsAssignment_0_0_3() { return cAnnotationsAssignment_0_0_3; }
 		
 		//AnnotationNoAtSign
-		public RuleCall getAnnotationsAnnotationNoAtSignParserRuleCall_0_0_2_0() { return cAnnotationsAnnotationNoAtSignParserRuleCall_0_0_2_0; }
+		public RuleCall getAnnotationsAnnotationNoAtSignParserRuleCall_0_0_3_0() { return cAnnotationsAnnotationNoAtSignParserRuleCall_0_0_3_0; }
 		
 		//annotations+=Annotation*
 		public Assignment getAnnotationsAssignment_1() { return cAnnotationsAssignment_1; }
@@ -11904,6 +11931,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	private final AnnotationElements pAnnotation;
 	private final ScriptAnnotationElements pScriptAnnotation;
 	private final AnnotationNoAtSignElements pAnnotationNoAtSign;
+	private final AnnotationNoAtSignFragmentElements pAnnotationNoAtSignFragment;
 	private final AnnotationArgumentElements pAnnotationArgument;
 	private final LiteralAnnotationArgumentElements pLiteralAnnotationArgument;
 	private final TypeRefAnnotationArgumentElements pTypeRefAnnotationArgument;
@@ -12161,6 +12189,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		this.pAnnotation = new AnnotationElements();
 		this.pScriptAnnotation = new ScriptAnnotationElements();
 		this.pAnnotationNoAtSign = new AnnotationNoAtSignElements();
+		this.pAnnotationNoAtSignFragment = new AnnotationNoAtSignFragmentElements();
 		this.pAnnotationArgument = new AnnotationArgumentElements();
 		this.pLiteralAnnotationArgument = new LiteralAnnotationArgumentElements();
 		this.pTypeRefAnnotationArgument = new TypeRefAnnotationArgumentElements();
@@ -14176,7 +14205,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//PromisifyExpression <In, Yield> returns Expression:
-	//    =>({PromisifyExpression} '@' 'Promisify') expression=AssignmentExpression<In,Yield>;
+	//    =>({PromisifyExpression} '@' NoWhiteSpace 'Promisify') expression=AssignmentExpression<In,Yield>;
 	public PromisifyExpressionElements getPromisifyExpressionAccess() {
 		return pPromisifyExpression;
 	}
@@ -14640,7 +14669,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//// Annotations
 	//// ****************************************************************************************************
 	//// cf. N4JSSpec §9
-	//Annotation: '@' AnnotationNoAtSign;
+	//Annotation: '@' NoWhiteSpace AnnotationNoAtSignFragment;
 	public AnnotationElements getAnnotationAccess() {
 		return pAnnotation;
 	}
@@ -14649,7 +14678,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getAnnotationAccess().getRule();
 	}
 	
-	//ScriptAnnotation returns Annotation: '@@' AnnotationNoAtSign;
+	//ScriptAnnotation returns Annotation: '@@' NoWhiteSpace AnnotationNoAtSignFragment;
 	public ScriptAnnotationElements getScriptAnnotationAccess() {
 		return pScriptAnnotation;
 	}
@@ -14659,13 +14688,23 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//AnnotationNoAtSign returns Annotation:
-	//    name=AnnotationName (=> NoWhiteSpace '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
+	//    AnnotationNoAtSignFragment;
 	public AnnotationNoAtSignElements getAnnotationNoAtSignAccess() {
 		return pAnnotationNoAtSign;
 	}
 	
 	public ParserRule getAnnotationNoAtSignRule() {
 		return getAnnotationNoAtSignAccess().getRule();
+	}
+	
+	//fragment AnnotationNoAtSignFragment returns Annotation:
+	//    name=AnnotationName (=> NoWhiteSpace '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
+	public AnnotationNoAtSignFragmentElements getAnnotationNoAtSignFragmentAccess() {
+		return pAnnotationNoAtSignFragment;
+	}
+	
+	public ParserRule getAnnotationNoAtSignFragmentRule() {
+		return getAnnotationNoAtSignFragmentAccess().getRule();
 	}
 	
 	//AnnotationArgument:
@@ -14702,7 +14741,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//AnnotationList:
-	//    =>({AnnotationList} '@' -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
+	//    =>({AnnotationList} '@' NoWhiteSpace -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
 	//;
 	public AnnotationListElements getAnnotationListAccess() {
 		return pAnnotationList;

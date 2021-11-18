@@ -433,7 +433,16 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     NO_WHITE_SPACE?
 	 *
 	 * This ambiguous syntax occurs at:
+	 *     (rule start) '@' (ambiguity) '(' ')' (rule start)
+	 *     (rule start) '@' (ambiguity) '(' args+=AnnotationArgument
+	 *     (rule start) '@' (ambiguity) 'Promisify' expression=AssignmentExpression
+	 *     (rule start) '@' (ambiguity) annotations+=AnnotationNoAtSign
+	 *     (rule start) '@' (ambiguity) name=AnnotationName
+	 *     (rule start) '@@' (ambiguity) '(' ')' (rule start)
+	 *     (rule start) '@@' (ambiguity) '(' args+=AnnotationArgument
+	 *     (rule start) '@@' (ambiguity) name=AnnotationName
 	 *     name=AnnotationName (ambiguity) '(' args+=AnnotationArgument
+	 *     name=AnnotationName (ambiguity) name=AnnotationName
 	 */
 	protected void emit_NoWhiteSpace_NO_WHITE_SPACETerminalRuleCall_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

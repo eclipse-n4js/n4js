@@ -26,6 +26,7 @@ ruleScriptElement:
 	(
 		(
 			('@'
+			ruleNoWhiteSpace
 			(
 				'This'
 				    |
@@ -96,6 +97,7 @@ ruleScriptElement:
 ruleAnnotatedScriptElement:
 	(
 		('@'
+		ruleNoWhiteSpace
 		(
 			'This'
 			    |
@@ -238,6 +240,7 @@ ruleExportableElement:
 	(
 		(
 			('@'
+			ruleNoWhiteSpace
 			(
 				'This'
 				    |
@@ -310,6 +313,7 @@ ruleExportableElement:
 ruleAnnotatedExportableElement:
 	(
 		('@'
+		ruleNoWhiteSpace
 		(
 			'This'
 			    |
@@ -716,6 +720,7 @@ norm3_FunctionBody:
 ruleAnnotatedFunctionDeclaration:
 	(
 		('@'
+		ruleNoWhiteSpace
 		(
 			'This'
 			    |
@@ -736,6 +741,7 @@ ruleAnnotatedFunctionDeclaration:
 norm1_AnnotatedFunctionDeclaration:
 	(
 		('@'
+		ruleNoWhiteSpace
 		(
 			'This'
 			    |
@@ -1323,6 +1329,7 @@ ruleStatement:
 	(
 		(
 			('@'
+			ruleNoWhiteSpace
 			(
 				'This'
 				    |
@@ -1343,6 +1350,7 @@ norm1_Statement:
 	(
 		(
 			('@'
+			ruleNoWhiteSpace
 			(
 				'This'
 				    |
@@ -6031,6 +6039,7 @@ ruleAssignmentExpression:
 		    |
 		(
 			('@'
+			ruleNoWhiteSpace
 			'Promisify'
 			)=>
 			rulePromisifyExpression
@@ -6085,6 +6094,7 @@ norm1_AssignmentExpression:
 		    |
 		(
 			('@'
+			ruleNoWhiteSpace
 			'Promisify'
 			)=>
 			norm1_PromisifyExpression
@@ -6139,6 +6149,7 @@ norm2_AssignmentExpression:
 		    |
 		(
 			('@'
+			ruleNoWhiteSpace
 			'Promisify'
 			)=>
 			norm2_PromisifyExpression
@@ -6195,6 +6206,7 @@ norm3_AssignmentExpression:
 		    |
 		(
 			('@'
+			ruleNoWhiteSpace
 			'Promisify'
 			)=>
 			norm3_PromisifyExpression
@@ -6348,9 +6360,11 @@ norm3_AwaitExpression:
 rulePromisifyExpression:
 	(
 		('@'
+		ruleNoWhiteSpace
 		'Promisify'
 		)=>
 		'@'
+		ruleNoWhiteSpace
 		'Promisify'
 	)
 	ruleAssignmentExpression
@@ -6360,9 +6374,11 @@ rulePromisifyExpression:
 norm1_PromisifyExpression:
 	(
 		('@'
+		ruleNoWhiteSpace
 		'Promisify'
 		)=>
 		'@'
+		ruleNoWhiteSpace
 		'Promisify'
 	)
 	norm1_AssignmentExpression
@@ -6372,9 +6388,11 @@ norm1_PromisifyExpression:
 norm2_PromisifyExpression:
 	(
 		('@'
+		ruleNoWhiteSpace
 		'Promisify'
 		)=>
 		'@'
+		ruleNoWhiteSpace
 		'Promisify'
 	)
 	norm2_AssignmentExpression
@@ -6384,9 +6402,11 @@ norm2_PromisifyExpression:
 norm3_PromisifyExpression:
 	(
 		('@'
+		ruleNoWhiteSpace
 		'Promisify'
 		)=>
 		'@'
+		ruleNoWhiteSpace
 		'Promisify'
 	)
 	norm3_AssignmentExpression
@@ -6679,17 +6699,24 @@ ruleNoWhiteSpace:
 // Rule Annotation
 ruleAnnotation:
 	'@'
-	ruleAnnotationNoAtSign
+	ruleNoWhiteSpace
+	ruleAnnotationNoAtSignFragment
 ;
 
 // Rule ScriptAnnotation
 ruleScriptAnnotation:
 	'@@'
-	ruleAnnotationNoAtSign
+	ruleNoWhiteSpace
+	ruleAnnotationNoAtSignFragment
 ;
 
 // Rule AnnotationNoAtSign
 ruleAnnotationNoAtSign:
+	ruleAnnotationNoAtSignFragment
+;
+
+// Rule AnnotationNoAtSignFragment
+ruleAnnotationNoAtSignFragment:
 	ruleAnnotationName
 	(
 		(
@@ -6734,6 +6761,7 @@ ruleTypeRefAnnotationArgument:
 ruleAnnotationList:
 	(
 		('@'
+		ruleNoWhiteSpace
 		(
 			'This'
 			    |
@@ -6743,6 +6771,7 @@ ruleAnnotationList:
 		)
 		)=>
 		'@'
+		ruleNoWhiteSpace
 		(
 			('This' | 'target' | RULE_IDENTIFIER)=>
 			ruleAnnotationNoAtSign

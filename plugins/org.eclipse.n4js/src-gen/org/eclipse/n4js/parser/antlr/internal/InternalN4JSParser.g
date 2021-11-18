@@ -177,6 +177,7 @@ ruleScriptElement returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				(
 					This
 					    |
@@ -363,6 +364,7 @@ ruleAnnotatedScriptElement returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				(
 					This
 					    |
@@ -1299,6 +1301,7 @@ ruleExportableElement returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				(
 					This
 					    |
@@ -1487,6 +1490,7 @@ ruleAnnotatedExportableElement returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				(
 					This
 					    |
@@ -3930,6 +3934,7 @@ ruleAnnotatedFunctionDeclaration returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				(
 					This
 					    |
@@ -4016,6 +4021,7 @@ norm1_AnnotatedFunctionDeclaration returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				(
 					This
 					    |
@@ -6897,6 +6903,7 @@ ruleStatement returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				(
 					This
 					    |
@@ -6942,6 +6949,7 @@ norm1_Statement returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				(
 					This
 					    |
@@ -25087,6 +25095,7 @@ ruleAssignmentExpression returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				Promisify
 			)
 			)=>
@@ -25265,6 +25274,7 @@ norm1_AssignmentExpression returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				Promisify
 			)
 			)=>
@@ -25443,6 +25453,7 @@ norm2_AssignmentExpression returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				Promisify
 			)
 			)=>
@@ -25630,6 +25641,7 @@ norm3_AssignmentExpression returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				Promisify
 			)
 			)=>
@@ -26286,6 +26298,7 @@ rulePromisifyExpression returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				Promisify
 			)
 			)=>
@@ -26301,9 +26314,20 @@ rulePromisifyExpression returns [EObject current=null]
 				{
 					newLeafNode(otherlv_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
 				}
-				otherlv_2=Promisify
 				{
-					newLeafNode(otherlv_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPromisifyExpressionRule());
+					}
+					newCompositeNode(grammarAccess.getPromisifyExpressionAccess().getNoWhiteSpaceParserRuleCall_0_0_2());
+				}
+				this_NoWhiteSpace_2=ruleNoWhiteSpace[$current]
+				{
+					$current = $this_NoWhiteSpace_2.current;
+					afterParserOrEnumRuleCall();
+				}
+				otherlv_3=Promisify
+				{
+					newLeafNode(otherlv_3, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_3());
 				}
 			)
 		)
@@ -26312,7 +26336,7 @@ rulePromisifyExpression returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getPromisifyExpressionAccess().getExpressionAssignmentExpressionParserRuleCall_1_0());
 				}
-				lv_expression_3_0=ruleAssignmentExpression
+				lv_expression_4_0=ruleAssignmentExpression
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getPromisifyExpressionRule());
@@ -26320,7 +26344,7 @@ rulePromisifyExpression returns [EObject current=null]
 					set(
 						$current,
 						"expression",
-						lv_expression_3_0,
+						lv_expression_4_0,
 						"org.eclipse.n4js.N4JS.AssignmentExpression");
 					afterParserOrEnumRuleCall();
 				}
@@ -26344,6 +26368,7 @@ norm1_PromisifyExpression returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				Promisify
 			)
 			)=>
@@ -26359,9 +26384,20 @@ norm1_PromisifyExpression returns [EObject current=null]
 				{
 					newLeafNode(otherlv_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
 				}
-				otherlv_2=Promisify
 				{
-					newLeafNode(otherlv_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPromisifyExpressionRule());
+					}
+					newCompositeNode(grammarAccess.getPromisifyExpressionAccess().getNoWhiteSpaceParserRuleCall_0_0_2());
+				}
+				this_NoWhiteSpace_2=ruleNoWhiteSpace[$current]
+				{
+					$current = $this_NoWhiteSpace_2.current;
+					afterParserOrEnumRuleCall();
+				}
+				otherlv_3=Promisify
+				{
+					newLeafNode(otherlv_3, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_3());
 				}
 			)
 		)
@@ -26370,7 +26406,7 @@ norm1_PromisifyExpression returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getPromisifyExpressionAccess().getExpressionAssignmentExpressionParserRuleCall_1_0());
 				}
-				lv_expression_3_0=norm1_AssignmentExpression
+				lv_expression_4_0=norm1_AssignmentExpression
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getPromisifyExpressionRule());
@@ -26378,7 +26414,7 @@ norm1_PromisifyExpression returns [EObject current=null]
 					set(
 						$current,
 						"expression",
-						lv_expression_3_0,
+						lv_expression_4_0,
 						"org.eclipse.n4js.N4JS.AssignmentExpression");
 					afterParserOrEnumRuleCall();
 				}
@@ -26402,6 +26438,7 @@ norm2_PromisifyExpression returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				Promisify
 			)
 			)=>
@@ -26417,9 +26454,20 @@ norm2_PromisifyExpression returns [EObject current=null]
 				{
 					newLeafNode(otherlv_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
 				}
-				otherlv_2=Promisify
 				{
-					newLeafNode(otherlv_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPromisifyExpressionRule());
+					}
+					newCompositeNode(grammarAccess.getPromisifyExpressionAccess().getNoWhiteSpaceParserRuleCall_0_0_2());
+				}
+				this_NoWhiteSpace_2=ruleNoWhiteSpace[$current]
+				{
+					$current = $this_NoWhiteSpace_2.current;
+					afterParserOrEnumRuleCall();
+				}
+				otherlv_3=Promisify
+				{
+					newLeafNode(otherlv_3, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_3());
 				}
 			)
 		)
@@ -26428,7 +26476,7 @@ norm2_PromisifyExpression returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getPromisifyExpressionAccess().getExpressionAssignmentExpressionParserRuleCall_1_0());
 				}
-				lv_expression_3_0=norm2_AssignmentExpression
+				lv_expression_4_0=norm2_AssignmentExpression
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getPromisifyExpressionRule());
@@ -26436,7 +26484,7 @@ norm2_PromisifyExpression returns [EObject current=null]
 					set(
 						$current,
 						"expression",
-						lv_expression_3_0,
+						lv_expression_4_0,
 						"org.eclipse.n4js.N4JS.AssignmentExpression");
 					afterParserOrEnumRuleCall();
 				}
@@ -26460,6 +26508,7 @@ norm3_PromisifyExpression returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				Promisify
 			)
 			)=>
@@ -26475,9 +26524,20 @@ norm3_PromisifyExpression returns [EObject current=null]
 				{
 					newLeafNode(otherlv_1, grammarAccess.getPromisifyExpressionAccess().getCommercialAtKeyword_0_0_1());
 				}
-				otherlv_2=Promisify
 				{
-					newLeafNode(otherlv_2, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_2());
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getPromisifyExpressionRule());
+					}
+					newCompositeNode(grammarAccess.getPromisifyExpressionAccess().getNoWhiteSpaceParserRuleCall_0_0_2());
+				}
+				this_NoWhiteSpace_2=ruleNoWhiteSpace[$current]
+				{
+					$current = $this_NoWhiteSpace_2.current;
+					afterParserOrEnumRuleCall();
+				}
+				otherlv_3=Promisify
+				{
+					newLeafNode(otherlv_3, grammarAccess.getPromisifyExpressionAccess().getPromisifyKeyword_0_0_3());
 				}
 			)
 		)
@@ -26486,7 +26546,7 @@ norm3_PromisifyExpression returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getPromisifyExpressionAccess().getExpressionAssignmentExpressionParserRuleCall_1_0());
 				}
-				lv_expression_3_0=norm3_AssignmentExpression
+				lv_expression_4_0=norm3_AssignmentExpression
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getPromisifyExpressionRule());
@@ -26494,7 +26554,7 @@ norm3_PromisifyExpression returns [EObject current=null]
 					set(
 						$current,
 						"expression",
-						lv_expression_3_0,
+						lv_expression_4_0,
 						"org.eclipse.n4js.N4JS.AssignmentExpression");
 					afterParserOrEnumRuleCall();
 				}
@@ -28208,11 +28268,25 @@ ruleAnnotation returns [EObject current=null]
 			newLeafNode(otherlv_0, grammarAccess.getAnnotationAccess().getCommercialAtKeyword_0());
 		}
 		{
-			newCompositeNode(grammarAccess.getAnnotationAccess().getAnnotationNoAtSignParserRuleCall_1());
+			if ($current==null) {
+				$current = createModelElement(grammarAccess.getAnnotationRule());
+			}
+			newCompositeNode(grammarAccess.getAnnotationAccess().getNoWhiteSpaceParserRuleCall_1());
 		}
-		this_AnnotationNoAtSign_1=ruleAnnotationNoAtSign
+		this_NoWhiteSpace_1=ruleNoWhiteSpace[$current]
 		{
-			$current = $this_AnnotationNoAtSign_1.current;
+			$current = $this_NoWhiteSpace_1.current;
+			afterParserOrEnumRuleCall();
+		}
+		{
+			if ($current==null) {
+				$current = createModelElement(grammarAccess.getAnnotationRule());
+			}
+			newCompositeNode(grammarAccess.getAnnotationAccess().getAnnotationNoAtSignFragmentParserRuleCall_2());
+		}
+		this_AnnotationNoAtSignFragment_2=ruleAnnotationNoAtSignFragment[$current]
+		{
+			$current = $this_AnnotationNoAtSignFragment_2.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -28239,11 +28313,25 @@ ruleScriptAnnotation returns [EObject current=null]
 			newLeafNode(otherlv_0, grammarAccess.getScriptAnnotationAccess().getCommercialAtCommercialAtKeyword_0());
 		}
 		{
-			newCompositeNode(grammarAccess.getScriptAnnotationAccess().getAnnotationNoAtSignParserRuleCall_1());
+			if ($current==null) {
+				$current = createModelElement(grammarAccess.getScriptAnnotationRule());
+			}
+			newCompositeNode(grammarAccess.getScriptAnnotationAccess().getNoWhiteSpaceParserRuleCall_1());
 		}
-		this_AnnotationNoAtSign_1=ruleAnnotationNoAtSign
+		this_NoWhiteSpace_1=ruleNoWhiteSpace[$current]
 		{
-			$current = $this_AnnotationNoAtSign_1.current;
+			$current = $this_NoWhiteSpace_1.current;
+			afterParserOrEnumRuleCall();
+		}
+		{
+			if ($current==null) {
+				$current = createModelElement(grammarAccess.getScriptAnnotationRule());
+			}
+			newCompositeNode(grammarAccess.getScriptAnnotationAccess().getAnnotationNoAtSignFragmentParserRuleCall_2());
+		}
+		this_AnnotationNoAtSignFragment_2=ruleAnnotationNoAtSignFragment[$current]
+		{
+			$current = $this_AnnotationNoAtSignFragment_2.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -28264,16 +28352,38 @@ ruleAnnotationNoAtSign returns [EObject current=null]
 @after {
 	leaveRule();
 }:
+	{
+		if ($current==null) {
+			$current = createModelElement(grammarAccess.getAnnotationNoAtSignRule());
+		}
+		newCompositeNode(grammarAccess.getAnnotationNoAtSignAccess().getAnnotationNoAtSignFragmentParserRuleCall());
+	}
+	this_AnnotationNoAtSignFragment_0=ruleAnnotationNoAtSignFragment[$current]
+	{
+		$current = $this_AnnotationNoAtSignFragment_0.current;
+		afterParserOrEnumRuleCall();
+	}
+;
+
+
+// Rule AnnotationNoAtSignFragment
+ruleAnnotationNoAtSignFragment[EObject in_current]  returns [EObject current=in_current]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
 	(
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getAnnotationNoAtSignAccess().getNameAnnotationNameParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getAnnotationNoAtSignFragmentAccess().getNameAnnotationNameParserRuleCall_0_0());
 				}
 				lv_name_0_0=ruleAnnotationName
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getAnnotationNoAtSignRule());
+						$current = createModelElementForParent(grammarAccess.getAnnotationNoAtSignFragmentRule());
 					}
 					set(
 						$current,
@@ -28289,9 +28399,9 @@ ruleAnnotationNoAtSign returns [EObject current=null]
 				(ruleNoWhiteSpace[null])=>
 				{
 					if ($current==null) {
-						$current = createModelElement(grammarAccess.getAnnotationNoAtSignRule());
+						$current = createModelElement(grammarAccess.getAnnotationNoAtSignFragmentRule());
 					}
-					newCompositeNode(grammarAccess.getAnnotationNoAtSignAccess().getNoWhiteSpaceParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getAnnotationNoAtSignFragmentAccess().getNoWhiteSpaceParserRuleCall_1_0());
 				}
 				this_NoWhiteSpace_1=ruleNoWhiteSpace[$current]
 				{
@@ -28301,18 +28411,18 @@ ruleAnnotationNoAtSign returns [EObject current=null]
 			)
 			otherlv_2=LeftParenthesis
 			{
-				newLeafNode(otherlv_2, grammarAccess.getAnnotationNoAtSignAccess().getLeftParenthesisKeyword_1_1());
+				newLeafNode(otherlv_2, grammarAccess.getAnnotationNoAtSignFragmentAccess().getLeftParenthesisKeyword_1_1());
 			}
 			(
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getAnnotationNoAtSignAccess().getArgsAnnotationArgumentParserRuleCall_1_2_0_0());
+							newCompositeNode(grammarAccess.getAnnotationNoAtSignFragmentAccess().getArgsAnnotationArgumentParserRuleCall_1_2_0_0());
 						}
 						lv_args_3_0=ruleAnnotationArgument
 						{
 							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getAnnotationNoAtSignRule());
+								$current = createModelElementForParent(grammarAccess.getAnnotationNoAtSignFragmentRule());
 							}
 							add(
 								$current,
@@ -28326,17 +28436,17 @@ ruleAnnotationNoAtSign returns [EObject current=null]
 				(
 					otherlv_4=Comma
 					{
-						newLeafNode(otherlv_4, grammarAccess.getAnnotationNoAtSignAccess().getCommaKeyword_1_2_1_0());
+						newLeafNode(otherlv_4, grammarAccess.getAnnotationNoAtSignFragmentAccess().getCommaKeyword_1_2_1_0());
 					}
 					(
 						(
 							{
-								newCompositeNode(grammarAccess.getAnnotationNoAtSignAccess().getArgsAnnotationArgumentParserRuleCall_1_2_1_1_0());
+								newCompositeNode(grammarAccess.getAnnotationNoAtSignFragmentAccess().getArgsAnnotationArgumentParserRuleCall_1_2_1_1_0());
 							}
 							lv_args_5_0=ruleAnnotationArgument
 							{
 								if ($current==null) {
-									$current = createModelElementForParent(grammarAccess.getAnnotationNoAtSignRule());
+									$current = createModelElementForParent(grammarAccess.getAnnotationNoAtSignFragmentRule());
 								}
 								add(
 									$current,
@@ -28351,7 +28461,7 @@ ruleAnnotationNoAtSign returns [EObject current=null]
 			)?
 			otherlv_6=RightParenthesis
 			{
-				newLeafNode(otherlv_6, grammarAccess.getAnnotationNoAtSignAccess().getRightParenthesisKeyword_1_3());
+				newLeafNode(otherlv_6, grammarAccess.getAnnotationNoAtSignFragmentAccess().getRightParenthesisKeyword_1_3());
 			}
 		)?
 	)
@@ -28489,6 +28599,7 @@ ruleAnnotationList returns [EObject current=null]
 				(
 				)
 				CommercialAt
+				ruleNoWhiteSpace[null]
 				(
 					This
 					    |
@@ -28510,13 +28621,24 @@ ruleAnnotationList returns [EObject current=null]
 				{
 					newLeafNode(otherlv_1, grammarAccess.getAnnotationListAccess().getCommercialAtKeyword_0_0_1());
 				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getAnnotationListRule());
+					}
+					newCompositeNode(grammarAccess.getAnnotationListAccess().getNoWhiteSpaceParserRuleCall_0_0_2());
+				}
+				this_NoWhiteSpace_2=ruleNoWhiteSpace[$current]
+				{
+					$current = $this_NoWhiteSpace_2.current;
+					afterParserOrEnumRuleCall();
+				}
 				(
 					(This | Target | RULE_IDENTIFIER)=>
 					(
 						{
-							newCompositeNode(grammarAccess.getAnnotationListAccess().getAnnotationsAnnotationNoAtSignParserRuleCall_0_0_2_0());
+							newCompositeNode(grammarAccess.getAnnotationListAccess().getAnnotationsAnnotationNoAtSignParserRuleCall_0_0_3_0());
 						}
-						lv_annotations_2_0=ruleAnnotationNoAtSign
+						lv_annotations_3_0=ruleAnnotationNoAtSign
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getAnnotationListRule());
@@ -28524,7 +28646,7 @@ ruleAnnotationList returns [EObject current=null]
 							add(
 								$current,
 								"annotations",
-								lv_annotations_2_0,
+								lv_annotations_3_0,
 								"org.eclipse.n4js.N4JS.AnnotationNoAtSign");
 							afterParserOrEnumRuleCall();
 						}
@@ -28537,7 +28659,7 @@ ruleAnnotationList returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getAnnotationListAccess().getAnnotationsAnnotationParserRuleCall_1_0());
 				}
-				lv_annotations_3_0=ruleAnnotation
+				lv_annotations_4_0=ruleAnnotation
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getAnnotationListRule());
@@ -28545,7 +28667,7 @@ ruleAnnotationList returns [EObject current=null]
 					add(
 						$current,
 						"annotations",
-						lv_annotations_3_0,
+						lv_annotations_4_0,
 						"org.eclipse.n4js.N4JS.Annotation");
 					afterParserOrEnumRuleCall();
 				}

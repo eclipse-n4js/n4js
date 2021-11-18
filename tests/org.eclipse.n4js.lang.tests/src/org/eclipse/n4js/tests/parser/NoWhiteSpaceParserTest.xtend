@@ -10,10 +10,97 @@
  */
 package org.eclipse.n4js.tests.parser
 
+import java.math.BigDecimal
+import org.eclipse.n4js.n4JS.LiteralAnnotationArgument
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
+import org.eclipse.n4js.n4JS.NumericLiteral
+import org.eclipse.n4js.n4JS.StringLiteral
 import org.junit.Test
 
 class NoWhiteSpaceParserTest extends AbstractParserTest {
+
+	@Test
+	def void testAnnotation01() {
+		val script = '''
+			@Annotation
+			class Cls {}
+		'''.parseN4jsSuccessfully;
+		val ann = script.eAllContents.filter(N4ClassifierDeclaration).head?.annotations?.head;
+		assertNotNull(ann);
+		assertEquals("Annotation", ann.name);
+		assertEquals(0, ann.args.size);
+	}
+
+	@Test
+	def void testAnnotation02() {
+		val script = '''
+			@Annotation()
+			class Cls {}
+		'''.parseN4jsSuccessfully;
+		val ann = script.eAllContents.filter(N4ClassifierDeclaration).head?.annotations?.head;
+		assertNotNull(ann);
+		assertEquals("Annotation", ann.name);
+		assertEquals(0, ann.args.size);
+	}
+
+	@Test
+	def void testAnnotation03() {
+		val script = '''
+			@Annotation( /* white-space is legal at this location */ )
+			class Cls {}
+		'''.parseN4jsSuccessfully;
+		val ann = script.eAllContents.filter(N4ClassifierDeclaration).head?.annotations?.head;
+		assertNotNull(ann);
+		assertEquals("Annotation", ann.name);
+		assertEquals(0, ann.args.size);
+	}
+
+	@Test
+	def void testAnnotation04() {
+		val script = '''
+			@Annotation("")
+			class Cls {}
+		'''.parseN4jsSuccessfully;
+		val ann = script.eAllContents.filter(N4ClassifierDeclaration).head?.annotations?.head;
+		assertNotNull(ann);
+		assertEquals("Annotation", ann.name);
+		assertEquals(1, ann.args.size);
+		assertTrue(ann.args.head instanceof LiteralAnnotationArgument);
+	}
+
+	@Test
+	def void testAnnotation05() {
+		val script = '''
+			@Annotation( // white space
+				"arg1"  ,
+				"arg2"  ,
+				42 /*  */ )
+			class Cls {}
+		'''.parseN4jsSuccessfully;
+		val ann = script.eAllContents.filter(N4ClassifierDeclaration).head?.annotations?.head;
+		assertNotNull(ann);
+		assertEquals("Annotation", ann.name);
+		assertEquals(3, ann.args.size);
+		assertEquals("arg1",                 ((ann.args.get(0) as LiteralAnnotationArgument).literal as StringLiteral).value);
+		assertEquals("arg2",                 ((ann.args.get(1) as LiteralAnnotationArgument).literal as StringLiteral).value);
+		assertEquals(BigDecimal.valueOf(42), ((ann.args.get(2) as LiteralAnnotationArgument).literal as NumericLiteral).value);
+	}
+
+	@Test
+	def void testAnnotation06_bad() {
+		'''
+			@ Annotation
+			class Cls {}
+		'''.parseN4jsWithError;
+	}
+
+	@Test
+	def void testAnnotation07_bad() {
+		'''
+			@Annotation ()
+			class Cls {}
+		'''.parseN4jsWithError;
+	}
 
 	@Test
 	def void testCallSignatureWithAnnotation01() {
