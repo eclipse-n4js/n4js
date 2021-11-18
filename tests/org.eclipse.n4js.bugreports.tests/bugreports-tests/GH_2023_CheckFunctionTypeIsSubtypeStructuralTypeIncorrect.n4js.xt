@@ -18,7 +18,7 @@ let fn: (string)=>boolean;
 // 1) from bug report:
 
 let obj: ~Object with { prop: string };
-// XPECT errors --> "Function is not a structural subtype of ~Object with { prop: string }: missing structural field prop." at "fn"
+// XPECT errors --> "{function(string):boolean} is not a structural subtype of ~Object with { prop: string }: missing structural field prop." at "fn"
 obj = fn;
 
 

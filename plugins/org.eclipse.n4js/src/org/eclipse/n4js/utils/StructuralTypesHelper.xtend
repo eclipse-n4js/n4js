@@ -12,6 +12,7 @@ package org.eclipse.n4js.utils
 
 import com.google.inject.Inject
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
@@ -125,6 +126,12 @@ class StructuralTypesHelper {
 			}
 		}
 		return nominalMembers;
+	}
+
+	def private dispatch Iterable<TMember> doCollectMembers(RuleEnvironment G, FunctionTypeExpression ref,
+		Function1<TMember, Boolean> predicate) {
+
+		return doCollectMembersOfType(G, G.functionType, predicate);
 	}
 
 	def private dispatch Iterable<TMember> doCollectMembersOfType(RuleEnvironment G, Type type,
