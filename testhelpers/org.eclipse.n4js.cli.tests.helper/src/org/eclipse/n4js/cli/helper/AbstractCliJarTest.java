@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.junit.Before;
@@ -31,7 +32,7 @@ import com.google.common.base.Predicates;
  */
 public abstract class AbstractCliJarTest extends AbstractCliCompileTest {
 	/** Standard target folder-name, the base of maven-compile results. */
-	static public final String TARGET = "target";
+	static public final String TARGET = N4JSGlobals.TARGET;
 	/** Standard target folder (name+"/"), the base of maven-compile results. */
 	static public final String TARGET_FOLDER = TARGET + "/";
 	/** Sub folder in target folder. */
