@@ -964,9 +964,11 @@ stderr:
 In this example, the interface `I` is defined in the `Inf.n4jsd` file without the `@N4JS` annotation. As a result, its field `m` cannot be initialized via the `@Spec` constructor and hence the output of `console.log(c.m)` is `undefined`. On the other hand,  since the interface `J` is declared with the annotation `@N4JS`, it is possible to initialize its field `n` in the `@Spec` constructor. That's why the result of `console.log(d.n)` is `Bye`.
 
 
-=== Call Signatures
 
-FIXME GH-2265
+=== Callable Constructors
+
+See Section <<sec:call_and_construct_signatures>>.
+
 
 
 === Covariant Constructors
@@ -2183,3 +2185,53 @@ Consequently, the initializer of `s` in `C` is used.
 * `d.v = "I2"` : `v` is overridden in `I2`, so is the field initializer. This is why `d.v` must be assigned to `I2` and not `I0`.
 
 --
+
+
+
+== Call and Construct Signatures [[sec:call_and_construct_signatures]]
+
+In `.n4jsd` files, interfaces can be provided with a call or construct signature. In this case, instances of such an interface can be invoked using
+a call expression (in case of call signatures) and/or instantiated using a new expression (in case of construct signatures). Such call and construct
+signatures in interfaces are inherited by extending interfaces. However, classes are unable to implement such interfaces, because it is not
+possible for them to provide implementations for the call/construct signatures. The reason for this limitation is that call/construct signatures
+are only intended to represent elements of plain Javascript libraries.
+
+For example, given an `.n4jsd` file `ext.n4jsd` with
+
+[source,n4jsd]
+----
+export external public interface ~IfcCall {
+    (p: string): number; // call signature
+}
+
+export external public class Cls {}
+export external public interface ~IfcConstruct {
+    new(p: string): Cls; // construct signature
+}
+----
+
+instances of these interfaces could be used in an `.n4js` file as follows:
+
+[source,n4jsd]
+----
+import { IfcCall, IfcConstruct } from "ext"
+
+let value1: IfcCall;
+value1("hello"); // a value of type IfcCall can be invoked (returning a number)
+
+let value2: IfcConstruct;
+new value2("hello"); // a value of type IfcConstruct can be instantiated (creating an instance of Cls)
+----
+
+
+In addition to the above, classes in `.n4jsd` files can be provided with a call signature (not construct signature). Such a call signature
+marks the constructor of this class as "callable", i.e. the constructor function may be invoked directly with a call expression.
+Therefore, a call signature in a class is also referred to as a "callable constructor".
+
+Note that call/construct signatures in interfaces and call signatures in classes are rather different and should be seen as two
+separate features:
+
+* call/construct signatures in interfaces are inherited by sub-interfaces, whereas call signatures in classes are not inherited
+  by sub-classes.
+* call/construct signatures in interfaces apply to values of the type, whereas call signatures in classes apply to the class
+  constructor function.
