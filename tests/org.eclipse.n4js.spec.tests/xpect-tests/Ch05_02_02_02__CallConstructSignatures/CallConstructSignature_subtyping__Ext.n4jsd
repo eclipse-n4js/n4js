@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+export external class A {}
+export external class B extends A {
+	public constructor(p: B)
+}
+export external class C extends B {}
+
+export external public interface ~IfcCall {
+	(p: B): B;
+}
+export external public interface ~IfcCallWithField {
+	(p: B): B;
+	someField: string;
+}
+export external public interface ~IfcCallOtherGood {
+	(p: A): C;
+}
+export external public interface ~IfcCallOtherBad {
+	(p: C): B;
+}
+
+export let structTypeRefCall: ~Object with {
+	(p: B): B;
+};
+export let structTypeRefCallOtherGood: ~Object with {
+	(p: A): C;
+};
+export let structTypeRefCallOtherBad: ~Object with {
+	(p: C): B;
+};
+
+export external function consumeStructTypeRefCall(p: ~Object with { (p: B): B; })
+
+export external public interface ~IfcConstruct {
+	new(p: B): B;
+}
+export external public interface ~IfcConstructWithField {
+	new(p: B): B;
+	someField: string;
+}
+export external public interface ~IfcConstructOtherGood {
+	new(p: A): C;
+}
+export external public interface ~IfcConstructOtherBad {
+	new(p: C): B;
+}
+
+export let structTypeRefConstruct: ~Object with {
+	new(p: B): B;
+};
+export let structTypeRefConstructOtherGood: ~Object with {
+	new(p: A): C;
+};
+export let structTypeRefConstructOtherBad: ~Object with {
+	new(p: C): B;
+};
+
+export external function consumeStructTypeRefConstruct(p: ~Object with { new(p: B): B; })

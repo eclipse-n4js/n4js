@@ -144,7 +144,7 @@ public class N4JSTypesFromTypeRefBuilder {
 		applyDefaults(builtInTypeScope, setter.fpar);
 	}
 	def private dispatch void applyDefaults(BuiltInTypeScope builtInTypeScope, TStructMethod method) {
-		if (method.isCallSignature) {
+		if (method.isASTCallSignature) {
 			method.name = N4JSLanguageUtils.CALL_SIGNATURE_NAME;
 		}
 		method.fpars.forEach[applyDefaults(builtInTypeScope, it)];

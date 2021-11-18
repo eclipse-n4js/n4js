@@ -1,0 +1,98 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+	ResourceSet {
+		ThisFile {}
+		File "Ext.n4jsd" { from="CallConstructSignature_subtyping__Ext.n4jsd" }
+	}
+
+END_SETUP */
+
+
+import { IfcCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcCallWithField } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcCallOtherGood } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcCallOtherBad } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { structTypeRefCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { structTypeRefCallOtherGood } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { structTypeRefCallOtherBad } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { consumeStructTypeRefCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+
+import { IfcConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcConstructWithField } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcConstructOtherGood } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcConstructOtherBad } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { structTypeRefConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { structTypeRefConstructOtherGood } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { structTypeRefConstructOtherBad } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { consumeStructTypeRefConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+
+
+
+let ifcCall: IfcCall;
+let ifcCallWithField: IfcCallWithField;
+let ifcCallOtherGood: IfcCallOtherGood;
+let ifcCallOtherBad: IfcCallOtherBad;
+
+// XPECT noerrors -->
+ifcCall = ifcCall;
+// XPECT noerrors -->
+ifcCall = ifcCallWithField;
+// XPECT noerrors -->
+ifcCall = ifcCallOtherGood;
+// XPECT errors --> "IfcCallOtherBad is not a structural subtype of IfcCall: call signature failed: {function(C):B} is not a subtype of {function(B):B}." at "ifcCallOtherBad"
+ifcCall = ifcCallOtherBad;
+// XPECT errors --> "IfcCall is not a structural subtype of IfcCallWithField: missing field someField." at "ifcCall"
+ifcCallWithField = ifcCall;
+// XPECT noerrors -->
+ifcCall = structTypeRefCall;
+// XPECT noerrors -->
+ifcCall = structTypeRefCallOtherGood;
+// XPECT errors --> "~Object with { (p: C): B } is not a structural subtype of IfcCall: call signature failed: {function(C):B} is not a subtype of {function(B):B}." at "structTypeRefCallOtherBad"
+ifcCall = structTypeRefCallOtherBad;
+// XPECT noerrors -->
+consumeStructTypeRefCall(ifcCall);
+// XPECT noerrors -->
+consumeStructTypeRefCall(ifcCallOtherGood);
+// XPECT errors --> "IfcCallOtherBad is not a structural subtype of ~Object with { (p: B): B }: call signature failed: {function(C):B} is not a subtype of {function(B):B}." at "ifcCallOtherBad"
+consumeStructTypeRefCall(ifcCallOtherBad);
+
+
+
+let ifcConstruct: IfcConstruct;
+let ifcConstructWithField: IfcConstructWithField;
+let ifcConstructOtherGood: IfcConstructOtherGood;
+let ifcConstructOtherBad: IfcConstructOtherBad;
+
+// XPECT noerrors -->
+ifcConstruct = ifcConstruct;
+// XPECT noerrors -->
+ifcConstruct = ifcConstructWithField;
+// XPECT noerrors -->
+ifcConstruct = ifcConstructOtherGood;
+// XPECT errors --> "IfcConstructOtherBad is not a structural subtype of IfcConstruct: construct signature failed: {function(C):B} is not a subtype of {function(B):B}." at "ifcConstructOtherBad"
+ifcConstruct = ifcConstructOtherBad;
+// XPECT errors --> "IfcConstruct is not a structural subtype of IfcConstructWithField: missing field someField." at "ifcConstruct"
+ifcConstructWithField = ifcConstruct;
+// XPECT noerrors -->
+ifcConstruct = structTypeRefConstruct;
+// XPECT noerrors -->
+ifcConstruct = structTypeRefConstructOtherGood;
+// XPECT errors --> "~Object with { new(p: C): B } is not a structural subtype of IfcConstruct: construct signature failed: {function(C):B} is not a subtype of {function(B):B}." at "structTypeRefConstructOtherBad"
+ifcConstruct = structTypeRefConstructOtherBad;
+// XPECT noerrors -->
+consumeStructTypeRefConstruct(ifcConstruct);
+// XPECT noerrors -->
+consumeStructTypeRefConstruct(ifcConstructOtherGood);
+// XPECT errors --> "IfcConstructOtherBad is not a structural subtype of ~Object with { new(p: B): B }: construct signature failed: {function(C):B} is not a subtype of {function(B):B}." at "ifcConstructOtherBad"
+consumeStructTypeRefConstruct(ifcConstructOtherBad);
