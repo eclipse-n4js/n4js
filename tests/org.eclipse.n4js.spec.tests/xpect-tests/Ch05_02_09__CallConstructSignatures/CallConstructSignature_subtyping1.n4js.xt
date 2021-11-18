@@ -19,23 +19,23 @@
 END_SETUP */
 
 
-import { IfcCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcCallWithField } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcCallOtherGood } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcCallOtherBad } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefCallOtherGood } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefCallOtherBad } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { consumeStructTypeRefCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcCall } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcCallWithField } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcCallOtherGood } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcCallOtherBad } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefCall } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefCallOtherGood } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefCallOtherBad } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { consumeStructTypeRefCall } from "Ch05_02_09__CallConstructSignatures/Ext"
 
-import { IfcConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcConstructWithField } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcConstructOtherGood } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcConstructOtherBad } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefConstructOtherGood } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefConstructOtherBad } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { consumeStructTypeRefConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcConstructWithField } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcConstructOtherGood } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcConstructOtherBad } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefConstructOtherGood } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefConstructOtherBad } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { consumeStructTypeRefConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
 
 
 

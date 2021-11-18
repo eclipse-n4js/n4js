@@ -23,8 +23,8 @@ END_SETUP */
 // but implementing class is located in an N4JS file:
 
 
-import { SubIfcCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { SubIfcConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { SubIfcCall } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { SubIfcConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
 
 
 // XPECT errors --> "An interface with a call or construct signature cannot be implemented by a class." at "SubIfcCall"

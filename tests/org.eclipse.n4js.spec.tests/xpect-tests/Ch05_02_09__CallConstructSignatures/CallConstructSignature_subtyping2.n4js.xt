@@ -19,11 +19,11 @@
 END_SETUP */
 
 
-import { A,B,C } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcCallWithField } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { consumeStructTypeRefCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { A,B,C } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcCall } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcCallWithField } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { consumeStructTypeRefCall } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
 
 
 let ifcCall: IfcCall;

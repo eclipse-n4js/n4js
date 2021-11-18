@@ -19,8 +19,8 @@
 END_SETUP */
 
 
-import { IfcGen } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefGen } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcGen } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefGen } from "Ch05_02_09__CallConstructSignatures/Ext"
 
 class ClsArg {}
 let clsArg: ClsArg;

@@ -19,8 +19,8 @@
 END_SETUP */
 
 
-import { SubIfcOnlyCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { SubIfcOnlyConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { SubIfcOnlyCall } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { SubIfcOnlyConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
 
 
 // assert that it works as well if the call/construct signature is not owned but inherited

@@ -19,7 +19,7 @@
 END_SETUP */
 
 
-import { IfcPrivateConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcPrivateConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
 
 
 // assert that accessibility of construct signatures is checked

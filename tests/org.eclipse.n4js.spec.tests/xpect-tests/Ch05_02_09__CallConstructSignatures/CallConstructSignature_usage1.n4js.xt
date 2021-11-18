@@ -19,14 +19,14 @@
 END_SETUP */
 
 
-import { IfcNone } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcOnlyCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcOnlyConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { IfcBoth } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefNone } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefOnlyCall } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefOnlyConstruct } from "Ch05_02_02_02__CallConstructSignatures/Ext"
-import { structTypeRefBoth } from "Ch05_02_02_02__CallConstructSignatures/Ext"
+import { IfcNone } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcOnlyCall } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcOnlyConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcBoth } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefNone } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefOnlyCall } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefOnlyConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { structTypeRefBoth } from "Ch05_02_09__CallConstructSignatures/Ext"
 
 
 let ifcNone: IfcNone;
