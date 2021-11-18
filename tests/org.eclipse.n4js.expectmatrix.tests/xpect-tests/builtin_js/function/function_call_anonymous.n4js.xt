@@ -23,7 +23,7 @@ var animals = [
 
 for (var i = 0; i < animals.length; i++) {
 	(
-	@This (~Object with {name: string; species: string;})
+	@This(~Object with {name: string; species: string;})
 		function (i) {
     	console.log(i + "\t" + this.name + " is a " + this.species);
   	}).call(animals[i], i);
