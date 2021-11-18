@@ -38,7 +38,7 @@ let result02 = <ClsArg>ifcGen("bad");
 // XPECT type of 'result03' --> CallResultGenCls<ClsArg>
 let result03 = <ClsArg>ifcGen(clsArg);
 
-// XPECT errors --> "Incorrect number of type arguments: expected 1, got 2." at "structTypeRefGen"
+// XPECT errors --> "Incorrect number of type arguments for call signature (): expected 1, got 2." at "structTypeRefGen"
 // XPECT type of 'result04' --> CallResultGenCls<ClsArg>
 let result04 = <ClsArg,string>structTypeRefGen(null);
 // XPECT errors --> ""bad" is not a subtype of ClsArg." at ""bad""
