@@ -87,6 +87,7 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.TYPE: return createType();
 			case TypesPackage.ABSTRACT_NAMESPACE: return createAbstractNamespace();
 			case TypesPackage.TNAMESPACE: return createTNamespace();
+			case TypesPackage.TNAMESPACE_ELEMENT: return createTNamespaceElement();
 			case TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE: return createModuleNamespaceVirtualType();
 			case TypesPackage.PRIMITIVE_TYPE: return createPrimitiveType();
 			case TypesPackage.BUILT_IN_TYPE: return createBuiltInType();
@@ -357,6 +358,17 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public TNamespace createTNamespace() {
 		TNamespaceImpl tNamespace = new TNamespaceImpl();
 		return tNamespace;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TNamespaceElement createTNamespaceElement() {
+		TNamespaceElementImpl tNamespaceElement = new TNamespaceElementImpl();
+		return tNamespaceElement;
 	}
 
 	/**

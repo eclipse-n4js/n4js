@@ -32,7 +32,7 @@ package org.eclipse.n4js.n4JS;
  * @model abstract="true"
  * @generated
  */
-public interface N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElement, ModifiableElement, ExportableElement, NamedElement {
+public interface N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElement, ModifiableElement, ExportableElement, NamedElement, NamespaceElement {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -66,13 +66,5 @@ public interface N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElem
 	 * @generated
 	 */
 	boolean isExternal();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	boolean isHollow();
 
 } // N4TypeDeclaration

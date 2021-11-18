@@ -25,6 +25,10 @@ import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SingletonScope
 import org.eclipse.xtext.util.IResourceScopeCache
 import com.google.common.collect.Iterables
+import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.n4js.ts.types.TNamespace
+import org.eclipse.n4js.ts.types.TNamespaceElement
 
 /**
  * Helper for {@link N4JSScopeProvider N4JSScopeProvider} using
@@ -118,8 +122,11 @@ class LocallyKnownTypesScopingHelper {
 		if (local === null || local.eIsProxy) {
 			return parent;
 		}
-		val tleAndNamespaces = Iterables.concat(local.topLevelTypes, local.namespaces);
-		val eoDescrs = tleAndNamespaces.filter[t | !t.polyfill ].map[ topLevelType | EObjectDescription.create(topLevelType.name, topLevelType) ];
+		val namespaces = EcoreUtil2.getAllContentsOfType(local, TNamespace);
+		val tleAndNamespaces = Iterables.concat(local.topLevelTypes, namespaces);
+		val eoDescrs = tleAndNamespaces.filter[t | !t.polyfill ].map[ topLevelType |
+			return EObjectDescription.create(topLevelType.getContainingNamespaceNamesWithDot() + topLevelType.name, topLevelType);
+		];
 		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", script, parent, eoDescrs);
 	}
 

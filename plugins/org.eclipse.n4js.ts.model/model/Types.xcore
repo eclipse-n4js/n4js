@@ -561,7 +561,7 @@ enum MemberAccessModifier {
  * </p>
  */
 //TODO why not abstract (doesn't work when it is abstract, but why?)
-class Type extends TExportableElement, TAnnotableElement {
+class Type extends TExportableElement, TAnnotableElement, TNamespaceElement {
 
 	/** Returns true iff this type is a type alias. */
 	op boolean isAlias() {
@@ -681,9 +681,6 @@ class Type extends TExportableElement, TAnnotableElement {
 		}
 	}
 	
-	op boolean isHollow() {
-		return false;
-	}
 
 //	op String getTypeAsHTML() {
 //		return UtilN4.sanitizeForHTML(getTypeAsString());
@@ -830,9 +827,37 @@ class AbstractNamespace {
 }
 
 class TNamespace extends Type /* must be first to generate 'isExported' */,
-							AbstractNamespace, AccessibleTypeElement, SyntaxRelatedTElement {
+							AbstractNamespace, AccessibleTypeElement, SyntaxRelatedTElement, TNamespaceElement {
 	boolean external
 	
+}
+
+class TNamespaceElement {
+
+	op boolean isHollow() {
+		return false;
+	}
+	
+	op String getContainingNamespaceNamesWithDot() {
+		if (getContainingNamespaceNames.empty) {
+			return getContainingNamespaceNames;
+		} else {
+			return getContainingNamespaceNames + ".";
+		}
+	}
+	
+	op String getContainingNamespaceNames() {
+		var containingTypeNames = "";
+		var currContainer = eContainer;
+		while (currContainer instanceof TNamespace) {
+			if (!containingTypeNames.empty) {
+				containingTypeNames = "." + containingTypeNames;
+			}
+			containingTypeNames = currContainer.name + containingTypeNames;
+			currContainer = currContainer.eContainer;
+		}
+		return containingTypeNames;
+	}
 }
 
 /*
@@ -1670,7 +1695,7 @@ abstract class TConstableElement {
  * to Types (such as TClass, TInterface, TFunction). It references the variable declaration of the
  * export declaration (via SyntaxRelatedTElement's astElement).
  */
-class TVariable extends TExportableElement, TConstableElement, SyntaxRelatedTElement, TAnnotableElement, AccessibleTypeElement, TTypedElement {
+class TVariable extends TExportableElement, TConstableElement, SyntaxRelatedTElement, TAnnotableElement, AccessibleTypeElement, TTypedElement, TNamespaceElement {
 	boolean external
 	boolean objectLiteral
 	boolean newExpression

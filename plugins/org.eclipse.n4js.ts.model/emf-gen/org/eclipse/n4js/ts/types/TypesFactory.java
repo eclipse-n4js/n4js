@@ -174,6 +174,15 @@ public interface TypesFactory extends EFactory {
 	TNamespace createTNamespace();
 
 	/**
+	 * Returns a new object of class '<em>TNamespace Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>TNamespace Element</em>'.
+	 * @generated
+	 */
+	TNamespaceElement createTNamespaceElement();
+
+	/**
 	 * Returns a new object of class '<em>Module Namespace Virtual Type</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

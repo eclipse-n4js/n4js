@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -33,6 +34,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableDeclarationContainer;
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
@@ -139,6 +142,58 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 		varStmtKeyword = newVarStmtKeyword == null ? VAR_STMT_KEYWORD_EDEFAULT : newVarStmtKeyword;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.VARIABLE_STATEMENT__VAR_STMT_KEYWORD, oldVarStmtKeyword, varStmtKeyword));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getContainingNamespaceNamesWithDot() {
+		boolean _isEmpty = this.getContainingNamespaceNames().isEmpty();
+		if (_isEmpty) {
+			return this.getContainingNamespaceNames();
+		}
+		else {
+			String _containingNamespaceNames = this.getContainingNamespaceNames();
+			return (_containingNamespaceNames + ".");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getContainingNamespaceNames() {
+		String containingTypeNames = "";
+		EObject currContainer = this.eContainer();
+		while ((currContainer instanceof N4NamespaceDeclaration)) {
+			{
+				boolean _isEmpty = containingTypeNames.isEmpty();
+				boolean _not = (!_isEmpty);
+				if (_not) {
+					containingTypeNames = ("." + containingTypeNames);
+				}
+				String _name = ((N4NamespaceDeclaration)currContainer).getName();
+				String _plus = (_name + containingTypeNames);
+				containingTypeNames = _plus;
+				currContainer = ((N4NamespaceDeclaration)currContainer).eContainer();
+			}
+		}
+		return containingTypeNames;
 	}
 
 	/**
@@ -288,6 +343,11 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 				default: return -1;
 			}
 		}
+		if (baseClass == NamespaceElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -302,6 +362,11 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 			switch (baseFeatureID) {
 				case N4JSPackage.VARIABLE_DECLARATION_CONTAINER__VAR_DECLS_OR_BINDINGS: return N4JSPackage.VARIABLE_STATEMENT__VAR_DECLS_OR_BINDINGS;
 				case N4JSPackage.VARIABLE_DECLARATION_CONTAINER__VAR_STMT_KEYWORD: return N4JSPackage.VARIABLE_STATEMENT__VAR_STMT_KEYWORD;
+				default: return -1;
+			}
+		}
+		if (baseClass == NamespaceElement.class) {
+			switch (baseFeatureID) {
 				default: return -1;
 			}
 		}
@@ -322,6 +387,14 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 				default: return -1;
 			}
 		}
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.VARIABLE_STATEMENT___IS_HOLLOW;
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT: return N4JSPackage.VARIABLE_STATEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES: return N4JSPackage.VARIABLE_STATEMENT___GET_CONTAINING_NAMESPACE_NAMES;
+				default: return -1;
+			}
+		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
@@ -333,6 +406,12 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.VARIABLE_STATEMENT___IS_HOLLOW:
+				return isHollow();
+			case N4JSPackage.VARIABLE_STATEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT:
+				return getContainingNamespaceNamesWithDot();
+			case N4JSPackage.VARIABLE_STATEMENT___GET_CONTAINING_NAMESPACE_NAMES:
+				return getContainingNamespaceNames();
 			case N4JSPackage.VARIABLE_STATEMENT___GET_VAR_DECL:
 				return getVarDecl();
 			case N4JSPackage.VARIABLE_STATEMENT___IS_BLOCK_SCOPED:

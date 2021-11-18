@@ -34,7 +34,7 @@ import org.eclipse.n4js.ts.types.util.Variance;
  * @model
  * @generated
  */
-public interface Type extends TExportableElement, TAnnotableElement {
+public interface Type extends TExportableElement, TAnnotableElement, TNamespaceElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -216,13 +216,5 @@ public interface Type extends TExportableElement, TAnnotableElement {
 	 * @generated
 	 */
 	String getTypeAsString();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	boolean isHollow();
 
 } // Type

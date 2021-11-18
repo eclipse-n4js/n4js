@@ -1056,13 +1056,40 @@ public interface TypesPackage extends EPackage {
 	int TYPE___IS_EXPORTED = TEXPORTABLE_ELEMENT___IS_EXPORTED;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE___IS_HOLLOW = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE___GET_CONTAINING_NAMESPACE_NAMES = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_ALIAS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 0;
+	int TYPE___IS_ALIAS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -1071,7 +1098,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_PROVIDED_BY_RUNTIME = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 1;
+	int TYPE___IS_PROVIDED_BY_RUNTIME = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -1080,7 +1107,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
+	int TYPE___IS_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -1089,7 +1116,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_STATIC_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TYPE___IS_STATIC_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -1098,7 +1125,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_FINAL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TYPE___IS_FINAL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Dynamizable</em>' operation.
@@ -1107,7 +1134,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_DYNAMIZABLE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
+	int TYPE___IS_DYNAMIZABLE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -1116,7 +1143,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_ARRAY_LIKE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
+	int TYPE___IS_ARRAY_LIKE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -1125,7 +1152,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_ELEMENT_TYPE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 7;
+	int TYPE___GET_ELEMENT_TYPE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -1134,7 +1161,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 8;
+	int TYPE___GET_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -1143,7 +1170,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_GENERIC = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 9;
+	int TYPE___IS_GENERIC = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -1152,7 +1179,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_TYPE_VARS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 10;
+	int TYPE___GET_TYPE_VARS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
@@ -1161,7 +1188,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 11;
+	int TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
@@ -1170,7 +1197,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_RAW_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 12;
+	int TYPE___GET_RAW_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Get Type As String</em>' operation.
@@ -1179,16 +1206,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 13;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE___IS_HOLLOW = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 14;
+	int TYPE___GET_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The number of operations of the '<em>Type</em>' class.
@@ -1197,7 +1215,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 15;
+	int TYPE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl <em>Type Variable</em>}' class.
@@ -1298,6 +1316,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_VARIABLE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE___IS_HOLLOW = TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -1415,15 +1460,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_VARIABLE___GET_RAW_TYPE_AS_STRING = TYPE___GET_RAW_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_VARIABLE___IS_HOLLOW = TYPE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Variance</em>' operation.
@@ -1571,6 +1607,33 @@ public interface TypesPackage extends EPackage {
 	int INFERENCE_VARIABLE___IS_EXPORTED = TYPE_VARIABLE___IS_EXPORTED;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE___IS_HOLLOW = TYPE_VARIABLE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES = TYPE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1686,15 +1749,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int INFERENCE_VARIABLE___GET_RAW_TYPE_AS_STRING = TYPE_VARIABLE___GET_RAW_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INFERENCE_VARIABLE___IS_HOLLOW = TYPE_VARIABLE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Variance</em>' operation.
@@ -1813,6 +1867,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERIC_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -1939,15 +2020,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERIC_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
 
 	/**
 	 * The number of operations of the '<em>Generic Type</em>' class.
@@ -2122,6 +2194,33 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___GET_CONTAINING_NAMESPACE_NAMES = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2219,15 +2318,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFUNCTION___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -2484,6 +2574,33 @@ public interface TypesPackage extends EPackage {
 	int CONTAINER_TYPE___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2608,15 +2725,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int CONTAINER_TYPE___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONTAINER_TYPE___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
@@ -2773,6 +2881,33 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 7;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___IS_HOLLOW = TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2881,15 +3016,6 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TNAMESPACE___IS_HOLLOW = TYPE___IS_HOLLOW;
-
-	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2935,6 +3061,61 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 4;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceElementImpl <em>TNamespace Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.TNamespaceElementImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNamespaceElement()
+	 * @generated
+	 */
+	int TNAMESPACE_ELEMENT = 22;
+
+	/**
+	 * The number of structural features of the '<em>TNamespace Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE_ELEMENT_FEATURE_COUNT = 0;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE_ELEMENT___IS_HOLLOW = 0;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = 1;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES = 2;
+
+	/**
+	 * The number of operations of the '<em>TNamespace Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE_ELEMENT_OPERATION_COUNT = 3;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ModuleNamespaceVirtualTypeImpl <em>Module Namespace Virtual Type</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2942,7 +3123,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleNamespaceVirtualType()
 	 * @generated
 	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE = 22;
+	int MODULE_NAMESPACE_VIRTUAL_TYPE = 23;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3024,6 +3205,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -3143,15 +3351,6 @@ public interface TypesPackage extends EPackage {
 	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
-
-	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3177,7 +3376,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getPrimitiveType()
 	 * @generated
 	 */
-	int PRIMITIVE_TYPE = 23;
+	int PRIMITIVE_TYPE = 24;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3268,6 +3467,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int PRIMITIVE_TYPE___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE___GET_CONTAINING_NAMESPACE_NAMES = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -3387,15 +3613,6 @@ public interface TypesPackage extends EPackage {
 	int PRIMITIVE_TYPE___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRIMITIVE_TYPE___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
-
-	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3421,7 +3638,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getBuiltInType()
 	 * @generated
 	 */
-	int BUILT_IN_TYPE = 24;
+	int BUILT_IN_TYPE = 25;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3476,6 +3693,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int BUILT_IN_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -3604,15 +3848,6 @@ public interface TypesPackage extends EPackage {
 	int BUILT_IN_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BUILT_IN_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
-
-	/**
 	 * The number of operations of the '<em>Built In Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3629,7 +3864,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAnyType()
 	 * @generated
 	 */
-	int ANY_TYPE = 25;
+	int ANY_TYPE = 26;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3684,6 +3919,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int ANY_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE___GET_CONTAINING_NAMESPACE_NAMES = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -3803,15 +4065,6 @@ public interface TypesPackage extends EPackage {
 	int ANY_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ANY_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
-
-	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3837,7 +4090,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getUndefinedType()
 	 * @generated
 	 */
-	int UNDEFINED_TYPE = 26;
+	int UNDEFINED_TYPE = 27;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3892,6 +4145,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNDEFINED_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE___GET_CONTAINING_NAMESPACE_NAMES = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -4020,15 +4300,6 @@ public interface TypesPackage extends EPackage {
 	int UNDEFINED_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNDEFINED_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
-
-	/**
 	 * The number of operations of the '<em>Undefined Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4045,7 +4316,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNullType()
 	 * @generated
 	 */
-	int NULL_TYPE = 27;
+	int NULL_TYPE = 28;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4100,6 +4371,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int NULL_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE___GET_CONTAINING_NAMESPACE_NAMES = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -4228,15 +4526,6 @@ public interface TypesPackage extends EPackage {
 	int NULL_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NULL_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
-
-	/**
 	 * The number of operations of the '<em>Null Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4253,7 +4542,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVoidType()
 	 * @generated
 	 */
-	int VOID_TYPE = 28;
+	int VOID_TYPE = 29;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4308,6 +4597,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int VOID_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE___GET_CONTAINING_NAMESPACE_NAMES = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -4436,15 +4752,6 @@ public interface TypesPackage extends EPackage {
 	int VOID_TYPE___GET_TYPE_AS_STRING = BUILT_IN_TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VOID_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
-
-	/**
 	 * The number of operations of the '<em>Void Type</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4461,7 +4768,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructuralType()
 	 * @generated
 	 */
-	int TSTRUCTURAL_TYPE = 29;
+	int TSTRUCTURAL_TYPE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4561,6 +4868,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCTURAL_TYPE___IS_EXPORTED = CONTAINER_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE___IS_HOLLOW = CONTAINER_TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE___GET_CONTAINING_NAMESPACE_NAMES = CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -4680,15 +5014,6 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCTURAL_TYPE___GET_TYPE_AS_STRING = CONTAINER_TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCTURAL_TYPE___IS_HOLLOW = CONTAINER_TYPE___IS_HOLLOW;
-
-	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4750,7 +5075,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifier()
 	 * @generated
 	 */
-	int TCLASSIFIER = 30;
+	int TCLASSIFIER = 31;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4859,6 +5184,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASSIFIER___IS_EXPORTED = CONTAINER_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___IS_HOLLOW = CONTAINER_TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES = CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -4978,15 +5330,6 @@ public interface TypesPackage extends EPackage {
 	int TCLASSIFIER___GET_TYPE_AS_STRING = CONTAINER_TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASSIFIER___IS_HOLLOW = CONTAINER_TYPE___IS_HOLLOW;
-
-	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5084,7 +5427,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getArrayLike()
 	 * @generated
 	 */
-	int ARRAY_LIKE = 31;
+	int ARRAY_LIKE = 32;
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -5130,7 +5473,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTN4Classifier()
 	 * @generated
 	 */
-	int TN4_CLASSIFIER = 32;
+	int TN4_CLASSIFIER = 33;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5286,6 +5629,33 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER___GET_CONTAINING_MODULE = TCLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___IS_HOLLOW = TCLASSIFIER___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TCLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES = TCLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5365,15 +5735,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___GET_TYPE_AS_STRING = TCLASSIFIER___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TN4_CLASSIFIER___IS_HOLLOW = TCLASSIFIER___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
@@ -5518,7 +5879,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClass()
 	 * @generated
 	 */
-	int TCLASS = 33;
+	int TCLASS = 34;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5746,6 +6107,33 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___IS_HOLLOW = TN4_CLASSIFIER___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___GET_CONTAINING_NAMESPACE_NAMES = TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5816,15 +6204,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASS___GET_TYPE_AS_STRING = TN4_CLASSIFIER___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASS___IS_HOLLOW = TN4_CLASSIFIER___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
@@ -5987,7 +6366,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTInterface()
 	 * @generated
 	 */
-	int TINTERFACE = 34;
+	int TINTERFACE = 35;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6159,6 +6538,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___GET_CONTAINING_NAMESPACE_NAMES = TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -6393,7 +6790,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMember()
 	 * @generated
 	 */
-	int TMEMBER = 35;
+	int TMEMBER = 36;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6673,7 +7070,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMemberWithAccessModifier()
 	 * @generated
 	 */
-	int TMEMBER_WITH_ACCESS_MODIFIER = 36;
+	int TMEMBER_WITH_ACCESS_MODIFIER = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6971,7 +7368,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMember()
 	 * @generated
 	 */
-	int TSTRUCT_MEMBER = 37;
+	int TSTRUCT_MEMBER = 38;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7269,7 +7666,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMethod()
 	 * @generated
 	 */
-	int TMETHOD = 38;
+	int TMETHOD = 39;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7515,6 +7912,33 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___IS_HOLLOW = TFUNCTION___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TFUNCTION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___GET_CONTAINING_NAMESPACE_NAMES = TFUNCTION___GET_CONTAINING_NAMESPACE_NAMES;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7612,15 +8036,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMETHOD___GET_TYPE_AS_STRING = TFUNCTION___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___IS_HOLLOW = TFUNCTION___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -7864,7 +8279,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMethod()
 	 * @generated
 	 */
-	int TSTRUCT_METHOD = 39;
+	int TSTRUCT_METHOD = 40;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8119,6 +8534,33 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___GET_CONTAINING_MODULE = TMETHOD___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_HOLLOW = TMETHOD___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TMETHOD___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___GET_CONTAINING_NAMESPACE_NAMES = TMETHOD___GET_CONTAINING_NAMESPACE_NAMES;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8216,15 +8658,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___GET_TYPE_AS_STRING = TMETHOD___GET_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___IS_HOLLOW = TMETHOD___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -8477,7 +8910,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFormalParameter()
 	 * @generated
 	 */
-	int TFORMAL_PARAMETER = 40;
+	int TFORMAL_PARAMETER = 41;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8622,7 +9055,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnonymousFormalParameter()
 	 * @generated
 	 */
-	int TANONYMOUS_FORMAL_PARAMETER = 41;
+	int TANONYMOUS_FORMAL_PARAMETER = 42;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8785,7 +9218,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTField()
 	 * @generated
 	 */
-	int TFIELD = 42;
+	int TFIELD = 43;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9128,7 +9561,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructField()
 	 * @generated
 	 */
-	int TSTRUCT_FIELD = 43;
+	int TSTRUCT_FIELD = 44;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9489,7 +9922,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getFieldAccessor()
 	 * @generated
 	 */
-	int FIELD_ACCESSOR = 44;
+	int FIELD_ACCESSOR = 45;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9823,7 +10256,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTGetter()
 	 * @generated
 	 */
-	int TGETTER = 45;
+	int TGETTER = 46;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10166,7 +10599,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructGetter()
 	 * @generated
 	 */
-	int TSTRUCT_GETTER = 46;
+	int TSTRUCT_GETTER = 47;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10527,7 +10960,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTSetter()
 	 * @generated
 	 */
-	int TSETTER = 47;
+	int TSETTER = 48;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10870,7 +11303,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructSetter()
 	 * @generated
 	 */
-	int TSTRUCT_SETTER = 48;
+	int TSTRUCT_SETTER = 49;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11231,7 +11664,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnum()
 	 * @generated
 	 */
-	int TENUM = 49;
+	int TENUM = 50;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11322,6 +11755,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TENUM___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___IS_HOLLOW = TYPE___IS_HOLLOW;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -11432,15 +11892,6 @@ public interface TypesPackage extends EPackage {
 	int TENUM___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TENUM___IS_HOLLOW = TYPE___IS_HOLLOW;
-
-	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11484,7 +11935,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getSyntaxRelatedTElement()
 	 * @generated
 	 */
-	int SYNTAX_RELATED_TELEMENT = 52;
+	int SYNTAX_RELATED_TELEMENT = 53;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -11521,7 +11972,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnumLiteral()
 	 * @generated
 	 */
-	int TENUM_LITERAL = 50;
+	int TENUM_LITERAL = 51;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -11594,7 +12045,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAlias()
 	 * @generated
 	 */
-	int TYPE_ALIAS = 51;
+	int TYPE_ALIAS = 52;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11685,6 +12136,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_ALIAS___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___GET_CONTAINING_NAMESPACE_NAMES = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -11847,7 +12316,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTConstableElement()
 	 * @generated
 	 */
-	int TCONSTABLE_ELEMENT = 53;
+	int TCONSTABLE_ELEMENT = 54;
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -11893,7 +12362,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
-	int TVARIABLE = 54;
+	int TVARIABLE = 55;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12049,13 +12518,40 @@ public interface TypesPackage extends EPackage {
 	int TVARIABLE___IS_EXPORTED = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE___IS_HOLLOW = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
+
+	/**
+	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE___GET_CONTAINING_NAMESPACE_NAMES = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
+
+	/**
 	 * The operation id for the '<em>Get Variable As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_VARIABLE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TVARIABLE___GET_VARIABLE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>TVariable</em>' class.
@@ -12064,7 +12560,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TVARIABLE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypingStrategy <em>Typing Strategy</em>}' enum.
@@ -12074,7 +12570,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
-	int TYPING_STRATEGY = 55;
+	int TYPING_STRATEGY = 56;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -12084,7 +12580,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
-	int TYPE_ACCESS_MODIFIER = 56;
+	int TYPE_ACCESS_MODIFIER = 57;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -12094,7 +12590,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
-	int MEMBER_ACCESS_MODIFIER = 57;
+	int MEMBER_ACCESS_MODIFIER = 58;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -12104,7 +12600,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
-	int MEMBER_TYPE = 58;
+	int MEMBER_TYPE = 59;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -12114,7 +12610,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 59;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -12124,7 +12620,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 60;
+	int ITERABLE_OF_TCLASSIFIER = 61;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12134,7 +12630,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 61;
+	int VARIANCE = 62;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12144,7 +12640,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 62;
+	int NAME_AND_ACCESS = 63;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12154,7 +12650,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 63;
+	int MEMBER_LIST = 64;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12164,7 +12660,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 64;
+	int TCLASSIFIER_ITERABLE = 65;
 
 
 	/**
@@ -13143,16 +13639,6 @@ public interface TypesPackage extends EPackage {
 	EOperation getType__GetTypeAsString();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.Type#isHollow() <em>Is Hollow</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Hollow</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.Type#isHollow()
-	 * @generated
-	 */
-	EOperation getType__IsHollow();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.GenericType <em>Generic Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13391,6 +13877,46 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTNamespace_External();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TNamespaceElement <em>TNamespace Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>TNamespace Element</em>'.
+	 * @see org.eclipse.n4js.ts.types.TNamespaceElement
+	 * @generated
+	 */
+	EClass getTNamespaceElement();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TNamespaceElement#isHollow() <em>Is Hollow</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TNamespaceElement#isHollow()
+	 * @generated
+	 */
+	EOperation getTNamespaceElement__IsHollow();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TNamespaceElement#getContainingNamespaceNamesWithDot() <em>Get Containing Namespace Names With Dot</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Containing Namespace Names With Dot</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TNamespaceElement#getContainingNamespaceNamesWithDot()
+	 * @generated
+	 */
+	EOperation getTNamespaceElement__GetContainingNamespaceNamesWithDot();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TNamespaceElement#getContainingNamespaceNames() <em>Get Containing Namespace Names</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Containing Namespace Names</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TNamespaceElement#getContainingNamespaceNames()
+	 * @generated
+	 */
+	EOperation getTNamespaceElement__GetContainingNamespaceNames();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType <em>Module Namespace Virtual Type</em>}'.
@@ -15910,14 +16436,6 @@ public interface TypesPackage extends EPackage {
 		EOperation TYPE___GET_TYPE_AS_STRING = eINSTANCE.getType__GetTypeAsString();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE___IS_HOLLOW = eINSTANCE.getType__IsHollow();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.GenericTypeImpl <em>Generic Type</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -16110,6 +16628,40 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TNAMESPACE__EXTERNAL = eINSTANCE.getTNamespace_External();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceElementImpl <em>TNamespace Element</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.TNamespaceElementImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNamespaceElement()
+		 * @generated
+		 */
+		EClass TNAMESPACE_ELEMENT = eINSTANCE.getTNamespaceElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TNAMESPACE_ELEMENT___IS_HOLLOW = eINSTANCE.getTNamespaceElement__IsHollow();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Containing Namespace Names With Dot</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = eINSTANCE.getTNamespaceElement__GetContainingNamespaceNamesWithDot();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Containing Namespace Names</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES = eINSTANCE.getTNamespaceElement__GetContainingNamespaceNames();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ModuleNamespaceVirtualTypeImpl <em>Module Namespace Virtual Type</em>}' class.

@@ -72,6 +72,7 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TNamespace;
+import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructGetter;
@@ -254,6 +255,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass tNamespaceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tNamespaceElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1562,16 +1570,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getType__IsHollow() {
-		return typeEClass.getEOperations().get(14);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getGenericType() {
 		return genericTypeEClass;
 	}
@@ -1794,6 +1792,46 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EAttribute getTNamespace_External() {
 		return (EAttribute)tNamespaceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getTNamespaceElement() {
+		return tNamespaceElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTNamespaceElement__IsHollow() {
+		return tNamespaceElementEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTNamespaceElement__GetContainingNamespaceNamesWithDot() {
+		return tNamespaceElementEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTNamespaceElement__GetContainingNamespaceNames() {
+		return tNamespaceElementEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -3594,7 +3632,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(typeEClass, TYPE___GET_VARIANCE_OF_TYPE_VAR__INT);
 		createEOperation(typeEClass, TYPE___GET_RAW_TYPE_AS_STRING);
 		createEOperation(typeEClass, TYPE___GET_TYPE_AS_STRING);
-		createEOperation(typeEClass, TYPE___IS_HOLLOW);
 
 		genericTypeEClass = createEClass(GENERIC_TYPE);
 		createEReference(genericTypeEClass, GENERIC_TYPE__TYPE_VARS);
@@ -3623,6 +3660,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		tNamespaceEClass = createEClass(TNAMESPACE);
 		createEAttribute(tNamespaceEClass, TNAMESPACE__EXTERNAL);
+
+		tNamespaceElementEClass = createEClass(TNAMESPACE_ELEMENT);
+		createEOperation(tNamespaceElementEClass, TNAMESPACE_ELEMENT___IS_HOLLOW);
+		createEOperation(tNamespaceElementEClass, TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT);
+		createEOperation(tNamespaceElementEClass, TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES);
 
 		moduleNamespaceVirtualTypeEClass = createEClass(MODULE_NAMESPACE_VIRTUAL_TYPE);
 		createEReference(moduleNamespaceVirtualTypeEClass, MODULE_NAMESPACE_VIRTUAL_TYPE__MODULE);
@@ -3881,12 +3923,14 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tFunctionEClass.getESuperTypes().add(this.getType());
 		typeEClass.getESuperTypes().add(this.getTExportableElement());
 		typeEClass.getESuperTypes().add(this.getTAnnotableElement());
+		typeEClass.getESuperTypes().add(this.getTNamespaceElement());
 		genericTypeEClass.getESuperTypes().add(this.getType());
 		containerTypeEClass.getESuperTypes().add(this.getGenericType());
 		tNamespaceEClass.getESuperTypes().add(this.getType());
 		tNamespaceEClass.getESuperTypes().add(this.getAbstractNamespace());
 		tNamespaceEClass.getESuperTypes().add(this.getAccessibleTypeElement());
 		tNamespaceEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
+		tNamespaceEClass.getESuperTypes().add(this.getTNamespaceElement());
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getType());
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		primitiveTypeEClass.getESuperTypes().add(this.getGenericType());
@@ -3958,6 +4002,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tVariableEClass.getESuperTypes().add(this.getTAnnotableElement());
 		tVariableEClass.getESuperTypes().add(this.getAccessibleTypeElement());
 		tVariableEClass.getESuperTypes().add(this.getTTypedElement());
+		tVariableEClass.getESuperTypes().add(this.getTNamespaceElement());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(tModuleEClass, TModule.class, "TModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -4105,8 +4150,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getType__GetTypeAsString(), theEcorePackage.getEString(), "getTypeAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getType__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
 		initEClass(genericTypeEClass, GenericType.class, "GenericType", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getGenericType_TypeVars(), this.getTypeVariable(), null, "typeVars", null, 0, -1, GenericType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -4162,6 +4205,14 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEClass(tNamespaceEClass, TNamespace.class, "TNamespace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTNamespace_External(), theEcorePackage.getEBoolean(), "external", null, 0, 1, TNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(tNamespaceElementEClass, TNamespaceElement.class, "TNamespaceElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getTNamespaceElement__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTNamespaceElement__GetContainingNamespaceNamesWithDot(), theEcorePackage.getEString(), "getContainingNamespaceNamesWithDot", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTNamespaceElement__GetContainingNamespaceNames(), theEcorePackage.getEString(), "getContainingNamespaceNames", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(moduleNamespaceVirtualTypeEClass, ModuleNamespaceVirtualType.class, "ModuleNamespaceVirtualType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getModuleNamespaceVirtualType_Module(), this.getTModule(), null, "module", null, 0, 1, ModuleNamespaceVirtualType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

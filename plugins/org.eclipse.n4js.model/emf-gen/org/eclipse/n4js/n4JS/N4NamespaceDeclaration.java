@@ -29,7 +29,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface N4NamespaceDeclaration extends N4TypeDefinition, VariableEnvironmentElement, ScriptElement, ModifiableElement, ExportableElement, NamedElement {
+public interface N4NamespaceDeclaration extends N4TypeDefinition, NamespaceElement, VariableEnvironmentElement, ScriptElement, ModifiableElement, ExportableElement, NamedElement {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

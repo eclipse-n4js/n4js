@@ -39,6 +39,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifiers <em>Ast Declared Type Qualifiers</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifiersAsText <em>Ast Declared Type Qualifiers As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -179,6 +180,28 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * @generated
 	 */
 	EList<Type> getAstDeclaredTypeQualifiers();
+
+	/**
+	 * Returns the value of the '<em><b>Ast Declared Type Qualifiers As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Ast Declared Type Qualifiers As Text</em>' attribute.
+	 * @see #setAstDeclaredTypeQualifiersAsText(String)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstDeclaredTypeQualifiersAsText()
+	 * @model unique="false" transient="true"
+	 * @generated
+	 */
+	String getAstDeclaredTypeQualifiersAsText();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifiersAsText <em>Ast Declared Type Qualifiers As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Ast Declared Type Qualifiers As Text</em>' attribute.
+	 * @see #getAstDeclaredTypeQualifiersAsText()
+	 * @generated
+	 */
+	void setAstDeclaredTypeQualifiersAsText(String value);
 
 	/**
 	 * Returns the value of the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.

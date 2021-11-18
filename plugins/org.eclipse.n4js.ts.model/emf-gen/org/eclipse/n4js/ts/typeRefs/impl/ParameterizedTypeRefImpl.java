@@ -61,6 +61,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getAstDeclaredTypeQualifiers <em>Ast Declared Type Qualifiers</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getAstDeclaredTypeQualifiersAsText <em>Ast Declared Type Qualifiers As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -157,6 +158,26 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @ordered
 	 */
 	protected EList<Type> astDeclaredTypeQualifiers;
+
+	/**
+	 * The default value of the '{@link #getAstDeclaredTypeQualifiersAsText() <em>Ast Declared Type Qualifiers As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAstDeclaredTypeQualifiersAsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getAstDeclaredTypeQualifiersAsText() <em>Ast Declared Type Qualifiers As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAstDeclaredTypeQualifiersAsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected String astDeclaredTypeQualifiersAsText = AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getASTNodeOptionalFieldStrategy() <em>AST Node Optional Field Strategy</em>}' attribute.
@@ -350,6 +371,29 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			astDeclaredTypeQualifiers = new EObjectResolvingEList<Type>(Type.class, this, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS);
 		}
 		return astDeclaredTypeQualifiers;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getAstDeclaredTypeQualifiersAsText() {
+		return astDeclaredTypeQualifiersAsText;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setAstDeclaredTypeQualifiersAsText(String newAstDeclaredTypeQualifiersAsText) {
+		String oldAstDeclaredTypeQualifiersAsText = astDeclaredTypeQualifiersAsText;
+		astDeclaredTypeQualifiersAsText = newAstDeclaredTypeQualifiersAsText;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT, oldAstDeclaredTypeQualifiersAsText, astDeclaredTypeQualifiersAsText));
 	}
 
 	/**
@@ -593,6 +637,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return isArrayNTypeExpression();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS:
 				return getAstDeclaredTypeQualifiers();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT:
+				return getAstDeclaredTypeQualifiersAsText();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return getASTNodeOptionalFieldStrategy();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY:
@@ -630,6 +676,9 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				getAstDeclaredTypeQualifiers().clear();
 				getAstDeclaredTypeQualifiers().addAll((Collection<? extends Type>)newValue);
 				return;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT:
+				setAstDeclaredTypeQualifiersAsText((String)newValue);
+				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				setASTNodeOptionalFieldStrategy((OptionalFieldStrategy)newValue);
 				return;
@@ -666,6 +715,9 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS:
 				getAstDeclaredTypeQualifiers().clear();
 				return;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT:
+				setAstDeclaredTypeQualifiersAsText(AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT_EDEFAULT);
+				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				setASTNodeOptionalFieldStrategy(AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT);
 				return;
@@ -696,6 +748,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return arrayNTypeExpression != ARRAY_NTYPE_EXPRESSION_EDEFAULT;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS:
 				return astDeclaredTypeQualifiers != null && !astDeclaredTypeQualifiers.isEmpty();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT:
+				return AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT_EDEFAULT == null ? astDeclaredTypeQualifiersAsText != null : !AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT_EDEFAULT.equals(astDeclaredTypeQualifiersAsText);
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return aSTNodeOptionalFieldStrategy != AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY:
@@ -776,6 +830,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		result.append(arrayTypeExpression);
 		result.append(", arrayNTypeExpression: ");
 		result.append(arrayNTypeExpression);
+		result.append(", astDeclaredTypeQualifiersAsText: ");
+		result.append(astDeclaredTypeQualifiersAsText);
 		result.append(", aSTNodeOptionalFieldStrategy: ");
 		result.append(aSTNodeOptionalFieldStrategy);
 		result.append(", definedTypingStrategy: ");

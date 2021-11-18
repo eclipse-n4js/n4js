@@ -899,7 +899,7 @@ abstract class VariableDeclarationContainer {
 	}
 }
 
-class VariableStatement extends Statement, VariableDeclarationContainer {
+class VariableStatement extends Statement, VariableDeclarationContainer, NamespaceElement {
 }
 
 class ExportedVariableStatement extends VariableStatement, ExportableElement, AnnotableScriptElement, ModifiableElement {
@@ -2023,17 +2023,13 @@ abstract class N4TypeDefinition extends AnnotableElement, TypeDefiningElement {
  * Abstract base class for N4 specific type declarations. These declarations contain an
  * type access modifier.
  */
-abstract class N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElement, ModifiableElement, ExportableElement, NamedElement {
+abstract class N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElement, ModifiableElement, ExportableElement, NamedElement, NamespaceElement {
 	String name
 	/**
 	 * Returns true if type is declared as external.
 	 */
 	op boolean isExternal() {
 		declaredModifiers.contains(N4Modifier.EXTERNAL)
-	}
-	
-	op boolean isHollow() {
-		return false;
 	}
 }
 
@@ -2135,7 +2131,7 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 }
 
 
-class N4NamespaceDeclaration extends N4TypeDefinition, VariableEnvironmentElement, ScriptElement, ModifiableElement, ExportableElement, NamedElement {
+class N4NamespaceDeclaration extends N4TypeDefinition, NamespaceElement, VariableEnvironmentElement, ScriptElement, ModifiableElement, ExportableElement, NamedElement {
 	String name
 	contains ScriptElement[] ownedElementsRaw
 	
@@ -2159,6 +2155,34 @@ class N4NamespaceDeclaration extends N4TypeDefinition, VariableEnvironmentElemen
 			|| (it instanceof N4TypeDeclaration && (it as N4TypeDeclaration).isHollow)
 		];
 		return hollow
+	}
+}
+
+class NamespaceElement {
+	
+	op boolean isHollow() {
+		return false;
+	}
+	
+	op String getContainingNamespaceNamesWithDot() {
+		if (getContainingNamespaceNames.empty) {
+			return getContainingNamespaceNames;
+		} else {
+			return getContainingNamespaceNames + ".";
+		}
+	}
+	
+	op String getContainingNamespaceNames() {
+		var containingTypeNames = "";
+		var currContainer = eContainer;
+		while (currContainer instanceof N4NamespaceDeclaration) {
+			if (!containingTypeNames.empty) {
+				containingTypeNames = "." + containingTypeNames;
+			}
+			containingTypeNames = currContainer.name + containingTypeNames;
+			currContainer = currContainer.eContainer;
+		}
+		return containingTypeNames;
 	}
 }
 

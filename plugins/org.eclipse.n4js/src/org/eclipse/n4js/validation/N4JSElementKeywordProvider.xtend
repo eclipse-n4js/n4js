@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
@@ -42,6 +43,7 @@ import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterType
+import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.validation.utils.TypesKeywordProvider
 
 /**
@@ -49,6 +51,14 @@ import org.eclipse.n4js.validation.utils.TypesKeywordProvider
  */
 @Singleton
 class N4JSElementKeywordProvider extends TypesKeywordProvider {
+
+	def dispatch String keyword(N4NamespaceDeclaration n4NamespaceDeclaration) {
+		"namespace"
+	}
+
+	def dispatch String keyword(TNamespace tNamespace) {
+		"namespace"
+	}
 
 	def dispatch String keyword(N4ClassDefinition n4ClassDefinition) {
 		"class"

@@ -570,6 +570,7 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	 * </ol>
 	 */
 	refers transient Type[] astDeclaredTypeQualifiers
+	transient String astDeclaredTypeQualifiersAsText
 
 	/* @see TypeRef#getASTOptionalFieldStrategy() */
 	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy

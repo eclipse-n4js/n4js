@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
@@ -481,6 +482,12 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == TNamespaceElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TNAMESPACE_ELEMENT___IS_HOLLOW: return TypesPackage.TYPE_ALIAS___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == Type.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TYPE___IS_ALIAS: return TypesPackage.TYPE_ALIAS___IS_ALIAS;

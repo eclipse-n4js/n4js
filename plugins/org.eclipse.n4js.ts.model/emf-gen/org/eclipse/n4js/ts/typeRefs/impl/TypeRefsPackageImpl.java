@@ -1120,7 +1120,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getParameterizedTypeRef_ASTNodeOptionalFieldStrategy() {
+	public EAttribute getParameterizedTypeRef_AstDeclaredTypeQualifiersAsText() {
 		return (EAttribute)parameterizedTypeRefEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1130,8 +1130,18 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getParameterizedTypeRef_DefinedTypingStrategy() {
+	public EAttribute getParameterizedTypeRef_ASTNodeOptionalFieldStrategy() {
 		return (EAttribute)parameterizedTypeRefEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getParameterizedTypeRef_DefinedTypingStrategy() {
+		return (EAttribute)parameterizedTypeRefEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -2241,6 +2251,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION);
 		createEReference(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS);
+		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS_AS_TEXT);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY);
 		createEOperation(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY);
@@ -2569,6 +2580,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEAttribute(getParameterizedTypeRef_ArrayTypeExpression(), theEcorePackage.getEBoolean(), "arrayTypeExpression", "false", 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedTypeRef_ArrayNTypeExpression(), theEcorePackage.getEBoolean(), "arrayNTypeExpression", "false", 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getParameterizedTypeRef_AstDeclaredTypeQualifiers(), theTypesPackage.getType(), null, "astDeclaredTypeQualifiers", null, 0, -1, ParameterizedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getParameterizedTypeRef_AstDeclaredTypeQualifiersAsText(), theEcorePackage.getEString(), "astDeclaredTypeQualifiersAsText", null, 0, 1, ParameterizedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedTypeRef_ASTNodeOptionalFieldStrategy(), this.getOptionalFieldStrategy(), "aSTNodeOptionalFieldStrategy", null, 0, 1, ParameterizedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedTypeRef_DefinedTypingStrategy(), theTypesPackage.getTypingStrategy(), "definedTypingStrategy", null, 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

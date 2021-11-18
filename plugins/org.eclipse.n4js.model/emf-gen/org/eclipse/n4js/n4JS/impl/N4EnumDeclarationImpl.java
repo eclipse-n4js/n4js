@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.Type;
@@ -190,6 +191,12 @@ public class N4EnumDeclarationImpl extends N4TypeDeclarationImpl implements N4En
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_ENUM_DECLARATION___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == N4TypeDeclaration.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.N4_TYPE_DECLARATION___IS_HOLLOW: return N4JSPackage.N4_ENUM_DECLARATION___IS_HOLLOW;

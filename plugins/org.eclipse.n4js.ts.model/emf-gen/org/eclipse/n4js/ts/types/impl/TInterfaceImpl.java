@@ -34,6 +34,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TInterface;
+import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -277,6 +278,12 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == TNamespaceElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TNAMESPACE_ELEMENT___IS_HOLLOW: return TypesPackage.TINTERFACE___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == Type.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TYPE___IS_HOLLOW: return TypesPackage.TINTERFACE___IS_HOLLOW;

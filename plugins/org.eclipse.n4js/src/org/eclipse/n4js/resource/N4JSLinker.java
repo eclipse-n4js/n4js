@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.LabelRef;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter.BadEscapementException;
 import org.eclipse.n4js.parser.conversion.N4JSValueConverterException;
 import org.eclipse.n4js.parser.conversion.N4JSValueConverterWithValueException;
@@ -33,6 +34,8 @@ import org.eclipse.n4js.scoping.members.ComposedMemberScope;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
@@ -73,6 +76,11 @@ public class N4JSLinker extends LazyLinker {
 	/** Custom delimiter to use for encoded URI fragments. */
 	public static final char N4JS_CROSSREF_DELIM = '|';
 
+	private static final EReference PARAMETERIZED_TYPE_REF__DECLARED_TYPE = TypeRefsPackage.eINSTANCE
+			.getParameterizedTypeRef_DeclaredType();
+	private static final EReference PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS = TypeRefsPackage.eINSTANCE
+			.getParameterizedTypeRef_AstDeclaredTypeQualifiers();
+
 	@Inject
 	private IValueConverterService valueConverterService;
 
@@ -81,6 +89,9 @@ public class N4JSLinker extends LazyLinker {
 
 	@Inject
 	private N4JSPreProcessor preProcessor;
+
+	@Inject
+	private N4JSQualifiedNameConverter qnConverter;
 
 	/**
 	 * Clears the list of encoded URIs in {@link N4JSResource}, installs proxies for all cross references inside the
@@ -280,7 +291,25 @@ public class N4JSLinker extends LazyLinker {
 			if (obj instanceof IdentifierRef && value instanceof String) {
 				((IdentifierRef) obj).setIdAsText((String) value);
 			} else if (obj instanceof ParameterizedTypeRef && value instanceof String) {
-				((ParameterizedTypeRef) obj).setDeclaredTypeAsText((String) value);
+				ParameterizedTypeRef ptr = (ParameterizedTypeRef) obj;
+				String valueStr = (String) value;
+				if (eRef == PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS) {
+					// since this property is an array, this case will be called for each element
+					String completeText = NodeModelUtils.getTokenText(node.getParent());
+					String typeQualifiers = "";
+					if (completeText.length() > valueStr.length()) {
+						int index = completeText.lastIndexOf(".");
+						typeQualifiers = completeText.substring(0, index);
+					}
+					ptr.setAstDeclaredTypeQualifiersAsText(typeQualifiers);
+
+				} else if (eRef == PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
+					ptr.setDeclaredTypeAsText(valueStr);
+				}
+
+				Type typeProxy = (Type) proxy;
+				typeProxy.setName(valueStr);
+
 			} else if (obj instanceof LabelRef && value instanceof String) {
 				((LabelRef) obj).setLabelAsText((String) value);
 			} else if (obj instanceof ParameterizedPropertyAccessExpression && value instanceof String) {
@@ -343,6 +372,7 @@ public class N4JSLinker extends LazyLinker {
 			((ParameterizedPropertyAccessExpression) obj).setPropertyAsText(null);
 		} else if (obj instanceof ParameterizedTypeRef) {
 			((ParameterizedTypeRef) obj).setDeclaredTypeAsText(null);
+			((ParameterizedTypeRef) obj).setAstDeclaredTypeQualifiersAsText(null);
 		}
 	}
 

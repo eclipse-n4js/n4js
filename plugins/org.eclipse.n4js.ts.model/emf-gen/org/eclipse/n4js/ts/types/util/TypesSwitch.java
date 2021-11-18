@@ -171,6 +171,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(typeVariable);
 				if (result == null) result = caseTExportableElement(typeVariable);
 				if (result == null) result = caseTAnnotableElement(typeVariable);
+				if (result == null) result = caseTNamespaceElement(typeVariable);
 				if (result == null) result = caseIdentifiableElement(typeVariable);
 				if (result == null) result = caseTypableElement(typeVariable);
 				if (result == null) result = defaultCase(theEObject);
@@ -183,6 +184,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(inferenceVariable);
 				if (result == null) result = caseTExportableElement(inferenceVariable);
 				if (result == null) result = caseTAnnotableElement(inferenceVariable);
+				if (result == null) result = caseTNamespaceElement(inferenceVariable);
 				if (result == null) result = caseIdentifiableElement(inferenceVariable);
 				if (result == null) result = caseTypableElement(inferenceVariable);
 				if (result == null) result = defaultCase(theEObject);
@@ -197,6 +199,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(tFunction);
 				if (result == null) result = caseTExportableElement(tFunction);
 				if (result == null) result = caseTAnnotableElement(tFunction);
+				if (result == null) result = caseTNamespaceElement(tFunction);
 				if (result == null) result = caseIdentifiableElement(tFunction);
 				if (result == null) result = caseTypableElement(tFunction);
 				if (result == null) result = defaultCase(theEObject);
@@ -207,6 +210,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				T result = caseType(type);
 				if (result == null) result = caseTExportableElement(type);
 				if (result == null) result = caseTAnnotableElement(type);
+				if (result == null) result = caseTNamespaceElement(type);
 				if (result == null) result = caseIdentifiableElement(type);
 				if (result == null) result = caseTypableElement(type);
 				if (result == null) result = defaultCase(theEObject);
@@ -218,6 +222,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(genericType);
 				if (result == null) result = caseTExportableElement(genericType);
 				if (result == null) result = caseTAnnotableElement(genericType);
+				if (result == null) result = caseTNamespaceElement(genericType);
 				if (result == null) result = caseIdentifiableElement(genericType);
 				if (result == null) result = caseTypableElement(genericType);
 				if (result == null) result = defaultCase(theEObject);
@@ -236,6 +241,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(containerType);
 				if (result == null) result = caseTExportableElement(containerType);
 				if (result == null) result = caseTAnnotableElement(containerType);
+				if (result == null) result = caseTNamespaceElement(containerType);
 				if (result == null) result = caseIdentifiableElement(containerType);
 				if (result == null) result = caseTypableElement(containerType);
 				if (result == null) result = defaultCase(theEObject);
@@ -256,8 +262,15 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseSyntaxRelatedTElement(tNamespace);
 				if (result == null) result = caseTExportableElement(tNamespace);
 				if (result == null) result = caseTAnnotableElement(tNamespace);
+				if (result == null) result = caseTNamespaceElement(tNamespace);
 				if (result == null) result = caseIdentifiableElement(tNamespace);
 				if (result == null) result = caseTypableElement(tNamespace);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypesPackage.TNAMESPACE_ELEMENT: {
+				TNamespaceElement tNamespaceElement = (TNamespaceElement)theEObject;
+				T result = caseTNamespaceElement(tNamespaceElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -268,6 +281,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseSyntaxRelatedTElement(moduleNamespaceVirtualType);
 				if (result == null) result = caseTExportableElement(moduleNamespaceVirtualType);
 				if (result == null) result = caseTAnnotableElement(moduleNamespaceVirtualType);
+				if (result == null) result = caseTNamespaceElement(moduleNamespaceVirtualType);
 				if (result == null) result = caseIdentifiableElement(moduleNamespaceVirtualType);
 				if (result == null) result = caseTypableElement(moduleNamespaceVirtualType);
 				if (result == null) result = defaultCase(theEObject);
@@ -281,6 +295,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(primitiveType);
 				if (result == null) result = caseTExportableElement(primitiveType);
 				if (result == null) result = caseTAnnotableElement(primitiveType);
+				if (result == null) result = caseTNamespaceElement(primitiveType);
 				if (result == null) result = caseIdentifiableElement(primitiveType);
 				if (result == null) result = caseTypableElement(primitiveType);
 				if (result == null) result = defaultCase(theEObject);
@@ -292,6 +307,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(builtInType);
 				if (result == null) result = caseTExportableElement(builtInType);
 				if (result == null) result = caseTAnnotableElement(builtInType);
+				if (result == null) result = caseTNamespaceElement(builtInType);
 				if (result == null) result = caseIdentifiableElement(builtInType);
 				if (result == null) result = caseTypableElement(builtInType);
 				if (result == null) result = defaultCase(theEObject);
@@ -304,6 +320,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(anyType);
 				if (result == null) result = caseTExportableElement(anyType);
 				if (result == null) result = caseTAnnotableElement(anyType);
+				if (result == null) result = caseTNamespaceElement(anyType);
 				if (result == null) result = caseIdentifiableElement(anyType);
 				if (result == null) result = caseTypableElement(anyType);
 				if (result == null) result = defaultCase(theEObject);
@@ -316,6 +333,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(undefinedType);
 				if (result == null) result = caseTExportableElement(undefinedType);
 				if (result == null) result = caseTAnnotableElement(undefinedType);
+				if (result == null) result = caseTNamespaceElement(undefinedType);
 				if (result == null) result = caseIdentifiableElement(undefinedType);
 				if (result == null) result = caseTypableElement(undefinedType);
 				if (result == null) result = defaultCase(theEObject);
@@ -328,6 +346,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(nullType);
 				if (result == null) result = caseTExportableElement(nullType);
 				if (result == null) result = caseTAnnotableElement(nullType);
+				if (result == null) result = caseTNamespaceElement(nullType);
 				if (result == null) result = caseIdentifiableElement(nullType);
 				if (result == null) result = caseTypableElement(nullType);
 				if (result == null) result = defaultCase(theEObject);
@@ -340,6 +359,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(voidType);
 				if (result == null) result = caseTExportableElement(voidType);
 				if (result == null) result = caseTAnnotableElement(voidType);
+				if (result == null) result = caseTNamespaceElement(voidType);
 				if (result == null) result = caseIdentifiableElement(voidType);
 				if (result == null) result = caseTypableElement(voidType);
 				if (result == null) result = defaultCase(theEObject);
@@ -354,6 +374,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(tStructuralType);
 				if (result == null) result = caseTExportableElement(tStructuralType);
 				if (result == null) result = caseTAnnotableElement(tStructuralType);
+				if (result == null) result = caseTNamespaceElement(tStructuralType);
 				if (result == null) result = caseIdentifiableElement(tStructuralType);
 				if (result == null) result = caseTypableElement(tStructuralType);
 				if (result == null) result = defaultCase(theEObject);
@@ -368,6 +389,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(tClassifier);
 				if (result == null) result = caseTExportableElement(tClassifier);
 				if (result == null) result = caseTAnnotableElement(tClassifier);
+				if (result == null) result = caseTNamespaceElement(tClassifier);
 				if (result == null) result = caseIdentifiableElement(tClassifier);
 				if (result == null) result = caseTypableElement(tClassifier);
 				if (result == null) result = defaultCase(theEObject);
@@ -391,6 +413,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(tn4Classifier);
 				if (result == null) result = caseTExportableElement(tn4Classifier);
 				if (result == null) result = caseTAnnotableElement(tn4Classifier);
+				if (result == null) result = caseTNamespaceElement(tn4Classifier);
 				if (result == null) result = caseIdentifiableElement(tn4Classifier);
 				if (result == null) result = caseTypableElement(tn4Classifier);
 				if (result == null) result = defaultCase(theEObject);
@@ -409,6 +432,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(tClass);
 				if (result == null) result = caseTExportableElement(tClass);
 				if (result == null) result = caseTAnnotableElement(tClass);
+				if (result == null) result = caseTNamespaceElement(tClass);
 				if (result == null) result = caseIdentifiableElement(tClass);
 				if (result == null) result = caseTypableElement(tClass);
 				if (result == null) result = defaultCase(theEObject);
@@ -427,6 +451,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(tInterface);
 				if (result == null) result = caseTExportableElement(tInterface);
 				if (result == null) result = caseTAnnotableElement(tInterface);
+				if (result == null) result = caseTNamespaceElement(tInterface);
 				if (result == null) result = caseIdentifiableElement(tInterface);
 				if (result == null) result = caseTypableElement(tInterface);
 				if (result == null) result = defaultCase(theEObject);
@@ -476,6 +501,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseSyntaxRelatedTElement(tMethod);
 				if (result == null) result = caseTExportableElement(tMethod);
 				if (result == null) result = caseTAnnotableElement(tMethod);
+				if (result == null) result = caseTNamespaceElement(tMethod);
 				if (result == null) result = caseIdentifiableElement(tMethod);
 				if (result == null) result = caseTypableElement(tMethod);
 				if (result == null) result = defaultCase(theEObject);
@@ -495,6 +521,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseSyntaxRelatedTElement(tStructMethod);
 				if (result == null) result = caseTExportableElement(tStructMethod);
 				if (result == null) result = caseTAnnotableElement(tStructMethod);
+				if (result == null) result = caseTNamespaceElement(tStructMethod);
 				if (result == null) result = caseIdentifiableElement(tStructMethod);
 				if (result == null) result = caseTypableElement(tStructMethod);
 				if (result == null) result = defaultCase(theEObject);
@@ -629,6 +656,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseSyntaxRelatedTElement(tEnum);
 				if (result == null) result = caseTExportableElement(tEnum);
 				if (result == null) result = caseTAnnotableElement(tEnum);
+				if (result == null) result = caseTNamespaceElement(tEnum);
 				if (result == null) result = caseIdentifiableElement(tEnum);
 				if (result == null) result = caseTypableElement(tEnum);
 				if (result == null) result = defaultCase(theEObject);
@@ -653,6 +681,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseType(typeAlias);
 				if (result == null) result = caseTExportableElement(typeAlias);
 				if (result == null) result = caseTAnnotableElement(typeAlias);
+				if (result == null) result = caseTNamespaceElement(typeAlias);
 				if (result == null) result = caseIdentifiableElement(typeAlias);
 				if (result == null) result = caseTypableElement(typeAlias);
 				if (result == null) result = defaultCase(theEObject);
@@ -679,6 +708,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTAnnotableElement(tVariable);
 				if (result == null) result = caseAccessibleTypeElement(tVariable);
 				if (result == null) result = caseTTypedElement(tVariable);
+				if (result == null) result = caseTNamespaceElement(tVariable);
 				if (result == null) result = caseIdentifiableElement(tVariable);
 				if (result == null) result = caseTypableElement(tVariable);
 				if (result == null) result = defaultCase(theEObject);
@@ -1015,6 +1045,21 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTNamespace(TNamespace object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TNamespace Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TNamespace Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTNamespaceElement(TNamespaceElement object) {
 		return null;
 	}
 

@@ -21,5 +21,5 @@ package org.eclipse.n4js.n4JS;
  * @model
  * @generated
  */
-public interface VariableStatement extends Statement, VariableDeclarationContainer {
+public interface VariableStatement extends Statement, VariableDeclarationContainer, NamespaceElement {
 } // VariableStatement

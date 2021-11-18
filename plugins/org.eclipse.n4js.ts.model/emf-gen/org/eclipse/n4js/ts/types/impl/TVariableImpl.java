@@ -37,6 +37,8 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TConstableElement;
+import org.eclipse.n4js.ts.types.TNamespace;
+import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
@@ -543,6 +545,58 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getContainingNamespaceNamesWithDot() {
+		boolean _isEmpty = this.getContainingNamespaceNames().isEmpty();
+		if (_isEmpty) {
+			return this.getContainingNamespaceNames();
+		}
+		else {
+			String _containingNamespaceNames = this.getContainingNamespaceNames();
+			return (_containingNamespaceNames + ".");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getContainingNamespaceNames() {
+		String containingTypeNames = "";
+		EObject currContainer = this.eContainer();
+		while ((currContainer instanceof TNamespace)) {
+			{
+				boolean _isEmpty = containingTypeNames.isEmpty();
+				boolean _not = (!_isEmpty);
+				if (_not) {
+					containingTypeNames = ("." + containingTypeNames);
+				}
+				String _name = ((TNamespace)currContainer).getName();
+				String _plus = (_name + containingTypeNames);
+				containingTypeNames = _plus;
+				currContainer = ((TNamespace)currContainer).eContainer();
+			}
+		}
+		return containingTypeNames;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -774,6 +828,11 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 				default: return -1;
 			}
 		}
+		if (baseClass == TNamespaceElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -816,6 +875,11 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 				default: return -1;
 			}
 		}
+		if (baseClass == TNamespaceElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
@@ -854,6 +918,14 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 				default: return -1;
 			}
 		}
+		if (baseClass == TNamespaceElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TNAMESPACE_ELEMENT___IS_HOLLOW: return TypesPackage.TVARIABLE___IS_HOLLOW;
+				case TypesPackage.TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT: return TypesPackage.TVARIABLE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+				case TypesPackage.TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES: return TypesPackage.TVARIABLE___GET_CONTAINING_NAMESPACE_NAMES;
+				default: return -1;
+			}
+		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
@@ -867,6 +939,12 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 		switch (operationID) {
 			case TypesPackage.TVARIABLE___GET_VARIABLE_AS_STRING:
 				return getVariableAsString();
+			case TypesPackage.TVARIABLE___IS_HOLLOW:
+				return isHollow();
+			case TypesPackage.TVARIABLE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT:
+				return getContainingNamespaceNamesWithDot();
+			case TypesPackage.TVARIABLE___GET_CONTAINING_NAMESPACE_NAMES:
+				return getContainingNamespaceNames();
 			case TypesPackage.TVARIABLE___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TVARIABLE___GET_TYPE_ACCESS_MODIFIER:

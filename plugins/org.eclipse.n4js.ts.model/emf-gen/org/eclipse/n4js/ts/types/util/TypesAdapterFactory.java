@@ -164,6 +164,10 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createTNamespaceAdapter();
 			}
 			@Override
+			public Adapter caseTNamespaceElement(TNamespaceElement object) {
+				return createTNamespaceElementAdapter();
+			}
+			@Override
 			public Adapter caseModuleNamespaceVirtualType(ModuleNamespaceVirtualType object) {
 				return createModuleNamespaceVirtualTypeAdapter();
 			}
@@ -620,6 +624,20 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTNamespaceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TNamespaceElement <em>TNamespace Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.TNamespaceElement
+	 * @generated
+	 */
+	public Adapter createTNamespaceElementAdapter() {
 		return null;
 	}
 

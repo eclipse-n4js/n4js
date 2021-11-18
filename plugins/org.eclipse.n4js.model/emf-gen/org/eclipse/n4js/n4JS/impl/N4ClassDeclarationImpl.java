@@ -43,10 +43,12 @@ import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDefinition;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 
@@ -313,6 +315,48 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * @generated
 	 */
 	@Override
+	public String getContainingNamespaceNamesWithDot() {
+		boolean _isEmpty = this.getContainingNamespaceNames().isEmpty();
+		if (_isEmpty) {
+			return this.getContainingNamespaceNames();
+		}
+		else {
+			String _containingNamespaceNames = this.getContainingNamespaceNames();
+			return (_containingNamespaceNames + ".");
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getContainingNamespaceNames() {
+		String containingTypeNames = "";
+		EObject currContainer = this.eContainer();
+		while ((currContainer instanceof N4NamespaceDeclaration)) {
+			{
+				boolean _isEmpty = containingTypeNames.isEmpty();
+				boolean _not = (!_isEmpty);
+				if (_not) {
+					containingTypeNames = ("." + containingTypeNames);
+				}
+				String _name = ((N4NamespaceDeclaration)currContainer).getName();
+				String _plus = (_name + containingTypeNames);
+				containingTypeNames = _plus;
+				currContainer = ((N4NamespaceDeclaration)currContainer).eContainer();
+			}
+		}
+		return containingTypeNames;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
@@ -550,6 +594,11 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				default: return -1;
 			}
 		}
+		if (baseClass == NamespaceElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == N4TypeDeclaration.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.N4_CLASS_DECLARATION__NAME: return N4JSPackage.N4_TYPE_DECLARATION__NAME;
@@ -601,6 +650,11 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 			}
 		}
 		if (baseClass == NamedElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == NamespaceElement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
 			}
@@ -676,10 +730,17 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				default: return -1;
 			}
 		}
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_CLASS_DECLARATION___IS_HOLLOW;
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT: return N4JSPackage.N4_CLASS_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES: return N4JSPackage.N4_CLASS_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES;
+				default: return -1;
+			}
+		}
 		if (baseClass == N4TypeDeclaration.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.N4_TYPE_DECLARATION___IS_EXTERNAL: return N4JSPackage.N4_CLASS_DECLARATION___IS_EXTERNAL;
-				case N4JSPackage.N4_TYPE_DECLARATION___IS_HOLLOW: return N4JSPackage.N4_CLASS_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
 		}
@@ -710,6 +771,10 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				return isExternal();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_HOLLOW:
 				return isHollow();
+			case N4JSPackage.N4_CLASS_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT:
+				return getContainingNamespaceNamesWithDot();
+			case N4JSPackage.N4_CLASS_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES:
+				return getContainingNamespaceNames();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXPORTED_AS_DEFAULT:
