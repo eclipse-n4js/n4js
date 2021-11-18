@@ -45,6 +45,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_N4MethodDeclaration_SemicolonKeyword_1_q;
 	protected AbstractElementAlias match_N4SetterDeclaration_SemicolonKeyword_6_q;
 	protected AbstractElementAlias match_NoLineTerminator_NO_LINE_TERMINATORTerminalRuleCall_q;
+	protected AbstractElementAlias match_NoWhiteSpace_NO_WHITE_SPACETerminalRuleCall_q;
 	protected AbstractElementAlias match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q;
 	protected AbstractElementAlias match_ObjectLiteral_CommaKeyword_2_2_q;
 	protected AbstractElementAlias match_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_a;
@@ -71,6 +72,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_N4MethodDeclaration_SemicolonKeyword_1_q = new TokenAlias(false, true, grammarAccess.getN4MethodDeclarationAccess().getSemicolonKeyword_1());
 		match_N4SetterDeclaration_SemicolonKeyword_6_q = new TokenAlias(false, true, grammarAccess.getN4SetterDeclarationAccess().getSemicolonKeyword_6());
 		match_NoLineTerminator_NO_LINE_TERMINATORTerminalRuleCall_q = new TokenAlias(false, true, grammarAccess.getNoLineTerminatorAccess().getNO_LINE_TERMINATORTerminalRuleCall());
+		match_NoWhiteSpace_NO_WHITE_SPACETerminalRuleCall_q = new TokenAlias(false, true, grammarAccess.getNoWhiteSpaceAccess().getNO_WHITE_SPACETerminalRuleCall());
 		match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q = new TokenAlias(false, true, grammarAccess.getNumericLiteralTypeRefAccess().getPlusSignKeyword_0_0());
 		match_ObjectLiteral_CommaKeyword_2_2_q = new TokenAlias(false, true, grammarAccess.getObjectLiteralAccess().getCommaKeyword_2_2());
 		match_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_a = new TokenAlias(true, true, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_4_0());
@@ -85,6 +87,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 			return getArrowToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getNO_LINE_TERMINATORRule())
 			return getNO_LINE_TERMINATORToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getNO_WHITE_SPACERule())
+			return getNO_WHITE_SPACEToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getSemiRule())
 			return getSemiToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getTemplateExpressionEndRule())
@@ -110,6 +114,16 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		if (node != null)
 			return getTokenText(node);
 		return "//5";
+	}
+	
+	/**
+	 * terminal NO_WHITE_SPACE:
+	 * 	'//6' ;
+	 */
+	protected String getNO_WHITE_SPACEToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "//6";
 	}
 	
 	/**
@@ -170,6 +184,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_N4SetterDeclaration_SemicolonKeyword_6_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_NoLineTerminator_NO_LINE_TERMINATORTerminalRuleCall_q.equals(syntax))
 				emit_NoLineTerminator_NO_LINE_TERMINATORTerminalRuleCall_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_NoWhiteSpace_NO_WHITE_SPACETerminalRuleCall_q.equals(syntax))
+				emit_NoWhiteSpace_NO_WHITE_SPACETerminalRuleCall_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q.equals(syntax))
 				emit_NumericLiteralTypeRef_PlusSignKeyword_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ObjectLiteral_CommaKeyword_2_2_q.equals(syntax))
@@ -407,9 +423,19 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredAsync?='async' (ambiguity) 'function' name=BindingIdentifier
 	 *     declaredAsync?='async' (ambiguity) declaredName=LiteralOrComputedPropertyName
 	 *     declaredAsync?='async' (ambiguity) generator?='*'
-	 *     name=AnnotationName (ambiguity) '(' args+=AnnotationArgument
 	 */
 	protected void emit_NoLineTerminator_NO_LINE_TERMINATORTerminalRuleCall_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     NO_WHITE_SPACE?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     name=AnnotationName (ambiguity) '(' args+=AnnotationArgument
+	 */
+	protected void emit_NoWhiteSpace_NO_WHITE_SPACETerminalRuleCall_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

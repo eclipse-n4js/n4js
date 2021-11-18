@@ -7116,6 +7116,23 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+
+// Rule NoWhiteSpace
+ruleNoWhiteSpace 
+	@init {
+		int stackSize = keepStackSize();
+	}
+	:
+	(
+		{ before(grammarAccess.getNoWhiteSpaceAccess().getNO_WHITE_SPACETerminalRuleCall()); }
+		(RULE_NO_WHITE_SPACE)?
+		{ after(grammarAccess.getNoWhiteSpaceAccess().getNO_WHITE_SPACETerminalRuleCall()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 // Entry rule entryRuleAnnotation
 entryRuleAnnotation
 :
@@ -60977,9 +60994,9 @@ rule__AnnotationNoAtSign__Group_1__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getAnnotationNoAtSignAccess().getNoLineTerminatorParserRuleCall_1_0()); }
-	(ruleNoLineTerminator)
-	{ after(grammarAccess.getAnnotationNoAtSignAccess().getNoLineTerminatorParserRuleCall_1_0()); }
+	{ before(grammarAccess.getAnnotationNoAtSignAccess().getNoWhiteSpaceParserRuleCall_1_0()); }
+	(ruleNoWhiteSpace)
+	{ after(grammarAccess.getAnnotationNoAtSignAccess().getNoWhiteSpaceParserRuleCall_1_0()); }
 )
 ;
 finally {

@@ -321,6 +321,22 @@ public class SemicolonInjectionHelper {
 	}
 
 	/**
+	 * Returns true if there was unexpected white-space.
+	 */
+	public static boolean hasDisallowedWhiteSpace(Callback callback) {
+		TokenStream input = callback.getInput();
+		Token lt = input.LT(1);
+
+		int ix = lt.getTokenIndex() - 1;
+		Token ltPrev = input.get(ix);
+		if (ltPrev.getChannel() != Token.DEFAULT_CHANNEL) {
+			// every hidden token (i.e. token not on the default channel) is deemed disallowed white space
+			return true;
+		}
+		return false;
+	}
+
+	/**
 	 * Returns {@code true} if the given look-ahead token type is considered to be an explicit or implicitly injected
 	 * semicolon.
 	 */

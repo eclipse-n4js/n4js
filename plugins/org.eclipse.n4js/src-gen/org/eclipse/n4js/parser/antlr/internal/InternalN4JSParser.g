@@ -41,6 +41,7 @@ protected boolean forcedRewind(int position) { return true; } // overridden in s
 protected void promoteEOL() {} // overridden in subtype
 protected void addASIMessage() {} // overridden in subtype
 protected boolean hasDisallowedEOL() { return false; } // overridden in subtype
+protected boolean hasDisallowedWhiteSpace() { return false; } // overridden in subtype
 // end of injection
 
  	private N4JSGrammarAccess grammarAccess;
@@ -28169,6 +28170,23 @@ ruleNoLineTerminator[EObject in_current]  returns [EObject current=in_current]
 	)?
 ;
 
+
+// Rule NoWhiteSpace
+ruleNoWhiteSpace[EObject in_current]  returns [EObject current=in_current]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		this_NO_WHITE_SPACE_0=RULE_NO_WHITE_SPACE
+		{
+			newLeafNode(this_NO_WHITE_SPACE_0, grammarAccess.getNoWhiteSpaceAccess().getNO_WHITE_SPACETerminalRuleCall());
+		}
+	)?
+;
+
 // Entry rule entryRuleAnnotation
 entryRuleAnnotation returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getAnnotationRule()); }
@@ -28268,16 +28286,16 @@ ruleAnnotationNoAtSign returns [EObject current=null]
 		)
 		(
 			(
-				(ruleNoLineTerminator[null])=>
+				(ruleNoWhiteSpace[null])=>
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getAnnotationNoAtSignRule());
 					}
-					newCompositeNode(grammarAccess.getAnnotationNoAtSignAccess().getNoLineTerminatorParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getAnnotationNoAtSignAccess().getNoWhiteSpaceParserRuleCall_1_0());
 				}
-				this_NoLineTerminator_1=ruleNoLineTerminator[$current]
+				this_NoWhiteSpace_1=ruleNoWhiteSpace[$current]
 				{
-					$current = $this_NoLineTerminator_1.current;
+					$current = $this_NoWhiteSpace_1.current;
 					afterParserOrEnumRuleCall();
 				}
 			)

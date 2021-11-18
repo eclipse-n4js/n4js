@@ -8519,6 +8519,19 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//NO_LINE_TERMINATOR?
 		public RuleCall getNO_LINE_TERMINATORTerminalRuleCall() { return cNO_LINE_TERMINATORTerminalRuleCall; }
 	}
+	public class NoWhiteSpaceElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NoWhiteSpace");
+		private final RuleCall cNO_WHITE_SPACETerminalRuleCall = (RuleCall)rule.eContents().get(0);
+		
+		///**
+		// * Will be completely replaced during post processing, need some dummy token to be able to define rule.
+		// */
+		//fragment NoWhiteSpace*: NO_WHITE_SPACE?;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//NO_WHITE_SPACE?
+		public RuleCall getNO_WHITE_SPACETerminalRuleCall() { return cNO_WHITE_SPACETerminalRuleCall; }
+	}
 	public class AnnotationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.Annotation");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -8532,7 +8545,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//// Annotations
 		//// ****************************************************************************************************
 		//// cf. N4JSSpec §9
-		//Annotation:'@' AnnotationNoAtSign;
+		//Annotation: '@' AnnotationNoAtSign;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'@' AnnotationNoAtSign
@@ -8568,7 +8581,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final RuleCall cNameAnnotationNameParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final RuleCall cNoLineTerminatorParserRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
+		private final RuleCall cNoWhiteSpaceParserRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_1_1 = (Keyword)cGroup_1.eContents().get(1);
 		private final Group cGroup_1_2 = (Group)cGroup_1.eContents().get(2);
 		private final Assignment cArgsAssignment_1_2_0 = (Assignment)cGroup_1_2.eContents().get(0);
@@ -8580,10 +8593,10 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cRightParenthesisKeyword_1_3 = (Keyword)cGroup_1.eContents().get(3);
 		
 		//AnnotationNoAtSign returns Annotation:
-		//    name=AnnotationName (=> NoLineTerminator '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
+		//    name=AnnotationName (=> NoWhiteSpace '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//name=AnnotationName (=> NoLineTerminator '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?
+		//name=AnnotationName (=> NoWhiteSpace '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?
 		public Group getGroup() { return cGroup; }
 		
 		//name=AnnotationName
@@ -8592,11 +8605,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//AnnotationName
 		public RuleCall getNameAnnotationNameParserRuleCall_0_0() { return cNameAnnotationNameParserRuleCall_0_0; }
 		
-		//(=> NoLineTerminator '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?
+		//(=> NoWhiteSpace '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//=> NoLineTerminator
-		public RuleCall getNoLineTerminatorParserRuleCall_1_0() { return cNoLineTerminatorParserRuleCall_1_0; }
+		//=> NoWhiteSpace
+		public RuleCall getNoWhiteSpaceParserRuleCall_1_0() { return cNoWhiteSpaceParserRuleCall_1_0; }
 		
 		//'('
 		public Keyword getLeftParenthesisKeyword_1_1() { return cLeftParenthesisKeyword_1_1; }
@@ -11886,6 +11899,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	private final SemiElements pSemi;
 	private final NoLineTerminatorElements pNoLineTerminator;
 	private final TerminalRule tNO_LINE_TERMINATOR;
+	private final NoWhiteSpaceElements pNoWhiteSpace;
+	private final TerminalRule tNO_WHITE_SPACE;
 	private final AnnotationElements pAnnotation;
 	private final ScriptAnnotationElements pScriptAnnotation;
 	private final AnnotationNoAtSignElements pAnnotationNoAtSign;
@@ -12141,6 +12156,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		this.pSemi = new SemiElements();
 		this.pNoLineTerminator = new NoLineTerminatorElements();
 		this.tNO_LINE_TERMINATOR = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NO_LINE_TERMINATOR");
+		this.pNoWhiteSpace = new NoWhiteSpaceElements();
+		this.tNO_WHITE_SPACE = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NO_WHITE_SPACE");
 		this.pAnnotation = new AnnotationElements();
 		this.pScriptAnnotation = new ScriptAnnotationElements();
 		this.pAnnotationNoAtSign = new AnnotationNoAtSignElements();
@@ -14596,6 +14613,26 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return tNO_LINE_TERMINATOR;
 	}
 	
+	///**
+	// * Will be completely replaced during post processing, need some dummy token to be able to define rule.
+	// */
+	//fragment NoWhiteSpace*: NO_WHITE_SPACE?;
+	public NoWhiteSpaceElements getNoWhiteSpaceAccess() {
+		return pNoWhiteSpace;
+	}
+	
+	public ParserRule getNoWhiteSpaceRule() {
+		return getNoWhiteSpaceAccess().getRule();
+	}
+	
+	///** Rewritten in post-processing. */
+	//terminal NO_WHITE_SPACE:
+	//    '//6' // will never be lexed
+	//;
+	public TerminalRule getNO_WHITE_SPACERule() {
+		return tNO_WHITE_SPACE;
+	}
+	
 	//// ****************************************************************************************************
 	//// N4JS Specific
 	//// ****************************************************************************************************
@@ -14603,7 +14640,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//// Annotations
 	//// ****************************************************************************************************
 	//// cf. N4JSSpec §9
-	//Annotation:'@' AnnotationNoAtSign;
+	//Annotation: '@' AnnotationNoAtSign;
 	public AnnotationElements getAnnotationAccess() {
 		return pAnnotation;
 	}
@@ -14622,7 +14659,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//AnnotationNoAtSign returns Annotation:
-	//    name=AnnotationName (=> NoLineTerminator '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
+	//    name=AnnotationName (=> NoWhiteSpace '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
 	public AnnotationNoAtSignElements getAnnotationNoAtSignAccess() {
 		return pAnnotationNoAtSign;
 	}

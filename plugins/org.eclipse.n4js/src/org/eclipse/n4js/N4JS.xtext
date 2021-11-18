@@ -1170,6 +1170,16 @@ terminal NO_LINE_TERMINATOR:
 	'//5' // will never be lexed
 ;
 
+/**
+ * Will be completely replaced during post processing, need some dummy token to be able to define rule.
+ */
+fragment NoWhiteSpace*: NO_WHITE_SPACE?;
+
+/** Rewritten in post-processing. */
+terminal NO_WHITE_SPACE:
+	'//6' // will never be lexed
+;
+
 // ****************************************************************************************************
 // N4JS Specific
 // ****************************************************************************************************
@@ -1179,11 +1189,11 @@ terminal NO_LINE_TERMINATOR:
 // ****************************************************************************************************
 
 // cf. N4JSSpec §9
-Annotation:'@' AnnotationNoAtSign;
+Annotation: '@' AnnotationNoAtSign;
 ScriptAnnotation returns Annotation: '@@' AnnotationNoAtSign;
 
 AnnotationNoAtSign returns Annotation:
-	name=AnnotationName (=> NoLineTerminator '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
+	name=AnnotationName (=> NoWhiteSpace '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
 
 AnnotationArgument:
 	=>LiteralAnnotationArgument | TypeRefAnnotationArgument

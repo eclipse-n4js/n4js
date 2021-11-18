@@ -6671,6 +6671,11 @@ ruleNoLineTerminator:
 	RULE_NO_LINE_TERMINATOR?
 ;
 
+// Rule NoWhiteSpace
+ruleNoWhiteSpace:
+	RULE_NO_WHITE_SPACE?
+;
+
 // Rule Annotation
 ruleAnnotation:
 	'@'
@@ -6688,8 +6693,8 @@ ruleAnnotationNoAtSign:
 	ruleAnnotationName
 	(
 		(
-			(ruleNoLineTerminator)=>
-			ruleNoLineTerminator
+			(ruleNoWhiteSpace)=>
+			ruleNoWhiteSpace
 		)
 		'('
 		(
@@ -9754,6 +9759,8 @@ RULE_TEMPLATE_END : '//3';
 fragment RULE_TEMPLATE_CONTINUATION : '//4';
 
 RULE_NO_LINE_TERMINATOR : '//5';
+
+RULE_NO_WHITE_SPACE : '//6';
 
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
 
