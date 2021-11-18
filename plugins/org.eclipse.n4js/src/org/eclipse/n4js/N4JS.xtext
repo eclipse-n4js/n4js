@@ -990,7 +990,7 @@ AwaitExpression <In, Yield> returns Expression:
 	=>({AwaitExpression} 'await') expression=AssignmentExpression<In,Yield>;
 
 PromisifyExpression <In, Yield> returns Expression:
-	=>({PromisifyExpression} '@' NoWhiteSpace 'Promisify') expression=AssignmentExpression<In,Yield>;
+	=>({PromisifyExpression} '@' 'Promisify') expression=AssignmentExpression<In,Yield>;
 
 /**
  * Comma operator (11.14)
@@ -1189,13 +1189,10 @@ terminal NO_WHITE_SPACE:
 // ****************************************************************************************************
 
 // cf. N4JSSpec §9
-Annotation: '@' NoWhiteSpace AnnotationNoAtSignFragment;
-ScriptAnnotation returns Annotation: '@@' NoWhiteSpace AnnotationNoAtSignFragment;
+Annotation: '@' AnnotationNoAtSign;
+ScriptAnnotation returns Annotation: '@@' AnnotationNoAtSign;
 
 AnnotationNoAtSign returns Annotation:
-	AnnotationNoAtSignFragment;
-
-fragment AnnotationNoAtSignFragment returns Annotation:
 	name=AnnotationName (=> NoWhiteSpace '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
 
 AnnotationArgument:
@@ -1211,7 +1208,7 @@ TypeRefAnnotationArgument:
 ;
 
 AnnotationList:
-	=>({AnnotationList} '@' NoWhiteSpace -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
+	=>({AnnotationList} '@' -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
 ;
 
 ExpressionAnnotationList:

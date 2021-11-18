@@ -19,6 +19,8 @@ import org.junit.Test
 
 class NoWhiteSpaceParserTest extends AbstractParserTest {
 
+	// White-space between the an annotation's name and its arguments list is not allowed:
+
 	@Test
 	def void testAnnotation01() {
 		val script = '''
@@ -89,18 +91,27 @@ class NoWhiteSpaceParserTest extends AbstractParserTest {
 	@Test
 	def void testAnnotation06_bad() {
 		'''
-			@ Annotation
-			class Cls {}
-		'''.parseN4jsWithError;
-	}
-
-	@Test
-	def void testAnnotation07_bad() {
-		'''
 			@Annotation ()
 			class Cls {}
 		'''.parseN4jsWithError;
 	}
+
+	// In contrast to the above, white-space between the @ and the annotation's name is allowed:
+
+	@Test
+	def void testAnnotation07() {
+		val script = '''
+			@  Annotation
+			class Cls {}
+		'''.parseN4jsSuccessfully;
+		val ann = script.eAllContents.filter(N4ClassifierDeclaration).head?.annotations?.head;
+		assertNotNull(ann);
+		assertEquals("Annotation", ann.name);
+		assertEquals(0, ann.args.size);
+	}
+
+	// Disallowing white-space between an annotation's name and its argument list solves some
+	// ambiguities of annotated call signatures:
 
 	@Test
 	def void testCallSignatureWithAnnotation01() {

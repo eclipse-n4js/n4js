@@ -183,16 +183,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_AdditiveExpression(context, (AdditiveExpression) semanticObject); 
 				return; 
 			case N4JSPackage.ANNOTATION:
-				if (rule == grammarAccess.getAnnotationRule()
-						|| rule == grammarAccess.getScriptAnnotationRule()) {
-					sequence_AnnotationNoAtSignFragment(context, (Annotation) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getAnnotationNoAtSignRule()) {
-					sequence_AnnotationNoAtSignFragment(context, (Annotation) semanticObject); 
-					return; 
-				}
-				else break;
+				sequence_AnnotationNoAtSign(context, (Annotation) semanticObject); 
+				return; 
 			case N4JSPackage.ANNOTATION_LIST:
 				sequence_AnnotationList(context, (AnnotationList) semanticObject); 
 				return; 
@@ -4527,26 +4519,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Contexts:
 	 *     Annotation returns Annotation
 	 *     ScriptAnnotation returns Annotation
+	 *     AnnotationNoAtSign returns Annotation
 	 *
 	 * Constraint:
-	 *     (name=AnnotationName* (args+=AnnotationArgument args+=AnnotationArgument*)?)
+	 *     (name=AnnotationName (args+=AnnotationArgument args+=AnnotationArgument*)?)
 	 */
-	protected void sequence_AnnotationNoAtSignFragment(ISerializationContext context, Annotation semanticObject) {
+	protected void sequence_AnnotationNoAtSign(ISerializationContext context, Annotation semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
-	
-	// This method is commented out because it has the same signature as another method in this class.
-	// This is probably a bug in Xtext's serializer, please report it here: 
-	// https://bugs.eclipse.org/bugs/enter_bug.cgi?product=TMF
-	//
-	// Contexts:
-	//     AnnotationNoAtSign returns Annotation
-	//
-	// Constraint:
-	//     (name=AnnotationName (args+=AnnotationArgument args+=AnnotationArgument*)?)
-	//
-	// protected void sequence_AnnotationNoAtSignFragment(ISerializationContext context, Annotation semanticObject) { }
 	
 	/**
 	 * Contexts:
