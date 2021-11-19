@@ -1385,40 +1385,36 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeReference");
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
-		private final Assignment cAstDeclaredTypeQualifiersAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
-		private final CrossReference cAstDeclaredTypeQualifiersTypeCrossReference_0_0_0 = (CrossReference)cAstDeclaredTypeQualifiersAssignment_0_0.eContents().get(0);
-		private final RuleCall cAstDeclaredTypeQualifiersTypeIDENTIFIERTerminalRuleCall_0_0_0_1 = (RuleCall)cAstDeclaredTypeQualifiersTypeCrossReference_0_0_0.eContents().get(1);
+		private final Assignment cNamespaceLikeRefsAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
+		private final RuleCall cNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0 = (RuleCall)cNamespaceLikeRefsAssignment_0_0.eContents().get(0);
 		private final Keyword cFullStopKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cDeclaredTypeAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final CrossReference cDeclaredTypeTypeCrossReference_1_0 = (CrossReference)cDeclaredTypeAssignment_1.eContents().get(0);
 		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_1_0.eContents().get(1);
 		
 		//fragment TypeReference *:
-		//    (astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
-		//    declaredType=[Type|TypeReferenceName]
+		//    (namespaceLikeRefs+=NamespaceLikeRef '.')*
+		//    => declaredType=[Type|TypeReferenceName]
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//(astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
-		//declaredType=[Type|TypeReferenceName]
+		//(namespaceLikeRefs+=NamespaceLikeRef '.')*
+		//=> declaredType=[Type|TypeReferenceName]
 		public Group getGroup() { return cGroup; }
 		
-		//(astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
+		//(namespaceLikeRefs+=NamespaceLikeRef '.')*
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//astDeclaredTypeQualifiers+=[Type|IDENTIFIER]
-		public Assignment getAstDeclaredTypeQualifiersAssignment_0_0() { return cAstDeclaredTypeQualifiersAssignment_0_0; }
+		//namespaceLikeRefs+=NamespaceLikeRef
+		public Assignment getNamespaceLikeRefsAssignment_0_0() { return cNamespaceLikeRefsAssignment_0_0; }
 		
-		//[Type|IDENTIFIER]
-		public CrossReference getAstDeclaredTypeQualifiersTypeCrossReference_0_0_0() { return cAstDeclaredTypeQualifiersTypeCrossReference_0_0_0; }
-		
-		//IDENTIFIER
-		public RuleCall getAstDeclaredTypeQualifiersTypeIDENTIFIERTerminalRuleCall_0_0_0_1() { return cAstDeclaredTypeQualifiersTypeIDENTIFIERTerminalRuleCall_0_0_0_1; }
+		//NamespaceLikeRef
+		public RuleCall getNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0() { return cNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0; }
 		
 		//'.'
 		public Keyword getFullStopKeyword_0_1() { return cFullStopKeyword_0_1; }
 		
-		//declaredType=[Type|TypeReferenceName]
+		//=> declaredType=[Type|TypeReferenceName]
 		public Assignment getDeclaredTypeAssignment_1() { return cDeclaredTypeAssignment_1; }
 		
 		//[Type|TypeReferenceName]
@@ -1426,6 +1422,26 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//TypeReferenceName
 		public RuleCall getDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1() { return cDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1; }
+	}
+	public class NamespaceLikeRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.NamespaceLikeRef");
+		private final Assignment cDeclaredTypeAssignment = (Assignment)rule.eContents().get(1);
+		private final CrossReference cDeclaredTypeTypeCrossReference_0 = (CrossReference)cDeclaredTypeAssignment.eContents().get(0);
+		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_0.eContents().get(1);
+		
+		//NamespaceLikeRef:
+		//    declaredType=[Type|TypeReferenceName]
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//declaredType=[Type|TypeReferenceName]
+		public Assignment getDeclaredTypeAssignment() { return cDeclaredTypeAssignment; }
+		
+		//[Type|TypeReferenceName]
+		public CrossReference getDeclaredTypeTypeCrossReference_0() { return cDeclaredTypeTypeCrossReference_0; }
+		
+		//TypeReferenceName
+		public RuleCall getDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1() { return cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1; }
 	}
 	public class TypeArgumentsElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeArguments");
@@ -2707,6 +2723,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final ArrayNTypeExpressionElements pArrayNTypeExpression;
 	private final EmptyIterableTypeExpressionTailElements pEmptyIterableTypeExpressionTail;
 	private final TypeReferenceElements pTypeReference;
+	private final NamespaceLikeRefElements pNamespaceLikeRef;
 	private final TypeArgumentsElements pTypeArguments;
 	private final TStructMemberListElements pTStructMemberList;
 	private final TStructMemberElements pTStructMember;
@@ -2793,6 +2810,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pArrayNTypeExpression = new ArrayNTypeExpressionElements();
 		this.pEmptyIterableTypeExpressionTail = new EmptyIterableTypeExpressionTailElements();
 		this.pTypeReference = new TypeReferenceElements();
+		this.pNamespaceLikeRef = new NamespaceLikeRefElements();
 		this.pTypeArguments = new TypeArgumentsElements();
 		this.pTStructMemberList = new TStructMemberListElements();
 		this.pTStructMember = new TStructMemberElements();
@@ -3242,8 +3260,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//fragment TypeReference *:
-	//    (astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
-	//    declaredType=[Type|TypeReferenceName]
+	//    (namespaceLikeRefs+=NamespaceLikeRef '.')*
+	//    => declaredType=[Type|TypeReferenceName]
 	//;
 	public TypeReferenceElements getTypeReferenceAccess() {
 		return pTypeReference;
@@ -3251,6 +3269,17 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	
 	public ParserRule getTypeReferenceRule() {
 		return getTypeReferenceAccess().getRule();
+	}
+	
+	//NamespaceLikeRef:
+	//    declaredType=[Type|TypeReferenceName]
+	//;
+	public NamespaceLikeRefElements getNamespaceLikeRefAccess() {
+		return pNamespaceLikeRef;
+	}
+	
+	public ParserRule getNamespaceLikeRefRule() {
+		return getNamespaceLikeRefAccess().getRule();
 	}
 	
 	//fragment TypeArguments *:

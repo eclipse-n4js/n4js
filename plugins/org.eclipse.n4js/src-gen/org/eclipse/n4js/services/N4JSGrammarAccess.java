@@ -15767,8 +15767,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//fragment TypeReference *:
-	//    (astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
-	//    declaredType=[Type|TypeReferenceName]
+	//    (namespaceLikeRefs+=NamespaceLikeRef '.')*
+	//    => declaredType=[Type|TypeReferenceName]
 	//;
 	public TypeExpressionsGrammarAccess.TypeReferenceElements getTypeReferenceAccess() {
 		return gaTypeExpressions.getTypeReferenceAccess();
@@ -15776,6 +15776,17 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getTypeReferenceRule() {
 		return getTypeReferenceAccess().getRule();
+	}
+	
+	//NamespaceLikeRef:
+	//    declaredType=[Type|TypeReferenceName]
+	//;
+	public TypeExpressionsGrammarAccess.NamespaceLikeRefElements getNamespaceLikeRefAccess() {
+		return gaTypeExpressions.getNamespaceLikeRefAccess();
+	}
+	
+	public ParserRule getNamespaceLikeRefRule() {
+		return getNamespaceLikeRefAccess().getRule();
 	}
 	
 	//fragment TypeArguments *:

@@ -196,7 +196,11 @@ EmptyIterableTypeExpressionTail returns Wildcard:
 	{Wildcard} ']';
 
 fragment TypeReference *:
-	(astDeclaredTypeQualifiers+=[Type|IDENTIFIER] '.')*
+	(namespaceLikeRefs+=NamespaceLikeRef '.')*
+	=> declaredType=[Type|TypeReferenceName]
+;
+
+NamespaceLikeRef:
 	declaredType=[Type|TypeReferenceName]
 ;
 

@@ -569,8 +569,7 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
 	 * </ol>
 	 */
-	refers transient Type[] astDeclaredTypeQualifiers
-	transient String astDeclaredTypeQualifiersAsText
+	contains NamespaceLikeRef[] namespaceLikeRefs
 
 	/* @see TypeRef#getASTOptionalFieldStrategy() */
 	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy
@@ -956,6 +955,11 @@ class TypeTypeRef extends BaseTypeRef {
 	}
 
 	// note: operation getStaticType moved to TypeSystemHelper#getStaticType()
+}
+
+class NamespaceLikeRef {
+	transient String declaredTypeAsText
+	refers Type declaredType
 }
 
 /*

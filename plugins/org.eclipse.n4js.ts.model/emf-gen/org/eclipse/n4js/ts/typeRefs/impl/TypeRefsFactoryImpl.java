@@ -77,6 +77,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 			case TypeRefsPackage.EXISTENTIAL_TYPE_REF: return createExistentialTypeRef();
 			case TypeRefsPackage.UNKNOWN_TYPE_REF: return createUnknownTypeRef();
 			case TypeRefsPackage.TYPE_TYPE_REF: return createTypeTypeRef();
+			case TypeRefsPackage.NAMESPACE_LIKE_REF: return createNamespaceLikeRef();
 			case TypeRefsPackage.WILDCARD: return createWildcard();
 			case TypeRefsPackage.FUNCTION_TYPE_REF: return createFunctionTypeRef();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION: return createFunctionTypeExpression();
@@ -233,6 +234,17 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	public TypeTypeRef createTypeTypeRef() {
 		TypeTypeRefImpl typeTypeRef = new TypeTypeRefImpl();
 		return typeTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NamespaceLikeRef createNamespaceLikeRef() {
+		NamespaceLikeRefImpl namespaceLikeRef = new NamespaceLikeRefImpl();
+		return namespaceLikeRef;
 	}
 
 	/**

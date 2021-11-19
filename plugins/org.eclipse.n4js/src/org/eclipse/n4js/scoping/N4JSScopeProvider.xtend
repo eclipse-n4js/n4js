@@ -92,6 +92,7 @@ import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensi
 import org.eclipse.n4js.scoping.validation.VeeScopeValidator
 import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.AbstractNamespace
+import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef
 
 /**
  * This class contains custom scoping description.
@@ -218,15 +219,16 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
 	private def getScopeByShortcut(EObject context, EReference reference) {
-		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS) {
-			return new FilteringScope(getTypeScope(context, false), [
+		if (reference == TypeRefsPackage.Literals.NAMESPACE_LIKE_REF__DECLARED_TYPE) {
+			val namespaceLikeType = (context as NamespaceLikeRef).declaredType;
+			return new FilteringScope(getTypeScope(namespaceLikeType, false), [
 				TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
 				|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)
 				|| TypesPackage.Literals.TNAMESPACE.isSuperTypeOf(it.getEClass)
 			]);
 		} else if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
-				val astQualifier = context.astDeclaredTypeQualifiers?.last;
+				val astQualifier = context.namespaceLikeRefs?.last;
 				switch (astQualifier) {
 					ModuleNamespaceVirtualType:
 						return createScopeForNamespaceAccess(astQualifier, context)
@@ -599,6 +601,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, [
 					delegateGetScope(context, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE); // provide any reference that expects instances of Type as target objects
 				]);
+			}
+			TNamespace: {
+				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredTypes(context, parent);
 			}
 			TModule: {
 				val script = context.astElement as Script;

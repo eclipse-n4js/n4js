@@ -9483,9 +9483,18 @@ ruleEmptyIterableTypeExpressionTail:
 // Rule TypeReference
 ruleTypeReference:
 	(
-		RULE_IDENTIFIER
+		ruleNamespaceLikeRef
 		'.'
 	)*
+	(
+		(ruleTypeReferenceName
+		)=>
+		ruleTypeReferenceName
+	)
+;
+
+// Rule NamespaceLikeRef
+ruleNamespaceLikeRef:
 	ruleTypeReferenceName
 ;
 

@@ -125,9 +125,6 @@ public class N4JSIdeContentProposalProvider extends IdeContentProposalProvider {
 				String featureName = GrammarUtil.containingAssignment(crossReference).getFeature();
 				if (featureName.equals(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE.getName())) {
 					ref = TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
-				} else if (featureName.equals(
-						TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS.getName())) {
-					ref = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_AstDeclaredTypeQualifiers();
 				}
 			}
 			if (ref != null) {

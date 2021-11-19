@@ -38972,13 +38972,19 @@ ruleTypeReference[EObject in_current]  returns [EObject current=in_current]
 			(
 				(
 					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getTypeReferenceRule());
-						}
+						newCompositeNode(grammarAccess.getTypeReferenceAccess().getNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0());
 					}
-					otherlv_0=RULE_IDENTIFIER
+					lv_namespaceLikeRefs_0_0=ruleNamespaceLikeRef
 					{
-						newLeafNode(otherlv_0, grammarAccess.getTypeReferenceAccess().getAstDeclaredTypeQualifiersTypeCrossReference_0_0_0());
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getTypeReferenceRule());
+						}
+						add(
+							$current,
+							"namespaceLikeRefs",
+							lv_namespaceLikeRefs_0_0,
+							"org.eclipse.n4js.TypeExpressions.NamespaceLikeRef");
+						afterParserOrEnumRuleCall();
 					}
 				)
 			)
@@ -38988,6 +38994,10 @@ ruleTypeReference[EObject in_current]  returns [EObject current=in_current]
 			}
 		)*
 		(
+			((
+				ruleTypeReferenceName
+			)
+			)=>
 			(
 				{
 					if ($current==null) {
@@ -39002,6 +39012,39 @@ ruleTypeReference[EObject in_current]  returns [EObject current=in_current]
 					afterParserOrEnumRuleCall();
 				}
 			)
+		)
+	)
+;
+
+// Entry rule entryRuleNamespaceLikeRef
+entryRuleNamespaceLikeRef returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getNamespaceLikeRefRule()); }
+	iv_ruleNamespaceLikeRef=ruleNamespaceLikeRef
+	{ $current=$iv_ruleNamespaceLikeRef.current; }
+	EOF;
+
+// Rule NamespaceLikeRef
+ruleNamespaceLikeRef returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getNamespaceLikeRefRule());
+				}
+			}
+			{
+				newCompositeNode(grammarAccess.getNamespaceLikeRefAccess().getDeclaredTypeTypeCrossReference_0());
+			}
+			ruleTypeReferenceName
+			{
+				afterParserOrEnumRuleCall();
+			}
 		)
 	)
 ;

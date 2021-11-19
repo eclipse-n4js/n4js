@@ -40,7 +40,6 @@ import org.eclipse.xtext.linking.impl.XtextLinkingDiagnostic;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.IScopeProvider;
@@ -56,8 +55,6 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 
 	private static final EReference PARAMETERIZED_TYPE_REF__DECLARED_TYPE = TypeRefsPackage.eINSTANCE
 			.getParameterizedTypeRef_DeclaredType();
-	private static final EReference PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS = TypeRefsPackage.eINSTANCE
-			.getParameterizedTypeRef_AstDeclaredTypeQualifiers();
 	private static final EReference NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT = N4JSPackage.eINSTANCE
 			.getNamedImportSpecifier_ImportedElement();
 
@@ -178,17 +175,6 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 		// standard cases:
 		String result = getCrossRefNodeAsString(node);
 
-		if (ref == PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIERS && context instanceof ParameterizedTypeRef) {
-			// special case:
-			String completeName = result;
-			INode previousSibling = node;
-			while (previousSibling.getPreviousSibling() != null) {
-				previousSibling = previousSibling.getPreviousSibling();
-				String prevNodeText = NodeModelUtils.getTokenText(previousSibling);
-				completeName = prevNodeText.trim() + completeName;
-			}
-			result = completeName;
-		}
 		if (ref == PARAMETERIZED_TYPE_REF__DECLARED_TYPE && context instanceof ParameterizedTypeRef) {
 			// special case: we might have a reference to a type C imported via namespace import: NS.C
 			// -> replace '.' by '/' to make it a valid qualified name

@@ -10,25 +10,25 @@
  */
 package org.eclipse.n4js.scoping.utils
 
+import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import java.util.function.Supplier
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.EObjectDescription
+import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SingletonScope
 import org.eclipse.xtext.util.IResourceScopeCache
-import com.google.common.collect.Iterables
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.n4js.ts.types.TNamespace
-import org.eclipse.n4js.ts.types.TNamespaceElement
 
 /**
  * Helper for {@link N4JSScopeProvider N4JSScopeProvider} using
@@ -118,16 +118,32 @@ class LocallyKnownTypesScopingHelper {
 	 * Returns scope with locally declared types (without import scope).
 	 */
 	def IScope scopeWithLocallyDeclaredTypes(Script script, IScope parent) {
-		val TModule local = script.module;
+		val AbstractNamespace local = script.module;
 		if (local === null || local.eIsProxy) {
 			return parent;
 		}
-		val namespaces = EcoreUtil2.getAllContentsOfType(local, TNamespace);
-		val tleAndNamespaces = Iterables.concat(local.topLevelTypes, namespaces);
+		val eoDescrs = computeEObjectDescriptions(local);
+		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", script, parent, eoDescrs);
+	}
+	
+	/**
+	 * Returns scope with locally declared types (without import scope).
+	 */
+	def IScope scopeWithLocallyDeclaredTypes(TNamespace namespace, IScope parent) {
+		if (namespace === null || namespace.eIsProxy) {
+			return parent;
+		}
+		val eoDescrs = computeEObjectDescriptions(namespace);
+		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", namespace, parent, eoDescrs);
+	}
+	
+	def private Iterable<IEObjectDescription> computeEObjectDescriptions(AbstractNamespace ans) {
+		val namespaces = EcoreUtil2.getAllContentsOfType(ans, TNamespace);
+		val tleAndNamespaces = Iterables.concat(ans.topLevelTypes, namespaces);
 		val eoDescrs = tleAndNamespaces.filter[t | !t.polyfill ].map[ topLevelType |
 			return EObjectDescription.create(topLevelType.getContainingNamespaceNamesWithDot() + topLevelType.name, topLevelType);
 		];
-		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", script, parent, eoDescrs);
+		return eoDescrs;
 	}
 
 	/**

@@ -51,6 +51,7 @@ import org.eclipse.n4js.transpiler.im.ReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -363,9 +364,12 @@ public class PreparationStep {
 		private boolean isDynamicNamespaceReference(EObject eObject) {
 			if (eObject instanceof ParameterizedTypeRef) {
 				ParameterizedTypeRef ptr = (ParameterizedTypeRef) eObject;
-				List<Type> astQualifiers = ptr.getAstDeclaredTypeQualifiers();
-				if (!astQualifiers.isEmpty() && astQualifiers.get(0) instanceof ModuleNamespaceVirtualType) {
-					return ((ModuleNamespaceVirtualType) astQualifiers.get(0)).isDeclaredDynamic();
+				List<NamespaceLikeRef> namespaceLikeRefs = ptr.getNamespaceLikeRefs();
+				if (!namespaceLikeRefs.isEmpty()
+						&& namespaceLikeRefs.get(0).getDeclaredType() instanceof ModuleNamespaceVirtualType) {
+
+					return ((ModuleNamespaceVirtualType) namespaceLikeRefs.get(0).getDeclaredType())
+							.isDeclaredDynamic();
 				}
 			}
 			return false;
