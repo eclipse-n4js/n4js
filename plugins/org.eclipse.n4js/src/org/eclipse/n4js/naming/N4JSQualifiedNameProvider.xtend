@@ -30,9 +30,7 @@ import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
@@ -100,11 +98,11 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			N4NamespaceDeclaration:
 				if (name !== null) fqnNamespaceDeclaration(it)
 			TNamespace:
-				if (name !== null) fqnTExportableElement(it)
+				if (name !== null) fqnType(it)
 			TClass:
-				if (name !== null) fqnTExportableElement(it)
+				if (name !== null) fqnType(it)
 			TInterface:
-				if (name !== null) fqnTExportableElement(it)
+				if (name !== null) fqnType(it)
 			TEnum:
 				if (name !== null) rootContainer.fullyQualifiedName?.append(exportedName ?: name)
 			TypeAlias:
@@ -150,8 +148,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		{
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
-		var qn = QualifiedName.create(typeDecl.exportedName ?: typeDecl.name);
-		val fqn = QualifiedNameUtils.concat(prefix, qn);
+		val fqn = QualifiedNameUtils.append(prefix, typeDecl.exportedName ?: typeDecl.name);
 		return fqn;
 	}
 	
@@ -168,19 +165,12 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		return fqn;
 	}
 
-	private def QualifiedName fqnTExportableElement(TExportableElement tClassifier) {
-		var prefix = tClassifier.rootContainer.fullyQualifiedName;
-		if (tClassifier instanceof TClassifier && (tClassifier as TClassifier).polyfill) {
+	private def QualifiedName fqnType(Type type) {
+		var prefix = type.rootContainer.fullyQualifiedName;
+		if (type.polyfill) {
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
-		var qn = QualifiedName.create(tClassifier.exportedName ?: tClassifier.name);
-		var EObject tmpTypeDecl = tClassifier;
-		while (tmpTypeDecl.eContainer instanceof TNamespace) {
-			tmpTypeDecl = tmpTypeDecl.eContainer;
-			val nsd = tmpTypeDecl as TNamespace;
-			qn = QualifiedNameUtils.prepend(nsd.exportedName ?: nsd.name, qn);
-		}
-		val fqn = QualifiedNameUtils.concat(prefix, qn);
+		val fqn = QualifiedNameUtils.append(prefix, type.exportedName ?: type.name);
 		return fqn;
 	}
 

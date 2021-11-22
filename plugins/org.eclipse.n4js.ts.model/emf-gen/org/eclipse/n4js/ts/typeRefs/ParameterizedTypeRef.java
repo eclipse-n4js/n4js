@@ -240,6 +240,14 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @model unique="false" nslRefUnique="false"
+	 * @generated
+	 */
+	NamespaceLikeRef getPreviousSibling(NamespaceLikeRef nslRef);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
 	 * Returns the actual typing strategy, that is either the defined typing strategy, or the typing strategy of the declared type.

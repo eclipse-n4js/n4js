@@ -1065,31 +1065,13 @@ public interface TypesPackage extends EPackage {
 	int TYPE___IS_HOLLOW = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE___GET_CONTAINING_NAMESPACE_NAMES = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
-
-	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_ALIAS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TYPE___IS_ALIAS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -1098,7 +1080,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_PROVIDED_BY_RUNTIME = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TYPE___IS_PROVIDED_BY_RUNTIME = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -1107,7 +1089,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
+	int TYPE___IS_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -1116,7 +1098,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_STATIC_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
+	int TYPE___IS_STATIC_POLYFILL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -1125,7 +1107,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_FINAL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 7;
+	int TYPE___IS_FINAL = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Dynamizable</em>' operation.
@@ -1134,7 +1116,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_DYNAMIZABLE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 8;
+	int TYPE___IS_DYNAMIZABLE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -1143,7 +1125,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_ARRAY_LIKE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 9;
+	int TYPE___IS_ARRAY_LIKE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -1152,7 +1134,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_ELEMENT_TYPE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 10;
+	int TYPE___GET_ELEMENT_TYPE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -1161,7 +1143,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 11;
+	int TYPE___GET_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -1170,7 +1152,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___IS_GENERIC = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 12;
+	int TYPE___IS_GENERIC = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -1179,7 +1161,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_TYPE_VARS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 13;
+	int TYPE___GET_TYPE_VARS = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
@@ -1188,7 +1170,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 14;
+	int TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
@@ -1197,7 +1179,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_RAW_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 15;
+	int TYPE___GET_RAW_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Type As String</em>' operation.
@@ -1206,7 +1188,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 16;
+	int TYPE___GET_TYPE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 14;
 
 	/**
 	 * The number of operations of the '<em>Type</em>' class.
@@ -1215,7 +1197,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 17;
+	int TYPE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TypeVariableImpl <em>Type Variable</em>}' class.
@@ -1325,24 +1307,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_VARIABLE___IS_HOLLOW = TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -1616,24 +1580,6 @@ public interface TypesPackage extends EPackage {
 	int INFERENCE_VARIABLE___IS_HOLLOW = TYPE_VARIABLE___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INFERENCE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INFERENCE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES = TYPE_VARIABLE___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1876,24 +1822,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERIC_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -2201,24 +2129,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFUNCTION___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___GET_CONTAINING_NAMESPACE_NAMES = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -2583,24 +2493,6 @@ public interface TypesPackage extends EPackage {
 	int CONTAINER_TYPE___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2890,24 +2782,6 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE___IS_HOLLOW = TYPE___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TNAMESPACE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TNAMESPACE___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3089,31 +2963,13 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE_ELEMENT___IS_HOLLOW = 0;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = 1;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES = 2;
-
-	/**
 	 * The number of operations of the '<em>TNamespace Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_ELEMENT_OPERATION_COUNT = 3;
+	int TNAMESPACE_ELEMENT_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ModuleNamespaceVirtualTypeImpl <em>Module Namespace Virtual Type</em>}' class.
@@ -3214,24 +3070,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -3478,24 +3316,6 @@ public interface TypesPackage extends EPackage {
 	int PRIMITIVE_TYPE___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRIMITIVE_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PRIMITIVE_TYPE___GET_CONTAINING_NAMESPACE_NAMES = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3702,24 +3522,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int BUILT_IN_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -3930,24 +3732,6 @@ public interface TypesPackage extends EPackage {
 	int ANY_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ANY_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ANY_TYPE___GET_CONTAINING_NAMESPACE_NAMES = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4154,24 +3938,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNDEFINED_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNDEFINED_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNDEFINED_TYPE___GET_CONTAINING_NAMESPACE_NAMES = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -4382,24 +4148,6 @@ public interface TypesPackage extends EPackage {
 	int NULL_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NULL_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NULL_TYPE___GET_CONTAINING_NAMESPACE_NAMES = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4606,24 +4354,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int VOID_TYPE___IS_HOLLOW = BUILT_IN_TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VOID_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VOID_TYPE___GET_CONTAINING_NAMESPACE_NAMES = BUILT_IN_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -4877,24 +4607,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCTURAL_TYPE___IS_HOLLOW = CONTAINER_TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCTURAL_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCTURAL_TYPE___GET_CONTAINING_NAMESPACE_NAMES = CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -5193,24 +4905,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASSIFIER___IS_HOLLOW = CONTAINER_TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES = CONTAINER_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -5636,24 +5330,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___IS_HOLLOW = TCLASSIFIER___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TCLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES = TCLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -6116,24 +5792,6 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___IS_HOLLOW = TN4_CLASSIFIER___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASS___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASS___GET_CONTAINING_NAMESPACE_NAMES = TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6538,24 +6196,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TINTERFACE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TINTERFACE___GET_CONTAINING_NAMESPACE_NAMES = TN4_CLASSIFIER___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -7921,24 +7561,6 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___IS_HOLLOW = TFUNCTION___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TFUNCTION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___GET_CONTAINING_NAMESPACE_NAMES = TFUNCTION___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8541,24 +8163,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___IS_HOLLOW = TMETHOD___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TMETHOD___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___GET_CONTAINING_NAMESPACE_NAMES = TMETHOD___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -11766,24 +11370,6 @@ public interface TypesPackage extends EPackage {
 	int TENUM___IS_HOLLOW = TYPE___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TENUM___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TENUM___GET_CONTAINING_NAMESPACE_NAMES = TYPE___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12136,24 +11722,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_ALIAS___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_ALIAS___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_ALIAS___GET_CONTAINING_NAMESPACE_NAMES = GENERIC_TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -12527,31 +12095,13 @@ public interface TypesPackage extends EPackage {
 	int TVARIABLE___IS_HOLLOW = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE___GET_CONTAINING_NAMESPACE_NAMES = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
-
-	/**
 	 * The operation id for the '<em>Get Variable As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_VARIABLE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
+	int TVARIABLE___GET_VARIABLE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>TVariable</em>' class.
@@ -12560,7 +12110,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 7;
+	int TVARIABLE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypingStrategy <em>Typing Strategy</em>}' enum.
@@ -13897,26 +13447,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTNamespaceElement__IsHollow();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TNamespaceElement#getContainingNamespaceNamesWithDot() <em>Get Containing Namespace Names With Dot</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TNamespaceElement#getContainingNamespaceNamesWithDot()
-	 * @generated
-	 */
-	EOperation getTNamespaceElement__GetContainingNamespaceNamesWithDot();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TNamespaceElement#getContainingNamespaceNames() <em>Get Containing Namespace Names</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Containing Namespace Names</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TNamespaceElement#getContainingNamespaceNames()
-	 * @generated
-	 */
-	EOperation getTNamespaceElement__GetContainingNamespaceNames();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType <em>Module Namespace Virtual Type</em>}'.
@@ -16646,22 +16176,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TNAMESPACE_ELEMENT___IS_HOLLOW = eINSTANCE.getTNamespaceElement__IsHollow();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Containing Namespace Names With Dot</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = eINSTANCE.getTNamespaceElement__GetContainingNamespaceNamesWithDot();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Containing Namespace Names</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES = eINSTANCE.getTNamespaceElement__GetContainingNamespaceNames();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ModuleNamespaceVirtualTypeImpl <em>Module Namespace Virtual Type</em>}' class.

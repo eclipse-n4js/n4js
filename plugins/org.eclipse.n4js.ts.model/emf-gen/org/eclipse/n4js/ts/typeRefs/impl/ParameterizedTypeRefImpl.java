@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.typeRefs.impl;
 
+import com.google.common.base.Objects;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -404,6 +406,26 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
+	public NamespaceLikeRef getPreviousSibling(final NamespaceLikeRef nslRef) {
+		if (((nslRef == null) || (nslRef.eContainer() != this))) {
+			return null;
+		}
+		for (int i = 1; (i < ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getNamespaceLikeRefs(), Object.class)).length); i++) {
+			NamespaceLikeRef _get = this.getNamespaceLikeRefs().get(i);
+			boolean _equals = Objects.equal(_get, nslRef);
+			if (_equals) {
+				return this.getNamespaceLikeRefs().get((i - 1));
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public TypingStrategy getTypingStrategy() {
 		TypingStrategy _definedTypingStrategy = this.getDefinedTypingStrategy();
 		boolean _tripleEquals = (_definedTypingStrategy == TypingStrategy.DEFAULT);
@@ -742,6 +764,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_PREVIOUS_SIBLING__NAMESPACELIKEREF:
+				return getPreviousSibling((NamespaceLikeRef)arguments.get(0));
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY:
 				return getTypingStrategy();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS:

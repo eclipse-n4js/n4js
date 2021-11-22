@@ -76,4 +76,12 @@ public interface NamespaceLikeRef extends EObject {
 	 */
 	void setDeclaredType(Type value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	NamespaceLikeRef getPreviousSibling();
+
 } // NamespaceLikeRef

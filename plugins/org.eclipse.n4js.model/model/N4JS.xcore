@@ -2159,30 +2159,8 @@ class N4NamespaceDeclaration extends N4TypeDefinition, NamespaceElement, Variabl
 }
 
 class NamespaceElement {
-	
 	op boolean isHollow() {
 		return false;
-	}
-	
-	op String getContainingNamespaceNamesWithDot() {
-		if (getContainingNamespaceNames.empty) {
-			return getContainingNamespaceNames;
-		} else {
-			return getContainingNamespaceNames + ".";
-		}
-	}
-	
-	op String getContainingNamespaceNames() {
-		var containingTypeNames = "";
-		var currContainer = eContainer;
-		while (currContainer instanceof N4NamespaceDeclaration) {
-			if (!containingTypeNames.empty) {
-				containingTypeNames = "." + containingTypeNames;
-			}
-			containingTypeNames = currContainer.name + containingTypeNames;
-			currContainer = currContainer.eContainer;
-		}
-		return containingTypeNames;
 	}
 }
 

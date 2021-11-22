@@ -138,10 +138,9 @@ class LocallyKnownTypesScopingHelper {
 	}
 	
 	def private Iterable<IEObjectDescription> computeEObjectDescriptions(AbstractNamespace ans) {
-		val namespaces = EcoreUtil2.getAllContentsOfType(ans, TNamespace);
-		val tleAndNamespaces = Iterables.concat(ans.topLevelTypes, namespaces);
+		val tleAndNamespaces = Iterables.concat(ans.topLevelTypes, ans.namespaces);
 		val eoDescrs = tleAndNamespaces.filter[t | !t.polyfill ].map[ topLevelType |
-			return EObjectDescription.create(topLevelType.getContainingNamespaceNamesWithDot() + topLevelType.name, topLevelType);
+			return EObjectDescription.create(topLevelType.name, topLevelType);
 		];
 		return eoDescrs;
 	}

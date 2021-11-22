@@ -10,14 +10,20 @@
  */
 package org.eclipse.n4js.ts.typeRefs.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 import org.eclipse.n4js.ts.types.Type;
@@ -157,6 +163,22 @@ public class NamespaceLikeRefImpl extends ProxyResolvingEObjectImpl implements N
 	 * @generated
 	 */
 	@Override
+	public NamespaceLikeRef getPreviousSibling() {
+		EObject _eContainer = this.eContainer();
+		boolean _not = (!(_eContainer instanceof ParameterizedTypeRef));
+		if (_not) {
+			return null;
+		}
+		EObject _eContainer_1 = this.eContainer();
+		return ((ParameterizedTypeRef) _eContainer_1).getPreviousSibling(this);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypeRefsPackage.NAMESPACE_LIKE_REF__DECLARED_TYPE_AS_TEXT:
@@ -218,6 +240,20 @@ public class NamespaceLikeRefImpl extends ProxyResolvingEObjectImpl implements N
 				return declaredType != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypeRefsPackage.NAMESPACE_LIKE_REF___GET_PREVIOUS_SIBLING:
+				return getPreviousSibling();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

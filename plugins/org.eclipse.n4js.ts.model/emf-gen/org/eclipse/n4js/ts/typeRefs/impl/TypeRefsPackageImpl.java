@@ -1148,7 +1148,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getParameterizedTypeRef__GetTypingStrategy() {
+	public EOperation getParameterizedTypeRef__GetPreviousSibling__NamespaceLikeRef() {
 		return parameterizedTypeRefEClass.getEOperations().get(0);
 	}
 
@@ -1158,7 +1158,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getParameterizedTypeRef__GetTypeArgsWithDefaults() {
+	public EOperation getParameterizedTypeRef__GetTypingStrategy() {
 		return parameterizedTypeRefEClass.getEOperations().get(1);
 	}
 
@@ -1168,7 +1168,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getParameterizedTypeRef__InternalGetTypeRefAsString() {
+	public EOperation getParameterizedTypeRef__GetTypeArgsWithDefaults() {
 		return parameterizedTypeRefEClass.getEOperations().get(2);
 	}
 
@@ -1178,7 +1178,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getParameterizedTypeRef__IsParameterized() {
+	public EOperation getParameterizedTypeRef__InternalGetTypeRefAsString() {
 		return parameterizedTypeRefEClass.getEOperations().get(3);
 	}
 
@@ -1188,7 +1188,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getParameterizedTypeRef__IsGeneric() {
+	public EOperation getParameterizedTypeRef__IsParameterized() {
 		return parameterizedTypeRefEClass.getEOperations().get(4);
 	}
 
@@ -1198,7 +1198,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getParameterizedTypeRef__IsRaw() {
+	public EOperation getParameterizedTypeRef__IsGeneric() {
 		return parameterizedTypeRefEClass.getEOperations().get(5);
 	}
 
@@ -1208,7 +1208,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getParameterizedTypeRef__IsUseSiteStructuralTyping() {
+	public EOperation getParameterizedTypeRef__IsRaw() {
 		return parameterizedTypeRefEClass.getEOperations().get(6);
 	}
 
@@ -1218,8 +1218,18 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getParameterizedTypeRef__IsDefSiteStructuralTyping() {
+	public EOperation getParameterizedTypeRef__IsUseSiteStructuralTyping() {
 		return parameterizedTypeRefEClass.getEOperations().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getParameterizedTypeRef__IsDefSiteStructuralTyping() {
+		return parameterizedTypeRefEClass.getEOperations().get(8);
 	}
 
 	/**
@@ -1540,6 +1550,16 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	@Override
 	public EReference getNamespaceLikeRef_DeclaredType() {
 		return (EReference)namespaceLikeRefEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getNamespaceLikeRef__GetPreviousSibling() {
+		return namespaceLikeRefEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -2281,6 +2301,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEReference(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__NAMESPACE_LIKE_REFS);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY);
+		createEOperation(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF___GET_PREVIOUS_SIBLING__NAMESPACELIKEREF);
 		createEOperation(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY);
 		createEOperation(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS);
 		createEOperation(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
@@ -2327,6 +2348,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		namespaceLikeRefEClass = createEClass(NAMESPACE_LIKE_REF);
 		createEAttribute(namespaceLikeRefEClass, NAMESPACE_LIKE_REF__DECLARED_TYPE_AS_TEXT);
 		createEReference(namespaceLikeRefEClass, NAMESPACE_LIKE_REF__DECLARED_TYPE);
+		createEOperation(namespaceLikeRefEClass, NAMESPACE_LIKE_REF___GET_PREVIOUS_SIBLING);
 
 		wildcardEClass = createEClass(WILDCARD);
 		createEReference(wildcardEClass, WILDCARD__DECLARED_UPPER_BOUND);
@@ -2614,6 +2636,9 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEAttribute(getParameterizedTypeRef_ASTNodeOptionalFieldStrategy(), this.getOptionalFieldStrategy(), "aSTNodeOptionalFieldStrategy", null, 0, 1, ParameterizedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedTypeRef_DefinedTypingStrategy(), theTypesPackage.getTypingStrategy(), "definedTypingStrategy", null, 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		op = initEOperation(getParameterizedTypeRef__GetPreviousSibling__NamespaceLikeRef(), this.getNamespaceLikeRef(), "getPreviousSibling", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getNamespaceLikeRef(), "nslRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEOperation(getParameterizedTypeRef__GetTypingStrategy(), theTypesPackage.getTypingStrategy(), "getTypingStrategy", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getParameterizedTypeRef__GetTypeArgsWithDefaults(), this.getTypeArgument(), "getTypeArgsWithDefaults", 0, -1, !IS_UNIQUE, IS_ORDERED);
@@ -2685,6 +2710,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEClass(namespaceLikeRefEClass, NamespaceLikeRef.class, "NamespaceLikeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getNamespaceLikeRef_DeclaredTypeAsText(), theEcorePackage.getEString(), "declaredTypeAsText", null, 0, 1, NamespaceLikeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getNamespaceLikeRef_DeclaredType(), theTypesPackage.getType(), null, "declaredType", null, 0, 1, NamespaceLikeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getNamespaceLikeRef__GetPreviousSibling(), this.getNamespaceLikeRef(), "getPreviousSibling", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(wildcardEClass, Wildcard.class, "Wildcard", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getWildcard_DeclaredUpperBound(), this.getTypeRef(), null, "declaredUpperBound", null, 0, 1, Wildcard.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

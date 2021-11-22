@@ -220,20 +220,24 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
 	private def getScopeByShortcut(EObject context, EReference reference) {
 		if (reference == TypeRefsPackage.Literals.NAMESPACE_LIKE_REF__DECLARED_TYPE) {
-			val namespaceLikeType = (context as NamespaceLikeRef).declaredType;
-			return new FilteringScope(getTypeScope(namespaceLikeType, false), [
-				TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
-				|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)
-				|| TypesPackage.Literals.TNAMESPACE.isSuperTypeOf(it.getEClass)
-			]);
+			if (context instanceof NamespaceLikeRef) {
+				val namespaceLikeType = context.previousSibling?.declaredType;
+				val script = EcoreUtil2.getContainerOfType(context, Script);
+				val namespace = namespaceLikeType === null ? script : namespaceLikeType;
+				return new FilteringScope(getTypeScope(namespace, false), [
+					TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
+					|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)
+					|| TypesPackage.Literals.TNAMESPACE.isSuperTypeOf(it.getEClass)
+				]);
+			}
 		} else if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			if (context instanceof ParameterizedTypeRef) {
-				val astQualifier = context.namespaceLikeRefs?.last;
-				switch (astQualifier) {
+				val namespaceLikeType = context.namespaceLikeRefs?.last?.declaredType;
+				switch (namespaceLikeType) {
 					ModuleNamespaceVirtualType:
-						return createScopeForNamespaceAccess(astQualifier, context)
+						return createScopeForNamespaceAccess(namespaceLikeType, context)
 					TNamespace:
-						return scope_AllTopLevelElementsFromAbstractNamespace(astQualifier, context)
+						return scope_AllTopLevelElementsFromAbstractNamespace(namespaceLikeType, context)
 					TEnum:
 						return new DynamicPseudoScope()
 				}

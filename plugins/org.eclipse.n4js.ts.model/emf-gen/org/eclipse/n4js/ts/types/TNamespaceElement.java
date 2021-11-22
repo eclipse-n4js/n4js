@@ -31,20 +31,4 @@ public interface TNamespaceElement extends EObject {
 	 */
 	boolean isHollow();
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	String getContainingNamespaceNamesWithDot();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	String getContainingNamespaceNames();
-
 } // TNamespaceElement

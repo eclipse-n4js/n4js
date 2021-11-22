@@ -3712,31 +3712,13 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_STATEMENT___IS_HOLLOW = STATEMENT_OPERATION_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VARIABLE_STATEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = STATEMENT_OPERATION_COUNT + 3;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VARIABLE_STATEMENT___GET_CONTAINING_NAMESPACE_NAMES = STATEMENT_OPERATION_COUNT + 4;
-
-	/**
 	 * The number of operations of the '<em>Variable Statement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_STATEMENT_OPERATION_COUNT = STATEMENT_OPERATION_COUNT + 5;
+	int VARIABLE_STATEMENT_OPERATION_COUNT = STATEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableStatementImpl <em>Exported Variable Statement</em>}' class.
@@ -3819,24 +3801,6 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW = VARIABLE_STATEMENT___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = VARIABLE_STATEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_CONTAINING_NAMESPACE_NAMES = VARIABLE_STATEMENT___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -11537,31 +11501,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_TYPE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_TYPE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
-
-	/**
 	 * The operation id for the '<em>Is External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
+	int N4_TYPE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>N4 Type Declaration</em>' class.
@@ -11570,7 +11516,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
+	int N4_TYPE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassifierDeclarationImpl <em>N4 Classifier Declaration</em>}' class.
@@ -11725,24 +11671,6 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_CLASSIFIER_DECLARATION___IS_HOLLOW = N4_TYPE_DECLARATION___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_CLASSIFIER_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = N4_TYPE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_CLASSIFIER_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES = N4_TYPE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -12252,31 +12180,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_NAMESPACE_DECLARATION___GET_ALL_ANNOTATIONS = N4_TYPE_DEFINITION___GET_ALL_ANNOTATIONS;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_NAMESPACE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = N4_TYPE_DEFINITION_OPERATION_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_NAMESPACE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES = N4_TYPE_DEFINITION_OPERATION_COUNT + 2;
-
-	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = N4_TYPE_DEFINITION_OPERATION_COUNT + 3;
+	int N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = N4_TYPE_DEFINITION_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -12285,7 +12195,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 4;
+	int N4_NAMESPACE_DECLARATION___IS_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -12294,7 +12204,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
+	int N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DEFINITION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -12303,7 +12213,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
+	int N4_NAMESPACE_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -12312,7 +12222,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_TOPLEVEL = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
+	int N4_NAMESPACE_DECLARATION___IS_TOPLEVEL = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -12321,7 +12231,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
+	int N4_NAMESPACE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -12330,7 +12240,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
+	int N4_NAMESPACE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -12339,7 +12249,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
+	int N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12348,7 +12258,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
+	int N4_NAMESPACE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>N4 Namespace Declaration</em>' class.
@@ -12357,7 +12267,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
+	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.NamespaceElementImpl <em>Namespace Element</em>}' class.
@@ -12388,31 +12298,13 @@ public interface N4JSPackage extends EPackage {
 	int NAMESPACE_ELEMENT___IS_HOLLOW = 0;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = 1;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int NAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES = 2;
-
-	/**
 	 * The number of operations of the '<em>Namespace Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NAMESPACE_ELEMENT_OPERATION_COUNT = 3;
+	int NAMESPACE_ELEMENT_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl <em>N4 Class Declaration</em>}' class.
@@ -12686,31 +12578,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DECLARATION___IS_HOLLOW = N4_CLASS_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_CLASS_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = N4_CLASS_DEFINITION_OPERATION_COUNT + 7;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_CLASS_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES = N4_CLASS_DEFINITION_OPERATION_COUNT + 8;
-
-	/**
 	 * The operation id for the '<em>Is External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 9;
+	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -12719,7 +12593,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 10;
+	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>N4 Class Declaration</em>' class.
@@ -12728,7 +12602,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
+	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassExpressionImpl <em>N4 Class Expression</em>}' class.
@@ -13111,24 +12985,6 @@ public interface N4JSPackage extends EPackage {
 	int N4_INTERFACE_DECLARATION___GET_NAME = N4_CLASSIFIER_DECLARATION___GET_NAME;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_INTERFACE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = N4_CLASSIFIER_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_INTERFACE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES = N4_CLASSIFIER_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13373,24 +13229,6 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_DECLARATION___GET_NAME = N4_TYPE_DECLARATION___GET_NAME;
 
 	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_ENUM_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = N4_TYPE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_ENUM_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES = N4_TYPE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES;
-
-	/**
 	 * The operation id for the '<em>Is External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13625,24 +13463,6 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_TYPE_ALIAS_DECLARATION___GET_NAME = N4_TYPE_DECLARATION___GET_NAME;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_TYPE_ALIAS_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = N4_TYPE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-
-	/**
-	 * The operation id for the '<em>Get Containing Namespace Names</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_TYPE_ALIAS_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES = N4_TYPE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -21965,26 +21785,6 @@ public interface N4JSPackage extends EPackage {
 	EOperation getNamespaceElement__IsHollow();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.NamespaceElement#getContainingNamespaceNamesWithDot() <em>Get Containing Namespace Names With Dot</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Containing Namespace Names With Dot</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.NamespaceElement#getContainingNamespaceNamesWithDot()
-	 * @generated
-	 */
-	EOperation getNamespaceElement__GetContainingNamespaceNamesWithDot();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.NamespaceElement#getContainingNamespaceNames() <em>Get Containing Namespace Names</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Containing Namespace Names</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.NamespaceElement#getContainingNamespaceNames()
-	 * @generated
-	 */
-	EOperation getNamespaceElement__GetContainingNamespaceNames();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4ClassDeclaration <em>N4 Class Declaration</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -27426,22 +27226,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation NAMESPACE_ELEMENT___IS_HOLLOW = eINSTANCE.getNamespaceElement__IsHollow();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Containing Namespace Names With Dot</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation NAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT = eINSTANCE.getNamespaceElement__GetContainingNamespaceNamesWithDot();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Containing Namespace Names</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation NAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES = eINSTANCE.getNamespaceElement__GetContainingNamespaceNames();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl <em>N4 Class Declaration</em>}' class.

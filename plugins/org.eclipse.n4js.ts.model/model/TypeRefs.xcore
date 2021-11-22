@@ -570,6 +570,18 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	 * </ol>
 	 */
 	contains NamespaceLikeRef[] namespaceLikeRefs
+	
+	op NamespaceLikeRef getPreviousSibling(NamespaceLikeRef nslRef) {
+		if (nslRef === null || nslRef.eContainer !== this) {
+			return null;
+		}
+		for (var i=1; i<namespaceLikeRefs.length; i++) {
+			if (namespaceLikeRefs.get(i) == nslRef) {
+				return namespaceLikeRefs.get(i - 1);
+			}
+		}
+		return null;
+	}
 
 	/* @see TypeRef#getASTOptionalFieldStrategy() */
 	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy
@@ -960,6 +972,14 @@ class TypeTypeRef extends BaseTypeRef {
 class NamespaceLikeRef {
 	transient String declaredTypeAsText
 	refers Type declaredType
+	
+	
+	op NamespaceLikeRef getPreviousSibling() {
+		if (!(eContainer instanceof ParameterizedTypeRef)) {
+			return null;
+		}
+		return (eContainer as ParameterizedTypeRef).getPreviousSibling(this);
+	}
 }
 
 /*

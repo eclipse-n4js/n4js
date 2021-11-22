@@ -299,48 +299,6 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 * @generated
 	 */
 	@Override
-	public String getContainingNamespaceNamesWithDot() {
-		boolean _isEmpty = this.getContainingNamespaceNames().isEmpty();
-		if (_isEmpty) {
-			return this.getContainingNamespaceNames();
-		}
-		else {
-			String _containingNamespaceNames = this.getContainingNamespaceNames();
-			return (_containingNamespaceNames + ".");
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getContainingNamespaceNames() {
-		String containingTypeNames = "";
-		EObject currContainer = this.eContainer();
-		while ((currContainer instanceof N4NamespaceDeclaration)) {
-			{
-				boolean _isEmpty = containingTypeNames.isEmpty();
-				boolean _not = (!_isEmpty);
-				if (_not) {
-					containingTypeNames = ("." + containingTypeNames);
-				}
-				String _name = ((N4NamespaceDeclaration)currContainer).getName();
-				String _plus = (_name + containingTypeNames);
-				containingTypeNames = _plus;
-				currContainer = ((N4NamespaceDeclaration)currContainer).eContainer();
-			}
-		}
-		return containingTypeNames;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW:
@@ -534,8 +492,6 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW;
-				case N4JSPackage.NAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-				case N4JSPackage.NAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES;
 				default: return -1;
 			}
 		}
@@ -597,10 +553,6 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				return isToplevel();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS:
 				return appliesOnlyToBlockScopedElements();
-			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT:
-				return getContainingNamespaceNamesWithDot();
-			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_CONTAINING_NAMESPACE_NAMES:
-				return getContainingNamespaceNames();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -1820,26 +1820,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTNamespaceElement__GetContainingNamespaceNamesWithDot() {
-		return tNamespaceElementEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getTNamespaceElement__GetContainingNamespaceNames() {
-		return tNamespaceElementEClass.getEOperations().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getModuleNamespaceVirtualType() {
 		return moduleNamespaceVirtualTypeEClass;
 	}
@@ -3663,8 +3643,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		tNamespaceElementEClass = createEClass(TNAMESPACE_ELEMENT);
 		createEOperation(tNamespaceElementEClass, TNAMESPACE_ELEMENT___IS_HOLLOW);
-		createEOperation(tNamespaceElementEClass, TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT);
-		createEOperation(tNamespaceElementEClass, TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES);
 
 		moduleNamespaceVirtualTypeEClass = createEClass(MODULE_NAMESPACE_VIRTUAL_TYPE);
 		createEReference(moduleNamespaceVirtualTypeEClass, MODULE_NAMESPACE_VIRTUAL_TYPE__MODULE);
@@ -4209,10 +4187,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(tNamespaceElementEClass, TNamespaceElement.class, "TNamespaceElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getTNamespaceElement__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getTNamespaceElement__GetContainingNamespaceNamesWithDot(), theEcorePackage.getEString(), "getContainingNamespaceNamesWithDot", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getTNamespaceElement__GetContainingNamespaceNames(), theEcorePackage.getEString(), "getContainingNamespaceNames", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(moduleNamespaceVirtualTypeEClass, ModuleNamespaceVirtualType.class, "ModuleNamespaceVirtualType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getModuleNamespaceVirtualType_Module(), this.getTModule(), null, "module", null, 0, 1, ModuleNamespaceVirtualType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

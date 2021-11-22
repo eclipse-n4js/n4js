@@ -32,6 +32,7 @@ import org.eclipse.n4js.parser.conversion.N4JSValueConverterWithValueException;
 import org.eclipse.n4js.scoping.members.ComposedMemberScope;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
+import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.Type;
@@ -293,6 +294,8 @@ public class N4JSLinker extends LazyLinker {
 				Type typeProxy = (Type) proxy;
 				typeProxy.setName(valueStr);
 
+			} else if (obj instanceof NamespaceLikeRef && value instanceof String) {
+				((NamespaceLikeRef) obj).setDeclaredTypeAsText((String) value);
 			} else if (obj instanceof LabelRef && value instanceof String) {
 				((LabelRef) obj).setLabelAsText((String) value);
 			} else if (obj instanceof ParameterizedPropertyAccessExpression && value instanceof String) {
@@ -355,6 +358,8 @@ public class N4JSLinker extends LazyLinker {
 			((ParameterizedPropertyAccessExpression) obj).setPropertyAsText(null);
 		} else if (obj instanceof ParameterizedTypeRef) {
 			((ParameterizedTypeRef) obj).setDeclaredTypeAsText(null);
+		} else if (obj instanceof NamespaceLikeRef) {
+			((NamespaceLikeRef) obj).setDeclaredTypeAsText(null);
 		}
 	}
 

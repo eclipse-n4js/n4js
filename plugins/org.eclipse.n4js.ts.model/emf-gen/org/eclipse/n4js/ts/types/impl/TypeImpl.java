@@ -19,7 +19,6 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
@@ -33,7 +32,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ArrayLikes;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
-import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
@@ -285,48 +283,6 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * @generated
 	 */
 	@Override
-	public String getContainingNamespaceNamesWithDot() {
-		boolean _isEmpty = this.getContainingNamespaceNames().isEmpty();
-		if (_isEmpty) {
-			return this.getContainingNamespaceNames();
-		}
-		else {
-			String _containingNamespaceNames = this.getContainingNamespaceNames();
-			return (_containingNamespaceNames + ".");
-		}
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getContainingNamespaceNames() {
-		String containingTypeNames = "";
-		EObject currContainer = this.eContainer();
-		while ((currContainer instanceof TNamespace)) {
-			{
-				boolean _isEmpty = containingTypeNames.isEmpty();
-				boolean _not = (!_isEmpty);
-				if (_not) {
-					containingTypeNames = ("." + containingTypeNames);
-				}
-				String _name = ((TNamespace)currContainer).getName();
-				String _plus = (_name + containingTypeNames);
-				containingTypeNames = _plus;
-				currContainer = ((TNamespace)currContainer).eContainer();
-			}
-		}
-		return containingTypeNames;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TYPE__ANNOTATIONS:
@@ -452,8 +408,6 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 		if (baseClass == TNamespaceElement.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TNAMESPACE_ELEMENT___IS_HOLLOW: return TypesPackage.TYPE___IS_HOLLOW;
-				case TypesPackage.TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT: return TypesPackage.TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT;
-				case TypesPackage.TNAMESPACE_ELEMENT___GET_CONTAINING_NAMESPACE_NAMES: return TypesPackage.TYPE___GET_CONTAINING_NAMESPACE_NAMES;
 				default: return -1;
 			}
 		}
@@ -498,10 +452,6 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 				return getTypeAsString();
 			case TypesPackage.TYPE___IS_HOLLOW:
 				return isHollow();
-			case TypesPackage.TYPE___GET_CONTAINING_NAMESPACE_NAMES_WITH_DOT:
-				return getContainingNamespaceNamesWithDot();
-			case TypesPackage.TYPE___GET_CONTAINING_NAMESPACE_NAMES:
-				return getContainingNamespaceNames();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

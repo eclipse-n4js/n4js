@@ -17,10 +17,8 @@ import java.util.function.Function;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.scoping.ScopeSnapshot;
-import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -102,12 +100,12 @@ public class ScopeSnapshotHelper {
 
 	private IEObjectDescription convertToIEObjectDescription(EObject eObject) {
 		String name = SimpleAttributeResolver.NAME_RESOLVER.apply(eObject);
-		if (eObject instanceof NamespaceElement) {
-			name = ((NamespaceElement) eObject).getContainingNamespaceNamesWithDot() + name;
-		}
-		if (eObject instanceof TNamespaceElement) {
-			name = ((TNamespaceElement) eObject).getContainingNamespaceNamesWithDot() + name;
-		}
+		// if (eObject instanceof NamespaceElement) {
+		// name = ((NamespaceElement) eObject).getContainingNamespaceNamesWithDot() + name;
+		// }
+		// if (eObject instanceof TNamespaceElement) {
+		// name = ((TNamespaceElement) eObject).getContainingNamespaceNamesWithDot() + name;
+		// }
 		QualifiedName qualifiedName = name == null ? null : QualifiedName.create(name);
 		EObjectDescription description = qualifiedName == null ? null
 				: new EObjectDescription(qualifiedName, eObject, null);
