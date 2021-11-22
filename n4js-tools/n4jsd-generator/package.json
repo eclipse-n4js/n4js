@@ -13,22 +13,19 @@
     "test": "./node_modules/.bin/n4js-mangelhaft"
   },
   "dependencies": {
-    "@types/node": "^14.14.7",
-    "glob": "^7.1.7",
-    "n4js-runtime": "^0.28.0",
-    "n4js-runtime-es2015": "^0.28.0",
-    "n4js-runtime-esnext": "^0.28.0",
-    "n4js-runtime-node": "^0.28.0",
-    "typescript": "^4.0.5"
+    "@types/node": "~14.14.7",
+    "glob": "~7.2.0",
+    "n4js-runtime": "~0.29.1",
+    "n4js-runtime-es2015": "~0.29.1",
+    "n4js-runtime-esnext": "~0.29.1",
+    "n4js-runtime-node": "~0.29.1",
+    "typescript": "~4.4.4"
   },
   "devDependencies": {
-    "n4js-cli": "^0.28.0",
-    "n4js-mangelhaft-cli": "^0.28.0",
-    "org.eclipse.n4js.mangelhaft": "^0.28.0",
-    "org.eclipse.n4js.mangelhaft.assert": "^0.28.0"
-  },
-  "resolutions": {
-    "underscore": "^1.12.1"
+    "n4js-cli": "~0.29.1",
+    "n4js-mangelhaft-cli": "~0.29.1",
+    "org.eclipse.n4js.mangelhaft": "~0.29.1",
+    "org.eclipse.n4js.mangelhaft.assert": "~0.29.1"
   },
   "n4js": {
     "projectType": "library",
