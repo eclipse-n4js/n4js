@@ -27,12 +27,6 @@ Contributors:
 		<relativePath>releng/org.eclipse.n4js.parent</relativePath>
 	</parent>
 
-	<properties>
-		<!-- control parameters for starting/stopping the test verdaccio: -->
-		<internal_startVerdaccioPhase>none</internal_startVerdaccioPhase>
-		<internal_stopVerdaccioPhase>none</internal_stopVerdaccioPhase>
-	</properties>
-
 	<modules>
 		<module>releng</module>
 	</modules>
@@ -76,39 +70,6 @@ Contributors:
 			<modules>
 				<module>tests</module>
 			</modules>
-		</profile>
-
-		<!--
-			If build started with '-Pexecute-jar-tests', activate the
-			starting and stopping of a verdaccio instance for testing purposes.
-		-->
-		<profile>
-			<id>execute-jar-tests</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<properties>
-				<internal_startVerdaccioPhase>pre-integration-test</internal_startVerdaccioPhase>
-				<internal_stopVerdaccioPhase>post-integration-test</internal_stopVerdaccioPhase>
-			</properties>
-		</profile>
-
-		<!--
-			If build started with '-DstartAndKeepVerdaccio', then ...
-			1) enforce starting of a test verdaccio (even if '-Pexecute-jar-tests' is not given) and
-			2) suppress stopping of the test verdaccio (even if '-Pexecute-jar-tests' is given)
-		-->
-		<profile>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-				<property>
-					<name>startAndKeepVerdaccio</name>
-				</property>
-			</activation>
-			<properties>
-				<internal_startVerdaccioPhase>pre-integration-test</internal_startVerdaccioPhase>
-				<internal_stopVerdaccioPhase>none</internal_stopVerdaccioPhase>
-			</properties>
 		</profile>
 	</profiles>
 

@@ -101,8 +101,9 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 	 */
 	def private String fixIdentifierAsKeywordWithEOLAwareness(String normalizedContent) {
 		val String c1 = applyReplacement(normalizedContent, "ruleNoLineTerminator.java.replacement");
-		val String c2 = applyReplacement(c1, "rulePrimaryExpression.java.replacement");
-		return c2;
+		val String c2 = applyReplacement(c1, "ruleNoWhiteSpace.java.replacement");
+		val String c3 = applyReplacement(c2, "rulePrimaryExpression.java.replacement");
+		return c3;
 	}
 
 }

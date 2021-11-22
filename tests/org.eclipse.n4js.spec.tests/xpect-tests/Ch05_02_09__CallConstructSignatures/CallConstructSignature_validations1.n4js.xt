@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+interface I {
+
+	// XPECT errors --> "Call and construct signatures may only be used in .n4jsd files." at "() {}"
+	() {}
+
+	// XPECT errors --> "Call and construct signatures may only be used in .n4jsd files." at "new() {}"
+	new() {}
+}
+
+class C {
+
+	// XPECT errors --> "Call and construct signatures may only be used in .n4jsd files." at "() {}"
+	() {}
+
+	// treated as an ordinary method with name "new" XPECT noerrors -->
+	new() {}
+}
+
+let o: ~Object with {
+	
+	// XPECT errors --> "Call and construct signatures may only be used in .n4jsd files." at "()"
+	();
+
+	// XPECT errors --> "Call and construct signatures may only be used in .n4jsd files." at "new()"
+	new();
+};

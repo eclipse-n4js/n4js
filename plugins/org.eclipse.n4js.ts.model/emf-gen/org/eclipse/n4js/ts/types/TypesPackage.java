@@ -2176,13 +2176,22 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = GENERIC_TYPE_OPERATION_COUNT + 3;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_CALLABLE_CONSTRUCTOR = GENERIC_TYPE_OPERATION_COUNT + 4;
+	int TFUNCTION___IS_CALL_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 4;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___IS_CONSTRUCT_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -2191,7 +2200,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 5;
+	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Function As String</em>' operation.
@@ -2200,7 +2209,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 6;
+	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -2209,7 +2218,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 7;
+	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>TFunction</em>' class.
@@ -2218,7 +2227,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 8;
+	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AccessibleTypeElementImpl <em>Accessible Type Element</em>}' class.
@@ -2358,13 +2367,22 @@ public interface TypesPackage extends EPackage {
 	int CONTAINER_TYPE__OWNED_MEMBERS = GENERIC_TYPE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Callable Ctor</b></em>' containment reference.
+	 * The feature id for the '<em><b>Call Signature</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__CALLABLE_CTOR = GENERIC_TYPE_FEATURE_COUNT + 2;
+	int CONTAINER_TYPE__CALL_SIGNATURE = GENERIC_TYPE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE__CONSTRUCT_SIGNATURE = GENERIC_TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Container Type</em>' class.
@@ -2373,7 +2391,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 3;
+	int CONTAINER_TYPE_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -4085,13 +4103,22 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCTURAL_TYPE__OWNED_MEMBERS = CONTAINER_TYPE__OWNED_MEMBERS;
 
 	/**
-	 * The feature id for the '<em><b>Callable Ctor</b></em>' containment reference.
+	 * The feature id for the '<em><b>Call Signature</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCTURAL_TYPE__CALLABLE_CTOR = CONTAINER_TYPE__CALLABLE_CTOR;
+	int TSTRUCTURAL_TYPE__CALL_SIGNATURE = CONTAINER_TYPE__CALL_SIGNATURE;
+
+	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE__CONSTRUCT_SIGNATURE = CONTAINER_TYPE__CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -4365,13 +4392,22 @@ public interface TypesPackage extends EPackage {
 	int TCLASSIFIER__OWNED_MEMBERS = CONTAINER_TYPE__OWNED_MEMBERS;
 
 	/**
-	 * The feature id for the '<em><b>Callable Ctor</b></em>' containment reference.
+	 * The feature id for the '<em><b>Call Signature</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER__CALLABLE_CTOR = CONTAINER_TYPE__CALLABLE_CTOR;
+	int TCLASSIFIER__CALL_SIGNATURE = CONTAINER_TYPE__CALL_SIGNATURE;
+
+	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER__CONSTRUCT_SIGNATURE = CONTAINER_TYPE__CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -4736,13 +4772,22 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER__OWNED_MEMBERS = TCLASSIFIER__OWNED_MEMBERS;
 
 	/**
-	 * The feature id for the '<em><b>Callable Ctor</b></em>' containment reference.
+	 * The feature id for the '<em><b>Call Signature</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER__CALLABLE_CTOR = TCLASSIFIER__CALLABLE_CTOR;
+	int TN4_CLASSIFIER__CALL_SIGNATURE = TCLASSIFIER__CALL_SIGNATURE;
+
+	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER__CONSTRUCT_SIGNATURE = TCLASSIFIER__CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -5115,13 +5160,22 @@ public interface TypesPackage extends EPackage {
 	int TCLASS__OWNED_MEMBERS = TN4_CLASSIFIER__OWNED_MEMBERS;
 
 	/**
-	 * The feature id for the '<em><b>Callable Ctor</b></em>' containment reference.
+	 * The feature id for the '<em><b>Call Signature</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__CALLABLE_CTOR = TN4_CLASSIFIER__CALLABLE_CTOR;
+	int TCLASS__CALL_SIGNATURE = TN4_CLASSIFIER__CALL_SIGNATURE;
+
+	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS__CONSTRUCT_SIGNATURE = TN4_CLASSIFIER__CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -5575,13 +5629,22 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE__OWNED_MEMBERS = TN4_CLASSIFIER__OWNED_MEMBERS;
 
 	/**
-	 * The feature id for the '<em><b>Callable Ctor</b></em>' containment reference.
+	 * The feature id for the '<em><b>Call Signature</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE__CALLABLE_CTOR = TN4_CLASSIFIER__CALLABLE_CTOR;
+	int TINTERFACE__CALL_SIGNATURE = TN4_CLASSIFIER__CALL_SIGNATURE;
+
+	/**
+	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE__CONSTRUCT_SIGNATURE = TN4_CLASSIFIER__CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -6775,13 +6838,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_MEMBER___GET_MEMBER_ACCESS_MODIFIER = TMEMBER_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER___IS_AST_CALL_SIGNATURE = TMEMBER_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE = TMEMBER_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>TStruct Member</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_MEMBER_OPERATION_COUNT = TMEMBER_OPERATION_COUNT + 3;
+	int TSTRUCT_MEMBER_OPERATION_COUNT = TMEMBER_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMethodImpl <em>TMethod</em>}' class.
@@ -7172,13 +7253,22 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___IS_RETURN_VALUE_OPTIONAL = TFUNCTION___IS_RETURN_VALUE_OPTIONAL;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___IS_CALLABLE_CONSTRUCTOR = TFUNCTION___IS_CALLABLE_CONSTRUCTOR;
+	int TMETHOD___IS_CALL_SIGNATURE = TFUNCTION___IS_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___IS_CONSTRUCT_SIGNATURE = TFUNCTION___IS_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -7767,13 +7857,22 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___IS_RETURN_VALUE_OPTIONAL = TMETHOD___IS_RETURN_VALUE_OPTIONAL;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_METHOD___IS_CALLABLE_CONSTRUCTOR = TMETHOD___IS_CALLABLE_CONSTRUCTOR;
+	int TSTRUCT_METHOD___IS_CALL_SIGNATURE = TMETHOD___IS_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_CONSTRUCT_SIGNATURE = TMETHOD___IS_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -7965,13 +8064,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___GET_MEMBER_ACCESS_MODIFIER = TMETHOD_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_AST_CALL_SIGNATURE = TMETHOD_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_AST_CONSTRUCT_SIGNATURE = TMETHOD_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>TStruct Method</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_METHOD_OPERATION_COUNT = TMETHOD_OPERATION_COUNT + 3;
+	int TSTRUCT_METHOD_OPERATION_COUNT = TMETHOD_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TFormalParameterImpl <em>TFormal Parameter</em>}' class.
@@ -8977,13 +9094,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_FIELD___GET_MEMBER_ACCESS_MODIFIER = TFIELD_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD___IS_AST_CALL_SIGNATURE = TFIELD_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD___IS_AST_CONSTRUCT_SIGNATURE = TFIELD_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>TStruct Field</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_FIELD_OPERATION_COUNT = TFIELD_OPERATION_COUNT + 3;
+	int TSTRUCT_FIELD_OPERATION_COUNT = TFIELD_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.FieldAccessorImpl <em>Field Accessor</em>}' class.
@@ -10015,13 +10150,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_GETTER___GET_MEMBER_ACCESS_MODIFIER = TGETTER_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER___IS_AST_CALL_SIGNATURE = TGETTER_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER___IS_AST_CONSTRUCT_SIGNATURE = TGETTER_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>TStruct Getter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_GETTER_OPERATION_COUNT = TGETTER_OPERATION_COUNT + 3;
+	int TSTRUCT_GETTER_OPERATION_COUNT = TGETTER_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TSetterImpl <em>TSetter</em>}' class.
@@ -10710,13 +10863,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_SETTER___GET_MEMBER_ACCESS_MODIFIER = TSETTER_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER___IS_AST_CALL_SIGNATURE = TSETTER_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER___IS_AST_CONSTRUCT_SIGNATURE = TSETTER_OPERATION_COUNT + 4;
+
+	/**
 	 * The operation id for the '<em>Is Writeable</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_SETTER___IS_WRITEABLE = TSETTER_OPERATION_COUNT + 3;
+	int TSTRUCT_SETTER___IS_WRITEABLE = TSETTER_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>TStruct Setter</em>' class.
@@ -10725,7 +10896,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_SETTER_OPERATION_COUNT = TSETTER_OPERATION_COUNT + 4;
+	int TSTRUCT_SETTER_OPERATION_COUNT = TSETTER_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TEnumImpl <em>TEnum</em>}' class.
@@ -12414,14 +12585,24 @@ public interface TypesPackage extends EPackage {
 	EOperation getTFunction__IsReturnValueOptional();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TFunction#isCallableConstructor() <em>Is Callable Constructor</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TFunction#isCallSignature() <em>Is Call Signature</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Callable Constructor</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TFunction#isCallableConstructor()
+	 * @return the meta object for the '<em>Is Call Signature</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TFunction#isCallSignature()
 	 * @generated
 	 */
-	EOperation getTFunction__IsCallableConstructor();
+	EOperation getTFunction__IsCallSignature();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TFunction#isConstructSignature() <em>Is Construct Signature</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Construct Signature</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TFunction#isConstructSignature()
+	 * @generated
+	 */
+	EOperation getTFunction__IsConstructSignature();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TFunction#getFparForArgIdx(int) <em>Get Fpar For Arg Idx</em>}' operation.
@@ -12719,15 +12900,26 @@ public interface TypesPackage extends EPackage {
 	EReference getContainerType_OwnedMembers();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.ContainerType#getCallableCtor <em>Callable Ctor</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.ContainerType#getCallSignature <em>Call Signature</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Callable Ctor</em>'.
-	 * @see org.eclipse.n4js.ts.types.ContainerType#getCallableCtor()
+	 * @return the meta object for the containment reference '<em>Call Signature</em>'.
+	 * @see org.eclipse.n4js.ts.types.ContainerType#getCallSignature()
 	 * @see #getContainerType()
 	 * @generated
 	 */
-	EReference getContainerType_CallableCtor();
+	EReference getContainerType_CallSignature();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.ContainerType#getConstructSignature <em>Construct Signature</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Construct Signature</em>'.
+	 * @see org.eclipse.n4js.ts.types.ContainerType#getConstructSignature()
+	 * @see #getContainerType()
+	 * @generated
+	 */
+	EReference getContainerType_ConstructSignature();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.ContainerType#getOwnedCtor() <em>Get Owned Ctor</em>}' operation.
@@ -13656,6 +13848,26 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTStructMember__GetMemberAccessModifier();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TStructMember#isASTCallSignature() <em>Is AST Call Signature</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is AST Call Signature</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TStructMember#isASTCallSignature()
+	 * @generated
+	 */
+	EOperation getTStructMember__IsASTCallSignature();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TStructMember#isASTConstructSignature() <em>Is AST Construct Signature</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is AST Construct Signature</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TStructMember#isASTConstructSignature()
+	 * @generated
+	 */
+	EOperation getTStructMember__IsASTConstructSignature();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TMethod <em>TMethod</em>}'.
@@ -15121,12 +15333,20 @@ public interface TypesPackage extends EPackage {
 		EOperation TFUNCTION___IS_RETURN_VALUE_OPTIONAL = eINSTANCE.getTFunction__IsReturnValueOptional();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Callable Constructor</b></em>' operation.
+		 * The meta object literal for the '<em><b>Is Call Signature</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TFUNCTION___IS_CALLABLE_CONSTRUCTOR = eINSTANCE.getTFunction__IsCallableConstructor();
+		EOperation TFUNCTION___IS_CALL_SIGNATURE = eINSTANCE.getTFunction__IsCallSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Construct Signature</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TFUNCTION___IS_CONSTRUCT_SIGNATURE = eINSTANCE.getTFunction__IsConstructSignature();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Fpar For Arg Idx</b></em>' operation.
@@ -15369,12 +15589,20 @@ public interface TypesPackage extends EPackage {
 		EReference CONTAINER_TYPE__OWNED_MEMBERS = eINSTANCE.getContainerType_OwnedMembers();
 
 		/**
-		 * The meta object literal for the '<em><b>Callable Ctor</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Call Signature</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference CONTAINER_TYPE__CALLABLE_CTOR = eINSTANCE.getContainerType_CallableCtor();
+		EReference CONTAINER_TYPE__CALL_SIGNATURE = eINSTANCE.getContainerType_CallSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Construct Signature</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference CONTAINER_TYPE__CONSTRUCT_SIGNATURE = eINSTANCE.getContainerType_ConstructSignature();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Owned Ctor</b></em>' operation.
@@ -16127,6 +16355,22 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TSTRUCT_MEMBER___GET_MEMBER_ACCESS_MODIFIER = eINSTANCE.getTStructMember__GetMemberAccessModifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Is AST Call Signature</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TSTRUCT_MEMBER___IS_AST_CALL_SIGNATURE = eINSTANCE.getTStructMember__IsASTCallSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Is AST Construct Signature</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE = eINSTANCE.getTStructMember__IsASTConstructSignature();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TMethodImpl <em>TMethod</em>}' class.

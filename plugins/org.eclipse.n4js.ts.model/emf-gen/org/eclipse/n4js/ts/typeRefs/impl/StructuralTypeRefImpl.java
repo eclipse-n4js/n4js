@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.typeRefs.impl;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -17,6 +19,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 
@@ -32,7 +35,9 @@ import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
 
+import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
@@ -256,6 +261,41 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 	 * @generated
 	 */
 	@Override
+	public EList<TStructMember> getStructuralMembersWithCallConstructSignatures() {
+		final TStructuralType structType = this.getStructuralType();
+		TMethod _callSignature = null;
+		if (structType!=null) {
+			_callSignature=structType.getCallSignature();
+		}
+		final TStructMethod callSig = ((TStructMethod) _callSignature);
+		TMethod _constructSignature = null;
+		if (structType!=null) {
+			_constructSignature=structType.getConstructSignature();
+		}
+		final TStructMethod constructSig = ((TStructMethod) _constructSignature);
+		if (((callSig != null) || (constructSig != null))) {
+			final EList<TStructMember> structMembers = this.getStructuralMembers();
+			int _size = structMembers.size();
+			int _plus = (_size + 2);
+			final BasicEList<TStructMember> result = ECollections.<TStructMember>newBasicEListWithCapacity(_plus);
+			if ((callSig != null)) {
+				result.add(callSig);
+			}
+			if ((constructSig != null)) {
+				result.add(constructSig);
+			}
+			Iterables.<TStructMember>addAll(result, structMembers);
+			return result;
+		}
+		return this.getStructuralMembers();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean hasPostponedSubstitutionFor(final TypeVariable typeVar) {
 		final Function1<TypeVariableMapping, Boolean> _function = new Function1<TypeVariableMapping, Boolean>() {
 			public Boolean apply(final TypeVariableMapping m) {
@@ -395,6 +435,8 @@ public abstract class StructuralTypeRefImpl extends ProxyResolvingEObjectImpl im
 				return null;
 			case TypeRefsPackage.STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS:
 				return getStructuralMembers();
+			case TypeRefsPackage.STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES:
+				return getStructuralMembersWithCallConstructSignatures();
 			case TypeRefsPackage.STRUCTURAL_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE:
 				return hasPostponedSubstitutionFor((TypeVariable)arguments.get(0));
 		}

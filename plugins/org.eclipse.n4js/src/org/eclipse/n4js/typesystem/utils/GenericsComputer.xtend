@@ -18,6 +18,8 @@ import java.util.Collections
 import java.util.List
 import java.util.Set
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.n4js.n4JS.NewExpression
+import org.eclipse.n4js.n4JS.ParameterizedAccess
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
@@ -36,11 +38,13 @@ import org.eclipse.n4js.ts.types.GenericType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareHelper
+import org.eclipse.n4js.types.utils.TypeExtensions
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
@@ -250,37 +254,34 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	 *                       this method do the inference; only purpose of this argument is to avoid an
 	 *                       unnecessary 2nd type inference if caller has already performed this.
 	 */
-	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, TypeRef targetTypeRef) {
-		if(G===null || callExpr===null)
-			return;
+	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, FunctionTypeExprOrRef targetTypeRef) {
+		addSubstitutions(G, callExpr, true, targetTypeRef);
+	}
 
-		val TypeRef actualTargetTypeRef =
-				if(targetTypeRef!==null)
-					targetTypeRef
-				else
-					ts.type(new RuleEnvironment(G),callExpr.target);
+	def void addSubstitutions(RuleEnvironment G, NewExpression newExpr, TMethod constructSignature) {
+		addSubstitutions(G, newExpr, false, TypeExtensions.ref(constructSignature));
+	}
 
-		if(!(actualTargetTypeRef instanceof FunctionTypeExprOrRef))
-			return;
-		val FunctionTypeExprOrRef F = actualTargetTypeRef as FunctionTypeExprOrRef;
-
+	def private void addSubstitutions(RuleEnvironment G, ParameterizedAccess paramAccessExpr, boolean isCallExpr, FunctionTypeExprOrRef targetTypeRef) {
 		// restore type mappings from postponed substitutions
 		// TODO what if the structural type ref is contained in another typeRef (e.g. in a ComposedTypeRef)???
 		// TODO is there a better place to do this???
-		if(F.returnTypeRef instanceof StructuralTypeRef)
-			G.restorePostponedSubstitutionsFrom(F.returnTypeRef as StructuralTypeRef)
-		for(currFpar : F.fpars) {
-			if(currFpar.typeRef instanceof StructuralTypeRef)
+		if (targetTypeRef.returnTypeRef instanceof StructuralTypeRef) {
+			G.restorePostponedSubstitutionsFrom(targetTypeRef.returnTypeRef as StructuralTypeRef)
+		}
+		for (currFpar : targetTypeRef.fpars) {
+			if (currFpar.typeRef instanceof StructuralTypeRef) {
 				G.restorePostponedSubstitutionsFrom(currFpar.typeRef as StructuralTypeRef)
+			}
 		}
 
-		if(F.generic) {
-			val typeArgs = if(callExpr.parameterized) {
-				callExpr.typeArgs.map[typeRef].toList
-			} else {
-				ASTMetaInfoUtils.getInferredTypeArgs(callExpr) ?: #[]
+		if (targetTypeRef.generic) {
+			val typeArgs = if (paramAccessExpr.parameterized) {
+				paramAccessExpr.typeArgs.map[typeRef].toList
+			} else if (isCallExpr) {
+				ASTMetaInfoUtils.getInferredTypeArgs(paramAccessExpr as ParameterizedCallExpression) ?: #[]
 			};
-			G.addTypeMappings(F.typeVars, typeArgs);
+			G.addTypeMappings(targetTypeRef.typeVars, typeArgs);
 		}
 	}
 

@@ -44,7 +44,15 @@ public interface N4MethodDeclaration extends AnnotableN4MemberDeclaration, Metho
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	boolean isCallableConstructor();
+	boolean isCallSignature();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isConstructSignature();
 
 	/**
 	 * <!-- begin-user-doc -->

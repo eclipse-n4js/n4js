@@ -722,6 +722,11 @@ import com.google.inject.Inject;
 				final TMethod callableCtorFunction = typeSystemHelper.getCallableClassConstructorFunction(G, T);
 				if (callableCtorFunction != null) {
 					T = ref(callableCtorFunction);
+				} else {
+					final TMethod callSigOfT = typeSystemHelper.getCallSignature(G, T);
+					if (callSigOfT != null) {
+						T = ref(callSigOfT);
+					}
 				}
 			}
 
@@ -1114,7 +1119,7 @@ import com.google.inject.Inject;
 						T = rtr != null ? rtr : anyTypeRef(G);
 					}
 
-					typeSystemHelper.addSubstitutions(G2, expr, targetTypeRef);
+					typeSystemHelper.addSubstitutions(G2, expr, F);
 					T = ts.substTypeVariables(G2, T);
 					if (T == null) {
 						return unknown();
@@ -1162,6 +1167,19 @@ import com.google.inject.Inject;
 			TypeRef T = ts.type(G, e.getCallee());
 			if (T instanceof TypeTypeRef) {
 				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T, e);
+			} else {
+				TMethod constructSig = typeSystemHelper.getConstructSignature(G, T);
+				if (constructSig != null) {
+					TypeRef returnTypeRef = constructSig.getReturnTypeRef();
+					if (returnTypeRef != null && !TypeUtils.isVoid(returnTypeRef)) {
+						RuleEnvironment G2 = wrap(G);
+						tsh.addSubstitutions(G2, e, constructSig);
+						TypeRef returnTypeRefSubst = ts.substTypeVariablesWithFullCapture(G2, returnTypeRef);
+						T = returnTypeRefSubst;
+					} else {
+						T = unknown();
+					}
+				}
 			}
 			return T;
 		}

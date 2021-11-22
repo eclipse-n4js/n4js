@@ -97,4 +97,30 @@ public interface TStructMember extends TMember {
 	 */
 	MemberAccessModifier getMemberAccessModifier();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * If this TStructMember plays the role of an AST node, this method tells whether it is a call signature;
+	 * if this TStructMember is not an AST node, the return value is undefined (i.e. this method does not check
+	 * whether the receiver is actually an AST node).
+	 * <p>
+	 * Note: this method is required because {@link TFunction#isCallSignature()} does not work for AST nodes.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isASTCallSignature();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Same as {@link TStructMember#isASTCallSignature()}, but for construct signatures.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isASTConstructSignature();
+
 } // TStructMember

@@ -6322,7 +6322,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4ClassifierDefinition__GetOwnedCallableCtor() {
+	public EOperation getN4ClassifierDefinition__GetOwnedCallSignature() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(2);
 	}
 
@@ -6332,7 +6332,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4ClassifierDefinition__GetOwnedMethods() {
+	public EOperation getN4ClassifierDefinition__GetOwnedConstructSignature() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(3);
 	}
 
@@ -6342,7 +6342,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4ClassifierDefinition__GetOwnedFields() {
+	public EOperation getN4ClassifierDefinition__GetOwnedMethods() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(4);
 	}
 
@@ -6352,7 +6352,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4ClassifierDefinition__GetOwnedGetters() {
+	public EOperation getN4ClassifierDefinition__GetOwnedFields() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(5);
 	}
 
@@ -6362,7 +6362,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4ClassifierDefinition__GetOwnedSetters() {
+	public EOperation getN4ClassifierDefinition__GetOwnedGetters() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(6);
 	}
 
@@ -6372,7 +6372,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4ClassifierDefinition__GetSuperClassifierRefs() {
+	public EOperation getN4ClassifierDefinition__GetOwnedSetters() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(7);
 	}
 
@@ -6382,8 +6382,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4ClassifierDefinition__GetImplementedOrExtendedInterfaceRefs() {
+	public EOperation getN4ClassifierDefinition__GetSuperClassifierRefs() {
 		return n4ClassifierDefinitionEClass.getEOperations().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4ClassifierDefinition__GetImplementedOrExtendedInterfaceRefs() {
+		return n4ClassifierDefinitionEClass.getEOperations().get(9);
 	}
 
 	/**
@@ -6762,8 +6772,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MemberDeclaration__IsCallableConstructor() {
+	public EOperation getN4MemberDeclaration__IsCallSignature() {
 		return n4MemberDeclarationEClass.getEOperations().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4MemberDeclaration__IsConstructSignature() {
+		return n4MemberDeclarationEClass.getEOperations().get(9);
 	}
 
 	/**
@@ -6992,7 +7012,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MethodDeclaration__IsCallableConstructor() {
+	public EOperation getN4MethodDeclaration__IsCallSignature() {
 		return n4MethodDeclarationEClass.getEOperations().get(2);
 	}
 
@@ -7002,7 +7022,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MethodDeclaration__IsStatic() {
+	public EOperation getN4MethodDeclaration__IsConstructSignature() {
 		return n4MethodDeclarationEClass.getEOperations().get(3);
 	}
 
@@ -7012,8 +7032,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4MethodDeclaration__IsValidName() {
+	public EOperation getN4MethodDeclaration__IsStatic() {
 		return n4MethodDeclarationEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4MethodDeclaration__IsValidName() {
+		return n4MethodDeclarationEClass.getEOperations().get(5);
 	}
 
 	/**
@@ -8264,7 +8294,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(n4ClassifierDefinitionEClass, N4_CLASSIFIER_DEFINITION__OWNED_MEMBERS_RAW);
 		createEOperation(n4ClassifierDefinitionEClass, N4_CLASSIFIER_DEFINITION___GET_OWNED_MEMBERS);
 		createEOperation(n4ClassifierDefinitionEClass, N4_CLASSIFIER_DEFINITION___GET_OWNED_CTOR);
-		createEOperation(n4ClassifierDefinitionEClass, N4_CLASSIFIER_DEFINITION___GET_OWNED_CALLABLE_CTOR);
+		createEOperation(n4ClassifierDefinitionEClass, N4_CLASSIFIER_DEFINITION___GET_OWNED_CALL_SIGNATURE);
+		createEOperation(n4ClassifierDefinitionEClass, N4_CLASSIFIER_DEFINITION___GET_OWNED_CONSTRUCT_SIGNATURE);
 		createEOperation(n4ClassifierDefinitionEClass, N4_CLASSIFIER_DEFINITION___GET_OWNED_METHODS);
 		createEOperation(n4ClassifierDefinitionEClass, N4_CLASSIFIER_DEFINITION___GET_OWNED_FIELDS);
 		createEOperation(n4ClassifierDefinitionEClass, N4_CLASSIFIER_DEFINITION___GET_OWNED_GETTERS);
@@ -8317,7 +8348,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_DECLARED_FINAL);
 		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_FINAL);
 		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_CONSTRUCTOR);
-		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR);
+		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE);
+		createEOperation(n4MemberDeclarationEClass, N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE);
 
 		annotableN4MemberDeclarationEClass = createEClass(ANNOTABLE_N4_MEMBER_DECLARATION);
 		createEReference(annotableN4MemberDeclarationEClass, ANNOTABLE_N4_MEMBER_DECLARATION__ANNOTATION_LIST);
@@ -8345,7 +8377,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4MethodDeclarationEClass = createEClass(N4_METHOD_DECLARATION);
 		createEOperation(n4MethodDeclarationEClass, N4_METHOD_DECLARATION___IS_ABSTRACT);
 		createEOperation(n4MethodDeclarationEClass, N4_METHOD_DECLARATION___IS_CONSTRUCTOR);
-		createEOperation(n4MethodDeclarationEClass, N4_METHOD_DECLARATION___IS_CALLABLE_CONSTRUCTOR);
+		createEOperation(n4MethodDeclarationEClass, N4_METHOD_DECLARATION___IS_CALL_SIGNATURE);
+		createEOperation(n4MethodDeclarationEClass, N4_METHOD_DECLARATION___IS_CONSTRUCT_SIGNATURE);
 		createEOperation(n4MethodDeclarationEClass, N4_METHOD_DECLARATION___IS_STATIC);
 		createEOperation(n4MethodDeclarationEClass, N4_METHOD_DECLARATION___IS_VALID_NAME);
 
@@ -9496,7 +9529,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4ClassifierDefinition__GetOwnedCtor(), this.getN4MethodDeclaration(), "getOwnedCtor", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4ClassifierDefinition__GetOwnedCallableCtor(), this.getN4MethodDeclaration(), "getOwnedCallableCtor", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4ClassifierDefinition__GetOwnedCallSignature(), this.getN4MethodDeclaration(), "getOwnedCallSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4ClassifierDefinition__GetOwnedConstructSignature(), this.getN4MethodDeclaration(), "getOwnedConstructSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4ClassifierDefinition__GetOwnedMethods(), this.getN4MethodDeclaration(), "getOwnedMethods", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
@@ -9582,7 +9617,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4MemberDeclaration__IsConstructor(), theEcorePackage.getEBoolean(), "isConstructor", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4MemberDeclaration__IsCallableConstructor(), theEcorePackage.getEBoolean(), "isCallableConstructor", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4MemberDeclaration__IsCallSignature(), theEcorePackage.getEBoolean(), "isCallSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4MemberDeclaration__IsConstructSignature(), theEcorePackage.getEBoolean(), "isConstructSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(annotableN4MemberDeclarationEClass, AnnotableN4MemberDeclaration.class, "AnnotableN4MemberDeclaration", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAnnotableN4MemberDeclaration_AnnotationList(), this.getN4MemberAnnotationList(), null, "annotationList", null, 0, 1, AnnotableN4MemberDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -9624,7 +9661,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4MethodDeclaration__IsConstructor(), theEcorePackage.getEBoolean(), "isConstructor", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getN4MethodDeclaration__IsCallableConstructor(), theEcorePackage.getEBoolean(), "isCallableConstructor", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getN4MethodDeclaration__IsCallSignature(), theEcorePackage.getEBoolean(), "isCallSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4MethodDeclaration__IsConstructSignature(), theEcorePackage.getEBoolean(), "isConstructSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4MethodDeclaration__IsStatic(), theEcorePackage.getEBoolean(), "isStatic", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

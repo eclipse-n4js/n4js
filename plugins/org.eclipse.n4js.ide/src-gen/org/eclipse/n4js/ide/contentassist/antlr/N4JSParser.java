@@ -460,8 +460,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getScriptAnnotationAccess().getGroup(), "rule__ScriptAnnotation__Group__0");
 			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getGroup(), "rule__AnnotationNoAtSign__Group__0");
 			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getGroup_1(), "rule__AnnotationNoAtSign__Group_1__0");
-			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getGroup_1_1(), "rule__AnnotationNoAtSign__Group_1_1__0");
-			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getGroup_1_1_1(), "rule__AnnotationNoAtSign__Group_1_1_1__0");
+			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getGroup_1_2(), "rule__AnnotationNoAtSign__Group_1_2__0");
+			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getGroup_1_2_1(), "rule__AnnotationNoAtSign__Group_1_2_1__0");
 			builder.put(grammarAccess.getAnnotationListAccess().getGroup(), "rule__AnnotationList__Group__0");
 			builder.put(grammarAccess.getAnnotationListAccess().getGroup_0(), "rule__AnnotationList__Group_0__0");
 			builder.put(grammarAccess.getAnnotationListAccess().getGroup_0_0(), "rule__AnnotationList__Group_0_0__0");
@@ -510,6 +510,9 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getGroup_1_2_0_0_3_0(), "rule__AnnotatedN4MemberDeclaration__Group_1_2_0_0_3_0__0");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getGroup_1_2_0_0_3_1(), "rule__AnnotatedN4MemberDeclaration__Group_1_2_0_0_3_1__0");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getGroup_1_3(), "rule__AnnotatedN4MemberDeclaration__Group_1_3__0");
+			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getGroup_1_3_0(), "rule__AnnotatedN4MemberDeclaration__Group_1_3_0__0");
+			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getGroup_1_3_0_0(), "rule__AnnotatedN4MemberDeclaration__Group_1_3_0_0__0");
+			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getGroup_1_4(), "rule__AnnotatedN4MemberDeclaration__Group_1_4__0");
 			builder.put(grammarAccess.getFieldDeclarationImplAccess().getGroup(), "rule__FieldDeclarationImpl__Group__0");
 			builder.put(grammarAccess.getFieldDeclarationImplAccess().getGroup_4(), "rule__FieldDeclarationImpl__Group_4__0");
 			builder.put(grammarAccess.getN4FieldDeclarationAccess().getGroup(), "rule__N4FieldDeclaration__Group__0");
@@ -518,7 +521,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4MethodDeclarationAccess().getGroup_0_0(), "rule__N4MethodDeclaration__Group_0_0__0");
 			builder.put(grammarAccess.getN4MethodDeclarationAccess().getGroup_0_0_4_0(), "rule__N4MethodDeclaration__Group_0_0_4_0__0");
 			builder.put(grammarAccess.getN4MethodDeclarationAccess().getGroup_0_0_4_1(), "rule__N4MethodDeclaration__Group_0_0_4_1__0");
-			builder.put(grammarAccess.getN4CallableConstructorDeclarationAccess().getGroup(), "rule__N4CallableConstructorDeclaration__Group__0");
+			builder.put(grammarAccess.getN4CallSignatureDeclarationAccess().getGroup(), "rule__N4CallSignatureDeclaration__Group__0");
 			builder.put(grammarAccess.getMethodParamsAndBodyAccess().getGroup(), "rule__MethodParamsAndBody__Group__0");
 			builder.put(grammarAccess.getMethodParamsReturnAndBodyAccess().getGroup(), "rule__MethodParamsReturnAndBody__Group__0");
 			builder.put(grammarAccess.getN4GetterDeclarationAccess().getGroup(), "rule__N4GetterDeclaration__Group__0");
@@ -940,8 +943,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getScientificIntLiteralAccess().getValueAssignment(), "rule__ScientificIntLiteral__ValueAssignment");
 			builder.put(grammarAccess.getRegularExpressionLiteralAccess().getValueAssignment(), "rule__RegularExpressionLiteral__ValueAssignment");
 			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getNameAssignment_0(), "rule__AnnotationNoAtSign__NameAssignment_0");
-			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getArgsAssignment_1_1_0(), "rule__AnnotationNoAtSign__ArgsAssignment_1_1_0");
-			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getArgsAssignment_1_1_1_1(), "rule__AnnotationNoAtSign__ArgsAssignment_1_1_1_1");
+			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getArgsAssignment_1_2_0(), "rule__AnnotationNoAtSign__ArgsAssignment_1_2_0");
+			builder.put(grammarAccess.getAnnotationNoAtSignAccess().getArgsAssignment_1_2_1_1(), "rule__AnnotationNoAtSign__ArgsAssignment_1_2_1_1");
 			builder.put(grammarAccess.getLiteralAnnotationArgumentAccess().getLiteralAssignment(), "rule__LiteralAnnotationArgument__LiteralAssignment");
 			builder.put(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefNodeAssignment(), "rule__TypeRefAnnotationArgument__TypeRefNodeAssignment");
 			builder.put(grammarAccess.getAnnotationListAccess().getAnnotationsAssignment_0_0_2(), "rule__AnnotationList__AnnotationsAssignment_0_0_2");
