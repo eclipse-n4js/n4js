@@ -872,15 +872,6 @@ export default {
 				"DocumentType#ownerDocument": { addAnnotations: [ "@Override" ] },
 				"Element#ownerDocument": { addAnnotations: [ "@Override" ] },
 				"ProcessingInstruction#ownerDocument": { addAnnotations: [ "@Override" ] },
-				// method toString ==================================================================================
-				"DOMMatrixReadOnly#toString": { addAnnotations: [ "@Override" ] },
-				"DOMTokenList#toString": { addAnnotations: [ "@Override" ] },
-				"Location#toString": { addAnnotations: [ "@Override" ] },
-				"MediaList#toString": { addAnnotations: [ "@Override" ] },
-				"Range#toString": { addAnnotations: [ "@Override" ] },
-				"Selection#toString": { addAnnotations: [ "@Override" ] },
-				"URL#toString": { addAnnotations: [ "@Override" ] },
-				"URLSearchParams#toString": { addAnnotations: [ "@Override" ] },
 				// method addEventListener ==========================================================================
 				"AbortSignal#addEventListener": { addAnnotations: [ "@Override" ] },
 				"Animation#addEventListener": { addAnnotations: [ "@Override" ] },
