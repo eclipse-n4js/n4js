@@ -374,14 +374,15 @@ export default {
 				// odd stuff:
 				"ThisParameterType", "OmitThisParameter", "CallableFunction", "NewableFunction", "PromiseConstructorLike"
 			],
+			convertCtorInstanceTypes: true,
+			ctorInstanceTypes: [
+				"Symbol", "SymbolConstructor",
+				"Promise", "PromiseConstructor"
+			],
 			polyfills: [],
 			changeToClass: [
 				"RegExpMatchArray",
 				"RegExpExecArray"
-			],
-			ctorInstanceTypes: [
-				"Symbol", "SymbolConstructor",
-				"Promise", "PromiseConstructor"
 			],
 			patchMembers: {
 				// required due to odd return types on TypeScript side
@@ -504,6 +505,7 @@ export default {
 				// read-only types:
 				"ReadonlyArray"
 			],
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				"Object#keys": { addAnnotations: [ "@Override" ] },
 				"Date#constructor": undefined,
@@ -518,6 +520,7 @@ export default {
 				// read-only types:
 				"ReadonlySet", "ReadonlyMap"
 			],
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				// TypeScript provides constructors accepting Iterables via overloading in file "es2015.iterable.d.ts" (which we do not support):
 				"Map#constructor": { replaceBy: "public constructor(entries: Iterable<Iterable2<K,V>> = );" },
@@ -533,13 +536,15 @@ export default {
 		"es2015.symbol.d.ts": {
 			ignore: [
 				"Symbol", "SymbolConstructor" // Symbol was moved to es5.n4jsd (see above)
-			]
+			],
+			convertCtorInstanceTypes: true
 		},
 		"es2015.symbol.wellknown.d.ts": {
 			ignore: [
 				"Symbol", "SymbolConstructor", // Symbol was moved to es5.n4jsd (see above)
 				"Promise", "PromiseConstructor" // this would work fine, except for different number of type parameters
 			],
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				// the signatures of the following members use computed property names inside ~Object with {}
 				"String#replace": undefined,
@@ -557,6 +562,7 @@ export default {
 				// read-only types:
 				"ReadonlyArray", "ReadonlySet", "ReadonlyMap"
 			],
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				"Symbol#iterator": undefined, // was moved to es5.n4jsd (see above)
 				"Array#[Symbol.iterator]": undefined, // was moved to es5.n4jsd (see above)
@@ -603,6 +609,7 @@ export default {
 			ignore: [
 				"Generator" // Generator was moved to es5.n4jsd (see above)
 			],
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				"GeneratorFunction#()": undefined,           // callable ctor not supported in interface
 				"GeneratorFunctionConstructor#()": undefined // callable ctor not supported in interface
@@ -611,7 +618,8 @@ export default {
 		"es2015.promise.d.ts": {
 			ignore: [
 				"Promise", "PromiseConstructor" // Promise was moved to es5.n4jsd (see above)
-			]
+			],
+			convertCtorInstanceTypes: true
 		},
 		"es2015.proxy.d.ts": {
 			ignore: [
@@ -620,6 +628,7 @@ export default {
 				// 2) use of unfortunate type 'any' instead of 'Object' for parameters "thisArg" and "receiver"
 				"ProxyHandler"
 			],
+			convertCtorInstanceTypes: true,
 			suffix: `
 				export external public interface ~ProxyHandler<T> {
 					apply?: (target: T, thisArg: Object, argArray: Array<any>) => any;
@@ -638,23 +647,32 @@ export default {
 				}
 			`
 		},
-		"es2015.reflect.d.ts": {},
+		"es2015.reflect.d.ts": {
+			convertCtorInstanceTypes: true
+		},
 		"es2016.array.include.d.ts": {
 			ignore: [
 				// read-only types:
 				"ReadonlyArray"
-			]
+			],
+			convertCtorInstanceTypes: true
 		},
-		"es2017.string.d.ts": {},
+		"es2017.string.d.ts": {
+			convertCtorInstanceTypes: true
+		},
 		"es2017.object.d.ts": {
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				// required due to overloading:
 				"Object#values": { replaceBy: "public static values(obj: Object): any[];" },
 				"Object#entries": { replaceBy: "public static entries(obj: Object): Iterable2<string, any>[];" }
 			}
 		},
-		"es2017.sharedmemory.d.ts": {},
+		"es2017.sharedmemory.d.ts": {
+			convertCtorInstanceTypes: true
+		},
 		"es2017.typedarrays.d.ts": {
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				// cannot add overload signatures via polyfill:
 				"Int8Array#constructor": undefined,
@@ -668,12 +686,15 @@ export default {
 				"Float64Array#constructor": undefined
 			}
 		},
-		"es2017.intl.d.ts": {},
+		"es2017.intl.d.ts": {
+			convertCtorInstanceTypes: true
+		},
 		"es2018.asynciterable.d.ts": {
 			ignore: [
 				"AsyncIterator", // AsyncIterator was moved to es5.n4jsd (see above)
 				"AsyncIterable" // AsyncIterable was moved to es5.n4jsd (see above)
 			],
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				"Symbol#asyncIterator": undefined // was moved to es5.n4jsd (see above)
 			}
@@ -682,6 +703,7 @@ export default {
 			ignore: [
 				"AsyncGenerator" // AsyncGenerator was moved to es5.n4jsd (see above)
 			],
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				"AsyncGeneratorFunction#()": undefined,           // callable ctor not supported in interface
 				"AsyncGeneratorFunctionConstructor#()": undefined // callable ctor not supported in interface
@@ -691,6 +713,7 @@ export default {
 			ignore: [
 				"Promise", "PromiseConstructor" // this would work fine, except for different number of type parameters
 			],
+			convertCtorInstanceTypes: true,
 			suffix: `
 				@Polyfill
 				export external public class Promise<out S, out F = any> extends Promise<S,F> {
@@ -699,6 +722,7 @@ export default {
 			`
 		},
 		"es2018.regexp.d.ts": {
+			convertCtorInstanceTypes: true,
 			polyfills: [
 				"RegExpMatchArray",
 				"RegExpExecArray"
@@ -708,17 +732,27 @@ export default {
 				"RegExpExecArray"
 			],
 		},
-		"es2018.intl.d.ts": {},
-		"es2019.string.d.ts": {},
-		"es2019.object.d.ts": {},
+		"es2018.intl.d.ts": {
+			convertCtorInstanceTypes: true
+		},
+		"es2019.string.d.ts": {
+			convertCtorInstanceTypes: true
+		},
+		"es2019.object.d.ts": {
+			convertCtorInstanceTypes: true
+		},
 		"es2019.array.d.ts": {
 			ignore: [
 				// read-only types:
 				"ReadonlyArray"
-			]
+			],
+			convertCtorInstanceTypes: true
 		},
-		"es2019.symbol.d.ts": {},
+		"es2019.symbol.d.ts": {
+			convertCtorInstanceTypes: true
+		},
 		"es2020.bigint.d.ts": {
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				"BigInt#toString": { addAnnotations: [ "@Override" ] },
 				"BigInt#toLocaleString": { addAnnotations: [ "@Override" ] },
@@ -731,11 +765,14 @@ export default {
 				"BigUint64Array#valueOf": { addAnnotations: [ "@Override" ] }
 			}
 		},
-		"es2020.string.d.ts": {},
+		"es2020.string.d.ts": {
+			convertCtorInstanceTypes: true
+		},
 		"es2020.promise.d.ts": {
 			ignore: [
 				"Promise", "PromiseConstructor" // this would work fine, except for different number of type parameters
 			],
+			convertCtorInstanceTypes: true,
 			suffix: `
 				@Polyfill
 				export external public class Promise<out S, out F = any> extends Promise<S,F> {
@@ -744,6 +781,7 @@ export default {
 			`
 		},
 		"es2020.sharedmemory.d.ts": {
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				// these are cases of adding overloads to existing methods:
 				"Atomics#add": undefined,
@@ -760,11 +798,14 @@ export default {
 			}
 		},
 		"es2020.symbol.wellknown.d.ts": {
+			convertCtorInstanceTypes: true,
 			patchMembers: {
 				"Symbol#matchAll": undefined // was moved to es5.n4jsd (see above)
 			}
 		},
-		"es2020.intl.d.ts": {},
+		"es2020.intl.d.ts": {
+			convertCtorInstanceTypes: true
+		},
 		"dom.generated.d.ts": {
 			ignore: [
 				"*#prototype",

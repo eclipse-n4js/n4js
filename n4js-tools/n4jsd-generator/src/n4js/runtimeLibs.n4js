@@ -33,9 +33,10 @@ class FileGenConfig {
 	public prefix: string;
 	public suffix: string;
 	public ignore = new Set<string>();
+	public convertCtorInstanceTypes: boolean;
+	public ctorInstanceTypes = [] as string[];
 	public polyfills = new Set<string>();
 	public changeToClass = new Set<string>();
-	public ctorInstanceTypes = [] as string[];
 	public patchMembers = new Map<string, PatchMemberConfig>();
 	public appendCode = new Map<string, string>();
 }
@@ -44,15 +45,16 @@ class PatchMemberConfig {
 	public addAnnotations: string[];
 }
 const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
-	[ "GenConfig#patchFiles",             new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "GenConfig#addFiles",               new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#ignore",             new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#polyfills",          new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#changeToClass",      new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#ctorInstanceTypes",  new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#patchMembers",       new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#appendCode",         new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "PatchMemberConfig#addAnnotations", new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo]
+	[ "GenConfig#patchFiles",                   new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "GenConfig#addFiles",                     new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#ignore",                   new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#convertCtorInstanceTypes", new PropertyTypeInfo({ type: Boolean                                  }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#ctorInstanceTypes",        new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#polyfills",                new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#changeToClass",            new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#patchMembers",             new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#appendCode",               new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "PatchMemberConfig#addAnnotations",       new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo]
 ]);
 
 
@@ -244,6 +246,12 @@ class RuntimeLibsPatcher {
 	}
 
 	private handleCtorInstanceTypePattern(script: model.Script) {
+		const config = getGenConfig();
+		const fileConfig = config.patchFiles.get(script.tsFileName);
+		if (!(fileConfig && fileConfig.convertCtorInstanceTypes)) {
+			return; // not converted by default
+		}
+
 		const elemsByName = new Map<string,model.ExportableElement[]>();
 		for (const elem of script.topLevelElements) {
 			const name = elem.name;
@@ -288,7 +296,6 @@ class RuntimeLibsPatcher {
 		topLevelElementModifications.applyTo(script);
 
 		// register additional known ctor/instance types, as requested by this file's FileGenConfig
-		const fileConfig = getGenConfig().patchFiles.get(script.tsFileName);
 		for (const typeName of fileConfig?.ctorInstanceTypes ?? []) {
 			if (typeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
 				this.knownCtorTypes.add(typeName);
