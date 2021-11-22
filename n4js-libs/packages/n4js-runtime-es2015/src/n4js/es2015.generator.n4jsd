@@ -4,15 +4,13 @@
 @@Global @@ProvidedByRuntime
 
 export external public interface ~GeneratorFunction {
-	@CovariantConstructor
-	constructor(...args: any);
+	new(...args: any): Generator;
 	get length(): number;
 	get name(): string;
 }
 
 export external public interface ~GeneratorFunctionConstructor {
-	@CovariantConstructor
-	constructor(...args: string);
+	new(...args: string): GeneratorFunction;
 	get length(): number;
 	get name(): string;
 }
