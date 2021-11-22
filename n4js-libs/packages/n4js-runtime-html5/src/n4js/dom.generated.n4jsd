@@ -4409,6 +4409,7 @@ export external public interface ~HTMLCollection extends HTMLCollectionBase {
 var HTMLCollection: ~Object with { new(): HTMLCollection; };
 
 export external public interface ~HTMLCollectionOf<T extends Element> extends HTMLCollectionBase {
+	@Override
 	item(index: number): T;
 	namedItem(name: string): T;
 }
@@ -6508,7 +6509,9 @@ export external public interface ~NodeList {
 var NodeList: ~Object with { new(): NodeList; };
 
 export external public interface ~NodeListOf<TNode extends Node> extends NodeList {
+	@Override
 	item(index: number): TNode;
+	@Override
 	forEach(callbackfn: (value: TNode, key: number, parent: NodeListOf<TNode>)=>void, thisArg: any = ): void;
 }
 
@@ -6993,6 +6996,7 @@ var ProcessingInstruction: ~Object with { new(): ProcessingInstruction; };
 export external public interface ~ProgressEvent<T extends EventTarget=EventTarget> extends Event {
 	get lengthComputable(): boolean;
 	get loaded(): number;
+	@Override
 	get target(): T;
 	get total(): number;
 }
