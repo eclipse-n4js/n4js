@@ -3,81 +3,67 @@
 
 @@Global @@ProvidedByRuntime
 
-@Polyfill
-export external public class AudioParam extends AudioParam {
-	public setValueCurveAtTime(values: Iterable<number>, startTime: number, duration: number): AudioParam;
+export external public interface ~AudioParam {
+	setValueCurveAtTime(values: Iterable<number>, startTime: number, duration: number): AudioParam;
 }
 
-@Polyfill
-export external public class AudioParamMap extends AudioParamMap {}
+export external public interface ~AudioParamMap extends ReadonlyMap<string,AudioParam> {}
 
-@Polyfill
-export external public class BaseAudioContext extends BaseAudioContext {
-	public createIIRFilter(feedforward: Iterable<number>, feedback: Iterable<number>): IIRFilterNode;
-	public createPeriodicWave(real: Iterable<number>, imag: Iterable<number>, constraints: PeriodicWaveConstraints = ): PeriodicWave;
+export external public interface ~BaseAudioContext {
+	createIIRFilter(feedforward: Iterable<number>, feedback: Iterable<number>): IIRFilterNode;
+	createPeriodicWave(real: Iterable<number>, imag: Iterable<number>, constraints: PeriodicWaveConstraints = ): PeriodicWave;
 }
 
-@Polyfill
-export external public class CSSRuleList extends CSSRuleList {
-	public [Symbol.iterator](): IterableIterator<CSSRule>;
+export external public interface ~CSSRuleList {
+	[Symbol.iterator](): IterableIterator<CSSRule>;
 }
 
-@Polyfill
-export external public class CSSStyleDeclaration extends CSSStyleDeclaration {
-	public [Symbol.iterator](): IterableIterator<string>;
+export external public interface ~CSSStyleDeclaration {
+	[Symbol.iterator](): IterableIterator<string>;
 }
 
-@Polyfill
-export external public class Cache extends Cache {
-	public addAll(requests: Iterable<RequestInfo>): Promise<void>;
+export external public interface ~Cache {
+	addAll(requests: Iterable<RequestInfo>): Promise<undefined>;
 }
 
 export external public interface ~CanvasPathDrawingStyles {
 	setLineDash(segments: Iterable<number>): void;
 }
 
-@Polyfill
-export external public class DOMRectList extends DOMRectList {
-	public [Symbol.iterator](): IterableIterator<DOMRect>;
+export external public interface ~DOMRectList {
+	[Symbol.iterator](): IterableIterator<DOMRect>;
 }
 
-@Polyfill
-export external public class DOMStringList extends DOMStringList {
-	public [Symbol.iterator](): IterableIterator<string>;
+export external public interface ~DOMStringList {
+	[Symbol.iterator](): IterableIterator<string>;
 }
 
-@Polyfill
-export external public class DOMTokenList extends DOMTokenList {
-	public [Symbol.iterator](): IterableIterator<string>;
-	public entries(): IterableIterator<[number,string]>;
-	public keys(): IterableIterator<number>;
-	public values(): IterableIterator<string>;
+export external public interface ~DOMTokenList {
+	[Symbol.iterator](): IterableIterator<string>;
+	entries(): IterableIterator<[number,string]>;
+	keys(): IterableIterator<number>;
+	values(): IterableIterator<string>;
 }
 
-@Polyfill
-export external public class DataTransferItemList extends DataTransferItemList {
-	public [Symbol.iterator](): IterableIterator<DataTransferItem>;
+export external public interface ~DataTransferItemList {
+	[Symbol.iterator](): IterableIterator<DataTransferItem>;
 }
 
-@Polyfill
-export external public class FileList extends FileList {
-	public [Symbol.iterator](): IterableIterator<File>;
+export external public interface ~FileList {
+	[Symbol.iterator](): IterableIterator<File>;
 }
 
-@Polyfill
-export external public class FontFaceSet extends FontFaceSet {}
+export external public interface ~FontFaceSet extends Set<FontFace> {}
 
-@Polyfill
-export external public class FormData extends FormData {
-	public [Symbol.iterator](): IterableIterator<[string,FormDataEntryValue]>;
-	public entries(): IterableIterator<[string,FormDataEntryValue]>;
-	public keys(): IterableIterator<string>;
-	public values(): IterableIterator<FormDataEntryValue>;
+export external public interface ~FormData {
+	[Symbol.iterator](): IterableIterator<[string,FormDataEntryValue]>;
+	entries(): IterableIterator<[string,FormDataEntryValue]>;
+	keys(): IterableIterator<string>;
+	values(): IterableIterator<FormDataEntryValue>;
 }
 
-@Polyfill
-export external public class HTMLAllCollection extends HTMLAllCollection {
-	public [Symbol.iterator](): IterableIterator<Element>;
+export external public interface ~HTMLAllCollection {
+	[Symbol.iterator](): IterableIterator<Element>;
 }
 
 export external public interface ~HTMLCollectionBase {
@@ -88,74 +74,62 @@ export external public interface ~HTMLCollectionOf<T> {
 	[Symbol.iterator](): IterableIterator<T>;
 }
 
-@Polyfill
-export external public class HTMLFormElement extends HTMLFormElement {
-	public [Symbol.iterator](): IterableIterator<Element>;
+export external public interface ~HTMLFormElement {
+	[Symbol.iterator](): IterableIterator<Element>;
 }
 
-@Polyfill
-export external public class HTMLSelectElement extends HTMLSelectElement {
-	public [Symbol.iterator](): IterableIterator<HTMLOptionElement>;
+export external public interface ~HTMLSelectElement {
+	[Symbol.iterator](): IterableIterator<HTMLOptionElement>;
 }
 
-@Polyfill
-export external public class Headers extends Headers {
-	public [Symbol.iterator](): IterableIterator<[string,string]>;
-	public entries(): IterableIterator<[string,string]>;
-	public keys(): IterableIterator<string>;
-	public values(): IterableIterator<string>;
+export external public interface ~Headers {
+	[Symbol.iterator](): IterableIterator<[string,string]>;
+	entries(): IterableIterator<[string,string]>;
+	keys(): IterableIterator<string>;
+	values(): IterableIterator<string>;
 }
 
-@Polyfill
-export external public class IDBDatabase extends IDBDatabase {
-	public transaction(storeNames: string | Iterable<string>, mode: IDBTransactionMode = ): IDBTransaction;
+export external public interface ~IDBDatabase {
+	transaction(storeNames: string | Iterable<string>, mode: IDBTransactionMode = ): IDBTransaction;
 }
 
-@Polyfill
-export external public class IDBObjectStore extends IDBObjectStore {
-	public createIndex(name: string, keyPath: string | Iterable<string>, options: IDBIndexParameters = ): IDBIndex;
+export external public interface ~IDBObjectStore {
+	createIndex(name: string, keyPath: string | Iterable<string>, options: IDBIndexParameters = ): IDBIndex;
 }
 
-@Polyfill
-export external public class MediaKeyStatusMap extends MediaKeyStatusMap {
-	public [Symbol.iterator](): IterableIterator<[BufferSource,MediaKeyStatus]>;
-	public entries(): IterableIterator<[BufferSource,MediaKeyStatus]>;
-	public keys(): IterableIterator<BufferSource>;
-	public values(): IterableIterator<MediaKeyStatus>;
+export external public interface ~MediaKeyStatusMap {
+	[Symbol.iterator](): IterableIterator<[BufferSource,MediaKeyStatus]>;
+	entries(): IterableIterator<[BufferSource,MediaKeyStatus]>;
+	keys(): IterableIterator<BufferSource>;
+	values(): IterableIterator<MediaKeyStatus>;
 }
 
-@Polyfill
-export external public class MediaList extends MediaList {
-	public [Symbol.iterator](): IterableIterator<string>;
+export external public interface ~MediaList {
+	[Symbol.iterator](): IterableIterator<string>;
 }
 
-@Polyfill
-export external public class MessageEvent<T=any> extends MessageEvent<T> {
-	public initMessageEvent(type: string, bubbles: boolean = , cancelable: boolean = , data: any = , origin: string = , lastEventId: string = , source: MessageEventSource = , ports: Iterable<MessagePort> = ): void;
+export external public interface ~MessageEvent<T=any> {
+	initMessageEvent(type: string, bubbles: boolean = , cancelable: boolean = , data: any = , origin: string = , lastEventId: string = , source: MessageEventSource = , ports: Iterable<MessagePort> = ): void;
 }
 
-@Polyfill
-export external public class MimeTypeArray extends MimeTypeArray {
-	public [Symbol.iterator](): IterableIterator<MimeType>;
+export external public interface ~MimeTypeArray {
+	[Symbol.iterator](): IterableIterator<MimeType>;
 }
 
-@Polyfill
-export external public class NamedNodeMap extends NamedNodeMap {
-	public [Symbol.iterator](): IterableIterator<Attr>;
+export external public interface ~NamedNodeMap {
+	[Symbol.iterator](): IterableIterator<Attr>;
 }
 
-@Polyfill
-export external public class Navigator extends Navigator {
-	public requestMediaKeySystemAccess(keySystem: string, supportedConfigurations: Iterable<MediaKeySystemConfiguration>): Promise<MediaKeySystemAccess>;
-	public vibrate(pattern: Iterable<number>): boolean;
+export external public interface ~Navigator {
+	requestMediaKeySystemAccess(keySystem: string, supportedConfigurations: Iterable<MediaKeySystemConfiguration>): Promise<MediaKeySystemAccess>;
+	vibrate(pattern: Iterable<number>): boolean;
 }
 
-@Polyfill
-export external public class NodeList extends NodeList {
-	public [Symbol.iterator](): IterableIterator<Node>;
-	public entries(): IterableIterator<[number,Node]>;
-	public keys(): IterableIterator<number>;
-	public values(): IterableIterator<Node>;
+export external public interface ~NodeList {
+	[Symbol.iterator](): IterableIterator<Node>;
+	entries(): IterableIterator<[number,Node]>;
+	keys(): IterableIterator<number>;
+	values(): IterableIterator<Node>;
 }
 
 export external public interface ~NodeListOf<TNode> {
@@ -165,101 +139,83 @@ export external public interface ~NodeListOf<TNode> {
 	values(): IterableIterator<TNode>;
 }
 
-@Polyfill
-export external public class Plugin extends Plugin {
-	public [Symbol.iterator](): IterableIterator<MimeType>;
+export external public interface ~Plugin {
+	[Symbol.iterator](): IterableIterator<MimeType>;
 }
 
-@Polyfill
-export external public class PluginArray extends PluginArray {
-	public [Symbol.iterator](): IterableIterator<Plugin>;
+export external public interface ~PluginArray {
+	[Symbol.iterator](): IterableIterator<Plugin>;
 }
 
-@Polyfill
-export external public class RTCStatsReport extends RTCStatsReport {}
+export external public interface ~RTCStatsReport extends ReadonlyMap<string,any> {}
 
-@Polyfill
-export external public class ReadableStream<R=any> extends ReadableStream<R> {
-	public [Symbol.iterator](): IterableIterator<any>;
-	public entries(): IterableIterator<[number,any]>;
-	public keys(): IterableIterator<number>;
-	public values(): IterableIterator<any>;
+export external public interface ~ReadableStream<R=any> {
+	[Symbol.iterator](): IterableIterator<any>;
+	entries(): IterableIterator<[number,any]>;
+	keys(): IterableIterator<number>;
+	values(): IterableIterator<any>;
 }
 
-@Polyfill
-export external public class SVGLengthList extends SVGLengthList {
-	public [Symbol.iterator](): IterableIterator<SVGLength>;
+export external public interface ~SVGLengthList {
+	[Symbol.iterator](): IterableIterator<SVGLength>;
 }
 
-@Polyfill
-export external public class SVGNumberList extends SVGNumberList {
-	public [Symbol.iterator](): IterableIterator<SVGNumber>;
+export external public interface ~SVGNumberList {
+	[Symbol.iterator](): IterableIterator<SVGNumber>;
 }
 
-@Polyfill
-export external public class SVGPointList extends SVGPointList {
-	public [Symbol.iterator](): IterableIterator<DOMPoint>;
+export external public interface ~SVGPointList {
+	[Symbol.iterator](): IterableIterator<DOMPoint>;
 }
 
-@Polyfill
-export external public class SVGStringList extends SVGStringList {
-	public [Symbol.iterator](): IterableIterator<string>;
+export external public interface ~SVGStringList {
+	[Symbol.iterator](): IterableIterator<string>;
 }
 
-@Polyfill
-export external public class SVGTransformList extends SVGTransformList {
-	public [Symbol.iterator](): IterableIterator<SVGTransform>;
+export external public interface ~SVGTransformList {
+	[Symbol.iterator](): IterableIterator<SVGTransform>;
 }
 
-@Polyfill
-export external public class SourceBufferList extends SourceBufferList {
-	public [Symbol.iterator](): IterableIterator<SourceBuffer>;
+export external public interface ~SourceBufferList {
+	[Symbol.iterator](): IterableIterator<SourceBuffer>;
 }
 
-@Polyfill
-export external public class SpeechRecognitionResult extends SpeechRecognitionResult {
-	public [Symbol.iterator](): IterableIterator<SpeechRecognitionAlternative>;
+export external public interface ~SpeechRecognitionResult {
+	[Symbol.iterator](): IterableIterator<SpeechRecognitionAlternative>;
 }
 
-@Polyfill
-export external public class SpeechRecognitionResultList extends SpeechRecognitionResultList {
-	public [Symbol.iterator](): IterableIterator<SpeechRecognitionResult>;
+export external public interface ~SpeechRecognitionResultList {
+	[Symbol.iterator](): IterableIterator<SpeechRecognitionResult>;
 }
 
-@Polyfill
-export external public class StyleSheetList extends StyleSheetList {
-	public [Symbol.iterator](): IterableIterator<CSSStyleSheet>;
+export external public interface ~StyleSheetList {
+	[Symbol.iterator](): IterableIterator<CSSStyleSheet>;
 }
 
-@Polyfill
-export external public class SubtleCrypto extends SubtleCrypto {
-	public deriveKey(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier | AesDerivedKeyParams | HmacImportParams | HkdfParams | Pbkdf2Params, extractable: boolean, keyUsages: Iterable<KeyUsage>): Promise<CryptoKey>;
-	public generateKey(...args: any+): any+; // overloading not supported
-	public importKey(...args: any+): any+; // overloading not supported
-	public unwrapKey(format: KeyFormat, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesGcmParams, unwrappedKeyAlgorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | AesKeyAlgorithm, extractable: boolean, keyUsages: Iterable<KeyUsage>): Promise<CryptoKey>;
+export external public interface ~SubtleCrypto {
+	deriveKey(algorithm: AlgorithmIdentifier | EcdhKeyDeriveParams | HkdfParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier | AesDerivedKeyParams | HmacImportParams | HkdfParams | Pbkdf2Params, extractable: boolean, keyUsages: Iterable<KeyUsage>): Promise<CryptoKey>;
+	generateKey(...args: any+): any+; // overloading not supported
+	importKey(...args: any+): any+; // overloading not supported
+	unwrapKey(format: KeyFormat, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier | RsaOaepParams | AesCtrParams | AesCbcParams | AesGcmParams, unwrappedKeyAlgorithm: AlgorithmIdentifier | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | AesKeyAlgorithm, extractable: boolean, keyUsages: Iterable<KeyUsage>): Promise<CryptoKey>;
 }
 
-@Polyfill
-export external public class TextTrackCueList extends TextTrackCueList {
-	public [Symbol.iterator](): IterableIterator<TextTrackCue>;
+export external public interface ~TextTrackCueList {
+	[Symbol.iterator](): IterableIterator<TextTrackCue>;
 }
 
-@Polyfill
-export external public class TextTrackList extends TextTrackList {
-	public [Symbol.iterator](): IterableIterator<TextTrack>;
+export external public interface ~TextTrackList {
+	[Symbol.iterator](): IterableIterator<TextTrack>;
 }
 
-@Polyfill
-export external public class TouchList extends TouchList {
-	public [Symbol.iterator](): IterableIterator<Touch>;
+export external public interface ~TouchList {
+	[Symbol.iterator](): IterableIterator<Touch>;
 }
 
-@Polyfill
-export external public class URLSearchParams extends URLSearchParams {
-	public [Symbol.iterator](): IterableIterator<[string,string]>;
-	public entries(): IterableIterator<[string,string]>;
-	public keys(): IterableIterator<string>;
-	public values(): IterableIterator<string>;
+export external public interface ~URLSearchParams {
+	[Symbol.iterator](): IterableIterator<[string,string]>;
+	entries(): IterableIterator<[string,string]>;
+	keys(): IterableIterator<string>;
+	values(): IterableIterator<string>;
 }
 
 export external public interface ~WEBGL_draw_buffers {

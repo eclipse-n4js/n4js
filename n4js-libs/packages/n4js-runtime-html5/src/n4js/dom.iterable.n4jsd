@@ -3,26 +3,23 @@
 
 @@Global @@ProvidedByRuntime
 
-@Polyfill
-export external public class DOMTokenList extends DOMTokenList {
-	public [Symbol.iterator](): IterableIterator<string>;
+export external public interface ~DOMTokenList {
+	[Symbol.iterator](): IterableIterator<string>;
 }
 
-@Polyfill
-export external public class Headers extends Headers {
-	public [Symbol.iterator](): IterableIterator<[string,string]>;
-	public entries(): IterableIterator<[string,string]>;
-	public keys(): IterableIterator<string>;
-	public values(): IterableIterator<string>;
+export external public interface ~Headers {
+	[Symbol.iterator](): IterableIterator<[string,string]>;
+	entries(): IterableIterator<[string,string]>;
+	keys(): IterableIterator<string>;
+	values(): IterableIterator<string>;
 }
 
-@Polyfill
-export external public class NodeList extends NodeList {
-	public entries(): IterableIterator<[number,Node]>;
-	public forEach(callbackfn: (value: Node, index: number, listObj: NodeList)=>void, thisArg: any = ): void;
-	public keys(): IterableIterator<number>;
-	public values(): IterableIterator<Node>;
-	public [Symbol.iterator](): IterableIterator<Node>;
+export external public interface ~NodeList {
+	entries(): IterableIterator<[number,Node]>;
+	forEach(callbackfn: (value: Node, index: number, listObj: NodeList)=>void, thisArg: any = ): void;
+	keys(): IterableIterator<number>;
+	values(): IterableIterator<Node>;
+	[Symbol.iterator](): IterableIterator<Node>;
 }
 
 export external public interface ~NodeListOf<TNode> {
@@ -41,18 +38,16 @@ export external public interface ~HTMLCollectionOf<T> {
 	[Symbol.iterator](): IterableIterator<T>;
 }
 
-@Polyfill
-export external public class FormData extends FormData {
-	public entries(): IterableIterator<[string,string | File]>;
-	public keys(): IterableIterator<string>;
-	public values(): IterableIterator<string | File>;
-	public [Symbol.iterator](): IterableIterator<string | File>;
+export external public interface ~FormData {
+	entries(): IterableIterator<[string,string | File]>;
+	keys(): IterableIterator<string>;
+	values(): IterableIterator<string | File>;
+	[Symbol.iterator](): IterableIterator<string | File>;
 }
 
-@Polyfill
-export external public class URLSearchParams extends URLSearchParams {
-	public entries(): IterableIterator<[string,string]>;
-	public keys(): IterableIterator<string>;
-	public values(): IterableIterator<string>;
-	public [Symbol.iterator](): IterableIterator<[string,string]>;
+export external public interface ~URLSearchParams {
+	entries(): IterableIterator<[string,string]>;
+	keys(): IterableIterator<string>;
+	values(): IterableIterator<string>;
+	[Symbol.iterator](): IterableIterator<[string,string]>;
 }
