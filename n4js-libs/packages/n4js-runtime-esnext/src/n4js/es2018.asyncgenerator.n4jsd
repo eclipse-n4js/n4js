@@ -4,13 +4,15 @@
 @@Global @@ProvidedByRuntime
 
 export external public interface ~AsyncGeneratorFunction {
-	new(...args: any): AsyncGenerator;
+	new(...args: any): AsyncGenerator<any,any,any>;
+	(...args: any): AsyncGenerator<any,any,any>;
 	get length(): number;
 	get name(): string;
 }
 
 export external public interface ~AsyncGeneratorFunctionConstructor {
 	new(...args: string): AsyncGeneratorFunction;
+	(...args: string): AsyncGeneratorFunction;
 	get length(): number;
 	get name(): string;
 }

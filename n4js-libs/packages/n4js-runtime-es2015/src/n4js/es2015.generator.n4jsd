@@ -4,13 +4,15 @@
 @@Global @@ProvidedByRuntime
 
 export external public interface ~GeneratorFunction {
-	new(...args: any): Generator;
+	new(...args: any): Generator<any,any,any>;
+	(...args: any): Generator<any,any,any>;
 	get length(): number;
 	get name(): string;
 }
 
 export external public interface ~GeneratorFunctionConstructor {
 	new(...args: string): GeneratorFunction;
+	(...args: string): GeneratorFunction;
 	get length(): number;
 	get name(): string;
 }

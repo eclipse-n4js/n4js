@@ -611,8 +611,8 @@ export default {
 			],
 			convertCtorInstanceTypes: true,
 			patchMembers: {
-				"GeneratorFunction#()": undefined,           // callable ctor not supported in interface
-				"GeneratorFunctionConstructor#()": undefined // callable ctor not supported in interface
+				"GeneratorFunction#new": { replaceBy: "new(...args: any): Generator<any,any,any>;" }, // optional type parameters missing
+				"GeneratorFunction#()": { replaceBy: "(...args: any): Generator<any,any,any>;" } // optional type parameters missing
 			}
 		},
 		"es2015.promise.d.ts": {
@@ -706,8 +706,8 @@ export default {
 			],
 			convertCtorInstanceTypes: true,
 			patchMembers: {
-				"AsyncGeneratorFunction#()": undefined,           // callable ctor not supported in interface
-				"AsyncGeneratorFunctionConstructor#()": undefined // callable ctor not supported in interface
+				"AsyncGeneratorFunction#new": { replaceBy: "new(...args: any): AsyncGenerator<any,any,any>;" }, // optional type parameters missing
+				"AsyncGeneratorFunction#()": { replaceBy: "(...args: any): AsyncGenerator<any,any,any>;" } // optional type parameters missing
 			}
 		},
 		"es2018.promise.d.ts": {
