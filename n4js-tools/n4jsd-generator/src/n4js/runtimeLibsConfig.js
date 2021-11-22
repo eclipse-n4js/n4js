@@ -628,7 +628,8 @@ export default {
 				// 2) use of unfortunate type 'any' instead of 'Object' for parameters "thisArg" and "receiver"
 				"ProxyHandler"
 			],
-			convertCtorInstanceTypes: true,
+			// cannot convert ctor/instance type "Proxy" to class, because construct signature in ProxyConstructor has an odd return type:
+			convertCtorInstanceTypes: false,
 			suffix: `
 				export external public interface ~ProxyHandler<T> {
 					apply?: (target: T, thisArg: Object, argArray: Array<any>) => any;

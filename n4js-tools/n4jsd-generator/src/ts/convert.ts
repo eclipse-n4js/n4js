@@ -469,11 +469,11 @@ export class Converter {
 			result.signatures = this.convertConstructSignatures(sourceFile, symContainingClassifier);
 			return result;
 		} else if (ts.isConstructSignatureDeclaration(node)) {
-			result.kind = model.MemberKind.CTOR;
+			result.kind = model.MemberKind.CONSTRUCT_SIGNATURE;
 			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
 			return result;
 		} else if (ts.isCallSignatureDeclaration(node)) {
-			result.kind = model.MemberKind.CALLABLE_CTOR;
+			result.kind = model.MemberKind.CALL_SIGNATURE;
 			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
 			return result;
 		} else if (ts.isIndexSignatureDeclaration(node)) {
@@ -565,9 +565,8 @@ export class Converter {
 	private convertSignatureDeclarationsInAST(decls: ts.Declaration[]): model.Signature[] {
 		const results = [] as model.Signature[];
 		for (const decl of decls) {
-			const isConstructSigDecl = ts.isConstructSignatureDeclaration(decl);
-			if (isConstructSigDecl
-				|| ts.isCallSignatureDeclaration(decl)
+			if (ts.isCallSignatureDeclaration(decl)
+				|| ts.isConstructSignatureDeclaration(decl)
 				|| ts.isIndexSignatureDeclaration(decl)
 				|| ts.isFunctionTypeNode(decl)) {
 				const result = new model.Signature();
@@ -589,8 +588,8 @@ export class Converter {
 						result.parameters.push(this.convertParameter(paramSym));
 					}
 				}
-				if (!isConstructSigDecl && decl.type) {
-					result.returnType = this.convertTypeReference(decl.type);
+				if (decl.type) {
+					result.returnType = this.convertTypeReference(decl.type); // note: even construct signatures have a return type
 				}
 				results.push(result);
 			}

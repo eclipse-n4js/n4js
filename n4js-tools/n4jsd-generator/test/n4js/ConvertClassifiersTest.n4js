@@ -301,14 +301,35 @@ export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
 				name: "es5.d.ts",
 				dts: `
 					export interface Ifc {
+						new(p1: string, p2: number): Ifc;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						new(p1: string, p2: number): Ifc;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testConstructSignatures_withOverloading() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
 						new(p: string): Ifc;
 						new(p1: string, p2: number): Ifc;
 					}
 				`,
 				n4jsd: `
 					export external public interface ~Ifc {
-						@CovariantConstructor
-						constructor(...args: any+); // overloading not supported
+						new(...args: any+): any+; // overloading not supported
 					}
 				`
 			}

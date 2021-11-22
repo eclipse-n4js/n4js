@@ -124,7 +124,8 @@ export class EnumLiteral extends NamedElement {
 }
 
 export enum MemberKind {
-	CTOR, CALLABLE_CTOR, INDEX_SIGNATURE,
+	CTOR,
+	CALL_SIGNATURE, CONSTRUCT_SIGNATURE, INDEX_SIGNATURE,
 	FIELD, GETTER, SETTER, METHOD
 }
 
@@ -450,13 +451,13 @@ class Emitter {
 		}
 		this.emitAnnotations(member, true);
 		if (member.accessibility !== undefined) {
-			if (member.kind !== MemberKind.CALLABLE_CTOR) { // TODO how to define accessibility of a callable ctor?
+			if (member.kind !== MemberKind.CALL_SIGNATURE) { // TODO how to define accessibility of a callable ctor?
 				this.emitAccessibility(member);
 				buff.push(" ");
 			}
 		}
 		if (member.isStatic) {
-			if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALLABLE_CTOR) {
+			if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALL_SIGNATURE) {
 				buff.push("static ");
 			}
 		}
@@ -475,7 +476,13 @@ class Emitter {
 				this.emitSignaturePart2(signature, true);
 				buff.push(";");
 				break;
-			case MemberKind.CALLABLE_CTOR:
+			case MemberKind.CALL_SIGNATURE:
+				this.emitSignaturePart2(signature);
+				buff.push(";");
+				break;
+			case MemberKind.CONSTRUCT_SIGNATURE:
+				this.emitSignaturePart1(signature);
+				buff.push("new");
 				this.emitSignaturePart2(signature);
 				buff.push(";");
 				break;

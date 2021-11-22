@@ -123,7 +123,8 @@ export class EnumLiteral extends NamedElement {
 }
 
 export enum MemberKind {
-	CTOR, CALLABLE_CTOR, INDEX_SIGNATURE,
+	CTOR,
+	CALL_SIGNATURE, CONSTRUCT_SIGNATURE, INDEX_SIGNATURE,
 	FIELD, GETTER, SETTER, METHOD
 }
 
