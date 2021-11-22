@@ -193,6 +193,9 @@ export class TypeRef implements AnnotatableElement { // note: annotations only s
 	public isBuiltInUndefined(): boolean {
 		return this.kind === TypeRefKind.NAMED && this.targetTypeName === "undefined";
 	}
+	public isBuiltInVoid(): boolean {
+		return this.kind === TypeRefKind.NAMED && this.targetTypeName === "void";
+	}
 	public isComposed(): boolean {
 		return this.kind === TypeRefKind.UNION || this.kind === TypeRefKind.INTERSECTION;
 	}
@@ -539,7 +542,7 @@ class Emitter {
 		}
 		buff.push(")");
 		if (!ignoreReturnType) {
-			this.emitTypeAnnotation(simplifyUnion(sig.returnType));
+			this.emitTypeAnnotation(simplifyUnion(sig.returnType), undefined, true); // keep 'void'
 		}
 	}
 
@@ -570,12 +573,16 @@ class Emitter {
 		}
 	}
 
-	emitTypeAnnotation(typeRef: TypeRef, separator: string = ": ") {
+	emitTypeAnnotation(typeRef: TypeRef, separator: string = ": ", keepVoid = false) {
 		const buff = this.buff;
 		if (getGlobalOptions()?.copyTypeRefs) {
 			if (typeRef) {
 				buff.push(separator);
-				this.emitTypeRef(typeRef);
+				if (keepVoid && typeRef.isBuiltInVoid()) {
+					buff.push("void");
+				} else {
+					this.emitTypeRef(typeRef);
+				}
 			} else {
 				buff.push(separator, "any+");
 			}
@@ -656,6 +663,11 @@ class Emitter {
 			throw "expected a TypeRef of kind TypeRefKind.NAMED, but got: " + typeRef.kind;
 		}
 		const buff = this.buff;
+		if (typeRef.isBuiltInVoid()) {
+			// in TypeScript, 'void' can be used anywhere but in N4JS only as return type of functions/methods
+			// -> replace 'void' by 'undefined' by default:
+			typeRef = createUndefined();
+		}
 		buff.push(typeRef.targetTypeName);
 		if (typeRef.targetTypeArgs.length > 0) {
 			buff.push("<");
@@ -697,7 +709,11 @@ class Emitter {
 			if (needParens) {
 				buff.push("(");
 			}
-			this.emitTypeRef(returnType);
+			if (returnType.isBuiltInVoid()) {
+				buff.push("void");
+			} else {
+				this.emitTypeRef(returnType);
+			}
 			if (needParens) {
 				buff.push(")");
 			}
@@ -870,7 +886,7 @@ export function simplifyUnion(typeRef: TypeRef): TypeRef {
 	const typeRefs = [...typeRef.composedTypeRefs];
 	while (idx < typeRefs.length) {
 		const curr = typeRefs[idx];
-		if (curr.isBuiltInUndefined()) {
+		if (curr.isBuiltInUndefined() || curr.isBuiltInVoid()) {
 			typeRefs.splice(idx,1);
 		} else {
 			++idx;
