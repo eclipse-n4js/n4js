@@ -4454,7 +4454,9 @@ export external public interface ~HTMLDetailsElement extends HTMLElement {
 var HTMLDetailsElement: ~Object with { constructor(); };
 
 export external public interface ~HTMLDialogElement extends HTMLElement {
+	@Override
 	addEventListener(type: string, listener: EventListenerOrEventListenerObject, options: boolean | AddEventListenerOptions = ): void;
+	@Override
 	removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options: boolean | EventListenerOptions = ): void;
 }
 
@@ -5348,7 +5350,9 @@ export external public interface ~HTMLTableColElement extends HTMLElement {
 var HTMLTableColElement: ~Object with { constructor(); };
 
 export external public interface ~HTMLTableDataCellElement extends HTMLTableCellElement {
+	@Override
 	addEventListener(type: string, listener: EventListenerOrEventListenerObject, options: boolean | AddEventListenerOptions = ): void;
+	@Override
 	removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options: boolean | EventListenerOptions = ): void;
 }
 
@@ -5385,7 +5389,9 @@ export external public interface ~HTMLTableElement extends HTMLElement {
 var HTMLTableElement: ~Object with { constructor(); };
 
 export external public interface ~HTMLTableHeaderCellElement extends HTMLTableCellElement {
+	@Override
 	addEventListener(type: string, listener: EventListenerOrEventListenerObject, options: boolean | AddEventListenerOptions = ): void;
+	@Override
 	removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options: boolean | EventListenerOptions = ): void;
 }
 
