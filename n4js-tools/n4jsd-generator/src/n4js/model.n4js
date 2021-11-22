@@ -104,6 +104,7 @@ export interface GenericElement {
 }
 
 export class TypeParameter extends NamedElement {
+	upperBound?: TypeRef;
 	defaultArgument?: TypeRef;
 }
 
@@ -387,6 +388,10 @@ class Emitter {
 					buff.push(",");
 				}
 				buff.push(typeParam.name);
+				if (typeParam.upperBound) {
+					buff.push(" extends ");
+					this.emitTypeRef(typeParam.upperBound);
+				}
 				if (allowOptionalParams && typeParam.defaultArgument) {
 					buff.push("=");
 					this.emitTypeRef(typeParam.defaultArgument);

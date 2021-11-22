@@ -379,6 +379,9 @@ export class Converter {
 	private convertTypeParameter(node: ts.TypeParameterDeclaration): model.TypeParameter {
 		const result = new model.TypeParameter();
 		result.name = node.name.text;
+		if (node.constraint) {
+			result.upperBound = this.convertTypeReference(node.constraint);
+		}
 		if (node.default) {
 			result.defaultArgument = this.convertTypeReference(node.default);
 		}

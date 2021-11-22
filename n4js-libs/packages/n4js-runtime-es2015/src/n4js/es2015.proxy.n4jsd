@@ -4,8 +4,8 @@
 @@Global @@ProvidedByRuntime
 
 export external public interface ~ProxyConstructor {
-	<T> revocable(target: T, handler: ProxyHandler<T>): ~Object with { proxy: T; revoke: ()=>void; };
-	<T> new(target: T, handler: ProxyHandler<T>): T;
+	<T extends Object> revocable(target: T, handler: ProxyHandler<T>): ~Object with { proxy: T; revoke: ()=>void; };
+	<T extends Object> new(target: T, handler: ProxyHandler<T>): T;
 }
 
 var Proxy: ProxyConstructor;

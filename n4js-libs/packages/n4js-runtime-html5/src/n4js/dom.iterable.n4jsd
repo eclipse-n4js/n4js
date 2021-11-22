@@ -22,7 +22,7 @@ export external public interface ~NodeList {
 	[Symbol.iterator](): IterableIterator<Node>;
 }
 
-export external public interface ~NodeListOf<TNode> {
+export external public interface ~NodeListOf<TNode extends Node> {
 	entries(): IterableIterator<[number,TNode]>;
 	forEach(callbackfn: (value: TNode, index: number, listObj: NodeListOf<TNode>)=>void, thisArg: any = ): void;
 	keys(): IterableIterator<number>;
@@ -34,7 +34,7 @@ export external public interface ~HTMLCollectionBase {
 	[Symbol.iterator](): IterableIterator<Element>;
 }
 
-export external public interface ~HTMLCollectionOf<T> {
+export external public interface ~HTMLCollectionOf<T extends Element> {
 	[Symbol.iterator](): IterableIterator<T>;
 }
 

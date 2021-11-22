@@ -3065,7 +3065,7 @@ var CredentialsContainer: ~Object with { new(): CredentialsContainer; };
 
 export external public interface ~Crypto {
 	get subtle(): SubtleCrypto;
-	<T> getRandomValues(array: T): T;
+	<T extends ArrayBufferView> getRandomValues(array: T): T;
 }
 
 var Crypto: ~Object with { new(): Crypto; };
@@ -3496,7 +3496,7 @@ export external public interface ~Document extends Node, DocumentAndElementEvent
 	title: string;
 	get visibilityState(): VisibilityState;
 	vlinkColor: string;
-	<T> adoptNode(node: T): T;
+	<T extends Node> adoptNode(node: T): T;
 	captureEvents(): void;
 	caretRangeFromPoint(x: number, y: number): Range;
 	clear(): void;
@@ -3529,7 +3529,7 @@ export external public interface ~Document extends Node, DocumentAndElementEvent
 	getSelection(): Selection;
 	hasFocus(): boolean;
 	hasStorageAccess(): Promise<boolean>;
-	<T> importNode(node: T, deep: boolean = ): T;
+	<T extends Node> importNode(node: T, deep: boolean = ): T;
 	open(...args: any+): any+; // overloading not supported
 	queryCommandEnabled(commandId: string): boolean;
 	queryCommandIndeterm(commandId: string): boolean;
@@ -4408,7 +4408,7 @@ export external public interface ~HTMLCollection extends HTMLCollectionBase {
 
 var HTMLCollection: ~Object with { new(): HTMLCollection; };
 
-export external public interface ~HTMLCollectionOf<T> extends HTMLCollectionBase {
+export external public interface ~HTMLCollectionOf<T extends Element> extends HTMLCollectionBase {
 	item(index: number): T;
 	namedItem(name: string): T;
 }
@@ -6449,21 +6449,21 @@ export external public interface ~Node extends EventTarget {
 	get parentNode(): ParentNode;
 	get previousSibling(): ChildNode;
 	textContent: string;
-	<T> appendChild(node: T): T;
+	<T extends Node> appendChild(node: T): T;
 	cloneNode(deep: boolean = ): Node;
 	compareDocumentPosition(other: Node): number;
 	contains(other: Node): boolean;
 	getRootNode(options: GetRootNodeOptions = ): Node;
 	hasChildNodes(): boolean;
-	<T> insertBefore(node: T, child: Node): T;
+	<T extends Node> insertBefore(node: T, child: Node): T;
 	isDefaultNamespace(namespace: string): boolean;
 	isEqualNode(otherNode: Node): boolean;
 	isSameNode(otherNode: Node): boolean;
 	lookupNamespaceURI(prefix: string): string;
 	lookupPrefix(namespace: string): string;
 	normalize(): void;
-	<T> removeChild(child: T): T;
-	<T> replaceChild(node: Node, child: T): T;
+	<T extends Node> removeChild(child: T): T;
+	<T extends Node> replaceChild(node: Node, child: T): T;
 	get ATTRIBUTE_NODE(): number;
 	get CDATA_SECTION_NODE(): number;
 	get COMMENT_NODE(): number;
@@ -6507,7 +6507,7 @@ export external public interface ~NodeList {
 
 var NodeList: ~Object with { new(): NodeList; };
 
-export external public interface ~NodeListOf<TNode> extends NodeList {
+export external public interface ~NodeListOf<TNode extends Node> extends NodeList {
 	item(index: number): TNode;
 	forEach(callbackfn: (value: TNode, key: number, parent: NodeListOf<TNode>)=>void, thisArg: any = ): void;
 }
@@ -6990,7 +6990,7 @@ export external public interface ~ProcessingInstruction extends CharacterData, L
 
 var ProcessingInstruction: ~Object with { new(): ProcessingInstruction; };
 
-export external public interface ~ProgressEvent<T=EventTarget> extends Event {
+export external public interface ~ProgressEvent<T extends EventTarget=EventTarget> extends Event {
 	get lengthComputable(): boolean;
 	get loaded(): number;
 	get target(): T;

@@ -70,7 +70,7 @@ export external public interface ~HTMLCollectionBase {
 	[Symbol.iterator](): IterableIterator<Element>;
 }
 
-export external public interface ~HTMLCollectionOf<T> {
+export external public interface ~HTMLCollectionOf<T extends Element> {
 	[Symbol.iterator](): IterableIterator<T>;
 }
 
@@ -132,7 +132,7 @@ export external public interface ~NodeList {
 	values(): IterableIterator<Node>;
 }
 
-export external public interface ~NodeListOf<TNode> {
+export external public interface ~NodeListOf<TNode extends Node> {
 	[Symbol.iterator](): IterableIterator<TNode>;
 	entries(): IterableIterator<[number,TNode]>;
 	keys(): IterableIterator<number>;

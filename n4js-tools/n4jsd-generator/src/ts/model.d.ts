@@ -99,6 +99,7 @@ export interface GenericElement {
 }
 
 export class TypeParameter extends NamedElement {
+	upperBound?: TypeRef;
 	defaultArgument?: TypeRef;
 }
 
