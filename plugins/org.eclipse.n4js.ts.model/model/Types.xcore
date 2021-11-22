@@ -485,11 +485,22 @@ class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElemen
 	 */
 	boolean constructor
 	/**
-	 * Tells whether this function is a method that represents a callable constructor.
+	 * Tells whether this function is a method that represents a call signature.
+	 * <p>
+	 * Does not work in case the receiver is an AST node (use {@link TStructMember#isASTCallSignature()} instead).
 	 */
-	op boolean isCallableConstructor() {
+	op boolean isCallSignature() {
 		val parent = eContainer;
-		return if(parent instanceof ContainerType<?>) parent.callableCtor===this else false;
+		return if(parent instanceof ContainerType<?>) parent.callSignature===this else false;
+	}
+	/**
+	 * Tells whether this function is a method that represents a construct signature.
+	 * <p>
+	 * Does not work in case the receiver is an AST node (use {@link TStructMember#isASTConstructSignature()} instead).
+	 */
+	op boolean isConstructSignature() {
+		val parent = eContainer;
+		return if(parent instanceof ContainerType<?>) parent.constructSignature===this else false;
 	}
 	/**
 	 * Returns the formal parameter corresponding to the argument at index 'argIndex' in a function call
@@ -744,7 +755,8 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 	transient EMap<NameAndAccess, ? extends TMember> ownedMembersByNameAndAccess
 
 	contains MT[] ownedMembers
-	contains TMethod callableCtor // required in TClass
+	contains TMethod callSignature
+	contains TMethod constructSignature
 
 	/**
 	 * Convenience method returning the owned constructor or <code>null</code> if not available.
@@ -1260,6 +1272,22 @@ abstract class TStructMember extends TMember {
 	op MemberAccessModifier getMemberAccessModifier() {
 		return MemberAccessModifier.PUBLIC
 	}
+
+	/*
+	 * If this TStructMember plays the role of an AST node, this method tells whether it is a call signature;
+	 * if this TStructMember is not an AST node, the return value is undefined (i.e. this method does not check
+	 * whether the receiver is actually an AST node).
+	 * <p>
+	 * Note: this method is required because {@link TFunction#isCallSignature()} does not work for AST nodes.
+	 */
+	op boolean isASTCallSignature() {
+		return this instanceof TStructMethod && this.name === null;
+	}
+
+	/* Same as {@link TStructMember#isASTCallSignature()}, but for construct signatures. */
+	op boolean isASTConstructSignature() {
+		return this instanceof TStructMethod && this.name == "new";
+	}
 }
 
 /*
@@ -1297,7 +1325,10 @@ class TMethod extends TFunction, TMemberWithAccessModifier {
 		val StringBuilder strb = new StringBuilder();
 		if (generic) strb.append("<").append(typeVars.map[typeAsString].join(",")).append("> ");
 		if (declaredAsync) strb.append("async ");
-		strb.append(name).append("(").append(fpars.map[formalParameterAsString].join(", ")).append(")");
+		if (!isCallSignature()) {
+			strb.append(name);
+		}
+		strb.append("(").append(fpars.map[formalParameterAsString].join(", ")).append(")");
 		if (returnTypeRef!==null) strb.append(": ").append(returnTypeRef.typeRefAsString);
 		if (returnValueOptional) strb.append('?');
 		return strb.toString();

@@ -83,7 +83,15 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 	}
 
 	def dispatch String keyword(N4MethodDeclaration n4MethodDeclaration) {
-		if(n4MethodDeclaration.isConstructor) "constructor" else "method"
+		if (n4MethodDeclaration.isConstructor) {
+			"constructor"
+		} else if (n4MethodDeclaration.isCallSignature) {
+			"call signature"
+		} else if (n4MethodDeclaration.isConstructSignature) {
+			"construct signature"
+		} else {
+			"method"
+		}
 	}
 
 	def dispatch String keyword(N4GetterDeclaration n4GetterDeclaration) {

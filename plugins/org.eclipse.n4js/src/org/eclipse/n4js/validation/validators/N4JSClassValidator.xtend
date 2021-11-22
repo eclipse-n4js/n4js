@@ -338,6 +338,14 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 							consumedType.description);
 						addIssue(message, it, null, CLF_WRONG_META_TYPE);
 					}
+				} else {
+					val tIfc = consumedType as TInterface;
+					val cth = containerTypesHelper.fromContext(n4Class);
+					val hasCallConstructSig = cth.findCallSignature(tIfc) !== null || cth.findConstructSignature(tIfc) !== null;
+					if (hasCallConstructSig) {
+						val message = getMessageForCLF_CALL_CONSTRUCT_SIG_CANNOT_IMPLEMENT();
+						addIssue(message, it, null, CLF_CALL_CONSTRUCT_SIG_CANNOT_IMPLEMENT);
+					}
 				}
 			} else if (consumedTypeRef !== null && consumedTypeRef.isAliasResolved) {
 				// not all aliases are illegal after "implements", but if we get to this point we have an illegal case:

@@ -11664,13 +11664,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASSIFIER_DECLARATION___GET_OWNED_CTOR = N4_TYPE_DECLARATION_OPERATION_COUNT + 1;
 
 	/**
-	 * The operation id for the '<em>Get Owned Callable Ctor</em>' operation.
+	 * The operation id for the '<em>Get Owned Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION___GET_OWNED_CALLABLE_CTOR = N4_TYPE_DECLARATION_OPERATION_COUNT + 2;
+	int N4_CLASSIFIER_DECLARATION___GET_OWNED_CALL_SIGNATURE = N4_TYPE_DECLARATION_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Get Owned Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DECLARATION___GET_OWNED_CONSTRUCT_SIGNATURE = N4_TYPE_DECLARATION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Owned Methods</em>' operation.
@@ -11679,7 +11688,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION___GET_OWNED_METHODS = N4_TYPE_DECLARATION_OPERATION_COUNT + 3;
+	int N4_CLASSIFIER_DECLARATION___GET_OWNED_METHODS = N4_TYPE_DECLARATION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Owned Fields</em>' operation.
@@ -11688,7 +11697,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION___GET_OWNED_FIELDS = N4_TYPE_DECLARATION_OPERATION_COUNT + 4;
+	int N4_CLASSIFIER_DECLARATION___GET_OWNED_FIELDS = N4_TYPE_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Owned Getters</em>' operation.
@@ -11697,7 +11706,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION___GET_OWNED_GETTERS = N4_TYPE_DECLARATION_OPERATION_COUNT + 5;
+	int N4_CLASSIFIER_DECLARATION___GET_OWNED_GETTERS = N4_TYPE_DECLARATION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Owned Setters</em>' operation.
@@ -11706,7 +11715,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION___GET_OWNED_SETTERS = N4_TYPE_DECLARATION_OPERATION_COUNT + 6;
+	int N4_CLASSIFIER_DECLARATION___GET_OWNED_SETTERS = N4_TYPE_DECLARATION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Super Classifier Refs</em>' operation.
@@ -11715,7 +11724,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION___GET_SUPER_CLASSIFIER_REFS = N4_TYPE_DECLARATION_OPERATION_COUNT + 7;
+	int N4_CLASSIFIER_DECLARATION___GET_SUPER_CLASSIFIER_REFS = N4_TYPE_DECLARATION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Implemented Or Extended Interface Refs</em>' operation.
@@ -11724,7 +11733,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = N4_TYPE_DECLARATION_OPERATION_COUNT + 8;
+	int N4_CLASSIFIER_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = N4_TYPE_DECLARATION_OPERATION_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>N4 Classifier Declaration</em>' class.
@@ -11733,7 +11742,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 9;
+	int N4_CLASSIFIER_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassifierDefinitionImpl <em>N4 Classifier Definition</em>}' class.
@@ -11818,13 +11827,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASSIFIER_DEFINITION___GET_OWNED_CTOR = N4_TYPE_DEFINITION_OPERATION_COUNT + 1;
 
 	/**
-	 * The operation id for the '<em>Get Owned Callable Ctor</em>' operation.
+	 * The operation id for the '<em>Get Owned Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DEFINITION___GET_OWNED_CALLABLE_CTOR = N4_TYPE_DEFINITION_OPERATION_COUNT + 2;
+	int N4_CLASSIFIER_DEFINITION___GET_OWNED_CALL_SIGNATURE = N4_TYPE_DEFINITION_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Get Owned Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DEFINITION___GET_OWNED_CONSTRUCT_SIGNATURE = N4_TYPE_DEFINITION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Owned Methods</em>' operation.
@@ -11833,7 +11851,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DEFINITION___GET_OWNED_METHODS = N4_TYPE_DEFINITION_OPERATION_COUNT + 3;
+	int N4_CLASSIFIER_DEFINITION___GET_OWNED_METHODS = N4_TYPE_DEFINITION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Owned Fields</em>' operation.
@@ -11842,7 +11860,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DEFINITION___GET_OWNED_FIELDS = N4_TYPE_DEFINITION_OPERATION_COUNT + 4;
+	int N4_CLASSIFIER_DEFINITION___GET_OWNED_FIELDS = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Owned Getters</em>' operation.
@@ -11851,7 +11869,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DEFINITION___GET_OWNED_GETTERS = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
+	int N4_CLASSIFIER_DEFINITION___GET_OWNED_GETTERS = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Owned Setters</em>' operation.
@@ -11860,7 +11878,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DEFINITION___GET_OWNED_SETTERS = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
+	int N4_CLASSIFIER_DEFINITION___GET_OWNED_SETTERS = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Super Classifier Refs</em>' operation.
@@ -11869,7 +11887,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DEFINITION___GET_SUPER_CLASSIFIER_REFS = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
+	int N4_CLASSIFIER_DEFINITION___GET_SUPER_CLASSIFIER_REFS = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Implemented Or Extended Interface Refs</em>' operation.
@@ -11878,7 +11896,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DEFINITION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
+	int N4_CLASSIFIER_DEFINITION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>N4 Classifier Definition</em>' class.
@@ -11887,7 +11905,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DEFINITION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
+	int N4_CLASSIFIER_DEFINITION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassDefinitionImpl <em>N4 Class Definition</em>}' class.
@@ -11999,13 +12017,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DEFINITION___GET_OWNED_CTOR = N4_CLASSIFIER_DEFINITION___GET_OWNED_CTOR;
 
 	/**
-	 * The operation id for the '<em>Get Owned Callable Ctor</em>' operation.
+	 * The operation id for the '<em>Get Owned Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DEFINITION___GET_OWNED_CALLABLE_CTOR = N4_CLASSIFIER_DEFINITION___GET_OWNED_CALLABLE_CTOR;
+	int N4_CLASS_DEFINITION___GET_OWNED_CALL_SIGNATURE = N4_CLASSIFIER_DEFINITION___GET_OWNED_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Get Owned Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DEFINITION___GET_OWNED_CONSTRUCT_SIGNATURE = N4_CLASSIFIER_DEFINITION___GET_OWNED_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Owned Methods</em>' operation.
@@ -12216,13 +12243,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DECLARATION___GET_OWNED_CTOR = N4_CLASS_DEFINITION___GET_OWNED_CTOR;
 
 	/**
-	 * The operation id for the '<em>Get Owned Callable Ctor</em>' operation.
+	 * The operation id for the '<em>Get Owned Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___GET_OWNED_CALLABLE_CTOR = N4_CLASS_DEFINITION___GET_OWNED_CALLABLE_CTOR;
+	int N4_CLASS_DECLARATION___GET_OWNED_CALL_SIGNATURE = N4_CLASS_DEFINITION___GET_OWNED_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Get Owned Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___GET_OWNED_CONSTRUCT_SIGNATURE = N4_CLASS_DEFINITION___GET_OWNED_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Owned Methods</em>' operation.
@@ -12487,13 +12523,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_EXPRESSION___GET_OWNED_CTOR = N4_CLASS_DEFINITION___GET_OWNED_CTOR;
 
 	/**
-	 * The operation id for the '<em>Get Owned Callable Ctor</em>' operation.
+	 * The operation id for the '<em>Get Owned Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_EXPRESSION___GET_OWNED_CALLABLE_CTOR = N4_CLASS_DEFINITION___GET_OWNED_CALLABLE_CTOR;
+	int N4_CLASS_EXPRESSION___GET_OWNED_CALL_SIGNATURE = N4_CLASS_DEFINITION___GET_OWNED_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Get Owned Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_EXPRESSION___GET_OWNED_CONSTRUCT_SIGNATURE = N4_CLASS_DEFINITION___GET_OWNED_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Owned Methods</em>' operation.
@@ -12776,13 +12821,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_INTERFACE_DECLARATION___GET_OWNED_CTOR = N4_CLASSIFIER_DECLARATION___GET_OWNED_CTOR;
 
 	/**
-	 * The operation id for the '<em>Get Owned Callable Ctor</em>' operation.
+	 * The operation id for the '<em>Get Owned Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INTERFACE_DECLARATION___GET_OWNED_CALLABLE_CTOR = N4_CLASSIFIER_DECLARATION___GET_OWNED_CALLABLE_CTOR;
+	int N4_INTERFACE_DECLARATION___GET_OWNED_CALL_SIGNATURE = N4_CLASSIFIER_DECLARATION___GET_OWNED_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Get Owned Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___GET_OWNED_CONSTRUCT_SIGNATURE = N4_CLASSIFIER_DECLARATION___GET_OWNED_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Owned Methods</em>' operation.
@@ -13438,13 +13492,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_MEMBER_DECLARATION___IS_CONSTRUCTOR = ANNOTABLE_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = ANNOTABLE_ELEMENT_OPERATION_COUNT + 9;
+	int N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 9;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The number of operations of the '<em>N4 Member Declaration</em>' class.
@@ -13453,7 +13516,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION_OPERATION_COUNT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 10;
+	int N4_MEMBER_DECLARATION_OPERATION_COUNT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.AnnotableN4MemberDeclarationImpl <em>Annotable N4 Member Declaration</em>}' class.
@@ -13592,13 +13655,22 @@ public interface N4JSPackage extends EPackage {
 	int ANNOTABLE_N4_MEMBER_DECLARATION___IS_CONSTRUCTOR = N4_MEMBER_DECLARATION___IS_CONSTRUCTOR;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTABLE_N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR;
+	int ANNOTABLE_N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE = N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTABLE_N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE = N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -13746,13 +13818,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 10;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_CALLABLE_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 11;
+	int N4_MEMBER_ANNOTATION_LIST___IS_CALL_SIGNATURE = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 11;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCT_SIGNATURE = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -13761,7 +13842,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 12;
+	int N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -13770,7 +13851,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___GET_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 13;
+	int N4_MEMBER_ANNOTATION_LIST___GET_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 14;
 
 	/**
 	 * The number of operations of the '<em>N4 Member Annotation List</em>' class.
@@ -13779,7 +13860,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 14;
+	int N4_MEMBER_ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4FieldDeclarationImpl <em>N4 Field Declaration</em>}' class.
@@ -13936,13 +14017,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_FIELD_DECLARATION___IS_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CONSTRUCTOR;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_DECLARATION___IS_CALLABLE_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR;
+	int N4_FIELD_DECLARATION___IS_CALL_SIGNATURE = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_DECLARATION___IS_CONSTRUCT_SIGNATURE = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -14613,13 +14703,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_METHOD_DECLARATION___IS_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 18;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___IS_CALLABLE_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 19;
+	int N4_METHOD_DECLARATION___IS_CALL_SIGNATURE = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 19;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_METHOD_DECLARATION___IS_CONSTRUCT_SIGNATURE = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -14628,7 +14727,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___IS_STATIC = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 20;
+	int N4_METHOD_DECLARATION___IS_STATIC = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -14637,7 +14736,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION___IS_VALID_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 21;
+	int N4_METHOD_DECLARATION___IS_VALID_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 22;
 
 	/**
 	 * The number of operations of the '<em>N4 Method Declaration</em>' class.
@@ -14646,7 +14745,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 22;
+	int N4_METHOD_DECLARATION_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 23;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4FieldAccessorImpl <em>N4 Field Accessor</em>}' class.
@@ -14803,13 +14902,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_FIELD_ACCESSOR___IS_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CONSTRUCTOR;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_FIELD_ACCESSOR___IS_CALLABLE_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR;
+	int N4_FIELD_ACCESSOR___IS_CALL_SIGNATURE = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_ACCESSOR___IS_CONSTRUCT_SIGNATURE = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -15227,13 +15335,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_GETTER_DECLARATION___IS_CONSTRUCTOR = GETTER_DECLARATION_OPERATION_COUNT + 7;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = GETTER_DECLARATION_OPERATION_COUNT + 8;
+	int N4_GETTER_DECLARATION___IS_CALL_SIGNATURE = GETTER_DECLARATION_OPERATION_COUNT + 8;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_GETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE = GETTER_DECLARATION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -15242,7 +15359,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___GET_ANNOTATIONS = GETTER_DECLARATION_OPERATION_COUNT + 9;
+	int N4_GETTER_DECLARATION___GET_ANNOTATIONS = GETTER_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -15251,7 +15368,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_ABSTRACT = GETTER_DECLARATION_OPERATION_COUNT + 10;
+	int N4_GETTER_DECLARATION___IS_ABSTRACT = GETTER_DECLARATION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -15260,7 +15377,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_VALID_NAME = GETTER_DECLARATION_OPERATION_COUNT + 11;
+	int N4_GETTER_DECLARATION___IS_VALID_NAME = GETTER_DECLARATION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -15269,7 +15386,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = GETTER_DECLARATION_OPERATION_COUNT + 12;
+	int N4_GETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = GETTER_DECLARATION_OPERATION_COUNT + 13;
 
 	/**
 	 * The number of operations of the '<em>N4 Getter Declaration</em>' class.
@@ -15278,7 +15395,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION_OPERATION_COUNT = GETTER_DECLARATION_OPERATION_COUNT + 13;
+	int N4_GETTER_DECLARATION_OPERATION_COUNT = GETTER_DECLARATION_OPERATION_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4SetterDeclarationImpl <em>N4 Setter Declaration</em>}' class.
@@ -15552,13 +15669,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_SETTER_DECLARATION___IS_CONSTRUCTOR = SETTER_DECLARATION_OPERATION_COUNT + 7;
 
 	/**
-	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = SETTER_DECLARATION_OPERATION_COUNT + 8;
+	int N4_SETTER_DECLARATION___IS_CALL_SIGNATURE = SETTER_DECLARATION_OPERATION_COUNT + 8;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_SETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE = SETTER_DECLARATION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -15567,7 +15693,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___GET_ANNOTATIONS = SETTER_DECLARATION_OPERATION_COUNT + 9;
+	int N4_SETTER_DECLARATION___GET_ANNOTATIONS = SETTER_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -15576,7 +15702,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_ABSTRACT = SETTER_DECLARATION_OPERATION_COUNT + 10;
+	int N4_SETTER_DECLARATION___IS_ABSTRACT = SETTER_DECLARATION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -15585,7 +15711,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_VALID_NAME = SETTER_DECLARATION_OPERATION_COUNT + 11;
+	int N4_SETTER_DECLARATION___IS_VALID_NAME = SETTER_DECLARATION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -15594,7 +15720,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = SETTER_DECLARATION_OPERATION_COUNT + 12;
+	int N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = SETTER_DECLARATION_OPERATION_COUNT + 13;
 
 	/**
 	 * The number of operations of the '<em>N4 Setter Declaration</em>' class.
@@ -15603,7 +15729,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION_OPERATION_COUNT = SETTER_DECLARATION_OPERATION_COUNT + 13;
+	int N4_SETTER_DECLARATION_OPERATION_COUNT = SETTER_DECLARATION_OPERATION_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.BindingPatternImpl <em>Binding Pattern</em>}' class.
@@ -21297,14 +21423,24 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4ClassifierDefinition__GetOwnedCtor();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4ClassifierDefinition#getOwnedCallableCtor() <em>Get Owned Callable Ctor</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4ClassifierDefinition#getOwnedCallSignature() <em>Get Owned Call Signature</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Owned Callable Ctor</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.N4ClassifierDefinition#getOwnedCallableCtor()
+	 * @return the meta object for the '<em>Get Owned Call Signature</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4ClassifierDefinition#getOwnedCallSignature()
 	 * @generated
 	 */
-	EOperation getN4ClassifierDefinition__GetOwnedCallableCtor();
+	EOperation getN4ClassifierDefinition__GetOwnedCallSignature();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4ClassifierDefinition#getOwnedConstructSignature() <em>Get Owned Construct Signature</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Owned Construct Signature</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4ClassifierDefinition#getOwnedConstructSignature()
+	 * @generated
+	 */
+	EOperation getN4ClassifierDefinition__GetOwnedConstructSignature();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4ClassifierDefinition#getOwnedMethods() <em>Get Owned Methods</em>}' operation.
@@ -21748,14 +21884,24 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4MemberDeclaration__IsConstructor();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MemberDeclaration#isCallableConstructor() <em>Is Callable Constructor</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MemberDeclaration#isCallSignature() <em>Is Call Signature</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Callable Constructor</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.N4MemberDeclaration#isCallableConstructor()
+	 * @return the meta object for the '<em>Is Call Signature</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4MemberDeclaration#isCallSignature()
 	 * @generated
 	 */
-	EOperation getN4MemberDeclaration__IsCallableConstructor();
+	EOperation getN4MemberDeclaration__IsCallSignature();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MemberDeclaration#isConstructSignature() <em>Is Construct Signature</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Construct Signature</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4MemberDeclaration#isConstructSignature()
+	 * @generated
+	 */
+	EOperation getN4MemberDeclaration__IsConstructSignature();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration <em>Annotable N4 Member Declaration</em>}'.
@@ -21982,14 +22128,24 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4MethodDeclaration__IsConstructor();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MethodDeclaration#isCallableConstructor() <em>Is Callable Constructor</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MethodDeclaration#isCallSignature() <em>Is Call Signature</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Callable Constructor</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.N4MethodDeclaration#isCallableConstructor()
+	 * @return the meta object for the '<em>Is Call Signature</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4MethodDeclaration#isCallSignature()
 	 * @generated
 	 */
-	EOperation getN4MethodDeclaration__IsCallableConstructor();
+	EOperation getN4MethodDeclaration__IsCallSignature();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MethodDeclaration#isConstructSignature() <em>Is Construct Signature</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Construct Signature</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4MethodDeclaration#isConstructSignature()
+	 * @generated
+	 */
+	EOperation getN4MethodDeclaration__IsConstructSignature();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MethodDeclaration#isStatic() <em>Is Static</em>}' operation.
@@ -26671,12 +26827,20 @@ public interface N4JSPackage extends EPackage {
 		EOperation N4_CLASSIFIER_DEFINITION___GET_OWNED_CTOR = eINSTANCE.getN4ClassifierDefinition__GetOwnedCtor();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Owned Callable Ctor</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Owned Call Signature</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation N4_CLASSIFIER_DEFINITION___GET_OWNED_CALLABLE_CTOR = eINSTANCE.getN4ClassifierDefinition__GetOwnedCallableCtor();
+		EOperation N4_CLASSIFIER_DEFINITION___GET_OWNED_CALL_SIGNATURE = eINSTANCE.getN4ClassifierDefinition__GetOwnedCallSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Owned Construct Signature</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_CLASSIFIER_DEFINITION___GET_OWNED_CONSTRUCT_SIGNATURE = eINSTANCE.getN4ClassifierDefinition__GetOwnedConstructSignature();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Owned Methods</b></em>' operation.
@@ -27041,12 +27205,20 @@ public interface N4JSPackage extends EPackage {
 		EOperation N4_MEMBER_DECLARATION___IS_CONSTRUCTOR = eINSTANCE.getN4MemberDeclaration__IsConstructor();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Callable Constructor</b></em>' operation.
+		 * The meta object literal for the '<em><b>Is Call Signature</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR = eINSTANCE.getN4MemberDeclaration__IsCallableConstructor();
+		EOperation N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE = eINSTANCE.getN4MemberDeclaration__IsCallSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Construct Signature</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE = eINSTANCE.getN4MemberDeclaration__IsConstructSignature();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.AnnotableN4MemberDeclarationImpl <em>Annotable N4 Member Declaration</em>}' class.
@@ -27235,12 +27407,20 @@ public interface N4JSPackage extends EPackage {
 		EOperation N4_METHOD_DECLARATION___IS_CONSTRUCTOR = eINSTANCE.getN4MethodDeclaration__IsConstructor();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Callable Constructor</b></em>' operation.
+		 * The meta object literal for the '<em><b>Is Call Signature</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation N4_METHOD_DECLARATION___IS_CALLABLE_CONSTRUCTOR = eINSTANCE.getN4MethodDeclaration__IsCallableConstructor();
+		EOperation N4_METHOD_DECLARATION___IS_CALL_SIGNATURE = eINSTANCE.getN4MethodDeclaration__IsCallSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Construct Signature</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_METHOD_DECLARATION___IS_CONSTRUCT_SIGNATURE = eINSTANCE.getN4MethodDeclaration__IsConstructSignature();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Static</b></em>' operation.

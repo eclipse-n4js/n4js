@@ -1366,7 +1366,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTFunction__IsCallableConstructor() {
+	public EOperation getTFunction__IsCallSignature() {
 		return tFunctionEClass.getEOperations().get(1);
 	}
 
@@ -1376,7 +1376,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTFunction__GetFparForArgIdx__int() {
+	public EOperation getTFunction__IsConstructSignature() {
 		return tFunctionEClass.getEOperations().get(2);
 	}
 
@@ -1386,7 +1386,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTFunction__GetFunctionAsString() {
+	public EOperation getTFunction__GetFparForArgIdx__int() {
 		return tFunctionEClass.getEOperations().get(3);
 	}
 
@@ -1396,8 +1396,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTFunction__IsFinal() {
+	public EOperation getTFunction__GetFunctionAsString() {
 		return tFunctionEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTFunction__IsFinal() {
+		return tFunctionEClass.getEOperations().get(5);
 	}
 
 	/**
@@ -1666,8 +1676,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getContainerType_CallableCtor() {
+	public EReference getContainerType_CallSignature() {
 		return (EReference)containerTypeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getContainerType_ConstructSignature() {
+		return (EReference)containerTypeEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2576,6 +2596,26 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getTStructMember__IsASTCallSignature() {
+		return tStructMemberEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTStructMember__IsASTConstructSignature() {
+		return tStructMemberEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTMethod() {
 		return tMethodEClass;
 	}
@@ -3469,7 +3509,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(tFunctionEClass, TFUNCTION__DECLARED_GENERATOR);
 		createEAttribute(tFunctionEClass, TFUNCTION__CONSTRUCTOR);
 		createEOperation(tFunctionEClass, TFUNCTION___IS_RETURN_VALUE_OPTIONAL);
-		createEOperation(tFunctionEClass, TFUNCTION___IS_CALLABLE_CONSTRUCTOR);
+		createEOperation(tFunctionEClass, TFUNCTION___IS_CALL_SIGNATURE);
+		createEOperation(tFunctionEClass, TFUNCTION___IS_CONSTRUCT_SIGNATURE);
 		createEOperation(tFunctionEClass, TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT);
 		createEOperation(tFunctionEClass, TFUNCTION___GET_FUNCTION_AS_STRING);
 		createEOperation(tFunctionEClass, TFUNCTION___IS_FINAL);
@@ -3503,7 +3544,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		containerTypeEClass = createEClass(CONTAINER_TYPE);
 		createEAttribute(containerTypeEClass, CONTAINER_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS);
 		createEReference(containerTypeEClass, CONTAINER_TYPE__OWNED_MEMBERS);
-		createEReference(containerTypeEClass, CONTAINER_TYPE__CALLABLE_CTOR);
+		createEReference(containerTypeEClass, CONTAINER_TYPE__CALL_SIGNATURE);
+		createEReference(containerTypeEClass, CONTAINER_TYPE__CONSTRUCT_SIGNATURE);
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___GET_OWNED_CTOR);
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING);
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING_BOOLEAN_BOOLEAN);
@@ -3610,6 +3652,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER);
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___IS_STATIC);
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___GET_MEMBER_ACCESS_MODIFIER);
+		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___IS_AST_CALL_SIGNATURE);
+		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE);
 
 		tMethodEClass = createEClass(TMETHOD);
 		createEAttribute(tMethodEClass, TMETHOD__DECLARED_ABSTRACT);
@@ -3943,7 +3987,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getTFunction__IsReturnValueOptional(), theEcorePackage.getEBoolean(), "isReturnValueOptional", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getTFunction__IsCallableConstructor(), theEcorePackage.getEBoolean(), "isCallableConstructor", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getTFunction__IsCallSignature(), theEcorePackage.getEBoolean(), "isCallSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTFunction__IsConstructSignature(), theEcorePackage.getEBoolean(), "isConstructSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		op = initEOperation(getTFunction__GetFparForArgIdx__int(), this.getTFormalParameter(), "getFparForArgIdx", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theEcorePackage.getEInt(), "argIndex", 0, 1, !IS_UNIQUE, IS_ORDERED);
@@ -4007,7 +4053,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getContainerType_OwnedMembersByNameAndAccess(), g1, "ownedMembersByNameAndAccess", null, 0, 1, ContainerType.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		g1 = createEGenericType(containerTypeEClass_MT);
 		initEReference(getContainerType_OwnedMembers(), g1, null, "ownedMembers", null, 0, -1, ContainerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getContainerType_CallableCtor(), this.getTMethod(), null, "callableCtor", null, 0, 1, ContainerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getContainerType_CallSignature(), this.getTMethod(), null, "callSignature", null, 0, 1, ContainerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getContainerType_ConstructSignature(), this.getTMethod(), null, "constructSignature", null, 0, 1, ContainerType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getContainerType__GetOwnedCtor(), this.getTMethod(), "getOwnedCtor", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -4176,6 +4223,10 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTStructMember__IsStatic(), theEcorePackage.getEBoolean(), "isStatic", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTStructMember__GetMemberAccessModifier(), this.getMemberAccessModifier(), "getMemberAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTStructMember__IsASTCallSignature(), theEcorePackage.getEBoolean(), "isASTCallSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTStructMember__IsASTConstructSignature(), theEcorePackage.getEBoolean(), "isASTConstructSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tMethodEClass, TMethod.class, "TMethod", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTMethod_DeclaredAbstract(), theEcorePackage.getEBoolean(), "declaredAbstract", null, 0, 1, TMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

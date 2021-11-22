@@ -14,14 +14,14 @@
 // Function.prototype.call()
 // Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call
 
-@This (~Object with {name: string; price: number; })
+@This(~Object with {name: string; price: number; })
 function product(name: string, price: number) {
 	this.name = name;
 	this.price = price;
 	return this;
 }
 
-@This (~Object with {name: string; price: number; category: string;})
+@This(~Object with {name: string; price: number; category: string;})
 function food(name: string, price: number) {
   this.category = 'food';
   return product.call(this, name, price);
