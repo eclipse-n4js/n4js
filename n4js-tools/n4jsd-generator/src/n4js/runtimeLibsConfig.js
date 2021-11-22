@@ -1298,7 +1298,15 @@ export default {
 			}
 		},
 		"dom.iterable.d.ts": {},
-		"dom.iterable.generated.d.ts": {}
+		"dom.iterable.generated.d.ts": {
+			// the following need to be converted to classes, because they extend built-in types Map, Set, ReadonlyMap
+			// (which are currrently being converted from the ctor/instance pattern to a class)
+			changeToClass: [
+				"AudioParamMap",
+				"FontFaceSet",
+				"RTCStatsReport"
+			]
+		}
 	},
 	addFiles: {
 		"es2020.globalThis.n4jsd": `

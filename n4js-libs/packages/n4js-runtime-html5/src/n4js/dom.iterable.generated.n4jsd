@@ -7,7 +7,7 @@ export external public interface ~AudioParam {
 	setValueCurveAtTime(values: Iterable<number>, startTime: number, duration: number): AudioParam;
 }
 
-export external public interface ~AudioParamMap extends ReadonlyMap<string,AudioParam> {}
+export external public class ~AudioParamMap extends ReadonlyMap<string,AudioParam> {}
 
 export external public interface ~BaseAudioContext {
 	createIIRFilter(feedforward: Iterable<number>, feedback: Iterable<number>): IIRFilterNode;
@@ -53,7 +53,7 @@ export external public interface ~FileList {
 	[Symbol.iterator](): IterableIterator<File>;
 }
 
-export external public interface ~FontFaceSet extends Set<FontFace> {}
+export external public class ~FontFaceSet extends Set<FontFace> {}
 
 export external public interface ~FormData {
 	[Symbol.iterator](): IterableIterator<[string,FormDataEntryValue]>;
@@ -147,7 +147,7 @@ export external public interface ~PluginArray {
 	[Symbol.iterator](): IterableIterator<Plugin>;
 }
 
-export external public interface ~RTCStatsReport extends ReadonlyMap<string,any> {}
+export external public class ~RTCStatsReport extends ReadonlyMap<string,any> {}
 
 export external public interface ~ReadableStream<R=any> {
 	[Symbol.iterator](): IterableIterator<any>;
