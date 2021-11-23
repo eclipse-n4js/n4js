@@ -814,6 +814,12 @@ export default {
 				"*#removeEventListener#signature0"
 			],
 			patchMembers: {
+				// use 'any+' instead of the default type argument 'any'
+				// (a cleaner approach would be to use in/out for the type parameters of Readable/WritableStream and related
+				// classes, but that would (1) require patching in many places and (2) make us run into a bug in the N4JS structural subtyping;
+				// also using wildcards instead of 'any+' would be cleaner, but would make us run into the same bug)
+				"GenericTransformStream#readable": { replaceBy: "get readable(): ReadableStream<any+>;" },
+				"GenericTransformStream#writable": { replaceBy: "get writable(): WritableStream<any+>;" },
 				// @Override annotations:
 				// misc. methods ====================================================================================
 				"AudioBufferSourceNode#start": { addAnnotations: [ "@Override" ] },

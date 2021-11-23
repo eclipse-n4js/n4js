@@ -4026,8 +4026,8 @@ export external public interface ~GamepadHapticActuator {
 var GamepadHapticActuator: ~Object with { new(): GamepadHapticActuator; };
 
 export external public interface ~GenericTransformStream {
-	get readable(): ReadableStream;
-	get writable(): WritableStream;
+	get readable(): ReadableStream<any+>;
+	get writable(): WritableStream<any+>;
 }
 
 export external public interface ~Geolocation {
