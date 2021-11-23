@@ -3095,38 +3095,60 @@ export external public interface ~CustomEvent<T=any> extends Event {
 
 var CustomEvent: ~Object with { <T> new(type: string, eventInitDict: CustomEventInit<T> = ): CustomEvent<T>; };
 
-export external public interface ~DOMException extends Error {
-	get code(): number;
-	get message(): string;
-	get name(): string;
-	get ABORT_ERR(): number;
-	get DATA_CLONE_ERR(): number;
-	get DOMSTRING_SIZE_ERR(): number;
-	get HIERARCHY_REQUEST_ERR(): number;
-	get INDEX_SIZE_ERR(): number;
-	get INUSE_ATTRIBUTE_ERR(): number;
-	get INVALID_ACCESS_ERR(): number;
-	get INVALID_CHARACTER_ERR(): number;
-	get INVALID_MODIFICATION_ERR(): number;
-	get INVALID_NODE_TYPE_ERR(): number;
-	get INVALID_STATE_ERR(): number;
-	get NAMESPACE_ERR(): number;
-	get NETWORK_ERR(): number;
-	get NOT_FOUND_ERR(): number;
-	get NOT_SUPPORTED_ERR(): number;
-	get NO_DATA_ALLOWED_ERR(): number;
-	get NO_MODIFICATION_ALLOWED_ERR(): number;
-	get QUOTA_EXCEEDED_ERR(): number;
-	get SECURITY_ERR(): number;
-	get SYNTAX_ERR(): number;
-	get TIMEOUT_ERR(): number;
-	get TYPE_MISMATCH_ERR(): number;
-	get URL_MISMATCH_ERR(): number;
-	get VALIDATION_ERR(): number;
-	get WRONG_DOCUMENT_ERR(): number;
+export external public class DOMException extends Error {
+	public get code(): number;
+	public get ABORT_ERR(): number;
+	public get DATA_CLONE_ERR(): number;
+	public get DOMSTRING_SIZE_ERR(): number;
+	public get HIERARCHY_REQUEST_ERR(): number;
+	public get INDEX_SIZE_ERR(): number;
+	public get INUSE_ATTRIBUTE_ERR(): number;
+	public get INVALID_ACCESS_ERR(): number;
+	public get INVALID_CHARACTER_ERR(): number;
+	public get INVALID_MODIFICATION_ERR(): number;
+	public get INVALID_NODE_TYPE_ERR(): number;
+	public get INVALID_STATE_ERR(): number;
+	public get NAMESPACE_ERR(): number;
+	public get NETWORK_ERR(): number;
+	public get NOT_FOUND_ERR(): number;
+	public get NOT_SUPPORTED_ERR(): number;
+	public get NO_DATA_ALLOWED_ERR(): number;
+	public get NO_MODIFICATION_ALLOWED_ERR(): number;
+	public get QUOTA_EXCEEDED_ERR(): number;
+	public get SECURITY_ERR(): number;
+	public get SYNTAX_ERR(): number;
+	public get TIMEOUT_ERR(): number;
+	public get TYPE_MISMATCH_ERR(): number;
+	public get URL_MISMATCH_ERR(): number;
+	public get VALIDATION_ERR(): number;
+	public get WRONG_DOCUMENT_ERR(): number;
+	public constructor(message: string = , name: string = );
+	public static get ABORT_ERR(): number;
+	public static get DATA_CLONE_ERR(): number;
+	public static get DOMSTRING_SIZE_ERR(): number;
+	public static get HIERARCHY_REQUEST_ERR(): number;
+	public static get INDEX_SIZE_ERR(): number;
+	public static get INUSE_ATTRIBUTE_ERR(): number;
+	public static get INVALID_ACCESS_ERR(): number;
+	public static get INVALID_CHARACTER_ERR(): number;
+	public static get INVALID_MODIFICATION_ERR(): number;
+	public static get INVALID_NODE_TYPE_ERR(): number;
+	public static get INVALID_STATE_ERR(): number;
+	public static get NAMESPACE_ERR(): number;
+	public static get NETWORK_ERR(): number;
+	public static get NOT_FOUND_ERR(): number;
+	public static get NOT_SUPPORTED_ERR(): number;
+	public static get NO_DATA_ALLOWED_ERR(): number;
+	public static get NO_MODIFICATION_ALLOWED_ERR(): number;
+	public static get QUOTA_EXCEEDED_ERR(): number;
+	public static get SECURITY_ERR(): number;
+	public static get SYNTAX_ERR(): number;
+	public static get TIMEOUT_ERR(): number;
+	public static get TYPE_MISMATCH_ERR(): number;
+	public static get URL_MISMATCH_ERR(): number;
+	public static get VALIDATION_ERR(): number;
+	public static get WRONG_DOCUMENT_ERR(): number;
 }
-
-var DOMException: ~Object with { new(message: string = , name: string = ): DOMException; get ABORT_ERR(): number; get DATA_CLONE_ERR(): number; get DOMSTRING_SIZE_ERR(): number; get HIERARCHY_REQUEST_ERR(): number; get INDEX_SIZE_ERR(): number; get INUSE_ATTRIBUTE_ERR(): number; get INVALID_ACCESS_ERR(): number; get INVALID_CHARACTER_ERR(): number; get INVALID_MODIFICATION_ERR(): number; get INVALID_NODE_TYPE_ERR(): number; get INVALID_STATE_ERR(): number; get NAMESPACE_ERR(): number; get NETWORK_ERR(): number; get NOT_FOUND_ERR(): number; get NOT_SUPPORTED_ERR(): number; get NO_DATA_ALLOWED_ERR(): number; get NO_MODIFICATION_ALLOWED_ERR(): number; get QUOTA_EXCEEDED_ERR(): number; get SECURITY_ERR(): number; get SYNTAX_ERR(): number; get TIMEOUT_ERR(): number; get TYPE_MISMATCH_ERR(): number; get URL_MISMATCH_ERR(): number; get VALIDATION_ERR(): number; get WRONG_DOCUMENT_ERR(): number; };
 
 export external public interface ~DOMImplementation {
 	createDocument(namespace: string, qualifiedName: string, doctype: DocumentType = ): XMLDocument;
@@ -6623,11 +6645,10 @@ export external public interface ~OscillatorNode extends AudioScheduledSourceNod
 
 var OscillatorNode: ~Object with { new(context: BaseAudioContext, options: OscillatorOptions = ): OscillatorNode; };
 
-export external public interface ~OverconstrainedError extends Error {
-	get constraint(): string;
+export external public class OverconstrainedError extends Error {
+	public get constraint(): string;
+	public constructor(constraint: string, message: string = );
 }
-
-var OverconstrainedError: ~Object with { new(constraint: string, message: string = ): OverconstrainedError; };
 
 export external public interface ~PageTransitionEvent extends Event {
 	get persisted(): boolean;

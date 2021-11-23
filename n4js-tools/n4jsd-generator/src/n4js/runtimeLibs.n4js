@@ -33,7 +33,8 @@ class FileGenConfig {
 	public prefix: string;
 	public suffix: string;
 	public ignore = new Set<string>();
-	public convertCtorInstanceTypes: boolean;
+	public convertAllCtorInstanceTypes: boolean;
+	public convertSelectedCtorInstanceTypes = new Set<string>();
 	public ctorInstanceTypes = [] as string[];
 	public polyfills = new Set<string>();
 	public changeToClass = new Set<string>();
@@ -45,16 +46,17 @@ class PatchMemberConfig {
 	public addAnnotations: string[];
 }
 const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
-	[ "GenConfig#patchFiles",                   new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "GenConfig#addFiles",                     new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#ignore",                   new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#convertCtorInstanceTypes", new PropertyTypeInfo({ type: Boolean                                  }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#ctorInstanceTypes",        new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#polyfills",                new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#changeToClass",            new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#patchMembers",             new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#appendCode",               new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "PatchMemberConfig#addAnnotations",       new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo]
+	[ "GenConfig#patchFiles",                           new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "GenConfig#addFiles",                             new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#ignore",                           new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#convertAllCtorInstanceTypes",      new PropertyTypeInfo({ type: Boolean                                  }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#convertSelectedCtorInstanceTypes", new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#ctorInstanceTypes",                new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#polyfills",                        new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#changeToClass",                    new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#patchMembers",                     new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#appendCode",                       new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "PatchMemberConfig#addAnnotations",               new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo]
 ]);
 
 
@@ -250,7 +252,7 @@ class RuntimeLibsPatcher {
 	private handleCtorInstanceTypePattern(script: model.Script) {
 		const config = getGenConfig();
 		const fileConfig = config.patchFiles.get(script.tsFileName);
-		if (!(fileConfig && fileConfig.convertCtorInstanceTypes)) {
+		if (!(fileConfig && (fileConfig.convertAllCtorInstanceTypes || fileConfig.convertSelectedCtorInstanceTypes.size > 0))) {
 			return; // not converted by default
 		}
 
@@ -291,7 +293,9 @@ class RuntimeLibsPatcher {
 		}
 		for (const elem of script.topLevelElements) {
 			if (elem instanceof model.Variable) {
-				this.adjustCtorInstanceTypesForVarDecl(elem, elemsByName, topLevelElementModifications);
+				if (fileConfig.convertAllCtorInstanceTypes || fileConfig.convertSelectedCtorInstanceTypes.has(elem.name)) {
+					this.adjustCtorInstanceTypesForVarDecl(elem, elemsByName, topLevelElementModifications);
+				}
 			}
 		}
 
