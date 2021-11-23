@@ -35,8 +35,5 @@ class X7 implements A {}
 // XPECT noerrors --> "Keyword implements must be used with interfaces but I is a interface." at "I"
 class X8 implements I {}
 
-/* XPECT errors ---
-"Couldn't resolve reference to Type 'a'." at "a"
-"The class X0 cannot extend type a." at "a"
---- */
+// XPECT errors --> "Couldn't resolve reference to Type 'a'." at "a"
 class X0 extends a {}		// note: in this example we do NOT want an error message about the wrong meta-type of 'a'

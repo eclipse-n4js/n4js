@@ -35,7 +35,6 @@ import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
@@ -291,8 +290,8 @@ public class N4JSLinker extends LazyLinker {
 				if (eRef == PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 					ptr.setDeclaredTypeAsText(valueStr);
 				}
-				Type typeProxy = (Type) proxy;
-				typeProxy.setName(valueStr);
+				// Type typeProxy = (Type) proxy;
+				// typeProxy.setName(valueStr);
 
 			} else if (obj instanceof NamespaceLikeRef && value instanceof String) {
 				((NamespaceLikeRef) obj).setDeclaredTypeAsText((String) value);
