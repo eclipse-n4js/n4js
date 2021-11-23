@@ -33,6 +33,7 @@ class FileGenConfig {
 	public prefix: string;
 	public suffix: string;
 	public ignore = new Set<string>();
+	public replace = new Map<string, string>();
 	public convertAllCtorInstanceTypes: boolean;
 	public convertSelectedCtorInstanceTypes = new Set<string>();
 	public ctorInstanceTypes = [] as string[];
@@ -49,6 +50,7 @@ const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
 	[ "GenConfig#patchFiles",                           new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
 	[ "GenConfig#addFiles",                             new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#ignore",                           new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#replace",                          new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#convertAllCtorInstanceTypes",      new PropertyTypeInfo({ type: Boolean                                  }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#convertSelectedCtorInstanceTypes", new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
 	[ "FileGenConfig#ctorInstanceTypes",                new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
@@ -225,6 +227,22 @@ class RuntimeLibsPatcher {
 					const code = additionalCode.get(elemName);
 					if (code !== undefined && code !== null) {
 						elem.additionalCode.push(utils.trimMultiLineString(code));
+					}
+				}
+			}
+		}
+		// replacement of top-level elements
+		const replacements = fileConfig?.replace;
+		if (replacements && replacements.size > 0) {
+			for (const elem of script.topLevelElements) {
+				if (!(elem instanceof model.ExportableElement)) {
+					continue;
+				}
+				const elemName = elem.name;
+				if (elemName && replacements.has(elemName)) {
+					const code = replacements.get(elemName);
+					if (code !== undefined && code !== null) {
+						elem.replacementCode = utils.trimMultiLineString(code);
 					}
 				}
 			}

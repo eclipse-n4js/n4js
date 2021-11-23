@@ -11330,7 +11330,7 @@ export public var top: WindowProxy;
 
 export public var visualViewport: VisualViewport;
 
-export public var window: Window & any+;
+export public var window: Window+;
 
 export external public function alert(message: any = ): void;
 

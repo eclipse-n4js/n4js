@@ -824,6 +824,12 @@ export default {
 				"DOMException#message",
 				"SVGElement#className" // in this case, also the type is changed in an incompatible way!
 			],
+			replace: {
+				// need to replace variable 'window' (only the lower case one!) with custom code, to make it dynamic:
+				"window": "export public var window: Window+;"
+				// otherwise this .d.ts code:                 declare var window: Window & typeof globalThis;
+				// ... would be turned into this .n4jsd code: export public var window: Window & any+;
+			},
 			convertSelectedCtorInstanceTypes: [
 				"DOMException", "OverconstrainedError" // must convert because their super type "Error" is converted from ctor/instance pattern to class
 			],

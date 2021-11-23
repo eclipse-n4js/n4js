@@ -71,6 +71,8 @@ export abstract class NamedElement {
 export abstract class ExportableElement extends NamedElement {
 	exported: boolean;
 	exportedAsDefault: boolean;
+	/** If defined, all other properties will be ignored and this string will be emitted. */
+	replacementCode?: string;
 }
 
 export enum VariableKeyword {
