@@ -699,10 +699,13 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 
 		// 6. abstract
 		if (m.isAbstract() && !s.isAbstract()) {
-			if (!consumptionConflict) { // avoid consequential errors
-				messageOverrideAbstract(redefinitionType, m, s);
+			boolean sIsEffectivelyAbstract = sIsField && isMemberOfInterfaceInN4jsdWithoutN4jsAnnotation(s);
+			if (!sIsEffectivelyAbstract) {
+				if (!consumptionConflict) { // avoid consequential errors
+					messageOverrideAbstract(redefinitionType, m, s);
+				}
+				return OverrideCompatibilityResult.ERROR;
 			}
-			return OverrideCompatibilityResult.ERROR;
 		}
 
 		// 7. type compatible
@@ -1265,6 +1268,12 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		}
 
 		return ts.subtype(G, typeLeft, typeRight);
+	}
+
+	private boolean isMemberOfInterfaceInN4jsdWithoutN4jsAnnotation(TMember m) {
+		final ContainerType<?> type = m.getContainingType();
+		return type instanceof TInterface
+				&& N4JSLanguageUtils.builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation((TInterface) type);
 	}
 
 	private TClassifier getCurrentClassifier() {
