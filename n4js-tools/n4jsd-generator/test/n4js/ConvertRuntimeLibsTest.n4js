@@ -51,7 +51,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 						someStaticMethod(p: string): number;
 					}
 
-					var SomeType: SomeTypeConstructor;
+					export public var SomeType: SomeTypeConstructor;
 				`
 			}
 		);
@@ -88,7 +88,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 						someInstanceMethod(p: string): number;
 					}
 
-					var SomeType: ~Object with { new(p: string): SomeType; someStaticMethod(p: string): number; };
+					export public var SomeType: ~Object with { new(p: string): SomeType; someStaticMethod(p: string): number; };
 				`
 			}
 		);
@@ -132,7 +132,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 						someStaticMethod(p: string): number;
 					}
 
-					var SomeGenType: SomeGenTypeConstructor;
+					export public var SomeGenType: SomeGenTypeConstructor;
 				`
 			}
 		);
@@ -147,7 +147,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 					preamble: `@@Global @@ProvidedByRuntime`,
 					patchFiles: {
 						"es5test.d.ts": {
-							convertCtorInstanceTypes: true
+							convertAllCtorInstanceTypes: true
 						}
 					}
 				}
@@ -190,7 +190,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 					preamble: `@@Global @@ProvidedByRuntime`,
 					patchFiles: {
 						"es5test.d.ts": {
-							convertCtorInstanceTypes: true
+							convertAllCtorInstanceTypes: true
 						}
 					}
 				}
@@ -229,7 +229,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 					preamble: `@@Global @@ProvidedByRuntime`,
 					patchFiles: {
 						"es5test.d.ts": {
-							convertCtorInstanceTypes: true
+							convertAllCtorInstanceTypes: true
 						}
 					}
 				}
@@ -272,7 +272,7 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 					preamble: `@@Global @@ProvidedByRuntime`,
 					patchFiles: {
 						"es5test.d.ts": {
-							convertCtorInstanceTypes: true
+							convertAllCtorInstanceTypes: true
 						}
 					}
 				}
