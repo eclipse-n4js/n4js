@@ -196,6 +196,14 @@ public interface StructuralTypeRef extends EObject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	EList<TStructMember> getStructuralMembersWithCallConstructSignatures();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Returns true iff there exists a type variable mapping for 'typeVar' in property 'typeVarMappings'.
 	 * <!-- end-model-doc -->

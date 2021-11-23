@@ -66,6 +66,7 @@ import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
+import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
@@ -152,6 +153,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject ContainerTypesHelper containerTypesHelper;
 
 	@Inject private MemberScopingHelper memberScopingHelper;
+	@Inject private MemberVisibilityChecker memberVisibilityChecker;
 
 	@Inject private PromisifyHelper promisifyHelper;
 
@@ -386,8 +388,14 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				val message = IssueCodes.getMessageForEXP_CALL_CLASS_CTOR;
 				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CLASS_CTOR);
 			} else {
-				val message = IssueCodes.getMessageForEXP_CALL_NOT_A_FUNCTION(typeRef.typeRefAsString);
-				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_NOT_A_FUNCTION);
+				val staticType = if (typeRef instanceof TypeTypeRef) tsh.getStaticType(G, typeRef);
+				if (staticType instanceof TInterface && tsh.getCallSignature(callExpression.eResource, TypeUtils.createTypeRef(staticType)) !== null) {
+					val message = IssueCodes.getMessageForEXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED("invoke", staticType.name, "call");
+					addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED);
+				} else {
+					val message = IssueCodes.getMessageForEXP_CALL_NOT_A_FUNCTION(typeRef.typeRefAsString);
+					addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_NOT_A_FUNCTION);
+				}
 			}
 			return;
 		}
@@ -538,6 +546,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 					return;
 				}
 			}
+			val constructSig = tsh.getConstructSignature(newExpression.eResource, typeRef);
+			if (constructSig !== null) {
+				// special success case; but perform some further checks
+				internalCheckConstructSignatureInvocation(newExpression, typeRef, constructSig);
+				return;
+			}
 			issueNotACtor(typeRef, newExpression);
 			return;
 		}
@@ -549,6 +563,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (staticType !== null && staticType.eIsProxy) {
 			return;
 		}
+
 		val isCtor = classifierTypeRef.isConstructorRef;
 		val isDirectRef = callee instanceof IdentifierRef && (callee as IdentifierRef).id === staticType;
 		val isConcreteOrCovariant =
@@ -562,8 +577,15 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		} else if (!isCtor && staticType instanceof TInterface && isDirectRef) {
 			// error case #2: trying to instantiate an interface
-			val message = IssueCodes.
-				getMessageForEXP_NEW_CANNOT_INSTANTIATE(staticType.keyword, staticType.name);
+			val tInterface = staticType as TInterface;
+			if (tInterface.constructSignature !== null) {
+				// special case: trying to directly instantiate an interface with a construct signature
+				val message = IssueCodes.getMessageForEXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED("instantiate", staticType.name, "construct");
+				addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
+					IssueCodes.EXP_CALL_CONSTRUCT_SIG_OF_INTERFACE_DIRECTLY_USED);
+				return;
+			}
+			val message = IssueCodes.getMessageForEXP_NEW_CANNOT_INSTANTIATE(staticType.keyword, staticType.name);
 			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
 				IssueCodes.EXP_NEW_CANNOT_INSTANTIATE);
 			return;
@@ -603,11 +625,32 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		// success case; but perform some further checks
 		internalCheckTypeArgumentsNodes(staticType.typeVars, newExpression.typeArgs, false, staticType, newExpression,
 			N4JSPackage.eINSTANCE.newExpression_Callee);
-			
-		
+
 		if (staticType instanceof TClassifier) {
 			internalCheckNewParameters(newExpression, staticType);
 		}
+	}
+
+	private def void internalCheckConstructSignatureInvocation(NewExpression newExpression, TypeRef calleeTypeRef, TMethod constructSig) {
+		if (holdsConstructSignatureIsAccessible(newExpression, calleeTypeRef, constructSig)) {
+
+			internalCheckTypeArgumentsNodes(constructSig.typeVars, newExpression.typeArgs, false, constructSig, newExpression,
+				N4JSPackage.eINSTANCE.newExpression_Callee);
+	
+			internalCheckNewParameters(newExpression, constructSig);
+		}
+	}
+
+	private def boolean holdsConstructSignatureIsAccessible(NewExpression newExpression, TypeRef calleeTypeRef, TMethod constructSig) {
+		val container = constructSig.eContainer;
+		if (container instanceof TInterface) { // avoid checking accessibility of construct signatures in StructuralTypeRefs/TStructuralTypes (they're always public)
+			if (!memberVisibilityChecker.isVisible(newExpression, calleeTypeRef, constructSig).visibility) {
+				val message = IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR("construct signature", container.name);
+				addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, IssueCodes.VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR);
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private def Type changeToCovariantUpperBoundIfTypeVar(Type type) {
@@ -801,10 +844,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	def private internalCheckNewParameters(NewExpression newExpression, TClassifier staticType) {
 		val maybeConstructor = containerTypesHelper.fromContext(newExpression).findConstructor(staticType);
 		if (maybeConstructor !== null) {
-			internalCheckNumberOfArguments((maybeConstructor as TFunction).fpars, newExpression.arguments,
-				newExpression)
-			return;
+			internalCheckNewParameters(newExpression, maybeConstructor);
 		}
+	}
+
+	def private internalCheckNewParameters(NewExpression newExpression, TFunction ctor) {
+		internalCheckNumberOfArguments(ctor.fpars, newExpression.arguments, newExpression);
 	}
 
 	def private void internalCheckNumberOfArguments(List<TFormalParameter> fpars, List<Argument> args,

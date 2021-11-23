@@ -372,7 +372,17 @@ public class N4SetterDeclarationImpl extends SetterDeclarationImpl implements N4
 	 * @generated
 	 */
 	@Override
-	public boolean isCallableConstructor() {
+	public boolean isCallSignature() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isConstructSignature() {
 		return false;
 	}
 
@@ -609,7 +619,8 @@ public class N4SetterDeclarationImpl extends SetterDeclarationImpl implements N4
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_FINAL: return N4JSPackage.N4_SETTER_DECLARATION___IS_DECLARED_FINAL;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_FINAL: return N4JSPackage.N4_SETTER_DECLARATION___IS_FINAL;
 				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCTOR: return N4JSPackage.N4_SETTER_DECLARATION___IS_CONSTRUCTOR;
-				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CALLABLE_CONSTRUCTOR: return N4JSPackage.N4_SETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR;
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE: return N4JSPackage.N4_SETTER_DECLARATION___IS_CALL_SIGNATURE;
+				case N4JSPackage.N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE: return N4JSPackage.N4_SETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE;
 				default: return -1;
 			}
 		}
@@ -657,8 +668,10 @@ public class N4SetterDeclarationImpl extends SetterDeclarationImpl implements N4
 				return isFinal();
 			case N4JSPackage.N4_SETTER_DECLARATION___IS_CONSTRUCTOR:
 				return isConstructor();
-			case N4JSPackage.N4_SETTER_DECLARATION___IS_CALLABLE_CONSTRUCTOR:
-				return isCallableConstructor();
+			case N4JSPackage.N4_SETTER_DECLARATION___IS_CALL_SIGNATURE:
+				return isCallSignature();
+			case N4JSPackage.N4_SETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE:
+				return isConstructSignature();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

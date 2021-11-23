@@ -16,7 +16,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getContextResource;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.hasReplacements;
@@ -250,9 +249,17 @@ import com.google.common.collect.Iterables;
 			} else if (right instanceof ParameterizedTypeRef
 					&& (right.isUseSiteStructuralTyping() || right.isDefSiteStructuralTyping())) {
 				// special case: (string)=>number <: ~Object with { prop: string }
-				// Here, the actual function signature of 'left' is irrelevant and we can thus simply perform
-				// a structural subtype check with the built-in 'Function' on the left-hand side:
-				return applyParameterizedTypeRef(G, functionTypeRef(G), (ParameterizedTypeRef) right);
+				// We cannot invoke #applyParameterizedTypeRef(), because we might not have a ParameterizedTypeRef
+				// on the left side, so we have to perform the structural subtype check directly ...
+				// (NOTE: we also cannot simply perform a structural subtype check with the built-in 'Function' on the
+				// left-hand side ("applyParameterizedTypeRef(G, functionTypeRef(G), (ParameterizedTypeRef) right);"),
+				// because the actual function signature of 'left' is relevant in case a call signature exists
+				// on the right side!)
+				final StructuralTypingResult result = typeSystemHelper.isStructuralSubtype(G, left, right);
+				if (!result.isValue()) {
+					return failure(result.message);
+				}
+				return success();
 			} else {
 				return resultFromBoolean(
 						isObject(G, right)

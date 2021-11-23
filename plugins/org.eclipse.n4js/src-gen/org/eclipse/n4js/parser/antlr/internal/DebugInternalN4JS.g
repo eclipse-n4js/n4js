@@ -6909,6 +6909,11 @@ ruleNoLineTerminator:
 	RULE_NO_LINE_TERMINATOR?
 ;
 
+// Rule NoWhiteSpace
+ruleNoWhiteSpace:
+	RULE_NO_WHITE_SPACE?
+;
+
 // Rule Annotation
 ruleAnnotation:
 	'@'
@@ -6926,9 +6931,10 @@ ruleAnnotationNoAtSign:
 	ruleAnnotationName
 	(
 		(
-			('(')=>
-			'('
+			(ruleNoWhiteSpace)=>
+			ruleNoWhiteSpace
 		)
+		'('
 		(
 			ruleAnnotationArgument
 			(
@@ -7503,9 +7509,9 @@ ruleN4MemberDeclaration:
 			ruleN4MethodDeclaration
 		)
 		    |
-		ruleN4FieldDeclaration
+		ruleN4CallSignatureDeclaration
 		    |
-		ruleN4CallableConstructorDeclaration
+		ruleN4FieldDeclaration
 	)
 ;
 
@@ -7692,9 +7698,9 @@ norm1_N4MemberDeclaration:
 			norm1_N4MethodDeclaration
 		)
 		    |
-		norm1_N4FieldDeclaration
+		norm1_N4CallSignatureDeclaration
 		    |
-		norm1_N4CallableConstructorDeclaration
+		norm1_N4FieldDeclaration
 	)
 ;
 
@@ -7919,6 +7925,18 @@ ruleAnnotatedN4MemberDeclaration:
 					('(')=>
 					ruleMethodParamsReturnAndBody
 				)
+			)
+		)
+		';'?
+		    |
+		(
+			(ruleTypeParameters?
+			'('
+			)=>
+			ruleTypeParameters?
+			(
+				('(')=>
+				ruleMethodParamsReturnAndBody
 			)
 		)
 		';'?
@@ -8152,6 +8170,18 @@ norm1_AnnotatedN4MemberDeclaration:
 		)
 		';'?
 		    |
+		(
+			(ruleTypeParameters?
+			'('
+			)=>
+			ruleTypeParameters?
+			(
+				('(')=>
+				ruleMethodParamsReturnAndBody
+			)
+		)
+		';'?
+		    |
 		norm1_FieldDeclarationImpl
 	)
 ;
@@ -8272,14 +8302,16 @@ norm1_N4MethodDeclaration:
 	';'?
 ;
 
-// Rule N4CallableConstructorDeclaration
-ruleN4CallableConstructorDeclaration:
+// Rule N4CallSignatureDeclaration
+ruleN4CallSignatureDeclaration:
+	ruleTypeParameters?
 	ruleMethodParamsReturnAndBody
 	';'?
 ;
 
-// Rule N4CallableConstructorDeclaration
-norm1_N4CallableConstructorDeclaration:
+// Rule N4CallSignatureDeclaration
+norm1_N4CallSignatureDeclaration:
+	ruleTypeParameters?
 	ruleMethodParamsReturnAndBody
 	';'?
 ;
@@ -9551,6 +9583,7 @@ ruleTStructMember:
 				'>'
 			)?
 			ruleIdentifierName
+			?
 			'('
 			)=>
 			ruleTStructMethod
@@ -9573,6 +9606,7 @@ ruleTStructMethod:
 			'>'
 		)?
 		ruleIdentifierName
+		?
 		'('
 		)=>
 		(
@@ -9585,6 +9619,7 @@ ruleTStructMethod:
 			'>'
 		)?
 		ruleIdentifierName
+		?
 		'('
 	)
 	ruleTAnonymousFormalParameterList
@@ -10080,6 +10115,8 @@ RULE_TEMPLATE_END : '//3';
 fragment RULE_TEMPLATE_CONTINUATION : '//4';
 
 RULE_NO_LINE_TERMINATOR : '//5';
+
+RULE_NO_WHITE_SPACE : '//6';
 
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
 

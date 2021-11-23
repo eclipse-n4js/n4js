@@ -21,6 +21,8 @@ import org.junit.Test;
 
 /**
  * Validates the issue locations when used as LSP server
+ * <p>
+ * See corresponding N4jsc test {@code OneBasedIssuesInN4jscTest}.
  */
 public class ZeroBasedIssuesInLspTest extends AbstractStructuredIdeTest<Void> {
 

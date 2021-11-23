@@ -18,9 +18,11 @@ import java.util.Arrays
 import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
+import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ParameterizedAccess
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
@@ -36,11 +38,11 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
-import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
@@ -51,6 +53,7 @@ import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo
+import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
@@ -93,6 +96,8 @@ class TypeSystemHelper {
 	@Inject private IterableComputer iterableComputer;
 	@Inject private TypeAliasComputer typeAliasComputer;
 
+	@Inject private ContainerTypesHelper containerTypesHelper;
+
 
 @Inject private StructuralTypesHelper structuralTypesHelper;
 def StructuralTypesHelper getStructuralTypesHelper() {
@@ -103,8 +108,11 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
 		genericsComputer.addSubstitutions(G,typeRef)
 	}
-	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, TypeRef targetTypeRef) {
+	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, FunctionTypeExprOrRef targetTypeRef) {
 		genericsComputer.addSubstitutions(G,callExpr,targetTypeRef)
+	}
+	def void addSubstitutions(RuleEnvironment G, NewExpression newExpr, TMethod constructSignature) {
+		genericsComputer.addSubstitutions(G, newExpr, constructSignature);
 	}
 	def void addSubstitutions(RuleEnvironment G, ParameterizedPropertyAccessExpression accessExpr) {
 		genericsComputer.addSubstitutions(G,accessExpr)
@@ -350,10 +358,14 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		if(isClassConstructorFunction(G, typeRef)) {
 			// don't allow direct invocation of class constructors
 			if(getCallableClassConstructorFunction(G, typeRef)!==null)
-				return true; // exception: this is a class that provides a callable constructor function
+				return true; // exception: this is a class that provides a call signature
 			return false;
 		}
-		if(typeRef.declaredType instanceof TFunction)
+		if(getCallSignature(G, typeRef) !== null) {
+			return true;
+		}
+		val declType = typeRef.declaredType;
+		if(declType instanceof TFunction)
 			return true;
 		if(typeRef instanceof FunctionTypeExprOrRef)
 			return true;
@@ -407,8 +419,53 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			if(cls instanceof TClass)
 				type = cls;
 		}
-		if(type instanceof ContainerType<?>) {
-			return type.callableCtor;
+		if(type instanceof TClass) {
+			// note: "callable constructors" (i.e. call signatures in classes) are not inherited
+			// and cannot appear in StructuralTypeRefs, so no need for ContainerTypesHelper or
+			// checking for TStructuralType here:
+			return type.callSignature;
+		}
+		return null;
+	}
+
+	def public TMethod getCallSignature(RuleEnvironment G, TypeRef calleeTypeRef) {
+		return getCallSignature(G.contextResource, calleeTypeRef);
+	}
+
+	def public TMethod getCallSignature(Resource context, TypeRef calleeTypeRef) {
+		return getCallConstructSignature(context, calleeTypeRef, false);
+	}
+
+	def public TMethod getConstructSignature(RuleEnvironment G, TypeRef calleeTypeRef) {
+		return getConstructSignature(G.contextResource, calleeTypeRef);
+	}
+
+	def public TMethod getConstructSignature(Resource context, TypeRef calleeTypeRef) {
+		return getCallConstructSignature(context, calleeTypeRef, true);
+	}
+
+	/**
+	 * NOTE: does not cover "callable constructors" (i.e. call signatures in classes); use method
+	 * {@link #getCallableClassConstructorFunction(RuleEnvironment,TypeRef)} for this purpose.
+	 */
+	def private TMethod getCallConstructSignature(Resource context, TypeRef calleeTypeRef, boolean searchConstructSig) {
+		val declType = calleeTypeRef.declaredType;
+		if (declType instanceof TInterface) {
+			return if (searchConstructSig) {
+				containerTypesHelper.fromContext(context).findConstructSignature(declType);
+			} else {
+				containerTypesHelper.fromContext(context).findCallSignature(declType);
+			};
+		}
+		if (calleeTypeRef instanceof StructuralTypeRef) {
+			val structType = calleeTypeRef.structuralType;
+			if (structType !== null) {
+				return if (searchConstructSig) {
+					structType.constructSignature
+				} else {
+					structType.callSignature
+				};
+			}
 		}
 		return null;
 	}

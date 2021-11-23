@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import com.google.common.base.Objects;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -27,6 +29,7 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -140,6 +143,26 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 	@Override
 	public MemberAccessModifier getMemberAccessModifier() {
 		return MemberAccessModifier.PUBLIC;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isASTCallSignature() {
+		return ((this instanceof TStructMethod) && (this.getName() == null));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isASTConstructSignature() {
+		return ((this instanceof TStructMethod) && Objects.equal(this.getName(), "new"));
 	}
 
 	/**
@@ -264,6 +287,8 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 				case TypesPackage.TSTRUCT_MEMBER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER: return TypesPackage.TSTRUCT_FIELD___GET_DEFAULT_MEMBER_ACCESS_MODIFIER;
 				case TypesPackage.TSTRUCT_MEMBER___IS_STATIC: return TypesPackage.TSTRUCT_FIELD___IS_STATIC;
 				case TypesPackage.TSTRUCT_MEMBER___GET_MEMBER_ACCESS_MODIFIER: return TypesPackage.TSTRUCT_FIELD___GET_MEMBER_ACCESS_MODIFIER;
+				case TypesPackage.TSTRUCT_MEMBER___IS_AST_CALL_SIGNATURE: return TypesPackage.TSTRUCT_FIELD___IS_AST_CALL_SIGNATURE;
+				case TypesPackage.TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE: return TypesPackage.TSTRUCT_FIELD___IS_AST_CONSTRUCT_SIGNATURE;
 				default: return -1;
 			}
 		}
@@ -284,6 +309,10 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 				return isStatic();
 			case TypesPackage.TSTRUCT_FIELD___GET_MEMBER_ACCESS_MODIFIER:
 				return getMemberAccessModifier();
+			case TypesPackage.TSTRUCT_FIELD___IS_AST_CALL_SIGNATURE:
+				return isASTCallSignature();
+			case TypesPackage.TSTRUCT_FIELD___IS_AST_CONSTRUCT_SIGNATURE:
+				return isASTConstructSignature();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

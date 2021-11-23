@@ -1197,6 +1197,16 @@ terminal NO_LINE_TERMINATOR:
 	'//5' // will never be lexed
 ;
 
+/**
+ * Will be completely replaced during post processing, need some dummy token to be able to define rule.
+ */
+fragment NoWhiteSpace*: NO_WHITE_SPACE?;
+
+/** Rewritten in post-processing. */
+terminal NO_WHITE_SPACE:
+	'//6' // will never be lexed
+;
+
 // ****************************************************************************************************
 // N4JS Specific
 // ****************************************************************************************************
@@ -1206,11 +1216,11 @@ terminal NO_LINE_TERMINATOR:
 // ****************************************************************************************************
 
 // cf. N4JSSpec §9
-Annotation:'@' AnnotationNoAtSign;
+Annotation: '@' AnnotationNoAtSign;
 ScriptAnnotation returns Annotation: '@@' AnnotationNoAtSign;
 
 AnnotationNoAtSign returns Annotation:
-	name=AnnotationName (=> '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
+	name=AnnotationName (=> NoWhiteSpace '(' (args+=AnnotationArgument (',' args+=AnnotationArgument)*)? ')')?;
 
 AnnotationArgument:
 	=>LiteralAnnotationArgument | TypeRefAnnotationArgument
@@ -1357,8 +1367,8 @@ N4MemberDeclaration <Yield>:
 	| N4GetterDeclaration<Yield>
 	| N4SetterDeclaration<Yield>
 	| N4MethodDeclaration<Yield>
+	| N4CallSignatureDeclaration<Yield>
 	| N4FieldDeclaration<Yield>
-	| N4CallableConstructorDeclaration<Yield>
 ;
 
 /**
@@ -1380,6 +1390,7 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> -> MethodParamsReturnAndBody <Generator=false>
 				)
 				)';'?
+		|	=> ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
 		| 	{N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 	)
 ;
@@ -1408,8 +1419,13 @@ N4MethodDeclaration <Yield>:
 	) ';'?
 ;
 
-N4CallableConstructorDeclaration <Yield> returns N4MethodDeclaration:
-	MethodParamsReturnAndBody <Generator=false> ';'?
+/*
+ * NOTE: while constructors and construct signatures are handled as ordinary methods
+ * by the parser (i.e. they do not have dedicated grammar rules), call signatures need
+ * this special grammar rule.
+ */
+N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
+	TypeParameters? MethodParamsReturnAndBody <Generator=false> ';'?
 ;
 
 fragment MethodParamsAndBody <Generator>*:

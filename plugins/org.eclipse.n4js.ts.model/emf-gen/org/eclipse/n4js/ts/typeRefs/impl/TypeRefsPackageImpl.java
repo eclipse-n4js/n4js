@@ -1318,8 +1318,18 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getStructuralTypeRef__HasPostponedSubstitutionFor__TypeVariable() {
+	public EOperation getStructuralTypeRef__GetStructuralMembersWithCallConstructSignatures() {
 		return structuralTypeRefEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getStructuralTypeRef__HasPostponedSubstitutionFor__TypeVariable() {
+		return structuralTypeRefEClass.getEOperations().get(4);
 	}
 
 	/**
@@ -2319,6 +2329,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(structuralTypeRefEClass, STRUCTURAL_TYPE_REF___GET_TYPING_STRATEGY);
 		createEOperation(structuralTypeRefEClass, STRUCTURAL_TYPE_REF___SET_TYPING_STRATEGY__TYPINGSTRATEGY);
 		createEOperation(structuralTypeRefEClass, STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS);
+		createEOperation(structuralTypeRefEClass, STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES);
 		createEOperation(structuralTypeRefEClass, STRUCTURAL_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE);
 
 		parameterizedTypeRefStructuralEClass = createEClass(PARAMETERIZED_TYPE_REF_STRUCTURAL);
@@ -2667,6 +2678,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		addEParameter(op, theTypesPackage.getTypingStrategy(), "typingStrategy", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getStructuralTypeRef__GetStructuralMembers(), theTypesPackage.getTStructMember(), "getStructuralMembers", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getStructuralTypeRef__GetStructuralMembersWithCallConstructSignatures(), theTypesPackage.getTStructMember(), "getStructuralMembersWithCallConstructSignatures", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		op = initEOperation(getStructuralTypeRef__HasPostponedSubstitutionFor__TypeVariable(), theEcorePackage.getEBoolean(), "hasPostponedSubstitutionFor", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theTypesPackage.getTypeVariable(), "typeVar", 0, 1, !IS_UNIQUE, IS_ORDERED);

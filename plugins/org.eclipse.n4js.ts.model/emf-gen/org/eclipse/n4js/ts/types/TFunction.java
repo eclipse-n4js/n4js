@@ -247,12 +247,28 @@ public interface TFunction extends GenericType, AccessibleTypeElement, SyntaxRel
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Tells whether this function is a method that represents a callable constructor.
+	 * Tells whether this function is a method that represents a call signature.
+	 * <p>
+	 * Does not work in case the receiver is an AST node (use {@link TStructMember#isASTCallSignature()} instead).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	boolean isCallableConstructor();
+	boolean isCallSignature();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Tells whether this function is a method that represents a construct signature.
+	 * <p>
+	 * Does not work in case the receiver is an AST node (use {@link TStructMember#isASTConstructSignature()} instead).
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isConstructSignature();
 
 	/**
 	 * <!-- begin-user-doc -->

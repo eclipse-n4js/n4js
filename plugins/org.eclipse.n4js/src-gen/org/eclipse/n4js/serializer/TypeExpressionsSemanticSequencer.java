@@ -536,7 +536,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         name=IdentifierName 
+	 *         name=IdentifierName? 
 	 *         (fpars+=TAnonymousFormalParameter fpars+=TAnonymousFormalParameter*)? 
 	 *         returnTypeRef=TypeRef?
 	 *     )

@@ -33,6 +33,8 @@ import * as cli_color_+ from "cli-color";
 import {parse} from "url";
 import * as lib_path from "path";
 import * as lib_fs from "fs";
+import * as lib_coverage+ from "istanbul-lib-coverage";
+import {mkdirp} from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter";
 
 
 class NodeTestRunner  {
@@ -143,6 +145,22 @@ class NodeTestRunner  {
         const failed = (resGroups.failures !== 0) || (resGroups.errors !== 0);
         if (failed) {
             log(`${fail("Test run failed.")} To rerun just the failing tests use the command: \n n4js-mangelhaft ${this.consoleReporter.unsuccessfulTests.map(test => `\\\n    -f ${test}`).join(" ")}`);
+        }
+
+        const nycCoveragePath = options.nycCoveragePath;
+        const coverage = globalThis.__coverage__;
+        if (nycCoveragePath && coverage) {
+            const coverageMap = lib_coverage.createCoverageMap(coverage);
+            mkdirp(lib_path.dirname(nycCoveragePath));
+            log("Writing %s", nycCoveragePath);
+            lib_fs.writeFileSync(nycCoveragePath, JSON.stringify(coverageMap, null, 2), { encoding: "UTF-8" });
+
+            const coverageSummary = lib_coverage.createCoverageSummary();
+            for (const file of coverageMap.files()) {
+                const fc = coverageMap.fileCoverageFor(file);
+                coverageSummary.merge(fc.toSummary());
+            }
+            console.log("Coverage Summary:", coverageSummary);
         }
 
         // Don't wait for async promises to finish.

@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+	ResourceSet {
+		ThisFile {}
+		File "Ext.n4jsd" { from="CallConstructSignature_subtyping__Ext.n4jsd" }
+	}
+
+END_SETUP */
+
+
+import { A,B,C } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcCall } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcCallWithField } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { consumeStructTypeRefCall } from "Ch05_02_09__CallConstructSignatures/Ext"
+import { IfcConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
+
+
+let ifcCall: IfcCall;
+let ifcCallWithField: IfcCallWithField;
+let ifcConstruct: IfcConstruct;
+
+
+// XPECT noerrors -->
+ifcCall = (p: B): B => { return null; }
+// XPECT noerrors -->
+ifcCall = (p: A): C => { return null; }
+// XPECT errors --> "{function(C):B} is not a structural subtype of IfcCall: call signature failed: {function(C):B} is not a subtype of {function(B):B}." at "(p: C): B => { return null; }"
+ifcCall = (p: C): B => { return null; }
+// XPECT errors --> "{function(B):B} is not a structural subtype of IfcCallWithField: missing field someField." at "(p: B): B => { return null; }"
+ifcCallWithField = (p: B): B => { return null; }
+// XPECT noerrors -->
+consumeStructTypeRefCall((p: B): B => { return null; });
+// XPECT noerrors -->
+consumeStructTypeRefCall((p: A): C => { return null; });
+// XPECT errors --> "{function(C):B} is not a structural subtype of ~Object with { (p: B): B }: call signature failed: {function(C):B} is not a subtype of {function(B):B}." at "(p: C): B => { return null; }"
+consumeStructTypeRefCall((p: C): B => { return null; });
+
+
+// for now, the following is not supported, but could be supported in the future (according to the above cases):
+
+// could be allowed XPECT errors --> "constructor{B} is not a subtype of IfcConstruct." at "B"
+ifcConstruct = B;
+
+
+// if, in the future, the ~ type modifier will be generalized to type references of all kinds,
+// we might also support things such as:
+//
+// let fn: ~( (p: B) => B );
+// // X--PECT noerrors -->
+// fn = ifcCall;
+//
+// let ctor: ~( constructor{B} );
+// // X--PECT noerrors -->
+// ctor = ifcConstruct;

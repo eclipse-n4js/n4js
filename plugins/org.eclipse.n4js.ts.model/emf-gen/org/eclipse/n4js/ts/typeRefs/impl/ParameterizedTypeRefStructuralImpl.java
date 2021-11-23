@@ -12,6 +12,8 @@ package org.eclipse.n4js.ts.typeRefs.impl;
 
 import com.google.common.base.Objects;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -19,6 +21,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 
@@ -40,7 +43,9 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
 
+import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -271,6 +276,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 	 */
 	@Override
 	public String internalGetTypeRefAsString() {
+		final EList<TStructMember> membersWithCallConstructSigs = this.getStructuralMembersWithCallConstructSignatures();
 		TypingStrategy _typingStrategy = this.getTypingStrategy();
 		Type _declaredType = this.getDeclaredType();
 		String _rawTypeAsString = null;
@@ -295,7 +301,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 		}
 		String _plus_2 = (_plus + _xifexpression);
 		String _xifexpression_1 = null;
-		boolean _isEmpty_1 = this.getStructuralMembers().isEmpty();
+		boolean _isEmpty_1 = membersWithCallConstructSigs.isEmpty();
 		if (_isEmpty_1) {
 			_xifexpression_1 = "";
 		}
@@ -305,7 +311,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 					return it.getMemberAsString();
 				}
 			};
-			String _join_1 = IterableExtensions.join(XcoreEListExtensions.<TStructMember, String>map(this.getStructuralMembers(), _function_1), "; ");
+			String _join_1 = IterableExtensions.join(IterableExtensions.<TStructMember, String>map(Iterables.<TStructMember>concat(java.util.Collections.<TStructMember>unmodifiableList(org.eclipse.xtext.xbase.lib.CollectionLiterals.<TStructMember>newArrayList()), membersWithCallConstructSigs), _function_1), "; ");
 			String _plus_3 = (" with { " + _join_1);
 			String _plus_4 = (_plus_3 + " }");
 			String _xifexpression_2 = null;
@@ -329,6 +335,41 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 			_xifexpression_1 = (_plus_4 + _xifexpression_2);
 		}
 		return (_plus_2 + _xifexpression_1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TStructMember> getStructuralMembersWithCallConstructSignatures() {
+		final TStructuralType structType = this.getStructuralType();
+		TMethod _callSignature = null;
+		if (structType!=null) {
+			_callSignature=structType.getCallSignature();
+		}
+		final TStructMethod callSig = ((TStructMethod) _callSignature);
+		TMethod _constructSignature = null;
+		if (structType!=null) {
+			_constructSignature=structType.getConstructSignature();
+		}
+		final TStructMethod constructSig = ((TStructMethod) _constructSignature);
+		if (((callSig != null) || (constructSig != null))) {
+			final EList<TStructMember> structMembers = this.getStructuralMembers();
+			int _size = structMembers.size();
+			int _plus = (_size + 2);
+			final BasicEList<TStructMember> result = ECollections.<TStructMember>newBasicEListWithCapacity(_plus);
+			if ((callSig != null)) {
+				result.add(callSig);
+			}
+			if ((constructSig != null)) {
+				result.add(constructSig);
+			}
+			Iterables.<TStructMember>addAll(result, structMembers);
+			return result;
+		}
+		return this.getStructuralMembers();
 	}
 
 	/**
@@ -531,6 +572,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 				case TypeRefsPackage.STRUCTURAL_TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.STRUCTURAL_TYPE_REF___SET_TYPING_STRATEGY__TYPINGSTRATEGY: return TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY;
 				case TypeRefsPackage.STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS: return TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS;
+				case TypeRefsPackage.STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES: return TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES;
 				case TypeRefsPackage.STRUCTURAL_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE: return TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE;
 				default: return -1;
 			}
@@ -555,6 +597,8 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 				return getStructuralMembers();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING:
 				return internalGetTypeRefAsString();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES:
+				return getStructuralMembersWithCallConstructSignatures();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE:
 				return hasPostponedSubstitutionFor((TypeVariable)arguments.get(0));
 		}

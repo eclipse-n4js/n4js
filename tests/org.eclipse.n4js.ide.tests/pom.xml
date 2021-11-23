@@ -43,29 +43,6 @@ Contributors:
 					<release>${jdk-version}</release>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-verifier-plugin</artifactId>
-				<version>${maven-verifier-plugin.version}</version>
-				<configuration>
-					<verificationFile>verifier/verifications-test.xml</verificationFile>
-				</configuration>
-				<executions>
-					<execution>
-						<id>main</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>verify</goal>
-						</goals>
-						<configuration>
-							<systemProperties>
-								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-							</systemProperties>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

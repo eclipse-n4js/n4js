@@ -11,12 +11,15 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import java.util.Collection
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.lsp4j.jsonrpc.messages.Either
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
-import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -24,6 +27,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
+import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.FieldAccessor
@@ -35,9 +39,11 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.VoidType
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -141,7 +147,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			return
 		}
 
-		holdsCallableConstructorConstraints(n4Method)
+		if (n4Method.isCallSignature || n4Method.isConstructSignature) {
+			return; // checked below in a dedicated check method
+		}
 
 		// wrong parsed
 		if (n4Method.definedTypeElement === null) {
@@ -152,6 +160,32 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 
 		holdsAbstractAndBodyPropertiesOfMethod(tmethod)
 		holdsConstructorConstraints(tmethod)
+	}
+
+	@Check
+	def void checkCallConstructSignaturesInClassifier(N4ClassifierDefinition n4ClassifierDef) {
+		val allCallSigs = n4ClassifierDef.ownedMembersRaw.filter[isCallSignature].map[it as N4MethodDeclaration].toList;
+		val allConstructSigs = n4ClassifierDef.ownedMembersRaw.filter[isConstructSignature].map[it as N4MethodDeclaration].toList;
+
+		for (callSig : allCallSigs) {
+			holdsCallConstructSignatureConstraints(Either.forLeft(callSig), true, false, allCallSigs, allConstructSigs);
+		}
+		for (constructSig : allConstructSigs) {
+			holdsCallConstructSignatureConstraints(Either.forLeft(constructSig), false, true, allCallSigs, allConstructSigs);
+		}
+	}
+
+	@Check
+	def void checkCallConstructSignaturesInStructTypeRef(StructuralTypeRef structTypeRefInAST) {
+		val allCallSigs = structTypeRefInAST.astStructuralMembers.filter[isASTCallSignature].map[it as TStructMethod].toList;
+		val allConstructSigs = structTypeRefInAST.astStructuralMembers.filter[isASTConstructSignature].map[it as TStructMethod].toList;
+
+		for (callSig : allCallSigs) {
+			holdsCallConstructSignatureConstraints(Either.forRight(callSig), true, false, allCallSigs, allConstructSigs);
+		}
+		for (constructSig : allConstructSigs) {
+			holdsCallConstructSignatureConstraints(Either.forRight(constructSig), false, true, allCallSigs, allConstructSigs);
+		}
 	}
 
 	@Check
@@ -381,21 +415,54 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
-	def private boolean holdsCallableConstructorConstraints(N4MethodDeclaration method) {
-		if (method.isCallableConstructor) {
-			// constraint: only in classes
-			if (!(method.eContainer instanceof N4ClassDefinition)) {
-				addIssue(getMessageForCLF_CTOR_CALLABLE_ONLY_IN_CLASS, method, CLF_CTOR_CALLABLE_ONLY_IN_CLASS);
-				return false;
-			}
+	def private boolean holdsCallConstructSignatureConstraints(Either<N4MethodDeclaration, TStructMethod> methodInAST,
+		boolean isCallSig, boolean isConstructSig,
+		Collection<? extends EObject> allCallSigs, Collection<? extends EObject> allConstructSigs) {
+
+		val EObject astNode = if (methodInAST.isLeft) methodInAST.getLeft else methodInAST.getRight;
+
+		if (isCallSig || isConstructSig) {
 			// constraint: only in .n4jsd files
-			if (!jsVariantHelper.isExternalMode(method)) {
-				addIssue(getMessageForCLF_CTOR_CALLABLE_ONLY_IN_N4JSD, method, CLF_CTOR_CALLABLE_ONLY_IN_N4JSD);
+			if (!jsVariantHelper.isExternalMode(astNode)) {
+				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD, astNode, CLF_CALL_CONSTRUCT_SIG_ONLY_IN_N4JSD);
 				return false;
 			}
-			// constraint: not more than one callable constructor per class
-			if ((method.eContainer as N4ClassifierDefinition).ownedMembersRaw.filter[isCallableConstructor].size >= 2) {
-				addIssue(getMessageForCLF_CTOR_CALLABLE_DUPLICATE, method, CLF_CTOR_CALLABLE_DUPLICATE);
+			// constraint: not in classifiers with @N4JS
+			val owner = if (methodInAST.isLeft) methodInAST.getLeft.owner; // owners of TStructMethods are never annotated with @N4JS
+			if (owner !== null && AnnotationDefinition.N4JS.hasAnnotation(owner)) {
+				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS, astNode, CLF_CALL_CONSTRUCT_SIG_NOT_IN_N4JS);
+				return false;
+			}
+			// constraint: must not have a body
+			val body = if (methodInAST.isLeft) methodInAST.getLeft.body; // TStructMethods never have a body
+			if (body !== null) {
+				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_BODY, astNode, CLF_CALL_CONSTRUCT_SIG_BODY);
+				return false;
+			}
+			// constraint: not more than one call/construct signature per class
+			val haveDuplicate = (if (isCallSig) allCallSigs else allConstructSigs).size >= 2;
+			if (haveDuplicate) {
+				val kind = if (isCallSig) "call" else "construct";
+				addIssue(getMessageForCLF_CALL_CONSTRUCT_SIG_DUPLICATE(kind), astNode, CLF_CALL_CONSTRUCT_SIG_DUPLICATE);
+				return false;
+			}
+		}
+		if (isConstructSig) {
+			// constraint: only in classes
+			if (!(astNode.eContainer instanceof N4InterfaceDeclaration || astNode.eContainer instanceof StructuralTypeRef)) {
+				addIssue(messageForCLF_CONSTRUCT_SIG_ONLY_IN_INTERFACE, astNode, CLF_CONSTRUCT_SIG_ONLY_IN_INTERFACE);
+				return false;
+			}
+			// constraint: must have non-void return type
+			val definedFunction = if (methodInAST.isLeft) {
+				methodInAST.getLeft.definedFunction
+			} else {
+				methodInAST.getRight.definedMember as TStructMethod
+			};
+			val returnTypeRef = definedFunction?.returnTypeRef;
+			if (returnTypeRef === null || TypeUtils.isVoid(returnTypeRef)) {
+				addIssue(messageForCLF_CONSTRUCT_SIG_VOID_RETURN_TYPE, astNode, CLF_CONSTRUCT_SIG_VOID_RETURN_TYPE);
+				return false;
 			}
 		}
 		return true;

@@ -27,7 +27,7 @@ class A1 {
 }
 --- */
 class A1 {
-           @ Parameter ( 4 )
+           @ Parameter( 4 )
     field: any = 4;
 }
 

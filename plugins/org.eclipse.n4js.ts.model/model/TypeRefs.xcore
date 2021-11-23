@@ -25,6 +25,7 @@
 package org.eclipse.n4js.ts.typeRefs
 
 import java.util.UUID
+import org.eclipse.emf.common.util.ECollections
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TEnum
@@ -33,6 +34,7 @@ import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TStructMember
+import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
@@ -786,6 +788,25 @@ abstract class StructuralTypeRef {
 		return (if (structuralType !== null) structuralType.ownedMembers else if (!astStructuralMembers.empty) astStructuralMembers else genStructuralMembers).
 			unmodifiableView;
 	}
+	op TStructMember[] getStructuralMembersWithCallConstructSignatures() {
+		val structType = getStructuralType();
+		val callSig = structType?.callSignature as TStructMethod;
+		val constructSig = structType?.constructSignature as TStructMethod;
+		if (callSig !== null || constructSig !== null) {
+			val structMembers = getStructuralMembers();
+			val result = ECollections.<TStructMember>newBasicEListWithCapacity(structMembers.size + 2);
+			if (callSig !== null) {
+				result += callSig;
+			}
+			if (constructSig !== null) {
+				result += constructSig;
+			}
+			result += structMembers;
+			return result;
+		}
+		return getStructuralMembers();
+	}
+
 	/*
 	 * Returns true iff there exists a type variable mapping for 'typeVar' in property 'typeVarMappings'.
 	 */
@@ -832,14 +853,15 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
 	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
 	op String internalGetTypeRefAsString() {
+		val membersWithCallConstructSigs = getStructuralMembersWithCallConstructSignatures();
 		return typingStrategy + declaredType?.rawTypeAsString + (if (declaredTypeArgs.empty) {
 			""
 		} else {
 			"<" + declaredTypeArgs.map[typeRefAsString].join(",") + ">"
-		}) + (if (structuralMembers.empty) {
+		}) + (if (membersWithCallConstructSigs.empty) {
 			""
 		} else {
-			" with { " + structuralMembers.map[memberAsString].join("; ") + " }" +
+			" with { " + (#[] + membersWithCallConstructSigs).map[memberAsString].join("; ") + " }" +
 			(if (postponedSubstitutions.empty) "" else " [[" + postponedSubstitutions.map[it.typeVar.typeAsString + "->" + it.typeArg.typeRefAsString].join(", ") + "]]")
 		});
 	}

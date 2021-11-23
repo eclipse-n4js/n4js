@@ -1,0 +1,68 @@
+    public final EObject ruleNoWhiteSpace(EObject in_current) throws RecognitionException {
+        EObject current = in_current;
+
+        Token this_NO_WHITE_SPACE_0=null;
+
+
+        	enterRule();
+
+        try {
+            {
+            int ##(?<alt>\w+)##=2;
+            int ##(?<LA>\w+)## = input.LA(1);
+
+            if ( (##\k<LA>##==RULE_NO_WHITE_SPACE) ) {
+                ##\k<alt>##=1;
+            }
+            switch (##\k<alt>##) {
+                case 1 :
+                    {
+                    this_NO_WHITE_SPACE_0=(Token)match(input,RULE_NO_WHITE_SPACE,FOLLOW_2); if (state.failed) return current;
+                    if ( state.backtracking==0 ) {
+
+                      			newLeafNode(this_NO_WHITE_SPACE_0, grammarAccess.getNoWhiteSpaceAccess().getNO_WHITE_SPACETerminalRuleCall());
+                      		
+                    }
+
+                    }
+                    break;
+
+            }
+
+
+            }
+
+            if ( state.backtracking==0 ) {
+
+              	leaveRule();
+
+            }
+        }
+
+            catch (RecognitionException re) {
+                recover(input,re);
+                appendSkippedTokens();
+            }
+        finally {
+        }
+        return current;
+    }
+_________________________________REPLACE_WITH_________________________________
+// REPLACEMENT ruleNoWhiteSpace.java.replacement START
+ public final EObject ruleNoWhiteSpace(EObject in_current) throws RecognitionException {
+    	EObject current = in_current;
+    	if (state.backtracking==0) {
+    		promoteEOL();
+    	}
+    	if (hasDisallowedWhiteSpace()) { 
+        	if (state.backtracking==0) {
+        		NoViableAltException nvae = new NoViableAltException("", 0, 0, input);
+                reportError(nvae);
+                throw nvae;
+        	}
+        	state.failed=true; 
+        	return current;
+        }
+        return current;
+    }
+// REPLACEMENT ruleNoWhiteSpace.java.replacement END

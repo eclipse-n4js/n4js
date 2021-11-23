@@ -34,7 +34,7 @@ public class InvisibleCtorDescription extends InvisibleMemberDescription {
 	@Override
 	public String getMessage() {
 		String containerName = staticType.getTypeAsString();
-		return IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR(containerName);
+		return IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR("constructor", containerName);
 	}
 
 	@Override

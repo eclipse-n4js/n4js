@@ -224,7 +224,7 @@ TStructMethod:
 	=>
 	({TStructMethod}
 		('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-	    name=IdentifierName '('
+	    (name=IdentifierName)? '('
 	)
 	TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 ;

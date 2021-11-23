@@ -41,6 +41,11 @@ const nomnomOptions: Object = {
     xunitReportPackage: {
         help: "jUnit/xUnit report package name. Default is the project name."
     },
+    nycCoveragePath: {
+        metavar: "PATH",
+        transform: resolvePath,
+        help: "Write istanbul test coverage into file."
+    },
     inspectBrk: {
         type: "number",
         full: "inspect-brk",

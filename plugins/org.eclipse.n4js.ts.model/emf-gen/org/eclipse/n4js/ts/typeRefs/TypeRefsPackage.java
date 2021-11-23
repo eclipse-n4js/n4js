@@ -2887,13 +2887,22 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_STRUCTURAL___GET_MODIFIERS_AS_STRING = THIS_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Structural Members With Call Construct Signatures</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES = THIS_TYPE_REF_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = THIS_TYPE_REF_OPERATION_COUNT + 3;
+	int THIS_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = THIS_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -2902,7 +2911,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 4;
+	int THIS_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Set Typing Strategy</em>' operation.
@@ -2911,7 +2920,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 5;
+	int THIS_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -2920,7 +2929,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___IS_USE_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 6;
+	int THIS_TYPE_REF_STRUCTURAL___IS_USE_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -2929,7 +2938,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS = THIS_TYPE_REF_OPERATION_COUNT + 7;
+	int THIS_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS = THIS_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -2938,7 +2947,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF_OPERATION_COUNT + 8;
+	int THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF_OPERATION_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>This Type Ref Structural</em>' class.
@@ -2947,7 +2956,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL_OPERATION_COUNT = THIS_TYPE_REF_OPERATION_COUNT + 9;
+	int THIS_TYPE_REF_STRUCTURAL_OPERATION_COUNT = THIS_TYPE_REF_OPERATION_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.BoundThisTypeRefImpl <em>Bound This Type Ref</em>}' class.
@@ -3248,13 +3257,22 @@ public interface TypeRefsPackage extends EPackage {
 	int BOUND_THIS_TYPE_REF___GET_MODIFIERS_AS_STRING = THIS_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Structural Members With Call Construct Signatures</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES = THIS_TYPE_REF_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = THIS_TYPE_REF_OPERATION_COUNT + 3;
+	int BOUND_THIS_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = THIS_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -3263,7 +3281,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___GET_TYPING_STRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 4;
+	int BOUND_THIS_TYPE_REF___GET_TYPING_STRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Set Typing Strategy</em>' operation.
@@ -3272,7 +3290,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___SET_TYPING_STRATEGY__TYPINGSTRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 5;
+	int BOUND_THIS_TYPE_REF___SET_TYPING_STRATEGY__TYPINGSTRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -3281,7 +3299,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF_OPERATION_COUNT + 6;
+	int BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
@@ -3290,7 +3308,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___GET_DECLARED_UPPER_BOUND = THIS_TYPE_REF_OPERATION_COUNT + 7;
+	int BOUND_THIS_TYPE_REF___GET_DECLARED_UPPER_BOUND = THIS_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -3299,7 +3317,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 8;
+	int BOUND_THIS_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -3308,7 +3326,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 9;
+	int BOUND_THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -3317,7 +3335,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS = THIS_TYPE_REF_OPERATION_COUNT + 10;
+	int BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS = THIS_TYPE_REF_OPERATION_COUNT + 11;
 
 	/**
 	 * The number of operations of the '<em>Bound This Type Ref</em>' class.
@@ -3326,7 +3344,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF_OPERATION_COUNT = THIS_TYPE_REF_OPERATION_COUNT + 11;
+	int BOUND_THIS_TYPE_REF_OPERATION_COUNT = THIS_TYPE_REF_OPERATION_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl <em>Parameterized Type Ref</em>}' class.
@@ -3799,13 +3817,22 @@ public interface TypeRefsPackage extends EPackage {
 	int STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = 2;
 
 	/**
+	 * The operation id for the '<em>Get Structural Members With Call Construct Signatures</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES = 3;
+
+	/**
 	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STRUCTURAL_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = 3;
+	int STRUCTURAL_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = 4;
 
 	/**
 	 * The number of operations of the '<em>Structural Type Ref</em>' class.
@@ -3814,7 +3841,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STRUCTURAL_TYPE_REF_OPERATION_COUNT = 4;
+	int STRUCTURAL_TYPE_REF_OPERATION_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefStructuralImpl <em>Parameterized Type Ref Structural</em>}' class.
@@ -4205,13 +4232,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_DEF_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
+	 * The operation id for the '<em>Get Structural Members With Call Construct Signatures</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 3;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -4220,7 +4256,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Set Typing Strategy</em>' operation.
@@ -4229,7 +4265,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -4238,7 +4274,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -4247,7 +4283,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 7;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>Parameterized Type Ref Structural</em>' class.
@@ -4256,7 +4292,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 8;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl <em>Existential Type Ref</em>}' class.
@@ -9630,6 +9666,16 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getStructuralTypeRef__GetStructuralMembers();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.StructuralTypeRef#getStructuralMembersWithCallConstructSignatures() <em>Get Structural Members With Call Construct Signatures</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Structural Members With Call Construct Signatures</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.StructuralTypeRef#getStructuralMembersWithCallConstructSignatures()
+	 * @generated
+	 */
+	EOperation getStructuralTypeRef__GetStructuralMembersWithCallConstructSignatures();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.StructuralTypeRef#hasPostponedSubstitutionFor(org.eclipse.n4js.ts.types.TypeVariable) <em>Has Postponed Substitution For</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11343,6 +11389,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = eINSTANCE.getStructuralTypeRef__GetStructuralMembers();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Structural Members With Call Construct Signatures</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES = eINSTANCE.getStructuralTypeRef__GetStructuralMembersWithCallConstructSignatures();
 
 		/**
 		 * The meta object literal for the '<em><b>Has Postponed Substitution For</b></em>' operation.

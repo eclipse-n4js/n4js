@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import com.google.common.base.Objects;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -26,6 +28,7 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.TStructGetter;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -147,6 +150,26 @@ public class TStructGetterImpl extends TGetterImpl implements TStructGetter {
 	 * @generated
 	 */
 	@Override
+	public boolean isASTCallSignature() {
+		return ((this instanceof TStructMethod) && (this.getName() == null));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isASTConstructSignature() {
+		return ((this instanceof TStructMethod) && Objects.equal(this.getName(), "new"));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.TSTRUCT_GETTER__DEFINED_MEMBER:
@@ -257,6 +280,8 @@ public class TStructGetterImpl extends TGetterImpl implements TStructGetter {
 				case TypesPackage.TSTRUCT_MEMBER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER: return TypesPackage.TSTRUCT_GETTER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER;
 				case TypesPackage.TSTRUCT_MEMBER___IS_STATIC: return TypesPackage.TSTRUCT_GETTER___IS_STATIC;
 				case TypesPackage.TSTRUCT_MEMBER___GET_MEMBER_ACCESS_MODIFIER: return TypesPackage.TSTRUCT_GETTER___GET_MEMBER_ACCESS_MODIFIER;
+				case TypesPackage.TSTRUCT_MEMBER___IS_AST_CALL_SIGNATURE: return TypesPackage.TSTRUCT_GETTER___IS_AST_CALL_SIGNATURE;
+				case TypesPackage.TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE: return TypesPackage.TSTRUCT_GETTER___IS_AST_CONSTRUCT_SIGNATURE;
 				default: return -1;
 			}
 		}
@@ -277,6 +302,10 @@ public class TStructGetterImpl extends TGetterImpl implements TStructGetter {
 				return isStatic();
 			case TypesPackage.TSTRUCT_GETTER___GET_MEMBER_ACCESS_MODIFIER:
 				return getMemberAccessModifier();
+			case TypesPackage.TSTRUCT_GETTER___IS_AST_CALL_SIGNATURE:
+				return isASTCallSignature();
+			case TypesPackage.TSTRUCT_GETTER___IS_AST_CONSTRUCT_SIGNATURE:
+				return isASTConstructSignature();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
