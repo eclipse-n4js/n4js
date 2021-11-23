@@ -8,7 +8,7 @@ export external public interface ~ProxyConstructor {
 	<T extends Object> new(target: T, handler: ProxyHandler<T>): T;
 }
 
-var Proxy: ProxyConstructor;
+export public var Proxy: ProxyConstructor;
 
 export external public interface ~ProxyHandler<T> {
 	apply?: (target: T, thisArg: Object, argArray: Array<any>) => any;

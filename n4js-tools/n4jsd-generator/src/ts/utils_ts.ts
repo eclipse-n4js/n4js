@@ -49,8 +49,20 @@ export function traverse(sourceFile: ts.SourceFile, fn: (node: ts.Node, indent: 
 
 export function isExported(node: ts.Declaration): boolean {
 	const flags = ts.getCombinedModifierFlags(node);
-	return utils.testFlag(flags, ts.ModifierFlags.Export)
-		|| (!!node.parent && node.parent.kind === ts.SyntaxKind.SourceFile);
+	if (utils.testFlag(flags, ts.ModifierFlags.Export)) {
+		return true;
+	}
+	let parent = node.parent;
+	if (parent?.kind === ts.SyntaxKind.VariableDeclarationList) {
+		parent = parent.parent;
+	}
+	if (parent?.kind === ts.SyntaxKind.VariableStatement) {
+		parent = parent.parent;
+	}
+	if (parent?.kind === ts.SyntaxKind.SourceFile) {
+		return true;
+	}
+	return false;
 }
 
 export function isExportedAsDefault(node: ts.NamedDeclaration, checker: ts.TypeChecker, exportAssignment?: ts.ExportAssignment): boolean {
