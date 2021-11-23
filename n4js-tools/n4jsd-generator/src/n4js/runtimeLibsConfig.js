@@ -812,9 +812,17 @@ export default {
 				"*#prototype",
 				"*#addEventListener#signature0",
 				"*#removeEventListener#signature0",
-				// getter without setter overriding a field:
+				// cases of overriding a field with a field with a non-equal type:
+				"BeforeUnloadEvent#returnValue",
+				// cases of a writable field being turned into a read-only property (by way of overriding the field with a getter but not a setter)
+				// (not allowed in N4JS but allowed in TypeScript!!)
+				"ByteLengthQueuingStrategy#highWaterMark",
+				"ByteLengthQueuingStrategy#size",
+				"CountQueuingStrategy#highWaterMark",
+				"CountQueuingStrategy#size",
 				"DOMException#name",
 				"DOMException#message",
+				"SVGElement#className" // in this case, also the type is changed in an incompatible way!
 			],
 			convertSelectedCtorInstanceTypes: [
 				"DOMException", "OverconstrainedError" // must convert because their super type "Error" is converted from ctor/instance pattern to class

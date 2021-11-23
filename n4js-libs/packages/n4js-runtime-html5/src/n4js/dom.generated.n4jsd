@@ -2120,9 +2120,7 @@ export external public interface ~BaseAudioContext extends EventTarget {
 
 var BaseAudioContext: ~Object with { new(): BaseAudioContext; };
 
-export external public interface ~BeforeUnloadEvent extends Event {
-	returnValue: any;
-}
+export external public interface ~BeforeUnloadEvent extends Event {}
 
 var BeforeUnloadEvent: ~Object with { new(): BeforeUnloadEvent; };
 
@@ -2184,10 +2182,7 @@ export external public interface ~BroadcastChannel extends EventTarget {
 
 var BroadcastChannel: ~Object with { new(name: string): BroadcastChannel; };
 
-export external public interface ~ByteLengthQueuingStrategy extends QueuingStrategy<ArrayBufferView> {
-	get highWaterMark(): number;
-	get size(): QueuingStrategySize<ArrayBufferView>;
-}
+export external public interface ~ByteLengthQueuingStrategy extends QueuingStrategy<ArrayBufferView> {}
 
 var ByteLengthQueuingStrategy: ~Object with { new(init: QueuingStrategyInit): ByteLengthQueuingStrategy; };
 
@@ -3040,10 +3035,7 @@ export external public interface ~ConvolverNode extends AudioNode {
 
 var ConvolverNode: ~Object with { new(context: BaseAudioContext, options: ConvolverOptions = ): ConvolverNode; };
 
-export external public interface ~CountQueuingStrategy extends QueuingStrategy {
-	get highWaterMark(): number;
-	get size(): QueuingStrategySize;
-}
+export external public interface ~CountQueuingStrategy extends QueuingStrategy {}
 
 var CountQueuingStrategy: ~Object with { new(init: QueuingStrategyInit): CountQueuingStrategy; };
 
@@ -7686,7 +7678,6 @@ var SVGDescElement: ~Object with { new(): SVGDescElement; };
 export external public interface ~SVGElementEventMap extends ElementEventMap, DocumentAndElementEventHandlersEventMap, GlobalEventHandlersEventMap {}
 
 export external public interface ~SVGElement extends Element, DocumentAndElementEventHandlers, ElementCSSInlineStyle, GlobalEventHandlers, HTMLOrSVGElement {
-	get className(): any;
 	get ownerSVGElement(): SVGSVGElement;
 	get viewportElement(): SVGElement;
 	@Override
