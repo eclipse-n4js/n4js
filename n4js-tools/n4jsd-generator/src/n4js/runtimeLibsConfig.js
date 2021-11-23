@@ -1323,15 +1323,183 @@ export default {
 				"XMLHttpRequestUpload#removeEventListener": { addAnnotations: [ "@Override" ] },
 			}
 		},
-		"dom.iterable.d.ts": {},
+		"dom.iterable.d.ts": {
+			// TODO: with all the below removals, this file is empty and could maybe be removed entirely!
+			polyfills: [
+				"DOMTokenList",
+				"Headers",
+				"NodeList",
+				"NodeListOf",
+				"HTMLCollectionBase",
+				"HTMLCollectionOf",
+				"FormData",
+				"URLSearchParams"
+			],
+			patchMembers: {
+				// the following members are also polyfilled in file 'dom.iterable.generated.d.ts';
+				// N4JS does not allow several polyfills for the same member, so we ignore them here
+				// (note: their signature seems to be identical, so these seem to be duplicates anyway)
+				"DOMTokenList#[Symbol.iterator]": undefined,
+				"Headers#[Symbol.iterator]": undefined,
+				"Headers#entries": undefined,
+				"Headers#keys": undefined,
+				"Headers#values": undefined,
+				"NodeList#entries": undefined,
+				"NodeList#keys": undefined,
+				"NodeList#values": undefined,
+				"NodeList#[Symbol.iterator]": undefined,
+				"NodeListOf#entries": undefined,
+				"NodeListOf#keys": undefined,
+				"NodeListOf#values": undefined,
+				"NodeListOf#[Symbol.iterator]": undefined,
+				"HTMLCollectionBase#[Symbol.iterator]": undefined,
+				"HTMLCollectionOf#[Symbol.iterator]": undefined,
+				"FormData#entries": undefined,
+				"FormData#keys": undefined,
+				"FormData#values": undefined,
+				"FormData#[Symbol.iterator]": undefined,
+				"URLSearchParams#entries": undefined,
+				"URLSearchParams#keys": undefined,
+				"URLSearchParams#values": undefined,
+				"URLSearchParams#[Symbol.iterator]": undefined,
+				// cannot add overload signatures via polyfill
+				// (note: their signature seems to be identical, so these seem to be duplicates anyway)
+				"NodeList#forEach": undefined,
+				"NodeListOf#forEach": undefined
+			}
+		},
 		"dom.iterable.generated.d.ts": {
-			// the following need to be converted to classes, because they extend built-in types Map, Set, ReadonlyMap
-			// (which are currrently being converted from the ctor/instance pattern to a class)
 			changeToClass: [
+				// the following need to be converted to classes, because they extend built-in types Map, Set, ReadonlyMap
+				// (which are currrently being converted from the ctor/instance pattern to a class)
 				"AudioParamMap",
 				"FontFaceSet",
 				"RTCStatsReport"
-			]
+			],
+			polyfills: [
+				"BaseAudioContext",
+				"CSSRuleList",
+				"CSSStyleDeclaration",
+				"Cache",
+				"CanvasPathDrawingStyles",
+				"DOMRectList",
+				"DOMStringList",
+				"DOMTokenList",
+				"DataTransferItemList",
+				"FileList",
+				"FormData",
+				"HTMLAllCollection",
+				"HTMLCollectionBase",
+				"HTMLCollectionOf",
+				"HTMLFormElement",
+				"HTMLSelectElement",
+				"Headers",
+				"IDBDatabase",
+				"IDBObjectStore",
+				"MediaKeyStatusMap",
+				"MediaList",
+				"MessageEvent",
+				"MimeTypeArray",
+				"NamedNodeMap",
+				"Navigator",
+				"NodeList",
+				"NodeListOf",
+				"Plugin",
+				"PluginArray",
+				"ReadableStream",
+				"SVGLengthList",
+				"SVGNumberList",
+				"SVGPointList",
+				"SVGStringList",
+				"SVGTransformList",
+				"SourceBufferList",
+				"SpeechRecognitionResult",
+				"SpeechRecognitionResultList",
+				"StyleSheetList",
+				"SubtleCrypto",
+				"TextTrackCueList",
+				"TextTrackList",
+				"TouchList",
+				"URLSearchParams",
+				"WEBGL_draw_buffers",
+				"WebGL2RenderingContextBase",
+				"WebGL2RenderingContextOverloads",
+				"WebGLRenderingContextBase",
+				"WebGLRenderingContextOverloads"
+			],
+			patchMembers: {
+				// another nasty case:
+				// the main file 'dom.generated.d.ts' assumes that NodeListOf is a subtype of NodeList, but polyfilling the two members
+				// NodeList.entries(): IterableIterator<[number,Node]>;
+				// NodeListOf.entries(): IterableIterator<[number,TNode]>;
+				// would break this assumption due to the use of Array2 instead of Iterable2; therefore we have to patch as follows:
+				"NodeList#entries": { replaceBy: "entries(): IterableIterator<Iterable2<number,Node>>;" },
+				"NodeListOf#entries": { replaceBy: "entries(): IterableIterator<Iterable2<number,TNode>>;" },
+				// cannot add overload signatures via polyfill:
+				"Navigator#vibrate": undefined,
+				"WebGL2RenderingContextBase#getUniformIndices": undefined,
+				// missing @Override annotations:
+				// (TODO: are these overrides actually cases of adding overload signatures via polyfill???)
+				"BaseAudioContext#createIIRFilter": { addAnnotations: [ "@Override" ] },
+				"BaseAudioContext#createPeriodicWave": { addAnnotations: [ "@Override" ] },
+				"Cache#addAll": { addAnnotations: [ "@Override" ] },
+				"CanvasPathDrawingStyles#setLineDash": { addAnnotations: [ "@Override" ] },
+				"IDBDatabase#transaction": { addAnnotations: [ "@Override" ] },
+				"IDBObjectStore#createIndex": { addAnnotations: [ "@Override" ] },
+				"MessageEvent#initMessageEvent": { addAnnotations: [ "@Override" ] },
+				"Navigator#requestMediaKeySystemAccess": { addAnnotations: [ "@Override" ] },
+				"SubtleCrypto#deriveKey": { addAnnotations: [ "@Override" ] },
+				"SubtleCrypto#generateKey": { addAnnotations: [ "@Override" ] },
+				"SubtleCrypto#importKey": { addAnnotations: [ "@Override" ] },
+				"SubtleCrypto#unwrapKey": { addAnnotations: [ "@Override" ] },
+				"WEBGL_draw_buffers#drawBuffersWEBGL": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#clearBufferfv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#clearBufferiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#clearBufferuiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#drawBuffers": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#getActiveUniforms": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#invalidateFramebuffer": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#invalidateSubFramebuffer": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#transformFeedbackVaryings": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniform1uiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniform2uiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniform3uiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniform4uiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix2x3fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix2x4fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix3x2fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix3x4fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix4x2fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix4x3fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#vertexAttribI4iv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#vertexAttribI4uiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform1fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform1iv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform2fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform2iv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform3fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform3iv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform4fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform4iv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniformMatrix2fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniformMatrix3fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniformMatrix4fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextBase#vertexAttrib1fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextBase#vertexAttrib2fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextBase#vertexAttrib3fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextBase#vertexAttrib4fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform1fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform1iv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform2fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform2iv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform3fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform3iv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform4fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform4iv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniformMatrix2fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniformMatrix3fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniformMatrix4fv": { addAnnotations: [ "@Override" ] }
+			}
 		}
 	},
 	addFiles: {

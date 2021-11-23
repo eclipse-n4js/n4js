@@ -70,7 +70,15 @@ export public function isIgnored(filePath: string, elementName: string =, member
 	}
 	let elemQualifier = "";
 	if (memberName) {
-		elemQualifier += "#" + memberName;
+		elemQualifier += "#";
+		const symbolName = model.getSymbolNameFromPropertyName(memberName);
+		if (symbolName) {
+			// 'memberName' denotes a symbol
+			elemQualifier += "[Symbol." + symbolName + "]";
+		} else {
+			// standard case: not a symbol
+			elemQualifier += memberName;
+		}
 		if (signatureIndex !== undefined && signatureIndex >= 0) {
 			elemQualifier += "#signature" + signatureIndex;
 		}
