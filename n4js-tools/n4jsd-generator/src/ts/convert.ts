@@ -710,10 +710,12 @@ export class Converter {
 			|| kind === ts.SyntaxKind.UndefinedKeyword) {
 			// type keyword supported by N4JS
 			result.kind = model.TypeRefKind.NAMED;
+			result.builtIn = true;
 			result.targetTypeName = sourceStr;
 		} else if (kind === ts.SyntaxKind.ObjectKeyword) {
 			// type keyword NOT supported by N4JS, but it can be converted
 			result.kind = model.TypeRefKind.NAMED;
+			result.builtIn = true;
 			result.targetTypeName = "Object";
 		} else if (kind === ts.SyntaxKind.NullKeyword
 			|| kind === ts.SyntaxKind.NeverKeyword
@@ -728,6 +730,7 @@ export class Converter {
 				return model.createAnyPlus();
 			}
 			result.kind = model.TypeRefKind.NAMED;
+			result.builtIn = utils_ts.isBuiltInType(type, this.runtimeLibs);
 			result.targetTypeName = node.typeName.getText().trim();
 			if (node.typeArguments) {
 				for (const typeArg of node.typeArguments) {

@@ -111,7 +111,7 @@ export external public interface ~AudioWorkletNodeOptions extends AudioNodeOptio
 	numberOfInputs?: number;
 	numberOfOutputs?: number;
 	outputChannelCount?: Array<number>;
-	parameterData?: Record<string,number>;
+	parameterData?: any+;
 	processorOptions?: any;
 }
 
@@ -1135,7 +1135,7 @@ export external public interface ~PublicKeyCredentialUserEntity extends PublicKe
 export external public interface ~PushSubscriptionJSON {
 	endpoint?: string;
 	expirationTime?: DOMTimeStamp;
-	keys?: Record<string,string>;
+	keys?: any+;
 }
 
 export external public interface ~PushSubscriptionOptionsInit {
@@ -3002,7 +3002,7 @@ export external public interface ~ClipboardItem {
 	getType(type: string): Promise<Blob>;
 }
 
-var ClipboardItem: ~Object with { new(items: Record<string,ClipboardItemDataType | PromiseLike<ClipboardItemDataType>>, options: ClipboardItemOptions = ): ClipboardItem; };
+var ClipboardItem: ~Object with { new(items: any+, options: ClipboardItemOptions = ): ClipboardItem; };
 
 export external public interface ~CloseEvent extends Event {
 	get code(): number;
@@ -9350,7 +9350,7 @@ export external public interface ~URLSearchParams {
 	forEach(callbackfn: (value: string, key: string, parent: URLSearchParams)=>void, thisArg: any = ): void;
 }
 
-var URLSearchParams: ~Object with { new(init: Array<Array<string>> | Record<string,string> | string | URLSearchParams = ): URLSearchParams; toString(): string; };
+var URLSearchParams: ~Object with { new(init: Array<Array<string>> | any+ | string | URLSearchParams = ): URLSearchParams; toString(): string; };
 
 export external public interface ~VTTCue extends TextTrackCue {
 	align: AlignSetting;
@@ -11222,7 +11222,7 @@ export external public interface ~SVGElementTagNameMap {
 	view: SVGViewElement;
 }
 
-export external public type ElementTagNameMap = HTMLElementTagNameMap & Pick<SVGElementTagNameMap,Exclude<SVGElementTagNameMap,HTMLElementTagNameMap>>;
+export external public type ElementTagNameMap = HTMLElementTagNameMap & any+;
 
 var Audio: ~Object with { new(src: string = ): HTMLAudioElement; };
 
@@ -11698,7 +11698,7 @@ export external public type HTMLOrSVGScriptElement = HTMLScriptElement | SVGScri
 
 export external public type HashAlgorithmIdentifier = AlgorithmIdentifier;
 
-export external public type HeadersInit = Array<Array<string>> | Record<string,string> | Headers;
+export external public type HeadersInit = Array<Array<string>> | any+ | Headers;
 
 export external public type IDBValidKey = number | string | Date | BufferSource | Array<IDBValidKey>;
 

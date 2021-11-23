@@ -180,6 +180,7 @@ export enum TypeRefOperator {
 
 export class TypeRef implements AnnotatableElement { // note: annotations only supported for TypeRefKind === FUNCTION
 	kind: TypeRefKind;
+	builtIn: boolean = false;
 	dynamic: boolean;
 	targetTypeName: string;
 	targetTypeArgs: TypeRef[] = [];
@@ -193,10 +194,13 @@ export class TypeRef implements AnnotatableElement { // note: annotations only s
 	tsSourceString: string;
 
 	public isBuiltInUndefined(): boolean {
-		return this.kind === TypeRefKind.NAMED && this.targetTypeName === "undefined";
+		return this.kind === TypeRefKind.NAMED && this.builtIn && this.targetTypeName === "undefined";
 	}
 	public isBuiltInVoid(): boolean {
-		return this.kind === TypeRefKind.NAMED && this.targetTypeName === "void";
+		return this.kind === TypeRefKind.NAMED && this.builtIn && this.targetTypeName === "void";
+	}
+	public isBuiltInUtilityType(): boolean {
+		return this.kind === TypeRefKind.NAMED && this.builtIn && utils.TS_UTILITY_TYPES.has(this.targetTypeName);
 	}
 	public isComposed(): boolean {
 		return this.kind === TypeRefKind.UNION || this.kind === TypeRefKind.INTERSECTION;
@@ -679,6 +683,9 @@ class Emitter {
 			// in TypeScript, 'void' can be used anywhere but in N4JS only as return type of functions/methods
 			// -> replace 'void' by 'undefined' by default:
 			typeRef = createUndefined();
+		} else if (typeRef.isBuiltInUtilityType()) {
+			// something like Pick<...> or Record<...>
+			typeRef = createAnyPlus();
 		}
 		buff.push(typeRef.targetTypeName);
 		if (typeRef.targetTypeArgs.length > 0) {
@@ -949,9 +956,10 @@ export function getSymbolNameFromPropertyName(propertyName: string): string {
 	return undefined; // not a symbol
 }
 
-export function createNamedTypeRef(targetType: Type | string): TypeRef {
+export function createNamedTypeRef(targetType: Type | string, builtIn: boolean = false): TypeRef {
 	const result = new TypeRef();
 	result.kind = TypeRefKind.NAMED;
+	result.builtIn = builtIn;
 	if (targetType instanceof Type) {
 		result.targetTypeName = targetType.name;
 		for (const typeParam of targetType.typeParams) {
@@ -966,6 +974,7 @@ export function createNamedTypeRef(targetType: Type | string): TypeRef {
 export function createUndefined(): TypeRef {
 	const result = new TypeRef();
 	result.kind = TypeRefKind.NAMED;
+	result.builtIn = true;
 	result.targetTypeName = "undefined";
 	return result;
 }
@@ -973,6 +982,7 @@ export function createUndefined(): TypeRef {
 export function createAnyPlus(): TypeRef {
 	const result = new TypeRef();
 	result.kind = TypeRefKind.NAMED;
+	result.builtIn = true;
 	result.targetTypeName = "any";
 	result.dynamic = true;
 	return result;

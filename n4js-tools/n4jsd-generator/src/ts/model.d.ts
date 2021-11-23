@@ -185,6 +185,7 @@ export enum TypeRefOperator {
 
 export class TypeRef implements AnnotatableElement { // note: annotations only supported for TypeRefKind === FUNCTION
 	kind: TypeRefKind;
+	builtIn: boolean;
 	dynamic: boolean;
 	targetTypeName: string;
 	targetTypeArgs: TypeRef[];

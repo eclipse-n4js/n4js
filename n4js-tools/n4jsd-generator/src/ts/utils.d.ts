@@ -11,6 +11,8 @@
 
 export const PACKAGE_JSON: string;
 
+export const TS_UTILITY_TYPES: Set<string>;
+
 export enum IssueKind {
 	WARNING, ERROR
 }
