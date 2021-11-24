@@ -20,8 +20,6 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 
-import com.google.common.collect.ImmutableList;
-
 /**
  * This class attaches additional information such as filters and validations for a given scope. One main use case is
  * the following situation: The given scope is a cached scope that refers to a location L such as block (i.e.
@@ -31,7 +29,7 @@ public class ScopeInfo implements IScope /* LEGACY SUPPORT */ {
 	/** The scope this info is about */
 	protected final IScope scope;
 	/** Validators for this scope */
-	protected final ImmutableList<IScopeValidator> validators;
+	protected final ArrayList<IScopeValidator> validators = new ArrayList<>();
 
 	/** Legacy support */
 	private final IScope legacyDelegate;
@@ -39,7 +37,7 @@ public class ScopeInfo implements IScope /* LEGACY SUPPORT */ {
 	/** Constructor */
 	public ScopeInfo(IScope scope, List<IScopeValidator> validators, IScope legacyDelegate) {
 		this.scope = scope;
-		this.validators = ImmutableList.copyOf(validators);
+		this.validators.addAll(validators);
 		this.legacyDelegate = legacyDelegate;
 	}
 
@@ -51,6 +49,11 @@ public class ScopeInfo implements IScope /* LEGACY SUPPORT */ {
 	/** Returns the scope */
 	public IScope getScope() {
 		return scope;
+	}
+
+	/** Adds the given validator to this {@link ScopeInfo} */
+	public void addValidator(IScopeValidator validator) {
+		validators.add(validator);
 	}
 
 	/** Returns true iff the given {@link IEObjectDescription} is evaluated as valid by all validators */

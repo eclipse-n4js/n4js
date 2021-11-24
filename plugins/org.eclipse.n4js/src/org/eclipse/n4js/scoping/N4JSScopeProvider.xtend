@@ -47,7 +47,6 @@ import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.ContextAwareTypeScope
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
-import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareCtorScope
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
@@ -59,6 +58,8 @@ import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
 import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 import org.eclipse.n4js.scoping.validation.ContextAwareTypeScopeValidator
 import org.eclipse.n4js.scoping.validation.ScopeInfo
+import org.eclipse.n4js.scoping.validation.VeeScopeValidator
+import org.eclipse.n4js.scoping.validation.VisibilityAwareCtorScopeValidator
 import org.eclipse.n4js.tooling.react.ReactHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -89,7 +90,6 @@ import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.scoping.validation.VeeScopeValidator
 
 /**
  * This class contains custom scoping description.
@@ -393,12 +393,14 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 */
 	private def IScope scope_IdentifierRef_id(IdentifierRef identifierRef, EReference ref) {
 		val VariableEnvironmentElement vee = ancestor(identifierRef, VariableEnvironmentElement);
+		if (vee === null) {
+			return IScope.NULLSCOPE;
+		}
 		val scope = getLexicalEnvironmentScope(vee, identifierRef, ref);
 		// Handle constructor visibility
 		if (identifierRef.eContainer instanceof NewExpression) {
 			val newExpr = identifierRef.eContainer as NewExpression
-			val vacs = new VisibilityAwareCtorScope(scope, checker, containerTypesHelper, newExpr);
-			return vacs;
+			scope.addValidator(new VisibilityAwareCtorScopeValidator(checker, containerTypesHelper, newExpr));
 		}
 		return scope;
 	}
@@ -411,16 +413,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				obj
 			else
 				ancestor(obj, VariableEnvironmentElement);
-		return getLexicalEnvironmentScope(vee, obj, ref);
-	}
 
-	private def IScope getLexicalEnvironmentScope(VariableEnvironmentElement vee, EObject context, EReference ref) {
 		if (vee === null) {
 			return IScope.NULLSCOPE;
 		}
-		
-		ensureLexicalEnvironmentScopes(context, ref);
+		return getLexicalEnvironmentScope(vee, obj, ref);
+	}
 
+	private def ScopeInfo getLexicalEnvironmentScope(VariableEnvironmentElement vee, EObject context, EReference ref) {
+		ensureLexicalEnvironmentScopes(context, ref);
 		return cache.mustGet('scope_IdentifierRef_id' -> vee, vee.eResource);
 	}
 
@@ -446,7 +447,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * Builds a lexical environment scope with the given parameters.
 	 * Filters out primitive types.
 	 */
-	private def IScope buildLexicalEnvironmentScope(VariableEnvironmentElement vee, EObject context, EReference reference) {
+	private def ScopeInfo buildLexicalEnvironmentScope(VariableEnvironmentElement vee, EObject context, EReference reference) {
 		val scopeLists = newArrayList;
 		// variables declared in module
 		collectLexialEnvironmentsScopeLists(vee, scopeLists);
