@@ -2216,11 +2216,6 @@ class N4EnumDeclaration extends N4TypeDeclaration {
 	op TEnum getDefinedTypeAsEnum() {
 		return definedType as TEnum;
 	}
-	
-	
-	op boolean isHollow() {
-		return true;
-	}
 }
 
 class N4EnumLiteral extends NamedElement, TypableElement {

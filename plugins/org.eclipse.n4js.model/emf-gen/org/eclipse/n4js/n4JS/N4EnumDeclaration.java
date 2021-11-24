@@ -54,12 +54,4 @@ public interface N4EnumDeclaration extends N4TypeDeclaration {
 	 */
 	TEnum getDefinedTypeAsEnum();
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	boolean isHollow();
-
 } // N4EnumDeclaration

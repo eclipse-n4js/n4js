@@ -13283,6 +13283,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_DECLARATION___GET_NAME = N4_TYPE_DECLARATION___GET_NAME;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___IS_HOLLOW = N4_TYPE_DECLARATION___IS_HOLLOW;
+
+	/**
 	 * The operation id for the '<em>Is External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13301,22 +13310,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM = N4_TYPE_DECLARATION_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_ENUM_DECLARATION___IS_HOLLOW = N4_TYPE_DECLARATION_OPERATION_COUNT + 1;
-
-	/**
 	 * The number of operations of the '<em>N4 Enum Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_ENUM_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 2;
+	int N4_ENUM_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4EnumLiteralImpl <em>N4 Enum Literal</em>}' class.
@@ -22054,16 +22054,6 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4EnumDeclaration__GetDefinedTypeAsEnum();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4EnumDeclaration#isHollow() <em>Is Hollow</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Hollow</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.N4EnumDeclaration#isHollow()
-	 * @generated
-	 */
-	EOperation getN4EnumDeclaration__IsHollow();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4EnumLiteral <em>N4 Enum Literal</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -27502,14 +27492,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM = eINSTANCE.getN4EnumDeclaration__GetDefinedTypeAsEnum();
-
-		/**
-		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation N4_ENUM_DECLARATION___IS_HOLLOW = eINSTANCE.getN4EnumDeclaration__IsHollow();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4EnumLiteralImpl <em>N4 Enum Literal</em>}' class.

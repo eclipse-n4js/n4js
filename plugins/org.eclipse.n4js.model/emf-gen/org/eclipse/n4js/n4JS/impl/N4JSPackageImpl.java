@@ -6698,16 +6698,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4EnumDeclaration__IsHollow() {
-		return n4EnumDeclarationEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getN4EnumLiteral() {
 		return n4EnumLiteralEClass;
 	}
@@ -8463,7 +8453,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4EnumDeclarationEClass = createEClass(N4_ENUM_DECLARATION);
 		createEReference(n4EnumDeclarationEClass, N4_ENUM_DECLARATION__LITERALS);
 		createEOperation(n4EnumDeclarationEClass, N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM);
-		createEOperation(n4EnumDeclarationEClass, N4_ENUM_DECLARATION___IS_HOLLOW);
 
 		n4EnumLiteralEClass = createEClass(N4_ENUM_LITERAL);
 		createEAttribute(n4EnumLiteralEClass, N4_ENUM_LITERAL__NAME);
@@ -9749,8 +9738,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getN4EnumDeclaration_Literals(), this.getN4EnumLiteral(), null, "literals", null, 0, -1, N4EnumDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4EnumDeclaration__GetDefinedTypeAsEnum(), theTypesPackage.getTEnum(), "getDefinedTypeAsEnum", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getN4EnumDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4EnumLiteralEClass, N4EnumLiteral.class, "N4EnumLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getN4EnumLiteral_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4EnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
