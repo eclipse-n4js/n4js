@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		JavaProject "my-lib" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "package.json" { from="my-lib.package.json" }
+		}
+		JavaProject "my-runtime-lib" {
+			Folder "src" {
+				File "MyRuntimeLib.n4jsd" { from="my-runtime-lib.MyRuntimeLib.n4jsd" }
+			}
+			File "package.json" { from="my-runtime-lib.package.json" }
+		}
+	}
+
+   END_SETUP
+ */
+
+
+
+
+
+// XPECT noerrors -->
+URL; // works (binds to variable)
+
+// XPECT noerrors -->
+URL(""); // works (binds to variable)
+
+// XPECT noerrors --> "Cannot instantiate interface URL." at "URL"
+new URL(true); // incorrect (binds to interface)
+
+interface MyURL extends URL {
+
+}
+
+let yy = URL;
+
+
+
+
