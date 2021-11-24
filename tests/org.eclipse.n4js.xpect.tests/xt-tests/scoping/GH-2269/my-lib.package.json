@@ -1,0 +1,24 @@
+{
+  "name": "my-lib",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "n4js": {
+    "projectType": "library",
+    "sources": {
+      "source": [
+        "src"
+      ]
+    },
+    "output": "src-gen"
+  },
+  "dependencies": {
+    "n4js-runtime": "",
+    "my-runtime-library": ""
+  }
+}

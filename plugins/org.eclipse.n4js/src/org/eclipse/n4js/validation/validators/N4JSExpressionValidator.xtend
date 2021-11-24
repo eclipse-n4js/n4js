@@ -564,6 +564,13 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
+		val isHollow = N4JSLanguageUtils.isHollowElement(classifierTypeRef.originalAliasTypeRef?.declaredType, jsVariantHelper);
+		if (isHollow) {
+			// errors due to access to hollow elements is done in VeeScopeValidator
+			return;
+		}
+		
+		
 		val isCtor = classifierTypeRef.isConstructorRef;
 		val isDirectRef = callee instanceof IdentifierRef && (callee as IdentifierRef).id === staticType;
 		val isConcreteOrCovariant =

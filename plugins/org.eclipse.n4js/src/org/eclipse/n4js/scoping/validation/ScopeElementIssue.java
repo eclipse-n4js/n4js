@@ -25,8 +25,8 @@ public final class ScopeElementIssue {
 	public final String message;
 
 	/** Constructor */
-	public ScopeElementIssue(IEObjectDescription delegate, String message, String issueCode) {
-		this(delegate, Severity.ERROR, message, issueCode);
+	public ScopeElementIssue(IEObjectDescription delegate, String issueCode, String message) {
+		this(delegate, Severity.ERROR, issueCode, message);
 	}
 
 	/** Constructor */
@@ -37,4 +37,8 @@ public final class ScopeElementIssue {
 		this.message = message;
 	}
 
+	@Override
+	public String toString() {
+		return message;
+	}
 }
