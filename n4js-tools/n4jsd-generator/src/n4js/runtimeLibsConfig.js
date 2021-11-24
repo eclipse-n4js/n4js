@@ -834,6 +834,10 @@ export default {
 				"DOMException", "OverconstrainedError" // must convert because their super type "Error" is converted from ctor/instance pattern to class
 			],
 			patchMembers: {
+				// because TS is using a very nifty way of defining the event listener signatures in subtypes of EventTarget
+				// we have to make the type of the event listener's parameter dynamic (basically turning off type checking here!)
+				// TODO find better approach
+				"EventListener#()": { replaceBy: "(evt: Event+): void;" },
 				// use 'any+' instead of the default type argument 'any'
 				// (a cleaner approach would be to use in/out for the type parameters of Readable/WritableStream and related
 				// classes, but that would (1) require patching in many places and (2) make us run into a bug in the N4JS structural subtyping;

@@ -3788,7 +3788,7 @@ export external public interface ~Event {
 export public var Event: ~Object with { new(type: string, eventInitDict: EventInit = ): Event; get AT_TARGET(): number; get BUBBLING_PHASE(): number; get CAPTURING_PHASE(): number; get NONE(): number; };
 
 export external public interface ~EventListener {
-	(evt: Event): void;
+	(evt: Event+): void;
 }
 
 export external public interface ~EventListenerObject {
