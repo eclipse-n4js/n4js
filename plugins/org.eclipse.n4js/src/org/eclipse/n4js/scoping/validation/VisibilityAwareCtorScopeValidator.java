@@ -75,7 +75,7 @@ public class VisibilityAwareCtorScopeValidator implements IScopeValidator {
 		String message = IssueCodes.getMessageForVIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR("constructor",
 				containerName);
 
-		return new ScopeElementIssue(objDescr, message, IssueCodes.VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR);
+		return new ScopeElementIssue(objDescr, IssueCodes.VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR, message);
 	}
 
 }

@@ -51,9 +51,11 @@ public class ScopeInfo implements IScope /* LEGACY SUPPORT */ {
 		return scope;
 	}
 
-	/** Adds the given validator to this {@link ScopeInfo} */
-	public void addValidator(IScopeValidator validator) {
-		validators.add(validator);
+	/** Adds the given validator to a copy of this {@link ScopeInfo} */
+	public ScopeInfo addValidator(IScopeValidator validator) {
+		ArrayList<IScopeValidator> newValidators = new ArrayList<>(validators);
+		newValidators.add(validator);
+		return new ScopeInfo(scope, newValidators, legacyDelegate);
 	}
 
 	/** Returns true iff the given {@link IEObjectDescription} is evaluated as valid by all validators */
@@ -76,9 +78,11 @@ public class ScopeInfo implements IScope /* LEGACY SUPPORT */ {
 		}
 		List<ScopeElementIssue> errors = new ArrayList<>(0);
 		for (IScopeValidator validator : validators) {
-			ScopeElementIssue error = validator.getIssue(objDescr);
-			if (error != null) {
-				errors.add(error);
+			if (!validator.isValid(objDescr)) {
+				ScopeElementIssue error = validator.getIssue(objDescr);
+				if (error != null) {
+					errors.add(error);
+				}
 			}
 		}
 		return errors;

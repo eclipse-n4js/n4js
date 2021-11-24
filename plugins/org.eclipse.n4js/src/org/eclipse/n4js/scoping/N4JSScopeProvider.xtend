@@ -400,7 +400,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		// Handle constructor visibility
 		if (identifierRef.eContainer instanceof NewExpression) {
 			val newExpr = identifierRef.eContainer as NewExpression
-			scope.addValidator(new VisibilityAwareCtorScopeValidator(checker, containerTypesHelper, newExpr));
+			return scope.addValidator(new VisibilityAwareCtorScopeValidator(checker, containerTypesHelper, newExpr));
 		}
 		return scope;
 	}
