@@ -206,6 +206,8 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 		vee.checkLocalScopeNamesConflict(localNames, localNamesNoDuplicates)
 
+		// TODO: in files with an extremely large number of top-level elements, the copying
+		// in the following line can get expensive (~250ms in "dom.generated.n4jsd" of n4js-runtime-html5)
 		val Set<String> allNamesNoDuplicates = new HashSet(outerNames); // copy 'outerNames', do not change it!
 		allNamesNoDuplicates.addAll(localNamesNoDuplicates);
 
