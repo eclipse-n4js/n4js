@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.common.collect.ListMultimap
+import com.google.common.collect.MultimapBuilder
+import com.google.common.collect.Multimaps
 import com.google.common.collect.Sets
 import com.google.inject.Inject
 import java.util.ArrayList
@@ -64,6 +67,8 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TVariable
+import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -78,8 +83,6 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
-import org.eclipse.n4js.ts.types.TVariable
-import org.eclipse.n4js.ts.types.Type
 
 /**
  */
@@ -116,7 +119,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * Similar to check of duplicates in scope.
 	 */
 	@Check
-	def void checkNameConflicts(ObjectLiteral objectLiteral) {
+	def void checkNameConflictsInObjectLiteral(ObjectLiteral objectLiteral) {
 		objectLiteral.propertyAssignments.filter[!it.findName.nullOrEmpty].toList.stream.collect(
 			Collectors.groupingBy([findName(it)])).filter[name, lstEO|lstEO.size > 1].forEach [ name, lstEO |
 			//appearance order
@@ -197,11 +200,11 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * Only names are passed, actual {@link EObject}s are resolved only if name clash is detected.
 	 */
 	def private void checkNameConflicts(VariableEnvironmentElement vee, Set<String> outerNames) {
-		val List<String> localNames = vee.declaredNames.toList;
+		val ListMultimap<String, EObject> localNames = vee.declaredNames;
 
 		vee.checkGlobalNamesConflict(vee.declaredNamesForGlobalScopeComparison.toList);
 
-		val Set<String> localNamesNoDuplicates = new HashSet(localNames);
+		val Set<String> localNamesNoDuplicates = localNames.keySet;
 
 		vee.checkLocalScopeNamesConflict(localNames, localNamesNoDuplicates)
 
@@ -241,7 +244,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * check (pre-computed) localNames of the given scope against each other. When conflict is found EObjects
 	 * that create conflict are analyzed and if appropriate error marker is issued.
 	 */
-	def private checkLocalScopeNamesConflict(VariableEnvironmentElement vee, List<String> localNames,
+	def private checkLocalScopeNamesConflict(VariableEnvironmentElement vee, ListMultimap<String, EObject> localNames,
 		Set<String> localNamesNoDuplicates) {
 
 		if(vee instanceof Block
@@ -254,14 +257,13 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		if (localNamesNoDuplicates.size < localNames.size) {
 
 			// found 1 or more duplicate names
-			// (exception case: time & space do not matter anymore)
-			val temp = new ArrayList(localNames);
-			localNamesNoDuplicates.forEach[temp.remove(it)] // removes only the first occurrence of each name => duplicates will be left
-			val Set<String> localNamesDuplicatesLocally = new HashSet(temp); // turn into a set again, because we may still have a single name more than once in temp (if the same name is used more than twice)
-			for (n : localNamesDuplicatesLocally) {
-				vee.getNameDeclarations(n).toList.stream.collect(Collectors.groupingBy([it.declaredName])).filter[name, lstEO|
-					lstEO.size > 1].forEach[name, lstEO|
+
+			for (entry : localNames.asMap.entrySet.filter[value.size > 1]) {
+				val name = entry.key;
+				val eObjects = entry.value;
+				if (eObjects.size > 1) {
 					//appearance order
+					val lstEO = new ArrayList(eObjects);
 					lstEO.sort(
 						[EObject e1, EObject e2|
 							val n1=NodeModelUtils.getNode(e1);
@@ -347,7 +349,8 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 								}
 							}
 						]
-					)]
+					)
+				}
 			}
 		}
 	}
@@ -416,7 +419,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * If no {@link EObject} that meets error conditions is found, no error is issued.
 	 * AST traversing stops at first {@link EObject} that meets error conditions, so no multiple errors should be issued on a given declaration.
 	 */
-	def private checkOuterScopesNamesConflict(VariableEnvironmentElement scope, List<String> localNames,
+	def private checkOuterScopesNamesConflict(VariableEnvironmentElement scope, ListMultimap<String,EObject> localNames,
 		Set<String> localNamesNoDuplicates, Set<String> allNamesNoDuplicates, Set<String> outerNames) {
 
 		if (allNamesNoDuplicates.size < outerNames.size + localNamesNoDuplicates.size) {
@@ -433,7 +436,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 					return; //special case, separate handling
 				}
 
-				scope.getNameDeclarations(n).toList.forEach [
+				localNames.get(n).forEach [
 					var EObject conflict;
 					var EObject conflictContainer = scope.eContainer
 					while (conflict === null) {
@@ -591,17 +594,15 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Returns all elements that declare the given name in scope 'scope' without(!) considering nested scopes.
-	 */
-	def private Iterable<EObject> getNameDeclarations(VariableEnvironmentElement scope, String name) {
-		scope.nameDeclarations.filter[declaredName == name]
-	}
-
-	/**
 	 * Returns list of names declared in scope 'scope' without(!) considering nested scopes.
 	 */
-	def private Iterable<String> getDeclaredNames(VariableEnvironmentElement scope) {
-		scope.nameDeclarations.map[declaredName]
+	def private ListMultimap<String, EObject> getDeclaredNames(VariableEnvironmentElement scope) {
+		val result = MultimapBuilder.hashKeys.linkedListValues.build();
+		for (nameDecl : scope.nameDeclarations) {
+			val name = nameDecl.declaredName;
+			result.put(name, nameDecl);
+		}
+		return Multimaps.unmodifiableListMultimap(result);
 	}
 
 	/**
