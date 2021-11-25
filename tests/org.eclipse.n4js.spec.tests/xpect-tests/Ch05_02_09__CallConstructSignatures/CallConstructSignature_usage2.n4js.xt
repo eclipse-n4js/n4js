@@ -34,5 +34,8 @@ import { IfcOnlyConstruct } from "Ch05_02_09__CallConstructSignatures/Ext"
 --- */
 IfcOnlyCall();
 
-// XPECT errors --> "Cannot directly instantiate interface IfcOnlyConstruct; its construct signature applies to values of type IfcOnlyConstruct, not to IfcOnlyConstruct itself." at "IfcOnlyConstruct"
+/* XPECT errors ---
+"Cannot directly instantiate interface IfcOnlyConstruct; its construct signature applies to values of type IfcOnlyConstruct, not to IfcOnlyConstruct itself." at "IfcOnlyConstruct"
+"IfcOnlyConstruct cannot be used as a value." at "IfcOnlyConstruct"
+--- */
 new IfcOnlyConstruct();

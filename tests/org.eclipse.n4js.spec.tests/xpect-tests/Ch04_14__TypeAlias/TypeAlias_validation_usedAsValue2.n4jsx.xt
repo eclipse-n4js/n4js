@@ -26,9 +26,9 @@ let s = "";
 
 // XPECT errors --> "A cannot be used as a value." at "A"
 A;
-// XPECT noerrors --> "A cannot be used as a value." at "A"
+// XPECT errors --> "A cannot be used as a value." at "A"
 new A();
-// XPECT errors --> "Cannot instantiate B." at "B"
+// XPECT errors --> "B cannot be used as a value." at "B"
 new B();
 // XPECT errors --> "A cannot be used as a value." at "A"
 foo(A);
