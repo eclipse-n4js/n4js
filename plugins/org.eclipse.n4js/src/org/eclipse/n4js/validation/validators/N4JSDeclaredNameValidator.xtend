@@ -16,8 +16,6 @@ import com.google.common.collect.Multimaps
 import com.google.common.collect.Sets
 import com.google.inject.Inject
 import java.util.ArrayList
-import java.util.Collections
-import java.util.HashSet
 import java.util.Iterator
 import java.util.List
 import java.util.ListIterator
@@ -192,7 +190,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	def void checkNameConflicts(Script script) {
 		val ListMultimap<String, TMember> globalNames = getGlobalNames(script.eResource);
 
-		script.checkNameConflicts(Collections.emptySet, globalNames, getCancelIndicator());
+		script.checkNameConflicts(newHashSet, globalNames, getCancelIndicator());
 	}
 
 	/**
@@ -206,21 +204,34 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 		vee.checkGlobalNamesConflict(localNames, globalNames, ci);
 
-		val Set<String> localNamesNoDuplicates = localNames.keySet;
+		vee.checkLocalScopeNamesConflict(localNames, ci);
 
-		vee.checkLocalScopeNamesConflict(localNames, localNamesNoDuplicates, ci)
+		// (1) add 'localNames' to 'outerNames'
+		// (note: for performance reasons, we change 'outerNames' in place and restore its state after processing the nested VEEs)
+		val localNamesWithConflictToOuterNames = new ArrayList(localNames.size);
+		val localNamesAddedToOuterNames = new ArrayList(localNames.size);
+		for (localName : localNames.keySet) {
+			val wasAdded = outerNames.add(localName);
+			if (wasAdded) {
+				// 'outerNames' did not contain 'localName' -> no conflict
+				// remember that 'localName' has to be removed from 'outerNames' after processing nested VEEs
+				localNamesAddedToOuterNames += localName;
+			} else {
+				// 'outerNames' did already contain 'localName' -> conflict!
+				localNamesWithConflictToOuterNames += localName;
+			}
+		}
 
-		// TODO: in files with an extremely large number of top-level elements, the copying
-		// in the following line can get expensive (~250ms in "dom.generated.n4jsd" of n4js-runtime-html5)
-		val Set<String> allNamesNoDuplicates = new HashSet(outerNames); // copy 'outerNames', do not change it!
-		allNamesNoDuplicates.addAll(localNamesNoDuplicates);
+		vee.checkOuterScopesNamesConflict(localNames, localNamesWithConflictToOuterNames, ci);
 
-		vee.checkOuterScopesNamesConflict(localNames, localNamesNoDuplicates, allNamesNoDuplicates, outerNames, ci)
-
+		// (2) process nested VEEs
 		for (veeNested : vee.nestedScopes.toIterable) {
 			operationCanceledManager.checkCanceled(ci);
-			veeNested.checkNameConflicts(allNamesNoDuplicates, globalNames, ci); // note: we haven't changed argument 'outerNames' above, so we can pass the same instance of allNamesNoDuplicates to all nested scopes
+			veeNested.checkNameConflicts(outerNames, globalNames, ci);
 		}
+
+		// (3) restore state of 'outerNames'
+		outerNames -= localNamesAddedToOuterNames;
 	}
 
 	/**
@@ -251,8 +262,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * check (pre-computed) localNames of the given scope against each other. When conflict is found EObjects
 	 * that create conflict are analyzed and if appropriate error marker is issued.
 	 */
-	def private checkLocalScopeNamesConflict(VariableEnvironmentElement vee, ListMultimap<String, EObject> localNames,
-		Set<String> localNamesNoDuplicates, CancelIndicator ci) {
+	def private checkLocalScopeNamesConflict(VariableEnvironmentElement vee, ListMultimap<String, EObject> localNames, CancelIndicator ci) {
 
 		if(vee instanceof Block
 				&& vee.eContainer instanceof FunctionOrFieldAccessor
@@ -261,7 +271,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// search for duplicates in local scope
-		if (localNamesNoDuplicates.size < localNames.size) {
+		if (localNames.keySet.size < localNames.size) {
 
 			// found 1 or more duplicate names
 
@@ -427,27 +437,17 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * If no {@link EObject} that meets error conditions is found, no error is issued.
 	 * AST traversing stops at first {@link EObject} that meets error conditions, so no multiple errors should be issued on a given declaration.
 	 */
-	def private checkOuterScopesNamesConflict(VariableEnvironmentElement scope, ListMultimap<String,EObject> localNames,
-		Set<String> localNamesNoDuplicates, Set<String> allNamesNoDuplicates, Set<String> outerNames, CancelIndicator ci) {
+	def private void checkOuterScopesNamesConflict(VariableEnvironmentElement scope, ListMultimap<String,EObject> localNames,
+		List<String> localNamesWithConflictToOuterNames, CancelIndicator ci) {
 
-		if (allNamesNoDuplicates.size < outerNames.size + localNamesNoDuplicates.size) {
+		for (n : localNamesWithConflictToOuterNames) {
+			operationCanceledManager.checkCanceled(ci);
 
-			// found 1 or more shadowed names
-			// (exception case: time & space do not matter anymore)
-			val temp = new ArrayList(localNamesNoDuplicates);
-			temp.addAll(outerNames);
-			allNamesNoDuplicates.forEach[temp.remove(it)]; // removes only the first occurrence of each name => duplicates will be left
-			val Set<String> localNamesDuplicatesGlobally = new HashSet(temp);
+			val isExceptionCase = n.equals("arguments"); //special case, separate handling
+			if (!isExceptionCase) {
 
-			for (n : localNamesDuplicatesGlobally) {
-				operationCanceledManager.checkCanceled(ci);
-
-				if (n.equals("arguments")) {
-					return; //special case, separate handling
-				}
-
-				for (innerScopeObject : localNames.get(n)) {
-					operationCanceledManager.checkCanceled(ci);
+				val innerScopeObjects = localNames.get(n);
+				for (innerScopeObject : innerScopeObjects) {
 					var EObject conflict;
 					var EObject conflictContainer = scope.eContainer
 					while (conflict === null) {
