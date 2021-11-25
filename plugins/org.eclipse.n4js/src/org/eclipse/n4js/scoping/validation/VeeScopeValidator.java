@@ -13,9 +13,11 @@ package org.eclipse.n4js.scoping.validation;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.scoping.utils.SourceElementExtensions;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
@@ -43,8 +45,14 @@ public class VeeScopeValidator implements IScopeValidator {
 	@Override
 	public boolean isValid(IEObjectDescription originalDescr) {
 		EObject eObjectOrProxy = originalDescr.getEObjectOrProxy();
-		if (eObjectOrProxy.eIsProxy() || !(eObjectOrProxy instanceof IdentifiableElement)) {
+		if (!(eObjectOrProxy instanceof IdentifiableElement)) {
 			return true;
+		}
+		if (eObjectOrProxy.eIsProxy()
+				// also checking for TInterface is only a performance optimization
+				// since only TInterfaces provide information to determine "isHollow" below
+				&& eObjectOrProxy instanceof TInterface) {
+			eObjectOrProxy = EcoreUtil.resolve(eObjectOrProxy, context);
 		}
 		IdentifiableElement ie = (IdentifiableElement) eObjectOrProxy;
 
