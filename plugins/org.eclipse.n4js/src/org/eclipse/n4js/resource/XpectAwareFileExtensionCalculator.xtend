@@ -14,6 +14,7 @@ import com.google.common.base.Strings
 import com.google.inject.Singleton
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.impl.MinimalEObjectImpl
 import org.eclipse.n4js.N4JSGlobals
 
 /**
@@ -25,10 +26,21 @@ import org.eclipse.n4js.N4JSGlobals
 public class XpectAwareFileExtensionCalculator {
 
 	def public String getXpectAwareFileExtension(EObject eob) {
-		if ((eob === null) || (eob.eResource === null)) {
-			return "";
+		val uri = getURI(eob);
+		return getXpectAwareFileExtension(uri);
+	}
+	
+	def private URI getURI(EObject eob) {
+		if (eob === null) {
+			return null;
 		}
-		return eob.eResource.URI.getXpectAwareFileExtension;
+		if (eob.eResource !== null) {
+			return eob.eResource.URI;
+		}
+		if (eob instanceof MinimalEObjectImpl) {
+			return eob.eProxyURI.trimFragment;
+		}
+		return null;
 	}
 
 	/**
@@ -38,7 +50,7 @@ public class XpectAwareFileExtensionCalculator {
 		if (uri === null) {
 			return "";
 		}
-		return uri.getXpectAwareFileExtensionOrEmpty
+		return getXpectAwareFileExtensionOrEmpty(uri)
 	}
 	
 	/**
@@ -57,11 +69,9 @@ public class XpectAwareFileExtensionCalculator {
 	 * Returns the URI of the given EObject but without the Xpect file
 	 * extension in case that is present.
 	 */
-	def public URI getUriWithoutXpectExtension(EObject eObject) {
-		if ((eObject === null) || (eObject.eResource === null)) {
-			return null;
-		}
-		return getUriWithoutXpectExtension(eObject.eResource.URI);
+	def public URI getUriWithoutXpectExtension(EObject eob) {
+		val uri = getURI(eob);
+		return getUriWithoutXpectExtension(uri);
 	}
 	
 	/**
