@@ -202,8 +202,6 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * Only names are passed, actual {@link EObject}s are resolved only if name clash is detected.
 	 */
 	def private void checkNameConflicts(VariableEnvironmentElement vee, Set<String> outerNames, ListMultimap<String, TMember> globalNames, CancelIndicator ci) {
-		operationCanceledManager.checkCanceled(ci);
-
 		val ListMultimap<String, EObject> localNames = getLocalNames(vee);
 
 		vee.checkGlobalNamesConflict(localNames, globalNames, ci);
@@ -219,7 +217,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 		vee.checkOuterScopesNamesConflict(localNames, localNamesNoDuplicates, allNamesNoDuplicates, outerNames, ci)
 
-		vee.nestedScopes.forEach[checkNameConflicts(allNamesNoDuplicates, globalNames, ci)]; // note: we haven't changed argument 'outerNames' above, so we can pass the same instance of allNamesNoDuplicates to all nested scopes
+		for (veeNested : vee.nestedScopes.toIterable) {
+			operationCanceledManager.checkCanceled(ci);
+			veeNested.checkNameConflicts(allNamesNoDuplicates, globalNames, ci); // note: we haven't changed argument 'outerNames' above, so we can pass the same instance of allNamesNoDuplicates to all nested scopes
+		}
 	}
 
 	/**
