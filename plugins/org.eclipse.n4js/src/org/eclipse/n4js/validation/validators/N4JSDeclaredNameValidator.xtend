@@ -77,6 +77,8 @@ import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.service.OperationCanceledManager
+import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -93,6 +95,8 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject SourceElementExtensions sourceElementExtensions;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
+
+	@Inject OperationCanceledManager operationCanceledManager;
 
 
 	public static val BASE_JS_TYPES = Sets.newHashSet(
@@ -188,7 +192,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	def void checkNameConflicts(Script script) {
 		val ListMultimap<String, TMember> globalNames = getGlobalNames(script.eResource);
 
-		script.checkNameConflicts(Collections.emptySet, globalNames);
+		script.checkNameConflicts(Collections.emptySet, globalNames, getCancelIndicator());
 	}
 
 	/**
@@ -197,30 +201,35 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * Recursive call is passing set of used names in current scope, allowing child scope to perform proper comparison checks.
 	 * Only names are passed, actual {@link EObject}s are resolved only if name clash is detected.
 	 */
-	def private void checkNameConflicts(VariableEnvironmentElement vee, Set<String> outerNames, ListMultimap<String, TMember> globalNames) {
+	def private void checkNameConflicts(VariableEnvironmentElement vee, Set<String> outerNames, ListMultimap<String, TMember> globalNames, CancelIndicator ci) {
+		operationCanceledManager.checkCanceled(ci);
+
 		val ListMultimap<String, EObject> localNames = getLocalNames(vee);
 
-		vee.checkGlobalNamesConflict(localNames, globalNames);
+		vee.checkGlobalNamesConflict(localNames, globalNames, ci);
 
 		val Set<String> localNamesNoDuplicates = localNames.keySet;
 
-		vee.checkLocalScopeNamesConflict(localNames, localNamesNoDuplicates)
+		vee.checkLocalScopeNamesConflict(localNames, localNamesNoDuplicates, ci)
 
 		// TODO: in files with an extremely large number of top-level elements, the copying
 		// in the following line can get expensive (~250ms in "dom.generated.n4jsd" of n4js-runtime-html5)
 		val Set<String> allNamesNoDuplicates = new HashSet(outerNames); // copy 'outerNames', do not change it!
 		allNamesNoDuplicates.addAll(localNamesNoDuplicates);
 
-		vee.checkOuterScopesNamesConflict(localNames, localNamesNoDuplicates, allNamesNoDuplicates, outerNames)
+		vee.checkOuterScopesNamesConflict(localNames, localNamesNoDuplicates, allNamesNoDuplicates, outerNames, ci)
 
-		vee.nestedScopes.forEach[checkNameConflicts(allNamesNoDuplicates, globalNames)]; // note: we haven't changed argument 'outerNames' above, so we can pass the same instance of allNamesNoDuplicates to all nested scopes
+		vee.nestedScopes.forEach[checkNameConflicts(allNamesNoDuplicates, globalNames, ci)]; // note: we haven't changed argument 'outerNames' above, so we can pass the same instance of allNamesNoDuplicates to all nested scopes
 	}
 
 	/**
 	 * checks if provided localNames of given scope are not conflicting with names in global object
 	 */
-	def private checkGlobalNamesConflict(VariableEnvironmentElement vee, ListMultimap<String, EObject> localNames, ListMultimap<String, TMember> globalNames) {
+	def private checkGlobalNamesConflict(VariableEnvironmentElement vee, ListMultimap<String, EObject> localNames,
+		ListMultimap<String, TMember> globalNames, CancelIndicator ci) {
+
 		for (globalEntry : globalNames.asMap.entrySet) {
+			operationCanceledManager.checkCanceled(ci);
 			val name = globalEntry.key;
 			if (name != 'eval') { // already validated by the AST Structure validator
 				val globalObjectMember = globalEntry.value.head;
@@ -242,7 +251,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * that create conflict are analyzed and if appropriate error marker is issued.
 	 */
 	def private checkLocalScopeNamesConflict(VariableEnvironmentElement vee, ListMultimap<String, EObject> localNames,
-		Set<String> localNamesNoDuplicates) {
+		Set<String> localNamesNoDuplicates, CancelIndicator ci) {
 
 		if(vee instanceof Block
 				&& vee.eContainer instanceof FunctionOrFieldAccessor
@@ -256,6 +265,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 			// found 1 or more duplicate names
 
 			for (entry : localNames.asMap.entrySet.filter[value.size > 1]) {
+				operationCanceledManager.checkCanceled(ci);
 				val name = entry.key;
 				val eObjects = entry.value;
 				if (eObjects.size > 1) {
@@ -417,7 +427,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * AST traversing stops at first {@link EObject} that meets error conditions, so no multiple errors should be issued on a given declaration.
 	 */
 	def private checkOuterScopesNamesConflict(VariableEnvironmentElement scope, ListMultimap<String,EObject> localNames,
-		Set<String> localNamesNoDuplicates, Set<String> allNamesNoDuplicates, Set<String> outerNames) {
+		Set<String> localNamesNoDuplicates, Set<String> allNamesNoDuplicates, Set<String> outerNames, CancelIndicator ci) {
 
 		if (allNamesNoDuplicates.size < outerNames.size + localNamesNoDuplicates.size) {
 
@@ -429,11 +439,14 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 			val Set<String> localNamesDuplicatesGlobally = new HashSet(temp);
 
 			for (n : localNamesDuplicatesGlobally) {
+				operationCanceledManager.checkCanceled(ci);
+
 				if (n.equals("arguments")) {
 					return; //special case, separate handling
 				}
 
-				localNames.get(n).forEach [
+				for (innerScopeObject : localNames.get(n)) {
+					operationCanceledManager.checkCanceled(ci);
 					var EObject conflict;
 					var EObject conflictContainer = scope.eContainer
 					while (conflict === null) {
@@ -450,7 +463,6 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 							conflict = z.head
 
 							var EObject outerScopeObject = conflict
-							var innerScopeObject = it
 							var name = n
 
 							if (outerScopeObject instanceof N4ClassExpression ||
@@ -530,7 +542,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 						}
 					}
-				]
+				}
 			}
 		}
 	}
