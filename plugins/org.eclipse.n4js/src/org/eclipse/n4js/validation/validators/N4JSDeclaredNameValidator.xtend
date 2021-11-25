@@ -36,13 +36,12 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
+import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
-import org.eclipse.n4js.n4JS.N4EnumDeclaration
-import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -78,7 +77,6 @@ import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
-import org.eclipse.xtext.util.IResourceScopeCache
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -87,8 +85,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 /**
  */
 class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
-
-	@Inject IResourceScopeCache cache
 
 	@Inject ValidatorMessageHelper messageHelper;
 
@@ -190,7 +186,9 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def void checkNameConflicts(Script script) {
-		script.checkNameConflicts(Collections.emptySet);
+		val ListMultimap<String, TMember> globalNames = getGlobalNames(script.eResource);
+
+		script.checkNameConflicts(Collections.emptySet, globalNames);
 	}
 
 	/**
@@ -199,10 +197,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * Recursive call is passing set of used names in current scope, allowing child scope to perform proper comparison checks.
 	 * Only names are passed, actual {@link EObject}s are resolved only if name clash is detected.
 	 */
-	def private void checkNameConflicts(VariableEnvironmentElement vee, Set<String> outerNames) {
-		val ListMultimap<String, EObject> localNames = vee.declaredNames;
+	def private void checkNameConflicts(VariableEnvironmentElement vee, Set<String> outerNames, ListMultimap<String, TMember> globalNames) {
+		val ListMultimap<String, EObject> localNames = getLocalNames(vee);
 
-		vee.checkGlobalNamesConflict(vee.declaredNamesForGlobalScopeComparison.toList);
+		vee.checkGlobalNamesConflict(localNames, globalNames);
 
 		val Set<String> localNamesNoDuplicates = localNames.keySet;
 
@@ -213,30 +211,27 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 		vee.checkOuterScopesNamesConflict(localNames, localNamesNoDuplicates, allNamesNoDuplicates, outerNames)
 
-		vee.nestedScopes.forEach[checkNameConflicts(allNamesNoDuplicates)]; // note: we haven't changed argument 'outerNames' above, so we can pass the same instance of allNamesNoDuplicates to all nested scopes
+		vee.nestedScopes.forEach[checkNameConflicts(allNamesNoDuplicates, globalNames)]; // note: we haven't changed argument 'outerNames' above, so we can pass the same instance of allNamesNoDuplicates to all nested scopes
 	}
 
 	/**
 	 * checks if provided localNames of given scope are not conflicting with names in global object
 	 */
-	def private checkGlobalNamesConflict(VariableEnvironmentElement vee, List<String> localNames) {
-		val List<String> globalNames = findGlobalNames(vee.eResource)
-		val Set<String> globalNamesConflicts = new HashSet(globalNames)
-
-		if (globalNamesConflicts.retainAll(localNames)) {
-			vee.getNameDeclarations.filter[globalNamesConflicts.contains(it.declaredNameForGlobalScopeComparision)].forEach [
-				val innerScopeObject = it;
-				val name = innerScopeObject.declaredNameForGlobalScopeComparision
-				if (name != 'eval') { // already validated by the AST Structure validator
-					val globalObjectMemeber = findGlobalMembers(vee.eResource).findFirst[m|name.equals(m.name)]
+	def private checkGlobalNamesConflict(VariableEnvironmentElement vee, ListMultimap<String, EObject> localNames, ListMultimap<String, TMember> globalNames) {
+		for (globalEntry : globalNames.asMap.entrySet) {
+			val name = globalEntry.key;
+			if (name != 'eval') { // already validated by the AST Structure validator
+				val globalObjectMember = globalEntry.value.head;
+				val localObjects = localNames.get(name);
+				for (innerScopeObject : localObjects) {
 					addIssue(
 						StringExtensions.toFirstUpper(
 							getMessageForAST_GLOBAL_NAME_SHADOW_ERR(
 								messageHelper.description(innerScopeObject, name),
-								messageHelper.description(globalObjectMemeber, name))), innerScopeObject,
+								messageHelper.description(globalObjectMember, name))), innerScopeObject,
 						findNameEAttribute(innerScopeObject), AST_GLOBAL_NAME_SHADOW_ERR);
 				}
-			]
+			}
 		}
 	}
 
@@ -545,21 +540,17 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * returns {@link List} of names declared in global scope.
-	 * Returned data is cached, resolved only if new (or changed) {@link Resource}
+	 * returns {@link List} of names declared in the global object.
 	 */
-	def List<String> findGlobalNames(Resource resource) {
-		cache.get("globalObjectNames", resource,
-			[ EcoreUtil2.getAllContentsOfType(getGlobalObject(resource), TMember).filter[!name.nullOrEmpty].map[name].toList])
-	}
-
-	/**
-	 * returns {@link List} of members of the global object
-	 * Returned data is cached, resolved only if new (or changed) {@link Resource}
-	 */
-	def List<TMember> findGlobalMembers(Resource resource) {
-		cache.get("globalObjectMembers", resource,
-			[ EcoreUtil2.getAllContentsOfType(getGlobalObject(resource), TMember) ])
+	def ListMultimap<String, TMember> getGlobalNames(Resource resource) {
+		val result = MultimapBuilder.linkedHashKeys.linkedListValues.build();
+		for (member : EcoreUtil2.getAllContentsOfType(getGlobalObject(resource), TMember)) {
+			val name = member.name;
+			if (!name.nullOrEmpty) {
+				result.put(name, member);
+			}
+		}
+		return Multimaps.unmodifiableListMultimap(result);
 	}
 
 	/**
@@ -582,7 +573,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		// validation, so add a few additional elements:
 		switch(scope) {
 			Script: 
-				namedEOs += scope.eAllContents.filter(ImportSpecifier).toList
+				namedEOs += scope.scriptElements.filter(ImportDeclaration).flatMap[importSpecifiers].toList
 			FunctionOrFieldAccessor:
 				namedEOs += scope.localArgumentsVariable
 		}
@@ -596,20 +587,13 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	/**
 	 * Returns list of names declared in scope 'scope' without(!) considering nested scopes.
 	 */
-	def private ListMultimap<String, EObject> getDeclaredNames(VariableEnvironmentElement scope) {
-		val result = MultimapBuilder.hashKeys.linkedListValues.build();
+	def private ListMultimap<String, EObject> getLocalNames(VariableEnvironmentElement scope) {
+		val result = MultimapBuilder.linkedHashKeys.linkedListValues.build();
 		for (nameDecl : scope.nameDeclarations) {
 			val name = nameDecl.declaredName;
 			result.put(name, nameDecl);
 		}
 		return Multimaps.unmodifiableListMultimap(result);
-	}
-
-	/**
-	 * Returns list of names declared in scope 'scope' without(!) considering nested scopes for comparison in global scope.
-	 */
-	def private Iterable<String> getDeclaredNamesForGlobalScopeComparison(VariableEnvironmentElement scope) {
-		scope.nameDeclarations.map[declaredNameForGlobalScopeComparision]
 	}
 
 	/**
@@ -661,15 +645,6 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		return null
-	}
-
-	def private String getDeclaredNameForGlobalScopeComparision(EObject eo) {
-		switch (eo) {
-			N4ClassDeclaration    : eo.name
-			N4InterfaceDeclaration: eo.name
-			N4EnumDeclaration	 : eo.name
-			default                  : eo.declaredName
-		}
 	}
 
 	/** helper dispatch because we lack one uniform interface for getName */
