@@ -2204,7 +2204,7 @@ class N4InterfaceDeclaration extends N4ClassifierDeclaration {
 	}
 	
 	op boolean isHollow() {
-		return isExternal() && !annotations.exists[it.name == "N4JS"]
+		return isExternal() && !allAnnotations.exists[it.name == "N4JS"]
 	}
 }
 

@@ -138,7 +138,7 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 */
 	@Override
 	public boolean isHollow() {
-		return (this.isExternal() && (!IterableExtensions.<Annotation>exists(this.getAnnotations(), new Function1<Annotation, Boolean>() {
+		return (this.isExternal() && (!IterableExtensions.<Annotation>exists(this.getAllAnnotations(), new Function1<Annotation, Boolean>() {
 			public Boolean apply(final Annotation it) {
 				String _name = it.getName();
 				return Boolean.valueOf(Objects.equal(_name, "N4JS"));
