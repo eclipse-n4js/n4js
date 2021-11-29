@@ -16,12 +16,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.n4js.ts.types.MemberAccessModifier;
+import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-
-import org.eclipse.n4js.ts.types.MemberAccessModifier;
-import org.eclipse.n4js.ts.types.TypeAccessModifier;
 
 /**
  * Utility methods for {@link N4Modifier N4Modifiers}.
@@ -47,6 +46,7 @@ public class ModifierUtils {
 			return isN4MemberDeclaration(astNodeType);
 		case EXTERNAL:
 			return isN4TypeDeclaration(astNodeType)
+					|| isNamespaceDeclaration(astNodeType)
 					|| isFunctionDeclaration(astNodeType)
 					|| isExportedVariableStatement(astNodeType);
 		case ABSTRACT:
@@ -149,6 +149,10 @@ public class ModifierUtils {
 
 	private static final boolean isN4MemberDeclaration(EClass astNodeType) {
 		return N4JSPackage.eINSTANCE.getN4MemberDeclaration().isSuperTypeOf(astNodeType);
+	}
+
+	private static final boolean isNamespaceDeclaration(EClass astNodeType) {
+		return N4JSPackage.eINSTANCE.getN4NamespaceDeclaration().isSuperTypeOf(astNodeType);
 	}
 
 	private static final boolean isFunctionDeclaration(EClass astNodeType) {

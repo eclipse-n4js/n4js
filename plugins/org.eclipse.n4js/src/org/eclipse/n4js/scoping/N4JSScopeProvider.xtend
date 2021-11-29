@@ -223,7 +223,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			if (context instanceof NamespaceLikeRef) {
 				val namespaceLikeType = context.previousSibling?.declaredType;
 				val script = EcoreUtil2.getContainerOfType(context, Script);
-				val namespace = namespaceLikeType === null ? script : namespaceLikeType;
+				// also check for eIsProxy in case of broken AST
+				val namespace = namespaceLikeType === null || namespaceLikeType.eIsProxy ? script : namespaceLikeType;
 				return new FilteringScope(getTypeScope(namespace, false), [
 					TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
 					|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)

@@ -54,6 +54,7 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 
 /**
  */
@@ -453,6 +454,11 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			return isUnallowedElement(eo.exportedElement);
 		}
 		if (eo instanceof N4ClassDeclaration) {
+			if (eo.external) {
+				return false;
+			}
+		}
+		if (eo instanceof N4NamespaceDeclaration) {
 			if (eo.external) {
 				return false;
 			}

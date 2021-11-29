@@ -23,36 +23,68 @@ export external type T1 = string;
 // XPECT noerrors -->
 export external const T1 : string;
 
+export external namespace NSV1 {}
+// XPECT noerrors -->
+export external const NSV1 : string;
+
+export external namespace NSV2 { external interface ~NSV2I{} }
+// XPECT noerrors -->
+export external const NSV2 : string;
+
+export external namespace NSV3 { external namespace NSV3NS{} }
+// XPECT noerrors -->
+export external const NSV3 : string;
+
 
 
 // Runtime-Representationless and variables: ERROR
 @StringBased
 export external enum ES1 { a }
-// XPECT errors --> "Variable ES1 duplicates enum ES1 (line 30)." at "ES1"
+// XPECT errors --> "Variable ES1 duplicates enum ES1 (line 42)." at "ES1"
 export external const ES1 : string;
 
 @NumberBased
 export external enum EN1 { a }
-// XPECT errors --> "Variable EN1 duplicates enum EN1 (line 35)." at "EN1"
+// XPECT errors --> "Variable EN1 duplicates enum EN1 (line 47)." at "EN1"
 export external const EN1 : string;
 
 
 
 // Hollows and classes: ERROR
 export external interface ~I2 {}
-// XPECT errors --> "Class I2 duplicates interface I2 (line 42)." at "I2"
+// XPECT errors --> "Class I2 duplicates interface I2 (line 54)." at "I2"
 export external class I2 {}
 
 export external type T2 = string;
-// XPECT errors --> "Class T2 duplicates type alias T2 (line 46)." at "T2"
+// XPECT errors --> "Class T2 duplicates type alias T2 (line 58)." at "T2"
 export external class T2 {}
+
+export external namespace NSC1 {}
+// XPECT errors --> "Class NSC1 duplicates namespace NSC1 (line 62)." at "NSC1"
+export external class NSC1 {};
+
+export external namespace NSC2 { external interface ~NSC2I{} }
+// XPECT errors --> "Class NSC2 duplicates namespace NSC2 (line 66)." at "NSC2"
+export external class NSC2 {};
+
+export external namespace NSC3 { external namespace NSC3NS{} }
+// XPECT errors --> "Class NSC3 duplicates namespace NSC3 (line 70)." at "NSC3"
+export external class NSC3 {};
 
 
 
 // Hollows and Hollows: ERROR
 export external interface ~IT {}
-// XPECT errors --> "Type alias IT duplicates interface IT (line 53)." at "IT"
+// XPECT errors --> "Type alias IT duplicates interface IT (line 77)." at "IT"
 export external type IT = string;
+
+export external namespace NST {}
+// XPECT errors --> "Type alias NST duplicates namespace NST (line 81)." at "NST"
+export external type NST = string;
+
+export external namespace NSI {}
+// XPECT errors --> "Interface NSI duplicates namespace NSI (line 85)." at "NSI"
+export external interface ~NSI {}
 
 
 
@@ -60,3 +92,11 @@ export external type IT = string;
 export external class C3 {}
 // XPECT errors --> "Variable C3 duplicates class C3 (line 60)." at "C3"
 export external const C3;
+
+export external namespace NSC4 { const NSC4 = 4; }
+// XPECT errors --> "Class NSC4 duplicates namespace NSC4 (line 53)." at "NSC4"
+export external class C4 {}
+
+export external namespace NSV4 { const NSV4 = 4; }
+// XPECT errors --> "Class NSV4 duplicates namespace NSV4 (line 53)." at "NSV4"
+export external const V4;

@@ -53,6 +53,7 @@ import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.SetterDeclaration
+import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.Variable
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
@@ -388,7 +389,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	}
 	
 	def private boolean isHollow(EObject eo) {
-		return (eo instanceof N4TypeDeclaration && N4JSLanguageUtils.isHollowElement(eo as N4TypeDeclaration, jsVariantHelper))
+		return (eo instanceof TypeDefiningElement && N4JSLanguageUtils.isHollowElement(eo as TypeDefiningElement, jsVariantHelper))
 			|| (eo instanceof NamedImportSpecifier
 				&& (eo as NamedImportSpecifier).importedElement instanceof Type
 				&& N4JSLanguageUtils.isHollowElement((eo as NamedImportSpecifier).importedElement as Type, jsVariantHelper)
