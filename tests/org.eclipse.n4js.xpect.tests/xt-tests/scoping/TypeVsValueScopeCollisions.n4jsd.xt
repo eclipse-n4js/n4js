@@ -90,13 +90,13 @@ export external interface ~NSI {}
 
 // vars and classes: ERROR
 export external class C3 {}
-// XPECT errors --> "Variable C3 duplicates class C3 (line 60)." at "C3"
+// XPECT errors --> "Variable C3 duplicates class C3 (line 92)." at "C3"
 export external const C3;
 
 export external namespace NSC4 { const NSC4 = 4; }
-// XPECT errors --> "Class NSC4 duplicates namespace NSC4 (line 53)." at "NSC4"
-export external class C4 {}
+// XPECT errors --> "Class NSC4 duplicates namespace NSC4 (line 96)." at "NSC4"
+export external class NSC4 {}
 
 export external namespace NSV4 { const NSV4 = 4; }
-// XPECT errors --> "Class NSV4 duplicates namespace NSV4 (line 53)." at "NSV4"
-export external const V4;
+// XPECT errors --> "Variable NSV4 duplicates namespace NSV4 (line 100)." at "NSV4"
+export external const NSV4;

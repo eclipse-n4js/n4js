@@ -398,7 +398,10 @@ public class N4JSTypesBuilder {
 				N4NamespaceDeclaration: {
 					n.createType(target, preLinkingPhase);
 					val namespaceType = n.definedType as TNamespace;
-					buildTypes(n, namespaceType, preLinkingPhase);
+					if (namespaceType !== null) {
+						// can be null in broken ASTs
+						buildTypes(n, namespaceType, preLinkingPhase);
+					}
 				}
 				TypeDefiningElement:
 					n.createType(target, preLinkingPhase)

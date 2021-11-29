@@ -10641,15 +10641,21 @@ rule__NamespaceElement__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_6()); }
-		ruleExportDeclaration
-		{ after(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_6()); }
+		{ before(grammarAccess.getNamespaceElementAccess().getFunctionDeclarationParserRuleCall_6()); }
+		(ruleFunctionDeclaration)
+		{ after(grammarAccess.getNamespaceElementAccess().getFunctionDeclarationParserRuleCall_6()); }
 	)
 	|
 	(
 		{ before(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
 		(norm1_VariableStatement)
 		{ after(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_8()); }
+		ruleExportDeclaration
+		{ after(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_8()); }
 	)
 ;
 finally {
@@ -10698,15 +10704,21 @@ norm1_NamespaceElement__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_6()); }
-		ruleExportDeclaration
-		{ after(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_6()); }
+		{ before(grammarAccess.getNamespaceElementAccess().getFunctionDeclarationParserRuleCall_6()); }
+		(norm1_FunctionDeclaration)
+		{ after(grammarAccess.getNamespaceElementAccess().getFunctionDeclarationParserRuleCall_6()); }
 	)
 	|
 	(
 		{ before(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
 		(norm3_VariableStatement)
 		{ after(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_8()); }
+		ruleExportDeclaration
+		{ after(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_8()); }
 	)
 ;
 finally {

@@ -214,13 +214,22 @@ ruleNamespaceElement:
 			ruleN4TypeAliasDeclaration
 		)
 		    |
-		ruleExportDeclaration
+		(
+			(ruleN4Modifier
+			*
+			ruleAsyncNoTrailingLineBreak
+			'function'
+			)=>
+			ruleFunctionDeclaration
+		)
 		    |
 		(
 			(ruleVariableStatementKeyword
 			)=>
 			norm1_VariableStatement
 		)
+		    |
+		ruleExportDeclaration
 	)
 ;
 
@@ -294,13 +303,22 @@ norm1_NamespaceElement:
 			norm1_N4TypeAliasDeclaration
 		)
 		    |
-		ruleExportDeclaration
+		(
+			(ruleN4Modifier
+			*
+			ruleAsyncNoTrailingLineBreak
+			'function'
+			)=>
+			norm1_FunctionDeclaration
+		)
 		    |
 		(
 			(ruleVariableStatementKeyword
 			)=>
 			norm3_VariableStatement
 		)
+		    |
+		ruleExportDeclaration
 	)
 ;
 

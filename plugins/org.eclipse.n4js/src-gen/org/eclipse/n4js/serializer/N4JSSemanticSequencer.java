@@ -451,12 +451,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getScriptElementRule()) {
+				else if (rule == grammarAccess.getScriptElementRule()
+						|| rule == grammarAccess.getNamespaceElementRule()) {
 					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getNamespaceElementRule()
-						|| rule == grammarAccess.getAnnotatedScriptElementRule()) {
+				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
 					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
@@ -4183,6 +4183,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     ScriptElement returns FunctionDeclaration
+	 *     NamespaceElement<Yield> returns FunctionDeclaration
+	 *     NamespaceElement returns FunctionDeclaration
 	 *
 	 * Constraint:
 	 *     (
@@ -4203,8 +4205,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     NamespaceElement<Yield> returns FunctionDeclaration
-	 *     NamespaceElement returns FunctionDeclaration
 	 *     AnnotatedScriptElement returns FunctionDeclaration
 	 *
 	 * Constraint:

@@ -86,8 +86,9 @@ NamespaceElement<Yield> returns ScriptElement :
 	| N4InterfaceDeclaration<Yield>
 	| N4EnumDeclaration<Yield>
 	| N4TypeAliasDeclaration<Yield>
-	| ExportDeclaration
+	| FunctionDeclaration<Yield>
 	| VariableStatement<In=true,Yield>
+	| ExportDeclaration
 ;
 
 

@@ -774,14 +774,28 @@ ruleNamespaceElement returns [EObject current=null]
 			}
 		)
 		    |
-		{
-			newCompositeNode(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_6());
-		}
-		this_ExportDeclaration_6=ruleExportDeclaration
-		{
-			$current = $this_ExportDeclaration_6.current;
-			afterParserOrEnumRuleCall();
-		}
+		(
+			((
+				(
+				)
+				(
+					(
+						ruleN4Modifier
+					)
+				)*
+				ruleAsyncNoTrailingLineBreak[null]
+				Function
+			)
+			)=>
+			{
+				newCompositeNode(grammarAccess.getNamespaceElementAccess().getFunctionDeclarationParserRuleCall_6());
+			}
+			this_FunctionDeclaration_6=ruleFunctionDeclaration
+			{
+				$current = $this_FunctionDeclaration_6.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
 		    |
 		(
 			((
@@ -803,6 +817,15 @@ ruleNamespaceElement returns [EObject current=null]
 				afterParserOrEnumRuleCall();
 			}
 		)
+		    |
+		{
+			newCompositeNode(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_8());
+		}
+		this_ExportDeclaration_8=ruleExportDeclaration
+		{
+			$current = $this_ExportDeclaration_8.current;
+			afterParserOrEnumRuleCall();
+		}
 	)
 ;
 
@@ -981,14 +1004,28 @@ norm1_NamespaceElement returns [EObject current=null]
 			}
 		)
 		    |
-		{
-			newCompositeNode(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_6());
-		}
-		this_ExportDeclaration_6=ruleExportDeclaration
-		{
-			$current = $this_ExportDeclaration_6.current;
-			afterParserOrEnumRuleCall();
-		}
+		(
+			((
+				(
+				)
+				(
+					(
+						ruleN4Modifier
+					)
+				)*
+				ruleAsyncNoTrailingLineBreak[null]
+				Function
+			)
+			)=>
+			{
+				newCompositeNode(grammarAccess.getNamespaceElementAccess().getFunctionDeclarationParserRuleCall_6());
+			}
+			this_FunctionDeclaration_6=norm1_FunctionDeclaration
+			{
+				$current = $this_FunctionDeclaration_6.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
 		    |
 		(
 			((
@@ -1010,6 +1047,15 @@ norm1_NamespaceElement returns [EObject current=null]
 				afterParserOrEnumRuleCall();
 			}
 		)
+		    |
+		{
+			newCompositeNode(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_8());
+		}
+		this_ExportDeclaration_8=ruleExportDeclaration
+		{
+			$current = $this_ExportDeclaration_8.current;
+			afterParserOrEnumRuleCall();
+		}
 	)
 ;
 

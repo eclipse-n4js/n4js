@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+
+namespace NS1 {
+    class NS1C {}
+}
+
+// XPECT noerrors -->
+let ns1c1 : NS1.NS1C = new NS1.NS1C();
+
+// XPECT errors --> "Couldn't resolve reference to Type 'NS1C'." at "NS1C"
+let ns1c2 : NS1C = new NS1.NS1C();
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'NS1C'." at "NS1C"
+let ns1c3 = new NS1C();
+
+
+
+namespace NS2 {
+    class NS2C1 {}
+// XPECT noerrors -->
+    class NS2C2 extends NS2C1 {}
+// XPECT noerrors -->
+    class NS2C2 extends NS2.NS2C1 {}
+}
+
+
+// access nested namespace
+namespace NS3 {
+	namespace NS3NS {
+    	export class NS3NSC1 {}
+    	class NS3NSC2 {}
+	}
+// XPECT noerrors -->
+    class NS3C1 extends NS3NS.NS3NSC1 {}
+// XPECT errors --> "" at "NS3NSC2"
+    class NS3C1 extends NS3NS.NS3NSC2 {}
+// XPECT errors --> "" at "NS3NSC1"
+    class NS3C2 extends NS3NSC1 {}
+}
+
+
+// access outer namespace
+namespace NS4 {
+    class NS4C {}
+	namespace NS4NS {
+// XPECT noerrors -->
+    	class NS4NSC extends NS4.NS4C {}
+// XPECT noerrors -->
+    	class NS4NSC extends NS4C {}
+	}
+}
