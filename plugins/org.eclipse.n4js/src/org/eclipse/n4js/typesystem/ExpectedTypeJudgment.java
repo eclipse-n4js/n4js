@@ -87,7 +87,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
-import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -186,47 +185,40 @@ import com.google.inject.Inject;
 				} else {
 					// expected type of argument
 
+					// obtain constructor or construct signature
+					final TypeRef calleeTypeRef = ts.type(G, expr.getCallee());
+					final TMethod ctorOrConstructSig = tsh.getConstructorOrConstructSignature(G, calleeTypeRef, false);
+					if (ctorOrConstructSig == null) {
+						return unknown();
+					}
+
+					// prepare rule environment for substitution
 					final RuleEnvironment G2 = wrap(G);
-
-					// compute ctor
-					final TypeRef ctorTypeRefPlain = ts.type(G, expr.getCallee());
-					final TMethod constructSig = tsh.getConstructSignature(G, ctorTypeRefPlain);
-
-					final TMethod ctor;
-					if (constructSig != null) {
+					if (ctorOrConstructSig.isConstructSignature()) {
 						// special case: interface with construct signature
-						typeSystemHelper.addSubstitutions(G2, expr, constructSig);
-						ctor = constructSig;
+						typeSystemHelper.addSubstitutions(G2, expr, ctorOrConstructSig);
 
-					} else if (ctorTypeRefPlain instanceof TypeTypeRef) {
+					} else if (calleeTypeRef instanceof TypeTypeRef) {
 						// standard case:
-						final TypeTypeRef ctorTypeRef = (TypeTypeRef) ctorTypeRefPlain;
+						final TypeTypeRef calleeTypeRefCasted = (TypeTypeRef) calleeTypeRef;
 
 						// add type variable mappings based on the type
 						// of the instance to be created
 						// --> for this, create a ParameterizedTypeRef taking the staticType from
 						// the CtorTypeRef and the type arguments from the NewExpression
 						final TypeRef typeRefOfInstanceToCreate = typeSystemHelper.createTypeRefFromStaticType(
-								G, ctorTypeRef, expr);
-						final Type typeOfInstanceToCreatePlain = typeRefOfInstanceToCreate.getDeclaredType();
-						if (!(typeOfInstanceToCreatePlain instanceof ContainerType<?>)) {
-							return unknown();
-						}
-						final ContainerType<?> typeOfInstanceToCreate = (ContainerType<?>) typeOfInstanceToCreatePlain;
+								G, calleeTypeRefCasted, expr);
 						typeSystemHelper.addSubstitutions(G2, typeRefOfInstanceToCreate);
 
 						// required if we refer to a ctor with a parameter of type [~]~this (esp. default ctor)
 						setThisBinding(G2, typeRefOfInstanceToCreate);
 
-						ctor = containerTypesHelper.fromContext(expr.eResource())
-								.findConstructor(typeOfInstanceToCreate);
 					} else {
 						return unknown();
 					}
 
-					final TFormalParameter fpar = ctor != null
-							? ctor.getFparForArgIdx(ECollections.indexOf(expr.getArguments(), argument, 0))
-							: null;
+					final int argIdx = ECollections.indexOf(expr.getArguments(), argument, 0);
+					final TFormalParameter fpar = ctorOrConstructSig.getFparForArgIdx(argIdx);
 					if (fpar == null) {
 						// consequential error or ignored:
 						return unknown();
