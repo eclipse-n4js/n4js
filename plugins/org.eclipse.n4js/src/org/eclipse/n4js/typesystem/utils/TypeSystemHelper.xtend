@@ -435,12 +435,6 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	}
 
 	def public TMethod getConstructorOrConstructSignature(RuleEnvironment G, TypeRef calleeTypeRef, boolean ignoreConstructSignatures) {
-		if (!ignoreConstructSignatures) {
-			val constructSig = getConstructSignature(G, calleeTypeRef);
-			if (constructSig !== null) {
-				return constructSig;
-			}
-		}
 		if (calleeTypeRef instanceof TypeTypeRef) {
 			val staticType = getStaticType(G, calleeTypeRef, true);
 			if (staticType instanceof ContainerType<?>) {
@@ -449,6 +443,9 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 					return ctor;
 				}
 			}
+		}
+		if (!ignoreConstructSignatures) {
+			return getConstructSignature(G, calleeTypeRef);
 		}
 		return null;
 	}
