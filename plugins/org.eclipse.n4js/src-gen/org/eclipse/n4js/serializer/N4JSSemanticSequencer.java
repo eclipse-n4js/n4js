@@ -27817,6 +27817,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     ScriptElement returns VariableStatement
+	 *     NamespaceElement<Yield> returns VariableStatement
+	 *     NamespaceElement returns VariableStatement
 	 *     RootStatement<Yield> returns VariableStatement
 	 *     RootStatement returns VariableStatement
 	 *     Statement<Yield> returns VariableStatement

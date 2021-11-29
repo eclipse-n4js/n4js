@@ -215,6 +215,12 @@ ruleNamespaceElement:
 		)
 		    |
 		ruleExportDeclaration
+		    |
+		(
+			(ruleVariableStatementKeyword
+			)=>
+			norm1_VariableStatement
+		)
 	)
 ;
 
@@ -289,6 +295,12 @@ norm1_NamespaceElement:
 		)
 		    |
 		ruleExportDeclaration
+		    |
+		(
+			(ruleVariableStatementKeyword
+			)=>
+			norm3_VariableStatement
+		)
 	)
 ;
 

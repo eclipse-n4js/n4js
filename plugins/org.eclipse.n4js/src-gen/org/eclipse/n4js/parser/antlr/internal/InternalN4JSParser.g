@@ -782,6 +782,27 @@ ruleNamespaceElement returns [EObject current=null]
 			$current = $this_ExportDeclaration_6.current;
 			afterParserOrEnumRuleCall();
 		}
+		    |
+		(
+			((
+				(
+				)
+				(
+					(
+						ruleVariableStatementKeyword
+					)
+				)
+			)
+			)=>
+			{
+				newCompositeNode(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7());
+			}
+			this_VariableStatement_7=norm1_VariableStatement
+			{
+				$current = $this_VariableStatement_7.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
 	)
 ;
 
@@ -968,6 +989,27 @@ norm1_NamespaceElement returns [EObject current=null]
 			$current = $this_ExportDeclaration_6.current;
 			afterParserOrEnumRuleCall();
 		}
+		    |
+		(
+			((
+				(
+				)
+				(
+					(
+						ruleVariableStatementKeyword
+					)
+				)
+			)
+			)=>
+			{
+				newCompositeNode(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7());
+			}
+			this_VariableStatement_7=norm3_VariableStatement
+			{
+				$current = $this_VariableStatement_7.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
 	)
 ;
 

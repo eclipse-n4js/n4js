@@ -249,6 +249,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cN4EnumDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		private final RuleCall cN4TypeAliasDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		private final RuleCall cExportDeclarationParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cVariableStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
 		
 		//NamespaceElement<Yield> returns ScriptElement :
 		//    AnnotatedScriptElement
@@ -258,6 +259,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    | N4EnumDeclaration<Yield>
 		//    | N4TypeAliasDeclaration<Yield>
 		//    | ExportDeclaration
+		//    | VariableStatement<In=true,Yield>
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -268,6 +270,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//| N4EnumDeclaration<Yield>
 		//| N4TypeAliasDeclaration<Yield>
 		//| ExportDeclaration
+		//| VariableStatement<In=true,Yield>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//AnnotatedScriptElement
@@ -290,6 +293,9 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//ExportDeclaration
 		public RuleCall getExportDeclarationParserRuleCall_6() { return cExportDeclarationParserRuleCall_6; }
+		
+		//VariableStatement<In=true,Yield>
+		public RuleCall getVariableStatementParserRuleCall_7() { return cVariableStatementParserRuleCall_7; }
 	}
 	public class AnnotatedScriptElementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotatedScriptElement");
@@ -12371,6 +12377,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | N4EnumDeclaration<Yield>
 	//    | N4TypeAliasDeclaration<Yield>
 	//    | ExportDeclaration
+	//    | VariableStatement<In=true,Yield>
 	//;
 	public NamespaceElementElements getNamespaceElementAccess() {
 		return pNamespaceElement;

@@ -10645,6 +10645,12 @@ rule__NamespaceElement__Alternatives
 		ruleExportDeclaration
 		{ after(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_6()); }
 	)
+	|
+	(
+		{ before(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
+		(norm1_VariableStatement)
+		{ after(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
+	)
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -10695,6 +10701,12 @@ norm1_NamespaceElement__Alternatives
 		{ before(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_6()); }
 		ruleExportDeclaration
 		{ after(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_6()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
+		(norm3_VariableStatement)
+		{ after(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
 	)
 ;
 finally {

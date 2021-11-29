@@ -33,6 +33,7 @@ import org.eclipse.n4js.n4JS.N4FieldAccessor
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NewExpression
@@ -223,8 +224,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			if (context instanceof NamespaceLikeRef) {
 				val namespaceLikeType = context.previousSibling?.declaredType;
 				val script = EcoreUtil2.getContainerOfType(context, Script);
+				val parentNamespace = EcoreUtil2.getContainerOfType(context, N4NamespaceDeclaration);
+				val parentContainer = parentNamespace === null ? script : parentNamespace;
 				// also check for eIsProxy in case of broken AST
-				val namespace = namespaceLikeType === null || namespaceLikeType.eIsProxy ? script : namespaceLikeType;
+				val namespace = namespaceLikeType === null || namespaceLikeType.eIsProxy ? parentContainer : namespaceLikeType;
 				return new FilteringScope(getTypeScope(namespace, false), [
 					TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
 					|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)
@@ -607,6 +610,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, [
 					delegateGetScope(context, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE); // provide any reference that expects instances of Type as target objects
 				]);
+			}
+			N4NamespaceDeclaration: {
+				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredTypes(context, parent);
 			}
 			TNamespace: {
 				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
