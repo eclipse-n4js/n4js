@@ -38,6 +38,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
+import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
@@ -424,6 +425,30 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			// and cannot appear in StructuralTypeRefs, so no need for ContainerTypesHelper or
 			// checking for TStructuralType here:
 			return type.callSignature;
+		}
+		return null;
+	}
+
+	def public TMethod getConstructorOrConstructSignature(RuleEnvironment G, NewExpression newExpr, boolean ignoreConstructSignatures) {
+		val calleeTypeRef = ts.type(G, newExpr.callee);
+		return getConstructorOrConstructSignature(G, calleeTypeRef, ignoreConstructSignatures);
+	}
+
+	def public TMethod getConstructorOrConstructSignature(RuleEnvironment G, TypeRef calleeTypeRef, boolean ignoreConstructSignatures) {
+		if (!ignoreConstructSignatures) {
+			val constructSig = getConstructSignature(G, calleeTypeRef);
+			if (constructSig !== null) {
+				return constructSig;
+			}
+		}
+		if (calleeTypeRef instanceof TypeTypeRef) {
+			val staticType = getStaticType(G, calleeTypeRef, true);
+			if (staticType instanceof ContainerType<?>) {
+				val ctor = containerTypesHelper.fromContext(G.contextResource).findConstructor(staticType);
+				if (ctor !== null) {
+					return ctor;
+				}
+			}
 		}
 		return null;
 	}

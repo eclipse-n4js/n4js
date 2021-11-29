@@ -73,7 +73,6 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
-import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
@@ -561,16 +560,14 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			if (structuralMembers.isEmpty && type == RuleEnvironmentExtensions.objectType(G)) {
 				return;
 			}
-			
-			
+
 			val isSpecArgument = isSpecArgument(objectLiteral);
-			val ctor = containerTypesHelper.fromContext(objectLiteral).findConstructor(type as ContainerType<?>);
 			val strategyFilter = new TypingStrategyFilter(typingStrategy,
 				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
-				isSpecArgumentToSpecCtor(objectLiteral, ctor));
+				isSpecArgument);
 			val strategyFilterIncludeNotAccessible = new TypingStrategyFilter(typingStrategy,
 				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
-				isSpecArgumentToSpecCtor(objectLiteral, ctor), true);
+				isSpecArgument, true);
 			val expectedMembers = containerTypesHelper.fromContext(objectLiteral).allMembers(
 				type as ContainerType<?>).filter[member|strategyFilter.apply(member)].map[member|member.name].toSet();
 			val expectedMembersPlusNotAccessibles = containerTypesHelper.fromContext(objectLiteral).allMembers(
@@ -616,29 +613,28 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-
 	def private boolean isSpecArgument(ObjectLiteral objectLiteral) {
-		val usedInConstructor = objectLiteral.eContainer?.eContainer instanceof NewExpression;
-		if (usedInConstructor) {
-			val newExpression = objectLiteral.eContainer?.eContainer as NewExpression;
-			val newTypeRef = ts.tau(newExpression); // no context, we only need the number of fpars
-			var newType = newTypeRef.declaredType;
-			if (newType===null && newTypeRef instanceof BoundThisTypeRef) {
-				newType = (newTypeRef as BoundThisTypeRef).actualThisTypeRef?.declaredType;
-			}
-			if (newType instanceof ContainerType<?>) {
-				val newCtor = containerTypesHelper.fromContext(newExpression).findConstructor(newType);
-				val pos = newExpression.arguments.indexOf(objectLiteral.eContainer);
-				if (newCtor !== null && pos >= 0) {
-					val formalParam = newCtor.getFparForArgIdx(pos);
-					val hasSpecAnnotation = formalParam.annotations.exists[an|an.name.equals("Spec")];
-					return hasSpecAnnotation;
-				}
-			}
+		val parent = objectLiteral?.eContainer;
+		val grandParent = parent?.eContainer;
+		if (!(parent instanceof Argument && grandParent instanceof NewExpression)) {
+			return false;
 		}
-		return false;
+		val arg = parent as Argument;
+		val newExpr = grandParent as NewExpression;
+		val G = newExpr.newRuleEnvironment;
+		// note: since the @Spec annotation may only be used in the constructor of a class,
+		// we can here skip the handling of construct signatures (i.e. last argument is 'true'):
+		val ctor = tsh.getConstructorOrConstructSignature(G, newExpr, true);
+		if (ctor === null) {
+			return false;
+		}
+		val argIdx = newExpr.arguments.indexOf(arg);
+		val ctorFpar = ctor.getFparForArgIdx(argIdx);
+		if (ctorFpar === null) {
+			return false;
+		}
+		return AnnotationDefinition.SPEC.hasAnnotation(ctorFpar);
 	}
-
 
 	def private void internalCheckUseOfUndefinedExpression(RuleEnvironment G, Expression expression,
 		TypeRef expectedTypeRef, TypeRef actualTypeRef) {
@@ -1020,22 +1016,4 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		return tClassRefs;
 	}
 
-	def private static boolean isSpecArgumentToSpecCtor(Expression expr, TMethod ctor) {
-		if (ctor === null) {
-			return false;
-		}
-		val parent = expr?.eContainer;
-		val grandParent = parent?.eContainer;
-		if (parent instanceof Argument) {
-			if (grandParent instanceof NewExpression) {
-				val Argument arg = parent 
-				val argIdx = grandParent.arguments.indexOf(arg);
-				val ctorFpar = ctor.getFparForArgIdx(argIdx);
-				if (ctorFpar !== null) {
-					return AnnotationDefinition.SPEC.hasAnnotation(ctorFpar);
-				}
-			}
-		}
-		return false;
-	}
 }
