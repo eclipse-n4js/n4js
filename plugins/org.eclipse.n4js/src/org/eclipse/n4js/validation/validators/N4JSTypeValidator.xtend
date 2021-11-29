@@ -506,7 +506,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 	def void internalCheckSuperfluousPropertiesInObjectLiteralRek(RuleEnvironment G, TypeRef expectedTypeRef, Expression expression) {
 		if (expression instanceof ObjectLiteral) {
-			internalCheckSuperfluousPropertiesInObjectLiteral(expectedTypeRef, expression);
+			internalCheckSuperfluousPropertiesInObjectLiteral(G, expectedTypeRef, expression);
 
 		} else if (expression instanceof ArrayLiteral) {
 			val expectedElemTypeRefs = tsh.extractIterableElementTypes(G, expectedTypeRef);
@@ -540,7 +540,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 * #225: always check for superfluous properties in object literal
 	 * req-id IDE-22501
 	 */
-	def void internalCheckSuperfluousPropertiesInObjectLiteral(TypeRef typeRef, ObjectLiteral objectLiteral) {
+	def void internalCheckSuperfluousPropertiesInObjectLiteral(RuleEnvironment G, TypeRef typeRef, ObjectLiteral objectLiteral) {
 		val typingStrategy = typeRef.typingStrategy;
 		if (typingStrategy != TypingStrategy.NOMINAL && typingStrategy != TypingStrategy.DEFAULT) {
 			if (typeRef.isDynamic) {
@@ -555,13 +555,12 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				return;
 			}
 
-			val G = RuleEnvironmentExtensions.newRuleEnvironment(objectLiteral);
 			val structuralMembers = typeRef.structuralMembers;
 			if (structuralMembers.isEmpty && type == RuleEnvironmentExtensions.objectType(G)) {
 				return;
 			}
 
-			val isSpecArgument = isSpecArgument(objectLiteral);
+			val isSpecArgument = isSpecArgument(G, objectLiteral);
 			val strategyFilter = new TypingStrategyFilter(typingStrategy,
 				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
 				isSpecArgument);
@@ -613,7 +612,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private boolean isSpecArgument(ObjectLiteral objectLiteral) {
+	def private boolean isSpecArgument(RuleEnvironment G, ObjectLiteral objectLiteral) {
 		val parent = objectLiteral?.eContainer;
 		val grandParent = parent?.eContainer;
 		if (!(parent instanceof Argument && grandParent instanceof NewExpression)) {
@@ -621,7 +620,6 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		val arg = parent as Argument;
 		val newExpr = grandParent as NewExpression;
-		val G = newExpr.newRuleEnvironment;
 		// note: since the @Spec annotation may only be used in the constructor of a class,
 		// we can here skip the handling of construct signatures (i.e. last argument is 'true'):
 		val ctor = tsh.getConstructorOrConstructSignature(G, newExpr, true);
