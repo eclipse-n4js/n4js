@@ -122,7 +122,9 @@ import org.eclipse.n4js.validation.utils.MemberMatrix;
 import org.eclipse.n4js.validation.utils.MemberMatrix.SourceAwareIterator;
 import org.eclipse.n4js.validation.utils.MemberRedefinitionUtils;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.Arrays;
+import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.Check;
 import org.eclipse.xtext.validation.EValidatorRegistrar;
 
@@ -158,6 +160,8 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 	private MemberVisibilityChecker memberVisibilityChecker;
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	private final static String TYPE_VAR_CONTEXT = "TYPE_VAR_CONTEXT";
 
@@ -189,10 +193,13 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 
 		MemberCube memberCube = createMemberValidationList();
 
+		final CancelIndicator ci = getCancelIndicator();
 		final boolean isClass = tClassifier instanceof TClass;
 		final Map<TypeReferenceNode<ParameterizedTypeRef>, MemberList<TMember>> nonAccessibleAbstractMembersBySuperTypeRefNode = new HashMap<>();
 
 		for (Entry<NameStaticPair, MemberMatrix> entry : memberCube.entrySet()) {
+			operationCanceledManager.checkCanceled(ci);
+
 			MemberMatrix mm = entry.getValue();
 
 			// Set to collect all owned members that are lacking an override annotation.
