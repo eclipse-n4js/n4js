@@ -1164,24 +1164,22 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseNewExpression(NewExpression e) {
-			TypeRef T = ts.type(G, e.getCallee());
-			if (T instanceof TypeTypeRef) {
-				T = typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) T, e);
+			final TypeRef calleeTypeRef = ts.type(G, e.getCallee());
+			if (calleeTypeRef instanceof TypeTypeRef) {
+				return typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) calleeTypeRef, e);
 			} else {
-				TMethod constructSig = typeSystemHelper.getConstructSignature(G, T);
+				TMethod constructSig = typeSystemHelper.getConstructSignature(G, calleeTypeRef);
 				if (constructSig != null) {
 					TypeRef returnTypeRef = constructSig.getReturnTypeRef();
 					if (returnTypeRef != null && !TypeUtils.isVoid(returnTypeRef)) {
 						RuleEnvironment G2 = wrap(G);
 						tsh.addSubstitutions(G2, e, constructSig);
 						TypeRef returnTypeRefSubst = ts.substTypeVariablesWithFullCapture(G2, returnTypeRef);
-						T = returnTypeRefSubst;
-					} else {
-						T = unknown();
+						return returnTypeRefSubst;
 					}
 				}
 			}
-			return T;
+			return unknown();
 		}
 
 		@Override
