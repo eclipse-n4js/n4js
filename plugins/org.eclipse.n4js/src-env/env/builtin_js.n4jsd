@@ -57,7 +57,7 @@ export external public type ObjectConstructor = constructor{Object};
 export external public class Function {
 	public apply(thisArg: any, argArray: any = ): any;
 	public call(thisArg: any, ...argArray: any): any;
-	public bind(thisArg: any, ...args: any): {function(... args: any): any}
+	public bind(thisArg: any, ...args: any): (... args: any)=>any;
 	@Override
 	public toString(): string;
 	public get length(): number;
@@ -340,8 +340,8 @@ export external public class URIError extends Error {
 export external public type URIErrorConstructor = constructor{URIError};
 
 export external public class JSON {
-	public static parse(text: string, reviver: {@This(any) function(key: string, value: any): any} = ): any;
-	public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;
+	public static parse(text: string, reviver: (this: any, key: string, value: any)=>any = ): any;
+	public static stringify(value: any, replacer: union{Array<?>, (key: string, value: any)=>any } = undefined, space: union{number , string} = undefined): string;
 }
 
 export external public interface ~ConcatArray<T> {
@@ -368,13 +368,13 @@ export external public class Array<T> {
 	public unshift(...items: T): number;
 	public indexOf(searchElement: any, fromIndex: number = ): number;
 	public lastIndexOf(searchElement: any, fromIndex: number = ): number;
-	public <ThisT extends Object> every(callback: {function(value: T, index: number, traversedObject: Array<T>)}, thisObject: ThisT = undefined): boolean;
+	public <ThisT extends Object> every(callback: (value: T, index: number, traversedObject: Array<T>)=>void, thisObject: ThisT = undefined): boolean;
 	public some(predicate: (value: T, index: number, array: Array<T>)=>any+, thisArg: any = ): boolean;
 	public forEach(callbackfn: (value: T, index: number, array: Array<T>)=>void, thisArg: any = ): void;
-	public <U, ThisT extends Object> map(callback: {function(value: T, index: number, traversedObject: Array<T>) : U}, thisObject: ThisT = undefined): Array<U>;
-	public <ThisT extends Object> filter(callback: {function(value: T, index: number, traversedObject: Array<T>) : boolean}, thisObject: ThisT = undefined): Array<T>;
-	public <MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
-	public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
+	public <U, ThisT extends Object> map(callback: (value: T, index: number, traversedObject: Array<T>)=>U, thisObject: ThisT = undefined): Array<U>;
+	public <ThisT extends Object> filter(callback: (value: T, index: number, traversedObject: Array<T>)=>boolean, thisObject: ThisT = undefined): Array<T>;
+	public <MemoT> reduce(callback: (previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>)=>MemoT, initialValue: MemoT = undefined): MemoT;
+	public <MemoT> reduceRight(callback: (previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>)=>MemoT, initialValue: MemoT = undefined): MemoT;
 	public constructor(first: union{number, T} = undefined, ...items: T);  // TODO: signature is type unsafe, allows to create arrays with elements of wrong type, new Array<string>(5, 'x', 'y'), but cannot write constructor(items : union {number, T... items} = undefined)
 	(...args: any+): any+; // overloading not supported
 	public static isArray(arg: any): boolean;
@@ -1093,19 +1093,19 @@ export external public interface ~AsyncGenerator<out TYield, out TReturn, in TNe
 export external public class Promise<out S, out F = any> extends Object {
 
 	public constructor(
-		executor: {function(
-			resolveFn:{function(arg: S = undefined):void},
-			rejectFn: {function(arg: F = undefined):void}
-		): void}
+		executor: (
+			resolveFn:(arg: S = undefined)=>void,
+			rejectFn: (arg: F = undefined)=>void
+		)=>void
 	)
 
 	public <Snew, Fnew> then(
-		onFulfilled: {function(arg:S = undefined): union{Snew, Promise<Snew, Fnew>}?},
-		onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?} = undefined
+		onFulfilled: (arg:S = undefined)=>union{Snew, Promise<Snew, Fnew>}?,
+		onRejected: (arg:F = undefined)=>union{Fnew, Promise<Snew, Fnew>}? = undefined
 	): Promise<Snew, Fnew>
 
 	public <Snew, Fnew> catch(
-		onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?}
+		onRejected: (arg:F = undefined)=>union{Fnew, Promise<Snew, Fnew>}?
 	): Promise<Snew, Fnew>
 
 	public static <S, F> reject(f: F): Promise<S, F>
