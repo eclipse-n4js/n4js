@@ -1831,6 +1831,18 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION: {
+				N4IndexSignatureDeclaration n4IndexSignatureDeclaration = (N4IndexSignatureDeclaration)theEObject;
+				T1 result = caseN4IndexSignatureDeclaration(n4IndexSignatureDeclaration);
+				if (result == null) result = caseAnnotableN4MemberDeclaration(n4IndexSignatureDeclaration);
+				if (result == null) result = caseN4MemberDeclaration(n4IndexSignatureDeclaration);
+				if (result == null) result = caseAnnotableElement(n4IndexSignatureDeclaration);
+				if (result == null) result = caseModifiableElement(n4IndexSignatureDeclaration);
+				if (result == null) result = caseTypableElement(n4IndexSignatureDeclaration);
+				if (result == null) result = caseNamedElement(n4IndexSignatureDeclaration);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.BINDING_PATTERN: {
 				BindingPattern bindingPattern = (BindingPattern)theEObject;
 				T1 result = caseBindingPattern(bindingPattern);
@@ -4426,6 +4438,21 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseN4SetterDeclaration(N4SetterDeclaration object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>N4 Index Signature Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>N4 Index Signature Declaration</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseN4IndexSignatureDeclaration(N4IndexSignatureDeclaration object) {
 		return null;
 	}
 

@@ -2505,6 +2505,26 @@ class N4SetterDeclaration extends SetterDeclaration, N4FieldAccessor {
 	}
 }
 
+class N4IndexSignatureDeclaration extends AnnotableN4MemberDeclaration {
+
+	contains TypeReferenceNode<TypeRef> declaredIndexTypeRefNode
+	contains TypeReferenceNode<TypeRef> declaredValueTypeRefNode
+
+	op TypeRef getDeclaredIndexTypeRef() {
+		return declaredIndexTypeRefNode?.typeRef;
+	}
+	op TypeRef getDeclaredIndexTypeRefInAST() {
+		return declaredIndexTypeRefNode?.typeRefInAST;
+	}
+
+	op TypeRef getDeclaredValueTypeRef() {
+		return declaredValueTypeRefNode?.typeRef;
+	}
+	op TypeRef getDeclaredValueTypeRefInAST() {
+		return declaredValueTypeRefNode?.typeRefInAST;
+	}
+}
+
 abstract class BindingPattern extends ControlFlowElement {
 }
 

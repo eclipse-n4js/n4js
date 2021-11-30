@@ -36,11 +36,15 @@
 '@'=106
 '@@'=80
 'Promisify'=8
+<<<<<<< HEAD
 'This'=43
+=======
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 '['=107
 ']'=108
 '^'=109
 '^='=81
+<<<<<<< HEAD
 'abstract'=12
 'as'=82
 'async'=31
@@ -70,16 +74,52 @@
 'if'=84
 'implements'=6
 'import'=24
+=======
+'abstract'=11
+'as'=82
+'async'=32
+'await'=33
+'break'=34
+'case'=44
+'catch'=35
+'class'=36
+'const'=37
+'constructor'=5
+'continue'=12
+'debugger'=13
+'declare'=17
+'default'=18
+'delete'=23
+'do'=83
+'else'=45
+'enum'=46
+'export'=24
+'extends'=19
+'external'=14
+'false'=38
+'finally'=20
+'for'=58
+'from'=47
+'function'=15
+'get'=59
+'if'=84
+'implements'=6
+'import'=25
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 'in'=85
 'instanceof'=7
 'interface'=9
 'intersection'=4
 'let'=60
+<<<<<<< HEAD
 'namespace'=10
+=======
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 'new'=61
 'null'=48
 'of'=86
 'out'=62
+<<<<<<< HEAD
 'private'=20
 'project'=21
 'protected'=11
@@ -102,6 +142,31 @@
 'while'=41
 'with'=53
 'yield'=42
+=======
+'private'=21
+'project'=22
+'protected'=10
+'public'=26
+'readonly'=16
+'return'=27
+'set'=63
+'static'=28
+'super'=39
+'switch'=29
+'target'=30
+'this'=49
+'throw'=40
+'true'=50
+'try'=64
+'type'=51
+'typeof'=31
+'union'=41
+'var'=65
+'void'=52
+'while'=42
+'with'=53
+'yield'=43
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 '{'=110
 '|'=111
 '|='=87

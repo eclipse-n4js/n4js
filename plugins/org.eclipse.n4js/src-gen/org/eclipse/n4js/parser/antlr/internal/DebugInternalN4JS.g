@@ -27,8 +27,6 @@ ruleScriptElement:
 		(
 			('@'
 			(
-				'This'
-				    |
 				'target'
 				    |
 				RULE_IDENTIFIER
@@ -94,6 +92,8 @@ ruleScriptElement:
 			(ruleImportDeclaration)=>
 			ruleImportDeclaration
 		)
+		    |
+		ruleDeclareDeclaration
 		    |
 		ruleExportDeclaration
 		    |
@@ -312,8 +312,6 @@ ruleAnnotatedScriptElement:
 	(
 		('@'
 		(
-			'This'
-			    |
 			'target'
 			    |
 			RULE_IDENTIFIER
@@ -384,6 +382,7 @@ ruleAnnotatedScriptElement:
 	)
 ;
 
+<<<<<<< HEAD
 // Rule AnnotatedNamespaceElement
 ruleAnnotatedNamespaceElement:
 	(
@@ -455,6 +454,12 @@ ruleAnnotatedNamespaceElement:
 		'='
 		ruleTypeReferenceNode
 	)
+=======
+// Rule DeclareDeclaration
+ruleDeclareDeclaration:
+	'declare'
+	ruleExportableElement
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 ;
 
 // Rule ExportDeclaration
@@ -527,8 +532,6 @@ ruleExportableElement:
 		(
 			('@'
 			(
-				'This'
-				    |
 				'target'
 				    |
 				RULE_IDENTIFIER
@@ -608,8 +611,6 @@ ruleAnnotatedExportableElement:
 	(
 		('@'
 		(
-			'This'
-			    |
 			'target'
 			    |
 			RULE_IDENTIFIER
@@ -1014,8 +1015,6 @@ ruleAnnotatedFunctionDeclaration:
 	(
 		('@'
 		(
-			'This'
-			    |
 			'target'
 			    |
 			RULE_IDENTIFIER
@@ -1034,8 +1033,6 @@ norm1_AnnotatedFunctionDeclaration:
 	(
 		('@'
 		(
-			'This'
-			    |
 			'target'
 			    |
 			RULE_IDENTIFIER
@@ -1445,6 +1442,7 @@ ruleBindingElementFragment:
 		'...'
 		?
 		ruleBindingIdentifier
+		'?'?
 		ruleColonSepDeclaredTypeRef?
 	)
 	(
@@ -1468,6 +1466,7 @@ norm1_BindingElementFragment:
 		'...'
 		?
 		norm1_BindingIdentifier
+		'?'?
 		ruleColonSepDeclaredTypeRef?
 	)
 	(
@@ -1621,8 +1620,6 @@ ruleStatement:
 		(
 			('@'
 			(
-				'This'
-				    |
 				'target'
 				    |
 				RULE_IDENTIFIER
@@ -1641,8 +1638,6 @@ norm1_Statement:
 		(
 			('@'
 			(
-				'This'
-				    |
 				'target'
 				    |
 				RULE_IDENTIFIER
@@ -2278,8 +2273,6 @@ ruleForStatement:
 						    |
 						'intersection'
 						    |
-						'This'
-						    |
 						'Promisify'
 						    |
 						'implements'
@@ -2372,7 +2365,11 @@ ruleForStatement:
 						'of'
 					)
 					(
+<<<<<<< HEAD
 						('await' | '@' | '(' | 'async' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+=======
+						('await' | '@' | '(' | 'async' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 						norm1_AssignmentExpression
 					)?
 				)
@@ -2501,8 +2498,6 @@ norm1_ForStatement:
 						    |
 						'intersection'
 						    |
-						'This'
-						    |
 						'Promisify'
 						    |
 						'implements'
@@ -2597,7 +2592,11 @@ norm1_ForStatement:
 						'of'
 					)
 					(
+<<<<<<< HEAD
 						('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+=======
+						('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 						norm3_AssignmentExpression
 					)?
 				)
@@ -3321,8 +3320,6 @@ rulePropertyAssignment:
 				    |
 				'intersection'
 				    |
-				'This'
-				    |
 				'Promisify'
 				    |
 				'await'
@@ -3516,8 +3513,6 @@ norm1_PropertyAssignment:
 				'union'
 				    |
 				'intersection'
-				    |
-				'This'
 				    |
 				'Promisify'
 				    |
@@ -3719,8 +3714,6 @@ ruleAnnotatedPropertyAssignment:
 				    |
 				'intersection'
 				    |
-				'This'
-				    |
 				'Promisify'
 				    |
 				'await'
@@ -3762,7 +3755,11 @@ ruleAnnotatedPropertyAssignment:
 			)=>
 			'set'
 			(
+<<<<<<< HEAD
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+=======
+				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 				ruleLiteralOrComputedPropertyName
 			)
 		)
@@ -3954,8 +3951,6 @@ norm1_AnnotatedPropertyAssignment:
 				    |
 				'intersection'
 				    |
-				'This'
-				    |
 				'Promisify'
 				    |
 				'await'
@@ -3997,7 +3992,11 @@ norm1_AnnotatedPropertyAssignment:
 			)=>
 			'set'
 			(
+<<<<<<< HEAD
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+=======
+				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 				norm1_LiteralOrComputedPropertyName
 			)
 		)
@@ -4339,8 +4338,6 @@ rulePropertySetterDeclaration:
 			    |
 			'intersection'
 			    |
-			'This'
-			    |
 			'Promisify'
 			    |
 			'await'
@@ -4382,7 +4379,11 @@ rulePropertySetterDeclaration:
 		)=>
 		'set'
 		(
+<<<<<<< HEAD
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+=======
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			ruleLiteralOrComputedPropertyName
 		)
 	)
@@ -4507,8 +4508,6 @@ norm1_PropertySetterDeclaration:
 			    |
 			'intersection'
 			    |
-			'This'
-			    |
 			'Promisify'
 			    |
 			'await'
@@ -4550,7 +4549,11 @@ norm1_PropertySetterDeclaration:
 		)=>
 		'set'
 		(
+<<<<<<< HEAD
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+=======
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			norm1_LiteralOrComputedPropertyName
 		)
 	)
@@ -5059,8 +5062,6 @@ ruleShiftExpression:
 			    |
 			'intersection'
 			    |
-			'This'
-			    |
 			'Promisify'
 			    |
 			'await'
@@ -5150,7 +5151,11 @@ ruleShiftExpression:
 		)=>
 		ruleShiftOperator
 		(
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+=======
+			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			ruleAdditiveExpression
 		)
 	)*
@@ -5198,8 +5203,6 @@ norm1_ShiftExpression:
 			    |
 			'intersection'
 			    |
-			'This'
-			    |
 			'Promisify'
 			    |
 			'await'
@@ -5289,7 +5292,11 @@ norm1_ShiftExpression:
 		)=>
 		ruleShiftOperator
 		(
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+=======
+			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			norm1_AdditiveExpression
 		)
 	)*
@@ -5350,8 +5357,6 @@ ruleRelationalExpression:
 			    |
 			'intersection'
 			    |
-			'This'
-			    |
 			'Promisify'
 			    |
 			'await'
@@ -5441,7 +5446,11 @@ ruleRelationalExpression:
 		)=>
 		ruleRelationalOperator
 		(
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+=======
+			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			ruleShiftExpression
 		)
 	)*
@@ -5491,8 +5500,6 @@ norm1_RelationalExpression:
 			    |
 			'intersection'
 			    |
-			'This'
-			    |
 			'Promisify'
 			    |
 			'await'
@@ -5582,7 +5589,11 @@ norm1_RelationalExpression:
 		)=>
 		norm1_RelationalOperator
 		(
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+=======
+			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			ruleShiftExpression
 		)
 	)*
@@ -5629,8 +5640,6 @@ norm2_RelationalExpression:
 			'union'
 			    |
 			'intersection'
-			    |
-			'This'
 			    |
 			'Promisify'
 			    |
@@ -5721,7 +5730,11 @@ norm2_RelationalExpression:
 		)=>
 		ruleRelationalOperator
 		(
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+=======
+			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			norm1_ShiftExpression
 		)
 	)*
@@ -5768,8 +5781,6 @@ norm3_RelationalExpression:
 			'union'
 			    |
 			'intersection'
-			    |
-			'This'
 			    |
 			'Promisify'
 			    |
@@ -5860,7 +5871,11 @@ norm3_RelationalExpression:
 		)=>
 		norm1_RelationalOperator
 		(
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+=======
+			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			norm1_ShiftExpression
 		)
 	)*
@@ -6574,7 +6589,11 @@ ruleYieldExpression:
 		'*'
 	)?
 	(
+<<<<<<< HEAD
 		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+=======
+		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 		norm2_AssignmentExpression
 	)?
 ;
@@ -6588,7 +6607,11 @@ norm1_YieldExpression:
 		'*'
 	)?
 	(
+<<<<<<< HEAD
 		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+=======
+		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 		norm3_AssignmentExpression
 	)?
 ;
@@ -6947,8 +6970,6 @@ ruleIdentifierOrThis:
 	(
 		RULE_IDENTIFIER
 		    |
-		'This'
-		    |
 		'Promisify'
 		    |
 		'target'
@@ -6959,8 +6980,6 @@ ruleIdentifierOrThis:
 ruleAnnotationName:
 	(
 		RULE_IDENTIFIER
-		    |
-		'This'
 		    |
 		'target'
 	)
@@ -7060,8 +7079,6 @@ ruleAnnotationList:
 	(
 		('@'
 		(
-			'This'
-			    |
 			'target'
 			    |
 			RULE_IDENTIFIER
@@ -7069,7 +7086,7 @@ ruleAnnotationList:
 		)=>
 		'@'
 		(
-			('This' | 'target' | RULE_IDENTIFIER)=>
+			('target' | RULE_IDENTIFIER)=>
 			ruleAnnotationNoAtSign
 		)
 	)
@@ -7095,6 +7112,37 @@ ruleN4MemberAnnotationList:
 	+
 ;
 
+<<<<<<< HEAD
+=======
+// Rule TypeReference
+ruleTypeReference:
+	(
+		ruleTypeReferenceName
+		'.'
+	)?
+	ruleTypeReferenceName
+;
+
+// Rule TypeReferenceName
+ruleTypeReferenceName:
+	(
+		'void'
+		    |
+		'null'
+		    |
+		'await'
+		    |
+		'Promisify'
+		    |
+		'target'
+		    |
+		'default'
+		    |
+		RULE_IDENTIFIER
+	)
+;
+
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 // Rule N4ClassDeclaration
 ruleN4ClassDeclaration:
 	(
@@ -7419,6 +7467,14 @@ ruleN4MemberDeclaration:
 		ruleAnnotatedN4MemberDeclaration
 		    |
 		(
+			('['
+			ruleIdentifierName
+			':'
+			)=>
+			ruleN4IndexSignatureDeclaration
+		)
+		    |
+		(
 			(ruleN4Modifier
 			*
 			ruleGetterHeader
@@ -7535,8 +7591,6 @@ ruleN4MemberDeclaration:
 				    |
 				'intersection'
 				    |
-				'This'
-				    |
 				'Promisify'
 				    |
 				'await'
@@ -7582,14 +7636,15 @@ ruleN4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeParameters?
 			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
+				ruleTypeParameters?
 				'('
 				    |
 				ruleLiteralOrComputedPropertyName
+				ruleTypeParameters?
 				'('
 			)
 			)=>
@@ -7606,6 +7661,14 @@ ruleN4MemberDeclaration:
 norm1_N4MemberDeclaration:
 	(
 		norm1_AnnotatedN4MemberDeclaration
+		    |
+		(
+			('['
+			ruleIdentifierName
+			':'
+			)=>
+			norm1_N4IndexSignatureDeclaration
+		)
 		    |
 		(
 			(ruleN4Modifier
@@ -7724,8 +7787,6 @@ norm1_N4MemberDeclaration:
 				    |
 				'intersection'
 				    |
-				'This'
-				    |
 				'Promisify'
 				    |
 				'await'
@@ -7771,14 +7832,15 @@ norm1_N4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeParameters?
 			ruleAsyncNoTrailingLineBreak
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
+				ruleTypeParameters?
 				'('
 				    |
 				norm1_LiteralOrComputedPropertyName
+				ruleTypeParameters?
 				'('
 			)
 			)=>
@@ -7920,8 +7982,6 @@ ruleAnnotatedN4MemberDeclaration:
 				    |
 				'intersection'
 				    |
-				'This'
-				    |
 				'Promisify'
 				    |
 				'await'
@@ -7965,7 +8025,11 @@ ruleAnnotatedN4MemberDeclaration:
 			*
 			'set'
 			(
+<<<<<<< HEAD
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+=======
+				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 				ruleLiteralOrComputedPropertyName
 			)
 		)
@@ -7984,23 +8048,24 @@ ruleAnnotatedN4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeParameters?
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
+				ruleTypeParameters?
 				'('
 				    |
 				ruleAsyncNoTrailingLineBreak
 				ruleLiteralOrComputedPropertyName
+				ruleTypeParameters?
 				'('
 			)
 			)=>
 			ruleN4Modifier
 			*
-			ruleTypeParameters?
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
+				ruleTypeParameters?
 				(
 					('(')=>
 					norm1_MethodParamsReturnAndBody
@@ -8008,6 +8073,7 @@ ruleAnnotatedN4MemberDeclaration:
 				    |
 				ruleAsyncNoTrailingLineBreak
 				ruleLiteralOrComputedPropertyName
+				ruleTypeParameters?
 				(
 					('(')=>
 					ruleMethodParamsReturnAndBody
@@ -8161,8 +8227,6 @@ norm1_AnnotatedN4MemberDeclaration:
 				    |
 				'intersection'
 				    |
-				'This'
-				    |
 				'Promisify'
 				    |
 				'await'
@@ -8206,7 +8270,11 @@ norm1_AnnotatedN4MemberDeclaration:
 			*
 			'set'
 			(
+<<<<<<< HEAD
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+=======
+				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 				norm1_LiteralOrComputedPropertyName
 			)
 		)
@@ -8225,23 +8293,24 @@ norm1_AnnotatedN4MemberDeclaration:
 		(
 			(ruleN4Modifier
 			*
-			ruleTypeParameters?
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
+				ruleTypeParameters?
 				'('
 				    |
 				ruleAsyncNoTrailingLineBreak
 				norm1_LiteralOrComputedPropertyName
+				ruleTypeParameters?
 				'('
 			)
 			)=>
 			ruleN4Modifier
 			*
-			ruleTypeParameters?
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
+				ruleTypeParameters?
 				(
 					('(')=>
 					norm1_MethodParamsReturnAndBody
@@ -8249,6 +8318,7 @@ norm1_AnnotatedN4MemberDeclaration:
 				    |
 				ruleAsyncNoTrailingLineBreak
 				norm1_LiteralOrComputedPropertyName
+				ruleTypeParameters?
 				(
 					('(')=>
 					ruleMethodParamsReturnAndBody
@@ -8275,6 +8345,7 @@ norm1_AnnotatedN4MemberDeclaration:
 
 // Rule FieldDeclarationImpl
 ruleFieldDeclarationImpl:
+	'readonly'?
 	ruleN4Modifier
 	*
 	ruleLiteralOrComputedPropertyName
@@ -8290,6 +8361,7 @@ ruleFieldDeclarationImpl:
 
 // Rule FieldDeclarationImpl
 norm1_FieldDeclarationImpl:
+	'readonly'?
 	ruleN4Modifier
 	*
 	norm1_LiteralOrComputedPropertyName
@@ -8318,30 +8390,32 @@ ruleN4MethodDeclaration:
 	(
 		(ruleN4Modifier
 		*
-		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
+			ruleTypeParameters?
 			'('
 			    |
 			ruleLiteralOrComputedPropertyName
+			ruleTypeParameters?
 			'('
 		)
 		)=>
 		ruleN4Modifier
 		*
-		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
+			ruleTypeParameters?
 			(
 				('(')=>
 				norm1_MethodParamsReturnAndBody
 			)
 			    |
 			ruleLiteralOrComputedPropertyName
+			ruleTypeParameters?
 			(
 				('(')=>
 				ruleMethodParamsReturnAndBody
@@ -8356,30 +8430,32 @@ norm1_N4MethodDeclaration:
 	(
 		(ruleN4Modifier
 		*
-		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
+			ruleTypeParameters?
 			'('
 			    |
 			norm1_LiteralOrComputedPropertyName
+			ruleTypeParameters?
 			'('
 		)
 		)=>
 		ruleN4Modifier
 		*
-		ruleTypeParameters?
 		ruleAsyncNoTrailingLineBreak
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
+			ruleTypeParameters?
 			(
 				('(')=>
 				norm1_MethodParamsReturnAndBody
 			)
 			    |
 			norm1_LiteralOrComputedPropertyName
+			ruleTypeParameters?
 			(
 				('(')=>
 				ruleMethodParamsReturnAndBody
@@ -8487,7 +8563,11 @@ norm1_N4GetterDeclaration:
 ruleGetterHeader:
 	'get'
 	(
+<<<<<<< HEAD
 		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+=======
+		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 		ruleLiteralOrComputedPropertyName
 	)
 	'?'
@@ -8501,7 +8581,11 @@ ruleGetterHeader:
 norm1_GetterHeader:
 	'get'
 	(
+<<<<<<< HEAD
 		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+=======
+		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 		norm1_LiteralOrComputedPropertyName
 	)
 	'?'
@@ -8622,8 +8706,6 @@ ruleN4SetterDeclaration:
 			    |
 			'intersection'
 			    |
-			'This'
-			    |
 			'Promisify'
 			    |
 			'await'
@@ -8667,7 +8749,11 @@ ruleN4SetterDeclaration:
 		*
 		'set'
 		(
+<<<<<<< HEAD
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+=======
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			ruleLiteralOrComputedPropertyName
 		)
 	)
@@ -8795,8 +8881,6 @@ norm1_N4SetterDeclaration:
 			    |
 			'intersection'
 			    |
-			'This'
-			    |
 			'Promisify'
 			    |
 			'await'
@@ -8840,7 +8924,11 @@ norm1_N4SetterDeclaration:
 		*
 		'set'
 		(
+<<<<<<< HEAD
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+=======
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			norm1_LiteralOrComputedPropertyName
 		)
 	)
@@ -8854,6 +8942,42 @@ norm1_N4SetterDeclaration:
 		)=>
 		norm1_Block
 	)?
+	';'?
+;
+
+// Rule N4IndexSignatureDeclaration
+ruleN4IndexSignatureDeclaration:
+	(
+		('['
+		ruleIdentifierName
+		':'
+		)=>
+		'['
+		ruleIdentifierName
+		':'
+	)
+	ruleTypeReferenceNode
+	']'
+	':'
+	ruleTypeReferenceNode
+	';'?
+;
+
+// Rule N4IndexSignatureDeclaration
+norm1_N4IndexSignatureDeclaration:
+	(
+		('['
+		ruleIdentifierName
+		':'
+		)=>
+		'['
+		ruleIdentifierName
+		':'
+	)
+	ruleTypeReferenceNode
+	']'
+	':'
+	ruleTypeReferenceNode
 	';'?
 ;
 
@@ -9179,7 +9303,11 @@ ruleJSXIdentifier:
 			'--'
 		)
 		(
+<<<<<<< HEAD
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | RULE_INT | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_LEGACY_OCTAL_INT | RULE_IDENTIFIER)=>
+=======
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | RULE_INT | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_LEGACY_OCTAL_INT | RULE_IDENTIFIER)=>
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 			(
 				RULE_INT
 				    |
@@ -9285,7 +9413,7 @@ rulePrimaryTypeExpression:
 		    |
 		(
 			('('
-			ruleTAnonymousFormalParameterList
+			ruleTAnonymousFormalParameterListWithDeclaredThisType
 			')'
 			ruleArrow
 			)=>
@@ -9325,23 +9453,6 @@ ruleTypeRefWithoutModifiers:
 			)=>
 			'+'
 		)?
-		    |
-		ruleTypeTypeRef
-		    |
-		ruleFunctionTypeExpressionOLD
-		    |
-		ruleUnionTypeExpressionOLD
-		    |
-		ruleIntersectionTypeExpressionOLD
-	)
-;
-
-// Rule TypeRefFunctionTypeExpression
-ruleTypeRefFunctionTypeExpression:
-	(
-		ruleParameterizedTypeRef
-		    |
-		ruleArrayNTypeExpression
 		    |
 		ruleTypeTypeRef
 		    |
@@ -9439,43 +9550,16 @@ ruleThisTypeRefStructural:
 	)?
 ;
 
-// Rule FunctionTypeExpressionOLD
-ruleFunctionTypeExpressionOLD:
-	'{'
-	(
-		'@'
-		'This'
-		'('
-		ruleTypeRefFunctionTypeExpression
-		')'
-	)?
-	'function'
-	(
-		'<'
-		ruleTypeVariable
-		(
-			','
-			ruleTypeVariable
-		)*
-		'>'
-	)?
-	'('
-	ruleTAnonymousFormalParameterList
-	')'
-	ruleColonSepReturnTypeRef?
-	'}'
-;
-
 // Rule ArrowFunctionTypeExpression
 ruleArrowFunctionTypeExpression:
 	(
 		('('
-		ruleTAnonymousFormalParameterList
+		ruleTAnonymousFormalParameterListWithDeclaredThisType
 		')'
 		ruleArrow
 		)=>
 		'('
-		ruleTAnonymousFormalParameterList
+		ruleTAnonymousFormalParameterListWithDeclaredThisType
 		')'
 		ruleArrow
 	)
@@ -9493,6 +9577,23 @@ ruleTAnonymousFormalParameterList:
 	)?
 ;
 
+// Rule TAnonymousFormalParameterListWithDeclaredThisType
+ruleTAnonymousFormalParameterListWithDeclaredThisType:
+	(
+		(
+			'this'
+			':'
+			ruleTypeRef
+			    |
+			ruleTAnonymousFormalParameter
+		)
+		(
+			','
+			ruleTAnonymousFormalParameter
+		)*
+	)?
+;
+
 // Rule TAnonymousFormalParameter
 ruleTAnonymousFormalParameter:
 	'...'
@@ -9500,9 +9601,11 @@ ruleTAnonymousFormalParameter:
 	(
 		(
 			(ruleBindingIdentifier
+			'?'?
 			':'
 			)=>
 			ruleBindingIdentifier
+			'?'?
 			(
 				(':')=>
 				ruleColonSepTypeRef
@@ -9567,16 +9670,29 @@ ruleParameterizedTypeRefNominal:
 
 // Rule ParameterizedTypeRefStructural
 ruleParameterizedTypeRefStructural:
-	ruleTypingStrategyUseSiteOperator
-	ruleTypeReference
 	(
-		('<')=>
-		ruleTypeArguments
-	)?
-	(
-		'with'
-		ruleTStructMemberList
-	)?
+		'{'
+		(
+			ruleTStructMember
+			(
+				';'
+				    |
+				','
+			)?
+		)*
+		'}'
+		    |
+		ruleTypingStrategyUseSiteOperator
+		ruleTypeReference
+		(
+			('<')=>
+			ruleTypeArguments
+		)?
+		(
+			'with'
+			ruleTStructMemberList
+		)?
+	)
 ;
 
 // Rule ArrayNTypeExpression
@@ -9728,6 +9844,7 @@ ruleColonSepReturnTypeRef:
 
 // Rule TStructField
 ruleTStructField:
+	'readonly'?
 	ruleIdentifierName
 	'?'
 	?
@@ -10026,8 +10143,6 @@ ruleN4Keyword:
 		'union'
 		    |
 		'intersection'
-		    |
-		'This'
 		    |
 		'Promisify'
 		    |

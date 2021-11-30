@@ -1103,6 +1103,15 @@ public interface N4JSFactory extends EFactory {
 	N4SetterDeclaration createN4SetterDeclaration();
 
 	/**
+	 * Returns a new object of class '<em>N4 Index Signature Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>N4 Index Signature Declaration</em>'.
+	 * @generated
+	 */
+	N4IndexSignatureDeclaration createN4IndexSignatureDeclaration();
+
+	/**
 	 * Returns a new object of class '<em>Object Binding Pattern</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

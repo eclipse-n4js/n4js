@@ -30,7 +30,6 @@ import org.eclipse.xtext.resource.IEObjectDescription;
  */
 public class ContextAwareTypeScopeValidator implements IScopeValidator {
 	private final EObject context;
-	private final boolean isValidLocationForNull;
 	private final boolean isValidLocationForVoid;
 	private final boolean isValidLocationForFunctionType;
 
@@ -42,8 +41,6 @@ public class ContextAwareTypeScopeValidator implements IScopeValidator {
 		this.context = context;
 		final EObject container = context.eContainer();
 		final EReference eRef = context.eContainmentFeature();
-
-		this.isValidLocationForNull = false; // in the source code, 'null' is never a valid type
 
 		this.isValidLocationForVoid = eRef == N4JSPackage.eINSTANCE.getFunctionDefinition_DeclaredReturnTypeRefNode()
 				|| eRef == TypeRefsPackage.eINSTANCE.getFunctionTypeExpression_ReturnTypeRef()
@@ -64,9 +61,6 @@ public class ContextAwareTypeScopeValidator implements IScopeValidator {
 	@Override
 	public boolean isValid(IEObjectDescription originalDescr) {
 		final EClass eClass = originalDescr.getEClass();
-		if (!isValidLocationForNull && eClass == TypesPackage.Literals.NULL_TYPE) {
-			return false;
-		}
 		if (!isValidLocationForVoid && eClass == TypesPackage.Literals.VOID_TYPE) {
 			return false; // Requirements 13, Void type.
 		}
@@ -79,9 +73,6 @@ public class ContextAwareTypeScopeValidator implements IScopeValidator {
 	@Override
 	public ScopeElementIssue getIssue(IEObjectDescription originalDescr) {
 		final EClass eClass = originalDescr.getEClass();
-		if (!isValidLocationForNull && eClass == TypesPackage.Literals.NULL_TYPE) {
-			return null; // 'null' will filter out this element completely (i.e. not custom error message)
-		}
 		if (!isValidLocationForVoid && eClass == TypesPackage.Literals.VOID_TYPE) {
 			return new ScopeElementIssue(originalDescr,
 					IssueCodes.TYS_VOID_AT_WRONG_LOCATION,

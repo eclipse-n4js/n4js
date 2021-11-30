@@ -16805,6 +16805,232 @@ public interface N4JSPackage extends EPackage {
 	int N4_SETTER_DECLARATION_OPERATION_COUNT = SETTER_DECLARATION_OPERATION_COUNT + 16;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl <em>N4 Index Signature Declaration</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4IndexSignatureDeclaration()
+	 * @generated
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION = 163;
+
+	/**
+	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_MODIFIERS = ANNOTABLE_N4_MEMBER_DECLARATION__DECLARED_MODIFIERS;
+
+	/**
+	 * The feature id for the '<em><b>Owner</b></em>' container reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION__OWNER = ANNOTABLE_N4_MEMBER_DECLARATION__OWNER;
+
+	/**
+	 * The feature id for the '<em><b>Annotation List</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION__ANNOTATION_LIST = ANNOTABLE_N4_MEMBER_DECLARATION__ANNOTATION_LIST;
+
+	/**
+	 * The feature id for the '<em><b>Declared Index Type Ref Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Declared Value Type Ref Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>N4 Index Signature Declaration</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Get Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___GET_NAME = ANNOTABLE_N4_MEMBER_DECLARATION___GET_NAME;
+
+	/**
+	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT;
+
+	/**
+	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_DECLARED_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT;
+
+	/**
+	 * The operation id for the '<em>Is Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_ABSTRACT = ANNOTABLE_N4_MEMBER_DECLARATION___IS_ABSTRACT;
+
+	/**
+	 * The operation id for the '<em>Is Declared Static</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_DECLARED_STATIC = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_STATIC;
+
+	/**
+	 * The operation id for the '<em>Is Static</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_STATIC = ANNOTABLE_N4_MEMBER_DECLARATION___IS_STATIC;
+
+	/**
+	 * The operation id for the '<em>Is Declared Final</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_DECLARED_FINAL = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_FINAL;
+
+	/**
+	 * The operation id for the '<em>Is Final</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_FINAL = ANNOTABLE_N4_MEMBER_DECLARATION___IS_FINAL;
+
+	/**
+	 * The operation id for the '<em>Is Constructor</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_CONSTRUCTOR = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CONSTRUCTOR;
+
+	/**
+	 * The operation id for the '<em>Is Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_CALL_SIGNATURE = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_CONSTRUCT_SIGNATURE = ANNOTABLE_N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Get Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___GET_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Get Declared Index Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Declared Index Type Ref In AST</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF_IN_AST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Declared Value Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_VALUE_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Get Declared Value Type Ref In AST</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_VALUE_TYPE_REF_IN_AST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 3;
+
+	/**
+	 * The number of operations of the '<em>N4 Index Signature Declaration</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION_OPERATION_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 4;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.BindingPatternImpl <em>Binding Pattern</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16812,7 +17038,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBindingPattern()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int BINDING_PATTERN = 165;
+=======
+	int BINDING_PATTERN = 164;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The number of structural features of the '<em>Binding Pattern</em>' class.
@@ -16840,7 +17070,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getObjectBindingPattern()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int OBJECT_BINDING_PATTERN = 166;
+=======
+	int OBJECT_BINDING_PATTERN = 165;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Properties</b></em>' containment reference list.
@@ -16877,7 +17111,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getArrayBindingPattern()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ARRAY_BINDING_PATTERN = 167;
+=======
+	int ARRAY_BINDING_PATTERN = 166;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
@@ -16914,7 +17152,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBindingProperty()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int BINDING_PROPERTY = 168;
+=======
+	int BINDING_PROPERTY = 167;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
@@ -16987,7 +17229,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBindingElement()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int BINDING_ELEMENT = 169;
+=======
+	int BINDING_ELEMENT = 168;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Rest</b></em>' attribute.
@@ -17060,7 +17306,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXChild()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int JSX_CHILD = 170;
+=======
+	int JSX_CHILD = 169;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The number of structural features of the '<em>JSX Child</em>' class.
@@ -17088,7 +17338,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXElementName()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int JSX_ELEMENT_NAME = 171;
+=======
+	int JSX_ELEMENT_NAME = 170;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -17125,7 +17379,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXText()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int JSX_TEXT = 172;
+=======
+	int JSX_TEXT = 171;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The number of structural features of the '<em>JSX Text</em>' class.
@@ -17153,7 +17411,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXExpression()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int JSX_EXPRESSION = 173;
+=======
+	int JSX_EXPRESSION = 172;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -17190,7 +17452,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXAttribute()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int JSX_ATTRIBUTE = 174;
+=======
+	int JSX_ATTRIBUTE = 173;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The number of structural features of the '<em>JSX Attribute</em>' class.
@@ -17218,7 +17484,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXPropertyAttribute()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int JSX_PROPERTY_ATTRIBUTE = 175;
+=======
+	int JSX_PROPERTY_ATTRIBUTE = 174;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
@@ -17282,7 +17552,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXSpreadAttribute()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int JSX_SPREAD_ATTRIBUTE = 176;
+=======
+	int JSX_SPREAD_ATTRIBUTE = 175;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -17319,7 +17593,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXAbstractElement()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int JSX_ABSTRACT_ELEMENT = 177;
+=======
+	int JSX_ABSTRACT_ELEMENT = 176;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
@@ -17365,7 +17643,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXElement()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int JSX_ELEMENT = 178;
+=======
+	int JSX_ELEMENT = 177;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
@@ -17438,7 +17720,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXFragment()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int JSX_FRAGMENT = 179;
+=======
+	int JSX_FRAGMENT = 178;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
@@ -17484,7 +17770,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getModuleSpecifierForm()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int MODULE_SPECIFIER_FORM = 180;
+=======
+	int MODULE_SPECIFIER_FORM = 179;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}' enum.
@@ -17494,7 +17784,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVariableStatementKeyword()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int VARIABLE_STATEMENT_KEYWORD = 181;
+=======
+	int VARIABLE_STATEMENT_KEYWORD = 180;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PropertyNameKind <em>Property Name Kind</em>}' enum.
@@ -17504,7 +17798,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPropertyNameKind()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int PROPERTY_NAME_KIND = 182;
+=======
+	int PROPERTY_NAME_KIND = 181;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PostfixOperator <em>Postfix Operator</em>}' enum.
@@ -17514,7 +17812,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPostfixOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int POSTFIX_OPERATOR = 183;
+=======
+	int POSTFIX_OPERATOR = 182;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.UnaryOperator <em>Unary Operator</em>}' enum.
@@ -17524,7 +17826,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getUnaryOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int UNARY_OPERATOR = 184;
+=======
+	int UNARY_OPERATOR = 183;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.MultiplicativeOperator <em>Multiplicative Operator</em>}' enum.
@@ -17534,7 +17840,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMultiplicativeOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int MULTIPLICATIVE_OPERATOR = 185;
+=======
+	int MULTIPLICATIVE_OPERATOR = 184;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AdditiveOperator <em>Additive Operator</em>}' enum.
@@ -17544,7 +17854,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAdditiveOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ADDITIVE_OPERATOR = 186;
+=======
+	int ADDITIVE_OPERATOR = 185;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.RelationalOperator <em>Relational Operator</em>}' enum.
@@ -17554,7 +17868,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getRelationalOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int RELATIONAL_OPERATOR = 187;
+=======
+	int RELATIONAL_OPERATOR = 186;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.EqualityOperator <em>Equality Operator</em>}' enum.
@@ -17564,7 +17882,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getEqualityOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int EQUALITY_OPERATOR = 188;
+=======
+	int EQUALITY_OPERATOR = 187;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryBitwiseOperator <em>Binary Bitwise Operator</em>}' enum.
@@ -17574,7 +17896,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryBitwiseOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int BINARY_BITWISE_OPERATOR = 189;
+=======
+	int BINARY_BITWISE_OPERATOR = 188;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryLogicalOperator <em>Binary Logical Operator</em>}' enum.
@@ -17584,7 +17910,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryLogicalOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int BINARY_LOGICAL_OPERATOR = 190;
+=======
+	int BINARY_LOGICAL_OPERATOR = 189;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.ShiftOperator <em>Shift Operator</em>}' enum.
@@ -17594,7 +17924,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getShiftOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int SHIFT_OPERATOR = 191;
+=======
+	int SHIFT_OPERATOR = 190;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AssignmentOperator <em>Assignment Operator</em>}' enum.
@@ -17604,7 +17938,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAssignmentOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ASSIGNMENT_OPERATOR = 192;
+=======
+	int ASSIGNMENT_OPERATOR = 191;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.N4Modifier <em>N4 Modifier</em>}' enum.
@@ -17614,7 +17952,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4Modifier()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int N4_MODIFIER = 193;
+=======
+	int N4_MODIFIER = 192;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Expression</em>' data type.
@@ -17624,7 +17966,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfExpression()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ITERATOR_OF_EXPRESSION = 194;
+=======
+	int ITERATOR_OF_EXPRESSION = 193;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Yield Expression</em>' data type.
@@ -17634,7 +17980,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfYieldExpression()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ITERATOR_OF_YIELD_EXPRESSION = 195;
+=======
+	int ITERATOR_OF_YIELD_EXPRESSION = 194;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Statement</em>' data type.
@@ -17644,7 +17994,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfStatement()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ITERATOR_OF_STATEMENT = 196;
+=======
+	int ITERATOR_OF_STATEMENT = 195;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Return Statement</em>' data type.
@@ -17654,7 +18008,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfReturnStatement()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ITERATOR_OF_RETURN_STATEMENT = 197;
+=======
+	int ITERATOR_OF_RETURN_STATEMENT = 196;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Node Iterable</em>' data type.
@@ -17664,7 +18022,11 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getParameterizedTypeRefNodeIterable()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 198;
+=======
+	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 197;
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 
 
 	/**
@@ -23493,6 +23855,78 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4SetterDeclaration__GetDefinedTypeElement();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration <em>N4 Index Signature Declaration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>N4 Index Signature Declaration</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration
+	 * @generated
+	 */
+	EClass getN4IndexSignatureDeclaration();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRefNode <em>Declared Index Type Ref Node</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Declared Index Type Ref Node</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRefNode()
+	 * @see #getN4IndexSignatureDeclaration()
+	 * @generated
+	 */
+	EReference getN4IndexSignatureDeclaration_DeclaredIndexTypeRefNode();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredValueTypeRefNode <em>Declared Value Type Ref Node</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Declared Value Type Ref Node</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredValueTypeRefNode()
+	 * @see #getN4IndexSignatureDeclaration()
+	 * @generated
+	 */
+	EReference getN4IndexSignatureDeclaration_DeclaredValueTypeRefNode();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRef() <em>Get Declared Index Type Ref</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Declared Index Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRef()
+	 * @generated
+	 */
+	EOperation getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRef();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRefInAST() <em>Get Declared Index Type Ref In AST</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Declared Index Type Ref In AST</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRefInAST()
+	 * @generated
+	 */
+	EOperation getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRefInAST();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredValueTypeRef() <em>Get Declared Value Type Ref</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Declared Value Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredValueTypeRef()
+	 * @generated
+	 */
+	EOperation getN4IndexSignatureDeclaration__GetDeclaredValueTypeRef();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredValueTypeRefInAST() <em>Get Declared Value Type Ref In AST</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Declared Value Type Ref In AST</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredValueTypeRefInAST()
+	 * @generated
+	 */
+	EOperation getN4IndexSignatureDeclaration__GetDeclaredValueTypeRefInAST();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.BindingPattern <em>Binding Pattern</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -28902,6 +29336,64 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = eINSTANCE.getN4SetterDeclaration__GetDefinedTypeElement();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl <em>N4 Index Signature Declaration</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl
+		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4IndexSignatureDeclaration()
+		 * @generated
+		 */
+		EClass N4_INDEX_SIGNATURE_DECLARATION = eINSTANCE.getN4IndexSignatureDeclaration();
+
+		/**
+		 * The meta object literal for the '<em><b>Declared Index Type Ref Node</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE = eINSTANCE.getN4IndexSignatureDeclaration_DeclaredIndexTypeRefNode();
+
+		/**
+		 * The meta object literal for the '<em><b>Declared Value Type Ref Node</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE = eINSTANCE.getN4IndexSignatureDeclaration_DeclaredValueTypeRefNode();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Declared Index Type Ref</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF = eINSTANCE.getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Declared Index Type Ref In AST</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF_IN_AST = eINSTANCE.getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRefInAST();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Declared Value Type Ref</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_VALUE_TYPE_REF = eINSTANCE.getN4IndexSignatureDeclaration__GetDeclaredValueTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Declared Value Type Ref In AST</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_VALUE_TYPE_REF_IN_AST = eINSTANCE.getN4IndexSignatureDeclaration__GetDeclaredValueTypeRefInAST();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.BindingPatternImpl <em>Binding Pattern</em>}' class.

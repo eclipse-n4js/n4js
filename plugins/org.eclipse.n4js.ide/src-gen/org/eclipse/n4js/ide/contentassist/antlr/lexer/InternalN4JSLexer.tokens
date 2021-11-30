@@ -1,10 +1,15 @@
+<<<<<<< HEAD
 Abstract=12
+=======
+Abstract=11
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 Ampersand=91
 AmpersandAmpersand=68
 AmpersandEqualsSign=69
 As=82
 Asterisk=94
 AsteriskEqualsSign=70
+<<<<<<< HEAD
 Async=31
 Await=32
 Break=33
@@ -13,16 +18,36 @@ Catch=34
 CircumflexAccent=109
 CircumflexAccentEqualsSign=81
 Class=35
+=======
+Async=32
+Await=33
+Break=34
+Case=44
+Catch=35
+CircumflexAccent=109
+CircumflexAccentEqualsSign=81
+Class=36
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 Colon=100
 Comma=96
 CommercialAt=106
 CommercialAtCommercialAt=80
+<<<<<<< HEAD
 Const=36
 Constructor=5
 Continue=13
 Debugger=14
 Default=17
 Delete=22
+=======
+Const=37
+Constructor=5
+Continue=12
+Debugger=13
+Declare=17
+Default=18
+Delete=23
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 Do=83
 Else=45
 Enum=46
@@ -32,23 +57,39 @@ EqualsSignEqualsSignEqualsSign=57
 ExclamationMark=89
 ExclamationMarkEqualsSign=66
 ExclamationMarkEqualsSignEqualsSign=54
+<<<<<<< HEAD
 Export=23
 Extends=18
 External=15
 False=37
 Finally=19
+=======
+Export=24
+Extends=19
+External=14
+False=38
+Finally=20
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 For=58
 From=47
 FullStop=98
 FullStopFullStopFullStop=55
+<<<<<<< HEAD
 Function=16
+=======
+Function=15
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 Get=59
 GreaterThanSign=104
 HyphenMinus=97
 HyphenMinusHyphenMinus=73
 If=84
 Implements=6
+<<<<<<< HEAD
 Import=24
+=======
+Import=25
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 In=85
 Instanceof=7
 Interface=9
@@ -61,7 +102,10 @@ LessThanSignEqualsSign=76
 LessThanSignLessThanSign=75
 LessThanSignLessThanSignEqualsSign=56
 Let=60
+<<<<<<< HEAD
 Namespace=10
+=======
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 New=61
 Null=48
 Of=86
@@ -71,11 +115,19 @@ PercentSignEqualsSign=67
 PlusSign=95
 PlusSignEqualsSign=72
 PlusSignPlusSign=71
+<<<<<<< HEAD
 Private=20
 Project=21
 Promisify=8
 Protected=11
 Public=25
+=======
+Private=21
+Project=22
+Promisify=8
+Protected=10
+Public=26
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 QuestionMark=105
 QuestionMarkFullStop=78
 QuestionMarkQuestionMark=79
@@ -135,7 +187,12 @@ RULE_WHITESPACE_FRAGMENT=155
 RULE_WS=156
 RULE_ZWJ=164
 RULE_ZWNJ=163
+<<<<<<< HEAD
 Return=26
+=======
+Readonly=16
+Return=27
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 RightCurlyBracket=112
 RightParenthesis=93
 RightSquareBracket=108
@@ -143,6 +200,7 @@ Semicolon=101
 Set=63
 Solidus=99
 SolidusEqualsSign=74
+<<<<<<< HEAD
 Static=27
 Super=38
 Switch=28
@@ -150,17 +208,36 @@ Target=29
 This=43
 This_1=49
 Throw=39
+=======
+Static=28
+Super=39
+Switch=29
+Target=30
+This=49
+Throw=40
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 Tilde=113
 True=50
 Try=64
 Type=51
+<<<<<<< HEAD
 Typeof=30
 Union=40
+=======
+Typeof=31
+Union=41
+>>>>>>> 8b8567bc8 (early support for a few first constructs)
 Var=65
 VerticalLine=111
 VerticalLineEqualsSign=87
 VerticalLineVerticalLine=88
 Void=52
+<<<<<<< HEAD
 While=41
 With=53
 Yield=42
+=======
+While=42
+With=53
+Yield=43
+>>>>>>> 8b8567bc8 (early support for a few first constructs)

@@ -741,6 +741,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createN4SetterDeclarationAdapter();
 			}
 			@Override
+			public Adapter caseN4IndexSignatureDeclaration(N4IndexSignatureDeclaration object) {
+				return createN4IndexSignatureDeclarationAdapter();
+			}
+			@Override
 			public Adapter caseBindingPattern(BindingPattern object) {
 				return createBindingPatternAdapter();
 			}
@@ -3135,6 +3139,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createN4SetterDeclarationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration <em>N4 Index Signature Declaration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration
+	 * @generated
+	 */
+	public Adapter createN4IndexSignatureDeclarationAdapter() {
 		return null;
 	}
 

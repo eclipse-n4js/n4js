@@ -67,14 +67,6 @@ TypeRefWithModifiers returns StaticBaseTypeRef:
 TypeRefWithoutModifiers returns StaticBaseTypeRef:
 	  ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
 	| TypeTypeRef
-	| FunctionTypeExpressionOLD
-	| UnionTypeExpressionOLD
-	| IntersectionTypeExpressionOLD;
-
-TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
-	  ParameterizedTypeRef
-	| ArrayNTypeExpression
-	| TypeTypeRef
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
 
@@ -120,28 +112,23 @@ ThisTypeRefStructural returns ThisTypeRefStructural:
 	'this'
 	('with' TStructMemberList)?;
 
-FunctionTypeExpressionOLD returns FunctionTypeExpression:
-	{FunctionTypeExpression}
-	'{'
-	('@' 'This' '(' declaredThisType=TypeRefFunctionTypeExpression ')')?
-	'function'
-	('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
-	'(' TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
-	'}';
-
 ArrowFunctionTypeExpression returns FunctionTypeExpression:
-	=>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' Arrow) returnTypeRef=PrimaryTypeExpression;
+	=>({FunctionTypeExpression} '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) returnTypeRef=PrimaryTypeExpression;
 
 // TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard
 fragment TAnonymousFormalParameterList* :
 	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?
 ;
 
+fragment TAnonymousFormalParameterListWithDeclaredThisType* :
+	(('this' ':' declaredThisType=TypeRef | fpars+=TAnonymousFormalParameter) (',' fpars+=TAnonymousFormalParameter)*)?
+;
+
 /**
  * Used in type expressions, name is optional.
  */
 TAnonymousFormalParameter:
-	variadic?='...'? (=>(name=BindingIdentifier<Yield=false> ->ColonSepTypeRef) | typeRef=TypeRef)
+	variadic?='...'? (=>(name=BindingIdentifier<Yield=false> '?'? ->ColonSepTypeRef) | typeRef=TypeRef)
 	DefaultFormalParameter
 ;
 
@@ -149,7 +136,7 @@ TAnonymousFormalParameter:
  * Used in Types language only.
  */
 TFormalParameter:
-	variadic?='...'? name=BindingIdentifier<Yield=false> ColonSepTypeRef
+	variadic?='...'? name=BindingIdentifier<Yield=false> '?'? ColonSepTypeRef
 	DefaultFormalParameter
 ;
 
@@ -180,9 +167,12 @@ ParameterizedTypeRefNominal returns ParameterizedTypeRef:
 ;
 
 ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
-	definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
-	(-> TypeArguments)?
-	('with' TStructMemberList)?
+	( {ParameterizedTypeRefStructural} '{' (astStructuralMembers+=TStructMember (';'|',')?)*  '}' )
+|	(
+		definedTypingStrategy=TypingStrategyUseSiteOperator TypeReference
+		(-> TypeArguments)?
+		('with' TStructMemberList)?
+	)
 ;
 
 ArrayNTypeExpression returns ParameterizedTypeRef:
@@ -238,7 +228,7 @@ fragment ColonSepReturnTypeRef*:
 ;
 
 TStructField:
-	name=IdentifierName (optional?='?')? ColonSepTypeRef?
+	'readonly'? name=IdentifierName (optional?='?')? ColonSepTypeRef?
 ;
 
 TStructGetter:
@@ -338,7 +328,7 @@ N4Keyword:
 	| 'external' | 'abstract' | 'static'
 	| 'as' | 'from' | 'constructor' | 'of' | 'target'
 	| 'type' | 'union' | 'intersection'
-	| 'This' | 'Promisify'
+	| 'Promisify'
 	// future reserved keyword in [ECM15] only in modules, we add additional validation
 	| 'await'
 	// async is not a reserved keyword, i.e. it can be used as a variable name

@@ -138,6 +138,7 @@ import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4FieldAccessor;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
+import org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -1387,6 +1388,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass n4SetterDeclarationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass n4IndexSignatureDeclarationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -7318,6 +7326,76 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getN4IndexSignatureDeclaration() {
+		return n4IndexSignatureDeclarationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getN4IndexSignatureDeclaration_DeclaredIndexTypeRefNode() {
+		return (EReference)n4IndexSignatureDeclarationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getN4IndexSignatureDeclaration_DeclaredValueTypeRefNode() {
+		return (EReference)n4IndexSignatureDeclarationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRef() {
+		return n4IndexSignatureDeclarationEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRefInAST() {
+		return n4IndexSignatureDeclarationEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4IndexSignatureDeclaration__GetDeclaredValueTypeRef() {
+		return n4IndexSignatureDeclarationEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4IndexSignatureDeclaration__GetDeclaredValueTypeRefInAST() {
+		return n4IndexSignatureDeclarationEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getBindingPattern() {
 		return bindingPatternEClass;
 	}
@@ -8608,6 +8686,14 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4SetterDeclarationEClass = createEClass(N4_SETTER_DECLARATION);
 		createEOperation(n4SetterDeclarationEClass, N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT);
 
+		n4IndexSignatureDeclarationEClass = createEClass(N4_INDEX_SIGNATURE_DECLARATION);
+		createEReference(n4IndexSignatureDeclarationEClass, N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE);
+		createEReference(n4IndexSignatureDeclarationEClass, N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE);
+		createEOperation(n4IndexSignatureDeclarationEClass, N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF);
+		createEOperation(n4IndexSignatureDeclarationEClass, N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF_IN_AST);
+		createEOperation(n4IndexSignatureDeclarationEClass, N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_VALUE_TYPE_REF);
+		createEOperation(n4IndexSignatureDeclarationEClass, N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_VALUE_TYPE_REF_IN_AST);
+
 		bindingPatternEClass = createEClass(BINDING_PATTERN);
 
 		objectBindingPatternEClass = createEClass(OBJECT_BINDING_PATTERN);
@@ -8960,6 +9046,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4GetterDeclarationEClass.getESuperTypes().add(this.getN4FieldAccessor());
 		n4SetterDeclarationEClass.getESuperTypes().add(this.getSetterDeclaration());
 		n4SetterDeclarationEClass.getESuperTypes().add(this.getN4FieldAccessor());
+		n4IndexSignatureDeclarationEClass.getESuperTypes().add(this.getAnnotableN4MemberDeclaration());
 		bindingPatternEClass.getESuperTypes().add(this.getControlFlowElement());
 		objectBindingPatternEClass.getESuperTypes().add(this.getBindingPattern());
 		arrayBindingPatternEClass.getESuperTypes().add(this.getBindingPattern());
@@ -9940,6 +10027,24 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(n4SetterDeclarationEClass, N4SetterDeclaration.class, "N4SetterDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getN4SetterDeclaration__GetDefinedTypeElement(), theTypesPackage.getTMember(), "getDefinedTypeElement", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(n4IndexSignatureDeclarationEClass, N4IndexSignatureDeclaration.class, "N4IndexSignatureDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		g1 = createEGenericType(this.getTypeReferenceNode());
+		g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
+		g1.getETypeArguments().add(g2);
+		initEReference(getN4IndexSignatureDeclaration_DeclaredIndexTypeRefNode(), g1, null, "declaredIndexTypeRefNode", null, 0, 1, N4IndexSignatureDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(this.getTypeReferenceNode());
+		g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
+		g1.getETypeArguments().add(g2);
+		initEReference(getN4IndexSignatureDeclaration_DeclaredValueTypeRefNode(), g1, null, "declaredValueTypeRefNode", null, 0, 1, N4IndexSignatureDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRef(), theTypeRefsPackage.getTypeRef(), "getDeclaredIndexTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRefInAST(), theTypeRefsPackage.getTypeRef(), "getDeclaredIndexTypeRefInAST", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4IndexSignatureDeclaration__GetDeclaredValueTypeRef(), theTypeRefsPackage.getTypeRef(), "getDeclaredValueTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4IndexSignatureDeclaration__GetDeclaredValueTypeRefInAST(), theTypeRefsPackage.getTypeRef(), "getDeclaredValueTypeRefInAST", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(bindingPatternEClass, BindingPattern.class, "BindingPattern", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
