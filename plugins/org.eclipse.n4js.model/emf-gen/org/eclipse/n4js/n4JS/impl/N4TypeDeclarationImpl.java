@@ -38,6 +38,7 @@ import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDefinition;
 import org.eclipse.n4js.n4JS.NamedElement;
@@ -210,7 +211,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 */
 	@Override
 	public boolean isExternal() {
-		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
+		return (this.isDeclaredExternal() || this.isDefaultExternal());
 	}
 
 	/**
@@ -230,6 +231,16 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 */
 	@Override
 	public boolean isExported() {
+		return (this.isDeclaredExported() || this.isExportedByNamespace());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDeclaredExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
 	}
@@ -240,8 +251,25 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * @generated
 	 */
 	@Override
+	public boolean isExportedByNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent).isExported();
+		}
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isExportedAsDefault() {
-		return (this.isExported() && ((ExportDeclaration) this.eContainer()).isDefaultExport());
+		return (this.isDeclaredExported() && ((ExportDeclaration) this.eContainer()).isDefaultExport());
 	}
 
 	/**
@@ -253,11 +281,14 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	public String getExportedName() {
 		boolean _isExported = this.isExported();
 		if (_isExported) {
-			EObject _eContainer = this.eContainer();
-			final ExportDeclaration exportDecl = ((ExportDeclaration) _eContainer);
-			boolean _isDefaultExport = exportDecl.isDefaultExport();
-			if (_isDefaultExport) {
-				return "default";
+			boolean _isDeclaredExported = this.isDeclaredExported();
+			if (_isDeclaredExported) {
+				EObject _eContainer = this.eContainer();
+				final ExportDeclaration exportDecl = ((ExportDeclaration) _eContainer);
+				boolean _isDefaultExport = exportDecl.isDefaultExport();
+				if (_isDefaultExport) {
+					return "default";
+				}
 			}
 			final ExportableElement me = this;
 			String _switchResult = null;
@@ -291,6 +322,33 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 		}
 		EObject _eContainer_2 = this.eContainer();
 		return (_eContainer_2 instanceof Script);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDeclaredExternal() {
+		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDefaultExternal() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent).isExternal();
+		}
+		return false;
 	}
 
 	/**
@@ -525,12 +583,16 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 		}
 		if (baseClass == ModifiableElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.N4_TYPE_DECLARATION___IS_DECLARED_EXTERNAL;
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.N4_TYPE_DECLARATION___IS_DEFAULT_EXTERNAL;
 				default: return -1;
 			}
 		}
 		if (baseClass == ExportableElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED: return N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_DECLARED_EXPORTED: return N4JSPackage.N4_TYPE_DECLARATION___IS_DECLARED_EXPORTED;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_BY_NAMESPACE: return N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED_BY_NAMESPACE;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT: return N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT;
 				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.N4_TYPE_DECLARATION___GET_EXPORTED_NAME;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.N4_TYPE_DECLARATION___IS_TOPLEVEL;
@@ -566,12 +628,20 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 				return isHollow();
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED:
 				return isExported();
+			case N4JSPackage.N4_TYPE_DECLARATION___IS_DECLARED_EXPORTED:
+				return isDeclaredExported();
+			case N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED_BY_NAMESPACE:
+				return isExportedByNamespace();
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT:
 				return isExportedAsDefault();
 			case N4JSPackage.N4_TYPE_DECLARATION___GET_EXPORTED_NAME:
 				return getExportedName();
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_TOPLEVEL:
 				return isToplevel();
+			case N4JSPackage.N4_TYPE_DECLARATION___IS_DECLARED_EXTERNAL:
+				return isDeclaredExternal();
+			case N4JSPackage.N4_TYPE_DECLARATION___IS_DEFAULT_EXTERNAL:
+				return isDefaultExternal();
 			case N4JSPackage.N4_TYPE_DECLARATION___GET_ANNOTATIONS:
 				return getAnnotations();
 		}

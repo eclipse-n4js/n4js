@@ -45,6 +45,22 @@ public interface ExportableElement extends EObject {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
+	boolean isDeclaredExported();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isExportedByNamespace();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
 	boolean isExportedAsDefault();
 
 	/**

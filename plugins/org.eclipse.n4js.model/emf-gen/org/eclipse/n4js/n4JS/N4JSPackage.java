@@ -594,13 +594,31 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTABLE_ELEMENT___IS_EXPORTED = 0;
 
 	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTABLE_ELEMENT___IS_DECLARED_EXPORTED = 1;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTABLE_ELEMENT___IS_EXPORTED_BY_NAMESPACE = 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT = 1;
+	int EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT = 3;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -609,7 +627,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTABLE_ELEMENT___GET_EXPORTED_NAME = 2;
+	int EXPORTABLE_ELEMENT___GET_EXPORTED_NAME = 4;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -618,7 +636,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTABLE_ELEMENT___IS_TOPLEVEL = 3;
+	int EXPORTABLE_ELEMENT___IS_TOPLEVEL = 5;
 
 	/**
 	 * The number of operations of the '<em>Exportable Element</em>' class.
@@ -627,7 +645,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTABLE_ELEMENT_OPERATION_COUNT = 4;
+	int EXPORTABLE_ELEMENT_OPERATION_COUNT = 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl <em>Import Declaration</em>}' class.
@@ -1553,13 +1571,31 @@ public interface N4JSPackage extends EPackage {
 	int ANNOTATION_LIST___IS_EXPORTED = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTATION_LIST___IS_DECLARED_EXPORTED = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTATION_LIST___IS_EXPORTED_BY_NAMESPACE = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTATION_LIST___IS_EXPORTED_AS_DEFAULT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 1;
+	int ANNOTATION_LIST___IS_EXPORTED_AS_DEFAULT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -1568,7 +1604,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTATION_LIST___GET_EXPORTED_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 2;
+	int ANNOTATION_LIST___GET_EXPORTED_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -1577,7 +1613,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTATION_LIST___IS_TOPLEVEL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 3;
+	int ANNOTATION_LIST___IS_TOPLEVEL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>Annotation List</em>' class.
@@ -1586,7 +1622,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 4;
+	int ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExpressionAnnotationListImpl <em>Expression Annotation List</em>}' class.
@@ -2507,13 +2543,31 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DECLARATION___GET_ANNOTATIONS = ANNOTABLE_SCRIPT_ELEMENT___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DECLARATION___IS_DECLARED_EXTERNAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DECLARATION___IS_DEFAULT_EXTERNAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+	int FUNCTION_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Local Arguments Variable</em>' operation.
@@ -2522,7 +2576,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 2;
+	int FUNCTION_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Defined Function Or Accessor</em>' operation.
@@ -2531,7 +2585,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 5;
+	int FUNCTION_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
@@ -2540,7 +2594,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_RETURN_VALUE_OPTIONAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 6;
+	int FUNCTION_DECLARATION___IS_RETURN_VALUE_OPTIONAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Declared Return Type Ref</em>' operation.
@@ -2549,7 +2603,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_DECLARED_RETURN_TYPE_REF = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 7;
+	int FUNCTION_DECLARATION___GET_DECLARED_RETURN_TYPE_REF = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Get Declared Return Type Ref In AST</em>' operation.
@@ -2558,7 +2612,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_DECLARED_RETURN_TYPE_REF_IN_AST = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 8;
+	int FUNCTION_DECLARATION___GET_DECLARED_RETURN_TYPE_REF_IN_AST = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Async</em>' operation.
@@ -2567,7 +2621,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_ASYNC = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 9;
+	int FUNCTION_DECLARATION___IS_ASYNC = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Defined Function</em>' operation.
@@ -2576,7 +2630,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_DEFINED_FUNCTION = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 10;
+	int FUNCTION_DECLARATION___GET_DEFINED_FUNCTION = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -2585,7 +2639,25 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_EXPORTED = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 11;
+	int FUNCTION_DECLARATION___IS_EXPORTED = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 13;
+
+	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DECLARATION___IS_DECLARED_EXPORTED = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 14;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DECLARATION___IS_EXPORTED_BY_NAMESPACE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -2594,7 +2666,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_EXPORTED_AS_DEFAULT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 12;
+	int FUNCTION_DECLARATION___IS_EXPORTED_AS_DEFAULT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -2603,7 +2675,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_EXPORTED_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 13;
+	int FUNCTION_DECLARATION___GET_EXPORTED_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -2612,7 +2684,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_TOPLEVEL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 14;
+	int FUNCTION_DECLARATION___IS_TOPLEVEL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 18;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -2621,7 +2693,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 15;
+	int FUNCTION_DECLARATION___GET_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 19;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -2630,7 +2702,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_EXTERNAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 16;
+	int FUNCTION_DECLARATION___IS_EXTERNAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 20;
 
 	/**
 	 * The number of operations of the '<em>Function Declaration</em>' class.
@@ -2639,7 +2711,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 17;
+	int FUNCTION_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 21;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.FunctionExpressionImpl <em>Function Expression</em>}' class.
@@ -3812,13 +3884,31 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED = VARIABLE_STATEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_STATEMENT___IS_DECLARED_EXPORTED = VARIABLE_STATEMENT_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_BY_NAMESPACE = VARIABLE_STATEMENT_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT = VARIABLE_STATEMENT_OPERATION_COUNT + 1;
+	int EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT = VARIABLE_STATEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -3827,7 +3917,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_EXPORTED_NAME = VARIABLE_STATEMENT_OPERATION_COUNT + 2;
+	int EXPORTED_VARIABLE_STATEMENT___GET_EXPORTED_NAME = VARIABLE_STATEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -3836,7 +3926,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_TOPLEVEL = VARIABLE_STATEMENT_OPERATION_COUNT + 3;
+	int EXPORTED_VARIABLE_STATEMENT___IS_TOPLEVEL = VARIABLE_STATEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -3845,7 +3935,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 5;
+	int EXPORTED_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -3854,7 +3944,25 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 6;
+	int EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 8;
+
+	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_STATEMENT___IS_DECLARED_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 9;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_STATEMENT___IS_DEFAULT_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -3863,7 +3971,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 7;
+	int EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The number of operations of the '<em>Exported Variable Statement</em>' class.
@@ -3872,7 +3980,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT_OPERATION_COUNT = VARIABLE_STATEMENT_OPERATION_COUNT + 8;
+	int EXPORTED_VARIABLE_STATEMENT_OPERATION_COUNT = VARIABLE_STATEMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationOrBindingImpl <em>Variable Declaration Or Binding</em>}' class.
@@ -11447,13 +11555,49 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DEFINITION_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_DECLARATION___IS_DECLARED_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_DECLARATION___IS_DEFAULT_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 1;
+	int N4_TYPE_DECLARATION___IS_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_DECLARATION___IS_DECLARED_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 4;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_DECLARATION___IS_EXPORTED_BY_NAMESPACE = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -11462,7 +11606,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DEFINITION_OPERATION_COUNT + 2;
+	int N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -11471,7 +11615,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 3;
+	int N4_TYPE_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -11480,7 +11624,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_TOPLEVEL = N4_TYPE_DEFINITION_OPERATION_COUNT + 4;
+	int N4_TYPE_DECLARATION___IS_TOPLEVEL = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -11489,7 +11633,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
+	int N4_TYPE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -11498,7 +11642,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
+	int N4_TYPE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -11507,7 +11651,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
+	int N4_TYPE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The number of operations of the '<em>N4 Type Declaration</em>' class.
@@ -11516,7 +11660,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
+	int N4_TYPE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassifierDeclarationImpl <em>N4 Classifier Declaration</em>}' class.
@@ -11619,6 +11763,24 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASSIFIER_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DECLARATION___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DECLARATION___IS_DECLARED_EXTERNAL = N4_TYPE_DECLARATION___IS_DECLARED_EXTERNAL;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DECLARATION___IS_DEFAULT_EXTERNAL = N4_TYPE_DECLARATION___IS_DEFAULT_EXTERNAL;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11626,6 +11788,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_CLASSIFIER_DECLARATION___IS_EXPORTED = N4_TYPE_DECLARATION___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DECLARATION___IS_DECLARED_EXPORTED = N4_TYPE_DECLARATION___IS_DECLARED_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DECLARATION___IS_EXPORTED_BY_NAMESPACE = N4_TYPE_DECLARATION___IS_EXPORTED_BY_NAMESPACE;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -12216,13 +12396,49 @@ public interface N4JSPackage extends EPackage {
 	int N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = N4_TYPE_DEFINITION_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_NAMESPACE_DECLARATION___IS_DECLARED_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_NAMESPACE_DECLARATION___IS_DEFAULT_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 2;
+	int N4_NAMESPACE_DECLARATION___IS_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 4;
+
+	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_NAMESPACE_DECLARATION___IS_DECLARED_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_NAMESPACE_DECLARATION___IS_EXPORTED_BY_NAMESPACE = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -12231,7 +12447,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DEFINITION_OPERATION_COUNT + 3;
+	int N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -12240,7 +12456,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 4;
+	int N4_NAMESPACE_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -12249,7 +12465,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_TOPLEVEL = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
+	int N4_NAMESPACE_DECLARATION___IS_TOPLEVEL = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -12258,7 +12474,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
+	int N4_NAMESPACE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -12267,7 +12483,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
+	int N4_NAMESPACE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -12276,7 +12492,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
+	int N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
+
+	/**
+	 * The operation id for the '<em>Get All Modifiers</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_NAMESPACE_DECLARATION___GET_ALL_MODIFIERS = N4_TYPE_DEFINITION_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12285,7 +12510,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
+	int N4_NAMESPACE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 14;
 
 	/**
 	 * The number of operations of the '<em>N4 Namespace Declaration</em>' class.
@@ -12294,7 +12519,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
+	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.NamespaceElementImpl <em>Namespace Element</em>}' class.
@@ -12560,13 +12785,49 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DECLARATION___GET_ANNOTATIONS = N4_CLASS_DEFINITION_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___IS_DECLARED_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___IS_DEFAULT_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_EXPORTED = N4_CLASS_DEFINITION_OPERATION_COUNT + 1;
+	int N4_CLASS_DECLARATION___IS_EXPORTED = N4_CLASS_DEFINITION_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___IS_DECLARED_EXPORTED = N4_CLASS_DEFINITION_OPERATION_COUNT + 4;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___IS_EXPORTED_BY_NAMESPACE = N4_CLASS_DEFINITION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -12575,7 +12836,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_CLASS_DEFINITION_OPERATION_COUNT + 2;
+	int N4_CLASS_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_CLASS_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -12584,7 +12845,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___GET_EXPORTED_NAME = N4_CLASS_DEFINITION_OPERATION_COUNT + 3;
+	int N4_CLASS_DECLARATION___GET_EXPORTED_NAME = N4_CLASS_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -12593,7 +12854,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_TOPLEVEL = N4_CLASS_DEFINITION_OPERATION_COUNT + 4;
+	int N4_CLASS_DECLARATION___IS_TOPLEVEL = N4_CLASS_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -12602,7 +12863,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___GET_NAME = N4_CLASS_DEFINITION_OPERATION_COUNT + 5;
+	int N4_CLASS_DECLARATION___GET_NAME = N4_CLASS_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12611,7 +12872,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_HOLLOW = N4_CLASS_DEFINITION_OPERATION_COUNT + 6;
+	int N4_CLASS_DECLARATION___IS_HOLLOW = N4_CLASS_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -12620,7 +12881,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 7;
+	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -12629,7 +12890,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 8;
+	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 12;
 
 	/**
 	 * The number of operations of the '<em>N4 Class Declaration</em>' class.
@@ -12638,7 +12899,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 9;
+	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassExpressionImpl <em>N4 Class Expression</em>}' class.
@@ -12985,6 +13246,24 @@ public interface N4JSPackage extends EPackage {
 	int N4_INTERFACE_DECLARATION___GET_ANNOTATIONS = N4_CLASSIFIER_DECLARATION___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___IS_DECLARED_EXTERNAL = N4_CLASSIFIER_DECLARATION___IS_DECLARED_EXTERNAL;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___IS_DEFAULT_EXTERNAL = N4_CLASSIFIER_DECLARATION___IS_DEFAULT_EXTERNAL;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12992,6 +13271,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_INTERFACE_DECLARATION___IS_EXPORTED = N4_CLASSIFIER_DECLARATION___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___IS_DECLARED_EXPORTED = N4_CLASSIFIER_DECLARATION___IS_DECLARED_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___IS_EXPORTED_BY_NAMESPACE = N4_CLASSIFIER_DECLARATION___IS_EXPORTED_BY_NAMESPACE;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -13238,6 +13535,24 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DECLARATION___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___IS_DECLARED_EXTERNAL = N4_TYPE_DECLARATION___IS_DECLARED_EXTERNAL;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___IS_DEFAULT_EXTERNAL = N4_TYPE_DECLARATION___IS_DEFAULT_EXTERNAL;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13245,6 +13560,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_ENUM_DECLARATION___IS_EXPORTED = N4_TYPE_DECLARATION___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___IS_DECLARED_EXPORTED = N4_TYPE_DECLARATION___IS_DECLARED_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___IS_EXPORTED_BY_NAMESPACE = N4_TYPE_DECLARATION___IS_EXPORTED_BY_NAMESPACE;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -13474,6 +13807,24 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_ALIAS_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DECLARATION___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_ALIAS_DECLARATION___IS_DECLARED_EXTERNAL = N4_TYPE_DECLARATION___IS_DECLARED_EXTERNAL;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_ALIAS_DECLARATION___IS_DEFAULT_EXTERNAL = N4_TYPE_DECLARATION___IS_DEFAULT_EXTERNAL;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13481,6 +13832,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_TYPE_ALIAS_DECLARATION___IS_EXPORTED = N4_TYPE_DECLARATION___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Declared Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_ALIAS_DECLARATION___IS_DECLARED_EXPORTED = N4_TYPE_DECLARATION___IS_DECLARED_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_ALIAS_DECLARATION___IS_EXPORTED_BY_NAMESPACE = N4_TYPE_DECLARATION___IS_EXPORTED_BY_NAMESPACE;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -13610,13 +13979,31 @@ public interface N4JSPackage extends EPackage {
 	int MODIFIABLE_ELEMENT_FEATURE_COUNT = 1;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL = 0;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL = 1;
+
+	/**
 	 * The number of operations of the '<em>Modifiable Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODIFIABLE_ELEMENT_OPERATION_COUNT = 0;
+	int MODIFIABLE_ELEMENT_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4MemberDeclarationImpl <em>N4 Member Declaration</em>}' class.
@@ -13674,13 +14061,31 @@ public interface N4JSPackage extends EPackage {
 	int N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL = ANNOTABLE_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL = ANNOTABLE_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___GET_NAME = ANNOTABLE_ELEMENT_OPERATION_COUNT + 0;
+	int N4_MEMBER_DECLARATION___GET_NAME = ANNOTABLE_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -13689,7 +14094,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 1;
+	int N4_MEMBER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
@@ -13698,7 +14103,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 2;
+	int N4_MEMBER_DECLARATION___IS_DECLARED_ABSTRACT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -13707,7 +14112,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_ABSTRACT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 3;
+	int N4_MEMBER_DECLARATION___IS_ABSTRACT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
@@ -13716,7 +14121,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_DECLARED_STATIC = ANNOTABLE_ELEMENT_OPERATION_COUNT + 4;
+	int N4_MEMBER_DECLARATION___IS_DECLARED_STATIC = ANNOTABLE_ELEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -13725,7 +14130,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_STATIC = ANNOTABLE_ELEMENT_OPERATION_COUNT + 5;
+	int N4_MEMBER_DECLARATION___IS_STATIC = ANNOTABLE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Declared Final</em>' operation.
@@ -13734,7 +14139,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_DECLARED_FINAL = ANNOTABLE_ELEMENT_OPERATION_COUNT + 6;
+	int N4_MEMBER_DECLARATION___IS_DECLARED_FINAL = ANNOTABLE_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -13743,7 +14148,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_FINAL = ANNOTABLE_ELEMENT_OPERATION_COUNT + 7;
+	int N4_MEMBER_DECLARATION___IS_FINAL = ANNOTABLE_ELEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -13752,7 +14157,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_CONSTRUCTOR = ANNOTABLE_ELEMENT_OPERATION_COUNT + 8;
+	int N4_MEMBER_DECLARATION___IS_CONSTRUCTOR = ANNOTABLE_ELEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Call Signature</em>' operation.
@@ -13761,7 +14166,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 9;
+	int N4_MEMBER_DECLARATION___IS_CALL_SIGNATURE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Construct Signature</em>' operation.
@@ -13770,7 +14175,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 10;
+	int N4_MEMBER_DECLARATION___IS_CONSTRUCT_SIGNATURE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The number of operations of the '<em>N4 Member Declaration</em>' class.
@@ -13779,7 +14184,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_DECLARATION_OPERATION_COUNT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 11;
+	int N4_MEMBER_DECLARATION_OPERATION_COUNT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.AnnotableN4MemberDeclarationImpl <em>Annotable N4 Member Declaration</em>}' class.
@@ -13835,6 +14240,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int ANNOTABLE_N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS = N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL = N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTABLE_N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL = N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -14018,13 +14441,31 @@ public interface N4JSPackage extends EPackage {
 	int N4_MEMBER_ANNOTATION_LIST___GET_ALL_ANNOTATIONS = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_EXTERNAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_ANNOTATION_LIST___IS_DEFAULT_EXTERNAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_ABSTRACT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 4;
+	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_ABSTRACT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -14033,7 +14474,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_ABSTRACT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 5;
+	int N4_MEMBER_ANNOTATION_LIST___IS_ABSTRACT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
@@ -14042,7 +14483,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 6;
+	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -14051,7 +14492,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
+	int N4_MEMBER_ANNOTATION_LIST___IS_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Declared Final</em>' operation.
@@ -14060,7 +14501,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
+	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -14069,7 +14510,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 9;
+	int N4_MEMBER_ANNOTATION_LIST___IS_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -14078,7 +14519,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 10;
+	int N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is Call Signature</em>' operation.
@@ -14087,7 +14528,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_CALL_SIGNATURE = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 11;
+	int N4_MEMBER_ANNOTATION_LIST___IS_CALL_SIGNATURE = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Is Construct Signature</em>' operation.
@@ -14096,7 +14537,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCT_SIGNATURE = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 12;
+	int N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCT_SIGNATURE = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -14105,7 +14546,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 13;
+	int N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -14114,7 +14555,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___GET_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 14;
+	int N4_MEMBER_ANNOTATION_LIST___GET_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 16;
 
 	/**
 	 * The number of operations of the '<em>N4 Member Annotation List</em>' class.
@@ -14123,7 +14564,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 15;
+	int N4_MEMBER_ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 17;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4FieldDeclarationImpl <em>N4 Field Declaration</em>}' class.
@@ -14224,6 +14665,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_FIELD_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_DECLARATION___IS_DECLARED_EXTERNAL = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_DECLARATION___IS_DEFAULT_EXTERNAL = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL;
 
 	/**
 	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
@@ -14795,6 +15254,24 @@ public interface N4JSPackage extends EPackage {
 	int N4_METHOD_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_METHOD_DECLARATION___IS_DECLARED_EXTERNAL = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_METHOD_DECLARATION___IS_DEFAULT_EXTERNAL = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL;
+
+	/**
 	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15100,6 +15577,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_FIELD_ACCESSOR___GET_ALL_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_ACCESSOR___IS_DECLARED_EXTERNAL = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_ACCESSOR___IS_DEFAULT_EXTERNAL = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -15544,13 +16039,31 @@ public interface N4JSPackage extends EPackage {
 	int N4_GETTER_DECLARATION___GET_DEFINED_ACCESSOR = GETTER_DECLARATION___GET_DEFINED_ACCESSOR;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_GETTER_DECLARATION___IS_DECLARED_EXTERNAL = GETTER_DECLARATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_GETTER_DECLARATION___IS_DEFAULT_EXTERNAL = GETTER_DECLARATION_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_DECLARED_ABSTRACT = GETTER_DECLARATION_OPERATION_COUNT + 1;
+	int N4_GETTER_DECLARATION___IS_DECLARED_ABSTRACT = GETTER_DECLARATION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
@@ -15559,7 +16072,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_DECLARED_STATIC = GETTER_DECLARATION_OPERATION_COUNT + 3;
+	int N4_GETTER_DECLARATION___IS_DECLARED_STATIC = GETTER_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -15568,7 +16081,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_STATIC = GETTER_DECLARATION_OPERATION_COUNT + 4;
+	int N4_GETTER_DECLARATION___IS_STATIC = GETTER_DECLARATION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Declared Final</em>' operation.
@@ -15577,7 +16090,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_DECLARED_FINAL = GETTER_DECLARATION_OPERATION_COUNT + 5;
+	int N4_GETTER_DECLARATION___IS_DECLARED_FINAL = GETTER_DECLARATION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -15586,7 +16099,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_FINAL = GETTER_DECLARATION_OPERATION_COUNT + 6;
+	int N4_GETTER_DECLARATION___IS_FINAL = GETTER_DECLARATION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -15595,7 +16108,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_CONSTRUCTOR = GETTER_DECLARATION_OPERATION_COUNT + 7;
+	int N4_GETTER_DECLARATION___IS_CONSTRUCTOR = GETTER_DECLARATION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Call Signature</em>' operation.
@@ -15604,7 +16117,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_CALL_SIGNATURE = GETTER_DECLARATION_OPERATION_COUNT + 8;
+	int N4_GETTER_DECLARATION___IS_CALL_SIGNATURE = GETTER_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Construct Signature</em>' operation.
@@ -15613,7 +16126,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE = GETTER_DECLARATION_OPERATION_COUNT + 9;
+	int N4_GETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE = GETTER_DECLARATION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -15622,7 +16135,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___GET_ANNOTATIONS = GETTER_DECLARATION_OPERATION_COUNT + 10;
+	int N4_GETTER_DECLARATION___GET_ANNOTATIONS = GETTER_DECLARATION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -15631,7 +16144,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_ABSTRACT = GETTER_DECLARATION_OPERATION_COUNT + 11;
+	int N4_GETTER_DECLARATION___IS_ABSTRACT = GETTER_DECLARATION_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -15640,7 +16153,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___IS_VALID_NAME = GETTER_DECLARATION_OPERATION_COUNT + 12;
+	int N4_GETTER_DECLARATION___IS_VALID_NAME = GETTER_DECLARATION_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -15649,7 +16162,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = GETTER_DECLARATION_OPERATION_COUNT + 13;
+	int N4_GETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = GETTER_DECLARATION_OPERATION_COUNT + 15;
 
 	/**
 	 * The number of operations of the '<em>N4 Getter Declaration</em>' class.
@@ -15658,7 +16171,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_GETTER_DECLARATION_OPERATION_COUNT = GETTER_DECLARATION_OPERATION_COUNT + 14;
+	int N4_GETTER_DECLARATION_OPERATION_COUNT = GETTER_DECLARATION_OPERATION_COUNT + 16;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4SetterDeclarationImpl <em>N4 Setter Declaration</em>}' class.
@@ -15878,13 +16391,31 @@ public interface N4JSPackage extends EPackage {
 	int N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 
 	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_SETTER_DECLARATION___IS_DECLARED_EXTERNAL = SETTER_DECLARATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_SETTER_DECLARATION___IS_DEFAULT_EXTERNAL = SETTER_DECLARATION_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Is Declared Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_DECLARED_ABSTRACT = SETTER_DECLARATION_OPERATION_COUNT + 1;
+	int N4_SETTER_DECLARATION___IS_DECLARED_ABSTRACT = SETTER_DECLARATION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
@@ -15893,7 +16424,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_DECLARED_STATIC = SETTER_DECLARATION_OPERATION_COUNT + 3;
+	int N4_SETTER_DECLARATION___IS_DECLARED_STATIC = SETTER_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -15902,7 +16433,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_STATIC = SETTER_DECLARATION_OPERATION_COUNT + 4;
+	int N4_SETTER_DECLARATION___IS_STATIC = SETTER_DECLARATION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Declared Final</em>' operation.
@@ -15911,7 +16442,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_DECLARED_FINAL = SETTER_DECLARATION_OPERATION_COUNT + 5;
+	int N4_SETTER_DECLARATION___IS_DECLARED_FINAL = SETTER_DECLARATION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -15920,7 +16451,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_FINAL = SETTER_DECLARATION_OPERATION_COUNT + 6;
+	int N4_SETTER_DECLARATION___IS_FINAL = SETTER_DECLARATION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -15929,7 +16460,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_CONSTRUCTOR = SETTER_DECLARATION_OPERATION_COUNT + 7;
+	int N4_SETTER_DECLARATION___IS_CONSTRUCTOR = SETTER_DECLARATION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Call Signature</em>' operation.
@@ -15938,7 +16469,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_CALL_SIGNATURE = SETTER_DECLARATION_OPERATION_COUNT + 8;
+	int N4_SETTER_DECLARATION___IS_CALL_SIGNATURE = SETTER_DECLARATION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Construct Signature</em>' operation.
@@ -15947,7 +16478,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE = SETTER_DECLARATION_OPERATION_COUNT + 9;
+	int N4_SETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE = SETTER_DECLARATION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -15956,7 +16487,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___GET_ANNOTATIONS = SETTER_DECLARATION_OPERATION_COUNT + 10;
+	int N4_SETTER_DECLARATION___GET_ANNOTATIONS = SETTER_DECLARATION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -15965,7 +16496,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_ABSTRACT = SETTER_DECLARATION_OPERATION_COUNT + 11;
+	int N4_SETTER_DECLARATION___IS_ABSTRACT = SETTER_DECLARATION_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -15974,7 +16505,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___IS_VALID_NAME = SETTER_DECLARATION_OPERATION_COUNT + 12;
+	int N4_SETTER_DECLARATION___IS_VALID_NAME = SETTER_DECLARATION_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -15983,7 +16514,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = SETTER_DECLARATION_OPERATION_COUNT + 13;
+	int N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT = SETTER_DECLARATION_OPERATION_COUNT + 15;
 
 	/**
 	 * The number of operations of the '<em>N4 Setter Declaration</em>' class.
@@ -15992,7 +16523,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_SETTER_DECLARATION_OPERATION_COUNT = SETTER_DECLARATION_OPERATION_COUNT + 14;
+	int N4_SETTER_DECLARATION_OPERATION_COUNT = SETTER_DECLARATION_OPERATION_COUNT + 16;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.BindingPatternImpl <em>Binding Pattern</em>}' class.
@@ -17089,6 +17620,26 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getExportableElement__IsExported();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableElement#isDeclaredExported() <em>Is Declared Exported</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Declared Exported</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ExportableElement#isDeclaredExported()
+	 * @generated
+	 */
+	EOperation getExportableElement__IsDeclaredExported();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableElement#isExportedByNamespace() <em>Is Exported By Namespace</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Exported By Namespace</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ExportableElement#isExportedByNamespace()
+	 * @generated
+	 */
+	EOperation getExportableElement__IsExportedByNamespace();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableElement#isExportedAsDefault() <em>Is Exported As Default</em>}' operation.
@@ -21891,6 +22442,16 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4NamespaceDeclaration__GetAnnotations();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4NamespaceDeclaration#getAllModifiers() <em>Get All Modifiers</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get All Modifiers</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4NamespaceDeclaration#getAllModifiers()
+	 * @generated
+	 */
+	EOperation getN4NamespaceDeclaration__GetAllModifiers();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4NamespaceDeclaration#isHollow() <em>Is Hollow</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -22146,6 +22707,26 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getModifiableElement_DeclaredModifiers();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ModifiableElement#isDeclaredExternal() <em>Is Declared External</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Declared External</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ModifiableElement#isDeclaredExternal()
+	 * @generated
+	 */
+	EOperation getModifiableElement__IsDeclaredExternal();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ModifiableElement#isDefaultExternal() <em>Is Default External</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Default External</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ModifiableElement#isDefaultExternal()
+	 * @generated
+	 */
+	EOperation getModifiableElement__IsDefaultExternal();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4MemberDeclaration <em>N4 Member Declaration</em>}'.
@@ -23376,6 +23957,22 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation EXPORTABLE_ELEMENT___IS_EXPORTED = eINSTANCE.getExportableElement__IsExported();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Declared Exported</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPORTABLE_ELEMENT___IS_DECLARED_EXPORTED = eINSTANCE.getExportableElement__IsDeclaredExported();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Exported By Namespace</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPORTABLE_ELEMENT___IS_EXPORTED_BY_NAMESPACE = eINSTANCE.getExportableElement__IsExportedByNamespace();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Exported As Default</b></em>' operation.
@@ -27356,6 +27953,14 @@ public interface N4JSPackage extends EPackage {
 		EOperation N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = eINSTANCE.getN4NamespaceDeclaration__GetAnnotations();
 
 		/**
+		 * The meta object literal for the '<em><b>Get All Modifiers</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_NAMESPACE_DECLARATION___GET_ALL_MODIFIERS = eINSTANCE.getN4NamespaceDeclaration__GetAllModifiers();
+
+		/**
 		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -27570,6 +28175,22 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute MODIFIABLE_ELEMENT__DECLARED_MODIFIERS = eINSTANCE.getModifiableElement_DeclaredModifiers();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Declared External</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL = eINSTANCE.getModifiableElement__IsDeclaredExternal();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Default External</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL = eINSTANCE.getModifiableElement__IsDefaultExternal();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4MemberDeclarationImpl <em>N4 Member Declaration</em>}' class.

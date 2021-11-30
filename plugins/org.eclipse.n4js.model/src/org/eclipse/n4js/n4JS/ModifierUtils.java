@@ -16,8 +16,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.nodemodel.ILeafNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -33,16 +36,30 @@ public class ModifierUtils {
 	/**
 	 * Checks if the given modifier is a legal modifier for AST nodes of type 'astNodeType'.
 	 */
-	public static final boolean isValid(EClass astNodeType, N4Modifier modifier) {
+	public static final boolean isValid(ModifiableElement elem, N4Modifier modifier) {
+		EClass astNodeType = elem.eClass();
 		switch (modifier) {
 		case PUBLIC:
 		case PROJECT:
 			return isN4TypeDeclaration(astNodeType)
+					|| isNamespaceDeclaration(astNodeType)
 					|| isN4MemberDeclaration(astNodeType)
 					|| isFunctionDeclaration(astNodeType)
 					|| isExportedVariableStatement(astNodeType);
-		case PROTECTED:
 		case PRIVATE:
+			if (isN4MemberDeclaration(astNodeType)) {
+				return true;
+			}
+			if (elem.eContainer() instanceof N4NamespaceDeclaration &&
+					(isN4TypeDeclaration(astNodeType)
+							|| isNamespaceDeclaration(astNodeType)
+							|| isFunctionDeclaration(astNodeType)
+							|| isExportedVariableStatement(astNodeType))) {
+
+				return true;
+			}
+			return false;
+		case PROTECTED:
 			return isN4MemberDeclaration(astNodeType);
 		case EXTERNAL:
 			return isN4TypeDeclaration(astNodeType)
@@ -59,6 +76,33 @@ public class ModifierUtils {
 			// note: 'const' is allowed for variables as well, but in that case it
 			// is not a modifier but a VariableStatementKeyword (see n4js.xtext)
 			return isN4FieldDeclaration(astNodeType);
+		default:
+			return false;
+		}
+	}
+
+	/** Returns true iff the given modifier is obsolete due by being equal to the default modifier. */
+	public static final boolean isObsolete(ModifiableElement elem, N4Modifier modifier) {
+		switch (modifier) {
+		case PUBLIC:
+		case PROJECT:
+		case PRIVATE:
+		case PROTECTED:
+			EClass astNodeType = elem.eClass();
+			if (isTypeDefiningElement(astNodeType)) {
+				TypeDefiningElement typeDefElem = (TypeDefiningElement) elem;
+				Type definedType = typeDefElem.getDefinedType();
+				if (isAccessibleTypeElement(definedType.eClass())) {
+					AccessibleTypeElement ate = (AccessibleTypeElement) definedType;
+					return ate.getDeclaredTypeAccessModifier() == ate.getDefaultTypeAccessModifier();
+				}
+			}
+			return isN4MemberDeclaration(astNodeType);
+		case EXTERNAL:
+			return elem.isDeclaredExternal() && elem.isDefaultExternal();
+		case ABSTRACT:
+		case STATIC:
+		case CONST:
 		default:
 			return false;
 		}
@@ -143,6 +187,10 @@ public class ModifierUtils {
 
 	// the following methods are used only to improve readability if #isValid() above
 
+	private static final boolean isTypeDefiningElement(EClass astNodeType) {
+		return N4JSPackage.eINSTANCE.getTypeDefiningElement().isSuperTypeOf(astNodeType);
+	}
+
 	private static final boolean isN4TypeDeclaration(EClass astNodeType) {
 		return N4JSPackage.eINSTANCE.getN4TypeDeclaration().isSuperTypeOf(astNodeType);
 	}
@@ -177,5 +225,9 @@ public class ModifierUtils {
 
 	private static final boolean isN4MethodDeclaration(EClass astNodeType) {
 		return N4JSPackage.eINSTANCE.getN4MethodDeclaration().isSuperTypeOf(astNodeType);
+	}
+
+	private static final boolean isAccessibleTypeElement(EClass astNodeType) {
+		return TypesPackage.eINSTANCE.getAccessibleTypeElement().isSuperTypeOf(astNodeType);
 	}
 }

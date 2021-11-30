@@ -44,6 +44,7 @@ public class N4JSNamespaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 		namespaceType.setProvidedByRuntime(n4Namespace, preLinkingPhase)
 
 		namespaceType.astElement = n4Namespace
+		namespaceType.exportedName = n4Namespace.exportedName;
 
 		n4Namespace.definedType = namespaceType
 

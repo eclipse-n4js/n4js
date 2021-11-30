@@ -94,6 +94,14 @@ public interface N4NamespaceDeclaration extends N4TypeDefinition, NamespaceEleme
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
+	EList<N4Modifier> getAllModifiers();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
 	boolean isHollow();
 
 } // N4NamespaceDeclaration

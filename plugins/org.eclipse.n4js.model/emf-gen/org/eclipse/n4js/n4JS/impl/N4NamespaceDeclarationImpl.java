@@ -10,13 +10,17 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
@@ -184,7 +188,7 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 */
 	@Override
 	public boolean isExternal() {
-		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
+		return (this.isDeclaredExternal() || this.isDefaultExternal());
 	}
 
 	/**
@@ -195,6 +199,25 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	@Override
 	public EList<Annotation> getAnnotations() {
 		return XcoreCollectionLiterals.<Annotation>emptyEList();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<N4Modifier> getAllModifiers() {
+		final HashSet<N4Modifier> allModifiers = new HashSet<N4Modifier>();
+		EObject _eContainer = this.eContainer();
+		if ((_eContainer instanceof N4NamespaceDeclaration)) {
+			EObject _eContainer_1 = this.eContainer();
+			final EList<N4Modifier> parentModifiers = ((N4NamespaceDeclaration) _eContainer_1).getAllModifiers();
+			Iterables.<N4Modifier>addAll(allModifiers, parentModifiers);
+		}
+		EList<N4Modifier> _declaredModifiers = this.getDeclaredModifiers();
+		Iterables.<N4Modifier>addAll(allModifiers, _declaredModifiers);
+		return new BasicEList<N4Modifier>(allModifiers);
 	}
 
 	/**
@@ -220,6 +243,16 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 */
 	@Override
 	public boolean isExported() {
+		return (this.isDeclaredExported() || this.isExportedByNamespace());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDeclaredExported() {
 		EObject _eContainer = this.eContainer();
 		return (_eContainer instanceof ExportDeclaration);
 	}
@@ -230,8 +263,25 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 * @generated
 	 */
 	@Override
+	public boolean isExportedByNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent).isExported();
+		}
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isExportedAsDefault() {
-		return (this.isExported() && ((ExportDeclaration) this.eContainer()).isDefaultExport());
+		return (this.isDeclaredExported() && ((ExportDeclaration) this.eContainer()).isDefaultExport());
 	}
 
 	/**
@@ -243,11 +293,14 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	public String getExportedName() {
 		boolean _isExported = this.isExported();
 		if (_isExported) {
-			EObject _eContainer = this.eContainer();
-			final ExportDeclaration exportDecl = ((ExportDeclaration) _eContainer);
-			boolean _isDefaultExport = exportDecl.isDefaultExport();
-			if (_isDefaultExport) {
-				return "default";
+			boolean _isDeclaredExported = this.isDeclaredExported();
+			if (_isDeclaredExported) {
+				EObject _eContainer = this.eContainer();
+				final ExportDeclaration exportDecl = ((ExportDeclaration) _eContainer);
+				boolean _isDefaultExport = exportDecl.isDefaultExport();
+				if (_isDefaultExport) {
+					return "default";
+				}
 			}
 			final ExportableElement me = this;
 			String _switchResult = null;
@@ -281,6 +334,33 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 		}
 		EObject _eContainer_2 = this.eContainer();
 		return (_eContainer_2 instanceof Script);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDeclaredExternal() {
+		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDefaultExternal() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent).isExternal();
+		}
+		return false;
 	}
 
 	/**
@@ -508,12 +588,16 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 		}
 		if (baseClass == ModifiableElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DECLARED_EXTERNAL;
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DEFAULT_EXTERNAL;
 				default: return -1;
 			}
 		}
 		if (baseClass == ExportableElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_DECLARED_EXPORTED: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DECLARED_EXPORTED;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_BY_NAMESPACE: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED_BY_NAMESPACE;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT;
 				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_EXPORTED_NAME;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_TOPLEVEL;
@@ -541,16 +625,26 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				return isExternal();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS:
 				return getAnnotations();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_ALL_MODIFIERS:
+				return getAllModifiers();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW:
 				return isHollow();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED:
 				return isExported();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DECLARED_EXPORTED:
+				return isDeclaredExported();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED_BY_NAMESPACE:
+				return isExportedByNamespace();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT:
 				return isExportedAsDefault();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_EXPORTED_NAME:
 				return getExportedName();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_TOPLEVEL:
 				return isToplevel();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DECLARED_EXTERNAL:
+				return isDeclaredExternal();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DEFAULT_EXTERNAL:
+				return isDefaultExternal();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS:
 				return appliesOnlyToBlockScopedElements();
 		}

@@ -10,17 +10,22 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 
+import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
@@ -86,6 +91,33 @@ public abstract class ModifiableElementImpl extends ProxyResolvingEObjectImpl im
 	 * @generated
 	 */
 	@Override
+	public boolean isDeclaredExternal() {
+		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDefaultExternal() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent).isExternal();
+		}
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case N4JSPackage.MODIFIABLE_ELEMENT__DECLARED_MODIFIERS:
@@ -138,6 +170,22 @@ public abstract class ModifiableElementImpl extends ProxyResolvingEObjectImpl im
 				return declaredModifiers != null && !declaredModifiers.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL:
+				return isDeclaredExternal();
+			case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL:
+				return isDefaultExternal();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

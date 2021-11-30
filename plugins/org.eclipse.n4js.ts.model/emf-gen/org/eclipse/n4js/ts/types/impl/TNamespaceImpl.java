@@ -350,6 +350,24 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 		TypeAccessModifier _declaredTypeAccessModifier = this.getDeclaredTypeAccessModifier();
 		boolean _equals = Objects.equal(_declaredTypeAccessModifier, TypeAccessModifier.UNDEFINED);
 		if (_equals) {
+			return this.getDefaultTypeAccessModifier();
+		}
+		return this.getDeclaredTypeAccessModifier();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeAccessModifier getDefaultTypeAccessModifier() {
+		EObject _eContainer = this.eContainer();
+		if ((_eContainer instanceof TNamespace)) {
+			EObject _eContainer_1 = this.eContainer();
+			return ((TNamespace) _eContainer_1).getTypeAccessModifier();
+		}
+		else {
 			boolean _isExported = this.isExported();
 			if (_isExported) {
 				return TypeAccessModifier.PROJECT;
@@ -358,7 +376,6 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 				return TypeAccessModifier.PRIVATE;
 			}
 		}
-		return this.getDeclaredTypeAccessModifier();
 	}
 
 	/**
@@ -604,6 +621,7 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 			switch (baseOperationID) {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TNAMESPACE___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TNAMESPACE___GET_TYPE_ACCESS_MODIFIER;
+				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER: return TypesPackage.TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED: return TypesPackage.TNAMESPACE___IS_EXPORTED;
 				default: return -1;
 			}
@@ -628,6 +646,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 				return isProvidedByRuntime();
 			case TypesPackage.TNAMESPACE___GET_TYPE_ACCESS_MODIFIER:
 				return getTypeAccessModifier();
+			case TypesPackage.TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER:
+				return getDefaultTypeAccessModifier();
 			case TypesPackage.TNAMESPACE___GET_CONTAINING_MODULE:
 				return getContainingModule();
 		}

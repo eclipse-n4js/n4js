@@ -50,4 +50,20 @@ public interface ModifiableElement extends EObject {
 	 */
 	EList<N4Modifier> getDeclaredModifiers();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isDeclaredExternal();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isDefaultExternal();
+
 } // ModifiableElement

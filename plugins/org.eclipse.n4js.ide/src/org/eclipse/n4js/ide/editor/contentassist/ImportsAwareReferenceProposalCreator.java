@@ -184,6 +184,9 @@ public class ImportsAwareReferenceProposalCreator {
 		if (TypesPackage.eINSTANCE.getModuleNamespaceVirtualType() == eClass) {
 			return ContentAssistEntry.KIND_COLOR;
 		}
+		if (TypesPackage.eINSTANCE.getTNamespace() == eClass) {
+			return ContentAssistEntry.KIND_COLOR;
+		}
 		return ContentAssistEntry.KIND_TEXT;
 	}
 }

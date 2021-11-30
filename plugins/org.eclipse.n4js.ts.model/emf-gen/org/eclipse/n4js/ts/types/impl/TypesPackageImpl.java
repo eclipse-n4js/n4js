@@ -1650,8 +1650,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getAccessibleTypeElement__IsExported() {
+	public EOperation getAccessibleTypeElement__GetDefaultTypeAccessModifier() {
 		return accessibleTypeElementEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getAccessibleTypeElement__IsExported() {
+		return accessibleTypeElementEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -3662,6 +3672,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT__DECLARED_PROVIDED_BY_RUNTIME);
 		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME);
 		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER);
+		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER);
 		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED);
 
 		containerTypeEClass = createEClass(CONTAINER_TYPE);
@@ -4184,6 +4195,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getAccessibleTypeElement__IsProvidedByRuntime(), theEcorePackage.getEBoolean(), "isProvidedByRuntime", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getAccessibleTypeElement__GetTypeAccessModifier(), this.getTypeAccessModifier(), "getTypeAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getAccessibleTypeElement__GetDefaultTypeAccessModifier(), this.getTypeAccessModifier(), "getDefaultTypeAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getAccessibleTypeElement__IsExported(), theEcorePackage.getEBoolean(), "isExported", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

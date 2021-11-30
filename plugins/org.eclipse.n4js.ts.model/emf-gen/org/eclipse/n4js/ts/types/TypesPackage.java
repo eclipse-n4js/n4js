@@ -2248,13 +2248,22 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION___GET_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___GET_DEFAULT_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 2;
+	int TFUNCTION___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
@@ -2263,7 +2272,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = GENERIC_TYPE_OPERATION_COUNT + 3;
+	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = GENERIC_TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Call Signature</em>' operation.
@@ -2272,7 +2281,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_CALL_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 4;
+	int TFUNCTION___IS_CALL_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Construct Signature</em>' operation.
@@ -2281,7 +2290,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_CONSTRUCT_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 5;
+	int TFUNCTION___IS_CONSTRUCT_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -2290,7 +2299,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 6;
+	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Function As String</em>' operation.
@@ -2299,7 +2308,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 7;
+	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -2308,7 +2317,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 8;
+	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>TFunction</em>' class.
@@ -2317,7 +2326,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 9;
+	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AccessibleTypeElementImpl <em>Accessible Type Element</em>}' class.
@@ -2375,13 +2384,22 @@ public interface TypesPackage extends EPackage {
 	int ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER = 1;
 
 	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER = 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED = 2;
+	int ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED = 3;
 
 	/**
 	 * The number of operations of the '<em>Accessible Type Element</em>' class.
@@ -2390,7 +2408,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ACCESSIBLE_TYPE_ELEMENT_OPERATION_COUNT = 3;
+	int ACCESSIBLE_TYPE_ELEMENT_OPERATION_COUNT = 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl <em>Container Type</em>}' class.
@@ -2935,13 +2953,22 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_EXPORTED = TYPE_OPERATION_COUNT + 3;
+	int TNAMESPACE___IS_EXPORTED = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>TNamespace</em>' class.
@@ -2950,7 +2977,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 4;
+	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceElementImpl <em>TNamespace Element</em>}' class.
@@ -5557,13 +5584,22 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER___GET_TYPE_ACCESS_MODIFIER = TCLASSIFIER_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TCLASSIFIER_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER___IS_EXPORTED = TCLASSIFIER_OPERATION_COUNT + 2;
+	int TN4_CLASSIFIER___IS_EXPORTED = TCLASSIFIER_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -5572,7 +5608,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER___GET_ELEMENT_TYPE = TCLASSIFIER_OPERATION_COUNT + 3;
+	int TN4_CLASSIFIER___GET_ELEMENT_TYPE = TCLASSIFIER_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -5581,7 +5617,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER___IS_POLYFILL = TCLASSIFIER_OPERATION_COUNT + 4;
+	int TN4_CLASSIFIER___IS_POLYFILL = TCLASSIFIER_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>TN4 Classifier</em>' class.
@@ -5590,7 +5626,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER_OPERATION_COUNT = TCLASSIFIER_OPERATION_COUNT + 5;
+	int TN4_CLASSIFIER_OPERATION_COUNT = TCLASSIFIER_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TClassImpl <em>TClass</em>}' class.
@@ -5979,6 +6015,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASS___GET_TYPE_ACCESS_MODIFIER = TN4_CLASSIFIER___GET_TYPE_ACCESS_MODIFIER;
+
+	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TN4_CLASSIFIER___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -6412,6 +6457,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE___GET_TYPE_ACCESS_MODIFIER = TN4_CLASSIFIER___GET_TYPE_ACCESS_MODIFIER;
+
+	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TN4_CLASSIFIER___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -7759,6 +7813,15 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_TYPE_ACCESS_MODIFIER = TFUNCTION___GET_TYPE_ACCESS_MODIFIER;
 
 	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TFUNCTION___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8370,6 +8433,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___GET_TYPE_ACCESS_MODIFIER = TMETHOD___GET_TYPE_ACCESS_MODIFIER;
+
+	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TMETHOD___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -11667,13 +11739,22 @@ public interface TypesPackage extends EPackage {
 	int TENUM___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM___IS_EXPORTED = TYPE_OPERATION_COUNT + 2;
+	int TENUM___IS_EXPORTED = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>TEnum</em>' class.
@@ -11682,7 +11763,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM_OPERATION_COUNT = TYPE_OPERATION_COUNT + 3;
+	int TENUM_OPERATION_COUNT = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.SyntaxRelatedTElementImpl <em>Syntax Related TElement</em>}' class.
@@ -12012,13 +12093,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE_ALIAS___GET_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___GET_DEFAULT_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 2;
+	int TYPE_ALIAS___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -12027,7 +12117,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_ALIAS = GENERIC_TYPE_OPERATION_COUNT + 3;
+	int TYPE_ALIAS___IS_ALIAS = GENERIC_TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12036,7 +12126,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_HOLLOW = GENERIC_TYPE_OPERATION_COUNT + 4;
+	int TYPE_ALIAS___IS_HOLLOW = GENERIC_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>Type Alias</em>' class.
@@ -12045,7 +12135,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 5;
+	int TYPE_ALIAS_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TConstableElementImpl <em>TConstable Element</em>}' class.
@@ -12248,13 +12338,22 @@ public interface TypesPackage extends EPackage {
 	int TVARIABLE___GET_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_EXPORTED = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
+	int TVARIABLE___IS_EXPORTED = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12263,7 +12362,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_HOLLOW = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TVARIABLE___IS_HOLLOW = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Variable As String</em>' operation.
@@ -12272,7 +12371,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_VARIABLE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TVARIABLE___GET_VARIABLE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>TVariable</em>' class.
@@ -12281,7 +12380,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
+	int TVARIABLE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypingStrategy <em>Typing Strategy</em>}' enum.
@@ -13441,6 +13540,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getAccessibleTypeElement__GetTypeAccessModifier();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AccessibleTypeElement#getDefaultTypeAccessModifier() <em>Get Default Type Access Modifier</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Default Type Access Modifier</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.AccessibleTypeElement#getDefaultTypeAccessModifier()
+	 * @generated
+	 */
+	EOperation getAccessibleTypeElement__GetDefaultTypeAccessModifier();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AccessibleTypeElement#isExported() <em>Is Exported</em>}' operation.
@@ -16244,6 +16353,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER = eINSTANCE.getAccessibleTypeElement__GetTypeAccessModifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Default Type Access Modifier</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER = eINSTANCE.getAccessibleTypeElement__GetDefaultTypeAccessModifier();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Exported</b></em>' operation.

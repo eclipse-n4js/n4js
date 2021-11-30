@@ -16,11 +16,13 @@
 
 
 // XPECT noerrors -->
-export external namespace NSC4 { 
+export external namespace NSC4 {
     export const c1;
     export var v1;
     export let l1;
+    export function F1():void {}
     const c2;
     var v2;
     let l2;
+    function F2():void {}
 }

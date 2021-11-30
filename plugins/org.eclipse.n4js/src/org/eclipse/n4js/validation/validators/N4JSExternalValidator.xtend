@@ -323,7 +323,6 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value,
 			CLF_EXT_PROVIDED_BY_RUNTIME_IN_RUNTIME_TYPE)
 		return false;
-
 	}
 
 	def private validateNoObservableAtClassifier(ExportDeclaration ed, N4ClassifierDeclaration declaration,
