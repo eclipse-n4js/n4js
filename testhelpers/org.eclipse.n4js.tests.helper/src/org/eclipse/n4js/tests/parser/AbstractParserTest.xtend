@@ -17,12 +17,13 @@ import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ParenExpression
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.validation.JavaScriptVariant
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.junit.Assert
 import org.junit.runner.RunWith
-import org.eclipse.n4js.n4JS.Script
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -59,6 +60,19 @@ public abstract class AbstractParserTest extends Assert {
 
 	protected def parseN4jsWithError(CharSequence js) {
 		val script = js.parseN4js
+		val errors = script.eResource.errors;
+		assertFalse(errors.toString, errors.empty)
+		return script
+	}
+
+	protected def Script parseN4jsdSuccessfully(CharSequence js) {
+		val script = js.parse(JavaScriptVariant.external)
+		assertTrue(script.eResource.errors.join('\n') [ line + ': ' + message] , script.eResource.errors.empty)
+		return script
+	}
+
+	protected def parseN4jsdWithError(CharSequence js) {
+		val script = js.parse(JavaScriptVariant.external)
 		val errors = script.eResource.errors;
 		assertFalse(errors.toString, errors.empty)
 		return script
