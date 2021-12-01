@@ -33,7 +33,7 @@ package org.eclipse.n4js.n4JS;
  * @model
  * @generated
  */
-public interface FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Statement, FunctionDefinition, GenericDeclaration, ExportableElement, NamedElement {
+public interface FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Statement, FunctionDefinition, GenericDeclaration, ExportableElement, NamedElement, NamespaceElement {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

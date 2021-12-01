@@ -19,8 +19,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
-
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Namespace Element</b></em>'.
@@ -28,7 +26,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  *
  * @generated
  */
-public class NamespaceElementImpl extends ProxyResolvingEObjectImpl implements NamespaceElement {
+public class NamespaceElementImpl extends ScriptElementImpl implements NamespaceElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

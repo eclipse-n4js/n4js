@@ -157,7 +157,7 @@ ruleNamespaceElement:
 				RULE_IDENTIFIER
 			)
 			)=>
-			ruleAnnotatedScriptElement
+			ruleAnnotatedNamespaceElement
 		)
 		    |
 		(
@@ -246,7 +246,7 @@ norm1_NamespaceElement:
 				RULE_IDENTIFIER
 			)
 			)=>
-			ruleAnnotatedScriptElement
+			ruleAnnotatedNamespaceElement
 		)
 		    |
 		(
@@ -341,6 +341,79 @@ ruleAnnotatedScriptElement:
 		    |
 		ruleImportDeclarationImpl
 		    |
+		(
+			(ruleN4Modifier
+			*
+			ruleAsyncNoTrailingLineBreak
+			'function'
+			)=>
+			ruleN4Modifier
+			*
+			ruleAsyncNoTrailingLineBreak
+			(
+				('function')=>
+				ruleFunctionImpl
+			)
+		)
+		    |
+		(
+			ruleN4Modifier
+			*
+			'class'
+			ruleTypingStrategyDefSiteOperator
+			?
+			ruleBindingIdentifier
+			ruleTypeParameters?
+			ruleClassExtendsImplements?
+			    |
+			ruleN4Modifier
+			*
+			'interface'
+			ruleTypingStrategyDefSiteOperator
+			?
+			ruleBindingIdentifier
+			ruleTypeParameters?
+			ruleInterfaceExtendsList?
+		)
+		ruleMembers
+		    |
+		ruleN4Modifier
+		*
+		'enum'
+		ruleBindingIdentifier
+		'{'
+		ruleN4EnumLiteral
+		(
+			','
+			ruleN4EnumLiteral
+		)*
+		'}'
+		    |
+		ruleN4ModifierWithoutConst
+		*
+		'type'
+		ruleBindingIdentifier
+		ruleTypeParameters?
+		'='
+		ruleTypeReferenceNode
+	)
+;
+
+// Rule AnnotatedNamespaceElement
+ruleAnnotatedNamespaceElement:
+	(
+		('@'
+		(
+			'This'
+			    |
+			'target'
+			    |
+			RULE_IDENTIFIER
+		)
+		)=>
+		ruleAnnotationList
+	)
+	(
 		(
 			(ruleN4Modifier
 			*

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -30,6 +32,7 @@ import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 
 import org.eclipse.n4js.ts.types.TModule;
 
@@ -346,6 +349,16 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return this.getExportedElement().isHollow();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.EXPORT_DECLARATION__EXPORTED_ELEMENT:
@@ -467,6 +480,36 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return reexportedFrom != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORT_DECLARATION___IS_HOLLOW;
+				default: return -1;
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.EXPORT_DECLARATION___IS_HOLLOW:
+				return isHollow();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

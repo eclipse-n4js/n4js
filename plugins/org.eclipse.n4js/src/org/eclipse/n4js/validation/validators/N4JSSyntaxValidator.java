@@ -166,7 +166,13 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
-	/***/
+	/**
+	 * Checks whether
+	 * <ul>
+	 * <li/>the keyword 'export' is inherited from containing namespace and hence obsolete
+	 * <li/>an element within a non-exported namespace is exported and hence incorrect
+	 * </ul>
+	 */
 	@Check
 	public void checkObsoleteExportedModifier(ExportDeclaration element) {
 		if (element.eContainer() instanceof N4NamespaceDeclaration) {

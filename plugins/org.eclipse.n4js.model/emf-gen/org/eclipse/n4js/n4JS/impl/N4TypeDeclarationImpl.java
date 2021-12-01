@@ -596,6 +596,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT: return N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT;
 				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.N4_TYPE_DECLARATION___GET_EXPORTED_NAME;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.N4_TYPE_DECLARATION___IS_TOPLEVEL;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_TYPE_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
 		}

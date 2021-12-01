@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
@@ -227,6 +228,12 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == ExportableElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_INTERFACE_DECLARATION___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_INTERFACE_DECLARATION___IS_HOLLOW;

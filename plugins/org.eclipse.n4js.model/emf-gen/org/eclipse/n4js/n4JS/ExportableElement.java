@@ -85,4 +85,12 @@ public interface ExportableElement extends EObject {
 	 */
 	boolean isToplevel();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isHollow();
+
 } // ExportableElement

@@ -114,13 +114,18 @@ abstract class ScriptElement {
 // ****************************************************************************************************
 // Export and Import
 // ****************************************************************************************************
-class ExportDeclaration extends AnnotableScriptElement {
+class ExportDeclaration extends AnnotableScriptElement, NamespaceElement {
 	contains ExportableElement exportedElement
 	contains Expression defaultExportedExpression
 	contains ExportSpecifier[] namedExports
 	boolean wildcardExport
 	boolean defaultExport
 	refers TModule reexportedFrom
+	
+	
+	op boolean isHollow() {
+		return exportedElement.isHollow();
+	}
 }
 
 class ExportSpecifier {
@@ -187,6 +192,10 @@ abstract class ExportableElement {
 			return eContainer.eContainer instanceof Script
 		}
 		return eContainer instanceof Script;
+	}
+	
+	op boolean isHollow() {
+		return false;
 	}
 }
 
@@ -467,7 +476,7 @@ abstract class AbstractAnnotationList {
  * This allows to handle syntax errors in the input file gracefully while
  * being able to left factor the grammar to make it parseable.
  */
-class AnnotationList extends AbstractAnnotationList, ScriptElement, Statement, ExportableElement {
+class AnnotationList extends AbstractAnnotationList, Statement, ExportableElement, NamespaceElement {
 }
 
 /*
@@ -682,7 +691,7 @@ abstract class FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEleme
  * Function declarations should only be contained in the script or functions, that is, they should not be nested in blocks.
  * This is ensured by the ASTStructureValidator.
  */
-class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Statement, FunctionDefinition, GenericDeclaration, ExportableElement, NamedElement {
+class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Statement, FunctionDefinition, GenericDeclaration, ExportableElement, NamedElement, NamespaceElement {
 	/*
 	 * Function declarations are not treated as identifiable elements, as the binding should
 	 * refer to the inferred TFunction rather than this declaration. The name is mandatory.
@@ -2154,9 +2163,9 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 }
 
 
-class N4NamespaceDeclaration extends N4TypeDefinition, NamespaceElement, VariableEnvironmentElement, ScriptElement, ModifiableElement, ExportableElement, NamedElement {
+class N4NamespaceDeclaration extends N4TypeDefinition, NamespaceElement, VariableEnvironmentElement, ModifiableElement, ExportableElement, NamedElement {
 	String name
-	contains ScriptElement[] ownedElementsRaw
+	contains NamespaceElement[] ownedElementsRaw
 	
 	/**
 	 * Returns true if type is declared as external.
@@ -2172,26 +2181,13 @@ class N4NamespaceDeclaration extends N4TypeDefinition, NamespaceElement, Variabl
 		emptyEList
 	}
 	
-	op N4Modifier[] getAllModifiers() {
-		val allModifiers = new HashSet<N4Modifier>();
-		if (eContainer instanceof N4NamespaceDeclaration) {
-			val parentModifiers = (eContainer as N4NamespaceDeclaration).getAllModifiers();
-			allModifiers += parentModifiers;
-		}
-		allModifiers += getDeclaredModifiers();
-		return new BasicEList(allModifiers);
-	}
-	
 	op boolean isHollow() {
-		val hollow = ownedElementsRaw.forall[
-			(it instanceof N4NamespaceDeclaration && (it as N4NamespaceDeclaration).isHollow)
-			|| (it instanceof N4TypeDeclaration && (it as N4TypeDeclaration).isHollow)
-		];
+		val hollow = ownedElementsRaw.forall[isHollow];
 		return hollow
 	}
 }
 
-class NamespaceElement {
+class NamespaceElement extends ScriptElement {
 	op boolean isHollow() {
 		return false;
 	}

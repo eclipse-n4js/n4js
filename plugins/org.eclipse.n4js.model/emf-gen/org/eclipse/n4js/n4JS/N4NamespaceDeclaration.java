@@ -29,7 +29,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface N4NamespaceDeclaration extends N4TypeDefinition, NamespaceElement, VariableEnvironmentElement, ScriptElement, ModifiableElement, ExportableElement, NamedElement {
+public interface N4NamespaceDeclaration extends N4TypeDefinition, NamespaceElement, VariableEnvironmentElement, ModifiableElement, ExportableElement, NamedElement {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -54,7 +54,7 @@ public interface N4NamespaceDeclaration extends N4TypeDefinition, NamespaceEleme
 
 	/**
 	 * Returns the value of the '<em><b>Owned Elements Raw</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4JS.ScriptElement}.
+	 * The list contents are of type {@link org.eclipse.n4js.n4JS.NamespaceElement}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Owned Elements Raw</em>' containment reference list.
@@ -62,7 +62,7 @@ public interface N4NamespaceDeclaration extends N4TypeDefinition, NamespaceEleme
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ScriptElement> getOwnedElementsRaw();
+	EList<NamespaceElement> getOwnedElementsRaw();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -87,14 +87,6 @@ public interface N4NamespaceDeclaration extends N4TypeDefinition, NamespaceEleme
 	 * @generated
 	 */
 	EList<Annotation> getAnnotations();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	EList<N4Modifier> getAllModifiers();
 
 	/**
 	 * <!-- begin-user-doc -->

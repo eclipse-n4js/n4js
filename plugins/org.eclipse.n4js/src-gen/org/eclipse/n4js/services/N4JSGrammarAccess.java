@@ -242,7 +242,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	public class NamespaceElementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NamespaceElement");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cAnnotatedScriptElementParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cAnnotatedNamespaceElementParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cN4NamespaceDeclarationParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cN4ClassDeclarationParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cN4InterfaceDeclarationParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
@@ -252,8 +252,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cVariableStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
 		private final RuleCall cExportDeclarationParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
 		
-		//NamespaceElement<Yield> returns ScriptElement :
-		//    AnnotatedScriptElement
+		//NamespaceElement<Yield> returns NamespaceElement :
+		//    AnnotatedNamespaceElement
 		//    | N4NamespaceDeclaration<Yield>
 		//    | N4ClassDeclaration<Yield>
 		//    | N4InterfaceDeclaration<Yield>
@@ -265,7 +265,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//AnnotatedScriptElement
+		//AnnotatedNamespaceElement
 		//| N4NamespaceDeclaration<Yield>
 		//| N4ClassDeclaration<Yield>
 		//| N4InterfaceDeclaration<Yield>
@@ -276,8 +276,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//| ExportDeclaration
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//AnnotatedScriptElement
-		public RuleCall getAnnotatedScriptElementParserRuleCall_0() { return cAnnotatedScriptElementParserRuleCall_0; }
+		//AnnotatedNamespaceElement
+		public RuleCall getAnnotatedNamespaceElementParserRuleCall_0() { return cAnnotatedNamespaceElementParserRuleCall_0; }
 		
 		//N4NamespaceDeclaration<Yield>
 		public RuleCall getN4NamespaceDeclarationParserRuleCall_1() { return cN4NamespaceDeclarationParserRuleCall_1; }
@@ -747,6 +747,421 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//TypeReferenceNode
 		public RuleCall getDeclaredTypeRefNodeTypeReferenceNodeParserRuleCall_1_5_6_0() { return cDeclaredTypeRefNodeTypeReferenceNodeParserRuleCall_1_5_6_0; }
+	}
+	public class AnnotatedNamespaceElementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotatedNamespaceElement");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cAnnotationListParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
+		private final Action cFunctionDeclarationAnnotationListAction_1_0_0 = (Action)cGroup_1_0.eContents().get(0);
+		private final Group cGroup_1_0_1 = (Group)cGroup_1_0.eContents().get(1);
+		private final Group cGroup_1_0_1_0 = (Group)cGroup_1_0_1.eContents().get(0);
+		private final Assignment cDeclaredModifiersAssignment_1_0_1_0_0 = (Assignment)cGroup_1_0_1_0.eContents().get(0);
+		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_1_0_1_0_0_0 = (RuleCall)cDeclaredModifiersAssignment_1_0_1_0_0.eContents().get(0);
+		private final RuleCall cAsyncNoTrailingLineBreakParserRuleCall_1_0_1_0_1 = (RuleCall)cGroup_1_0_1_0.eContents().get(1);
+		private final RuleCall cFunctionImplParserRuleCall_1_0_1_0_2 = (RuleCall)cGroup_1_0_1_0.eContents().get(2);
+		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
+		private final Alternatives cAlternatives_1_1_0 = (Alternatives)cGroup_1_1.eContents().get(0);
+		private final Group cGroup_1_1_0_0 = (Group)cAlternatives_1_1_0.eContents().get(0);
+		private final Action cN4ClassDeclarationAnnotationListAction_1_1_0_0_0 = (Action)cGroup_1_1_0_0.eContents().get(0);
+		private final Assignment cDeclaredModifiersAssignment_1_1_0_0_1 = (Assignment)cGroup_1_1_0_0.eContents().get(1);
+		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_1_1_0_0_1_0 = (RuleCall)cDeclaredModifiersAssignment_1_1_0_0_1.eContents().get(0);
+		private final Keyword cClassKeyword_1_1_0_0_2 = (Keyword)cGroup_1_1_0_0.eContents().get(2);
+		private final Assignment cTypingStrategyAssignment_1_1_0_0_3 = (Assignment)cGroup_1_1_0_0.eContents().get(3);
+		private final RuleCall cTypingStrategyTypingStrategyDefSiteOperatorParserRuleCall_1_1_0_0_3_0 = (RuleCall)cTypingStrategyAssignment_1_1_0_0_3.eContents().get(0);
+		private final Assignment cNameAssignment_1_1_0_0_4 = (Assignment)cGroup_1_1_0_0.eContents().get(4);
+		private final RuleCall cNameBindingIdentifierParserRuleCall_1_1_0_0_4_0 = (RuleCall)cNameAssignment_1_1_0_0_4.eContents().get(0);
+		private final RuleCall cTypeParametersParserRuleCall_1_1_0_0_5 = (RuleCall)cGroup_1_1_0_0.eContents().get(5);
+		private final RuleCall cClassExtendsImplementsParserRuleCall_1_1_0_0_6 = (RuleCall)cGroup_1_1_0_0.eContents().get(6);
+		private final Group cGroup_1_1_0_1 = (Group)cAlternatives_1_1_0.eContents().get(1);
+		private final Action cN4InterfaceDeclarationAnnotationListAction_1_1_0_1_0 = (Action)cGroup_1_1_0_1.eContents().get(0);
+		private final Assignment cDeclaredModifiersAssignment_1_1_0_1_1 = (Assignment)cGroup_1_1_0_1.eContents().get(1);
+		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_1_1_0_1_1_0 = (RuleCall)cDeclaredModifiersAssignment_1_1_0_1_1.eContents().get(0);
+		private final Keyword cInterfaceKeyword_1_1_0_1_2 = (Keyword)cGroup_1_1_0_1.eContents().get(2);
+		private final Assignment cTypingStrategyAssignment_1_1_0_1_3 = (Assignment)cGroup_1_1_0_1.eContents().get(3);
+		private final RuleCall cTypingStrategyTypingStrategyDefSiteOperatorParserRuleCall_1_1_0_1_3_0 = (RuleCall)cTypingStrategyAssignment_1_1_0_1_3.eContents().get(0);
+		private final Assignment cNameAssignment_1_1_0_1_4 = (Assignment)cGroup_1_1_0_1.eContents().get(4);
+		private final RuleCall cNameBindingIdentifierParserRuleCall_1_1_0_1_4_0 = (RuleCall)cNameAssignment_1_1_0_1_4.eContents().get(0);
+		private final RuleCall cTypeParametersParserRuleCall_1_1_0_1_5 = (RuleCall)cGroup_1_1_0_1.eContents().get(5);
+		private final RuleCall cInterfaceExtendsListParserRuleCall_1_1_0_1_6 = (RuleCall)cGroup_1_1_0_1.eContents().get(6);
+		private final RuleCall cMembersParserRuleCall_1_1_1 = (RuleCall)cGroup_1_1.eContents().get(1);
+		private final Group cGroup_1_2 = (Group)cAlternatives_1.eContents().get(2);
+		private final Action cN4EnumDeclarationAnnotationListAction_1_2_0 = (Action)cGroup_1_2.eContents().get(0);
+		private final Assignment cDeclaredModifiersAssignment_1_2_1 = (Assignment)cGroup_1_2.eContents().get(1);
+		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_1_2_1_0 = (RuleCall)cDeclaredModifiersAssignment_1_2_1.eContents().get(0);
+		private final Keyword cEnumKeyword_1_2_2 = (Keyword)cGroup_1_2.eContents().get(2);
+		private final Assignment cNameAssignment_1_2_3 = (Assignment)cGroup_1_2.eContents().get(3);
+		private final RuleCall cNameBindingIdentifierParserRuleCall_1_2_3_0 = (RuleCall)cNameAssignment_1_2_3.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_1_2_4 = (Keyword)cGroup_1_2.eContents().get(4);
+		private final Assignment cLiteralsAssignment_1_2_5 = (Assignment)cGroup_1_2.eContents().get(5);
+		private final RuleCall cLiteralsN4EnumLiteralParserRuleCall_1_2_5_0 = (RuleCall)cLiteralsAssignment_1_2_5.eContents().get(0);
+		private final Group cGroup_1_2_6 = (Group)cGroup_1_2.eContents().get(6);
+		private final Keyword cCommaKeyword_1_2_6_0 = (Keyword)cGroup_1_2_6.eContents().get(0);
+		private final Assignment cLiteralsAssignment_1_2_6_1 = (Assignment)cGroup_1_2_6.eContents().get(1);
+		private final RuleCall cLiteralsN4EnumLiteralParserRuleCall_1_2_6_1_0 = (RuleCall)cLiteralsAssignment_1_2_6_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_1_2_7 = (Keyword)cGroup_1_2.eContents().get(7);
+		private final Group cGroup_1_3 = (Group)cAlternatives_1.eContents().get(3);
+		private final Action cN4TypeAliasDeclarationAnnotationListAction_1_3_0 = (Action)cGroup_1_3.eContents().get(0);
+		private final Assignment cDeclaredModifiersAssignment_1_3_1 = (Assignment)cGroup_1_3.eContents().get(1);
+		private final RuleCall cDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_3_1_0 = (RuleCall)cDeclaredModifiersAssignment_1_3_1.eContents().get(0);
+		private final Keyword cTypeKeyword_1_3_2 = (Keyword)cGroup_1_3.eContents().get(2);
+		private final Assignment cNameAssignment_1_3_3 = (Assignment)cGroup_1_3.eContents().get(3);
+		private final RuleCall cNameBindingIdentifierParserRuleCall_1_3_3_0 = (RuleCall)cNameAssignment_1_3_3.eContents().get(0);
+		private final RuleCall cTypeParametersParserRuleCall_1_3_4 = (RuleCall)cGroup_1_3.eContents().get(4);
+		private final Keyword cEqualsSignKeyword_1_3_5 = (Keyword)cGroup_1_3.eContents().get(5);
+		private final Assignment cDeclaredTypeRefNodeAssignment_1_3_6 = (Assignment)cGroup_1_3.eContents().get(6);
+		private final RuleCall cDeclaredTypeRefNodeTypeReferenceNodeParserRuleCall_1_3_6_0 = (RuleCall)cDeclaredTypeRefNodeAssignment_1_3_6.eContents().get(0);
+		
+		///**
+		// * Left factored, annotated script elements.
+		// *
+		// * Pretty much inlined versions of type declarations, imports, exports and function declarations.
+		// *
+		// * The GrammarLinter ensures that the inlined content mirrors the content of the real declarations.
+		// */
+		//AnnotatedNamespaceElement returns NamespaceElement:
+		//    AnnotationList (
+		//        {FunctionDeclaration.annotationList=current}
+		//        =>((declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+		//            ->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>)
+		//    |    (
+		//            (
+		//                {N4ClassDeclaration.annotationList=current}
+		//                (declaredModifiers+=N4Modifier)*
+		//                'class' typingStrategy=TypingStrategyDefSiteOperator?
+		//                name=BindingIdentifier<Yield=false>
+		//                TypeParameters?
+		//                ClassExtendsImplements<Yield=false>?
+		//            |   {N4InterfaceDeclaration.annotationList=current}
+		//                (declaredModifiers+=N4Modifier)*
+		//                'interface' typingStrategy=TypingStrategyDefSiteOperator?
+		//                name=BindingIdentifier<Yield=false>
+		//                TypeParameters?
+		//                InterfaceExtendsList?
+		//            )
+		//            Members<Yield=false>
+		//        )
+		//    |    {N4EnumDeclaration.annotationList=current}
+		//        (declaredModifiers+=N4Modifier)*
+		//        'enum' name=BindingIdentifier<Yield=false>
+		//        '{'
+		//            literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+		//        '}'
+		//    |    {N4TypeAliasDeclaration.annotationList=current}
+		//        (declaredModifiers+=N4ModifierWithoutConst)*
+		//        'type' name=BindingIdentifier<Yield=false>
+		//        TypeParameters?
+		//        '='
+		//        declaredTypeRefNode=TypeReferenceNode
+		//    )
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//AnnotationList (
+		//    {FunctionDeclaration.annotationList=current}
+		//    =>((declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+		//        ->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>)
+		//|    (
+		//        (
+		//            {N4ClassDeclaration.annotationList=current}
+		//            (declaredModifiers+=N4Modifier)*
+		//            'class' typingStrategy=TypingStrategyDefSiteOperator?
+		//            name=BindingIdentifier<Yield=false>
+		//            TypeParameters?
+		//            ClassExtendsImplements<Yield=false>?
+		//        |   {N4InterfaceDeclaration.annotationList=current}
+		//            (declaredModifiers+=N4Modifier)*
+		//            'interface' typingStrategy=TypingStrategyDefSiteOperator?
+		//            name=BindingIdentifier<Yield=false>
+		//            TypeParameters?
+		//            InterfaceExtendsList?
+		//        )
+		//        Members<Yield=false>
+		//    )
+		//|    {N4EnumDeclaration.annotationList=current}
+		//    (declaredModifiers+=N4Modifier)*
+		//    'enum' name=BindingIdentifier<Yield=false>
+		//    '{'
+		//        literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+		//    '}'
+		//|    {N4TypeAliasDeclaration.annotationList=current}
+		//    (declaredModifiers+=N4ModifierWithoutConst)*
+		//    'type' name=BindingIdentifier<Yield=false>
+		//    TypeParameters?
+		//    '='
+		//    declaredTypeRefNode=TypeReferenceNode
+		//)
+		public Group getGroup() { return cGroup; }
+		
+		//AnnotationList
+		public RuleCall getAnnotationListParserRuleCall_0() { return cAnnotationListParserRuleCall_0; }
+		
+		//(
+		//       {FunctionDeclaration.annotationList=current}
+		//       =>((declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+		//           ->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>)
+		//   |    (
+		//           (
+		//               {N4ClassDeclaration.annotationList=current}
+		//               (declaredModifiers+=N4Modifier)*
+		//               'class' typingStrategy=TypingStrategyDefSiteOperator?
+		//               name=BindingIdentifier<Yield=false>
+		//               TypeParameters?
+		//               ClassExtendsImplements<Yield=false>?
+		//           |   {N4InterfaceDeclaration.annotationList=current}
+		//               (declaredModifiers+=N4Modifier)*
+		//               'interface' typingStrategy=TypingStrategyDefSiteOperator?
+		//               name=BindingIdentifier<Yield=false>
+		//               TypeParameters?
+		//               InterfaceExtendsList?
+		//           )
+		//           Members<Yield=false>
+		//       )
+		//   |    {N4EnumDeclaration.annotationList=current}
+		//       (declaredModifiers+=N4Modifier)*
+		//       'enum' name=BindingIdentifier<Yield=false>
+		//       '{'
+		//           literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+		//       '}'
+		//   |    {N4TypeAliasDeclaration.annotationList=current}
+		//       (declaredModifiers+=N4ModifierWithoutConst)*
+		//       'type' name=BindingIdentifier<Yield=false>
+		//       TypeParameters?
+		//       '='
+		//       declaredTypeRefNode=TypeReferenceNode
+		//   )
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//{FunctionDeclaration.annotationList=current}
+		//=>((declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+		//    ->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>)
+		public Group getGroup_1_0() { return cGroup_1_0; }
+		
+		//{FunctionDeclaration.annotationList=current}
+		public Action getFunctionDeclarationAnnotationListAction_1_0_0() { return cFunctionDeclarationAnnotationListAction_1_0_0; }
+		
+		//=>((declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+		//    ->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>)
+		public Group getGroup_1_0_1() { return cGroup_1_0_1; }
+		
+		//(declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+		//            ->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>
+		public Group getGroup_1_0_1_0() { return cGroup_1_0_1_0; }
+		
+		//(declaredModifiers+=N4Modifier)*
+		public Assignment getDeclaredModifiersAssignment_1_0_1_0_0() { return cDeclaredModifiersAssignment_1_0_1_0_0; }
+		
+		//N4Modifier
+		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_1_0_1_0_0_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_1_0_1_0_0_0; }
+		
+		//AsyncNoTrailingLineBreak
+		public RuleCall getAsyncNoTrailingLineBreakParserRuleCall_1_0_1_0_1() { return cAsyncNoTrailingLineBreakParserRuleCall_1_0_1_0_1; }
+		
+		//->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>
+		public RuleCall getFunctionImplParserRuleCall_1_0_1_0_2() { return cFunctionImplParserRuleCall_1_0_1_0_2; }
+		
+		//(
+		//        (
+		//            {N4ClassDeclaration.annotationList=current}
+		//            (declaredModifiers+=N4Modifier)*
+		//            'class' typingStrategy=TypingStrategyDefSiteOperator?
+		//            name=BindingIdentifier<Yield=false>
+		//            TypeParameters?
+		//            ClassExtendsImplements<Yield=false>?
+		//        |   {N4InterfaceDeclaration.annotationList=current}
+		//            (declaredModifiers+=N4Modifier)*
+		//            'interface' typingStrategy=TypingStrategyDefSiteOperator?
+		//            name=BindingIdentifier<Yield=false>
+		//            TypeParameters?
+		//            InterfaceExtendsList?
+		//        )
+		//        Members<Yield=false>
+		//    )
+		public Group getGroup_1_1() { return cGroup_1_1; }
+		
+		//(
+		//    {N4ClassDeclaration.annotationList=current}
+		//    (declaredModifiers+=N4Modifier)*
+		//    'class' typingStrategy=TypingStrategyDefSiteOperator?
+		//    name=BindingIdentifier<Yield=false>
+		//    TypeParameters?
+		//    ClassExtendsImplements<Yield=false>?
+		//|   {N4InterfaceDeclaration.annotationList=current}
+		//    (declaredModifiers+=N4Modifier)*
+		//    'interface' typingStrategy=TypingStrategyDefSiteOperator?
+		//    name=BindingIdentifier<Yield=false>
+		//    TypeParameters?
+		//    InterfaceExtendsList?
+		//)
+		public Alternatives getAlternatives_1_1_0() { return cAlternatives_1_1_0; }
+		
+		//{N4ClassDeclaration.annotationList=current}
+		//(declaredModifiers+=N4Modifier)*
+		//'class' typingStrategy=TypingStrategyDefSiteOperator?
+		//name=BindingIdentifier<Yield=false>
+		//TypeParameters?
+		//ClassExtendsImplements<Yield=false>?
+		public Group getGroup_1_1_0_0() { return cGroup_1_1_0_0; }
+		
+		//{N4ClassDeclaration.annotationList=current}
+		public Action getN4ClassDeclarationAnnotationListAction_1_1_0_0_0() { return cN4ClassDeclarationAnnotationListAction_1_1_0_0_0; }
+		
+		//(declaredModifiers+=N4Modifier)*
+		public Assignment getDeclaredModifiersAssignment_1_1_0_0_1() { return cDeclaredModifiersAssignment_1_1_0_0_1; }
+		
+		//N4Modifier
+		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_1_1_0_0_1_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_1_1_0_0_1_0; }
+		
+		//'class'
+		public Keyword getClassKeyword_1_1_0_0_2() { return cClassKeyword_1_1_0_0_2; }
+		
+		//typingStrategy=TypingStrategyDefSiteOperator?
+		public Assignment getTypingStrategyAssignment_1_1_0_0_3() { return cTypingStrategyAssignment_1_1_0_0_3; }
+		
+		//TypingStrategyDefSiteOperator
+		public RuleCall getTypingStrategyTypingStrategyDefSiteOperatorParserRuleCall_1_1_0_0_3_0() { return cTypingStrategyTypingStrategyDefSiteOperatorParserRuleCall_1_1_0_0_3_0; }
+		
+		//name=BindingIdentifier<Yield=false>
+		public Assignment getNameAssignment_1_1_0_0_4() { return cNameAssignment_1_1_0_0_4; }
+		
+		//BindingIdentifier<Yield=false>
+		public RuleCall getNameBindingIdentifierParserRuleCall_1_1_0_0_4_0() { return cNameBindingIdentifierParserRuleCall_1_1_0_0_4_0; }
+		
+		//TypeParameters?
+		public RuleCall getTypeParametersParserRuleCall_1_1_0_0_5() { return cTypeParametersParserRuleCall_1_1_0_0_5; }
+		
+		//ClassExtendsImplements<Yield=false>?
+		public RuleCall getClassExtendsImplementsParserRuleCall_1_1_0_0_6() { return cClassExtendsImplementsParserRuleCall_1_1_0_0_6; }
+		
+		//{N4InterfaceDeclaration.annotationList=current}
+		//             (declaredModifiers+=N4Modifier)*
+		//             'interface' typingStrategy=TypingStrategyDefSiteOperator?
+		//             name=BindingIdentifier<Yield=false>
+		//             TypeParameters?
+		//             InterfaceExtendsList?
+		public Group getGroup_1_1_0_1() { return cGroup_1_1_0_1; }
+		
+		//{N4InterfaceDeclaration.annotationList=current}
+		public Action getN4InterfaceDeclarationAnnotationListAction_1_1_0_1_0() { return cN4InterfaceDeclarationAnnotationListAction_1_1_0_1_0; }
+		
+		//(declaredModifiers+=N4Modifier)*
+		public Assignment getDeclaredModifiersAssignment_1_1_0_1_1() { return cDeclaredModifiersAssignment_1_1_0_1_1; }
+		
+		//N4Modifier
+		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_1_1_0_1_1_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_1_1_0_1_1_0; }
+		
+		//'interface'
+		public Keyword getInterfaceKeyword_1_1_0_1_2() { return cInterfaceKeyword_1_1_0_1_2; }
+		
+		//typingStrategy=TypingStrategyDefSiteOperator?
+		public Assignment getTypingStrategyAssignment_1_1_0_1_3() { return cTypingStrategyAssignment_1_1_0_1_3; }
+		
+		//TypingStrategyDefSiteOperator
+		public RuleCall getTypingStrategyTypingStrategyDefSiteOperatorParserRuleCall_1_1_0_1_3_0() { return cTypingStrategyTypingStrategyDefSiteOperatorParserRuleCall_1_1_0_1_3_0; }
+		
+		//name=BindingIdentifier<Yield=false>
+		public Assignment getNameAssignment_1_1_0_1_4() { return cNameAssignment_1_1_0_1_4; }
+		
+		//BindingIdentifier<Yield=false>
+		public RuleCall getNameBindingIdentifierParserRuleCall_1_1_0_1_4_0() { return cNameBindingIdentifierParserRuleCall_1_1_0_1_4_0; }
+		
+		//TypeParameters?
+		public RuleCall getTypeParametersParserRuleCall_1_1_0_1_5() { return cTypeParametersParserRuleCall_1_1_0_1_5; }
+		
+		//InterfaceExtendsList?
+		public RuleCall getInterfaceExtendsListParserRuleCall_1_1_0_1_6() { return cInterfaceExtendsListParserRuleCall_1_1_0_1_6; }
+		
+		//Members<Yield=false>
+		public RuleCall getMembersParserRuleCall_1_1_1() { return cMembersParserRuleCall_1_1_1; }
+		
+		//{N4EnumDeclaration.annotationList=current}
+		//    (declaredModifiers+=N4Modifier)*
+		//    'enum' name=BindingIdentifier<Yield=false>
+		//    '{'
+		//        literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+		//    '}'
+		public Group getGroup_1_2() { return cGroup_1_2; }
+		
+		//{N4EnumDeclaration.annotationList=current}
+		public Action getN4EnumDeclarationAnnotationListAction_1_2_0() { return cN4EnumDeclarationAnnotationListAction_1_2_0; }
+		
+		//(declaredModifiers+=N4Modifier)*
+		public Assignment getDeclaredModifiersAssignment_1_2_1() { return cDeclaredModifiersAssignment_1_2_1; }
+		
+		//N4Modifier
+		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_1_2_1_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_1_2_1_0; }
+		
+		//'enum'
+		public Keyword getEnumKeyword_1_2_2() { return cEnumKeyword_1_2_2; }
+		
+		//name=BindingIdentifier<Yield=false>
+		public Assignment getNameAssignment_1_2_3() { return cNameAssignment_1_2_3; }
+		
+		//BindingIdentifier<Yield=false>
+		public RuleCall getNameBindingIdentifierParserRuleCall_1_2_3_0() { return cNameBindingIdentifierParserRuleCall_1_2_3_0; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_1_2_4() { return cLeftCurlyBracketKeyword_1_2_4; }
+		
+		//literals+=N4EnumLiteral
+		public Assignment getLiteralsAssignment_1_2_5() { return cLiteralsAssignment_1_2_5; }
+		
+		//N4EnumLiteral
+		public RuleCall getLiteralsN4EnumLiteralParserRuleCall_1_2_5_0() { return cLiteralsN4EnumLiteralParserRuleCall_1_2_5_0; }
+		
+		//(',' literals+= N4EnumLiteral)*
+		public Group getGroup_1_2_6() { return cGroup_1_2_6; }
+		
+		//','
+		public Keyword getCommaKeyword_1_2_6_0() { return cCommaKeyword_1_2_6_0; }
+		
+		//literals+= N4EnumLiteral
+		public Assignment getLiteralsAssignment_1_2_6_1() { return cLiteralsAssignment_1_2_6_1; }
+		
+		//N4EnumLiteral
+		public RuleCall getLiteralsN4EnumLiteralParserRuleCall_1_2_6_1_0() { return cLiteralsN4EnumLiteralParserRuleCall_1_2_6_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_1_2_7() { return cRightCurlyBracketKeyword_1_2_7; }
+		
+		//{N4TypeAliasDeclaration.annotationList=current}
+		//    (declaredModifiers+=N4ModifierWithoutConst)*
+		//    'type' name=BindingIdentifier<Yield=false>
+		//    TypeParameters?
+		//    '='
+		//    declaredTypeRefNode=TypeReferenceNode
+		public Group getGroup_1_3() { return cGroup_1_3; }
+		
+		//{N4TypeAliasDeclaration.annotationList=current}
+		public Action getN4TypeAliasDeclarationAnnotationListAction_1_3_0() { return cN4TypeAliasDeclarationAnnotationListAction_1_3_0; }
+		
+		//(declaredModifiers+=N4ModifierWithoutConst)*
+		public Assignment getDeclaredModifiersAssignment_1_3_1() { return cDeclaredModifiersAssignment_1_3_1; }
+		
+		//N4ModifierWithoutConst
+		public RuleCall getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_3_1_0() { return cDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_1_3_1_0; }
+		
+		//'type'
+		public Keyword getTypeKeyword_1_3_2() { return cTypeKeyword_1_3_2; }
+		
+		//name=BindingIdentifier<Yield=false>
+		public Assignment getNameAssignment_1_3_3() { return cNameAssignment_1_3_3; }
+		
+		//BindingIdentifier<Yield=false>
+		public RuleCall getNameBindingIdentifierParserRuleCall_1_3_3_0() { return cNameBindingIdentifierParserRuleCall_1_3_3_0; }
+		
+		//TypeParameters?
+		public RuleCall getTypeParametersParserRuleCall_1_3_4() { return cTypeParametersParserRuleCall_1_3_4; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_1_3_5() { return cEqualsSignKeyword_1_3_5; }
+		
+		//declaredTypeRefNode=TypeReferenceNode
+		public Assignment getDeclaredTypeRefNodeAssignment_1_3_6() { return cDeclaredTypeRefNodeAssignment_1_3_6; }
+		
+		//TypeReferenceNode
+		public RuleCall getDeclaredTypeRefNodeTypeReferenceNodeParserRuleCall_1_3_6_0() { return cDeclaredTypeRefNodeTypeReferenceNodeParserRuleCall_1_3_6_0; }
 	}
 	public class ExportDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportDeclaration");
@@ -11788,6 +12203,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	private final N4NamespaceDeclarationElements pN4NamespaceDeclaration;
 	private final NamespaceElementElements pNamespaceElement;
 	private final AnnotatedScriptElementElements pAnnotatedScriptElement;
+	private final AnnotatedNamespaceElementElements pAnnotatedNamespaceElement;
 	private final ExportDeclarationElements pExportDeclaration;
 	private final ExportDeclarationImplElements pExportDeclarationImpl;
 	private final ExportFromClauseElements pExportFromClause;
@@ -12045,6 +12461,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		this.pN4NamespaceDeclaration = new N4NamespaceDeclarationElements();
 		this.pNamespaceElement = new NamespaceElementElements();
 		this.pAnnotatedScriptElement = new AnnotatedScriptElementElements();
+		this.pAnnotatedNamespaceElement = new AnnotatedNamespaceElementElements();
 		this.pExportDeclaration = new ExportDeclarationElements();
 		this.pExportDeclarationImpl = new ExportDeclarationImplElements();
 		this.pExportFromClause = new ExportFromClauseElements();
@@ -12375,8 +12792,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getN4NamespaceDeclarationAccess().getRule();
 	}
 	
-	//NamespaceElement<Yield> returns ScriptElement :
-	//    AnnotatedScriptElement
+	//NamespaceElement<Yield> returns NamespaceElement :
+	//    AnnotatedNamespaceElement
 	//    | N4NamespaceDeclaration<Yield>
 	//    | N4ClassDeclaration<Yield>
 	//    | N4InterfaceDeclaration<Yield>
@@ -12445,6 +12862,57 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getAnnotatedScriptElementRule() {
 		return getAnnotatedScriptElementAccess().getRule();
+	}
+	
+	///**
+	// * Left factored, annotated script elements.
+	// *
+	// * Pretty much inlined versions of type declarations, imports, exports and function declarations.
+	// *
+	// * The GrammarLinter ensures that the inlined content mirrors the content of the real declarations.
+	// */
+	//AnnotatedNamespaceElement returns NamespaceElement:
+	//    AnnotationList (
+	//        {FunctionDeclaration.annotationList=current}
+	//        =>((declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+	//            ->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>)
+	//    |    (
+	//            (
+	//                {N4ClassDeclaration.annotationList=current}
+	//                (declaredModifiers+=N4Modifier)*
+	//                'class' typingStrategy=TypingStrategyDefSiteOperator?
+	//                name=BindingIdentifier<Yield=false>
+	//                TypeParameters?
+	//                ClassExtendsImplements<Yield=false>?
+	//            |   {N4InterfaceDeclaration.annotationList=current}
+	//                (declaredModifiers+=N4Modifier)*
+	//                'interface' typingStrategy=TypingStrategyDefSiteOperator?
+	//                name=BindingIdentifier<Yield=false>
+	//                TypeParameters?
+	//                InterfaceExtendsList?
+	//            )
+	//            Members<Yield=false>
+	//        )
+	//    |    {N4EnumDeclaration.annotationList=current}
+	//        (declaredModifiers+=N4Modifier)*
+	//        'enum' name=BindingIdentifier<Yield=false>
+	//        '{'
+	//            literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+	//        '}'
+	//    |    {N4TypeAliasDeclaration.annotationList=current}
+	//        (declaredModifiers+=N4ModifierWithoutConst)*
+	//        'type' name=BindingIdentifier<Yield=false>
+	//        TypeParameters?
+	//        '='
+	//        declaredTypeRefNode=TypeReferenceNode
+	//    )
+	//;
+	public AnnotatedNamespaceElementElements getAnnotatedNamespaceElementAccess() {
+		return pAnnotatedNamespaceElement;
+	}
+	
+	public ParserRule getAnnotatedNamespaceElementRule() {
+		return getAnnotatedNamespaceElementAccess().getRule();
 	}
 	
 	//ExportDeclaration:

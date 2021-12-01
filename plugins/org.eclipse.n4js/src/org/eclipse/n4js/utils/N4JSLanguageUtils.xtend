@@ -49,10 +49,10 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
-import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
+import org.eclipse.n4js.n4JS.NamespaceElement
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.NullLiteral
 import org.eclipse.n4js.n4JS.NumericLiteral
@@ -846,6 +846,11 @@ public class N4JSLanguageUtils {
 	}
 
 	/** Checks presence of {@link AnnotationDefinition#POLYFILL} annotation. See also {@link N4JSLanguageUtils#isStaticPolyfill(AnnotableElement) }*/
+	def static boolean isNamespaceElement(AnnotableElement astElement) {
+		return AnnotationDefinition.POLYFILL.hasAnnotation( astElement );
+	}
+
+	/** Checks presence of {@link AnnotationDefinition#POLYFILL} annotation. See also {@link N4JSLanguageUtils#isStaticPolyfill(AnnotableElement) }*/
 	def static boolean isNonStaticPolyfill(AnnotableElement astElement) {
 		return AnnotationDefinition.POLYFILL.hasAnnotation( astElement );
 	}
@@ -1224,9 +1229,8 @@ public class N4JSLanguageUtils {
 	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
 	 */
 	def static boolean isHollowElement(TypeDefiningElement typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isHollowType = typeDecl instanceof N4TypeDeclaration && (typeDecl as N4TypeDeclaration).isHollow;
-		val isHollowNamespace = typeDecl instanceof N4NamespaceDeclaration && (typeDecl as N4NamespaceDeclaration).isHollow;
-		return isHollowNamespace || isHollowType;
+		val isHollow = typeDecl instanceof NamespaceElement && (typeDecl as NamespaceElement).isHollow;
+		return isHollow;
 	}
 	
 	

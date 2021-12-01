@@ -10,17 +10,13 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
-import com.google.common.collect.Iterables;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
-import java.util.HashSet;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
-import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
@@ -43,7 +39,6 @@ import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
-import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDefinition;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.NamespaceElement;
@@ -111,7 +106,7 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ScriptElement> ownedElementsRaw;
+	protected EList<NamespaceElement> ownedElementsRaw;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -174,9 +169,9 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 * @generated
 	 */
 	@Override
-	public EList<ScriptElement> getOwnedElementsRaw() {
+	public EList<NamespaceElement> getOwnedElementsRaw() {
 		if (ownedElementsRaw == null) {
-			ownedElementsRaw = new EObjectContainmentEList<ScriptElement>(ScriptElement.class, this, N4JSPackage.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW);
+			ownedElementsRaw = new EObjectContainmentEList<NamespaceElement>(NamespaceElement.class, this, N4JSPackage.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW);
 		}
 		return ownedElementsRaw;
 	}
@@ -207,32 +202,13 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 * @generated
 	 */
 	@Override
-	public EList<N4Modifier> getAllModifiers() {
-		final HashSet<N4Modifier> allModifiers = new HashSet<N4Modifier>();
-		EObject _eContainer = this.eContainer();
-		if ((_eContainer instanceof N4NamespaceDeclaration)) {
-			EObject _eContainer_1 = this.eContainer();
-			final EList<N4Modifier> parentModifiers = ((N4NamespaceDeclaration) _eContainer_1).getAllModifiers();
-			Iterables.<N4Modifier>addAll(allModifiers, parentModifiers);
-		}
-		EList<N4Modifier> _declaredModifiers = this.getDeclaredModifiers();
-		Iterables.<N4Modifier>addAll(allModifiers, _declaredModifiers);
-		return new BasicEList<N4Modifier>(allModifiers);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isHollow() {
-		final Function1<ScriptElement, Boolean> _function = new Function1<ScriptElement, Boolean>() {
-			public Boolean apply(final ScriptElement it) {
-				return Boolean.valueOf((((it instanceof N4NamespaceDeclaration) && ((N4NamespaceDeclaration) it).isHollow()) || ((it instanceof N4TypeDeclaration) && ((N4TypeDeclaration) it).isHollow())));
+		final Function1<NamespaceElement, Boolean> _function = new Function1<NamespaceElement, Boolean>() {
+			public Boolean apply(final NamespaceElement it) {
+				return Boolean.valueOf(it.isHollow());
 			}
 		};
-		final boolean hollow = IterableExtensions.<ScriptElement>forall(this.getOwnedElementsRaw(), _function);
+		final boolean hollow = IterableExtensions.<NamespaceElement>forall(this.getOwnedElementsRaw(), _function);
 		return hollow;
 	}
 
@@ -423,7 +399,7 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				return;
 			case N4JSPackage.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW:
 				getOwnedElementsRaw().clear();
-				getOwnedElementsRaw().addAll((Collection<? extends ScriptElement>)newValue);
+				getOwnedElementsRaw().addAll((Collection<? extends NamespaceElement>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -475,17 +451,17 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == ScriptElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == NamespaceElement.class) {
 			switch (derivedFeatureID) {
 				default: return -1;
 			}
 		}
 		if (baseClass == VariableEnvironmentElement.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == ScriptElement.class) {
 			switch (derivedFeatureID) {
 				default: return -1;
 			}
@@ -516,17 +492,17 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == ScriptElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == NamespaceElement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
 			}
 		}
 		if (baseClass == VariableEnvironmentElement.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == ScriptElement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
 			}
@@ -569,6 +545,11 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
+		if (baseClass == ScriptElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW;
@@ -578,11 +559,6 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 		if (baseClass == VariableEnvironmentElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.VARIABLE_ENVIRONMENT_ELEMENT___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS: return N4JSPackage.N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS;
-				default: return -1;
-			}
-		}
-		if (baseClass == ScriptElement.class) {
-			switch (baseOperationID) {
 				default: return -1;
 			}
 		}
@@ -601,6 +577,7 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT;
 				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_EXPORTED_NAME;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_TOPLEVEL;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
 		}
@@ -625,8 +602,6 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				return isExternal();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS:
 				return getAnnotations();
-			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_ALL_MODIFIERS:
-				return getAllModifiers();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW:
 				return isHollow();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED:

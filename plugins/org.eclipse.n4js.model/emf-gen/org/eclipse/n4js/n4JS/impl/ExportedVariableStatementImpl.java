@@ -44,7 +44,9 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamedElement;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.VariableStatement;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
@@ -343,6 +345,16 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST:
@@ -492,6 +504,18 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == VariableStatement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.VARIABLE_STATEMENT___IS_HOLLOW: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == ExportableElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED;
@@ -500,6 +524,7 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT;
 				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_EXPORTED_NAME;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_TOPLEVEL;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW;
 				default: return -1;
 			}
 		}
@@ -556,6 +581,8 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 				return getExportedName();
 			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_TOPLEVEL:
 				return isToplevel();
+			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW:
+				return isHollow();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

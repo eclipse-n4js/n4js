@@ -161,6 +161,16 @@ public abstract class ExportableElementImpl extends ProxyResolvingEObjectImpl im
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED:
@@ -175,6 +185,8 @@ public abstract class ExportableElementImpl extends ProxyResolvingEObjectImpl im
 				return getExportedName();
 			case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL:
 				return isToplevel();
+			case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW:
+				return isHollow();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

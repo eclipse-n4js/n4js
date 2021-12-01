@@ -79,8 +79,8 @@ N4NamespaceDeclaration <Yield> returns N4NamespaceDeclaration:
 ;
 
 
-NamespaceElement<Yield> returns ScriptElement : 
-	AnnotatedScriptElement
+NamespaceElement<Yield> returns NamespaceElement : 
+	AnnotatedNamespaceElement
 	| N4NamespaceDeclaration<Yield>
 	| N4ClassDeclaration<Yield>
 	| N4InterfaceDeclaration<Yield>
@@ -104,6 +104,51 @@ AnnotatedScriptElement returns ScriptElement:
 		{ExportDeclaration.annotationList=current} ExportDeclarationImpl
 	|	{ImportDeclaration.annotationList=current} ImportDeclarationImpl
 	|	{FunctionDeclaration.annotationList=current}
+		=>((declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
+			->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>)
+	|	(
+			(
+				{N4ClassDeclaration.annotationList=current}
+				(declaredModifiers+=N4Modifier)*
+				'class' typingStrategy=TypingStrategyDefSiteOperator?
+				name=BindingIdentifier<Yield=false>
+				TypeParameters?
+				ClassExtendsImplements<Yield=false>?
+			|   {N4InterfaceDeclaration.annotationList=current}
+				(declaredModifiers+=N4Modifier)*
+				'interface' typingStrategy=TypingStrategyDefSiteOperator?
+				name=BindingIdentifier<Yield=false>
+				TypeParameters?
+				InterfaceExtendsList?
+			)
+			Members<Yield=false>
+		)
+	|	{N4EnumDeclaration.annotationList=current}
+		(declaredModifiers+=N4Modifier)*
+		'enum' name=BindingIdentifier<Yield=false>
+		'{'
+			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+		'}'
+	|	{N4TypeAliasDeclaration.annotationList=current}
+		(declaredModifiers+=N4ModifierWithoutConst)*
+		'type' name=BindingIdentifier<Yield=false>
+		TypeParameters?
+		'='
+		declaredTypeRefNode=TypeReferenceNode
+	)
+;
+
+
+/**
+ * Left factored, annotated script elements.
+ *
+ * Pretty much inlined versions of type declarations, imports, exports and function declarations.
+ *
+ * The GrammarLinter ensures that the inlined content mirrors the content of the real declarations.
+ */
+AnnotatedNamespaceElement returns NamespaceElement:
+	AnnotationList (
+		{FunctionDeclaration.annotationList=current}
 		=>((declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
 			->FunctionImpl<Yield=false,YieldIfGenerator=false,Expression=false>)
 	|	(

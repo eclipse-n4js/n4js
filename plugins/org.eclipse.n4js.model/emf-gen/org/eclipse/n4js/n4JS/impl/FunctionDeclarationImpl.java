@@ -47,6 +47,7 @@ import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
@@ -528,6 +529,16 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	@Override
 	public boolean isExternal() {
 		return (this.isDeclaredExternal() || this.isDefaultExternal());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isHollow() {
+		return false;
 	}
 
 	/**
@@ -1047,6 +1058,11 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				default: return -1;
 			}
 		}
+		if (baseClass == NamespaceElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -1122,6 +1138,11 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 			}
 		}
 		if (baseClass == NamedElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == NamespaceElement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
 			}
@@ -1207,12 +1228,19 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT: return N4JSPackage.FUNCTION_DECLARATION___IS_EXPORTED_AS_DEFAULT;
 				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.FUNCTION_DECLARATION___GET_EXPORTED_NAME;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.FUNCTION_DECLARATION___IS_TOPLEVEL;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.FUNCTION_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
 		}
 		if (baseClass == NamedElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.NAMED_ELEMENT___GET_NAME: return N4JSPackage.FUNCTION_DECLARATION___GET_NAME;
+				default: return -1;
+			}
+		}
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.FUNCTION_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
 		}
@@ -1229,6 +1257,8 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 		switch (operationID) {
 			case N4JSPackage.FUNCTION_DECLARATION___IS_EXTERNAL:
 				return isExternal();
+			case N4JSPackage.FUNCTION_DECLARATION___IS_HOLLOW:
+				return isHollow();
 			case N4JSPackage.FUNCTION_DECLARATION___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.FUNCTION_DECLARATION___IS_DECLARED_EXPORTED:

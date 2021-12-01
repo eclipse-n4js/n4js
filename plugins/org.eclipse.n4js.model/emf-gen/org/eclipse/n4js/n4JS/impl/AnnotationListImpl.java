@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamedElement;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.Statement;
@@ -55,6 +56,16 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.ANNOTATION_LIST;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isHollow() {
+		return false;
 	}
 
 	/**
@@ -187,6 +198,13 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT: return N4JSPackage.ANNOTATION_LIST___IS_EXPORTED_AS_DEFAULT;
 				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.ANNOTATION_LIST___GET_EXPORTED_NAME;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.ANNOTATION_LIST___IS_TOPLEVEL;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.ANNOTATION_LIST___IS_HOLLOW;
+				default: return -1;
+			}
+		}
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.ANNOTATION_LIST___IS_HOLLOW;
 				default: return -1;
 			}
 		}
@@ -201,6 +219,8 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.ANNOTATION_LIST___IS_HOLLOW:
+				return isHollow();
 			case N4JSPackage.ANNOTATION_LIST___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.ANNOTATION_LIST___IS_DECLARED_EXPORTED:

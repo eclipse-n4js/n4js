@@ -1868,6 +1868,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getExportDeclaration__IsHollow() {
+		return exportDeclarationEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getExportSpecifier() {
 		return exportSpecifierEClass;
 	}
@@ -1960,6 +1970,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EOperation getExportableElement__IsToplevel() {
 		return exportableElementEClass.getEOperations().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getExportableElement__IsHollow() {
+		return exportableElementEClass.getEOperations().get(6);
 	}
 
 	/**
@@ -6558,18 +6578,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getN4NamespaceDeclaration__GetAllModifiers() {
-		return n4NamespaceDeclarationEClass.getEOperations().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EOperation getN4NamespaceDeclaration__IsHollow() {
-		return n4NamespaceDeclarationEClass.getEOperations().get(3);
+		return n4NamespaceDeclarationEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -7872,6 +7882,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEAttribute(exportDeclarationEClass, EXPORT_DECLARATION__WILDCARD_EXPORT);
 		createEAttribute(exportDeclarationEClass, EXPORT_DECLARATION__DEFAULT_EXPORT);
 		createEReference(exportDeclarationEClass, EXPORT_DECLARATION__REEXPORTED_FROM);
+		createEOperation(exportDeclarationEClass, EXPORT_DECLARATION___IS_HOLLOW);
 
 		exportSpecifierEClass = createEClass(EXPORT_SPECIFIER);
 		createEReference(exportSpecifierEClass, EXPORT_SPECIFIER__ELEMENT);
@@ -7884,6 +7895,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(exportableElementEClass, EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT);
 		createEOperation(exportableElementEClass, EXPORTABLE_ELEMENT___GET_EXPORTED_NAME);
 		createEOperation(exportableElementEClass, EXPORTABLE_ELEMENT___IS_TOPLEVEL);
+		createEOperation(exportableElementEClass, EXPORTABLE_ELEMENT___IS_HOLLOW);
 
 		importDeclarationEClass = createEClass(IMPORT_DECLARATION);
 		createEReference(importDeclarationEClass, IMPORT_DECLARATION__IMPORT_SPECIFIERS);
@@ -8484,7 +8496,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___IS_EXTERNAL);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS);
-		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___GET_ALL_MODIFIERS);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___IS_HOLLOW);
 
 		namespaceElementEClass = createEClass(NAMESPACE_ELEMENT);
@@ -8689,6 +8700,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		scriptEClass.getESuperTypes().add(this.getAnnotableElement());
 		scriptEClass.getESuperTypes().add(this.getControlFlowElement());
 		exportDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
+		exportDeclarationEClass.getESuperTypes().add(this.getNamespaceElement());
 		importDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		namedImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());
 		defaultImportSpecifierEClass.getESuperTypes().add(this.getNamedImportSpecifier());
@@ -8703,9 +8715,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		annotableExpressionEClass.getESuperTypes().add(this.getAnnotableElement());
 		annotableExpressionEClass.getESuperTypes().add(this.getExpression());
 		annotationListEClass.getESuperTypes().add(this.getAbstractAnnotationList());
-		annotationListEClass.getESuperTypes().add(this.getScriptElement());
 		annotationListEClass.getESuperTypes().add(this.getStatement());
 		annotationListEClass.getESuperTypes().add(this.getExportableElement());
+		annotationListEClass.getESuperTypes().add(this.getNamespaceElement());
 		expressionAnnotationListEClass.getESuperTypes().add(this.getAbstractAnnotationList());
 		expressionAnnotationListEClass.getESuperTypes().add(this.getExpression());
 		annotationEClass.getESuperTypes().add(this.getNamedElement());
@@ -8727,6 +8739,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		functionDeclarationEClass.getESuperTypes().add(this.getGenericDeclaration());
 		functionDeclarationEClass.getESuperTypes().add(this.getExportableElement());
 		functionDeclarationEClass.getESuperTypes().add(this.getNamedElement());
+		functionDeclarationEClass.getESuperTypes().add(this.getNamespaceElement());
 		functionExpressionEClass.getESuperTypes().add(this.getFunctionDefinition());
 		functionExpressionEClass.getESuperTypes().add(this.getAnnotableExpression());
 		functionExpressionEClass.getESuperTypes().add(this.getGenericDeclaration());
@@ -8889,10 +8902,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getN4TypeDefinition());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getNamespaceElement());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
-		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getScriptElement());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getModifiableElement());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getExportableElement());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getNamedElement());
+		namespaceElementEClass.getESuperTypes().add(this.getScriptElement());
 		n4ClassDeclarationEClass.getESuperTypes().add(this.getN4ClassDefinition());
 		n4ClassDeclarationEClass.getESuperTypes().add(this.getN4ClassifierDeclaration());
 		n4ClassExpressionEClass.getESuperTypes().add(this.getN4ClassDefinition());
@@ -8970,6 +8983,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getExportDeclaration_DefaultExport(), theEcorePackage.getEBoolean(), "defaultExport", null, 0, 1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getExportDeclaration_ReexportedFrom(), theTypesPackage.getTModule(), null, "reexportedFrom", null, 0, 1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEOperation(getExportDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(exportSpecifierEClass, ExportSpecifier.class, "ExportSpecifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getExportSpecifier_Element(), this.getIdentifierRef(), null, "element", null, 0, 1, ExportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExportSpecifier_Alias(), theEcorePackage.getEString(), "alias", null, 0, 1, ExportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -8987,6 +9002,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getExportableElement__GetExportedName(), theEcorePackage.getEString(), "getExportedName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getExportableElement__IsToplevel(), theEcorePackage.getEBoolean(), "isToplevel", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getExportableElement__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(importDeclarationEClass, ImportDeclaration.class, "ImportDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getImportDeclaration_ImportSpecifiers(), this.getImportSpecifier(), null, "importSpecifiers", null, 0, -1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -9760,13 +9777,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(n4NamespaceDeclarationEClass, N4NamespaceDeclaration.class, "N4NamespaceDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getN4NamespaceDeclaration_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4NamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getN4NamespaceDeclaration_OwnedElementsRaw(), this.getScriptElement(), null, "ownedElementsRaw", null, 0, -1, N4NamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getN4NamespaceDeclaration_OwnedElementsRaw(), this.getNamespaceElement(), null, "ownedElementsRaw", null, 0, -1, N4NamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4NamespaceDeclaration__IsExternal(), theEcorePackage.getEBoolean(), "isExternal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4NamespaceDeclaration__GetAnnotations(), this.getAnnotation(), "getAnnotations", 0, -1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getN4NamespaceDeclaration__GetAllModifiers(), this.getN4Modifier(), "getAllModifiers", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4NamespaceDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

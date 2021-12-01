@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface NamespaceElement extends EObject {
+public interface NamespaceElement extends ScriptElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

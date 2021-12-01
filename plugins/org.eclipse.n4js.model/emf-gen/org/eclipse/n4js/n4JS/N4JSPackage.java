@@ -511,13 +511,22 @@ public interface N4JSPackage extends EPackage {
 	int EXPORT_DECLARATION___GET_ANNOTATIONS = ANNOTABLE_SCRIPT_ELEMENT___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORT_DECLARATION___IS_HOLLOW = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>Export Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+	int EXPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportSpecifierImpl <em>Export Specifier</em>}' class.
@@ -639,13 +648,22 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTABLE_ELEMENT___IS_TOPLEVEL = 5;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTABLE_ELEMENT___IS_HOLLOW = 6;
+
+	/**
 	 * The number of operations of the '<em>Exportable Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTABLE_ELEMENT_OPERATION_COUNT = 6;
+	int EXPORTABLE_ELEMENT_OPERATION_COUNT = 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl <em>Import Declaration</em>}' class.
@@ -1616,13 +1634,22 @@ public interface N4JSPackage extends EPackage {
 	int ANNOTATION_LIST___IS_TOPLEVEL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 5;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTATION_LIST___IS_HOLLOW = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
+
+	/**
 	 * The number of operations of the '<em>Annotation List</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 6;
+	int ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExpressionAnnotationListImpl <em>Expression Annotation List</em>}' class.
@@ -2693,7 +2720,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 19;
+	int FUNCTION_DECLARATION___GET_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 20;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DECLARATION___IS_HOLLOW = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -2702,7 +2738,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_EXTERNAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 20;
+	int FUNCTION_DECLARATION___IS_EXTERNAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 22;
 
 	/**
 	 * The number of operations of the '<em>Function Declaration</em>' class.
@@ -2711,7 +2747,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 21;
+	int FUNCTION_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 23;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.FunctionExpressionImpl <em>Function Expression</em>}' class.
@@ -3866,15 +3902,6 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTED_VARIABLE_STATEMENT___IS_BLOCK_SCOPED = VARIABLE_STATEMENT___IS_BLOCK_SCOPED;
 
 	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW = VARIABLE_STATEMENT___IS_HOLLOW;
-
-	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3929,13 +3956,22 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTED_VARIABLE_STATEMENT___IS_TOPLEVEL = VARIABLE_STATEMENT_OPERATION_COUNT + 5;
 
 	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW = VARIABLE_STATEMENT_OPERATION_COUNT + 6;
+
+	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 7;
+	int EXPORTED_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -3944,7 +3980,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 8;
+	int EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Declared External</em>' operation.
@@ -3953,7 +3989,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_DECLARED_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 9;
+	int EXPORTED_VARIABLE_STATEMENT___IS_DECLARED_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Default External</em>' operation.
@@ -3962,7 +3998,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_DEFAULT_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 10;
+	int EXPORTED_VARIABLE_STATEMENT___IS_DEFAULT_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -3971,7 +4007,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 11;
+	int EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The number of operations of the '<em>Exported Variable Statement</em>' class.
@@ -3980,7 +4016,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT_OPERATION_COUNT = VARIABLE_STATEMENT_OPERATION_COUNT + 12;
+	int EXPORTED_VARIABLE_STATEMENT_OPERATION_COUNT = VARIABLE_STATEMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationOrBindingImpl <em>Variable Declaration Or Binding</em>}' class.
@@ -11633,7 +11669,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
+	int N4_TYPE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -11642,7 +11678,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
+	int N4_TYPE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -11651,7 +11687,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
+	int N4_TYPE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
 
 	/**
 	 * The number of operations of the '<em>N4 Type Declaration</em>' class.
@@ -11660,7 +11696,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
+	int N4_TYPE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassifierDeclarationImpl <em>N4 Classifier Declaration</em>}' class.
@@ -12474,7 +12510,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
+	int N4_NAMESPACE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -12483,7 +12519,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
+	int N4_NAMESPACE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -12492,16 +12528,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
-
-	/**
-	 * The operation id for the '<em>Get All Modifiers</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4_NAMESPACE_DECLARATION___GET_ALL_MODIFIERS = N4_TYPE_DEFINITION_OPERATION_COUNT + 13;
+	int N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DEFINITION_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12538,7 +12565,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMESPACE_ELEMENT_FEATURE_COUNT = 0;
+	int NAMESPACE_ELEMENT_FEATURE_COUNT = SCRIPT_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12547,7 +12574,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMESPACE_ELEMENT___IS_HOLLOW = 0;
+	int NAMESPACE_ELEMENT___IS_HOLLOW = SCRIPT_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Namespace Element</em>' class.
@@ -12556,7 +12583,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMESPACE_ELEMENT_OPERATION_COUNT = 1;
+	int NAMESPACE_ELEMENT_OPERATION_COUNT = SCRIPT_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl <em>N4 Class Declaration</em>}' class.
@@ -12863,7 +12890,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___GET_NAME = N4_CLASS_DEFINITION_OPERATION_COUNT + 9;
+	int N4_CLASS_DECLARATION___GET_NAME = N4_CLASS_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12872,7 +12899,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_HOLLOW = N4_CLASS_DEFINITION_OPERATION_COUNT + 10;
+	int N4_CLASS_DECLARATION___IS_HOLLOW = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -12881,7 +12908,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
+	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -12890,7 +12917,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 12;
+	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 13;
 
 	/**
 	 * The number of operations of the '<em>N4 Class Declaration</em>' class.
@@ -12899,7 +12926,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 13;
+	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassExpressionImpl <em>N4 Class Expression</em>}' class.
@@ -17570,6 +17597,16 @@ public interface N4JSPackage extends EPackage {
 	EReference getExportDeclaration_ReexportedFrom();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportDeclaration#isHollow() <em>Is Hollow</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ExportDeclaration#isHollow()
+	 * @generated
+	 */
+	EOperation getExportDeclaration__IsHollow();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ExportSpecifier <em>Export Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17670,6 +17707,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getExportableElement__IsToplevel();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableElement#isHollow() <em>Is Hollow</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Hollow</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ExportableElement#isHollow()
+	 * @generated
+	 */
+	EOperation getExportableElement__IsHollow();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ImportDeclaration <em>Import Declaration</em>}'.
@@ -22442,16 +22489,6 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4NamespaceDeclaration__GetAnnotations();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4NamespaceDeclaration#getAllModifiers() <em>Get All Modifiers</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get All Modifiers</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.N4NamespaceDeclaration#getAllModifiers()
-	 * @generated
-	 */
-	EOperation getN4NamespaceDeclaration__GetAllModifiers();
-
-	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4NamespaceDeclaration#isHollow() <em>Is Hollow</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -23915,6 +23952,14 @@ public interface N4JSPackage extends EPackage {
 		EReference EXPORT_DECLARATION__REEXPORTED_FROM = eINSTANCE.getExportDeclaration_ReexportedFrom();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPORT_DECLARATION___IS_HOLLOW = eINSTANCE.getExportDeclaration__IsHollow();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ExportSpecifierImpl <em>Export Specifier</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -23997,6 +24042,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation EXPORTABLE_ELEMENT___IS_TOPLEVEL = eINSTANCE.getExportableElement__IsToplevel();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPORTABLE_ELEMENT___IS_HOLLOW = eINSTANCE.getExportableElement__IsHollow();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl <em>Import Declaration</em>}' class.
@@ -27951,14 +28004,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = eINSTANCE.getN4NamespaceDeclaration__GetAnnotations();
-
-		/**
-		 * The meta object literal for the '<em><b>Get All Modifiers</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation N4_NAMESPACE_DECLARATION___GET_ALL_MODIFIERS = eINSTANCE.getN4NamespaceDeclaration__GetAllModifiers();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.
