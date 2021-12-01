@@ -10012,6 +10012,15 @@ rulePrimaryTypeExpression:
 		(
 			('new'
 			?
+			(
+				'<'
+				ruleTypeVariable
+				(
+					','
+					ruleTypeVariable
+				)*
+				'>'
+			)?
 			'('
 			ruleTAnonymousFormalParameterListWithDeclaredThisType
 			')'
@@ -10152,6 +10161,15 @@ ruleArrowFunctionTypeExpression:
 	(
 		('new'
 		?
+		(
+			'<'
+			ruleTypeVariable
+			(
+				','
+				ruleTypeVariable
+			)*
+			'>'
+		)?
 		'('
 		ruleTAnonymousFormalParameterListWithDeclaredThisType
 		')'
@@ -10159,6 +10177,15 @@ ruleArrowFunctionTypeExpression:
 		)=>
 		'new'
 		?
+		(
+			'<'
+			ruleTypeVariable
+			(
+				','
+				ruleTypeVariable
+			)*
+			'>'
+		)?
 		'('
 		ruleTAnonymousFormalParameterListWithDeclaredThisType
 		')'

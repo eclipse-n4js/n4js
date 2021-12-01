@@ -39842,6 +39842,23 @@ rulePrimaryTypeExpression returns [EObject current=null]
 						New
 					)
 				)?
+				(
+					LessThanSign
+					(
+						(
+							ruleTypeVariable
+						)
+					)
+					(
+						Comma
+						(
+							(
+								ruleTypeVariable
+							)
+						)
+					)*
+					GreaterThanSign
+				)?
 				LeftParenthesis
 				ruleTAnonymousFormalParameterListWithDeclaredThisType[null]
 				RightParenthesis
@@ -40528,6 +40545,23 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 						New
 					)
 				)?
+				(
+					LessThanSign
+					(
+						(
+							ruleTypeVariable
+						)
+					)
+					(
+						Comma
+						(
+							(
+								ruleTypeVariable
+							)
+						)
+					)*
+					GreaterThanSign
+				)?
 				LeftParenthesis
 				ruleTAnonymousFormalParameterListWithDeclaredThisType[null]
 				RightParenthesis
@@ -40556,27 +40590,81 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 						}
 					)
 				)?
-				otherlv_2=LeftParenthesis
+				(
+					otherlv_2=LessThanSign
+					{
+						newLeafNode(otherlv_2, grammarAccess.getArrowFunctionTypeExpressionAccess().getLessThanSignKeyword_0_0_2_0());
+					}
+					(
+						(
+							{
+								newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getOwnedTypeVarsTypeVariableParserRuleCall_0_0_2_1_0());
+							}
+							lv_ownedTypeVars_3_0=ruleTypeVariable
+							{
+								if ($current==null) {
+									$current = createModelElementForParent(grammarAccess.getArrowFunctionTypeExpressionRule());
+								}
+								add(
+									$current,
+									"ownedTypeVars",
+									lv_ownedTypeVars_3_0,
+									"org.eclipse.n4js.TypeExpressions.TypeVariable");
+								afterParserOrEnumRuleCall();
+							}
+						)
+					)
+					(
+						otherlv_4=Comma
+						{
+							newLeafNode(otherlv_4, grammarAccess.getArrowFunctionTypeExpressionAccess().getCommaKeyword_0_0_2_2_0());
+						}
+						(
+							(
+								{
+									newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getOwnedTypeVarsTypeVariableParserRuleCall_0_0_2_2_1_0());
+								}
+								lv_ownedTypeVars_5_0=ruleTypeVariable
+								{
+									if ($current==null) {
+										$current = createModelElementForParent(grammarAccess.getArrowFunctionTypeExpressionRule());
+									}
+									add(
+										$current,
+										"ownedTypeVars",
+										lv_ownedTypeVars_5_0,
+										"org.eclipse.n4js.TypeExpressions.TypeVariable");
+									afterParserOrEnumRuleCall();
+								}
+							)
+						)
+					)*
+					otherlv_6=GreaterThanSign
+					{
+						newLeafNode(otherlv_6, grammarAccess.getArrowFunctionTypeExpressionAccess().getGreaterThanSignKeyword_0_0_2_3());
+					}
+				)?
+				otherlv_7=LeftParenthesis
 				{
-					newLeafNode(otherlv_2, grammarAccess.getArrowFunctionTypeExpressionAccess().getLeftParenthesisKeyword_0_0_2());
+					newLeafNode(otherlv_7, grammarAccess.getArrowFunctionTypeExpressionAccess().getLeftParenthesisKeyword_0_0_3());
 				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getArrowFunctionTypeExpressionRule());
 					}
-					newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_3());
+					newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_4());
 				}
-				this_TAnonymousFormalParameterListWithDeclaredThisType_3=ruleTAnonymousFormalParameterListWithDeclaredThisType[$current]
+				this_TAnonymousFormalParameterListWithDeclaredThisType_8=ruleTAnonymousFormalParameterListWithDeclaredThisType[$current]
 				{
-					$current = $this_TAnonymousFormalParameterListWithDeclaredThisType_3.current;
+					$current = $this_TAnonymousFormalParameterListWithDeclaredThisType_8.current;
 					afterParserOrEnumRuleCall();
 				}
-				otherlv_4=RightParenthesis
+				otherlv_9=RightParenthesis
 				{
-					newLeafNode(otherlv_4, grammarAccess.getArrowFunctionTypeExpressionAccess().getRightParenthesisKeyword_0_0_4());
+					newLeafNode(otherlv_9, grammarAccess.getArrowFunctionTypeExpressionAccess().getRightParenthesisKeyword_0_0_5());
 				}
 				{
-					newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getArrowParserRuleCall_0_0_5());
+					newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getArrowParserRuleCall_0_0_6());
 				}
 				ruleArrow
 				{
@@ -40607,7 +40695,7 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 					{
 						newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypePredicateTypePredicateWithPrimaryParserRuleCall_1_0_0());
 					}
-					lv_returnTypePredicate_6_0=ruleTypePredicateWithPrimary
+					lv_returnTypePredicate_11_0=ruleTypePredicateWithPrimary
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getArrowFunctionTypeExpressionRule());
@@ -40615,7 +40703,7 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 						set(
 							$current,
 							"returnTypePredicate",
-							lv_returnTypePredicate_6_0,
+							lv_returnTypePredicate_11_0,
 							"org.eclipse.n4js.TypeExpressions.TypePredicateWithPrimary");
 						afterParserOrEnumRuleCall();
 					}
@@ -40627,7 +40715,7 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 					{
 						newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypeRefPrimaryTypeExpressionParserRuleCall_1_1_0());
 					}
-					lv_returnTypeRef_7_0=rulePrimaryTypeExpression
+					lv_returnTypeRef_12_0=rulePrimaryTypeExpression
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getArrowFunctionTypeExpressionRule());
@@ -40635,7 +40723,7 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 						set(
 							$current,
 							"returnTypeRef",
-							lv_returnTypeRef_7_0,
+							lv_returnTypeRef_12_0,
 							"org.eclipse.n4js.TypeExpressions.PrimaryTypeExpression");
 						afterParserOrEnumRuleCall();
 					}

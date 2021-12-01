@@ -888,10 +888,19 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Action cFunctionTypeExpressionAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
 		private final Assignment cDtsConstructorAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
 		private final Keyword cDtsConstructorNewKeyword_0_0_1_0 = (Keyword)cDtsConstructorAssignment_0_0_1.eContents().get(0);
-		private final Keyword cLeftParenthesisKeyword_0_0_2 = (Keyword)cGroup_0_0.eContents().get(2);
-		private final RuleCall cTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_3 = (RuleCall)cGroup_0_0.eContents().get(3);
-		private final Keyword cRightParenthesisKeyword_0_0_4 = (Keyword)cGroup_0_0.eContents().get(4);
-		private final RuleCall cArrowParserRuleCall_0_0_5 = (RuleCall)cGroup_0_0.eContents().get(5);
+		private final Group cGroup_0_0_2 = (Group)cGroup_0_0.eContents().get(2);
+		private final Keyword cLessThanSignKeyword_0_0_2_0 = (Keyword)cGroup_0_0_2.eContents().get(0);
+		private final Assignment cOwnedTypeVarsAssignment_0_0_2_1 = (Assignment)cGroup_0_0_2.eContents().get(1);
+		private final RuleCall cOwnedTypeVarsTypeVariableParserRuleCall_0_0_2_1_0 = (RuleCall)cOwnedTypeVarsAssignment_0_0_2_1.eContents().get(0);
+		private final Group cGroup_0_0_2_2 = (Group)cGroup_0_0_2.eContents().get(2);
+		private final Keyword cCommaKeyword_0_0_2_2_0 = (Keyword)cGroup_0_0_2_2.eContents().get(0);
+		private final Assignment cOwnedTypeVarsAssignment_0_0_2_2_1 = (Assignment)cGroup_0_0_2_2.eContents().get(1);
+		private final RuleCall cOwnedTypeVarsTypeVariableParserRuleCall_0_0_2_2_1_0 = (RuleCall)cOwnedTypeVarsAssignment_0_0_2_2_1.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_0_0_2_3 = (Keyword)cGroup_0_0_2.eContents().get(3);
+		private final Keyword cLeftParenthesisKeyword_0_0_3 = (Keyword)cGroup_0_0.eContents().get(3);
+		private final RuleCall cTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_4 = (RuleCall)cGroup_0_0.eContents().get(4);
+		private final Keyword cRightParenthesisKeyword_0_0_5 = (Keyword)cGroup_0_0.eContents().get(5);
+		private final RuleCall cArrowParserRuleCall_0_0_6 = (RuleCall)cGroup_0_0.eContents().get(6);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Assignment cReturnTypePredicateAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
 		private final RuleCall cReturnTypePredicateTypePredicateWithPrimaryParserRuleCall_1_0_0 = (RuleCall)cReturnTypePredicateAssignment_1_0.eContents().get(0);
@@ -899,16 +908,35 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cReturnTypeRefPrimaryTypeExpressionParserRuleCall_1_1_0 = (RuleCall)cReturnTypeRefAssignment_1_1.eContents().get(0);
 		
 		//ArrowFunctionTypeExpression returns FunctionTypeExpression:
-		//    =>({FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
+		//    =>({FunctionTypeExpression}
+		//        (dtsConstructor?='new')?
+		//        ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
+		//        '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
+		//        Arrow
+		//    ) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=>({FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)
+		//=>({FunctionTypeExpression}
+		//    (dtsConstructor?='new')?
+		//    ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
+		//    '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
+		//    Arrow
+		//) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)
 		public Group getGroup() { return cGroup; }
 		
-		//=>({FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow)
+		//=>({FunctionTypeExpression}
+		//    (dtsConstructor?='new')?
+		//    ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
+		//    '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
+		//    Arrow
+		//)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow
+		//{FunctionTypeExpression}
+		//        (dtsConstructor?='new')?
+		//        ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
+		//        '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
+		//        Arrow
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{FunctionTypeExpression}
@@ -920,17 +948,44 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'new'
 		public Keyword getDtsConstructorNewKeyword_0_0_1_0() { return cDtsConstructorNewKeyword_0_0_1_0; }
 		
+		//('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
+		public Group getGroup_0_0_2() { return cGroup_0_0_2; }
+		
+		//'<'
+		public Keyword getLessThanSignKeyword_0_0_2_0() { return cLessThanSignKeyword_0_0_2_0; }
+		
+		//ownedTypeVars+=TypeVariable
+		public Assignment getOwnedTypeVarsAssignment_0_0_2_1() { return cOwnedTypeVarsAssignment_0_0_2_1; }
+		
+		//TypeVariable
+		public RuleCall getOwnedTypeVarsTypeVariableParserRuleCall_0_0_2_1_0() { return cOwnedTypeVarsTypeVariableParserRuleCall_0_0_2_1_0; }
+		
+		//(',' ownedTypeVars+=TypeVariable)*
+		public Group getGroup_0_0_2_2() { return cGroup_0_0_2_2; }
+		
+		//','
+		public Keyword getCommaKeyword_0_0_2_2_0() { return cCommaKeyword_0_0_2_2_0; }
+		
+		//ownedTypeVars+=TypeVariable
+		public Assignment getOwnedTypeVarsAssignment_0_0_2_2_1() { return cOwnedTypeVarsAssignment_0_0_2_2_1; }
+		
+		//TypeVariable
+		public RuleCall getOwnedTypeVarsTypeVariableParserRuleCall_0_0_2_2_1_0() { return cOwnedTypeVarsTypeVariableParserRuleCall_0_0_2_2_1_0; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_0_0_2_3() { return cGreaterThanSignKeyword_0_0_2_3; }
+		
 		//'('
-		public Keyword getLeftParenthesisKeyword_0_0_2() { return cLeftParenthesisKeyword_0_0_2; }
+		public Keyword getLeftParenthesisKeyword_0_0_3() { return cLeftParenthesisKeyword_0_0_3; }
 		
 		//TAnonymousFormalParameterListWithDeclaredThisType
-		public RuleCall getTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_3() { return cTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_3; }
+		public RuleCall getTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_4() { return cTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_4; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_0_0_4() { return cRightParenthesisKeyword_0_0_4; }
+		public Keyword getRightParenthesisKeyword_0_0_5() { return cRightParenthesisKeyword_0_0_5; }
 		
 		//Arrow
-		public RuleCall getArrowParserRuleCall_0_0_5() { return cArrowParserRuleCall_0_0_5; }
+		public RuleCall getArrowParserRuleCall_0_0_6() { return cArrowParserRuleCall_0_0_6; }
 		
 		//(returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
@@ -3779,7 +3834,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//ArrowFunctionTypeExpression returns FunctionTypeExpression:
-	//    =>({FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
+	//    =>({FunctionTypeExpression}
+	//        (dtsConstructor?='new')?
+	//        ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
+	//        '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
+	//        Arrow
+	//    ) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
 	public ArrowFunctionTypeExpressionElements getArrowFunctionTypeExpressionAccess() {
 		return pArrowFunctionTypeExpression;
 	}

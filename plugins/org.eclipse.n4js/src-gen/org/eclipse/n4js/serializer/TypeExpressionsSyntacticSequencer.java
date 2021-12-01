@@ -196,6 +196,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) '+'? astValue=LEGACY_OCTAL_INT
 	 *     (rule start) (ambiguity) '+'? astValue=OCTAL_INT
 	 *     (rule start) (ambiguity) '+'? astValue=SCIENTIFIC_INT
+	 *     (rule start) (ambiguity) '<' ownedTypeVars+=TypeVariable
 	 *     (rule start) (ambiguity) 'infer' typeVarName=IDENTIFIER
 	 *     (rule start) (ambiguity) 'intersection' '{' typeRefs+=TypeRef
 	 *     (rule start) (ambiguity) 'this' (rule start)

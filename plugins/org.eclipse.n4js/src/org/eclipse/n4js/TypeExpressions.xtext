@@ -129,7 +129,12 @@ ThisTypeRefStructural returns ThisTypeRefStructural:
 	('with' TStructMemberList)?;
 
 ArrowFunctionTypeExpression returns FunctionTypeExpression:
-	=>({FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
+	=>({FunctionTypeExpression}
+		(dtsConstructor?='new')?
+		('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
+		'(' TAnonymousFormalParameterListWithDeclaredThisType ')'
+		Arrow
+	) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
 
 // TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard
 fragment TAnonymousFormalParameterList* :
