@@ -2670,6 +2670,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getTMemberWithAccessModifier__GetDefaultMemberAccessModifier() {
+		return tMemberWithAccessModifierEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTStructMember() {
 		return tStructMemberEClass;
 	}
@@ -3793,6 +3803,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(tMemberWithAccessModifierEClass, TMEMBER_WITH_ACCESS_MODIFIER__HAS_NO_BODY);
 		createEAttribute(tMemberWithAccessModifierEClass, TMEMBER_WITH_ACCESS_MODIFIER__DECLARED_MEMBER_ACCESS_MODIFIER);
 		createEOperation(tMemberWithAccessModifierEClass, TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER);
+		createEOperation(tMemberWithAccessModifierEClass, TMEMBER_WITH_ACCESS_MODIFIER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER);
 
 		tStructMemberEClass = createEClass(TSTRUCT_MEMBER);
 		createEReference(tStructMemberEClass, TSTRUCT_MEMBER__DEFINED_MEMBER);
@@ -4388,6 +4399,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTMemberWithAccessModifier_DeclaredMemberAccessModifier(), this.getMemberAccessModifier(), "declaredMemberAccessModifier", null, 0, 1, TMemberWithAccessModifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTMemberWithAccessModifier__GetMemberAccessModifier(), this.getMemberAccessModifier(), "getMemberAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTMemberWithAccessModifier__GetDefaultMemberAccessModifier(), this.getMemberAccessModifier(), "getDefaultMemberAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tStructMemberEClass, TStructMember.class, "TStructMember", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTStructMember_DefinedMember(), this.getTStructMember(), null, "definedMember", null, 0, 1, TStructMember.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

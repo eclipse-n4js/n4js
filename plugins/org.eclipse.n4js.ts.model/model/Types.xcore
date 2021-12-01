@@ -1270,25 +1270,31 @@ abstract class TMemberWithAccessModifier extends TMember {
 	boolean hasNoBody
 	MemberAccessModifier declaredMemberAccessModifier
 	/**
-	 * Returns either the declared access modifier (if possible) or
-	 * derives the access modifier from the type access modifier of the containing type.
-	 * <p>
-	 * Note that the modifier is calculated in case no declared modifier is present, but it is not "fixed" (
-	 * cf. org.eclipse.n4js.ts.model.util.AccessModifiers.fixed(TMember)).
-	 * Also see [N4JSSpec] Constraints 2 (Default Member Access Modifiers)
+	 * Returns either the declared (if possible) or the default access modifier
 	 */
 	op MemberAccessModifier getMemberAccessModifier() {
 		if (declaredMemberAccessModifier === MemberAccessModifier.UNDEFINED) {
-			val parent = this.eContainer
-			if (parent instanceof TInterface) { // IDEBUG-456 only interface-members inherit from enclosing type
-				val modifierDerivedFromType = org.eclipse.n4js.ts.types.util.AccessModifiers.toMemberModifier((parent as Type).getTypeAccessModifier())
-				if (modifierDerivedFromType !== MemberAccessModifier.PRIVATE) {
-					return modifierDerivedFromType
-				}
-			}
-			return MemberAccessModifier.PROJECT // default for all class-members, even abstract members.
+			return getDefaultMemberAccessModifier();
 		}
 		return declaredMemberAccessModifier
+	}
+	
+	/**
+	 * Returns the default access modifier derived from the type access modifier of the containing type.
+	 * <p>
+	 * Note that the default modifier is calculated in case no declared modifier is present, but it is not "fixed"
+	 * (cf. org.eclipse.n4js.ts.model.util.AccessModifiers.fixed(TMember)).
+	 * Also see [N4JSSpec] Constraints 2 (Default Member Access Modifiers)
+	 */
+	op MemberAccessModifier getDefaultMemberAccessModifier() {
+		val parent = this.eContainer
+		if (parent instanceof TInterface) { // IDEBUG-456 only interface-members inherit from enclosing type
+			val modifierDerivedFromType = org.eclipse.n4js.ts.types.util.AccessModifiers.toMemberModifier((parent as Type).getTypeAccessModifier())
+			if (modifierDerivedFromType !== MemberAccessModifier.PRIVATE) {
+				return modifierDerivedFromType
+			}
+		}
+		return MemberAccessModifier.PROJECT // default for all class-members, even abstract members.
 	}
 }
 

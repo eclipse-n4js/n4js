@@ -7109,13 +7109,22 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER = TMEMBER_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Default Member Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER = TMEMBER_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>TMember With Access Modifier</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER_WITH_ACCESS_MODIFIER_OPERATION_COUNT = TMEMBER_OPERATION_COUNT + 1;
+	int TMEMBER_WITH_ACCESS_MODIFIER_OPERATION_COUNT = TMEMBER_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TStructMemberImpl <em>TStruct Member</em>}' class.
@@ -7993,13 +8002,22 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_MEMBER_ACCESS_MODIFIER = TFUNCTION_OPERATION_COUNT + 18;
 
 	/**
+	 * The operation id for the '<em>Get Default Member Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___GET_DEFAULT_MEMBER_ACCESS_MODIFIER = TFUNCTION_OPERATION_COUNT + 19;
+
+	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___IS_ABSTRACT = TFUNCTION_OPERATION_COUNT + 19;
+	int TMETHOD___IS_ABSTRACT = TFUNCTION_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Get Member Type</em>' operation.
@@ -8008,7 +8026,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___GET_MEMBER_TYPE = TFUNCTION_OPERATION_COUNT + 20;
+	int TMETHOD___GET_MEMBER_TYPE = TFUNCTION_OPERATION_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -8017,7 +8035,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___IS_CONSTRUCTOR = TFUNCTION_OPERATION_COUNT + 21;
+	int TMETHOD___IS_CONSTRUCTOR = TFUNCTION_OPERATION_COUNT + 22;
 
 	/**
 	 * The operation id for the '<em>Get Function As String</em>' operation.
@@ -8026,7 +8044,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___GET_FUNCTION_AS_STRING = TFUNCTION_OPERATION_COUNT + 22;
+	int TMETHOD___GET_FUNCTION_AS_STRING = TFUNCTION_OPERATION_COUNT + 23;
 
 	/**
 	 * The operation id for the '<em>Get Member As String</em>' operation.
@@ -8035,7 +8053,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___GET_MEMBER_AS_STRING = TFUNCTION_OPERATION_COUNT + 23;
+	int TMETHOD___GET_MEMBER_AS_STRING = TFUNCTION_OPERATION_COUNT + 24;
 
 	/**
 	 * The number of operations of the '<em>TMethod</em>' class.
@@ -8044,7 +8062,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 24;
+	int TMETHOD_OPERATION_COUNT = TFUNCTION_OPERATION_COUNT + 25;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TStructMethodImpl <em>TStruct Method</em>}' class.
@@ -9293,6 +9311,15 @@ public interface TypesPackage extends EPackage {
 	int TFIELD___GET_MEMBER_ACCESS_MODIFIER = TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER;
 
 	/**
+	 * The operation id for the '<em>Get Default Member Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD___GET_DEFAULT_MEMBER_ACCESS_MODIFIER = TMEMBER_WITH_ACCESS_MODIFIER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER;
+
+	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10033,6 +10060,15 @@ public interface TypesPackage extends EPackage {
 	int FIELD_ACCESSOR___GET_MEMBER_ACCESS_MODIFIER = TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER;
 
 	/**
+	 * The operation id for the '<em>Get Default Member Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR___GET_DEFAULT_MEMBER_ACCESS_MODIFIER = TMEMBER_WITH_ACCESS_MODIFIER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER;
+
+	/**
 	 * The operation id for the '<em>Get Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10356,6 +10392,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TGETTER___GET_MEMBER_ACCESS_MODIFIER = FIELD_ACCESSOR___GET_MEMBER_ACCESS_MODIFIER;
+
+	/**
+	 * The operation id for the '<em>Get Default Member Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER = FIELD_ACCESSOR___GET_DEFAULT_MEMBER_ACCESS_MODIFIER;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref</em>' operation.
@@ -11060,6 +11105,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSETTER___GET_MEMBER_ACCESS_MODIFIER = FIELD_ACCESSOR___GET_MEMBER_ACCESS_MODIFIER;
+
+	/**
+	 * The operation id for the '<em>Get Default Member Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER = FIELD_ACCESSOR___GET_DEFAULT_MEMBER_ACCESS_MODIFIER;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -14597,6 +14651,16 @@ public interface TypesPackage extends EPackage {
 	EOperation getTMemberWithAccessModifier__GetMemberAccessModifier();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMemberWithAccessModifier#getDefaultMemberAccessModifier() <em>Get Default Member Access Modifier</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Default Member Access Modifier</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TMemberWithAccessModifier#getDefaultMemberAccessModifier()
+	 * @generated
+	 */
+	EOperation getTMemberWithAccessModifier__GetDefaultMemberAccessModifier();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TStructMember <em>TStruct Member</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17207,6 +17271,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER = eINSTANCE.getTMemberWithAccessModifier__GetMemberAccessModifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Default Member Access Modifier</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TMEMBER_WITH_ACCESS_MODIFIER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER = eINSTANCE.getTMemberWithAccessModifier__GetDefaultMemberAccessModifier();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TStructMemberImpl <em>TStruct Member</em>}' class.

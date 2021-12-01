@@ -159,16 +159,26 @@ public abstract class TMemberWithAccessModifierImpl extends TMemberImpl implemen
 		MemberAccessModifier _declaredMemberAccessModifier = this.getDeclaredMemberAccessModifier();
 		boolean _tripleEquals = (_declaredMemberAccessModifier == MemberAccessModifier.UNDEFINED);
 		if (_tripleEquals) {
-			final EObject parent = this.eContainer();
-			if ((parent instanceof TInterface)) {
-				final MemberAccessModifier modifierDerivedFromType = AccessModifiers.toMemberModifier(((Type) parent).getTypeAccessModifier());
-				if ((modifierDerivedFromType != MemberAccessModifier.PRIVATE)) {
-					return modifierDerivedFromType;
-				}
-			}
-			return MemberAccessModifier.PROJECT;
+			return this.getDefaultMemberAccessModifier();
 		}
 		return this.getDeclaredMemberAccessModifier();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public MemberAccessModifier getDefaultMemberAccessModifier() {
+		final EObject parent = this.eContainer();
+		if ((parent instanceof TInterface)) {
+			final MemberAccessModifier modifierDerivedFromType = AccessModifiers.toMemberModifier(((Type) parent).getTypeAccessModifier());
+			if ((modifierDerivedFromType != MemberAccessModifier.PRIVATE)) {
+				return modifierDerivedFromType;
+			}
+		}
+		return MemberAccessModifier.PROJECT;
 	}
 
 	/**
@@ -249,6 +259,8 @@ public abstract class TMemberWithAccessModifierImpl extends TMemberImpl implemen
 		switch (operationID) {
 			case TypesPackage.TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER:
 				return getMemberAccessModifier();
+			case TypesPackage.TMEMBER_WITH_ACCESS_MODIFIER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER:
+				return getDefaultMemberAccessModifier();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

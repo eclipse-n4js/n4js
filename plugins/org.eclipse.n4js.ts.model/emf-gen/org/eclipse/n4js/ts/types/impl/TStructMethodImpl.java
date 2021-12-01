@@ -272,12 +272,14 @@ public class TStructMethodImpl extends TMethodImpl implements TStructMethod {
 		if (baseClass == TMemberWithAccessModifier.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER: return TypesPackage.TSTRUCT_METHOD___GET_MEMBER_ACCESS_MODIFIER;
+				case TypesPackage.TMEMBER_WITH_ACCESS_MODIFIER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER: return TypesPackage.TSTRUCT_METHOD___GET_DEFAULT_MEMBER_ACCESS_MODIFIER;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == TMethod.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TMETHOD___GET_MEMBER_ACCESS_MODIFIER: return TypesPackage.TSTRUCT_METHOD___GET_MEMBER_ACCESS_MODIFIER;
+				case TypesPackage.TMETHOD___GET_DEFAULT_MEMBER_ACCESS_MODIFIER: return TypesPackage.TSTRUCT_METHOD___GET_DEFAULT_MEMBER_ACCESS_MODIFIER;
 				case TypesPackage.TMETHOD___IS_STATIC: return TypesPackage.TSTRUCT_METHOD___IS_STATIC;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}

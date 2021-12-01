@@ -69,14 +69,17 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	protected N4JSTypeSystem ts;
 
-	@Inject protected ContainerTypesHelper containerTypesHelper;
-
-	@Inject StructuralTypesHelper structuralTypesHelper;
-
-	@Inject StaticPolyfillHelper staticPolyfillHelper;
+	@Inject
+	protected ContainerTypesHelper containerTypesHelper;
 
 	@Inject
-	private JavaScriptVariantHelper jsVariantHelper;
+	protected StructuralTypesHelper structuralTypesHelper;
+
+	@Inject
+	protected StaticPolyfillHelper staticPolyfillHelper;
+
+	@Inject
+	protected JavaScriptVariantHelper jsVariantHelper;
 
 	/**
 	 * NEEEDED

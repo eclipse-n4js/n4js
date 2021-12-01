@@ -18,6 +18,8 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -97,7 +99,15 @@ public class ModifierUtils {
 					return ate.getDeclaredTypeAccessModifier() == ate.getDefaultTypeAccessModifier();
 				}
 			}
-			return isN4MemberDeclaration(astNodeType);
+			if (isN4MemberDeclaration(astNodeType)) {
+				N4MemberDeclaration typeDefElem = (N4MemberDeclaration) elem;
+				TMember tMember = typeDefElem.getDefinedTypeElement();
+				if (isTMemberWithAccessModifier(tMember.eClass())) {
+					TMemberWithAccessModifier tmwam = (TMemberWithAccessModifier) tMember;
+					return tmwam.getDeclaredMemberAccessModifier() == tmwam.getDefaultMemberAccessModifier();
+				}
+			}
+			return false;
 		case EXTERNAL:
 			return elem.isDeclaredExternal() && elem.isDefaultExternal();
 		case ABSTRACT:
@@ -229,5 +239,9 @@ public class ModifierUtils {
 
 	private static final boolean isAccessibleTypeElement(EClass astNodeType) {
 		return TypesPackage.eINSTANCE.getAccessibleTypeElement().isSuperTypeOf(astNodeType);
+	}
+
+	private static final boolean isTMemberWithAccessModifier(EClass astNodeType) {
+		return TypesPackage.eINSTANCE.getTMemberWithAccessModifier().isSuperTypeOf(astNodeType);
 	}
 }

@@ -596,16 +596,26 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 		MemberAccessModifier _declaredMemberAccessModifier = this.getDeclaredMemberAccessModifier();
 		boolean _tripleEquals = (_declaredMemberAccessModifier == MemberAccessModifier.UNDEFINED);
 		if (_tripleEquals) {
-			final EObject parent = this.eContainer();
-			if ((parent instanceof TInterface)) {
-				final MemberAccessModifier modifierDerivedFromType = AccessModifiers.toMemberModifier(((Type) parent).getTypeAccessModifier());
-				if ((modifierDerivedFromType != MemberAccessModifier.PRIVATE)) {
-					return modifierDerivedFromType;
-				}
-			}
-			return MemberAccessModifier.PROJECT;
+			return this.getDefaultMemberAccessModifier();
 		}
 		return this.getDeclaredMemberAccessModifier();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public MemberAccessModifier getDefaultMemberAccessModifier() {
+		final EObject parent = this.eContainer();
+		if ((parent instanceof TInterface)) {
+			final MemberAccessModifier modifierDerivedFromType = AccessModifiers.toMemberModifier(((Type) parent).getTypeAccessModifier());
+			if ((modifierDerivedFromType != MemberAccessModifier.PRIVATE)) {
+				return modifierDerivedFromType;
+			}
+		}
+		return MemberAccessModifier.PROJECT;
 	}
 
 	/**
@@ -1006,6 +1016,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 		if (baseClass == TMemberWithAccessModifier.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER: return TypesPackage.TMETHOD___GET_MEMBER_ACCESS_MODIFIER;
+				case TypesPackage.TMEMBER_WITH_ACCESS_MODIFIER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER: return TypesPackage.TMETHOD___GET_DEFAULT_MEMBER_ACCESS_MODIFIER;
 				default: return -1;
 			}
 		}
@@ -1032,6 +1043,8 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				return getMemberAsString();
 			case TypesPackage.TMETHOD___GET_MEMBER_ACCESS_MODIFIER:
 				return getMemberAccessModifier();
+			case TypesPackage.TMETHOD___GET_DEFAULT_MEMBER_ACCESS_MODIFIER:
+				return getDefaultMemberAccessModifier();
 			case TypesPackage.TMETHOD___GET_CONTAINING_TYPE:
 				return getContainingType();
 			case TypesPackage.TMETHOD___IS_FIELD:
