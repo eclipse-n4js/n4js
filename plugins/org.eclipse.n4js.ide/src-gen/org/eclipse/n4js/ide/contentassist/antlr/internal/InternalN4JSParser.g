@@ -79890,9 +79890,9 @@ rule__ArrowFunctionTypeExpression__Group_0_0__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getLeftParenthesisKeyword_0_0_1()); }
-	LeftParenthesis
-	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getLeftParenthesisKeyword_0_0_1()); }
+	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getDtsConstructorAssignment_0_0_1()); }
+	(rule__ArrowFunctionTypeExpression__DtsConstructorAssignment_0_0_1)?
+	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getDtsConstructorAssignment_0_0_1()); }
 )
 ;
 finally {
@@ -79917,9 +79917,9 @@ rule__ArrowFunctionTypeExpression__Group_0_0__2__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_2()); }
-	ruleTAnonymousFormalParameterListWithDeclaredThisType
-	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_2()); }
+	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getLeftParenthesisKeyword_0_0_2()); }
+	LeftParenthesis
+	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getLeftParenthesisKeyword_0_0_2()); }
 )
 ;
 finally {
@@ -79944,9 +79944,9 @@ rule__ArrowFunctionTypeExpression__Group_0_0__3__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getRightParenthesisKeyword_0_0_3()); }
-	RightParenthesis
-	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getRightParenthesisKeyword_0_0_3()); }
+	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_3()); }
+	ruleTAnonymousFormalParameterListWithDeclaredThisType
+	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_3()); }
 )
 ;
 finally {
@@ -79959,6 +79959,7 @@ rule__ArrowFunctionTypeExpression__Group_0_0__4
 	}
 :
 	rule__ArrowFunctionTypeExpression__Group_0_0__4__Impl
+	rule__ArrowFunctionTypeExpression__Group_0_0__5
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -79970,9 +79971,35 @@ rule__ArrowFunctionTypeExpression__Group_0_0__4__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getArrowParserRuleCall_0_0_4()); }
+	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getRightParenthesisKeyword_0_0_4()); }
+	RightParenthesis
+	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getRightParenthesisKeyword_0_0_4()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__ArrowFunctionTypeExpression__Group_0_0__5
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__ArrowFunctionTypeExpression__Group_0_0__5__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__ArrowFunctionTypeExpression__Group_0_0__5__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getArrowParserRuleCall_0_0_5()); }
 	ruleArrow
-	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getArrowParserRuleCall_0_0_4()); }
+	{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getArrowParserRuleCall_0_0_5()); }
 )
 ;
 finally {
@@ -98156,6 +98183,25 @@ rule__ThisTypeRefStructural__DefinedTypingStrategyAssignment_0
 		{ before(grammarAccess.getThisTypeRefStructuralAccess().getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0()); }
 		ruleTypingStrategyUseSiteOperator
 		{ after(grammarAccess.getThisTypeRefStructuralAccess().getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__ArrowFunctionTypeExpression__DtsConstructorAssignment_0_0_1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getDtsConstructorNewKeyword_0_0_1_0()); }
+		(
+			{ before(grammarAccess.getArrowFunctionTypeExpressionAccess().getDtsConstructorNewKeyword_0_0_1_0()); }
+			New
+			{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getDtsConstructorNewKeyword_0_0_1_0()); }
+		)
+		{ after(grammarAccess.getArrowFunctionTypeExpressionAccess().getDtsConstructorNewKeyword_0_0_1_0()); }
 	)
 ;
 finally {

@@ -73,6 +73,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isDtsConstructor <em>Dts Constructor</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isBinding <em>Binding</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredThisType <em>Declared This Type</em>}</li>
@@ -90,6 +91,31 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * @generated
  */
 public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
+	/**
+	 * Returns the value of the '<em><b>Dts Constructor</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Only allowed in DTS.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Dts Constructor</em>' attribute.
+	 * @see #setDtsConstructor(boolean)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression_DtsConstructor()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isDtsConstructor();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isDtsConstructor <em>Dts Constructor</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dts Constructor</em>' attribute.
+	 * @see #isDtsConstructor()
+	 * @generated
+	 */
+	void setDtsConstructor(boolean value);
+
 	/**
 	 * Returns the value of the '<em><b>Binding</b></em>' attribute.
 	 * <!-- begin-user-doc -->

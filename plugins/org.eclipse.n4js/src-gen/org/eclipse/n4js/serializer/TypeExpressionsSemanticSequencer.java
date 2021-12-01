@@ -498,6 +498,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (
+	 *         dtsConstructor?='new'? 
 	 *         ((declaredThisType=TypeRef | fpars+=TAnonymousFormalParameter) fpars+=TAnonymousFormalParameter*)? 
 	 *         (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)
 	 *     )

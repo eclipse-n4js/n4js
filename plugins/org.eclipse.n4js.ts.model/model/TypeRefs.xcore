@@ -1257,6 +1257,9 @@ class FunctionTypeRef extends ParameterizedTypeRef, FunctionTypeExprOrRef {
  */
 class FunctionTypeExpression extends FunctionTypeExprOrRef {
 
+	/* Only allowed in DTS. */
+	boolean dtsConstructor
+
 	/*
 	 * Tells if this FunctionTypeExpression represents a binding of a TFunction or
 	 * another FunctionTypeExpression (use cases 2.a and 2.b, respectively).

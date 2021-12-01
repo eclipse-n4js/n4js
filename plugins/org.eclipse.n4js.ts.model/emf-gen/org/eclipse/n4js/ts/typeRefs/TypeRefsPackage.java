@@ -6265,13 +6265,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION__ORIGINAL_ALIAS_TYPE_REF = FUNCTION_TYPE_EXPR_OR_REF__ORIGINAL_ALIAS_TYPE_REF;
 
 	/**
+	 * The feature id for the '<em><b>Dts Constructor</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Binding</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__BINDING = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 0;
+	int FUNCTION_TYPE_EXPRESSION__BINDING = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
@@ -6280,7 +6289,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 1;
+	int FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Declared This Type</b></em>' containment reference.
@@ -6289,7 +6298,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 2;
+	int FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Owned Type Vars</b></em>' containment reference list.
@@ -6298,7 +6307,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 3;
+	int FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Unbound Type Vars</b></em>' reference list.
@@ -6307,7 +6316,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 4;
+	int FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Unbound Type Vars Upper Bounds</b></em>' containment reference list.
@@ -6316,7 +6325,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS_UPPER_BOUNDS = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 5;
+	int FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS_UPPER_BOUNDS = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
@@ -6325,7 +6334,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__FPARS = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 6;
+	int FUNCTION_TYPE_EXPRESSION__FPARS = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Return Value Marked Optional</b></em>' attribute.
@@ -6334,7 +6343,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 7;
+	int FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Return Type Ref</b></em>' containment reference.
@@ -6343,7 +6352,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 8;
+	int FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Return Type Predicate</b></em>' containment reference.
@@ -6352,7 +6361,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 9;
+	int FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 10;
 
 	/**
 	 * The number of structural features of the '<em>Function Type Expression</em>' class.
@@ -6361,7 +6370,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION_FEATURE_COUNT = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 10;
+	int FUNCTION_TYPE_EXPRESSION_FEATURE_COUNT = FUNCTION_TYPE_EXPR_OR_REF_FEATURE_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -12188,6 +12197,17 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getFunctionTypeExpression();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isDtsConstructor <em>Dts Constructor</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Dts Constructor</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isDtsConstructor()
+	 * @see #getFunctionTypeExpression()
+	 * @generated
+	 */
+	EAttribute getFunctionTypeExpression_DtsConstructor();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isBinding <em>Binding</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14133,6 +14153,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EClass FUNCTION_TYPE_EXPRESSION = eINSTANCE.getFunctionTypeExpression();
+
+		/**
+		 * The meta object literal for the '<em><b>Dts Constructor</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR = eINSTANCE.getFunctionTypeExpression_DtsConstructor();
 
 		/**
 		 * The meta object literal for the '<em><b>Binding</b></em>' attribute feature.

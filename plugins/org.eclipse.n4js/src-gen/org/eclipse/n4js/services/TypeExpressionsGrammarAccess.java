@@ -886,10 +886,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
 		private final Action cFunctionTypeExpressionAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
-		private final Keyword cLeftParenthesisKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
-		private final RuleCall cTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_2 = (RuleCall)cGroup_0_0.eContents().get(2);
-		private final Keyword cRightParenthesisKeyword_0_0_3 = (Keyword)cGroup_0_0.eContents().get(3);
-		private final RuleCall cArrowParserRuleCall_0_0_4 = (RuleCall)cGroup_0_0.eContents().get(4);
+		private final Assignment cDtsConstructorAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
+		private final Keyword cDtsConstructorNewKeyword_0_0_1_0 = (Keyword)cDtsConstructorAssignment_0_0_1.eContents().get(0);
+		private final Keyword cLeftParenthesisKeyword_0_0_2 = (Keyword)cGroup_0_0.eContents().get(2);
+		private final RuleCall cTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_3 = (RuleCall)cGroup_0_0.eContents().get(3);
+		private final Keyword cRightParenthesisKeyword_0_0_4 = (Keyword)cGroup_0_0.eContents().get(4);
+		private final RuleCall cArrowParserRuleCall_0_0_5 = (RuleCall)cGroup_0_0.eContents().get(5);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Assignment cReturnTypePredicateAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
 		private final RuleCall cReturnTypePredicateTypePredicateWithPrimaryParserRuleCall_1_0_0 = (RuleCall)cReturnTypePredicateAssignment_1_0.eContents().get(0);
@@ -897,32 +899,38 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cReturnTypeRefPrimaryTypeExpressionParserRuleCall_1_1_0 = (RuleCall)cReturnTypeRefAssignment_1_1.eContents().get(0);
 		
 		//ArrowFunctionTypeExpression returns FunctionTypeExpression:
-		//    =>({FunctionTypeExpression} '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
+		//    =>({FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=>({FunctionTypeExpression} '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)
+		//=>({FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)
 		public Group getGroup() { return cGroup; }
 		
-		//=>({FunctionTypeExpression} '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow)
+		//=>({FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//{FunctionTypeExpression} '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow
+		//{FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{FunctionTypeExpression}
 		public Action getFunctionTypeExpressionAction_0_0_0() { return cFunctionTypeExpressionAction_0_0_0; }
 		
+		//(dtsConstructor?='new')?
+		public Assignment getDtsConstructorAssignment_0_0_1() { return cDtsConstructorAssignment_0_0_1; }
+		
+		//'new'
+		public Keyword getDtsConstructorNewKeyword_0_0_1_0() { return cDtsConstructorNewKeyword_0_0_1_0; }
+		
 		//'('
-		public Keyword getLeftParenthesisKeyword_0_0_1() { return cLeftParenthesisKeyword_0_0_1; }
+		public Keyword getLeftParenthesisKeyword_0_0_2() { return cLeftParenthesisKeyword_0_0_2; }
 		
 		//TAnonymousFormalParameterListWithDeclaredThisType
-		public RuleCall getTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_2() { return cTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_2; }
+		public RuleCall getTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_3() { return cTAnonymousFormalParameterListWithDeclaredThisTypeParserRuleCall_0_0_3; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_0_0_3() { return cRightParenthesisKeyword_0_0_3; }
+		public Keyword getRightParenthesisKeyword_0_0_4() { return cRightParenthesisKeyword_0_0_4; }
 		
 		//Arrow
-		public RuleCall getArrowParserRuleCall_0_0_4() { return cArrowParserRuleCall_0_0_4; }
+		public RuleCall getArrowParserRuleCall_0_0_5() { return cArrowParserRuleCall_0_0_5; }
 		
 		//(returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
@@ -3761,7 +3769,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//ArrowFunctionTypeExpression returns FunctionTypeExpression:
-	//    =>({FunctionTypeExpression} '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
+	//    =>({FunctionTypeExpression} (dtsConstructor?='new')? '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
 	public ArrowFunctionTypeExpressionElements getArrowFunctionTypeExpressionAccess() {
 		return pArrowFunctionTypeExpression;
 	}

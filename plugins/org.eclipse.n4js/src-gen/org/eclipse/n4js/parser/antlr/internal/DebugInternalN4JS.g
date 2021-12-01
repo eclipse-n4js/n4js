@@ -9998,7 +9998,9 @@ rulePrimaryTypeExpression:
 		ruleLiteralTypeRef
 		    |
 		(
-			('('
+			('new'
+			?
+			'('
 			ruleTAnonymousFormalParameterListWithDeclaredThisType
 			')'
 			ruleArrow
@@ -10136,11 +10138,15 @@ ruleThisTypeRefStructural:
 // Rule ArrowFunctionTypeExpression
 ruleArrowFunctionTypeExpression:
 	(
-		('('
+		('new'
+		?
+		'('
 		ruleTAnonymousFormalParameterListWithDeclaredThisType
 		')'
 		ruleArrow
 		)=>
+		'new'
+		?
 		'('
 		ruleTAnonymousFormalParameterListWithDeclaredThisType
 		')'

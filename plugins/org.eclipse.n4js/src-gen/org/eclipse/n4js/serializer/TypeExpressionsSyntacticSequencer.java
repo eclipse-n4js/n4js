@@ -220,10 +220,16 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 5641a2d2d (early support for constructor type expressions)
 <<<<<<< HEAD
 	 *     (rule start) (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
 =======
+=======
+	 *     (rule start) (ambiguity) dtsConstructor?='new'
+>>>>>>> 9195fcc1c (early support for constructor type expressions)
 	 *     (rule start) (ambiguity) op=TypeOperator
 	 *     (rule start) (ambiguity) {ConditionalTypeRef.typeRef=}
 	 *     (rule start) (ambiguity) {IndexAccessTypeRef.targetTypeRef=}

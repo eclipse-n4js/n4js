@@ -1163,6 +1163,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAstValueAssignment_1_6(), "rule__NumericLiteralTypeRef__AstValueAssignment_1_6");
 			builder.put(grammarAccess.getStringLiteralTypeRefAccess().getAstValueAssignment(), "rule__StringLiteralTypeRef__AstValueAssignment");
 			builder.put(grammarAccess.getThisTypeRefStructuralAccess().getDefinedTypingStrategyAssignment_0(), "rule__ThisTypeRefStructural__DefinedTypingStrategyAssignment_0");
+			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getDtsConstructorAssignment_0_0_1(), "rule__ArrowFunctionTypeExpression__DtsConstructorAssignment_0_0_1");
 			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypePredicateAssignment_1_0(), "rule__ArrowFunctionTypeExpression__ReturnTypePredicateAssignment_1_0");
 			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypeRefAssignment_1_1(), "rule__ArrowFunctionTypeExpression__ReturnTypeRefAssignment_1_1");
 			builder.put(grammarAccess.getTAnonymousFormalParameterListAccess().getFparsAssignment_0(), "rule__TAnonymousFormalParameterList__FparsAssignment_0");

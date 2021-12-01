@@ -46,7 +46,8 @@ class DtsParserTest extends AbstractParserTest {
 
 	@Test
 	def void testSingleFile() {
-		val file = FILE_ES5;
+		val file = FILE_TEST;
+//		val file = FILE_ES5;
 		val code = Files.readString(file);
 		val idx = code.indexOf("%%END");
 		val codeTrimmed = if (idx>=0) code.substring(0, idx) else code;

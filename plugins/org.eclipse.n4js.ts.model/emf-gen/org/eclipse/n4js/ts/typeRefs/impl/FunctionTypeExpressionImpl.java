@@ -46,6 +46,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isDtsConstructor <em>Dts Constructor</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isBinding <em>Binding</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getDeclaredThisType <em>Declared This Type</em>}</li>
@@ -61,6 +62,26 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * @generated
  */
 public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implements FunctionTypeExpression {
+	/**
+	 * The default value of the '{@link #isDtsConstructor() <em>Dts Constructor</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDtsConstructor()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DTS_CONSTRUCTOR_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDtsConstructor() <em>Dts Constructor</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDtsConstructor()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean dtsConstructor = DTS_CONSTRUCTOR_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #isBinding() <em>Binding</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -198,6 +219,29 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	protected EClass eStaticClass() {
 		return TypeRefsPackage.Literals.FUNCTION_TYPE_EXPRESSION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDtsConstructor() {
+		return dtsConstructor;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDtsConstructor(boolean newDtsConstructor) {
+		boolean oldDtsConstructor = dtsConstructor;
+		dtsConstructor = newDtsConstructor;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR, oldDtsConstructor, dtsConstructor));
 	}
 
 	/**
@@ -564,6 +608,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR:
+				return isDtsConstructor();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__BINDING:
 				return isBinding();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE:
@@ -598,6 +644,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR:
+				setDtsConstructor((Boolean)newValue);
+				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__BINDING:
 				setBinding((Boolean)newValue);
 				return;
@@ -644,6 +693,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR:
+				setDtsConstructor(DTS_CONSTRUCTOR_EDEFAULT);
+				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__BINDING:
 				setBinding(BINDING_EDEFAULT);
 				return;
@@ -686,6 +738,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR:
+				return dtsConstructor != DTS_CONSTRUCTOR_EDEFAULT;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__BINDING:
 				return binding != BINDING_EDEFAULT;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE:
@@ -756,7 +810,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (binding: ");
+		result.append(" (dtsConstructor: ");
+		result.append(dtsConstructor);
+		result.append(", binding: ");
 		result.append(binding);
 		result.append(", returnValueMarkedOptional: ");
 		result.append(returnValueMarkedOptional);
