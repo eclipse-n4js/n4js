@@ -1650,6 +1650,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cTStructSetterParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cTStructMethodParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cTStructFieldParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cTStructIndexSignatureParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		
 		///**
 		// * All TMembers here are only used in ParameterizedTypeRefStructural references
@@ -1659,13 +1660,15 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//      TStructGetter
 		//    | TStructSetter
 		//    | TStructMethod
-		//    | TStructField;
+		//    | TStructField
+		//    | TStructIndexSignature;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//  TStructGetter
 		//| TStructSetter
 		//| TStructMethod
 		//| TStructField
+		//| TStructIndexSignature
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//TStructGetter
@@ -1679,6 +1682,9 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//TStructField
 		public RuleCall getTStructFieldParserRuleCall_3() { return cTStructFieldParserRuleCall_3; }
+		
+		//TStructIndexSignature
+		public RuleCall getTStructIndexSignatureParserRuleCall_4() { return cTStructIndexSignatureParserRuleCall_4; }
 	}
 	public class TStructMethodElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TStructMethod");
@@ -2015,6 +2021,62 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//')'
 		public Keyword getRightParenthesisKeyword_4() { return cRightParenthesisKeyword_4; }
+	}
+	public class TStructIndexSignatureElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TStructIndexSignature");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cLeftSquareBracketKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cKeyNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cKeyNameIdentifierNameParserRuleCall_1_0 = (RuleCall)cKeyNameAssignment_1.eContents().get(0);
+		private final Keyword cColonKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cKeyTypeRefAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cKeyTypeRefTypeRefParserRuleCall_3_0 = (RuleCall)cKeyTypeRefAssignment_3.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Keyword cColonKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		private final Assignment cValueTypeRefAssignment_6 = (Assignment)cGroup.eContents().get(6);
+		private final RuleCall cValueTypeRefTypeRefParserRuleCall_6_0 = (RuleCall)cValueTypeRefAssignment_6.eContents().get(0);
+		
+		//TStructIndexSignature:
+		//    '[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
+		//    ':'
+		//    valueTypeRef=TypeRef
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
+		//':'
+		//valueTypeRef=TypeRef
+		public Group getGroup() { return cGroup; }
+		
+		//'['
+		public Keyword getLeftSquareBracketKeyword_0() { return cLeftSquareBracketKeyword_0; }
+		
+		//keyName=IdentifierName
+		public Assignment getKeyNameAssignment_1() { return cKeyNameAssignment_1; }
+		
+		//IdentifierName
+		public RuleCall getKeyNameIdentifierNameParserRuleCall_1_0() { return cKeyNameIdentifierNameParserRuleCall_1_0; }
+		
+		//':'
+		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
+		
+		//keyTypeRef=TypeRef
+		public Assignment getKeyTypeRefAssignment_3() { return cKeyTypeRefAssignment_3; }
+		
+		//TypeRef
+		public RuleCall getKeyTypeRefTypeRefParserRuleCall_3_0() { return cKeyTypeRefTypeRefParserRuleCall_3_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_4() { return cRightSquareBracketKeyword_4; }
+		
+		//':'
+		public Keyword getColonKeyword_5() { return cColonKeyword_5; }
+		
+		//valueTypeRef=TypeRef
+		public Assignment getValueTypeRefAssignment_6() { return cValueTypeRefAssignment_6; }
+		
+		//TypeRef
+		public RuleCall getValueTypeRefTypeRefParserRuleCall_6_0() { return cValueTypeRefTypeRefParserRuleCall_6_0; }
 	}
 	public class TypingStrategyUseSiteOperatorElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypingStrategyUseSiteOperator");
@@ -3081,6 +3143,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final TStructFieldElements pTStructField;
 	private final TStructGetterElements pTStructGetter;
 	private final TStructSetterElements pTStructSetter;
+	private final TStructIndexSignatureElements pTStructIndexSignature;
 	private final TypingStrategyUseSiteOperatorElements pTypingStrategyUseSiteOperator;
 	private final TypingStrategyDefSiteOperatorElements pTypingStrategyDefSiteOperator;
 	private final TerminalRule tSTRUCTMODSUFFIX;
@@ -3173,6 +3236,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pTStructField = new TStructFieldElements();
 		this.pTStructGetter = new TStructGetterElements();
 		this.pTStructSetter = new TStructSetterElements();
+		this.pTStructIndexSignature = new TStructIndexSignatureElements();
 		this.pTypingStrategyUseSiteOperator = new TypingStrategyUseSiteOperatorElements();
 		this.pTypingStrategyDefSiteOperator = new TypingStrategyDefSiteOperatorElements();
 		this.tSTRUCTMODSUFFIX = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.STRUCTMODSUFFIX");
@@ -3682,7 +3746,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//      TStructGetter
 	//    | TStructSetter
 	//    | TStructMethod
-	//    | TStructField;
+	//    | TStructField
+	//    | TStructIndexSignature;
 	public TStructMemberElements getTStructMemberAccess() {
 		return pTStructMember;
 	}
@@ -3768,6 +3833,19 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	
 	public ParserRule getTStructSetterRule() {
 		return getTStructSetterAccess().getRule();
+	}
+	
+	//TStructIndexSignature:
+	//    '[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
+	//    ':'
+	//    valueTypeRef=TypeRef
+	//;
+	public TStructIndexSignatureElements getTStructIndexSignatureAccess() {
+		return pTStructIndexSignature;
+	}
+	
+	public ParserRule getTStructIndexSignatureRule() {
+		return getTStructIndexSignatureAccess().getRule();
 	}
 	
 	//TypingStrategyUseSiteOperator returns TypingStrategy:

@@ -2523,14 +2523,15 @@ class N4SetterDeclaration extends SetterDeclaration, N4FieldAccessor {
 
 class N4IndexSignatureDeclaration extends AnnotableN4MemberDeclaration {
 
-	contains TypeReferenceNode<TypeRef> declaredIndexTypeRefNode
+	String keyName
+	contains TypeReferenceNode<TypeRef> declaredKeyTypeRefNode
 	contains TypeReferenceNode<TypeRef> declaredValueTypeRefNode
 
-	op TypeRef getDeclaredIndexTypeRef() {
-		return declaredIndexTypeRefNode?.typeRef;
+	op TypeRef getDeclaredKeyTypeRef() {
+		return declaredKeyTypeRefNode?.typeRef;
 	}
-	op TypeRef getDeclaredIndexTypeRefInAST() {
-		return declaredIndexTypeRefNode?.typeRefInAST;
+	op TypeRef getDeclaredKeyTypeRefInAST() {
+		return declaredKeyTypeRefNode?.typeRefInAST;
 	}
 
 	op TypeRef getDeclaredValueTypeRef() {

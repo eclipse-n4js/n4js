@@ -16,6 +16,7 @@ import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TStructGetter
+import org.eclipse.n4js.ts.types.TStructIndexSignature
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TStructSetter
@@ -149,5 +150,8 @@ public class N4JSTypesFromTypeRefBuilder {
 		if(fpar.typeRef===null) {
 			fpar.typeRef = builtInTypeScope.getAnyTypeRef();
 		}
+	}
+	def private dispatch void applyDefaults(BuiltInTypeScope builtInTypeScope, TStructIndexSignature indexSig) {
+		// FIXME
 	}
 }

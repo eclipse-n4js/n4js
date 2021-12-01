@@ -1654,6 +1654,18 @@ class TStructSetter extends TSetter, TStructMember {
 	}
 }
 
+class TIndexSignature extends TMember {
+	String keyName
+	contains TypeRef keyTypeRef
+	contains TypeRef valueTypeRef
+}
+
+/*
+ * Index signature defined in a structural type reference.
+ */
+class TStructIndexSignature extends TIndexSignature, TStructMember {
+}
+
 /*
  * Represents a user defined enumeration type. All enums implicitly (and transparently
  * to the user) inherit from N4Enum, which provides properties shared by all enums.

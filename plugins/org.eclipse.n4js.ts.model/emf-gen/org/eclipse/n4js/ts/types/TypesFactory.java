@@ -372,6 +372,24 @@ public interface TypesFactory extends EFactory {
 	TStructSetter createTStructSetter();
 
 	/**
+	 * Returns a new object of class '<em>TIndex Signature</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>TIndex Signature</em>'.
+	 * @generated
+	 */
+	TIndexSignature createTIndexSignature();
+
+	/**
+	 * Returns a new object of class '<em>TStruct Index Signature</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>TStruct Index Signature</em>'.
+	 * @generated
+	 */
+	TStructIndexSignature createTStructIndexSignature();
+
+	/**
 	 * Returns a new object of class '<em>TEnum</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.types.TAnonymousFormalParameter;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructGetter;
+import org.eclipse.n4js.ts.types.TStructIndexSignature;
 import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TStructSetter;
 import org.eclipse.n4js.ts.types.TypePredicate;
@@ -288,6 +289,9 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 				return; 
 			case TypesPackage.TSTRUCT_GETTER:
 				sequence_ColonSepTypeRef_TStructGetter(context, (TStructGetter) semanticObject); 
+				return; 
+			case TypesPackage.TSTRUCT_INDEX_SIGNATURE:
+				sequence_TStructIndexSignature(context, (TStructIndexSignature) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_METHOD:
 				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod(context, (TStructMethod) semanticObject); 
@@ -927,6 +931,31 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getStringLiteralTypeRefAccess().getAstValueSTRINGTerminalRuleCall_0(), semanticObject.getAstValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     TStructMember returns TStructIndexSignature
+	 *     TStructIndexSignature returns TStructIndexSignature
+	 *
+	 * Constraint:
+	 *     (keyName=IdentifierName keyTypeRef=TypeRef valueTypeRef=TypeRef)
+	 */
+	protected void sequence_TStructIndexSignature(ISerializationContext context, TStructIndexSignature semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__KEY_NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__KEY_NAME));
+			if (transientValues.isValueTransient(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__KEY_TYPE_REF) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__KEY_TYPE_REF));
+			if (transientValues.isValueTransient(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__VALUE_TYPE_REF) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__VALUE_TYPE_REF));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getTStructIndexSignatureAccess().getKeyNameIdentifierNameParserRuleCall_1_0(), semanticObject.getKeyName());
+		feeder.accept(grammarAccess.getTStructIndexSignatureAccess().getKeyTypeRefTypeRefParserRuleCall_3_0(), semanticObject.getKeyTypeRef());
+		feeder.accept(grammarAccess.getTStructIndexSignatureAccess().getValueTypeRefTypeRefParserRuleCall_6_0(), semanticObject.getValueTypeRef());
 		feeder.finish();
 	}
 	

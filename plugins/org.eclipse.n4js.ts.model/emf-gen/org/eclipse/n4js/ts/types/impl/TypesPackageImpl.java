@@ -65,6 +65,7 @@ import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TGetter;
+import org.eclipse.n4js.ts.types.TIndexSignature;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
@@ -76,6 +77,7 @@ import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructGetter;
+import org.eclipse.n4js.ts.types.TStructIndexSignature;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TStructSetter;
@@ -459,6 +461,20 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass tStructSetterEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tIndexSignatureEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tStructIndexSignatureEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -3288,6 +3304,56 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getTIndexSignature() {
+		return tIndexSignatureEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getTIndexSignature_KeyName() {
+		return (EAttribute)tIndexSignatureEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTIndexSignature_KeyTypeRef() {
+		return (EReference)tIndexSignatureEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTIndexSignature_ValueTypeRef() {
+		return (EReference)tIndexSignatureEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getTStructIndexSignature() {
+		return tStructIndexSignatureEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTEnum() {
 		return tEnumEClass;
 	}
@@ -3916,6 +3982,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tStructSetterEClass = createEClass(TSTRUCT_SETTER);
 		createEOperation(tStructSetterEClass, TSTRUCT_SETTER___IS_WRITEABLE);
 
+		tIndexSignatureEClass = createEClass(TINDEX_SIGNATURE);
+		createEAttribute(tIndexSignatureEClass, TINDEX_SIGNATURE__KEY_NAME);
+		createEReference(tIndexSignatureEClass, TINDEX_SIGNATURE__KEY_TYPE_REF);
+		createEReference(tIndexSignatureEClass, TINDEX_SIGNATURE__VALUE_TYPE_REF);
+
+		tStructIndexSignatureEClass = createEClass(TSTRUCT_INDEX_SIGNATURE);
+
 		tEnumEClass = createEClass(TENUM);
 		createEAttribute(tEnumEClass, TENUM__EXTERNAL);
 		createEReference(tEnumEClass, TENUM__LITERALS);
@@ -4073,6 +4146,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tSetterEClass.getESuperTypes().add(this.getTMemberWithAccessModifier());
 		tStructSetterEClass.getESuperTypes().add(this.getTSetter());
 		tStructSetterEClass.getESuperTypes().add(this.getTStructMember());
+		tIndexSignatureEClass.getESuperTypes().add(this.getTMember());
+		tStructIndexSignatureEClass.getESuperTypes().add(this.getTIndexSignature());
+		tStructIndexSignatureEClass.getESuperTypes().add(this.getTStructMember());
 		tEnumEClass.getESuperTypes().add(this.getType());
 		tEnumEClass.getESuperTypes().add(this.getAccessibleTypeElement());
 		tEnumEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
@@ -4547,6 +4623,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(tStructSetterEClass, TStructSetter.class, "TStructSetter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getTStructSetter__IsWriteable(), theEcorePackage.getEBoolean(), "isWriteable", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(tIndexSignatureEClass, TIndexSignature.class, "TIndexSignature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTIndexSignature_KeyName(), theEcorePackage.getEString(), "keyName", null, 0, 1, TIndexSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTIndexSignature_KeyTypeRef(), theTypeRefsPackage.getTypeRef(), null, "keyTypeRef", null, 0, 1, TIndexSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTIndexSignature_ValueTypeRef(), theTypeRefsPackage.getTypeRef(), null, "valueTypeRef", null, 0, 1, TIndexSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(tStructIndexSignatureEClass, TStructIndexSignature.class, "TStructIndexSignature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(tEnumEClass, TEnum.class, "TEnum", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTEnum_External(), theEcorePackage.getEBoolean(), "external", null, 0, 1, TEnum.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

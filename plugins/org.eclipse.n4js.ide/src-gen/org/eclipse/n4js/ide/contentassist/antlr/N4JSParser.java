@@ -670,6 +670,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTStructSetterAccess().getGroup(), "rule__TStructSetter__Group__0");
 			builder.put(grammarAccess.getTStructSetterAccess().getGroup_0(), "rule__TStructSetter__Group_0__0");
 			builder.put(grammarAccess.getTStructSetterAccess().getGroup_0_0(), "rule__TStructSetter__Group_0_0__0");
+			builder.put(grammarAccess.getTStructIndexSignatureAccess().getGroup(), "rule__TStructIndexSignature__Group__0");
 			builder.put(grammarAccess.getTypingStrategyUseSiteOperatorAccess().getGroup(), "rule__TypingStrategyUseSiteOperator__Group__0");
 			builder.put(grammarAccess.getTypeTypeRefAccess().getGroup(), "rule__TypeTypeRef__Group__0");
 			builder.put(grammarAccess.getWildcardOldNotationAccess().getGroup(), "rule__WildcardOldNotation__Group__0");
@@ -1082,7 +1083,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4SetterDeclarationAccess().getDeclaredOptionalAssignment_1(), "rule__N4SetterDeclaration__DeclaredOptionalAssignment_1");
 			builder.put(grammarAccess.getN4SetterDeclarationAccess().getFparAssignment_3(), "rule__N4SetterDeclaration__FparAssignment_3");
 			builder.put(grammarAccess.getN4SetterDeclarationAccess().getBodyAssignment_5(), "rule__N4SetterDeclaration__BodyAssignment_5");
-			builder.put(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredIndexTypeRefNodeAssignment_1(), "rule__N4IndexSignatureDeclaration__DeclaredIndexTypeRefNodeAssignment_1");
+			builder.put(grammarAccess.getN4IndexSignatureDeclarationAccess().getKeyNameAssignment_0_0_1(), "rule__N4IndexSignatureDeclaration__KeyNameAssignment_0_0_1");
+			builder.put(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredKeyTypeRefNodeAssignment_1(), "rule__N4IndexSignatureDeclaration__DeclaredKeyTypeRefNodeAssignment_1");
 			builder.put(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredValueTypeRefNodeAssignment_4(), "rule__N4IndexSignatureDeclaration__DeclaredValueTypeRefNodeAssignment_4");
 			builder.put(grammarAccess.getObjectBindingPatternAccess().getPropertiesAssignment_2_0(), "rule__ObjectBindingPattern__PropertiesAssignment_2_0");
 			builder.put(grammarAccess.getObjectBindingPatternAccess().getPropertiesAssignment_2_1_1(), "rule__ObjectBindingPattern__PropertiesAssignment_2_1_1");
@@ -1186,6 +1188,9 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTStructSetterAccess().getNameAssignment_0_0_2(), "rule__TStructSetter__NameAssignment_0_0_2");
 			builder.put(grammarAccess.getTStructSetterAccess().getOptionalAssignment_1(), "rule__TStructSetter__OptionalAssignment_1");
 			builder.put(grammarAccess.getTStructSetterAccess().getFparAssignment_3(), "rule__TStructSetter__FparAssignment_3");
+			builder.put(grammarAccess.getTStructIndexSignatureAccess().getKeyNameAssignment_1(), "rule__TStructIndexSignature__KeyNameAssignment_1");
+			builder.put(grammarAccess.getTStructIndexSignatureAccess().getKeyTypeRefAssignment_3(), "rule__TStructIndexSignature__KeyTypeRefAssignment_3");
+			builder.put(grammarAccess.getTStructIndexSignatureAccess().getValueTypeRefAssignment_6(), "rule__TStructIndexSignature__ValueTypeRefAssignment_6");
 			builder.put(grammarAccess.getTypeTypeRefAccess().getConstructorRefAssignment_1_1(), "rule__TypeTypeRef__ConstructorRefAssignment_1_1");
 			builder.put(grammarAccess.getTypeTypeRefAccess().getTypeArgAssignment_3(), "rule__TypeTypeRef__TypeArgAssignment_3");
 			builder.put(grammarAccess.getWildcardOldNotationAccess().getDeclaredUpperBoundAssignment_1_0_1(), "rule__WildcardOldNotation__DeclaredUpperBoundAssignment_1_0_1");

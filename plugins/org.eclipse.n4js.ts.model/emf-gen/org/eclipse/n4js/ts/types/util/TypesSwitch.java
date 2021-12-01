@@ -654,6 +654,30 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypesPackage.TINDEX_SIGNATURE: {
+				TIndexSignature tIndexSignature = (TIndexSignature)theEObject;
+				T result = caseTIndexSignature(tIndexSignature);
+				if (result == null) result = caseTMember(tIndexSignature);
+				if (result == null) result = caseIdentifiableElement(tIndexSignature);
+				if (result == null) result = caseTAnnotableElement(tIndexSignature);
+				if (result == null) result = caseSyntaxRelatedTElement(tIndexSignature);
+				if (result == null) result = caseTypableElement(tIndexSignature);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypesPackage.TSTRUCT_INDEX_SIGNATURE: {
+				TStructIndexSignature tStructIndexSignature = (TStructIndexSignature)theEObject;
+				T result = caseTStructIndexSignature(tStructIndexSignature);
+				if (result == null) result = caseTIndexSignature(tStructIndexSignature);
+				if (result == null) result = caseTStructMember(tStructIndexSignature);
+				if (result == null) result = caseTMember(tStructIndexSignature);
+				if (result == null) result = caseIdentifiableElement(tStructIndexSignature);
+				if (result == null) result = caseTAnnotableElement(tStructIndexSignature);
+				if (result == null) result = caseSyntaxRelatedTElement(tStructIndexSignature);
+				if (result == null) result = caseTypableElement(tStructIndexSignature);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypesPackage.TENUM: {
 				TEnum tEnum = (TEnum)theEObject;
 				T result = caseTEnum(tEnum);
@@ -1486,6 +1510,36 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTStructSetter(TStructSetter object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TIndex Signature</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TIndex Signature</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTIndexSignature(TIndexSignature object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TStruct Index Signature</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TStruct Index Signature</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTStructIndexSignature(TStructIndexSignature object) {
 		return null;
 	}
 

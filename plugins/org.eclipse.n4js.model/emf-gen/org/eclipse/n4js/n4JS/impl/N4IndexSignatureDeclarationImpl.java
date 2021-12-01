@@ -36,7 +36,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl#getDeclaredIndexTypeRefNode <em>Declared Index Type Ref Node</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl#getKeyName <em>Key Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl#getDeclaredKeyTypeRefNode <em>Declared Key Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl#getDeclaredValueTypeRefNode <em>Declared Value Type Ref Node</em>}</li>
  * </ul>
  *
@@ -44,14 +45,34 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  */
 public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclarationImpl implements N4IndexSignatureDeclaration {
 	/**
-	 * The cached value of the '{@link #getDeclaredIndexTypeRefNode() <em>Declared Index Type Ref Node</em>}' containment reference.
+	 * The default value of the '{@link #getKeyName() <em>Key Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDeclaredIndexTypeRefNode()
+	 * @see #getKeyName()
 	 * @generated
 	 * @ordered
 	 */
-	protected TypeReferenceNode<TypeRef> declaredIndexTypeRefNode;
+	protected static final String KEY_NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getKeyName() <em>Key Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getKeyName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String keyName = KEY_NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredKeyTypeRefNode() <em>Declared Key Type Ref Node</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredKeyTypeRefNode()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeReferenceNode<TypeRef> declaredKeyTypeRefNode;
 
 	/**
 	 * The cached value of the '{@link #getDeclaredValueTypeRefNode() <em>Declared Value Type Ref Node</em>}' containment reference.
@@ -88,8 +109,8 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	 * @generated
 	 */
 	@Override
-	public TypeReferenceNode<TypeRef> getDeclaredIndexTypeRefNode() {
-		return declaredIndexTypeRefNode;
+	public String getKeyName() {
+		return keyName;
 	}
 
 	/**
@@ -97,11 +118,34 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetDeclaredIndexTypeRefNode(TypeReferenceNode<TypeRef> newDeclaredIndexTypeRefNode, NotificationChain msgs) {
-		TypeReferenceNode<TypeRef> oldDeclaredIndexTypeRefNode = declaredIndexTypeRefNode;
-		declaredIndexTypeRefNode = newDeclaredIndexTypeRefNode;
+	@Override
+	public void setKeyName(String newKeyName) {
+		String oldKeyName = keyName;
+		keyName = newKeyName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME, oldKeyName, keyName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeReferenceNode<TypeRef> getDeclaredKeyTypeRefNode() {
+		return declaredKeyTypeRefNode;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDeclaredKeyTypeRefNode(TypeReferenceNode<TypeRef> newDeclaredKeyTypeRefNode, NotificationChain msgs) {
+		TypeReferenceNode<TypeRef> oldDeclaredKeyTypeRefNode = declaredKeyTypeRefNode;
+		declaredKeyTypeRefNode = newDeclaredKeyTypeRefNode;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE, oldDeclaredIndexTypeRefNode, newDeclaredIndexTypeRefNode);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE, oldDeclaredKeyTypeRefNode, newDeclaredKeyTypeRefNode);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -113,18 +157,18 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredIndexTypeRefNode(TypeReferenceNode<TypeRef> newDeclaredIndexTypeRefNode) {
-		if (newDeclaredIndexTypeRefNode != declaredIndexTypeRefNode) {
+	public void setDeclaredKeyTypeRefNode(TypeReferenceNode<TypeRef> newDeclaredKeyTypeRefNode) {
+		if (newDeclaredKeyTypeRefNode != declaredKeyTypeRefNode) {
 			NotificationChain msgs = null;
-			if (declaredIndexTypeRefNode != null)
-				msgs = ((InternalEObject)declaredIndexTypeRefNode).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE, null, msgs);
-			if (newDeclaredIndexTypeRefNode != null)
-				msgs = ((InternalEObject)newDeclaredIndexTypeRefNode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE, null, msgs);
-			msgs = basicSetDeclaredIndexTypeRefNode(newDeclaredIndexTypeRefNode, msgs);
+			if (declaredKeyTypeRefNode != null)
+				msgs = ((InternalEObject)declaredKeyTypeRefNode).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE, null, msgs);
+			if (newDeclaredKeyTypeRefNode != null)
+				msgs = ((InternalEObject)newDeclaredKeyTypeRefNode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE, null, msgs);
+			msgs = basicSetDeclaredKeyTypeRefNode(newDeclaredKeyTypeRefNode, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE, newDeclaredIndexTypeRefNode, newDeclaredIndexTypeRefNode));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE, newDeclaredKeyTypeRefNode, newDeclaredKeyTypeRefNode));
 	}
 
 	/**
@@ -178,11 +222,11 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	 * @generated
 	 */
 	@Override
-	public TypeRef getDeclaredIndexTypeRef() {
-		TypeReferenceNode<TypeRef> _declaredIndexTypeRefNode = this.getDeclaredIndexTypeRefNode();
+	public TypeRef getDeclaredKeyTypeRef() {
+		TypeReferenceNode<TypeRef> _declaredKeyTypeRefNode = this.getDeclaredKeyTypeRefNode();
 		TypeRef _typeRef = null;
-		if (_declaredIndexTypeRefNode!=null) {
-			_typeRef=_declaredIndexTypeRefNode.getTypeRef();
+		if (_declaredKeyTypeRefNode!=null) {
+			_typeRef=_declaredKeyTypeRefNode.getTypeRef();
 		}
 		return _typeRef;
 	}
@@ -193,11 +237,11 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	 * @generated
 	 */
 	@Override
-	public TypeRef getDeclaredIndexTypeRefInAST() {
-		TypeReferenceNode<TypeRef> _declaredIndexTypeRefNode = this.getDeclaredIndexTypeRefNode();
+	public TypeRef getDeclaredKeyTypeRefInAST() {
+		TypeReferenceNode<TypeRef> _declaredKeyTypeRefNode = this.getDeclaredKeyTypeRefNode();
 		TypeRef _typeRefInAST = null;
-		if (_declaredIndexTypeRefNode!=null) {
-			_typeRefInAST=_declaredIndexTypeRefNode.getTypeRefInAST();
+		if (_declaredKeyTypeRefNode!=null) {
+			_typeRefInAST=_declaredKeyTypeRefNode.getTypeRefInAST();
 		}
 		return _typeRefInAST;
 	}
@@ -240,8 +284,8 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE:
-				return basicSetDeclaredIndexTypeRefNode(null, msgs);
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE:
+				return basicSetDeclaredKeyTypeRefNode(null, msgs);
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE:
 				return basicSetDeclaredValueTypeRefNode(null, msgs);
 		}
@@ -256,8 +300,10 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE:
-				return getDeclaredIndexTypeRefNode();
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME:
+				return getKeyName();
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE:
+				return getDeclaredKeyTypeRefNode();
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE:
 				return getDeclaredValueTypeRefNode();
 		}
@@ -273,8 +319,11 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE:
-				setDeclaredIndexTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME:
+				setKeyName((String)newValue);
+				return;
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE:
+				setDeclaredKeyTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
 				return;
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE:
 				setDeclaredValueTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
@@ -291,8 +340,11 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE:
-				setDeclaredIndexTypeRefNode((TypeReferenceNode<TypeRef>)null);
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME:
+				setKeyName(KEY_NAME_EDEFAULT);
+				return;
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE:
+				setDeclaredKeyTypeRefNode((TypeReferenceNode<TypeRef>)null);
 				return;
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE:
 				setDeclaredValueTypeRefNode((TypeReferenceNode<TypeRef>)null);
@@ -309,8 +361,10 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE:
-				return declaredIndexTypeRefNode != null;
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME:
+				return KEY_NAME_EDEFAULT == null ? keyName != null : !KEY_NAME_EDEFAULT.equals(keyName);
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE:
+				return declaredKeyTypeRefNode != null;
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE:
 				return declaredValueTypeRefNode != null;
 		}
@@ -325,16 +379,32 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF:
-				return getDeclaredIndexTypeRef();
-			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF_IN_AST:
-				return getDeclaredIndexTypeRefInAST();
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_KEY_TYPE_REF:
+				return getDeclaredKeyTypeRef();
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_KEY_TYPE_REF_IN_AST:
+				return getDeclaredKeyTypeRefInAST();
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_VALUE_TYPE_REF:
 				return getDeclaredValueTypeRef();
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_VALUE_TYPE_REF_IN_AST:
 				return getDeclaredValueTypeRefInAST();
 		}
 		return super.eInvoke(operationID, arguments);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (keyName: ");
+		result.append(keyName);
+		result.append(')');
+		return result.toString();
 	}
 
 } //N4IndexSignatureDeclarationImpl

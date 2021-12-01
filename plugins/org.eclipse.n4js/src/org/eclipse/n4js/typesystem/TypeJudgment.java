@@ -157,6 +157,7 @@ import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TGetter;
+import org.eclipse.n4js.ts.types.TIndexSignature;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
@@ -284,6 +285,11 @@ import com.google.inject.Inject;
 		public TypeRef caseTSetter(TSetter tSetter) {
 			final TypeRef declTypeRef = tSetter.getTypeRef();
 			return declTypeRef != null ? declTypeRef : anyTypeRef(G);
+		}
+
+		@Override
+		public TypeRef caseTIndexSignature(TIndexSignature object) {
+			return unknown(); // FIXME
 		}
 
 		@Override

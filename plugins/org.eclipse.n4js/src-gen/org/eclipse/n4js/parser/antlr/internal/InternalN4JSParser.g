@@ -32442,7 +32442,11 @@ ruleN4MemberDeclaration returns [EObject current=null]
 		(
 			((
 				LeftSquareBracket
-				ruleIdentifierName
+				(
+					(
+						ruleIdentifierName
+					)
+				)
 				Colon
 			)
 			)=>
@@ -32747,7 +32751,11 @@ norm1_N4MemberDeclaration returns [EObject current=null]
 		(
 			((
 				LeftSquareBracket
-				ruleIdentifierName
+				(
+					(
+						ruleIdentifierName
+					)
+				)
 				Colon
 			)
 			)=>
@@ -36469,7 +36477,11 @@ ruleN4IndexSignatureDeclaration returns [EObject current=null]
 		(
 			((
 				LeftSquareBracket
-				ruleIdentifierName
+				(
+					(
+						ruleIdentifierName
+					)
+				)
 				Colon
 			)
 			)=>
@@ -36478,13 +36490,25 @@ ruleN4IndexSignatureDeclaration returns [EObject current=null]
 				{
 					newLeafNode(otherlv_0, grammarAccess.getN4IndexSignatureDeclarationAccess().getLeftSquareBracketKeyword_0_0_0());
 				}
-				{
-					newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getIdentifierNameParserRuleCall_0_0_1());
-				}
-				ruleIdentifierName
-				{
-					afterParserOrEnumRuleCall();
-				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getKeyNameIdentifierNameParserRuleCall_0_0_1_0());
+						}
+						lv_keyName_1_0=ruleIdentifierName
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getN4IndexSignatureDeclarationRule());
+							}
+							set(
+								$current,
+								"keyName",
+								lv_keyName_1_0,
+								"org.eclipse.n4js.TypeExpressions.IdentifierName");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
 				otherlv_2=Colon
 				{
 					newLeafNode(otherlv_2, grammarAccess.getN4IndexSignatureDeclarationAccess().getColonKeyword_0_0_2());
@@ -36494,17 +36518,17 @@ ruleN4IndexSignatureDeclaration returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredIndexTypeRefNodeTypeReferenceNodeParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredKeyTypeRefNodeTypeReferenceNodeParserRuleCall_1_0());
 				}
-				lv_declaredIndexTypeRefNode_3_0=ruleTypeReferenceNode
+				lv_declaredKeyTypeRefNode_3_0=ruleTypeReferenceNode
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4IndexSignatureDeclarationRule());
 					}
 					set(
 						$current,
-						"declaredIndexTypeRefNode",
-						lv_declaredIndexTypeRefNode_3_0,
+						"declaredKeyTypeRefNode",
+						lv_declaredKeyTypeRefNode_3_0,
 						"org.eclipse.n4js.N4JS.TypeReferenceNode");
 					afterParserOrEnumRuleCall();
 				}
@@ -36559,7 +36583,11 @@ norm1_N4IndexSignatureDeclaration returns [EObject current=null]
 		(
 			((
 				LeftSquareBracket
-				ruleIdentifierName
+				(
+					(
+						ruleIdentifierName
+					)
+				)
 				Colon
 			)
 			)=>
@@ -36568,13 +36596,25 @@ norm1_N4IndexSignatureDeclaration returns [EObject current=null]
 				{
 					newLeafNode(otherlv_0, grammarAccess.getN4IndexSignatureDeclarationAccess().getLeftSquareBracketKeyword_0_0_0());
 				}
-				{
-					newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getIdentifierNameParserRuleCall_0_0_1());
-				}
-				ruleIdentifierName
-				{
-					afterParserOrEnumRuleCall();
-				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getKeyNameIdentifierNameParserRuleCall_0_0_1_0());
+						}
+						lv_keyName_1_0=ruleIdentifierName
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getN4IndexSignatureDeclarationRule());
+							}
+							set(
+								$current,
+								"keyName",
+								lv_keyName_1_0,
+								"org.eclipse.n4js.TypeExpressions.IdentifierName");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
 				otherlv_2=Colon
 				{
 					newLeafNode(otherlv_2, grammarAccess.getN4IndexSignatureDeclarationAccess().getColonKeyword_0_0_2());
@@ -36584,17 +36624,17 @@ norm1_N4IndexSignatureDeclaration returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredIndexTypeRefNodeTypeReferenceNodeParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredKeyTypeRefNodeTypeReferenceNodeParserRuleCall_1_0());
 				}
-				lv_declaredIndexTypeRefNode_3_0=ruleTypeReferenceNode
+				lv_declaredKeyTypeRefNode_3_0=ruleTypeReferenceNode
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4IndexSignatureDeclarationRule());
 					}
 					set(
 						$current,
-						"declaredIndexTypeRefNode",
-						lv_declaredIndexTypeRefNode_3_0,
+						"declaredKeyTypeRefNode",
+						lv_declaredKeyTypeRefNode_3_0,
 						"org.eclipse.n4js.N4JS.TypeReferenceNode");
 					afterParserOrEnumRuleCall();
 				}
@@ -41261,6 +41301,15 @@ ruleTStructMember returns [EObject current=null]
 			$current = $this_TStructField_3.current;
 			afterParserOrEnumRuleCall();
 		}
+		    |
+		{
+			newCompositeNode(grammarAccess.getTStructMemberAccess().getTStructIndexSignatureParserRuleCall_4());
+		}
+		this_TStructIndexSignature_4=ruleTStructIndexSignature
+		{
+			$current = $this_TStructIndexSignature_4.current;
+			afterParserOrEnumRuleCall();
+		}
 	)
 ;
 
@@ -41810,6 +41859,98 @@ ruleTStructSetter returns [EObject current=null]
 		{
 			newLeafNode(otherlv_6, grammarAccess.getTStructSetterAccess().getRightParenthesisKeyword_4());
 		}
+	)
+;
+
+// Entry rule entryRuleTStructIndexSignature
+entryRuleTStructIndexSignature returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getTStructIndexSignatureRule()); }
+	iv_ruleTStructIndexSignature=ruleTStructIndexSignature
+	{ $current=$iv_ruleTStructIndexSignature.current; }
+	EOF;
+
+// Rule TStructIndexSignature
+ruleTStructIndexSignature returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		otherlv_0=LeftSquareBracket
+		{
+			newLeafNode(otherlv_0, grammarAccess.getTStructIndexSignatureAccess().getLeftSquareBracketKeyword_0());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getTStructIndexSignatureAccess().getKeyNameIdentifierNameParserRuleCall_1_0());
+				}
+				lv_keyName_1_0=ruleIdentifierName
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getTStructIndexSignatureRule());
+					}
+					set(
+						$current,
+						"keyName",
+						lv_keyName_1_0,
+						"org.eclipse.n4js.TypeExpressions.IdentifierName");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		otherlv_2=Colon
+		{
+			newLeafNode(otherlv_2, grammarAccess.getTStructIndexSignatureAccess().getColonKeyword_2());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getTStructIndexSignatureAccess().getKeyTypeRefTypeRefParserRuleCall_3_0());
+				}
+				lv_keyTypeRef_3_0=ruleTypeRef
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getTStructIndexSignatureRule());
+					}
+					set(
+						$current,
+						"keyTypeRef",
+						lv_keyTypeRef_3_0,
+						"org.eclipse.n4js.TypeExpressions.TypeRef");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		otherlv_4=RightSquareBracket
+		{
+			newLeafNode(otherlv_4, grammarAccess.getTStructIndexSignatureAccess().getRightSquareBracketKeyword_4());
+		}
+		otherlv_5=Colon
+		{
+			newLeafNode(otherlv_5, grammarAccess.getTStructIndexSignatureAccess().getColonKeyword_5());
+		}
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getTStructIndexSignatureAccess().getValueTypeRefTypeRefParserRuleCall_6_0());
+				}
+				lv_valueTypeRef_6_0=ruleTypeRef
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getTStructIndexSignatureRule());
+					}
+					set(
+						$current,
+						"valueTypeRef",
+						lv_valueTypeRef_6_0,
+						"org.eclipse.n4js.TypeExpressions.TypeRef");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
 	)
 ;
 

@@ -21,7 +21,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRefNode <em>Declared Index Type Ref Node</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getKeyName <em>Key Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredKeyTypeRefNode <em>Declared Key Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredValueTypeRefNode <em>Declared Value Type Ref Node</em>}</li>
  * </ul>
  *
@@ -31,26 +32,48 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  */
 public interface N4IndexSignatureDeclaration extends AnnotableN4MemberDeclaration {
 	/**
-	 * Returns the value of the '<em><b>Declared Index Type Ref Node</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Key Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared Index Type Ref Node</em>' containment reference.
-	 * @see #setDeclaredIndexTypeRefNode(TypeReferenceNode)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4IndexSignatureDeclaration_DeclaredIndexTypeRefNode()
+	 * @return the value of the '<em>Key Name</em>' attribute.
+	 * @see #setKeyName(String)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4IndexSignatureDeclaration_KeyName()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getKeyName();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getKeyName <em>Key Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Key Name</em>' attribute.
+	 * @see #getKeyName()
+	 * @generated
+	 */
+	void setKeyName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Declared Key Type Ref Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Declared Key Type Ref Node</em>' containment reference.
+	 * @see #setDeclaredKeyTypeRefNode(TypeReferenceNode)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4IndexSignatureDeclaration_DeclaredKeyTypeRefNode()
 	 * @model containment="true"
 	 * @generated
 	 */
-	TypeReferenceNode<TypeRef> getDeclaredIndexTypeRefNode();
+	TypeReferenceNode<TypeRef> getDeclaredKeyTypeRefNode();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRefNode <em>Declared Index Type Ref Node</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredKeyTypeRefNode <em>Declared Key Type Ref Node</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Index Type Ref Node</em>' containment reference.
-	 * @see #getDeclaredIndexTypeRefNode()
+	 * @param value the new value of the '<em>Declared Key Type Ref Node</em>' containment reference.
+	 * @see #getDeclaredKeyTypeRefNode()
 	 * @generated
 	 */
-	void setDeclaredIndexTypeRefNode(TypeReferenceNode<TypeRef> value);
+	void setDeclaredKeyTypeRefNode(TypeReferenceNode<TypeRef> value);
 
 	/**
 	 * Returns the value of the '<em><b>Declared Value Type Ref Node</b></em>' containment reference.
@@ -80,7 +103,7 @@ public interface N4IndexSignatureDeclaration extends AnnotableN4MemberDeclaratio
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	TypeRef getDeclaredIndexTypeRef();
+	TypeRef getDeclaredKeyTypeRef();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -88,7 +111,7 @@ public interface N4IndexSignatureDeclaration extends AnnotableN4MemberDeclaratio
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	TypeRef getDeclaredIndexTypeRefInAST();
+	TypeRef getDeclaredKeyTypeRefInAST();
 
 	/**
 	 * <!-- begin-user-doc -->

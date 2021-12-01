@@ -280,6 +280,14 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createTStructSetterAdapter();
 			}
 			@Override
+			public Adapter caseTIndexSignature(TIndexSignature object) {
+				return createTIndexSignatureAdapter();
+			}
+			@Override
+			public Adapter caseTStructIndexSignature(TStructIndexSignature object) {
+				return createTStructIndexSignatureAdapter();
+			}
+			@Override
 			public Adapter caseTEnum(TEnum object) {
 				return createTEnumAdapter();
 			}
@@ -1034,6 +1042,34 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTStructSetterAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TIndexSignature <em>TIndex Signature</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.TIndexSignature
+	 * @generated
+	 */
+	public Adapter createTIndexSignatureAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TStructIndexSignature <em>TStruct Index Signature</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.TStructIndexSignature
+	 * @generated
+	 */
+	public Adapter createTStructIndexSignatureAdapter() {
 		return null;
 	}
 

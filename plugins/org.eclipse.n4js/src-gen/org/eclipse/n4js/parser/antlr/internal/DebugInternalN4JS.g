@@ -10204,6 +10204,8 @@ ruleTStructMember:
 		)
 		    |
 		ruleTStructField
+		    |
+		ruleTStructIndexSignature
 	)
 ;
 
@@ -10305,6 +10307,17 @@ ruleTStructSetter:
 	'('
 	ruleTAnonymousFormalParameter
 	')'
+;
+
+// Rule TStructIndexSignature
+ruleTStructIndexSignature:
+	'['
+	ruleIdentifierName
+	':'
+	ruleTypeRef
+	']'
+	':'
+	ruleTypeRef
 ;
 
 // Rule TypingStrategyUseSiteOperator

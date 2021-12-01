@@ -109,6 +109,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.TSTRUCT_GETTER: return createTStructGetter();
 			case TypesPackage.TSETTER: return createTSetter();
 			case TypesPackage.TSTRUCT_SETTER: return createTStructSetter();
+			case TypesPackage.TINDEX_SIGNATURE: return createTIndexSignature();
+			case TypesPackage.TSTRUCT_INDEX_SIGNATURE: return createTStructIndexSignature();
 			case TypesPackage.TENUM: return createTEnum();
 			case TypesPackage.TENUM_LITERAL: return createTEnumLiteral();
 			case TypesPackage.TYPE_ALIAS: return createTypeAlias();
@@ -600,6 +602,28 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public TStructSetter createTStructSetter() {
 		TStructSetterImpl tStructSetter = new TStructSetterImpl();
 		return tStructSetter;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TIndexSignature createTIndexSignature() {
+		TIndexSignatureImpl tIndexSignature = new TIndexSignatureImpl();
+		return tIndexSignature;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TStructIndexSignature createTStructIndexSignature() {
+		TStructIndexSignatureImpl tStructIndexSignature = new TStructIndexSignatureImpl();
+		return tStructIndexSignature;
 	}
 
 	/**

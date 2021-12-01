@@ -96,8 +96,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if (ruleCall.getRule() == grammarAccess.getArrowRule())
 			return getArrowToken(semanticObject, ruleCall, node);
-		else if (ruleCall.getRule() == grammarAccess.getIdentifierNameRule())
-			return getIdentifierNameToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getNO_LINE_TERMINATORRule())
 			return getNO_LINE_TERMINATORToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getNO_WHITE_SPACERule())
@@ -117,17 +115,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		if (node != null)
 			return getTokenText(node);
 		return "= >";
-	}
-	
-	/**
-	 * IdentifierName:
-	 * 	IDENTIFIER | ReservedWord | N4Keyword
-	 * ;
-	 */
-	protected String getIdentifierNameToken(EObject semanticObject, RuleCall ruleCall, INode node) {
-		if (node != null)
-			return getTokenText(node);
-		return "";
 	}
 	
 	/**

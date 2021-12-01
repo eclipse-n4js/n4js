@@ -162,6 +162,7 @@ import org.eclipse.n4js.ts.types.TAnonymousFormalParameter;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructGetter;
+import org.eclipse.n4js.ts.types.TStructIndexSignature;
 import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TStructSetter;
 import org.eclipse.n4js.ts.types.TypePredicate;
@@ -1685,6 +1686,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case TypesPackage.TSTRUCT_GETTER:
 				sequence_ColonSepTypeRef_TStructGetter(context, (TStructGetter) semanticObject); 
+				return; 
+			case TypesPackage.TSTRUCT_INDEX_SIGNATURE:
+				sequence_TStructIndexSignature(context, (TStructIndexSignature) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_METHOD:
 				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod(context, (TStructMethod) semanticObject); 
@@ -19696,17 +19700,20 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4IndexSignatureDeclaration returns N4IndexSignatureDeclaration
 	 *
 	 * Constraint:
-	 *     (declaredIndexTypeRefNode=TypeReferenceNode declaredValueTypeRefNode=TypeReferenceNode)
+	 *     (keyName=IdentifierName declaredKeyTypeRefNode=TypeReferenceNode declaredValueTypeRefNode=TypeReferenceNode)
 	 */
 	protected void sequence_N4IndexSignatureDeclaration(ISerializationContext context, N4IndexSignatureDeclaration semanticObject) {
 		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME));
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE));
 			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE) == ValueTransient.YES)
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredIndexTypeRefNodeTypeReferenceNodeParserRuleCall_1_0(), semanticObject.getDeclaredIndexTypeRefNode());
+		feeder.accept(grammarAccess.getN4IndexSignatureDeclarationAccess().getKeyNameIdentifierNameParserRuleCall_0_0_1_0(), semanticObject.getKeyName());
+		feeder.accept(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredKeyTypeRefNodeTypeReferenceNodeParserRuleCall_1_0(), semanticObject.getDeclaredKeyTypeRefNode());
 		feeder.accept(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredValueTypeRefNodeTypeReferenceNodeParserRuleCall_4_0(), semanticObject.getDeclaredValueTypeRefNode());
 		feeder.finish();
 	}

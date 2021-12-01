@@ -17042,13 +17042,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_INDEX_SIGNATURE_DECLARATION__ANNOTATION_LIST = ANNOTABLE_N4_MEMBER_DECLARATION__ANNOTATION_LIST;
 
 	/**
-	 * The feature id for the '<em><b>Declared Index Type Ref Node</b></em>' containment reference.
+	 * The feature id for the '<em><b>Key Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 0;
+	int N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Declared Key Type Ref Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Declared Value Type Ref Node</b></em>' containment reference.
@@ -17057,7 +17066,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 1;
+	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>N4 Index Signature Declaration</em>' class.
@@ -17066,7 +17075,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INDEX_SIGNATURE_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 2;
+	int N4_INDEX_SIGNATURE_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -17186,22 +17195,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_INDEX_SIGNATURE_DECLARATION___GET_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ANNOTATIONS;
 
 	/**
-	 * The operation id for the '<em>Get Declared Index Type Ref</em>' operation.
+	 * The operation id for the '<em>Get Declared Key Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 0;
+	int N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_KEY_TYPE_REF = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Get Declared Index Type Ref In AST</em>' operation.
+	 * The operation id for the '<em>Get Declared Key Type Ref In AST</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF_IN_AST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 1;
+	int N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_KEY_TYPE_REF_IN_AST = ANNOTABLE_N4_MEMBER_DECLARATION_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Declared Value Type Ref</em>' operation.
@@ -24275,15 +24284,26 @@ public interface N4JSPackage extends EPackage {
 	EClass getN4IndexSignatureDeclaration();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRefNode <em>Declared Index Type Ref Node</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getKeyName <em>Key Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Declared Index Type Ref Node</em>'.
-	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRefNode()
+	 * @return the meta object for the attribute '<em>Key Name</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getKeyName()
 	 * @see #getN4IndexSignatureDeclaration()
 	 * @generated
 	 */
-	EReference getN4IndexSignatureDeclaration_DeclaredIndexTypeRefNode();
+	EAttribute getN4IndexSignatureDeclaration_KeyName();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredKeyTypeRefNode <em>Declared Key Type Ref Node</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Declared Key Type Ref Node</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredKeyTypeRefNode()
+	 * @see #getN4IndexSignatureDeclaration()
+	 * @generated
+	 */
+	EReference getN4IndexSignatureDeclaration_DeclaredKeyTypeRefNode();
 
 	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredValueTypeRefNode <em>Declared Value Type Ref Node</em>}'.
@@ -24297,24 +24317,24 @@ public interface N4JSPackage extends EPackage {
 	EReference getN4IndexSignatureDeclaration_DeclaredValueTypeRefNode();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRef() <em>Get Declared Index Type Ref</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredKeyTypeRef() <em>Get Declared Key Type Ref</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Declared Index Type Ref</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRef()
+	 * @return the meta object for the '<em>Get Declared Key Type Ref</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredKeyTypeRef()
 	 * @generated
 	 */
-	EOperation getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRef();
+	EOperation getN4IndexSignatureDeclaration__GetDeclaredKeyTypeRef();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRefInAST() <em>Get Declared Index Type Ref In AST</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredKeyTypeRefInAST() <em>Get Declared Key Type Ref In AST</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Declared Index Type Ref In AST</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredIndexTypeRefInAST()
+	 * @return the meta object for the '<em>Get Declared Key Type Ref In AST</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredKeyTypeRefInAST()
 	 * @generated
 	 */
-	EOperation getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRefInAST();
+	EOperation getN4IndexSignatureDeclaration__GetDeclaredKeyTypeRefInAST();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getDeclaredValueTypeRef() <em>Get Declared Value Type Ref</em>}' operation.
@@ -29816,12 +29836,20 @@ public interface N4JSPackage extends EPackage {
 		EClass N4_INDEX_SIGNATURE_DECLARATION = eINSTANCE.getN4IndexSignatureDeclaration();
 
 		/**
-		 * The meta object literal for the '<em><b>Declared Index Type Ref Node</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Key Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference N4_INDEX_SIGNATURE_DECLARATION__DECLARED_INDEX_TYPE_REF_NODE = eINSTANCE.getN4IndexSignatureDeclaration_DeclaredIndexTypeRefNode();
+		EAttribute N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME = eINSTANCE.getN4IndexSignatureDeclaration_KeyName();
+
+		/**
+		 * The meta object literal for the '<em><b>Declared Key Type Ref Node</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE = eINSTANCE.getN4IndexSignatureDeclaration_DeclaredKeyTypeRefNode();
 
 		/**
 		 * The meta object literal for the '<em><b>Declared Value Type Ref Node</b></em>' containment reference feature.
@@ -29832,20 +29860,20 @@ public interface N4JSPackage extends EPackage {
 		EReference N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE = eINSTANCE.getN4IndexSignatureDeclaration_DeclaredValueTypeRefNode();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Declared Index Type Ref</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Declared Key Type Ref</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF = eINSTANCE.getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRef();
+		EOperation N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_KEY_TYPE_REF = eINSTANCE.getN4IndexSignatureDeclaration__GetDeclaredKeyTypeRef();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Declared Index Type Ref In AST</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Declared Key Type Ref In AST</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_INDEX_TYPE_REF_IN_AST = eINSTANCE.getN4IndexSignatureDeclaration__GetDeclaredIndexTypeRefInAST();
+		EOperation N4_INDEX_SIGNATURE_DECLARATION___GET_DECLARED_KEY_TYPE_REF_IN_AST = eINSTANCE.getN4IndexSignatureDeclaration__GetDeclaredKeyTypeRefInAST();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Declared Value Type Ref</b></em>' operation.

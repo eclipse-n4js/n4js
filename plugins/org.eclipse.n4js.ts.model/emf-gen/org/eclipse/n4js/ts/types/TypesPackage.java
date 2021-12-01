@@ -86,10 +86,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int ABSTRACT_NAMESPACE = 20;
 =======
 	int SYNTAX_RELATED_TELEMENT = 51;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int SYNTAX_RELATED_TELEMENT = 53;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
@@ -11761,6 +11765,656 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_SETTER_OPERATION_COUNT = TSETTER_OPERATION_COUNT + 6;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TIndexSignatureImpl <em>TIndex Signature</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.TIndexSignatureImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTIndexSignature()
+	 * @generated
+	 */
+	int TINDEX_SIGNATURE = 48;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__NAME = TMEMBER__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__ANNOTATIONS = TMEMBER__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__AST_ELEMENT = TMEMBER__AST_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__DECLARED_FINAL = TMEMBER__DECLARED_FINAL;
+
+	/**
+	 * The feature id for the '<em><b>Declared Static</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__DECLARED_STATIC = TMEMBER__DECLARED_STATIC;
+
+	/**
+	 * The feature id for the '<em><b>Declared Override</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__DECLARED_OVERRIDE = TMEMBER__DECLARED_OVERRIDE;
+
+	/**
+	 * The feature id for the '<em><b>Has Computed Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__HAS_COMPUTED_NAME = TMEMBER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__CONSTITUENT_MEMBERS = TMEMBER__CONSTITUENT_MEMBERS;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__COMPOSED = TMEMBER__COMPOSED;
+
+	/**
+	 * The feature id for the '<em><b>Key Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__KEY_NAME = TMEMBER_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Key Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__KEY_TYPE_REF = TMEMBER_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Value Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__VALUE_TYPE_REF = TMEMBER_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>TIndex Signature</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE_FEATURE_COUNT = TMEMBER_FEATURE_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___GET_CONTAINING_MODULE = TMEMBER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___GET_CONTAINING_TYPE = TMEMBER___GET_CONTAINING_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Member Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___GET_MEMBER_ACCESS_MODIFIER = TMEMBER___GET_MEMBER_ACCESS_MODIFIER;
+
+	/**
+	 * The operation id for the '<em>Get Member Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___GET_MEMBER_TYPE = TMEMBER___GET_MEMBER_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Field</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_FIELD = TMEMBER___IS_FIELD;
+
+	/**
+	 * The operation id for the '<em>Is Getter</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_GETTER = TMEMBER___IS_GETTER;
+
+	/**
+	 * The operation id for the '<em>Is Setter</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_SETTER = TMEMBER___IS_SETTER;
+
+	/**
+	 * The operation id for the '<em>Is Accessor</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_ACCESSOR = TMEMBER___IS_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Is Method</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_METHOD = TMEMBER___IS_METHOD;
+
+	/**
+	 * The operation id for the '<em>Is Constructor</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_CONSTRUCTOR = TMEMBER___IS_CONSTRUCTOR;
+
+	/**
+	 * The operation id for the '<em>Is Optional</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_OPTIONAL = TMEMBER___IS_OPTIONAL;
+
+	/**
+	 * The operation id for the '<em>Is Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_ABSTRACT = TMEMBER___IS_ABSTRACT;
+
+	/**
+	 * The operation id for the '<em>Is Readable</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_READABLE = TMEMBER___IS_READABLE;
+
+	/**
+	 * The operation id for the '<em>Is Writeable</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_WRITEABLE = TMEMBER___IS_WRITEABLE;
+
+	/**
+	 * The operation id for the '<em>Get Member As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___GET_MEMBER_AS_STRING = TMEMBER___GET_MEMBER_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Final</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_FINAL = TMEMBER___IS_FINAL;
+
+	/**
+	 * The operation id for the '<em>Is Static</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_STATIC = TMEMBER___IS_STATIC;
+
+	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_CONST = TMEMBER___IS_CONST;
+
+	/**
+	 * The operation id for the '<em>Is Polyfilled</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE___IS_POLYFILLED = TMEMBER___IS_POLYFILLED;
+
+	/**
+	 * The number of operations of the '<em>TIndex Signature</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE_OPERATION_COUNT = TMEMBER_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TStructIndexSignatureImpl <em>TStruct Index Signature</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.TStructIndexSignatureImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructIndexSignature()
+	 * @generated
+	 */
+	int TSTRUCT_INDEX_SIGNATURE = 49;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__NAME = TINDEX_SIGNATURE__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__ANNOTATIONS = TINDEX_SIGNATURE__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__AST_ELEMENT = TINDEX_SIGNATURE__AST_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__DECLARED_FINAL = TINDEX_SIGNATURE__DECLARED_FINAL;
+
+	/**
+	 * The feature id for the '<em><b>Declared Static</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__DECLARED_STATIC = TINDEX_SIGNATURE__DECLARED_STATIC;
+
+	/**
+	 * The feature id for the '<em><b>Declared Override</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__DECLARED_OVERRIDE = TINDEX_SIGNATURE__DECLARED_OVERRIDE;
+
+	/**
+	 * The feature id for the '<em><b>Has Computed Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__HAS_COMPUTED_NAME = TINDEX_SIGNATURE__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__CONSTITUENT_MEMBERS = TINDEX_SIGNATURE__CONSTITUENT_MEMBERS;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__COMPOSED = TINDEX_SIGNATURE__COMPOSED;
+
+	/**
+	 * The feature id for the '<em><b>Key Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__KEY_NAME = TINDEX_SIGNATURE__KEY_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Key Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__KEY_TYPE_REF = TINDEX_SIGNATURE__KEY_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Value Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__VALUE_TYPE_REF = TINDEX_SIGNATURE__VALUE_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Defined Member</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__DEFINED_MEMBER = TINDEX_SIGNATURE_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>TStruct Index Signature</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE_FEATURE_COUNT = TINDEX_SIGNATURE_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___GET_CONTAINING_MODULE = TINDEX_SIGNATURE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___GET_CONTAINING_TYPE = TINDEX_SIGNATURE___GET_CONTAINING_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Member Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___GET_MEMBER_TYPE = TINDEX_SIGNATURE___GET_MEMBER_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Field</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_FIELD = TINDEX_SIGNATURE___IS_FIELD;
+
+	/**
+	 * The operation id for the '<em>Is Getter</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_GETTER = TINDEX_SIGNATURE___IS_GETTER;
+
+	/**
+	 * The operation id for the '<em>Is Setter</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_SETTER = TINDEX_SIGNATURE___IS_SETTER;
+
+	/**
+	 * The operation id for the '<em>Is Accessor</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_ACCESSOR = TINDEX_SIGNATURE___IS_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Is Method</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_METHOD = TINDEX_SIGNATURE___IS_METHOD;
+
+	/**
+	 * The operation id for the '<em>Is Constructor</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_CONSTRUCTOR = TINDEX_SIGNATURE___IS_CONSTRUCTOR;
+
+	/**
+	 * The operation id for the '<em>Is Optional</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_OPTIONAL = TINDEX_SIGNATURE___IS_OPTIONAL;
+
+	/**
+	 * The operation id for the '<em>Is Abstract</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_ABSTRACT = TINDEX_SIGNATURE___IS_ABSTRACT;
+
+	/**
+	 * The operation id for the '<em>Is Readable</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_READABLE = TINDEX_SIGNATURE___IS_READABLE;
+
+	/**
+	 * The operation id for the '<em>Is Writeable</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_WRITEABLE = TINDEX_SIGNATURE___IS_WRITEABLE;
+
+	/**
+	 * The operation id for the '<em>Get Member As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___GET_MEMBER_AS_STRING = TINDEX_SIGNATURE___GET_MEMBER_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Final</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_FINAL = TINDEX_SIGNATURE___IS_FINAL;
+
+	/**
+	 * The operation id for the '<em>Is Const</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_CONST = TINDEX_SIGNATURE___IS_CONST;
+
+	/**
+	 * The operation id for the '<em>Is Polyfilled</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_POLYFILLED = TINDEX_SIGNATURE___IS_POLYFILLED;
+
+	/**
+	 * The operation id for the '<em>Get Default Member Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___GET_DEFAULT_MEMBER_ACCESS_MODIFIER = TINDEX_SIGNATURE_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Is Static</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_STATIC = TINDEX_SIGNATURE_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Member Access Modifier</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___GET_MEMBER_ACCESS_MODIFIER = TINDEX_SIGNATURE_OPERATION_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Is AST Call Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_AST_CALL_SIGNATURE = TINDEX_SIGNATURE_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Is AST Construct Signature</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE___IS_AST_CONSTRUCT_SIGNATURE = TINDEX_SIGNATURE_OPERATION_COUNT + 4;
+
+	/**
+	 * The number of operations of the '<em>TStruct Index Signature</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE_OPERATION_COUNT = TINDEX_SIGNATURE_OPERATION_COUNT + 5;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TEnumImpl <em>TEnum</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11769,10 +12423,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TENUM = 50;
 =======
 	int TENUM = 48;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TENUM = 50;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12072,10 +12730,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TENUM_LITERAL = 51;
 =======
 	int TENUM_LITERAL = 49;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TENUM_LITERAL = 51;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -12149,10 +12811,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TYPE_ALIAS = 52;
 =======
 	int TYPE_ALIAS = 50;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TYPE_ALIAS = 52;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12415,10 +13081,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TCONSTABLE_ELEMENT = 54;
 =======
 	int TCONSTABLE_ELEMENT = 52;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TCONSTABLE_ELEMENT = 54;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -12465,10 +13135,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TVARIABLE = 55;
 =======
 	int TVARIABLE = 53;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TVARIABLE = 55;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12668,10 +13342,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TYPING_STRATEGY = 56;
 =======
 	int TYPING_STRATEGY = 54;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TYPING_STRATEGY = 56;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -12682,10 +13360,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TYPE_ACCESS_MODIFIER = 57;
 =======
 	int TYPE_ACCESS_MODIFIER = 55;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TYPE_ACCESS_MODIFIER = 57;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -12696,10 +13378,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int MEMBER_ACCESS_MODIFIER = 58;
 =======
 	int MEMBER_ACCESS_MODIFIER = 56;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int MEMBER_ACCESS_MODIFIER = 58;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -12710,10 +13396,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int MEMBER_TYPE = 59;
 =======
 	int MEMBER_TYPE = 57;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int MEMBER_TYPE = 59;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -12724,10 +13414,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
 =======
 	int PARAMETERIZED_TYPE_REF_ITERABLE = 58;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -12738,10 +13432,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int ITERABLE_OF_TCLASSIFIER = 61;
 =======
 	int ITERABLE_OF_TCLASSIFIER = 59;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int ITERABLE_OF_TCLASSIFIER = 61;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12752,10 +13450,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int VARIANCE = 62;
 =======
 	int VARIANCE = 60;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int VARIANCE = 62;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12766,10 +13468,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int NAME_AND_ACCESS = 63;
 =======
 	int NAME_AND_ACCESS = 61;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int NAME_AND_ACCESS = 63;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12780,10 +13486,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int MEMBER_LIST = 64;
 =======
 	int MEMBER_LIST = 62;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int MEMBER_LIST = 64;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12794,10 +13504,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TCLASSIFIER_ITERABLE = 65;
 =======
 	int TCLASSIFIER_ITERABLE = 63;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TCLASSIFIER_ITERABLE = 65;
+>>>>>>> e44376615 (support index signatures also in structural type references)
 
 
 	/**
@@ -15540,6 +16254,59 @@ public interface TypesPackage extends EPackage {
 	EOperation getTStructSetter__IsWriteable();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TIndexSignature <em>TIndex Signature</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>TIndex Signature</em>'.
+	 * @see org.eclipse.n4js.ts.types.TIndexSignature
+	 * @generated
+	 */
+	EClass getTIndexSignature();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TIndexSignature#getKeyName <em>Key Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Key Name</em>'.
+	 * @see org.eclipse.n4js.ts.types.TIndexSignature#getKeyName()
+	 * @see #getTIndexSignature()
+	 * @generated
+	 */
+	EAttribute getTIndexSignature_KeyName();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TIndexSignature#getKeyTypeRef <em>Key Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Key Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.types.TIndexSignature#getKeyTypeRef()
+	 * @see #getTIndexSignature()
+	 * @generated
+	 */
+	EReference getTIndexSignature_KeyTypeRef();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TIndexSignature#getValueTypeRef <em>Value Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Value Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.types.TIndexSignature#getValueTypeRef()
+	 * @see #getTIndexSignature()
+	 * @generated
+	 */
+	EReference getTIndexSignature_ValueTypeRef();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TStructIndexSignature <em>TStruct Index Signature</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>TStruct Index Signature</em>'.
+	 * @see org.eclipse.n4js.ts.types.TStructIndexSignature
+	 * @generated
+	 */
+	EClass getTStructIndexSignature();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TEnum <em>TEnum</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -18081,6 +18848,50 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TSTRUCT_SETTER___IS_WRITEABLE = eINSTANCE.getTStructSetter__IsWriteable();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TIndexSignatureImpl <em>TIndex Signature</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.TIndexSignatureImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTIndexSignature()
+		 * @generated
+		 */
+		EClass TINDEX_SIGNATURE = eINSTANCE.getTIndexSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Key Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TINDEX_SIGNATURE__KEY_NAME = eINSTANCE.getTIndexSignature_KeyName();
+
+		/**
+		 * The meta object literal for the '<em><b>Key Type Ref</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TINDEX_SIGNATURE__KEY_TYPE_REF = eINSTANCE.getTIndexSignature_KeyTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Value Type Ref</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TINDEX_SIGNATURE__VALUE_TYPE_REF = eINSTANCE.getTIndexSignature_ValueTypeRef();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TStructIndexSignatureImpl <em>TStruct Index Signature</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.TStructIndexSignatureImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructIndexSignature()
+		 * @generated
+		 */
+		EClass TSTRUCT_INDEX_SIGNATURE = eINSTANCE.getTStructIndexSignature();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TEnumImpl <em>TEnum</em>}' class.

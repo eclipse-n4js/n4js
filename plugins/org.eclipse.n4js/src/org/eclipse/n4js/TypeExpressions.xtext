@@ -220,7 +220,8 @@ TStructMember:
 	  TStructGetter
 	| TStructSetter
 	| TStructMethod
-	| TStructField;
+	| TStructField
+	| TStructIndexSignature;
 
 TStructMethod:
 	=>
@@ -257,6 +258,12 @@ TStructSetter:
 	name=IdentifierName)
 	(optional?='?')?
 	'(' fpar=TAnonymousFormalParameter ')'
+;
+
+TStructIndexSignature:
+	'[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
+	':'
+	valueTypeRef=TypeRef
 ;
 
 TypingStrategyUseSiteOperator returns TypingStrategy:
