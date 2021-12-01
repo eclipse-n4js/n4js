@@ -17123,13 +17123,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_INDEX_SIGNATURE_DECLARATION__ANNOTATION_LIST = ANNOTABLE_N4_MEMBER_DECLARATION__ANNOTATION_LIST;
 
 	/**
+	 * The feature id for the '<em><b>Readonly</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION__READONLY = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Key Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 0;
+	int N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Declared Key Type Ref Node</b></em>' containment reference.
@@ -17138,7 +17147,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 1;
+	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Declared Value Type Ref Node</b></em>' containment reference.
@@ -17147,7 +17156,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 2;
+	int N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>N4 Index Signature Declaration</em>' class.
@@ -17156,7 +17165,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INDEX_SIGNATURE_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 3;
+	int N4_INDEX_SIGNATURE_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -24398,6 +24407,17 @@ public interface N4JSPackage extends EPackage {
 	EClass getN4IndexSignatureDeclaration();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#isReadonly <em>Readonly</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Readonly</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#isReadonly()
+	 * @see #getN4IndexSignatureDeclaration()
+	 * @generated
+	 */
+	EAttribute getN4IndexSignatureDeclaration_Readonly();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.N4IndexSignatureDeclaration#getKeyName <em>Key Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -29972,6 +29992,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass N4_INDEX_SIGNATURE_DECLARATION = eINSTANCE.getN4IndexSignatureDeclaration();
+
+		/**
+		 * The meta object literal for the '<em><b>Readonly</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute N4_INDEX_SIGNATURE_DECLARATION__READONLY = eINSTANCE.getN4IndexSignatureDeclaration_Readonly();
 
 		/**
 		 * The meta object literal for the '<em><b>Key Name</b></em>' attribute feature.

@@ -1655,6 +1655,7 @@ class TStructSetter extends TSetter, TStructMember {
 }
 
 class TIndexSignature extends TMember {
+	boolean ^readonly
 	String keyName
 	contains TypeRef keyTypeRef
 	contains TypeRef valueTypeRef

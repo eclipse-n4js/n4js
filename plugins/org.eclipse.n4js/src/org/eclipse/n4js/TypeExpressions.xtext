@@ -276,6 +276,7 @@ TStructSetter:
 ;
 
 TStructIndexSignature:
+	(readonly?='readonly')?
 	'[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
 	':'
 	valueTypeRef=TypeRef

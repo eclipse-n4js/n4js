@@ -1016,22 +1016,10 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TStructIndexSignature returns TStructIndexSignature
 	 *
 	 * Constraint:
-	 *     (keyName=IdentifierName keyTypeRef=TypeRef valueTypeRef=TypeRef)
+	 *     (readonly?='readonly'? keyName=IdentifierName keyTypeRef=TypeRef valueTypeRef=TypeRef)
 	 */
 	protected void sequence_TStructIndexSignature(ISerializationContext context, TStructIndexSignature semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__KEY_NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__KEY_NAME));
-			if (transientValues.isValueTransient(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__KEY_TYPE_REF) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__KEY_TYPE_REF));
-			if (transientValues.isValueTransient(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__VALUE_TYPE_REF) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypesPackage.Literals.TINDEX_SIGNATURE__VALUE_TYPE_REF));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getTStructIndexSignatureAccess().getKeyNameIdentifierNameParserRuleCall_1_0(), semanticObject.getKeyName());
-		feeder.accept(grammarAccess.getTStructIndexSignatureAccess().getKeyTypeRefTypeRefParserRuleCall_3_0(), semanticObject.getKeyTypeRef());
-		feeder.accept(grammarAccess.getTStructIndexSignatureAccess().getValueTypeRefTypeRefParserRuleCall_6_0(), semanticObject.getValueTypeRef());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

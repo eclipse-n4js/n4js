@@ -21,6 +21,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.TIndexSignature#isReadonly <em>Readonly</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TIndexSignature#getKeyName <em>Key Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TIndexSignature#getKeyTypeRef <em>Key Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TIndexSignature#getValueTypeRef <em>Value Type Ref</em>}</li>
@@ -31,6 +32,28 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * @generated
  */
 public interface TIndexSignature extends TMember {
+	/**
+	 * Returns the value of the '<em><b>Readonly</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Readonly</em>' attribute.
+	 * @see #setReadonly(boolean)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTIndexSignature_Readonly()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isReadonly();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TIndexSignature#isReadonly <em>Readonly</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Readonly</em>' attribute.
+	 * @see #isReadonly()
+	 * @generated
+	 */
+	void setReadonly(boolean value);
+
 	/**
 	 * Returns the value of the '<em><b>Key Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

@@ -31,6 +31,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TIndexSignatureImpl#isReadonly <em>Readonly</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TIndexSignatureImpl#getKeyName <em>Key Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TIndexSignatureImpl#getKeyTypeRef <em>Key Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TIndexSignatureImpl#getValueTypeRef <em>Value Type Ref</em>}</li>
@@ -39,6 +40,26 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * @generated
  */
 public class TIndexSignatureImpl extends TMemberImpl implements TIndexSignature {
+	/**
+	 * The default value of the '{@link #isReadonly() <em>Readonly</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReadonly()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean READONLY_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isReadonly() <em>Readonly</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReadonly()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean readonly = READONLY_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getKeyName() <em>Key Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -96,6 +117,29 @@ public class TIndexSignatureImpl extends TMemberImpl implements TIndexSignature 
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.TINDEX_SIGNATURE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isReadonly() {
+		return readonly;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setReadonly(boolean newReadonly) {
+		boolean oldReadonly = readonly;
+		readonly = newReadonly;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TINDEX_SIGNATURE__READONLY, oldReadonly, readonly));
 	}
 
 	/**
@@ -235,6 +279,8 @@ public class TIndexSignatureImpl extends TMemberImpl implements TIndexSignature 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypesPackage.TINDEX_SIGNATURE__READONLY:
+				return isReadonly();
 			case TypesPackage.TINDEX_SIGNATURE__KEY_NAME:
 				return getKeyName();
 			case TypesPackage.TINDEX_SIGNATURE__KEY_TYPE_REF:
@@ -253,6 +299,9 @@ public class TIndexSignatureImpl extends TMemberImpl implements TIndexSignature 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypesPackage.TINDEX_SIGNATURE__READONLY:
+				setReadonly((Boolean)newValue);
+				return;
 			case TypesPackage.TINDEX_SIGNATURE__KEY_NAME:
 				setKeyName((String)newValue);
 				return;
@@ -274,6 +323,9 @@ public class TIndexSignatureImpl extends TMemberImpl implements TIndexSignature 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypesPackage.TINDEX_SIGNATURE__READONLY:
+				setReadonly(READONLY_EDEFAULT);
+				return;
 			case TypesPackage.TINDEX_SIGNATURE__KEY_NAME:
 				setKeyName(KEY_NAME_EDEFAULT);
 				return;
@@ -295,6 +347,8 @@ public class TIndexSignatureImpl extends TMemberImpl implements TIndexSignature 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypesPackage.TINDEX_SIGNATURE__READONLY:
+				return readonly != READONLY_EDEFAULT;
 			case TypesPackage.TINDEX_SIGNATURE__KEY_NAME:
 				return KEY_NAME_EDEFAULT == null ? keyName != null : !KEY_NAME_EDEFAULT.equals(keyName);
 			case TypesPackage.TINDEX_SIGNATURE__KEY_TYPE_REF:
@@ -315,7 +369,9 @@ public class TIndexSignatureImpl extends TMemberImpl implements TIndexSignature 
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (keyName: ");
+		result.append(" (readonly: ");
+		result.append(readonly);
+		result.append(", keyName: ");
 		result.append(keyName);
 		result.append(')');
 		return result.toString();

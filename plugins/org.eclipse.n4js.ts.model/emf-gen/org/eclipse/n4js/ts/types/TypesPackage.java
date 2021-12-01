@@ -11856,13 +11856,22 @@ public interface TypesPackage extends EPackage {
 	int TINDEX_SIGNATURE__COMPOSED = TMEMBER__COMPOSED;
 
 	/**
+	 * The feature id for the '<em><b>Readonly</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINDEX_SIGNATURE__READONLY = TMEMBER_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Key Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TINDEX_SIGNATURE__KEY_NAME = TMEMBER_FEATURE_COUNT + 0;
+	int TINDEX_SIGNATURE__KEY_NAME = TMEMBER_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Key Type Ref</b></em>' containment reference.
@@ -11871,7 +11880,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TINDEX_SIGNATURE__KEY_TYPE_REF = TMEMBER_FEATURE_COUNT + 1;
+	int TINDEX_SIGNATURE__KEY_TYPE_REF = TMEMBER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Value Type Ref</b></em>' containment reference.
@@ -11880,7 +11889,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TINDEX_SIGNATURE__VALUE_TYPE_REF = TMEMBER_FEATURE_COUNT + 2;
+	int TINDEX_SIGNATURE__VALUE_TYPE_REF = TMEMBER_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>TIndex Signature</em>' class.
@@ -11889,7 +11898,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TINDEX_SIGNATURE_FEATURE_COUNT = TMEMBER_FEATURE_COUNT + 3;
+	int TINDEX_SIGNATURE_FEATURE_COUNT = TMEMBER_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -12161,6 +12170,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_INDEX_SIGNATURE__COMPOSED = TINDEX_SIGNATURE__COMPOSED;
+
+	/**
+	 * The feature id for the '<em><b>Readonly</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__READONLY = TINDEX_SIGNATURE__READONLY;
 
 	/**
 	 * The feature id for the '<em><b>Key Name</b></em>' attribute.
@@ -16264,6 +16282,17 @@ public interface TypesPackage extends EPackage {
 	EClass getTIndexSignature();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TIndexSignature#isReadonly <em>Readonly</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Readonly</em>'.
+	 * @see org.eclipse.n4js.ts.types.TIndexSignature#isReadonly()
+	 * @see #getTIndexSignature()
+	 * @generated
+	 */
+	EAttribute getTIndexSignature_Readonly();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TIndexSignature#getKeyName <em>Key Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -18858,6 +18887,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TINDEX_SIGNATURE = eINSTANCE.getTIndexSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Readonly</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TINDEX_SIGNATURE__READONLY = eINSTANCE.getTIndexSignature_Readonly();
 
 		/**
 		 * The meta object literal for the '<em><b>Key Name</b></em>' attribute feature.

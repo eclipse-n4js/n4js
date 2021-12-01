@@ -11209,10 +11209,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
-		private final Keyword cLeftSquareBracketKeyword_0_0_0 = (Keyword)cGroup_0_0.eContents().get(0);
-		private final Assignment cKeyNameAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
-		private final RuleCall cKeyNameIdentifierNameParserRuleCall_0_0_1_0 = (RuleCall)cKeyNameAssignment_0_0_1.eContents().get(0);
-		private final Keyword cColonKeyword_0_0_2 = (Keyword)cGroup_0_0.eContents().get(2);
+		private final Assignment cReadonlyAssignment_0_0_0 = (Assignment)cGroup_0_0.eContents().get(0);
+		private final Keyword cReadonlyReadonlyKeyword_0_0_0_0 = (Keyword)cReadonlyAssignment_0_0_0.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
+		private final Assignment cKeyNameAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
+		private final RuleCall cKeyNameIdentifierNameParserRuleCall_0_0_2_0 = (RuleCall)cKeyNameAssignment_0_0_2.eContents().get(0);
+		private final Keyword cColonKeyword_0_0_3 = (Keyword)cGroup_0_0.eContents().get(3);
 		private final Assignment cDeclaredKeyTypeRefNodeAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cDeclaredKeyTypeRefNodeTypeReferenceNodeParserRuleCall_1_0 = (RuleCall)cDeclaredKeyTypeRefNodeAssignment_1.eContents().get(0);
 		private final Keyword cRightSquareBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
@@ -11222,30 +11224,36 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cSemicolonKeyword_5 = (Keyword)cGroup.eContents().get(5);
 		
 		//N4IndexSignatureDeclaration<Yield>:
-		//    =>('[' keyName=IdentifierName ':') declaredKeyTypeRefNode=TypeReferenceNode ']' ':' declaredValueTypeRefNode=TypeReferenceNode ';'?
+		//    =>(readonly?='readonly'? '[' keyName=IdentifierName ':') declaredKeyTypeRefNode=TypeReferenceNode ']' ':' declaredValueTypeRefNode=TypeReferenceNode ';'?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=>('[' keyName=IdentifierName ':') declaredKeyTypeRefNode=TypeReferenceNode ']' ':' declaredValueTypeRefNode=TypeReferenceNode ';'?
+		//=>(readonly?='readonly'? '[' keyName=IdentifierName ':') declaredKeyTypeRefNode=TypeReferenceNode ']' ':' declaredValueTypeRefNode=TypeReferenceNode ';'?
 		public Group getGroup() { return cGroup; }
 		
-		//=>('[' keyName=IdentifierName ':')
+		//=>(readonly?='readonly'? '[' keyName=IdentifierName ':')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//'[' keyName=IdentifierName ':'
+		//readonly?='readonly'? '[' keyName=IdentifierName ':'
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
+		//readonly?='readonly'?
+		public Assignment getReadonlyAssignment_0_0_0() { return cReadonlyAssignment_0_0_0; }
+		
+		//'readonly'
+		public Keyword getReadonlyReadonlyKeyword_0_0_0_0() { return cReadonlyReadonlyKeyword_0_0_0_0; }
+		
 		//'['
-		public Keyword getLeftSquareBracketKeyword_0_0_0() { return cLeftSquareBracketKeyword_0_0_0; }
+		public Keyword getLeftSquareBracketKeyword_0_0_1() { return cLeftSquareBracketKeyword_0_0_1; }
 		
 		//keyName=IdentifierName
-		public Assignment getKeyNameAssignment_0_0_1() { return cKeyNameAssignment_0_0_1; }
+		public Assignment getKeyNameAssignment_0_0_2() { return cKeyNameAssignment_0_0_2; }
 		
 		//IdentifierName
-		public RuleCall getKeyNameIdentifierNameParserRuleCall_0_0_1_0() { return cKeyNameIdentifierNameParserRuleCall_0_0_1_0; }
+		public RuleCall getKeyNameIdentifierNameParserRuleCall_0_0_2_0() { return cKeyNameIdentifierNameParserRuleCall_0_0_2_0; }
 		
 		//':'
-		public Keyword getColonKeyword_0_0_2() { return cColonKeyword_0_0_2; }
+		public Keyword getColonKeyword_0_0_3() { return cColonKeyword_0_0_3; }
 		
 		//declaredKeyTypeRefNode=TypeReferenceNode
 		public Assignment getDeclaredKeyTypeRefNodeAssignment_1() { return cDeclaredKeyTypeRefNodeAssignment_1; }
@@ -16114,7 +16122,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//N4IndexSignatureDeclaration<Yield>:
-	//    =>('[' keyName=IdentifierName ':') declaredKeyTypeRefNode=TypeReferenceNode ']' ':' declaredValueTypeRefNode=TypeReferenceNode ';'?
+	//    =>(readonly?='readonly'? '[' keyName=IdentifierName ':') declaredKeyTypeRefNode=TypeReferenceNode ']' ':' declaredValueTypeRefNode=TypeReferenceNode ';'?
 	//;
 	public N4IndexSignatureDeclarationElements getN4IndexSignatureDeclarationAccess() {
 		return pN4IndexSignatureDeclaration;
@@ -16935,6 +16943,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//TStructIndexSignature:
+	//    (readonly?='readonly')?
 	//    '[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
 	//    ':'
 	//    valueTypeRef=TypeRef

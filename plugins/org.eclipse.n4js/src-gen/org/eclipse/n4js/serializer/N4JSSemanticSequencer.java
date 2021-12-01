@@ -19724,22 +19724,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4IndexSignatureDeclaration returns N4IndexSignatureDeclaration
 	 *
 	 * Constraint:
-	 *     (keyName=IdentifierName declaredKeyTypeRefNode=TypeReferenceNode declaredValueTypeRefNode=TypeReferenceNode)
+	 *     (readonly?='readonly'? keyName=IdentifierName declaredKeyTypeRefNode=TypeReferenceNode declaredValueTypeRefNode=TypeReferenceNode)
 	 */
 	protected void sequence_N4IndexSignatureDeclaration(ISerializationContext context, N4IndexSignatureDeclaration semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE));
-			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getN4IndexSignatureDeclarationAccess().getKeyNameIdentifierNameParserRuleCall_0_0_1_0(), semanticObject.getKeyName());
-		feeder.accept(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredKeyTypeRefNodeTypeReferenceNodeParserRuleCall_1_0(), semanticObject.getDeclaredKeyTypeRefNode());
-		feeder.accept(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredValueTypeRefNodeTypeReferenceNodeParserRuleCall_4_0(), semanticObject.getDeclaredValueTypeRefNode());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

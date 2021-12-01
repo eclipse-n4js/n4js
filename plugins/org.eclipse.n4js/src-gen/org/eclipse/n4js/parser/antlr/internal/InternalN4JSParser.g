@@ -32605,6 +32605,11 @@ ruleN4MemberDeclaration returns [EObject current=null]
 		    |
 		(
 			((
+				(
+					(
+						Readonly
+					)
+				)?
 				LeftSquareBracket
 				(
 					(
@@ -32926,6 +32931,11 @@ norm1_N4MemberDeclaration returns [EObject current=null]
 		    |
 		(
 			((
+				(
+					(
+						Readonly
+					)
+				)?
 				LeftSquareBracket
 				(
 					(
@@ -36848,6 +36858,11 @@ ruleN4IndexSignatureDeclaration returns [EObject current=null]
 	(
 		(
 			((
+				(
+					(
+						Readonly
+					)
+				)?
 				LeftSquareBracket
 				(
 					(
@@ -36858,16 +36873,30 @@ ruleN4IndexSignatureDeclaration returns [EObject current=null]
 			)
 			)=>
 			(
-				otherlv_0=LeftSquareBracket
+				(
+					(
+						lv_readonly_0_0=Readonly
+						{
+							newLeafNode(lv_readonly_0_0, grammarAccess.getN4IndexSignatureDeclarationAccess().getReadonlyReadonlyKeyword_0_0_0_0());
+						}
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getN4IndexSignatureDeclarationRule());
+							}
+							setWithLastConsumed($current, "readonly", lv_readonly_0_0 != null, "readonly");
+						}
+					)
+				)?
+				otherlv_1=LeftSquareBracket
 				{
-					newLeafNode(otherlv_0, grammarAccess.getN4IndexSignatureDeclarationAccess().getLeftSquareBracketKeyword_0_0_0());
+					newLeafNode(otherlv_1, grammarAccess.getN4IndexSignatureDeclarationAccess().getLeftSquareBracketKeyword_0_0_1());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getKeyNameIdentifierNameParserRuleCall_0_0_1_0());
+							newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getKeyNameIdentifierNameParserRuleCall_0_0_2_0());
 						}
-						lv_keyName_1_0=ruleIdentifierName
+						lv_keyName_2_0=ruleIdentifierName
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getN4IndexSignatureDeclarationRule());
@@ -36875,15 +36904,15 @@ ruleN4IndexSignatureDeclaration returns [EObject current=null]
 							set(
 								$current,
 								"keyName",
-								lv_keyName_1_0,
+								lv_keyName_2_0,
 								"org.eclipse.n4js.TypeExpressions.IdentifierName");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
-				otherlv_2=Colon
+				otherlv_3=Colon
 				{
-					newLeafNode(otherlv_2, grammarAccess.getN4IndexSignatureDeclarationAccess().getColonKeyword_0_0_2());
+					newLeafNode(otherlv_3, grammarAccess.getN4IndexSignatureDeclarationAccess().getColonKeyword_0_0_3());
 				}
 			)
 		)
@@ -36892,7 +36921,7 @@ ruleN4IndexSignatureDeclaration returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredKeyTypeRefNodeTypeReferenceNodeParserRuleCall_1_0());
 				}
-				lv_declaredKeyTypeRefNode_3_0=ruleTypeReferenceNode
+				lv_declaredKeyTypeRefNode_4_0=ruleTypeReferenceNode
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4IndexSignatureDeclarationRule());
@@ -36900,26 +36929,26 @@ ruleN4IndexSignatureDeclaration returns [EObject current=null]
 					set(
 						$current,
 						"declaredKeyTypeRefNode",
-						lv_declaredKeyTypeRefNode_3_0,
+						lv_declaredKeyTypeRefNode_4_0,
 						"org.eclipse.n4js.N4JS.TypeReferenceNode");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)
-		otherlv_4=RightSquareBracket
+		otherlv_5=RightSquareBracket
 		{
-			newLeafNode(otherlv_4, grammarAccess.getN4IndexSignatureDeclarationAccess().getRightSquareBracketKeyword_2());
+			newLeafNode(otherlv_5, grammarAccess.getN4IndexSignatureDeclarationAccess().getRightSquareBracketKeyword_2());
 		}
-		otherlv_5=Colon
+		otherlv_6=Colon
 		{
-			newLeafNode(otherlv_5, grammarAccess.getN4IndexSignatureDeclarationAccess().getColonKeyword_3());
+			newLeafNode(otherlv_6, grammarAccess.getN4IndexSignatureDeclarationAccess().getColonKeyword_3());
 		}
 		(
 			(
 				{
 					newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredValueTypeRefNodeTypeReferenceNodeParserRuleCall_4_0());
 				}
-				lv_declaredValueTypeRefNode_6_0=ruleTypeReferenceNode
+				lv_declaredValueTypeRefNode_7_0=ruleTypeReferenceNode
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4IndexSignatureDeclarationRule());
@@ -36927,16 +36956,16 @@ ruleN4IndexSignatureDeclaration returns [EObject current=null]
 					set(
 						$current,
 						"declaredValueTypeRefNode",
-						lv_declaredValueTypeRefNode_6_0,
+						lv_declaredValueTypeRefNode_7_0,
 						"org.eclipse.n4js.N4JS.TypeReferenceNode");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)
 		(
-			otherlv_7=Semicolon
+			otherlv_8=Semicolon
 			{
-				newLeafNode(otherlv_7, grammarAccess.getN4IndexSignatureDeclarationAccess().getSemicolonKeyword_5());
+				newLeafNode(otherlv_8, grammarAccess.getN4IndexSignatureDeclarationAccess().getSemicolonKeyword_5());
 			}
 		)?
 	)
@@ -36954,6 +36983,11 @@ norm1_N4IndexSignatureDeclaration returns [EObject current=null]
 	(
 		(
 			((
+				(
+					(
+						Readonly
+					)
+				)?
 				LeftSquareBracket
 				(
 					(
@@ -36964,16 +36998,30 @@ norm1_N4IndexSignatureDeclaration returns [EObject current=null]
 			)
 			)=>
 			(
-				otherlv_0=LeftSquareBracket
+				(
+					(
+						lv_readonly_0_0=Readonly
+						{
+							newLeafNode(lv_readonly_0_0, grammarAccess.getN4IndexSignatureDeclarationAccess().getReadonlyReadonlyKeyword_0_0_0_0());
+						}
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getN4IndexSignatureDeclarationRule());
+							}
+							setWithLastConsumed($current, "readonly", lv_readonly_0_0 != null, "readonly");
+						}
+					)
+				)?
+				otherlv_1=LeftSquareBracket
 				{
-					newLeafNode(otherlv_0, grammarAccess.getN4IndexSignatureDeclarationAccess().getLeftSquareBracketKeyword_0_0_0());
+					newLeafNode(otherlv_1, grammarAccess.getN4IndexSignatureDeclarationAccess().getLeftSquareBracketKeyword_0_0_1());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getKeyNameIdentifierNameParserRuleCall_0_0_1_0());
+							newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getKeyNameIdentifierNameParserRuleCall_0_0_2_0());
 						}
-						lv_keyName_1_0=ruleIdentifierName
+						lv_keyName_2_0=ruleIdentifierName
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getN4IndexSignatureDeclarationRule());
@@ -36981,15 +37029,15 @@ norm1_N4IndexSignatureDeclaration returns [EObject current=null]
 							set(
 								$current,
 								"keyName",
-								lv_keyName_1_0,
+								lv_keyName_2_0,
 								"org.eclipse.n4js.TypeExpressions.IdentifierName");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
-				otherlv_2=Colon
+				otherlv_3=Colon
 				{
-					newLeafNode(otherlv_2, grammarAccess.getN4IndexSignatureDeclarationAccess().getColonKeyword_0_0_2());
+					newLeafNode(otherlv_3, grammarAccess.getN4IndexSignatureDeclarationAccess().getColonKeyword_0_0_3());
 				}
 			)
 		)
@@ -36998,7 +37046,7 @@ norm1_N4IndexSignatureDeclaration returns [EObject current=null]
 				{
 					newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredKeyTypeRefNodeTypeReferenceNodeParserRuleCall_1_0());
 				}
-				lv_declaredKeyTypeRefNode_3_0=ruleTypeReferenceNode
+				lv_declaredKeyTypeRefNode_4_0=ruleTypeReferenceNode
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4IndexSignatureDeclarationRule());
@@ -37006,26 +37054,26 @@ norm1_N4IndexSignatureDeclaration returns [EObject current=null]
 					set(
 						$current,
 						"declaredKeyTypeRefNode",
-						lv_declaredKeyTypeRefNode_3_0,
+						lv_declaredKeyTypeRefNode_4_0,
 						"org.eclipse.n4js.N4JS.TypeReferenceNode");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)
-		otherlv_4=RightSquareBracket
+		otherlv_5=RightSquareBracket
 		{
-			newLeafNode(otherlv_4, grammarAccess.getN4IndexSignatureDeclarationAccess().getRightSquareBracketKeyword_2());
+			newLeafNode(otherlv_5, grammarAccess.getN4IndexSignatureDeclarationAccess().getRightSquareBracketKeyword_2());
 		}
-		otherlv_5=Colon
+		otherlv_6=Colon
 		{
-			newLeafNode(otherlv_5, grammarAccess.getN4IndexSignatureDeclarationAccess().getColonKeyword_3());
+			newLeafNode(otherlv_6, grammarAccess.getN4IndexSignatureDeclarationAccess().getColonKeyword_3());
 		}
 		(
 			(
 				{
 					newCompositeNode(grammarAccess.getN4IndexSignatureDeclarationAccess().getDeclaredValueTypeRefNodeTypeReferenceNodeParserRuleCall_4_0());
 				}
-				lv_declaredValueTypeRefNode_6_0=ruleTypeReferenceNode
+				lv_declaredValueTypeRefNode_7_0=ruleTypeReferenceNode
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4IndexSignatureDeclarationRule());
@@ -37033,16 +37081,16 @@ norm1_N4IndexSignatureDeclaration returns [EObject current=null]
 					set(
 						$current,
 						"declaredValueTypeRefNode",
-						lv_declaredValueTypeRefNode_6_0,
+						lv_declaredValueTypeRefNode_7_0,
 						"org.eclipse.n4js.N4JS.TypeReferenceNode");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)
 		(
-			otherlv_7=Semicolon
+			otherlv_8=Semicolon
 			{
-				newLeafNode(otherlv_7, grammarAccess.getN4IndexSignatureDeclarationAccess().getSemicolonKeyword_5());
+				newLeafNode(otherlv_8, grammarAccess.getN4IndexSignatureDeclarationAccess().getSemicolonKeyword_5());
 			}
 		)?
 	)
@@ -42512,16 +42560,30 @@ ruleTStructIndexSignature returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		otherlv_0=LeftSquareBracket
+		(
+			(
+				lv_readonly_0_0=Readonly
+				{
+					newLeafNode(lv_readonly_0_0, grammarAccess.getTStructIndexSignatureAccess().getReadonlyReadonlyKeyword_0_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getTStructIndexSignatureRule());
+					}
+					setWithLastConsumed($current, "readonly", lv_readonly_0_0 != null, "readonly");
+				}
+			)
+		)?
+		otherlv_1=LeftSquareBracket
 		{
-			newLeafNode(otherlv_0, grammarAccess.getTStructIndexSignatureAccess().getLeftSquareBracketKeyword_0());
+			newLeafNode(otherlv_1, grammarAccess.getTStructIndexSignatureAccess().getLeftSquareBracketKeyword_1());
 		}
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getTStructIndexSignatureAccess().getKeyNameIdentifierNameParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getTStructIndexSignatureAccess().getKeyNameIdentifierNameParserRuleCall_2_0());
 				}
-				lv_keyName_1_0=ruleIdentifierName
+				lv_keyName_2_0=ruleIdentifierName
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getTStructIndexSignatureRule());
@@ -42529,22 +42591,22 @@ ruleTStructIndexSignature returns [EObject current=null]
 					set(
 						$current,
 						"keyName",
-						lv_keyName_1_0,
+						lv_keyName_2_0,
 						"org.eclipse.n4js.TypeExpressions.IdentifierName");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)
-		otherlv_2=Colon
+		otherlv_3=Colon
 		{
-			newLeafNode(otherlv_2, grammarAccess.getTStructIndexSignatureAccess().getColonKeyword_2());
+			newLeafNode(otherlv_3, grammarAccess.getTStructIndexSignatureAccess().getColonKeyword_3());
 		}
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getTStructIndexSignatureAccess().getKeyTypeRefTypeRefParserRuleCall_3_0());
+					newCompositeNode(grammarAccess.getTStructIndexSignatureAccess().getKeyTypeRefTypeRefParserRuleCall_4_0());
 				}
-				lv_keyTypeRef_3_0=ruleTypeRef
+				lv_keyTypeRef_4_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getTStructIndexSignatureRule());
@@ -42552,26 +42614,26 @@ ruleTStructIndexSignature returns [EObject current=null]
 					set(
 						$current,
 						"keyTypeRef",
-						lv_keyTypeRef_3_0,
+						lv_keyTypeRef_4_0,
 						"org.eclipse.n4js.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)
-		otherlv_4=RightSquareBracket
+		otherlv_5=RightSquareBracket
 		{
-			newLeafNode(otherlv_4, grammarAccess.getTStructIndexSignatureAccess().getRightSquareBracketKeyword_4());
+			newLeafNode(otherlv_5, grammarAccess.getTStructIndexSignatureAccess().getRightSquareBracketKeyword_5());
 		}
-		otherlv_5=Colon
+		otherlv_6=Colon
 		{
-			newLeafNode(otherlv_5, grammarAccess.getTStructIndexSignatureAccess().getColonKeyword_5());
+			newLeafNode(otherlv_6, grammarAccess.getTStructIndexSignatureAccess().getColonKeyword_6());
 		}
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getTStructIndexSignatureAccess().getValueTypeRefTypeRefParserRuleCall_6_0());
+					newCompositeNode(grammarAccess.getTStructIndexSignatureAccess().getValueTypeRefTypeRefParserRuleCall_7_0());
 				}
-				lv_valueTypeRef_6_0=ruleTypeRef
+				lv_valueTypeRef_7_0=ruleTypeRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getTStructIndexSignatureRule());
@@ -42579,7 +42641,7 @@ ruleTStructIndexSignature returns [EObject current=null]
 					set(
 						$current,
 						"valueTypeRef",
-						lv_valueTypeRef_6_0,
+						lv_valueTypeRef_7_0,
 						"org.eclipse.n4js.TypeExpressions.TypeRef");
 					afterParserOrEnumRuleCall();
 				}

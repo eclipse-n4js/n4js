@@ -3314,7 +3314,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTIndexSignature_KeyName() {
+	public EAttribute getTIndexSignature_Readonly() {
 		return (EAttribute)tIndexSignatureEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -3324,8 +3324,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getTIndexSignature_KeyName() {
+		return (EAttribute)tIndexSignatureEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getTIndexSignature_KeyTypeRef() {
-		return (EReference)tIndexSignatureEClass.getEStructuralFeatures().get(1);
+		return (EReference)tIndexSignatureEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -3335,7 +3345,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	@Override
 	public EReference getTIndexSignature_ValueTypeRef() {
-		return (EReference)tIndexSignatureEClass.getEStructuralFeatures().get(2);
+		return (EReference)tIndexSignatureEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -3983,6 +3993,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tStructSetterEClass, TSTRUCT_SETTER___IS_WRITEABLE);
 
 		tIndexSignatureEClass = createEClass(TINDEX_SIGNATURE);
+		createEAttribute(tIndexSignatureEClass, TINDEX_SIGNATURE__READONLY);
 		createEAttribute(tIndexSignatureEClass, TINDEX_SIGNATURE__KEY_NAME);
 		createEReference(tIndexSignatureEClass, TINDEX_SIGNATURE__KEY_TYPE_REF);
 		createEReference(tIndexSignatureEClass, TINDEX_SIGNATURE__VALUE_TYPE_REF);
@@ -4625,6 +4636,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTStructSetter__IsWriteable(), theEcorePackage.getEBoolean(), "isWriteable", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tIndexSignatureEClass, TIndexSignature.class, "TIndexSignature", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTIndexSignature_Readonly(), theEcorePackage.getEBoolean(), "readonly", null, 0, 1, TIndexSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTIndexSignature_KeyName(), theEcorePackage.getEString(), "keyName", null, 0, 1, TIndexSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTIndexSignature_KeyTypeRef(), theTypeRefsPackage.getTypeRef(), null, "keyTypeRef", null, 0, 1, TIndexSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTIndexSignature_ValueTypeRef(), theTypeRefsPackage.getTypeRef(), null, "valueTypeRef", null, 0, 1, TIndexSignature.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

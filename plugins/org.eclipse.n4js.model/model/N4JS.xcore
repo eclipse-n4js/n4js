@@ -2531,6 +2531,8 @@ class N4SetterDeclaration extends SetterDeclaration, N4FieldAccessor {
 
 class N4IndexSignatureDeclaration extends AnnotableN4MemberDeclaration {
 
+	boolean ^readonly
+
 	String keyName
 	contains TypeReferenceNode<TypeRef> declaredKeyTypeRefNode
 	contains TypeReferenceNode<TypeRef> declaredValueTypeRefNode

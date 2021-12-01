@@ -1520,7 +1520,7 @@ N4SetterDeclaration <Yield>:
 ;
 
 N4IndexSignatureDeclaration<Yield>:
-	=>('[' keyName=IdentifierName ':') declaredKeyTypeRefNode=TypeReferenceNode ']' ':' declaredValueTypeRefNode=TypeReferenceNode ';'?
+	=>(readonly?='readonly'? '[' keyName=IdentifierName ':') declaredKeyTypeRefNode=TypeReferenceNode ']' ':' declaredValueTypeRefNode=TypeReferenceNode ';'?
 ;
 
 BindingPattern <Yield>:

@@ -7444,7 +7444,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getN4IndexSignatureDeclaration_KeyName() {
+	public EAttribute getN4IndexSignatureDeclaration_Readonly() {
 		return (EAttribute)n4IndexSignatureDeclarationEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -7454,8 +7454,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getN4IndexSignatureDeclaration_KeyName() {
+		return (EAttribute)n4IndexSignatureDeclarationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getN4IndexSignatureDeclaration_DeclaredKeyTypeRefNode() {
-		return (EReference)n4IndexSignatureDeclarationEClass.getEStructuralFeatures().get(1);
+		return (EReference)n4IndexSignatureDeclarationEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -7465,7 +7475,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EReference getN4IndexSignatureDeclaration_DeclaredValueTypeRefNode() {
-		return (EReference)n4IndexSignatureDeclarationEClass.getEStructuralFeatures().get(2);
+		return (EReference)n4IndexSignatureDeclarationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -8816,6 +8826,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(n4SetterDeclarationEClass, N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT);
 
 		n4IndexSignatureDeclarationEClass = createEClass(N4_INDEX_SIGNATURE_DECLARATION);
+		createEAttribute(n4IndexSignatureDeclarationEClass, N4_INDEX_SIGNATURE_DECLARATION__READONLY);
 		createEAttribute(n4IndexSignatureDeclarationEClass, N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME);
 		createEReference(n4IndexSignatureDeclarationEClass, N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE);
 		createEReference(n4IndexSignatureDeclarationEClass, N4_INDEX_SIGNATURE_DECLARATION__DECLARED_VALUE_TYPE_REF_NODE);
@@ -10178,6 +10189,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getN4SetterDeclaration__GetDefinedTypeElement(), theTypesPackage.getTMember(), "getDefinedTypeElement", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4IndexSignatureDeclarationEClass, N4IndexSignatureDeclaration.class, "N4IndexSignatureDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getN4IndexSignatureDeclaration_Readonly(), theEcorePackage.getEBoolean(), "readonly", null, 0, 1, N4IndexSignatureDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getN4IndexSignatureDeclaration_KeyName(), theEcorePackage.getEString(), "keyName", null, 0, 1, N4IndexSignatureDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		g1 = createEGenericType(this.getTypeReferenceNode());
 		g2 = createEGenericType(theTypeRefsPackage.getTypeRef());

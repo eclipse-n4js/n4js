@@ -36,6 +36,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl#isReadonly <em>Readonly</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl#getKeyName <em>Key Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl#getDeclaredKeyTypeRefNode <em>Declared Key Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4IndexSignatureDeclarationImpl#getDeclaredValueTypeRefNode <em>Declared Value Type Ref Node</em>}</li>
@@ -44,6 +45,26 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * @generated
  */
 public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclarationImpl implements N4IndexSignatureDeclaration {
+	/**
+	 * The default value of the '{@link #isReadonly() <em>Readonly</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReadonly()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean READONLY_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isReadonly() <em>Readonly</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReadonly()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean readonly = READONLY_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #getKeyName() <em>Key Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -101,6 +122,29 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.N4_INDEX_SIGNATURE_DECLARATION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isReadonly() {
+		return readonly;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setReadonly(boolean newReadonly) {
+		boolean oldReadonly = readonly;
+		readonly = newReadonly;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__READONLY, oldReadonly, readonly));
 	}
 
 	/**
@@ -300,6 +344,8 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__READONLY:
+				return isReadonly();
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME:
 				return getKeyName();
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE:
@@ -319,6 +365,9 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__READONLY:
+				setReadonly((Boolean)newValue);
+				return;
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME:
 				setKeyName((String)newValue);
 				return;
@@ -340,6 +389,9 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__READONLY:
+				setReadonly(READONLY_EDEFAULT);
+				return;
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME:
 				setKeyName(KEY_NAME_EDEFAULT);
 				return;
@@ -361,6 +413,8 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__READONLY:
+				return readonly != READONLY_EDEFAULT;
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__KEY_NAME:
 				return KEY_NAME_EDEFAULT == null ? keyName != null : !KEY_NAME_EDEFAULT.equals(keyName);
 			case N4JSPackage.N4_INDEX_SIGNATURE_DECLARATION__DECLARED_KEY_TYPE_REF_NODE:
@@ -401,7 +455,9 @@ public class N4IndexSignatureDeclarationImpl extends AnnotableN4MemberDeclaratio
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (keyName: ");
+		result.append(" (readonly: ");
+		result.append(readonly);
+		result.append(", keyName: ");
 		result.append(keyName);
 		result.append(')');
 		return result.toString();

@@ -7839,7 +7839,9 @@ ruleN4MemberDeclaration:
 		ruleAnnotatedN4MemberDeclaration
 		    |
 		(
-			('['
+			('readonly'
+			?
+			'['
 			ruleIdentifierName
 			':'
 			)=>
@@ -8051,7 +8053,9 @@ norm1_N4MemberDeclaration:
 		norm1_AnnotatedN4MemberDeclaration
 		    |
 		(
-			('['
+			('readonly'
+			?
+			'['
 			ruleIdentifierName
 			':'
 			)=>
@@ -9480,10 +9484,14 @@ norm1_N4SetterDeclaration:
 // Rule N4IndexSignatureDeclaration
 ruleN4IndexSignatureDeclaration:
 	(
-		('['
+		('readonly'
+		?
+		'['
 		ruleIdentifierName
 		':'
 		)=>
+		'readonly'
+		?
 		'['
 		ruleIdentifierName
 		':'
@@ -9498,10 +9506,14 @@ ruleN4IndexSignatureDeclaration:
 // Rule N4IndexSignatureDeclaration
 norm1_N4IndexSignatureDeclaration:
 	(
-		('['
+		('readonly'
+		?
+		'['
 		ruleIdentifierName
 		':'
 		)=>
+		'readonly'
+		?
 		'['
 		ruleIdentifierName
 		':'
@@ -10532,6 +10544,8 @@ ruleTStructSetter:
 
 // Rule TStructIndexSignature
 ruleTStructIndexSignature:
+	'readonly'
+	?
 	'['
 	ruleIdentifierName
 	':'
