@@ -2833,8 +2833,14 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Assignment cFparsAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
-		private final RuleCall cFparsFormalParameterParserRuleCall_1_0_0 = (RuleCall)cFparsAssignment_1_0.eContents().get(0);
+		private final Alternatives cAlternatives_1_0 = (Alternatives)cGroup_1.eContents().get(0);
+		private final Group cGroup_1_0_0 = (Group)cAlternatives_1_0.eContents().get(0);
+		private final Keyword cThisKeyword_1_0_0_0 = (Keyword)cGroup_1_0_0.eContents().get(0);
+		private final Keyword cColonKeyword_1_0_0_1 = (Keyword)cGroup_1_0_0.eContents().get(1);
+		private final Assignment cDtsDeclaredThisTypeNodeAssignment_1_0_0_2 = (Assignment)cGroup_1_0_0.eContents().get(2);
+		private final RuleCall cDtsDeclaredThisTypeNodeTypeReferenceNodeParserRuleCall_1_0_0_2_0 = (RuleCall)cDtsDeclaredThisTypeNodeAssignment_1_0_0_2.eContents().get(0);
+		private final Assignment cFparsAssignment_1_0_1 = (Assignment)cAlternatives_1_0.eContents().get(1);
+		private final RuleCall cFparsFormalParameterParserRuleCall_1_0_1_0 = (RuleCall)cFparsAssignment_1_0_1.eContents().get(0);
 		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
 		private final Keyword cCommaKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
 		private final Assignment cFparsAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
@@ -2842,24 +2848,42 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cRightParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		
 		//fragment StrictFormalParameters <Yield>*:
-		//    '(' (fpars+=FormalParameter<Yield> (',' fpars+=FormalParameter<Yield>)*)? ')'
+		//    '(' (('this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter<Yield>) (',' fpars+=FormalParameter<Yield>)*)? ')'
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'(' (fpars+=FormalParameter<Yield> (',' fpars+=FormalParameter<Yield>)*)? ')'
+		//'(' (('this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter<Yield>) (',' fpars+=FormalParameter<Yield>)*)? ')'
 		public Group getGroup() { return cGroup; }
 		
 		//'('
 		public Keyword getLeftParenthesisKeyword_0() { return cLeftParenthesisKeyword_0; }
 		
-		//(fpars+=FormalParameter<Yield> (',' fpars+=FormalParameter<Yield>)*)?
+		//(('this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter<Yield>) (',' fpars+=FormalParameter<Yield>)*)?
 		public Group getGroup_1() { return cGroup_1; }
 		
+		//('this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter<Yield>)
+		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
+		
+		//'this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode
+		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
+		
+		//'this'
+		public Keyword getThisKeyword_1_0_0_0() { return cThisKeyword_1_0_0_0; }
+		
+		//':'
+		public Keyword getColonKeyword_1_0_0_1() { return cColonKeyword_1_0_0_1; }
+		
+		//dtsDeclaredThisTypeNode=TypeReferenceNode
+		public Assignment getDtsDeclaredThisTypeNodeAssignment_1_0_0_2() { return cDtsDeclaredThisTypeNodeAssignment_1_0_0_2; }
+		
+		//TypeReferenceNode
+		public RuleCall getDtsDeclaredThisTypeNodeTypeReferenceNodeParserRuleCall_1_0_0_2_0() { return cDtsDeclaredThisTypeNodeTypeReferenceNodeParserRuleCall_1_0_0_2_0; }
+		
 		//fpars+=FormalParameter<Yield>
-		public Assignment getFparsAssignment_1_0() { return cFparsAssignment_1_0; }
+		public Assignment getFparsAssignment_1_0_1() { return cFparsAssignment_1_0_1; }
 		
 		//FormalParameter<Yield>
-		public RuleCall getFparsFormalParameterParserRuleCall_1_0_0() { return cFparsFormalParameterParserRuleCall_1_0_0; }
+		public RuleCall getFparsFormalParameterParserRuleCall_1_0_1_0() { return cFparsFormalParameterParserRuleCall_1_0_1_0; }
 		
 		//(',' fpars+=FormalParameter<Yield>)*
 		public Group getGroup_1_1() { return cGroup_1_1; }
@@ -3165,7 +3189,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cVariadicFullStopFullStopFullStopKeyword_0_1_1_0 = (Keyword)cVariadicAssignment_0_1_1.eContents().get(0);
 		private final Assignment cNameAssignment_0_1_2 = (Assignment)cGroup_0_1.eContents().get(2);
 		private final RuleCall cNameBindingIdentifierParserRuleCall_0_1_2_0 = (RuleCall)cNameAssignment_0_1_2.eContents().get(0);
-		private final Keyword cQuestionMarkKeyword_0_1_3 = (Keyword)cGroup_0_1.eContents().get(3);
+		private final Assignment cDtsDeclaredOptionalAssignment_0_1_3 = (Assignment)cGroup_0_1.eContents().get(3);
+		private final Keyword cDtsDeclaredOptionalQuestionMarkKeyword_0_1_3_0 = (Keyword)cDtsDeclaredOptionalAssignment_0_1_3.eContents().get(0);
 		private final RuleCall cColonSepDeclaredTypeRefParserRuleCall_0_1_4 = (RuleCall)cGroup_0_1.eContents().get(4);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Assignment cHasInitializerAssignmentAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
@@ -3175,20 +3200,20 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//fragment BindingElementFragment <Yield>*:
 		//    ( => bindingPattern=BindingPattern<Yield>
-		//    | annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> '?'? ColonSepDeclaredTypeRef?
+		//    | annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> (dtsDeclaredOptional?='?')? ColonSepDeclaredTypeRef?
 		//    )
 		//    (hasInitializerAssignment?='=' initializer=AssignmentExpression<In=true, Yield>?)?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//( => bindingPattern=BindingPattern<Yield>
-		//| annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> '?'? ColonSepDeclaredTypeRef?
+		//| annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> (dtsDeclaredOptional?='?')? ColonSepDeclaredTypeRef?
 		//)
 		//(hasInitializerAssignment?='=' initializer=AssignmentExpression<In=true, Yield>?)?
 		public Group getGroup() { return cGroup; }
 		
 		//( => bindingPattern=BindingPattern<Yield>
-		//| annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> '?'? ColonSepDeclaredTypeRef?
+		//| annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> (dtsDeclaredOptional?='?')? ColonSepDeclaredTypeRef?
 		//)
 		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
@@ -3198,7 +3223,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//BindingPattern<Yield>
 		public RuleCall getBindingPatternBindingPatternParserRuleCall_0_0_0() { return cBindingPatternBindingPatternParserRuleCall_0_0_0; }
 		
-		//annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> '?'? ColonSepDeclaredTypeRef?
+		//annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> (dtsDeclaredOptional?='?')? ColonSepDeclaredTypeRef?
 		public Group getGroup_0_1() { return cGroup_0_1; }
 		
 		//annotations+=Annotation*
@@ -3219,8 +3244,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//BindingIdentifier<Yield>
 		public RuleCall getNameBindingIdentifierParserRuleCall_0_1_2_0() { return cNameBindingIdentifierParserRuleCall_0_1_2_0; }
 		
-		//'?'?
-		public Keyword getQuestionMarkKeyword_0_1_3() { return cQuestionMarkKeyword_0_1_3; }
+		//(dtsDeclaredOptional?='?')?
+		public Assignment getDtsDeclaredOptionalAssignment_0_1_3() { return cDtsDeclaredOptionalAssignment_0_1_3; }
+		
+		//'?'
+		public Keyword getDtsDeclaredOptionalQuestionMarkKeyword_0_1_3_0() { return cDtsDeclaredOptionalQuestionMarkKeyword_0_1_3_0; }
 		
 		//ColonSepDeclaredTypeRef?
 		public RuleCall getColonSepDeclaredTypeRefParserRuleCall_0_1_4() { return cColonSepDeclaredTypeRefParserRuleCall_0_1_4; }
@@ -10360,14 +10388,18 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cGeneratorAsteriskKeyword_1_2_0_0_2_0_0_0 = (Keyword)cGeneratorAssignment_1_2_0_0_2_0_0.eContents().get(0);
 		private final Assignment cDeclaredNameAssignment_1_2_0_0_2_0_1 = (Assignment)cGroup_1_2_0_0_2_0.eContents().get(1);
 		private final RuleCall cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0_1_0 = (RuleCall)cDeclaredNameAssignment_1_2_0_0_2_0_1.eContents().get(0);
-		private final RuleCall cTypeParametersParserRuleCall_1_2_0_0_2_0_2 = (RuleCall)cGroup_1_2_0_0_2_0.eContents().get(2);
-		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_0_3 = (RuleCall)cGroup_1_2_0_0_2_0.eContents().get(3);
+		private final Assignment cDtsDeclaredOptionalAssignment_1_2_0_0_2_0_2 = (Assignment)cGroup_1_2_0_0_2_0.eContents().get(2);
+		private final Keyword cDtsDeclaredOptionalQuestionMarkKeyword_1_2_0_0_2_0_2_0 = (Keyword)cDtsDeclaredOptionalAssignment_1_2_0_0_2_0_2.eContents().get(0);
+		private final RuleCall cTypeParametersParserRuleCall_1_2_0_0_2_0_3 = (RuleCall)cGroup_1_2_0_0_2_0.eContents().get(3);
+		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_0_4 = (RuleCall)cGroup_1_2_0_0_2_0.eContents().get(4);
 		private final Group cGroup_1_2_0_0_2_1 = (Group)cAlternatives_1_2_0_0_2.eContents().get(1);
 		private final RuleCall cAsyncNoTrailingLineBreakParserRuleCall_1_2_0_0_2_1_0 = (RuleCall)cGroup_1_2_0_0_2_1.eContents().get(0);
 		private final Assignment cDeclaredNameAssignment_1_2_0_0_2_1_1 = (Assignment)cGroup_1_2_0_0_2_1.eContents().get(1);
 		private final RuleCall cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_1_1_0 = (RuleCall)cDeclaredNameAssignment_1_2_0_0_2_1_1.eContents().get(0);
-		private final RuleCall cTypeParametersParserRuleCall_1_2_0_0_2_1_2 = (RuleCall)cGroup_1_2_0_0_2_1.eContents().get(2);
-		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_1_3 = (RuleCall)cGroup_1_2_0_0_2_1.eContents().get(3);
+		private final Assignment cDtsDeclaredOptionalAssignment_1_2_0_0_2_1_2 = (Assignment)cGroup_1_2_0_0_2_1.eContents().get(2);
+		private final Keyword cDtsDeclaredOptionalQuestionMarkKeyword_1_2_0_0_2_1_2_0 = (Keyword)cDtsDeclaredOptionalAssignment_1_2_0_0_2_1_2.eContents().get(0);
+		private final RuleCall cTypeParametersParserRuleCall_1_2_0_0_2_1_3 = (RuleCall)cGroup_1_2_0_0_2_1.eContents().get(3);
+		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_1_4 = (RuleCall)cGroup_1_2_0_0_2_1.eContents().get(4);
 		private final Keyword cSemicolonKeyword_1_2_1 = (Keyword)cGroup_1_2.eContents().get(1);
 		private final Group cGroup_1_3 = (Group)cAlternatives_1.eContents().get(3);
 		private final Group cGroup_1_3_0 = (Group)cGroup_1_3.eContents().get(0);
@@ -10395,8 +10427,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//        |     => (
 		//                {N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)*
 		//                (
-		//                        generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//                    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//                        generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//                    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//                )
 		//                )';'?
 		//        |    => ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
@@ -10412,8 +10444,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    |     => (
 		//            {N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)*
 		//            (
-		//                    generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//                |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//                    generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//                |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//            )
 		//            )';'?
 		//    |    => ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
@@ -10431,8 +10463,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//       |     => (
 		//               {N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)*
 		//               (
-		//                       generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//                   |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//                       generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//                   |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//               )
 		//               )';'?
 		//       |    => ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
@@ -10528,8 +10560,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//=> (
 		//           {N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)*
 		//           (
-		//                   generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//               |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//                   generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//               |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//           )
 		//           )';'?
 		public Group getGroup_1_2() { return cGroup_1_2; }
@@ -10537,16 +10569,16 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//=> (
 		//           {N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)*
 		//           (
-		//                   generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//               |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//                   generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//               |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//           )
 		//           )
 		public Group getGroup_1_2_0() { return cGroup_1_2_0; }
 		
 		//{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)*
 		//(
-		//        generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//        generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//)
 		public Group getGroup_1_2_0_0() { return cGroup_1_2_0_0; }
 		
@@ -10560,12 +10592,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_1_2_0_0_1_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_1_2_0_0_1_0; }
 		
 		//(
-		//        generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//        generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//)
 		public Alternatives getAlternatives_1_2_0_0_2() { return cAlternatives_1_2_0_0_2; }
 		
-		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
 		public Group getGroup_1_2_0_0_2_0() { return cGroup_1_2_0_0_2_0; }
 		
 		//generator?='*'
@@ -10580,13 +10612,19 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//LiteralOrComputedPropertyName<Yield>
 		public RuleCall getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0_1_0() { return cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0_1_0; }
 		
+		//(dtsDeclaredOptional?='?')?
+		public Assignment getDtsDeclaredOptionalAssignment_1_2_0_0_2_0_2() { return cDtsDeclaredOptionalAssignment_1_2_0_0_2_0_2; }
+		
+		//'?'
+		public Keyword getDtsDeclaredOptionalQuestionMarkKeyword_1_2_0_0_2_0_2_0() { return cDtsDeclaredOptionalQuestionMarkKeyword_1_2_0_0_2_0_2_0; }
+		
 		//TypeParameters?
-		public RuleCall getTypeParametersParserRuleCall_1_2_0_0_2_0_2() { return cTypeParametersParserRuleCall_1_2_0_0_2_0_2; }
+		public RuleCall getTypeParametersParserRuleCall_1_2_0_0_2_0_3() { return cTypeParametersParserRuleCall_1_2_0_0_2_0_3; }
 		
 		//-> MethodParamsReturnAndBody <Generator=true>
-		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_0_3() { return cMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_0_3; }
+		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_0_4() { return cMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_0_4; }
 		
-		//AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		public Group getGroup_1_2_0_0_2_1() { return cGroup_1_2_0_0_2_1; }
 		
 		//AsyncNoTrailingLineBreak
@@ -10598,11 +10636,17 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//LiteralOrComputedPropertyName<Yield>
 		public RuleCall getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_1_1_0() { return cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_1_1_0; }
 		
+		//(dtsDeclaredOptional?='?')?
+		public Assignment getDtsDeclaredOptionalAssignment_1_2_0_0_2_1_2() { return cDtsDeclaredOptionalAssignment_1_2_0_0_2_1_2; }
+		
+		//'?'
+		public Keyword getDtsDeclaredOptionalQuestionMarkKeyword_1_2_0_0_2_1_2_0() { return cDtsDeclaredOptionalQuestionMarkKeyword_1_2_0_0_2_1_2_0; }
+		
 		//TypeParameters?
-		public RuleCall getTypeParametersParserRuleCall_1_2_0_0_2_1_2() { return cTypeParametersParserRuleCall_1_2_0_0_2_1_2; }
+		public RuleCall getTypeParametersParserRuleCall_1_2_0_0_2_1_3() { return cTypeParametersParserRuleCall_1_2_0_0_2_1_3; }
 		
 		//-> MethodParamsReturnAndBody <Generator=false>
-		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_1_3() { return cMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_1_3; }
+		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_1_4() { return cMethodParamsReturnAndBodyParserRuleCall_1_2_0_0_2_1_4; }
 		
 		//';'?
 		public Keyword getSemicolonKeyword_1_2_1() { return cSemicolonKeyword_1_2_1; }
@@ -10750,21 +10794,25 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cGeneratorAsteriskKeyword_0_0_3_0_0_0 = (Keyword)cGeneratorAssignment_0_0_3_0_0.eContents().get(0);
 		private final Assignment cDeclaredNameAssignment_0_0_3_0_1 = (Assignment)cGroup_0_0_3_0.eContents().get(1);
 		private final RuleCall cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0 = (RuleCall)cDeclaredNameAssignment_0_0_3_0_1.eContents().get(0);
-		private final RuleCall cTypeParametersParserRuleCall_0_0_3_0_2 = (RuleCall)cGroup_0_0_3_0.eContents().get(2);
-		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_0_0_3_0_3 = (RuleCall)cGroup_0_0_3_0.eContents().get(3);
+		private final Assignment cDtsDeclaredOptionalAssignment_0_0_3_0_2 = (Assignment)cGroup_0_0_3_0.eContents().get(2);
+		private final Keyword cDtsDeclaredOptionalQuestionMarkKeyword_0_0_3_0_2_0 = (Keyword)cDtsDeclaredOptionalAssignment_0_0_3_0_2.eContents().get(0);
+		private final RuleCall cTypeParametersParserRuleCall_0_0_3_0_3 = (RuleCall)cGroup_0_0_3_0.eContents().get(3);
+		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_0_0_3_0_4 = (RuleCall)cGroup_0_0_3_0.eContents().get(4);
 		private final Group cGroup_0_0_3_1 = (Group)cAlternatives_0_0_3.eContents().get(1);
 		private final Assignment cDeclaredNameAssignment_0_0_3_1_0 = (Assignment)cGroup_0_0_3_1.eContents().get(0);
 		private final RuleCall cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_0_0 = (RuleCall)cDeclaredNameAssignment_0_0_3_1_0.eContents().get(0);
-		private final RuleCall cTypeParametersParserRuleCall_0_0_3_1_1 = (RuleCall)cGroup_0_0_3_1.eContents().get(1);
-		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_0_0_3_1_2 = (RuleCall)cGroup_0_0_3_1.eContents().get(2);
+		private final Assignment cDtsDeclaredOptionalAssignment_0_0_3_1_1 = (Assignment)cGroup_0_0_3_1.eContents().get(1);
+		private final Keyword cDtsDeclaredOptionalQuestionMarkKeyword_0_0_3_1_1_0 = (Keyword)cDtsDeclaredOptionalAssignment_0_0_3_1_1.eContents().get(0);
+		private final RuleCall cTypeParametersParserRuleCall_0_0_3_1_2 = (RuleCall)cGroup_0_0_3_1.eContents().get(2);
+		private final RuleCall cMethodParamsReturnAndBodyParserRuleCall_0_0_3_1_3 = (RuleCall)cGroup_0_0_3_1.eContents().get(3);
 		private final Keyword cSemicolonKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		
 		//N4MethodDeclaration <Yield>:
 		//    => ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)*
 		//        AsyncNoTrailingLineBreak
 		//        (
-		//                generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//            |    declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//                generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//            |    declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//        )
 		//    ) ';'?
 		//;
@@ -10773,8 +10821,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)*
 		//    AsyncNoTrailingLineBreak
 		//    (
-		//            generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//        |    declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//            generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//        |    declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//    )
 		//) ';'?
 		public Group getGroup() { return cGroup; }
@@ -10782,8 +10830,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)*
 		//    AsyncNoTrailingLineBreak
 		//    (
-		//            generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//        |    declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//            generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//        |    declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//    )
 		//)
 		public Group getGroup_0() { return cGroup_0; }
@@ -10791,8 +10839,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//{N4MethodDeclaration} (declaredModifiers+=N4Modifier)*
 		//        AsyncNoTrailingLineBreak
 		//        (
-		//                generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//            |    declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//                generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//            |    declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//        )
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
@@ -10809,12 +10857,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		public RuleCall getAsyncNoTrailingLineBreakParserRuleCall_0_0_2() { return cAsyncNoTrailingLineBreakParserRuleCall_0_0_2; }
 		
 		//(
-		//        generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-		//    |    declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//        generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//    |    declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		//)
 		public Alternatives getAlternatives_0_0_3() { return cAlternatives_0_0_3; }
 		
-		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+		//generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
 		public Group getGroup_0_0_3_0() { return cGroup_0_0_3_0; }
 		
 		//generator?='*'
@@ -10829,13 +10877,19 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//LiteralOrComputedPropertyName<Yield>
 		public RuleCall getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0() { return cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0_1_0; }
 		
+		//(dtsDeclaredOptional?='?')?
+		public Assignment getDtsDeclaredOptionalAssignment_0_0_3_0_2() { return cDtsDeclaredOptionalAssignment_0_0_3_0_2; }
+		
+		//'?'
+		public Keyword getDtsDeclaredOptionalQuestionMarkKeyword_0_0_3_0_2_0() { return cDtsDeclaredOptionalQuestionMarkKeyword_0_0_3_0_2_0; }
+		
 		//TypeParameters?
-		public RuleCall getTypeParametersParserRuleCall_0_0_3_0_2() { return cTypeParametersParserRuleCall_0_0_3_0_2; }
+		public RuleCall getTypeParametersParserRuleCall_0_0_3_0_3() { return cTypeParametersParserRuleCall_0_0_3_0_3; }
 		
 		//-> MethodParamsReturnAndBody <Generator=true>
-		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_0_0_3_0_3() { return cMethodParamsReturnAndBodyParserRuleCall_0_0_3_0_3; }
+		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_0_0_3_0_4() { return cMethodParamsReturnAndBodyParserRuleCall_0_0_3_0_4; }
 		
-		//declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+		//declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		public Group getGroup_0_0_3_1() { return cGroup_0_0_3_1; }
 		
 		//declaredName=LiteralOrComputedPropertyName<Yield>
@@ -10844,11 +10898,17 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//LiteralOrComputedPropertyName<Yield>
 		public RuleCall getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_0_0() { return cDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_1_0_0; }
 		
+		//(dtsDeclaredOptional?='?')?
+		public Assignment getDtsDeclaredOptionalAssignment_0_0_3_1_1() { return cDtsDeclaredOptionalAssignment_0_0_3_1_1; }
+		
+		//'?'
+		public Keyword getDtsDeclaredOptionalQuestionMarkKeyword_0_0_3_1_1_0() { return cDtsDeclaredOptionalQuestionMarkKeyword_0_0_3_1_1_0; }
+		
 		//TypeParameters?
-		public RuleCall getTypeParametersParserRuleCall_0_0_3_1_1() { return cTypeParametersParserRuleCall_0_0_3_1_1; }
+		public RuleCall getTypeParametersParserRuleCall_0_0_3_1_2() { return cTypeParametersParserRuleCall_0_0_3_1_2; }
 		
 		//-> MethodParamsReturnAndBody <Generator=false>
-		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_0_0_3_1_2() { return cMethodParamsReturnAndBodyParserRuleCall_0_0_3_1_2; }
+		public RuleCall getMethodParamsReturnAndBodyParserRuleCall_0_0_3_1_3() { return cMethodParamsReturnAndBodyParserRuleCall_0_0_3_1_3; }
 		
 		//';'?
 		public Keyword getSemicolonKeyword_1() { return cSemicolonKeyword_1; }
@@ -13591,7 +13651,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//fragment StrictFormalParameters <Yield>*:
-	//    '(' (fpars+=FormalParameter<Yield> (',' fpars+=FormalParameter<Yield>)*)? ')'
+	//    '(' (('this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter<Yield>) (',' fpars+=FormalParameter<Yield>)*)? ')'
 	//;
 	public StrictFormalParametersElements getStrictFormalParametersAccess() {
 		return pStrictFormalParameters;
@@ -13692,7 +13752,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//fragment BindingElementFragment <Yield>*:
 	//    ( => bindingPattern=BindingPattern<Yield>
-	//    | annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> '?'? ColonSepDeclaredTypeRef?
+	//    | annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> (dtsDeclaredOptional?='?')? ColonSepDeclaredTypeRef?
 	//    )
 	//    (hasInitializerAssignment?='=' initializer=AssignmentExpression<In=true, Yield>?)?
 	//;
@@ -15905,8 +15965,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//        |     => (
 	//                {N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)*
 	//                (
-	//                        generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-	//                    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+	//                        generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+	//                    |     AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 	//                )
 	//                )';'?
 	//        |    => ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
@@ -15954,8 +16014,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    => ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)*
 	//        AsyncNoTrailingLineBreak
 	//        (
-	//                generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-	//            |    declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+	//                generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+	//            |    declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 	//        )
 	//    ) ';'?
 	//;
@@ -16697,6 +16757,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    '[' propName=IdentifierName 'in' propNameTypeRef=TypeRef ']'
 	//    ('+'? includeOptional?='?' | '-' excludeOptional?='?')?
 	//    (':' templateTypeRef=TypeRef)? ';'?
+	//    // FIXME consider allowing additional mapping signatures here, to be able to show better error messages
 	//    // FIXME consider allowing TStructMemberList here, to be able to show better error messages
 	//    '}'
 	//;

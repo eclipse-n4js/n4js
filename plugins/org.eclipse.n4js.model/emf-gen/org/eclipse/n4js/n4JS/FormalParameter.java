@@ -26,6 +26,7 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#isVariadic <em>Variadic</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#getDefinedTypeElement <em>Defined Type Element</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#isDtsDeclaredOptional <em>Dts Declared Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#isHasInitializerAssignment <em>Has Initializer Assignment</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#getInitializer <em>Initializer</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#getBindingPattern <em>Binding Pattern</em>}</li>
@@ -91,6 +92,31 @@ public interface FormalParameter extends AnnotableElement, Variable {
 	 * @generated
 	 */
 	void setDefinedTypeElement(TFormalParameter value);
+
+	/**
+	 * Returns the value of the '<em><b>Dts Declared Optional</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Only allowed in DTS.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Dts Declared Optional</em>' attribute.
+	 * @see #setDtsDeclaredOptional(boolean)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFormalParameter_DtsDeclaredOptional()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isDtsDeclaredOptional();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FormalParameter#isDtsDeclaredOptional <em>Dts Declared Optional</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dts Declared Optional</em>' attribute.
+	 * @see #isDtsDeclaredOptional()
+	 * @generated
+	 */
+	void setDtsDeclaredOptional(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Has Initializer Assignment</b></em>' attribute.

@@ -122,6 +122,9 @@ import static extension org.eclipse.n4js.parser.conversion.AbstractN4JSStringVal
  */
 class ASTStructureValidator {
 
+	// FIXME remove this!
+	public static boolean SUPPRESS_AST_STRUCTURE_VALIDATION = false;
+
 	@Inject
 	private WorkspaceAccess workspaceAccess;
 
@@ -298,6 +301,9 @@ class ASTStructureValidator {
 	}
 
 	def void validate(EObject model, IDiagnosticConsumer consumer) {
+		if (SUPPRESS_AST_STRUCTURE_VALIDATION) {
+			return;
+		}
 		val resource = model?.eResource;
 		if(resource !== null && !workspaceAccess.isNoValidate(resource, resource.getURI())) {
 			val producer = new ASTStructureDiagnosticProducer(consumer);

@@ -33,7 +33,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_3_1_q;
 	protected AbstractElementAlias match_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q;
 	protected AbstractElementAlias match_ArrayBindingPattern_CommaKeyword_3_2_0_q;
-	protected AbstractElementAlias match_BindingElementFragment_QuestionMarkKeyword_0_1_3_q;
 	protected AbstractElementAlias match_DoStatement_SemiParserRuleCall_6_q;
 	protected AbstractElementAlias match_ExportClause_CommaKeyword_1_2_q;
 	protected AbstractElementAlias match_FieldDeclarationImpl_ReadonlyKeyword_0_q;
@@ -69,7 +68,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_3_1_q = new TokenAlias(false, true, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getSemicolonKeyword_1_3_1());
 		match_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q = new TokenAlias(false, true, grammarAccess.getAnnotatedPropertyAssignmentAccess().getSemicolonKeyword_1_3_1());
 		match_ArrayBindingPattern_CommaKeyword_3_2_0_q = new TokenAlias(false, true, grammarAccess.getArrayBindingPatternAccess().getCommaKeyword_3_2_0());
-		match_BindingElementFragment_QuestionMarkKeyword_0_1_3_q = new TokenAlias(false, true, grammarAccess.getBindingElementFragmentAccess().getQuestionMarkKeyword_0_1_3());
 		match_DoStatement_SemiParserRuleCall_6_q = new TokenAlias(false, true, grammarAccess.getDoStatementAccess().getSemiParserRuleCall_6());
 		match_ExportClause_CommaKeyword_1_2_q = new TokenAlias(false, true, grammarAccess.getExportClauseAccess().getCommaKeyword_1_2());
 		match_FieldDeclarationImpl_ReadonlyKeyword_0_q = new TokenAlias(false, true, grammarAccess.getFieldDeclarationImplAccess().getReadonlyKeyword_0());
@@ -179,8 +177,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ArrayBindingPattern_CommaKeyword_3_2_0_q.equals(syntax))
 				emit_ArrayBindingPattern_CommaKeyword_3_2_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_BindingElementFragment_QuestionMarkKeyword_0_1_3_q.equals(syntax))
-				emit_BindingElementFragment_QuestionMarkKeyword_0_1_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_DoStatement_SemiParserRuleCall_6_q.equals(syntax))
 				emit_DoStatement_SemiParserRuleCall_6_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ExportClause_CommaKeyword_1_2_q.equals(syntax))
@@ -272,6 +268,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
 	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
+	 *     dtsDeclaredOptional?='?' '(' ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
 	 *     {N4MethodDeclaration.annotationList=} '(' ')' (ambiguity) (rule end)
@@ -287,6 +285,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 */
 	protected void emit_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -301,19 +300,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     elements+=BindingRestElement (ambiguity) ']' (rule end)
 	 */
 	protected void emit_ArrayBindingPattern_CommaKeyword_3_2_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     '?'?
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     name=BindingIdentifier (ambiguity) ':' declaredTypeRefNode=TypeReferenceNode
-	 *     name=BindingIdentifier (ambiguity) (rule end)
-	 *     name=BindingIdentifier (ambiguity) hasInitializerAssignment?='='
-	 */
-	protected void emit_BindingElementFragment_QuestionMarkKeyword_0_1_3_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -365,6 +351,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredModifiers+=N4Modifier 'function' '(' ')' (ambiguity) (rule end)
 	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     generator?='*' '(' ')' (ambiguity) (rule end)
 	 *     name=BindingIdentifier '(' ')' (ambiguity) (rule end)
@@ -447,6 +434,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
 	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
+	 *     dtsDeclaredOptional?='?' '(' ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
 	 *     {N4MethodDeclaration.annotationList=} '(' ')' (ambiguity) (rule end)
@@ -489,6 +478,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
 	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
+	 *     dtsDeclaredOptional?='?' '(' ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
 	 */
@@ -517,12 +508,14 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredAsync?='async' (ambiguity) '(' ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
 	 *     declaredAsync?='async' (ambiguity) '(' ')' Arrow body=ExpressionDisguisedAsBlock
 	 *     declaredAsync?='async' (ambiguity) '(' ')' Arrow hasBracesAroundBody?='{'
+	 *     declaredAsync?='async' (ambiguity) '(' 'this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode
 	 *     declaredAsync?='async' (ambiguity) '(' fpars+=FormalParameter
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' ':' declaredReturnTypePredicate=TypePredicateDeclaration
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' (rule end)
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' Semi? (rule end)
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' body=Block
+	 *     declaredAsync?='async' (ambiguity) 'function' '(' 'this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' fpars+=FormalParameter
 	 *     declaredAsync?='async' (ambiguity) 'function' '<' typeVars+=N4TypeVariable
 	 *     declaredAsync?='async' (ambiguity) 'function' generator?='*'
@@ -676,6 +669,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 */
 	protected void emit_PropertyMethodDeclaration_SemicolonKeyword_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {

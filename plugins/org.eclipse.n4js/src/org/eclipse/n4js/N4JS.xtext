@@ -386,7 +386,7 @@ ArrowExpression <In, Yield> returns ArrowFunction:
 ;
 
 fragment StrictFormalParameters <Yield>*:
-	'(' (fpars+=FormalParameter<Yield> (',' fpars+=FormalParameter<Yield>)*)? ')'
+	'(' (('this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter<Yield>) (',' fpars+=FormalParameter<Yield>)*)? ')'
 ;
 
 BindingIdentifierAsFormalParameter <Yield> returns FormalParameter:	name=BindingIdentifier<Yield>;
@@ -431,7 +431,7 @@ FormalParameter <Yield>:
 
 fragment BindingElementFragment <Yield>*:
 	( => bindingPattern=BindingPattern<Yield>
-	| annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> '?'? ColonSepDeclaredTypeRef?
+	| annotations+=Annotation* variadic?='...'? name=BindingIdentifier<Yield> (dtsDeclaredOptional?='?')? ColonSepDeclaredTypeRef?
 	)
 	(hasInitializerAssignment?='=' initializer=AssignmentExpression<In=true, Yield>?)?
 ;
@@ -1441,8 +1441,8 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 		| 	=> (
 				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)*
 				(
-						generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+						generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 				)
 				)';'?
 		|	=> ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
@@ -1469,8 +1469,8 @@ N4MethodDeclaration <Yield>:
 	=> ({N4MethodDeclaration} (declaredModifiers+=N4Modifier)*
 		AsyncNoTrailingLineBreak
 		(
-				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
-			|	declaredName=LiteralOrComputedPropertyName<Yield> TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
+				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
+			|	declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		)
 	) ';'?
 ;

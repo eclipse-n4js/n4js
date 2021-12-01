@@ -61,6 +61,7 @@ import org.eclipse.xtext.EcoreUtil2;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#isVariadic <em>Variadic</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getDefinedTypeElement <em>Defined Type Element</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#isDtsDeclaredOptional <em>Dts Declared Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#isHasInitializerAssignment <em>Has Initializer Assignment</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getInitializer <em>Initializer</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getBindingPattern <em>Binding Pattern</em>}</li>
@@ -138,6 +139,26 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * @ordered
 	 */
 	protected TFormalParameter definedTypeElement;
+
+	/**
+	 * The default value of the '{@link #isDtsDeclaredOptional() <em>Dts Declared Optional</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDtsDeclaredOptional()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DTS_DECLARED_OPTIONAL_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDtsDeclaredOptional() <em>Dts Declared Optional</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDtsDeclaredOptional()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean dtsDeclaredOptional = DTS_DECLARED_OPTIONAL_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isHasInitializerAssignment() <em>Has Initializer Assignment</em>}' attribute.
@@ -348,6 +369,29 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * @generated
 	 */
 	@Override
+	public boolean isDtsDeclaredOptional() {
+		return dtsDeclaredOptional;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDtsDeclaredOptional(boolean newDtsDeclaredOptional) {
+		boolean oldDtsDeclaredOptional = dtsDeclaredOptional;
+		dtsDeclaredOptional = newDtsDeclaredOptional;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FORMAL_PARAMETER__DTS_DECLARED_OPTIONAL, oldDtsDeclaredOptional, dtsDeclaredOptional));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isHasInitializerAssignment() {
 		return hasInitializerAssignment;
 	}
@@ -544,6 +588,8 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 			case N4JSPackage.FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT:
 				if (resolve) return getDefinedTypeElement();
 				return basicGetDefinedTypeElement();
+			case N4JSPackage.FORMAL_PARAMETER__DTS_DECLARED_OPTIONAL:
+				return isDtsDeclaredOptional();
 			case N4JSPackage.FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT:
 				return isHasInitializerAssignment();
 			case N4JSPackage.FORMAL_PARAMETER__INITIALIZER:
@@ -578,6 +624,9 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 				return;
 			case N4JSPackage.FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT:
 				setDefinedTypeElement((TFormalParameter)newValue);
+				return;
+			case N4JSPackage.FORMAL_PARAMETER__DTS_DECLARED_OPTIONAL:
+				setDtsDeclaredOptional((Boolean)newValue);
 				return;
 			case N4JSPackage.FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT:
 				setHasInitializerAssignment((Boolean)newValue);
@@ -615,6 +664,9 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 			case N4JSPackage.FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT:
 				setDefinedTypeElement((TFormalParameter)null);
 				return;
+			case N4JSPackage.FORMAL_PARAMETER__DTS_DECLARED_OPTIONAL:
+				setDtsDeclaredOptional(DTS_DECLARED_OPTIONAL_EDEFAULT);
+				return;
 			case N4JSPackage.FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT:
 				setHasInitializerAssignment(HAS_INITIALIZER_ASSIGNMENT_EDEFAULT);
 				return;
@@ -646,6 +698,8 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 				return variadic != VARIADIC_EDEFAULT;
 			case N4JSPackage.FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT:
 				return definedTypeElement != null;
+			case N4JSPackage.FORMAL_PARAMETER__DTS_DECLARED_OPTIONAL:
+				return dtsDeclaredOptional != DTS_DECLARED_OPTIONAL_EDEFAULT;
 			case N4JSPackage.FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT:
 				return hasInitializerAssignment != HAS_INITIALIZER_ASSIGNMENT_EDEFAULT;
 			case N4JSPackage.FORMAL_PARAMETER__INITIALIZER:
@@ -822,6 +876,8 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 		result.append(name);
 		result.append(", variadic: ");
 		result.append(variadic);
+		result.append(", dtsDeclaredOptional: ");
+		result.append(dtsDeclaredOptional);
 		result.append(", hasInitializerAssignment: ");
 		result.append(hasInitializerAssignment);
 		result.append(')');

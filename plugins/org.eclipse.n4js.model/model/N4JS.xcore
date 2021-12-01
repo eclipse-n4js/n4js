@@ -603,6 +603,8 @@ abstract class FunctionOrFieldAccessor extends AnnotableElement, VariableEnviron
  * Note that, since an anonymous function expression has no name, the function definition is not a named element.
  */
 abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement {
+	/* Only allowed in DTS. */
+	contains TypeReferenceNode<TypeRef> dtsDeclaredThisTypeNode
 	contains FormalParameter[] fpars
 	/*
 	 * Tells if the return value is optional.
@@ -811,6 +813,8 @@ class FormalParameter extends AnnotableElement, Variable {
 	contains Annotation[] annotations
 	boolean variadic
 	refers transient TFormalParameter definedTypeElement
+	/* Only allowed in DTS. */
+	boolean dtsDeclaredOptional
 	/* A formal parameter with a default value in a function 'foo' can look like this:
 	 * foo(defParam = undefined){}, with 'undefined' as the initializing expression, which can be omitted.
 	 * When the initializer is omitted, it evaluates to 'undefined'. To know whether a parameter is a
@@ -2457,6 +2461,10 @@ abstract class MethodDeclaration extends FunctionDefinition, GenericDeclaration,
 }
 
 class N4MethodDeclaration extends AnnotableN4MemberDeclaration, MethodDeclaration {
+
+	/* Only allowed in DTS. */
+	boolean dtsDeclaredOptional
+
 	op boolean isAbstract() {
 		return (eContainer instanceof N4InterfaceDeclaration && body === null &&
 			! annotations.exists[name == "ProvidesDefaultImplementation"]

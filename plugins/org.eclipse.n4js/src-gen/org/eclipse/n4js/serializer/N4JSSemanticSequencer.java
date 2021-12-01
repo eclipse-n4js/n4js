@@ -2085,7 +2085,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
@@ -2108,7 +2108,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
@@ -2997,7 +2997,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block
 	 *     )
@@ -3019,7 +3019,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block
 	 *     )
@@ -3719,7 +3719,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
@@ -3744,7 +3744,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
@@ -3766,24 +3766,26 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 
 	 *                 declaredModifiers+=N4Modifier* 
 	 *                 (
-	 *                     (declaredAsync?='async' declaredName=LiteralOrComputedPropertyName) | 
-	 *                     (generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *                     declaredName=LiteralOrComputedPropertyName
+	 *                     (declaredAsync?='async'? declaredName=LiteralOrComputedPropertyName dtsDeclaredOptional?='?'?) | 
+	 *                     (generator?='*' declaredName=LiteralOrComputedPropertyName dtsDeclaredOptional?='?'?)
 	 *                 )
 	 *             ) | 
 	 *             (
 	 *                 (
-	 *                     (annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 declaredModifiers+=N4Modifier* declaredAsync?='async') | 
+	 *                     (annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 declaredModifiers+=N4Modifier* declaredAsync?='async'?) | 
 	 *                     declaredModifiers+=N4Modifier+ | 
-	 *                     (declaredModifiers+=N4Modifier+ declaredAsync?='async')
+	 *                     (declaredModifiers+=N4Modifier+ declaredAsync?='async'?)
 	 *                 )? 
-	 *                 ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName)
+	 *                 (
+	 *                     (generator?='*' declaredName=LiteralOrComputedPropertyName dtsDeclaredOptional?='?'?) | 
+	 *                     (declaredName=LiteralOrComputedPropertyName dtsDeclaredOptional?='?'?)
+	 *                 )
 	 *             ) | 
 	 *             annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_3_0_0_0 | 
-	 *             (declaredModifiers+=N4Modifier+ declaredAsync?='async' declaredName=LiteralOrComputedPropertyName)
+	 *             (declaredModifiers+=N4Modifier+ declaredAsync?='async'? declaredName=LiteralOrComputedPropertyName dtsDeclaredOptional?='?'?)
 	 *         )? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
@@ -3804,12 +3806,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (
 	 *                 annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 
 	 *                 declaredModifiers+=N4Modifier* 
-	 *                 ((declaredAsync?='async'? declaredName=LiteralOrComputedPropertyName) | (generator?='*' declaredName=LiteralOrComputedPropertyName))
+	 *                 (
+	 *                     (declaredAsync?='async'? declaredName=LiteralOrComputedPropertyName dtsDeclaredOptional?='?'?) | 
+	 *                     (generator?='*' declaredName=LiteralOrComputedPropertyName dtsDeclaredOptional?='?'?)
+	 *                 )
 	 *             ) | 
 	 *             annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_3_0_0_0
 	 *         ) 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
@@ -4208,7 +4213,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName)
 	 *             )
 	 *         ) 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -4266,7 +4271,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
 	 *         declaredReturnTypeRefNode=TypeReferenceWithModifiersNode? 
 	 *         ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName) 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -4443,7 +4448,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
@@ -4465,7 +4470,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
@@ -7718,7 +7723,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (
 	 *             (
 	 *                 declaredAsync?='async'? 
-	 *                 (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *                 ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *                 (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)?
 	 *             ) | 
 	 *             fpars+=BindingIdentifierAsFormalParameter
@@ -7795,7 +7800,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block
 	 *     )
@@ -7819,7 +7824,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
@@ -7838,9 +7843,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         declaredModifiers+=N4Modifier* 
 	 *         declaredAsync?='async'? 
-	 *         ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName) 
+	 *         (
+	 *             (generator?='*' declaredName=LiteralOrComputedPropertyName dtsDeclaredOptional?='?'?) | 
+	 *             (declaredName=LiteralOrComputedPropertyName dtsDeclaredOptional?='?'?)
+	 *         ) 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
@@ -7861,7 +7869,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceWithModifiersNode? 
 	 *         declaredAsync?='async'? 
 	 *         ((generator?='*' declaredName=LiteralOrComputedPropertyName) | declaredName=LiteralOrComputedPropertyName) 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -8555,7 +8563,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         (bindingPattern=BindingPattern | (annotations+=Annotation* variadic?='...'? name=BindingIdentifier declaredTypeRefNode=TypeReferenceNode?)) 
+	 *         (
+	 *             bindingPattern=BindingPattern | 
+	 *             (annotations+=Annotation* variadic?='...'? name=BindingIdentifier dtsDeclaredOptional?='?'? declaredTypeRefNode=TypeReferenceNode?)
+	 *         ) 
 	 *         (hasInitializerAssignment?='=' initializer=AssignmentExpression?)?
 	 *     )
 	 */
@@ -10139,7 +10150,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         generator?='*'? 
 	 *         name=BindingIdentifier? 
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block
 	 *     )
@@ -10157,7 +10168,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
 	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )

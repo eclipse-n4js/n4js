@@ -2774,7 +2774,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionDefinition_Fpars() {
+	public EReference getFunctionDefinition_DtsDeclaredThisTypeNode() {
 		return (EReference)functionDefinitionEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2784,7 +2784,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionDefinition_DeclaredReturnTypeRefNode() {
+	public EReference getFunctionDefinition_Fpars() {
 		return (EReference)functionDefinitionEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -2794,7 +2794,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionDefinition_DeclaredReturnTypePredicate() {
+	public EReference getFunctionDefinition_DeclaredReturnTypeRefNode() {
 		return (EReference)functionDefinitionEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -2804,8 +2804,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getFunctionDefinition_DeclaredReturnTypePredicate() {
+		return (EReference)functionDefinitionEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getFunctionDefinition_Generator() {
-		return (EAttribute)functionDefinitionEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)functionDefinitionEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2815,7 +2825,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EAttribute getFunctionDefinition_DeclaredAsync() {
-		return (EAttribute)functionDefinitionEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)functionDefinitionEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -3184,7 +3194,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFormalParameter_HasInitializerAssignment() {
+	public EAttribute getFormalParameter_DtsDeclaredOptional() {
 		return (EAttribute)formalParameterEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -3194,8 +3204,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getFormalParameter_HasInitializerAssignment() {
+		return (EAttribute)formalParameterEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getFormalParameter_Initializer() {
-		return (EReference)formalParameterEClass.getEStructuralFeatures().get(4);
+		return (EReference)formalParameterEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -3205,7 +3225,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EReference getFormalParameter_BindingPattern() {
-		return (EReference)formalParameterEClass.getEStructuralFeatures().get(5);
+		return (EReference)formalParameterEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -7274,6 +7294,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getN4MethodDeclaration_DtsDeclaredOptional() {
+		return (EAttribute)n4MethodDeclarationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getN4MethodDeclaration__IsAbstract() {
 		return n4MethodDeclarationEClass.getEOperations().get(0);
 	}
@@ -8183,6 +8213,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(functionOrFieldAccessorEClass, FUNCTION_OR_FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR);
 
 		functionDefinitionEClass = createEClass(FUNCTION_DEFINITION);
+		createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__DTS_DECLARED_THIS_TYPE_NODE);
 		createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__FPARS);
 		createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE);
 		createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE);
@@ -8231,6 +8262,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(formalParameterEClass, FORMAL_PARAMETER__ANNOTATIONS);
 		createEAttribute(formalParameterEClass, FORMAL_PARAMETER__VARIADIC);
 		createEReference(formalParameterEClass, FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT);
+		createEAttribute(formalParameterEClass, FORMAL_PARAMETER__DTS_DECLARED_OPTIONAL);
 		createEAttribute(formalParameterEClass, FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT);
 		createEReference(formalParameterEClass, FORMAL_PARAMETER__INITIALIZER);
 		createEReference(formalParameterEClass, FORMAL_PARAMETER__BINDING_PATTERN);
@@ -8765,6 +8797,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(methodDeclarationEClass, METHOD_DECLARATION___IS_STATIC);
 
 		n4MethodDeclarationEClass = createEClass(N4_METHOD_DECLARATION);
+		createEAttribute(n4MethodDeclarationEClass, N4_METHOD_DECLARATION__DTS_DECLARED_OPTIONAL);
 		createEOperation(n4MethodDeclarationEClass, N4_METHOD_DECLARATION___IS_ABSTRACT);
 		createEOperation(n4MethodDeclarationEClass, N4_METHOD_DECLARATION___IS_CONSTRUCTOR);
 		createEOperation(n4MethodDeclarationEClass, N4_METHOD_DECLARATION___IS_CALL_SIGNATURE);
@@ -9347,6 +9380,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getFunctionOrFieldAccessor__GetDefinedFunctionOrAccessor(), theTypesPackage.getIdentifiableElement(), "getDefinedFunctionOrAccessor", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(functionDefinitionEClass, FunctionDefinition.class, "FunctionDefinition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		g1 = createEGenericType(this.getTypeReferenceNode());
+		g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
+		g1.getETypeArguments().add(g2);
+		initEReference(getFunctionDefinition_DtsDeclaredThisTypeNode(), g1, null, "dtsDeclaredThisTypeNode", null, 0, 1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionDefinition_Fpars(), this.getFormalParameter(), null, "fpars", null, 0, -1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		g1 = createEGenericType(this.getTypeReferenceNode());
 		g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
@@ -9424,6 +9461,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getFormalParameter_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFormalParameter_Variadic(), theEcorePackage.getEBoolean(), "variadic", null, 0, 1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFormalParameter_DefinedTypeElement(), theTypesPackage.getTFormalParameter(), null, "definedTypeElement", null, 0, 1, FormalParameter.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFormalParameter_DtsDeclaredOptional(), theEcorePackage.getEBoolean(), "dtsDeclaredOptional", null, 0, 1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFormalParameter_HasInitializerAssignment(), theEcorePackage.getEBoolean(), "hasInitializerAssignment", null, 0, 1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFormalParameter_Initializer(), this.getExpression(), null, "initializer", null, 0, 1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFormalParameter_BindingPattern(), this.getBindingPattern(), null, "bindingPattern", null, 0, 1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -10111,6 +10149,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getMethodDeclaration__IsStatic(), theEcorePackage.getEBoolean(), "isStatic", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4MethodDeclarationEClass, N4MethodDeclaration.class, "N4MethodDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getN4MethodDeclaration_DtsDeclaredOptional(), theEcorePackage.getEBoolean(), "dtsDeclaredOptional", null, 0, 1, N4MethodDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4MethodDeclaration__IsAbstract(), theEcorePackage.getEBoolean(), "isAbstract", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

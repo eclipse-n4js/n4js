@@ -30,6 +30,7 @@ import org.eclipse.n4js.ts.types.TFunction;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDtsDeclaredThisTypeNode <em>Dts Declared This Type Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypePredicate <em>Declared Return Type Predicate</em>}</li>
@@ -42,6 +43,31 @@ import org.eclipse.n4js.ts.types.TFunction;
  * @generated
  */
 public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement {
+	/**
+	 * Returns the value of the '<em><b>Dts Declared This Type Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Only allowed in DTS.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Dts Declared This Type Node</em>' containment reference.
+	 * @see #setDtsDeclaredThisTypeNode(TypeReferenceNode)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDefinition_DtsDeclaredThisTypeNode()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TypeReferenceNode<TypeRef> getDtsDeclaredThisTypeNode();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDtsDeclaredThisTypeNode <em>Dts Declared This Type Node</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dts Declared This Type Node</em>' containment reference.
+	 * @see #getDtsDeclaredThisTypeNode()
+	 * @generated
+	 */
+	void setDtsDeclaredThisTypeNode(TypeReferenceNode<TypeRef> value);
+
 	/**
 	 * Returns the value of the '<em><b>Fpars</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.FormalParameter}.

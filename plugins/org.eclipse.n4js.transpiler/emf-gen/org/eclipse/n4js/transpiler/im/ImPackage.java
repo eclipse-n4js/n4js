@@ -2229,6 +2229,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION__DEFINED_TYPE = N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Dts Declared This Type Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE = N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE;
+
+	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2290,6 +2299,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION__DECLARED_NAME = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Dts Declared Optional</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION__DTS_DECLARED_OPTIONAL = N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_OPTIONAL;
 
 	/**
 	 * The feature id for the '<em><b>Delegation Base Type</b></em>' reference.

@@ -1311,7 +1311,13 @@ norm3_ArrowExpression:
 ruleStrictFormalParameters:
 	'('
 	(
-		ruleFormalParameter
+		(
+			'this'
+			':'
+			ruleTypeReferenceNode
+			    |
+			ruleFormalParameter
+		)
 		(
 			','
 			ruleFormalParameter
@@ -1324,7 +1330,13 @@ ruleStrictFormalParameters:
 norm1_StrictFormalParameters:
 	'('
 	(
-		norm1_FormalParameter
+		(
+			'this'
+			':'
+			ruleTypeReferenceNode
+			    |
+			norm1_FormalParameter
+		)
 		(
 			','
 			norm1_FormalParameter
@@ -1448,7 +1460,8 @@ ruleBindingElementFragment:
 		'...'
 		?
 		ruleBindingIdentifier
-		'?'?
+		'?'
+		?
 		ruleColonSepDeclaredTypeRef?
 	)
 	(
@@ -1472,7 +1485,8 @@ norm1_BindingElementFragment:
 		'...'
 		?
 		norm1_BindingIdentifier
-		'?'?
+		'?'
+		?
 		ruleColonSepDeclaredTypeRef?
 	)
 	(
@@ -7924,10 +7938,14 @@ ruleN4MemberDeclaration:
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				'('
 				    |
 				ruleLiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				'('
 			)
@@ -8130,10 +8148,14 @@ norm1_N4MemberDeclaration:
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				'('
 				    |
 				norm1_LiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				'('
 			)
@@ -8359,11 +8381,15 @@ ruleAnnotatedN4MemberDeclaration:
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				'('
 				    |
 				ruleAsyncNoTrailingLineBreak
 				ruleLiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				'('
 			)
@@ -8373,6 +8399,8 @@ ruleAnnotatedN4MemberDeclaration:
 			(
 				'*'
 				ruleLiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				(
 					('(')=>
@@ -8381,6 +8409,8 @@ ruleAnnotatedN4MemberDeclaration:
 				    |
 				ruleAsyncNoTrailingLineBreak
 				ruleLiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				(
 					('(')=>
@@ -8618,11 +8648,15 @@ norm1_AnnotatedN4MemberDeclaration:
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				'('
 				    |
 				ruleAsyncNoTrailingLineBreak
 				norm1_LiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				'('
 			)
@@ -8632,6 +8666,8 @@ norm1_AnnotatedN4MemberDeclaration:
 			(
 				'*'
 				norm1_LiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				(
 					('(')=>
@@ -8640,6 +8676,8 @@ norm1_AnnotatedN4MemberDeclaration:
 				    |
 				ruleAsyncNoTrailingLineBreak
 				norm1_LiteralOrComputedPropertyName
+				'?'
+				?
 				ruleTypeParameters?
 				(
 					('(')=>
@@ -8716,10 +8754,14 @@ ruleN4MethodDeclaration:
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
+			'?'
+			?
 			ruleTypeParameters?
 			'('
 			    |
 			ruleLiteralOrComputedPropertyName
+			'?'
+			?
 			ruleTypeParameters?
 			'('
 		)
@@ -8730,6 +8772,8 @@ ruleN4MethodDeclaration:
 		(
 			'*'
 			ruleLiteralOrComputedPropertyName
+			'?'
+			?
 			ruleTypeParameters?
 			(
 				('(')=>
@@ -8737,6 +8781,8 @@ ruleN4MethodDeclaration:
 			)
 			    |
 			ruleLiteralOrComputedPropertyName
+			'?'
+			?
 			ruleTypeParameters?
 			(
 				('(')=>
@@ -8756,10 +8802,14 @@ norm1_N4MethodDeclaration:
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
+			'?'
+			?
 			ruleTypeParameters?
 			'('
 			    |
 			norm1_LiteralOrComputedPropertyName
+			'?'
+			?
 			ruleTypeParameters?
 			'('
 		)
@@ -8770,6 +8820,8 @@ norm1_N4MethodDeclaration:
 		(
 			'*'
 			norm1_LiteralOrComputedPropertyName
+			'?'
+			?
 			ruleTypeParameters?
 			(
 				('(')=>
@@ -8777,6 +8829,8 @@ norm1_N4MethodDeclaration:
 			)
 			    |
 			norm1_LiteralOrComputedPropertyName
+			'?'
+			?
 			ruleTypeParameters?
 			(
 				('(')=>

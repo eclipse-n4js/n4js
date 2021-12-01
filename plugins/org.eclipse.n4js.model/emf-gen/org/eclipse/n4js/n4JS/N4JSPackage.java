@@ -2191,13 +2191,22 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DEFINITION__DEFINED_TYPE = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Dts Declared This Type Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DEFINITION__DTS_DECLARED_THIS_TYPE_NODE = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 1;
+
+	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DEFINITION__FPARS = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 1;
+	int FUNCTION_DEFINITION__FPARS = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Declared Return Type Ref Node</b></em>' containment reference.
@@ -2206,7 +2215,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 2;
+	int FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Declared Return Type Predicate</b></em>' containment reference.
@@ -2215,7 +2224,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 3;
+	int FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
@@ -2224,7 +2233,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DEFINITION__GENERATOR = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 4;
+	int FUNCTION_DEFINITION__GENERATOR = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -2233,7 +2242,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DEFINITION__DECLARED_ASYNC = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 5;
+	int FUNCTION_DEFINITION__DECLARED_ASYNC = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>Function Definition</em>' class.
@@ -2242,7 +2251,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DEFINITION_FEATURE_COUNT = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 6;
+	int FUNCTION_DEFINITION_FEATURE_COUNT = FUNCTION_OR_FIELD_ACCESSOR_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -2680,13 +2689,22 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DECLARATION__DEFINED_TYPE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Dts Declared This Type Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__FPARS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 4;
+	int FUNCTION_DECLARATION__FPARS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Declared Return Type Ref Node</b></em>' containment reference.
@@ -2695,7 +2713,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
+	int FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Declared Return Type Predicate</b></em>' containment reference.
@@ -2704,7 +2722,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 6;
+	int FUNCTION_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
@@ -2713,7 +2731,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__GENERATOR = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 7;
+	int FUNCTION_DECLARATION__GENERATOR = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -2722,7 +2740,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__DECLARED_ASYNC = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 8;
+	int FUNCTION_DECLARATION__DECLARED_ASYNC = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -2731,7 +2749,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__TYPE_VARS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 9;
+	int FUNCTION_DECLARATION__TYPE_VARS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2740,7 +2758,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION__NAME = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 10;
+	int FUNCTION_DECLARATION__NAME = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 11;
 
 	/**
 	 * The number of structural features of the '<em>Function Declaration</em>' class.
@@ -2749,7 +2767,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 11;
+	int FUNCTION_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -3005,6 +3023,15 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_EXPRESSION__DEFINED_TYPE = FUNCTION_DEFINITION__DEFINED_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Dts Declared This Type Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_EXPRESSION__DTS_DECLARED_THIS_TYPE_NODE = FUNCTION_DEFINITION__DTS_DECLARED_THIS_TYPE_NODE;
+
+	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3247,6 +3274,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int ARROW_FUNCTION__DEFINED_TYPE = FUNCTION_EXPRESSION__DEFINED_TYPE;
+
+	/**
+	 * The feature id for the '<em><b>Dts Declared This Type Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARROW_FUNCTION__DTS_DECLARED_THIS_TYPE_NODE = FUNCTION_EXPRESSION__DTS_DECLARED_THIS_TYPE_NODE;
 
 	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
@@ -3647,13 +3683,22 @@ public interface N4JSPackage extends EPackage {
 	int FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Dts Declared Optional</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FORMAL_PARAMETER__DTS_DECLARED_OPTIONAL = ANNOTABLE_ELEMENT_FEATURE_COUNT + 5;
+
+	/**
 	 * The feature id for the '<em><b>Has Initializer Assignment</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 5;
+	int FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Initializer</b></em>' containment reference.
@@ -3662,7 +3707,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER__INITIALIZER = ANNOTABLE_ELEMENT_FEATURE_COUNT + 6;
+	int FORMAL_PARAMETER__INITIALIZER = ANNOTABLE_ELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Binding Pattern</b></em>' containment reference.
@@ -3671,7 +3716,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER__BINDING_PATTERN = ANNOTABLE_ELEMENT_FEATURE_COUNT + 7;
+	int FORMAL_PARAMETER__BINDING_PATTERN = ANNOTABLE_ELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of structural features of the '<em>Formal Parameter</em>' class.
@@ -3680,7 +3725,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER_FEATURE_COUNT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 8;
+	int FORMAL_PARAMETER_FEATURE_COUNT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -7453,13 +7498,22 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_METHOD_DECLARATION__DEFINED_TYPE = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Dts Declared This Type Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION__FPARS = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 3;
+	int PROPERTY_METHOD_DECLARATION__FPARS = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Declared Return Type Ref Node</b></em>' containment reference.
@@ -7468,7 +7522,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 4;
+	int PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Declared Return Type Predicate</b></em>' containment reference.
@@ -7477,7 +7531,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 5;
+	int PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
@@ -7486,7 +7540,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION__GENERATOR = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 6;
+	int PROPERTY_METHOD_DECLARATION__GENERATOR = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -7495,7 +7549,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION__DECLARED_ASYNC = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 7;
+	int PROPERTY_METHOD_DECLARATION__DECLARED_ASYNC = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -7504,7 +7558,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION__TYPE_VARS = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 8;
+	int PROPERTY_METHOD_DECLARATION__TYPE_VARS = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of structural features of the '<em>Property Method Declaration</em>' class.
@@ -7513,7 +7567,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 9;
+	int PROPERTY_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -15347,6 +15401,15 @@ public interface N4JSPackage extends EPackage {
 	int METHOD_DECLARATION__DEFINED_TYPE = FUNCTION_DEFINITION__DEFINED_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>Dts Declared This Type Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE = FUNCTION_DEFINITION__DTS_DECLARED_THIS_TYPE_NODE;
+
+	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15640,13 +15703,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_METHOD_DECLARATION__DEFINED_TYPE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Dts Declared This Type Node</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__FPARS = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 3;
+	int N4_METHOD_DECLARATION__FPARS = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Declared Return Type Ref Node</b></em>' containment reference.
@@ -15655,7 +15727,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 4;
+	int N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Declared Return Type Predicate</b></em>' containment reference.
@@ -15664,7 +15736,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 5;
+	int N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
@@ -15673,7 +15745,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__GENERATOR = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 6;
+	int N4_METHOD_DECLARATION__GENERATOR = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -15682,7 +15754,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__DECLARED_ASYNC = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 7;
+	int N4_METHOD_DECLARATION__DECLARED_ASYNC = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -15691,7 +15763,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__TYPE_VARS = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 8;
+	int N4_METHOD_DECLARATION__TYPE_VARS = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
@@ -15700,7 +15772,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION__DECLARED_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 9;
+	int N4_METHOD_DECLARATION__DECLARED_NAME = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Dts Declared Optional</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_METHOD_DECLARATION__DTS_DECLARED_OPTIONAL = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 11;
 
 	/**
 	 * The number of structural features of the '<em>N4 Method Declaration</em>' class.
@@ -15709,7 +15790,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 10;
+	int N4_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -19473,6 +19554,17 @@ public interface N4JSPackage extends EPackage {
 	EClass getFunctionDefinition();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDtsDeclaredThisTypeNode <em>Dts Declared This Type Node</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Dts Declared This Type Node</em>'.
+	 * @see org.eclipse.n4js.n4JS.FunctionDefinition#getDtsDeclaredThisTypeNode()
+	 * @see #getFunctionDefinition()
+	 * @generated
+	 */
+	EReference getFunctionDefinition_DtsDeclaredThisTypeNode();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getFpars <em>Fpars</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -19896,6 +19988,17 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getFormalParameter_DefinedTypeElement();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.FormalParameter#isDtsDeclaredOptional <em>Dts Declared Optional</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Dts Declared Optional</em>'.
+	 * @see org.eclipse.n4js.n4JS.FormalParameter#isDtsDeclaredOptional()
+	 * @see #getFormalParameter()
+	 * @generated
+	 */
+	EAttribute getFormalParameter_DtsDeclaredOptional();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.FormalParameter#isHasInitializerAssignment <em>Has Initializer Assignment</em>}'.
@@ -24144,6 +24247,17 @@ public interface N4JSPackage extends EPackage {
 	EClass getN4MethodDeclaration();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.N4MethodDeclaration#isDtsDeclaredOptional <em>Dts Declared Optional</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Dts Declared Optional</em>'.
+	 * @see org.eclipse.n4js.n4JS.N4MethodDeclaration#isDtsDeclaredOptional()
+	 * @see #getN4MethodDeclaration()
+	 * @generated
+	 */
+	EAttribute getN4MethodDeclaration_DtsDeclaredOptional();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4MethodDeclaration#isAbstract() <em>Is Abstract</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -25852,6 +25966,14 @@ public interface N4JSPackage extends EPackage {
 		EClass FUNCTION_DEFINITION = eINSTANCE.getFunctionDefinition();
 
 		/**
+		 * The meta object literal for the '<em><b>Dts Declared This Type Node</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FUNCTION_DEFINITION__DTS_DECLARED_THIS_TYPE_NODE = eINSTANCE.getFunctionDefinition_DtsDeclaredThisTypeNode();
+
+		/**
 		 * The meta object literal for the '<em><b>Fpars</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -26192,6 +26314,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT = eINSTANCE.getFormalParameter_DefinedTypeElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Dts Declared Optional</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute FORMAL_PARAMETER__DTS_DECLARED_OPTIONAL = eINSTANCE.getFormalParameter_DtsDeclaredOptional();
 
 		/**
 		 * The meta object literal for the '<em><b>Has Initializer Assignment</b></em>' attribute feature.
@@ -29714,6 +29844,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass N4_METHOD_DECLARATION = eINSTANCE.getN4MethodDeclaration();
+
+		/**
+		 * The meta object literal for the '<em><b>Dts Declared Optional</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute N4_METHOD_DECLARATION__DTS_DECLARED_OPTIONAL = eINSTANCE.getN4MethodDeclaration_DtsDeclaredOptional();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Abstract</b></em>' operation.

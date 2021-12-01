@@ -1461,6 +1461,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    '[' propName=IdentifierName 'in' propNameTypeRef=TypeRef ']'
 		//    ('+'? includeOptional?='?' | '-' excludeOptional?='?')?
 		//    (':' templateTypeRef=TypeRef)? ';'?
+		//    // FIXME consider allowing additional mapping signatures here, to be able to show better error messages
 		//    // FIXME consider allowing TStructMemberList here, to be able to show better error messages
 		//    '}'
 		//;
@@ -1471,6 +1472,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'[' propName=IdentifierName 'in' propNameTypeRef=TypeRef ']'
 		//('+'? includeOptional?='?' | '-' excludeOptional?='?')?
 		//(':' templateTypeRef=TypeRef)? ';'?
+		//// FIXME consider allowing additional mapping signatures here, to be able to show better error messages
 		//// FIXME consider allowing TStructMemberList here, to be able to show better error messages
 		//'}'
 		public Group getGroup() { return cGroup; }
@@ -1568,6 +1570,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//';'?
 		public Keyword getSemicolonKeyword_9() { return cSemicolonKeyword_9; }
 		
+		//// FIXME consider allowing additional mapping signatures here, to be able to show better error messages
 		//// FIXME consider allowing TStructMemberList here, to be able to show better error messages
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_10() { return cRightCurlyBracketKeyword_10; }
@@ -3852,6 +3855,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    '[' propName=IdentifierName 'in' propNameTypeRef=TypeRef ']'
 	//    ('+'? includeOptional?='?' | '-' excludeOptional?='?')?
 	//    (':' templateTypeRef=TypeRef)? ';'?
+	//    // FIXME consider allowing additional mapping signatures here, to be able to show better error messages
 	//    // FIXME consider allowing TStructMemberList here, to be able to show better error messages
 	//    '}'
 	//;

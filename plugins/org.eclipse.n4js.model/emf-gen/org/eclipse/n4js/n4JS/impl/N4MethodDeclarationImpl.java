@@ -90,6 +90,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getBody <em>Body</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#get_lok <em>lok</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDefinedType <em>Defined Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDtsDeclaredThisTypeNode <em>Dts Declared This Type Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDeclaredReturnTypePredicate <em>Declared Return Type Predicate</em>}</li>
@@ -97,6 +98,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#isDeclaredAsync <em>Declared Async</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDeclaredName <em>Declared Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#isDtsDeclaredOptional <em>Dts Declared Optional</em>}</li>
  * </ul>
  *
  * @generated
@@ -131,6 +133,16 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @ordered
 	 */
 	protected Type definedType;
+
+	/**
+	 * The cached value of the '{@link #getDtsDeclaredThisTypeNode() <em>Dts Declared This Type Node</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDtsDeclaredThisTypeNode()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeReferenceNode<TypeRef> dtsDeclaredThisTypeNode;
 
 	/**
 	 * The cached value of the '{@link #getFpars() <em>Fpars</em>}' containment reference list.
@@ -221,6 +233,26 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @ordered
 	 */
 	protected LiteralOrComputedPropertyName declaredName;
+
+	/**
+	 * The default value of the '{@link #isDtsDeclaredOptional() <em>Dts Declared Optional</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDtsDeclaredOptional()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DTS_DECLARED_OPTIONAL_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDtsDeclaredOptional() <em>Dts Declared Optional</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDtsDeclaredOptional()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean dtsDeclaredOptional = DTS_DECLARED_OPTIONAL_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -369,6 +401,51 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		definedType = newDefinedType;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE, oldDefinedType, definedType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeReferenceNode<TypeRef> getDtsDeclaredThisTypeNode() {
+		return dtsDeclaredThisTypeNode;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDtsDeclaredThisTypeNode(TypeReferenceNode<TypeRef> newDtsDeclaredThisTypeNode, NotificationChain msgs) {
+		TypeReferenceNode<TypeRef> oldDtsDeclaredThisTypeNode = dtsDeclaredThisTypeNode;
+		dtsDeclaredThisTypeNode = newDtsDeclaredThisTypeNode;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE, oldDtsDeclaredThisTypeNode, newDtsDeclaredThisTypeNode);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDtsDeclaredThisTypeNode(TypeReferenceNode<TypeRef> newDtsDeclaredThisTypeNode) {
+		if (newDtsDeclaredThisTypeNode != dtsDeclaredThisTypeNode) {
+			NotificationChain msgs = null;
+			if (dtsDeclaredThisTypeNode != null)
+				msgs = ((InternalEObject)dtsDeclaredThisTypeNode).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE, null, msgs);
+			if (newDtsDeclaredThisTypeNode != null)
+				msgs = ((InternalEObject)newDtsDeclaredThisTypeNode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE, null, msgs);
+			msgs = basicSetDtsDeclaredThisTypeNode(newDtsDeclaredThisTypeNode, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE, newDtsDeclaredThisTypeNode, newDtsDeclaredThisTypeNode));
 	}
 
 	/**
@@ -576,6 +653,29 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DECLARED_NAME, newDeclaredName, newDeclaredName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDtsDeclaredOptional() {
+		return dtsDeclaredOptional;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDtsDeclaredOptional(boolean newDtsDeclaredOptional) {
+		boolean oldDtsDeclaredOptional = dtsDeclaredOptional;
+		dtsDeclaredOptional = newDtsDeclaredOptional;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_OPTIONAL, oldDtsDeclaredOptional, dtsDeclaredOptional));
 	}
 
 	/**
@@ -893,6 +993,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return basicSetBody(null, msgs);
 			case N4JSPackage.N4_METHOD_DECLARATION__LOK:
 				return basicSet_lok(null, msgs);
+			case N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE:
+				return basicSetDtsDeclaredThisTypeNode(null, msgs);
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -922,6 +1024,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
 				if (resolve) return getDefinedType();
 				return basicGetDefinedType();
+			case N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE:
+				return getDtsDeclaredThisTypeNode();
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				return getFpars();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -936,6 +1040,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return getTypeVars();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_NAME:
 				return getDeclaredName();
+			case N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_OPTIONAL:
+				return isDtsDeclaredOptional();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -957,6 +1063,9 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
 				setDefinedType((Type)newValue);
+				return;
+			case N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE:
+				setDtsDeclaredThisTypeNode((TypeReferenceNode<TypeRef>)newValue);
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				getFpars().clear();
@@ -981,6 +1090,9 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_NAME:
 				setDeclaredName((LiteralOrComputedPropertyName)newValue);
 				return;
+			case N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_OPTIONAL:
+				setDtsDeclaredOptional((Boolean)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -1001,6 +1113,9 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
 				setDefinedType((Type)null);
+				return;
+			case N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE:
+				setDtsDeclaredThisTypeNode((TypeReferenceNode<TypeRef>)null);
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				getFpars().clear();
@@ -1023,6 +1138,9 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_NAME:
 				setDeclaredName((LiteralOrComputedPropertyName)null);
 				return;
+			case N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_OPTIONAL:
+				setDtsDeclaredOptional(DTS_DECLARED_OPTIONAL_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -1041,6 +1159,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return _lok != null;
 			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
 				return definedType != null;
+			case N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE:
+				return dtsDeclaredThisTypeNode != null;
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -1055,6 +1175,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return typeVars != null && !typeVars.isEmpty();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_NAME:
 				return declaredName != null;
+			case N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_OPTIONAL:
+				return dtsDeclaredOptional != DTS_DECLARED_OPTIONAL_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1091,6 +1213,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		}
 		if (baseClass == FunctionDefinition.class) {
 			switch (derivedFeatureID) {
+				case N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE: return N4JSPackage.FUNCTION_DEFINITION__DTS_DECLARED_THIS_TYPE_NODE;
 				case N4JSPackage.N4_METHOD_DECLARATION__FPARS: return N4JSPackage.FUNCTION_DEFINITION__FPARS;
 				case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE;
 				case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE;
@@ -1151,6 +1274,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		}
 		if (baseClass == FunctionDefinition.class) {
 			switch (baseFeatureID) {
+				case N4JSPackage.FUNCTION_DEFINITION__DTS_DECLARED_THIS_TYPE_NODE: return N4JSPackage.N4_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE;
 				case N4JSPackage.FUNCTION_DEFINITION__FPARS: return N4JSPackage.N4_METHOD_DECLARATION__FPARS;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE: return N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE: return N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE;
@@ -1326,6 +1450,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		result.append(generator);
 		result.append(", declaredAsync: ");
 		result.append(declaredAsync);
+		result.append(", dtsDeclaredOptional: ");
+		result.append(dtsDeclaredOptional);
 		result.append(')');
 		return result.toString();
 	}

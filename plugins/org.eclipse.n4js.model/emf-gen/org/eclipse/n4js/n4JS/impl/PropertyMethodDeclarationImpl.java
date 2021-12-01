@@ -80,6 +80,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getBody <em>Body</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#get_lok <em>lok</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getDefinedType <em>Defined Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getDtsDeclaredThisTypeNode <em>Dts Declared This Type Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getDeclaredReturnTypePredicate <em>Declared Return Type Predicate</em>}</li>
@@ -120,6 +121,16 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 	 * @ordered
 	 */
 	protected Type definedType;
+
+	/**
+	 * The cached value of the '{@link #getDtsDeclaredThisTypeNode() <em>Dts Declared This Type Node</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDtsDeclaredThisTypeNode()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeReferenceNode<TypeRef> dtsDeclaredThisTypeNode;
 
 	/**
 	 * The cached value of the '{@link #getFpars() <em>Fpars</em>}' containment reference list.
@@ -348,6 +359,51 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 		definedType = newDefinedType;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_METHOD_DECLARATION__DEFINED_TYPE, oldDefinedType, definedType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeReferenceNode<TypeRef> getDtsDeclaredThisTypeNode() {
+		return dtsDeclaredThisTypeNode;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDtsDeclaredThisTypeNode(TypeReferenceNode<TypeRef> newDtsDeclaredThisTypeNode, NotificationChain msgs) {
+		TypeReferenceNode<TypeRef> oldDtsDeclaredThisTypeNode = dtsDeclaredThisTypeNode;
+		dtsDeclaredThisTypeNode = newDtsDeclaredThisTypeNode;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE, oldDtsDeclaredThisTypeNode, newDtsDeclaredThisTypeNode);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDtsDeclaredThisTypeNode(TypeReferenceNode<TypeRef> newDtsDeclaredThisTypeNode) {
+		if (newDtsDeclaredThisTypeNode != dtsDeclaredThisTypeNode) {
+			NotificationChain msgs = null;
+			if (dtsDeclaredThisTypeNode != null)
+				msgs = ((InternalEObject)dtsDeclaredThisTypeNode).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE, null, msgs);
+			if (newDtsDeclaredThisTypeNode != null)
+				msgs = ((InternalEObject)newDtsDeclaredThisTypeNode).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE, null, msgs);
+			msgs = basicSetDtsDeclaredThisTypeNode(newDtsDeclaredThisTypeNode, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE, newDtsDeclaredThisTypeNode, newDtsDeclaredThisTypeNode));
 	}
 
 	/**
@@ -725,6 +781,8 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return basicSetBody(null, msgs);
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__LOK:
 				return basicSet_lok(null, msgs);
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE:
+				return basicSetDtsDeclaredThisTypeNode(null, msgs);
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__FPARS:
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -752,6 +810,8 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DEFINED_TYPE:
 				if (resolve) return getDefinedType();
 				return basicGetDefinedType();
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE:
+				return getDtsDeclaredThisTypeNode();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__FPARS:
 				return getFpars();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -785,6 +845,9 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DEFINED_TYPE:
 				setDefinedType((Type)newValue);
+				return;
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE:
+				setDtsDeclaredThisTypeNode((TypeReferenceNode<TypeRef>)newValue);
 				return;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__FPARS:
 				getFpars().clear();
@@ -827,6 +890,9 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DEFINED_TYPE:
 				setDefinedType((Type)null);
 				return;
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE:
+				setDtsDeclaredThisTypeNode((TypeReferenceNode<TypeRef>)null);
+				return;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__FPARS:
 				getFpars().clear();
 				return;
@@ -863,6 +929,8 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return _lok != null;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DEFINED_TYPE:
 				return definedType != null;
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE:
+				return dtsDeclaredThisTypeNode != null;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__FPARS:
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -906,6 +974,7 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 		}
 		if (baseClass == FunctionDefinition.class) {
 			switch (derivedFeatureID) {
+				case N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE: return N4JSPackage.FUNCTION_DEFINITION__DTS_DECLARED_THIS_TYPE_NODE;
 				case N4JSPackage.PROPERTY_METHOD_DECLARATION__FPARS: return N4JSPackage.FUNCTION_DEFINITION__FPARS;
 				case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE;
 				case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE;
@@ -955,6 +1024,7 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 		}
 		if (baseClass == FunctionDefinition.class) {
 			switch (baseFeatureID) {
+				case N4JSPackage.FUNCTION_DEFINITION__DTS_DECLARED_THIS_TYPE_NODE: return N4JSPackage.PROPERTY_METHOD_DECLARATION__DTS_DECLARED_THIS_TYPE_NODE;
 				case N4JSPackage.FUNCTION_DEFINITION__FPARS: return N4JSPackage.PROPERTY_METHOD_DECLARATION__FPARS;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE: return N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE: return N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE;
