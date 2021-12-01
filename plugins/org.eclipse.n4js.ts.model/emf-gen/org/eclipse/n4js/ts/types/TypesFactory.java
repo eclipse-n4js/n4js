@@ -147,6 +147,15 @@ public interface TypesFactory extends EFactory {
 	TFunction createTFunction();
 
 	/**
+	 * Returns a new object of class '<em>Type Predicate</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Type Predicate</em>'.
+	 * @generated
+	 */
+	TypePredicate createTypePredicate();
+
+	/**
 	 * Returns a new object of class '<em>Type</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

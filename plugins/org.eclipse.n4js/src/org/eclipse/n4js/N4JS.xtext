@@ -185,7 +185,7 @@ AnnotatedNamespaceElement returns NamespaceElement:
 ;
 
 DeclareDeclaration returns ExportDeclaration:
-	'declare' exportedElement=ExportableElement
+	=>'declare' exportedElement=ExportableElement
 ;
 
 ExportDeclaration:
@@ -334,10 +334,10 @@ fragment FunctionImplWithoutKeyword<Yield, YieldIfGenerator, Expression>*:
 ;
 
 fragment FunctionHeader<Yield, Generator>*:
-	TypeParameters?
 	name=BindingIdentifier<Yield>?
+	TypeParameters?
 	StrictFormalParameters<Yield=Generator>
-	(-> ColonSepDeclaredReturnTypeRef)?
+	(-> ColonSepDeclaredReturnTypeRef<Yield=Generator>)?
 ;
 
 fragment FunctionBody <Yield, Expression>*:
@@ -376,8 +376,8 @@ ArrowExpression <In, Yield> returns ArrowFunction:
 			(
 					// we cannot use fragments here since we have to combine the terminals into a syntactic predicate
 					// also, we have to use explicit alternatives instead of making async optional due to a generation bug
-					StrictFormalParameters<Yield> ColonSepDeclaredReturnTypeRef?
-				|	=>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepDeclaredReturnTypeRef?
+					StrictFormalParameters<Yield> ColonSepDeclaredReturnTypeRef<Yield>?
+				|	=>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepDeclaredReturnTypeRef<Yield>?
 				| 	fpars+=BindingIdentifierAsFormalParameter<Yield>
 			)
 			/* no line terminator here, guaranteed implicitly */ Arrow
@@ -840,8 +840,12 @@ fragment ColonSepDeclaredTypeRef*:
 	':' declaredTypeRefNode=TypeReferenceNode
 ;
 
-fragment ColonSepDeclaredReturnTypeRef*:
-	':' declaredReturnTypeRefNode=TypeReferenceNode
+fragment ColonSepDeclaredReturnTypeRef<Yield>*:
+	':' (declaredReturnTypePredicate=TypePredicateDeclaration<Yield> | declaredReturnTypeRefNode=TypeReferenceNode)
+;
+
+TypePredicateDeclaration<Yield>:
+	=>((referringToThis?='this' | fpar=[types::IdentifiableElement|BindingIdentifier<Yield>]) 'is') typeRefNode=TypeReferenceNode
 ;
 
 TypeReferenceNode returns TypeReferenceNode:
@@ -1487,7 +1491,7 @@ fragment MethodParamsAndBody <Generator>*:
 
 fragment MethodParamsReturnAndBody <Generator>*:
 	StrictFormalParameters<Yield=Generator>
-	ColonSepDeclaredReturnTypeRef?
+	ColonSepDeclaredReturnTypeRef<Yield=Generator>?
 	(body=Block<Yield=Generator>)?
 ;
 

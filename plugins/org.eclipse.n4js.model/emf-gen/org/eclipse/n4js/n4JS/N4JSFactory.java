@@ -149,6 +149,15 @@ public interface N4JSFactory extends EFactory {
 	TypeRefAnnotationArgument createTypeRefAnnotationArgument();
 
 	/**
+	 * Returns a new object of class '<em>Type Predicate Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Type Predicate Declaration</em>'.
+	 * @generated
+	 */
+	TypePredicateDeclaration createTypePredicateDeclaration();
+
+	/**
 	 * Returns a new object of class '<em>Function Declaration</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

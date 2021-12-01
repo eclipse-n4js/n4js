@@ -28,6 +28,7 @@ import java.util.UUID
 import org.eclipse.emf.common.util.ECollections
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TFormalParameter
@@ -37,6 +38,7 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypePredicate
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
@@ -1345,10 +1347,17 @@ class FunctionTypeExpression extends FunctionTypeExprOrRef {
 		return returnValueMarkedOptional || (returnTypeRef!==null && returnTypeRef.followedByQuestionMark);
 	}
 	/*
-	 * Return type declared in the FunctionTypeExpression in the AST or
-	 * a copy of the return type of the 'declaredType' or original FunctionTypeExpression.
+	 * Return type declared in the FunctionTypeExpression in the AST
+	 * or a copy of the return type of either the 'declaredType' or the original FunctionTypeExpression,
+	 * or <code>null</code> if a type predicate is used.
 	 */
 	contains TypeRef returnTypeRef
+	/*
+	 * The type predicate declared in the FunctionTypeExpression in the AST
+	 * or a copy of the type predicate of either the 'declaredType' or the original FunctionTypeExpression,
+	 * or <code>null</code> if no type predicate is used.
+	 */
+	contains TypePredicate returnTypePredicate
 }
 
 /**
@@ -1417,5 +1426,52 @@ class EnumLiteralTypeRef extends LiteralTypeRef {
 
 	op String internalGetTypeRefAsString() {
 		return enumType?.name + "." + value?.name
+	}
+}
+
+enum TypeOperator {
+	keyof = 0
+	^unique = 1
+	^readonly = 2
+}
+
+/* Only allowed in DTS. */
+class QueryTypeRef extends TypeRef {
+	refers IdentifiableElement element
+
+	op String internalGetTypeRefAsString() {
+		"typeof " + element?.name
+	}
+}
+
+/* Only allowed in DTS. */
+class OperatorTypeRef extends TypeRef {
+	TypeOperator ^op
+	contains TypeRef typeRef
+
+	op String internalGetTypeRefAsString() {
+		op + " " + getTypeRef()?.typeRefAsString
+	}
+}
+
+/* Only allowed in DTS. */
+class IndexAccessTypeRef extends TypeRef {
+	contains TypeRef targetTypeRef
+	contains TypeRef indexTypeRef
+
+	op String internalGetTypeRefAsString() {
+		targetTypeRef?.typeRefAsString + "[" + indexTypeRef?.typeRefAsString + "]"
+	}
+}
+
+/* Only allowed in DTS. */
+class ConditionalTypeRef extends TypeRef {
+	contains TypeRef typeRef
+	contains TypeRef upperBound
+	contains TypeRef trueTypeRef
+	contains TypeRef falseTypeRef
+
+	op String internalGetTypeRefAsString() {
+		getTypeRef()?.typeRefAsString + " extends " + upperBound?.typeRefAsString + " ? " + trueTypeRef.typeRefAsString + " : " + falseTypeRef.typeRefAsString
 	}
 }

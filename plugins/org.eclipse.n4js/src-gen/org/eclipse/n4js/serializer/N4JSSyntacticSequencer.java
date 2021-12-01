@@ -271,6 +271,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
@@ -363,6 +364,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredAsync?='async' NO_LINE_TERMINATOR? 'function' '(' ')' (ambiguity) (rule end)
 	 *     declaredModifiers+=N4Modifier 'function' '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     generator?='*' '(' ')' (ambiguity) (rule end)
@@ -407,6 +409,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) '(' ')' (ambiguity) (rule start)
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
@@ -448,6 +451,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
+	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
 	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
@@ -473,10 +477,12 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     NO_LINE_TERMINATOR?
 	 *
 	 * This ambiguous syntax occurs at:
+	 *     declaredAsync?='async' (ambiguity) '(' ')' ':' declaredReturnTypePredicate=TypePredicateDeclaration
 	 *     declaredAsync?='async' (ambiguity) '(' ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
 	 *     declaredAsync?='async' (ambiguity) '(' ')' Arrow body=ExpressionDisguisedAsBlock
 	 *     declaredAsync?='async' (ambiguity) '(' ')' Arrow hasBracesAroundBody?='{'
 	 *     declaredAsync?='async' (ambiguity) '(' fpars+=FormalParameter
+	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' ':' declaredReturnTypePredicate=TypePredicateDeclaration
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' (rule end)
 	 *     declaredAsync?='async' (ambiguity) 'function' '(' ')' Semi? (rule end)
@@ -545,7 +551,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     astStructuralMembers+=TStructMember (ambiguity) '}' (rule end)
 	 *     astStructuralMembers+=TStructMember (ambiguity) '}' dynamic?='+'
-	 *     astStructuralMembers+=TStructMember (ambiguity) '}' followedByQuestionMark?='?'
 	 *     astStructuralMembers+=TStructMember (ambiguity) astStructuralMembers+=TStructMember
 	 */
 	protected void emit_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -557,6 +562,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     '('*
 	 *
 	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
 	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
 	 *     (rule start) (ambiguity) '(' 'this' ':' declaredThisType=TypeRef
 	 *     (rule start) (ambiguity) '(' declaredTypeArgs+=Wildcard
@@ -571,12 +577,11 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) 'intersection' '{' typeRefs+=TypeRef
 	 *     (rule start) (ambiguity) 'this' (rule start)
 	 *     (rule start) (ambiguity) 'this' dynamic?='+'
-	 *     (rule start) (ambiguity) 'this' followedByQuestionMark?='?'
 	 *     (rule start) (ambiguity) 'type' '{' typeArg=TypeArgInTypeTypeRef
+	 *     (rule start) (ambiguity) 'typeof' element=[IdentifiableElement|IdentifierName]
 	 *     (rule start) (ambiguity) 'union' '{' typeRefs+=TypeRef
 	 *     (rule start) (ambiguity) '{' '}' (rule start)
 	 *     (rule start) (ambiguity) '{' '}' dynamic?='+'
-	 *     (rule start) (ambiguity) '{' '}' followedByQuestionMark?='?'
 	 *     (rule start) (ambiguity) '{' astStructuralMembers+=TStructMember
 	 *     (rule start) (ambiguity) arrayNTypeExpression?='['
 	 *     (rule start) (ambiguity) astNamespaceLikeRefs+=NamespaceLikeRef
@@ -588,6 +593,16 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+	 *     (rule start) (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
+=======
+	 *     (rule start) (ambiguity) op=TypeOperator
+	 *     (rule start) (ambiguity) {ConditionalTypeRef.typeRef=}
+	 *     (rule start) (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+>>>>>>> 400b52473 (early support for DTS type references, except mapped types)
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
 	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
@@ -602,7 +617,11 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) '(' declaredTypeArgs+=Wildcard
+	 *     (rule start) (ambiguity) arrayNTypeExpression?='['
 	 *     (rule start) (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
+	 *     (rule start) (ambiguity) op=TypeOperator
+	 *     (rule start) (ambiguity) {ConditionalTypeRef.typeRef=}
+	 *     (rule start) (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
 	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
@@ -664,7 +683,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     astStructuralMembers+=TStructMember (ambiguity) '}' (rule end)
 	 *     astStructuralMembers+=TStructMember (ambiguity) '}' dynamic?='+'
-	 *     astStructuralMembers+=TStructMember (ambiguity) '}' followedByQuestionMark?='?'
 	 *     astStructuralMembers+=TStructMember (ambiguity) astStructuralMembers+=TStructMember
 	 */
 	protected void emit_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {

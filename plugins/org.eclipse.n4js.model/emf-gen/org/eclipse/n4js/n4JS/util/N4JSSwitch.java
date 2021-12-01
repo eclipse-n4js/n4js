@@ -318,6 +318,12 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.TYPE_PREDICATE_DECLARATION: {
+				TypePredicateDeclaration typePredicateDeclaration = (TypePredicateDeclaration)theEObject;
+				T1 result = caseTypePredicateDeclaration(typePredicateDeclaration);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.FIELD_ACCESSOR: {
 				FieldAccessor fieldAccessor = (FieldAccessor)theEObject;
 				T1 result = caseFieldAccessor(fieldAccessor);
@@ -2428,6 +2434,21 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseFunctionDefinition(FunctionDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Type Predicate Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Type Predicate Declaration</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseTypePredicateDeclaration(TypePredicateDeclaration object) {
 		return null;
 	}
 

@@ -26,7 +26,7 @@ class DtsParserTest extends AbstractParserTest {
 	def void testIt() {
 		val code = Files.readString(FILE);
 		val idx = code.indexOf("%%END");
-		val codeTrimmed = code.substring(0, idx);
+		val codeTrimmed = if (idx>=0) code.substring(0, idx) else code;
 		val script = codeTrimmed.parseN4jsdSuccessfully;
 		
 	}

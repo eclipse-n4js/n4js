@@ -192,6 +192,22 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 				return createEnumLiteralTypeRefAdapter();
 			}
 			@Override
+			public Adapter caseQueryTypeRef(QueryTypeRef object) {
+				return createQueryTypeRefAdapter();
+			}
+			@Override
+			public Adapter caseOperatorTypeRef(OperatorTypeRef object) {
+				return createOperatorTypeRefAdapter();
+			}
+			@Override
+			public Adapter caseIndexAccessTypeRef(IndexAccessTypeRef object) {
+				return createIndexAccessTypeRefAdapter();
+			}
+			@Override
+			public Adapter caseConditionalTypeRef(ConditionalTypeRef object) {
+				return createConditionalTypeRefAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -614,6 +630,62 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createEnumLiteralTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.QueryTypeRef <em>Query Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.QueryTypeRef
+	 * @generated
+	 */
+	public Adapter createQueryTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.OperatorTypeRef <em>Operator Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.OperatorTypeRef
+	 * @generated
+	 */
+	public Adapter createOperatorTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef <em>Index Access Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef
+	 * @generated
+	 */
+	public Adapter createIndexAccessTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.ConditionalTypeRef <em>Conditional Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.ConditionalTypeRef
+	 * @generated
+	 */
+	public Adapter createConditionalTypeRefAdapter() {
 		return null;
 	}
 

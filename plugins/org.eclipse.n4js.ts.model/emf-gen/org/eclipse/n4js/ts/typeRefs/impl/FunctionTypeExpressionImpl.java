@@ -35,6 +35,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
+import org.eclipse.n4js.ts.types.TypePredicate;
 import org.eclipse.n4js.ts.types.TypeVariable;
 
 /**
@@ -54,6 +55,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getReturnTypeRef <em>Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getReturnTypePredicate <em>Return Type Predicate</em>}</li>
  * </ul>
  *
  * @generated
@@ -168,6 +170,16 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * @ordered
 	 */
 	protected TypeRef returnTypeRef;
+
+	/**
+	 * The cached value of the '{@link #getReturnTypePredicate() <em>Return Type Predicate</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getReturnTypePredicate()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypePredicate returnTypePredicate;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -422,6 +434,51 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * @generated
 	 */
 	@Override
+	public TypePredicate getReturnTypePredicate() {
+		return returnTypePredicate;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetReturnTypePredicate(TypePredicate newReturnTypePredicate, NotificationChain msgs) {
+		TypePredicate oldReturnTypePredicate = returnTypePredicate;
+		returnTypePredicate = newReturnTypePredicate;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE, oldReturnTypePredicate, newReturnTypePredicate);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setReturnTypePredicate(TypePredicate newReturnTypePredicate) {
+		if (newReturnTypePredicate != returnTypePredicate) {
+			NotificationChain msgs = null;
+			if (returnTypePredicate != null)
+				msgs = ((InternalEObject)returnTypePredicate).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE, null, msgs);
+			if (newReturnTypePredicate != null)
+				msgs = ((InternalEObject)newReturnTypePredicate).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE, null, msgs);
+			msgs = basicSetReturnTypePredicate(newReturnTypePredicate, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE, newReturnTypePredicate, newReturnTypePredicate));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<TypeVariable> getTypeVars() {
 		EList<TypeVariable> _xifexpression = null;
 		boolean _isBinding = this.isBinding();
@@ -493,6 +550,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				return basicSetReturnTypeRef(null, msgs);
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE:
+				return basicSetReturnTypePredicate(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -524,6 +583,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 				return isReturnValueMarkedOptional();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				return getReturnTypeRef();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE:
+				return getReturnTypePredicate();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -568,6 +629,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				setReturnTypeRef((TypeRef)newValue);
 				return;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE:
+				setReturnTypePredicate((TypePredicate)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -607,6 +671,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				setReturnTypeRef((TypeRef)null);
 				return;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE:
+				setReturnTypePredicate((TypePredicate)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -637,6 +704,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 				return returnValueMarkedOptional != RETURN_VALUE_MARKED_OPTIONAL_EDEFAULT;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				return returnTypeRef != null;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_PREDICATE:
+				return returnTypePredicate != null;
 		}
 		return super.eIsSet(featureID);
 	}

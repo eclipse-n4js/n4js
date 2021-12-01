@@ -2,6 +2,7 @@
 Abstract=12
 =======
 Abstract=11
+<<<<<<< HEAD
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
 Ampersand=91
 AmpersandAmpersand=68
@@ -41,12 +42,34 @@ Default=17
 Delete=22
 =======
 Const=37
+=======
+Ampersand=94
+AmpersandAmpersand=70
+AmpersandEqualsSign=71
+As=84
+Asterisk=97
+AsteriskEqualsSign=72
+Async=33
+Await=34
+Break=35
+Case=46
+Catch=36
+CircumflexAccent=112
+CircumflexAccentEqualsSign=83
+Class=37
+Colon=103
+Comma=99
+CommercialAt=109
+CommercialAtCommercialAt=82
+Const=38
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 Constructor=5
 Continue=12
 Debugger=13
 Declare=17
 Default=18
 Delete=23
+<<<<<<< HEAD
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
 Do=83
 Else=45
@@ -64,11 +87,23 @@ External=15
 False=37
 Finally=19
 =======
+=======
+Do=85
+Else=47
+Enum=48
+EqualsSign=106
+EqualsSignEqualsSign=79
+EqualsSignEqualsSignEqualsSign=59
+ExclamationMark=92
+ExclamationMarkEqualsSign=68
+ExclamationMarkEqualsSignEqualsSign=56
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 Export=24
 Extends=19
 External=14
-False=38
+False=39
 Finally=20
+<<<<<<< HEAD
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
 For=58
 From=47
@@ -84,11 +119,24 @@ GreaterThanSign=104
 HyphenMinus=97
 HyphenMinusHyphenMinus=73
 If=84
+=======
+For=60
+From=49
+FullStop=101
+FullStopFullStopFullStop=57
+Function=15
+Get=61
+GreaterThanSign=107
+HyphenMinus=100
+HyphenMinusHyphenMinus=75
+If=86
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 Implements=6
 <<<<<<< HEAD
 Import=24
 =======
 Import=25
+<<<<<<< HEAD
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
 In=85
 Instanceof=7
@@ -122,11 +170,37 @@ Promisify=8
 Protected=11
 Public=25
 =======
+=======
+In=87
+Instanceof=7
+Interface=9
+Intersection=4
+Is=88
+Keyof=40
+LeftCurlyBracket=113
+LeftParenthesis=95
+LeftSquareBracket=110
+LessThanSign=105
+LessThanSignEqualsSign=78
+LessThanSignLessThanSign=77
+LessThanSignLessThanSignEqualsSign=58
+Let=62
+New=63
+Null=50
+Of=89
+Out=64
+PercentSign=93
+PercentSignEqualsSign=69
+PlusSign=98
+PlusSignEqualsSign=74
+PlusSignPlusSign=73
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 Private=21
 Project=22
 Promisify=8
 Protected=10
 Public=26
+<<<<<<< HEAD
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
 QuestionMark=105
 QuestionMarkFullStop=78
@@ -209,10 +283,81 @@ This=43
 This_1=49
 Throw=39
 =======
+=======
+QuestionMark=108
+QuestionMarkFullStop=80
+QuestionMarkQuestionMark=81
+RULE_ACTUAL_REGEX_TAIL=123
+RULE_ACTUAL_TEMPLATE_END=129
+RULE_ANY_OTHER=172
+RULE_BACKSLASH_SEQUENCE=119
+RULE_BINARY_INT=145
+RULE_BOM=169
+RULE_DECIMAL_DIGIT_FRAGMENT=141
+RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT=139
+RULE_DOT_DOT=168
+RULE_DOUBLE=143
+RULE_DOUBLE_STRING_CHAR=151
+RULE_EOL=157
+RULE_EXPONENT_PART=142
+RULE_HASH_BANG=118
+RULE_HEX_DIGIT=160
+RULE_HEX_INT=148
+RULE_IDENTIFIER=138
+RULE_IDENTIFIER_PART=122
+RULE_IDENTIFIER_START=137
+RULE_INT=140
+RULE_INT_SUFFIX=144
+RULE_LEGACY_OCTAL_INT=147
+RULE_LINE_TERMINATOR_FRAGMENT=117
+RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT=130
+RULE_ML_COMMENT=155
+RULE_ML_COMMENT_FRAGMENT=154
+RULE_NO_LINE_TERMINATOR=134
+RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL=128
+RULE_NO_WHITE_SPACE=135
+RULE_OCTAL_INT=146
+RULE_REGEX_CHAR=121
+RULE_REGEX_CHAR_OR_BRACKET=120
+RULE_REGEX_START=124
+RULE_REGEX_TAIL=125
+RULE_SCIENTIFIC_INT=149
+RULE_SIGNED_INT=150
+RULE_SINGLE_STRING_CHAR=152
+RULE_SL_COMMENT=156
+RULE_SL_COMMENT_FRAGMENT=171
+RULE_STRING=153
+RULE_STRUCTMODSUFFIX=136
+RULE_TEMPLATE_CONTINUATION=133
+RULE_TEMPLATE_END=132
+RULE_TEMPLATE_HEAD=127
+RULE_TEMPLATE_LITERAL_CHAR=126
+RULE_TEMPLATE_MIDDLE=131
+RULE_UNICODE_COMBINING_MARK_FRAGMENT=163
+RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT=165
+RULE_UNICODE_DIGIT_FRAGMENT=164
+RULE_UNICODE_ESCAPE_FRAGMENT=161
+RULE_UNICODE_LETTER_FRAGMENT=162
+RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT=170
+RULE_WHITESPACE_FRAGMENT=158
+RULE_WS=159
+RULE_ZWJ=167
+RULE_ZWNJ=166
+Readonly=16
+Return=27
+RightCurlyBracket=115
+RightParenthesis=96
+RightSquareBracket=111
+Semicolon=104
+Set=65
+Solidus=102
+SolidusEqualsSign=76
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 Static=28
-Super=39
+Super=41
 Switch=29
 Target=30
+<<<<<<< HEAD
 This=49
 Throw=40
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
@@ -241,3 +386,22 @@ While=42
 With=53
 Yield=43
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+This=51
+Throw=42
+Tilde=116
+True=52
+Try=66
+Type=53
+Typeof=31
+Union=43
+Unique=32
+Var=67
+VerticalLine=114
+VerticalLineEqualsSign=90
+VerticalLineVerticalLine=91
+Void=54
+While=44
+With=55
+Yield=45
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)

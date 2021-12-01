@@ -455,9 +455,13 @@ class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElemen
 		return returnValueMarkedOptional || (returnTypeRef!==null && returnTypeRef.followedByQuestionMark);
 	}
 	/*
-	 * Return type
+	 * Return type or <code>null</code> if a type predicate is used.
 	 */
 	contains TypeRef returnTypeRef
+	/*
+	 * Type predicate
+	 */
+	contains TypePredicate returnTypePredicate
 	/*
 	 * optional thisType declaration (@This)
 	 */
@@ -531,6 +535,12 @@ class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElemen
 	op boolean isFinal() {
 		return false;
 	}
+}
+
+class TypePredicate {
+	boolean referringToThis
+	refers IdentifiableElement fpar
+	contains TypeRef typeRef
 }
 
 /*

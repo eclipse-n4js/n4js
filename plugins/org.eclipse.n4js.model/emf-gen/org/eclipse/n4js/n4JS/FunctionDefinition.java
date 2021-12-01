@@ -32,6 +32,7 @@ import org.eclipse.n4js.ts.types.TFunction;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypePredicate <em>Declared Return Type Predicate</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#isDeclaredAsync <em>Declared Async</em>}</li>
  * </ul>
@@ -79,6 +80,28 @@ public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefinin
 	 * @generated
 	 */
 	void setDeclaredReturnTypeRefNode(TypeReferenceNode<TypeRef> value);
+
+	/**
+	 * Returns the value of the '<em><b>Declared Return Type Predicate</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Declared Return Type Predicate</em>' containment reference.
+	 * @see #setDeclaredReturnTypePredicate(TypePredicateDeclaration)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDefinition_DeclaredReturnTypePredicate()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TypePredicateDeclaration getDeclaredReturnTypePredicate();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypePredicate <em>Declared Return Type Predicate</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Declared Return Type Predicate</em>' containment reference.
+	 * @see #getDeclaredReturnTypePredicate()
+	 * @generated
+	 */
+	void setDeclaredReturnTypePredicate(TypePredicateDeclaration value);
 
 	/**
 	 * Returns the value of the '<em><b>Generator</b></em>' attribute.

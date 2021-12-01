@@ -205,6 +205,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createFunctionDefinitionAdapter();
 			}
 			@Override
+			public Adapter caseTypePredicateDeclaration(TypePredicateDeclaration object) {
+				return createTypePredicateDeclarationAdapter();
+			}
+			@Override
 			public Adapter caseFieldAccessor(FieldAccessor object) {
 				return createFieldAccessorAdapter();
 			}
@@ -1263,6 +1267,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createFunctionDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.TypePredicateDeclaration <em>Type Predicate Declaration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.TypePredicateDeclaration
+	 * @generated
+	 */
+	public Adapter createTypePredicateDeclarationAdapter() {
 		return null;
 	}
 

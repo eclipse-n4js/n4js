@@ -205,6 +205,7 @@ import org.eclipse.n4js.n4JS.ThisTarget;
 import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
+import org.eclipse.n4js.n4JS.TypePredicateDeclaration;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -450,6 +451,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass functionDefinitionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass typePredicateDeclarationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2786,8 +2794,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getFunctionDefinition_DeclaredReturnTypePredicate() {
+		return (EReference)functionDefinitionEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getFunctionDefinition_Generator() {
-		return (EAttribute)functionDefinitionEClass.getEStructuralFeatures().get(2);
+		return (EAttribute)functionDefinitionEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2797,7 +2815,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EAttribute getFunctionDefinition_DeclaredAsync() {
-		return (EAttribute)functionDefinitionEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)functionDefinitionEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2848,6 +2866,66 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EOperation getFunctionDefinition__GetDefinedFunction() {
 		return functionDefinitionEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getTypePredicateDeclaration() {
+		return typePredicateDeclarationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getTypePredicateDeclaration_ReferringToThis() {
+		return (EAttribute)typePredicateDeclarationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTypePredicateDeclaration_Fpar() {
+		return (EReference)typePredicateDeclarationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTypePredicateDeclaration_TypeRefNode() {
+		return (EReference)typePredicateDeclarationEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTypePredicateDeclaration__GetTypeRef() {
+		return typePredicateDeclarationEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTypePredicateDeclaration__GetTypeRefInAST() {
+		return typePredicateDeclarationEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -8097,6 +8175,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		functionDefinitionEClass = createEClass(FUNCTION_DEFINITION);
 		createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__FPARS);
 		createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE);
+		createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE);
 		createEAttribute(functionDefinitionEClass, FUNCTION_DEFINITION__GENERATOR);
 		createEAttribute(functionDefinitionEClass, FUNCTION_DEFINITION__DECLARED_ASYNC);
 		createEOperation(functionDefinitionEClass, FUNCTION_DEFINITION___IS_RETURN_VALUE_OPTIONAL);
@@ -8104,6 +8183,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(functionDefinitionEClass, FUNCTION_DEFINITION___GET_DECLARED_RETURN_TYPE_REF_IN_AST);
 		createEOperation(functionDefinitionEClass, FUNCTION_DEFINITION___IS_ASYNC);
 		createEOperation(functionDefinitionEClass, FUNCTION_DEFINITION___GET_DEFINED_FUNCTION);
+
+		typePredicateDeclarationEClass = createEClass(TYPE_PREDICATE_DECLARATION);
+		createEAttribute(typePredicateDeclarationEClass, TYPE_PREDICATE_DECLARATION__REFERRING_TO_THIS);
+		createEReference(typePredicateDeclarationEClass, TYPE_PREDICATE_DECLARATION__FPAR);
+		createEReference(typePredicateDeclarationEClass, TYPE_PREDICATE_DECLARATION__TYPE_REF_NODE);
+		createEOperation(typePredicateDeclarationEClass, TYPE_PREDICATE_DECLARATION___GET_TYPE_REF);
+		createEOperation(typePredicateDeclarationEClass, TYPE_PREDICATE_DECLARATION___GET_TYPE_REF_IN_AST);
 
 		fieldAccessorEClass = createEClass(FIELD_ACCESSOR);
 		createEAttribute(fieldAccessorEClass, FIELD_ACCESSOR__DECLARED_OPTIONAL);
@@ -9255,6 +9341,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
 		g1.getETypeArguments().add(g2);
 		initEReference(getFunctionDefinition_DeclaredReturnTypeRefNode(), g1, null, "declaredReturnTypeRefNode", null, 0, 1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFunctionDefinition_DeclaredReturnTypePredicate(), this.getTypePredicateDeclaration(), null, "declaredReturnTypePredicate", null, 0, 1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFunctionDefinition_Generator(), theEcorePackage.getEBoolean(), "generator", null, 0, 1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFunctionDefinition_DeclaredAsync(), theEcorePackage.getEBoolean(), "declaredAsync", null, 0, 1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -9267,6 +9354,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getFunctionDefinition__IsAsync(), theEcorePackage.getEBoolean(), "isAsync", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getFunctionDefinition__GetDefinedFunction(), theTypesPackage.getTFunction(), "getDefinedFunction", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(typePredicateDeclarationEClass, TypePredicateDeclaration.class, "TypePredicateDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTypePredicateDeclaration_ReferringToThis(), theEcorePackage.getEBoolean(), "referringToThis", null, 0, 1, TypePredicateDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypePredicateDeclaration_Fpar(), theTypesPackage.getIdentifiableElement(), null, "fpar", null, 0, 1, TypePredicateDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(this.getTypeReferenceNode());
+		g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
+		g1.getETypeArguments().add(g2);
+		initEReference(getTypePredicateDeclaration_TypeRefNode(), g1, null, "typeRefNode", null, 0, 1, TypePredicateDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getTypePredicateDeclaration__GetTypeRef(), theTypeRefsPackage.getTypeRef(), "getTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTypePredicateDeclaration__GetTypeRefInAST(), theTypeRefsPackage.getTypeRef(), "getTypeRefInAST", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(fieldAccessorEClass, FieldAccessor.class, "FieldAccessor", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getFieldAccessor_DeclaredOptional(), theEcorePackage.getEBoolean(), "declaredOptional", null, 0, 1, FieldAccessor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -32,6 +32,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
+import org.eclipse.n4js.n4JS.TypePredicateDeclaration;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -50,6 +51,7 @@ import org.eclipse.n4js.ts.types.Type;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDefinedType <em>Defined Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDeclaredReturnTypePredicate <em>Declared Return Type Predicate</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#isDeclaredAsync <em>Declared Async</em>}</li>
  * </ul>
@@ -86,6 +88,16 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * @ordered
 	 */
 	protected TypeReferenceNode<TypeRef> declaredReturnTypeRefNode;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredReturnTypePredicate() <em>Declared Return Type Predicate</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredReturnTypePredicate()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypePredicateDeclaration declaredReturnTypePredicate;
 
 	/**
 	 * The default value of the '{@link #isGenerator() <em>Generator</em>}' attribute.
@@ -250,6 +262,51 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * @generated
 	 */
 	@Override
+	public TypePredicateDeclaration getDeclaredReturnTypePredicate() {
+		return declaredReturnTypePredicate;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDeclaredReturnTypePredicate(TypePredicateDeclaration newDeclaredReturnTypePredicate, NotificationChain msgs) {
+		TypePredicateDeclaration oldDeclaredReturnTypePredicate = declaredReturnTypePredicate;
+		declaredReturnTypePredicate = newDeclaredReturnTypePredicate;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE, oldDeclaredReturnTypePredicate, newDeclaredReturnTypePredicate);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredReturnTypePredicate(TypePredicateDeclaration newDeclaredReturnTypePredicate) {
+		if (newDeclaredReturnTypePredicate != declaredReturnTypePredicate) {
+			NotificationChain msgs = null;
+			if (declaredReturnTypePredicate != null)
+				msgs = ((InternalEObject)declaredReturnTypePredicate).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE, null, msgs);
+			if (newDeclaredReturnTypePredicate != null)
+				msgs = ((InternalEObject)newDeclaredReturnTypePredicate).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE, null, msgs);
+			msgs = basicSetDeclaredReturnTypePredicate(newDeclaredReturnTypePredicate, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE, newDeclaredReturnTypePredicate, newDeclaredReturnTypePredicate));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isGenerator() {
 		return generator;
 	}
@@ -386,6 +443,8 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE:
 				return basicSetDeclaredReturnTypeRefNode(null, msgs);
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE:
+				return basicSetDeclaredReturnTypePredicate(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -405,6 +464,8 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return getFpars();
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE:
 				return getDeclaredReturnTypeRefNode();
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE:
+				return getDeclaredReturnTypePredicate();
 			case N4JSPackage.FUNCTION_DEFINITION__GENERATOR:
 				return isGenerator();
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC:
@@ -431,6 +492,9 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return;
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE:
 				setDeclaredReturnTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
+				return;
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE:
+				setDeclaredReturnTypePredicate((TypePredicateDeclaration)newValue);
 				return;
 			case N4JSPackage.FUNCTION_DEFINITION__GENERATOR:
 				setGenerator((Boolean)newValue);
@@ -459,6 +523,9 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE:
 				setDeclaredReturnTypeRefNode((TypeReferenceNode<TypeRef>)null);
 				return;
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE:
+				setDeclaredReturnTypePredicate((TypePredicateDeclaration)null);
+				return;
 			case N4JSPackage.FUNCTION_DEFINITION__GENERATOR:
 				setGenerator(GENERATOR_EDEFAULT);
 				return;
@@ -483,6 +550,8 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE:
 				return declaredReturnTypeRefNode != null;
+			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE:
+				return declaredReturnTypePredicate != null;
 			case N4JSPackage.FUNCTION_DEFINITION__GENERATOR:
 				return generator != GENERATOR_EDEFAULT;
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC:

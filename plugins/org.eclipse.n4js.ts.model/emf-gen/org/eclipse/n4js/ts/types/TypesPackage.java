@@ -85,7 +85,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAbstractNamespace()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ABSTRACT_NAMESPACE = 20;
+=======
+	int SYNTAX_RELATED_TELEMENT = 51;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
@@ -999,7 +1003,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getType()
 	 * @generated
 	 */
-	int TYPE = 16;
+	int TYPE = 17;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1749,7 +1753,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getGenericType()
 	 * @generated
 	 */
-	int GENERIC_TYPE = 17;
+	int GENERIC_TYPE = 18;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2068,13 +2072,22 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION__RETURN_TYPE_REF = GENERIC_TYPE_FEATURE_COUNT + 6;
 
 	/**
+	 * The feature id for the '<em><b>Return Type Predicate</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION__RETURN_TYPE_PREDICATE = GENERIC_TYPE_FEATURE_COUNT + 7;
+
+	/**
 	 * The feature id for the '<em><b>Declared This Type</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_THIS_TYPE = GENERIC_TYPE_FEATURE_COUNT + 7;
+	int TFUNCTION__DECLARED_THIS_TYPE = GENERIC_TYPE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -2083,7 +2096,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_ASYNC = GENERIC_TYPE_FEATURE_COUNT + 8;
+	int TFUNCTION__DECLARED_ASYNC = GENERIC_TYPE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Declared Generator</b></em>' attribute.
@@ -2092,7 +2105,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_GENERATOR = GENERIC_TYPE_FEATURE_COUNT + 9;
+	int TFUNCTION__DECLARED_GENERATOR = GENERIC_TYPE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Constructor</b></em>' attribute.
@@ -2101,7 +2114,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__CONSTRUCTOR = GENERIC_TYPE_FEATURE_COUNT + 10;
+	int TFUNCTION__CONSTRUCTOR = GENERIC_TYPE_FEATURE_COUNT + 11;
 
 	/**
 	 * The number of structural features of the '<em>TFunction</em>' class.
@@ -2110,7 +2123,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 11;
+	int TFUNCTION_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -2329,6 +2342,61 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 10;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TypePredicateImpl <em>Type Predicate</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.TypePredicateImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypePredicate()
+	 * @generated
+	 */
+	int TYPE_PREDICATE = 16;
+
+	/**
+	 * The feature id for the '<em><b>Referring To This</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_PREDICATE__REFERRING_TO_THIS = 0;
+
+	/**
+	 * The feature id for the '<em><b>Fpar</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_PREDICATE__FPAR = 1;
+
+	/**
+	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_PREDICATE__TYPE_REF = 2;
+
+	/**
+	 * The number of structural features of the '<em>Type Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_PREDICATE_FEATURE_COUNT = 3;
+
+	/**
+	 * The number of operations of the '<em>Type Predicate</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_PREDICATE_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AccessibleTypeElementImpl <em>Accessible Type Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2336,7 +2404,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAccessibleTypeElement()
 	 * @generated
 	 */
-	int ACCESSIBLE_TYPE_ELEMENT = 18;
+	int ACCESSIBLE_TYPE_ELEMENT = 19;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -2418,7 +2486,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getContainerType()
 	 * @generated
 	 */
-	int CONTAINER_TYPE = 19;
+	int CONTAINER_TYPE = 20;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3024,7 +3092,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleNamespaceVirtualType()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int MODULE_NAMESPACE_VIRTUAL_TYPE = 23;
+=======
+	int MODULE_NAMESPACE_VIRTUAL_TYPE = 21;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3259,7 +3331,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getPrimitiveType()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int PRIMITIVE_TYPE = 24;
+=======
+	int PRIMITIVE_TYPE = 22;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3503,7 +3579,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getBuiltInType()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int BUILT_IN_TYPE = 25;
+=======
+	int BUILT_IN_TYPE = 23;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3711,7 +3791,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAnyType()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ANY_TYPE = 26;
+=======
+	int ANY_TYPE = 24;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3919,7 +4003,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getUndefinedType()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int UNDEFINED_TYPE = 27;
+=======
+	int UNDEFINED_TYPE = 25;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4127,7 +4215,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNullType()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int NULL_TYPE = 28;
+=======
+	int NULL_TYPE = 26;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4335,7 +4427,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVoidType()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int VOID_TYPE = 29;
+=======
+	int VOID_TYPE = 27;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4543,7 +4639,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructuralType()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TSTRUCTURAL_TYPE = 30;
+=======
+	int TSTRUCTURAL_TYPE = 28;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4841,7 +4941,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifier()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TCLASSIFIER = 31;
+=======
+	int TCLASSIFIER = 29;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5184,7 +5288,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getArrayLike()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ARRAY_LIKE = 32;
+=======
+	int ARRAY_LIKE = 30;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -5230,7 +5338,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTN4Classifier()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TN4_CLASSIFIER = 33;
+=======
+	int TN4_CLASSIFIER = 31;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5645,7 +5757,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClass()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TCLASS = 34;
+=======
+	int TCLASS = 32;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6132,7 +6248,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTInterface()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TINTERFACE = 35;
+=======
+	int TINTERFACE = 33;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6556,7 +6676,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMember()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TMEMBER = 36;
+=======
+	int TMEMBER = 34;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6836,7 +6960,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMemberWithAccessModifier()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TMEMBER_WITH_ACCESS_MODIFIER = 37;
+=======
+	int TMEMBER_WITH_ACCESS_MODIFIER = 35;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7143,7 +7271,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMember()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TSTRUCT_MEMBER = 38;
+=======
+	int TSTRUCT_MEMBER = 36;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7459,7 +7591,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMethod()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TMETHOD = 39;
+=======
+	int TMETHOD = 37;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7559,6 +7695,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMETHOD__RETURN_TYPE_REF = TFUNCTION__RETURN_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Return Type Predicate</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD__RETURN_TYPE_PREDICATE = TFUNCTION__RETURN_TYPE_PREDICATE;
 
 	/**
 	 * The feature id for the '<em><b>Declared This Type</b></em>' containment reference.
@@ -8081,7 +8226,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMethod()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TSTRUCT_METHOD = 40;
+=======
+	int TSTRUCT_METHOD = 38;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8181,6 +8330,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD__RETURN_TYPE_REF = TMETHOD__RETURN_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Return Type Predicate</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD__RETURN_TYPE_PREDICATE = TMETHOD__RETURN_TYPE_PREDICATE;
 
 	/**
 	 * The feature id for the '<em><b>Declared This Type</b></em>' containment reference.
@@ -8730,7 +8888,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFormalParameter()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TFORMAL_PARAMETER = 41;
+=======
+	int TFORMAL_PARAMETER = 39;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8875,7 +9037,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnonymousFormalParameter()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TANONYMOUS_FORMAL_PARAMETER = 42;
+=======
+	int TANONYMOUS_FORMAL_PARAMETER = 40;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9038,7 +9204,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTField()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TFIELD = 43;
+=======
+	int TFIELD = 41;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9390,7 +9560,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructField()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TSTRUCT_FIELD = 44;
+=======
+	int TSTRUCT_FIELD = 42;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9769,7 +9943,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getFieldAccessor()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int FIELD_ACCESSOR = 45;
+=======
+	int FIELD_ACCESSOR = 43;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10112,7 +10290,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTGetter()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TGETTER = 46;
+=======
+	int TGETTER = 44;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10464,7 +10646,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructGetter()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TSTRUCT_GETTER = 47;
+=======
+	int TSTRUCT_GETTER = 45;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10843,7 +11029,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTSetter()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TSETTER = 48;
+=======
+	int TSETTER = 46;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11195,7 +11385,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructSetter()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TSTRUCT_SETTER = 49;
+=======
+	int TSTRUCT_SETTER = 47;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11574,7 +11768,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnum()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TENUM = 50;
+=======
+	int TENUM = 48;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11873,7 +12071,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnumLiteral()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TENUM_LITERAL = 51;
+=======
+	int TENUM_LITERAL = 49;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -11946,7 +12148,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAlias()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TYPE_ALIAS = 52;
+=======
+	int TYPE_ALIAS = 50;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12208,7 +12414,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTConstableElement()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TCONSTABLE_ELEMENT = 54;
+=======
+	int TCONSTABLE_ELEMENT = 52;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -12254,7 +12464,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TVARIABLE = 55;
+=======
+	int TVARIABLE = 53;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12453,7 +12667,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TYPING_STRATEGY = 56;
+=======
+	int TYPING_STRATEGY = 54;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -12463,7 +12681,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TYPE_ACCESS_MODIFIER = 57;
+=======
+	int TYPE_ACCESS_MODIFIER = 55;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -12473,7 +12695,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int MEMBER_ACCESS_MODIFIER = 58;
+=======
+	int MEMBER_ACCESS_MODIFIER = 56;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -12483,7 +12709,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int MEMBER_TYPE = 59;
+=======
+	int MEMBER_TYPE = 57;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -12493,7 +12723,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
+=======
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 58;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -12503,7 +12737,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int ITERABLE_OF_TCLASSIFIER = 61;
+=======
+	int ITERABLE_OF_TCLASSIFIER = 59;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12513,7 +12751,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int VARIANCE = 62;
+=======
+	int VARIANCE = 60;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12523,7 +12765,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int NAME_AND_ACCESS = 63;
+=======
+	int NAME_AND_ACCESS = 61;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12533,7 +12779,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int MEMBER_LIST = 64;
+=======
+	int MEMBER_LIST = 62;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12543,7 +12793,11 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TCLASSIFIER_ITERABLE = 65;
+=======
+	int TCLASSIFIER_ITERABLE = 63;
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 
 
 	/**
@@ -13268,6 +13522,17 @@ public interface TypesPackage extends EPackage {
 	EReference getTFunction_ReturnTypeRef();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TFunction#getReturnTypePredicate <em>Return Type Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Return Type Predicate</em>'.
+	 * @see org.eclipse.n4js.ts.types.TFunction#getReturnTypePredicate()
+	 * @see #getTFunction()
+	 * @generated
+	 */
+	EReference getTFunction_ReturnTypePredicate();
+
+	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TFunction#getDeclaredThisType <em>Declared This Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13370,6 +13635,49 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTFunction__IsFinal();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TypePredicate <em>Type Predicate</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Type Predicate</em>'.
+	 * @see org.eclipse.n4js.ts.types.TypePredicate
+	 * @generated
+	 */
+	EClass getTypePredicate();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TypePredicate#isReferringToThis <em>Referring To This</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Referring To This</em>'.
+	 * @see org.eclipse.n4js.ts.types.TypePredicate#isReferringToThis()
+	 * @see #getTypePredicate()
+	 * @generated
+	 */
+	EAttribute getTypePredicate_ReferringToThis();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.TypePredicate#getFpar <em>Fpar</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Fpar</em>'.
+	 * @see org.eclipse.n4js.ts.types.TypePredicate#getFpar()
+	 * @see #getTypePredicate()
+	 * @generated
+	 */
+	EReference getTypePredicate_Fpar();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TypePredicate#getTypeRef <em>Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.types.TypePredicate#getTypeRef()
+	 * @see #getTypePredicate()
+	 * @generated
+	 */
+	EReference getTypePredicate_TypeRef();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.Type <em>Type</em>}'.
@@ -16137,6 +16445,14 @@ public interface TypesPackage extends EPackage {
 		EReference TFUNCTION__RETURN_TYPE_REF = eINSTANCE.getTFunction_ReturnTypeRef();
 
 		/**
+		 * The meta object literal for the '<em><b>Return Type Predicate</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TFUNCTION__RETURN_TYPE_PREDICATE = eINSTANCE.getTFunction_ReturnTypePredicate();
+
+		/**
 		 * The meta object literal for the '<em><b>Declared This Type</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -16215,6 +16531,40 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TFUNCTION___IS_FINAL = eINSTANCE.getTFunction__IsFinal();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TypePredicateImpl <em>Type Predicate</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.TypePredicateImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypePredicate()
+		 * @generated
+		 */
+		EClass TYPE_PREDICATE = eINSTANCE.getTypePredicate();
+
+		/**
+		 * The meta object literal for the '<em><b>Referring To This</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TYPE_PREDICATE__REFERRING_TO_THIS = eINSTANCE.getTypePredicate_ReferringToThis();
+
+		/**
+		 * The meta object literal for the '<em><b>Fpar</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TYPE_PREDICATE__FPAR = eINSTANCE.getTypePredicate_Fpar();
+
+		/**
+		 * The meta object literal for the '<em><b>Type Ref</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TYPE_PREDICATE__TYPE_REF = eINSTANCE.getTypePredicate_TypeRef();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TypeImpl <em>Type</em>}' class.

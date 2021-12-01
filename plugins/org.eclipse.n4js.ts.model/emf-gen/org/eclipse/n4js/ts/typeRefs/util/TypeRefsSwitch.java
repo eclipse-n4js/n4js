@@ -334,6 +334,38 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypeRefsPackage.QUERY_TYPE_REF: {
+				QueryTypeRef queryTypeRef = (QueryTypeRef)theEObject;
+				T result = caseQueryTypeRef(queryTypeRef);
+				if (result == null) result = caseTypeRef(queryTypeRef);
+				if (result == null) result = caseTypeArgument(queryTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypeRefsPackage.OPERATOR_TYPE_REF: {
+				OperatorTypeRef operatorTypeRef = (OperatorTypeRef)theEObject;
+				T result = caseOperatorTypeRef(operatorTypeRef);
+				if (result == null) result = caseTypeRef(operatorTypeRef);
+				if (result == null) result = caseTypeArgument(operatorTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypeRefsPackage.INDEX_ACCESS_TYPE_REF: {
+				IndexAccessTypeRef indexAccessTypeRef = (IndexAccessTypeRef)theEObject;
+				T result = caseIndexAccessTypeRef(indexAccessTypeRef);
+				if (result == null) result = caseTypeRef(indexAccessTypeRef);
+				if (result == null) result = caseTypeArgument(indexAccessTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypeRefsPackage.CONDITIONAL_TYPE_REF: {
+				ConditionalTypeRef conditionalTypeRef = (ConditionalTypeRef)theEObject;
+				T result = caseConditionalTypeRef(conditionalTypeRef);
+				if (result == null) result = caseTypeRef(conditionalTypeRef);
+				if (result == null) result = caseTypeArgument(conditionalTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -770,6 +802,66 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseEnumLiteralTypeRef(EnumLiteralTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Query Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Query Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseQueryTypeRef(QueryTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Operator Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Operator Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseOperatorTypeRef(OperatorTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Index Access Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Index Access Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseIndexAccessTypeRef(IndexAccessTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Conditional Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Conditional Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseConditionalTypeRef(ConditionalTypeRef object) {
 		return null;
 	}
 

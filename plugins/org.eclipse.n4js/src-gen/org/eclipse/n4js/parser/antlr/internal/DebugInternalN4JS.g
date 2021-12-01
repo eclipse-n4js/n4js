@@ -93,7 +93,10 @@ ruleScriptElement:
 			ruleImportDeclaration
 		)
 		    |
-		ruleDeclareDeclaration
+		(
+			('declare')=>
+			ruleDeclareDeclaration
+		)
 		    |
 		ruleExportDeclaration
 		    |
@@ -457,7 +460,10 @@ ruleAnnotatedNamespaceElement:
 =======
 // Rule DeclareDeclaration
 ruleDeclareDeclaration:
-	'declare'
+	(
+		('declare')=>
+		'declare'
+	)
 	ruleExportableElement
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
 ;
@@ -928,9 +934,9 @@ norm7_FunctionImplWithoutKeyword:
 
 // Rule FunctionHeader
 ruleFunctionHeader:
-	ruleTypeParameters?
 	ruleBindingIdentifier
 	?
+	ruleTypeParameters?
 	ruleStrictFormalParameters
 	(
 		(':')=>
@@ -940,9 +946,9 @@ ruleFunctionHeader:
 
 // Rule FunctionHeader
 norm1_FunctionHeader:
-	ruleTypeParameters?
 	norm1_BindingIdentifier
 	?
+	ruleTypeParameters?
 	ruleStrictFormalParameters
 	(
 		(':')=>
@@ -952,25 +958,25 @@ norm1_FunctionHeader:
 
 // Rule FunctionHeader
 norm2_FunctionHeader:
-	ruleTypeParameters?
 	ruleBindingIdentifier
 	?
+	ruleTypeParameters?
 	norm1_StrictFormalParameters
 	(
 		(':')=>
-		ruleColonSepDeclaredReturnTypeRef
+		norm1_ColonSepDeclaredReturnTypeRef
 	)?
 ;
 
 // Rule FunctionHeader
 norm3_FunctionHeader:
-	ruleTypeParameters?
 	norm1_BindingIdentifier
 	?
+	ruleTypeParameters?
 	norm1_StrictFormalParameters
 	(
 		(':')=>
-		ruleColonSepDeclaredReturnTypeRef
+		norm1_ColonSepDeclaredReturnTypeRef
 	)?
 ;
 
@@ -1188,7 +1194,7 @@ norm2_ArrowExpression:
 	(
 		((
 			norm1_StrictFormalParameters
-			ruleColonSepDeclaredReturnTypeRef?
+			norm1_ColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -1202,7 +1208,7 @@ norm2_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepDeclaredReturnTypeRef?
+			norm1_ColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -1210,7 +1216,7 @@ norm2_ArrowExpression:
 		)=>
 		(
 			norm1_StrictFormalParameters
-			ruleColonSepDeclaredReturnTypeRef?
+			norm1_ColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -1224,7 +1230,7 @@ norm2_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepDeclaredReturnTypeRef?
+			norm1_ColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -1247,7 +1253,7 @@ norm3_ArrowExpression:
 	(
 		((
 			norm1_StrictFormalParameters
-			ruleColonSepDeclaredReturnTypeRef?
+			norm1_ColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -1261,7 +1267,7 @@ norm3_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepDeclaredReturnTypeRef?
+			norm1_ColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -1269,7 +1275,7 @@ norm3_ArrowExpression:
 		)=>
 		(
 			norm1_StrictFormalParameters
-			ruleColonSepDeclaredReturnTypeRef?
+			norm1_ColonSepDeclaredReturnTypeRef?
 			    |
 			(
 				('async'
@@ -1283,7 +1289,7 @@ norm3_ArrowExpression:
 					norm1_StrictFormalParameters
 				)
 			)
-			ruleColonSepDeclaredReturnTypeRef?
+			norm1_ColonSepDeclaredReturnTypeRef?
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
@@ -2287,7 +2293,17 @@ ruleForStatement:
 						    |
 						'out'
 						    |
+<<<<<<< HEAD
 						'namespace'
+=======
+						'declare'
+						    |
+						'is'
+						    |
+						'keyof'
+						    |
+						'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 						    |
 						'new'
 						    |
@@ -2366,10 +2382,14 @@ ruleForStatement:
 					)
 					(
 <<<<<<< HEAD
+<<<<<<< HEAD
 						('await' | '@' | '(' | 'async' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 =======
 						('await' | '@' | '(' | 'async' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+						('await' | '@' | '(' | 'async' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 						norm1_AssignmentExpression
 					)?
 				)
@@ -2512,7 +2532,17 @@ norm1_ForStatement:
 						    |
 						'out'
 						    |
+<<<<<<< HEAD
 						'namespace'
+=======
+						'declare'
+						    |
+						'is'
+						    |
+						'keyof'
+						    |
+						'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 						    |
 						'yield'
 						    |
@@ -2593,10 +2623,14 @@ norm1_ForStatement:
 					)
 					(
 <<<<<<< HEAD
+<<<<<<< HEAD
 						('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 =======
 						('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+						('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 						norm3_AssignmentExpression
 					)?
 				)
@@ -3338,7 +3372,17 @@ rulePropertyAssignment:
 				    |
 				'out'
 				    |
+<<<<<<< HEAD
 				'namespace'
+=======
+				'declare'
+				    |
+				'is'
+				    |
+				'keyof'
+				    |
+				'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				    |
 				'['
 				    |
@@ -3532,7 +3576,17 @@ norm1_PropertyAssignment:
 				    |
 				'out'
 				    |
+<<<<<<< HEAD
 				'namespace'
+=======
+				'declare'
+				    |
+				'is'
+				    |
+				'keyof'
+				    |
+				'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				    |
 				'['
 				    |
@@ -3732,7 +3786,17 @@ ruleAnnotatedPropertyAssignment:
 				    |
 				'out'
 				    |
+<<<<<<< HEAD
 				'namespace'
+=======
+				'declare'
+				    |
+				'is'
+				    |
+				'keyof'
+				    |
+				'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				    |
 				'['
 				    |
@@ -3756,10 +3820,14 @@ ruleAnnotatedPropertyAssignment:
 			'set'
 			(
 <<<<<<< HEAD
+<<<<<<< HEAD
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 =======
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				ruleLiteralOrComputedPropertyName
 			)
 		)
@@ -3969,7 +4037,17 @@ norm1_AnnotatedPropertyAssignment:
 				    |
 				'out'
 				    |
+<<<<<<< HEAD
 				'namespace'
+=======
+				'declare'
+				    |
+				'is'
+				    |
+				'keyof'
+				    |
+				'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				    |
 				'['
 				    |
@@ -3993,10 +4071,14 @@ norm1_AnnotatedPropertyAssignment:
 			'set'
 			(
 <<<<<<< HEAD
+<<<<<<< HEAD
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 =======
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				norm1_LiteralOrComputedPropertyName
 			)
 		)
@@ -4356,7 +4438,17 @@ rulePropertySetterDeclaration:
 			    |
 			'out'
 			    |
+<<<<<<< HEAD
 			'namespace'
+=======
+			'declare'
+			    |
+			'is'
+			    |
+			'keyof'
+			    |
+			'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			    |
 			'['
 			    |
@@ -4380,10 +4472,14 @@ rulePropertySetterDeclaration:
 		'set'
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 =======
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			ruleLiteralOrComputedPropertyName
 		)
 	)
@@ -4526,7 +4622,17 @@ norm1_PropertySetterDeclaration:
 			    |
 			'out'
 			    |
+<<<<<<< HEAD
 			'namespace'
+=======
+			'declare'
+			    |
+			'is'
+			    |
+			'keyof'
+			    |
+			'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			    |
 			'['
 			    |
@@ -4550,10 +4656,14 @@ norm1_PropertySetterDeclaration:
 		'set'
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 =======
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			norm1_LiteralOrComputedPropertyName
 		)
 	)
@@ -4619,6 +4729,78 @@ ruleColonSepDeclaredTypeRef:
 // Rule ColonSepDeclaredReturnTypeRef
 ruleColonSepDeclaredReturnTypeRef:
 	':'
+	(
+		(
+			((
+				'this'
+				    |
+				ruleBindingIdentifier
+			)
+			'is'
+			)=>
+			ruleTypePredicateDeclaration
+		)
+		    |
+		ruleTypeReferenceNode
+	)
+;
+
+// Rule ColonSepDeclaredReturnTypeRef
+norm1_ColonSepDeclaredReturnTypeRef:
+	':'
+	(
+		(
+			((
+				'this'
+				    |
+				norm1_BindingIdentifier
+			)
+			'is'
+			)=>
+			norm1_TypePredicateDeclaration
+		)
+		    |
+		ruleTypeReferenceNode
+	)
+;
+
+// Rule TypePredicateDeclaration
+ruleTypePredicateDeclaration:
+	(
+		((
+			'this'
+			    |
+			ruleBindingIdentifier
+		)
+		'is'
+		)=>
+		(
+			'this'
+			    |
+			ruleBindingIdentifier
+		)
+		'is'
+	)
+	ruleTypeReferenceNode
+;
+
+// Rule TypePredicateDeclaration
+norm1_TypePredicateDeclaration:
+	(
+		((
+			'this'
+			    |
+			norm1_BindingIdentifier
+		)
+		'is'
+		)=>
+		(
+			'this'
+			    |
+			norm1_BindingIdentifier
+		)
+		'is'
+	)
 	ruleTypeReferenceNode
 ;
 
@@ -5080,7 +5262,17 @@ ruleShiftExpression:
 			    |
 			'out'
 			    |
+<<<<<<< HEAD
 			'namespace'
+=======
+			'declare'
+			    |
+			'is'
+			    |
+			'keyof'
+			    |
+			'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			    |
 			'<'
 			    |
@@ -5152,10 +5344,14 @@ ruleShiftExpression:
 		ruleShiftOperator
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 =======
 			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			ruleAdditiveExpression
 		)
 	)*
@@ -5221,7 +5417,17 @@ norm1_ShiftExpression:
 			    |
 			'out'
 			    |
+<<<<<<< HEAD
 			'namespace'
+=======
+			'declare'
+			    |
+			'is'
+			    |
+			'keyof'
+			    |
+			'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			    |
 			'<'
 			    |
@@ -5293,10 +5499,14 @@ norm1_ShiftExpression:
 		ruleShiftOperator
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 =======
 			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			norm1_AdditiveExpression
 		)
 	)*
@@ -5375,7 +5585,17 @@ ruleRelationalExpression:
 			    |
 			'out'
 			    |
+<<<<<<< HEAD
 			'namespace'
+=======
+			'declare'
+			    |
+			'is'
+			    |
+			'keyof'
+			    |
+			'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			    |
 			'<'
 			    |
@@ -5447,10 +5667,14 @@ ruleRelationalExpression:
 		ruleRelationalOperator
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 =======
 			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			ruleShiftExpression
 		)
 	)*
@@ -5518,7 +5742,17 @@ norm1_RelationalExpression:
 			    |
 			'out'
 			    |
+<<<<<<< HEAD
 			'namespace'
+=======
+			'declare'
+			    |
+			'is'
+			    |
+			'keyof'
+			    |
+			'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			    |
 			'<'
 			    |
@@ -5590,10 +5824,14 @@ norm1_RelationalExpression:
 		norm1_RelationalOperator
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 =======
 			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('new' | 'this' | 'super' | 'yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			ruleShiftExpression
 		)
 	)*
@@ -5659,7 +5897,17 @@ norm2_RelationalExpression:
 			    |
 			'out'
 			    |
+<<<<<<< HEAD
 			'namespace'
+=======
+			'declare'
+			    |
+			'is'
+			    |
+			'keyof'
+			    |
+			'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			    |
 			'<'
 			    |
@@ -5731,10 +5979,14 @@ norm2_RelationalExpression:
 		ruleRelationalOperator
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 =======
 			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			norm1_ShiftExpression
 		)
 	)*
@@ -5800,7 +6052,17 @@ norm3_RelationalExpression:
 			    |
 			'out'
 			    |
+<<<<<<< HEAD
 			'namespace'
+=======
+			'declare'
+			    |
+			'is'
+			    |
+			'keyof'
+			    |
+			'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			    |
 			'<'
 			    |
@@ -5872,10 +6134,14 @@ norm3_RelationalExpression:
 		norm1_RelationalOperator
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 =======
 			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('new' | 'this' | 'super' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | '(' | '@' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			norm1_ShiftExpression
 		)
 	)*
@@ -6487,7 +6753,7 @@ norm2_AssignmentExpression:
 		(
 			((
 				norm1_StrictFormalParameters
-				ruleColonSepDeclaredReturnTypeRef?
+				norm1_ColonSepDeclaredReturnTypeRef?
 				    |
 				(
 					('async'
@@ -6501,7 +6767,7 @@ norm2_AssignmentExpression:
 						norm1_StrictFormalParameters
 					)
 				)
-				ruleColonSepDeclaredReturnTypeRef?
+				norm1_ColonSepDeclaredReturnTypeRef?
 				    |
 				norm1_BindingIdentifierAsFormalParameter
 			)
@@ -6543,7 +6809,7 @@ norm3_AssignmentExpression:
 		(
 			((
 				norm1_StrictFormalParameters
-				ruleColonSepDeclaredReturnTypeRef?
+				norm1_ColonSepDeclaredReturnTypeRef?
 				    |
 				(
 					('async'
@@ -6557,7 +6823,7 @@ norm3_AssignmentExpression:
 						norm1_StrictFormalParameters
 					)
 				)
-				ruleColonSepDeclaredReturnTypeRef?
+				norm1_ColonSepDeclaredReturnTypeRef?
 				    |
 				norm1_BindingIdentifierAsFormalParameter
 			)
@@ -6590,10 +6856,14 @@ ruleYieldExpression:
 	)?
 	(
 <<<<<<< HEAD
+<<<<<<< HEAD
 		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 =======
 		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 		norm2_AssignmentExpression
 	)?
 ;
@@ -6608,10 +6878,14 @@ norm1_YieldExpression:
 	)?
 	(
 <<<<<<< HEAD
+<<<<<<< HEAD
 		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 =======
 		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+		('await' | '@' | '(' | 'async' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | 'yield' | 'new' | 'this' | 'super' | '<' | 'import' | 'true' | 'false' | 'null' | '/' | '/=' | '[' | '{' | 'function' | 'class' | 'delete' | 'void' | 'typeof' | '++' | '--' | '+' | '-' | '~' | '!' | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 		norm3_AssignmentExpression
 	)?
 ;
@@ -7609,7 +7883,17 @@ ruleN4MemberDeclaration:
 				    |
 				'out'
 				    |
+<<<<<<< HEAD
 				'namespace'
+=======
+				'declare'
+				    |
+				'is'
+				    |
+				'keyof'
+				    |
+				'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				    |
 				'['
 				    |
@@ -7805,7 +8089,17 @@ norm1_N4MemberDeclaration:
 				    |
 				'out'
 				    |
+<<<<<<< HEAD
 				'namespace'
+=======
+				'declare'
+				    |
+				'is'
+				    |
+				'keyof'
+				    |
+				'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				    |
 				'['
 				    |
@@ -8000,7 +8294,17 @@ ruleAnnotatedN4MemberDeclaration:
 				    |
 				'out'
 				    |
+<<<<<<< HEAD
 				'namespace'
+=======
+				'declare'
+				    |
+				'is'
+				    |
+				'keyof'
+				    |
+				'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				    |
 				'['
 				    |
@@ -8026,10 +8330,14 @@ ruleAnnotatedN4MemberDeclaration:
 			'set'
 			(
 <<<<<<< HEAD
+<<<<<<< HEAD
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 =======
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				ruleLiteralOrComputedPropertyName
 			)
 		)
@@ -8245,7 +8553,17 @@ norm1_AnnotatedN4MemberDeclaration:
 				    |
 				'out'
 				    |
+<<<<<<< HEAD
 				'namespace'
+=======
+				'declare'
+				    |
+				'is'
+				    |
+				'keyof'
+				    |
+				'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				    |
 				'['
 				    |
@@ -8271,10 +8589,14 @@ norm1_AnnotatedN4MemberDeclaration:
 			'set'
 			(
 <<<<<<< HEAD
+<<<<<<< HEAD
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 =======
 				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+				('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 				norm1_LiteralOrComputedPropertyName
 			)
 		)
@@ -8513,7 +8835,7 @@ ruleMethodParamsReturnAndBody:
 // Rule MethodParamsReturnAndBody
 norm1_MethodParamsReturnAndBody:
 	norm1_StrictFormalParameters
-	ruleColonSepDeclaredReturnTypeRef?
+	norm1_ColonSepDeclaredReturnTypeRef?
 	(
 		('{'
 		)=>
@@ -8564,10 +8886,14 @@ ruleGetterHeader:
 	'get'
 	(
 <<<<<<< HEAD
+<<<<<<< HEAD
 		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 =======
 		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 		ruleLiteralOrComputedPropertyName
 	)
 	'?'
@@ -8582,10 +8908,14 @@ norm1_GetterHeader:
 	'get'
 	(
 <<<<<<< HEAD
+<<<<<<< HEAD
 		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 =======
 		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+		('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 		norm1_LiteralOrComputedPropertyName
 	)
 	'?'
@@ -8724,7 +9054,17 @@ ruleN4SetterDeclaration:
 			    |
 			'out'
 			    |
+<<<<<<< HEAD
 			'namespace'
+=======
+			'declare'
+			    |
+			'is'
+			    |
+			'keyof'
+			    |
+			'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			    |
 			'['
 			    |
@@ -8750,10 +9090,14 @@ ruleN4SetterDeclaration:
 		'set'
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 =======
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			ruleLiteralOrComputedPropertyName
 		)
 	)
@@ -8899,7 +9243,17 @@ norm1_N4SetterDeclaration:
 			    |
 			'out'
 			    |
+<<<<<<< HEAD
 			'namespace'
+=======
+			'declare'
+			    |
+			'is'
+			    |
+			'keyof'
+			    |
+			'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			    |
 			'['
 			    |
@@ -8925,10 +9279,14 @@ norm1_N4SetterDeclaration:
 		'set'
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 =======
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | '[' | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			norm1_LiteralOrComputedPropertyName
 		)
 	)
@@ -9304,10 +9662,14 @@ ruleJSXIdentifier:
 		)
 		(
 <<<<<<< HEAD
+<<<<<<< HEAD
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'namespace' | RULE_INT | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_LEGACY_OCTAL_INT | RULE_IDENTIFIER)=>
 =======
 			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | RULE_INT | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_LEGACY_OCTAL_INT | RULE_IDENTIFIER)=>
 >>>>>>> 8b8567bc8 (early support for a few first constructs)
+=======
+			('break' | 'case' | 'catch' | 'class' | 'const' | 'continue' | 'debugger' | 'default' | 'delete' | 'do' | 'else' | 'export' | 'extends' | 'finally' | 'for' | 'function' | 'if' | 'import' | 'in' | 'instanceof' | 'new' | 'return' | 'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' | 'null' | 'true' | 'false' | 'enum' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'declare' | 'is' | 'keyof' | 'unique' | RULE_INT | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_LEGACY_OCTAL_INT | RULE_IDENTIFIER)=>
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 			(
 				RULE_INT
 				    |
@@ -9348,6 +9710,28 @@ ruleJSXPropertyAttribute:
 
 // Rule TypeRef
 ruleTypeRef:
+	ruleConditionalTypeRef
+;
+
+// Rule ConditionalTypeRef
+ruleConditionalTypeRef:
+	ruleUnionTypeExpression
+	(
+		(
+			('extends'
+			)=>
+			'extends'
+		)
+		ruleUnionTypeExpression
+		'?'
+		ruleConditionalTypeRef
+		':'
+		ruleConditionalTypeRef
+	)?
+;
+
+// Rule UnionTypeExpression
+ruleUnionTypeExpression:
 	ruleIntersectionTypeExpression
 	(
 		(
@@ -9359,13 +9743,23 @@ ruleTypeRef:
 
 // Rule IntersectionTypeExpression
 ruleIntersectionTypeExpression:
-	ruleArrayTypeExpression
+	ruleOperatorTypeRef
 	(
 		(
 			'&'
-			ruleArrayTypeExpression
+			ruleOperatorTypeRef
 		)+
 	)?
+;
+
+// Rule OperatorTypeRef
+ruleOperatorTypeRef:
+	(
+		ruleTypeOperator
+		ruleArrayTypeExpression
+		    |
+		ruleArrayTypeExpression
+	)
 ;
 
 // Rule ArrayTypeExpression
@@ -9395,13 +9789,27 @@ ruleArrayTypeExpression:
 			']'
 		)*
 		    |
+		ruleArrayNTypeExpression
+		    |
 		rulePrimaryTypeExpression
 		(
-			('['
-			']'
+			((
+				'['
+				']'
+				    |
+				'['
+				rulePrimaryTypeExpression
+				']'
+			)
 			)=>
-			'['
-			']'
+			(
+				'['
+				']'
+				    |
+				'['
+				rulePrimaryTypeExpression
+				']'
+			)
 		)*
 	)
 ;
@@ -9420,9 +9828,9 @@ rulePrimaryTypeExpression:
 			ruleArrowFunctionTypeExpression
 		)
 		    |
-		ruleArrayNTypeExpression
-		    |
 		ruleTypeRefWithModifiers
+		    |
+		ruleQueryTypeRef
 		    |
 		'('
 		ruleTypeRef
@@ -9432,16 +9840,6 @@ rulePrimaryTypeExpression:
 
 // Rule TypeRefWithModifiers
 ruleTypeRefWithModifiers:
-	ruleTypeRefWithoutModifiers
-	(
-		('?'
-		)=>
-		'?'
-	)?
-;
-
-// Rule TypeRefWithoutModifiers
-ruleTypeRefWithoutModifiers:
 	(
 		(
 			ruleParameterizedTypeRef
@@ -9563,7 +9961,20 @@ ruleArrowFunctionTypeExpression:
 		')'
 		ruleArrow
 	)
-	rulePrimaryTypeExpression
+	(
+		(
+			((
+				'this'
+				    |
+				ruleBindingIdentifier
+			)
+			'is'
+			)=>
+			ruleTypePredicateWithPrimary
+		)
+		    |
+		rulePrimaryTypeExpression
+	)
 ;
 
 // Rule TAnonymousFormalParameterList
@@ -9839,7 +10250,20 @@ ruleColonSepTypeRef:
 // Rule ColonSepReturnTypeRef
 ruleColonSepReturnTypeRef:
 	':'
-	ruleTypeRef
+	(
+		(
+			((
+				'this'
+				    |
+				ruleBindingIdentifier
+			)
+			'is'
+			)=>
+			ruleTypePredicate
+		)
+		    |
+		ruleTypeRef
+	)
 ;
 
 // Rule TStructField
@@ -9999,6 +10423,52 @@ ruleTypeVariable:
 		'='
 		ruleTypeRef
 	)?
+;
+
+// Rule QueryTypeRef
+ruleQueryTypeRef:
+	'typeof'
+	ruleIdentifierName
+;
+
+// Rule TypePredicate
+ruleTypePredicate:
+	(
+		((
+			'this'
+			    |
+			ruleBindingIdentifier
+		)
+		'is'
+		)=>
+		(
+			'this'
+			    |
+			ruleBindingIdentifier
+		)
+		'is'
+	)
+	ruleTypeRef
+;
+
+// Rule TypePredicateWithPrimary
+ruleTypePredicateWithPrimary:
+	(
+		((
+			'this'
+			    |
+			ruleBindingIdentifier
+		)
+		'is'
+		)=>
+		(
+			'this'
+			    |
+			ruleBindingIdentifier
+		)
+		'is'
+	)
+	rulePrimaryTypeExpression
 ;
 
 // Rule BindingIdentifier
@@ -10162,7 +10632,17 @@ ruleN4Keyword:
 		    |
 		'out'
 		    |
+<<<<<<< HEAD
 		'namespace'
+=======
+		'declare'
+		    |
+		'is'
+		    |
+		'keyof'
+		    |
+		'unique'
+>>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 	)
 ;
 
@@ -10285,6 +10765,17 @@ ruleN4ModifierWithoutConst:
 		'abstract'
 		    |
 		'static'
+	)
+;
+
+// Rule TypeOperator
+ruleTypeOperator:
+	(
+		'keyof'
+		    |
+		'unique'
+		    |
+		'readonly'
 	)
 ;
 

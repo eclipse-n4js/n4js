@@ -32,6 +32,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#getReturnTypeRef <em>Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TFunction#getReturnTypePredicate <em>Return Type Predicate</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#getDeclaredThisType <em>Declared This Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#isDeclaredAsync <em>Declared Async</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TFunction#isDeclaredGenerator <em>Declared Generator</em>}</li>
@@ -113,7 +114,7 @@ public interface TFunction extends GenericType, AccessibleTypeElement, SyntaxRel
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Return type
+	 * Return type or <code>null</code> if a type predicate is used.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Return Type Ref</em>' containment reference.
 	 * @see #setReturnTypeRef(TypeRef)
@@ -132,6 +133,31 @@ public interface TFunction extends GenericType, AccessibleTypeElement, SyntaxRel
 	 * @generated
 	 */
 	void setReturnTypeRef(TypeRef value);
+
+	/**
+	 * Returns the value of the '<em><b>Return Type Predicate</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Type predicate
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Return Type Predicate</em>' containment reference.
+	 * @see #setReturnTypePredicate(TypePredicate)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTFunction_ReturnTypePredicate()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TypePredicate getReturnTypePredicate();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TFunction#getReturnTypePredicate <em>Return Type Predicate</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Return Type Predicate</em>' containment reference.
+	 * @see #getReturnTypePredicate()
+	 * @generated
+	 */
+	void setReturnTypePredicate(TypePredicate value);
 
 	/**
 	 * Returns the value of the '<em><b>Declared This Type</b></em>' containment reference.

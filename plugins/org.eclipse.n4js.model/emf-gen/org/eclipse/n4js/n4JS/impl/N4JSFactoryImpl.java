@@ -83,6 +83,7 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.ANNOTATION: return createAnnotation();
 			case N4JSPackage.LITERAL_ANNOTATION_ARGUMENT: return createLiteralAnnotationArgument();
 			case N4JSPackage.TYPE_REF_ANNOTATION_ARGUMENT: return createTypeRefAnnotationArgument();
+			case N4JSPackage.TYPE_PREDICATE_DECLARATION: return createTypePredicateDeclaration();
 			case N4JSPackage.FUNCTION_DECLARATION: return createFunctionDeclaration();
 			case N4JSPackage.FUNCTION_EXPRESSION: return createFunctionExpression();
 			case N4JSPackage.ARROW_FUNCTION: return createArrowFunction();
@@ -449,6 +450,17 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public TypeRefAnnotationArgument createTypeRefAnnotationArgument() {
 		TypeRefAnnotationArgumentImpl typeRefAnnotationArgument = new TypeRefAnnotationArgumentImpl();
 		return typeRefAnnotationArgument;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypePredicateDeclaration createTypePredicateDeclaration() {
+		TypePredicateDeclarationImpl typePredicateDeclaration = new TypePredicateDeclarationImpl();
+		return typePredicateDeclaration;
 	}
 
 	/**

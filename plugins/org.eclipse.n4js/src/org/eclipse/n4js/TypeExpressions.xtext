@@ -42,29 +42,41 @@ import "http://www.eclipse.org/n4js/ts/TypeRefs"
  * VarTypeRef: no Void, i.e.
  * AttributeTypeRef: no Void
  */
-TypeRef returns TypeRef:
+TypeRef: ConditionalTypeRef;
+
+ConditionalTypeRef returns TypeRef:
+	UnionTypeExpression (=> ({ConditionalTypeRef.typeRef=current} 'extends') upperBound=UnionTypeExpression '?' trueTypeRef=ConditionalTypeRef ':' falseTypeRef=ConditionalTypeRef)?;
+
+UnionTypeExpression returns TypeRef:
 	IntersectionTypeExpression ({UnionTypeExpression.typeRefs+=current} ("|" typeRefs+=IntersectionTypeExpression)+)?;
 
 IntersectionTypeExpression returns TypeRef:
-	ArrayTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=ArrayTypeExpression)+)?;
+	OperatorTypeRef ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=OperatorTypeRef)+)?;
+
+OperatorTypeRef returns TypeRef:
+	  ({OperatorTypeRef} op=TypeOperator typeRef=ArrayTypeExpression)
+	| ArrayTypeExpression;
+
+enum TypeOperator: keyof | unique | readonly;
 
 ArrayTypeExpression returns TypeRef:
 	  ({ParameterizedTypeRef} declaredTypeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')*)
 	| ({ParameterizedTypeRef} '(' declaredTypeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')*)
-	| PrimaryTypeExpression =>({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')*;
+	| ArrayNTypeExpression
+	| PrimaryTypeExpression =>(
+		  ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
+		| ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=PrimaryTypeExpression ']')
+	)*;
 
 PrimaryTypeExpression returns TypeRef:
 	( LiteralTypeRef
 	| ArrowFunctionTypeExpression
-	| ArrayNTypeExpression
 	| TypeRefWithModifiers
+	| QueryTypeRef
 	| "(" TypeRef ")"
 	);
 
 TypeRefWithModifiers returns StaticBaseTypeRef:
-	TypeRefWithoutModifiers =>followedByQuestionMark?='?'?;
-
-TypeRefWithoutModifiers returns StaticBaseTypeRef:
 	  ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
 	| TypeTypeRef
 	| UnionTypeExpressionOLD
@@ -113,7 +125,7 @@ ThisTypeRefStructural returns ThisTypeRefStructural:
 	('with' TStructMemberList)?;
 
 ArrowFunctionTypeExpression returns FunctionTypeExpression:
-	=>({FunctionTypeExpression} '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) returnTypeRef=PrimaryTypeExpression;
+	=>({FunctionTypeExpression} '(' TAnonymousFormalParameterListWithDeclaredThisType ')' Arrow) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
 
 // TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard
 fragment TAnonymousFormalParameterList* :
@@ -224,7 +236,7 @@ fragment ColonSepTypeRef*:
 ;
 
 fragment ColonSepReturnTypeRef*:
-	':' returnTypeRef=TypeRef
+	':' (returnTypePredicate=TypePredicate | returnTypeRef=TypeRef)
 ;
 
 TStructField:
@@ -291,6 +303,18 @@ TypeVariable returns TypeVariable:
 	// (only added here to obtain a better error message)
 	('=' defaultArgument=TypeRef)?;
 
+QueryTypeRef:
+	'typeof' element=[IdentifiableElement|IdentifierName]
+;
+
+TypePredicate:
+	=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=TypeRef
+;
+
+TypePredicateWithPrimary returns TypePredicate:
+	=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=PrimaryTypeExpression
+;
+
 /*
  * [ECM11] (7.6, pp. 17)
  * Identifier :: IdentifierName but not ReservedWord
@@ -340,6 +364,8 @@ N4Keyword:
 	| 'out'
 	// namespace keyword
 	| 'namespace'
+	// .d.ts keywords
+	| 'declare' | 'is' | 'keyof' | 'unique' // | 'readonly'
 ;
 
 Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()

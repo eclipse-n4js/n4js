@@ -87,6 +87,10 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF: return createNumericLiteralTypeRef();
 			case TypeRefsPackage.STRING_LITERAL_TYPE_REF: return createStringLiteralTypeRef();
 			case TypeRefsPackage.ENUM_LITERAL_TYPE_REF: return createEnumLiteralTypeRef();
+			case TypeRefsPackage.QUERY_TYPE_REF: return createQueryTypeRef();
+			case TypeRefsPackage.OPERATOR_TYPE_REF: return createOperatorTypeRef();
+			case TypeRefsPackage.INDEX_ACCESS_TYPE_REF: return createIndexAccessTypeRef();
+			case TypeRefsPackage.CONDITIONAL_TYPE_REF: return createConditionalTypeRef();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -102,6 +106,8 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 		switch (eDataType.getClassifierID()) {
 			case TypeRefsPackage.OPTIONAL_FIELD_STRATEGY:
 				return createOptionalFieldStrategyFromString(eDataType, initialValue);
+			case TypeRefsPackage.TYPE_OPERATOR:
+				return createTypeOperatorFromString(eDataType, initialValue);
 			case TypeRefsPackage.UUID:
 				return createUUIDFromString(eDataType, initialValue);
 			default:
@@ -119,6 +125,8 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 		switch (eDataType.getClassifierID()) {
 			case TypeRefsPackage.OPTIONAL_FIELD_STRATEGY:
 				return convertOptionalFieldStrategyToString(eDataType, instanceValue);
+			case TypeRefsPackage.TYPE_OPERATOR:
+				return convertTypeOperatorToString(eDataType, instanceValue);
 			case TypeRefsPackage.UUID:
 				return convertUUIDToString(eDataType, instanceValue);
 			default:
@@ -351,6 +359,50 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@Override
+	public QueryTypeRef createQueryTypeRef() {
+		QueryTypeRefImpl queryTypeRef = new QueryTypeRefImpl();
+		return queryTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public OperatorTypeRef createOperatorTypeRef() {
+		OperatorTypeRefImpl operatorTypeRef = new OperatorTypeRefImpl();
+		return operatorTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public IndexAccessTypeRef createIndexAccessTypeRef() {
+		IndexAccessTypeRefImpl indexAccessTypeRef = new IndexAccessTypeRefImpl();
+		return indexAccessTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ConditionalTypeRef createConditionalTypeRef() {
+		ConditionalTypeRefImpl conditionalTypeRef = new ConditionalTypeRefImpl();
+		return conditionalTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public OptionalFieldStrategy createOptionalFieldStrategyFromString(EDataType eDataType, String initialValue) {
 		OptionalFieldStrategy result = OptionalFieldStrategy.get(initialValue);
 		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
@@ -363,6 +415,26 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * @generated
 	 */
 	public String convertOptionalFieldStrategyToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TypeOperator createTypeOperatorFromString(EDataType eDataType, String initialValue) {
+		TypeOperator result = TypeOperator.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertTypeOperatorToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
 	}
 

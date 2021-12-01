@@ -627,6 +627,8 @@ abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningE
 	 */
 	contains TypeReferenceNode<TypeRef> declaredReturnTypeRefNode
 
+	contains TypePredicateDeclaration declaredReturnTypePredicate
+
 	/*
 	 * Whether the function is a generator
 	 */
@@ -650,6 +652,20 @@ abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningE
 		val defType = definedType;
 		return if(defType instanceof TFunction) { defType };
 	}
+}
+
+class TypePredicateDeclaration {
+	boolean referringToThis
+
+	refers IdentifiableElement fpar
+
+	op TypeRef getTypeRef() {
+		return typeRefNode?.typeRef;
+	}
+	op TypeRef getTypeRefInAST() {
+		return typeRefNode?.typeRefInAST;
+	}
+	contains TypeReferenceNode<TypeRef> typeRefNode
 }
 
 /*

@@ -43,6 +43,7 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
+import org.eclipse.n4js.ts.types.TypePredicate;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -65,6 +66,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getReturnTypeRef <em>Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getReturnTypePredicate <em>Return Type Predicate</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getDeclaredThisType <em>Declared This Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isDeclaredAsync <em>Declared Async</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isDeclaredGenerator <em>Declared Generator</em>}</li>
@@ -183,6 +185,16 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 * @ordered
 	 */
 	protected TypeRef returnTypeRef;
+
+	/**
+	 * The cached value of the '{@link #getReturnTypePredicate() <em>Return Type Predicate</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getReturnTypePredicate()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypePredicate returnTypePredicate;
 
 	/**
 	 * The cached value of the '{@link #getDeclaredThisType() <em>Declared This Type</em>}' containment reference.
@@ -461,6 +473,51 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__RETURN_TYPE_REF, newReturnTypeRef, newReturnTypeRef));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypePredicate getReturnTypePredicate() {
+		return returnTypePredicate;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetReturnTypePredicate(TypePredicate newReturnTypePredicate, NotificationChain msgs) {
+		TypePredicate oldReturnTypePredicate = returnTypePredicate;
+		returnTypePredicate = newReturnTypePredicate;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__RETURN_TYPE_PREDICATE, oldReturnTypePredicate, newReturnTypePredicate);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setReturnTypePredicate(TypePredicate newReturnTypePredicate) {
+		if (newReturnTypePredicate != returnTypePredicate) {
+			NotificationChain msgs = null;
+			if (returnTypePredicate != null)
+				msgs = ((InternalEObject)returnTypePredicate).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TFUNCTION__RETURN_TYPE_PREDICATE, null, msgs);
+			if (newReturnTypePredicate != null)
+				msgs = ((InternalEObject)newReturnTypePredicate).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TFUNCTION__RETURN_TYPE_PREDICATE, null, msgs);
+			msgs = basicSetReturnTypePredicate(newReturnTypePredicate, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__RETURN_TYPE_PREDICATE, newReturnTypePredicate, newReturnTypePredicate));
 	}
 
 	/**
@@ -758,6 +815,8 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
 				return basicSetReturnTypeRef(null, msgs);
+			case TypesPackage.TFUNCTION__RETURN_TYPE_PREDICATE:
+				return basicSetReturnTypePredicate(null, msgs);
 			case TypesPackage.TFUNCTION__DECLARED_THIS_TYPE:
 				return basicSetDeclaredThisType(null, msgs);
 		}
@@ -787,6 +846,8 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return isReturnValueMarkedOptional();
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
 				return getReturnTypeRef();
+			case TypesPackage.TFUNCTION__RETURN_TYPE_PREDICATE:
+				return getReturnTypePredicate();
 			case TypesPackage.TFUNCTION__DECLARED_THIS_TYPE:
 				return getDeclaredThisType();
 			case TypesPackage.TFUNCTION__DECLARED_ASYNC:
@@ -829,6 +890,9 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return;
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
 				setReturnTypeRef((TypeRef)newValue);
+				return;
+			case TypesPackage.TFUNCTION__RETURN_TYPE_PREDICATE:
+				setReturnTypePredicate((TypePredicate)newValue);
 				return;
 			case TypesPackage.TFUNCTION__DECLARED_THIS_TYPE:
 				setDeclaredThisType((TypeRef)newValue);
@@ -875,6 +939,9 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
 				setReturnTypeRef((TypeRef)null);
 				return;
+			case TypesPackage.TFUNCTION__RETURN_TYPE_PREDICATE:
+				setReturnTypePredicate((TypePredicate)null);
+				return;
 			case TypesPackage.TFUNCTION__DECLARED_THIS_TYPE:
 				setDeclaredThisType((TypeRef)null);
 				return;
@@ -913,6 +980,8 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return returnValueMarkedOptional != RETURN_VALUE_MARKED_OPTIONAL_EDEFAULT;
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
 				return returnTypeRef != null;
+			case TypesPackage.TFUNCTION__RETURN_TYPE_PREDICATE:
+				return returnTypePredicate != null;
 			case TypesPackage.TFUNCTION__DECLARED_THIS_TYPE:
 				return declaredThisType != null;
 			case TypesPackage.TFUNCTION__DECLARED_ASYNC:

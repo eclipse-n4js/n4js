@@ -50,6 +50,7 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.SuperLiteral;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
+import org.eclipse.n4js.n4JS.TypePredicateDeclaration;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -81,6 +82,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getDefinedType <em>Defined Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getDeclaredReturnTypePredicate <em>Declared Return Type Predicate</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#isDeclaredAsync <em>Declared Async</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.PropertyMethodDeclarationImpl#getTypeVars <em>Type Vars</em>}</li>
@@ -138,6 +140,16 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 	 * @ordered
 	 */
 	protected TypeReferenceNode<TypeRef> declaredReturnTypeRefNode;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredReturnTypePredicate() <em>Declared Return Type Predicate</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredReturnTypePredicate()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypePredicateDeclaration declaredReturnTypePredicate;
 
 	/**
 	 * The default value of the '{@link #isGenerator() <em>Generator</em>}' attribute.
@@ -394,6 +406,51 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE, newDeclaredReturnTypeRefNode, newDeclaredReturnTypeRefNode));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypePredicateDeclaration getDeclaredReturnTypePredicate() {
+		return declaredReturnTypePredicate;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDeclaredReturnTypePredicate(TypePredicateDeclaration newDeclaredReturnTypePredicate, NotificationChain msgs) {
+		TypePredicateDeclaration oldDeclaredReturnTypePredicate = declaredReturnTypePredicate;
+		declaredReturnTypePredicate = newDeclaredReturnTypePredicate;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE, oldDeclaredReturnTypePredicate, newDeclaredReturnTypePredicate);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDeclaredReturnTypePredicate(TypePredicateDeclaration newDeclaredReturnTypePredicate) {
+		if (newDeclaredReturnTypePredicate != declaredReturnTypePredicate) {
+			NotificationChain msgs = null;
+			if (declaredReturnTypePredicate != null)
+				msgs = ((InternalEObject)declaredReturnTypePredicate).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE, null, msgs);
+			if (newDeclaredReturnTypePredicate != null)
+				msgs = ((InternalEObject)newDeclaredReturnTypePredicate).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE, null, msgs);
+			msgs = basicSetDeclaredReturnTypePredicate(newDeclaredReturnTypePredicate, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE, newDeclaredReturnTypePredicate, newDeclaredReturnTypePredicate));
 	}
 
 	/**
@@ -672,6 +729,8 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
 				return basicSetDeclaredReturnTypeRefNode(null, msgs);
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE:
+				return basicSetDeclaredReturnTypePredicate(null, msgs);
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__TYPE_VARS:
 				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
 		}
@@ -697,6 +756,8 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return getFpars();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
 				return getDeclaredReturnTypeRefNode();
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE:
+				return getDeclaredReturnTypePredicate();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__GENERATOR:
 				return isGenerator();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_ASYNC:
@@ -731,6 +792,9 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
 				setDeclaredReturnTypeRefNode((TypeReferenceNode<TypeRef>)newValue);
+				return;
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE:
+				setDeclaredReturnTypePredicate((TypePredicateDeclaration)newValue);
 				return;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__GENERATOR:
 				setGenerator((Boolean)newValue);
@@ -769,6 +833,9 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
 				setDeclaredReturnTypeRefNode((TypeReferenceNode<TypeRef>)null);
 				return;
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE:
+				setDeclaredReturnTypePredicate((TypePredicateDeclaration)null);
+				return;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__GENERATOR:
 				setGenerator(GENERATOR_EDEFAULT);
 				return;
@@ -800,6 +867,8 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
 				return declaredReturnTypeRefNode != null;
+			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE:
+				return declaredReturnTypePredicate != null;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__GENERATOR:
 				return generator != GENERATOR_EDEFAULT;
 			case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_ASYNC:
@@ -839,6 +908,7 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 			switch (derivedFeatureID) {
 				case N4JSPackage.PROPERTY_METHOD_DECLARATION__FPARS: return N4JSPackage.FUNCTION_DEFINITION__FPARS;
 				case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE;
+				case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE;
 				case N4JSPackage.PROPERTY_METHOD_DECLARATION__GENERATOR: return N4JSPackage.FUNCTION_DEFINITION__GENERATOR;
 				case N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_ASYNC: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC;
 				default: return -1;
@@ -887,6 +957,7 @@ public class PropertyMethodDeclarationImpl extends AnnotablePropertyAssignmentIm
 			switch (baseFeatureID) {
 				case N4JSPackage.FUNCTION_DEFINITION__FPARS: return N4JSPackage.PROPERTY_METHOD_DECLARATION__FPARS;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE: return N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE;
+				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_PREDICATE: return N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE;
 				case N4JSPackage.FUNCTION_DEFINITION__GENERATOR: return N4JSPackage.PROPERTY_METHOD_DECLARATION__GENERATOR;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC: return N4JSPackage.PROPERTY_METHOD_DECLARATION__DECLARED_ASYNC;
 				default: return -1;

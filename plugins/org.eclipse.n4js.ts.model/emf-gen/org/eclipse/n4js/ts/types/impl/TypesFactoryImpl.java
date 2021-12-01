@@ -84,6 +84,7 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.TYPE_VARIABLE: return createTypeVariable();
 			case TypesPackage.INFERENCE_VARIABLE: return createInferenceVariable();
 			case TypesPackage.TFUNCTION: return createTFunction();
+			case TypesPackage.TYPE_PREDICATE: return createTypePredicate();
 			case TypesPackage.TYPE: return createType();
 			case TypesPackage.TNAMESPACE: return createTNamespace();
 			case TypesPackage.TNAMESPACE_ELEMENT: return createTNamespaceElement();
@@ -324,6 +325,17 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public TFunction createTFunction() {
 		TFunctionImpl tFunction = new TFunctionImpl();
 		return tFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypePredicate createTypePredicate() {
+		TypePredicateImpl typePredicate = new TypePredicateImpl();
+		return typePredicate;
 	}
 
 	/**

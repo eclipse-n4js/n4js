@@ -210,6 +210,42 @@ public interface TypeRefsFactory extends EFactory {
 	EnumLiteralTypeRef createEnumLiteralTypeRef();
 
 	/**
+	 * Returns a new object of class '<em>Query Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Query Type Ref</em>'.
+	 * @generated
+	 */
+	QueryTypeRef createQueryTypeRef();
+
+	/**
+	 * Returns a new object of class '<em>Operator Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Operator Type Ref</em>'.
+	 * @generated
+	 */
+	OperatorTypeRef createOperatorTypeRef();
+
+	/**
+	 * Returns a new object of class '<em>Index Access Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Index Access Type Ref</em>'.
+	 * @generated
+	 */
+	IndexAccessTypeRef createIndexAccessTypeRef();
+
+	/**
+	 * Returns a new object of class '<em>Conditional Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Conditional Type Ref</em>'.
+	 * @generated
+	 */
+	ConditionalTypeRef createConditionalTypeRef();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
+import org.eclipse.n4js.ts.types.TypePredicate;
 import org.eclipse.n4js.ts.types.TypeVariable;
 
 /**
@@ -81,6 +82,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getReturnTypeRef <em>Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getReturnTypePredicate <em>Return Type Predicate</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression()
@@ -274,8 +276,9 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Return type declared in the FunctionTypeExpression in the AST or
-	 * a copy of the return type of the 'declaredType' or original FunctionTypeExpression.
+	 * Return type declared in the FunctionTypeExpression in the AST
+	 * or a copy of the return type of either the 'declaredType' or the original FunctionTypeExpression,
+	 * or <code>null</code> if a type predicate is used.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Return Type Ref</em>' containment reference.
 	 * @see #setReturnTypeRef(TypeRef)
@@ -294,6 +297,33 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * @generated
 	 */
 	void setReturnTypeRef(TypeRef value);
+
+	/**
+	 * Returns the value of the '<em><b>Return Type Predicate</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * The type predicate declared in the FunctionTypeExpression in the AST
+	 * or a copy of the type predicate of either the 'declaredType' or the original FunctionTypeExpression,
+	 * or <code>null</code> if no type predicate is used.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Return Type Predicate</em>' containment reference.
+	 * @see #setReturnTypePredicate(TypePredicate)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression_ReturnTypePredicate()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TypePredicate getReturnTypePredicate();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getReturnTypePredicate <em>Return Type Predicate</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Return Type Predicate</em>' containment reference.
+	 * @see #getReturnTypePredicate()
+	 * @generated
+	 */
+	void setReturnTypePredicate(TypePredicate value);
 
 	/**
 	 * <!-- begin-user-doc -->

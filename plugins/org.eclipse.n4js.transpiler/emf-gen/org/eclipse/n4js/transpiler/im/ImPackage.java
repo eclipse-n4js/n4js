@@ -2247,6 +2247,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE;
 
 	/**
+	 * The feature id for the '<em><b>Declared Return Type Predicate</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_PREDICATE;
+
+	/**
 	 * The feature id for the '<em><b>Generator</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

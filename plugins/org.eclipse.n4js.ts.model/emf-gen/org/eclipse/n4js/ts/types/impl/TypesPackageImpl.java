@@ -86,6 +86,7 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeAlias;
+import org.eclipse.n4js.ts.types.TypePredicate;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -213,6 +214,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass tFunctionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass typePredicateEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1320,7 +1328,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTFunction_DeclaredThisType() {
+	public EReference getTFunction_ReturnTypePredicate() {
 		return (EReference)tFunctionEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1330,8 +1338,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTFunction_DeclaredAsync() {
-		return (EAttribute)tFunctionEClass.getEStructuralFeatures().get(5);
+	public EReference getTFunction_DeclaredThisType() {
+		return (EReference)tFunctionEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -1340,7 +1348,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTFunction_DeclaredGenerator() {
+	public EAttribute getTFunction_DeclaredAsync() {
 		return (EAttribute)tFunctionEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1350,8 +1358,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTFunction_Constructor() {
+	public EAttribute getTFunction_DeclaredGenerator() {
 		return (EAttribute)tFunctionEClass.getEStructuralFeatures().get(7);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getTFunction_Constructor() {
+		return (EAttribute)tFunctionEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -1412,6 +1430,46 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EOperation getTFunction__IsFinal() {
 		return tFunctionEClass.getEOperations().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getTypePredicate() {
+		return typePredicateEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getTypePredicate_ReferringToThis() {
+		return (EAttribute)typePredicateEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTypePredicate_Fpar() {
+		return (EReference)typePredicateEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTypePredicate_TypeRef() {
+		return (EReference)typePredicateEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -3626,6 +3684,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(tFunctionEClass, TFUNCTION__FPARS);
 		createEAttribute(tFunctionEClass, TFUNCTION__RETURN_VALUE_MARKED_OPTIONAL);
 		createEReference(tFunctionEClass, TFUNCTION__RETURN_TYPE_REF);
+		createEReference(tFunctionEClass, TFUNCTION__RETURN_TYPE_PREDICATE);
 		createEReference(tFunctionEClass, TFUNCTION__DECLARED_THIS_TYPE);
 		createEAttribute(tFunctionEClass, TFUNCTION__DECLARED_ASYNC);
 		createEAttribute(tFunctionEClass, TFUNCTION__DECLARED_GENERATOR);
@@ -3636,6 +3695,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tFunctionEClass, TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT);
 		createEOperation(tFunctionEClass, TFUNCTION___GET_FUNCTION_AS_STRING);
 		createEOperation(tFunctionEClass, TFUNCTION___IS_FINAL);
+
+		typePredicateEClass = createEClass(TYPE_PREDICATE);
+		createEAttribute(typePredicateEClass, TYPE_PREDICATE__REFERRING_TO_THIS);
+		createEReference(typePredicateEClass, TYPE_PREDICATE__FPAR);
+		createEReference(typePredicateEClass, TYPE_PREDICATE__TYPE_REF);
 
 		typeEClass = createEClass(TYPE);
 		createEOperation(typeEClass, TYPE___IS_ALIAS);
@@ -4123,6 +4187,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEReference(getTFunction_Fpars(), this.getTFormalParameter(), null, "fpars", null, 0, -1, TFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTFunction_ReturnValueMarkedOptional(), theEcorePackage.getEBoolean(), "returnValueMarkedOptional", null, 0, 1, TFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTFunction_ReturnTypeRef(), theTypeRefsPackage.getTypeRef(), null, "returnTypeRef", null, 0, 1, TFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTFunction_ReturnTypePredicate(), this.getTypePredicate(), null, "returnTypePredicate", null, 0, 1, TFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTFunction_DeclaredThisType(), theTypeRefsPackage.getTypeRef(), null, "declaredThisType", null, 0, 1, TFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTFunction_DeclaredAsync(), theEcorePackage.getEBoolean(), "declaredAsync", null, 0, 1, TFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTFunction_DeclaredGenerator(), theEcorePackage.getEBoolean(), "declaredGenerator", null, 0, 1, TFunction.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4140,6 +4205,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTFunction__GetFunctionAsString(), theEcorePackage.getEString(), "getFunctionAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTFunction__IsFinal(), theEcorePackage.getEBoolean(), "isFinal", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(typePredicateEClass, TypePredicate.class, "TypePredicate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTypePredicate_ReferringToThis(), theEcorePackage.getEBoolean(), "referringToThis", null, 0, 1, TypePredicate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypePredicate_Fpar(), this.getIdentifiableElement(), null, "fpar", null, 0, 1, TypePredicate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTypePredicate_TypeRef(), theTypeRefsPackage.getTypeRef(), null, "typeRef", null, 0, 1, TypePredicate.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(typeEClass, Type.class, "Type", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
