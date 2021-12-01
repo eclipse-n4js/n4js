@@ -19,7 +19,7 @@ export external public enum EnumWithLiteralThatHasValueAssigned {
   	"another bug"
 }
 
-// XPECT errors --> "Only classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "EnumWithoutExternal"
+// XPECT errors --> "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "EnumWithoutExternal"
 export public enum EnumWithoutExternal {
   MayBug,
   Cockroach
@@ -27,7 +27,7 @@ export public enum EnumWithoutExternal {
 
 // 	relaxed by IDEBUG-561:	 noerrors -->  "External elements have to be exported." at "EnumWithoutExport"
 /* XPECT errors ---
-	"A enum with visibility public must be marked as exported." at "EnumWithoutExport"
+	"A enum with visibility public must be marked with modifier export." at "public"
 --- */
 external public enum EnumWithoutExport {
   MayBug,

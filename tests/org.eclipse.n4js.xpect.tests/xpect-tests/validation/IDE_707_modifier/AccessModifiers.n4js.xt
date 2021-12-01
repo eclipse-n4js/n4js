@@ -11,12 +11,12 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-// XPECT errors --> "A class with visibility public must be marked as exported." at "Point"
+// XPECT errors --> "A class with visibility public must be marked with modifier export." at "public"
 public class Point {
 
 }
 
-// XPECT errors --> "A class with visibility project must be marked as exported." at "Point2"
+// XPECT errors --> "A class with visibility project must be marked with modifier export." at "public"
 project class Point2 {
 
 }

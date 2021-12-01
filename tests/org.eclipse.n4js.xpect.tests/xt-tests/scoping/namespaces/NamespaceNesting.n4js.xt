@@ -17,9 +17,13 @@
 
 // XPECT noerrors -->
 export external namespace NSC4 {
+// XPECT warnings --> "" at "export"
     export const c1;
+// XPECT warnings --> "" at "export"
     export var v1;
+// XPECT warnings --> "" at "export"
     export let l1;
+// XPECT warnings --> "" at "export"
     export function F1():void {}
     const c2;
     var v2;
