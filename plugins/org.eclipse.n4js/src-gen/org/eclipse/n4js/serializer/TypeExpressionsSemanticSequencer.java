@@ -427,7 +427,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeArgument returns IndexAccessTypeRef
 	 *
 	 * Constraint:
-	 *     (targetTypeRef=ArrayTypeExpression_IndexAccessTypeRef_3_1_0_1_0 indexTypeRef=PrimaryTypeExpression)
+	 *     (targetTypeRef=ArrayTypeExpression_IndexAccessTypeRef_3_1_0_1_0 indexTypeRef=TypeRef)
 	 */
 	protected void sequence_ArrayTypeExpression(ISerializationContext context, IndexAccessTypeRef semanticObject) {
 		if (errorAcceptor != null) {
@@ -438,7 +438,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0(), semanticObject.getTargetTypeRef());
-		feeder.accept(grammarAccess.getArrayTypeExpressionAccess().getIndexTypeRefPrimaryTypeExpressionParserRuleCall_3_1_0_1_2_0(), semanticObject.getIndexTypeRef());
+		feeder.accept(grammarAccess.getArrayTypeExpressionAccess().getIndexTypeRefTypeRefParserRuleCall_3_1_0_1_2_0(), semanticObject.getIndexTypeRef());
 		feeder.finish();
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 	}
@@ -498,7 +498,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (
-	 *         dtsConstructor?='new'? 
+	 *         (dtsAbstract?='abstract'? dtsConstructor?='new')? 
 	 *         (ownedTypeVars+=TypeVariable ownedTypeVars+=TypeVariable*)? 
 	 *         ((declaredThisType=TypeRef | fpars+=TAnonymousFormalParameter) fpars+=TAnonymousFormalParameter*)? 
 	 *         (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)

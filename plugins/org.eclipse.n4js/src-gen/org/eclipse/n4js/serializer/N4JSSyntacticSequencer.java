@@ -629,13 +629,19 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 5641a2d2d (early support for constructor type expressions)
+=======
+>>>>>>> f7a1b4792 (constructor type expressions can be 'abstract')
 <<<<<<< HEAD
 	 *     (rule start) (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
 =======
 =======
+=======
+	 *     (rule start) (ambiguity) dtsAbstract?='abstract'
+>>>>>>> 448326d89 (constructor type expressions can be 'abstract')
 	 *     (rule start) (ambiguity) dtsConstructor?='new'
 >>>>>>> 9195fcc1c (early support for constructor type expressions)
 	 *     (rule start) (ambiguity) op=TypeOperator

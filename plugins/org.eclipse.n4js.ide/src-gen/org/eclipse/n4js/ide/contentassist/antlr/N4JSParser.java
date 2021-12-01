@@ -631,6 +631,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getGroup(), "rule__ArrowFunctionTypeExpression__Group__0");
 			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getGroup_0(), "rule__ArrowFunctionTypeExpression__Group_0__0");
 			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getGroup_0_0(), "rule__ArrowFunctionTypeExpression__Group_0_0__0");
+			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getGroup_0_0_1(), "rule__ArrowFunctionTypeExpression__Group_0_0_1__0");
 			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getGroup_0_0_2(), "rule__ArrowFunctionTypeExpression__Group_0_0_2__0");
 			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getGroup_0_0_2_2(), "rule__ArrowFunctionTypeExpression__Group_0_0_2_2__0");
 			builder.put(grammarAccess.getTAnonymousFormalParameterListAccess().getGroup(), "rule__TAnonymousFormalParameterList__Group__0");
@@ -1166,7 +1167,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getNumericLiteralTypeRefAccess().getAstValueAssignment_1_6(), "rule__NumericLiteralTypeRef__AstValueAssignment_1_6");
 			builder.put(grammarAccess.getStringLiteralTypeRefAccess().getAstValueAssignment(), "rule__StringLiteralTypeRef__AstValueAssignment");
 			builder.put(grammarAccess.getThisTypeRefStructuralAccess().getDefinedTypingStrategyAssignment_0(), "rule__ThisTypeRefStructural__DefinedTypingStrategyAssignment_0");
-			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getDtsConstructorAssignment_0_0_1(), "rule__ArrowFunctionTypeExpression__DtsConstructorAssignment_0_0_1");
+			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getDtsAbstractAssignment_0_0_1_0(), "rule__ArrowFunctionTypeExpression__DtsAbstractAssignment_0_0_1_0");
+			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getDtsConstructorAssignment_0_0_1_1(), "rule__ArrowFunctionTypeExpression__DtsConstructorAssignment_0_0_1_1");
 			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getOwnedTypeVarsAssignment_0_0_2_1(), "rule__ArrowFunctionTypeExpression__OwnedTypeVarsAssignment_0_0_2_1");
 			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getOwnedTypeVarsAssignment_0_0_2_2_1(), "rule__ArrowFunctionTypeExpression__OwnedTypeVarsAssignment_0_0_2_2_1");
 			builder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypePredicateAssignment_1_0(), "rule__ArrowFunctionTypeExpression__ReturnTypePredicateAssignment_1_0");

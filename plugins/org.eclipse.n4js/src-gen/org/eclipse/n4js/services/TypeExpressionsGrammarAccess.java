@@ -299,7 +299,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Action cIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0 = (Action)cGroup_3_1_0_1.eContents().get(0);
 		private final Keyword cLeftSquareBracketKeyword_3_1_0_1_1 = (Keyword)cGroup_3_1_0_1.eContents().get(1);
 		private final Assignment cIndexTypeRefAssignment_3_1_0_1_2 = (Assignment)cGroup_3_1_0_1.eContents().get(2);
-		private final RuleCall cIndexTypeRefPrimaryTypeExpressionParserRuleCall_3_1_0_1_2_0 = (RuleCall)cIndexTypeRefAssignment_3_1_0_1_2.eContents().get(0);
+		private final RuleCall cIndexTypeRefTypeRefParserRuleCall_3_1_0_1_2_0 = (RuleCall)cIndexTypeRefAssignment_3_1_0_1_2.eContents().get(0);
 		private final Keyword cRightSquareBracketKeyword_3_1_0_1_3 = (Keyword)cGroup_3_1_0_1.eContents().get(3);
 		
 		//ArrayTypeExpression returns TypeRef:
@@ -308,7 +308,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    | ArrayNTypeExpression
 		//    | PrimaryTypeExpression =>(
 		//          ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
-		//        | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=PrimaryTypeExpression ']')
+		//        | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
 		//    )*;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -317,7 +317,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//| ArrayNTypeExpression
 		//| PrimaryTypeExpression =>(
 		//      ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
-		//    | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=PrimaryTypeExpression ']')
+		//    | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
 		//)*
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
@@ -410,7 +410,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//PrimaryTypeExpression =>(
 		//         ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
-		//       | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=PrimaryTypeExpression ']')
+		//       | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
 		//   )*
 		public Group getGroup_3() { return cGroup_3; }
 		
@@ -419,12 +419,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//=>(
 		//         ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
-		//       | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=PrimaryTypeExpression ']')
+		//       | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
 		//   )*
 		public Group getGroup_3_1() { return cGroup_3_1; }
 		
 		//  ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
-		//| ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=PrimaryTypeExpression ']')
+		//| ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
 		public Alternatives getAlternatives_3_1_0() { return cAlternatives_3_1_0; }
 		
 		//({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
@@ -442,7 +442,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//']'
 		public Keyword getRightSquareBracketKeyword_3_1_0_0_2() { return cRightSquareBracketKeyword_3_1_0_0_2; }
 		
-		//({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=PrimaryTypeExpression ']')
+		//({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
 		public Group getGroup_3_1_0_1() { return cGroup_3_1_0_1; }
 		
 		//{IndexAccessTypeRef.targetTypeRef=current}
@@ -451,11 +451,11 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'['
 		public Keyword getLeftSquareBracketKeyword_3_1_0_1_1() { return cLeftSquareBracketKeyword_3_1_0_1_1; }
 		
-		//indexTypeRef=PrimaryTypeExpression
+		//indexTypeRef=TypeRef
 		public Assignment getIndexTypeRefAssignment_3_1_0_1_2() { return cIndexTypeRefAssignment_3_1_0_1_2; }
 		
-		//PrimaryTypeExpression
-		public RuleCall getIndexTypeRefPrimaryTypeExpressionParserRuleCall_3_1_0_1_2_0() { return cIndexTypeRefPrimaryTypeExpressionParserRuleCall_3_1_0_1_2_0; }
+		//TypeRef
+		public RuleCall getIndexTypeRefTypeRefParserRuleCall_3_1_0_1_2_0() { return cIndexTypeRefTypeRefParserRuleCall_3_1_0_1_2_0; }
 		
 		//']'
 		public Keyword getRightSquareBracketKeyword_3_1_0_1_3() { return cRightSquareBracketKeyword_3_1_0_1_3; }
@@ -886,8 +886,11 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
 		private final Action cFunctionTypeExpressionAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
-		private final Assignment cDtsConstructorAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
-		private final Keyword cDtsConstructorNewKeyword_0_0_1_0 = (Keyword)cDtsConstructorAssignment_0_0_1.eContents().get(0);
+		private final Group cGroup_0_0_1 = (Group)cGroup_0_0.eContents().get(1);
+		private final Assignment cDtsAbstractAssignment_0_0_1_0 = (Assignment)cGroup_0_0_1.eContents().get(0);
+		private final Keyword cDtsAbstractAbstractKeyword_0_0_1_0_0 = (Keyword)cDtsAbstractAssignment_0_0_1_0.eContents().get(0);
+		private final Assignment cDtsConstructorAssignment_0_0_1_1 = (Assignment)cGroup_0_0_1.eContents().get(1);
+		private final Keyword cDtsConstructorNewKeyword_0_0_1_1_0 = (Keyword)cDtsConstructorAssignment_0_0_1_1.eContents().get(0);
 		private final Group cGroup_0_0_2 = (Group)cGroup_0_0.eContents().get(2);
 		private final Keyword cLessThanSignKeyword_0_0_2_0 = (Keyword)cGroup_0_0_2.eContents().get(0);
 		private final Assignment cOwnedTypeVarsAssignment_0_0_2_1 = (Assignment)cGroup_0_0_2.eContents().get(1);
@@ -909,7 +912,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//ArrowFunctionTypeExpression returns FunctionTypeExpression:
 		//    =>({FunctionTypeExpression}
-		//        (dtsConstructor?='new')?
+		//        ((dtsAbstract?='abstract')? dtsConstructor?='new')?
 		//        ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
 		//        '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 		//        Arrow
@@ -917,7 +920,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=>({FunctionTypeExpression}
-		//    (dtsConstructor?='new')?
+		//    ((dtsAbstract?='abstract')? dtsConstructor?='new')?
 		//    ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
 		//    '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 		//    Arrow
@@ -925,7 +928,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		public Group getGroup() { return cGroup; }
 		
 		//=>({FunctionTypeExpression}
-		//    (dtsConstructor?='new')?
+		//    ((dtsAbstract?='abstract')? dtsConstructor?='new')?
 		//    ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
 		//    '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 		//    Arrow
@@ -933,7 +936,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//{FunctionTypeExpression}
-		//        (dtsConstructor?='new')?
+		//        ((dtsAbstract?='abstract')? dtsConstructor?='new')?
 		//        ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
 		//        '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 		//        Arrow
@@ -942,11 +945,20 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//{FunctionTypeExpression}
 		public Action getFunctionTypeExpressionAction_0_0_0() { return cFunctionTypeExpressionAction_0_0_0; }
 		
-		//(dtsConstructor?='new')?
-		public Assignment getDtsConstructorAssignment_0_0_1() { return cDtsConstructorAssignment_0_0_1; }
+		//((dtsAbstract?='abstract')? dtsConstructor?='new')?
+		public Group getGroup_0_0_1() { return cGroup_0_0_1; }
+		
+		//(dtsAbstract?='abstract')?
+		public Assignment getDtsAbstractAssignment_0_0_1_0() { return cDtsAbstractAssignment_0_0_1_0; }
+		
+		//'abstract'
+		public Keyword getDtsAbstractAbstractKeyword_0_0_1_0_0() { return cDtsAbstractAbstractKeyword_0_0_1_0_0; }
+		
+		//dtsConstructor?='new'
+		public Assignment getDtsConstructorAssignment_0_0_1_1() { return cDtsConstructorAssignment_0_0_1_1; }
 		
 		//'new'
-		public Keyword getDtsConstructorNewKeyword_0_0_1_0() { return cDtsConstructorNewKeyword_0_0_1_0; }
+		public Keyword getDtsConstructorNewKeyword_0_0_1_1_0() { return cDtsConstructorNewKeyword_0_0_1_1_0; }
 		
 		//('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
 		public Group getGroup_0_0_2() { return cGroup_0_0_2; }
@@ -3695,7 +3707,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    | ArrayNTypeExpression
 	//    | PrimaryTypeExpression =>(
 	//          ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
-	//        | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=PrimaryTypeExpression ']')
+	//        | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
 	//    )*;
 	public ArrayTypeExpressionElements getArrayTypeExpressionAccess() {
 		return pArrayTypeExpression;
@@ -3835,7 +3847,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	
 	//ArrowFunctionTypeExpression returns FunctionTypeExpression:
 	//    =>({FunctionTypeExpression}
-	//        (dtsConstructor?='new')?
+	//        ((dtsAbstract?='abstract')? dtsConstructor?='new')?
 	//        ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
 	//        '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 	//        Arrow

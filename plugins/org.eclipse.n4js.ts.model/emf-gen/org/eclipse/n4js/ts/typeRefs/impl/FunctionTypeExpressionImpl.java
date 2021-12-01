@@ -46,6 +46,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isDtsAbstract <em>Dts Abstract</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isDtsConstructor <em>Dts Constructor</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isBinding <em>Binding</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getDeclaredType <em>Declared Type</em>}</li>
@@ -62,6 +63,26 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * @generated
  */
 public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implements FunctionTypeExpression {
+	/**
+	 * The default value of the '{@link #isDtsAbstract() <em>Dts Abstract</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDtsAbstract()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DTS_ABSTRACT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDtsAbstract() <em>Dts Abstract</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDtsAbstract()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean dtsAbstract = DTS_ABSTRACT_EDEFAULT;
+
 	/**
 	 * The default value of the '{@link #isDtsConstructor() <em>Dts Constructor</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -219,6 +240,29 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	protected EClass eStaticClass() {
 		return TypeRefsPackage.Literals.FUNCTION_TYPE_EXPRESSION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDtsAbstract() {
+		return dtsAbstract;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDtsAbstract(boolean newDtsAbstract) {
+		boolean oldDtsAbstract = dtsAbstract;
+		dtsAbstract = newDtsAbstract;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_ABSTRACT, oldDtsAbstract, dtsAbstract));
 	}
 
 	/**
@@ -608,6 +652,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_ABSTRACT:
+				return isDtsAbstract();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR:
 				return isDtsConstructor();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__BINDING:
@@ -644,6 +690,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_ABSTRACT:
+				setDtsAbstract((Boolean)newValue);
+				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR:
 				setDtsConstructor((Boolean)newValue);
 				return;
@@ -693,6 +742,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_ABSTRACT:
+				setDtsAbstract(DTS_ABSTRACT_EDEFAULT);
+				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR:
 				setDtsConstructor(DTS_CONSTRUCTOR_EDEFAULT);
 				return;
@@ -738,6 +790,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_ABSTRACT:
+				return dtsAbstract != DTS_ABSTRACT_EDEFAULT;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DTS_CONSTRUCTOR:
 				return dtsConstructor != DTS_CONSTRUCTOR_EDEFAULT;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__BINDING:
@@ -810,7 +864,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (dtsConstructor: ");
+		result.append(" (dtsAbstract: ");
+		result.append(dtsAbstract);
+		result.append(", dtsConstructor: ");
 		result.append(dtsConstructor);
 		result.append(", binding: ");
 		result.append(binding);

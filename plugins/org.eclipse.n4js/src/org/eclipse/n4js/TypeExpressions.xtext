@@ -65,7 +65,7 @@ ArrayTypeExpression returns TypeRef:
 	| ArrayNTypeExpression
 	| PrimaryTypeExpression =>(
 		  ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
-		| ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=PrimaryTypeExpression ']')
+		| ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
 	)*;
 
 PrimaryTypeExpression returns TypeRef:
@@ -130,7 +130,7 @@ ThisTypeRefStructural returns ThisTypeRefStructural:
 
 ArrowFunctionTypeExpression returns FunctionTypeExpression:
 	=>({FunctionTypeExpression}
-		(dtsConstructor?='new')?
+		((dtsAbstract?='abstract')? dtsConstructor?='new')?
 		('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
 		'(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 		Arrow

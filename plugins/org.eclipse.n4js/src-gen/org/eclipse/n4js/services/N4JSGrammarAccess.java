@@ -16482,7 +16482,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | ArrayNTypeExpression
 	//    | PrimaryTypeExpression =>(
 	//          ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
-	//        | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=PrimaryTypeExpression ']')
+	//        | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
 	//    )*;
 	public TypeExpressionsGrammarAccess.ArrayTypeExpressionElements getArrayTypeExpressionAccess() {
 		return gaTypeExpressions.getArrayTypeExpressionAccess();
@@ -16622,7 +16622,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//ArrowFunctionTypeExpression returns FunctionTypeExpression:
 	//    =>({FunctionTypeExpression}
-	//        (dtsConstructor?='new')?
+	//        ((dtsAbstract?='abstract')? dtsConstructor?='new')?
 	//        ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
 	//        '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 	//        Arrow

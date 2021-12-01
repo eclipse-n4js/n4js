@@ -9988,7 +9988,7 @@ ruleArrayTypeExpression:
 				']'
 				    |
 				'['
-				rulePrimaryTypeExpression
+				ruleTypeRef
 				']'
 			)
 			)=>
@@ -9997,7 +9997,7 @@ ruleArrayTypeExpression:
 				']'
 				    |
 				'['
-				rulePrimaryTypeExpression
+				ruleTypeRef
 				']'
 			)
 		)*
@@ -10010,8 +10010,11 @@ rulePrimaryTypeExpression:
 		ruleLiteralTypeRef
 		    |
 		(
-			('new'
-			?
+			((
+				'abstract'
+				?
+				'new'
+			)?
 			(
 				'<'
 				ruleTypeVariable
@@ -10159,8 +10162,11 @@ ruleThisTypeRefStructural:
 // Rule ArrowFunctionTypeExpression
 ruleArrowFunctionTypeExpression:
 	(
-		('new'
-		?
+		((
+			'abstract'
+			?
+			'new'
+		)?
 		(
 			'<'
 			ruleTypeVariable
@@ -10175,8 +10181,11 @@ ruleArrowFunctionTypeExpression:
 		')'
 		ruleArrow
 		)=>
-		'new'
-		?
+		(
+			'abstract'
+			?
+			'new'
+		)?
 		(
 			'<'
 			ruleTypeVariable

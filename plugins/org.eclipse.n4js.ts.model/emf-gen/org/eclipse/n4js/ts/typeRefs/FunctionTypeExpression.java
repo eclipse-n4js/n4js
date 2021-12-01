@@ -73,6 +73,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isDtsAbstract <em>Dts Abstract</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isDtsConstructor <em>Dts Constructor</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isBinding <em>Binding</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredType <em>Declared Type</em>}</li>
@@ -91,6 +92,31 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * @generated
  */
 public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
+	/**
+	 * Returns the value of the '<em><b>Dts Abstract</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Only allowed in DTS.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Dts Abstract</em>' attribute.
+	 * @see #setDtsAbstract(boolean)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression_DtsAbstract()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isDtsAbstract();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isDtsAbstract <em>Dts Abstract</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dts Abstract</em>' attribute.
+	 * @see #isDtsAbstract()
+	 * @generated
+	 */
+	void setDtsAbstract(boolean value);
+
 	/**
 	 * Returns the value of the '<em><b>Dts Constructor</b></em>' attribute.
 	 * <!-- begin-user-doc -->
