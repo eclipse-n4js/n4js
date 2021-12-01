@@ -620,7 +620,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getArrayTypeExpressionAccess().getGroup_3_1(), "rule__ArrayTypeExpression__Group_3_1__0");
 			builder.put(grammarAccess.getArrayTypeExpressionAccess().getGroup_3_1_0_0(), "rule__ArrayTypeExpression__Group_3_1_0_0__0");
 			builder.put(grammarAccess.getArrayTypeExpressionAccess().getGroup_3_1_0_1(), "rule__ArrayTypeExpression__Group_3_1_0_1__0");
-			builder.put(grammarAccess.getPrimaryTypeExpressionAccess().getGroup_4(), "rule__PrimaryTypeExpression__Group_4__0");
+			builder.put(grammarAccess.getPrimaryTypeExpressionAccess().getGroup_5(), "rule__PrimaryTypeExpression__Group_5__0");
 			builder.put(grammarAccess.getTypeRefWithModifiersAccess().getGroup_0(), "rule__TypeRefWithModifiers__Group_0__0");
 			builder.put(grammarAccess.getTypeRefWithModifiersAccess().getGroup_1(), "rule__TypeRefWithModifiers__Group_1__0");
 			builder.put(grammarAccess.getBooleanLiteralTypeRefAccess().getGroup(), "rule__BooleanLiteralTypeRef__Group__0");
@@ -695,6 +695,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTypeVariableAccess().getGroup_2(), "rule__TypeVariable__Group_2__0");
 			builder.put(grammarAccess.getTypeVariableAccess().getGroup_3(), "rule__TypeVariable__Group_3__0");
 			builder.put(grammarAccess.getQueryTypeRefAccess().getGroup(), "rule__QueryTypeRef__Group__0");
+			builder.put(grammarAccess.getInferTypeRefAccess().getGroup(), "rule__InferTypeRef__Group__0");
 			builder.put(grammarAccess.getTypePredicateAccess().getGroup(), "rule__TypePredicate__Group__0");
 			builder.put(grammarAccess.getTypePredicateAccess().getGroup_0(), "rule__TypePredicate__Group_0__0");
 			builder.put(grammarAccess.getTypePredicateAccess().getGroup_0_0(), "rule__TypePredicate__Group_0_0__0");
@@ -1229,6 +1230,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundAssignment_2_1(), "rule__TypeVariable__DeclaredUpperBoundAssignment_2_1");
 			builder.put(grammarAccess.getTypeVariableAccess().getDefaultArgumentAssignment_3_1(), "rule__TypeVariable__DefaultArgumentAssignment_3_1");
 			builder.put(grammarAccess.getQueryTypeRefAccess().getElementAssignment_1(), "rule__QueryTypeRef__ElementAssignment_1");
+			builder.put(grammarAccess.getInferTypeRefAccess().getTypeVarNameAssignment_1(), "rule__InferTypeRef__TypeVarNameAssignment_1");
 			builder.put(grammarAccess.getTypePredicateAccess().getReferringToThisAssignment_0_0_0_0(), "rule__TypePredicate__ReferringToThisAssignment_0_0_0_0");
 			builder.put(grammarAccess.getTypePredicateAccess().getFparAssignment_0_0_0_1(), "rule__TypePredicate__FparAssignment_0_0_0_1");
 			builder.put(grammarAccess.getTypePredicateAccess().getTypeRefAssignment_1(), "rule__TypePredicate__TypeRefAssignment_1");

@@ -91,6 +91,7 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 			case TypeRefsPackage.OPERATOR_TYPE_REF: return createOperatorTypeRef();
 			case TypeRefsPackage.INDEX_ACCESS_TYPE_REF: return createIndexAccessTypeRef();
 			case TypeRefsPackage.CONDITIONAL_TYPE_REF: return createConditionalTypeRef();
+			case TypeRefsPackage.INFER_TYPE_REF: return createInferTypeRef();
 			case TypeRefsPackage.MAPPED_TYPE_REF: return createMappedTypeRef();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
@@ -397,6 +398,17 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	public ConditionalTypeRef createConditionalTypeRef() {
 		ConditionalTypeRefImpl conditionalTypeRef = new ConditionalTypeRefImpl();
 		return conditionalTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public InferTypeRef createInferTypeRef() {
+		InferTypeRefImpl inferTypeRef = new InferTypeRefImpl();
+		return inferTypeRef;
 	}
 
 	/**

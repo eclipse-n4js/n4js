@@ -33,6 +33,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef;
+import org.eclipse.n4js.ts.typeRefs.InferTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 <<<<<<< HEAD
@@ -304,6 +305,13 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	private EClass conditionalTypeRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass inferTypeRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2409,6 +2417,26 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
+	public EClass getInferTypeRef() {
+		return inferTypeRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getInferTypeRef_TypeVarName() {
+		return (EAttribute)inferTypeRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getMappedTypeRef() {
 		return mappedTypeRefEClass;
 	}
@@ -2785,6 +2813,9 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEReference(conditionalTypeRefEClass, CONDITIONAL_TYPE_REF__FALSE_TYPE_REF);
 		createEOperation(conditionalTypeRefEClass, CONDITIONAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
 
+		inferTypeRefEClass = createEClass(INFER_TYPE_REF);
+		createEAttribute(inferTypeRefEClass, INFER_TYPE_REF__TYPE_VAR_NAME);
+
 		mappedTypeRefEClass = createEClass(MAPPED_TYPE_REF);
 		createEAttribute(mappedTypeRefEClass, MAPPED_TYPE_REF__INCLUDE_READONLY);
 		createEAttribute(mappedTypeRefEClass, MAPPED_TYPE_REF__EXCLUDE_READONLY);
@@ -2868,6 +2899,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		operatorTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 		indexAccessTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 		conditionalTypeRefEClass.getESuperTypes().add(this.getTypeRef());
+		inferTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 		mappedTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 
 		// Initialize classes, features, and operations; add parameters
@@ -3224,6 +3256,9 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEReference(getConditionalTypeRef_FalseTypeRef(), this.getTypeRef(), null, "falseTypeRef", null, 0, 1, ConditionalTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getConditionalTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(inferTypeRefEClass, InferTypeRef.class, "InferTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getInferTypeRef_TypeVarName(), theEcorePackage.getEString(), "typeVarName", null, 0, 1, InferTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(mappedTypeRefEClass, MappedTypeRef.class, "MappedTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getMappedTypeRef_IncludeReadonly(), theEcorePackage.getEBoolean(), "includeReadonly", null, 0, 1, MappedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

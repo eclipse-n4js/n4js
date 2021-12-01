@@ -1476,6 +1476,11 @@ class ConditionalTypeRef extends TypeRef {
 	}
 }
 
+/* Only allowed in DTS (and only in the 'extends' clause of a conditional type). */
+class InferTypeRef extends TypeRef {
+	String typeVarName
+}
+
 /* Only allowed in DTS. */
 class MappedTypeRef extends TypeRef {
 	boolean ^includeReadonly

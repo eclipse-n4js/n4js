@@ -144,6 +144,7 @@ import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ConditionalTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef;
+import org.eclipse.n4js.ts.typeRefs.InferTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 <<<<<<< HEAD
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
@@ -1477,6 +1478,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case TypeRefsPackage.INDEX_ACCESS_TYPE_REF:
 				sequence_ArrayTypeExpression(context, (IndexAccessTypeRef) semanticObject); 
+				return; 
+			case TypeRefsPackage.INFER_TYPE_REF:
+				sequence_InferTypeRef(context, (InferTypeRef) semanticObject); 
 				return; 
 			case TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION:
 				if (rule == grammarAccess.getTypeRefWithModifiersRule()

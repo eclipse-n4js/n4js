@@ -19,6 +19,7 @@ import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ConditionalTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef;
+import org.eclipse.n4js.ts.typeRefs.InferTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 <<<<<<< HEAD
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
@@ -80,6 +81,9 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 				return; 
 			case TypeRefsPackage.INDEX_ACCESS_TYPE_REF:
 				sequence_ArrayTypeExpression(context, (IndexAccessTypeRef) semanticObject); 
+				return; 
+			case TypeRefsPackage.INFER_TYPE_REF:
+				sequence_InferTypeRef(context, (InferTypeRef) semanticObject); 
 				return; 
 			case TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION:
 				if (rule == grammarAccess.getTypeRefWithModifiersRule()
@@ -655,6 +659,37 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 */
 	protected void sequence_EmptyIterableTypeExpressionTail_WildcardOldNotationWithoutBound(ISerializationContext context, Wildcard semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     TypeRef returns InferTypeRef
+	 *     ConditionalTypeRef returns InferTypeRef
+	 *     ConditionalTypeRef.ConditionalTypeRef_1_0_0_0 returns InferTypeRef
+	 *     UnionTypeExpression returns InferTypeRef
+	 *     UnionTypeExpression.UnionTypeExpression_1_0 returns InferTypeRef
+	 *     IntersectionTypeExpression returns InferTypeRef
+	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns InferTypeRef
+	 *     OperatorTypeRef returns InferTypeRef
+	 *     ArrayTypeExpression returns InferTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns InferTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns InferTypeRef
+	 *     PrimaryTypeExpression returns InferTypeRef
+	 *     TypeArgument returns InferTypeRef
+	 *     InferTypeRef returns InferTypeRef
+	 *
+	 * Constraint:
+	 *     typeVarName=IDENTIFIER
+	 */
+	protected void sequence_InferTypeRef(ISerializationContext context, InferTypeRef semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, TypeRefsPackage.Literals.INFER_TYPE_REF__TYPE_VAR_NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypeRefsPackage.Literals.INFER_TYPE_REF__TYPE_VAR_NAME));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getInferTypeRefAccess().getTypeVarNameIDENTIFIERTerminalRuleCall_1_0(), semanticObject.getTypeVarName());
+		feeder.finish();
 	}
 	
 	

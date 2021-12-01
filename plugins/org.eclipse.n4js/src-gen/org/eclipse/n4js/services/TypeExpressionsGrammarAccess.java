@@ -467,16 +467,18 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cArrowFunctionTypeExpressionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cTypeRefWithModifiersParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
 		private final RuleCall cQueryTypeRefParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final Group cGroup_4 = (Group)cAlternatives.eContents().get(4);
-		private final Keyword cLeftParenthesisKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
-		private final RuleCall cTypeRefParserRuleCall_4_1 = (RuleCall)cGroup_4.eContents().get(1);
-		private final Keyword cRightParenthesisKeyword_4_2 = (Keyword)cGroup_4.eContents().get(2);
+		private final RuleCall cInferTypeRefParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final Group cGroup_5 = (Group)cAlternatives.eContents().get(5);
+		private final Keyword cLeftParenthesisKeyword_5_0 = (Keyword)cGroup_5.eContents().get(0);
+		private final RuleCall cTypeRefParserRuleCall_5_1 = (RuleCall)cGroup_5.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_5_2 = (Keyword)cGroup_5.eContents().get(2);
 		
 		//PrimaryTypeExpression returns TypeRef:
 		//    ( LiteralTypeRef
 		//    | ArrowFunctionTypeExpression
 		//    | TypeRefWithModifiers
 		//    | QueryTypeRef
+		//    | InferTypeRef
 		//    | "(" TypeRef ")"
 		//    );
 		@Override public ParserRule getRule() { return rule; }
@@ -485,6 +487,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//| ArrowFunctionTypeExpression
 		//| TypeRefWithModifiers
 		//| QueryTypeRef
+		//| InferTypeRef
 		//| "(" TypeRef ")"
 		//)
 		public Alternatives getAlternatives() { return cAlternatives; }
@@ -501,17 +504,20 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//QueryTypeRef
 		public RuleCall getQueryTypeRefParserRuleCall_3() { return cQueryTypeRefParserRuleCall_3; }
 		
+		//InferTypeRef
+		public RuleCall getInferTypeRefParserRuleCall_4() { return cInferTypeRefParserRuleCall_4; }
+		
 		//"(" TypeRef ")"
-		public Group getGroup_4() { return cGroup_4; }
+		public Group getGroup_5() { return cGroup_5; }
 		
 		//"("
-		public Keyword getLeftParenthesisKeyword_4_0() { return cLeftParenthesisKeyword_4_0; }
+		public Keyword getLeftParenthesisKeyword_5_0() { return cLeftParenthesisKeyword_5_0; }
 		
 		//TypeRef
-		public RuleCall getTypeRefParserRuleCall_4_1() { return cTypeRefParserRuleCall_4_1; }
+		public RuleCall getTypeRefParserRuleCall_5_1() { return cTypeRefParserRuleCall_5_1; }
 		
 		//")"
-		public Keyword getRightParenthesisKeyword_4_2() { return cRightParenthesisKeyword_4_2; }
+		public Keyword getRightParenthesisKeyword_5_2() { return cRightParenthesisKeyword_5_2; }
 	}
 	public class TypeRefWithModifiersElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeRefWithModifiers");
@@ -2668,6 +2674,30 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//IdentifierName
 		public RuleCall getElementIdentifiableElementIdentifierNameParserRuleCall_1_0_1() { return cElementIdentifiableElementIdentifierNameParserRuleCall_1_0_1; }
 	}
+	public class InferTypeRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.InferTypeRef");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cInferKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cTypeVarNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cTypeVarNameIDENTIFIERTerminalRuleCall_1_0 = (RuleCall)cTypeVarNameAssignment_1.eContents().get(0);
+		
+		//InferTypeRef:
+		//    'infer' typeVarName=IDENTIFIER
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'infer' typeVarName=IDENTIFIER
+		public Group getGroup() { return cGroup; }
+		
+		//'infer'
+		public Keyword getInferKeyword_0() { return cInferKeyword_0; }
+		
+		//typeVarName=IDENTIFIER
+		public Assignment getTypeVarNameAssignment_1() { return cTypeVarNameAssignment_1; }
+		
+		//IDENTIFIER
+		public RuleCall getTypeVarNameIDENTIFIERTerminalRuleCall_1_0() { return cTypeVarNameIDENTIFIERTerminalRuleCall_1_0; }
+	}
 	public class TypePredicateElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypePredicate");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -3072,7 +3102,11 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Keyword cIsKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
 		private final Keyword cKeyofKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
 		private final Keyword cUniqueKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
+<<<<<<< HEAD
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+		private final Keyword cInferKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
+>>>>>>> c3d10a43c (early support for infer declarations)
 		
 		//N4Keyword:
 		//    'get' | 'set'
@@ -3096,8 +3130,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    | 'namespace'
 =======
 		//    // .d.ts keywords
+<<<<<<< HEAD
 		//    | 'declare' | 'is' | 'keyof' | 'unique' // | 'readonly'
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+		//    | 'declare' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
+>>>>>>> c3d10a43c (early support for infer declarations)
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -3122,8 +3160,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//| 'namespace'
 =======
 		//// .d.ts keywords
+<<<<<<< HEAD
 		//| 'declare' | 'is' | 'keyof' | 'unique'
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+		//| 'declare' | 'is' | 'keyof' | 'unique' | 'infer'
+>>>>>>> c3d10a43c (early support for infer declarations)
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'get'
@@ -3218,7 +3260,13 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//'unique'
 		public Keyword getUniqueKeyword_27() { return cUniqueKeyword_27; }
+<<<<<<< HEAD
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+		
+		//'infer'
+		public Keyword getInferKeyword_28() { return cInferKeyword_28; }
+>>>>>>> c3d10a43c (early support for infer declarations)
 	}
 	public class ArrowElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.Arrow");
@@ -3330,6 +3378,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final WildcardNewNotationElements pWildcardNewNotation;
 	private final TypeVariableElements pTypeVariable;
 	private final QueryTypeRefElements pQueryTypeRef;
+	private final InferTypeRefElements pInferTypeRef;
 	private final TypePredicateElements pTypePredicate;
 	private final TypePredicateWithPrimaryElements pTypePredicateWithPrimary;
 	private final BindingIdentifierElements pBindingIdentifier;
@@ -3424,6 +3473,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pWildcardNewNotation = new WildcardNewNotationElements();
 		this.pTypeVariable = new TypeVariableElements();
 		this.pQueryTypeRef = new QueryTypeRefElements();
+		this.pInferTypeRef = new InferTypeRefElements();
 		this.pTypePredicate = new TypePredicateElements();
 		this.pTypePredicateWithPrimary = new TypePredicateWithPrimaryElements();
 		this.pBindingIdentifier = new BindingIdentifierElements();
@@ -3587,6 +3637,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    | ArrowFunctionTypeExpression
 	//    | TypeRefWithModifiers
 	//    | QueryTypeRef
+	//    | InferTypeRef
 	//    | "(" TypeRef ")"
 	//    );
 	public PrimaryTypeExpressionElements getPrimaryTypeExpressionAccess() {
@@ -4172,6 +4223,17 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return getQueryTypeRefAccess().getRule();
 	}
 	
+	//InferTypeRef:
+	//    'infer' typeVarName=IDENTIFIER
+	//;
+	public InferTypeRefElements getInferTypeRefAccess() {
+		return pInferTypeRef;
+	}
+	
+	public ParserRule getInferTypeRefRule() {
+		return getInferTypeRefAccess().getRule();
+	}
+	
 	//TypePredicate:
 	//    =>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=TypeRef
 	//;
@@ -4267,8 +4329,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    | 'namespace'
 =======
 	//    // .d.ts keywords
+<<<<<<< HEAD
 	//    | 'declare' | 'is' | 'keyof' | 'unique' // | 'readonly'
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	//    | 'declare' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
+>>>>>>> c3d10a43c (early support for infer declarations)
 	//;
 	public N4KeywordElements getN4KeywordAccess() {
 		return pN4Keyword;

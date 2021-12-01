@@ -73,6 +73,7 @@ PrimaryTypeExpression returns TypeRef:
 	| ArrowFunctionTypeExpression
 	| TypeRefWithModifiers
 	| QueryTypeRef
+	| InferTypeRef
 	| "(" TypeRef ")"
 	);
 
@@ -328,6 +329,10 @@ QueryTypeRef:
 	'typeof' element=[IdentifiableElement|IdentifierName]
 ;
 
+InferTypeRef:
+	'infer' typeVarName=IDENTIFIER
+;
+
 TypePredicate:
 	=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=TypeRef
 ;
@@ -386,7 +391,7 @@ N4Keyword:
 	// namespace keyword
 	| 'namespace'
 	// .d.ts keywords
-	| 'declare' | 'is' | 'keyof' | 'unique' // | 'readonly'
+	| 'declare' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
 ;
 
 Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()

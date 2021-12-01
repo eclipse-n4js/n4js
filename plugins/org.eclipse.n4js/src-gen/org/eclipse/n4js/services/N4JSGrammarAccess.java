@@ -16489,6 +16489,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | ArrowFunctionTypeExpression
 	//    | TypeRefWithModifiers
 	//    | QueryTypeRef
+	//    | InferTypeRef
 	//    | "(" TypeRef ")"
 	//    );
 	public TypeExpressionsGrammarAccess.PrimaryTypeExpressionElements getPrimaryTypeExpressionAccess() {
@@ -17074,6 +17075,17 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getQueryTypeRefAccess().getRule();
 	}
 	
+	//InferTypeRef:
+	//    'infer' typeVarName=IDENTIFIER
+	//;
+	public TypeExpressionsGrammarAccess.InferTypeRefElements getInferTypeRefAccess() {
+		return gaTypeExpressions.getInferTypeRefAccess();
+	}
+	
+	public ParserRule getInferTypeRefRule() {
+		return getInferTypeRefAccess().getRule();
+	}
+	
 	//TypePredicate:
 	//    =>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=TypeRef
 	//;
@@ -17169,8 +17181,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | 'namespace'
 =======
 	//    // .d.ts keywords
+<<<<<<< HEAD
 	//    | 'declare' | 'is' | 'keyof' | 'unique' // | 'readonly'
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	//    | 'declare' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
+>>>>>>> c3d10a43c (early support for infer declarations)
 	//;
 	public TypeExpressionsGrammarAccess.N4KeywordElements getN4KeywordAccess() {
 		return gaTypeExpressions.getN4KeywordAccess();
