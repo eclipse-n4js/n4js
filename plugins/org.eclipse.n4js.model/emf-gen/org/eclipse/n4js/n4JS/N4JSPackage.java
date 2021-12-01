@@ -511,13 +511,22 @@ public interface N4JSPackage extends EPackage {
 	int EXPORT_DECLARATION___GET_ANNOTATIONS = ANNOTABLE_SCRIPT_ELEMENT___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORT_DECLARATION___GET_NAMESPACE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION___IS_HOLLOW = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 1;
+	int EXPORT_DECLARATION___IS_HOLLOW = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Export Declaration</em>' class.
@@ -526,7 +535,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 2;
+	int EXPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportSpecifierImpl <em>Export Specifier</em>}' class.
@@ -1634,13 +1643,22 @@ public interface N4JSPackage extends EPackage {
 	int ANNOTATION_LIST___IS_TOPLEVEL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 5;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTATION_LIST___GET_NAMESPACE = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTATION_LIST___IS_HOLLOW = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
+	int ANNOTATION_LIST___IS_HOLLOW = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>Annotation List</em>' class.
@@ -1649,7 +1667,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
+	int ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExpressionAnnotationListImpl <em>Expression Annotation List</em>}' class.
@@ -2723,13 +2741,22 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DECLARATION___GET_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 20;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DECLARATION___GET_NAMESPACE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 21;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_HOLLOW = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 21;
+	int FUNCTION_DECLARATION___IS_HOLLOW = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 22;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -2738,7 +2765,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_EXTERNAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 22;
+	int FUNCTION_DECLARATION___IS_EXTERNAL = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 23;
 
 	/**
 	 * The number of operations of the '<em>Function Declaration</em>' class.
@@ -2747,7 +2774,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 23;
+	int FUNCTION_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 24;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.FunctionExpressionImpl <em>Function Expression</em>}' class.
@@ -3811,13 +3838,22 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_STATEMENT___IS_BLOCK_SCOPED = STATEMENT_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_STATEMENT___GET_NAMESPACE = STATEMENT_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_STATEMENT___IS_HOLLOW = STATEMENT_OPERATION_COUNT + 2;
+	int VARIABLE_STATEMENT___IS_HOLLOW = STATEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Variable Statement</em>' class.
@@ -3826,7 +3862,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_STATEMENT_OPERATION_COUNT = STATEMENT_OPERATION_COUNT + 3;
+	int VARIABLE_STATEMENT_OPERATION_COUNT = STATEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableStatementImpl <em>Exported Variable Statement</em>}' class.
@@ -3900,6 +3936,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPORTED_VARIABLE_STATEMENT___IS_BLOCK_SCOPED = VARIABLE_STATEMENT___IS_BLOCK_SCOPED;
+
+	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_STATEMENT___GET_NAMESPACE = VARIABLE_STATEMENT___GET_NAMESPACE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -11672,13 +11717,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_DECLARATION___GET_NAMESPACE = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
+	int N4_TYPE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -11687,7 +11741,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
+	int N4_TYPE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 13;
 
 	/**
 	 * The number of operations of the '<em>N4 Type Declaration</em>' class.
@@ -11696,7 +11750,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 13;
+	int N4_TYPE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassifierDeclarationImpl <em>N4 Classifier Declaration</em>}' class.
@@ -11878,6 +11932,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_CLASSIFIER_DECLARATION___GET_NAME = N4_TYPE_DECLARATION___GET_NAME;
+
+	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DECLARATION___GET_NAMESPACE = N4_TYPE_DECLARATION___GET_NAMESPACE;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12423,13 +12486,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_NAMESPACE_DECLARATION___GET_ALL_ANNOTATIONS = N4_TYPE_DEFINITION___GET_ALL_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_NAMESPACE_DECLARATION___GET_NAMESPACE = N4_TYPE_DEFINITION_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = N4_TYPE_DEFINITION_OPERATION_COUNT + 1;
+	int N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = N4_TYPE_DEFINITION_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Declared External</em>' operation.
@@ -12438,7 +12510,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_DECLARED_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 2;
+	int N4_NAMESPACE_DECLARATION___IS_DECLARED_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Default External</em>' operation.
@@ -12447,7 +12519,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_DEFAULT_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 3;
+	int N4_NAMESPACE_DECLARATION___IS_DEFAULT_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -12456,7 +12528,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 4;
+	int N4_NAMESPACE_DECLARATION___IS_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -12465,7 +12537,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_DECLARED_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
+	int N4_NAMESPACE_DECLARATION___IS_DECLARED_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
@@ -12474,7 +12546,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXPORTED_BY_NAMESPACE = N4_TYPE_DEFINITION_OPERATION_COUNT + 6;
+	int N4_NAMESPACE_DECLARATION___IS_EXPORTED_BY_NAMESPACE = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -12483,7 +12555,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
+	int N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -12492,7 +12564,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 8;
+	int N4_NAMESPACE_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -12501,7 +12573,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_TOPLEVEL = N4_TYPE_DEFINITION_OPERATION_COUNT + 9;
+	int N4_NAMESPACE_DECLARATION___IS_TOPLEVEL = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -12510,7 +12582,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
+	int N4_NAMESPACE_DECLARATION___GET_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -12519,7 +12591,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 12;
+	int N4_NAMESPACE_DECLARATION___IS_EXTERNAL = N4_TYPE_DEFINITION_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -12528,7 +12600,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DEFINITION_OPERATION_COUNT + 13;
+	int N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS = N4_TYPE_DEFINITION_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12537,7 +12609,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 14;
+	int N4_NAMESPACE_DECLARATION___IS_HOLLOW = N4_TYPE_DEFINITION_OPERATION_COUNT + 15;
 
 	/**
 	 * The number of operations of the '<em>N4 Namespace Declaration</em>' class.
@@ -12546,7 +12618,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 15;
+	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 16;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.NamespaceElementImpl <em>Namespace Element</em>}' class.
@@ -12568,13 +12640,22 @@ public interface N4JSPackage extends EPackage {
 	int NAMESPACE_ELEMENT_FEATURE_COUNT = SCRIPT_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_ELEMENT___GET_NAMESPACE = SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NAMESPACE_ELEMENT___IS_HOLLOW = SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+	int NAMESPACE_ELEMENT___IS_HOLLOW = SCRIPT_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Namespace Element</em>' class.
@@ -12583,7 +12664,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int NAMESPACE_ELEMENT_OPERATION_COUNT = SCRIPT_ELEMENT_OPERATION_COUNT + 1;
+	int NAMESPACE_ELEMENT_OPERATION_COUNT = SCRIPT_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl <em>N4 Class Declaration</em>}' class.
@@ -12893,13 +12974,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DECLARATION___GET_NAME = N4_CLASS_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___GET_NAMESPACE = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_HOLLOW = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
+	int N4_CLASS_DECLARATION___IS_HOLLOW = N4_CLASS_DEFINITION_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -12908,7 +12998,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 12;
+	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -12917,7 +13007,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 13;
+	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 14;
 
 	/**
 	 * The number of operations of the '<em>N4 Class Declaration</em>' class.
@@ -12926,7 +13016,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 14;
+	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 15;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassExpressionImpl <em>N4 Class Expression</em>}' class.
@@ -13354,6 +13444,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_INTERFACE_DECLARATION___GET_NAME = N4_CLASSIFIER_DECLARATION___GET_NAME;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___GET_NAMESPACE = N4_CLASSIFIER_DECLARATION___GET_NAMESPACE;
+
+	/**
 	 * The operation id for the '<em>Is External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13643,6 +13742,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_DECLARATION___GET_NAME = N4_TYPE_DECLARATION___GET_NAME;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___GET_NAMESPACE = N4_TYPE_DECLARATION___GET_NAMESPACE;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13913,6 +14021,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_TYPE_ALIAS_DECLARATION___GET_NAME = N4_TYPE_DECLARATION___GET_NAME;
+
+	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_ALIAS_DECLARATION___GET_NAMESPACE = N4_TYPE_DECLARATION___GET_NAMESPACE;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -22509,6 +22626,16 @@ public interface N4JSPackage extends EPackage {
 	EClass getNamespaceElement();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.NamespaceElement#getNamespace() <em>Get Namespace</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Namespace</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.NamespaceElement#getNamespace()
+	 * @generated
+	 */
+	EOperation getNamespaceElement__GetNamespace();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.NamespaceElement#isHollow() <em>Is Hollow</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -28022,6 +28149,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass NAMESPACE_ELEMENT = eINSTANCE.getNamespaceElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Namespace</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation NAMESPACE_ELEMENT___GET_NAMESPACE = eINSTANCE.getNamespaceElement__GetNamespace();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Hollow</b></em>' operation.

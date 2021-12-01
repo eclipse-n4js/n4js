@@ -91,20 +91,21 @@ public class ModifierUtils {
 		case PRIVATE:
 		case PROTECTED:
 			EClass astNodeType = elem.eClass();
-			if (isTypeDefiningElement(astNodeType)) {
-				TypeDefiningElement typeDefElem = (TypeDefiningElement) elem;
-				Type definedType = typeDefElem.getDefinedType();
-				if (isAccessibleTypeElement(definedType.eClass())) {
-					AccessibleTypeElement ate = (AccessibleTypeElement) definedType;
-					return ate.getDeclaredTypeAccessModifier() == ate.getDefaultTypeAccessModifier();
-				}
-			}
+			// First check for member since TMethods are TypeDefiningElements too
 			if (isN4MemberDeclaration(astNodeType)) {
 				N4MemberDeclaration typeDefElem = (N4MemberDeclaration) elem;
 				TMember tMember = typeDefElem.getDefinedTypeElement();
 				if (isTMemberWithAccessModifier(tMember.eClass())) {
 					TMemberWithAccessModifier tmwam = (TMemberWithAccessModifier) tMember;
 					return tmwam.getDeclaredMemberAccessModifier() == tmwam.getDefaultMemberAccessModifier();
+				}
+			}
+			if (isTypeDefiningElement(astNodeType)) {
+				TypeDefiningElement typeDefElem = (TypeDefiningElement) elem;
+				Type definedType = typeDefElem.getDefinedType();
+				if (isAccessibleTypeElement(definedType.eClass())) {
+					AccessibleTypeElement ate = (AccessibleTypeElement) definedType;
+					return ate.getDeclaredTypeAccessModifier() == ate.getDefaultTypeAccessModifier();
 				}
 			}
 			return false;

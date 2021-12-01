@@ -27,7 +27,6 @@
 package org.eclipse.n4js.n4JS
 
 import java.util.Collections
-import java.util.HashSet
 import java.util.Iterator
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
@@ -2188,6 +2187,16 @@ class N4NamespaceDeclaration extends N4TypeDefinition, NamespaceElement, Variabl
 }
 
 class NamespaceElement extends ScriptElement {
+	op N4NamespaceDeclaration getNamespace() {
+		var parent = eContainer;
+		if (parent instanceof ExportDeclaration) {
+			parent = parent.eContainer;
+		}
+		if (parent instanceof N4NamespaceDeclaration) {
+			return parent;
+		}
+		return null;
+	}
 	op boolean isHollow() {
 		return false;
 	}

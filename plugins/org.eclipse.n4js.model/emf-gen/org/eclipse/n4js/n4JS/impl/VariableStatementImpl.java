@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -32,7 +33,9 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
+import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableDeclarationContainer;
@@ -140,6 +143,23 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 		varStmtKeyword = newVarStmtKeyword == null ? VAR_STMT_KEYWORD_EDEFAULT : newVarStmtKeyword;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.VARIABLE_STATEMENT__VAR_STMT_KEYWORD, oldVarStmtKeyword, varStmtKeyword));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public N4NamespaceDeclaration getNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent);
+		}
+		return null;
 	}
 
 	/**
@@ -345,6 +365,7 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 		}
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.VARIABLE_STATEMENT___GET_NAMESPACE;
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.VARIABLE_STATEMENT___IS_HOLLOW;
 				default: return -1;
 			}
@@ -360,6 +381,8 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.VARIABLE_STATEMENT___GET_NAMESPACE:
+				return getNamespace();
 			case N4JSPackage.VARIABLE_STATEMENT___IS_HOLLOW:
 				return isHollow();
 			case N4JSPackage.VARIABLE_STATEMENT___GET_VAR_DECL:

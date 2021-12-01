@@ -148,7 +148,7 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def void checkPolyfillInNamespace(NamespaceElement elem) {
 		if (elem instanceof AnnotableElement) {
-			if (isStaticPolyfill(elem) || isNonStaticPolyfill(elem)) {
+			if (elem.getNamespace !== null && (isStaticPolyfill(elem) || isNonStaticPolyfill(elem))) {
 				unsupported("polyfills in namespaces", elem)
 			}
 		}

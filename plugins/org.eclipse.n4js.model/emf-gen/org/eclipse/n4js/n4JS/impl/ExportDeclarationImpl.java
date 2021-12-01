@@ -20,6 +20,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -32,6 +33,7 @@ import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 
 import org.eclipse.n4js.ts.types.TModule;
@@ -359,6 +361,23 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
+	public N4NamespaceDeclaration getNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent);
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.EXPORT_DECLARATION__EXPORTED_ELEMENT:
@@ -491,6 +510,7 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.EXPORT_DECLARATION___GET_NAMESPACE;
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORT_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
@@ -508,6 +528,8 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 		switch (operationID) {
 			case N4JSPackage.EXPORT_DECLARATION___IS_HOLLOW:
 				return isHollow();
+			case N4JSPackage.EXPORT_DECLARATION___GET_NAMESPACE:
+				return getNamespace();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

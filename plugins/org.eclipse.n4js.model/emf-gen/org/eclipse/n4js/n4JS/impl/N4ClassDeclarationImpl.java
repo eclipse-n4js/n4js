@@ -305,6 +305,23 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 	 * @generated
 	 */
 	@Override
+	public N4NamespaceDeclaration getNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent);
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isHollow() {
 		return false;
 	}
@@ -752,6 +769,7 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 		}
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.N4_CLASS_DECLARATION___GET_NAMESPACE;
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_CLASS_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
@@ -787,6 +805,8 @@ public class N4ClassDeclarationImpl extends N4ClassDefinitionImpl implements N4C
 				return isAbstract();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXTERNAL:
 				return isExternal();
+			case N4JSPackage.N4_CLASS_DECLARATION___GET_NAMESPACE:
+				return getNamespace();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_HOLLOW:
 				return isHollow();
 			case N4JSPackage.N4_CLASS_DECLARATION___IS_EXPORTED:

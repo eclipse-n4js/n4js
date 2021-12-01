@@ -28,6 +28,14 @@ public interface NamespaceElement extends ScriptElement {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
+	N4NamespaceDeclaration getNamespace();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
 	boolean isHollow();
 
 } // NamespaceElement

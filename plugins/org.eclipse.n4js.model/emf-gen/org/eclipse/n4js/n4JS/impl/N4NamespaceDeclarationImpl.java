@@ -355,6 +355,23 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 * @generated
 	 */
 	@Override
+	public N4NamespaceDeclaration getNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent);
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW:
@@ -552,6 +569,7 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 		}
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_NAMESPACE;
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
@@ -622,6 +640,8 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				return isDefaultExternal();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS:
 				return appliesOnlyToBlockScopedElements();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_NAMESPACE:
+				return getNamespace();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -64,6 +64,23 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	 * @generated
 	 */
 	@Override
+	public N4NamespaceDeclaration getNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent);
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isHollow() {
 		return false;
 	}
@@ -204,6 +221,7 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 		}
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.ANNOTATION_LIST___GET_NAMESPACE;
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.ANNOTATION_LIST___IS_HOLLOW;
 				default: return -1;
 			}
@@ -219,6 +237,8 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.ANNOTATION_LIST___GET_NAMESPACE:
+				return getNamespace();
 			case N4JSPackage.ANNOTATION_LIST___IS_HOLLOW:
 				return isHollow();
 			case N4JSPackage.ANNOTATION_LIST___IS_EXPORTED:

@@ -15,8 +15,11 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 
 /**
@@ -52,6 +55,23 @@ public class NamespaceElementImpl extends ScriptElementImpl implements Namespace
 	 * @generated
 	 */
 	@Override
+	public N4NamespaceDeclaration getNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent);
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isHollow() {
 		return false;
 	}
@@ -64,6 +84,8 @@ public class NamespaceElementImpl extends ScriptElementImpl implements Namespace
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE:
+				return getNamespace();
 			case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW:
 				return isHollow();
 		}
