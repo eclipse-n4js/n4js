@@ -246,6 +246,15 @@ public interface TypeRefsFactory extends EFactory {
 	ConditionalTypeRef createConditionalTypeRef();
 
 	/**
+	 * Returns a new object of class '<em>Mapped Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Mapped Type Ref</em>'.
+	 * @generated
+	 */
+	MappedTypeRef createMappedTypeRef();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

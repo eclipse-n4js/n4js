@@ -366,6 +366,14 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypeRefsPackage.MAPPED_TYPE_REF: {
+				MappedTypeRef mappedTypeRef = (MappedTypeRef)theEObject;
+				T result = caseMappedTypeRef(mappedTypeRef);
+				if (result == null) result = caseTypeRef(mappedTypeRef);
+				if (result == null) result = caseTypeArgument(mappedTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -862,6 +870,21 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseConditionalTypeRef(ConditionalTypeRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Mapped Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Mapped Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMappedTypeRef(MappedTypeRef object) {
 		return null;
 	}
 

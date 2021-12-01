@@ -1475,3 +1475,24 @@ class ConditionalTypeRef extends TypeRef {
 		getTypeRef()?.typeRefAsString + " extends " + upperBound?.typeRefAsString + " ? " + trueTypeRef.typeRefAsString + " : " + falseTypeRef.typeRefAsString
 	}
 }
+
+/* Only allowed in DTS. */
+class MappedTypeRef extends TypeRef {
+	boolean ^includeReadonly
+	boolean ^excludeReadonly
+	boolean ^includeOptional
+	boolean ^excludeOptional
+	String propName
+	contains TypeRef propNameTypeRef
+	contains TypeRef templateTypeRef
+
+	op String internalGetTypeRefAsString() {
+		return "{ "
+				+ (if (includeReadonly) "readonly " else if (excludeReadonly) "-readonly " else "")
+				+ "["
+				+ propName + " in " + propNameTypeRef?.typeRefAsString
+				+ "]"
+				+ (if (includeOptional) "?" else if (excludeOptional) "-?" else "")
+				+ (if (templateTypeRef !== null) ": " + templateTypeRef.typeRefAsString else "");
+	}
+}

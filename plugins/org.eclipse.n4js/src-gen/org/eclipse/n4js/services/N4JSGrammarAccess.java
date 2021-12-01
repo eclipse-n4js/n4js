@@ -16439,11 +16439,14 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getPrimaryTypeExpressionAccess().getRule();
 	}
 	
-	//TypeRefWithModifiers returns StaticBaseTypeRef:
-	//      ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
+	//TypeRefWithModifiers returns TypeRef:
+	//      (ParameterizedTypeRef => dynamic?='+'?)
+	//    | (ThisTypeRef => dynamic?='+'?)
 	//    | TypeTypeRef
 	//    | UnionTypeExpressionOLD
-	//    | IntersectionTypeExpressionOLD;
+	//    | IntersectionTypeExpressionOLD
+	//    | MappedTypeRef // this covers sequences starting with: '{' '[' IdentifierName 'in' ...
+	//;
 	public TypeExpressionsGrammarAccess.TypeRefWithModifiersElements getTypeRefWithModifiersAccess() {
 		return gaTypeExpressions.getTypeRefWithModifiersAccess();
 	}
@@ -16686,6 +16689,23 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getParameterizedTypeRefStructuralRule() {
 		return getParameterizedTypeRefStructuralAccess().getRule();
+	}
+	
+	//MappedTypeRef:
+	//    '{'
+	//    ('+'? includeReadonly?='readonly' | '-' excludeReadonly?='readonly')?
+	//    '[' propName=IdentifierName 'in' propNameTypeRef=TypeRef ']'
+	//    ('+'? includeOptional?='?' | '-' excludeOptional?='?')?
+	//    (':' templateTypeRef=TypeRef)? ';'?
+	//    // FIXME consider allowing TStructMemberList here, to be able to show better error messages
+	//    '}'
+	//;
+	public TypeExpressionsGrammarAccess.MappedTypeRefElements getMappedTypeRefAccess() {
+		return gaTypeExpressions.getMappedTypeRefAccess();
+	}
+	
+	public ParserRule getMappedTypeRefRule() {
+		return getMappedTypeRefAccess().getRule();
 	}
 	
 	//ArrayNTypeExpression returns ParameterizedTypeRef:

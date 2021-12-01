@@ -28,6 +28,9 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected TypeExpressionsGrammarAccess grammarAccess;
+	protected AbstractElementAlias match_MappedTypeRef_PlusSignKeyword_1_0_0_q;
+	protected AbstractElementAlias match_MappedTypeRef_PlusSignKeyword_7_0_0_q;
+	protected AbstractElementAlias match_MappedTypeRef_SemicolonKeyword_9_q;
 	protected AbstractElementAlias match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q;
 	protected AbstractElementAlias match_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q;
 	protected AbstractElementAlias match_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_a;
@@ -40,6 +43,9 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (TypeExpressionsGrammarAccess) access;
+		match_MappedTypeRef_PlusSignKeyword_1_0_0_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getPlusSignKeyword_1_0_0());
+		match_MappedTypeRef_PlusSignKeyword_7_0_0_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getPlusSignKeyword_7_0_0());
+		match_MappedTypeRef_SemicolonKeyword_9_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getSemicolonKeyword_9());
 		match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q = new TokenAlias(false, true, grammarAccess.getNumericLiteralTypeRefAccess().getPlusSignKeyword_0_0());
 		match_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q = new AlternativeAlias(false, true, new TokenAlias(false, false, grammarAccess.getParameterizedTypeRefStructuralAccess().getCommaKeyword_0_2_1_1()), new TokenAlias(false, false, grammarAccess.getParameterizedTypeRefStructuralAccess().getSemicolonKeyword_0_2_1_0()));
 		match_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_a = new TokenAlias(true, true, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_4_0());
@@ -73,7 +79,13 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if (match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q.equals(syntax))
+			if (match_MappedTypeRef_PlusSignKeyword_1_0_0_q.equals(syntax))
+				emit_MappedTypeRef_PlusSignKeyword_1_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_MappedTypeRef_PlusSignKeyword_7_0_0_q.equals(syntax))
+				emit_MappedTypeRef_PlusSignKeyword_7_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_MappedTypeRef_SemicolonKeyword_9_q.equals(syntax))
+				emit_MappedTypeRef_SemicolonKeyword_9_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q.equals(syntax))
 				emit_NumericLiteralTypeRef_PlusSignKeyword_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q.equals(syntax))
 				emit_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q(semanticObject, getLastNavigableState(), syntaxNodes);
@@ -93,6 +105,43 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 		}
 	}
 
+	/**
+	 * Ambiguous syntax:
+	 *     '+'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) '('* '{' (ambiguity) includeReadonly?='readonly'
+	 *     (rule start) '{' (ambiguity) includeReadonly?='readonly'
+	 */
+	protected void emit_MappedTypeRef_PlusSignKeyword_1_0_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     '+'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     propNameTypeRef=TypeRef ']' (ambiguity) includeOptional?='?'
+	 */
+	protected void emit_MappedTypeRef_PlusSignKeyword_7_0_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ';'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     excludeOptional?='?' (ambiguity) '}' (rule end)
+	 *     includeOptional?='?' (ambiguity) '}' (rule end)
+	 *     propNameTypeRef=TypeRef ']' (ambiguity) '}' (rule end)
+	 *     templateTypeRef=TypeRef (ambiguity) '}' (rule end)
+	 */
+	protected void emit_MappedTypeRef_SemicolonKeyword_9_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
 	/**
 	 * Ambiguous syntax:
 	 *     '+'?
@@ -153,6 +202,9 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) 'type' '{' typeArg=TypeArgInTypeTypeRef
 	 *     (rule start) (ambiguity) 'typeof' element=[IdentifiableElement|IdentifierName]
 	 *     (rule start) (ambiguity) 'union' '{' typeRefs+=TypeRef
+	 *     (rule start) (ambiguity) '{' '+'? includeReadonly?='readonly'
+	 *     (rule start) (ambiguity) '{' '-' excludeReadonly?='readonly'
+	 *     (rule start) (ambiguity) '{' '[' propName=IdentifierName
 	 *     (rule start) (ambiguity) '{' '}' (rule start)
 	 *     (rule start) (ambiguity) '{' '}' dynamic?='+'
 	 *     (rule start) (ambiguity) '{' astStructuralMembers+=TStructMember

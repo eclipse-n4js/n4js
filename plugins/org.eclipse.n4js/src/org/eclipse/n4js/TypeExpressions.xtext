@@ -76,11 +76,14 @@ PrimaryTypeExpression returns TypeRef:
 	| "(" TypeRef ")"
 	);
 
-TypeRefWithModifiers returns StaticBaseTypeRef:
-	  ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
+TypeRefWithModifiers returns TypeRef:
+	  (ParameterizedTypeRef => dynamic?='+'?)
+	| (ThisTypeRef => dynamic?='+'?)
 	| TypeTypeRef
 	| UnionTypeExpressionOLD
-	| IntersectionTypeExpressionOLD;
+	| IntersectionTypeExpressionOLD
+	| MappedTypeRef // this covers sequences starting with: '{' '[' IdentifierName 'in' ...
+;
 
 TypeArgInTypeTypeRef returns TypeArgument:
 	  ParameterizedTypeRefNominal
@@ -185,6 +188,17 @@ ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
 		(-> TypeArguments)?
 		('with' TStructMemberList)?
 	)
+;
+
+MappedTypeRef:
+	'{'
+	('+'? includeReadonly?='readonly' | '-' excludeReadonly?='readonly')?
+	'[' propName=IdentifierName 'in' propNameTypeRef=TypeRef ']'
+	('+'? includeOptional?='?' | '-' excludeOptional?='?')?
+	(':' templateTypeRef=TypeRef)? ';'?
+	// FIXME consider allowing additional mapping signatures here, to be able to show better error messages
+	// FIXME consider allowing TStructMemberList here, to be able to show better error messages
+	'}'
 ;
 
 ArrayNTypeExpression returns ParameterizedTypeRef:

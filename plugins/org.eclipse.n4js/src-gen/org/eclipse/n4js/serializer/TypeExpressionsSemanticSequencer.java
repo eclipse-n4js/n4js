@@ -20,7 +20,11 @@ import org.eclipse.n4js.ts.typeRefs.ConditionalTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
+<<<<<<< HEAD
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
+=======
+import org.eclipse.n4js.ts.typeRefs.MappedTypeRef;
+>>>>>>> 765b95ac8 (early support for mapped types)
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.OperatorTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -100,8 +104,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 					return; 
 				}
 				else break;
+<<<<<<< HEAD
 			case TypeRefsPackage.NAMESPACE_LIKE_REF:
 				sequence_NamespaceLikeRef(context, (NamespaceLikeRef) semanticObject); 
+=======
+			case TypeRefsPackage.MAPPED_TYPE_REF:
+				sequence_MappedTypeRef(context, (MappedTypeRef) semanticObject); 
+>>>>>>> 765b95ac8 (early support for mapped types)
 				return; 
 			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF:
 				sequence_NumericLiteralTypeRef(context, (NumericLiteralTypeRef) semanticObject); 
@@ -688,6 +697,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	/**
 	 * Contexts:
+<<<<<<< HEAD
 	 *     NamespaceLikeRef returns NamespaceLikeRef
 	 *
 	 * Constraint:
@@ -701,6 +711,35 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getNamespaceLikeRefAccess().getDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1(), semanticObject.eGet(TypeRefsPackage.Literals.NAMESPACE_LIKE_REF__DECLARED_TYPE, false));
 		feeder.finish();
+=======
+	 *     TypeRef returns MappedTypeRef
+	 *     ConditionalTypeRef returns MappedTypeRef
+	 *     ConditionalTypeRef.ConditionalTypeRef_1_0_0_0 returns MappedTypeRef
+	 *     UnionTypeExpression returns MappedTypeRef
+	 *     UnionTypeExpression.UnionTypeExpression_1_0 returns MappedTypeRef
+	 *     IntersectionTypeExpression returns MappedTypeRef
+	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns MappedTypeRef
+	 *     OperatorTypeRef returns MappedTypeRef
+	 *     ArrayTypeExpression returns MappedTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns MappedTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns MappedTypeRef
+	 *     PrimaryTypeExpression returns MappedTypeRef
+	 *     TypeRefWithModifiers returns MappedTypeRef
+	 *     MappedTypeRef returns MappedTypeRef
+	 *     TypeArgument returns MappedTypeRef
+	 *
+	 * Constraint:
+	 *     (
+	 *         (includeReadonly?='readonly' | excludeReadonly?='readonly')? 
+	 *         propName=IdentifierName 
+	 *         propNameTypeRef=TypeRef 
+	 *         (includeOptional?='?' | excludeOptional?='?')? 
+	 *         templateTypeRef=TypeRef?
+	 *     )
+	 */
+	protected void sequence_MappedTypeRef(ISerializationContext context, MappedTypeRef semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+>>>>>>> 765b95ac8 (early support for mapped types)
 	}
 	
 	

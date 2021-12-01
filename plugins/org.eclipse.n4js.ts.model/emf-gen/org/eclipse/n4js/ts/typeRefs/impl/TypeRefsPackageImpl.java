@@ -35,7 +35,11 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
+<<<<<<< HEAD
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
+=======
+import org.eclipse.n4js.ts.typeRefs.MappedTypeRef;
+>>>>>>> 765b95ac8 (early support for mapped types)
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.OperatorTypeRef;
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;
@@ -300,6 +304,13 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	private EClass conditionalTypeRefEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass mappedTypeRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2398,6 +2409,96 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
+	public EClass getMappedTypeRef() {
+		return mappedTypeRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getMappedTypeRef_IncludeReadonly() {
+		return (EAttribute)mappedTypeRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getMappedTypeRef_ExcludeReadonly() {
+		return (EAttribute)mappedTypeRefEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getMappedTypeRef_IncludeOptional() {
+		return (EAttribute)mappedTypeRefEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getMappedTypeRef_ExcludeOptional() {
+		return (EAttribute)mappedTypeRefEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getMappedTypeRef_PropName() {
+		return (EAttribute)mappedTypeRefEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getMappedTypeRef_PropNameTypeRef() {
+		return (EReference)mappedTypeRefEClass.getEStructuralFeatures().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getMappedTypeRef_TemplateTypeRef() {
+		return (EReference)mappedTypeRefEClass.getEStructuralFeatures().get(6);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getMappedTypeRef__InternalGetTypeRefAsString() {
+		return mappedTypeRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EEnum getOptionalFieldStrategy() {
 		return optionalFieldStrategyEEnum;
 	}
@@ -2684,6 +2785,16 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEReference(conditionalTypeRefEClass, CONDITIONAL_TYPE_REF__FALSE_TYPE_REF);
 		createEOperation(conditionalTypeRefEClass, CONDITIONAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
 
+		mappedTypeRefEClass = createEClass(MAPPED_TYPE_REF);
+		createEAttribute(mappedTypeRefEClass, MAPPED_TYPE_REF__INCLUDE_READONLY);
+		createEAttribute(mappedTypeRefEClass, MAPPED_TYPE_REF__EXCLUDE_READONLY);
+		createEAttribute(mappedTypeRefEClass, MAPPED_TYPE_REF__INCLUDE_OPTIONAL);
+		createEAttribute(mappedTypeRefEClass, MAPPED_TYPE_REF__EXCLUDE_OPTIONAL);
+		createEAttribute(mappedTypeRefEClass, MAPPED_TYPE_REF__PROP_NAME);
+		createEReference(mappedTypeRefEClass, MAPPED_TYPE_REF__PROP_NAME_TYPE_REF);
+		createEReference(mappedTypeRefEClass, MAPPED_TYPE_REF__TEMPLATE_TYPE_REF);
+		createEOperation(mappedTypeRefEClass, MAPPED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
+
 		// Create enums
 		optionalFieldStrategyEEnum = createEEnum(OPTIONAL_FIELD_STRATEGY);
 		typeOperatorEEnum = createEEnum(TYPE_OPERATOR);
@@ -2757,6 +2868,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		operatorTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 		indexAccessTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 		conditionalTypeRefEClass.getESuperTypes().add(this.getTypeRef());
+		mappedTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(typeArgumentEClass, TypeArgument.class, "TypeArgument", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3112,6 +3224,17 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEReference(getConditionalTypeRef_FalseTypeRef(), this.getTypeRef(), null, "falseTypeRef", null, 0, 1, ConditionalTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getConditionalTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(mappedTypeRefEClass, MappedTypeRef.class, "MappedTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getMappedTypeRef_IncludeReadonly(), theEcorePackage.getEBoolean(), "includeReadonly", null, 0, 1, MappedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMappedTypeRef_ExcludeReadonly(), theEcorePackage.getEBoolean(), "excludeReadonly", null, 0, 1, MappedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMappedTypeRef_IncludeOptional(), theEcorePackage.getEBoolean(), "includeOptional", null, 0, 1, MappedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMappedTypeRef_ExcludeOptional(), theEcorePackage.getEBoolean(), "excludeOptional", null, 0, 1, MappedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getMappedTypeRef_PropName(), theEcorePackage.getEString(), "propName", null, 0, 1, MappedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMappedTypeRef_PropNameTypeRef(), this.getTypeRef(), null, "propNameTypeRef", null, 0, 1, MappedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getMappedTypeRef_TemplateTypeRef(), this.getTypeRef(), null, "templateTypeRef", null, 0, 1, MappedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getMappedTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(optionalFieldStrategyEEnum, OptionalFieldStrategy.class, "OptionalFieldStrategy");

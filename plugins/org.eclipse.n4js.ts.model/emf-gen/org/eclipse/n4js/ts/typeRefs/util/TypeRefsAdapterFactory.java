@@ -208,6 +208,10 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 				return createConditionalTypeRefAdapter();
 			}
 			@Override
+			public Adapter caseMappedTypeRef(MappedTypeRef object) {
+				return createMappedTypeRefAdapter();
+			}
+			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -686,6 +690,20 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createConditionalTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.MappedTypeRef <em>Mapped Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.MappedTypeRef
+	 * @generated
+	 */
+	public Adapter createMappedTypeRefAdapter() {
 		return null;
 	}
 

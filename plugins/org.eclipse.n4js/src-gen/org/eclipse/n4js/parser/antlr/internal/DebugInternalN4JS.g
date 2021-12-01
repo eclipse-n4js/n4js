@@ -9841,11 +9841,14 @@ rulePrimaryTypeExpression:
 // Rule TypeRefWithModifiers
 ruleTypeRefWithModifiers:
 	(
+		ruleParameterizedTypeRef
 		(
-			ruleParameterizedTypeRef
-			    |
-			ruleThisTypeRef
-		)
+			('+'
+			)=>
+			'+'
+		)?
+		    |
+		ruleThisTypeRef
 		(
 			('+'
 			)=>
@@ -9857,6 +9860,8 @@ ruleTypeRefWithModifiers:
 		ruleUnionTypeExpressionOLD
 		    |
 		ruleIntersectionTypeExpressionOLD
+		    |
+		ruleMappedTypeRef
 	)
 ;
 
@@ -10104,6 +10109,36 @@ ruleParameterizedTypeRefStructural:
 			ruleTStructMemberList
 		)?
 	)
+;
+
+// Rule MappedTypeRef
+ruleMappedTypeRef:
+	'{'
+	(
+		'+'?
+		'readonly'
+		    |
+		'-'
+		'readonly'
+	)?
+	'['
+	ruleIdentifierName
+	'in'
+	ruleTypeRef
+	']'
+	(
+		'+'?
+		'?'
+		    |
+		'-'
+		'?'
+	)?
+	(
+		':'
+		ruleTypeRef
+	)?
+	';'?
+	'}'
 ;
 
 // Rule ArrayNTypeExpression

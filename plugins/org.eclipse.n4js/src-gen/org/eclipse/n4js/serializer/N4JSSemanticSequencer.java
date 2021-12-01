@@ -145,7 +145,11 @@ import org.eclipse.n4js.ts.typeRefs.ConditionalTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
+<<<<<<< HEAD
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
+=======
+import org.eclipse.n4js.ts.typeRefs.MappedTypeRef;
+>>>>>>> 765b95ac8 (early support for mapped types)
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.OperatorTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -1497,8 +1501,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else break;
+<<<<<<< HEAD
 			case TypeRefsPackage.NAMESPACE_LIKE_REF:
 				sequence_NamespaceLikeRef(context, (NamespaceLikeRef) semanticObject); 
+=======
+			case TypeRefsPackage.MAPPED_TYPE_REF:
+				sequence_MappedTypeRef(context, (MappedTypeRef) semanticObject); 
+>>>>>>> 765b95ac8 (early support for mapped types)
 				return; 
 			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF:
 				sequence_NumericLiteralTypeRef(context, (NumericLiteralTypeRef) semanticObject); 

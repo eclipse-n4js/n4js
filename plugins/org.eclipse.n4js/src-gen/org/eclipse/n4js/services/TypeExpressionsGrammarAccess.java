@@ -517,39 +517,41 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeRefWithModifiers");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
-		private final Alternatives cAlternatives_0_0 = (Alternatives)cGroup_0.eContents().get(0);
-		private final RuleCall cParameterizedTypeRefParserRuleCall_0_0_0 = (RuleCall)cAlternatives_0_0.eContents().get(0);
-		private final RuleCall cThisTypeRefParserRuleCall_0_0_1 = (RuleCall)cAlternatives_0_0.eContents().get(1);
+		private final RuleCall cParameterizedTypeRefParserRuleCall_0_0 = (RuleCall)cGroup_0.eContents().get(0);
 		private final Assignment cDynamicAssignment_0_1 = (Assignment)cGroup_0.eContents().get(1);
 		private final Keyword cDynamicPlusSignKeyword_0_1_0 = (Keyword)cDynamicAssignment_0_1.eContents().get(0);
-		private final RuleCall cTypeTypeRefParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cUnionTypeExpressionOLDParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cIntersectionTypeExpressionOLDParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
+		private final RuleCall cThisTypeRefParserRuleCall_1_0 = (RuleCall)cGroup_1.eContents().get(0);
+		private final Assignment cDynamicAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
+		private final Keyword cDynamicPlusSignKeyword_1_1_0 = (Keyword)cDynamicAssignment_1_1.eContents().get(0);
+		private final RuleCall cTypeTypeRefParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cUnionTypeExpressionOLDParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cIntersectionTypeExpressionOLDParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cMappedTypeRefParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		
-		//TypeRefWithModifiers returns StaticBaseTypeRef:
-		//      ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
+		//TypeRefWithModifiers returns TypeRef:
+		//      (ParameterizedTypeRef => dynamic?='+'?)
+		//    | (ThisTypeRef => dynamic?='+'?)
 		//    | TypeTypeRef
 		//    | UnionTypeExpressionOLD
-		//    | IntersectionTypeExpressionOLD;
+		//    | IntersectionTypeExpressionOLD
+		//    | MappedTypeRef // this covers sequences starting with: '{' '[' IdentifierName 'in' ...
+		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//  ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
+		//  (ParameterizedTypeRef => dynamic?='+'?)
+		//| (ThisTypeRef => dynamic?='+'?)
 		//| TypeTypeRef
 		//| UnionTypeExpressionOLD
 		//| IntersectionTypeExpressionOLD
+		//| MappedTypeRef
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
-		//((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
+		//(ParameterizedTypeRef => dynamic?='+'?)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//(ParameterizedTypeRef | ThisTypeRef)
-		public Alternatives getAlternatives_0_0() { return cAlternatives_0_0; }
-		
 		//ParameterizedTypeRef
-		public RuleCall getParameterizedTypeRefParserRuleCall_0_0_0() { return cParameterizedTypeRefParserRuleCall_0_0_0; }
-		
-		//ThisTypeRef
-		public RuleCall getThisTypeRefParserRuleCall_0_0_1() { return cThisTypeRefParserRuleCall_0_0_1; }
+		public RuleCall getParameterizedTypeRefParserRuleCall_0_0() { return cParameterizedTypeRefParserRuleCall_0_0; }
 		
 		//=> dynamic?='+'?
 		public Assignment getDynamicAssignment_0_1() { return cDynamicAssignment_0_1; }
@@ -557,14 +559,29 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'+'
 		public Keyword getDynamicPlusSignKeyword_0_1_0() { return cDynamicPlusSignKeyword_0_1_0; }
 		
+		//(ThisTypeRef => dynamic?='+'?)
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//ThisTypeRef
+		public RuleCall getThisTypeRefParserRuleCall_1_0() { return cThisTypeRefParserRuleCall_1_0; }
+		
+		//=> dynamic?='+'?
+		public Assignment getDynamicAssignment_1_1() { return cDynamicAssignment_1_1; }
+		
+		//'+'
+		public Keyword getDynamicPlusSignKeyword_1_1_0() { return cDynamicPlusSignKeyword_1_1_0; }
+		
 		//TypeTypeRef
-		public RuleCall getTypeTypeRefParserRuleCall_1() { return cTypeTypeRefParserRuleCall_1; }
+		public RuleCall getTypeTypeRefParserRuleCall_2() { return cTypeTypeRefParserRuleCall_2; }
 		
 		//UnionTypeExpressionOLD
-		public RuleCall getUnionTypeExpressionOLDParserRuleCall_2() { return cUnionTypeExpressionOLDParserRuleCall_2; }
+		public RuleCall getUnionTypeExpressionOLDParserRuleCall_3() { return cUnionTypeExpressionOLDParserRuleCall_3; }
 		
 		//IntersectionTypeExpressionOLD
-		public RuleCall getIntersectionTypeExpressionOLDParserRuleCall_3() { return cIntersectionTypeExpressionOLDParserRuleCall_3; }
+		public RuleCall getIntersectionTypeExpressionOLDParserRuleCall_4() { return cIntersectionTypeExpressionOLDParserRuleCall_4; }
+		
+		//MappedTypeRef
+		public RuleCall getMappedTypeRefParserRuleCall_5() { return cMappedTypeRefParserRuleCall_5; }
 	}
 	public class TypeArgInTypeTypeRefElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeArgInTypeTypeRef");
@@ -1401,6 +1418,159 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//TStructMemberList
 		public RuleCall getTStructMemberListParserRuleCall_1_3_1() { return cTStructMemberListParserRuleCall_1_3_1; }
+	}
+	public class MappedTypeRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.MappedTypeRef");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cLeftCurlyBracketKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
+		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
+		private final Keyword cPlusSignKeyword_1_0_0 = (Keyword)cGroup_1_0.eContents().get(0);
+		private final Assignment cIncludeReadonlyAssignment_1_0_1 = (Assignment)cGroup_1_0.eContents().get(1);
+		private final Keyword cIncludeReadonlyReadonlyKeyword_1_0_1_0 = (Keyword)cIncludeReadonlyAssignment_1_0_1.eContents().get(0);
+		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
+		private final Keyword cHyphenMinusKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
+		private final Assignment cExcludeReadonlyAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
+		private final Keyword cExcludeReadonlyReadonlyKeyword_1_1_1_0 = (Keyword)cExcludeReadonlyAssignment_1_1_1.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cPropNameAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cPropNameIdentifierNameParserRuleCall_3_0 = (RuleCall)cPropNameAssignment_3.eContents().get(0);
+		private final Keyword cInKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Assignment cPropNameTypeRefAssignment_5 = (Assignment)cGroup.eContents().get(5);
+		private final RuleCall cPropNameTypeRefTypeRefParserRuleCall_5_0 = (RuleCall)cPropNameTypeRefAssignment_5.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
+		private final Alternatives cAlternatives_7 = (Alternatives)cGroup.eContents().get(7);
+		private final Group cGroup_7_0 = (Group)cAlternatives_7.eContents().get(0);
+		private final Keyword cPlusSignKeyword_7_0_0 = (Keyword)cGroup_7_0.eContents().get(0);
+		private final Assignment cIncludeOptionalAssignment_7_0_1 = (Assignment)cGroup_7_0.eContents().get(1);
+		private final Keyword cIncludeOptionalQuestionMarkKeyword_7_0_1_0 = (Keyword)cIncludeOptionalAssignment_7_0_1.eContents().get(0);
+		private final Group cGroup_7_1 = (Group)cAlternatives_7.eContents().get(1);
+		private final Keyword cHyphenMinusKeyword_7_1_0 = (Keyword)cGroup_7_1.eContents().get(0);
+		private final Assignment cExcludeOptionalAssignment_7_1_1 = (Assignment)cGroup_7_1.eContents().get(1);
+		private final Keyword cExcludeOptionalQuestionMarkKeyword_7_1_1_0 = (Keyword)cExcludeOptionalAssignment_7_1_1.eContents().get(0);
+		private final Group cGroup_8 = (Group)cGroup.eContents().get(8);
+		private final Keyword cColonKeyword_8_0 = (Keyword)cGroup_8.eContents().get(0);
+		private final Assignment cTemplateTypeRefAssignment_8_1 = (Assignment)cGroup_8.eContents().get(1);
+		private final RuleCall cTemplateTypeRefTypeRefParserRuleCall_8_1_0 = (RuleCall)cTemplateTypeRefAssignment_8_1.eContents().get(0);
+		private final Keyword cSemicolonKeyword_9 = (Keyword)cGroup.eContents().get(9);
+		private final Keyword cRightCurlyBracketKeyword_10 = (Keyword)cGroup.eContents().get(10);
+		
+		//MappedTypeRef:
+		//    '{'
+		//    ('+'? includeReadonly?='readonly' | '-' excludeReadonly?='readonly')?
+		//    '[' propName=IdentifierName 'in' propNameTypeRef=TypeRef ']'
+		//    ('+'? includeOptional?='?' | '-' excludeOptional?='?')?
+		//    (':' templateTypeRef=TypeRef)? ';'?
+		//    // FIXME consider allowing TStructMemberList here, to be able to show better error messages
+		//    '}'
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'{'
+		//('+'? includeReadonly?='readonly' | '-' excludeReadonly?='readonly')?
+		//'[' propName=IdentifierName 'in' propNameTypeRef=TypeRef ']'
+		//('+'? includeOptional?='?' | '-' excludeOptional?='?')?
+		//(':' templateTypeRef=TypeRef)? ';'?
+		//// FIXME consider allowing TStructMemberList here, to be able to show better error messages
+		//'}'
+		public Group getGroup() { return cGroup; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_0() { return cLeftCurlyBracketKeyword_0; }
+		
+		//('+'? includeReadonly?='readonly' | '-' excludeReadonly?='readonly')?
+		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		
+		//'+'? includeReadonly?='readonly'
+		public Group getGroup_1_0() { return cGroup_1_0; }
+		
+		//'+'?
+		public Keyword getPlusSignKeyword_1_0_0() { return cPlusSignKeyword_1_0_0; }
+		
+		//includeReadonly?='readonly'
+		public Assignment getIncludeReadonlyAssignment_1_0_1() { return cIncludeReadonlyAssignment_1_0_1; }
+		
+		//'readonly'
+		public Keyword getIncludeReadonlyReadonlyKeyword_1_0_1_0() { return cIncludeReadonlyReadonlyKeyword_1_0_1_0; }
+		
+		//'-' excludeReadonly?='readonly'
+		public Group getGroup_1_1() { return cGroup_1_1; }
+		
+		//'-'
+		public Keyword getHyphenMinusKeyword_1_1_0() { return cHyphenMinusKeyword_1_1_0; }
+		
+		//excludeReadonly?='readonly'
+		public Assignment getExcludeReadonlyAssignment_1_1_1() { return cExcludeReadonlyAssignment_1_1_1; }
+		
+		//'readonly'
+		public Keyword getExcludeReadonlyReadonlyKeyword_1_1_1_0() { return cExcludeReadonlyReadonlyKeyword_1_1_1_0; }
+		
+		//'['
+		public Keyword getLeftSquareBracketKeyword_2() { return cLeftSquareBracketKeyword_2; }
+		
+		//propName=IdentifierName
+		public Assignment getPropNameAssignment_3() { return cPropNameAssignment_3; }
+		
+		//IdentifierName
+		public RuleCall getPropNameIdentifierNameParserRuleCall_3_0() { return cPropNameIdentifierNameParserRuleCall_3_0; }
+		
+		//'in'
+		public Keyword getInKeyword_4() { return cInKeyword_4; }
+		
+		//propNameTypeRef=TypeRef
+		public Assignment getPropNameTypeRefAssignment_5() { return cPropNameTypeRefAssignment_5; }
+		
+		//TypeRef
+		public RuleCall getPropNameTypeRefTypeRefParserRuleCall_5_0() { return cPropNameTypeRefTypeRefParserRuleCall_5_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_6() { return cRightSquareBracketKeyword_6; }
+		
+		//('+'? includeOptional?='?' | '-' excludeOptional?='?')?
+		public Alternatives getAlternatives_7() { return cAlternatives_7; }
+		
+		//'+'? includeOptional?='?'
+		public Group getGroup_7_0() { return cGroup_7_0; }
+		
+		//'+'?
+		public Keyword getPlusSignKeyword_7_0_0() { return cPlusSignKeyword_7_0_0; }
+		
+		//includeOptional?='?'
+		public Assignment getIncludeOptionalAssignment_7_0_1() { return cIncludeOptionalAssignment_7_0_1; }
+		
+		//'?'
+		public Keyword getIncludeOptionalQuestionMarkKeyword_7_0_1_0() { return cIncludeOptionalQuestionMarkKeyword_7_0_1_0; }
+		
+		//'-' excludeOptional?='?'
+		public Group getGroup_7_1() { return cGroup_7_1; }
+		
+		//'-'
+		public Keyword getHyphenMinusKeyword_7_1_0() { return cHyphenMinusKeyword_7_1_0; }
+		
+		//excludeOptional?='?'
+		public Assignment getExcludeOptionalAssignment_7_1_1() { return cExcludeOptionalAssignment_7_1_1; }
+		
+		//'?'
+		public Keyword getExcludeOptionalQuestionMarkKeyword_7_1_1_0() { return cExcludeOptionalQuestionMarkKeyword_7_1_1_0; }
+		
+		//(':' templateTypeRef=TypeRef)?
+		public Group getGroup_8() { return cGroup_8; }
+		
+		//':'
+		public Keyword getColonKeyword_8_0() { return cColonKeyword_8_0; }
+		
+		//templateTypeRef=TypeRef
+		public Assignment getTemplateTypeRefAssignment_8_1() { return cTemplateTypeRefAssignment_8_1; }
+		
+		//TypeRef
+		public RuleCall getTemplateTypeRefTypeRefParserRuleCall_8_1_0() { return cTemplateTypeRefTypeRefParserRuleCall_8_1_0; }
+		
+		//';'?
+		public Keyword getSemicolonKeyword_9() { return cSemicolonKeyword_9; }
+		
+		//// FIXME consider allowing TStructMemberList here, to be able to show better error messages
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_10() { return cRightCurlyBracketKeyword_10; }
 	}
 	public class ArrayNTypeExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.ArrayNTypeExpression");
@@ -3130,6 +3300,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final ParameterizedTypeRefElements pParameterizedTypeRef;
 	private final ParameterizedTypeRefNominalElements pParameterizedTypeRefNominal;
 	private final ParameterizedTypeRefStructuralElements pParameterizedTypeRefStructural;
+	private final MappedTypeRefElements pMappedTypeRef;
 	private final ArrayNTypeExpressionElements pArrayNTypeExpression;
 	private final EmptyIterableTypeExpressionTailElements pEmptyIterableTypeExpressionTail;
 	private final TypeReferenceElements pTypeReference;
@@ -3223,6 +3394,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pParameterizedTypeRef = new ParameterizedTypeRefElements();
 		this.pParameterizedTypeRefNominal = new ParameterizedTypeRefNominalElements();
 		this.pParameterizedTypeRefStructural = new ParameterizedTypeRefStructuralElements();
+		this.pMappedTypeRef = new MappedTypeRefElements();
 		this.pArrayNTypeExpression = new ArrayNTypeExpressionElements();
 		this.pEmptyIterableTypeExpressionTail = new EmptyIterableTypeExpressionTailElements();
 		this.pTypeReference = new TypeReferenceElements();
@@ -3422,11 +3594,14 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return getPrimaryTypeExpressionAccess().getRule();
 	}
 	
-	//TypeRefWithModifiers returns StaticBaseTypeRef:
-	//      ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
+	//TypeRefWithModifiers returns TypeRef:
+	//      (ParameterizedTypeRef => dynamic?='+'?)
+	//    | (ThisTypeRef => dynamic?='+'?)
 	//    | TypeTypeRef
 	//    | UnionTypeExpressionOLD
-	//    | IntersectionTypeExpressionOLD;
+	//    | IntersectionTypeExpressionOLD
+	//    | MappedTypeRef // this covers sequences starting with: '{' '[' IdentifierName 'in' ...
+	//;
 	public TypeRefWithModifiersElements getTypeRefWithModifiersAccess() {
 		return pTypeRefWithModifiers;
 	}
@@ -3669,6 +3844,23 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	
 	public ParserRule getParameterizedTypeRefStructuralRule() {
 		return getParameterizedTypeRefStructuralAccess().getRule();
+	}
+	
+	//MappedTypeRef:
+	//    '{'
+	//    ('+'? includeReadonly?='readonly' | '-' excludeReadonly?='readonly')?
+	//    '[' propName=IdentifierName 'in' propNameTypeRef=TypeRef ']'
+	//    ('+'? includeOptional?='?' | '-' excludeOptional?='?')?
+	//    (':' templateTypeRef=TypeRef)? ';'?
+	//    // FIXME consider allowing TStructMemberList here, to be able to show better error messages
+	//    '}'
+	//;
+	public MappedTypeRefElements getMappedTypeRefAccess() {
+		return pMappedTypeRef;
+	}
+	
+	public ParserRule getMappedTypeRefRule() {
+		return getMappedTypeRefAccess().getRule();
 	}
 	
 	//ArrayNTypeExpression returns ParameterizedTypeRef:

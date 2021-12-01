@@ -9948,6 +9948,367 @@ public interface TypeRefsPackage extends EPackage {
 	int CONDITIONAL_TYPE_REF_OPERATION_COUNT = TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.MappedTypeRefImpl <em>Mapped Type Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.MappedTypeRefImpl
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getMappedTypeRef()
+	 * @generated
+	 */
+	int MAPPED_TYPE_REF = 32;
+
+	/**
+	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
+
+	/**
+	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Include Readonly</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF__INCLUDE_READONLY = TYPE_REF_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Exclude Readonly</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF__EXCLUDE_READONLY = TYPE_REF_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Include Optional</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF__INCLUDE_OPTIONAL = TYPE_REF_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Exclude Optional</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF__EXCLUDE_OPTIONAL = TYPE_REF_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Prop Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF__PROP_NAME = TYPE_REF_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Prop Name Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF__PROP_NAME_TYPE_REF = TYPE_REF_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Template Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF__TEMPLATE_TYPE_REF = TYPE_REF_FEATURE_COUNT + 6;
+
+	/**
+	 * The number of structural features of the '<em>Mapped Type Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 7;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_MODIFIERS_AS_STRING = TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_TYPE_REF = TYPE_REF___IS_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_ALIAS_UNRESOLVED = TYPE_REF___IS_ALIAS_UNRESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_ALIAS_RESOLVED = TYPE_REF___IS_ALIAS_RESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Final By Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_FINAL_BY_TYPE = TYPE_REF___IS_FINAL_BY_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Array Like</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_ARRAY_LIKE = TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_UNKNOWN = TYPE_REF___IS_UNKNOWN;
+
+	/**
+	 * The operation id for the '<em>Is Dynamic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_DYNAMIC = TYPE_REF___IS_DYNAMIC;
+
+	/**
+	 * The operation id for the '<em>Is Existential</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_EXISTENTIAL = TYPE_REF___IS_EXISTENTIAL;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_GENERIC = TYPE_REF___IS_GENERIC;
+
+	/**
+	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_PARAMETERIZED = TYPE_REF___IS_PARAMETERIZED;
+
+	/**
+	 * The operation id for the '<em>Is Raw</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_RAW = TYPE_REF___IS_RAW;
+
+	/**
+	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_DECLARED_UPPER_BOUND = TYPE_REF___GET_DECLARED_UPPER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Top Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_TOP_TYPE = TYPE_REF___IS_TOP_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Bottom Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_BOTTOM_TYPE = TYPE_REF___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_TYPING_STRATEGY = TYPE_REF___GET_TYPING_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Structural Members</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_REF_OPERATION_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Mapped Type Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MAPPED_TYPE_REF_OPERATION_COUNT = TYPE_REF_OPERATION_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9956,9 +10317,13 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int OPTIONAL_FIELD_STRATEGY = 29;
 =======
 	int OPTIONAL_FIELD_STRATEGY = 32;
+=======
+	int OPTIONAL_FIELD_STRATEGY = 33;
+>>>>>>> 765b95ac8 (early support for mapped types)
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.TypeOperator <em>Type Operator</em>}' enum.
@@ -9968,8 +10333,12 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeOperator()
 	 * @generated
 	 */
+<<<<<<< HEAD
 	int TYPE_OPERATOR = 33;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TYPE_OPERATOR = 34;
+>>>>>>> 765b95ac8 (early support for mapped types)
 
 	/**
 	 * The meta object id for the '<em>UUID</em>' data type.
@@ -9980,10 +10349,14 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int UUID = 30;
 =======
 	int UUID = 34;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int UUID = 35;
+>>>>>>> 765b95ac8 (early support for mapped types)
 
 
 	/**
@@ -12043,6 +12416,103 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getConditionalTypeRef__InternalGetTypeRefAsString();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.MappedTypeRef <em>Mapped Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Mapped Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.MappedTypeRef
+	 * @generated
+	 */
+	EClass getMappedTypeRef();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.MappedTypeRef#isIncludeReadonly <em>Include Readonly</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Include Readonly</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.MappedTypeRef#isIncludeReadonly()
+	 * @see #getMappedTypeRef()
+	 * @generated
+	 */
+	EAttribute getMappedTypeRef_IncludeReadonly();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.MappedTypeRef#isExcludeReadonly <em>Exclude Readonly</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Exclude Readonly</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.MappedTypeRef#isExcludeReadonly()
+	 * @see #getMappedTypeRef()
+	 * @generated
+	 */
+	EAttribute getMappedTypeRef_ExcludeReadonly();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.MappedTypeRef#isIncludeOptional <em>Include Optional</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Include Optional</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.MappedTypeRef#isIncludeOptional()
+	 * @see #getMappedTypeRef()
+	 * @generated
+	 */
+	EAttribute getMappedTypeRef_IncludeOptional();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.MappedTypeRef#isExcludeOptional <em>Exclude Optional</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Exclude Optional</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.MappedTypeRef#isExcludeOptional()
+	 * @see #getMappedTypeRef()
+	 * @generated
+	 */
+	EAttribute getMappedTypeRef_ExcludeOptional();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.MappedTypeRef#getPropName <em>Prop Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Prop Name</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.MappedTypeRef#getPropName()
+	 * @see #getMappedTypeRef()
+	 * @generated
+	 */
+	EAttribute getMappedTypeRef_PropName();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.typeRefs.MappedTypeRef#getPropNameTypeRef <em>Prop Name Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Prop Name Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.MappedTypeRef#getPropNameTypeRef()
+	 * @see #getMappedTypeRef()
+	 * @generated
+	 */
+	EReference getMappedTypeRef_PropNameTypeRef();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.typeRefs.MappedTypeRef#getTemplateTypeRef <em>Template Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Template Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.MappedTypeRef#getTemplateTypeRef()
+	 * @see #getMappedTypeRef()
+	 * @generated
+	 */
+	EReference getMappedTypeRef_TemplateTypeRef();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.MappedTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.MappedTypeRef#internalGetTypeRefAsString()
+	 * @generated
+	 */
+	EOperation getMappedTypeRef__InternalGetTypeRefAsString();
+
+	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13761,6 +14231,80 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation CONDITIONAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getConditionalTypeRef__InternalGetTypeRefAsString();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.MappedTypeRefImpl <em>Mapped Type Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.MappedTypeRefImpl
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getMappedTypeRef()
+		 * @generated
+		 */
+		EClass MAPPED_TYPE_REF = eINSTANCE.getMappedTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Include Readonly</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAPPED_TYPE_REF__INCLUDE_READONLY = eINSTANCE.getMappedTypeRef_IncludeReadonly();
+
+		/**
+		 * The meta object literal for the '<em><b>Exclude Readonly</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAPPED_TYPE_REF__EXCLUDE_READONLY = eINSTANCE.getMappedTypeRef_ExcludeReadonly();
+
+		/**
+		 * The meta object literal for the '<em><b>Include Optional</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAPPED_TYPE_REF__INCLUDE_OPTIONAL = eINSTANCE.getMappedTypeRef_IncludeOptional();
+
+		/**
+		 * The meta object literal for the '<em><b>Exclude Optional</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAPPED_TYPE_REF__EXCLUDE_OPTIONAL = eINSTANCE.getMappedTypeRef_ExcludeOptional();
+
+		/**
+		 * The meta object literal for the '<em><b>Prop Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute MAPPED_TYPE_REF__PROP_NAME = eINSTANCE.getMappedTypeRef_PropName();
+
+		/**
+		 * The meta object literal for the '<em><b>Prop Name Type Ref</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MAPPED_TYPE_REF__PROP_NAME_TYPE_REF = eINSTANCE.getMappedTypeRef_PropNameTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Template Type Ref</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MAPPED_TYPE_REF__TEMPLATE_TYPE_REF = eINSTANCE.getMappedTypeRef_TemplateTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation MAPPED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getMappedTypeRef__InternalGetTypeRefAsString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}' enum.
