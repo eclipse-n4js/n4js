@@ -87,6 +87,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int ABSTRACT_NAMESPACE = 20;
 =======
 	int SYNTAX_RELATED_TELEMENT = 51;
@@ -94,6 +95,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int SYNTAX_RELATED_TELEMENT = 53;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int SYNTAX_RELATED_TELEMENT = 54;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
@@ -7372,13 +7376,22 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_MEMBER__DEFINED_MEMBER = TMEMBER_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Dts Computed Name Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION = TMEMBER_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>TStruct Member</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_MEMBER_FEATURE_COUNT = TMEMBER_FEATURE_COUNT + 1;
+	int TSTRUCT_MEMBER_FEATURE_COUNT = TMEMBER_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -7588,6 +7601,52 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_MEMBER_OPERATION_COUNT = TMEMBER_OPERATION_COUNT + 5;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ExpressionInTypeRefImpl <em>Expression In Type Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.ExpressionInTypeRefImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getExpressionInTypeRef()
+	 * @generated
+	 */
+	int EXPRESSION_IN_TYPE_REF = 37;
+
+	/**
+	 * The feature id for the '<em><b>Name Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPRESSION_IN_TYPE_REF__NAME_TYPE_REF = 0;
+
+	/**
+	 * The feature id for the '<em><b>Identifier Names</b></em>' attribute list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPRESSION_IN_TYPE_REF__IDENTIFIER_NAMES = 1;
+
+	/**
+	 * The number of structural features of the '<em>Expression In Type Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPRESSION_IN_TYPE_REF_FEATURE_COUNT = 2;
+
+	/**
+	 * The number of operations of the '<em>Expression In Type Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPRESSION_IN_TYPE_REF_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMethodImpl <em>TMethod</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7596,10 +7655,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TMETHOD = 39;
 =======
 	int TMETHOD = 37;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TMETHOD = 38;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8231,10 +8294,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TSTRUCT_METHOD = 40;
 =======
 	int TSTRUCT_METHOD = 38;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TSTRUCT_METHOD = 39;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8480,13 +8547,22 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD__DEFINED_MEMBER = TMETHOD_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Dts Computed Name Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD__DTS_COMPUTED_NAME_EXPRESSION = TMETHOD_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>TStruct Method</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_METHOD_FEATURE_COUNT = TMETHOD_FEATURE_COUNT + 1;
+	int TSTRUCT_METHOD_FEATURE_COUNT = TMETHOD_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -8893,10 +8969,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TFORMAL_PARAMETER = 41;
 =======
 	int TFORMAL_PARAMETER = 39;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TFORMAL_PARAMETER = 40;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9042,10 +9122,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TANONYMOUS_FORMAL_PARAMETER = 42;
 =======
 	int TANONYMOUS_FORMAL_PARAMETER = 40;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TANONYMOUS_FORMAL_PARAMETER = 41;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9209,10 +9293,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TFIELD = 43;
 =======
 	int TFIELD = 41;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TFIELD = 42;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9565,10 +9653,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TSTRUCT_FIELD = 44;
 =======
 	int TSTRUCT_FIELD = 42;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TSTRUCT_FIELD = 43;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9724,13 +9816,22 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_FIELD__DEFINED_MEMBER = TFIELD_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Dts Computed Name Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION = TFIELD_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>TStruct Field</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_FIELD_FEATURE_COUNT = TFIELD_FEATURE_COUNT + 1;
+	int TSTRUCT_FIELD_FEATURE_COUNT = TFIELD_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -9948,10 +10049,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int FIELD_ACCESSOR = 45;
 =======
 	int FIELD_ACCESSOR = 43;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int FIELD_ACCESSOR = 44;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10295,10 +10400,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TGETTER = 46;
 =======
 	int TGETTER = 44;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TGETTER = 45;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10651,10 +10760,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TSTRUCT_GETTER = 47;
 =======
 	int TSTRUCT_GETTER = 45;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TSTRUCT_GETTER = 46;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10801,13 +10914,22 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_GETTER__DEFINED_MEMBER = TGETTER_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Dts Computed Name Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER__DTS_COMPUTED_NAME_EXPRESSION = TGETTER_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>TStruct Getter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_GETTER_FEATURE_COUNT = TGETTER_FEATURE_COUNT + 1;
+	int TSTRUCT_GETTER_FEATURE_COUNT = TGETTER_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -11034,10 +11156,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TSETTER = 48;
 =======
 	int TSETTER = 46;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TSETTER = 47;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11390,10 +11516,14 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TSTRUCT_SETTER = 49;
 =======
 	int TSTRUCT_SETTER = 47;
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+=======
+	int TSTRUCT_SETTER = 48;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11540,13 +11670,22 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_SETTER__DEFINED_MEMBER = TSETTER_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Dts Computed Name Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER__DTS_COMPUTED_NAME_EXPRESSION = TSETTER_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>TStruct Setter</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_SETTER_FEATURE_COUNT = TSETTER_FEATURE_COUNT + 1;
+	int TSTRUCT_SETTER_FEATURE_COUNT = TSETTER_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -11772,7 +11911,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTIndexSignature()
 	 * @generated
 	 */
-	int TINDEX_SIGNATURE = 48;
+	int TINDEX_SIGNATURE = 49;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12088,7 +12227,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructIndexSignature()
 	 * @generated
 	 */
-	int TSTRUCT_INDEX_SIGNATURE = 49;
+	int TSTRUCT_INDEX_SIGNATURE = 50;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12217,13 +12356,22 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_INDEX_SIGNATURE__DEFINED_MEMBER = TINDEX_SIGNATURE_FEATURE_COUNT + 0;
 
 	/**
+	 * The feature id for the '<em><b>Dts Computed Name Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_INDEX_SIGNATURE__DTS_COMPUTED_NAME_EXPRESSION = TINDEX_SIGNATURE_FEATURE_COUNT + 1;
+
+	/**
 	 * The number of structural features of the '<em>TStruct Index Signature</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_INDEX_SIGNATURE_FEATURE_COUNT = TINDEX_SIGNATURE_FEATURE_COUNT + 1;
+	int TSTRUCT_INDEX_SIGNATURE_FEATURE_COUNT = TINDEX_SIGNATURE_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -12442,6 +12590,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TENUM = 50;
 =======
 	int TENUM = 48;
@@ -12449,6 +12598,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int TENUM = 50;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int TENUM = 51;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12749,6 +12901,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TENUM_LITERAL = 51;
 =======
 	int TENUM_LITERAL = 49;
@@ -12756,6 +12909,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int TENUM_LITERAL = 51;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int TENUM_LITERAL = 52;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -12830,6 +12986,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TYPE_ALIAS = 52;
 =======
 	int TYPE_ALIAS = 50;
@@ -12837,6 +12994,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int TYPE_ALIAS = 52;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int TYPE_ALIAS = 53;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -13100,6 +13260,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TCONSTABLE_ELEMENT = 54;
 =======
 	int TCONSTABLE_ELEMENT = 52;
@@ -13107,6 +13268,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int TCONSTABLE_ELEMENT = 54;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int TCONSTABLE_ELEMENT = 55;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -13154,6 +13318,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TVARIABLE = 55;
 =======
 	int TVARIABLE = 53;
@@ -13161,6 +13326,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int TVARIABLE = 55;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int TVARIABLE = 56;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -13361,6 +13529,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TYPING_STRATEGY = 56;
 =======
 	int TYPING_STRATEGY = 54;
@@ -13368,6 +13537,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int TYPING_STRATEGY = 56;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int TYPING_STRATEGY = 57;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -13379,6 +13551,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TYPE_ACCESS_MODIFIER = 57;
 =======
 	int TYPE_ACCESS_MODIFIER = 55;
@@ -13386,6 +13559,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int TYPE_ACCESS_MODIFIER = 57;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int TYPE_ACCESS_MODIFIER = 58;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -13397,6 +13573,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int MEMBER_ACCESS_MODIFIER = 58;
 =======
 	int MEMBER_ACCESS_MODIFIER = 56;
@@ -13404,6 +13581,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int MEMBER_ACCESS_MODIFIER = 58;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int MEMBER_ACCESS_MODIFIER = 59;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -13415,6 +13595,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int MEMBER_TYPE = 59;
 =======
 	int MEMBER_TYPE = 57;
@@ -13422,6 +13603,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int MEMBER_TYPE = 59;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int MEMBER_TYPE = 60;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -13433,6 +13617,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
 =======
 	int PARAMETERIZED_TYPE_REF_ITERABLE = 58;
@@ -13440,6 +13625,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 61;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -13451,6 +13639,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int ITERABLE_OF_TCLASSIFIER = 61;
 =======
 	int ITERABLE_OF_TCLASSIFIER = 59;
@@ -13458,6 +13647,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int ITERABLE_OF_TCLASSIFIER = 61;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int ITERABLE_OF_TCLASSIFIER = 62;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -13469,6 +13661,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int VARIANCE = 62;
 =======
 	int VARIANCE = 60;
@@ -13476,6 +13669,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int VARIANCE = 62;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int VARIANCE = 63;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -13487,6 +13683,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int NAME_AND_ACCESS = 63;
 =======
 	int NAME_AND_ACCESS = 61;
@@ -13494,6 +13691,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int NAME_AND_ACCESS = 63;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int NAME_AND_ACCESS = 64;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -13505,6 +13705,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int MEMBER_LIST = 64;
 =======
 	int MEMBER_LIST = 62;
@@ -13512,6 +13713,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int MEMBER_LIST = 64;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int MEMBER_LIST = 65;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -13523,6 +13727,7 @@ public interface TypesPackage extends EPackage {
 	 */
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	int TCLASSIFIER_ITERABLE = 65;
 =======
 	int TCLASSIFIER_ITERABLE = 63;
@@ -13530,6 +13735,9 @@ public interface TypesPackage extends EPackage {
 =======
 	int TCLASSIFIER_ITERABLE = 65;
 >>>>>>> e44376615 (support index signatures also in structural type references)
+=======
+	int TCLASSIFIER_ITERABLE = 66;
+>>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
 
 
 	/**
@@ -15710,6 +15918,17 @@ public interface TypesPackage extends EPackage {
 	EReference getTStructMember_DefinedMember();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.TStructMember#getDtsComputedNameExpression <em>Dts Computed Name Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Dts Computed Name Expression</em>'.
+	 * @see org.eclipse.n4js.ts.types.TStructMember#getDtsComputedNameExpression()
+	 * @see #getTStructMember()
+	 * @generated
+	 */
+	EReference getTStructMember_DtsComputedNameExpression();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TStructMember#getDefaultMemberAccessModifier() <em>Get Default Member Access Modifier</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15758,6 +15977,38 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTStructMember__IsASTConstructSignature();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ExpressionInTypeRef <em>Expression In Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Expression In Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.types.ExpressionInTypeRef
+	 * @generated
+	 */
+	EClass getExpressionInTypeRef();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.ExpressionInTypeRef#getNameTypeRef <em>Name Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Name Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.types.ExpressionInTypeRef#getNameTypeRef()
+	 * @see #getExpressionInTypeRef()
+	 * @generated
+	 */
+	EReference getExpressionInTypeRef_NameTypeRef();
+
+	/**
+	 * Returns the meta object for the attribute list '{@link org.eclipse.n4js.ts.types.ExpressionInTypeRef#getIdentifierNames <em>Identifier Names</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute list '<em>Identifier Names</em>'.
+	 * @see org.eclipse.n4js.ts.types.ExpressionInTypeRef#getIdentifierNames()
+	 * @see #getExpressionInTypeRef()
+	 * @generated
+	 */
+	EAttribute getExpressionInTypeRef_IdentifierNames();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TMethod <em>TMethod</em>}'.
@@ -18417,6 +18668,14 @@ public interface TypesPackage extends EPackage {
 		EReference TSTRUCT_MEMBER__DEFINED_MEMBER = eINSTANCE.getTStructMember_DefinedMember();
 
 		/**
+		 * The meta object literal for the '<em><b>Dts Computed Name Expression</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION = eINSTANCE.getTStructMember_DtsComputedNameExpression();
+
+		/**
 		 * The meta object literal for the '<em><b>Get Default Member Access Modifier</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -18455,6 +18714,32 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE = eINSTANCE.getTStructMember__IsASTConstructSignature();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ExpressionInTypeRefImpl <em>Expression In Type Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.ExpressionInTypeRefImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getExpressionInTypeRef()
+		 * @generated
+		 */
+		EClass EXPRESSION_IN_TYPE_REF = eINSTANCE.getExpressionInTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Name Type Ref</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference EXPRESSION_IN_TYPE_REF__NAME_TYPE_REF = eINSTANCE.getExpressionInTypeRef_NameTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Identifier Names</b></em>' attribute list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXPRESSION_IN_TYPE_REF__IDENTIFIER_NAMES = eINSTANCE.getExpressionInTypeRef_IdentifierNames();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TMethodImpl <em>TMethod</em>}' class.

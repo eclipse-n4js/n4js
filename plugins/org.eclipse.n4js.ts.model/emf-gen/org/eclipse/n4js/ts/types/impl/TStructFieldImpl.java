@@ -15,6 +15,7 @@ import com.google.common.base.Objects;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -23,6 +24,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.n4js.ts.types.ExpressionInTypeRef;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TMember;
@@ -41,6 +43,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TStructFieldImpl#getDefinedMember <em>Defined Member</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TStructFieldImpl#getDtsComputedNameExpression <em>Dts Computed Name Expression</em>}</li>
  * </ul>
  *
  * @generated
@@ -55,6 +58,16 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 	 * @ordered
 	 */
 	protected TStructMember definedMember;
+
+	/**
+	 * The cached value of the '{@link #getDtsComputedNameExpression() <em>Dts Computed Name Expression</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDtsComputedNameExpression()
+	 * @generated
+	 * @ordered
+	 */
+	protected ExpressionInTypeRef dtsComputedNameExpression;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -121,6 +134,51 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 	 * @generated
 	 */
 	@Override
+	public ExpressionInTypeRef getDtsComputedNameExpression() {
+		return dtsComputedNameExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDtsComputedNameExpression(ExpressionInTypeRef newDtsComputedNameExpression, NotificationChain msgs) {
+		ExpressionInTypeRef oldDtsComputedNameExpression = dtsComputedNameExpression;
+		dtsComputedNameExpression = newDtsComputedNameExpression;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION, oldDtsComputedNameExpression, newDtsComputedNameExpression);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDtsComputedNameExpression(ExpressionInTypeRef newDtsComputedNameExpression) {
+		if (newDtsComputedNameExpression != dtsComputedNameExpression) {
+			NotificationChain msgs = null;
+			if (dtsComputedNameExpression != null)
+				msgs = ((InternalEObject)dtsComputedNameExpression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION, null, msgs);
+			if (newDtsComputedNameExpression != null)
+				msgs = ((InternalEObject)newDtsComputedNameExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION, null, msgs);
+			msgs = basicSetDtsComputedNameExpression(newDtsComputedNameExpression, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION, newDtsComputedNameExpression, newDtsComputedNameExpression));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public MemberAccessModifier getDefaultMemberAccessModifier() {
 		return MemberAccessModifier.PUBLIC;
 	}
@@ -171,11 +229,27 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION:
+				return basicSetDtsComputedNameExpression(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.TSTRUCT_FIELD__DEFINED_MEMBER:
 				if (resolve) return getDefinedMember();
 				return basicGetDefinedMember();
+			case TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION:
+				return getDtsComputedNameExpression();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -190,6 +264,9 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 		switch (featureID) {
 			case TypesPackage.TSTRUCT_FIELD__DEFINED_MEMBER:
 				setDefinedMember((TStructMember)newValue);
+				return;
+			case TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION:
+				setDtsComputedNameExpression((ExpressionInTypeRef)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -206,6 +283,9 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 			case TypesPackage.TSTRUCT_FIELD__DEFINED_MEMBER:
 				setDefinedMember((TStructMember)null);
 				return;
+			case TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION:
+				setDtsComputedNameExpression((ExpressionInTypeRef)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -220,6 +300,8 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 		switch (featureID) {
 			case TypesPackage.TSTRUCT_FIELD__DEFINED_MEMBER:
 				return definedMember != null;
+			case TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION:
+				return dtsComputedNameExpression != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -234,6 +316,7 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 		if (baseClass == TStructMember.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.TSTRUCT_FIELD__DEFINED_MEMBER: return TypesPackage.TSTRUCT_MEMBER__DEFINED_MEMBER;
+				case TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION: return TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION;
 				default: return -1;
 			}
 		}
@@ -250,6 +333,7 @@ public class TStructFieldImpl extends TFieldImpl implements TStructField {
 		if (baseClass == TStructMember.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.TSTRUCT_MEMBER__DEFINED_MEMBER: return TypesPackage.TSTRUCT_FIELD__DEFINED_MEMBER;
+				case TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION: return TypesPackage.TSTRUCT_FIELD__DTS_COMPUTED_NAME_EXPRESSION;
 				default: return -1;
 			}
 		}

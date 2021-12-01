@@ -15,6 +15,7 @@ import com.google.common.base.Objects;
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -23,6 +24,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.n4js.ts.types.ExpressionInTypeRef;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TStructMember;
@@ -38,6 +40,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TStructMemberImpl#getDefinedMember <em>Defined Member</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TStructMemberImpl#getDtsComputedNameExpression <em>Dts Computed Name Expression</em>}</li>
  * </ul>
  *
  * @generated
@@ -52,6 +55,16 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 	 * @ordered
 	 */
 	protected TStructMember definedMember;
+
+	/**
+	 * The cached value of the '{@link #getDtsComputedNameExpression() <em>Dts Computed Name Expression</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDtsComputedNameExpression()
+	 * @generated
+	 * @ordered
+	 */
+	protected ExpressionInTypeRef dtsComputedNameExpression;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -118,6 +131,51 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 	 * @generated
 	 */
 	@Override
+	public ExpressionInTypeRef getDtsComputedNameExpression() {
+		return dtsComputedNameExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetDtsComputedNameExpression(ExpressionInTypeRef newDtsComputedNameExpression, NotificationChain msgs) {
+		ExpressionInTypeRef oldDtsComputedNameExpression = dtsComputedNameExpression;
+		dtsComputedNameExpression = newDtsComputedNameExpression;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION, oldDtsComputedNameExpression, newDtsComputedNameExpression);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDtsComputedNameExpression(ExpressionInTypeRef newDtsComputedNameExpression) {
+		if (newDtsComputedNameExpression != dtsComputedNameExpression) {
+			NotificationChain msgs = null;
+			if (dtsComputedNameExpression != null)
+				msgs = ((InternalEObject)dtsComputedNameExpression).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION, null, msgs);
+			if (newDtsComputedNameExpression != null)
+				msgs = ((InternalEObject)newDtsComputedNameExpression).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION, null, msgs);
+			msgs = basicSetDtsComputedNameExpression(newDtsComputedNameExpression, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION, newDtsComputedNameExpression, newDtsComputedNameExpression));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public MemberAccessModifier getDefaultMemberAccessModifier() {
 		return MemberAccessModifier.PUBLIC;
 	}
@@ -168,11 +226,27 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION:
+				return basicSetDtsComputedNameExpression(null, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.TSTRUCT_MEMBER__DEFINED_MEMBER:
 				if (resolve) return getDefinedMember();
 				return basicGetDefinedMember();
+			case TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION:
+				return getDtsComputedNameExpression();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -187,6 +261,9 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 		switch (featureID) {
 			case TypesPackage.TSTRUCT_MEMBER__DEFINED_MEMBER:
 				setDefinedMember((TStructMember)newValue);
+				return;
+			case TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION:
+				setDtsComputedNameExpression((ExpressionInTypeRef)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -203,6 +280,9 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 			case TypesPackage.TSTRUCT_MEMBER__DEFINED_MEMBER:
 				setDefinedMember((TStructMember)null);
 				return;
+			case TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION:
+				setDtsComputedNameExpression((ExpressionInTypeRef)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -217,6 +297,8 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 		switch (featureID) {
 			case TypesPackage.TSTRUCT_MEMBER__DEFINED_MEMBER:
 				return definedMember != null;
+			case TypesPackage.TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION:
+				return dtsComputedNameExpression != null;
 		}
 		return super.eIsSet(featureID);
 	}

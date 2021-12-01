@@ -99,6 +99,7 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.TN4_CLASSIFIER: return createTN4Classifier();
 			case TypesPackage.TCLASS: return createTClass();
 			case TypesPackage.TINTERFACE: return createTInterface();
+			case TypesPackage.EXPRESSION_IN_TYPE_REF: return createExpressionInTypeRef();
 			case TypesPackage.TMETHOD: return createTMethod();
 			case TypesPackage.TSTRUCT_METHOD: return createTStructMethod();
 			case TypesPackage.TFORMAL_PARAMETER: return createTFormalParameter();
@@ -492,6 +493,17 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public TInterface createTInterface() {
 		TInterfaceImpl tInterface = new TInterfaceImpl();
 		return tInterface;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ExpressionInTypeRef createExpressionInTypeRef() {
+		ExpressionInTypeRefImpl expressionInTypeRef = new ExpressionInTypeRefImpl();
+		return expressionInTypeRef;
 	}
 
 	/**

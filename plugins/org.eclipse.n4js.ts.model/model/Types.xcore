@@ -31,6 +31,7 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EMap
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
@@ -1326,6 +1327,8 @@ abstract class TStructMember extends TMember {
 	 */
 	refers transient TStructMember definedMember
 
+	contains ExpressionInTypeRef dtsComputedNameExpression
+
 	/**
 	 * The default access modifier for struct members is public. This cannot be changed.
 	 */
@@ -1357,6 +1360,11 @@ abstract class TStructMember extends TMember {
 	op boolean isASTConstructSignature() {
 		return this instanceof TStructMethod && this.name == "new";
 	}
+}
+
+class ExpressionInTypeRef {
+	contains LiteralTypeRef nameTypeRef
+	String[] identifierNames
 }
 
 /*

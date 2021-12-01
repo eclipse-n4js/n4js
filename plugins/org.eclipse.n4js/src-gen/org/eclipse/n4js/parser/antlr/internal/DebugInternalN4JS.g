@@ -10749,6 +10749,25 @@ ruleTLiteralOrComputedPropertyName:
 		RULE_STRING
 		    |
 		ruleNumericLiteralAsString
+		    |
+		'['
+		ruleExpressionInTypeRef
+		']'
+	)
+;
+
+// Rule ExpressionInTypeRef
+ruleExpressionInTypeRef:
+	(
+		ruleNumericLiteralTypeRef
+		    |
+		ruleStringLiteralTypeRef
+		    |
+		ruleIdentifierName
+		(
+			'.'
+			ruleIdentifierName
+		)*
 	)
 ;
 

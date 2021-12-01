@@ -17073,11 +17073,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getTypePredicateWithPrimaryAccess().getRule();
 	}
 	
+	//// FIXME WIP
 	//fragment TLiteralOrComputedPropertyName*:
-	//    name=IdentifierName
+	//      name=IdentifierName
 	//    | name=STRING
 	//    | name=NumericLiteralAsString
-	////    | '[' TypeRef ']'
+	//    | '[' dtsComputedNameExpression=ExpressionInTypeRef ']'
 	//;
 	public TypeExpressionsGrammarAccess.TLiteralOrComputedPropertyNameElements getTLiteralOrComputedPropertyNameAccess() {
 		return gaTypeExpressions.getTLiteralOrComputedPropertyNameAccess();
@@ -17085,6 +17086,19 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getTLiteralOrComputedPropertyNameRule() {
 		return getTLiteralOrComputedPropertyNameAccess().getRule();
+	}
+	
+	//ExpressionInTypeRef:
+	//      nameTypeRef=NumericLiteralTypeRef
+	//    | nameTypeRef=StringLiteralTypeRef
+	//    | identifierNames+=IdentifierName ('.' identifierNames+=IdentifierName)* // e.g. [Symbol.iterator]
+	//;
+	public TypeExpressionsGrammarAccess.ExpressionInTypeRefElements getExpressionInTypeRefAccess() {
+		return gaTypeExpressions.getExpressionInTypeRefAccess();
+	}
+	
+	public ParserRule getExpressionInTypeRefRule() {
+		return getExpressionInTypeRefAccess().getRule();
 	}
 	
 	///*

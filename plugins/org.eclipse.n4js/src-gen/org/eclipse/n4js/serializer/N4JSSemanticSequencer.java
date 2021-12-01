@@ -163,6 +163,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
+import org.eclipse.n4js.ts.types.ExpressionInTypeRef;
 import org.eclipse.n4js.ts.types.TAnonymousFormalParameter;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TStructField;
@@ -1688,6 +1689,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 			}
 		else if (epackage == TypesPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
+			case TypesPackage.EXPRESSION_IN_TYPE_REF:
+				sequence_ExpressionInTypeRef(context, (ExpressionInTypeRef) semanticObject); 
+				return; 
 			case TypesPackage.TANONYMOUS_FORMAL_PARAMETER:
 				sequence_ColonSepTypeRef_DefaultFormalParameter_TAnonymousFormalParameter(context, (TAnonymousFormalParameter) semanticObject); 
 				return; 

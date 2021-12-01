@@ -2888,18 +2888,25 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cNameSTRINGTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
 		private final Assignment cNameAssignment_2 = (Assignment)cAlternatives.eContents().get(2);
 		private final RuleCall cNameNumericLiteralAsStringParserRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
+		private final Group cGroup_3 = (Group)cAlternatives.eContents().get(3);
+		private final Keyword cLeftSquareBracketKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
+		private final Assignment cDtsComputedNameExpressionAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cDtsComputedNameExpressionExpressionInTypeRefParserRuleCall_3_1_0 = (RuleCall)cDtsComputedNameExpressionAssignment_3_1.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_3_2 = (Keyword)cGroup_3.eContents().get(2);
 		
+		//// FIXME WIP
 		//fragment TLiteralOrComputedPropertyName*:
-		//    name=IdentifierName
+		//      name=IdentifierName
 		//    | name=STRING
 		//    | name=NumericLiteralAsString
-		////    | '[' TypeRef ']'
+		//    | '[' dtsComputedNameExpression=ExpressionInTypeRef ']'
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//name=IdentifierName
+		//  name=IdentifierName
 		//| name=STRING
 		//| name=NumericLiteralAsString
+		//| '[' dtsComputedNameExpression=ExpressionInTypeRef ']'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//name=IdentifierName
@@ -2919,6 +2926,81 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//NumericLiteralAsString
 		public RuleCall getNameNumericLiteralAsStringParserRuleCall_2_0() { return cNameNumericLiteralAsStringParserRuleCall_2_0; }
+		
+		//'[' dtsComputedNameExpression=ExpressionInTypeRef ']'
+		public Group getGroup_3() { return cGroup_3; }
+		
+		//'['
+		public Keyword getLeftSquareBracketKeyword_3_0() { return cLeftSquareBracketKeyword_3_0; }
+		
+		//dtsComputedNameExpression=ExpressionInTypeRef
+		public Assignment getDtsComputedNameExpressionAssignment_3_1() { return cDtsComputedNameExpressionAssignment_3_1; }
+		
+		//ExpressionInTypeRef
+		public RuleCall getDtsComputedNameExpressionExpressionInTypeRefParserRuleCall_3_1_0() { return cDtsComputedNameExpressionExpressionInTypeRefParserRuleCall_3_1_0; }
+		
+		//']'
+		public Keyword getRightSquareBracketKeyword_3_2() { return cRightSquareBracketKeyword_3_2; }
+	}
+	public class ExpressionInTypeRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.ExpressionInTypeRef");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final Assignment cNameTypeRefAssignment_0 = (Assignment)cAlternatives.eContents().get(0);
+		private final RuleCall cNameTypeRefNumericLiteralTypeRefParserRuleCall_0_0 = (RuleCall)cNameTypeRefAssignment_0.eContents().get(0);
+		private final Assignment cNameTypeRefAssignment_1 = (Assignment)cAlternatives.eContents().get(1);
+		private final RuleCall cNameTypeRefStringLiteralTypeRefParserRuleCall_1_0 = (RuleCall)cNameTypeRefAssignment_1.eContents().get(0);
+		private final Group cGroup_2 = (Group)cAlternatives.eContents().get(2);
+		private final Assignment cIdentifierNamesAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
+		private final RuleCall cIdentifierNamesIdentifierNameParserRuleCall_2_0_0 = (RuleCall)cIdentifierNamesAssignment_2_0.eContents().get(0);
+		private final Group cGroup_2_1 = (Group)cGroup_2.eContents().get(1);
+		private final Keyword cFullStopKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
+		private final Assignment cIdentifierNamesAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
+		private final RuleCall cIdentifierNamesIdentifierNameParserRuleCall_2_1_1_0 = (RuleCall)cIdentifierNamesAssignment_2_1_1.eContents().get(0);
+		
+		//ExpressionInTypeRef:
+		//      nameTypeRef=NumericLiteralTypeRef
+		//    | nameTypeRef=StringLiteralTypeRef
+		//    | identifierNames+=IdentifierName ('.' identifierNames+=IdentifierName)* // e.g. [Symbol.iterator]
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//  nameTypeRef=NumericLiteralTypeRef
+		//| nameTypeRef=StringLiteralTypeRef
+		//| identifierNames+=IdentifierName ('.' identifierNames+=IdentifierName)*
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//nameTypeRef=NumericLiteralTypeRef
+		public Assignment getNameTypeRefAssignment_0() { return cNameTypeRefAssignment_0; }
+		
+		//NumericLiteralTypeRef
+		public RuleCall getNameTypeRefNumericLiteralTypeRefParserRuleCall_0_0() { return cNameTypeRefNumericLiteralTypeRefParserRuleCall_0_0; }
+		
+		//nameTypeRef=StringLiteralTypeRef
+		public Assignment getNameTypeRefAssignment_1() { return cNameTypeRefAssignment_1; }
+		
+		//StringLiteralTypeRef
+		public RuleCall getNameTypeRefStringLiteralTypeRefParserRuleCall_1_0() { return cNameTypeRefStringLiteralTypeRefParserRuleCall_1_0; }
+		
+		//identifierNames+=IdentifierName ('.' identifierNames+=IdentifierName)*
+		public Group getGroup_2() { return cGroup_2; }
+		
+		//identifierNames+=IdentifierName
+		public Assignment getIdentifierNamesAssignment_2_0() { return cIdentifierNamesAssignment_2_0; }
+		
+		//IdentifierName
+		public RuleCall getIdentifierNamesIdentifierNameParserRuleCall_2_0_0() { return cIdentifierNamesIdentifierNameParserRuleCall_2_0_0; }
+		
+		//('.' identifierNames+=IdentifierName)*
+		public Group getGroup_2_1() { return cGroup_2_1; }
+		
+		//'.'
+		public Keyword getFullStopKeyword_2_1_0() { return cFullStopKeyword_2_1_0; }
+		
+		//identifierNames+=IdentifierName
+		public Assignment getIdentifierNamesAssignment_2_1_1() { return cIdentifierNamesAssignment_2_1_1; }
+		
+		//IdentifierName
+		public RuleCall getIdentifierNamesIdentifierNameParserRuleCall_2_1_1_0() { return cIdentifierNamesIdentifierNameParserRuleCall_2_1_1_0; }
 	}
 	public class BindingIdentifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.BindingIdentifier");
@@ -3528,6 +3610,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final TypePredicateElements pTypePredicate;
 	private final TypePredicateWithPrimaryElements pTypePredicateWithPrimary;
 	private final TLiteralOrComputedPropertyNameElements pTLiteralOrComputedPropertyName;
+	private final ExpressionInTypeRefElements pExpressionInTypeRef;
 	private final BindingIdentifierElements pBindingIdentifier;
 	private final IdentifierNameElements pIdentifierName;
 	private final ReservedWordElements pReservedWord;
@@ -3625,6 +3708,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pTypePredicate = new TypePredicateElements();
 		this.pTypePredicateWithPrimary = new TypePredicateWithPrimaryElements();
 		this.pTLiteralOrComputedPropertyName = new TLiteralOrComputedPropertyNameElements();
+		this.pExpressionInTypeRef = new ExpressionInTypeRefElements();
 		this.pBindingIdentifier = new BindingIdentifierElements();
 		this.pIdentifierName = new IdentifierNameElements();
 		this.pReservedWord = new ReservedWordElements();
@@ -4412,11 +4496,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return getTypePredicateWithPrimaryAccess().getRule();
 	}
 	
+	//// FIXME WIP
 	//fragment TLiteralOrComputedPropertyName*:
-	//    name=IdentifierName
+	//      name=IdentifierName
 	//    | name=STRING
 	//    | name=NumericLiteralAsString
-	////    | '[' TypeRef ']'
+	//    | '[' dtsComputedNameExpression=ExpressionInTypeRef ']'
 	//;
 	public TLiteralOrComputedPropertyNameElements getTLiteralOrComputedPropertyNameAccess() {
 		return pTLiteralOrComputedPropertyName;
@@ -4424,6 +4509,19 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	
 	public ParserRule getTLiteralOrComputedPropertyNameRule() {
 		return getTLiteralOrComputedPropertyNameAccess().getRule();
+	}
+	
+	//ExpressionInTypeRef:
+	//      nameTypeRef=NumericLiteralTypeRef
+	//    | nameTypeRef=StringLiteralTypeRef
+	//    | identifierNames+=IdentifierName ('.' identifierNames+=IdentifierName)* // e.g. [Symbol.iterator]
+	//;
+	public ExpressionInTypeRefElements getExpressionInTypeRefAccess() {
+		return pExpressionInTypeRef;
+	}
+	
+	public ParserRule getExpressionInTypeRefRule() {
+		return getExpressionInTypeRefAccess().getRule();
 	}
 	
 	///*

@@ -43600,6 +43600,141 @@ ruleTLiteralOrComputedPropertyName[EObject in_current]  returns [EObject current
 				}
 			)
 		)
+		    |
+		(
+			otherlv_3=LeftSquareBracket
+			{
+				newLeafNode(otherlv_3, grammarAccess.getTLiteralOrComputedPropertyNameAccess().getLeftSquareBracketKeyword_3_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getTLiteralOrComputedPropertyNameAccess().getDtsComputedNameExpressionExpressionInTypeRefParserRuleCall_3_1_0());
+					}
+					lv_dtsComputedNameExpression_4_0=ruleExpressionInTypeRef
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getTLiteralOrComputedPropertyNameRule());
+						}
+						set(
+							$current,
+							"dtsComputedNameExpression",
+							lv_dtsComputedNameExpression_4_0,
+							"org.eclipse.n4js.TypeExpressions.ExpressionInTypeRef");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+			otherlv_5=RightSquareBracket
+			{
+				newLeafNode(otherlv_5, grammarAccess.getTLiteralOrComputedPropertyNameAccess().getRightSquareBracketKeyword_3_2());
+			}
+		)
+	)
+;
+
+// Entry rule entryRuleExpressionInTypeRef
+entryRuleExpressionInTypeRef returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getExpressionInTypeRefRule()); }
+	iv_ruleExpressionInTypeRef=ruleExpressionInTypeRef
+	{ $current=$iv_ruleExpressionInTypeRef.current; }
+	EOF;
+
+// Rule ExpressionInTypeRef
+ruleExpressionInTypeRef returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getExpressionInTypeRefAccess().getNameTypeRefNumericLiteralTypeRefParserRuleCall_0_0());
+				}
+				lv_nameTypeRef_0_0=ruleNumericLiteralTypeRef
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getExpressionInTypeRefRule());
+					}
+					set(
+						$current,
+						"nameTypeRef",
+						lv_nameTypeRef_0_0,
+						"org.eclipse.n4js.TypeExpressions.NumericLiteralTypeRef");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		    |
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getExpressionInTypeRefAccess().getNameTypeRefStringLiteralTypeRefParserRuleCall_1_0());
+				}
+				lv_nameTypeRef_1_0=ruleStringLiteralTypeRef
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getExpressionInTypeRefRule());
+					}
+					set(
+						$current,
+						"nameTypeRef",
+						lv_nameTypeRef_1_0,
+						"org.eclipse.n4js.TypeExpressions.StringLiteralTypeRef");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		    |
+		(
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getExpressionInTypeRefAccess().getIdentifierNamesIdentifierNameParserRuleCall_2_0_0());
+					}
+					lv_identifierNames_2_0=ruleIdentifierName
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getExpressionInTypeRefRule());
+						}
+						add(
+							$current,
+							"identifierNames",
+							lv_identifierNames_2_0,
+							"org.eclipse.n4js.TypeExpressions.IdentifierName");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+			(
+				otherlv_3=FullStop
+				{
+					newLeafNode(otherlv_3, grammarAccess.getExpressionInTypeRefAccess().getFullStopKeyword_2_1_0());
+				}
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getExpressionInTypeRefAccess().getIdentifierNamesIdentifierNameParserRuleCall_2_1_1_0());
+						}
+						lv_identifierNames_4_0=ruleIdentifierName
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getExpressionInTypeRefRule());
+							}
+							add(
+								$current,
+								"identifierNames",
+								lv_identifierNames_4_0,
+								"org.eclipse.n4js.TypeExpressions.IdentifierName");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)*
+		)
 	)
 ;
 

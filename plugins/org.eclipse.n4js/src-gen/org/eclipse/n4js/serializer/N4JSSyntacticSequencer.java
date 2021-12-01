@@ -716,6 +716,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     'readonly'?
 	 *
 	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) '[' dtsComputedNameExpression=ExpressionInTypeRef
 	 *     (rule start) (ambiguity) name=IdentifierName
 	 *     (rule start) (ambiguity) name=NumericLiteralAsString
 	 *     (rule start) (ambiguity) name=STRING

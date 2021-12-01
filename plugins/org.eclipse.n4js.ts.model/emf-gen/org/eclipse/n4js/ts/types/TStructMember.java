@@ -27,6 +27,7 @@ package org.eclipse.n4js.ts.types;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.TStructMember#getDefinedMember <em>Defined Member</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TStructMember#getDtsComputedNameExpression <em>Dts Computed Name Expression</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTStructMember()
@@ -65,6 +66,28 @@ public interface TStructMember extends TMember {
 	 * @generated
 	 */
 	void setDefinedMember(TStructMember value);
+
+	/**
+	 * Returns the value of the '<em><b>Dts Computed Name Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Dts Computed Name Expression</em>' containment reference.
+	 * @see #setDtsComputedNameExpression(ExpressionInTypeRef)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTStructMember_DtsComputedNameExpression()
+	 * @model containment="true"
+	 * @generated
+	 */
+	ExpressionInTypeRef getDtsComputedNameExpression();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TStructMember#getDtsComputedNameExpression <em>Dts Computed Name Expression</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dts Computed Name Expression</em>' containment reference.
+	 * @see #getDtsComputedNameExpression()
+	 * @generated
+	 */
+	void setDtsComputedNameExpression(ExpressionInTypeRef value);
 
 	/**
 	 * <!-- begin-user-doc -->

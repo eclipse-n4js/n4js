@@ -347,12 +347,18 @@ TypePredicateWithPrimary returns TypePredicate:
 	=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=PrimaryTypeExpression
 ;
 
+// FIXME WIP
 fragment TLiteralOrComputedPropertyName*:
-	name=IdentifierName
+	  name=IdentifierName
 	| name=STRING
 	| name=NumericLiteralAsString
-// FIXME
-//	| '[' TypeRef ']'
+	| '[' dtsComputedNameExpression=ExpressionInTypeRef ']'
+;
+
+ExpressionInTypeRef:
+	  nameTypeRef=NumericLiteralTypeRef
+	| nameTypeRef=StringLiteralTypeRef
+	| identifierNames+=IdentifierName ('.' identifierNames+=IdentifierName)* // e.g. [Symbol.iterator]
 ;
 
 /*

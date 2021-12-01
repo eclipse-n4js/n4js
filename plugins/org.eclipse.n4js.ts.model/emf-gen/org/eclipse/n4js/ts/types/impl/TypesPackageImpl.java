@@ -36,6 +36,7 @@ import org.eclipse.n4js.ts.types.ArrayLike;
 import org.eclipse.n4js.ts.types.BuiltInType;
 import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.ExpressionInTypeRef;
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.GenericType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -384,6 +385,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass tStructMemberEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass expressionInTypeRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2754,6 +2762,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getTStructMember_DtsComputedNameExpression() {
+		return (EReference)tStructMemberEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getTStructMember__GetDefaultMemberAccessModifier() {
 		return tStructMemberEClass.getEOperations().get(0);
 	}
@@ -2796,6 +2814,36 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EOperation getTStructMember__IsASTConstructSignature() {
 		return tStructMemberEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getExpressionInTypeRef() {
+		return expressionInTypeRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getExpressionInTypeRef_NameTypeRef() {
+		return (EReference)expressionInTypeRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getExpressionInTypeRef_IdentifierNames() {
+		return (EAttribute)expressionInTypeRefEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -3925,11 +3973,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		tStructMemberEClass = createEClass(TSTRUCT_MEMBER);
 		createEReference(tStructMemberEClass, TSTRUCT_MEMBER__DEFINED_MEMBER);
+		createEReference(tStructMemberEClass, TSTRUCT_MEMBER__DTS_COMPUTED_NAME_EXPRESSION);
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER);
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___IS_STATIC);
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___GET_MEMBER_ACCESS_MODIFIER);
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___IS_AST_CALL_SIGNATURE);
 		createEOperation(tStructMemberEClass, TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE);
+
+		expressionInTypeRefEClass = createEClass(EXPRESSION_IN_TYPE_REF);
+		createEReference(expressionInTypeRefEClass, EXPRESSION_IN_TYPE_REF__NAME_TYPE_REF);
+		createEAttribute(expressionInTypeRefEClass, EXPRESSION_IN_TYPE_REF__IDENTIFIER_NAMES);
 
 		tMethodEClass = createEClass(TMETHOD);
 		createEAttribute(tMethodEClass, TMETHOD__DECLARED_ABSTRACT);
@@ -4536,6 +4589,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEClass(tStructMemberEClass, TStructMember.class, "TStructMember", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTStructMember_DefinedMember(), this.getTStructMember(), null, "definedMember", null, 0, 1, TStructMember.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTStructMember_DtsComputedNameExpression(), this.getExpressionInTypeRef(), null, "dtsComputedNameExpression", null, 0, 1, TStructMember.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTStructMember__GetDefaultMemberAccessModifier(), this.getMemberAccessModifier(), "getDefaultMemberAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -4546,6 +4600,10 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTStructMember__IsASTCallSignature(), theEcorePackage.getEBoolean(), "isASTCallSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTStructMember__IsASTConstructSignature(), theEcorePackage.getEBoolean(), "isASTConstructSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(expressionInTypeRefEClass, ExpressionInTypeRef.class, "ExpressionInTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getExpressionInTypeRef_NameTypeRef(), theTypeRefsPackage.getLiteralTypeRef(), null, "nameTypeRef", null, 0, 1, ExpressionInTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExpressionInTypeRef_IdentifierNames(), theEcorePackage.getEString(), "identifierNames", null, 0, -1, ExpressionInTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tMethodEClass, TMethod.class, "TMethod", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTMethod_DeclaredAbstract(), theEcorePackage.getEBoolean(), "declaredAbstract", null, 0, 1, TMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

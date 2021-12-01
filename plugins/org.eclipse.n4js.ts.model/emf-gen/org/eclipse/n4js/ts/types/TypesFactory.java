@@ -282,6 +282,15 @@ public interface TypesFactory extends EFactory {
 	TInterface createTInterface();
 
 	/**
+	 * Returns a new object of class '<em>Expression In Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Expression In Type Ref</em>'.
+	 * @generated
+	 */
+	ExpressionInTypeRef createExpressionInTypeRef();
+
+	/**
 	 * Returns a new object of class '<em>TMethod</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

@@ -38,6 +38,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
+import org.eclipse.n4js.ts.types.ExpressionInTypeRef;
 import org.eclipse.n4js.ts.types.TAnonymousFormalParameter;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TStructField;
@@ -291,6 +292,9 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 			}
 		else if (epackage == TypesPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
+			case TypesPackage.EXPRESSION_IN_TYPE_REF:
+				sequence_ExpressionInTypeRef(context, (ExpressionInTypeRef) semanticObject); 
+				return; 
 			case TypesPackage.TANONYMOUS_FORMAL_PARAMETER:
 				sequence_ColonSepTypeRef_DefaultFormalParameter_TAnonymousFormalParameter(context, (TAnonymousFormalParameter) semanticObject); 
 				return; 
@@ -543,7 +547,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         (name=IdentifierName | name=STRING | name=NumericLiteralAsString)? 
+	 *         (name=IdentifierName | name=STRING | name=NumericLiteralAsString | dtsComputedNameExpression=ExpressionInTypeRef)? 
 	 *         (fpars+=TAnonymousFormalParameter fpars+=TAnonymousFormalParameter*)? 
 	 *         (returnTypePredicate=TypePredicate | returnTypeRef=TypeRef)?
 	 *     )
@@ -587,7 +591,11 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TStructField returns TStructField
 	 *
 	 * Constraint:
-	 *     ((name=IdentifierName | name=STRING | name=NumericLiteralAsString) optional?='?'? typeRef=TypeRef?)
+	 *     (
+	 *         (name=IdentifierName | name=STRING | name=NumericLiteralAsString | dtsComputedNameExpression=ExpressionInTypeRef) 
+	 *         optional?='?'? 
+	 *         typeRef=TypeRef?
+	 *     )
 	 */
 	protected void sequence_ColonSepTypeRef_TLiteralOrComputedPropertyName_TStructField(ISerializationContext context, TStructField semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -600,7 +608,11 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TStructGetter returns TStructGetter
 	 *
 	 * Constraint:
-	 *     ((name=IdentifierName | name=STRING | name=NumericLiteralAsString) optional?='?'? typeRef=TypeRef?)
+	 *     (
+	 *         (name=IdentifierName | name=STRING | name=NumericLiteralAsString | dtsComputedNameExpression=ExpressionInTypeRef) 
+	 *         optional?='?'? 
+	 *         typeRef=TypeRef?
+	 *     )
 	 */
 	protected void sequence_ColonSepTypeRef_TLiteralOrComputedPropertyName_TStructGetter(ISerializationContext context, TStructGetter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -660,6 +672,18 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     {Wildcard}
 	 */
 	protected void sequence_EmptyIterableTypeExpressionTail_WildcardOldNotationWithoutBound(ISerializationContext context, Wildcard semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ExpressionInTypeRef returns ExpressionInTypeRef
+	 *
+	 * Constraint:
+	 *     (nameTypeRef=NumericLiteralTypeRef | nameTypeRef=StringLiteralTypeRef | (identifierNames+=IdentifierName identifierNames+=IdentifierName*))
+	 */
+	protected void sequence_ExpressionInTypeRef(ISerializationContext context, ExpressionInTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -1017,7 +1041,11 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TStructSetter returns TStructSetter
 	 *
 	 * Constraint:
-	 *     ((name=IdentifierName | name=STRING | name=NumericLiteralAsString) optional?='?'? fpar=TAnonymousFormalParameter)
+	 *     (
+	 *         (name=IdentifierName | name=STRING | name=NumericLiteralAsString | dtsComputedNameExpression=ExpressionInTypeRef) 
+	 *         optional?='?'? 
+	 *         fpar=TAnonymousFormalParameter
+	 *     )
 	 */
 	protected void sequence_TLiteralOrComputedPropertyName_TStructSetter(ISerializationContext context, TStructSetter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

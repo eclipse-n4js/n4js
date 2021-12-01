@@ -495,6 +495,12 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypesPackage.EXPRESSION_IN_TYPE_REF: {
+				ExpressionInTypeRef expressionInTypeRef = (ExpressionInTypeRef)theEObject;
+				T result = caseExpressionInTypeRef(expressionInTypeRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypesPackage.TMETHOD: {
 				TMethod tMethod = (TMethod)theEObject;
 				T result = caseTMethod(tMethod);
@@ -1345,6 +1351,21 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTStructMember(TStructMember object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Expression In Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Expression In Type Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExpressionInTypeRef(ExpressionInTypeRef object) {
 		return null;
 	}
 
