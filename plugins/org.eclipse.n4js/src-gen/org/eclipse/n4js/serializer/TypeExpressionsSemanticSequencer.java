@@ -100,8 +100,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_IntersectionTypeExpression_IntersectionTypeExpressionOLD(context, (IntersectionTypeExpression) semanticObject); 
@@ -132,8 +132,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_ArrayNTypeExpression_ArrayTypeExpression_TypeArguments_TypeRefWithModifiers_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
@@ -172,8 +172,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -208,8 +208,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -232,8 +232,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -259,8 +259,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_UnionTypeExpression_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
@@ -341,8 +341,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRef
 	 *     OperatorTypeRef returns ParameterizedTypeRef
 	 *     ArrayTypeExpression returns ParameterizedTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns ParameterizedTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns ParameterizedTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns ParameterizedTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns ParameterizedTypeRef
 	 *     PrimaryTypeExpression returns ParameterizedTypeRef
 	 *     TypeArgument returns ParameterizedTypeRef
 	 *
@@ -352,7 +352,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_0_4_0_0 arrayTypeExpression?='[') | 
 	 *         (declaredTypeArgs+=Wildcard arrayTypeExpression?='[') | 
 	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0 arrayTypeExpression?='[') | 
-	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_3_1_0_0_0 arrayTypeExpression?='[') | 
+	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_2_1_0_0_0 arrayTypeExpression?='[') | 
 	 *         (
 	 *             arrayNTypeExpression?='[' 
 	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
@@ -421,13 +421,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns IndexAccessTypeRef
 	 *     OperatorTypeRef returns IndexAccessTypeRef
 	 *     ArrayTypeExpression returns IndexAccessTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns IndexAccessTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns IndexAccessTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns IndexAccessTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns IndexAccessTypeRef
 	 *     PrimaryTypeExpression returns IndexAccessTypeRef
 	 *     TypeArgument returns IndexAccessTypeRef
 	 *
 	 * Constraint:
-	 *     (targetTypeRef=ArrayTypeExpression_IndexAccessTypeRef_3_1_0_1_0 indexTypeRef=TypeRef)
+	 *     (targetTypeRef=ArrayTypeExpression_IndexAccessTypeRef_2_1_0_1_0 indexTypeRef=TypeRef)
 	 */
 	protected void sequence_ArrayTypeExpression(ISerializationContext context, IndexAccessTypeRef semanticObject) {
 		if (errorAcceptor != null) {
@@ -437,8 +437,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypeRefsPackage.Literals.INDEX_ACCESS_TYPE_REF__INDEX_TYPE_REF));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0(), semanticObject.getTargetTypeRef());
-		feeder.accept(grammarAccess.getArrayTypeExpressionAccess().getIndexTypeRefTypeRefParserRuleCall_3_1_0_1_2_0(), semanticObject.getIndexTypeRef());
+		feeder.accept(grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0(), semanticObject.getTargetTypeRef());
+		feeder.accept(grammarAccess.getArrayTypeExpressionAccess().getIndexTypeRefTypeRefParserRuleCall_2_1_0_1_2_0(), semanticObject.getIndexTypeRef());
 		feeder.finish();
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 	}
@@ -490,8 +490,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns FunctionTypeExpression
 	 *     OperatorTypeRef returns FunctionTypeExpression
 	 *     ArrayTypeExpression returns FunctionTypeExpression
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns FunctionTypeExpression
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns FunctionTypeExpression
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns FunctionTypeExpression
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns FunctionTypeExpression
 	 *     PrimaryTypeExpression returns FunctionTypeExpression
 	 *     ArrowFunctionTypeExpression returns FunctionTypeExpression
 	 *     TypeArgument returns FunctionTypeExpression
@@ -520,8 +520,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns BooleanLiteralTypeRef
 	 *     OperatorTypeRef returns BooleanLiteralTypeRef
 	 *     ArrayTypeExpression returns BooleanLiteralTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns BooleanLiteralTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns BooleanLiteralTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns BooleanLiteralTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns BooleanLiteralTypeRef
 	 *     PrimaryTypeExpression returns BooleanLiteralTypeRef
 	 *     LiteralTypeRef returns BooleanLiteralTypeRef
 	 *     BooleanLiteralTypeRef returns BooleanLiteralTypeRef
@@ -618,8 +618,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ConditionalTypeRef
 	 *     OperatorTypeRef returns ConditionalTypeRef
 	 *     ArrayTypeExpression returns ConditionalTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns ConditionalTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns ConditionalTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns ConditionalTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns ConditionalTypeRef
 	 *     PrimaryTypeExpression returns ConditionalTypeRef
 	 *     TypeArgument returns ConditionalTypeRef
 	 *
@@ -675,8 +675,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns InferTypeRef
 	 *     OperatorTypeRef returns InferTypeRef
 	 *     ArrayTypeExpression returns InferTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns InferTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns InferTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns InferTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns InferTypeRef
 	 *     PrimaryTypeExpression returns InferTypeRef
 	 *     TypeArgument returns InferTypeRef
 	 *     InferTypeRef returns InferTypeRef
@@ -719,8 +719,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns IntersectionTypeExpression
 	 *     OperatorTypeRef returns IntersectionTypeExpression
 	 *     ArrayTypeExpression returns IntersectionTypeExpression
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns IntersectionTypeExpression
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns IntersectionTypeExpression
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns IntersectionTypeExpression
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns IntersectionTypeExpression
 	 *     PrimaryTypeExpression returns IntersectionTypeExpression
 	 *     TypeArgument returns IntersectionTypeExpression
 	 *
@@ -758,8 +758,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns MappedTypeRef
 	 *     OperatorTypeRef returns MappedTypeRef
 	 *     ArrayTypeExpression returns MappedTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns MappedTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns MappedTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns MappedTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns MappedTypeRef
 	 *     PrimaryTypeExpression returns MappedTypeRef
 	 *     TypeRefWithModifiers returns MappedTypeRef
 	 *     MappedTypeRef returns MappedTypeRef
@@ -791,8 +791,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns NumericLiteralTypeRef
 	 *     OperatorTypeRef returns NumericLiteralTypeRef
 	 *     ArrayTypeExpression returns NumericLiteralTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns NumericLiteralTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns NumericLiteralTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns NumericLiteralTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns NumericLiteralTypeRef
 	 *     PrimaryTypeExpression returns NumericLiteralTypeRef
 	 *     LiteralTypeRef returns NumericLiteralTypeRef
 	 *     NumericLiteralTypeRef returns NumericLiteralTypeRef
@@ -828,8 +828,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns OperatorTypeRef
 	 *     OperatorTypeRef returns OperatorTypeRef
 	 *     ArrayTypeExpression returns OperatorTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns OperatorTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns OperatorTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns OperatorTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns OperatorTypeRef
 	 *     PrimaryTypeExpression returns OperatorTypeRef
 	 *     TypeArgument returns OperatorTypeRef
 	 *
@@ -885,8 +885,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRefStructural
 	 *     OperatorTypeRef returns ParameterizedTypeRefStructural
 	 *     ArrayTypeExpression returns ParameterizedTypeRefStructural
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns ParameterizedTypeRefStructural
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns ParameterizedTypeRefStructural
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns ParameterizedTypeRefStructural
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns ParameterizedTypeRefStructural
 	 *     PrimaryTypeExpression returns ParameterizedTypeRefStructural
 	 *     TypeRefWithModifiers returns ParameterizedTypeRefStructural
 	 *     TypeArgument returns ParameterizedTypeRefStructural
@@ -959,8 +959,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns QueryTypeRef
 	 *     OperatorTypeRef returns QueryTypeRef
 	 *     ArrayTypeExpression returns QueryTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns QueryTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns QueryTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns QueryTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns QueryTypeRef
 	 *     PrimaryTypeExpression returns QueryTypeRef
 	 *     TypeArgument returns QueryTypeRef
 	 *     QueryTypeRef returns QueryTypeRef
@@ -990,8 +990,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns StringLiteralTypeRef
 	 *     OperatorTypeRef returns StringLiteralTypeRef
 	 *     ArrayTypeExpression returns StringLiteralTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns StringLiteralTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns StringLiteralTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns StringLiteralTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns StringLiteralTypeRef
 	 *     PrimaryTypeExpression returns StringLiteralTypeRef
 	 *     LiteralTypeRef returns StringLiteralTypeRef
 	 *     StringLiteralTypeRef returns StringLiteralTypeRef
@@ -1048,8 +1048,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ThisTypeRefStructural
 	 *     OperatorTypeRef returns ThisTypeRefStructural
 	 *     ArrayTypeExpression returns ThisTypeRefStructural
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns ThisTypeRefStructural
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns ThisTypeRefStructural
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns ThisTypeRefStructural
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns ThisTypeRefStructural
 	 *     PrimaryTypeExpression returns ThisTypeRefStructural
 	 *     TypeRefWithModifiers returns ThisTypeRefStructural
 	 *     TypeArgument returns ThisTypeRefStructural
@@ -1100,8 +1100,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ThisTypeRefNominal
 	 *     OperatorTypeRef returns ThisTypeRefNominal
 	 *     ArrayTypeExpression returns ThisTypeRefNominal
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns ThisTypeRefNominal
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns ThisTypeRefNominal
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns ThisTypeRefNominal
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns ThisTypeRefNominal
 	 *     PrimaryTypeExpression returns ThisTypeRefNominal
 	 *     TypeRefWithModifiers returns ThisTypeRefNominal
 	 *     TypeArgument returns ThisTypeRefNominal
@@ -1206,8 +1206,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns TypeTypeRef
 	 *     OperatorTypeRef returns TypeTypeRef
 	 *     ArrayTypeExpression returns TypeTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns TypeTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns TypeTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns TypeTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns TypeTypeRef
 	 *     PrimaryTypeExpression returns TypeTypeRef
 	 *     TypeRefWithModifiers returns TypeTypeRef
 	 *     TypeTypeRef returns TypeTypeRef
@@ -1257,8 +1257,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns UnionTypeExpression
 	 *     OperatorTypeRef returns UnionTypeExpression
 	 *     ArrayTypeExpression returns UnionTypeExpression
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns UnionTypeExpression
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns UnionTypeExpression
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns UnionTypeExpression
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns UnionTypeExpression
 	 *     PrimaryTypeExpression returns UnionTypeExpression
 	 *     TypeArgument returns UnionTypeExpression
 	 *

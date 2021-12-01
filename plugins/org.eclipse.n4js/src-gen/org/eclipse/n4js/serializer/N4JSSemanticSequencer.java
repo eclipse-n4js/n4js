@@ -1497,8 +1497,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_IntersectionTypeExpression_IntersectionTypeExpressionOLD(context, (IntersectionTypeExpression) semanticObject); 
@@ -1529,8 +1529,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_ArrayNTypeExpression_ArrayTypeExpression_TypeArguments_TypeRefWithModifiers_TypeReference(context, (ParameterizedTypeRef) semanticObject); 
@@ -1569,8 +1569,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1605,8 +1605,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1629,8 +1629,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
@@ -1656,8 +1656,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_3_1_0_0_0()
-						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_3_1_0_1_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
+						|| action == grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_UnionTypeExpression_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
@@ -7643,8 +7643,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRef
 	 *     OperatorTypeRef returns ParameterizedTypeRef
 	 *     ArrayTypeExpression returns ParameterizedTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns ParameterizedTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns ParameterizedTypeRef
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns ParameterizedTypeRef
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns ParameterizedTypeRef
 	 *     PrimaryTypeExpression returns ParameterizedTypeRef
 	 *     TypeArgument returns ParameterizedTypeRef
 	 *
@@ -7660,7 +7660,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_0_4_0_0 arrayTypeExpression?='[') | 
 	 *         (declaredTypeArgs+=Wildcard arrayTypeExpression?='[') | 
 	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0 arrayTypeExpression?='[') | 
-	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_3_1_0_0_0 arrayTypeExpression?='[') | 
+	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_2_1_0_0_0 arrayTypeExpression?='[') | 
 	 *         (
 	 *             arrayNTypeExpression?='[' 
 	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
@@ -21835,8 +21835,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRefStructural
 	 *     OperatorTypeRef returns ParameterizedTypeRefStructural
 	 *     ArrayTypeExpression returns ParameterizedTypeRefStructural
-	 *     ArrayTypeExpression.ParameterizedTypeRef_3_1_0_0_0 returns ParameterizedTypeRefStructural
-	 *     ArrayTypeExpression.IndexAccessTypeRef_3_1_0_1_0 returns ParameterizedTypeRefStructural
+	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns ParameterizedTypeRefStructural
+	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns ParameterizedTypeRefStructural
 	 *     PrimaryTypeExpression returns ParameterizedTypeRefStructural
 	 *     TypeRefWithModifiers returns ParameterizedTypeRefStructural
 	 *     TypeArgument returns ParameterizedTypeRefStructural

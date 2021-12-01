@@ -16479,7 +16479,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//ArrayTypeExpression returns TypeRef:
 	//      ({ParameterizedTypeRef} declaredTypeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')*)
 	//    | ({ParameterizedTypeRef} '(' declaredTypeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')*)
-	//    | ArrayNTypeExpression
 	//    | PrimaryTypeExpression =>(
 	//          ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
 	//        | ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
@@ -16495,6 +16494,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//PrimaryTypeExpression returns TypeRef:
 	//    ( LiteralTypeRef
 	//    | ArrowFunctionTypeExpression
+	//    | ArrayNTypeExpression
 	//    | TypeRefWithModifiers
 	//    | QueryTypeRef
 	//    | InferTypeRef

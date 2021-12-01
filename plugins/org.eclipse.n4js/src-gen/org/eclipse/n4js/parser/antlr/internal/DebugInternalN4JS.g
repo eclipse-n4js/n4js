@@ -9979,8 +9979,6 @@ ruleArrayTypeExpression:
 			']'
 		)*
 		    |
-		ruleArrayNTypeExpression
-		    |
 		rulePrimaryTypeExpression
 		(
 			((
@@ -10031,6 +10029,8 @@ rulePrimaryTypeExpression:
 			)=>
 			ruleArrowFunctionTypeExpression
 		)
+		    |
+		ruleArrayNTypeExpression
 		    |
 		ruleTypeRefWithModifiers
 		    |

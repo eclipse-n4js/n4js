@@ -62,7 +62,6 @@ enum TypeOperator: keyof | unique | readonly;
 ArrayTypeExpression returns TypeRef:
 	  ({ParameterizedTypeRef} declaredTypeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')*)
 	| ({ParameterizedTypeRef} '(' declaredTypeArgs+=Wildcard ')' arrayTypeExpression?='[' ']' =>({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')*)
-	| ArrayNTypeExpression
 	| PrimaryTypeExpression =>(
 		  ({ParameterizedTypeRef.declaredTypeArgs+=current} arrayTypeExpression?='[' ']')
 		| ({IndexAccessTypeRef.targetTypeRef=current} '[' indexTypeRef=TypeRef ']')
@@ -71,6 +70,7 @@ ArrayTypeExpression returns TypeRef:
 PrimaryTypeExpression returns TypeRef:
 	( LiteralTypeRef
 	| ArrowFunctionTypeExpression
+	| ArrayNTypeExpression
 	| TypeRefWithModifiers
 	| QueryTypeRef
 	| InferTypeRef
