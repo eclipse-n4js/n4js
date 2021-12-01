@@ -247,7 +247,7 @@ TStructMethod:
 	=>
 	({TStructMethod}
 		('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-	    (name=IdentifierName)? '('
+	    (TLiteralOrComputedPropertyName)? '('
 	)
 	TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 ;
@@ -261,13 +261,13 @@ fragment ColonSepReturnTypeRef*:
 ;
 
 TStructField:
-	'readonly'? name=IdentifierName (optional?='?')? ColonSepTypeRef?
+	'readonly'? TLiteralOrComputedPropertyName (optional?='?')? ColonSepTypeRef?
 ;
 
 TStructGetter:
 	=> ({TStructGetter}
 	'get'
-	name=IdentifierName)
+	TLiteralOrComputedPropertyName)
 	(optional?='?')?
 	'(' ')' ColonSepTypeRef?
 ;
@@ -275,7 +275,7 @@ TStructGetter:
 TStructSetter:
 	=> ({TStructSetter}
 	'set'
-	name=IdentifierName)
+	TLiteralOrComputedPropertyName)
 	(optional?='?')?
 	'(' fpar=TAnonymousFormalParameter ')'
 ;
@@ -347,6 +347,14 @@ TypePredicateWithPrimary returns TypePredicate:
 	=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=PrimaryTypeExpression
 ;
 
+fragment TLiteralOrComputedPropertyName*:
+	name=IdentifierName
+	| name=STRING
+	| name=NumericLiteralAsString
+// FIXME
+//	| '[' TypeRef ']'
+;
+
 /*
  * [ECM11] (7.6, pp. 17)
  * Identifier :: IdentifierName but not ReservedWord
@@ -398,6 +406,10 @@ N4Keyword:
 	| 'namespace'
 	// .d.ts keywords
 	| 'declare' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
+;
+
+NumericLiteralAsString:
+	DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
 ;
 
 Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()

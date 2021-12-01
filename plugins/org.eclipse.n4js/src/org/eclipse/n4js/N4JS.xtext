@@ -1130,10 +1130,6 @@ BinaryIntLiteral: value=BINARY_INT;
 ScientificIntLiteral: value=SCIENTIFIC_INT;
 RegularExpressionLiteral: value=REGEX_LITERAL;
 
-NumericLiteralAsString:
-	DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
-;
-
 IdentifierOrThis:
 	IDENTIFIER
 	| 'Promisify'

@@ -296,6 +296,8 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) name=IdentifierName
+	 *     (rule start) (ambiguity) name=NumericLiteralAsString
+	 *     (rule start) (ambiguity) name=STRING
 	 */
 	protected void emit_TStructField_ReadonlyKeyword_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

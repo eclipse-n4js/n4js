@@ -30,7 +30,7 @@ class DtsParserTest extends AbstractParserTest {
 
 	private Path FILE_TEST = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/test.d.ts");
 	private Path FILE_ES5 = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs/es5.d.ts");
-	private Path FILE_ES2017_OBJECT = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs/es2017.object.d.ts");
+	private Path FILE_TEMP = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs/es2015.symbol.wellknown.d.ts");
 	private Path TYPE_SCRIPT_LIBS = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs");
 	private Path DEFINITELY_TYPED = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/DefinitelyTyped/types");
 	private Path NODE_API = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/DefinitelyTyped/types/node");
@@ -49,7 +49,7 @@ class DtsParserTest extends AbstractParserTest {
 	def void testSingleFile() {
 //		val file = FILE_TEST;
 //		val file = FILE_ES5;
-		val file = FILE_ES2017_OBJECT;
+		val file = FILE_TEMP;
 		val code = Files.readString(file);
 		val idx = code.indexOf("%%END");
 		val codeTrimmed = if (idx>=0) code.substring(0, idx) else code;

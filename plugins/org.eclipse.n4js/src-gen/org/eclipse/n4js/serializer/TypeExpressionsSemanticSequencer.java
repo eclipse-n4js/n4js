@@ -298,19 +298,19 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 				sequence_ColonSepTypeRef_DefaultFormalParameter_TFormalParameter(context, (TFormalParameter) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_FIELD:
-				sequence_ColonSepTypeRef_TStructField(context, (TStructField) semanticObject); 
+				sequence_ColonSepTypeRef_TLiteralOrComputedPropertyName_TStructField(context, (TStructField) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_GETTER:
-				sequence_ColonSepTypeRef_TStructGetter(context, (TStructGetter) semanticObject); 
+				sequence_ColonSepTypeRef_TLiteralOrComputedPropertyName_TStructGetter(context, (TStructGetter) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_INDEX_SIGNATURE:
 				sequence_TStructIndexSignature(context, (TStructIndexSignature) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_METHOD:
-				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod(context, (TStructMethod) semanticObject); 
+				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TLiteralOrComputedPropertyName_TStructMethod(context, (TStructMethod) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_SETTER:
-				sequence_TStructSetter(context, (TStructSetter) semanticObject); 
+				sequence_TLiteralOrComputedPropertyName_TStructSetter(context, (TStructSetter) semanticObject); 
 				return; 
 			case TypesPackage.TYPE_PREDICATE:
 				if (rule == grammarAccess.getTypePredicateWithPrimaryRule()) {
@@ -543,12 +543,12 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         name=IdentifierName? 
+	 *         (name=IdentifierName | name=STRING | name=NumericLiteralAsString)? 
 	 *         (fpars+=TAnonymousFormalParameter fpars+=TAnonymousFormalParameter*)? 
 	 *         (returnTypePredicate=TypePredicate | returnTypeRef=TypeRef)?
 	 *     )
 	 */
-	protected void sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod(ISerializationContext context, TStructMethod semanticObject) {
+	protected void sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TLiteralOrComputedPropertyName_TStructMethod(ISerializationContext context, TStructMethod semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -587,9 +587,9 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TStructField returns TStructField
 	 *
 	 * Constraint:
-	 *     (name=IdentifierName optional?='?'? typeRef=TypeRef?)
+	 *     ((name=IdentifierName | name=STRING | name=NumericLiteralAsString) optional?='?'? typeRef=TypeRef?)
 	 */
-	protected void sequence_ColonSepTypeRef_TStructField(ISerializationContext context, TStructField semanticObject) {
+	protected void sequence_ColonSepTypeRef_TLiteralOrComputedPropertyName_TStructField(ISerializationContext context, TStructField semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -600,9 +600,9 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TStructGetter returns TStructGetter
 	 *
 	 * Constraint:
-	 *     (name=IdentifierName optional?='?'? typeRef=TypeRef?)
+	 *     ((name=IdentifierName | name=STRING | name=NumericLiteralAsString) optional?='?'? typeRef=TypeRef?)
 	 */
-	protected void sequence_ColonSepTypeRef_TStructGetter(ISerializationContext context, TStructGetter semanticObject) {
+	protected void sequence_ColonSepTypeRef_TLiteralOrComputedPropertyName_TStructGetter(ISerializationContext context, TStructGetter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -1013,6 +1013,19 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	/**
 	 * Contexts:
+	 *     TStructMember returns TStructSetter
+	 *     TStructSetter returns TStructSetter
+	 *
+	 * Constraint:
+	 *     ((name=IdentifierName | name=STRING | name=NumericLiteralAsString) optional?='?'? fpar=TAnonymousFormalParameter)
+	 */
+	protected void sequence_TLiteralOrComputedPropertyName_TStructSetter(ISerializationContext context, TStructSetter semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     TStructMember returns TStructIndexSignature
 	 *     TStructIndexSignature returns TStructIndexSignature
 	 *
@@ -1058,19 +1071,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     (definedTypingStrategy=TypingStrategyUseSiteOperator astStructuralMembers+=TStructMember* dynamic?='+'?)
 	 */
 	protected void sequence_TStructMemberList_ThisTypeRefStructural_TypeRefWithModifiers(ISerializationContext context, ThisTypeRefStructural semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TStructMember returns TStructSetter
-	 *     TStructSetter returns TStructSetter
-	 *
-	 * Constraint:
-	 *     (name=IdentifierName optional?='?'? fpar=TAnonymousFormalParameter)
-	 */
-	protected void sequence_TStructSetter(ISerializationContext context, TStructSetter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -7320,23 +7320,6 @@ ruleRegularExpressionLiteral:
 	ruleREGEX_LITERAL
 ;
 
-// Rule NumericLiteralAsString
-ruleNumericLiteralAsString:
-	(
-		RULE_DOUBLE
-		    |
-		RULE_INT
-		    |
-		RULE_BINARY_INT
-		    |
-		RULE_OCTAL_INT
-		    |
-		RULE_HEX_INT
-		    |
-		RULE_SCIENTIFIC_INT
-	)
-;
-
 // Rule IdentifierOrThis
 ruleIdentifierOrThis:
 	(
@@ -10443,14 +10426,14 @@ ruleTStructMember:
 	(
 		(
 			('get'
-			ruleIdentifierName
+			ruleTLiteralOrComputedPropertyName
 			)=>
 			ruleTStructGetter
 		)
 		    |
 		(
 			('set'
-			ruleIdentifierName
+			ruleTLiteralOrComputedPropertyName
 			)=>
 			ruleTStructSetter
 		)
@@ -10465,8 +10448,7 @@ ruleTStructMember:
 				)*
 				'>'
 			)?
-			ruleIdentifierName
-			?
+			ruleTLiteralOrComputedPropertyName?
 			'('
 			)=>
 			ruleTStructMethod
@@ -10490,8 +10472,7 @@ ruleTStructMethod:
 			)*
 			'>'
 		)?
-		ruleIdentifierName
-		?
+		ruleTLiteralOrComputedPropertyName?
 		'('
 		)=>
 		(
@@ -10503,8 +10484,7 @@ ruleTStructMethod:
 			)*
 			'>'
 		)?
-		ruleIdentifierName
-		?
+		ruleTLiteralOrComputedPropertyName?
 		'('
 	)
 	ruleTAnonymousFormalParameterList
@@ -10540,7 +10520,7 @@ ruleColonSepReturnTypeRef:
 // Rule TStructField
 ruleTStructField:
 	'readonly'?
-	ruleIdentifierName
+	ruleTLiteralOrComputedPropertyName
 	'?'
 	?
 	ruleColonSepTypeRef?
@@ -10550,10 +10530,10 @@ ruleTStructField:
 ruleTStructGetter:
 	(
 		('get'
-		ruleIdentifierName
+		ruleTLiteralOrComputedPropertyName
 		)=>
 		'get'
-		ruleIdentifierName
+		ruleTLiteralOrComputedPropertyName
 	)
 	'?'
 	?
@@ -10566,10 +10546,10 @@ ruleTStructGetter:
 ruleTStructSetter:
 	(
 		('set'
-		ruleIdentifierName
+		ruleTLiteralOrComputedPropertyName
 		)=>
 		'set'
-		ruleIdentifierName
+		ruleTLiteralOrComputedPropertyName
 	)
 	'?'
 	?
@@ -10761,6 +10741,17 @@ ruleTypePredicateWithPrimary:
 	rulePrimaryTypeExpression
 ;
 
+// Rule TLiteralOrComputedPropertyName
+ruleTLiteralOrComputedPropertyName:
+	(
+		ruleIdentifierName
+		    |
+		RULE_STRING
+		    |
+		ruleNumericLiteralAsString
+	)
+;
+
 // Rule BindingIdentifier
 ruleBindingIdentifier:
 	(
@@ -10938,6 +10929,23 @@ ruleN4Keyword:
 		    |
 		'infer'
 >>>>>>> c3d10a43c (early support for infer declarations)
+	)
+;
+
+// Rule NumericLiteralAsString
+ruleNumericLiteralAsString:
+	(
+		RULE_DOUBLE
+		    |
+		RULE_INT
+		    |
+		RULE_BINARY_INT
+		    |
+		RULE_OCTAL_INT
+		    |
+		RULE_HEX_INT
+		    |
+		RULE_SCIENTIFIC_INT
 	)
 ;
 

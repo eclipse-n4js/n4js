@@ -29901,72 +29901,6 @@ ruleRegularExpressionLiteral returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleNumericLiteralAsString
-entryRuleNumericLiteralAsString returns [String current=null]:
-	{ newCompositeNode(grammarAccess.getNumericLiteralAsStringRule()); }
-	iv_ruleNumericLiteralAsString=ruleNumericLiteralAsString
-	{ $current=$iv_ruleNumericLiteralAsString.current.getText(); }
-	EOF;
-
-// Rule NumericLiteralAsString
-ruleNumericLiteralAsString returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		this_DOUBLE_0=RULE_DOUBLE
-		{
-			$current.merge(this_DOUBLE_0);
-		}
-		{
-			newLeafNode(this_DOUBLE_0, grammarAccess.getNumericLiteralAsStringAccess().getDOUBLETerminalRuleCall_0());
-		}
-		    |
-		this_INT_1=RULE_INT
-		{
-			$current.merge(this_INT_1);
-		}
-		{
-			newLeafNode(this_INT_1, grammarAccess.getNumericLiteralAsStringAccess().getINTTerminalRuleCall_1());
-		}
-		    |
-		this_BINARY_INT_2=RULE_BINARY_INT
-		{
-			$current.merge(this_BINARY_INT_2);
-		}
-		{
-			newLeafNode(this_BINARY_INT_2, grammarAccess.getNumericLiteralAsStringAccess().getBINARY_INTTerminalRuleCall_2());
-		}
-		    |
-		this_OCTAL_INT_3=RULE_OCTAL_INT
-		{
-			$current.merge(this_OCTAL_INT_3);
-		}
-		{
-			newLeafNode(this_OCTAL_INT_3, grammarAccess.getNumericLiteralAsStringAccess().getOCTAL_INTTerminalRuleCall_3());
-		}
-		    |
-		this_HEX_INT_4=RULE_HEX_INT
-		{
-			$current.merge(this_HEX_INT_4);
-		}
-		{
-			newLeafNode(this_HEX_INT_4, grammarAccess.getNumericLiteralAsStringAccess().getHEX_INTTerminalRuleCall_4());
-		}
-		    |
-		this_SCIENTIFIC_INT_5=RULE_SCIENTIFIC_INT
-		{
-			$current.merge(this_SCIENTIFIC_INT_5);
-		}
-		{
-			newLeafNode(this_SCIENTIFIC_INT_5, grammarAccess.getNumericLiteralAsStringAccess().getSCIENTIFIC_INTTerminalRuleCall_5());
-		}
-	)
-;
-
 // Entry rule entryRuleIdentifierOrThis
 entryRuleIdentifierOrThis returns [String current=null]:
 	{ newCompositeNode(grammarAccess.getIdentifierOrThisRule()); }
@@ -38313,7 +38247,7 @@ ruleLiteralOrComputedPropertyName returns [EObject current=null]
 						$current,
 						"literalName",
 						lv_literalName_2_0,
-						"org.eclipse.n4js.N4JS.NumericLiteralAsString");
+						"org.eclipse.n4js.TypeExpressions.NumericLiteralAsString");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -38414,7 +38348,7 @@ norm1_LiteralOrComputedPropertyName returns [EObject current=null]
 						$current,
 						"literalName",
 						lv_literalName_2_0,
-						"org.eclipse.n4js.N4JS.NumericLiteralAsString");
+						"org.eclipse.n4js.TypeExpressions.NumericLiteralAsString");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -42015,11 +41949,7 @@ ruleTStructMember returns [EObject current=null]
 				(
 				)
 				Get
-				(
-					(
-						ruleIdentifierName
-					)
-				)
+				ruleTLiteralOrComputedPropertyName[null]
 			)
 			)=>
 			{
@@ -42037,11 +41967,7 @@ ruleTStructMember returns [EObject current=null]
 				(
 				)
 				Set
-				(
-					(
-						ruleIdentifierName
-					)
-				)
+				ruleTLiteralOrComputedPropertyName[null]
 			)
 			)=>
 			{
@@ -42076,9 +42002,7 @@ ruleTStructMember returns [EObject current=null]
 					GreaterThanSign
 				)?
 				(
-					(
-						ruleIdentifierName
-					)
+					ruleTLiteralOrComputedPropertyName[null]
 				)?
 				LeftParenthesis
 			)
@@ -42151,9 +42075,7 @@ ruleTStructMethod returns [EObject current=null]
 					GreaterThanSign
 				)?
 				(
-					(
-						ruleIdentifierName
-					)
+					ruleTLiteralOrComputedPropertyName[null]
 				)?
 				LeftParenthesis
 			)
@@ -42221,23 +42143,17 @@ ruleTStructMethod returns [EObject current=null]
 					}
 				)?
 				(
-					(
-						{
-							newCompositeNode(grammarAccess.getTStructMethodAccess().getNameIdentifierNameParserRuleCall_0_0_2_0());
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getTStructMethodRule());
 						}
-						lv_name_6_0=ruleIdentifierName
-						{
-							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getTStructMethodRule());
-							}
-							set(
-								$current,
-								"name",
-								lv_name_6_0,
-								"org.eclipse.n4js.TypeExpressions.IdentifierName");
-							afterParserOrEnumRuleCall();
-						}
-					)
+						newCompositeNode(grammarAccess.getTStructMethodAccess().getTLiteralOrComputedPropertyNameParserRuleCall_0_0_2());
+					}
+					this_TLiteralOrComputedPropertyName_6=ruleTLiteralOrComputedPropertyName[$current]
+					{
+						$current = $this_TLiteralOrComputedPropertyName_6.current;
+						afterParserOrEnumRuleCall();
+					}
 				)?
 				otherlv_7=LeftParenthesis
 				{
@@ -42409,25 +42325,17 @@ ruleTStructField returns [EObject current=null]
 				newLeafNode(otherlv_0, grammarAccess.getTStructFieldAccess().getReadonlyKeyword_0());
 			}
 		)?
-		(
-			(
-				{
-					newCompositeNode(grammarAccess.getTStructFieldAccess().getNameIdentifierNameParserRuleCall_1_0());
-				}
-				lv_name_1_0=ruleIdentifierName
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getTStructFieldRule());
-					}
-					set(
-						$current,
-						"name",
-						lv_name_1_0,
-						"org.eclipse.n4js.TypeExpressions.IdentifierName");
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
+		{
+			if ($current==null) {
+				$current = createModelElement(grammarAccess.getTStructFieldRule());
+			}
+			newCompositeNode(grammarAccess.getTStructFieldAccess().getTLiteralOrComputedPropertyNameParserRuleCall_1());
+		}
+		this_TLiteralOrComputedPropertyName_1=ruleTLiteralOrComputedPropertyName[$current]
+		{
+			$current = $this_TLiteralOrComputedPropertyName_1.current;
+			afterParserOrEnumRuleCall();
+		}
 		(
 			(
 				lv_optional_2_0=QuestionMark
@@ -42479,11 +42387,7 @@ ruleTStructGetter returns [EObject current=null]
 				(
 				)
 				Get
-				(
-					(
-						ruleIdentifierName
-					)
-				)
+				ruleTLiteralOrComputedPropertyName[null]
 			)
 			)=>
 			(
@@ -42498,25 +42402,17 @@ ruleTStructGetter returns [EObject current=null]
 				{
 					newLeafNode(otherlv_1, grammarAccess.getTStructGetterAccess().getGetKeyword_0_0_1());
 				}
-				(
-					(
-						{
-							newCompositeNode(grammarAccess.getTStructGetterAccess().getNameIdentifierNameParserRuleCall_0_0_2_0());
-						}
-						lv_name_2_0=ruleIdentifierName
-						{
-							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getTStructGetterRule());
-							}
-							set(
-								$current,
-								"name",
-								lv_name_2_0,
-								"org.eclipse.n4js.TypeExpressions.IdentifierName");
-							afterParserOrEnumRuleCall();
-						}
-					)
-				)
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getTStructGetterRule());
+					}
+					newCompositeNode(grammarAccess.getTStructGetterAccess().getTLiteralOrComputedPropertyNameParserRuleCall_0_0_2());
+				}
+				this_TLiteralOrComputedPropertyName_2=ruleTLiteralOrComputedPropertyName[$current]
+				{
+					$current = $this_TLiteralOrComputedPropertyName_2.current;
+					afterParserOrEnumRuleCall();
+				}
 			)
 		)
 		(
@@ -42578,11 +42474,7 @@ ruleTStructSetter returns [EObject current=null]
 				(
 				)
 				Set
-				(
-					(
-						ruleIdentifierName
-					)
-				)
+				ruleTLiteralOrComputedPropertyName[null]
 			)
 			)=>
 			(
@@ -42597,25 +42489,17 @@ ruleTStructSetter returns [EObject current=null]
 				{
 					newLeafNode(otherlv_1, grammarAccess.getTStructSetterAccess().getSetKeyword_0_0_1());
 				}
-				(
-					(
-						{
-							newCompositeNode(grammarAccess.getTStructSetterAccess().getNameIdentifierNameParserRuleCall_0_0_2_0());
-						}
-						lv_name_2_0=ruleIdentifierName
-						{
-							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getTStructSetterRule());
-							}
-							set(
-								$current,
-								"name",
-								lv_name_2_0,
-								"org.eclipse.n4js.TypeExpressions.IdentifierName");
-							afterParserOrEnumRuleCall();
-						}
-					)
-				)
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getTStructSetterRule());
+					}
+					newCompositeNode(grammarAccess.getTStructSetterAccess().getTLiteralOrComputedPropertyNameParserRuleCall_0_0_2());
+				}
+				this_TLiteralOrComputedPropertyName_2=ruleTLiteralOrComputedPropertyName[$current]
+				{
+					$current = $this_TLiteralOrComputedPropertyName_2.current;
+					afterParserOrEnumRuleCall();
+				}
 			)
 		)
 		(
@@ -43648,6 +43532,77 @@ ruleTypePredicateWithPrimary returns [EObject current=null]
 	)
 ;
 
+
+// Rule TLiteralOrComputedPropertyName
+ruleTLiteralOrComputedPropertyName[EObject in_current]  returns [EObject current=in_current]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getTLiteralOrComputedPropertyNameAccess().getNameIdentifierNameParserRuleCall_0_0());
+				}
+				lv_name_0_0=ruleIdentifierName
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getTLiteralOrComputedPropertyNameRule());
+					}
+					set(
+						$current,
+						"name",
+						lv_name_0_0,
+						"org.eclipse.n4js.TypeExpressions.IdentifierName");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		    |
+		(
+			(
+				lv_name_1_0=RULE_STRING
+				{
+					newLeafNode(lv_name_1_0, grammarAccess.getTLiteralOrComputedPropertyNameAccess().getNameSTRINGTerminalRuleCall_1_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getTLiteralOrComputedPropertyNameRule());
+					}
+					setWithLastConsumed(
+						$current,
+						"name",
+						lv_name_1_0,
+						"org.eclipse.n4js.TypeExpressions.STRING");
+				}
+			)
+		)
+		    |
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getTLiteralOrComputedPropertyNameAccess().getNameNumericLiteralAsStringParserRuleCall_2_0());
+				}
+				lv_name_2_0=ruleNumericLiteralAsString
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getTLiteralOrComputedPropertyNameRule());
+					}
+					set(
+						$current,
+						"name",
+						lv_name_2_0,
+						"org.eclipse.n4js.TypeExpressions.NumericLiteralAsString");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+	)
+;
+
 // Entry rule entryRuleBindingIdentifier
 entryRuleBindingIdentifier returns [String current=null]:
 	{ newCompositeNode(grammarAccess.getBindingIdentifierRule()); }
@@ -44205,6 +44160,72 @@ ruleN4Keyword returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
 		{
 			$current.merge(kw);
 			newLeafNode(kw, grammarAccess.getN4KeywordAccess().getInferKeyword_28());
+		}
+	)
+;
+
+// Entry rule entryRuleNumericLiteralAsString
+entryRuleNumericLiteralAsString returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getNumericLiteralAsStringRule()); }
+	iv_ruleNumericLiteralAsString=ruleNumericLiteralAsString
+	{ $current=$iv_ruleNumericLiteralAsString.current.getText(); }
+	EOF;
+
+// Rule NumericLiteralAsString
+ruleNumericLiteralAsString returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		this_DOUBLE_0=RULE_DOUBLE
+		{
+			$current.merge(this_DOUBLE_0);
+		}
+		{
+			newLeafNode(this_DOUBLE_0, grammarAccess.getNumericLiteralAsStringAccess().getDOUBLETerminalRuleCall_0());
+		}
+		    |
+		this_INT_1=RULE_INT
+		{
+			$current.merge(this_INT_1);
+		}
+		{
+			newLeafNode(this_INT_1, grammarAccess.getNumericLiteralAsStringAccess().getINTTerminalRuleCall_1());
+		}
+		    |
+		this_BINARY_INT_2=RULE_BINARY_INT
+		{
+			$current.merge(this_BINARY_INT_2);
+		}
+		{
+			newLeafNode(this_BINARY_INT_2, grammarAccess.getNumericLiteralAsStringAccess().getBINARY_INTTerminalRuleCall_2());
+		}
+		    |
+		this_OCTAL_INT_3=RULE_OCTAL_INT
+		{
+			$current.merge(this_OCTAL_INT_3);
+		}
+		{
+			newLeafNode(this_OCTAL_INT_3, grammarAccess.getNumericLiteralAsStringAccess().getOCTAL_INTTerminalRuleCall_3());
+		}
+		    |
+		this_HEX_INT_4=RULE_HEX_INT
+		{
+			$current.merge(this_HEX_INT_4);
+		}
+		{
+			newLeafNode(this_HEX_INT_4, grammarAccess.getNumericLiteralAsStringAccess().getHEX_INTTerminalRuleCall_4());
+		}
+		    |
+		this_SCIENTIFIC_INT_5=RULE_SCIENTIFIC_INT
+		{
+			$current.merge(this_SCIENTIFIC_INT_5);
+		}
+		{
+			newLeafNode(this_SCIENTIFIC_INT_5, grammarAccess.getNumericLiteralAsStringAccess().getSCIENTIFIC_INTTerminalRuleCall_5());
 		}
 	)
 ;

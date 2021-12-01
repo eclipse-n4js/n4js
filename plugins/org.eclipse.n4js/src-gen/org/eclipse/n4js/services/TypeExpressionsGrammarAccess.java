@@ -1955,8 +1955,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Assignment cTypeVarsAssignment_0_0_1_2_1 = (Assignment)cGroup_0_0_1_2.eContents().get(1);
 		private final RuleCall cTypeVarsTypeVariableParserRuleCall_0_0_1_2_1_0 = (RuleCall)cTypeVarsAssignment_0_0_1_2_1.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_0_0_1_3 = (Keyword)cGroup_0_0_1.eContents().get(3);
-		private final Assignment cNameAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
-		private final RuleCall cNameIdentifierNameParserRuleCall_0_0_2_0 = (RuleCall)cNameAssignment_0_0_2.eContents().get(0);
+		private final RuleCall cTLiteralOrComputedPropertyNameParserRuleCall_0_0_2 = (RuleCall)cGroup_0_0.eContents().get(2);
 		private final Keyword cLeftParenthesisKeyword_0_0_3 = (Keyword)cGroup_0_0.eContents().get(3);
 		private final RuleCall cTAnonymousFormalParameterListParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		private final Keyword cRightParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
@@ -1966,7 +1965,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    =>
 		//    ({TStructMethod}
 		//        ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-		//        (name=IdentifierName)? '('
+		//        (TLiteralOrComputedPropertyName)? '('
 		//    )
 		//    TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 		//;
@@ -1975,7 +1974,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//=>
 		//({TStructMethod}
 		//    ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-		//    (name=IdentifierName)? '('
+		//    (TLiteralOrComputedPropertyName)? '('
 		//)
 		//TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 		public Group getGroup() { return cGroup; }
@@ -1983,13 +1982,13 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//=>
 		//({TStructMethod}
 		//    ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-		//    (name=IdentifierName)? '('
+		//    (TLiteralOrComputedPropertyName)? '('
 		//)
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//{TStructMethod}
 		//        ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-		//        (name=IdentifierName)? '('
+		//        (TLiteralOrComputedPropertyName)? '('
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{TStructMethod}
@@ -2022,11 +2021,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'>'
 		public Keyword getGreaterThanSignKeyword_0_0_1_3() { return cGreaterThanSignKeyword_0_0_1_3; }
 		
-		//(name=IdentifierName)?
-		public Assignment getNameAssignment_0_0_2() { return cNameAssignment_0_0_2; }
-		
-		//IdentifierName
-		public RuleCall getNameIdentifierNameParserRuleCall_0_0_2_0() { return cNameIdentifierNameParserRuleCall_0_0_2_0; }
+		//(TLiteralOrComputedPropertyName)?
+		public RuleCall getTLiteralOrComputedPropertyNameParserRuleCall_0_0_2() { return cTLiteralOrComputedPropertyNameParserRuleCall_0_0_2; }
 		
 		//'('
 		public Keyword getLeftParenthesisKeyword_0_0_3() { return cLeftParenthesisKeyword_0_0_3; }
@@ -2104,28 +2100,24 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TStructField");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Keyword cReadonlyKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cNameIdentifierNameParserRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final RuleCall cTLiteralOrComputedPropertyNameParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		private final Assignment cOptionalAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final Keyword cOptionalQuestionMarkKeyword_2_0 = (Keyword)cOptionalAssignment_2.eContents().get(0);
 		private final RuleCall cColonSepTypeRefParserRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
 		
 		//TStructField:
-		//    'readonly'? name=IdentifierName (optional?='?')? ColonSepTypeRef?
+		//    'readonly'? TLiteralOrComputedPropertyName (optional?='?')? ColonSepTypeRef?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'readonly'? name=IdentifierName (optional?='?')? ColonSepTypeRef?
+		//'readonly'? TLiteralOrComputedPropertyName (optional?='?')? ColonSepTypeRef?
 		public Group getGroup() { return cGroup; }
 		
 		//'readonly'?
 		public Keyword getReadonlyKeyword_0() { return cReadonlyKeyword_0; }
 		
-		//name=IdentifierName
-		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
-		
-		//IdentifierName
-		public RuleCall getNameIdentifierNameParserRuleCall_1_0() { return cNameIdentifierNameParserRuleCall_1_0; }
+		//TLiteralOrComputedPropertyName
+		public RuleCall getTLiteralOrComputedPropertyNameParserRuleCall_1() { return cTLiteralOrComputedPropertyNameParserRuleCall_1; }
 		
 		//(optional?='?')?
 		public Assignment getOptionalAssignment_2() { return cOptionalAssignment_2; }
@@ -2143,8 +2135,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
 		private final Action cTStructGetterAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
 		private final Keyword cGetKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
-		private final Assignment cNameAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
-		private final RuleCall cNameIdentifierNameParserRuleCall_0_0_2_0 = (RuleCall)cNameAssignment_0_0_2.eContents().get(0);
+		private final RuleCall cTLiteralOrComputedPropertyNameParserRuleCall_0_0_2 = (RuleCall)cGroup_0_0.eContents().get(2);
 		private final Assignment cOptionalAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final Keyword cOptionalQuestionMarkKeyword_1_0 = (Keyword)cOptionalAssignment_1.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
@@ -2154,7 +2145,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//TStructGetter:
 		//    => ({TStructGetter}
 		//    'get'
-		//    name=IdentifierName)
+		//    TLiteralOrComputedPropertyName)
 		//    (optional?='?')?
 		//    '(' ')' ColonSepTypeRef?
 		//;
@@ -2162,19 +2153,19 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//=> ({TStructGetter}
 		//'get'
-		//name=IdentifierName)
+		//TLiteralOrComputedPropertyName)
 		//(optional?='?')?
 		//'(' ')' ColonSepTypeRef?
 		public Group getGroup() { return cGroup; }
 		
 		//=> ({TStructGetter}
 		//'get'
-		//name=IdentifierName)
+		//TLiteralOrComputedPropertyName)
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//{TStructGetter}
 		//    'get'
-		//    name=IdentifierName
+		//    TLiteralOrComputedPropertyName
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{TStructGetter}
@@ -2183,11 +2174,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'get'
 		public Keyword getGetKeyword_0_0_1() { return cGetKeyword_0_0_1; }
 		
-		//name=IdentifierName
-		public Assignment getNameAssignment_0_0_2() { return cNameAssignment_0_0_2; }
-		
-		//IdentifierName
-		public RuleCall getNameIdentifierNameParserRuleCall_0_0_2_0() { return cNameIdentifierNameParserRuleCall_0_0_2_0; }
+		//TLiteralOrComputedPropertyName
+		public RuleCall getTLiteralOrComputedPropertyNameParserRuleCall_0_0_2() { return cTLiteralOrComputedPropertyNameParserRuleCall_0_0_2; }
 		
 		//(optional?='?')?
 		public Assignment getOptionalAssignment_1() { return cOptionalAssignment_1; }
@@ -2211,8 +2199,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
 		private final Action cTStructSetterAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
 		private final Keyword cSetKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
-		private final Assignment cNameAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
-		private final RuleCall cNameIdentifierNameParserRuleCall_0_0_2_0 = (RuleCall)cNameAssignment_0_0_2.eContents().get(0);
+		private final RuleCall cTLiteralOrComputedPropertyNameParserRuleCall_0_0_2 = (RuleCall)cGroup_0_0.eContents().get(2);
 		private final Assignment cOptionalAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final Keyword cOptionalQuestionMarkKeyword_1_0 = (Keyword)cOptionalAssignment_1.eContents().get(0);
 		private final Keyword cLeftParenthesisKeyword_2 = (Keyword)cGroup.eContents().get(2);
@@ -2223,7 +2210,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//TStructSetter:
 		//    => ({TStructSetter}
 		//    'set'
-		//    name=IdentifierName)
+		//    TLiteralOrComputedPropertyName)
 		//    (optional?='?')?
 		//    '(' fpar=TAnonymousFormalParameter ')'
 		//;
@@ -2231,19 +2218,19 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		
 		//=> ({TStructSetter}
 		//'set'
-		//name=IdentifierName)
+		//TLiteralOrComputedPropertyName)
 		//(optional?='?')?
 		//'(' fpar=TAnonymousFormalParameter ')'
 		public Group getGroup() { return cGroup; }
 		
 		//=> ({TStructSetter}
 		//'set'
-		//name=IdentifierName)
+		//TLiteralOrComputedPropertyName)
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//{TStructSetter}
 		//    'set'
-		//    name=IdentifierName
+		//    TLiteralOrComputedPropertyName
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{TStructSetter}
@@ -2252,11 +2239,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'set'
 		public Keyword getSetKeyword_0_0_1() { return cSetKeyword_0_0_1; }
 		
-		//name=IdentifierName
-		public Assignment getNameAssignment_0_0_2() { return cNameAssignment_0_0_2; }
-		
-		//IdentifierName
-		public RuleCall getNameIdentifierNameParserRuleCall_0_0_2_0() { return cNameIdentifierNameParserRuleCall_0_0_2_0; }
+		//TLiteralOrComputedPropertyName
+		public RuleCall getTLiteralOrComputedPropertyNameParserRuleCall_0_0_2() { return cTLiteralOrComputedPropertyNameParserRuleCall_0_0_2; }
 		
 		//(optional?='?')?
 		public Assignment getOptionalAssignment_1() { return cOptionalAssignment_1; }
@@ -2895,6 +2879,47 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//PrimaryTypeExpression
 		public RuleCall getTypeRefPrimaryTypeExpressionParserRuleCall_1_0() { return cTypeRefPrimaryTypeExpressionParserRuleCall_1_0; }
 	}
+	public class TLiteralOrComputedPropertyNameElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TLiteralOrComputedPropertyName");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(0);
+		private final Assignment cNameAssignment_0 = (Assignment)cAlternatives.eContents().get(0);
+		private final RuleCall cNameIdentifierNameParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
+		private final Assignment cNameAssignment_1 = (Assignment)cAlternatives.eContents().get(1);
+		private final RuleCall cNameSTRINGTerminalRuleCall_1_0 = (RuleCall)cNameAssignment_1.eContents().get(0);
+		private final Assignment cNameAssignment_2 = (Assignment)cAlternatives.eContents().get(2);
+		private final RuleCall cNameNumericLiteralAsStringParserRuleCall_2_0 = (RuleCall)cNameAssignment_2.eContents().get(0);
+		
+		//fragment TLiteralOrComputedPropertyName*:
+		//    name=IdentifierName
+		//    | name=STRING
+		//    | name=NumericLiteralAsString
+		////    | '[' TypeRef ']'
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//name=IdentifierName
+		//| name=STRING
+		//| name=NumericLiteralAsString
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//name=IdentifierName
+		public Assignment getNameAssignment_0() { return cNameAssignment_0; }
+		
+		//IdentifierName
+		public RuleCall getNameIdentifierNameParserRuleCall_0_0() { return cNameIdentifierNameParserRuleCall_0_0; }
+		
+		//name=STRING
+		public Assignment getNameAssignment_1() { return cNameAssignment_1; }
+		
+		//STRING
+		public RuleCall getNameSTRINGTerminalRuleCall_1_0() { return cNameSTRINGTerminalRuleCall_1_0; }
+		
+		//name=NumericLiteralAsString
+		public Assignment getNameAssignment_2() { return cNameAssignment_2; }
+		
+		//NumericLiteralAsString
+		public RuleCall getNameNumericLiteralAsStringParserRuleCall_2_0() { return cNameNumericLiteralAsStringParserRuleCall_2_0; }
+	}
 	public class BindingIdentifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
@@ -3353,6 +3378,42 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		public Keyword getInferKeyword_28() { return cInferKeyword_28; }
 >>>>>>> c3d10a43c (early support for infer declarations)
 	}
+	public class NumericLiteralAsStringElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.NumericLiteralAsString");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cDOUBLETerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cINTTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cBINARY_INTTerminalRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cOCTAL_INTTerminalRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cHEX_INTTerminalRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cSCIENTIFIC_INTTerminalRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		
+		//NumericLiteralAsString:
+		//    DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//DOUBLE
+		public RuleCall getDOUBLETerminalRuleCall_0() { return cDOUBLETerminalRuleCall_0; }
+		
+		//INT
+		public RuleCall getINTTerminalRuleCall_1() { return cINTTerminalRuleCall_1; }
+		
+		//BINARY_INT
+		public RuleCall getBINARY_INTTerminalRuleCall_2() { return cBINARY_INTTerminalRuleCall_2; }
+		
+		//OCTAL_INT
+		public RuleCall getOCTAL_INTTerminalRuleCall_3() { return cOCTAL_INTTerminalRuleCall_3; }
+		
+		//HEX_INT
+		public RuleCall getHEX_INTTerminalRuleCall_4() { return cHEX_INTTerminalRuleCall_4; }
+		
+		//SCIENTIFIC_INT
+		public RuleCall getSCIENTIFIC_INTTerminalRuleCall_5() { return cSCIENTIFIC_INTTerminalRuleCall_5; }
+	}
 	public class ArrowElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.Arrow");
 		private final Group cGroup = (Group)rule.eContents().get(1);
@@ -3466,10 +3527,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final InferTypeRefElements pInferTypeRef;
 	private final TypePredicateElements pTypePredicate;
 	private final TypePredicateWithPrimaryElements pTypePredicateWithPrimary;
+	private final TLiteralOrComputedPropertyNameElements pTLiteralOrComputedPropertyName;
 	private final BindingIdentifierElements pBindingIdentifier;
 	private final IdentifierNameElements pIdentifierName;
 	private final ReservedWordElements pReservedWord;
 	private final N4KeywordElements pN4Keyword;
+	private final NumericLiteralAsStringElements pNumericLiteralAsString;
 	private final ArrowElements pArrow;
 	private final TerminalRule tIDENTIFIER;
 	private final TerminalRule tINT;
@@ -3561,10 +3624,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pInferTypeRef = new InferTypeRefElements();
 		this.pTypePredicate = new TypePredicateElements();
 		this.pTypePredicateWithPrimary = new TypePredicateWithPrimaryElements();
+		this.pTLiteralOrComputedPropertyName = new TLiteralOrComputedPropertyNameElements();
 		this.pBindingIdentifier = new BindingIdentifierElements();
 		this.pIdentifierName = new IdentifierNameElements();
 		this.pReservedWord = new ReservedWordElements();
 		this.pN4Keyword = new N4KeywordElements();
+		this.pNumericLiteralAsString = new NumericLiteralAsStringElements();
 		this.pArrow = new ArrowElements();
 		this.tIDENTIFIER = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.IDENTIFIER");
 		this.tINT = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.INT");
@@ -4097,7 +4162,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    =>
 	//    ({TStructMethod}
 	//        ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-	//        (name=IdentifierName)? '('
+	//        (TLiteralOrComputedPropertyName)? '('
 	//    )
 	//    TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 	//;
@@ -4132,7 +4197,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//TStructField:
-	//    'readonly'? name=IdentifierName (optional?='?')? ColonSepTypeRef?
+	//    'readonly'? TLiteralOrComputedPropertyName (optional?='?')? ColonSepTypeRef?
 	//;
 	public TStructFieldElements getTStructFieldAccess() {
 		return pTStructField;
@@ -4145,7 +4210,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//TStructGetter:
 	//    => ({TStructGetter}
 	//    'get'
-	//    name=IdentifierName)
+	//    TLiteralOrComputedPropertyName)
 	//    (optional?='?')?
 	//    '(' ')' ColonSepTypeRef?
 	//;
@@ -4160,7 +4225,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//TStructSetter:
 	//    => ({TStructSetter}
 	//    'set'
-	//    name=IdentifierName)
+	//    TLiteralOrComputedPropertyName)
 	//    (optional?='?')?
 	//    '(' fpar=TAnonymousFormalParameter ')'
 	//;
@@ -4347,6 +4412,20 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return getTypePredicateWithPrimaryAccess().getRule();
 	}
 	
+	//fragment TLiteralOrComputedPropertyName*:
+	//    name=IdentifierName
+	//    | name=STRING
+	//    | name=NumericLiteralAsString
+	////    | '[' TypeRef ']'
+	//;
+	public TLiteralOrComputedPropertyNameElements getTLiteralOrComputedPropertyNameAccess() {
+		return pTLiteralOrComputedPropertyName;
+	}
+	
+	public ParserRule getTLiteralOrComputedPropertyNameRule() {
+		return getTLiteralOrComputedPropertyNameAccess().getRule();
+	}
+	
 	///*
 	// * [ECM11] (7.6, pp. 17)
 	// * Identifier :: IdentifierName but not ReservedWord
@@ -4433,6 +4512,17 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	
 	public ParserRule getN4KeywordRule() {
 		return getN4KeywordAccess().getRule();
+	}
+	
+	//NumericLiteralAsString:
+	//    DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
+	//;
+	public NumericLiteralAsStringElements getNumericLiteralAsStringAccess() {
+		return pNumericLiteralAsString;
+	}
+	
+	public ParserRule getNumericLiteralAsStringRule() {
+		return getNumericLiteralAsStringAccess().getRule();
 	}
 	
 	//Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()

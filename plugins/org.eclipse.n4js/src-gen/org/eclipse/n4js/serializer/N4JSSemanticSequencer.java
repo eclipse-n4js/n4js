@@ -1695,19 +1695,19 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_ColonSepTypeRef_DefaultFormalParameter_TFormalParameter(context, (TFormalParameter) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_FIELD:
-				sequence_ColonSepTypeRef_TStructField(context, (TStructField) semanticObject); 
+				sequence_ColonSepTypeRef_TLiteralOrComputedPropertyName_TStructField(context, (TStructField) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_GETTER:
-				sequence_ColonSepTypeRef_TStructGetter(context, (TStructGetter) semanticObject); 
+				sequence_ColonSepTypeRef_TLiteralOrComputedPropertyName_TStructGetter(context, (TStructGetter) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_INDEX_SIGNATURE:
 				sequence_TStructIndexSignature(context, (TStructIndexSignature) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_METHOD:
-				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod(context, (TStructMethod) semanticObject); 
+				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TLiteralOrComputedPropertyName_TStructMethod(context, (TStructMethod) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_SETTER:
-				sequence_TStructSetter(context, (TStructSetter) semanticObject); 
+				sequence_TLiteralOrComputedPropertyName_TStructSetter(context, (TStructSetter) semanticObject); 
 				return; 
 			case TypesPackage.TYPE_PREDICATE:
 				if (rule == grammarAccess.getTypePredicateWithPrimaryRule()) {

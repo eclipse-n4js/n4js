@@ -9051,42 +9051,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//REGEX_LITERAL
 		public RuleCall getValueREGEX_LITERALParserRuleCall_0() { return cValueREGEX_LITERALParserRuleCall_0; }
 	}
-	public class NumericLiteralAsStringElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NumericLiteralAsString");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cDOUBLETerminalRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cINTTerminalRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cBINARY_INTTerminalRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cOCTAL_INTTerminalRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cHEX_INTTerminalRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cSCIENTIFIC_INTTerminalRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		
-		//NumericLiteralAsString:
-		//    DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
-		//;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
-		public Alternatives getAlternatives() { return cAlternatives; }
-		
-		//DOUBLE
-		public RuleCall getDOUBLETerminalRuleCall_0() { return cDOUBLETerminalRuleCall_0; }
-		
-		//INT
-		public RuleCall getINTTerminalRuleCall_1() { return cINTTerminalRuleCall_1; }
-		
-		//BINARY_INT
-		public RuleCall getBINARY_INTTerminalRuleCall_2() { return cBINARY_INTTerminalRuleCall_2; }
-		
-		//OCTAL_INT
-		public RuleCall getOCTAL_INTTerminalRuleCall_3() { return cOCTAL_INTTerminalRuleCall_3; }
-		
-		//HEX_INT
-		public RuleCall getHEX_INTTerminalRuleCall_4() { return cHEX_INTTerminalRuleCall_4; }
-		
-		//SCIENTIFIC_INT
-		public RuleCall getSCIENTIFIC_INTTerminalRuleCall_5() { return cSCIENTIFIC_INTTerminalRuleCall_5; }
-	}
 	public class IdentifierOrThisElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.IdentifierOrThis");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
@@ -12716,7 +12680,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	private final BinaryIntLiteralElements pBinaryIntLiteral;
 	private final ScientificIntLiteralElements pScientificIntLiteral;
 	private final RegularExpressionLiteralElements pRegularExpressionLiteral;
-	private final NumericLiteralAsStringElements pNumericLiteralAsString;
 	private final IdentifierOrThisElements pIdentifierOrThis;
 	private final AnnotationNameElements pAnnotationName;
 	private final TerminalRule tHASH_BANG;
@@ -12980,7 +12943,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		this.pBinaryIntLiteral = new BinaryIntLiteralElements();
 		this.pScientificIntLiteral = new ScientificIntLiteralElements();
 		this.pRegularExpressionLiteral = new RegularExpressionLiteralElements();
-		this.pNumericLiteralAsString = new NumericLiteralAsStringElements();
 		this.pIdentifierOrThis = new IdentifierOrThisElements();
 		this.pAnnotationName = new AnnotationNameElements();
 		this.tHASH_BANG = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.HASH_BANG");
@@ -15353,17 +15315,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getRegularExpressionLiteralAccess().getRule();
 	}
 	
-	//NumericLiteralAsString:
-	//    DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
-	//;
-	public NumericLiteralAsStringElements getNumericLiteralAsStringAccess() {
-		return pNumericLiteralAsString;
-	}
-	
-	public ParserRule getNumericLiteralAsStringRule() {
-		return getNumericLiteralAsStringAccess().getRule();
-	}
-	
 	//IdentifierOrThis:
 	//    IDENTIFIER
 	//    | 'Promisify'
@@ -16872,7 +16823,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    =>
 	//    ({TStructMethod}
 	//        ('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
-	//        (name=IdentifierName)? '('
+	//        (TLiteralOrComputedPropertyName)? '('
 	//    )
 	//    TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 	//;
@@ -16907,7 +16858,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//TStructField:
-	//    'readonly'? name=IdentifierName (optional?='?')? ColonSepTypeRef?
+	//    'readonly'? TLiteralOrComputedPropertyName (optional?='?')? ColonSepTypeRef?
 	//;
 	public TypeExpressionsGrammarAccess.TStructFieldElements getTStructFieldAccess() {
 		return gaTypeExpressions.getTStructFieldAccess();
@@ -16920,7 +16871,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//TStructGetter:
 	//    => ({TStructGetter}
 	//    'get'
-	//    name=IdentifierName)
+	//    TLiteralOrComputedPropertyName)
 	//    (optional?='?')?
 	//    '(' ')' ColonSepTypeRef?
 	//;
@@ -16935,7 +16886,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//TStructSetter:
 	//    => ({TStructSetter}
 	//    'set'
-	//    name=IdentifierName)
+	//    TLiteralOrComputedPropertyName)
 	//    (optional?='?')?
 	//    '(' fpar=TAnonymousFormalParameter ')'
 	//;
@@ -17122,6 +17073,20 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getTypePredicateWithPrimaryAccess().getRule();
 	}
 	
+	//fragment TLiteralOrComputedPropertyName*:
+	//    name=IdentifierName
+	//    | name=STRING
+	//    | name=NumericLiteralAsString
+	////    | '[' TypeRef ']'
+	//;
+	public TypeExpressionsGrammarAccess.TLiteralOrComputedPropertyNameElements getTLiteralOrComputedPropertyNameAccess() {
+		return gaTypeExpressions.getTLiteralOrComputedPropertyNameAccess();
+	}
+	
+	public ParserRule getTLiteralOrComputedPropertyNameRule() {
+		return getTLiteralOrComputedPropertyNameAccess().getRule();
+	}
+	
 	///*
 	// * [ECM11] (7.6, pp. 17)
 	// * Identifier :: IdentifierName but not ReservedWord
@@ -17208,6 +17173,17 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getN4KeywordRule() {
 		return getN4KeywordAccess().getRule();
+	}
+	
+	//NumericLiteralAsString:
+	//    DOUBLE | INT | BINARY_INT | OCTAL_INT | HEX_INT | SCIENTIFIC_INT
+	//;
+	public TypeExpressionsGrammarAccess.NumericLiteralAsStringElements getNumericLiteralAsStringAccess() {
+		return gaTypeExpressions.getNumericLiteralAsStringAccess();
+	}
+	
+	public ParserRule getNumericLiteralAsStringRule() {
+		return getNumericLiteralAsStringAccess().getRule();
 	}
 	
 	//Arrow hidden(): // "hidden()" works due to LazyTokenStream#doSetHiddenTokens()
