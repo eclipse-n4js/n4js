@@ -82,7 +82,7 @@ public class AmbiguousImportDescription extends AbstractDescriptionWithError {
 		} else if (this.issueCode == IssueCodes.IMP_AMBIGUOUS) {
 			return IssueCodes.getMessageForIMP_AMBIGUOUS(typeIdent, getName(), typeListStr.toString());
 		} else if (this.issueCode == IssueCodes.IMP_DUPLICATE_NAMESPACE) {
-			return IssueCodes.getMessageForIMP_DUPLICATE_NAMESPACE(getName(), "stub");
+			return IssueCodes.getMessageForIMP_DUPLICATE_NAMESPACE("stub", getName(), "stub");
 		}
 		return "Unknown ambiguous import issue: " + this.issueCode + " for " + context + ".";
 	}

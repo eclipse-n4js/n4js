@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.NamedElement
+import org.eclipse.n4js.n4JS.NamespaceElement
 import org.eclipse.n4js.n4JS.NewTarget
 import org.eclipse.n4js.n4JS.PropertySpread
 import org.eclipse.n4js.validation.ASTStructureValidator
@@ -32,9 +33,9 @@ import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
-import org.eclipse.n4js.n4JS.FunctionDeclaration
 
-import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import static org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.n4JS.AnnotableElement
 
 /**
  * Validations to show an error for unsupported language features, mostly ECMAScript6 features.
@@ -145,9 +146,11 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 	}
 	
 	@Check
-	def void checkPolyfillInNamespace(FunctionDeclaration elem) {
-		if (isStaticPolyfill(elem) || isNonStaticPolyfill(elem)) {
-			unsupported("polyfills in namespaces", elem)
+	def void checkPolyfillInNamespace(NamespaceElement elem) {
+		if (elem instanceof AnnotableElement) {
+			if (isStaticPolyfill(elem) || isNonStaticPolyfill(elem)) {
+				unsupported("polyfills in namespaces", elem)
+			}
 		}
 	}
 	

@@ -16,6 +16,8 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 /**
  * Utilities for ImportSpecifiers
@@ -25,16 +27,19 @@ class ImportSpecifiersUtil {
 	/**
 	 * @return {@link List} of {@link ImportProvidedElement}s describing imported elements
 	 */
-	public static def List<ImportProvidedElement> mapToImportProvidedElements(List<ImportSpecifier> importSpecifiers) {
+	public static def List<ImportProvidedElement> mapToImportProvidedElements(
+		List<ImportSpecifier> importSpecifiers, JavaScriptVariantHelper jsVariantHelper
+	) {
 		return importSpecifiers.map(
 			specifier |
 				switch (specifier) {
 					NamespaceImportSpecifier:
-						return namespaceToProvidedElements(specifier)
+						return namespaceToProvidedElements(jsVariantHelper, specifier)
 					NamedImportSpecifier:
 						return newArrayList(
 							new ImportProvidedElement(specifier.usedName, specifier.importedElementName,
-								specifier as ImportSpecifier))
+								specifier as ImportSpecifier,
+								N4JSLanguageUtils.isHollowElement(specifier.importedElement, jsVariantHelper)))
 					default:
 						return emptyList
 				}
@@ -42,23 +47,25 @@ class ImportSpecifiersUtil {
 	}
 
 	/** Map all exported elements from namespace target module to the import provided elements. */
-	private static def namespaceToProvidedElements(NamespaceImportSpecifier specifier) {
-		if (specifier.importedModule === null)
+	private static def namespaceToProvidedElements(JavaScriptVariantHelper jsVariantHelper, NamespaceImportSpecifier specifier) {
+		val importedModule = specifier.importedModule;
+		if (importedModule === null)
 			return emptyList
 
 		val importProvidedElements = newArrayList
 		// add import provided element for a namespace itself
-		importProvidedElements.add(
-			new ImportProvidedElement(specifier.alias, computeNamespaceActualName(specifier), specifier))
+		importProvidedElements.add(new ImportProvidedElement(specifier.alias,
+			computeNamespaceActualName(specifier), specifier, false));
 
-		val topExportedTypes = specifier.importedModule.topLevelTypes.filter[isExported].map[it as TExportableElement]
-		val topExportedVars = specifier.importedModule.variables.filter[it.isExported].map[it as TExportableElement];
-		val topExported = topExportedTypes + topExportedVars
+		val topNamespaces = importedModule.namespaces.filter[isExported].map[it as TExportableElement]
+		val topExportedTypes = importedModule.topLevelTypes.filter[isExported].map[it as TExportableElement]
+		val topExportedVars = importedModule.variables.filter[it.isExported].map[it as TExportableElement];
+		val topExported = topNamespaces + topExportedTypes + topExportedVars
 
 		topExported.forEach [ type |
 			importProvidedElements.add(
 				new ImportProvidedElement(specifier.importedElementName(type), type.exportedName,
-					specifier as ImportSpecifier))
+					specifier as ImportSpecifier, N4JSLanguageUtils.isHollowElement(type, jsVariantHelper)))
 		]
 		return importProvidedElements
 	}
