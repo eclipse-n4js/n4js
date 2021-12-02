@@ -27,11 +27,11 @@ export external namespace NSV1 {}
 // XPECT noerrors -->
 export external const NSV1 : string;
 
-export external namespace NSV2 { external interface ~NSV2I{} }
+export external namespace NSV2 { interface ~NSV2I{} }
 // XPECT noerrors -->
 export external const NSV2 : string;
 
-export external namespace NSV3 { external namespace NSV3NS{} }
+export external namespace NSV3 { namespace NSV3NS{} }
 // XPECT noerrors -->
 export external const NSV3 : string;
 
@@ -63,11 +63,11 @@ export external namespace NSC1 {}
 // XPECT errors --> "Class NSC1 duplicates namespace NSC1 (line 62)." at "NSC1"
 export external class NSC1 {};
 
-export external namespace NSC2 { external interface ~NSC2I{} }
+export external namespace NSC2 { interface ~NSC2I{} }
 // XPECT errors --> "Class NSC2 duplicates namespace NSC2 (line 66)." at "NSC2"
 export external class NSC2 {};
 
-export external namespace NSC3 { external namespace NSC3NS{} }
+export external namespace NSC3 { namespace NSC3NS{} }
 // XPECT errors --> "Class NSC3 duplicates namespace NSC3 (line 70)." at "NSC3"
 export external class NSC3 {};
 

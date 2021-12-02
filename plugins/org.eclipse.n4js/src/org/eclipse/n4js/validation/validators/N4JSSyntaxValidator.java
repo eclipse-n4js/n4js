@@ -105,12 +105,11 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 						IssueCodes.SYN_MODIFIER_DUPLICATE);
 				hasIssue = true;
 			} else if (ModifierUtils.isObsolete(elem, mod)) {
-				// TODO: activate later
-				// final ILeafNode node = ModifierUtils.getNodeForModifier(elem, idx);
-				// addIssue(IssueCodes.getMessageForSYN_MODIFIER_OBSOLETE(mod.getName()),
-				// elem, node.getOffset(), node.getLength(),
-				// IssueCodes.SYN_MODIFIER_OBSOLETE);
-				// hasIssue = true;
+				final ILeafNode node = ModifierUtils.getNodeForModifier(elem, idx);
+				addIssue(IssueCodes.getMessageForSYN_MODIFIER_OBSOLETE(mod.getName()),
+						elem, node.getOffset(), node.getLength(),
+						IssueCodes.SYN_MODIFIER_OBSOLETE);
+				hasIssue = true;
 			}
 		}
 		return !hasIssue;

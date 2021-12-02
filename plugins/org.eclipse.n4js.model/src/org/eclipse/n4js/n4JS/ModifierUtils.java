@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -96,11 +95,16 @@ public class ModifierUtils {
 				N4MemberDeclaration typeDefElem = (N4MemberDeclaration) elem;
 				TMember tMember = typeDefElem.getDefinedTypeElement();
 				if (isTMemberWithAccessModifier(tMember.eClass())) {
-					TMemberWithAccessModifier tmwam = (TMemberWithAccessModifier) tMember;
-					return tmwam.getDeclaredMemberAccessModifier() == tmwam.getDefaultMemberAccessModifier();
+					return false;
+
+					// TODO: activate later
+					// TMemberWithAccessModifier tmwam = (TMemberWithAccessModifier) tMember;
+					// return tmwam.getDeclaredMemberAccessModifier() == tmwam.getDefaultMemberAccessModifier();
 				}
 			}
-			if (isTypeDefiningElement(astNodeType)) {
+			if (isTypeDefiningElement(astNodeType)
+					// TODO: remove later the following condition
+					&& astNodeType instanceof N4NamespaceDeclaration) {
 				TypeDefiningElement typeDefElem = (TypeDefiningElement) elem;
 				Type definedType = typeDefElem.getDefinedType();
 				if (isAccessibleTypeElement(definedType.eClass())) {
