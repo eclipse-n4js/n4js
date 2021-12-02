@@ -41,14 +41,14 @@ namespace NS2 {
 // access nested namespace
 namespace NS3 {
 	namespace NS3NS {
-    	export class NS3NSC1 {}
-    	class NS3NSC2 {}
+    	class NS3NSC1 {}
+    	private class NS3NSC2 {}
 	}
 // XPECT noerrors -->
     class NS3C1 extends NS3NS.NS3NSC1 {}
 // XPECT errors --> "" at "NS3NSC2"
     class NS3C2 extends NS3NS.NS3NSC2 {}
-// XPECT errors --> "" at "NS3NSC1"
+// XPECT errors --> "Couldn't resolve reference to Type 'NS3NSC1'." at "NS3NSC1"
     class NS3C3 extends NS3NSC1 {}
 }
 
@@ -58,8 +58,8 @@ namespace NS4 {
     class NS4C {}
 	namespace NS4NS {
 // XPECT noerrors -->
-    	class NS4NSC extends NS4.NS4C {}
+    	class NS4NSC1 extends NS4.NS4C {}
 // XPECT noerrors -->
-    	class NS4NSC extends NS4C {}
+    	class NS4NSC2 extends NS4C {}
 	}
 }

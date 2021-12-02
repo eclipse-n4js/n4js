@@ -20,7 +20,7 @@ export public type A2 = string;
 // XPECT noerrors -->
 @Internal export public type A3 = string;
 
-// XPECT errors --> "A type with visibility public must be marked as exported." at "A4"
+// XPECT errors --> "A type with visibility public must be marked with modifier export." at "A4"
 public type A4 = string;
 
 

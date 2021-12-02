@@ -16,17 +16,17 @@
 
 
 // XPECT noerrors -->
-export external namespace NSC4 {
-// XPECT warnings --> "" at "export"
-    export const c1;
-// XPECT warnings --> "" at "export"
+export namespace NSC4 {
+// XPECT warnings --> "Modifier export is obsolete." at "export"
+    export const c1 = 0;
+// XPECT warnings --> "Modifier export is obsolete." at "export"
     export var v1;
-// XPECT warnings --> "" at "export"
-    export let l1;
-// XPECT warnings --> "" at "export"
+// XPECT warnings --> "Modifier export is obsolete." at "export"
+    export let l1 = 2;
+// XPECT warnings --> "Modifier export is obsolete." at "export"
     export function F1():void {}
-    const c2;
+    const c2 = 10;
     var v2;
-    let l2;
+    let l2 = 12;
     function F2():void {}
 }

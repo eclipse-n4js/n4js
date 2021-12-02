@@ -32,7 +32,7 @@ export public class InternalPoint {
 // 	No error expected: "External elements have to be exported." at "InternalPoint2"
 @Internal
 /* XPECT errors ---
-	"A class with visibility @Internal public must be marked as exported." at "InternalPoint2"
+	"A class with visibility @Internal public must be marked with modifier export." at "InternalPoint2"
 --- */
 external public class InternalPoint2 {
 }
@@ -55,7 +55,7 @@ export interface InternalClonable {
 
 // 	relaxed export constraint by IDEBUG-561:  "External elements have to be exported." at "InternalClonable2"
 /* XPECT errors ---
-"A interface with visibility public must be marked as exported." at "InternalClonable2"
+"A interface with visibility public must be marked with modifier export." at "public"
 --- */
 external public interface ~InternalClonable2 {
 }
@@ -79,7 +79,7 @@ export public interface NonStructuralTypedLine {
 // 	"External elements have to be exported." at "NonApiStructuralTypedLine"
 @Internal
 /* XPECT errors ---
-	"A interface with visibility @Internal public must be marked as exported." at "NonApiStructuralTypedLine"
+	"A interface with visibility @Internal public must be marked with modifier export." at "NonApiStructuralTypedLine"
 --- */
 public interface ~NonApiStructuralTypedLine {
 	public start : Point;

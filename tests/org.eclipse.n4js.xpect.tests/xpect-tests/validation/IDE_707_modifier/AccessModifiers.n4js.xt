@@ -16,7 +16,7 @@ public class Point {
 
 }
 
-// XPECT errors --> "A class with visibility project must be marked with modifier export." at "public"
+// XPECT errors --> "A class with visibility project must be marked with modifier export." at "project"
 project class Point2 {
 
 }
