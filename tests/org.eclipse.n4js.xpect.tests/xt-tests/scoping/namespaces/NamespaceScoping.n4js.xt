@@ -42,11 +42,12 @@ namespace NS2 {
 namespace NS3 {
 	namespace NS3NS {
     	class NS3NSC1 {}
+// XPECT warnings --> "Modifier private is obsolete." at "private"
     	private class NS3NSC2 {}
 	}
 // XPECT noerrors -->
     class NS3C1 extends NS3NS.NS3NSC1 {}
-// XPECT errors --> "" at "NS3NSC2"
+// XPECT noerrors --> "" at "NS3NSC2"
     class NS3C2 extends NS3NS.NS3NSC2 {}
 // XPECT errors --> "Couldn't resolve reference to Type 'NS3NSC1'." at "NS3NSC1"
     class NS3C3 extends NS3NSC1 {}
