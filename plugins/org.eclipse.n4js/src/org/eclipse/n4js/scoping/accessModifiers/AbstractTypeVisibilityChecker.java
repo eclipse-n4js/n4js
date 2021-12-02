@@ -14,20 +14,16 @@ import static java.util.Collections.emptyList;
 
 import java.util.Collection;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.util.Strings;
 
@@ -44,9 +40,10 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	protected WorkspaceAccess workspaceAccess;
 
 	@Override
-	public TypeVisibility isVisible(EObject context, IEObjectDescription e) {
+	public TypeVisibility isVisible(
+			Resource contextResource, IEObjectDescription e) {
 		TypeAccessModifier typeAccessModifier = N4JSResourceDescriptionStrategy.getTypeAccessModifier(e);
-		return isVisible(context, typeAccessModifier, e);
+		return isVisible(contextResource, typeAccessModifier, e);
 	}
 
 	/**
@@ -55,10 +52,8 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 * this is done in the caller via {@code getTypeAccessModifier}. However, there is no common interface for
 	 * retrieving that information.
 	 */
-	protected TypeVisibility isVisible(final EObject context, final TypeAccessModifier accessModifier,
+	protected TypeVisibility isVisible(final Resource contextResource, final TypeAccessModifier accessModifier,
 			final T element) {
-
-		Resource contextResource = context.eResource();
 		int startIndex = accessModifier.getValue();
 
 		boolean visibility = false;
@@ -71,7 +66,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 
 			switch (modifier) {
 			case PRIVATE: {
-				visibilityForModifier = isPrivateVisible(context, element);
+				visibilityForModifier = isPrivateVisible(contextResource, element);
 				break;
 			}
 			case PROJECT: {
@@ -108,9 +103,8 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 * this is done in the caller via {@code getTypeAccessModifier}. However, there is no common interface for
 	 * retrieving that information. Implementors should avoid calling {@link IEObjectDescription#getEObjectOrProxy()}.
 	 */
-	protected TypeVisibility isVisible(final EObject context, final TypeAccessModifier accessModifier,
+	protected TypeVisibility isVisible(final Resource contextResource, final TypeAccessModifier accessModifier,
 			final IEObjectDescription element) {
-
 		int startIndex = accessModifier.getValue();
 		boolean visibility = false;
 		String firstVisible = "PUBLIC";
@@ -122,15 +116,15 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 
 			switch (modifier) {
 			case PRIVATE: {
-				visibilityForModifier = isPrivateVisible(context.eResource(), element);
+				visibilityForModifier = isPrivateVisible(contextResource, element);
 				break;
 			}
 			case PROJECT: {
-				visibilityForModifier = isProjectVisible(context.eResource(), element);
+				visibilityForModifier = isProjectVisible(contextResource, element);
 				break;
 			}
 			case PUBLIC_INTERNAL: {
-				visibilityForModifier = isPublicInternalVisible(context.eResource(), element);
+				visibilityForModifier = isPublicInternalVisible(contextResource, element);
 				break;
 			}
 			case PUBLIC:
@@ -177,15 +171,8 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		return false;
 	}
 
-	private boolean isPrivateVisible(EObject context, final T element) {
-		if (element.eResource() != context.eResource()) {
-			return false;
-		}
-		N4NamespaceDeclaration contextNS = EcoreUtil2.getContainerOfType(context, N4NamespaceDeclaration.class);
-		TNamespace elementNS = EcoreUtil2.getContainerOfType(element, TNamespace.class);
-
-		return contextNS == null && elementNS == null ||
-				(contextNS != null && contextNS.getDefinedType() == elementNS);
+	private boolean isPrivateVisible(Resource contextResource, final T element) {
+		return element.eResource() == contextResource;
 		// TModule typeModule = EcoreUtil2.getContainerOfType(element, TModule.class);
 		// return typeModule == null || typeModule == contextModule;
 	}

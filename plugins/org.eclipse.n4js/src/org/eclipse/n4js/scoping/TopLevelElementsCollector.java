@@ -13,7 +13,7 @@ package org.eclipse.n4js.scoping;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.resource.N4JSEObjectDescription;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
 import org.eclipse.n4js.scoping.accessModifiers.HollowTypeOrValueDescription;
@@ -53,22 +53,22 @@ public class TopLevelElementsCollector {
 	 * Returns an iterable of all top-level elements of the given module, given that they are accessed from the given
 	 * context resource.
 	 *
-	 * @param ans
-	 *            The script or namespace
-	 * @param context
-	 *            The context
+	 * @param module
+	 *            The module
+	 * @param contextResource
+	 *            The context resource
 	 */
-	public Iterable<IEObjectDescription> getTopLevelElements(AbstractNamespace ans, EObject context,
+	public Iterable<IEObjectDescription> getTopLevelElements(AbstractNamespace module, Resource contextResource,
 			boolean includeHollows, boolean includeVariables) {
 
 		List<IEObjectDescription> visible = new ArrayList<>();
 		List<IEObjectDescription> invisible = new ArrayList<>();
 
-		Iterable<Type> tltAndNamespaces = Iterables.concat(ans.getTopLevelTypes(), ans.getNamespaces());
+		Iterable<Type> tltAndNamespaces = Iterables.concat(module.getTopLevelTypes(), module.getNamespaces());
 		for (Type type : tltAndNamespaces) {
 			boolean include = includeHollows || !N4JSLanguageUtils.isHollowElement(type, variantHelper);
 			if (include) {
-				TypeVisibility typeVisiblity = typeVisibilityChecker.isVisible(context, type);
+				TypeVisibility typeVisiblity = typeVisibilityChecker.isVisible(contextResource, type);
 				if (typeVisiblity.visibility) {
 					visible.add(createObjectDescription(type));
 				} else {
@@ -82,8 +82,8 @@ public class TopLevelElementsCollector {
 		}
 
 		if (includeVariables) {
-			for (TVariable var : ans.getVariables()) {
-				TypeVisibility typeVisiblity = variableVisibilityChecker.isVisible(context, var);
+			for (TVariable var : module.getVariables()) {
+				TypeVisibility typeVisiblity = variableVisibilityChecker.isVisible(contextResource, var);
 				if (typeVisiblity.visibility) {
 					visible.add(createObjectDescription(var));
 				} else {

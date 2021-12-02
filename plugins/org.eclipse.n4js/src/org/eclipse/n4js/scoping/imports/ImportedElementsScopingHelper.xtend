@@ -16,6 +16,7 @@ import com.google.inject.Singleton
 import java.util.HashMap
 import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
@@ -153,6 +154,7 @@ class ImportedElementsScopingHelper {
 	}
 
 	private def IScope findImportedElements(Script script, IScope parentScope, boolean includeHollows, boolean includeVariables) {
+		val contextResource = script.eResource;
 		val imports = script.scriptElements.filter(ImportDeclaration)
 
 		if (imports.empty) return parentScope;
@@ -170,17 +172,17 @@ class ImportedElementsScopingHelper {
 			val module = imp?.module;
 			if (module !== null) {
 				
-				val topLevelElements = topLevelElementCollector.getTopLevelElements(module, script, includeHollows, includeVariables);
+				val topLevelElements = topLevelElementCollector.getTopLevelElements(module, contextResource, includeHollows, includeVariables);
 				val tleScope = scopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", module, IScope.NULLSCOPE, false, topLevelElements)
 			
 				for (specifier : imp.importSpecifiers) {
 					switch (specifier) {
 						NamedImportSpecifier: {
-							processNamedImportSpecifier(specifier, imp, script, originatorMap, validImports,
+							processNamedImportSpecifier(specifier, imp, contextResource, originatorMap, validImports,
 								invalidImports, includeVariables, tleScope)
 						}
 						NamespaceImportSpecifier: {
-							processNamespaceSpecifier(specifier, imp, script, script, originatorMap, validImports,
+							processNamespaceSpecifier(specifier, imp, script, contextResource, originatorMap, validImports,
 								invalidImports, includeVariables)
 						}
 					}
@@ -197,7 +199,7 @@ class ImportedElementsScopingHelper {
 	}
 
 	protected def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
-			EObject context, IEODesc2ISpec originatorMap,
+			Resource contextResource, IEODesc2ISpec originatorMap,
 			ImportedElementsMap validImports,
 			ImportedElementsMap invalidImports, boolean importVariables, IScope tleScope) {
 
@@ -223,7 +225,7 @@ class ImportedElementsScopingHelper {
 			}
 
 			val importedQName = createQualifiedNameForAlias(specifier, element);
-			val typeVisibility = isVisible(context, element);
+			val typeVisibility = isVisible(contextResource, element);
 			if (typeVisibility.visibility) {
 
 				addNamedImports(specifier, element, importedQName,
@@ -251,7 +253,7 @@ class ImportedElementsScopingHelper {
 		NamespaceImportSpecifier specifier,
 		ImportDeclaration imp,
 		Script script,
-		EObject context,
+		Resource contextResource,
 		IEODesc2ISpec originatorMap,
 		ImportedElementsMap validImports,
 		ImportedElementsMap invalidImports,
@@ -263,7 +265,6 @@ class ImportedElementsScopingHelper {
 		if (script.module === null) {
 			return; // when reconciliation of TModule fails due to hash mismatch
 		}
-		val contextResource = context.eResource;
 
 		// add namespace to scope
 		val namespaceName = specifier.alias;
@@ -300,7 +301,7 @@ class ImportedElementsScopingHelper {
 			// add vars to namespace
 			// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 			for (importedVar : imp.module.variables) {
-				val varVisibility = variableVisibilityChecker.isVisible(context, importedVar);
+				val varVisibility = variableVisibilityChecker.isVisible(contextResource, importedVar);
 				val varName = importedVar.exportedName
 				val qn = QualifiedName.create(namespaceName, varName)
 				if (varVisibility.visibility) {
@@ -316,7 +317,7 @@ class ImportedElementsScopingHelper {
 		// add types
 		// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 		for (importedType : imp.module.topLevelTypes) {
-			val typeVisibility = typeVisibilityChecker.isVisible(context, importedType);
+			val typeVisibility = typeVisibilityChecker.isVisible(contextResource, importedType);
 
 			val qn = createImportedQualifiedTypeName(namespaceName, importedType)
 			if (typeVisibility.visibility) {
@@ -379,11 +380,12 @@ class ImportedElementsScopingHelper {
 		return res;
 	}
 
-	private def AbstractTypeVisibilityChecker.TypeVisibility isVisible(EObject context,	IdentifiableElement element) {
+	private def AbstractTypeVisibilityChecker.TypeVisibility isVisible(Resource contextResource,
+		IdentifiableElement element) {
 		if (element instanceof Type)
-			typeVisibilityChecker.isVisible(context, element)
+			typeVisibilityChecker.isVisible(contextResource, element)
 		else if (element instanceof TVariable)
-			variableVisibilityChecker.isVisible(context, element)
+			variableVisibilityChecker.isVisible(contextResource, element)
 		else if (element instanceof TDynamicElement)
 			return new AbstractTypeVisibilityChecker.TypeVisibility(true)
 		else

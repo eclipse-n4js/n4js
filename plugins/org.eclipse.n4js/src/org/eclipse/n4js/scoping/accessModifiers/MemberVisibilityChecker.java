@@ -66,7 +66,7 @@ public class MemberVisibilityChecker {
 	public boolean isEnumLiteralVisible(EObject context, TypeRef enumType) {
 		Resource contextResource = context.eResource();
 		Type declaredReceiverType = getActualDeclaredReceiverType(context, enumType, contextResource.getResourceSet());
-		if (typeVisibilityChecker.isVisible(context, declaredReceiverType).visibility) {
+		if (typeVisibilityChecker.isVisible(contextResource, declaredReceiverType).visibility) {
 			return true; // literals are public (i.e. visible across modules) by definition
 		}
 		return false;
@@ -113,7 +113,7 @@ public class MemberVisibilityChecker {
 		Type declaredReceiverType = getActualDeclaredReceiverType(context, receiverType,
 				contextResource.getResourceSet());
 		if (declaredReceiverType != null
-				&& typeVisibilityChecker.isVisible(context, declaredReceiverType).visibility) {
+				&& typeVisibilityChecker.isVisible(contextResource, declaredReceiverType).visibility) {
 			// check for local usage of locally defined member
 			if (shortcutIsVisible(member, contextType, contextModule, declaredReceiverType)) {
 				return new MemberVisibility(true);

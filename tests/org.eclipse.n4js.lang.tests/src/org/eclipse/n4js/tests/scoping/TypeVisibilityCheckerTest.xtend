@@ -65,7 +65,7 @@ class TypeVisibilityCheckerTest {
 		val parsedType = (script.eResource.contents.last as TModule).topLevelTypes.head
 		val myScript = '''class A{}'''.parse(URI.createURI('''b.n4js?«myVendor»|«myProject»'''), rs).withVendorAndProject(myVendor, myProject)
 
-		Assert.assertEquals(expectation, myScript.isVisible(parsedType).visibility)
+		Assert.assertEquals(expectation, myScript.eResource.isVisible(parsedType).visibility)
 	}
 
 	/**

@@ -41,24 +41,23 @@ public class VisibilityAwareTypeScope extends FilterWithErrorMarkerScope {
 	/**
 	 * The resource from which the type is to be accessed.
 	 */
-	protected final EObject context;
+	protected final Resource contextResource;
 
 	/**
 	 * Creates a new scope instance.
 	 */
-	public VisibilityAwareTypeScope(IScope parent, TypeVisibilityChecker checker, EObject context) {
+	public VisibilityAwareTypeScope(IScope parent, TypeVisibilityChecker checker, Resource contextResource) {
 		super(parent);
 		this.checker = checker;
-		this.context = context;
+		this.contextResource = contextResource;
 	}
 
 	@Override
 	protected boolean isAccepted(IEObjectDescription description) {
 		EObject proxyOrInstance = description.getEObjectOrProxy();
 
-		if (proxyOrInstance instanceof Type && context != null) {
+		if (proxyOrInstance instanceof Type) {
 			Type type = (Type) proxyOrInstance;
-			Resource contextResource = context.eResource();
 			if (type.eIsProxy() && contextResource != null) {
 				// we found a proxy. Only valid precondition for a proxy that was returned from a
 				// UserDataAwareScope is that the resource that contains the real instance is already
@@ -78,7 +77,7 @@ public class VisibilityAwareTypeScope extends FilterWithErrorMarkerScope {
 			}
 			// paranoid double check - object from resource set should never be a proxy
 			if (!type.eIsProxy()) {
-				TypeVisibility typeVisibility = checker.isVisible(context, type);
+				TypeVisibility typeVisibility = checker.isVisible(contextResource, type);
 
 				if (typeVisibility.visibility) {
 					accessModifierSuggestionStore.put(description.getEObjectURI().toString(),
@@ -97,7 +96,7 @@ public class VisibilityAwareTypeScope extends FilterWithErrorMarkerScope {
 
 	@Override
 	protected boolean tryAcceptWithoutResolve(IEObjectDescription originalDescr) {
-		TypeVisibility typeVisibility = checker.isVisible(context, originalDescr);
+		TypeVisibility typeVisibility = checker.isVisible(contextResource, originalDescr);
 		if (typeVisibility.visibility) {
 			accessModifierSuggestionStore.put(originalDescr.getEObjectURI().toString(),
 					typeVisibility.accessModifierSuggestion);

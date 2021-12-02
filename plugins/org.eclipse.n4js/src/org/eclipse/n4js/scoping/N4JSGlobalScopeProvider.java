@@ -12,7 +12,6 @@ package org.eclipse.n4js.scoping;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -55,23 +54,22 @@ public class N4JSGlobalScopeProvider extends DefaultN4GlobalScopeProvider {
 	}
 
 	@Override
-	protected IScope getScope(IScope parent, Resource contextResource, boolean ignoreCase, EClass type,
+	protected IScope getScope(IScope parent, Resource context, boolean ignoreCase, EClass type,
 			Predicate<IEObjectDescription> filter) {
 
 		IScope result = null;
 		try {
-			result = super.getScope(parent, contextResource, ignoreCase, type, filter);
+			result = super.getScope(parent, context, ignoreCase, type, filter);
 		} catch (IllegalStateException ise) {
-			String msg = "ERROR for " + contextResource.getURI() + " ::\n" + Throwables.getStackTraceAsString(ise);
+			String msg = "ERROR for " + context.getURI() + " ::\n" + Throwables.getStackTraceAsString(ise);
 			System.err.println(msg);
 			return IScope.NULLSCOPE;
 		}
-		EObject context = contextResource.getContents().isEmpty() ? null : contextResource.getContents().get(0);
-		if (context != null && isSubtypeOfType(type)) {
+		if (isSubtypeOfType(type)) {
 			result = new VisibilityAwareTypeScope(result, typeVisibilityChecker, context);
 			return result;
 		}
-		if (context != null && isSubtypeOfIdentifiable(type)) {
+		if (isSubtypeOfIdentifiable(type)) {
 			result = new VisibilityAwareIdentifiableScope(result, varVisibilityChecker, typeVisibilityChecker, context);
 			return result;
 		}
