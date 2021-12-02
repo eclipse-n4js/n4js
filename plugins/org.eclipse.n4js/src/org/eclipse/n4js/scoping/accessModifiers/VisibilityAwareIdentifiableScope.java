@@ -11,7 +11,6 @@
 package org.eclipse.n4js.scoping.accessModifiers;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -28,7 +27,7 @@ public class VisibilityAwareIdentifiableScope extends VisibilityAwareTypeScope {
 	 * Creates a new scope instance.
 	 */
 	public VisibilityAwareIdentifiableScope(IScope parent, VariableVisibilityChecker checker,
-			TypeVisibilityChecker typeVisibilityChecker, Resource context) {
+			TypeVisibilityChecker typeVisibilityChecker, EObject context) {
 		super(parent, typeVisibilityChecker, context);
 		this.checker = checker;
 	}
@@ -40,7 +39,7 @@ public class VisibilityAwareIdentifiableScope extends VisibilityAwareTypeScope {
 			if (proxyOrInstance instanceof TVariable && !proxyOrInstance.eIsProxy()) {
 				TVariable type = (TVariable) proxyOrInstance;
 
-				TypeVisibility visibility = checker.isVisible(this.contextResource, type);
+				TypeVisibility visibility = checker.isVisible(this.context, type);
 
 				if (!visibility.visibility) {
 					this.accessModifierSuggestionStore.put(description.getEObjectURI().toString(),
@@ -56,7 +55,7 @@ public class VisibilityAwareIdentifiableScope extends VisibilityAwareTypeScope {
 	@Override
 	protected boolean tryAcceptWithoutResolve(IEObjectDescription description) {
 		if (TVariable.class.isAssignableFrom(description.getEClass().getInstanceClass())) {
-			TypeVisibility visibility = checker.isVisible(this.contextResource, description);
+			TypeVisibility visibility = checker.isVisible(this.context, description);
 			if (!visibility.visibility) {
 				this.accessModifierSuggestionStore.put(description.getEObjectURI().toString(),
 						visibility.accessModifierSuggestion);

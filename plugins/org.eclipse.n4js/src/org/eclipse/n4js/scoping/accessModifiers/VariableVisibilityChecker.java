@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.scoping.accessModifiers;
 
-import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 
@@ -23,9 +23,9 @@ public class VariableVisibilityChecker extends AbstractTypeVisibilityChecker<TVa
 	 * Returns <code>true</code> if the given variable can be used from within the given resource.
 	 */
 	@Override
-	public TypeVisibility isVisible(Resource contextResource, TVariable t) {
+	public TypeVisibility isVisible(EObject context, TVariable t) {
 		TypeAccessModifier typeAccessModifier = t.getTypeAccessModifier();
-		return isVisible(contextResource, typeAccessModifier, t);
+		return isVisible(context, typeAccessModifier, t);
 	}
 
 }
