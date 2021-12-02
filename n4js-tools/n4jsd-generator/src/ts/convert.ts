@@ -847,6 +847,14 @@ export class Converter {
 			// e.g. "SomeType['someProperty']"
 			result.kind = model.TypeRefKind.INDEXED_ACCESS_TYPE;
 			this.createWarningForNode("indexed access type will be replaced by any+", node);
+		} else if (ts.isConditionalTypeNode(node)) {
+			// e.g. "X extends Y ? Cls : string"
+			result.kind = model.TypeRefKind.CONDITIONAL_TYPE;
+			this.createWarningForNode("conditional type will be replaced by any+", node);
+		} else if (ts.isInferTypeNode(node)) {
+			// e.g. "infer X" (only allowed in extends clause of a conditional type)
+			result.kind = model.TypeRefKind.INFER_TYPE;
+			this.createWarningForNode("infer declaration will be replaced by any+", node);
 		} else if (ts.isMappedTypeNode(node)) {
 			// e.g. { [P in K]: T[P]; }
 			result.kind = model.TypeRefKind.MAPPED_TYPE;

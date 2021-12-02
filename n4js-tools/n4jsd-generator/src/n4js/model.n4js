@@ -171,6 +171,8 @@ export enum TypeRefKind {
 	TYPE_PREDICATE,
 	TYPE_QUERY,
 	INDEXED_ACCESS_TYPE,
+	CONDITIONAL_TYPE,
+	INFER_TYPE,
 	MAPPED_TYPE
 }
 
@@ -678,6 +680,12 @@ class Emitter {
 				buff.push("any+");
 				break;
 			case TypeRefKind.INDEXED_ACCESS_TYPE:
+				buff.push("any+");
+				break;
+			case TypeRefKind.CONDITIONAL_TYPE:
+				buff.push("any+");
+				break;
+			case TypeRefKind.INFER_TYPE:
 				buff.push("any+");
 				break;
 			case TypeRefKind.MAPPED_TYPE:
