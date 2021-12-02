@@ -249,7 +249,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cN4EnumDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		private final RuleCall cN4TypeAliasDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		private final RuleCall cFunctionDeclarationParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cVariableStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cExportedVariableStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
 		private final RuleCall cExportDeclarationParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
 		
 		//NamespaceElement<Yield> returns NamespaceElement :
@@ -260,7 +260,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    | N4EnumDeclaration<Yield>
 		//    | N4TypeAliasDeclaration<Yield>
 		//    | FunctionDeclaration<Yield>
-		//    | VariableStatement<In=true,Yield>
+		//    | ExportedVariableStatement
 		//    | ExportDeclaration
 		//;
 		@Override public ParserRule getRule() { return rule; }
@@ -272,7 +272,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//| N4EnumDeclaration<Yield>
 		//| N4TypeAliasDeclaration<Yield>
 		//| FunctionDeclaration<Yield>
-		//| VariableStatement<In=true,Yield>
+		//| ExportedVariableStatement
 		//| ExportDeclaration
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
@@ -297,8 +297,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//FunctionDeclaration<Yield>
 		public RuleCall getFunctionDeclarationParserRuleCall_6() { return cFunctionDeclarationParserRuleCall_6; }
 		
-		//VariableStatement<In=true,Yield>
-		public RuleCall getVariableStatementParserRuleCall_7() { return cVariableStatementParserRuleCall_7; }
+		//ExportedVariableStatement
+		public RuleCall getExportedVariableStatementParserRuleCall_7() { return cExportedVariableStatementParserRuleCall_7; }
 		
 		//ExportDeclaration
 		public RuleCall getExportDeclarationParserRuleCall_8() { return cExportDeclarationParserRuleCall_8; }
@@ -12800,7 +12800,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | N4EnumDeclaration<Yield>
 	//    | N4TypeAliasDeclaration<Yield>
 	//    | FunctionDeclaration<Yield>
-	//    | VariableStatement<In=true,Yield>
+	//    | ExportedVariableStatement
 	//    | ExportDeclaration
 	//;
 	public NamespaceElementElements getNamespaceElementAccess() {

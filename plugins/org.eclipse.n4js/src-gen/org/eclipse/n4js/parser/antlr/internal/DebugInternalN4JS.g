@@ -223,11 +223,7 @@ ruleNamespaceElement:
 			ruleFunctionDeclaration
 		)
 		    |
-		(
-			(ruleVariableStatementKeyword
-			)=>
-			norm1_VariableStatement
-		)
+		ruleExportedVariableStatement
 		    |
 		ruleExportDeclaration
 	)
@@ -312,11 +308,7 @@ norm1_NamespaceElement:
 			norm1_FunctionDeclaration
 		)
 		    |
-		(
-			(ruleVariableStatementKeyword
-			)=>
-			norm3_VariableStatement
-		)
+		ruleExportedVariableStatement
 		    |
 		ruleExportDeclaration
 	)

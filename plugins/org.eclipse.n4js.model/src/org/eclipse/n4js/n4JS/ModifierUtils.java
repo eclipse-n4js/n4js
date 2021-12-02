@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -102,14 +103,30 @@ public class ModifierUtils {
 					// return tmwam.getDeclaredMemberAccessModifier() == tmwam.getDefaultMemberAccessModifier();
 				}
 			}
-			if (isTypeDefiningElement(astNodeType)
-					// TODO: remove later the following condition
-					&& astNodeType instanceof N4NamespaceDeclaration) {
-				TypeDefiningElement typeDefElem = (TypeDefiningElement) elem;
-				Type definedType = typeDefElem.getDefinedType();
-				if (isAccessibleTypeElement(definedType.eClass())) {
-					AccessibleTypeElement ate = (AccessibleTypeElement) definedType;
-					return ate.getDeclaredTypeAccessModifier() == ate.getDefaultTypeAccessModifier();
+
+			if (elem instanceof NamespaceElement && ((NamespaceElement) elem).getNamespace() != null) {
+				// TODO: remove later the previous condition
+
+				if (isExportedVariableStatement(elem.eClass())) {
+					ExportedVariableStatement evs = (ExportedVariableStatement) elem;
+					if (!evs.getVarDeclsOrBindings().isEmpty()
+							&& isExportedVariableDeclaration(evs.getVarDeclsOrBindings().get(0).eClass())) {
+
+						ExportedVariableDeclaration evd = (ExportedVariableDeclaration) evs.getVarDeclsOrBindings()
+								.get(0);
+						if (evd.getDefinedVariable() != null) {
+							TVariable tVar = evd.getDefinedVariable();
+							return tVar.getDeclaredTypeAccessModifier() == tVar.getDefaultTypeAccessModifier();
+						}
+					}
+				}
+				if (isTypeDefiningElement(astNodeType)) {
+					TypeDefiningElement typeDefElem = (TypeDefiningElement) elem;
+					Type definedType = typeDefElem.getDefinedType();
+					if (isAccessibleTypeElement(definedType.eClass())) {
+						AccessibleTypeElement ate = (AccessibleTypeElement) definedType;
+						return ate.getDeclaredTypeAccessModifier() == ate.getDefaultTypeAccessModifier();
+					}
 				}
 			}
 			return false;
@@ -224,6 +241,10 @@ public class ModifierUtils {
 
 	private static final boolean isExportedVariableStatement(EClass astNodeType) {
 		return N4JSPackage.eINSTANCE.getExportedVariableStatement().isSuperTypeOf(astNodeType);
+	}
+
+	private static final boolean isExportedVariableDeclaration(EClass astNodeType) {
+		return N4JSPackage.eINSTANCE.getExportedVariableDeclaration().isSuperTypeOf(astNodeType);
 	}
 
 	private static final boolean isN4ClassDeclaration(EClass astNodeType) {

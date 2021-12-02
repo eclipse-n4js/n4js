@@ -797,26 +797,14 @@ ruleNamespaceElement returns [EObject current=null]
 			}
 		)
 		    |
-		(
-			((
-				(
-				)
-				(
-					(
-						ruleVariableStatementKeyword
-					)
-				)
-			)
-			)=>
-			{
-				newCompositeNode(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7());
-			}
-			this_VariableStatement_7=norm1_VariableStatement
-			{
-				$current = $this_VariableStatement_7.current;
-				afterParserOrEnumRuleCall();
-			}
-		)
+		{
+			newCompositeNode(grammarAccess.getNamespaceElementAccess().getExportedVariableStatementParserRuleCall_7());
+		}
+		this_ExportedVariableStatement_7=ruleExportedVariableStatement
+		{
+			$current = $this_ExportedVariableStatement_7.current;
+			afterParserOrEnumRuleCall();
+		}
 		    |
 		{
 			newCompositeNode(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_8());
@@ -1027,26 +1015,14 @@ norm1_NamespaceElement returns [EObject current=null]
 			}
 		)
 		    |
-		(
-			((
-				(
-				)
-				(
-					(
-						ruleVariableStatementKeyword
-					)
-				)
-			)
-			)=>
-			{
-				newCompositeNode(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7());
-			}
-			this_VariableStatement_7=norm3_VariableStatement
-			{
-				$current = $this_VariableStatement_7.current;
-				afterParserOrEnumRuleCall();
-			}
-		)
+		{
+			newCompositeNode(grammarAccess.getNamespaceElementAccess().getExportedVariableStatementParserRuleCall_7());
+		}
+		this_ExportedVariableStatement_7=ruleExportedVariableStatement
+		{
+			$current = $this_ExportedVariableStatement_7.current;
+			afterParserOrEnumRuleCall();
+		}
 		    |
 		{
 			newCompositeNode(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_8());

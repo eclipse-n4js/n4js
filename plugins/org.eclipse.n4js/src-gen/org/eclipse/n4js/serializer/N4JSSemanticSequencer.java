@@ -397,7 +397,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_AnnotatedExportableElement_ExportedVariableStatement(context, (ExportedVariableStatement) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getExportedVariableStatementRule()) {
+				else if (rule == grammarAccess.getNamespaceElementRule()
+						|| rule == grammarAccess.getExportedVariableStatementRule()) {
 					sequence_ExportedVariableStatement(context, (ExportedVariableStatement) semanticObject); 
 					return; 
 				}
@@ -12351,6 +12352,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     NamespaceElement<Yield> returns ExportedVariableStatement
+	 *     NamespaceElement returns ExportedVariableStatement
 	 *     ExportedVariableStatement returns ExportedVariableStatement
 	 *
 	 * Constraint:
@@ -28086,8 +28089,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     ScriptElement returns VariableStatement
-	 *     NamespaceElement<Yield> returns VariableStatement
-	 *     NamespaceElement returns VariableStatement
 	 *     RootStatement<Yield> returns VariableStatement
 	 *     RootStatement returns VariableStatement
 	 *     Statement<Yield> returns VariableStatement

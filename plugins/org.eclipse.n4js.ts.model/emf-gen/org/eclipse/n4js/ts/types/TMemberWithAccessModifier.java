@@ -39,7 +39,7 @@ public interface TMemberWithAccessModifier extends TMember {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * * TODO mover to TMethod and accessors (not done yet due to 500 named elements restriction)
+	 * * TODO move to TMethod and accessors (not done yet due to 500 named elements restriction)
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Has No Body</em>' attribute.
 	 * @see #setHasNoBody(boolean)

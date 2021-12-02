@@ -10672,9 +10672,9 @@ rule__NamespaceElement__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
-		(norm1_VariableStatement)
-		{ after(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
+		{ before(grammarAccess.getNamespaceElementAccess().getExportedVariableStatementParserRuleCall_7()); }
+		ruleExportedVariableStatement
+		{ after(grammarAccess.getNamespaceElementAccess().getExportedVariableStatementParserRuleCall_7()); }
 	)
 	|
 	(
@@ -10735,9 +10735,9 @@ norm1_NamespaceElement__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
-		(norm3_VariableStatement)
-		{ after(grammarAccess.getNamespaceElementAccess().getVariableStatementParserRuleCall_7()); }
+		{ before(grammarAccess.getNamespaceElementAccess().getExportedVariableStatementParserRuleCall_7()); }
+		ruleExportedVariableStatement
+		{ after(grammarAccess.getNamespaceElementAccess().getExportedVariableStatementParserRuleCall_7()); }
 	)
 	|
 	(

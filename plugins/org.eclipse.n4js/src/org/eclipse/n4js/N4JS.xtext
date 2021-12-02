@@ -87,7 +87,7 @@ NamespaceElement<Yield> returns NamespaceElement :
 	| N4EnumDeclaration<Yield>
 	| N4TypeAliasDeclaration<Yield>
 	| FunctionDeclaration<Yield>
-	| VariableStatement<In=true,Yield>
+	| ExportedVariableStatement
 	| ExportDeclaration
 ;
 

@@ -1266,7 +1266,7 @@ abstract class TMember extends IdentifiableElement, TAnnotableElement, SyntaxRel
  */
 abstract class TMemberWithAccessModifier extends TMember {
 
-	/** TODO mover to TMethod and accessors (not done yet due to 500 named elements restriction) */
+	/** TODO move to TMethod and accessors (not done yet due to 500 named elements restriction) */
 	boolean hasNoBody
 	MemberAccessModifier declaredMemberAccessModifier
 	/**
