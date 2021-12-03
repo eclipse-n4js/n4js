@@ -95,7 +95,7 @@ public class ModifierUtils {
 			if (isN4MemberDeclaration(astNodeType)) {
 				N4MemberDeclaration typeDefElem = (N4MemberDeclaration) elem;
 				TMember tMember = typeDefElem.getDefinedTypeElement();
-				if (isTMemberWithAccessModifier(tMember.eClass())) {
+				if (tMember != null && isTMemberWithAccessModifier(tMember.eClass())) {
 					return false;
 
 					// TODO: activate later
@@ -107,7 +107,7 @@ public class ModifierUtils {
 			if (elem instanceof NamespaceElement && ((NamespaceElement) elem).getNamespace() != null) {
 				// TODO: remove later the previous condition
 
-				if (isExportedVariableStatement(elem.eClass())) {
+				if (isExportedVariableStatement(astNodeType)) {
 					ExportedVariableStatement evs = (ExportedVariableStatement) elem;
 					if (!evs.getVarDeclsOrBindings().isEmpty()
 							&& isExportedVariableDeclaration(evs.getVarDeclsOrBindings().get(0).eClass())) {
@@ -123,7 +123,7 @@ public class ModifierUtils {
 				if (isTypeDefiningElement(astNodeType)) {
 					TypeDefiningElement typeDefElem = (TypeDefiningElement) elem;
 					Type definedType = typeDefElem.getDefinedType();
-					if (isAccessibleTypeElement(definedType.eClass())) {
+					if (definedType != null && isAccessibleTypeElement(definedType.eClass())) {
 						AccessibleTypeElement ate = (AccessibleTypeElement) definedType;
 						return ate.getDeclaredTypeAccessModifier() == ate.getDefaultTypeAccessModifier();
 					}

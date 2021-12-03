@@ -15,18 +15,31 @@
 
 
 
-// XPECT noerrors -->
-export namespace NSC4 {
-// XPECT warnings --> "Modifier export is obsolete." at "export"
-    export const c1 = 0;
-// XPECT warnings --> "Modifier export is obsolete." at "export"
-    export var v1;
-// XPECT warnings --> "Modifier export is obsolete." at "export"
-    export let l1 = 2;
-// XPECT warnings --> "Modifier export is obsolete." at "export"
-    export function F1():void {}
-    const c2 = 10;
-    var v2;
-    let l2 = 12;
-    function F2():void {}
+namespace NS1 {
+	class NS1C1 {}
+	namespace NS1NS1 {
+		class NS1NS1C1 {}
+	}
+	
+	// access on same level
+	// XPECT noerrors -->
+	class NS1C2 extends NS1C1 {}
+	// access on same level by qualified name
+	// XPECT noerrors -->
+	class NS1C3 extends NS1.NS1C1 {}
+	
+	
+	namespace NS1NS2 {
+		// access to upper level
+		// XPECT noerrors -->
+		class NS1NS2C1 extends NS1C2 {}
+		// access to upper level by qualified name
+		// XPECT noerrors -->
+		class NS1NS2C2 extends NS1.NS1C2 {}
+	}
 }
+
+// XPECT noerrors -->
+class C1 extends NS1.NS1C1 {}
+// XPECT noerrors -->
+class C2 extends NS1.NS1NS1.NS1NS1C1 {}

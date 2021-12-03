@@ -21,11 +21,11 @@ export public class C {
     @Test foo() {}
 }
 
-// XPECT warnings --> "Classes containing test methods must be exported or abstract." at "D"
+// XPECT warnings --> "Classes containing test methods must be abstract or marked with modifier export." at "D"
 class D {
     @Test foo() {}
 }
 
-// XPECT warnings --> "Classes containing test methods must be exported or abstract." at "E"
+// XPECT warnings --> "Classes containing test methods must be abstract or marked with modifier export." at "E"
 class E extends B {
 }
