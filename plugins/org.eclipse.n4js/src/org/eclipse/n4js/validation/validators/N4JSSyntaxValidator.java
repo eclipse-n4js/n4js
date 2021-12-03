@@ -106,9 +106,9 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 				hasIssue = true;
 			} else if (ModifierUtils.isObsolete(elem, mod)) {
 				final ILeafNode node = ModifierUtils.getNodeForModifier(elem, idx);
-				addIssue(IssueCodes.getMessageForSYN_MODIFIER_OBSOLETE(mod.getName()),
+				addIssue(IssueCodes.getMessageForSYN_MODIFIER_UNNECESSARY(mod.getName()),
 						elem, node.getOffset(), node.getLength(),
-						IssueCodes.SYN_MODIFIER_OBSOLETE);
+						IssueCodes.SYN_MODIFIER_UNNECESSARY);
 				hasIssue = true;
 			}
 		}
@@ -181,9 +181,9 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 			ILeafNode keywordNode = findLeafWithKeyword(element, "{", node, EXPORT_KEYWORD, false);
 			if (keywordNode != null) {
 				if (ns.isExported()) {
-					addIssue(IssueCodes.getMessageForSYN_MODIFIER_OBSOLETE(EXPORT_KEYWORD),
+					addIssue(IssueCodes.getMessageForSYN_MODIFIER_UNNECESSARY(EXPORT_KEYWORD),
 							element, keywordNode.getTotalOffset(), keywordNode.getLength(),
-							IssueCodes.SYN_MODIFIER_OBSOLETE);
+							IssueCodes.SYN_MODIFIER_UNNECESSARY);
 				} else {
 					addIssue(IssueCodes.getMessageForNS_CHILD_CANNOT_EXPORT(),
 							element, keywordNode.getTotalOffset(), keywordNode.getLength(),
