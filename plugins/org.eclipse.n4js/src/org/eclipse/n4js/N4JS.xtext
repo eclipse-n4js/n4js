@@ -128,7 +128,7 @@ AnnotatedScriptElement returns ScriptElement:
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield=false>
 		'{'
-			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)* ','?
 		'}'
 	|	{N4TypeAliasDeclaration.annotationList=current}
 		(declaredModifiers+=N4ModifierWithoutConst)*
@@ -173,7 +173,7 @@ AnnotatedNamespaceElement returns NamespaceElement:
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield=false>
 		'{'
-			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)* ','?
 		'}'
 	|	{N4TypeAliasDeclaration.annotationList=current}
 		(declaredModifiers+=N4ModifierWithoutConst)*
@@ -242,7 +242,7 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 	|	{ExportedVariableStatement.annotationList=current}
 		(declaredModifiers+=N4Modifier)*
 		varStmtKeyword=VariableStatementKeyword
-		varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> ( ',' varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> )* Semi
+		varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> (',' varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> )* Semi
 	|	(
 			(
 				{N4ClassDeclaration.annotationList=current}
@@ -263,7 +263,7 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield>
 		'{'
-			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)*
+			literals+=N4EnumLiteral (',' literals+= N4EnumLiteral)* ','?
 		'}'
 	|	{N4TypeAliasDeclaration.annotationList=current}
 		(declaredModifiers+=N4ModifierWithoutConst)*
@@ -386,7 +386,7 @@ ArrowExpression <In, Yield> returns ArrowFunction:
 ;
 
 fragment StrictFormalParameters <Yield>*:
-	'(' (('this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter<Yield>) (',' fpars+=FormalParameter<Yield>)*)? ')'
+	'(' (('this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter<Yield>) (',' fpars+=FormalParameter<Yield>)* ','?)? ')'
 ;
 
 BindingIdentifierAsFormalParameter <Yield> returns FormalParameter:	name=BindingIdentifier<Yield>;
@@ -1325,7 +1325,7 @@ N4ClassDeclaration <Yield>:
 ;
 
 fragment TypeParameters*:
-	'<' typeVars+=N4TypeVariable (',' typeVars+=N4TypeVariable)* '>'
+	'<' typeVars+=N4TypeVariable (',' typeVars+=N4TypeVariable)* ','? '>'
 ;
 
 fragment Members <Yield>*:
@@ -1384,7 +1384,7 @@ N4EnumDeclaration <Yield>:
 		'enum' name=BindingIdentifier<Yield>?
 	)
 	'{'
-		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)?
+		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)? ','?
 	'}'
 ;
 

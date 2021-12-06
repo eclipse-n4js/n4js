@@ -28,11 +28,16 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected N4JSGrammarAccess grammarAccess;
+	protected AbstractElementAlias match_AnnotatedExportableElement_CommaKeyword_1_3_7_q;
 	protected AbstractElementAlias match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_0_2_q;
 	protected AbstractElementAlias match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_1_6_q;
 	protected AbstractElementAlias match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_3_1_q;
+	protected AbstractElementAlias match_AnnotatedNamespaceElement_CommaKeyword_1_2_7_q;
 	protected AbstractElementAlias match_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q;
+	protected AbstractElementAlias match_AnnotatedScriptElement_CommaKeyword_1_4_7_q;
 	protected AbstractElementAlias match_ArrayBindingPattern_CommaKeyword_3_2_0_q;
+	protected AbstractElementAlias match_ArrayNTypeExpression_CommaKeyword_1_1_2_q;
+	protected AbstractElementAlias match_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q;
 	protected AbstractElementAlias match_DoStatement_SemiParserRuleCall_6_q;
 	protected AbstractElementAlias match_ExportClause_CommaKeyword_1_2_q;
 	protected AbstractElementAlias match_FieldDeclarationImpl_ReadonlyKeyword_0_q;
@@ -43,6 +48,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_MappedTypeRef_PlusSignKeyword_7_0_0_q;
 	protected AbstractElementAlias match_MappedTypeRef_SemicolonKeyword_9_q;
 	protected AbstractElementAlias match_N4CallSignatureDeclaration_SemicolonKeyword_2_q;
+	protected AbstractElementAlias match_N4EnumDeclaration_CommaKeyword_3_q;
 	protected AbstractElementAlias match_N4GetterDeclaration_SemicolonKeyword_2_q;
 	protected AbstractElementAlias match_N4IndexSignatureDeclaration_SemicolonKeyword_5_q;
 	protected AbstractElementAlias match_N4MethodDeclaration_SemicolonKeyword_1_q;
@@ -55,19 +61,29 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_a;
 	protected AbstractElementAlias match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p;
 	protected AbstractElementAlias match_PropertyMethodDeclaration_SemicolonKeyword_1_q;
+	protected AbstractElementAlias match_StrictFormalParameters_CommaKeyword_1_2_q;
+	protected AbstractElementAlias match_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q;
+	protected AbstractElementAlias match_TAnonymousFormalParameterList_CommaKeyword_2_q;
 	protected AbstractElementAlias match_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q;
 	protected AbstractElementAlias match_TFormalParameter_QuestionMarkKeyword_2_q;
 	protected AbstractElementAlias match_TStructField_ReadonlyKeyword_0_q;
 	protected AbstractElementAlias match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q;
+	protected AbstractElementAlias match_TStructMethod_CommaKeyword_0_0_1_3_q;
+	protected AbstractElementAlias match_TypeParameters_CommaKeyword_3_q;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (N4JSGrammarAccess) access;
+		match_AnnotatedExportableElement_CommaKeyword_1_3_7_q = new TokenAlias(false, true, grammarAccess.getAnnotatedExportableElementAccess().getCommaKeyword_1_3_7());
 		match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_0_2_q = new TokenAlias(false, true, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getSemicolonKeyword_1_0_2());
 		match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_1_6_q = new TokenAlias(false, true, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getSemicolonKeyword_1_1_6());
 		match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_3_1_q = new TokenAlias(false, true, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getSemicolonKeyword_1_3_1());
+		match_AnnotatedNamespaceElement_CommaKeyword_1_2_7_q = new TokenAlias(false, true, grammarAccess.getAnnotatedNamespaceElementAccess().getCommaKeyword_1_2_7());
 		match_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q = new TokenAlias(false, true, grammarAccess.getAnnotatedPropertyAssignmentAccess().getSemicolonKeyword_1_3_1());
+		match_AnnotatedScriptElement_CommaKeyword_1_4_7_q = new TokenAlias(false, true, grammarAccess.getAnnotatedScriptElementAccess().getCommaKeyword_1_4_7());
 		match_ArrayBindingPattern_CommaKeyword_3_2_0_q = new TokenAlias(false, true, grammarAccess.getArrayBindingPatternAccess().getCommaKeyword_3_2_0());
+		match_ArrayNTypeExpression_CommaKeyword_1_1_2_q = new TokenAlias(false, true, grammarAccess.getArrayNTypeExpressionAccess().getCommaKeyword_1_1_2());
+		match_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q = new TokenAlias(false, true, grammarAccess.getArrowFunctionTypeExpressionAccess().getCommaKeyword_0_0_2_3());
 		match_DoStatement_SemiParserRuleCall_6_q = new TokenAlias(false, true, grammarAccess.getDoStatementAccess().getSemiParserRuleCall_6());
 		match_ExportClause_CommaKeyword_1_2_q = new TokenAlias(false, true, grammarAccess.getExportClauseAccess().getCommaKeyword_1_2());
 		match_FieldDeclarationImpl_ReadonlyKeyword_0_q = new TokenAlias(false, true, grammarAccess.getFieldDeclarationImplAccess().getReadonlyKeyword_0());
@@ -78,6 +94,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_MappedTypeRef_PlusSignKeyword_7_0_0_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getPlusSignKeyword_7_0_0());
 		match_MappedTypeRef_SemicolonKeyword_9_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getSemicolonKeyword_9());
 		match_N4CallSignatureDeclaration_SemicolonKeyword_2_q = new TokenAlias(false, true, grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_2());
+		match_N4EnumDeclaration_CommaKeyword_3_q = new TokenAlias(false, true, grammarAccess.getN4EnumDeclarationAccess().getCommaKeyword_3());
 		match_N4GetterDeclaration_SemicolonKeyword_2_q = new TokenAlias(false, true, grammarAccess.getN4GetterDeclarationAccess().getSemicolonKeyword_2());
 		match_N4IndexSignatureDeclaration_SemicolonKeyword_5_q = new TokenAlias(false, true, grammarAccess.getN4IndexSignatureDeclarationAccess().getSemicolonKeyword_5());
 		match_N4MethodDeclaration_SemicolonKeyword_1_q = new TokenAlias(false, true, grammarAccess.getN4MethodDeclarationAccess().getSemicolonKeyword_1());
@@ -90,10 +107,15 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_a = new TokenAlias(true, true, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0());
 		match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p = new TokenAlias(true, false, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0());
 		match_PropertyMethodDeclaration_SemicolonKeyword_1_q = new TokenAlias(false, true, grammarAccess.getPropertyMethodDeclarationAccess().getSemicolonKeyword_1());
+		match_StrictFormalParameters_CommaKeyword_1_2_q = new TokenAlias(false, true, grammarAccess.getStrictFormalParametersAccess().getCommaKeyword_1_2());
+		match_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q = new TokenAlias(false, true, grammarAccess.getTAnonymousFormalParameterListWithDeclaredThisTypeAccess().getCommaKeyword_2());
+		match_TAnonymousFormalParameterList_CommaKeyword_2_q = new TokenAlias(false, true, grammarAccess.getTAnonymousFormalParameterListAccess().getCommaKeyword_2());
 		match_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q = new TokenAlias(false, true, grammarAccess.getTAnonymousFormalParameterAccess().getQuestionMarkKeyword_1_0_0_1());
 		match_TFormalParameter_QuestionMarkKeyword_2_q = new TokenAlias(false, true, grammarAccess.getTFormalParameterAccess().getQuestionMarkKeyword_2());
 		match_TStructField_ReadonlyKeyword_0_q = new TokenAlias(false, true, grammarAccess.getTStructFieldAccess().getReadonlyKeyword_0());
 		match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q = new AlternativeAlias(false, true, new TokenAlias(false, false, grammarAccess.getTStructMemberListAccess().getCommaKeyword_1_1_1()), new TokenAlias(false, false, grammarAccess.getTStructMemberListAccess().getSemicolonKeyword_1_1_0()));
+		match_TStructMethod_CommaKeyword_0_0_1_3_q = new TokenAlias(false, true, grammarAccess.getTStructMethodAccess().getCommaKeyword_0_0_1_3());
+		match_TypeParameters_CommaKeyword_3_q = new TokenAlias(false, true, grammarAccess.getTypeParametersAccess().getCommaKeyword_3());
 	}
 	
 	@Override
@@ -167,16 +189,26 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if (match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_0_2_q.equals(syntax))
+			if (match_AnnotatedExportableElement_CommaKeyword_1_3_7_q.equals(syntax))
+				emit_AnnotatedExportableElement_CommaKeyword_1_3_7_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_0_2_q.equals(syntax))
 				emit_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_0_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_1_6_q.equals(syntax))
 				emit_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_1_6_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_3_1_q.equals(syntax))
 				emit_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_3_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_AnnotatedNamespaceElement_CommaKeyword_1_2_7_q.equals(syntax))
+				emit_AnnotatedNamespaceElement_CommaKeyword_1_2_7_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q.equals(syntax))
 				emit_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_AnnotatedScriptElement_CommaKeyword_1_4_7_q.equals(syntax))
+				emit_AnnotatedScriptElement_CommaKeyword_1_4_7_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ArrayBindingPattern_CommaKeyword_3_2_0_q.equals(syntax))
 				emit_ArrayBindingPattern_CommaKeyword_3_2_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ArrayNTypeExpression_CommaKeyword_1_1_2_q.equals(syntax))
+				emit_ArrayNTypeExpression_CommaKeyword_1_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q.equals(syntax))
+				emit_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_DoStatement_SemiParserRuleCall_6_q.equals(syntax))
 				emit_DoStatement_SemiParserRuleCall_6_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ExportClause_CommaKeyword_1_2_q.equals(syntax))
@@ -197,6 +229,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_MappedTypeRef_SemicolonKeyword_9_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_N4CallSignatureDeclaration_SemicolonKeyword_2_q.equals(syntax))
 				emit_N4CallSignatureDeclaration_SemicolonKeyword_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_N4EnumDeclaration_CommaKeyword_3_q.equals(syntax))
+				emit_N4EnumDeclaration_CommaKeyword_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_N4GetterDeclaration_SemicolonKeyword_2_q.equals(syntax))
 				emit_N4GetterDeclaration_SemicolonKeyword_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_N4IndexSignatureDeclaration_SemicolonKeyword_5_q.equals(syntax))
@@ -221,6 +255,12 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PropertyMethodDeclaration_SemicolonKeyword_1_q.equals(syntax))
 				emit_PropertyMethodDeclaration_SemicolonKeyword_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_StrictFormalParameters_CommaKeyword_1_2_q.equals(syntax))
+				emit_StrictFormalParameters_CommaKeyword_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q.equals(syntax))
+				emit_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_TAnonymousFormalParameterList_CommaKeyword_2_q.equals(syntax))
+				emit_TAnonymousFormalParameterList_CommaKeyword_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q.equals(syntax))
 				emit_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_TFormalParameter_QuestionMarkKeyword_2_q.equals(syntax))
@@ -229,10 +269,25 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_TStructField_ReadonlyKeyword_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q.equals(syntax))
 				emit_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_TStructMethod_CommaKeyword_0_0_1_3_q.equals(syntax))
+				emit_TStructMethod_CommaKeyword_0_0_1_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_TypeParameters_CommaKeyword_3_q.equals(syntax))
+				emit_TypeParameters_CommaKeyword_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
 
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     literals+=N4EnumLiteral (ambiguity) '}' (rule end)
+	 */
+	protected void emit_AnnotatedExportableElement_CommaKeyword_1_3_7_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
 	/**
 	 * Ambiguous syntax:
 	 *     ';'?
@@ -269,12 +324,23 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     dtsDeclaredOptional?='?' '(' ')' (ambiguity) (rule end)
-	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
-	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
-	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ','? ')' (ambiguity) (rule end)
+	 *     fpars+=FormalParameter ','? ')' (ambiguity) (rule end)
+	 *     typeVars+=N4TypeVariable ','? '>' '(' ')' (ambiguity) (rule end)
 	 *     {N4MethodDeclaration.annotationList=} '(' ')' (ambiguity) (rule end)
 	 */
 	protected void emit_AnnotatedN4MemberDeclaration_SemicolonKeyword_1_3_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     literals+=N4EnumLiteral (ambiguity) '}' (rule end)
+	 */
+	protected void emit_AnnotatedNamespaceElement_CommaKeyword_1_2_7_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -285,10 +351,21 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
-	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
-	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ','? ')' (ambiguity) (rule end)
+	 *     fpars+=FormalParameter ','? ')' (ambiguity) (rule end)
 	 */
 	protected void emit_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     literals+=N4EnumLiteral (ambiguity) '}' (rule end)
+	 */
+	protected void emit_AnnotatedScriptElement_CommaKeyword_1_4_7_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -300,6 +377,31 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     elements+=BindingRestElement (ambiguity) ']' (rule end)
 	 */
 	protected void emit_ArrayBindingPattern_CommaKeyword_3_2_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     declaredTypeArgs+=TypeArgument (ambiguity) ']' (rule end)
+	 */
+	protected void emit_ArrayNTypeExpression_CommaKeyword_1_1_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' 'this' ':' declaredThisType=TypeRef
+	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' fpars+=TAnonymousFormalParameter
+	 */
+	protected void emit_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -351,11 +453,11 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredModifiers+=N4Modifier 'function' '(' ')' (ambiguity) (rule end)
 	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
-	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
-	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ','? ')' (ambiguity) (rule end)
+	 *     fpars+=FormalParameter ','? ')' (ambiguity) (rule end)
 	 *     generator?='*' '(' ')' (ambiguity) (rule end)
 	 *     name=BindingIdentifier '(' ')' (ambiguity) (rule end)
-	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
+	 *     typeVars+=N4TypeVariable ','? '>' '(' ')' (ambiguity) (rule end)
 	 */
 	protected void emit_FunctionDeclaration_SemiParserRuleCall_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -380,7 +482,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
 	 *     declaredModifiers+=N4Modifier 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
 	 *     name=BindingIdentifier (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
-	 *     typeVars+=N4TypeVariable '>' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
+	 *     typeVars+=N4TypeVariable ','? '>' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
 	 *     typingStrategy=TypingStrategyDefSiteOperator (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominalNode
 	 */
 	protected void emit_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -435,12 +537,26 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     dtsDeclaredOptional?='?' '(' ')' (ambiguity) (rule end)
-	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
-	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
-	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ','? ')' (ambiguity) (rule end)
+	 *     fpars+=FormalParameter ','? ')' (ambiguity) (rule end)
+	 *     typeVars+=N4TypeVariable ','? '>' '(' ')' (ambiguity) (rule end)
 	 *     {N4MethodDeclaration.annotationList=} '(' ')' (ambiguity) (rule end)
 	 */
 	protected void emit_N4CallSignatureDeclaration_SemicolonKeyword_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) 'enum' '{' (ambiguity) '}' (rule start)
+	 *     declaredModifiers+=N4Modifier 'enum' '{' (ambiguity) '}' (rule end)
+	 *     literals+=N4EnumLiteral (ambiguity) '}' (rule end)
+	 *     name=BindingIdentifier '{' (ambiguity) '}' (rule end)
+	 */
+	protected void emit_N4EnumDeclaration_CommaKeyword_3_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -479,9 +595,9 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     declaredReturnTypePredicate=TypePredicateDeclaration (ambiguity) (rule end)
 	 *     declaredReturnTypeRefNode=TypeReferenceNode (ambiguity) (rule end)
 	 *     dtsDeclaredOptional?='?' '(' ')' (ambiguity) (rule end)
-	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
-	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
-	 *     typeVars+=N4TypeVariable '>' '(' ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ','? ')' (ambiguity) (rule end)
+	 *     fpars+=FormalParameter ','? ')' (ambiguity) (rule end)
+	 *     typeVars+=N4TypeVariable ','? '>' '(' ')' (ambiguity) (rule end)
 	 */
 	protected void emit_N4MethodDeclaration_SemicolonKeyword_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -687,10 +803,63 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     body=Block (ambiguity) (rule end)
 	 *     declaredName=LiteralOrComputedPropertyName '(' ')' (ambiguity) (rule end)
-	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ')' (ambiguity) (rule end)
-	 *     fpars+=FormalParameter ')' (ambiguity) (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode ','? ')' (ambiguity) (rule end)
+	 *     fpars+=FormalParameter ','? ')' (ambiguity) (rule end)
 	 */
 	protected void emit_PropertyMethodDeclaration_SemicolonKeyword_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode (ambiguity) ')' ':' declaredReturnTypePredicate=TypePredicateDeclaration
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode (ambiguity) ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode (ambiguity) ')' ';'? (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode (ambiguity) ')' (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode (ambiguity) ')' Arrow body=ExpressionDisguisedAsBlock
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode (ambiguity) ')' Arrow hasBracesAroundBody?='{'
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode (ambiguity) ')' Semi? (rule end)
+	 *     dtsDeclaredThisTypeNode=TypeReferenceNode (ambiguity) ')' body=Block
+	 *     fpars+=FormalParameter (ambiguity) ')' ':' declaredReturnTypePredicate=TypePredicateDeclaration
+	 *     fpars+=FormalParameter (ambiguity) ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
+	 *     fpars+=FormalParameter (ambiguity) ')' ';'? (rule end)
+	 *     fpars+=FormalParameter (ambiguity) ')' (rule end)
+	 *     fpars+=FormalParameter (ambiguity) ')' Arrow body=ExpressionDisguisedAsBlock
+	 *     fpars+=FormalParameter (ambiguity) ')' Arrow hasBracesAroundBody?='{'
+	 *     fpars+=FormalParameter (ambiguity) ')' Semi? (rule end)
+	 *     fpars+=FormalParameter (ambiguity) ')' body=Block
+	 */
+	protected void emit_StrictFormalParameters_CommaKeyword_1_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     declaredThisType=TypeRef (ambiguity) ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     declaredThisType=TypeRef (ambiguity) ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 */
+	protected void emit_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' ':' returnTypePredicate=TypePredicate
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' ':' returnTypeRef=TypeRef
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' (rule end)
+	 */
+	protected void emit_TAnonymousFormalParameterList_CommaKeyword_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -740,6 +909,53 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     astStructuralMembers+=TStructMember (ambiguity) astStructuralMembers+=TStructMember
 	 */
 	protected void emit_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     typeVars+=TypeVariable (ambiguity) '>' '(' ')' ':' returnTypePredicate=TypePredicate
+	 *     typeVars+=TypeVariable (ambiguity) '>' '(' ')' ':' returnTypeRef=TypeRef
+	 *     typeVars+=TypeVariable (ambiguity) '>' '(' ')' (rule end)
+	 *     typeVars+=TypeVariable (ambiguity) '>' '(' fpars+=TAnonymousFormalParameter
+	 *     typeVars+=TypeVariable (ambiguity) '>' '[' dtsComputedNameExpression=ExpressionInTypeRef
+	 *     typeVars+=TypeVariable (ambiguity) '>' name=IdentifierName
+	 *     typeVars+=TypeVariable (ambiguity) '>' name=NumericLiteralAsString
+	 *     typeVars+=TypeVariable (ambiguity) '>' name=STRING
+	 */
+	protected void emit_TStructMethod_CommaKeyword_0_0_1_3_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '(' ')' ':' declaredReturnTypePredicate=TypePredicateDeclaration
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '(' ')' ':' declaredReturnTypeRefNode=TypeReferenceNode
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '(' ')' ';'? (rule end)
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '(' ')' (rule end)
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '(' ')' Semi? (rule end)
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '(' ')' body=Block
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '(' 'this' ':' dtsDeclaredThisTypeNode=TypeReferenceNode
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '(' fpars+=FormalParameter
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '=' declaredTypeRefNode=TypeReferenceNode
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' 'extends' superClassExpression=LeftHandSideExpression
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' 'extends' superClassRef=ParameterizedTypeRefNominalNode
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' 'implements' implementedInterfaceRefs+=ParameterizedTypeRefNominalNode
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '{' '}' (rule end)
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' '{' ownedMembersRaw+=N4MemberDeclaration
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' ('extends' | 'implements') superInterfaceRefs+=ParameterizedTypeRefNominalNode
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' declaredAsync?='async'
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' declaredName=LiteralOrComputedPropertyName
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' declaredReturnTypeRefNode=TypeReferenceWithModifiersNode
+	 *     typeVars+=N4TypeVariable (ambiguity) '>' generator?='*'
+	 */
+	protected void emit_TypeParameters_CommaKeyword_3_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

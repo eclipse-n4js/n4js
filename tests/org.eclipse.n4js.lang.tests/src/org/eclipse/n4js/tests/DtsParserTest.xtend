@@ -30,7 +30,7 @@ class DtsParserTest extends AbstractParserTest {
 
 	private Path FILE_TEST = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/test.d.ts");
 	private Path FILE_ES5 = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs/es5.d.ts");
-	private Path FILE_TEMP = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs/es2015.symbol.wellknown.d.ts");
+	private Path FILE_TEMP = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs/es2020.intl.d.ts");
 	private Path TYPE_SCRIPT_LIBS = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs");
 	private Path DEFINITELY_TYPED = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/DefinitelyTyped/types");
 	private Path NODE_API = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/DefinitelyTyped/types/node");
@@ -58,7 +58,8 @@ class DtsParserTest extends AbstractParserTest {
 
 	@Test
 	def void testFolder() {
-		val files = Files.walk(TYPE_SCRIPT_LIBS, FileVisitOption.FOLLOW_LINKS).filter[fileName.toString.endsWith(".d.ts")].collect(Collectors.toList);
+		val folder = TYPE_SCRIPT_LIBS;
+		val files = Files.walk(folder, FileVisitOption.FOLLOW_LINKS).filter[fileName.toString.endsWith(".d.ts")].collect(Collectors.toList);
 		for (file : files) {
 			val code = Files.readString(file);
 			val script = code.parse(JavaScriptVariant.external);

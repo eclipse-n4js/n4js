@@ -28,6 +28,8 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected TypeExpressionsGrammarAccess grammarAccess;
+	protected AbstractElementAlias match_ArrayNTypeExpression_CommaKeyword_1_1_2_q;
+	protected AbstractElementAlias match_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q;
 	protected AbstractElementAlias match_MappedTypeRef_PlusSignKeyword_1_0_0_q;
 	protected AbstractElementAlias match_MappedTypeRef_PlusSignKeyword_7_0_0_q;
 	protected AbstractElementAlias match_MappedTypeRef_SemicolonKeyword_9_q;
@@ -35,14 +37,19 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	protected AbstractElementAlias match_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q;
 	protected AbstractElementAlias match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_a;
 	protected AbstractElementAlias match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p;
+	protected AbstractElementAlias match_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q;
+	protected AbstractElementAlias match_TAnonymousFormalParameterList_CommaKeyword_2_q;
 	protected AbstractElementAlias match_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q;
 	protected AbstractElementAlias match_TFormalParameter_QuestionMarkKeyword_2_q;
 	protected AbstractElementAlias match_TStructField_ReadonlyKeyword_0_q;
 	protected AbstractElementAlias match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q;
+	protected AbstractElementAlias match_TStructMethod_CommaKeyword_0_0_1_3_q;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (TypeExpressionsGrammarAccess) access;
+		match_ArrayNTypeExpression_CommaKeyword_1_1_2_q = new TokenAlias(false, true, grammarAccess.getArrayNTypeExpressionAccess().getCommaKeyword_1_1_2());
+		match_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q = new TokenAlias(false, true, grammarAccess.getArrowFunctionTypeExpressionAccess().getCommaKeyword_0_0_2_3());
 		match_MappedTypeRef_PlusSignKeyword_1_0_0_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getPlusSignKeyword_1_0_0());
 		match_MappedTypeRef_PlusSignKeyword_7_0_0_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getPlusSignKeyword_7_0_0());
 		match_MappedTypeRef_SemicolonKeyword_9_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getSemicolonKeyword_9());
@@ -50,10 +57,13 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 		match_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q = new AlternativeAlias(false, true, new TokenAlias(false, false, grammarAccess.getParameterizedTypeRefStructuralAccess().getCommaKeyword_0_2_1_1()), new TokenAlias(false, false, grammarAccess.getParameterizedTypeRefStructuralAccess().getSemicolonKeyword_0_2_1_0()));
 		match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_a = new TokenAlias(true, true, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0());
 		match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p = new TokenAlias(true, false, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0());
+		match_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q = new TokenAlias(false, true, grammarAccess.getTAnonymousFormalParameterListWithDeclaredThisTypeAccess().getCommaKeyword_2());
+		match_TAnonymousFormalParameterList_CommaKeyword_2_q = new TokenAlias(false, true, grammarAccess.getTAnonymousFormalParameterListAccess().getCommaKeyword_2());
 		match_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q = new TokenAlias(false, true, grammarAccess.getTAnonymousFormalParameterAccess().getQuestionMarkKeyword_1_0_0_1());
 		match_TFormalParameter_QuestionMarkKeyword_2_q = new TokenAlias(false, true, grammarAccess.getTFormalParameterAccess().getQuestionMarkKeyword_2());
 		match_TStructField_ReadonlyKeyword_0_q = new TokenAlias(false, true, grammarAccess.getTStructFieldAccess().getReadonlyKeyword_0());
 		match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q = new AlternativeAlias(false, true, new TokenAlias(false, false, grammarAccess.getTStructMemberListAccess().getCommaKeyword_1_1_1()), new TokenAlias(false, false, grammarAccess.getTStructMemberListAccess().getSemicolonKeyword_1_1_0()));
+		match_TStructMethod_CommaKeyword_0_0_1_3_q = new TokenAlias(false, true, grammarAccess.getTStructMethodAccess().getCommaKeyword_0_0_1_3());
 	}
 	
 	@Override
@@ -79,7 +89,11 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if (match_MappedTypeRef_PlusSignKeyword_1_0_0_q.equals(syntax))
+			if (match_ArrayNTypeExpression_CommaKeyword_1_1_2_q.equals(syntax))
+				emit_ArrayNTypeExpression_CommaKeyword_1_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q.equals(syntax))
+				emit_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_MappedTypeRef_PlusSignKeyword_1_0_0_q.equals(syntax))
 				emit_MappedTypeRef_PlusSignKeyword_1_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_MappedTypeRef_PlusSignKeyword_7_0_0_q.equals(syntax))
 				emit_MappedTypeRef_PlusSignKeyword_7_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
@@ -93,6 +107,10 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 				emit_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p.equals(syntax))
 				emit_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q.equals(syntax))
+				emit_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_TAnonymousFormalParameterList_CommaKeyword_2_q.equals(syntax))
+				emit_TAnonymousFormalParameterList_CommaKeyword_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q.equals(syntax))
 				emit_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_TFormalParameter_QuestionMarkKeyword_2_q.equals(syntax))
@@ -101,10 +119,37 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 				emit_TStructField_ReadonlyKeyword_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q.equals(syntax))
 				emit_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_TStructMethod_CommaKeyword_0_0_1_3_q.equals(syntax))
+				emit_TStructMethod_CommaKeyword_0_0_1_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
 
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     declaredTypeArgs+=TypeArgument (ambiguity) ']' (rule end)
+	 */
+	protected void emit_ArrayNTypeExpression_CommaKeyword_1_1_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' 'this' ':' declaredThisType=TypeRef
+	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' fpars+=TAnonymousFormalParameter
+	 */
+	protected void emit_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
 	/**
 	 * Ambiguous syntax:
 	 *     '+'?
@@ -275,6 +320,33 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	
 	/**
 	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     declaredThisType=TypeRef (ambiguity) ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     declaredThisType=TypeRef (ambiguity) ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 */
+	protected void emit_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' ':' returnTypePredicate=TypePredicate
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' ':' returnTypeRef=TypeRef
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' (rule end)
+	 */
+	protected void emit_TAnonymousFormalParameterList_CommaKeyword_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
 	 *     '?'?
 	 *
 	 * This ambiguous syntax occurs at:
@@ -319,6 +391,24 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     astStructuralMembers+=TStructMember (ambiguity) astStructuralMembers+=TStructMember
 	 */
 	protected void emit_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ','?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     typeVars+=TypeVariable (ambiguity) '>' '(' ')' ':' returnTypePredicate=TypePredicate
+	 *     typeVars+=TypeVariable (ambiguity) '>' '(' ')' ':' returnTypeRef=TypeRef
+	 *     typeVars+=TypeVariable (ambiguity) '>' '(' ')' (rule end)
+	 *     typeVars+=TypeVariable (ambiguity) '>' '(' fpars+=TAnonymousFormalParameter
+	 *     typeVars+=TypeVariable (ambiguity) '>' '[' dtsComputedNameExpression=ExpressionInTypeRef
+	 *     typeVars+=TypeVariable (ambiguity) '>' name=IdentifierName
+	 *     typeVars+=TypeVariable (ambiguity) '>' name=NumericLiteralAsString
+	 *     typeVars+=TypeVariable (ambiguity) '>' name=STRING
+	 */
+	protected void emit_TStructMethod_CommaKeyword_0_0_1_3_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

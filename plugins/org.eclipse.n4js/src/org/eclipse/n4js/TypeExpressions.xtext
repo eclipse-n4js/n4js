@@ -131,18 +131,18 @@ ThisTypeRefStructural returns ThisTypeRefStructural:
 ArrowFunctionTypeExpression returns FunctionTypeExpression:
 	=>({FunctionTypeExpression}
 		((dtsAbstract?='abstract')? dtsConstructor?='new')?
-		('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
+		('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* ','? '>')?
 		'(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 		Arrow
 	) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
 
 // TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard
 fragment TAnonymousFormalParameterList* :
-	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?
+	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)* ','?)?
 ;
 
 fragment TAnonymousFormalParameterListWithDeclaredThisType* :
-	(('this' ':' declaredThisType=TypeRef | fpars+=TAnonymousFormalParameter) (',' fpars+=TAnonymousFormalParameter)*)?
+	(('this' ':' declaredThisType=TypeRef | fpars+=TAnonymousFormalParameter) (',' fpars+=TAnonymousFormalParameter)* ','?)?
 ;
 
 /**
@@ -211,7 +211,7 @@ ArrayNTypeExpression returns ParameterizedTypeRef:
 	arrayNTypeExpression?='['
 	(
 		declaredTypeArgs+=EmptyIterableTypeExpressionTail
-	|	declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* ']'
+	|	declaredTypeArgs+=TypeArgument (',' declaredTypeArgs+=TypeArgument)* ','? ']'
 	);
 
 EmptyIterableTypeExpressionTail returns Wildcard:
@@ -246,7 +246,7 @@ TStructMember:
 TStructMethod:
 	=>
 	({TStructMethod}
-		('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
+		('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* ','? '>')?
 	    (TLiteralOrComputedPropertyName)? '('
 	)
 	TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?

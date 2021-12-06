@@ -369,6 +369,7 @@ ruleAnnotatedScriptElement:
 			','
 			ruleN4EnumLiteral
 		)*
+		','?
 		'}'
 		    |
 		ruleN4ModifierWithoutConst
@@ -440,6 +441,7 @@ ruleAnnotatedNamespaceElement:
 			','
 			ruleN4EnumLiteral
 		)*
+		','?
 		'}'
 		    |
 		ruleN4ModifierWithoutConst
@@ -664,6 +666,7 @@ ruleAnnotatedExportableElement:
 			','
 			ruleN4EnumLiteral
 		)*
+		','?
 		'}'
 		    |
 		ruleN4ModifierWithoutConst
@@ -1315,6 +1318,7 @@ ruleStrictFormalParameters:
 			','
 			ruleFormalParameter
 		)*
+		','?
 	)?
 	')'
 ;
@@ -1334,6 +1338,7 @@ norm1_StrictFormalParameters:
 			','
 			norm1_FormalParameter
 		)*
+		','?
 	)?
 	')'
 ;
@@ -7320,6 +7325,7 @@ ruleTypeParameters:
 		','
 		ruleN4TypeVariable
 	)*
+	','?
 	'>'
 ;
 
@@ -7502,6 +7508,7 @@ ruleN4EnumDeclaration:
 			ruleN4EnumLiteral
 		)*
 	)?
+	','?
 	'}'
 ;
 
@@ -7528,6 +7535,7 @@ norm1_N4EnumDeclaration:
 			ruleN4EnumLiteral
 		)*
 	)?
+	','?
 	'}'
 ;
 
@@ -9673,6 +9681,7 @@ rulePrimaryTypeExpression:
 					','
 					ruleTypeVariable
 				)*
+				','?
 				'>'
 			)?
 			'('
@@ -9827,6 +9836,7 @@ ruleArrowFunctionTypeExpression:
 				','
 				ruleTypeVariable
 			)*
+			','?
 			'>'
 		)?
 		'('
@@ -9846,6 +9856,7 @@ ruleArrowFunctionTypeExpression:
 				','
 				ruleTypeVariable
 			)*
+			','?
 			'>'
 		)?
 		'('
@@ -9877,6 +9888,7 @@ ruleTAnonymousFormalParameterList:
 			','
 			ruleTAnonymousFormalParameter
 		)*
+		','?
 	)?
 ;
 
@@ -9894,6 +9906,7 @@ ruleTAnonymousFormalParameterListWithDeclaredThisType:
 			','
 			ruleTAnonymousFormalParameter
 		)*
+		','?
 	)?
 ;
 
@@ -10039,6 +10052,7 @@ ruleArrayNTypeExpression:
 			','
 			ruleTypeArgument
 		)*
+		','?
 		']'
 	)
 ;
@@ -10116,6 +10130,7 @@ ruleTStructMember:
 					','
 					ruleTypeVariable
 				)*
+				','?
 				'>'
 			)?
 			ruleTLiteralOrComputedPropertyName?
@@ -10140,6 +10155,7 @@ ruleTStructMethod:
 				','
 				ruleTypeVariable
 			)*
+			','?
 			'>'
 		)?
 		ruleTLiteralOrComputedPropertyName?
@@ -10152,6 +10168,7 @@ ruleTStructMethod:
 				','
 				ruleTypeVariable
 			)*
+			','?
 			'>'
 		)?
 		ruleTLiteralOrComputedPropertyName?
