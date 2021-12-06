@@ -600,8 +600,8 @@ function getScriptsOrderedAndAsserted(scripts: model.Script[]): model.Script[] {
 		}
 	}
 	if (scriptsWithoutGenConfig.length > 0) {
-		// throw new RuntimeLibsError("no generator configuration in config property 'files' found for:\n    "
-		// 	+ scriptsWithoutGenConfig.map(s => s.tsFileName + "  (at " + s.tsFilePath + ")").join("\n    "));
+		throw new RuntimeLibsError("no generator configuration in config property 'files' found for:\n    "
+			+ scriptsWithoutGenConfig.map(s => s.tsFileName + "  (at " + s.tsFilePath + ")").join("\n    "));
 	}
 
 	const result: model.Script[] = [];
@@ -616,8 +616,8 @@ function getScriptsOrderedAndAsserted(scripts: model.Script[]): model.Script[] {
 		}
 	}
 	if (namesWithoutScript.length > 0) {
-		// throw new RuntimeLibsError("no .d.ts input file found for generator configuration with name(s): "
-		// 	+ namesWithoutScript.join(", "));
+		throw new RuntimeLibsError("no .d.ts input file found for generator configuration with name(s): "
+			+ namesWithoutScript.join(", "));
 	}
 
 	for (const scriptWithoutGenConfig of scriptsWithoutGenConfig) {
