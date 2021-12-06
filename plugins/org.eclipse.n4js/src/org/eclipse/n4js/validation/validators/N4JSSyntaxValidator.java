@@ -167,28 +167,17 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Checks whether
-	 * <ul>
-	 * <li/>the keyword 'export' is inherited from containing namespace and hence obsolete
-	 * <li/>an element within a non-exported namespace is exported and hence incorrect
-	 * </ul>
+	 * Checks whether that exported elements are on script / top level only
 	 */
 	@Check
-	public void checkObsoleteExportedModifier(ExportDeclaration element) {
+	public void checkExportedKeyword(ExportDeclaration element) {
 		if (element.eContainer() instanceof N4NamespaceDeclaration) {
-			N4NamespaceDeclaration ns = (N4NamespaceDeclaration) element.eContainer();
 			ICompositeNode node = NodeModelUtils.findActualNodeFor(element);
 			ILeafNode keywordNode = findLeafWithKeyword(element, "{", node, EXPORT_KEYWORD, false);
 			if (keywordNode != null) {
-				if (ns.isExported()) {
-					addIssue(IssueCodes.getMessageForSYN_UNNECESSARY_ELEMENT("keyword", EXPORT_KEYWORD),
-							element, keywordNode.getTotalOffset(), keywordNode.getLength(),
-							IssueCodes.SYN_UNNECESSARY_ELEMENT);
-				} else {
-					addIssue(IssueCodes.getMessageForNS_CHILD_CANNOT_EXPORT(),
-							element, keywordNode.getTotalOffset(), keywordNode.getLength(),
-							IssueCodes.NS_CHILD_CANNOT_EXPORT);
-				}
+				addIssue(IssueCodes.getMessageForEXP_ONLY_TOP_LEVEL_ELEMENTS(),
+						element, keywordNode.getTotalOffset(), keywordNode.getLength(),
+						IssueCodes.EXP_ONLY_TOP_LEVEL_ELEMENTS);
 			}
 		}
 	}

@@ -28,21 +28,21 @@
 // Test that all namespace elements can appear in a namespace
 // XPECT noerrors -->
 export namespace NS1 {
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export const c1 = 0;
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export var v1;
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export let l1 = 2;
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export function F1():void {}
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
 	export namespace NS1 {}
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export interface I1 {}
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export class C1 {}
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export type T1 = C1;
     const c2 = 10;
     var v2;
@@ -58,21 +58,21 @@ export namespace NS1 {
 // Test that all namespace elements can have access modifiers
 // XPECT noerrors -->
 export namespace NS2 {
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export public const c1 = 0;
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export public var v1;
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export public let l1 = 2;
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export public function F1():void {}
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
 	export public namespace NS1 {}
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export public interface I1 {}
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export public class C1 {}
-	// XPECT warnings --> "Unnecessary keyword export." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
     export public type T1 = C1;
     public const c2 = 10;
     public var v2;
@@ -86,7 +86,7 @@ export namespace NS2 {
 
 // Test that namespace elements cannot be exported without exporting their namespace
 namespace NS3 {
-	// XPECT errors --> "Elements of a namespace cannot be exported individually without exporting their namespace." at "export"
+	// XPECT errors --> "Only top level elements can be exported." at "export"
 	export const c2 = 10;
 }
 
