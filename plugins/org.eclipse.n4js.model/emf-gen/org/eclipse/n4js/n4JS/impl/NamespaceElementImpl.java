@@ -72,6 +72,17 @@ public class NamespaceElementImpl extends ScriptElementImpl implements Namespace
 	 * @generated
 	 */
 	@Override
+	public boolean isInNamespace() {
+		N4NamespaceDeclaration _namespace = this.getNamespace();
+		return (_namespace != null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isHollow() {
 		return false;
 	}
@@ -86,6 +97,8 @@ public class NamespaceElementImpl extends ScriptElementImpl implements Namespace
 		switch (operationID) {
 			case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE:
 				return getNamespace();
+			case N4JSPackage.NAMESPACE_ELEMENT___IS_IN_NAMESPACE:
+				return isInNamespace();
 			case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW:
 				return isHollow();
 		}

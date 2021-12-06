@@ -104,7 +104,7 @@ public class ModifierUtils {
 				}
 			}
 
-			if (elem instanceof NamespaceElement && ((NamespaceElement) elem).getNamespace() != null) {
+			if (elem instanceof NamespaceElement && ((NamespaceElement) elem).isInNamespace()) {
 				// TODO: remove later the previous condition
 
 				if (isExportedVariableStatement(astNodeType)) {

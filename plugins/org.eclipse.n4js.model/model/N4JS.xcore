@@ -2197,6 +2197,9 @@ class NamespaceElement extends ScriptElement {
 		}
 		return null;
 	}
+	op boolean isInNamespace() {
+		return getNamespace() !== null;
+	}
 	op boolean isHollow() {
 		return false;
 	}

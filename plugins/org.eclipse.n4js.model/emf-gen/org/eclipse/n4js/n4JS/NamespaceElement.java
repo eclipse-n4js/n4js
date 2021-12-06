@@ -36,6 +36,14 @@ public interface NamespaceElement extends ScriptElement {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
+	boolean isInNamespace();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
 	boolean isHollow();
 
 } // NamespaceElement

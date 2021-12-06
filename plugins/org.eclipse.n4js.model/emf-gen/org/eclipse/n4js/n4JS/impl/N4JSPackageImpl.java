@@ -6608,8 +6608,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getNamespaceElement__IsHollow() {
+	public EOperation getNamespaceElement__IsInNamespace() {
 		return namespaceElementEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getNamespaceElement__IsHollow() {
+		return namespaceElementEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -8510,6 +8520,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		namespaceElementEClass = createEClass(NAMESPACE_ELEMENT);
 		createEOperation(namespaceElementEClass, NAMESPACE_ELEMENT___GET_NAMESPACE);
+		createEOperation(namespaceElementEClass, NAMESPACE_ELEMENT___IS_IN_NAMESPACE);
 		createEOperation(namespaceElementEClass, NAMESPACE_ELEMENT___IS_HOLLOW);
 
 		n4ClassDeclarationEClass = createEClass(N4_CLASS_DECLARATION);
@@ -9799,6 +9810,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(namespaceElementEClass, NamespaceElement.class, "NamespaceElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getNamespaceElement__GetNamespace(), this.getN4NamespaceDeclaration(), "getNamespace", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getNamespaceElement__IsInNamespace(), theEcorePackage.getEBoolean(), "isInNamespace", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getNamespaceElement__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

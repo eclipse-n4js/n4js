@@ -209,6 +209,11 @@ public class PreparationStep {
 						((TypeDefiningElement) eObject).getDefinedType());
 			}
 
+			if (copy instanceof ExportedVariableDeclaration) {
+				info.setOriginalDefinedVariable_internal((ExportedVariableDeclaration) copy,
+						((ExportedVariableDeclaration) eObject).getDefinedVariable());
+			}
+
 			if (copy instanceof Script_IM) {
 				initializeScript_IM((Script_IM) copy);
 			} else if (copy instanceof ImportDeclaration) {

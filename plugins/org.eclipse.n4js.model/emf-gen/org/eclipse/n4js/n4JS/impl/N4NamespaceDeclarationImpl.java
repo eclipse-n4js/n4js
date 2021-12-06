@@ -372,6 +372,17 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 * @generated
 	 */
 	@Override
+	public boolean isInNamespace() {
+		N4NamespaceDeclaration _namespace = this.getNamespace();
+		return (_namespace != null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW:
@@ -570,6 +581,7 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_NAMESPACE;
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_IN_NAMESPACE: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_IN_NAMESPACE;
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
@@ -642,6 +654,8 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				return appliesOnlyToBlockScopedElements();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_NAMESPACE:
 				return getNamespace();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_IN_NAMESPACE:
+				return isInNamespace();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

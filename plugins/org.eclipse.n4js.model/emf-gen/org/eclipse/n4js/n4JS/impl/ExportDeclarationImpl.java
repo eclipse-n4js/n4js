@@ -378,6 +378,17 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
+	public boolean isInNamespace() {
+		N4NamespaceDeclaration _namespace = this.getNamespace();
+		return (_namespace != null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.EXPORT_DECLARATION__EXPORTED_ELEMENT:
@@ -511,6 +522,7 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.EXPORT_DECLARATION___GET_NAMESPACE;
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_IN_NAMESPACE: return N4JSPackage.EXPORT_DECLARATION___IS_IN_NAMESPACE;
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORT_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
@@ -530,6 +542,8 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return isHollow();
 			case N4JSPackage.EXPORT_DECLARATION___GET_NAMESPACE:
 				return getNamespace();
+			case N4JSPackage.EXPORT_DECLARATION___IS_IN_NAMESPACE:
+				return isInNamespace();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
