@@ -222,12 +222,17 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def checkAllowedElementsInN4JSDFile(EObject eo) {
-		if (jsVariantHelper.isExternalMode(eo) && eo.eContainer instanceof Script) {
+		if (jsVariantHelper.isExternalMode(eo)
+			&& (eo.eContainer instanceof Script || eo.eContainer instanceof N4NamespaceDeclaration)
+		) {
 			val found = eo.isUnallowedElement
 			if (found) {
 				handleUnallowedElement(eo)
 			} else if (eo instanceof ExportDeclaration) {
-				handleExportDeclaration(eo)
+				val exported = eo.exportedElement
+				handleExportDeclaration(eo, exported)
+			} else if (eo instanceof ExportableElement) {
+				handleExportDeclaration(null, eo)
 			} else if (!(eo instanceof AnnotationList || eo instanceof Annotation || eo instanceof EmptyStatement ||
 				eo instanceof ImportDeclaration)) {
 				// relaxed by IDEBUG-561:		handleNotExported(eo)
@@ -235,8 +240,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private handleExportDeclaration(ExportDeclaration eo) {
-		val exported = eo.exportedElement
+	def private handleExportDeclaration(ExportDeclaration eo, ExportableElement exported) {
 		holdsExternalImplementation(exported)
 		switch (exported) {
 			N4ClassDeclaration: handleN4ClassDeclaration(eo, exported)
@@ -247,12 +251,12 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private handleN4ClassDeclaration(ExportDeclaration eo, N4ClassDeclaration exported) {
-		validateClassifierIsExternal(exported.external, "classes", eo)
+		validateClassifierIsExternal(exported, "classes")
 		// relaxed by IDEBUG-561:	exported.validateClassifierIsPublicApi("classes", eo)
 		if (!AnnotationDefinition.N4JS.hasAnnotation(exported)) {
 			val superClass = exported.superClassRef?.typeRef?.hasExpectedTypes(TClass)
-			validateNonAnnotatedClassDoesntExtendN4Object(exported, superClass, eo)
-			validateConsumptionOfNonExternalInterfaces(exported.implementedInterfaceRefs, eo, "classes")
+			validateNonAnnotatedClassDoesntExtendN4Object(exported, superClass)
+			validateConsumptionOfNonExternalInterfaces(exported.implementedInterfaceRefs, "classes")
 		}
 		validateNoObservableAtClassifier(eo, exported, "classes")
 		// relaxed by IDEBUG-561:	validatePublicConstructor(exported)
@@ -261,7 +265,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 
 	def private handleN4InterfaceDeclaration(ExportDeclaration eo, N4InterfaceDeclaration exported) {
 		if (exported.typingStrategy == TypingStrategy.NOMINAL || exported.typingStrategy == TypingStrategy.DEFAULT) {
-			validateClassifierIsExternal(exported.external, "interfaces", eo)
+			validateClassifierIsExternal(exported, "interfaces")
 		}
 
 		if (N4JSLanguageUtils.isHollowElement(exported, jsVariantHelper)) {
@@ -286,7 +290,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		// relaxed by IDEBUG-561:		exported.validateFunctionIsPublicApi(eo)
 		if (exported.body !== null) {
 			val message = getMessageForCLF_EXT_FUN_NO_BODY
-			val eObjectToNameFeature = eo.findNameFeature
+			val eObjectToNameFeature = exported.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_FUN_NO_BODY)
 		}
 	}
@@ -381,38 +385,35 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private validateNonAnnotatedClassDoesntExtendN4Object(N4ClassDeclaration exported, TClass superType,
-		ExportDeclaration eo) {
+	def private validateNonAnnotatedClassDoesntExtendN4Object(N4ClassDeclaration exported, TClass superType) {
 		if (superType !== null && (!superType.isExternal || AnnotationDefinition.N4JS.hasAnnotation(superType))) {
 			val message = messageForCLF_EXT_NOT_ANNOTATED_EXTEND_N4OBJECT
-			val eObjectToNameFeature = eo.findNameFeature
+			val eObjectToNameFeature = exported.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value,
 				CLF_EXT_NOT_ANNOTATED_EXTEND_N4OBJECT)
 		}
 	}
 
-	def private validateClassifierIsExternal(boolean external, String classifiers, ExportDeclaration eo) {
-		if (!external) {
+	def private validateClassifierIsExternal(N4ClassifierDefinition exported, String classifiers) {
+		if (!exported.external) {
 			val message = getMessageForCLF_EXT_EXTERNAL(classifiers)
-			val eObjectToNameFeature = eo.findNameFeature
+			val eObjectToNameFeature = exported.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_EXTERNAL)
 		}
 	}
 
 	def private validateConsumptionOfNonExternalInterfaces(
-		Iterable<TypeReferenceNode<ParameterizedTypeRef>> superInterfaces,
-		ExportDeclaration eo, String classifiers) {
+		Iterable<TypeReferenceNode<ParameterizedTypeRef>> superInterfaces, String classifiers) {
 
 		for (tinterface : superInterfaces.map[typeRef].map[hasExpectedTypes(TInterface)].filter[it !== null]) {
-			validateConsumptionOfNonExternalInterface(tinterface, classifiers, eo)
+			validateConsumptionOfNonExternalInterface(tinterface, classifiers)
 		}
 	}
 
-	private def validateConsumptionOfNonExternalInterface(TInterface tinterface, String classifiers,
-		ExportDeclaration eo) {
+	private def validateConsumptionOfNonExternalInterface(TInterface tinterface, String classifiers) {
 		if (!tinterface.external && tinterface.typingStrategy !== TypingStrategy.STRUCTURAL) {
 			val message = getMessageForCLF_EXT_CONSUME_NON_EXT(classifiers)
-			val eObjectToNameFeature = eo.findNameFeature
+			val eObjectToNameFeature = tinterface.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_CONSUME_NON_EXT)
 		}
 	}
