@@ -29,6 +29,7 @@ import org.eclipse.n4js.smith.N4JSDataCollectors
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.RuntimeDependency
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -69,7 +70,7 @@ class RuntimeDependencyProcessor {
 						cache.elementsReferencedAtRuntime += targetDeclType;
 						// in case of namespace imports, we also want to remember that the namespace was referenced at run time:
 						val namespaceLikeType = targetTypeRef.typeRefInAST?.namespaceLikeRefs?.head?.declaredType;
-						if (namespaceLikeType instanceof ModuleNamespaceVirtualType) {
+						if (namespaceLikeType instanceof ModuleNamespaceVirtualType || namespaceLikeType instanceof TNamespace) {
 							cache.elementsReferencedAtRuntime += namespaceLikeType;
 						}
 						// remember that the target's containing module was referenced from an extends/implements clause:

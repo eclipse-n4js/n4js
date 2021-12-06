@@ -353,15 +353,15 @@ public class N4TypeAliasDeclarationImpl extends N4TypeDeclarationImpl implements
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == ExportableElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_TYPE_ALIAS_DECLARATION___IS_HOLLOW;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_TYPE_ALIAS_DECLARATION___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == ExportableElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_TYPE_ALIAS_DECLARATION___IS_HOLLOW;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}

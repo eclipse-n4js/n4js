@@ -64,44 +64,6 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	 * @generated
 	 */
 	@Override
-	public N4NamespaceDeclaration getNamespace() {
-		EObject parent = this.eContainer();
-		if ((parent instanceof ExportDeclaration)) {
-			parent = ((ExportDeclaration)parent).eContainer();
-		}
-		if ((parent instanceof N4NamespaceDeclaration)) {
-			return ((N4NamespaceDeclaration)parent);
-		}
-		return null;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isInNamespace() {
-		N4NamespaceDeclaration _namespace = this.getNamespace();
-		return (_namespace != null);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isHollow() {
-		return false;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isExported() {
 		return (this.isDeclaredExported() || this.isExportedByNamespace());
 	}
@@ -124,12 +86,9 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	 */
 	@Override
 	public boolean isExportedByNamespace() {
-		EObject parent = this.eContainer();
-		if ((parent instanceof ExportDeclaration)) {
-			parent = ((ExportDeclaration)parent).eContainer();
-		}
-		if ((parent instanceof N4NamespaceDeclaration)) {
-			return ((N4NamespaceDeclaration)parent).isExported();
+		N4NamespaceDeclaration ns = this.getNamespace();
+		if ((ns != null)) {
+			return ns.isExported();
 		}
 		return false;
 	}
@@ -202,6 +161,44 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public N4NamespaceDeclaration getNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent);
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isInNamespace() {
+		N4NamespaceDeclaration _namespace = this.getNamespace();
+		return (_namespace != null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == ScriptElement.class) {
 			switch (baseOperationID) {
@@ -218,6 +215,14 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 				default: return -1;
 			}
 		}
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.ANNOTATION_LIST___GET_NAMESPACE;
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_IN_NAMESPACE: return N4JSPackage.ANNOTATION_LIST___IS_IN_NAMESPACE;
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.ANNOTATION_LIST___IS_HOLLOW;
+				default: return -1;
+			}
+		}
 		if (baseClass == ExportableElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED: return N4JSPackage.ANNOTATION_LIST___IS_EXPORTED;
@@ -227,14 +232,6 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.ANNOTATION_LIST___GET_EXPORTED_NAME;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.ANNOTATION_LIST___IS_TOPLEVEL;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.ANNOTATION_LIST___IS_HOLLOW;
-				default: return -1;
-			}
-		}
-		if (baseClass == NamespaceElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.ANNOTATION_LIST___GET_NAMESPACE;
-				case N4JSPackage.NAMESPACE_ELEMENT___IS_IN_NAMESPACE: return N4JSPackage.ANNOTATION_LIST___IS_IN_NAMESPACE;
-				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.ANNOTATION_LIST___IS_HOLLOW;
 				default: return -1;
 			}
 		}
@@ -249,12 +246,6 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case N4JSPackage.ANNOTATION_LIST___GET_NAMESPACE:
-				return getNamespace();
-			case N4JSPackage.ANNOTATION_LIST___IS_IN_NAMESPACE:
-				return isInNamespace();
-			case N4JSPackage.ANNOTATION_LIST___IS_HOLLOW:
-				return isHollow();
 			case N4JSPackage.ANNOTATION_LIST___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.ANNOTATION_LIST___IS_DECLARED_EXPORTED:
@@ -267,6 +258,12 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 				return getExportedName();
 			case N4JSPackage.ANNOTATION_LIST___IS_TOPLEVEL:
 				return isToplevel();
+			case N4JSPackage.ANNOTATION_LIST___IS_HOLLOW:
+				return isHollow();
+			case N4JSPackage.ANNOTATION_LIST___GET_NAMESPACE:
+				return getNamespace();
+			case N4JSPackage.ANNOTATION_LIST___IS_IN_NAMESPACE:
+				return isInNamespace();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

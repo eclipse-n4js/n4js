@@ -584,17 +584,4 @@ public interface TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnno
 	 */
 	String getModuleSpecifier();
 
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenience method, returns module this element is contained in, or
-	 * null if it is not contained in a module.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	TModule getContainingModule();
-
 } // TModule

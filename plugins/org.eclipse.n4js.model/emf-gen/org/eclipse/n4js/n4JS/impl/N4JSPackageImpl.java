@@ -8723,6 +8723,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		scriptEClass.getESuperTypes().add(this.getControlFlowElement());
 		exportDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		exportDeclarationEClass.getESuperTypes().add(this.getNamespaceElement());
+		exportableElementEClass.getESuperTypes().add(this.getNamespaceElement());
 		importDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		namedImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());
 		defaultImportSpecifierEClass.getESuperTypes().add(this.getNamedImportSpecifier());
@@ -8739,7 +8740,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		annotationListEClass.getESuperTypes().add(this.getAbstractAnnotationList());
 		annotationListEClass.getESuperTypes().add(this.getStatement());
 		annotationListEClass.getESuperTypes().add(this.getExportableElement());
-		annotationListEClass.getESuperTypes().add(this.getNamespaceElement());
 		expressionAnnotationListEClass.getESuperTypes().add(this.getAbstractAnnotationList());
 		expressionAnnotationListEClass.getESuperTypes().add(this.getExpression());
 		annotationEClass.getESuperTypes().add(this.getNamedElement());
@@ -8761,7 +8761,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		functionDeclarationEClass.getESuperTypes().add(this.getGenericDeclaration());
 		functionDeclarationEClass.getESuperTypes().add(this.getExportableElement());
 		functionDeclarationEClass.getESuperTypes().add(this.getNamedElement());
-		functionDeclarationEClass.getESuperTypes().add(this.getNamespaceElement());
 		functionExpressionEClass.getESuperTypes().add(this.getFunctionDefinition());
 		functionExpressionEClass.getESuperTypes().add(this.getAnnotableExpression());
 		functionExpressionEClass.getESuperTypes().add(this.getGenericDeclaration());
@@ -8913,7 +8912,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4TypeDeclarationEClass.getESuperTypes().add(this.getModifiableElement());
 		n4TypeDeclarationEClass.getESuperTypes().add(this.getExportableElement());
 		n4TypeDeclarationEClass.getESuperTypes().add(this.getNamedElement());
-		n4TypeDeclarationEClass.getESuperTypes().add(this.getNamespaceElement());
 		n4ClassifierDeclarationEClass.getESuperTypes().add(this.getN4TypeDeclaration());
 		n4ClassifierDeclarationEClass.getESuperTypes().add(this.getN4ClassifierDefinition());
 		n4ClassifierDeclarationEClass.getESuperTypes().add(this.getGenericDeclaration());
@@ -8922,7 +8920,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4ClassDefinitionEClass.getESuperTypes().add(this.getN4ClassifierDefinition());
 		n4ClassDefinitionEClass.getESuperTypes().add(this.getThisTarget());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getN4TypeDefinition());
-		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getNamespaceElement());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getModifiableElement());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getExportableElement());

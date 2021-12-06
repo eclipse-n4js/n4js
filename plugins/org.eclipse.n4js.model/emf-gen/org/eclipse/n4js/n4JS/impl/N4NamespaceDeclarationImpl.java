@@ -240,12 +240,9 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 */
 	@Override
 	public boolean isExportedByNamespace() {
-		EObject parent = this.eContainer();
-		if ((parent instanceof ExportDeclaration)) {
-			parent = ((ExportDeclaration)parent).eContainer();
-		}
-		if ((parent instanceof N4NamespaceDeclaration)) {
-			return ((N4NamespaceDeclaration)parent).isExported();
+		N4NamespaceDeclaration ns = this.getNamespace();
+		if ((ns != null)) {
+			return ns.isExported();
 		}
 		return false;
 	}
@@ -318,6 +315,34 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 * @generated
 	 */
 	@Override
+	public N4NamespaceDeclaration getNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent);
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isInNamespace() {
+		N4NamespaceDeclaration _namespace = this.getNamespace();
+		return (_namespace != null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isDeclaredExternal() {
 		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
 	}
@@ -347,34 +372,6 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	@Override
 	public boolean appliesOnlyToBlockScopedElements() {
 		return false;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public N4NamespaceDeclaration getNamespace() {
-		EObject parent = this.eContainer();
-		if ((parent instanceof ExportDeclaration)) {
-			parent = ((ExportDeclaration)parent).eContainer();
-		}
-		if ((parent instanceof N4NamespaceDeclaration)) {
-			return ((N4NamespaceDeclaration)parent);
-		}
-		return null;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isInNamespace() {
-		N4NamespaceDeclaration _namespace = this.getNamespace();
-		return (_namespace != null);
 	}
 
 	/**
@@ -479,16 +476,6 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == ScriptElement.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == NamespaceElement.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
 		if (baseClass == VariableEnvironmentElement.class) {
 			switch (derivedFeatureID) {
 				default: return -1;
@@ -497,6 +484,16 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 		if (baseClass == ModifiableElement.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.N4_NAMESPACE_DECLARATION__DECLARED_MODIFIERS: return N4JSPackage.MODIFIABLE_ELEMENT__DECLARED_MODIFIERS;
+				default: return -1;
+			}
+		}
+		if (baseClass == ScriptElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == NamespaceElement.class) {
+			switch (derivedFeatureID) {
 				default: return -1;
 			}
 		}
@@ -520,16 +517,6 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == ScriptElement.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == NamespaceElement.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
 		if (baseClass == VariableEnvironmentElement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
@@ -538,6 +525,16 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 		if (baseClass == ModifiableElement.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.MODIFIABLE_ELEMENT__DECLARED_MODIFIERS: return N4JSPackage.N4_NAMESPACE_DECLARATION__DECLARED_MODIFIERS;
+				default: return -1;
+			}
+		}
+		if (baseClass == ScriptElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == NamespaceElement.class) {
+			switch (baseFeatureID) {
 				default: return -1;
 			}
 		}
@@ -573,19 +570,6 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
-		if (baseClass == ScriptElement.class) {
-			switch (baseOperationID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == NamespaceElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_NAMESPACE;
-				case N4JSPackage.NAMESPACE_ELEMENT___IS_IN_NAMESPACE: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_IN_NAMESPACE;
-				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW;
-				default: return -1;
-			}
-		}
 		if (baseClass == VariableEnvironmentElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.VARIABLE_ENVIRONMENT_ELEMENT___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS: return N4JSPackage.N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS;
@@ -596,6 +580,19 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 			switch (baseOperationID) {
 				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DECLARED_EXTERNAL;
 				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DEFAULT_EXTERNAL;
+				default: return -1;
+			}
+		}
+		if (baseClass == ScriptElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_NAMESPACE;
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_IN_NAMESPACE: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_IN_NAMESPACE;
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW;
 				default: return -1;
 			}
 		}
@@ -646,16 +643,16 @@ public class N4NamespaceDeclarationImpl extends N4TypeDefinitionImpl implements 
 				return getExportedName();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_TOPLEVEL:
 				return isToplevel();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_NAMESPACE:
+				return getNamespace();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_IN_NAMESPACE:
+				return isInNamespace();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DECLARED_EXTERNAL:
 				return isDeclaredExternal();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DEFAULT_EXTERNAL:
 				return isDefaultExternal();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS:
 				return appliesOnlyToBlockScopedElements();
-			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_NAMESPACE:
-				return getNamespace();
-			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_IN_NAMESPACE:
-				return isInNamespace();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

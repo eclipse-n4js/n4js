@@ -267,12 +267,9 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 */
 	@Override
 	public boolean isExportedByNamespace() {
-		EObject parent = this.eContainer();
-		if ((parent instanceof ExportDeclaration)) {
-			parent = ((ExportDeclaration)parent).eContainer();
-		}
-		if ((parent instanceof N4NamespaceDeclaration)) {
-			return ((N4NamespaceDeclaration)parent).isExported();
+		N4NamespaceDeclaration ns = this.getNamespace();
+		if ((ns != null)) {
+			return ns.isExported();
 		}
 		return false;
 	}

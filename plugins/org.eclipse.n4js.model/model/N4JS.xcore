@@ -139,7 +139,7 @@ class ExportSpecifier {
  * export {C as X}
  * </pre>
  */
-abstract class ExportableElement {
+abstract class ExportableElement extends NamespaceElement {
 	op boolean isExported() {
 		return isDeclaredExported() || isExportedByNamespace();
 	}
@@ -147,12 +147,9 @@ abstract class ExportableElement {
 		return eContainer instanceof ExportDeclaration;
 	}
 	op boolean isExportedByNamespace() {
-		var parent = eContainer;
-		if (parent instanceof ExportDeclaration) {
-			parent = parent.eContainer;
-		}
-		if (parent instanceof N4NamespaceDeclaration) {
-			return parent.isExported;
+		var ns = namespace;
+		if (ns !== null) {
+			return ns.isExported;
 		}
 		return false;
 	}
@@ -475,7 +472,7 @@ abstract class AbstractAnnotationList {
  * This allows to handle syntax errors in the input file gracefully while
  * being able to left factor the grammar to make it parseable.
  */
-class AnnotationList extends AbstractAnnotationList, Statement, ExportableElement, NamespaceElement {
+class AnnotationList extends AbstractAnnotationList, Statement, ExportableElement {
 }
 
 /*
@@ -690,7 +687,7 @@ abstract class FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEleme
  * Function declarations should only be contained in the script or functions, that is, they should not be nested in blocks.
  * This is ensured by the ASTStructureValidator.
  */
-class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Statement, FunctionDefinition, GenericDeclaration, ExportableElement, NamedElement, NamespaceElement {
+class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Statement, FunctionDefinition, GenericDeclaration, ExportableElement, NamedElement {
 	/*
 	 * Function declarations are not treated as identifiable elements, as the binding should
 	 * refer to the inferred TFunction rather than this declaration. The name is mandatory.
@@ -2047,7 +2044,7 @@ abstract class N4TypeDefinition extends AnnotableElement, TypeDefiningElement {
  * Abstract base class for N4 specific type declarations. These declarations contain an
  * type access modifier.
  */
-abstract class N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElement, ModifiableElement, ExportableElement, NamedElement, NamespaceElement {
+abstract class N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElement, ModifiableElement, ExportableElement, NamedElement {
 	String name
 	/**
 	 * Returns true if type is declared as external.
@@ -2162,7 +2159,7 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 }
 
 
-class N4NamespaceDeclaration extends N4TypeDefinition, NamespaceElement, VariableEnvironmentElement, ModifiableElement, ExportableElement, NamedElement {
+class N4NamespaceDeclaration extends N4TypeDefinition, VariableEnvironmentElement, ModifiableElement, ExportableElement, NamedElement {
 	String name
 	contains NamespaceElement[] ownedElementsRaw
 	

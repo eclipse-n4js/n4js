@@ -22,11 +22,10 @@ import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamedElement;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.Script;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -35,7 +34,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  *
  * @generated
  */
-public abstract class ExportableElementImpl extends ProxyResolvingEObjectImpl implements ExportableElement {
+public abstract class ExportableElementImpl extends NamespaceElementImpl implements ExportableElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -83,12 +82,9 @@ public abstract class ExportableElementImpl extends ProxyResolvingEObjectImpl im
 	 */
 	@Override
 	public boolean isExportedByNamespace() {
-		EObject parent = this.eContainer();
-		if ((parent instanceof ExportDeclaration)) {
-			parent = ((ExportDeclaration)parent).eContainer();
-		}
-		if ((parent instanceof N4NamespaceDeclaration)) {
-			return ((N4NamespaceDeclaration)parent).isExported();
+		N4NamespaceDeclaration ns = this.getNamespace();
+		if ((ns != null)) {
+			return ns.isExported();
 		}
 		return false;
 	}
@@ -163,6 +159,22 @@ public abstract class ExportableElementImpl extends ProxyResolvingEObjectImpl im
 	@Override
 	public boolean isHollow() {
 		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
 	/**

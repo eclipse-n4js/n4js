@@ -125,6 +125,8 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 			case N4JSPackage.EXPORTABLE_ELEMENT: {
 				ExportableElement exportableElement = (ExportableElement)theEObject;
 				T1 result = caseExportableElement(exportableElement);
+				if (result == null) result = caseNamespaceElement(exportableElement);
+				if (result == null) result = caseScriptElement(exportableElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -251,9 +253,9 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseAbstractAnnotationList(annotationList);
 				if (result == null) result = caseStatement(annotationList);
 				if (result == null) result = caseExportableElement(annotationList);
+				if (result == null) result = caseControlFlowElement(annotationList);
 				if (result == null) result = caseNamespaceElement(annotationList);
 				if (result == null) result = caseScriptElement(annotationList);
-				if (result == null) result = caseControlFlowElement(annotationList);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -340,12 +342,12 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseGenericDeclaration(functionDeclaration);
 				if (result == null) result = caseExportableElement(functionDeclaration);
 				if (result == null) result = caseNamedElement(functionDeclaration);
-				if (result == null) result = caseNamespaceElement(functionDeclaration);
-				if (result == null) result = caseScriptElement(functionDeclaration);
 				if (result == null) result = caseControlFlowElement(functionDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionDeclaration);
 				if (result == null) result = caseTypeDefiningElement(functionDeclaration);
+				if (result == null) result = caseNamespaceElement(functionDeclaration);
 				if (result == null) result = caseAnnotableElement(functionDeclaration);
+				if (result == null) result = caseScriptElement(functionDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(functionDeclaration);
 				if (result == null) result = caseThisArgProvider(functionDeclaration);
 				if (result == null) result = caseTypableElement(functionDeclaration);
@@ -1500,11 +1502,11 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModifiableElement(n4TypeDeclaration);
 				if (result == null) result = caseExportableElement(n4TypeDeclaration);
 				if (result == null) result = caseNamedElement(n4TypeDeclaration);
-				if (result == null) result = caseNamespaceElement(n4TypeDeclaration);
 				if (result == null) result = caseAnnotableElement(n4TypeDeclaration);
 				if (result == null) result = caseTypeDefiningElement(n4TypeDeclaration);
-				if (result == null) result = caseScriptElement(n4TypeDeclaration);
+				if (result == null) result = caseNamespaceElement(n4TypeDeclaration);
 				if (result == null) result = caseTypableElement(n4TypeDeclaration);
+				if (result == null) result = caseScriptElement(n4TypeDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1520,11 +1522,11 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModifiableElement(n4ClassifierDeclaration);
 				if (result == null) result = caseExportableElement(n4ClassifierDeclaration);
 				if (result == null) result = caseNamedElement(n4ClassifierDeclaration);
-				if (result == null) result = caseNamespaceElement(n4ClassifierDeclaration);
 				if (result == null) result = caseAnnotableElement(n4ClassifierDeclaration);
 				if (result == null) result = caseTypeDefiningElement(n4ClassifierDeclaration);
-				if (result == null) result = caseScriptElement(n4ClassifierDeclaration);
+				if (result == null) result = caseNamespaceElement(n4ClassifierDeclaration);
 				if (result == null) result = caseTypableElement(n4ClassifierDeclaration);
+				if (result == null) result = caseScriptElement(n4ClassifierDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1554,15 +1556,15 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				N4NamespaceDeclaration n4NamespaceDeclaration = (N4NamespaceDeclaration)theEObject;
 				T1 result = caseN4NamespaceDeclaration(n4NamespaceDeclaration);
 				if (result == null) result = caseN4TypeDefinition(n4NamespaceDeclaration);
-				if (result == null) result = caseNamespaceElement(n4NamespaceDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(n4NamespaceDeclaration);
 				if (result == null) result = caseModifiableElement(n4NamespaceDeclaration);
 				if (result == null) result = caseExportableElement(n4NamespaceDeclaration);
 				if (result == null) result = caseNamedElement(n4NamespaceDeclaration);
 				if (result == null) result = caseAnnotableElement(n4NamespaceDeclaration);
 				if (result == null) result = caseTypeDefiningElement(n4NamespaceDeclaration);
-				if (result == null) result = caseScriptElement(n4NamespaceDeclaration);
+				if (result == null) result = caseNamespaceElement(n4NamespaceDeclaration);
 				if (result == null) result = caseTypableElement(n4NamespaceDeclaration);
+				if (result == null) result = caseScriptElement(n4NamespaceDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1587,11 +1589,11 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModifiableElement(n4ClassDeclaration);
 				if (result == null) result = caseExportableElement(n4ClassDeclaration);
 				if (result == null) result = caseNamedElement(n4ClassDeclaration);
-				if (result == null) result = caseNamespaceElement(n4ClassDeclaration);
 				if (result == null) result = caseAnnotableElement(n4ClassDeclaration);
 				if (result == null) result = caseTypeDefiningElement(n4ClassDeclaration);
-				if (result == null) result = caseScriptElement(n4ClassDeclaration);
+				if (result == null) result = caseNamespaceElement(n4ClassDeclaration);
 				if (result == null) result = caseTypableElement(n4ClassDeclaration);
+				if (result == null) result = caseScriptElement(n4ClassDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1626,11 +1628,11 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModifiableElement(n4InterfaceDeclaration);
 				if (result == null) result = caseExportableElement(n4InterfaceDeclaration);
 				if (result == null) result = caseNamedElement(n4InterfaceDeclaration);
-				if (result == null) result = caseNamespaceElement(n4InterfaceDeclaration);
 				if (result == null) result = caseAnnotableElement(n4InterfaceDeclaration);
 				if (result == null) result = caseTypeDefiningElement(n4InterfaceDeclaration);
-				if (result == null) result = caseScriptElement(n4InterfaceDeclaration);
+				if (result == null) result = caseNamespaceElement(n4InterfaceDeclaration);
 				if (result == null) result = caseTypableElement(n4InterfaceDeclaration);
+				if (result == null) result = caseScriptElement(n4InterfaceDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1643,11 +1645,11 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModifiableElement(n4EnumDeclaration);
 				if (result == null) result = caseExportableElement(n4EnumDeclaration);
 				if (result == null) result = caseNamedElement(n4EnumDeclaration);
-				if (result == null) result = caseNamespaceElement(n4EnumDeclaration);
 				if (result == null) result = caseAnnotableElement(n4EnumDeclaration);
 				if (result == null) result = caseTypeDefiningElement(n4EnumDeclaration);
-				if (result == null) result = caseScriptElement(n4EnumDeclaration);
+				if (result == null) result = caseNamespaceElement(n4EnumDeclaration);
 				if (result == null) result = caseTypableElement(n4EnumDeclaration);
+				if (result == null) result = caseScriptElement(n4EnumDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1670,12 +1672,12 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModifiableElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseExportableElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseNamedElement(n4TypeAliasDeclaration);
-				if (result == null) result = caseNamespaceElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseTypeProvidingElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseAnnotableElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseTypeDefiningElement(n4TypeAliasDeclaration);
-				if (result == null) result = caseScriptElement(n4TypeAliasDeclaration);
+				if (result == null) result = caseNamespaceElement(n4TypeAliasDeclaration);
 				if (result == null) result = caseTypableElement(n4TypeAliasDeclaration);
+				if (result == null) result = caseScriptElement(n4TypeAliasDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

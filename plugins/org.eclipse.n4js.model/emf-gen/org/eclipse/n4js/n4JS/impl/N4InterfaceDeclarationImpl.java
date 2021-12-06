@@ -228,15 +228,15 @@ public class N4InterfaceDeclarationImpl extends N4ClassifierDeclarationImpl impl
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == ExportableElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_INTERFACE_DECLARATION___IS_HOLLOW;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_INTERFACE_DECLARATION___IS_HOLLOW;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == ExportableElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_INTERFACE_DECLARATION___IS_HOLLOW;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}

@@ -43,7 +43,6 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
-import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
@@ -110,7 +109,6 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
@@ -846,11 +844,6 @@ public class N4JSLanguageUtils {
 	}
 
 	/** Checks presence of {@link AnnotationDefinition#POLYFILL} annotation. See also {@link N4JSLanguageUtils#isStaticPolyfill(AnnotableElement) }*/
-	def static boolean isNamespaceElement(AnnotableElement astElement) {
-		return AnnotationDefinition.POLYFILL.hasAnnotation( astElement );
-	}
-
-	/** Checks presence of {@link AnnotationDefinition#POLYFILL} annotation. See also {@link N4JSLanguageUtils#isStaticPolyfill(AnnotableElement) }*/
 	def static boolean isNonStaticPolyfill(AnnotableElement astElement) {
 		return AnnotationDefinition.POLYFILL.hasAnnotation( astElement );
 	}
@@ -1197,13 +1190,9 @@ public class N4JSLanguageUtils {
 	 * in early stages before the types builder has run and in the transpiler!
 	 */
 	def static boolean hasRuntimeRepresentation(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
-			&& javaScriptVariantHelper.isExternalMode(typeDecl)
-			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
 		val isNumberOrStringBasedEnum = typeDecl instanceof N4EnumDeclaration
 			&& getEnumKind(typeDecl as N4EnumDeclaration) !== EnumKind.Normal;
-		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
-		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
+		return typeDecl !== null && !isNumberOrStringBasedEnum && !isHollowElement(typeDecl, javaScriptVariantHelper);
 	}
 
 	/**
@@ -1214,13 +1203,9 @@ public class N4JSLanguageUtils {
 	 * that were loaded from the Xtext index.
 	 */
 	def static boolean hasRuntimeRepresentation(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
-			&& javaScriptVariantHelper.isExternalMode(element)
-			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
 		val isNumberOrStringBasedEnum = element instanceof TEnum
 			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
-		val isTypeAlias = element instanceof TypeAlias;
-		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
+		return element !== null && !isNumberOrStringBasedEnum && !isHollowElement(element, javaScriptVariantHelper);
 	}
 	
 	

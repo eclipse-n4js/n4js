@@ -32,7 +32,7 @@ package org.eclipse.n4js.n4JS;
  * @model abstract="true"
  * @generated
  */
-public interface N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElement, ModifiableElement, ExportableElement, NamedElement, NamespaceElement {
+public interface N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElement, ModifiableElement, ExportableElement, NamedElement {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

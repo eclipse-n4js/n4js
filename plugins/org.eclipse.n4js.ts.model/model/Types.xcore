@@ -210,13 +210,6 @@ class TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElemen
 		return qualifiedName
 	}
 	
-	/**
-	 * Convenience method, returns module this element is contained in, or
-	 * null if it is not contained in a module.
-	 */
-	op TModule getContainingModule() {
-		return this;
-	}
 }
 
 /*

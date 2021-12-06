@@ -410,7 +410,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE___GET_CONTAINING_MODULE = ABSTRACT_NAMESPACE_OPERATION_COUNT + 0;
+	int TMODULE___GET_CONTAINING_MODULE = ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -419,7 +419,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 1;
+	int TMODULE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -12790,16 +12790,6 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTModule_ModuleSpecifier();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#getContainingModule() <em>Get Containing Module</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Containing Module</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TModule#getContainingModule()
-	 * @generated
-	 */
-	EOperation getTModule__GetContainingModule();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.RuntimeDependency <em>Runtime Dependency</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15757,14 +15747,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMODULE__MODULE_SPECIFIER = eINSTANCE.getTModule_ModuleSpecifier();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Containing Module</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TMODULE___GET_CONTAINING_MODULE = eINSTANCE.getTModule__GetContainingModule();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.

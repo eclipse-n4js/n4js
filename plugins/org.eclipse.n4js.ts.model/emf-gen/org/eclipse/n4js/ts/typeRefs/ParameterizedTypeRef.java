@@ -168,8 +168,8 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <!-- begin-model-doc -->
 	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node <em>and</em> ...
 	 * <ol>
-	 * <li>the declared type is, in the source code, referred to via the namespace of a namespace import, then this is non-null
-	 * and points to that namespace.
+	 * <li>the declared type is, in the source code, referred to via a namespace of a namespace or namespace import,
+	 * then this is non-null and points to that namespace, or
 	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
 	 * </ol>
 	 * <!-- end-model-doc -->
