@@ -303,7 +303,7 @@ TypeTypeRef returns TypeTypeRef:
 	'{' typeArg=TypeArgInTypeTypeRef '}';
 
 TypeReferenceName:
-	'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
+	'void' | 'null' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
 ;
 
 TypeArgument returns TypeArgument:

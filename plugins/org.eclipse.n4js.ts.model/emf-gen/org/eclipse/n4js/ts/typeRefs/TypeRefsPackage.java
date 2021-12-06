@@ -8700,7 +8700,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getQueryTypeRef()
 	 * @generated
 	 */
-	int QUERY_TYPE_REF = 28;
+	int QUERY_TYPE_REF = 29;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -9007,7 +9007,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getOperatorTypeRef()
 	 * @generated
 	 */
-	int OPERATOR_TYPE_REF = 29;
+	int OPERATOR_TYPE_REF = 30;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -9323,7 +9323,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getIndexAccessTypeRef()
 	 * @generated
 	 */
-	int INDEX_ACCESS_TYPE_REF = 30;
+	int INDEX_ACCESS_TYPE_REF = 31;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -9639,7 +9639,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getConditionalTypeRef()
 	 * @generated
 	 */
-	int CONDITIONAL_TYPE_REF = 31;
+	int CONDITIONAL_TYPE_REF = 32;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -9973,7 +9973,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getInferTypeRef()
 	 * @generated
 	 */
-	int INFER_TYPE_REF = 32;
+	int INFER_TYPE_REF = 33;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -10280,7 +10280,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getMappedTypeRef()
 	 * @generated
 	 */
-	int MAPPED_TYPE_REF = 33;
+	int MAPPED_TYPE_REF = 34;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -10641,18 +10641,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getOptionalFieldStrategy()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int OPTIONAL_FIELD_STRATEGY = 29;
-=======
-	int OPTIONAL_FIELD_STRATEGY = 32;
-=======
-	int OPTIONAL_FIELD_STRATEGY = 33;
->>>>>>> 765b95ac8 (early support for mapped types)
-=======
-	int OPTIONAL_FIELD_STRATEGY = 34;
->>>>>>> c3d10a43c (early support for infer declarations)
+	int OPTIONAL_FIELD_STRATEGY = 35;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.TypeOperator <em>Type Operator</em>}' enum.
@@ -10662,16 +10651,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TYPE_OPERATOR = 33;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TYPE_OPERATOR = 34;
->>>>>>> 765b95ac8 (early support for mapped types)
-=======
-	int TYPE_OPERATOR = 35;
->>>>>>> c3d10a43c (early support for infer declarations)
+	int TYPE_OPERATOR = 36;
 
 	/**
 	 * The meta object id for the '<em>UUID</em>' data type.
@@ -10681,19 +10661,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getUUID()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int UUID = 30;
-=======
-	int UUID = 34;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int UUID = 35;
->>>>>>> 765b95ac8 (early support for mapped types)
-=======
-	int UUID = 36;
->>>>>>> c3d10a43c (early support for infer declarations)
+	int UUID = 37;
 
 
 	/**

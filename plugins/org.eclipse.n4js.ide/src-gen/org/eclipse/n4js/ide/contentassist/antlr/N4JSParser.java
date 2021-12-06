@@ -180,7 +180,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup_1_4(), "rule__AnnotatedScriptElement__Group_1_4__0");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup_1_4_6(), "rule__AnnotatedScriptElement__Group_1_4_6__0");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup_1_5(), "rule__AnnotatedScriptElement__Group_1_5__0");
-<<<<<<< HEAD
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup(), "rule__AnnotatedNamespaceElement__Group__0");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup_1_0(), "rule__AnnotatedNamespaceElement__Group_1_0__0");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup_1_0_1(), "rule__AnnotatedNamespaceElement__Group_1_0_1__0");
@@ -191,9 +190,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup_1_2(), "rule__AnnotatedNamespaceElement__Group_1_2__0");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup_1_2_6(), "rule__AnnotatedNamespaceElement__Group_1_2_6__0");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup_1_3(), "rule__AnnotatedNamespaceElement__Group_1_3__0");
-=======
 			builder.put(grammarAccess.getDeclareDeclarationAccess().getGroup(), "rule__DeclareDeclaration__Group__0");
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 			builder.put(grammarAccess.getExportDeclarationAccess().getGroup(), "rule__ExportDeclaration__Group__0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup(), "rule__ExportDeclarationImpl__Group__0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_0(), "rule__ExportDeclarationImpl__Group_1_0__0");
@@ -731,7 +728,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersAssignment_1_5_1(), "rule__AnnotatedScriptElement__DeclaredModifiersAssignment_1_5_1");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getNameAssignment_1_5_3(), "rule__AnnotatedScriptElement__NameAssignment_1_5_3");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredTypeRefNodeAssignment_1_5_6(), "rule__AnnotatedScriptElement__DeclaredTypeRefNodeAssignment_1_5_6");
-<<<<<<< HEAD
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getDeclaredModifiersAssignment_1_0_1_0_0(), "rule__AnnotatedNamespaceElement__DeclaredModifiersAssignment_1_0_1_0_0");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getDeclaredModifiersAssignment_1_1_0_0_1(), "rule__AnnotatedNamespaceElement__DeclaredModifiersAssignment_1_1_0_0_1");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getTypingStrategyAssignment_1_1_0_0_3(), "rule__AnnotatedNamespaceElement__TypingStrategyAssignment_1_1_0_0_3");
@@ -746,9 +742,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getDeclaredModifiersAssignment_1_3_1(), "rule__AnnotatedNamespaceElement__DeclaredModifiersAssignment_1_3_1");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getNameAssignment_1_3_3(), "rule__AnnotatedNamespaceElement__NameAssignment_1_3_3");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getDeclaredTypeRefNodeAssignment_1_3_6(), "rule__AnnotatedNamespaceElement__DeclaredTypeRefNodeAssignment_1_3_6");
-=======
 			builder.put(grammarAccess.getDeclareDeclarationAccess().getExportedElementAssignment_1(), "rule__DeclareDeclaration__ExportedElementAssignment_1");
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getWildcardExportAssignment_1_0_0(), "rule__ExportDeclarationImpl__WildcardExportAssignment_1_0_0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getExportedElementAssignment_1_2(), "rule__ExportDeclarationImpl__ExportedElementAssignment_1_2");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getDefaultExportAssignment_1_3_0(), "rule__ExportDeclarationImpl__DefaultExportAssignment_1_3_0");

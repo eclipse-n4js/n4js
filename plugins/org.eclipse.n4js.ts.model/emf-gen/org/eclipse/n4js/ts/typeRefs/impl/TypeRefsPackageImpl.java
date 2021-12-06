@@ -36,11 +36,8 @@ import org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef;
 import org.eclipse.n4js.ts.typeRefs.InferTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
-<<<<<<< HEAD
-import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
-=======
 import org.eclipse.n4js.ts.typeRefs.MappedTypeRef;
->>>>>>> 765b95ac8 (early support for mapped types)
+import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.OperatorTypeRef;
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;

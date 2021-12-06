@@ -341,7 +341,6 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-<<<<<<< HEAD
 // Entry rule entryRuleAnnotatedNamespaceElement
 entryRuleAnnotatedNamespaceElement
 :
@@ -353,7 +352,20 @@ entryRuleAnnotatedNamespaceElement
 
 // Rule AnnotatedNamespaceElement
 ruleAnnotatedNamespaceElement 
-=======
+	@init {
+		int stackSize = keepStackSize();
+	}
+	:
+	(
+		{ before(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup()); }
+		(rule__AnnotatedNamespaceElement__Group__0)
+		{ after(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 // Entry rule entryRuleDeclareDeclaration
 entryRuleDeclareDeclaration
 :
@@ -365,21 +377,14 @@ entryRuleDeclareDeclaration
 
 // Rule DeclareDeclaration
 ruleDeclareDeclaration 
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 	@init {
 		int stackSize = keepStackSize();
 	}
 	:
 	(
-<<<<<<< HEAD
-		{ before(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup()); }
-		(rule__AnnotatedNamespaceElement__Group__0)
-		{ after(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup()); }
-=======
 		{ before(grammarAccess.getDeclareDeclarationAccess().getGroup()); }
 		(rule__DeclareDeclaration__Group__0)
 		{ after(grammarAccess.getDeclareDeclarationAccess().getGroup()); }
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 	)
 ;
 finally {
@@ -10972,25 +10977,21 @@ rule__ScriptElement__Alternatives
 	)
 	|
 	(
-<<<<<<< HEAD
-=======
-		{ before(grammarAccess.getScriptElementAccess().getDeclareDeclarationParserRuleCall_6()); }
+		{ before(grammarAccess.getScriptElementAccess().getDeclareDeclarationParserRuleCall_7()); }
 		(ruleDeclareDeclaration)
-		{ after(grammarAccess.getScriptElementAccess().getDeclareDeclarationParserRuleCall_6()); }
+		{ after(grammarAccess.getScriptElementAccess().getDeclareDeclarationParserRuleCall_7()); }
 	)
 	|
 	(
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-		{ before(grammarAccess.getScriptElementAccess().getExportDeclarationParserRuleCall_7()); }
+		{ before(grammarAccess.getScriptElementAccess().getExportDeclarationParserRuleCall_8()); }
 		ruleExportDeclaration
-		{ after(grammarAccess.getScriptElementAccess().getExportDeclarationParserRuleCall_7()); }
+		{ after(grammarAccess.getScriptElementAccess().getExportDeclarationParserRuleCall_8()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getScriptElementAccess().getRootStatementParserRuleCall_8()); }
+		{ before(grammarAccess.getScriptElementAccess().getRootStatementParserRuleCall_9()); }
 		ruleRootStatement
-		{ after(grammarAccess.getScriptElementAccess().getRootStatementParserRuleCall_8()); }
-<<<<<<< HEAD
+		{ after(grammarAccess.getScriptElementAccess().getRootStatementParserRuleCall_9()); }
 	)
 ;
 finally {
@@ -11117,8 +11118,6 @@ norm1_NamespaceElement__Alternatives
 		{ before(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_8()); }
 		ruleExportDeclaration
 		{ after(grammarAccess.getNamespaceElementAccess().getExportDeclarationParserRuleCall_8()); }
-=======
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 	)
 ;
 finally {
@@ -14281,60 +14280,6 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-<<<<<<< HEAD
-=======
-rule__TypeReferenceName__Alternatives
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getTypeReferenceNameAccess().getVoidKeyword_0()); }
-		Void
-		{ after(grammarAccess.getTypeReferenceNameAccess().getVoidKeyword_0()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeReferenceNameAccess().getNullKeyword_1()); }
-		Null
-		{ after(grammarAccess.getTypeReferenceNameAccess().getNullKeyword_1()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeReferenceNameAccess().getAwaitKeyword_2()); }
-		Await
-		{ after(grammarAccess.getTypeReferenceNameAccess().getAwaitKeyword_2()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeReferenceNameAccess().getPromisifyKeyword_3()); }
-		Promisify
-		{ after(grammarAccess.getTypeReferenceNameAccess().getPromisifyKeyword_3()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeReferenceNameAccess().getTargetKeyword_4()); }
-		Target
-		{ after(grammarAccess.getTypeReferenceNameAccess().getTargetKeyword_4()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeReferenceNameAccess().getDefaultKeyword_5()); }
-		Default
-		{ after(grammarAccess.getTypeReferenceNameAccess().getDefaultKeyword_5()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getTypeReferenceNameAccess().getIDENTIFIERTerminalRuleCall_6()); }
-		RULE_IDENTIFIER
-		{ after(grammarAccess.getTypeReferenceNameAccess().getIDENTIFIERTerminalRuleCall_6()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 rule__ClassExtendsImplements__Alternatives
 	@init {
 		int stackSize = keepStackSize();
@@ -15727,9 +15672,9 @@ rule__TypeReferenceName__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getTypeReferenceNameAccess().getThisKeyword_1()); }
-		This
-		{ after(grammarAccess.getTypeReferenceNameAccess().getThisKeyword_1()); }
+		{ before(grammarAccess.getTypeReferenceNameAccess().getNullKeyword_1()); }
+		Null
+		{ after(grammarAccess.getTypeReferenceNameAccess().getNullKeyword_1()); }
 	)
 	|
 	(
@@ -16429,39 +16374,39 @@ rule__N4Keyword__Alternatives
 	)
 	|
 	(
-<<<<<<< HEAD
-		{ before(grammarAccess.getN4KeywordAccess().getNamespaceKeyword_25()); }
+		{ before(grammarAccess.getN4KeywordAccess().getNamespaceKeyword_24()); }
 		Namespace
-		{ after(grammarAccess.getN4KeywordAccess().getNamespaceKeyword_25()); }
-=======
-		{ before(grammarAccess.getN4KeywordAccess().getDeclareKeyword_24()); }
+		{ after(grammarAccess.getN4KeywordAccess().getNamespaceKeyword_24()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getN4KeywordAccess().getDeclareKeyword_25()); }
 		Declare
-		{ after(grammarAccess.getN4KeywordAccess().getDeclareKeyword_24()); }
+		{ after(grammarAccess.getN4KeywordAccess().getDeclareKeyword_25()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getN4KeywordAccess().getIsKeyword_25()); }
+		{ before(grammarAccess.getN4KeywordAccess().getIsKeyword_26()); }
 		Is
-		{ after(grammarAccess.getN4KeywordAccess().getIsKeyword_25()); }
+		{ after(grammarAccess.getN4KeywordAccess().getIsKeyword_26()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getN4KeywordAccess().getKeyofKeyword_26()); }
+		{ before(grammarAccess.getN4KeywordAccess().getKeyofKeyword_27()); }
 		Keyof
-		{ after(grammarAccess.getN4KeywordAccess().getKeyofKeyword_26()); }
+		{ after(grammarAccess.getN4KeywordAccess().getKeyofKeyword_27()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getN4KeywordAccess().getUniqueKeyword_27()); }
+		{ before(grammarAccess.getN4KeywordAccess().getUniqueKeyword_28()); }
 		Unique
-		{ after(grammarAccess.getN4KeywordAccess().getUniqueKeyword_27()); }
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+		{ after(grammarAccess.getN4KeywordAccess().getUniqueKeyword_28()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getN4KeywordAccess().getInferKeyword_28()); }
+		{ before(grammarAccess.getN4KeywordAccess().getInferKeyword_29()); }
 		Infer
-		{ after(grammarAccess.getN4KeywordAccess().getInferKeyword_28()); }
+		{ after(grammarAccess.getN4KeywordAccess().getInferKeyword_29()); }
 	)
 ;
 finally {
@@ -86070,17 +86015,12 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-<<<<<<< HEAD
 rule__AnnotatedNamespaceElement__DeclaredModifiersAssignment_1_0_1_0_0
-=======
-rule__DeclareDeclaration__ExportedElementAssignment_1
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-<<<<<<< HEAD
 		{ before(grammarAccess.getAnnotatedNamespaceElementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_0_1_0_0_0()); }
 		ruleN4Modifier
 		{ after(grammarAccess.getAnnotatedNamespaceElementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_1_0_1_0_0_0()); }
@@ -86279,11 +86219,21 @@ rule__AnnotatedNamespaceElement__DeclaredTypeRefNodeAssignment_1_3_6
 		{ before(grammarAccess.getAnnotatedNamespaceElementAccess().getDeclaredTypeRefNodeTypeReferenceNodeParserRuleCall_1_3_6_0()); }
 		ruleTypeReferenceNode
 		{ after(grammarAccess.getAnnotatedNamespaceElementAccess().getDeclaredTypeRefNodeTypeReferenceNodeParserRuleCall_1_3_6_0()); }
-=======
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__DeclareDeclaration__ExportedElementAssignment_1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
 		{ before(grammarAccess.getDeclareDeclarationAccess().getExportedElementExportableElementParserRuleCall_1_0()); }
 		ruleExportableElement
 		{ after(grammarAccess.getDeclareDeclarationAccess().getExportedElementExportableElementParserRuleCall_1_0()); }
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 	)
 ;
 finally {

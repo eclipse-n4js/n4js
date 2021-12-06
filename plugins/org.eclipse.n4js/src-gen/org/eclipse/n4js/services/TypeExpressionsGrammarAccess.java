@@ -2419,7 +2419,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeReferenceName");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Keyword cVoidKeyword_0 = (Keyword)cAlternatives.eContents().get(0);
-		private final Keyword cThisKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		private final Keyword cNullKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
 		private final Keyword cAwaitKeyword_2 = (Keyword)cAlternatives.eContents().get(2);
 		private final Keyword cPromisifyKeyword_3 = (Keyword)cAlternatives.eContents().get(3);
 		private final Keyword cTargetKeyword_4 = (Keyword)cAlternatives.eContents().get(4);
@@ -2427,18 +2427,18 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cIDENTIFIERTerminalRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
 		
 		//TypeReferenceName:
-		//    'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
+		//    'void' | 'null' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
+		//'void' | 'null' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'void'
 		public Keyword getVoidKeyword_0() { return cVoidKeyword_0; }
 		
-		//'This'
-		public Keyword getThisKeyword_1() { return cThisKeyword_1; }
+		//'null'
+		public Keyword getNullKeyword_1() { return cNullKeyword_1; }
 		
 		//'await'
 		public Keyword getAwaitKeyword_2() { return cAwaitKeyword_2; }
@@ -3265,19 +3265,6 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Keyword cTypeKeyword_12 = (Keyword)cAlternatives.eContents().get(12);
 		private final Keyword cUnionKeyword_13 = (Keyword)cAlternatives.eContents().get(13);
 		private final Keyword cIntersectionKeyword_14 = (Keyword)cAlternatives.eContents().get(14);
-<<<<<<< HEAD
-		private final Keyword cThisKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
-		private final Keyword cPromisifyKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
-		private final Keyword cAwaitKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
-		private final Keyword cAsyncKeyword_18 = (Keyword)cAlternatives.eContents().get(18);
-		private final Keyword cImplementsKeyword_19 = (Keyword)cAlternatives.eContents().get(19);
-		private final Keyword cInterfaceKeyword_20 = (Keyword)cAlternatives.eContents().get(20);
-		private final Keyword cPrivateKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
-		private final Keyword cProtectedKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
-		private final Keyword cPublicKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
-		private final Keyword cOutKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
-		private final Keyword cNamespaceKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
-=======
 		private final Keyword cPromisifyKeyword_15 = (Keyword)cAlternatives.eContents().get(15);
 		private final Keyword cAwaitKeyword_16 = (Keyword)cAlternatives.eContents().get(16);
 		private final Keyword cAsyncKeyword_17 = (Keyword)cAlternatives.eContents().get(17);
@@ -3287,18 +3274,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Keyword cProtectedKeyword_21 = (Keyword)cAlternatives.eContents().get(21);
 		private final Keyword cPublicKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
 		private final Keyword cOutKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
-<<<<<<< HEAD
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-		private final Keyword cDeclareKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
-		private final Keyword cIsKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
-		private final Keyword cKeyofKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
-		private final Keyword cUniqueKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
-<<<<<<< HEAD
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-		private final Keyword cInferKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
->>>>>>> c3d10a43c (early support for infer declarations)
+		private final Keyword cNamespaceKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cDeclareKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
+		private final Keyword cIsKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
+		private final Keyword cKeyofKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
+		private final Keyword cUniqueKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
+		private final Keyword cInferKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
 		
 		//N4Keyword:
 		//    'get' | 'set'
@@ -3317,17 +3298,10 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    | 'private' | 'protected' | 'public' // package not used in N4JS
 		//    // definition-site variance
 		//    | 'out'
-<<<<<<< HEAD
 		//    // namespace keyword
 		//    | 'namespace'
-=======
 		//    // .d.ts keywords
-<<<<<<< HEAD
-		//    | 'declare' | 'is' | 'keyof' | 'unique' // | 'readonly'
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
 		//    | 'declare' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
->>>>>>> c3d10a43c (early support for infer declarations)
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -3347,17 +3321,10 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//| 'private' | 'protected' | 'public' // package not used in N4JS
 		//// definition-site variance
 		//| 'out'
-<<<<<<< HEAD
 		//// namespace keyword
 		//| 'namespace'
-=======
 		//// .d.ts keywords
-<<<<<<< HEAD
-		//| 'declare' | 'is' | 'keyof' | 'unique'
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
 		//| 'declare' | 'is' | 'keyof' | 'unique' | 'infer'
->>>>>>> c3d10a43c (early support for infer declarations)
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'get'
@@ -3430,35 +3397,25 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		public Keyword getPublicKeyword_22() { return cPublicKeyword_22; }
 		
 		//'out'
-<<<<<<< HEAD
-		public Keyword getOutKeyword_24() { return cOutKeyword_24; }
+		public Keyword getOutKeyword_23() { return cOutKeyword_23; }
 		
 		//'namespace'
-		public Keyword getNamespaceKeyword_25() { return cNamespaceKeyword_25; }
-=======
-		public Keyword getOutKeyword_23() { return cOutKeyword_23; }
-<<<<<<< HEAD
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
+		public Keyword getNamespaceKeyword_24() { return cNamespaceKeyword_24; }
 		
 		//'declare'
-		public Keyword getDeclareKeyword_24() { return cDeclareKeyword_24; }
+		public Keyword getDeclareKeyword_25() { return cDeclareKeyword_25; }
 		
 		//'is'
-		public Keyword getIsKeyword_25() { return cIsKeyword_25; }
+		public Keyword getIsKeyword_26() { return cIsKeyword_26; }
 		
 		//'keyof'
-		public Keyword getKeyofKeyword_26() { return cKeyofKeyword_26; }
+		public Keyword getKeyofKeyword_27() { return cKeyofKeyword_27; }
 		
 		//'unique'
-		public Keyword getUniqueKeyword_27() { return cUniqueKeyword_27; }
-<<<<<<< HEAD
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
+		public Keyword getUniqueKeyword_28() { return cUniqueKeyword_28; }
 		
 		//'infer'
-		public Keyword getInferKeyword_28() { return cInferKeyword_28; }
->>>>>>> c3d10a43c (early support for infer declarations)
+		public Keyword getInferKeyword_29() { return cInferKeyword_29; }
 	}
 	public class NumericLiteralAsStringElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.NumericLiteralAsString");
@@ -4375,7 +4332,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//TypeReferenceName:
-	//    'void' | 'This' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
+	//    'void' | 'null' | 'await' | 'Promisify' | 'target' | 'default' | IDENTIFIER
 	//;
 	public TypeReferenceNameElements getTypeReferenceNameAccess() {
 		return pTypeReferenceName;
@@ -4592,17 +4549,10 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    | 'private' | 'protected' | 'public' // package not used in N4JS
 	//    // definition-site variance
 	//    | 'out'
-<<<<<<< HEAD
 	//    // namespace keyword
 	//    | 'namespace'
-=======
 	//    // .d.ts keywords
-<<<<<<< HEAD
-	//    | 'declare' | 'is' | 'keyof' | 'unique' // | 'readonly'
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
 	//    | 'declare' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
->>>>>>> c3d10a43c (early support for infer declarations)
 	//;
 	public N4KeywordElements getN4KeywordAccess() {
 		return pN4Keyword;

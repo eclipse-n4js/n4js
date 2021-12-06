@@ -630,6 +630,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 5641a2d2d (early support for constructor type expressions)
@@ -640,15 +641,19 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 =======
 =======
 =======
+=======
+>>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *     (rule start) (ambiguity) dtsAbstract?='abstract'
->>>>>>> 448326d89 (constructor type expressions can be 'abstract')
 	 *     (rule start) (ambiguity) dtsConstructor?='new'
->>>>>>> 9195fcc1c (early support for constructor type expressions)
+	 *     (rule start) (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) (ambiguity) op=TypeOperator
 	 *     (rule start) (ambiguity) {ConditionalTypeRef.typeRef=}
 	 *     (rule start) (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
+<<<<<<< HEAD
 >>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 >>>>>>> 400b52473 (early support for DTS type references, except mapped types)
+=======
+>>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
 	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}

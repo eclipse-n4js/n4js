@@ -21,11 +21,8 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef;
 import org.eclipse.n4js.ts.typeRefs.InferTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
-<<<<<<< HEAD
-import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
-=======
 import org.eclipse.n4js.ts.typeRefs.MappedTypeRef;
->>>>>>> 765b95ac8 (early support for mapped types)
+import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.OperatorTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -109,13 +106,11 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 					return; 
 				}
 				else break;
-<<<<<<< HEAD
-			case TypeRefsPackage.NAMESPACE_LIKE_REF:
-				sequence_NamespaceLikeRef(context, (NamespaceLikeRef) semanticObject); 
-=======
 			case TypeRefsPackage.MAPPED_TYPE_REF:
 				sequence_MappedTypeRef(context, (MappedTypeRef) semanticObject); 
->>>>>>> 765b95ac8 (early support for mapped types)
+				return; 
+			case TypeRefsPackage.NAMESPACE_LIKE_REF:
+				sequence_NamespaceLikeRef(context, (NamespaceLikeRef) semanticObject); 
 				return; 
 			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF:
 				sequence_NumericLiteralTypeRef(context, (NumericLiteralTypeRef) semanticObject); 
@@ -361,17 +356,12 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *             arrayNTypeExpression?='[' 
 	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
 	 *         ) | 
-<<<<<<< HEAD
 	 *         (
 	 *             astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *             declaredType=[Type|TypeReferenceName] 
 	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *             dynamic?='+'? 
-	 *             followedByQuestionMark?='?'?
+	 *             dynamic?='+'?
 	 *         )
-=======
-	 *         (declaredType=[Type|TypeReferenceName] (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? dynamic?='+'?)
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 	 *     )
 	 */
 	protected void sequence_ArrayNTypeExpression_ArrayTypeExpression_TypeArguments_TypeRefWithModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
@@ -398,6 +388,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Contexts:
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRef
 	 *
 	 * Constraint:
@@ -416,6 +407,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	protected void sequence_ArrayNTypeExpression_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 =======
+=======
+>>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *     TypeRef returns IndexAccessTypeRef
 	 *     ConditionalTypeRef returns IndexAccessTypeRef
 	 *     ConditionalTypeRef.ConditionalTypeRef_1_0_0_0 returns IndexAccessTypeRef
@@ -444,17 +437,11 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 		feeder.accept(grammarAccess.getArrayTypeExpressionAccess().getIndexAccessTypeRefTargetTypeRefAction_2_1_0_1_0(), semanticObject.getTargetTypeRef());
 		feeder.accept(grammarAccess.getArrayTypeExpressionAccess().getIndexTypeRefTypeRefParserRuleCall_2_1_0_1_2_0(), semanticObject.getIndexTypeRef());
 		feeder.finish();
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 	}
 	
 	
 	/**
 	 * Contexts:
-<<<<<<< HEAD
-=======
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 	 *     ArrayTypeExpression.ParameterizedTypeRef_0_4_0_0 returns ParameterizedTypeRef
 	 *
 	 * Constraint:
@@ -758,21 +745,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	/**
 	 * Contexts:
-<<<<<<< HEAD
-	 *     NamespaceLikeRef returns NamespaceLikeRef
-	 *
-	 * Constraint:
-	 *     declaredType=[Type|TypeReferenceName]
-	 */
-	protected void sequence_NamespaceLikeRef(ISerializationContext context, NamespaceLikeRef semanticObject) {
-		if (errorAcceptor != null) {
-			if (transientValues.isValueTransient(semanticObject, TypeRefsPackage.Literals.NAMESPACE_LIKE_REF__DECLARED_TYPE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypeRefsPackage.Literals.NAMESPACE_LIKE_REF__DECLARED_TYPE));
-		}
-		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getNamespaceLikeRefAccess().getDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1(), semanticObject.eGet(TypeRefsPackage.Literals.NAMESPACE_LIKE_REF__DECLARED_TYPE, false));
-		feeder.finish();
-=======
 	 *     TypeRef returns MappedTypeRef
 	 *     ConditionalTypeRef returns MappedTypeRef
 	 *     ConditionalTypeRef.ConditionalTypeRef_1_0_0_0 returns MappedTypeRef
@@ -800,7 +772,24 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 */
 	protected void sequence_MappedTypeRef(ISerializationContext context, MappedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
->>>>>>> 765b95ac8 (early support for mapped types)
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     NamespaceLikeRef returns NamespaceLikeRef
+	 *
+	 * Constraint:
+	 *     declaredType=[Type|TypeReferenceName]
+	 */
+	protected void sequence_NamespaceLikeRef(ISerializationContext context, NamespaceLikeRef semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, TypeRefsPackage.Literals.NAMESPACE_LIKE_REF__DECLARED_TYPE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, TypeRefsPackage.Literals.NAMESPACE_LIKE_REF__DECLARED_TYPE));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getNamespaceLikeRefAccess().getDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1(), semanticObject.eGet(TypeRefsPackage.Literals.NAMESPACE_LIKE_REF__DECLARED_TYPE, false));
+		feeder.finish();
 	}
 	
 	
@@ -859,6 +848,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 <<<<<<< HEAD
+<<<<<<< HEAD
 	 *     (
 <<<<<<< HEAD
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
@@ -881,8 +871,9 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         followedByQuestionMark?='?'?
 	 *     )
 =======
+=======
+>>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *     (op=TypeOperator typeRef=ArrayTypeExpression)
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 	 */
 	protected void sequence_OperatorTypeRef(ISerializationContext context, OperatorTypeRef semanticObject) {
 		if (errorAcceptor != null) {
@@ -918,22 +909,25 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 <<<<<<< HEAD
+<<<<<<< HEAD
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
 	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember* 
 =======
+=======
+>>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *         (
 	 *             astStructuralMembers+=TStructMember+ | 
 	 *             (
 	 *                 definedTypingStrategy=TypingStrategyUseSiteOperator 
+	 *                 namespaceLikeRefs+=NamespaceLikeRef* 
 	 *                 declaredType=[Type|TypeReferenceName] 
 	 *                 (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *                 astStructuralMembers+=TStructMember*
 	 *             )
 	 *         )? 
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 	 *         dynamic?='+'?
 	 *     )
 	 */
@@ -950,6 +944,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 <<<<<<< HEAD
+<<<<<<< HEAD
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
 	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *         declaredType=[Type|TypeReferenceName] 
@@ -957,15 +952,17 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         astStructuralMembers+=TStructMember*
 	 *     )
 =======
+=======
+>>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *         astStructuralMembers+=TStructMember+ | 
 	 *         (
 	 *             definedTypingStrategy=TypingStrategyUseSiteOperator 
+	 *             namespaceLikeRefs+=NamespaceLikeRef* 
 	 *             declaredType=[Type|TypeReferenceName] 
 	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *             astStructuralMembers+=TStructMember*
 	 *         )
 	 *     )?
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 	 */
 	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1148,6 +1145,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 <<<<<<< HEAD
+<<<<<<< HEAD
 	 *     (
 	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *         declaredType=[Type|TypeReferenceName] 
@@ -1166,15 +1164,14 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeRefWithoutModifiers returns ParameterizedTypeRef
 	 *
 	 * Constraint:
+=======
+>>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *     (
 	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *         dynamic?='+'?
 	 *     )
-=======
-	 *     (declaredType=[Type|TypeReferenceName] (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? dynamic?='+'?)
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 	 */
 	protected void sequence_TypeArguments_TypeRefWithModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

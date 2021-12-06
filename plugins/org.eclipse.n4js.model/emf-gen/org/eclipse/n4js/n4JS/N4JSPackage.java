@@ -12737,7 +12737,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4NamespaceDeclaration()
 	 * @generated
 	 */
-	int N4_NAMESPACE_DECLARATION = 147;
+	int N4_NAMESPACE_DECLARATION = 148;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -12938,6 +12938,64 @@ public interface N4JSPackage extends EPackage {
 	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_TYPE_DEFINITION_OPERATION_COUNT + 17;
 
 	/**
+<<<<<<< HEAD
+=======
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.NamespaceElementImpl <em>Namespace Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4JS.impl.NamespaceElementImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getNamespaceElement()
+	 * @generated
+	 */
+	int NAMESPACE_ELEMENT = 149;
+
+	/**
+	 * The number of structural features of the '<em>Namespace Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_ELEMENT_FEATURE_COUNT = SCRIPT_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_ELEMENT___GET_NAMESPACE = SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Is In Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_ELEMENT___IS_IN_NAMESPACE = SCRIPT_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_ELEMENT___IS_HOLLOW = SCRIPT_ELEMENT_OPERATION_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>Namespace Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_ELEMENT_OPERATION_COUNT = SCRIPT_ELEMENT_OPERATION_COUNT + 3;
+
+	/**
+>>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl <em>N4 Class Declaration</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12945,11 +13003,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4ClassDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_CLASS_DECLARATION = 149;
-=======
-	int N4_CLASS_DECLARATION = 148;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_CLASS_DECLARATION = 150;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -13310,11 +13364,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4ClassExpression()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_CLASS_EXPRESSION = 150;
-=======
-	int N4_CLASS_EXPRESSION = 149;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_CLASS_EXPRESSION = 151;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -13549,11 +13599,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4InterfaceDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_INTERFACE_DECLARATION = 151;
-=======
-	int N4_INTERFACE_DECLARATION = 150;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_INTERFACE_DECLARATION = 152;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -13887,11 +13933,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4EnumDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_ENUM_DECLARATION = 152;
-=======
-	int N4_ENUM_DECLARATION = 151;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_ENUM_DECLARATION = 153;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -14108,11 +14150,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4EnumLiteral()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_ENUM_LITERAL = 153;
-=======
-	int N4_ENUM_LITERAL = 152;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_ENUM_LITERAL = 154;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -14176,11 +14214,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4TypeAliasDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_TYPE_ALIAS_DECLARATION = 154;
-=======
-	int N4_TYPE_ALIAS_DECLARATION = 153;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_TYPE_ALIAS_DECLARATION = 155;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -14433,11 +14467,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getModifiableElement()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int MODIFIABLE_ELEMENT = 155;
-=======
-	int MODIFIABLE_ELEMENT = 154;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int MODIFIABLE_ELEMENT = 156;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -14492,11 +14522,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4MemberDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_MEMBER_DECLARATION = 156;
-=======
-	int N4_MEMBER_DECLARATION = 155;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_MEMBER_DECLARATION = 157;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -14677,11 +14703,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAnnotableN4MemberDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int ANNOTABLE_N4_MEMBER_DECLARATION = 157;
-=======
-	int ANNOTABLE_N4_MEMBER_DECLARATION = 156;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int ANNOTABLE_N4_MEMBER_DECLARATION = 158;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -14871,11 +14893,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4MemberAnnotationList()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_MEMBER_ANNOTATION_LIST = 158;
-=======
-	int N4_MEMBER_ANNOTATION_LIST = 157;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_MEMBER_ANNOTATION_LIST = 159;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -15065,11 +15083,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4FieldDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_FIELD_DECLARATION = 159;
-=======
-	int N4_FIELD_DECLARATION = 158;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_FIELD_DECLARATION = 160;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -15367,11 +15381,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMethodDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int METHOD_DECLARATION = 160;
-=======
-	int METHOD_DECLARATION = 159;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int METHOD_DECLARATION = 161;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -15642,11 +15652,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4MethodDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_METHOD_DECLARATION = 161;
-=======
-	int N4_METHOD_DECLARATION = 160;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_METHOD_DECLARATION = 162;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -16043,11 +16049,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4FieldAccessor()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_FIELD_ACCESSOR = 162;
-=======
-	int N4_FIELD_ACCESSOR = 161;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_FIELD_ACCESSOR = 163;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -16381,11 +16383,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4GetterDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_GETTER_DECLARATION = 163;
-=======
-	int N4_GETTER_DECLARATION = 162;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_GETTER_DECLARATION = 164;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -16737,11 +16735,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4SetterDeclaration()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int N4_SETTER_DECLARATION = 164;
-=======
-	int N4_SETTER_DECLARATION = 163;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_SETTER_DECLARATION = 165;
 
 	/**
 	 * The feature id for the '<em><b>Body</b></em>' containment reference.
@@ -17093,7 +17087,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4IndexSignatureDeclaration()
 	 * @generated
 	 */
-	int N4_INDEX_SIGNATURE_DECLARATION = 164;
+	int N4_INDEX_SIGNATURE_DECLARATION = 166;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -17175,6 +17169,24 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_INDEX_SIGNATURE_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Is Declared External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_DECLARED_EXTERNAL = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL;
+
+	/**
+	 * The operation id for the '<em>Is Default External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INDEX_SIGNATURE_DECLARATION___IS_DEFAULT_EXTERNAL = ANNOTABLE_N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -17337,15 +17349,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBindingPattern()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int BINDING_PATTERN = 165;
-=======
-	int BINDING_PATTERN = 164;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int BINDING_PATTERN = 165;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int BINDING_PATTERN = 167;
 
 	/**
 	 * The number of structural features of the '<em>Binding Pattern</em>' class.
@@ -17373,15 +17377,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getObjectBindingPattern()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int OBJECT_BINDING_PATTERN = 166;
-=======
-	int OBJECT_BINDING_PATTERN = 165;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int OBJECT_BINDING_PATTERN = 166;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int OBJECT_BINDING_PATTERN = 168;
 
 	/**
 	 * The feature id for the '<em><b>Properties</b></em>' containment reference list.
@@ -17418,15 +17414,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getArrayBindingPattern()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int ARRAY_BINDING_PATTERN = 167;
-=======
-	int ARRAY_BINDING_PATTERN = 166;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int ARRAY_BINDING_PATTERN = 167;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int ARRAY_BINDING_PATTERN = 169;
 
 	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
@@ -17463,15 +17451,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBindingProperty()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int BINDING_PROPERTY = 168;
-=======
-	int BINDING_PROPERTY = 167;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int BINDING_PROPERTY = 168;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int BINDING_PROPERTY = 170;
 
 	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
@@ -17544,15 +17524,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBindingElement()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int BINDING_ELEMENT = 169;
-=======
-	int BINDING_ELEMENT = 168;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int BINDING_ELEMENT = 169;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int BINDING_ELEMENT = 171;
 
 	/**
 	 * The feature id for the '<em><b>Rest</b></em>' attribute.
@@ -17625,15 +17597,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXChild()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int JSX_CHILD = 170;
-=======
-	int JSX_CHILD = 169;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int JSX_CHILD = 170;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int JSX_CHILD = 172;
 
 	/**
 	 * The number of structural features of the '<em>JSX Child</em>' class.
@@ -17661,15 +17625,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXElementName()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int JSX_ELEMENT_NAME = 171;
-=======
-	int JSX_ELEMENT_NAME = 170;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int JSX_ELEMENT_NAME = 171;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int JSX_ELEMENT_NAME = 173;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -17706,15 +17662,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXText()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int JSX_TEXT = 172;
-=======
-	int JSX_TEXT = 171;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int JSX_TEXT = 172;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int JSX_TEXT = 174;
 
 	/**
 	 * The number of structural features of the '<em>JSX Text</em>' class.
@@ -17742,15 +17690,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXExpression()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int JSX_EXPRESSION = 173;
-=======
-	int JSX_EXPRESSION = 172;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int JSX_EXPRESSION = 173;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int JSX_EXPRESSION = 175;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -17787,15 +17727,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXAttribute()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int JSX_ATTRIBUTE = 174;
-=======
-	int JSX_ATTRIBUTE = 173;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int JSX_ATTRIBUTE = 174;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int JSX_ATTRIBUTE = 176;
 
 	/**
 	 * The number of structural features of the '<em>JSX Attribute</em>' class.
@@ -17823,15 +17755,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXPropertyAttribute()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int JSX_PROPERTY_ATTRIBUTE = 175;
-=======
-	int JSX_PROPERTY_ATTRIBUTE = 174;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int JSX_PROPERTY_ATTRIBUTE = 175;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int JSX_PROPERTY_ATTRIBUTE = 177;
 
 	/**
 	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
@@ -17895,15 +17819,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXSpreadAttribute()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int JSX_SPREAD_ATTRIBUTE = 176;
-=======
-	int JSX_SPREAD_ATTRIBUTE = 175;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int JSX_SPREAD_ATTRIBUTE = 176;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int JSX_SPREAD_ATTRIBUTE = 178;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -17940,15 +17856,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXAbstractElement()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int JSX_ABSTRACT_ELEMENT = 177;
-=======
-	int JSX_ABSTRACT_ELEMENT = 176;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int JSX_ABSTRACT_ELEMENT = 177;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int JSX_ABSTRACT_ELEMENT = 179;
 
 	/**
 	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
@@ -17994,15 +17902,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXElement()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int JSX_ELEMENT = 178;
-=======
-	int JSX_ELEMENT = 177;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int JSX_ELEMENT = 178;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int JSX_ELEMENT = 180;
 
 	/**
 	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
@@ -18075,15 +17975,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getJSXFragment()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int JSX_FRAGMENT = 179;
-=======
-	int JSX_FRAGMENT = 178;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int JSX_FRAGMENT = 179;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int JSX_FRAGMENT = 181;
 
 	/**
 	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
@@ -18129,15 +18021,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getModuleSpecifierForm()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int MODULE_SPECIFIER_FORM = 180;
-=======
-	int MODULE_SPECIFIER_FORM = 179;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int MODULE_SPECIFIER_FORM = 180;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int MODULE_SPECIFIER_FORM = 182;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}' enum.
@@ -18147,15 +18031,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVariableStatementKeyword()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int VARIABLE_STATEMENT_KEYWORD = 181;
-=======
-	int VARIABLE_STATEMENT_KEYWORD = 180;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int VARIABLE_STATEMENT_KEYWORD = 181;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int VARIABLE_STATEMENT_KEYWORD = 183;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PropertyNameKind <em>Property Name Kind</em>}' enum.
@@ -18165,15 +18041,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPropertyNameKind()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int PROPERTY_NAME_KIND = 182;
-=======
-	int PROPERTY_NAME_KIND = 181;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int PROPERTY_NAME_KIND = 182;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int PROPERTY_NAME_KIND = 184;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PostfixOperator <em>Postfix Operator</em>}' enum.
@@ -18183,15 +18051,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPostfixOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int POSTFIX_OPERATOR = 183;
-=======
-	int POSTFIX_OPERATOR = 182;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int POSTFIX_OPERATOR = 183;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int POSTFIX_OPERATOR = 185;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.UnaryOperator <em>Unary Operator</em>}' enum.
@@ -18201,15 +18061,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getUnaryOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int UNARY_OPERATOR = 184;
-=======
-	int UNARY_OPERATOR = 183;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int UNARY_OPERATOR = 184;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int UNARY_OPERATOR = 186;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.MultiplicativeOperator <em>Multiplicative Operator</em>}' enum.
@@ -18219,15 +18071,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMultiplicativeOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int MULTIPLICATIVE_OPERATOR = 185;
-=======
-	int MULTIPLICATIVE_OPERATOR = 184;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int MULTIPLICATIVE_OPERATOR = 185;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int MULTIPLICATIVE_OPERATOR = 187;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AdditiveOperator <em>Additive Operator</em>}' enum.
@@ -18237,15 +18081,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAdditiveOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int ADDITIVE_OPERATOR = 186;
-=======
-	int ADDITIVE_OPERATOR = 185;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int ADDITIVE_OPERATOR = 186;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int ADDITIVE_OPERATOR = 188;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.RelationalOperator <em>Relational Operator</em>}' enum.
@@ -18255,15 +18091,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getRelationalOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int RELATIONAL_OPERATOR = 187;
-=======
-	int RELATIONAL_OPERATOR = 186;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int RELATIONAL_OPERATOR = 187;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int RELATIONAL_OPERATOR = 189;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.EqualityOperator <em>Equality Operator</em>}' enum.
@@ -18273,15 +18101,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getEqualityOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int EQUALITY_OPERATOR = 188;
-=======
-	int EQUALITY_OPERATOR = 187;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int EQUALITY_OPERATOR = 188;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int EQUALITY_OPERATOR = 190;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryBitwiseOperator <em>Binary Bitwise Operator</em>}' enum.
@@ -18291,15 +18111,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryBitwiseOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int BINARY_BITWISE_OPERATOR = 189;
-=======
-	int BINARY_BITWISE_OPERATOR = 188;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int BINARY_BITWISE_OPERATOR = 189;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int BINARY_BITWISE_OPERATOR = 191;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryLogicalOperator <em>Binary Logical Operator</em>}' enum.
@@ -18309,15 +18121,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryLogicalOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int BINARY_LOGICAL_OPERATOR = 190;
-=======
-	int BINARY_LOGICAL_OPERATOR = 189;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int BINARY_LOGICAL_OPERATOR = 190;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int BINARY_LOGICAL_OPERATOR = 192;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.ShiftOperator <em>Shift Operator</em>}' enum.
@@ -18327,15 +18131,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getShiftOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int SHIFT_OPERATOR = 191;
-=======
-	int SHIFT_OPERATOR = 190;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int SHIFT_OPERATOR = 191;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int SHIFT_OPERATOR = 193;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AssignmentOperator <em>Assignment Operator</em>}' enum.
@@ -18345,15 +18141,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAssignmentOperator()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int ASSIGNMENT_OPERATOR = 192;
-=======
-	int ASSIGNMENT_OPERATOR = 191;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int ASSIGNMENT_OPERATOR = 192;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int ASSIGNMENT_OPERATOR = 194;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.N4Modifier <em>N4 Modifier</em>}' enum.
@@ -18363,15 +18151,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4Modifier()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int N4_MODIFIER = 193;
-=======
-	int N4_MODIFIER = 192;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int N4_MODIFIER = 193;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int N4_MODIFIER = 195;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Expression</em>' data type.
@@ -18381,15 +18161,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfExpression()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int ITERATOR_OF_EXPRESSION = 194;
-=======
-	int ITERATOR_OF_EXPRESSION = 193;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int ITERATOR_OF_EXPRESSION = 194;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int ITERATOR_OF_EXPRESSION = 196;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Yield Expression</em>' data type.
@@ -18399,15 +18171,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfYieldExpression()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int ITERATOR_OF_YIELD_EXPRESSION = 195;
-=======
-	int ITERATOR_OF_YIELD_EXPRESSION = 194;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int ITERATOR_OF_YIELD_EXPRESSION = 195;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int ITERATOR_OF_YIELD_EXPRESSION = 197;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Statement</em>' data type.
@@ -18417,15 +18181,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfStatement()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int ITERATOR_OF_STATEMENT = 196;
-=======
-	int ITERATOR_OF_STATEMENT = 195;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int ITERATOR_OF_STATEMENT = 196;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int ITERATOR_OF_STATEMENT = 198;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Return Statement</em>' data type.
@@ -18435,15 +18191,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfReturnStatement()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int ITERATOR_OF_RETURN_STATEMENT = 197;
-=======
-	int ITERATOR_OF_RETURN_STATEMENT = 196;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int ITERATOR_OF_RETURN_STATEMENT = 197;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int ITERATOR_OF_RETURN_STATEMENT = 199;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Node Iterable</em>' data type.
@@ -18453,15 +18201,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getParameterizedTypeRefNodeIterable()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 198;
-=======
-	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 197;
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-=======
-	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 198;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 200;
 
 
 	/**

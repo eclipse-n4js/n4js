@@ -85,19 +85,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAbstractNamespace()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int ABSTRACT_NAMESPACE = 20;
-=======
-	int SYNTAX_RELATED_TELEMENT = 51;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int SYNTAX_RELATED_TELEMENT = 53;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int SYNTAX_RELATED_TELEMENT = 54;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int ABSTRACT_NAMESPACE = 21;
 
 	/**
 	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
@@ -2783,7 +2771,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNamespace()
 	 * @generated
 	 */
-	int TNAMESPACE = 21;
+	int TNAMESPACE = 22;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3063,7 +3051,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNamespaceElement()
 	 * @generated
 	 */
-	int TNAMESPACE_ELEMENT = 22;
+	int TNAMESPACE_ELEMENT = 23;
 
 	/**
 	 * The number of structural features of the '<em>TNamespace Element</em>' class.
@@ -3100,11 +3088,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleNamespaceVirtualType()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int MODULE_NAMESPACE_VIRTUAL_TYPE = 23;
-=======
-	int MODULE_NAMESPACE_VIRTUAL_TYPE = 21;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int MODULE_NAMESPACE_VIRTUAL_TYPE = 24;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3339,11 +3323,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getPrimitiveType()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int PRIMITIVE_TYPE = 24;
-=======
-	int PRIMITIVE_TYPE = 22;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int PRIMITIVE_TYPE = 25;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3587,11 +3567,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getBuiltInType()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int BUILT_IN_TYPE = 25;
-=======
-	int BUILT_IN_TYPE = 23;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int BUILT_IN_TYPE = 26;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3799,11 +3775,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAnyType()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int ANY_TYPE = 26;
-=======
-	int ANY_TYPE = 24;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int ANY_TYPE = 27;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4011,11 +3983,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getUndefinedType()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int UNDEFINED_TYPE = 27;
-=======
-	int UNDEFINED_TYPE = 25;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int UNDEFINED_TYPE = 28;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4223,11 +4191,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNullType()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int NULL_TYPE = 28;
-=======
-	int NULL_TYPE = 26;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int NULL_TYPE = 29;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4435,11 +4399,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVoidType()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int VOID_TYPE = 29;
-=======
-	int VOID_TYPE = 27;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int VOID_TYPE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4647,11 +4607,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructuralType()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int TSTRUCTURAL_TYPE = 30;
-=======
-	int TSTRUCTURAL_TYPE = 28;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int TSTRUCTURAL_TYPE = 31;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4949,11 +4905,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifier()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int TCLASSIFIER = 31;
-=======
-	int TCLASSIFIER = 29;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int TCLASSIFIER = 32;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5296,11 +5248,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getArrayLike()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int ARRAY_LIKE = 32;
-=======
-	int ARRAY_LIKE = 30;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int ARRAY_LIKE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -5346,11 +5294,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTN4Classifier()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int TN4_CLASSIFIER = 33;
-=======
-	int TN4_CLASSIFIER = 31;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int TN4_CLASSIFIER = 34;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5765,11 +5709,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClass()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int TCLASS = 34;
-=======
-	int TCLASS = 32;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int TCLASS = 35;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6256,11 +6196,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTInterface()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int TINTERFACE = 35;
-=======
-	int TINTERFACE = 33;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int TINTERFACE = 36;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6684,11 +6620,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMember()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int TMEMBER = 36;
-=======
-	int TMEMBER = 34;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int TMEMBER = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6968,11 +6900,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMemberWithAccessModifier()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int TMEMBER_WITH_ACCESS_MODIFIER = 37;
-=======
-	int TMEMBER_WITH_ACCESS_MODIFIER = 35;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int TMEMBER_WITH_ACCESS_MODIFIER = 38;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7279,11 +7207,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMember()
 	 * @generated
 	 */
-<<<<<<< HEAD
-	int TSTRUCT_MEMBER = 38;
-=======
-	int TSTRUCT_MEMBER = 36;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
+	int TSTRUCT_MEMBER = 39;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7608,7 +7532,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getExpressionInTypeRef()
 	 * @generated
 	 */
-	int EXPRESSION_IN_TYPE_REF = 37;
+	int EXPRESSION_IN_TYPE_REF = 40;
 
 	/**
 	 * The feature id for the '<em><b>Name Type Ref</b></em>' containment reference.
@@ -7654,15 +7578,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMethod()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TMETHOD = 39;
-=======
-	int TMETHOD = 37;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TMETHOD = 38;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TMETHOD = 41;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8293,15 +8209,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMethod()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TSTRUCT_METHOD = 40;
-=======
-	int TSTRUCT_METHOD = 38;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TSTRUCT_METHOD = 39;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TSTRUCT_METHOD = 42;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8968,15 +8876,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFormalParameter()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TFORMAL_PARAMETER = 41;
-=======
-	int TFORMAL_PARAMETER = 39;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TFORMAL_PARAMETER = 40;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TFORMAL_PARAMETER = 43;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9121,15 +9021,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnonymousFormalParameter()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TANONYMOUS_FORMAL_PARAMETER = 42;
-=======
-	int TANONYMOUS_FORMAL_PARAMETER = 40;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TANONYMOUS_FORMAL_PARAMETER = 41;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TANONYMOUS_FORMAL_PARAMETER = 44;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9292,15 +9184,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTField()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TFIELD = 43;
-=======
-	int TFIELD = 41;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TFIELD = 42;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TFIELD = 45;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9652,15 +9536,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructField()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TSTRUCT_FIELD = 44;
-=======
-	int TSTRUCT_FIELD = 42;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TSTRUCT_FIELD = 43;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TSTRUCT_FIELD = 46;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10048,15 +9924,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getFieldAccessor()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int FIELD_ACCESSOR = 45;
-=======
-	int FIELD_ACCESSOR = 43;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int FIELD_ACCESSOR = 44;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int FIELD_ACCESSOR = 47;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10399,15 +10267,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTGetter()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TGETTER = 46;
-=======
-	int TGETTER = 44;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TGETTER = 45;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TGETTER = 48;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10759,15 +10619,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructGetter()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TSTRUCT_GETTER = 47;
-=======
-	int TSTRUCT_GETTER = 45;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TSTRUCT_GETTER = 46;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TSTRUCT_GETTER = 49;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11155,15 +11007,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTSetter()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TSETTER = 48;
-=======
-	int TSETTER = 46;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TSETTER = 47;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TSETTER = 50;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11515,15 +11359,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructSetter()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TSTRUCT_SETTER = 49;
-=======
-	int TSTRUCT_SETTER = 47;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TSTRUCT_SETTER = 48;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TSTRUCT_SETTER = 51;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11911,7 +11747,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTIndexSignature()
 	 * @generated
 	 */
-	int TINDEX_SIGNATURE = 49;
+	int TINDEX_SIGNATURE = 52;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12227,7 +12063,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructIndexSignature()
 	 * @generated
 	 */
-	int TSTRUCT_INDEX_SIGNATURE = 50;
+	int TSTRUCT_INDEX_SIGNATURE = 53;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12588,19 +12424,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnum()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TENUM = 50;
-=======
-	int TENUM = 48;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TENUM = 50;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int TENUM = 51;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TENUM = 54;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12862,7 +12686,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getSyntaxRelatedTElement()
 	 * @generated
 	 */
-	int SYNTAX_RELATED_TELEMENT = 53;
+	int SYNTAX_RELATED_TELEMENT = 57;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -12899,19 +12723,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnumLiteral()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TENUM_LITERAL = 51;
-=======
-	int TENUM_LITERAL = 49;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TENUM_LITERAL = 51;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int TENUM_LITERAL = 52;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TENUM_LITERAL = 55;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -12984,19 +12796,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAlias()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TYPE_ALIAS = 52;
-=======
-	int TYPE_ALIAS = 50;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TYPE_ALIAS = 52;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int TYPE_ALIAS = 53;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TYPE_ALIAS = 56;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -13258,19 +13058,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTConstableElement()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TCONSTABLE_ELEMENT = 54;
-=======
-	int TCONSTABLE_ELEMENT = 52;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TCONSTABLE_ELEMENT = 54;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int TCONSTABLE_ELEMENT = 55;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TCONSTABLE_ELEMENT = 58;
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -13316,19 +13104,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TVARIABLE = 55;
-=======
-	int TVARIABLE = 53;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TVARIABLE = 55;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int TVARIABLE = 56;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TVARIABLE = 59;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -13527,19 +13303,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TYPING_STRATEGY = 56;
-=======
-	int TYPING_STRATEGY = 54;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TYPING_STRATEGY = 56;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int TYPING_STRATEGY = 57;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TYPING_STRATEGY = 60;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -13549,19 +13313,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TYPE_ACCESS_MODIFIER = 57;
-=======
-	int TYPE_ACCESS_MODIFIER = 55;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TYPE_ACCESS_MODIFIER = 57;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int TYPE_ACCESS_MODIFIER = 58;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TYPE_ACCESS_MODIFIER = 61;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -13571,19 +13323,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int MEMBER_ACCESS_MODIFIER = 58;
-=======
-	int MEMBER_ACCESS_MODIFIER = 56;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int MEMBER_ACCESS_MODIFIER = 58;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int MEMBER_ACCESS_MODIFIER = 59;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int MEMBER_ACCESS_MODIFIER = 62;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -13593,19 +13333,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int MEMBER_TYPE = 59;
-=======
-	int MEMBER_TYPE = 57;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int MEMBER_TYPE = 59;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int MEMBER_TYPE = 60;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int MEMBER_TYPE = 63;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -13615,19 +13343,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
-=======
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 58;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 61;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 64;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -13637,19 +13353,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int ITERABLE_OF_TCLASSIFIER = 61;
-=======
-	int ITERABLE_OF_TCLASSIFIER = 59;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int ITERABLE_OF_TCLASSIFIER = 61;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int ITERABLE_OF_TCLASSIFIER = 62;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int ITERABLE_OF_TCLASSIFIER = 65;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -13659,19 +13363,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int VARIANCE = 62;
-=======
-	int VARIANCE = 60;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int VARIANCE = 62;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int VARIANCE = 63;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int VARIANCE = 66;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -13681,19 +13373,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int NAME_AND_ACCESS = 63;
-=======
-	int NAME_AND_ACCESS = 61;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int NAME_AND_ACCESS = 63;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int NAME_AND_ACCESS = 64;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int NAME_AND_ACCESS = 67;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -13703,19 +13383,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int MEMBER_LIST = 64;
-=======
-	int MEMBER_LIST = 62;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int MEMBER_LIST = 64;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int MEMBER_LIST = 65;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int MEMBER_LIST = 68;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -13725,19 +13393,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	int TCLASSIFIER_ITERABLE = 65;
-=======
-	int TCLASSIFIER_ITERABLE = 63;
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
-=======
-	int TCLASSIFIER_ITERABLE = 65;
->>>>>>> e44376615 (support index signatures also in structural type references)
-=======
-	int TCLASSIFIER_ITERABLE = 66;
->>>>>>> 1c9dd8fca (computed property names of members in structural type refs (part 2))
+	int TCLASSIFIER_ITERABLE = 69;
 
 
 	/**

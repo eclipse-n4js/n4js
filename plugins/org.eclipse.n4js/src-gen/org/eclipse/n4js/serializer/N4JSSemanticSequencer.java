@@ -146,11 +146,8 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IndexAccessTypeRef;
 import org.eclipse.n4js.ts.typeRefs.InferTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
-<<<<<<< HEAD
-import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
-=======
 import org.eclipse.n4js.ts.typeRefs.MappedTypeRef;
->>>>>>> 765b95ac8 (early support for mapped types)
+import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.OperatorTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -1506,13 +1503,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else break;
-<<<<<<< HEAD
-			case TypeRefsPackage.NAMESPACE_LIKE_REF:
-				sequence_NamespaceLikeRef(context, (NamespaceLikeRef) semanticObject); 
-=======
 			case TypeRefsPackage.MAPPED_TYPE_REF:
 				sequence_MappedTypeRef(context, (MappedTypeRef) semanticObject); 
->>>>>>> 765b95ac8 (early support for mapped types)
+				return; 
+			case TypeRefsPackage.NAMESPACE_LIKE_REF:
+				sequence_NamespaceLikeRef(context, (NamespaceLikeRef) semanticObject); 
 				return; 
 			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF:
 				sequence_NumericLiteralTypeRef(context, (NumericLiteralTypeRef) semanticObject); 
@@ -3964,10 +3959,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ((annotationList=AnnotatedNamespaceElement_FunctionDeclaration_1_0_0 declaredModifiers+=N4Modifier*) | declaredModifiers+=N4Modifier+)? 
 	 *         declaredAsync?='async'? 
 	 *         generator?='*'? 
-	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
 	 *         name=BindingIdentifier? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
+	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
+	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -3986,10 +3981,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4Modifier* 
 	 *         declaredAsync?='async'? 
 	 *         generator?='*'? 
-	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
 	 *         name=BindingIdentifier? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
+	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
+	 *         ((dtsDeclaredThisTypeNode=TypeReferenceNode | fpars+=FormalParameter) fpars+=FormalParameter*)? 
+	 *         (declaredReturnTypePredicate=TypePredicateDeclaration | declaredReturnTypeRefNode=TypeReferenceNode)? 
 	 *         body=Block?
 	 *     )
 	 */
@@ -7636,49 +7631,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-<<<<<<< HEAD
-=======
-	 *     TypeRef returns ParameterizedTypeRef
-	 *     ConditionalTypeRef returns ParameterizedTypeRef
-	 *     ConditionalTypeRef.ConditionalTypeRef_1_0_0_0 returns ParameterizedTypeRef
-	 *     UnionTypeExpression returns ParameterizedTypeRef
-	 *     UnionTypeExpression.UnionTypeExpression_1_0 returns ParameterizedTypeRef
-	 *     IntersectionTypeExpression returns ParameterizedTypeRef
-	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRef
-	 *     OperatorTypeRef returns ParameterizedTypeRef
-	 *     ArrayTypeExpression returns ParameterizedTypeRef
-	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns ParameterizedTypeRef
-	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns ParameterizedTypeRef
-	 *     PrimaryTypeExpression returns ParameterizedTypeRef
-	 *     TypeArgument returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *             declaredType=[Type|TypeReferenceName] 
-	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *             dynamic?='+'?
-	 *         ) | 
-	 *         (declaredTypeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[') | 
-	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_0_4_0_0 arrayTypeExpression?='[') | 
-	 *         (declaredTypeArgs+=Wildcard arrayTypeExpression?='[') | 
-	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0 arrayTypeExpression?='[') | 
-	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_2_1_0_0_0 arrayTypeExpression?='[') | 
-	 *         (
-	 *             arrayNTypeExpression?='[' 
-	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
-	 *         )
-	 *     )
-	 */
-	protected void sequence_ArrayNTypeExpression_ArrayTypeExpression_TypeArguments_TypeRefWithModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 	 *     ArrayPadding returns ArrayPadding
 	 *
 	 * Constraint:
@@ -21828,68 +21780,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-<<<<<<< HEAD
-=======
-	 *     TypeRef returns ParameterizedTypeRefStructural
-	 *     ConditionalTypeRef returns ParameterizedTypeRefStructural
-	 *     ConditionalTypeRef.ConditionalTypeRef_1_0_0_0 returns ParameterizedTypeRefStructural
-	 *     UnionTypeExpression returns ParameterizedTypeRefStructural
-	 *     UnionTypeExpression.UnionTypeExpression_1_0 returns ParameterizedTypeRefStructural
-	 *     IntersectionTypeExpression returns ParameterizedTypeRefStructural
-	 *     IntersectionTypeExpression.IntersectionTypeExpression_1_0 returns ParameterizedTypeRefStructural
-	 *     OperatorTypeRef returns ParameterizedTypeRefStructural
-	 *     ArrayTypeExpression returns ParameterizedTypeRefStructural
-	 *     ArrayTypeExpression.ParameterizedTypeRef_2_1_0_0_0 returns ParameterizedTypeRefStructural
-	 *     ArrayTypeExpression.IndexAccessTypeRef_2_1_0_1_0 returns ParameterizedTypeRefStructural
-	 *     PrimaryTypeExpression returns ParameterizedTypeRefStructural
-	 *     TypeRefWithModifiers returns ParameterizedTypeRefStructural
-	 *     TypeArgument returns ParameterizedTypeRefStructural
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             astStructuralMembers+=TStructMember+ | 
-	 *             (
-	 *                 definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *                 astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *                 declaredType=[Type|TypeReferenceName] 
-	 *                 (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *                 astStructuralMembers+=TStructMember*
-	 *             )
-	 *         )? 
-	 *         dynamic?='+'?
-	 *     )
-	 */
-	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     ParameterizedTypeRef returns ParameterizedTypeRefStructural
-	 *     ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural
-	 *
-	 * Constraint:
-	 *     (
-	 *         astStructuralMembers+=TStructMember+ | 
-	 *         (
-	 *             definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *             astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *             declaredType=[Type|TypeReferenceName] 
-	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *             astStructuralMembers+=TStructMember*
-	 *         )
-	 *     )?
-	 */
-	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
->>>>>>> 8b8567bc8 (early support for a few first constructs)
 	 *     PrimaryExpression<Yield> returns ParenExpression
 	 *     PrimaryExpression returns ParenExpression
 	 *     ParenExpression<Yield> returns ParenExpression
@@ -27719,43 +27609,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-<<<<<<< HEAD
-=======
-	 *     TypeRefWithModifiers returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *         dynamic?='+'?
-	 *     )
-	 */
-	protected void sequence_TypeArguments_TypeRefWithModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeArgInTypeTypeRef returns ParameterizedTypeRef
-	 *     ParameterizedTypeRef returns ParameterizedTypeRef
-	 *     ParameterizedTypeRefNominal returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         astDeclaredTypeQualifier=[Type|TypeReferenceName]? 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?
-	 *     )
-	 */
-	protected void sequence_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     TypePredicateDeclaration<Yield> returns TypePredicateDeclaration
 	 *     TypePredicateDeclaration returns TypePredicateDeclaration
 	 *
@@ -27769,7 +27622,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
 	 *     AnnotationArgument returns TypeRefAnnotationArgument
 	 *     TypeRefAnnotationArgument returns TypeRefAnnotationArgument
 	 *
