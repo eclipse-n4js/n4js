@@ -42,7 +42,6 @@ ruleScriptElement:
 			*
 			'namespace'
 			ruleBindingIdentifier
-			?
 			)=>
 			ruleN4NamespaceDeclaration
 		)
@@ -109,13 +108,11 @@ ruleN4NamespaceDeclaration:
 		*
 		'namespace'
 		ruleBindingIdentifier
-		?
 		)=>
 		ruleN4Modifier
 		*
 		'namespace'
 		ruleBindingIdentifier
-		?
 	)
 	'{'
 	ruleNamespaceElement
@@ -130,13 +127,11 @@ norm1_N4NamespaceDeclaration:
 		*
 		'namespace'
 		norm1_BindingIdentifier
-		?
 		)=>
 		ruleN4Modifier
 		*
 		'namespace'
 		norm1_BindingIdentifier
-		?
 	)
 	'{'
 	norm1_NamespaceElement
@@ -165,7 +160,6 @@ ruleNamespaceElement:
 			*
 			'namespace'
 			ruleBindingIdentifier
-			?
 			)=>
 			ruleN4NamespaceDeclaration
 		)
@@ -250,7 +244,6 @@ norm1_NamespaceElement:
 			*
 			'namespace'
 			norm1_BindingIdentifier
-			?
 			)=>
 			norm1_N4NamespaceDeclaration
 		)
@@ -549,7 +542,6 @@ ruleExportableElement:
 			*
 			'namespace'
 			ruleBindingIdentifier
-			?
 			)=>
 			ruleN4NamespaceDeclaration
 		)

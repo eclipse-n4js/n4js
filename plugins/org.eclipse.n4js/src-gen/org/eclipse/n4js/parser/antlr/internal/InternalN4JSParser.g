@@ -210,7 +210,7 @@ ruleScriptElement returns [EObject current=null]
 					(
 						ruleBindingIdentifier
 					)
-				)?
+				)
 			)
 			)=>
 			{
@@ -399,7 +399,7 @@ ruleN4NamespaceDeclaration returns [EObject current=null]
 					(
 						ruleBindingIdentifier
 					)
-				)?
+				)
 			)
 			)=>
 			(
@@ -451,7 +451,7 @@ ruleN4NamespaceDeclaration returns [EObject current=null]
 							afterParserOrEnumRuleCall();
 						}
 					)
-				)?
+				)
 			)
 		)
 		otherlv_4=LeftCurlyBracket
@@ -508,7 +508,7 @@ norm1_N4NamespaceDeclaration returns [EObject current=null]
 					(
 						norm1_BindingIdentifier
 					)
-				)?
+				)
 			)
 			)=>
 			(
@@ -560,7 +560,7 @@ norm1_N4NamespaceDeclaration returns [EObject current=null]
 							afterParserOrEnumRuleCall();
 						}
 					)
-				)?
+				)
 			)
 		)
 		otherlv_4=LeftCurlyBracket
@@ -647,7 +647,7 @@ ruleNamespaceElement returns [EObject current=null]
 					(
 						ruleBindingIdentifier
 					)
-				)?
+				)
 			)
 			)=>
 			{
@@ -865,7 +865,7 @@ norm1_NamespaceElement returns [EObject current=null]
 					(
 						norm1_BindingIdentifier
 					)
-				)?
+				)
 			)
 			)=>
 			{
@@ -2537,7 +2537,7 @@ ruleExportableElement returns [EObject current=null]
 					(
 						ruleBindingIdentifier
 					)
-				)?
+				)
 			)
 			)=>
 			{

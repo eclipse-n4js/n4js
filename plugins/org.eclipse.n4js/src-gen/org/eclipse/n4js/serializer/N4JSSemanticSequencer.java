@@ -19697,7 +19697,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ExportableElement returns N4NamespaceDeclaration
 	 *
 	 * Constraint:
-	 *     (declaredModifiers+=N4Modifier* name=BindingIdentifier? ownedElementsRaw+=NamespaceElement*)
+	 *     (declaredModifiers+=N4Modifier* name=BindingIdentifier ownedElementsRaw+=NamespaceElement*)
 	 */
 	protected void sequence_N4NamespaceDeclaration(ISerializationContext context, N4NamespaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

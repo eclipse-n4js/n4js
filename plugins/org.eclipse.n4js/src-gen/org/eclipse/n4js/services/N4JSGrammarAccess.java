@@ -176,7 +176,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//        {N4NamespaceDeclaration}
 		//        (declaredModifiers+=N4Modifier)*
 		//        'namespace'
-		//        name=BindingIdentifier<Yield>?
+		//        name=BindingIdentifier<Yield>
 		//    )
 		//    '{'
 		//        ownedElementsRaw+=NamespaceElement<Yield>*
@@ -188,7 +188,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    {N4NamespaceDeclaration}
 		//    (declaredModifiers+=N4Modifier)*
 		//    'namespace'
-		//    name=BindingIdentifier<Yield>?
+		//    name=BindingIdentifier<Yield>
 		//)
 		//'{'
 		//    ownedElementsRaw+=NamespaceElement<Yield>*
@@ -199,14 +199,14 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    {N4NamespaceDeclaration}
 		//    (declaredModifiers+=N4Modifier)*
 		//    'namespace'
-		//    name=BindingIdentifier<Yield>?
+		//    name=BindingIdentifier<Yield>
 		//)
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//{N4NamespaceDeclaration}
 		//(declaredModifiers+=N4Modifier)*
 		//'namespace'
-		//name=BindingIdentifier<Yield>?
+		//name=BindingIdentifier<Yield>
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{N4NamespaceDeclaration}
@@ -221,7 +221,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'namespace'
 		public Keyword getNamespaceKeyword_0_0_2() { return cNamespaceKeyword_0_0_2; }
 		
-		//name=BindingIdentifier<Yield>?
+		//name=BindingIdentifier<Yield>
 		public Assignment getNameAssignment_0_0_3() { return cNameAssignment_0_0_3; }
 		
 		//BindingIdentifier<Yield>
@@ -12778,7 +12778,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//        {N4NamespaceDeclaration}
 	//        (declaredModifiers+=N4Modifier)*
 	//        'namespace'
-	//        name=BindingIdentifier<Yield>?
+	//        name=BindingIdentifier<Yield>
 	//    )
 	//    '{'
 	//        ownedElementsRaw+=NamespaceElement<Yield>*

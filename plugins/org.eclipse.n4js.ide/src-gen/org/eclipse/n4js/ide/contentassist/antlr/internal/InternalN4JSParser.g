@@ -16294,7 +16294,7 @@ rule__N4NamespaceDeclaration__Group_0_0__3__Impl
 :
 (
 	{ before(grammarAccess.getN4NamespaceDeclarationAccess().getNameAssignment_0_0_3()); }
-	(rule__N4NamespaceDeclaration__NameAssignment_0_0_3)?
+	(rule__N4NamespaceDeclaration__NameAssignment_0_0_3)
 	{ after(grammarAccess.getN4NamespaceDeclarationAccess().getNameAssignment_0_0_3()); }
 )
 ;
@@ -16537,7 +16537,7 @@ norm1_N4NamespaceDeclaration__Group_0_0__3__Impl
 :
 (
 	{ before(grammarAccess.getN4NamespaceDeclarationAccess().getNameAssignment_0_0_3()); }
-	(norm1_N4NamespaceDeclaration__NameAssignment_0_0_3)?
+	(norm1_N4NamespaceDeclaration__NameAssignment_0_0_3)
 	{ after(grammarAccess.getN4NamespaceDeclarationAccess().getNameAssignment_0_0_3()); }
 )
 ;
