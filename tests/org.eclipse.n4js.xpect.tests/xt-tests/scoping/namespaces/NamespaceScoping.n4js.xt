@@ -42,7 +42,7 @@ namespace NS2 {
 namespace NS3 {
 	namespace NS3NS {
     	class NS3NSC1 {}
-// XPECT warnings --> "Modifier private is unnecessary." at "private"
+// XPECT warnings --> "Unnecessary modifier private." at "private"
     	private class NS3NSC2 {}
 	}
 // XPECT noerrors -->

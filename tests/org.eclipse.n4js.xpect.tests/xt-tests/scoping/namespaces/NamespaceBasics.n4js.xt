@@ -17,21 +17,21 @@
 // Test that all namespace elements can appear in a namespace
 // XPECT noerrors -->
 export namespace NS1 {
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export const c1 = 0;
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export var v1;
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export let l1 = 2;
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export function F1():void {}
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
 	export namespace NS1 {}
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export interface I1 {}
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export class C1 {}
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export type T1 = C1;
     const c2 = 10;
     var v2;
@@ -47,21 +47,21 @@ export namespace NS1 {
 // Test that all namespace elements can have access modifiers
 // XPECT noerrors -->
 export namespace NS2 {
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export public const c1 = 0;
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export public var v1;
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export public let l1 = 2;
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export public function F1():void {}
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
 	export public namespace NS1 {}
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export public interface I1 {}
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export public class C1 {}
-	// XPECT warnings --> "Modifier export is unnecessary." at "export"
+	// XPECT warnings --> "Unnecessary keyword export." at "export"
     export public type T1 = C1;
     public const c2 = 10;
     public var v2;
@@ -83,41 +83,41 @@ namespace NS3 {
 // Test that the access modifier of the namespace is inherited by all its namespace elements
 // XPECT noerrors -->
 export public namespace NS4 {
-	// XPECT warnings --> "Modifier public is unnecessary." at "public"
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
     public const c1 = 0;
-	// XPECT warnings --> "Modifier public is unnecessary." at "public"
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
     public var v1;
-	// XPECT warnings --> "Modifier public is unnecessary." at "public"
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
     public let l1 = 2;
-	// XPECT warnings --> "Modifier public is unnecessary." at "public"
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
     public function F1():void {}
-	// XPECT warnings --> "Modifier public is unnecessary." at "public"
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
 	public namespace NS1 {}
-	// XPECT warnings --> "Modifier public is unnecessary." at "public"
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
     public interface I1 {}
-	// XPECT warnings --> "Modifier public is unnecessary." at "public"
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
     public class C1 {}
-	// XPECT warnings --> "Modifier public is unnecessary." at "public"
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
     public type T1 = C1;
 }
 
 // Test that the access modifier of the namespace is inherited by all its namespace elements
 // XPECT noerrors -->
 export project namespace NS5 {
-	// XPECT warnings --> "Modifier project is unnecessary." at "project"
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
     project const c1 = 0;
-	// XPECT warnings --> "Modifier project is unnecessary." at "project"
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
     project var v1;
-	// XPECT warnings --> "Modifier project is unnecessary." at "project"
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
     project let l1 = 2;
-	// XPECT warnings --> "Modifier project is unnecessary." at "project"
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
     project function F1():void {}
-	// XPECT warnings --> "Modifier project is unnecessary." at "project"
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
 	project namespace NS1 {}
-	// XPECT warnings --> "Modifier project is unnecessary." at "project"
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
     project interface I1 {}
-	// XPECT warnings --> "Modifier project is unnecessary." at "project"
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
     project class C1 {}
-	// XPECT warnings --> "Modifier project is unnecessary." at "project"
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
     project type T1 = C1;
 }
