@@ -227,7 +227,8 @@ fragment ExportDeclarationImpl *:
 	|	ExportClause ->ExportFromClause? Semi
 	|	exportedElement=ExportableElement
 	|	defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
-	|	'=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax (only allowed in DTS)
+	|	'=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax for CommonJS/AMD (only allowed in DTS)
+	|	'as' 'namespace' IdentifierName Semi // legacy export syntax for UMD (only allowed in DTS)
 	|	'import' IdentifierName '=' defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi // legacy export syntax (only allowed in DTS)
 	)
 ;

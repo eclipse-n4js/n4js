@@ -1427,12 +1427,17 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cIdentifierNameParserRuleCall_1_4_2_1 = (RuleCall)cGroup_1_4_2.eContents().get(1);
 		private final RuleCall cSemiParserRuleCall_1_4_3 = (RuleCall)cGroup_1_4.eContents().get(3);
 		private final Group cGroup_1_5 = (Group)cAlternatives_1.eContents().get(5);
-		private final Keyword cImportKeyword_1_5_0 = (Keyword)cGroup_1_5.eContents().get(0);
-		private final RuleCall cIdentifierNameParserRuleCall_1_5_1 = (RuleCall)cGroup_1_5.eContents().get(1);
-		private final Keyword cEqualsSignKeyword_1_5_2 = (Keyword)cGroup_1_5.eContents().get(2);
-		private final Assignment cDefaultExportedExpressionAssignment_1_5_3 = (Assignment)cGroup_1_5.eContents().get(3);
-		private final RuleCall cDefaultExportedExpressionAssignmentExpressionParserRuleCall_1_5_3_0 = (RuleCall)cDefaultExportedExpressionAssignment_1_5_3.eContents().get(0);
-		private final RuleCall cSemiParserRuleCall_1_5_4 = (RuleCall)cGroup_1_5.eContents().get(4);
+		private final Keyword cAsKeyword_1_5_0 = (Keyword)cGroup_1_5.eContents().get(0);
+		private final Keyword cNamespaceKeyword_1_5_1 = (Keyword)cGroup_1_5.eContents().get(1);
+		private final RuleCall cIdentifierNameParserRuleCall_1_5_2 = (RuleCall)cGroup_1_5.eContents().get(2);
+		private final RuleCall cSemiParserRuleCall_1_5_3 = (RuleCall)cGroup_1_5.eContents().get(3);
+		private final Group cGroup_1_6 = (Group)cAlternatives_1.eContents().get(6);
+		private final Keyword cImportKeyword_1_6_0 = (Keyword)cGroup_1_6.eContents().get(0);
+		private final RuleCall cIdentifierNameParserRuleCall_1_6_1 = (RuleCall)cGroup_1_6.eContents().get(1);
+		private final Keyword cEqualsSignKeyword_1_6_2 = (Keyword)cGroup_1_6.eContents().get(2);
+		private final Assignment cDefaultExportedExpressionAssignment_1_6_3 = (Assignment)cGroup_1_6.eContents().get(3);
+		private final RuleCall cDefaultExportedExpressionAssignmentExpressionParserRuleCall_1_6_3_0 = (RuleCall)cDefaultExportedExpressionAssignment_1_6_3.eContents().get(0);
+		private final RuleCall cSemiParserRuleCall_1_6_4 = (RuleCall)cGroup_1_6.eContents().get(4);
 		
 		//fragment ExportDeclarationImpl *:
 		//    'export' (
@@ -1440,7 +1445,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    |    ExportClause ->ExportFromClause? Semi
 		//    |    exportedElement=ExportableElement
 		//    |    defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
-		//    |    '=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax (only allowed in DTS)
+		//    |    '=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax for CommonJS/AMD (only allowed in DTS)
+		//    |    'as' 'namespace' IdentifierName Semi // legacy export syntax for UMD (only allowed in DTS)
 		//    |    'import' IdentifierName '=' defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi // legacy export syntax (only allowed in DTS)
 		//    )
 		//;
@@ -1451,7 +1457,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//|    ExportClause ->ExportFromClause? Semi
 		//|    exportedElement=ExportableElement
 		//|    defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
-		//|    '=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax (only allowed in DTS)
+		//|    '=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax for CommonJS/AMD (only allowed in DTS)
+		//|    'as' 'namespace' IdentifierName Semi // legacy export syntax for UMD (only allowed in DTS)
 		//|    'import' IdentifierName '=' defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi // legacy export syntax (only allowed in DTS)
 		//)
 		public Group getGroup() { return cGroup; }
@@ -1464,7 +1471,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//   |    ExportClause ->ExportFromClause? Semi
 		//   |    exportedElement=ExportableElement
 		//   |    defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
-		//   |    '=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax (only allowed in DTS)
+		//   |    '=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax for CommonJS/AMD (only allowed in DTS)
+		//   |    'as' 'namespace' IdentifierName Semi // legacy export syntax for UMD (only allowed in DTS)
 		//   |    'import' IdentifierName '=' defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi // legacy export syntax (only allowed in DTS)
 		//   )
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
@@ -1553,26 +1561,41 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//Semi
 		public RuleCall getSemiParserRuleCall_1_4_3() { return cSemiParserRuleCall_1_4_3; }
 		
-		//'import' IdentifierName '=' defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi
+		//'as' 'namespace' IdentifierName Semi
 		public Group getGroup_1_5() { return cGroup_1_5; }
 		
-		//'import'
-		public Keyword getImportKeyword_1_5_0() { return cImportKeyword_1_5_0; }
+		//'as'
+		public Keyword getAsKeyword_1_5_0() { return cAsKeyword_1_5_0; }
+		
+		//'namespace'
+		public Keyword getNamespaceKeyword_1_5_1() { return cNamespaceKeyword_1_5_1; }
 		
 		//IdentifierName
-		public RuleCall getIdentifierNameParserRuleCall_1_5_1() { return cIdentifierNameParserRuleCall_1_5_1; }
-		
-		//'='
-		public Keyword getEqualsSignKeyword_1_5_2() { return cEqualsSignKeyword_1_5_2; }
-		
-		//defaultExportedExpression=AssignmentExpression<In=true,Yield=false>
-		public Assignment getDefaultExportedExpressionAssignment_1_5_3() { return cDefaultExportedExpressionAssignment_1_5_3; }
-		
-		//AssignmentExpression<In=true,Yield=false>
-		public RuleCall getDefaultExportedExpressionAssignmentExpressionParserRuleCall_1_5_3_0() { return cDefaultExportedExpressionAssignmentExpressionParserRuleCall_1_5_3_0; }
+		public RuleCall getIdentifierNameParserRuleCall_1_5_2() { return cIdentifierNameParserRuleCall_1_5_2; }
 		
 		//Semi
-		public RuleCall getSemiParserRuleCall_1_5_4() { return cSemiParserRuleCall_1_5_4; }
+		public RuleCall getSemiParserRuleCall_1_5_3() { return cSemiParserRuleCall_1_5_3; }
+		
+		//'import' IdentifierName '=' defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi
+		public Group getGroup_1_6() { return cGroup_1_6; }
+		
+		//'import'
+		public Keyword getImportKeyword_1_6_0() { return cImportKeyword_1_6_0; }
+		
+		//IdentifierName
+		public RuleCall getIdentifierNameParserRuleCall_1_6_1() { return cIdentifierNameParserRuleCall_1_6_1; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_1_6_2() { return cEqualsSignKeyword_1_6_2; }
+		
+		//defaultExportedExpression=AssignmentExpression<In=true,Yield=false>
+		public Assignment getDefaultExportedExpressionAssignment_1_6_3() { return cDefaultExportedExpressionAssignment_1_6_3; }
+		
+		//AssignmentExpression<In=true,Yield=false>
+		public RuleCall getDefaultExportedExpressionAssignmentExpressionParserRuleCall_1_6_3_0() { return cDefaultExportedExpressionAssignmentExpressionParserRuleCall_1_6_3_0; }
+		
+		//Semi
+		public RuleCall getSemiParserRuleCall_1_6_4() { return cSemiParserRuleCall_1_6_4; }
 	}
 	public class ExportFromClauseElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportFromClause");
@@ -13510,7 +13533,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    |    ExportClause ->ExportFromClause? Semi
 	//    |    exportedElement=ExportableElement
 	//    |    defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
-	//    |    '=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax (only allowed in DTS)
+	//    |    '=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax for CommonJS/AMD (only allowed in DTS)
+	//    |    'as' 'namespace' IdentifierName Semi // legacy export syntax for UMD (only allowed in DTS)
 	//    |    'import' IdentifierName '=' defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi // legacy export syntax (only allowed in DTS)
 	//    )
 	//;

@@ -42,7 +42,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_DeclareDeclaration_DeclareKeyword_0_q;
 	protected AbstractElementAlias match_DoStatement_SemiParserRuleCall_6_q;
 	protected AbstractElementAlias match_ExportClause_CommaKeyword_1_2_q;
-	protected AbstractElementAlias match_ExportDeclarationImpl___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a;
+	protected AbstractElementAlias match_ExportDeclarationImpl___AsKeyword_1_5_0_NamespaceKeyword_1_5_1_IdentifierNameParserRuleCall_1_5_2_SemiParserRuleCall_1_5_3___or___EqualsSignKeyword_1_4_0_IdentifierNameParserRuleCall_1_4_1___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a_SemiParserRuleCall_1_4_3__;
 	protected AbstractElementAlias match_FieldDeclarationImpl_ReadonlyKeyword_1_q;
 	protected AbstractElementAlias match_FunctionDeclaration_SemiParserRuleCall_1_q;
 	protected AbstractElementAlias match_ImportSpecifiersExceptDefault_CommaKeyword_1_1_2_q;
@@ -96,7 +96,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_DeclareDeclaration_DeclareKeyword_0_q = new TokenAlias(false, true, grammarAccess.getDeclareDeclarationAccess().getDeclareKeyword_0());
 		match_DoStatement_SemiParserRuleCall_6_q = new TokenAlias(false, true, grammarAccess.getDoStatementAccess().getSemiParserRuleCall_6());
 		match_ExportClause_CommaKeyword_1_2_q = new TokenAlias(false, true, grammarAccess.getExportClauseAccess().getCommaKeyword_1_2());
-		match_ExportDeclarationImpl___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a = new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getFullStopKeyword_1_4_2_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_4_2_1()));
+		match_ExportDeclarationImpl___AsKeyword_1_5_0_NamespaceKeyword_1_5_1_IdentifierNameParserRuleCall_1_5_2_SemiParserRuleCall_1_5_3___or___EqualsSignKeyword_1_4_0_IdentifierNameParserRuleCall_1_4_1___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a_SemiParserRuleCall_1_4_3__ = new AlternativeAlias(false, false, new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getAsKeyword_1_5_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getNamespaceKeyword_1_5_1()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_5_2()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getSemiParserRuleCall_1_5_3())), new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getEqualsSignKeyword_1_4_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_4_1()), new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getFullStopKeyword_1_4_2_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_4_2_1())), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getSemiParserRuleCall_1_4_3())));
 		match_FieldDeclarationImpl_ReadonlyKeyword_1_q = new TokenAlias(false, true, grammarAccess.getFieldDeclarationImplAccess().getReadonlyKeyword_1());
 		match_FunctionDeclaration_SemiParserRuleCall_1_q = new TokenAlias(false, true, grammarAccess.getFunctionDeclarationAccess().getSemiParserRuleCall_1());
 		match_ImportSpecifiersExceptDefault_CommaKeyword_1_1_2_q = new TokenAlias(false, true, grammarAccess.getImportSpecifiersExceptDefaultAccess().getCommaKeyword_1_1_2());
@@ -259,8 +259,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_DoStatement_SemiParserRuleCall_6_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ExportClause_CommaKeyword_1_2_q.equals(syntax))
 				emit_ExportClause_CommaKeyword_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_ExportDeclarationImpl___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a.equals(syntax))
-				emit_ExportDeclarationImpl___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ExportDeclarationImpl___AsKeyword_1_5_0_NamespaceKeyword_1_5_1_IdentifierNameParserRuleCall_1_5_2_SemiParserRuleCall_1_5_3___or___EqualsSignKeyword_1_4_0_IdentifierNameParserRuleCall_1_4_1___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a_SemiParserRuleCall_1_4_3__.equals(syntax))
+				emit_ExportDeclarationImpl___AsKeyword_1_5_0_NamespaceKeyword_1_5_1_IdentifierNameParserRuleCall_1_5_2_SemiParserRuleCall_1_5_3___or___EqualsSignKeyword_1_4_0_IdentifierNameParserRuleCall_1_4_1___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a_SemiParserRuleCall_1_4_3__(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_FieldDeclarationImpl_ReadonlyKeyword_1_q.equals(syntax))
 				emit_FieldDeclarationImpl_ReadonlyKeyword_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_FunctionDeclaration_SemiParserRuleCall_1_q.equals(syntax))
@@ -501,13 +501,13 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     ('.' IdentifierName)*
+	 *     ('=' IdentifierName ('.' IdentifierName)* Semi) | ('as' 'namespace' IdentifierName Semi)
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) 'export' '=' IdentifierName (ambiguity) Semi (rule start)
-	 *     {ExportDeclaration.annotationList=} 'export' '=' IdentifierName (ambiguity) Semi (rule end)
+	 *     (rule start) 'export' (ambiguity) (rule start)
+	 *     {ExportDeclaration.annotationList=} 'export' (ambiguity) (rule end)
 	 */
-	protected void emit_ExportDeclarationImpl___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_ExportDeclarationImpl___AsKeyword_1_5_0_NamespaceKeyword_1_5_1_IdentifierNameParserRuleCall_1_5_2_SemiParserRuleCall_1_5_3___or___EqualsSignKeyword_1_4_0_IdentifierNameParserRuleCall_1_4_1___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a_SemiParserRuleCall_1_4_3__(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

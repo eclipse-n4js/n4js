@@ -209,6 +209,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_4(), "rule__ExportDeclarationImpl__Group_1_4__0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_4_2(), "rule__ExportDeclarationImpl__Group_1_4_2__0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_5(), "rule__ExportDeclarationImpl__Group_1_5__0");
+			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_6(), "rule__ExportDeclarationImpl__Group_1_6__0");
 			builder.put(grammarAccess.getExportFromClauseAccess().getGroup(), "rule__ExportFromClause__Group__0");
 			builder.put(grammarAccess.getExportClauseAccess().getGroup(), "rule__ExportClause__Group__0");
 			builder.put(grammarAccess.getExportClauseAccess().getGroup_1(), "rule__ExportClause__Group_1__0");
@@ -767,7 +768,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getDefaultExportAssignment_1_3_0(), "rule__ExportDeclarationImpl__DefaultExportAssignment_1_3_0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getExportedElementAssignment_1_3_1_0(), "rule__ExportDeclarationImpl__ExportedElementAssignment_1_3_1_0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getDefaultExportedExpressionAssignment_1_3_1_1_0(), "rule__ExportDeclarationImpl__DefaultExportedExpressionAssignment_1_3_1_1_0");
-			builder.put(grammarAccess.getExportDeclarationImplAccess().getDefaultExportedExpressionAssignment_1_5_3(), "rule__ExportDeclarationImpl__DefaultExportedExpressionAssignment_1_5_3");
+			builder.put(grammarAccess.getExportDeclarationImplAccess().getDefaultExportedExpressionAssignment_1_6_3(), "rule__ExportDeclarationImpl__DefaultExportedExpressionAssignment_1_6_3");
 			builder.put(grammarAccess.getExportFromClauseAccess().getReexportedFromAssignment_1(), "rule__ExportFromClause__ReexportedFromAssignment_1");
 			builder.put(grammarAccess.getExportClauseAccess().getNamedExportsAssignment_1_0(), "rule__ExportClause__NamedExportsAssignment_1_0");
 			builder.put(grammarAccess.getExportClauseAccess().getNamedExportsAssignment_1_1_1(), "rule__ExportClause__NamedExportsAssignment_1_1_1");

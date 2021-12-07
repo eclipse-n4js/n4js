@@ -2613,27 +2613,52 @@ ruleExportDeclarationImpl[EObject in_current]  returns [EObject current=in_curre
 			)
 			    |
 			(
-				otherlv_17=Import
+				otherlv_17=As
 				{
-					newLeafNode(otherlv_17, grammarAccess.getExportDeclarationImplAccess().getImportKeyword_1_5_0());
+					newLeafNode(otherlv_17, grammarAccess.getExportDeclarationImplAccess().getAsKeyword_1_5_0());
+				}
+				otherlv_18=Namespace
+				{
+					newLeafNode(otherlv_18, grammarAccess.getExportDeclarationImplAccess().getNamespaceKeyword_1_5_1());
 				}
 				{
-					newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_5_1());
+					newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_5_2());
 				}
 				ruleIdentifierName
 				{
 					afterParserOrEnumRuleCall();
 				}
-				otherlv_19=EqualsSign
 				{
-					newLeafNode(otherlv_19, grammarAccess.getExportDeclarationImplAccess().getEqualsSignKeyword_1_5_2());
+					newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getSemiParserRuleCall_1_5_3());
+				}
+				ruleSemi
+				{
+					afterParserOrEnumRuleCall();
+				}
+			)
+			    |
+			(
+				otherlv_21=Import
+				{
+					newLeafNode(otherlv_21, grammarAccess.getExportDeclarationImplAccess().getImportKeyword_1_6_0());
+				}
+				{
+					newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_6_1());
+				}
+				ruleIdentifierName
+				{
+					afterParserOrEnumRuleCall();
+				}
+				otherlv_23=EqualsSign
+				{
+					newLeafNode(otherlv_23, grammarAccess.getExportDeclarationImplAccess().getEqualsSignKeyword_1_6_2());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getDefaultExportedExpressionAssignmentExpressionParserRuleCall_1_5_3_0());
+							newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getDefaultExportedExpressionAssignmentExpressionParserRuleCall_1_6_3_0());
 						}
-						lv_defaultExportedExpression_20_0=norm1_AssignmentExpression
+						lv_defaultExportedExpression_24_0=norm1_AssignmentExpression
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getExportDeclarationImplRule());
@@ -2641,14 +2666,14 @@ ruleExportDeclarationImpl[EObject in_current]  returns [EObject current=in_curre
 							set(
 								$current,
 								"defaultExportedExpression",
-								lv_defaultExportedExpression_20_0,
+								lv_defaultExportedExpression_24_0,
 								"org.eclipse.n4js.N4JS.AssignmentExpression");
 							afterParserOrEnumRuleCall();
 						}
 					)
 				)
 				{
-					newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getSemiParserRuleCall_1_5_4());
+					newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getSemiParserRuleCall_1_6_4());
 				}
 				ruleSemi
 				{

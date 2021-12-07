@@ -552,6 +552,11 @@ ruleExportDeclarationImpl:
 		)*
 		ruleSemi
 		    |
+		'as'
+		'namespace'
+		ruleIdentifierName
+		ruleSemi
+		    |
 		'import'
 		ruleIdentifierName
 		'='
