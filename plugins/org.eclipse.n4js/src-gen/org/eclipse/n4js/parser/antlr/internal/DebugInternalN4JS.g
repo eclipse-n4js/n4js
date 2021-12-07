@@ -7699,7 +7699,11 @@ norm1_N4EnumDeclaration:
 ruleN4EnumLiteral:
 	ruleIdentifierName
 	(
-		':'
+		(
+			':'
+			    |
+			'='
+		)
 		norm1_AssignmentExpression
 	)?
 ;

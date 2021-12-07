@@ -14561,6 +14561,27 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__N4EnumLiteral__Alternatives_1_0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getN4EnumLiteralAccess().getColonKeyword_1_0_0()); }
+		Colon
+		{ after(grammarAccess.getN4EnumLiteralAccess().getColonKeyword_1_0_0()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getN4EnumLiteralAccess().getEqualsSignKeyword_1_0_1()); }
+		EqualsSign
+		{ after(grammarAccess.getN4EnumLiteralAccess().getEqualsSignKeyword_1_0_1()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__N4MemberDeclaration__Alternatives
 	@init {
 		int stackSize = keepStackSize();
@@ -69419,9 +69440,9 @@ rule__N4EnumLiteral__Group_1__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getN4EnumLiteralAccess().getColonKeyword_1_0()); }
-	Colon
-	{ after(grammarAccess.getN4EnumLiteralAccess().getColonKeyword_1_0()); }
+	{ before(grammarAccess.getN4EnumLiteralAccess().getAlternatives_1_0()); }
+	(rule__N4EnumLiteral__Alternatives_1_0)
+	{ after(grammarAccess.getN4EnumLiteralAccess().getAlternatives_1_0()); }
 )
 ;
 finally {

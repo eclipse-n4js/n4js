@@ -59,6 +59,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_MappedTypeRef_SemicolonKeyword_9_q;
 	protected AbstractElementAlias match_N4CallSignatureDeclaration_SemicolonKeyword_2_q;
 	protected AbstractElementAlias match_N4EnumDeclaration_CommaKeyword_3_q;
+	protected AbstractElementAlias match_N4EnumLiteral_ColonKeyword_1_0_0_or_EqualsSignKeyword_1_0_1;
 	protected AbstractElementAlias match_N4GetterDeclaration_SemicolonKeyword_2_q;
 	protected AbstractElementAlias match_N4IndexSignatureDeclaration_SemicolonKeyword_5_q;
 	protected AbstractElementAlias match_N4MethodDeclaration_SemicolonKeyword_1_q;
@@ -113,6 +114,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_MappedTypeRef_SemicolonKeyword_9_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getSemicolonKeyword_9());
 		match_N4CallSignatureDeclaration_SemicolonKeyword_2_q = new TokenAlias(false, true, grammarAccess.getN4CallSignatureDeclarationAccess().getSemicolonKeyword_2());
 		match_N4EnumDeclaration_CommaKeyword_3_q = new TokenAlias(false, true, grammarAccess.getN4EnumDeclarationAccess().getCommaKeyword_3());
+		match_N4EnumLiteral_ColonKeyword_1_0_0_or_EqualsSignKeyword_1_0_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getN4EnumLiteralAccess().getColonKeyword_1_0_0()), new TokenAlias(false, false, grammarAccess.getN4EnumLiteralAccess().getEqualsSignKeyword_1_0_1()));
 		match_N4GetterDeclaration_SemicolonKeyword_2_q = new TokenAlias(false, true, grammarAccess.getN4GetterDeclarationAccess().getSemicolonKeyword_2());
 		match_N4IndexSignatureDeclaration_SemicolonKeyword_5_q = new TokenAlias(false, true, grammarAccess.getN4IndexSignatureDeclarationAccess().getSemicolonKeyword_5());
 		match_N4MethodDeclaration_SemicolonKeyword_1_q = new TokenAlias(false, true, grammarAccess.getN4MethodDeclarationAccess().getSemicolonKeyword_1());
@@ -293,6 +295,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_N4CallSignatureDeclaration_SemicolonKeyword_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_N4EnumDeclaration_CommaKeyword_3_q.equals(syntax))
 				emit_N4EnumDeclaration_CommaKeyword_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_N4EnumLiteral_ColonKeyword_1_0_0_or_EqualsSignKeyword_1_0_1.equals(syntax))
+				emit_N4EnumLiteral_ColonKeyword_1_0_0_or_EqualsSignKeyword_1_0_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_N4GetterDeclaration_SemicolonKeyword_2_q.equals(syntax))
 				emit_N4GetterDeclaration_SemicolonKeyword_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_N4IndexSignatureDeclaration_SemicolonKeyword_5_q.equals(syntax))
@@ -938,6 +942,17 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     name=BindingIdentifier '{' (ambiguity) '}' (rule end)
 	 */
 	protected void emit_N4EnumDeclaration_CommaKeyword_3_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ':' | '='
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     name=IdentifierName (ambiguity) valueExpression=AssignmentExpression
+	 */
+	protected void emit_N4EnumLiteral_ColonKeyword_1_0_0_or_EqualsSignKeyword_1_0_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

@@ -32474,16 +32474,23 @@ ruleN4EnumLiteral returns [EObject current=null]
 			)
 		)
 		(
-			otherlv_1=Colon
-			{
-				newLeafNode(otherlv_1, grammarAccess.getN4EnumLiteralAccess().getColonKeyword_1_0());
-			}
+			(
+				otherlv_1=Colon
+				{
+					newLeafNode(otherlv_1, grammarAccess.getN4EnumLiteralAccess().getColonKeyword_1_0_0());
+				}
+				    |
+				otherlv_2=EqualsSign
+				{
+					newLeafNode(otherlv_2, grammarAccess.getN4EnumLiteralAccess().getEqualsSignKeyword_1_0_1());
+				}
+			)
 			(
 				(
 					{
 						newCompositeNode(grammarAccess.getN4EnumLiteralAccess().getValueExpressionAssignmentExpressionParserRuleCall_1_1_0());
 					}
-					lv_valueExpression_2_0=norm1_AssignmentExpression
+					lv_valueExpression_3_0=norm1_AssignmentExpression
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getN4EnumLiteralRule());
@@ -32491,7 +32498,7 @@ ruleN4EnumLiteral returns [EObject current=null]
 						set(
 							$current,
 							"valueExpression",
-							lv_valueExpression_2_0,
+							lv_valueExpression_3_0,
 							"org.eclipse.n4js.N4JS.AssignmentExpression");
 						afterParserOrEnumRuleCall();
 					}

@@ -1427,7 +1427,16 @@ N4EnumDeclaration <Yield>:
 	'}'
 ;
 
-N4EnumLiteral: name=IdentifierName (':' valueExpression=AssignmentExpression<In=true,Yield=false>)?;
+N4EnumLiteral:
+	name=IdentifierName
+	(
+		(
+			':'
+		|	'=' // only allowed in DTS
+		)
+		valueExpression=AssignmentExpression<In=true,Yield=false>
+	)?
+;
 
 
 N4TypeAliasDeclaration <Yield>:
@@ -1437,7 +1446,7 @@ N4TypeAliasDeclaration <Yield>:
 		'type' name=BindingIdentifier<Yield>?
 	)
 	TypeParameters?
-	'='	
+	'='
 	declaredTypeRefNode=TypeReferenceNode
 	Semi
 ;

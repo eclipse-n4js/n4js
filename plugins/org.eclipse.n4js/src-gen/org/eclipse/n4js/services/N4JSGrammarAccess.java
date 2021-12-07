@@ -10411,14 +10411,16 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Assignment cNameAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final RuleCall cNameIdentifierNameParserRuleCall_0_0 = (RuleCall)cNameAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
-		private final Keyword cColonKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
+		private final Alternatives cAlternatives_1_0 = (Alternatives)cGroup_1.eContents().get(0);
+		private final Keyword cColonKeyword_1_0_0 = (Keyword)cAlternatives_1_0.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_1_0_1 = (Keyword)cAlternatives_1_0.eContents().get(1);
 		private final Assignment cValueExpressionAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cValueExpressionAssignmentExpressionParserRuleCall_1_1_0 = (RuleCall)cValueExpressionAssignment_1_1.eContents().get(0);
 		
-		//N4EnumLiteral: name=IdentifierName (':' valueExpression=AssignmentExpression<In=true,Yield=false>)?;
+		//N4EnumLiteral: name=IdentifierName ((':'|'=') valueExpression=AssignmentExpression<In=true,Yield=false>)?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//name=IdentifierName (':' valueExpression=AssignmentExpression<In=true,Yield=false>)?
+		//name=IdentifierName ((':'|'=') valueExpression=AssignmentExpression<In=true,Yield=false>)?
 		public Group getGroup() { return cGroup; }
 		
 		//name=IdentifierName
@@ -10427,11 +10429,17 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//IdentifierName
 		public RuleCall getNameIdentifierNameParserRuleCall_0_0() { return cNameIdentifierNameParserRuleCall_0_0; }
 		
-		//(':' valueExpression=AssignmentExpression<In=true,Yield=false>)?
+		//((':'|'=') valueExpression=AssignmentExpression<In=true,Yield=false>)?
 		public Group getGroup_1() { return cGroup_1; }
 		
+		//(':'|'=')
+		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
+		
 		//':'
-		public Keyword getColonKeyword_1_0() { return cColonKeyword_1_0; }
+		public Keyword getColonKeyword_1_0_0() { return cColonKeyword_1_0_0; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_1_0_1() { return cEqualsSignKeyword_1_0_1; }
 		
 		//valueExpression=AssignmentExpression<In=true,Yield=false>
 		public Assignment getValueExpressionAssignment_1_1() { return cValueExpressionAssignment_1_1; }
@@ -16129,7 +16137,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getN4EnumDeclarationAccess().getRule();
 	}
 	
-	//N4EnumLiteral: name=IdentifierName (':' valueExpression=AssignmentExpression<In=true,Yield=false>)?;
+	//N4EnumLiteral: name=IdentifierName ((':'|'=') valueExpression=AssignmentExpression<In=true,Yield=false>)?;
 	public N4EnumLiteralElements getN4EnumLiteralAccess() {
 		return pN4EnumLiteral;
 	}
