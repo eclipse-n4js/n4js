@@ -172,6 +172,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getGroup(), "rule__N4NamespaceDeclaration__Group__0");
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getGroup_0(), "rule__N4NamespaceDeclaration__Group_0__0");
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getGroup_0_0(), "rule__N4NamespaceDeclaration__Group_0_0__0");
+			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getGroup_0_0_3(), "rule__N4NamespaceDeclaration__Group_0_0_3__0");
 			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getGroup(), "rule__AmbientModuleDeclaration__Group__0");
 			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getGroup_0(), "rule__AmbientModuleDeclaration__Group_0__0");
 			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getGroup_0_0(), "rule__AmbientModuleDeclaration__Group_0_0__0");
@@ -731,7 +732,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getScriptAccess().getAnnotationsAssignment_2_0(), "rule__Script__AnnotationsAssignment_2_0");
 			builder.put(grammarAccess.getScriptAccess().getScriptElementsAssignment_2_1(), "rule__Script__ScriptElementsAssignment_2_1");
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getDeclaredModifiersAssignment_0_0_1(), "rule__N4NamespaceDeclaration__DeclaredModifiersAssignment_0_0_1");
-			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getNameAssignment_0_0_3(), "rule__N4NamespaceDeclaration__NameAssignment_0_0_3");
+			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getNameAssignment_0_0_4(), "rule__N4NamespaceDeclaration__NameAssignment_0_0_4");
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getOwnedElementsRawAssignment_2(), "rule__N4NamespaceDeclaration__OwnedElementsRawAssignment_2");
 			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getNameAssignment_0_0_2_0(), "rule__AmbientModuleDeclaration__NameAssignment_0_0_2_0");
 			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getNameAssignment_0_0_2_1(), "rule__AmbientModuleDeclaration__NameAssignment_0_0_2_1");

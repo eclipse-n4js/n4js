@@ -50,6 +50,10 @@ ruleScriptElement:
 			(ruleN4Modifier
 			*
 			'namespace'
+			(
+				ruleBindingIdentifier
+				'.'
+			)*
 			ruleBindingIdentifier
 			)=>
 			ruleN4NamespaceDeclaration
@@ -121,11 +125,19 @@ ruleN4NamespaceDeclaration:
 		(ruleN4Modifier
 		*
 		'namespace'
+		(
+			ruleBindingIdentifier
+			'.'
+		)*
 		ruleBindingIdentifier
 		)=>
 		ruleN4Modifier
 		*
 		'namespace'
+		(
+			ruleBindingIdentifier
+			'.'
+		)*
 		ruleBindingIdentifier
 	)
 	'{'
@@ -140,11 +152,19 @@ norm1_N4NamespaceDeclaration:
 		(ruleN4Modifier
 		*
 		'namespace'
+		(
+			norm1_BindingIdentifier
+			'.'
+		)*
 		norm1_BindingIdentifier
 		)=>
 		ruleN4Modifier
 		*
 		'namespace'
+		(
+			norm1_BindingIdentifier
+			'.'
+		)*
 		norm1_BindingIdentifier
 	)
 	'{'
@@ -207,6 +227,10 @@ ruleNamespaceElement:
 			(ruleN4Modifier
 			*
 			'namespace'
+			(
+				ruleBindingIdentifier
+				'.'
+			)*
 			ruleBindingIdentifier
 			)=>
 			ruleN4NamespaceDeclaration
@@ -289,6 +313,10 @@ norm1_NamespaceElement:
 			(ruleN4Modifier
 			*
 			'namespace'
+			(
+				norm1_BindingIdentifier
+				'.'
+			)*
 			norm1_BindingIdentifier
 			)=>
 			norm1_N4NamespaceDeclaration
@@ -630,6 +658,10 @@ ruleExportableElement:
 			(ruleN4Modifier
 			*
 			'namespace'
+			(
+				ruleBindingIdentifier
+				'.'
+			)*
 			ruleBindingIdentifier
 			)=>
 			ruleN4NamespaceDeclaration

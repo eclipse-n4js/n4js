@@ -181,8 +181,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Assignment cDeclaredModifiersAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
 		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0 = (RuleCall)cDeclaredModifiersAssignment_0_0_1.eContents().get(0);
 		private final Keyword cNamespaceKeyword_0_0_2 = (Keyword)cGroup_0_0.eContents().get(2);
-		private final Assignment cNameAssignment_0_0_3 = (Assignment)cGroup_0_0.eContents().get(3);
-		private final RuleCall cNameBindingIdentifierParserRuleCall_0_0_3_0 = (RuleCall)cNameAssignment_0_0_3.eContents().get(0);
+		private final Group cGroup_0_0_3 = (Group)cGroup_0_0.eContents().get(3);
+		private final RuleCall cBindingIdentifierParserRuleCall_0_0_3_0 = (RuleCall)cGroup_0_0_3.eContents().get(0);
+		private final Keyword cFullStopKeyword_0_0_3_1 = (Keyword)cGroup_0_0_3.eContents().get(1);
+		private final Assignment cNameAssignment_0_0_4 = (Assignment)cGroup_0_0.eContents().get(4);
+		private final RuleCall cNameBindingIdentifierParserRuleCall_0_0_4_0 = (RuleCall)cNameAssignment_0_0_4.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Assignment cOwnedElementsRawAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cOwnedElementsRawNamespaceElementParserRuleCall_2_0 = (RuleCall)cOwnedElementsRawAssignment_2.eContents().get(0);
@@ -194,7 +197,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//        {N4NamespaceDeclaration}
 		//        (declaredModifiers+=N4Modifier)*
 		//        'namespace'
+<<<<<<< HEAD
 		//        name=BindingIdentifier<Yield>
+=======
+		//        (BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
+>>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 		//    )
 		//    '{'
 		//        ownedElementsRaw+=NamespaceElement<Yield>*
@@ -206,7 +213,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    {N4NamespaceDeclaration}
 		//    (declaredModifiers+=N4Modifier)*
 		//    'namespace'
+<<<<<<< HEAD
 		//    name=BindingIdentifier<Yield>
+=======
+		//    (BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
+>>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 		//)
 		//'{'
 		//    ownedElementsRaw+=NamespaceElement<Yield>*
@@ -217,14 +228,22 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    {N4NamespaceDeclaration}
 		//    (declaredModifiers+=N4Modifier)*
 		//    'namespace'
+<<<<<<< HEAD
 		//    name=BindingIdentifier<Yield>
+=======
+		//    (BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
+>>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 		//)
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//{N4NamespaceDeclaration}
 		//(declaredModifiers+=N4Modifier)*
 		//'namespace'
+<<<<<<< HEAD
 		//name=BindingIdentifier<Yield>
+=======
+		//(BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
+>>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{N4NamespaceDeclaration}
@@ -239,11 +258,25 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'namespace'
 		public Keyword getNamespaceKeyword_0_0_2() { return cNamespaceKeyword_0_0_2; }
 		
+<<<<<<< HEAD
 		//name=BindingIdentifier<Yield>
 		public Assignment getNameAssignment_0_0_3() { return cNameAssignment_0_0_3; }
+=======
+		//(BindingIdentifier<Yield> '.')*
+		public Group getGroup_0_0_3() { return cGroup_0_0_3; }
+>>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 		
 		//BindingIdentifier<Yield>
-		public RuleCall getNameBindingIdentifierParserRuleCall_0_0_3_0() { return cNameBindingIdentifierParserRuleCall_0_0_3_0; }
+		public RuleCall getBindingIdentifierParserRuleCall_0_0_3_0() { return cBindingIdentifierParserRuleCall_0_0_3_0; }
+		
+		//'.'
+		public Keyword getFullStopKeyword_0_0_3_1() { return cFullStopKeyword_0_0_3_1; }
+		
+		//name=BindingIdentifier<Yield>
+		public Assignment getNameAssignment_0_0_4() { return cNameAssignment_0_0_4; }
+		
+		//BindingIdentifier<Yield>
+		public RuleCall getNameBindingIdentifierParserRuleCall_0_0_4_0() { return cNameBindingIdentifierParserRuleCall_0_0_4_0; }
 		
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_1() { return cLeftCurlyBracketKeyword_1; }
@@ -10417,10 +10450,26 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Assignment cValueExpressionAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cValueExpressionAssignmentExpressionParserRuleCall_1_1_0 = (RuleCall)cValueExpressionAssignment_1_1.eContents().get(0);
 		
-		//N4EnumLiteral: name=IdentifierName ((':'|'=') valueExpression=AssignmentExpression<In=true,Yield=false>)?;
+		//N4EnumLiteral:
+		//    name=IdentifierName
+		//    (
+		//        (
+		//            ':'
+		//        |    '=' // only allowed in DTS
+		//        )
+		//        valueExpression=AssignmentExpression<In=true,Yield=false>
+		//    )?
+		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//name=IdentifierName ((':'|'=') valueExpression=AssignmentExpression<In=true,Yield=false>)?
+		//name=IdentifierName
+		//(
+		//    (
+		//        ':'
+		//    |    '=' // only allowed in DTS
+		//    )
+		//    valueExpression=AssignmentExpression<In=true,Yield=false>
+		//)?
 		public Group getGroup() { return cGroup; }
 		
 		//name=IdentifierName
@@ -10429,10 +10478,19 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//IdentifierName
 		public RuleCall getNameIdentifierNameParserRuleCall_0_0() { return cNameIdentifierNameParserRuleCall_0_0; }
 		
-		//((':'|'=') valueExpression=AssignmentExpression<In=true,Yield=false>)?
+		//(
+		//    (
+		//        ':'
+		//    |    '=' // only allowed in DTS
+		//    )
+		//    valueExpression=AssignmentExpression<In=true,Yield=false>
+		//)?
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//(':'|'=')
+		//(
+		//    ':'
+		//|    '=' // only allowed in DTS
+		//)
 		public Alternatives getAlternatives_1_0() { return cAlternatives_1_0; }
 		
 		//':'
@@ -13380,7 +13438,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//        {N4NamespaceDeclaration}
 	//        (declaredModifiers+=N4Modifier)*
 	//        'namespace'
+<<<<<<< HEAD
 	//        name=BindingIdentifier<Yield>
+=======
+	//        (BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
+>>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 	//    )
 	//    '{'
 	//        ownedElementsRaw+=NamespaceElement<Yield>*
@@ -16137,7 +16199,16 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getN4EnumDeclarationAccess().getRule();
 	}
 	
-	//N4EnumLiteral: name=IdentifierName ((':'|'=') valueExpression=AssignmentExpression<In=true,Yield=false>)?;
+	//N4EnumLiteral:
+	//    name=IdentifierName
+	//    (
+	//        (
+	//            ':'
+	//        |    '=' // only allowed in DTS
+	//        )
+	//        valueExpression=AssignmentExpression<In=true,Yield=false>
+	//    )?
+	//;
 	public N4EnumLiteralElements getN4EnumLiteralAccess() {
 		return pN4EnumLiteral;
 	}

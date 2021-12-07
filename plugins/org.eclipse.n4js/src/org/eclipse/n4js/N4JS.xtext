@@ -74,7 +74,7 @@ N4NamespaceDeclaration <Yield> returns N4NamespaceDeclaration:
 		{N4NamespaceDeclaration}
 		(declaredModifiers+=N4Modifier)*
 		'namespace'
-		name=BindingIdentifier<Yield>
+		(BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
 	)
 	'{'
 		ownedElementsRaw+=NamespaceElement<Yield>*

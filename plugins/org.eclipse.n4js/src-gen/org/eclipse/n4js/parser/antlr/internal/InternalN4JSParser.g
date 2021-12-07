@@ -234,6 +234,10 @@ ruleScriptElement returns [EObject current=null]
 				)*
 				Namespace
 				(
+					ruleBindingIdentifier
+					FullStop
+				)*
+				(
 					(
 						ruleBindingIdentifier
 					)
@@ -435,6 +439,10 @@ ruleN4NamespaceDeclaration returns [EObject current=null]
 				)*
 				Namespace
 				(
+					ruleBindingIdentifier
+					FullStop
+				)*
+				(
 					(
 						ruleBindingIdentifier
 					)
@@ -473,11 +481,24 @@ ruleN4NamespaceDeclaration returns [EObject current=null]
 					newLeafNode(otherlv_2, grammarAccess.getN4NamespaceDeclarationAccess().getNamespaceKeyword_0_0_2());
 				}
 				(
+					{
+						newCompositeNode(grammarAccess.getN4NamespaceDeclarationAccess().getBindingIdentifierParserRuleCall_0_0_3_0());
+					}
+					ruleBindingIdentifier
+					{
+						afterParserOrEnumRuleCall();
+					}
+					otherlv_4=FullStop
+					{
+						newLeafNode(otherlv_4, grammarAccess.getN4NamespaceDeclarationAccess().getFullStopKeyword_0_0_3_1());
+					}
+				)*
+				(
 					(
 						{
-							newCompositeNode(grammarAccess.getN4NamespaceDeclarationAccess().getNameBindingIdentifierParserRuleCall_0_0_3_0());
+							newCompositeNode(grammarAccess.getN4NamespaceDeclarationAccess().getNameBindingIdentifierParserRuleCall_0_0_4_0());
 						}
-						lv_name_3_0=ruleBindingIdentifier
+						lv_name_5_0=ruleBindingIdentifier
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getN4NamespaceDeclarationRule());
@@ -485,7 +506,7 @@ ruleN4NamespaceDeclaration returns [EObject current=null]
 							set(
 								$current,
 								"name",
-								lv_name_3_0,
+								lv_name_5_0,
 								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
@@ -493,16 +514,16 @@ ruleN4NamespaceDeclaration returns [EObject current=null]
 				)
 			)
 		)
-		otherlv_4=LeftCurlyBracket
+		otherlv_6=LeftCurlyBracket
 		{
-			newLeafNode(otherlv_4, grammarAccess.getN4NamespaceDeclarationAccess().getLeftCurlyBracketKeyword_1());
+			newLeafNode(otherlv_6, grammarAccess.getN4NamespaceDeclarationAccess().getLeftCurlyBracketKeyword_1());
 		}
 		(
 			(
 				{
 					newCompositeNode(grammarAccess.getN4NamespaceDeclarationAccess().getOwnedElementsRawNamespaceElementParserRuleCall_2_0());
 				}
-				lv_ownedElementsRaw_5_0=ruleNamespaceElement
+				lv_ownedElementsRaw_7_0=ruleNamespaceElement
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4NamespaceDeclarationRule());
@@ -510,15 +531,15 @@ ruleN4NamespaceDeclaration returns [EObject current=null]
 					add(
 						$current,
 						"ownedElementsRaw",
-						lv_ownedElementsRaw_5_0,
+						lv_ownedElementsRaw_7_0,
 						"org.eclipse.n4js.N4JS.NamespaceElement");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)*
-		otherlv_6=RightCurlyBracket
+		otherlv_8=RightCurlyBracket
 		{
-			newLeafNode(otherlv_6, grammarAccess.getN4NamespaceDeclarationAccess().getRightCurlyBracketKeyword_3());
+			newLeafNode(otherlv_8, grammarAccess.getN4NamespaceDeclarationAccess().getRightCurlyBracketKeyword_3());
 		}
 	)
 ;
@@ -543,6 +564,10 @@ norm1_N4NamespaceDeclaration returns [EObject current=null]
 					)
 				)*
 				Namespace
+				(
+					norm1_BindingIdentifier
+					FullStop
+				)*
 				(
 					(
 						norm1_BindingIdentifier
@@ -582,11 +607,24 @@ norm1_N4NamespaceDeclaration returns [EObject current=null]
 					newLeafNode(otherlv_2, grammarAccess.getN4NamespaceDeclarationAccess().getNamespaceKeyword_0_0_2());
 				}
 				(
+					{
+						newCompositeNode(grammarAccess.getN4NamespaceDeclarationAccess().getBindingIdentifierParserRuleCall_0_0_3_0());
+					}
+					norm1_BindingIdentifier
+					{
+						afterParserOrEnumRuleCall();
+					}
+					otherlv_4=FullStop
+					{
+						newLeafNode(otherlv_4, grammarAccess.getN4NamespaceDeclarationAccess().getFullStopKeyword_0_0_3_1());
+					}
+				)*
+				(
 					(
 						{
-							newCompositeNode(grammarAccess.getN4NamespaceDeclarationAccess().getNameBindingIdentifierParserRuleCall_0_0_3_0());
+							newCompositeNode(grammarAccess.getN4NamespaceDeclarationAccess().getNameBindingIdentifierParserRuleCall_0_0_4_0());
 						}
-						lv_name_3_0=norm1_BindingIdentifier
+						lv_name_5_0=norm1_BindingIdentifier
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getN4NamespaceDeclarationRule());
@@ -594,7 +632,7 @@ norm1_N4NamespaceDeclaration returns [EObject current=null]
 							set(
 								$current,
 								"name",
-								lv_name_3_0,
+								lv_name_5_0,
 								"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
 							afterParserOrEnumRuleCall();
 						}
@@ -602,16 +640,16 @@ norm1_N4NamespaceDeclaration returns [EObject current=null]
 				)
 			)
 		)
-		otherlv_4=LeftCurlyBracket
+		otherlv_6=LeftCurlyBracket
 		{
-			newLeafNode(otherlv_4, grammarAccess.getN4NamespaceDeclarationAccess().getLeftCurlyBracketKeyword_1());
+			newLeafNode(otherlv_6, grammarAccess.getN4NamespaceDeclarationAccess().getLeftCurlyBracketKeyword_1());
 		}
 		(
 			(
 				{
 					newCompositeNode(grammarAccess.getN4NamespaceDeclarationAccess().getOwnedElementsRawNamespaceElementParserRuleCall_2_0());
 				}
-				lv_ownedElementsRaw_5_0=norm1_NamespaceElement
+				lv_ownedElementsRaw_7_0=norm1_NamespaceElement
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getN4NamespaceDeclarationRule());
@@ -619,15 +657,15 @@ norm1_N4NamespaceDeclaration returns [EObject current=null]
 					add(
 						$current,
 						"ownedElementsRaw",
-						lv_ownedElementsRaw_5_0,
+						lv_ownedElementsRaw_7_0,
 						"org.eclipse.n4js.N4JS.NamespaceElement");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)*
-		otherlv_6=RightCurlyBracket
+		otherlv_8=RightCurlyBracket
 		{
-			newLeafNode(otherlv_6, grammarAccess.getN4NamespaceDeclarationAccess().getRightCurlyBracketKeyword_3());
+			newLeafNode(otherlv_8, grammarAccess.getN4NamespaceDeclarationAccess().getRightCurlyBracketKeyword_3());
 		}
 	)
 ;
@@ -868,6 +906,10 @@ ruleNamespaceElement returns [EObject current=null]
 				)*
 				Namespace
 				(
+					ruleBindingIdentifier
+					FullStop
+				)*
+				(
 					(
 						ruleBindingIdentifier
 					)
@@ -1083,6 +1125,10 @@ norm1_NamespaceElement returns [EObject current=null]
 					)
 				)*
 				Namespace
+				(
+					norm1_BindingIdentifier
+					FullStop
+				)*
 				(
 					(
 						norm1_BindingIdentifier
@@ -2967,6 +3013,10 @@ ruleExportableElement returns [EObject current=null]
 					)
 				)*
 				Namespace
+				(
+					ruleBindingIdentifier
+					FullStop
+				)*
 				(
 					(
 						ruleBindingIdentifier
