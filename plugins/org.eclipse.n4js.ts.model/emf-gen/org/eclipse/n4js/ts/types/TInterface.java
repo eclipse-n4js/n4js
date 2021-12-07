@@ -23,7 +23,6 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.TInterface#isExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TInterface#getSuperInterfaceRefs <em>Super Interface Refs</em>}</li>
  * </ul>
  *
@@ -32,28 +31,6 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
  * @generated
  */
 public interface TInterface extends TN4Classifier {
-	/**
-	 * Returns the value of the '<em><b>External</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>External</em>' attribute.
-	 * @see #setExternal(boolean)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTInterface_External()
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean isExternal();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TInterface#isExternal <em>External</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>External</em>' attribute.
-	 * @see #isExternal()
-	 * @generated
-	 */
-	void setExternal(boolean value);
-
 	/**
 	 * Returns the value of the '<em><b>Super Interface Refs</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef}.

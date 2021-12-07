@@ -16,15 +16,12 @@ import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -50,33 +47,12 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TInterfaceImpl#isExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TInterfaceImpl#getSuperInterfaceRefs <em>Super Interface Refs</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
-	/**
-	 * The default value of the '{@link #isExternal() <em>External</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isExternal()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean EXTERNAL_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isExternal() <em>External</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isExternal()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean external = EXTERNAL_EDEFAULT;
-
 	/**
 	 * The cached value of the '{@link #getSuperInterfaceRefs() <em>Super Interface Refs</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -104,29 +80,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.TINTERFACE;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isExternal() {
-		return external;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setExternal(boolean newExternal) {
-		boolean oldExternal = external;
-		external = newExternal;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TINTERFACE__EXTERNAL, oldExternal, external));
 	}
 
 	/**
@@ -209,8 +162,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypesPackage.TINTERFACE__EXTERNAL:
-				return isExternal();
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				return getSuperInterfaceRefs();
 		}
@@ -226,9 +177,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypesPackage.TINTERFACE__EXTERNAL:
-				setExternal((Boolean)newValue);
-				return;
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				getSuperInterfaceRefs().clear();
 				getSuperInterfaceRefs().addAll((Collection<? extends ParameterizedTypeRef>)newValue);
@@ -245,9 +193,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TINTERFACE__EXTERNAL:
-				setExternal(EXTERNAL_EDEFAULT);
-				return;
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				getSuperInterfaceRefs().clear();
 				return;
@@ -263,8 +208,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TINTERFACE__EXTERNAL:
-				return external != EXTERNAL_EDEFAULT;
 			case TypesPackage.TINTERFACE__SUPER_INTERFACE_REFS:
 				return superInterfaceRefs != null && !superInterfaceRefs.isEmpty();
 		}
@@ -319,22 +262,6 @@ public class TInterfaceImpl extends TN4ClassifierImpl implements TInterface {
 				return isHollow();
 		}
 		return super.eInvoke(operationID, arguments);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String toString() {
-		if (eIsProxy()) return super.toString();
-
-		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (external: ");
-		result.append(external);
-		result.append(')');
-		return result.toString();
 	}
 
 } //TInterfaceImpl

@@ -47,7 +47,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredAbstract <em>Declared Abstract</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredN4JS <em>Declared N4JS</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassImpl#isDeclaredFinal <em>Declared Final</em>}</li>
@@ -60,26 +59,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * @generated
  */
 public class TClassImpl extends TN4ClassifierImpl implements TClass {
-	/**
-	 * The default value of the '{@link #isExternal() <em>External</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isExternal()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean EXTERNAL_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isExternal() <em>External</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isExternal()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean external = EXTERNAL_EDEFAULT;
-
 	/**
 	 * The default value of the '{@link #isDeclaredAbstract() <em>Declared Abstract</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -217,29 +196,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.TCLASS;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isExternal() {
-		return external;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setExternal(boolean newExternal) {
-		boolean oldExternal = external;
-		external = newExternal;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TCLASS__EXTERNAL, oldExternal, external));
 	}
 
 	/**
@@ -529,8 +485,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypesPackage.TCLASS__EXTERNAL:
-				return isExternal();
 			case TypesPackage.TCLASS__DECLARED_ABSTRACT:
 				return isDeclaredAbstract();
 			case TypesPackage.TCLASS__DECLARED_N4JS:
@@ -558,9 +512,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypesPackage.TCLASS__EXTERNAL:
-				setExternal((Boolean)newValue);
-				return;
 			case TypesPackage.TCLASS__DECLARED_ABSTRACT:
 				setDeclaredAbstract((Boolean)newValue);
 				return;
@@ -595,9 +546,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TCLASS__EXTERNAL:
-				setExternal(EXTERNAL_EDEFAULT);
-				return;
 			case TypesPackage.TCLASS__DECLARED_ABSTRACT:
 				setDeclaredAbstract(DECLARED_ABSTRACT_EDEFAULT);
 				return;
@@ -631,8 +579,6 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TCLASS__EXTERNAL:
-				return external != EXTERNAL_EDEFAULT;
 			case TypesPackage.TCLASS__DECLARED_ABSTRACT:
 				return declaredAbstract != DECLARED_ABSTRACT_EDEFAULT;
 			case TypesPackage.TCLASS__DECLARED_N4JS:
@@ -720,9 +666,7 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (external: ");
-		result.append(external);
-		result.append(", declaredAbstract: ");
+		result.append(" (declaredAbstract: ");
 		result.append(declaredAbstract);
 		result.append(", declaredN4JS: ");
 		result.append(declaredN4JS);

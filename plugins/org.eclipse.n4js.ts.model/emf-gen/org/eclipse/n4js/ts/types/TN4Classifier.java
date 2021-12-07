@@ -20,6 +20,7 @@ package org.eclipse.n4js.ts.types;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#isExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#isDeclaredNonStaticPolyfill <em>Declared Non Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#isDynamizable <em>Dynamizable</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#getTypingStrategy <em>Typing Strategy</em>}</li>
@@ -30,6 +31,28 @@ package org.eclipse.n4js.ts.types;
  * @generated
  */
 public interface TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike {
+	/**
+	 * Returns the value of the '<em><b>External</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>External</em>' attribute.
+	 * @see #setExternal(boolean)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTN4Classifier_External()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isExternal();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TN4Classifier#isExternal <em>External</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>External</em>' attribute.
+	 * @see #isExternal()
+	 * @generated
+	 */
+	void setExternal(boolean value);
+
 	/**
 	 * Returns the value of the '<em><b>Declared Non Static Polyfill</b></em>' attribute.
 	 * <!-- begin-user-doc -->

@@ -210,6 +210,13 @@ class TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElemen
 		return qualifiedName
 	}
 	
+	/**
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 */
+//	op TModule getContainingModule() {
+//		return this;
+//	}
 }
 
 /*
@@ -1017,6 +1024,7 @@ abstract class ArrayLike {
 }
 
 class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike {
+	boolean external
 
 	boolean declaredNonStaticPolyfill
 	/*
@@ -1036,7 +1044,6 @@ class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike {
 }
 
 class TClass extends TN4Classifier {
-	boolean external
 	boolean declaredAbstract
 	boolean declaredN4JS
 	boolean declaredFinal
@@ -1089,7 +1096,6 @@ class TClass extends TN4Classifier {
 }
 
 class TInterface extends TN4Classifier {
-	boolean external
 	contains ParameterizedTypeRef[] superInterfaceRefs
 
 	op boolean isAbstract() {

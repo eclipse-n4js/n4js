@@ -129,11 +129,11 @@ class N4_21_1_DefinitionSiteStructuralTypingClassesTest extends AbstractTypesyst
 		val script = createAndValidateScript(JavaScriptVariant.external, '''
 			external class Nominal{
 				public s: string;
-				public foo(): void {}
+				public foo(): void
 			}
 			external class ~Structural{
 				public s: string;
-				public foo(): void {}
+				public foo(): void
 			}
 			external class A{
 				public s: string;

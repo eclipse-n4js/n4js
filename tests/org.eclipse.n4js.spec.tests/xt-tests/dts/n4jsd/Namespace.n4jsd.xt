@@ -19,7 +19,7 @@ external namespace NS1 {
     const c;
     var v;
     let l;
-    function F():void {}
+    function F():void
     namespace NS2 {}
     interface ~I {}
     class C {}
@@ -30,7 +30,7 @@ export external namespace NS2 {
     const c;
     var v;
     let l;
-    function F():void {}
+    function F():void
     namespace NS2 {}
     interface ~I {}
     class C {}
@@ -41,7 +41,7 @@ export external namespace NS3 {
     private const c;
     private var v;
     private let l;
-    private function F():void {}
+    private function F():void
     private namespace NS2 {}
     private interface ~I {}
     private class C {}

@@ -47,6 +47,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getDeclaredElementType <em>Declared Element Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDeclaredNonStaticPolyfill <em>Declared Non Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#isDynamizable <em>Dynamizable</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TN4ClassifierImpl#getTypingStrategy <em>Typing Strategy</em>}</li>
@@ -104,6 +105,26 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @ordered
 	 */
 	protected TypeRef declaredElementType;
+
+	/**
+	 * The default value of the '{@link #isExternal() <em>External</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isExternal()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean EXTERNAL_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isExternal() <em>External</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isExternal()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean external = EXTERNAL_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isDeclaredNonStaticPolyfill() <em>Declared Non Static Polyfill</em>}' attribute.
@@ -281,6 +302,29 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 	 * @generated
 	 */
 	@Override
+	public boolean isExternal() {
+		return external;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setExternal(boolean newExternal) {
+		boolean oldExternal = external;
+		external = newExternal;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TN4_CLASSIFIER__EXTERNAL, oldExternal, external));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isDeclaredNonStaticPolyfill() {
 		return declaredNonStaticPolyfill;
 	}
@@ -430,6 +474,8 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return isDeclaredProvidedByRuntime();
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
 				return getDeclaredElementType();
+			case TypesPackage.TN4_CLASSIFIER__EXTERNAL:
+				return isExternal();
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL:
 				return isDeclaredNonStaticPolyfill();
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
@@ -456,6 +502,9 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return;
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
 				setDeclaredElementType((TypeRef)newValue);
+				return;
+			case TypesPackage.TN4_CLASSIFIER__EXTERNAL:
+				setExternal((Boolean)newValue);
 				return;
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL:
 				setDeclaredNonStaticPolyfill((Boolean)newValue);
@@ -487,6 +536,9 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
 				setDeclaredElementType((TypeRef)null);
 				return;
+			case TypesPackage.TN4_CLASSIFIER__EXTERNAL:
+				setExternal(EXTERNAL_EDEFAULT);
+				return;
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL:
 				setDeclaredNonStaticPolyfill(DECLARED_NON_STATIC_POLYFILL_EDEFAULT);
 				return;
@@ -514,6 +566,8 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 				return declaredProvidedByRuntime != DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE:
 				return declaredElementType != null;
+			case TypesPackage.TN4_CLASSIFIER__EXTERNAL:
+				return external != EXTERNAL_EDEFAULT;
 			case TypesPackage.TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL:
 				return declaredNonStaticPolyfill != DECLARED_NON_STATIC_POLYFILL_EDEFAULT;
 			case TypesPackage.TN4_CLASSIFIER__DYNAMIZABLE:
@@ -637,6 +691,8 @@ public class TN4ClassifierImpl extends TClassifierImpl implements TN4Classifier 
 		result.append(declaredTypeAccessModifier);
 		result.append(", declaredProvidedByRuntime: ");
 		result.append(declaredProvidedByRuntime);
+		result.append(", external: ");
+		result.append(external);
 		result.append(", declaredNonStaticPolyfill: ");
 		result.append(declaredNonStaticPolyfill);
 		result.append(", dynamizable: ");

@@ -5350,13 +5350,22 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE = TCLASSIFIER_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>External</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER__EXTERNAL = TCLASSIFIER_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Declared Non Static Polyfill</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL = TCLASSIFIER_FEATURE_COUNT + 3;
+	int TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL = TCLASSIFIER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Dynamizable</b></em>' attribute.
@@ -5365,7 +5374,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER__DYNAMIZABLE = TCLASSIFIER_FEATURE_COUNT + 4;
+	int TN4_CLASSIFIER__DYNAMIZABLE = TCLASSIFIER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Typing Strategy</b></em>' attribute.
@@ -5374,7 +5383,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER__TYPING_STRATEGY = TCLASSIFIER_FEATURE_COUNT + 5;
+	int TN4_CLASSIFIER__TYPING_STRATEGY = TCLASSIFIER_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>TN4 Classifier</em>' class.
@@ -5383,7 +5392,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER_FEATURE_COUNT = TCLASSIFIER_FEATURE_COUNT + 6;
+	int TN4_CLASSIFIER_FEATURE_COUNT = TCLASSIFIER_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -5756,6 +5765,15 @@ public interface TypesPackage extends EPackage {
 	int TCLASS__DECLARED_ELEMENT_TYPE = TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>External</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS__EXTERNAL = TN4_CLASSIFIER__EXTERNAL;
+
+	/**
 	 * The feature id for the '<em><b>Declared Non Static Polyfill</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5783,22 +5801,13 @@ public interface TypesPackage extends EPackage {
 	int TCLASS__TYPING_STRATEGY = TN4_CLASSIFIER__TYPING_STRATEGY;
 
 	/**
-	 * The feature id for the '<em><b>External</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TCLASS__EXTERNAL = TN4_CLASSIFIER_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>Declared Abstract</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__DECLARED_ABSTRACT = TN4_CLASSIFIER_FEATURE_COUNT + 1;
+	int TCLASS__DECLARED_ABSTRACT = TN4_CLASSIFIER_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Declared N4JS</b></em>' attribute.
@@ -5807,7 +5816,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__DECLARED_N4JS = TN4_CLASSIFIER_FEATURE_COUNT + 2;
+	int TCLASS__DECLARED_N4JS = TN4_CLASSIFIER_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Declared Final</b></em>' attribute.
@@ -5816,7 +5825,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__DECLARED_FINAL = TN4_CLASSIFIER_FEATURE_COUNT + 3;
+	int TCLASS__DECLARED_FINAL = TN4_CLASSIFIER_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Declared Static Polyfill</b></em>' attribute.
@@ -5825,7 +5834,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__DECLARED_STATIC_POLYFILL = TN4_CLASSIFIER_FEATURE_COUNT + 4;
+	int TCLASS__DECLARED_STATIC_POLYFILL = TN4_CLASSIFIER_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Observable</b></em>' attribute.
@@ -5834,7 +5843,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__OBSERVABLE = TN4_CLASSIFIER_FEATURE_COUNT + 5;
+	int TCLASS__OBSERVABLE = TN4_CLASSIFIER_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Super Class Ref</b></em>' containment reference.
@@ -5843,7 +5852,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__SUPER_CLASS_REF = TN4_CLASSIFIER_FEATURE_COUNT + 6;
+	int TCLASS__SUPER_CLASS_REF = TN4_CLASSIFIER_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Implemented Interface Refs</b></em>' containment reference list.
@@ -5852,7 +5861,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__IMPLEMENTED_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 7;
+	int TCLASS__IMPLEMENTED_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 6;
 
 	/**
 	 * The number of structural features of the '<em>TClass</em>' class.
@@ -5861,7 +5870,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 8;
+	int TCLASS_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -6243,6 +6252,15 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE__DECLARED_ELEMENT_TYPE = TN4_CLASSIFIER__DECLARED_ELEMENT_TYPE;
 
 	/**
+	 * The feature id for the '<em><b>External</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE__EXTERNAL = TN4_CLASSIFIER__EXTERNAL;
+
+	/**
 	 * The feature id for the '<em><b>Declared Non Static Polyfill</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6270,22 +6288,13 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE__TYPING_STRATEGY = TN4_CLASSIFIER__TYPING_STRATEGY;
 
 	/**
-	 * The feature id for the '<em><b>External</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TINTERFACE__EXTERNAL = TN4_CLASSIFIER_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>Super Interface Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE__SUPER_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 1;
+	int TINTERFACE__SUPER_INTERFACE_REFS = TN4_CLASSIFIER_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>TInterface</em>' class.
@@ -6294,7 +6303,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 2;
+	int TINTERFACE_FEATURE_COUNT = TN4_CLASSIFIER_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -14060,6 +14069,17 @@ public interface TypesPackage extends EPackage {
 	EClass getTN4Classifier();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TN4Classifier#isExternal <em>External</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>External</em>'.
+	 * @see org.eclipse.n4js.ts.types.TN4Classifier#isExternal()
+	 * @see #getTN4Classifier()
+	 * @generated
+	 */
+	EAttribute getTN4Classifier_External();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TN4Classifier#isDeclaredNonStaticPolyfill <em>Declared Non Static Polyfill</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14111,17 +14131,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getTClass();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TClass#isExternal <em>External</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>External</em>'.
-	 * @see org.eclipse.n4js.ts.types.TClass#isExternal()
-	 * @see #getTClass()
-	 * @generated
-	 */
-	EAttribute getTClass_External();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TClass#isDeclaredAbstract <em>Declared Abstract</em>}'.
@@ -14279,17 +14288,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getTInterface();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TInterface#isExternal <em>External</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>External</em>'.
-	 * @see org.eclipse.n4js.ts.types.TInterface#isExternal()
-	 * @see #getTInterface()
-	 * @generated
-	 */
-	EAttribute getTInterface_External();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TInterface#getSuperInterfaceRefs <em>Super Interface Refs</em>}'.
@@ -16799,6 +16797,14 @@ public interface TypesPackage extends EPackage {
 		EClass TN4_CLASSIFIER = eINSTANCE.getTN4Classifier();
 
 		/**
+		 * The meta object literal for the '<em><b>External</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TN4_CLASSIFIER__EXTERNAL = eINSTANCE.getTN4Classifier_External();
+
+		/**
 		 * The meta object literal for the '<em><b>Declared Non Static Polyfill</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -16839,14 +16845,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TCLASS = eINSTANCE.getTClass();
-
-		/**
-		 * The meta object literal for the '<em><b>External</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TCLASS__EXTERNAL = eINSTANCE.getTClass_External();
 
 		/**
 		 * The meta object literal for the '<em><b>Declared Abstract</b></em>' attribute feature.
@@ -16969,14 +16967,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TINTERFACE = eINSTANCE.getTInterface();
-
-		/**
-		 * The meta object literal for the '<em><b>External</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TINTERFACE__EXTERNAL = eINSTANCE.getTInterface_External();
 
 		/**
 		 * The meta object literal for the '<em><b>Super Interface Refs</b></em>' containment reference list feature.

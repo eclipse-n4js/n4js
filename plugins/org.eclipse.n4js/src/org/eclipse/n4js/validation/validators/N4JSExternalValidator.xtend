@@ -256,7 +256,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		if (!AnnotationDefinition.N4JS.hasAnnotation(exported)) {
 			val superClass = exported.superClassRef?.typeRef?.hasExpectedTypes(TClass)
 			validateNonAnnotatedClassDoesntExtendN4Object(exported, superClass)
-			validateConsumptionOfNonExternalInterfaces(exported.implementedInterfaceRefs, "classes")
+			validateConsumptionOfNonExternalInterfaces(exported, exported.implementedInterfaceRefs, "classes")
 		}
 		validateNoObservableAtClassifier(eo, exported, "classes")
 		// relaxed by IDEBUG-561:	validatePublicConstructor(exported)
@@ -402,18 +402,18 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private validateConsumptionOfNonExternalInterfaces(
+	def private validateConsumptionOfNonExternalInterfaces(N4ClassDeclaration exported,
 		Iterable<TypeReferenceNode<ParameterizedTypeRef>> superInterfaces, String classifiers) {
 
 		for (tinterface : superInterfaces.map[typeRef].map[hasExpectedTypes(TInterface)].filter[it !== null]) {
-			validateConsumptionOfNonExternalInterface(tinterface, classifiers)
+			validateConsumptionOfNonExternalInterface(exported, tinterface, classifiers)
 		}
 	}
 
-	private def validateConsumptionOfNonExternalInterface(TInterface tinterface, String classifiers) {
+	private def validateConsumptionOfNonExternalInterface(N4ClassDeclaration exported, TInterface tinterface, String classifiers) {
 		if (!tinterface.external && tinterface.typingStrategy !== TypingStrategy.STRUCTURAL) {
 			val message = getMessageForCLF_EXT_CONSUME_NON_EXT(classifiers)
-			val eObjectToNameFeature = tinterface.findNameFeature
+			val eObjectToNameFeature = exported.findNameFeature
 			addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_EXT_CONSUME_NON_EXT)
 		}
 	}
