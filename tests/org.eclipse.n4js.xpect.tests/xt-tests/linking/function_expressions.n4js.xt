@@ -28,7 +28,7 @@
 /* pos 0 */
 export function foo1() {
     foo1;
-// XPECT linkedFragment at 'foo1' --> /1/@topLevelTypes.0
+// XPECT linkedFragment at 'foo1' --> /1/@types.0
     foo1();
     var b = function foo2() {
 // XPECT linkedFragment at 'foo2' --> /1/@internalTypes.0
@@ -51,5 +51,5 @@ XPECT ! linkedFragment at 'foo4' ---
     	}
     }
 }
-// XPECT linkedFragment at 'foo' --> /1/@topLevelTypes.0
+// XPECT linkedFragment at 'foo' --> /1/@types.0
 foo1();

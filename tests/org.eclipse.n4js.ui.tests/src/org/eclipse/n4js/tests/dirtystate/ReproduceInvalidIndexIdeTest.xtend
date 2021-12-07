@@ -128,7 +128,7 @@ public class ReproduceInvalidIndexIdeTest extends ConvertedIdeTest {
 				"  <variables name=\"a\" exportedName=\"a\" const=\"true\" newExpression=\"true\">\n" +
 				"    <astElement href=\"#/0/@scriptElements.2/@exportedElement/@varDeclsOrBindings.0\"/>\n" +
 				"    <typeRef xsi:type=\"typeRefs:ParameterizedTypeRef\">\n" +
-				"      <declaredType href=\"../../Def/src/A.n4jsd#/1/@topLevelTypes.0\"/>\n" +
+				"      <declaredType href=\"../../Def/src/A.n4jsd#/1/@types.0\"/>\n" +
 				"    </typeRef>\n" +
 				"  </variables>\n" +
 				"  <astElement href=\"#/0\"/>\n" +

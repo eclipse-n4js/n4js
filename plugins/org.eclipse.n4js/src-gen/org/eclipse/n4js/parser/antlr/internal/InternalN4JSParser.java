@@ -57180,7 +57180,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public final EObject ruleTypeReference(EObject in_current) throws RecognitionException {
         EObject current = in_current;
         Token otherlv_1=null;
-        EObject lv_namespaceLikeRefs_0_0 = null;
+        EObject lv_astNamespaceLikeRefs_0_0 = null;
         	enterRule();
         try {
             {
@@ -57195,10 +57195,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	    {
             	    {
             	    if ( state.backtracking==0 ) {
-            	      						newCompositeNode(grammarAccess.getTypeReferenceAccess().getNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0());
+            	      						newCompositeNode(grammarAccess.getTypeReferenceAccess().getAstNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0());
             	    }
             	    pushFollow(FOLLOW_110);
-            	    lv_namespaceLikeRefs_0_0=ruleNamespaceLikeRef();
+            	    lv_astNamespaceLikeRefs_0_0=ruleNamespaceLikeRef();
             	    state._fsp--;
             	    if (state.failed) return current;
             	    if ( state.backtracking==0 ) {
@@ -57207,8 +57207,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             	      						}
             	      						add(
             	      							current,
-            	      							"namespaceLikeRefs",
-            	      							lv_namespaceLikeRefs_0_0,
+            	      							"astNamespaceLikeRefs",
+            	      							lv_astNamespaceLikeRefs_0_0,
             	      							"org.eclipse.n4js.TypeExpressions.NamespaceLikeRef");
             	      						afterParserOrEnumRuleCall();
             	    }
@@ -91900,7 +91900,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             this.transition = dfa_389;
         }
         public String getDescription() {
-            return "()* loopback of 39714:3: ( ( (lv_namespaceLikeRefs_0_0= ruleNamespaceLikeRef ) ) otherlv_1= FullStop )*";
+            return "()* loopback of 39714:3: ( ( (lv_astNamespaceLikeRefs_0_0= ruleNamespaceLikeRef ) ) otherlv_1= FullStop )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             TokenStream input = (TokenStream)_input;

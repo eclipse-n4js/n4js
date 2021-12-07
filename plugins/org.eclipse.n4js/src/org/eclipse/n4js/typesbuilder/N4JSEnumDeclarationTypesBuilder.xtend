@@ -30,7 +30,7 @@ public class N4JSEnumDeclarationTypesBuilder {
 			return false;
 		}
 
-		val TEnum enumType = target.topLevelTypes.get(idx) as TEnum
+		val TEnum enumType = target.types.get(idx) as TEnum
 		ensureEqualName(n4Enum, enumType);
 
 		relinkTEnumLiterals(n4Enum, enumType, preLinkingPhase);
@@ -73,7 +73,7 @@ public class N4JSEnumDeclarationTypesBuilder {
 		enumType.astElement = n4Enum
 		n4Enum.definedType = enumType
 
-		target.topLevelTypes += enumType
+		target.types += enumType
 
 		return enumType;
 	}

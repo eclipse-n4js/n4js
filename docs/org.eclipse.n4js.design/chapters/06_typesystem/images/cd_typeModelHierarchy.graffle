@@ -6438,7 +6438,7 @@ Variable}</string>
 {\*\expandedcolortbl;;}
 \pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc\partightenfactor0
 
-\f0\fs16 \cf0 topLevelTypes}</string>
+\f0\fs16 \cf0 types}</string>
 						<key>TextAlongPathGlyphAnchor</key>
 						<string>left</string>
 					</dict>

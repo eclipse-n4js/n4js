@@ -369,7 +369,7 @@ public class PreparationStep {
 		private boolean isDynamicNamespaceReference(EObject eObject) {
 			if (eObject instanceof ParameterizedTypeRef) {
 				ParameterizedTypeRef ptr = (ParameterizedTypeRef) eObject;
-				List<NamespaceLikeRef> namespaceLikeRefs = ptr.getNamespaceLikeRefs();
+				List<NamespaceLikeRef> namespaceLikeRefs = ptr.getAstNamespaceLikeRefs();
 				if (!namespaceLikeRefs.isEmpty()
 						&& namespaceLikeRefs.get(0).getDeclaredType() instanceof ModuleNamespaceVirtualType) {
 

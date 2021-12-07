@@ -27,7 +27,7 @@ class N4JSTypeAliasDeclarationTypesBuilder {
 			return false;
 		}
 
-		val TypeAlias typeAlias = target.topLevelTypes.get(idx) as TypeAlias
+		val TypeAlias typeAlias = target.types.get(idx) as TypeAlias
 
 		ensureEqualName(n4TypeAlias, typeAlias);
 		typeAlias.astElement = n4TypeAlias;
@@ -57,6 +57,6 @@ class N4JSTypeAliasDeclarationTypesBuilder {
 		typeAlias.astElement = n4TypeAlias;
 		n4TypeAlias.definedType = typeAlias;
 
-		target.topLevelTypes += typeAlias;
+		target.types += typeAlias;
 	}
 }

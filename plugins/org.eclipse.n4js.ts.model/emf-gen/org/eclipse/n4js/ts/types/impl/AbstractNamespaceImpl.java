@@ -43,23 +43,23 @@ import org.eclipse.xtext.EcoreUtil2;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getTopLevelTypes <em>Top Level Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getTypes <em>Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getNamespaces <em>Namespaces</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl implements AbstractNamespace {
+public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl implements AbstractNamespace {
 	/**
-	 * The cached value of the '{@link #getTopLevelTypes() <em>Top Level Types</em>}' containment reference list.
+	 * The cached value of the '{@link #getTypes() <em>Types</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTopLevelTypes()
+	 * @see #getTypes()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Type> topLevelTypes;
+	protected EList<Type> types;
 
 	/**
 	 * The cached value of the '{@link #getVariables() <em>Variables</em>}' containment reference list.
@@ -106,11 +106,11 @@ public class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl implements 
 	 * @generated
 	 */
 	@Override
-	public EList<Type> getTopLevelTypes() {
-		if (topLevelTypes == null) {
-			topLevelTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES);
+	public EList<Type> getTypes() {
+		if (types == null) {
+			types = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.ABSTRACT_NAMESPACE__TYPES);
 		}
-		return topLevelTypes;
+		return types;
 	}
 
 	/**
@@ -157,8 +157,8 @@ public class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl implements 
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TypesPackage.ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES:
-				return ((InternalEList<?>)getTopLevelTypes()).basicRemove(otherEnd, msgs);
+			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
+				return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
 			case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES:
 				return ((InternalEList<?>)getVariables()).basicRemove(otherEnd, msgs);
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
@@ -175,8 +175,8 @@ public class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl implements 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypesPackage.ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES:
-				return getTopLevelTypes();
+			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
+				return getTypes();
 			case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES:
 				return getVariables();
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
@@ -194,9 +194,9 @@ public class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl implements 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypesPackage.ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES:
-				getTopLevelTypes().clear();
-				getTopLevelTypes().addAll((Collection<? extends Type>)newValue);
+			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
+				getTypes().clear();
+				getTypes().addAll((Collection<? extends Type>)newValue);
 				return;
 			case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES:
 				getVariables().clear();
@@ -218,8 +218,8 @@ public class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl implements 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypesPackage.ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES:
-				getTopLevelTypes().clear();
+			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
+				getTypes().clear();
 				return;
 			case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES:
 				getVariables().clear();
@@ -239,8 +239,8 @@ public class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl implements 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypesPackage.ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES:
-				return topLevelTypes != null && !topLevelTypes.isEmpty();
+			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
+				return types != null && !types.isEmpty();
 			case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES:
 				return variables != null && !variables.isEmpty();
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:

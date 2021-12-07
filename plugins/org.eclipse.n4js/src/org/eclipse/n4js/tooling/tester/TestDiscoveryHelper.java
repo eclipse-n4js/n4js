@@ -374,7 +374,7 @@ public class TestDiscoveryHelper {
 	 */
 	private void collectTestCasesAndSuitesForModule(N4JSWorkspaceConfigSnapshot ws, TModule module,
 			Map<String, TestSuite> suites) {
-		for (final TClass clazz : from(module.getTopLevelTypes()).filter(TClass.class)
+		for (final TClass clazz : from(module.getTypes()).filter(TClass.class)
 				.filter(c -> !c.isAbstract() && c.isExported())) {
 			Iterable<TMethod> testMethods = getAllTestMethodsOfClass(clazz);
 			if (testMethods.iterator().hasNext()) {

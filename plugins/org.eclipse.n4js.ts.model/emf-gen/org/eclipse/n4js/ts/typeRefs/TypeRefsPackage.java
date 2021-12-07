@@ -3429,13 +3429,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Namespace Like Refs</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Ast Namespace Like Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__NAMESPACE_LIKE_REFS = BASE_TYPE_REF_FEATURE_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS = BASE_TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -3926,13 +3926,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_NTYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Namespace Like Refs</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Ast Namespace Like Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL__NAMESPACE_LIKE_REFS = PARAMETERIZED_TYPE_REF__NAMESPACE_LIKE_REFS;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_NAMESPACE_LIKE_REFS = PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -5859,13 +5859,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__ARRAY_NTYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Namespace Like Refs</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Ast Namespace Like Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF__NAMESPACE_LIKE_REFS = PARAMETERIZED_TYPE_REF__NAMESPACE_LIKE_REFS;
+	int FUNCTION_TYPE_REF__AST_NAMESPACE_LIKE_REFS = PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -9459,15 +9459,15 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getParameterizedTypeRef_ArrayNTypeExpression();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getNamespaceLikeRefs <em>Namespace Like Refs</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespaceLikeRefs <em>Ast Namespace Like Refs</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Namespace Like Refs</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getNamespaceLikeRefs()
+	 * @return the meta object for the containment reference list '<em>Ast Namespace Like Refs</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespaceLikeRefs()
 	 * @see #getParameterizedTypeRef()
 	 * @generated
 	 */
-	EReference getParameterizedTypeRef_NamespaceLikeRefs();
+	EReference getParameterizedTypeRef_AstNamespaceLikeRefs();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}'.
@@ -11229,12 +11229,12 @@ public interface TypeRefsPackage extends EPackage {
 		EAttribute PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION = eINSTANCE.getParameterizedTypeRef_ArrayNTypeExpression();
 
 		/**
-		 * The meta object literal for the '<em><b>Namespace Like Refs</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Ast Namespace Like Refs</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PARAMETERIZED_TYPE_REF__NAMESPACE_LIKE_REFS = eINSTANCE.getParameterizedTypeRef_NamespaceLikeRefs();
+		EReference PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS = eINSTANCE.getParameterizedTypeRef_AstNamespaceLikeRefs();
 
 		/**
 		 * The meta object literal for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute feature.

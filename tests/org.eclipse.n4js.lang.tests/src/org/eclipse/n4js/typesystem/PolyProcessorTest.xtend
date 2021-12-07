@@ -89,14 +89,14 @@ class PolyProcessorTest extends AbstractTypesystemTest {
 
 		N4JSResource.postProcessContainingN4JSResourceOf(script);
 
-		A = script.module.topLevelTypes.findFirst[name=="A"];
-		B = script.module.topLevelTypes.findFirst[name=="B"];
-		B1 = script.module.topLevelTypes.findFirst[name=="B1"];
-		B2 = script.module.topLevelTypes.findFirst[name=="B2"];
-		C = script.module.topLevelTypes.findFirst[name=="C"];
+		A = script.module.types.findFirst[name=="A"];
+		B = script.module.types.findFirst[name=="B"];
+		B1 = script.module.types.findFirst[name=="B1"];
+		B2 = script.module.types.findFirst[name=="B2"];
+		C = script.module.types.findFirst[name=="C"];
 
-		G = script.module.topLevelTypes.findFirst[name=="G"];
-		G2 = script.module.topLevelTypes.findFirst[name=="G2"];
+		G = script.module.types.findFirst[name=="G"];
+		G2 = script.module.types.findFirst[name=="G2"];
 
 		assertNotNull(A);
 		assertNotNull(B);

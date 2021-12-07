@@ -28,7 +28,7 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 			return false;
 		}
 
-		val TClass tclass = target.topLevelTypes.get(idx) as TClass
+		val TClass tclass = target.types.get(idx) as TClass
 
 		tclass.relinkClassifierAndMembers(n4Class, preLinkingPhase);
 		return true;
@@ -67,7 +67,7 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 
 		n4Class.definedType = tclass;
 
-		target.topLevelTypes += tclass;
+		target.types += tclass;
 
 		return tclass;
 	}

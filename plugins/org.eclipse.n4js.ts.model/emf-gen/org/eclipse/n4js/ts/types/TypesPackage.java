@@ -88,13 +88,13 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE = 20;
 
 	/**
-	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES = 0;
+	int ABSTRACT_NAMESPACE__TYPES = 0;
 
 	/**
 	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
@@ -152,13 +152,13 @@ public interface TypesPackage extends EPackage {
 	int TMODULE = 0;
 
 	/**
-	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TOP_LEVEL_TYPES = ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES;
+	int TMODULE__TYPES = ABSTRACT_NAMESPACE__TYPES;
 
 	/**
 	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
@@ -2737,13 +2737,13 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE__ANNOTATIONS = TYPE__ANNOTATIONS;
 
 	/**
-	 * The feature id for the '<em><b>Top Level Types</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__TOP_LEVEL_TYPES = TYPE_FEATURE_COUNT + 0;
+	int TNAMESPACE__TYPES = TYPE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
@@ -13719,15 +13719,15 @@ public interface TypesPackage extends EPackage {
 	EClass getAbstractNamespace();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getTopLevelTypes <em>Top Level Types</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getTypes <em>Types</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Top Level Types</em>'.
-	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getTopLevelTypes()
+	 * @return the meta object for the containment reference list '<em>Types</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getTypes()
 	 * @see #getAbstractNamespace()
 	 * @generated
 	 */
-	EReference getAbstractNamespace_TopLevelTypes();
+	EReference getAbstractNamespace_Types();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getVariables <em>Variables</em>}'.
@@ -16499,12 +16499,12 @@ public interface TypesPackage extends EPackage {
 		EClass ABSTRACT_NAMESPACE = eINSTANCE.getAbstractNamespace();
 
 		/**
-		 * The meta object literal for the '<em><b>Top Level Types</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Types</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES = eINSTANCE.getAbstractNamespace_TopLevelTypes();
+		EReference ABSTRACT_NAMESPACE__TYPES = eINSTANCE.getAbstractNamespace_Types();
 
 		/**
 		 * The meta object literal for the '<em><b>Variables</b></em>' containment reference list feature.

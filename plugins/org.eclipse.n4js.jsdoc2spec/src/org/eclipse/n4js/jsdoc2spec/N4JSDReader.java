@@ -169,14 +169,14 @@ public class N4JSDReader {
 	}
 
 	/**
-	 * The method {@link TModule#getTopLevelTypes()} returns also functions that are nested in functions. These are
+	 * The method {@link TModule#getTypes()} returns also functions that are nested in functions. These are
 	 * filtered out in this method.
 	 *
 	 * @return real top level types
 	 */
 	private Collection<Type> getRealTopLevelTypes(Script script) {
 		Collection<Type> realTLT = new LinkedList<>();
-		for (Type tlt : script.getModule().getTopLevelTypes()) {
+		for (Type tlt : script.getModule().getTypes()) {
 			if (tlt instanceof SyntaxRelatedTElement) {
 				SyntaxRelatedTElement srte = (SyntaxRelatedTElement) tlt;
 				EObject astElem = srte.getAstElement();

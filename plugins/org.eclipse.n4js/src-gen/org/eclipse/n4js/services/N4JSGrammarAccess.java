@@ -16336,7 +16336,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//fragment TypeReference *:
-	//    (namespaceLikeRefs+=NamespaceLikeRef '.')*
+	//    (astNamespaceLikeRefs+=NamespaceLikeRef '.')*
 	//    => declaredType=[Type|TypeReferenceName]
 	//;
 	public TypeExpressionsGrammarAccess.TypeReferenceElements getTypeReferenceAccess() {

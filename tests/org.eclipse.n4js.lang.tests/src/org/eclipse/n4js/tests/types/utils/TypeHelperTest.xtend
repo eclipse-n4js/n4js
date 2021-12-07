@@ -52,10 +52,10 @@ class TypeHelperTest  {
 
 		'''.parse()
 
-		var A = script.module.topLevelTypes.get(0).createTypeRef()
-		var B = script.module.topLevelTypes.get(1).createTypeRef()
-		var C = script.module.topLevelTypes.get(2).createTypeRef();
-		var D = script.module.topLevelTypes.get(3).createTypeRef();
+		var A = script.module.types.get(0).createTypeRef()
+		var B = script.module.types.get(1).createTypeRef()
+		var C = script.module.types.get(2).createTypeRef();
+		var D = script.module.types.get(3).createTypeRef();
 
 		assertEquals("", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(A, false).asString());
 		assertEquals("A", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(B, false).asString());
@@ -73,10 +73,10 @@ class TypeHelperTest  {
 
 		'''.parse()
 
-		var A = script.module.topLevelTypes.get(0).createTypeRef();
-		var B = script.module.topLevelTypes.get(1).createTypeRef();
-		var C = script.module.topLevelTypes.get(2).createTypeRef();
-		var D = script.module.topLevelTypes.get(3).createTypeRef();
+		var A = script.module.types.get(0).createTypeRef();
+		var B = script.module.types.get(1).createTypeRef();
+		var C = script.module.types.get(2).createTypeRef();
+		var D = script.module.types.get(3).createTypeRef();
 
 		assertEquals("A", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(A, true).asString());
 		assertEquals("B,A", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(B, true).asString());
@@ -94,10 +94,10 @@ class TypeHelperTest  {
 
 		'''.parse()
 
-		var A = script.module.topLevelTypes.get(0).createTypeRef();
-		var B = script.module.topLevelTypes.get(1).createTypeRef();
-		var C = script.module.topLevelTypes.get(2).createTypeRef();
-		var D = script.module.topLevelTypes.get(3).createTypeRef();
+		var A = script.module.types.get(0).createTypeRef();
+		var B = script.module.types.get(1).createTypeRef();
+		var C = script.module.types.get(2).createTypeRef();
+		var D = script.module.types.get(3).createTypeRef();
 
 		assertEquals("D,C,B", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(A, false).asString());
 		assertEquals("A,D,C", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(B, false).asString());
@@ -121,10 +121,10 @@ class TypeHelperTest  {
 
 		'''.parse()
 
-		var A = script.module.topLevelTypes.get(0).createTypeRef();
-		var B = script.module.topLevelTypes.get(1).createTypeRef();
-		var C = script.module.topLevelTypes.get(2).createTypeRef();
-		var D = script.module.topLevelTypes.get(3).createTypeRef();
+		var A = script.module.types.get(0).createTypeRef();
+		var B = script.module.types.get(1).createTypeRef();
+		var C = script.module.types.get(2).createTypeRef();
+		var D = script.module.types.get(3).createTypeRef();
 
 		assertEquals("I", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(A, false).asString());
 		assertEquals("A,I,L,K", tsh.collectAllDeclaredSuperTypesTypeargsIgnored(B, false).asString());

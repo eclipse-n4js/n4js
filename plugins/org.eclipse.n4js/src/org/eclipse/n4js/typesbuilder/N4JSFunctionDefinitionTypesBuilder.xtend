@@ -44,7 +44,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 			return false;
 		}
 
-		val TFunction functionType = target.topLevelTypes.get(idx) as TFunction
+		val TFunction functionType = target.types.get(idx) as TFunction
 		ensureEqualName(functionDecl, functionType);
 
 		functionType.relinkFormalParameters(functionDecl, preLinkingPhase)
@@ -86,7 +86,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 
 		// set container
-		target.topLevelTypes += functionType
+		target.types += functionType
 	}
 
 	/**

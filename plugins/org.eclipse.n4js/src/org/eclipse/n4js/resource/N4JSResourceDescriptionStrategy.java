@@ -213,7 +213,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (eObject instanceof TModule) {
 			TModule module = (TModule) eObject;
 			internalCreateEObjectDescriptionForRoot(module, acceptor);
-			for (Type type : module.getTopLevelTypes()) {
+			for (Type type : module.getTypes()) {
 				internalCreateEObjectDescription(type, acceptor);
 			}
 			for (TVariable variable : module.getVariables()) {

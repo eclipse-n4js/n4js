@@ -564,22 +564,19 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	boolean arrayNTypeExpression = "false"
 
 	/*
-	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node <em>and</em> ...
-	 * <ol>
-	 * <li>the declared type is, in the source code, referred to via a namespace of a namespace or namespace import,
-	 * then this is non-null and points to that namespace, or
-	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
-	 * </ol>
+	 * If and only if this {@code ParameterizedTypeRef} represents an AST node (i.e. was created by the parser).
+	 * The array consists of references in the following order:
+	 * ModuleNamespaceVirtualType? [TNamespace]* TEnum?
 	 */
-	contains NamespaceLikeRef[] namespaceLikeRefs
+	contains NamespaceLikeRef[] astNamespaceLikeRefs
 	
 	op NamespaceLikeRef getPreviousSibling(NamespaceLikeRef nslRef) {
 		if (nslRef === null || nslRef.eContainer !== this) {
 			return null;
 		}
-		for (var i=1; i<namespaceLikeRefs.length; i++) {
-			if (namespaceLikeRefs.get(i) == nslRef) {
-				return namespaceLikeRefs.get(i - 1);
+		for (var i=1; i<astNamespaceLikeRefs.length; i++) {
+			if (astNamespaceLikeRefs.get(i) == nslRef) {
+				return astNamespaceLikeRefs.get(i - 1);
 			}
 		}
 		return null;

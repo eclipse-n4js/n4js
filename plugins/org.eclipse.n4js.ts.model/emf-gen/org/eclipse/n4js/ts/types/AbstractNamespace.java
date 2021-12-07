@@ -23,18 +23,18 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getTopLevelTypes <em>Top Level Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getTypes <em>Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNamespaces <em>Namespaces</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace()
- * @model
+ * @model abstract="true"
  * @generated
  */
 public interface AbstractNamespace extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Top Level Types</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Types</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.Type}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -45,12 +45,12 @@ public interface AbstractNamespace extends EObject {
 	 * This allows for better validation messages and diagnostics in later stages
 	 * of the processing.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Top Level Types</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_TopLevelTypes()
+	 * @return the value of the '<em>Types</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_Types()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<Type> getTopLevelTypes();
+	EList<Type> getTypes();
 
 	/**
 	 * Returns the value of the '<em><b>Variables</b></em>' containment reference list.
@@ -60,7 +60,7 @@ public interface AbstractNamespace extends EObject {
 	 * <!-- begin-model-doc -->
 	 * A list of all top level variables in the script.
 	 * These include the exported variables as well as the internal variables.
-	 * Similar to #topLevelTypes, this allows for better validation messages and diagnostics.
+	 * Similar to #types, this allows for better validation messages and diagnostics.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Variables</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_Variables()
@@ -77,7 +77,7 @@ public interface AbstractNamespace extends EObject {
 	 * <!-- begin-model-doc -->
 	 * A list of all top level namespaces in the script.
 	 * These include the exported namespaces as well as the internal namespaces.
-	 * Similar to #topLevelTypes, this allows for better validation messages and diagnostics.
+	 * Similar to #types, this allows for better validation messages and diagnostics.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Namespaces</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_Namespaces()

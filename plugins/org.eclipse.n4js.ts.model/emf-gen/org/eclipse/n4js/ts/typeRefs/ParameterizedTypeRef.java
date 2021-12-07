@@ -38,7 +38,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeArgs <em>Declared Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getNamespaceLikeRefs <em>Namespace Like Refs</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespaceLikeRefs <em>Ast Namespace Like Refs</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -161,24 +161,21 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	void setArrayNTypeExpression(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Namespace Like Refs</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Ast Namespace Like Refs</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node <em>and</em> ...
-	 * <ol>
-	 * <li>the declared type is, in the source code, referred to via a namespace of a namespace or namespace import,
-	 * then this is non-null and points to that namespace, or
-	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
-	 * </ol>
+	 * If and only if this {@code ParameterizedTypeRef} represents an AST node (i.e. was created by the parser).
+	 * The array consists of references in the following order:
+	 * ModuleNamespaceVirtualType? [TNamespace]* TEnum?
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Namespace Like Refs</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_NamespaceLikeRefs()
+	 * @return the value of the '<em>Ast Namespace Like Refs</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstNamespaceLikeRefs()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<NamespaceLikeRef> getNamespaceLikeRefs();
+	EList<NamespaceLikeRef> getAstNamespaceLikeRefs();
 
 	/**
 	 * Returns the value of the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.

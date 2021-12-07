@@ -134,7 +134,7 @@ class LocallyKnownTypesScopingHelper {
 		if (ans === null || ans.eIsProxy) {
 			return parent;
 		}
-		val tleAndNamespaces = Iterables.concat(ans.topLevelTypes, ans.namespaces);
+		val tleAndNamespaces = Iterables.concat(ans.types, ans.namespaces);
 		val eoDescrs = tleAndNamespaces.filter[t | !t.polyfill ].map[ topLevelType |
 			return EObjectDescription.create(topLevelType.name, topLevelType);
 		];
@@ -155,7 +155,7 @@ class LocallyKnownTypesScopingHelper {
 
 		// locally defined types except polyfillType itself
 		val local = script.module
-		val eoDescrs = local.topLevelTypes.filter[it !== polyfillType].map[EObjectDescription.create(name, it)];
+		val eoDescrs = local.types.filter[it !== polyfillType].map[EObjectDescription.create(name, it)];
 		val IScope localTypesScope = scopeSnapshotHelper.scopeFor("scopeWithLocallyKnownTypesForPolyfillSuperRef", script, importScope, eoDescrs);
 
 		// type variables of polyfill

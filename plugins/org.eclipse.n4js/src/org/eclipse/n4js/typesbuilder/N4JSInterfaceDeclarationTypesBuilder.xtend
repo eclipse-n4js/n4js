@@ -24,7 +24,7 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 			return false;
 		}
 
-		val TInterface interfaceType = target.topLevelTypes.get(idx) as TInterface
+		val TInterface interfaceType = target.types.get(idx) as TInterface
 		interfaceType.relinkClassifierAndMembers(n4Interface, preLinkingPhase);
 		return true;
 	}
@@ -62,7 +62,7 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 
 		n4Interface.definedType = interfaceType
 
-		target.topLevelTypes += interfaceType
+		target.types += interfaceType
 		return interfaceType;
 	}
 

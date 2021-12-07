@@ -81,11 +81,11 @@ class VariablesAndConstantsTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		val firstVariable = assertTVariable(phase, newN4jsResource, 0, "a", false)
 		val firstVariableType = assertTypeRef(phase, firstVariable, newN4jsResource)
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, firstVariableType, "/1/@topLevelTypes.8")  // int
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, firstVariableType, "/1/@types.8")  // int
 
 		val secondVariable = assertTVariable(phase, newN4jsResource, 1, "b", false)
 		val secondVariableType = assertTypeRef(phase, secondVariable, newN4jsResource)
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, secondVariableType, "/1/@topLevelTypes.4")
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, secondVariableType, "/1/@types.4")
 
 		val thirdVariable = assertTVariable(phase, newN4jsResource, 2, "CONST1", true)
 		assertTrue(thirdVariable.typeRef instanceof NumericLiteralTypeRef)
@@ -93,7 +93,7 @@ class VariablesAndConstantsTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		val fourthVariable = assertTVariable(phase, newN4jsResource, 3, "CONST2", true)
 		val fourthVariableType = assertTypeRef(phase, fourthVariable, newN4jsResource)
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, fourthVariableType, "/1/@topLevelTypes.3")
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, fourthVariableType, "/1/@types.3")
 
 		Assert.assertEquals("Should have only 4 exported variables as the fifth one is not marked as exported",
 			4, (newN4jsResource.contents.get(1) as TModule).variables.size

@@ -114,7 +114,7 @@ class N4JSResourceTest {
 		val contents = newResource.contents
 		assertEquals(2, contents.size)
 		val deserializedScript = contents.get(1) as TModule
-		val deserializedType = deserializedScript.topLevelTypes.head as TClass
+		val deserializedType = deserializedScript.types.head as TClass
 		assertEquals("Supplier", deserializedType.name)
 		val astProxy = deserializedType.eGet(TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false) as EObject
 		assertTrue(astProxy.toString, astProxy.eIsProxy)

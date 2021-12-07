@@ -51,7 +51,7 @@ import org.eclipse.xtext.EcoreUtil2;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getTopLevelTypes <em>Top Level Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getTypes <em>Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getNamespaces <em>Namespaces</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
@@ -64,14 +64,14 @@ import org.eclipse.xtext.EcoreUtil2;
  */
 public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	/**
-	 * The cached value of the '{@link #getTopLevelTypes() <em>Top Level Types</em>}' containment reference list.
+	 * The cached value of the '{@link #getTypes() <em>Types</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTopLevelTypes()
+	 * @see #getTypes()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<Type> topLevelTypes;
+	protected EList<Type> types;
 
 	/**
 	 * The cached value of the '{@link #getVariables() <em>Variables</em>}' containment reference list.
@@ -188,11 +188,11 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	 * @generated
 	 */
 	@Override
-	public EList<Type> getTopLevelTypes() {
-		if (topLevelTypes == null) {
-			topLevelTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TNAMESPACE__TOP_LEVEL_TYPES);
+	public EList<Type> getTypes() {
+		if (types == null) {
+			types = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TNAMESPACE__TYPES);
 		}
-		return topLevelTypes;
+		return types;
 	}
 
 	/**
@@ -396,8 +396,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TypesPackage.TNAMESPACE__TOP_LEVEL_TYPES:
-				return ((InternalEList<?>)getTopLevelTypes()).basicRemove(otherEnd, msgs);
+			case TypesPackage.TNAMESPACE__TYPES:
+				return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TNAMESPACE__VARIABLES:
 				return ((InternalEList<?>)getVariables()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TNAMESPACE__NAMESPACES:
@@ -414,8 +414,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypesPackage.TNAMESPACE__TOP_LEVEL_TYPES:
-				return getTopLevelTypes();
+			case TypesPackage.TNAMESPACE__TYPES:
+				return getTypes();
 			case TypesPackage.TNAMESPACE__VARIABLES:
 				return getVariables();
 			case TypesPackage.TNAMESPACE__NAMESPACES:
@@ -442,9 +442,9 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypesPackage.TNAMESPACE__TOP_LEVEL_TYPES:
-				getTopLevelTypes().clear();
-				getTopLevelTypes().addAll((Collection<? extends Type>)newValue);
+			case TypesPackage.TNAMESPACE__TYPES:
+				getTypes().clear();
+				getTypes().addAll((Collection<? extends Type>)newValue);
 				return;
 			case TypesPackage.TNAMESPACE__VARIABLES:
 				getVariables().clear();
@@ -478,8 +478,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TNAMESPACE__TOP_LEVEL_TYPES:
-				getTopLevelTypes().clear();
+			case TypesPackage.TNAMESPACE__TYPES:
+				getTypes().clear();
 				return;
 			case TypesPackage.TNAMESPACE__VARIABLES:
 				getVariables().clear();
@@ -511,8 +511,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TNAMESPACE__TOP_LEVEL_TYPES:
-				return topLevelTypes != null && !topLevelTypes.isEmpty();
+			case TypesPackage.TNAMESPACE__TYPES:
+				return types != null && !types.isEmpty();
 			case TypesPackage.TNAMESPACE__VARIABLES:
 				return variables != null && !variables.isEmpty();
 			case TypesPackage.TNAMESPACE__NAMESPACES:
@@ -538,7 +538,7 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
 		if (baseClass == AbstractNamespace.class) {
 			switch (derivedFeatureID) {
-				case TypesPackage.TNAMESPACE__TOP_LEVEL_TYPES: return TypesPackage.ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES;
+				case TypesPackage.TNAMESPACE__TYPES: return TypesPackage.ABSTRACT_NAMESPACE__TYPES;
 				case TypesPackage.TNAMESPACE__VARIABLES: return TypesPackage.ABSTRACT_NAMESPACE__VARIABLES;
 				case TypesPackage.TNAMESPACE__NAMESPACES: return TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES;
 				default: return -1;
@@ -569,7 +569,7 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
 		if (baseClass == AbstractNamespace.class) {
 			switch (baseFeatureID) {
-				case TypesPackage.ABSTRACT_NAMESPACE__TOP_LEVEL_TYPES: return TypesPackage.TNAMESPACE__TOP_LEVEL_TYPES;
+				case TypesPackage.ABSTRACT_NAMESPACE__TYPES: return TypesPackage.TNAMESPACE__TYPES;
 				case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES: return TypesPackage.TNAMESPACE__VARIABLES;
 				case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES: return TypesPackage.TNAMESPACE__NAMESPACES;
 				default: return -1;

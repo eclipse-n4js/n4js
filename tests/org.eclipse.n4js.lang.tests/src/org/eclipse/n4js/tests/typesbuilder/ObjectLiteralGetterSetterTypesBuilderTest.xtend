@@ -76,7 +76,7 @@ class ObjectLiteralGetterSetterTypesBuilderTest extends AbstractTypesBuilderTest
 
 		val firstVariable = assertTVariable(phase, newN4jsResource, 0, "callee", false)
 		val firstVariableType = assertTypeRef(phase, firstVariable, newN4jsResource)
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, firstVariableType, "/1/@topLevelTypes.3")  // any
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, firstVariableType, "/1/@types.3")  // any
 	}
 
 	override assertExampleJSStructure(String phase, Resource resource) {
@@ -117,13 +117,13 @@ class ObjectLiteralGetterSetterTypesBuilderTest extends AbstractTypesBuilderTest
 		assertEquals(phase + ": expected TStructuralType getter count", 1, tStructType.ownedMembers.filter(TStructGetter).size)
 		assertEquals(phase + ": expected TStructuralType setter count", 1, tStructType.ownedMembers.filter(TStructSetter).size)
 
-		assertTStructField(phase, tStructType, "a", "/1/@topLevelTypes.4")
-		assertTStructField(phase, tStructType, "$data_property_b", "/1/@topLevelTypes.6")
-		assertTStructField(phase, tStructType, "c", "/1/@topLevelTypes.4")
-		assertTStructField(phase, tStructType, "d", "/1/@topLevelTypes.4")
-		assertTStructField(phase, tStructType, "$data_property_e", "/1/@topLevelTypes.6")
+		assertTStructField(phase, tStructType, "a", "/1/@types.4")
+		assertTStructField(phase, tStructType, "$data_property_b", "/1/@types.6")
+		assertTStructField(phase, tStructType, "c", "/1/@types.4")
+		assertTStructField(phase, tStructType, "d", "/1/@types.4")
+		assertTStructField(phase, tStructType, "$data_property_e", "/1/@types.6")
 
 		assertTGetter(phase, tStructType, "b")
-		assertTSetter(phase, tStructType, "e", "newE", "/1/@topLevelTypes.4")
+		assertTSetter(phase, tStructType, "e", "newE", "/1/@types.4")
 	}
 }

@@ -1385,31 +1385,31 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypeReference");
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
-		private final Assignment cNamespaceLikeRefsAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
-		private final RuleCall cNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0 = (RuleCall)cNamespaceLikeRefsAssignment_0_0.eContents().get(0);
+		private final Assignment cAstNamespaceLikeRefsAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
+		private final RuleCall cAstNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0 = (RuleCall)cAstNamespaceLikeRefsAssignment_0_0.eContents().get(0);
 		private final Keyword cFullStopKeyword_0_1 = (Keyword)cGroup_0.eContents().get(1);
 		private final Assignment cDeclaredTypeAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final CrossReference cDeclaredTypeTypeCrossReference_1_0 = (CrossReference)cDeclaredTypeAssignment_1.eContents().get(0);
 		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_1_0.eContents().get(1);
 		
 		//fragment TypeReference *:
-		//    (namespaceLikeRefs+=NamespaceLikeRef '.')*
+		//    (astNamespaceLikeRefs+=NamespaceLikeRef '.')*
 		//    => declaredType=[Type|TypeReferenceName]
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//(namespaceLikeRefs+=NamespaceLikeRef '.')*
+		//(astNamespaceLikeRefs+=NamespaceLikeRef '.')*
 		//=> declaredType=[Type|TypeReferenceName]
 		public Group getGroup() { return cGroup; }
 		
-		//(namespaceLikeRefs+=NamespaceLikeRef '.')*
+		//(astNamespaceLikeRefs+=NamespaceLikeRef '.')*
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//namespaceLikeRefs+=NamespaceLikeRef
-		public Assignment getNamespaceLikeRefsAssignment_0_0() { return cNamespaceLikeRefsAssignment_0_0; }
+		//astNamespaceLikeRefs+=NamespaceLikeRef
+		public Assignment getAstNamespaceLikeRefsAssignment_0_0() { return cAstNamespaceLikeRefsAssignment_0_0; }
 		
 		//NamespaceLikeRef
-		public RuleCall getNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0() { return cNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0; }
+		public RuleCall getAstNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0() { return cAstNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0; }
 		
 		//'.'
 		public Keyword getFullStopKeyword_0_1() { return cFullStopKeyword_0_1; }
@@ -3260,7 +3260,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//fragment TypeReference *:
-	//    (namespaceLikeRefs+=NamespaceLikeRef '.')*
+	//    (astNamespaceLikeRefs+=NamespaceLikeRef '.')*
 	//    => declaredType=[Type|TypeReferenceName]
 	//;
 	public TypeReferenceElements getTypeReferenceAccess() {

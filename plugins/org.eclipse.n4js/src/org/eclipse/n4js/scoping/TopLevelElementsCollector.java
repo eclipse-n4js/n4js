@@ -64,7 +64,7 @@ public class TopLevelElementsCollector {
 		List<IEObjectDescription> visible = new ArrayList<>();
 		List<IEObjectDescription> invisible = new ArrayList<>();
 
-		Iterable<Type> tltAndNamespaces = Iterables.concat(module.getTopLevelTypes(), module.getNamespaces());
+		Iterable<Type> tltAndNamespaces = Iterables.concat(module.getTypes(), module.getNamespaces());
 		for (Type type : tltAndNamespaces) {
 			boolean include = includeHollows || !N4JSLanguageUtils.isHollowElement(type, variantHelper);
 			if (include) {

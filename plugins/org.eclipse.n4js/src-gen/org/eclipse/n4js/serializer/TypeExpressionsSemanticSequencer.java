@@ -350,7 +350,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
 	 *         ) | 
 	 *         (
-	 *             namespaceLikeRefs+=NamespaceLikeRef* 
+	 *             astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *             declaredType=[Type|TypeReferenceName] 
 	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *             dynamic?='+'? 
@@ -388,7 +388,11 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *             arrayNTypeExpression?='[' 
 	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
 	 *         ) | 
-	 *         (namespaceLikeRefs+=NamespaceLikeRef* declaredType=[Type|TypeReferenceName] (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?)
+	 *         (
+	 *             astNamespaceLikeRefs+=NamespaceLikeRef* 
+	 *             declaredType=[Type|TypeReferenceName] 
+	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?
+	 *         )
 	 *     )
 	 */
 	protected void sequence_ArrayNTypeExpression_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
@@ -726,7 +730,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         namespaceLikeRefs+=NamespaceLikeRef* 
+	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember* 
@@ -746,7 +750,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         namespaceLikeRefs+=NamespaceLikeRef* 
+	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember* 
@@ -767,7 +771,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         namespaceLikeRefs+=NamespaceLikeRef* 
+	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember*
@@ -915,7 +919,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (
-	 *         namespaceLikeRefs+=NamespaceLikeRef* 
+	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *         dynamic?='+'? 
@@ -933,7 +937,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (
-	 *         namespaceLikeRefs+=NamespaceLikeRef* 
+	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *         dynamic?='+'?
@@ -951,7 +955,11 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     ParameterizedTypeRefNominal returns ParameterizedTypeRef
 	 *
 	 * Constraint:
-	 *     (namespaceLikeRefs+=NamespaceLikeRef* declaredType=[Type|TypeReferenceName] (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?)
+	 *     (
+	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
+	 *         declaredType=[Type|TypeReferenceName] 
+	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?
+	 *     )
 	 */
 	protected void sequence_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

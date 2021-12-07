@@ -39715,17 +39715,17 @@ ruleTypeReference[EObject in_current]  returns [EObject current=in_current]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getTypeReferenceAccess().getNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0());
+						newCompositeNode(grammarAccess.getTypeReferenceAccess().getAstNamespaceLikeRefsNamespaceLikeRefParserRuleCall_0_0_0());
 					}
-					lv_namespaceLikeRefs_0_0=ruleNamespaceLikeRef
+					lv_astNamespaceLikeRefs_0_0=ruleNamespaceLikeRef
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getTypeReferenceRule());
 						}
 						add(
 							$current,
-							"namespaceLikeRefs",
-							lv_namespaceLikeRefs_0_0,
+							"astNamespaceLikeRefs",
+							lv_astNamespaceLikeRefs_0_0,
 							"org.eclipse.n4js.TypeExpressions.NamespaceLikeRef");
 						afterParserOrEnumRuleCall();
 					}

@@ -135,10 +135,10 @@ class CircularReferencesScopingTest implements N4Scheme {
 		sister.contents.head // use an iterator here internally to check for concurrent modifications on the contents list
 		assertEquals(2, sister.contents.size)
 		val exportedScript = sister.contents.last as TModule
-		val exportedType = exportedScript.topLevelTypes.head as TClass
+		val exportedType = exportedScript.types.head as TClass
 		val exportedMethod = exportedType.ownedMembers.head as TMethod
 		val brotherType = (exportedMethod.returnTypeRef as ParameterizedTypeRef).declaredType as TClass
-		val originalBrotherType = (brother.contents.last as TModule).topLevelTypes.head
+		val originalBrotherType = (brother.contents.last as TModule).types.head
 		assertSame(originalBrotherType, brotherType)
 
 		rs.resources.filter[!resourceWithN4Scheme].forEach [ assertEquals(2, contents.size) ]
