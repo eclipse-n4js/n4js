@@ -332,7 +332,7 @@ TypeVariable returns TypeVariable:
 	('=' defaultArgument=TypeRef)?;
 
 QueryTypeRef:
-	'typeof' element=[IdentifiableElement|IdentifierName]
+	'typeof' expr=PropertyAccessExpressionInTypeRef
 ;
 
 InferTypeRef:
@@ -358,7 +358,11 @@ fragment TLiteralOrComputedPropertyName*:
 ExpressionInTypeRef:
 	  nameTypeRef=NumericLiteralTypeRef
 	| nameTypeRef=StringLiteralTypeRef
-	| identifierNames+=IdentifierName ('.' identifierNames+=IdentifierName)* // e.g. [Symbol.iterator]
+	| PropertyAccessExpressionInTypeRef
+;
+
+PropertyAccessExpressionInTypeRef returns ExpressionInTypeRef:
+	identifierNames+=IdentifierName ('.' identifierNames+=IdentifierName)* // e.g. Symbol.iterator or osConstants.priority (in node/constants.d.ts)
 ;
 
 /*

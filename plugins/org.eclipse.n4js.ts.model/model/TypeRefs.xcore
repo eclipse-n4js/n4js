@@ -28,7 +28,7 @@ import java.util.UUID
 import org.eclipse.emf.common.util.ECollections
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
-import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.ExpressionInTypeRef
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TFormalParameter
@@ -1442,10 +1442,10 @@ enum TypeOperator {
 
 /* Only allowed in DTS. */
 class QueryTypeRef extends TypeRef {
-	refers IdentifiableElement element
+	contains ExpressionInTypeRef expr
 
 	op String internalGetTypeRefAsString() {
-		"typeof " + element?.name
+		"typeof " + expr?.expressionAsString
 	}
 }
 

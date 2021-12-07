@@ -1365,6 +1365,10 @@ abstract class TStructMember extends TMember {
 class ExpressionInTypeRef {
 	contains LiteralTypeRef nameTypeRef
 	String[] identifierNames
+
+	op String getExpressionAsString() {
+		return nameTypeRef?.typeRefAsString ?: identifierNames?.join(".")
+	}
 }
 
 /*
