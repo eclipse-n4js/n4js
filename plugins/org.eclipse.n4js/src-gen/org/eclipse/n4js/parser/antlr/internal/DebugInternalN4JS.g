@@ -8239,7 +8239,11 @@ ruleAnnotatedN4MemberDeclaration:
 			)=>
 			ruleBlock
 		)?
-		';'?
+		(
+			';'
+			    |
+			','
+		)?
 		    |
 		(
 			(ruleN4Modifier
@@ -8421,7 +8425,11 @@ ruleAnnotatedN4MemberDeclaration:
 			)=>
 			ruleBlock
 		)?
-		';'?
+		(
+			';'
+			    |
+			','
+		)?
 		    |
 		(
 			(ruleN4Modifier
@@ -8466,7 +8474,11 @@ ruleAnnotatedN4MemberDeclaration:
 				)
 			)
 		)
-		';'?
+		(
+			';'
+			    |
+			','
+		)?
 		    |
 		(
 			(ruleTypeParameters?
@@ -8478,7 +8490,11 @@ ruleAnnotatedN4MemberDeclaration:
 				ruleMethodParamsReturnAndBody
 			)
 		)
-		';'?
+		(
+			';'
+			    |
+			','
+		)?
 		    |
 		ruleFieldDeclarationImpl
 	)
@@ -8502,7 +8518,11 @@ norm1_AnnotatedN4MemberDeclaration:
 			)=>
 			norm1_Block
 		)?
-		';'?
+		(
+			';'
+			    |
+			','
+		)?
 		    |
 		(
 			(ruleN4Modifier
@@ -8684,7 +8704,11 @@ norm1_AnnotatedN4MemberDeclaration:
 			)=>
 			norm1_Block
 		)?
-		';'?
+		(
+			';'
+			    |
+			','
+		)?
 		    |
 		(
 			(ruleN4Modifier
@@ -8729,7 +8753,11 @@ norm1_AnnotatedN4MemberDeclaration:
 				)
 			)
 		)
-		';'?
+		(
+			';'
+			    |
+			','
+		)?
 		    |
 		(
 			(ruleTypeParameters?
@@ -8741,7 +8769,11 @@ norm1_AnnotatedN4MemberDeclaration:
 				ruleMethodParamsReturnAndBody
 			)
 		)
-		';'?
+		(
+			';'
+			    |
+			','
+		)?
 		    |
 		norm1_FieldDeclarationImpl
 	)
@@ -8760,6 +8792,7 @@ ruleFieldDeclarationImpl:
 		'='
 		norm1_Expression
 	)?
+	','?
 	ruleSemi
 ;
 
@@ -8776,6 +8809,7 @@ norm1_FieldDeclarationImpl:
 		'='
 		norm3_Expression
 	)?
+	','?
 	ruleSemi
 ;
 
@@ -8834,7 +8868,11 @@ ruleN4MethodDeclaration:
 			)
 		)
 	)
-	';'?
+	(
+		';'
+		    |
+		','
+	)?
 ;
 
 // Rule N4MethodDeclaration
@@ -8882,21 +8920,33 @@ norm1_N4MethodDeclaration:
 			)
 		)
 	)
-	';'?
+	(
+		';'
+		    |
+		','
+	)?
 ;
 
 // Rule N4CallSignatureDeclaration
 ruleN4CallSignatureDeclaration:
 	ruleTypeParameters?
 	ruleMethodParamsReturnAndBody
-	';'?
+	(
+		';'
+		    |
+		','
+	)?
 ;
 
 // Rule N4CallSignatureDeclaration
 norm1_N4CallSignatureDeclaration:
 	ruleTypeParameters?
 	ruleMethodParamsReturnAndBody
-	';'?
+	(
+		';'
+		    |
+		','
+	)?
 ;
 
 // Rule MethodParamsAndBody
@@ -8957,7 +9007,11 @@ ruleN4GetterDeclaration:
 		)=>
 		ruleBlock
 	)?
-	';'?
+	(
+		';'
+		    |
+		','
+	)?
 ;
 
 // Rule N4GetterDeclaration
@@ -8976,7 +9030,11 @@ norm1_N4GetterDeclaration:
 		)=>
 		norm1_Block
 	)?
-	';'?
+	(
+		';'
+		    |
+		','
+	)?
 ;
 
 // Rule GetterHeader
@@ -9189,7 +9247,11 @@ ruleN4SetterDeclaration:
 		)=>
 		ruleBlock
 	)?
-	';'?
+	(
+		';'
+		    |
+		','
+	)?
 ;
 
 // Rule N4SetterDeclaration
@@ -9374,7 +9436,11 @@ norm1_N4SetterDeclaration:
 		)=>
 		norm1_Block
 	)?
-	';'?
+	(
+		';'
+		    |
+		','
+	)?
 ;
 
 // Rule N4IndexSignatureDeclaration
@@ -9396,7 +9462,11 @@ ruleN4IndexSignatureDeclaration:
 	']'
 	':'
 	ruleTypeReferenceNode
-	';'?
+	(
+		';'
+		    |
+		','
+	)?
 ;
 
 // Rule N4IndexSignatureDeclaration
@@ -9418,7 +9488,11 @@ norm1_N4IndexSignatureDeclaration:
 	']'
 	':'
 	ruleTypeReferenceNode
-	';'?
+	(
+		';'
+		    |
+		','
+	)?
 ;
 
 // Rule BindingPattern

@@ -107,8 +107,17 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4EnumLiteralAccess().getAlternatives_1_0(), "rule__N4EnumLiteral__Alternatives_1_0");
 			builder.put(grammarAccess.getN4MemberDeclarationAccess().getAlternatives(), "rule__N4MemberDeclaration__Alternatives");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getAlternatives_1(), "rule__AnnotatedN4MemberDeclaration__Alternatives_1");
+			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getAlternatives_1_0_2(), "rule__AnnotatedN4MemberDeclaration__Alternatives_1_0_2");
+			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getAlternatives_1_1_6(), "rule__AnnotatedN4MemberDeclaration__Alternatives_1_1_6");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getAlternatives_1_2_0_0_2(), "rule__AnnotatedN4MemberDeclaration__Alternatives_1_2_0_0_2");
+			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getAlternatives_1_2_1(), "rule__AnnotatedN4MemberDeclaration__Alternatives_1_2_1");
+			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getAlternatives_1_3_1(), "rule__AnnotatedN4MemberDeclaration__Alternatives_1_3_1");
 			builder.put(grammarAccess.getN4MethodDeclarationAccess().getAlternatives_0_0_3(), "rule__N4MethodDeclaration__Alternatives_0_0_3");
+			builder.put(grammarAccess.getN4MethodDeclarationAccess().getAlternatives_1(), "rule__N4MethodDeclaration__Alternatives_1");
+			builder.put(grammarAccess.getN4CallSignatureDeclarationAccess().getAlternatives_2(), "rule__N4CallSignatureDeclaration__Alternatives_2");
+			builder.put(grammarAccess.getN4GetterDeclarationAccess().getAlternatives_2(), "rule__N4GetterDeclaration__Alternatives_2");
+			builder.put(grammarAccess.getN4SetterDeclarationAccess().getAlternatives_6(), "rule__N4SetterDeclaration__Alternatives_6");
+			builder.put(grammarAccess.getN4IndexSignatureDeclarationAccess().getAlternatives_5(), "rule__N4IndexSignatureDeclaration__Alternatives_5");
 			builder.put(grammarAccess.getBindingPatternAccess().getAlternatives(), "rule__BindingPattern__Alternatives");
 			builder.put(grammarAccess.getBindingPropertyAccess().getAlternatives(), "rule__BindingProperty__Alternatives");
 			builder.put(grammarAccess.getBindingElementImplAccess().getAlternatives(), "rule__BindingElementImpl__Alternatives");

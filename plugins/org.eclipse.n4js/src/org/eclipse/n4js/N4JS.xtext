@@ -1481,17 +1481,17 @@ N4MemberDeclaration <Yield>:
  */
 AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 	N4MemberAnnotationList (
-			=> ({N4GetterDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* GetterHeader<Yield>) (body=Block<Yield>)? ';'?
+			=> ({N4GetterDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* GetterHeader<Yield>) (body=Block<Yield>)? (';'|',')?
 		| 	=> ({N4SetterDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)* 'set' -> declaredName=LiteralOrComputedPropertyName <Yield>)
-				(declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? ';'?
+				(declaredOptional?='?')? '(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? (';'|',')?
 		| 	=> (
 				{N4MethodDeclaration.annotationList=current} (declaredModifiers+=N4Modifier)*
 				(
 						generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
 					| 	AsyncNoTrailingLineBreak declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 				)
-				)';'?
-		|	=> ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) ';'?
+				) (';'|',')?
+		|	=> ({N4MethodDeclaration.annotationList=current} TypeParameters? -> MethodParamsReturnAndBody <Generator=false>) (';'|',')?
 		| 	{N4FieldDeclaration.annotationList=current} FieldDeclarationImpl<Yield>
 	)
 ;
@@ -1503,6 +1503,7 @@ fragment FieldDeclarationImpl <Yield>*:
 	(declaredOptional?='?')?
 	ColonSepDeclaredTypeRef?
 	('=' expression=Expression<In=true,Yield>)?
+	','?
 	Semi
 ;
 
@@ -1518,7 +1519,7 @@ N4MethodDeclaration <Yield>:
 				generator?='*' declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=true>
 			|	declaredName=LiteralOrComputedPropertyName<Yield> (dtsDeclaredOptional?='?')? TypeParameters? -> MethodParamsReturnAndBody <Generator=false>
 		)
-	) ';'?
+	) (';'|',')?
 ;
 
 /*
@@ -1527,7 +1528,7 @@ N4MethodDeclaration <Yield>:
  * this special grammar rule.
  */
 N4CallSignatureDeclaration <Yield> returns N4MethodDeclaration:
-	TypeParameters? MethodParamsReturnAndBody <Generator=false> ';'?
+	TypeParameters? MethodParamsReturnAndBody <Generator=false> (';'|',')?
 ;
 
 fragment MethodParamsAndBody <Generator>*:
@@ -1548,7 +1549,7 @@ N4GetterDeclaration <Yield>:
 	=> ({N4GetterDeclaration}
 	(declaredModifiers+=N4Modifier)*
 	GetterHeader<Yield>)
-	(body=Block<Yield>)? ';'?
+	(body=Block<Yield>)? (';'|',')?
 ;
 
 fragment GetterHeader <Yield>*:
@@ -1562,11 +1563,11 @@ N4SetterDeclaration <Yield>:
 		->declaredName=LiteralOrComputedPropertyName <Yield>
 	)
 	(declaredOptional?='?')?
-	'(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? ';'?
+	'(' fpar=FormalParameter<Yield> ')' (body=Block<Yield>)? (';'|',')?
 ;
 
 N4IndexSignatureDeclaration<Yield>:
-	=>(readonly?='readonly'? '[' keyName=IdentifierName ':') declaredKeyTypeRefNode=TypeReferenceNode ']' ':' declaredValueTypeRefNode=TypeReferenceNode ';'?
+	=>(readonly?='readonly'? '[' keyName=IdentifierName ':') declaredKeyTypeRefNode=TypeReferenceNode ']' ':' declaredValueTypeRefNode=TypeReferenceNode (';'|',')?
 ;
 
 BindingPattern <Yield>:
