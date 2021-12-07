@@ -809,6 +809,14 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createJSXFragmentAdapter();
 			}
 			@Override
+			public Adapter caseAmbientModuleDeclaration(AmbientModuleDeclaration object) {
+				return createAmbientModuleDeclarationAdapter();
+			}
+			@Override
+			public Adapter caseGlobalDeclaration(GlobalDeclaration object) {
+				return createGlobalDeclarationAdapter();
+			}
+			@Override
 			public Adapter caseTypableElement(TypableElement object) {
 				return createTypableElementAdapter();
 			}
@@ -3381,6 +3389,34 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createJSXFragmentAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.AmbientModuleDeclaration <em>Ambient Module Declaration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.AmbientModuleDeclaration
+	 * @generated
+	 */
+	public Adapter createAmbientModuleDeclarationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.GlobalDeclaration <em>Global Declaration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.GlobalDeclaration
+	 * @generated
+	 */
+	public Adapter createGlobalDeclarationAdapter() {
 		return null;
 	}
 

@@ -415,7 +415,7 @@ N4Keyword:
 	// namespace keyword
 	| 'namespace'
 	// .d.ts keywords
-	| 'declare' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
+	| 'declare' | 'global' | 'module' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
 ;
 
 NumericLiteralAsString:

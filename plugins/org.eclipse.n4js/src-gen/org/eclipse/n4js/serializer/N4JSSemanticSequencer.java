@@ -16,6 +16,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
+import org.eclipse.n4js.n4JS.AmbientModuleDeclaration;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.Argument;
@@ -61,6 +62,7 @@ import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionExpression;
+import org.eclipse.n4js.n4JS.GlobalDeclaration;
 import org.eclipse.n4js.n4JS.HexIntLiteral;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IfStatement;
@@ -194,6 +196,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 			switch (semanticObject.eClass().getClassifierID()) {
 			case N4JSPackage.ADDITIVE_EXPRESSION:
 				sequence_AdditiveExpression(context, (AdditiveExpression) semanticObject); 
+				return; 
+			case N4JSPackage.AMBIENT_MODULE_DECLARATION:
+				sequence_AmbientModuleDeclaration(context, (AmbientModuleDeclaration) semanticObject); 
 				return; 
 			case N4JSPackage.ANNOTATION:
 				sequence_AnnotationNoAtSign(context, (Annotation) semanticObject); 
@@ -546,6 +551,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else break;
+			case N4JSPackage.GLOBAL_DECLARATION:
+				sequence_GlobalDeclaration(context, (GlobalDeclaration) semanticObject); 
+				return; 
 			case N4JSPackage.HEX_INT_LITERAL:
 				sequence_HexIntLiteral(context, (HexIntLiteral) semanticObject); 
 				return; 
@@ -1490,9 +1498,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| rule == grammarAccess.getConditionalTypeRefRule()
 						|| action == grammarAccess.getConditionalTypeRefAccess().getConditionalTypeRefTypeRefAction_1_0_0_0()
 						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
-						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
 						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
@@ -1520,9 +1528,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| rule == grammarAccess.getConditionalTypeRefRule()
 						|| action == grammarAccess.getConditionalTypeRefAccess().getConditionalTypeRefTypeRefAction_1_0_0_0()
 						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
-						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
 						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
@@ -1560,9 +1568,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| rule == grammarAccess.getConditionalTypeRefRule()
 						|| action == grammarAccess.getConditionalTypeRefAccess().getConditionalTypeRefTypeRefAction_1_0_0_0()
 						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
-						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
 						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
@@ -1596,9 +1604,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| rule == grammarAccess.getConditionalTypeRefRule()
 						|| action == grammarAccess.getConditionalTypeRefAccess().getConditionalTypeRefTypeRefAction_1_0_0_0()
 						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
-						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
 						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
@@ -1620,9 +1628,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| rule == grammarAccess.getConditionalTypeRefRule()
 						|| action == grammarAccess.getConditionalTypeRefAccess().getConditionalTypeRefTypeRefAction_1_0_0_0()
 						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
-						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
 						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
@@ -1647,9 +1655,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| rule == grammarAccess.getConditionalTypeRefRule()
 						|| action == grammarAccess.getConditionalTypeRefAccess().getConditionalTypeRefTypeRefAction_1_0_0_0()
 						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
-						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_2_0()
 						|| rule == grammarAccess.getOperatorTypeRefRule()
 						|| rule == grammarAccess.getArrayTypeExpressionRule()
 						|| action == grammarAccess.getArrayTypeExpressionAccess().getParameterizedTypeRefDeclaredTypeArgsAction_2_1_0_0_0()
@@ -1685,8 +1693,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		else if (epackage == TypesPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
 			case TypesPackage.EXPRESSION_IN_TYPE_REF:
-				sequence_ExpressionInTypeRef(context, (ExpressionInTypeRef) semanticObject); 
-				return; 
+				if (rule == grammarAccess.getExpressionInTypeRefRule()) {
+					sequence_ExpressionInTypeRef_PropertyAccessExpressionInTypeRef(context, (ExpressionInTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPropertyAccessExpressionInTypeRefRule()) {
+					sequence_PropertyAccessExpressionInTypeRef(context, (ExpressionInTypeRef) semanticObject); 
+					return; 
+				}
+				else break;
 			case TypesPackage.TANONYMOUS_FORMAL_PARAMETER:
 				sequence_ColonSepTypeRef_DefaultFormalParameter_TAnonymousFormalParameter(context, (TAnonymousFormalParameter) semanticObject); 
 				return; 
@@ -2074,6 +2089,20 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		feeder.accept(grammarAccess.getAdditiveExpressionAccess().getOpAdditiveOperatorEnumRuleCall_1_0_0_1_0(), semanticObject.getOp());
 		feeder.accept(grammarAccess.getAdditiveExpressionAccess().getRhsMultiplicativeExpressionParserRuleCall_1_1_0(), semanticObject.getRhs());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ScriptElement returns AmbientModuleDeclaration
+	 *     AmbientModuleDeclaration returns AmbientModuleDeclaration
+	 *     DeclareDeclaration returns AmbientModuleDeclaration
+	 *
+	 * Constraint:
+	 *     (name=STRING scriptElements+=ScriptElement*)
+	 */
+	protected void sequence_AmbientModuleDeclaration(ISerializationContext context, AmbientModuleDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -4560,6 +4589,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 (wildcardExport?='*'? reexportedFrom=[TModule|ModuleSpecifier]?) | 
 	 *                 exportedElement=ExportableElement | 
 	 *                 (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
+	 *                 defaultExportedExpression=AssignmentExpression | 
 	 *                 (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[TModule|ModuleSpecifier]?)
 	 *             )?
 	 *         ) | 
@@ -4582,6 +4612,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (wildcardExport?='*'? reexportedFrom=[TModule|ModuleSpecifier]?) | 
 	 *             exportedElement=ExportableElement | 
 	 *             (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
+	 *             defaultExportedExpression=AssignmentExpression | 
 	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[TModule|ModuleSpecifier]?)
 	 *         )?
 	 *     )
@@ -4599,11 +4630,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedScriptElement_ImportDeclaration_1_1_0 
 	 *         (
-	 *             importSpecifiers+=DefaultImportSpecifier? 
-	 *             (importSpecifiers+=NamespaceImportSpecifier | (importSpecifiers+=NamedImportSpecifier importSpecifiers+=NamedImportSpecifier*))? 
-	 *             importFrom?='from'
-	 *         )? 
-	 *         module=[TModule|ModuleSpecifier]
+	 *             (
+	 *                 importSpecifiers+=DefaultImportSpecifier? 
+	 *                 (importSpecifiers+=NamespaceImportSpecifier | (importSpecifiers+=NamedImportSpecifier importSpecifiers+=NamedImportSpecifier*))? 
+	 *                 importFrom?='from'
+	 *             )? 
+	 *             module=[TModule|ModuleSpecifier]
+	 *         )?
 	 *     )
 	 */
 	protected void sequence_AnnotatedScriptElement_ImportClause_ImportDeclarationImpl_ImportSpecifiersExceptDefault(ISerializationContext context, ImportDeclaration semanticObject) {
@@ -4619,11 +4652,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedScriptElement_ImportDeclaration_1_1_0? 
 	 *         (
-	 *             importSpecifiers+=DefaultImportSpecifier? 
-	 *             (importSpecifiers+=NamespaceImportSpecifier | (importSpecifiers+=NamedImportSpecifier importSpecifiers+=NamedImportSpecifier*))? 
-	 *             importFrom?='from'
-	 *         )? 
-	 *         module=[TModule|ModuleSpecifier]
+	 *             (
+	 *                 importSpecifiers+=DefaultImportSpecifier? 
+	 *                 (importSpecifiers+=NamespaceImportSpecifier | (importSpecifiers+=NamedImportSpecifier importSpecifiers+=NamedImportSpecifier*))? 
+	 *                 importFrom?='from'
+	 *             )? 
+	 *             module=[TModule|ModuleSpecifier]
+	 *         )?
 	 *     )
 	 */
 	protected void sequence_AnnotatedScriptElement_ImportClause_ImportDeclaration_ImportDeclarationImpl_ImportSpecifiersExceptDefault(ISerializationContext context, ImportDeclaration semanticObject) {
@@ -11336,7 +11371,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.EXPORT_DECLARATION__EXPORTED_ELEMENT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getDeclareDeclarationAccess().getExportedElementExportableElementParserRuleCall_1_0(), semanticObject.getExportedElement());
+		feeder.accept(grammarAccess.getDeclareDeclarationAccess().getExportedElementExportableElementParserRuleCall_1_0_1_0(), semanticObject.getExportedElement());
 		feeder.finish();
 	}
 	
@@ -12318,6 +12353,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (wildcardExport?='*'? reexportedFrom=[TModule|ModuleSpecifier]?) | 
 	 *         exportedElement=ExportableElement | 
 	 *         (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
+	 *         defaultExportedExpression=AssignmentExpression | 
 	 *         (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[TModule|ModuleSpecifier]?)
 	 *     )?
 	 */
@@ -12593,6 +12629,19 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_ForStatement(ISerializationContext context, ForStatement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     ScriptElement returns GlobalDeclaration
+	 *     GlobalDeclaration returns GlobalDeclaration
+	 *
+	 * Constraint:
+	 *     elements+=NamespaceElement*
+	 */
+	protected void sequence_GlobalDeclaration(ISerializationContext context, GlobalDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -13922,7 +13971,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             importFrom?='from'
 	 *         )? 
 	 *         module=[TModule|ModuleSpecifier]
-	 *     )
+	 *     )?
 	 */
 	protected void sequence_ImportClause_ImportDeclaration_ImportDeclarationImpl_ImportSpecifiersExceptDefault(ISerializationContext context, ImportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

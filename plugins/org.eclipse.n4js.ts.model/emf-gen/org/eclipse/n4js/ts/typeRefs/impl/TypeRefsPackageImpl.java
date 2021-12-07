@@ -2274,7 +2274,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getQueryTypeRef_Element() {
+	public EReference getQueryTypeRef_Expr() {
 		return (EReference)queryTypeRefEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2812,7 +2812,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(enumLiteralTypeRefEClass, ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
 
 		queryTypeRefEClass = createEClass(QUERY_TYPE_REF);
-		createEReference(queryTypeRefEClass, QUERY_TYPE_REF__ELEMENT);
+		createEReference(queryTypeRefEClass, QUERY_TYPE_REF__EXPR);
 		createEOperation(queryTypeRefEClass, QUERY_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
 
 		operatorTypeRefEClass = createEClass(OPERATOR_TYPE_REF);
@@ -3254,7 +3254,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getEnumLiteralTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(queryTypeRefEClass, QueryTypeRef.class, "QueryTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getQueryTypeRef_Element(), theTypesPackage.getIdentifiableElement(), null, "element", null, 0, 1, QueryTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getQueryTypeRef_Expr(), theTypesPackage.getExpressionInTypeRef(), null, "expr", null, 0, 1, QueryTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getQueryTypeRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

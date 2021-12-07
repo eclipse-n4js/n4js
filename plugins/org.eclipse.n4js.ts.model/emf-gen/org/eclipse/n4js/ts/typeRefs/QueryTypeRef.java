@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ts.typeRefs;
 
-import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.ExpressionInTypeRef;
 
 /**
  * <!-- begin-user-doc -->
@@ -25,7 +25,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.QueryTypeRef#getElement <em>Element</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.QueryTypeRef#getExpr <em>Expr</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getQueryTypeRef()
@@ -34,26 +34,26 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  */
 public interface QueryTypeRef extends TypeRef {
 	/**
-	 * Returns the value of the '<em><b>Element</b></em>' reference.
+	 * Returns the value of the '<em><b>Expr</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Element</em>' reference.
-	 * @see #setElement(IdentifiableElement)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getQueryTypeRef_Element()
-	 * @model
+	 * @return the value of the '<em>Expr</em>' containment reference.
+	 * @see #setExpr(ExpressionInTypeRef)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getQueryTypeRef_Expr()
+	 * @model containment="true"
 	 * @generated
 	 */
-	IdentifiableElement getElement();
+	ExpressionInTypeRef getExpr();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.QueryTypeRef#getElement <em>Element</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.QueryTypeRef#getExpr <em>Expr</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Element</em>' reference.
-	 * @see #getElement()
+	 * @param value the new value of the '<em>Expr</em>' containment reference.
+	 * @see #getExpr()
 	 * @generated
 	 */
-	void setElement(IdentifiableElement value);
+	void setExpr(ExpressionInTypeRef value);
 
 	/**
 	 * <!-- begin-user-doc -->

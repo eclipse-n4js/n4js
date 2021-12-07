@@ -8721,13 +8721,13 @@ public interface TypeRefsPackage extends EPackage {
 	int QUERY_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
 
 	/**
-	 * The feature id for the '<em><b>Element</b></em>' reference.
+	 * The feature id for the '<em><b>Expr</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int QUERY_TYPE_REF__ELEMENT = TYPE_REF_FEATURE_COUNT + 0;
+	int QUERY_TYPE_REF__EXPR = TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Query Type Ref</em>' class.
@@ -12574,15 +12574,15 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getQueryTypeRef();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.QueryTypeRef#getElement <em>Element</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.typeRefs.QueryTypeRef#getExpr <em>Expr</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Element</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.QueryTypeRef#getElement()
+	 * @return the meta object for the containment reference '<em>Expr</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.QueryTypeRef#getExpr()
 	 * @see #getQueryTypeRef()
 	 * @generated
 	 */
-	EReference getQueryTypeRef_Element();
+	EReference getQueryTypeRef_Expr();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.QueryTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
@@ -14463,12 +14463,12 @@ public interface TypeRefsPackage extends EPackage {
 		EClass QUERY_TYPE_REF = eINSTANCE.getQueryTypeRef();
 
 		/**
-		 * The meta object literal for the '<em><b>Element</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Expr</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference QUERY_TYPE_REF__ELEMENT = eINSTANCE.getQueryTypeRef_Element();
+		EReference QUERY_TYPE_REF__EXPR = eINSTANCE.getQueryTypeRef_Expr();
 
 		/**
 		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.

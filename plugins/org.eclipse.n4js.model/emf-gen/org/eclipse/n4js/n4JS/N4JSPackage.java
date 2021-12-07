@@ -18014,6 +18014,89 @@ public interface N4JSPackage extends EPackage {
 	int JSX_FRAGMENT_OPERATION_COUNT = JSX_CHILD_OPERATION_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.AmbientModuleDeclarationImpl <em>Ambient Module Declaration</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4JS.impl.AmbientModuleDeclarationImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAmbientModuleDeclaration()
+	 * @generated
+	 */
+	int AMBIENT_MODULE_DECLARATION = 182;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AMBIENT_MODULE_DECLARATION__NAME = SCRIPT_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Script Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AMBIENT_MODULE_DECLARATION__SCRIPT_ELEMENTS = SCRIPT_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Ambient Module Declaration</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AMBIENT_MODULE_DECLARATION_FEATURE_COUNT = SCRIPT_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of operations of the '<em>Ambient Module Declaration</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int AMBIENT_MODULE_DECLARATION_OPERATION_COUNT = SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.GlobalDeclarationImpl <em>Global Declaration</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.n4JS.impl.GlobalDeclarationImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getGlobalDeclaration()
+	 * @generated
+	 */
+	int GLOBAL_DECLARATION = 183;
+
+	/**
+	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GLOBAL_DECLARATION__ELEMENTS = SCRIPT_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Global Declaration</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GLOBAL_DECLARATION_FEATURE_COUNT = SCRIPT_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Global Declaration</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GLOBAL_DECLARATION_OPERATION_COUNT = SCRIPT_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.ModuleSpecifierForm <em>Module Specifier Form</em>}' enum.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -18021,7 +18104,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getModuleSpecifierForm()
 	 * @generated
 	 */
-	int MODULE_SPECIFIER_FORM = 182;
+	int MODULE_SPECIFIER_FORM = 184;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}' enum.
@@ -18031,7 +18114,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVariableStatementKeyword()
 	 * @generated
 	 */
-	int VARIABLE_STATEMENT_KEYWORD = 183;
+	int VARIABLE_STATEMENT_KEYWORD = 185;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PropertyNameKind <em>Property Name Kind</em>}' enum.
@@ -18041,7 +18124,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPropertyNameKind()
 	 * @generated
 	 */
-	int PROPERTY_NAME_KIND = 184;
+	int PROPERTY_NAME_KIND = 186;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PostfixOperator <em>Postfix Operator</em>}' enum.
@@ -18051,7 +18134,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPostfixOperator()
 	 * @generated
 	 */
-	int POSTFIX_OPERATOR = 185;
+	int POSTFIX_OPERATOR = 187;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.UnaryOperator <em>Unary Operator</em>}' enum.
@@ -18061,7 +18144,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getUnaryOperator()
 	 * @generated
 	 */
-	int UNARY_OPERATOR = 186;
+	int UNARY_OPERATOR = 188;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.MultiplicativeOperator <em>Multiplicative Operator</em>}' enum.
@@ -18071,7 +18154,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMultiplicativeOperator()
 	 * @generated
 	 */
-	int MULTIPLICATIVE_OPERATOR = 187;
+	int MULTIPLICATIVE_OPERATOR = 189;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AdditiveOperator <em>Additive Operator</em>}' enum.
@@ -18081,7 +18164,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAdditiveOperator()
 	 * @generated
 	 */
-	int ADDITIVE_OPERATOR = 188;
+	int ADDITIVE_OPERATOR = 190;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.RelationalOperator <em>Relational Operator</em>}' enum.
@@ -18091,7 +18174,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getRelationalOperator()
 	 * @generated
 	 */
-	int RELATIONAL_OPERATOR = 189;
+	int RELATIONAL_OPERATOR = 191;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.EqualityOperator <em>Equality Operator</em>}' enum.
@@ -18101,7 +18184,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getEqualityOperator()
 	 * @generated
 	 */
-	int EQUALITY_OPERATOR = 190;
+	int EQUALITY_OPERATOR = 192;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryBitwiseOperator <em>Binary Bitwise Operator</em>}' enum.
@@ -18111,7 +18194,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryBitwiseOperator()
 	 * @generated
 	 */
-	int BINARY_BITWISE_OPERATOR = 191;
+	int BINARY_BITWISE_OPERATOR = 193;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryLogicalOperator <em>Binary Logical Operator</em>}' enum.
@@ -18121,7 +18204,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryLogicalOperator()
 	 * @generated
 	 */
-	int BINARY_LOGICAL_OPERATOR = 192;
+	int BINARY_LOGICAL_OPERATOR = 194;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.ShiftOperator <em>Shift Operator</em>}' enum.
@@ -18131,7 +18214,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getShiftOperator()
 	 * @generated
 	 */
-	int SHIFT_OPERATOR = 193;
+	int SHIFT_OPERATOR = 195;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AssignmentOperator <em>Assignment Operator</em>}' enum.
@@ -18141,7 +18224,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAssignmentOperator()
 	 * @generated
 	 */
-	int ASSIGNMENT_OPERATOR = 194;
+	int ASSIGNMENT_OPERATOR = 196;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.N4Modifier <em>N4 Modifier</em>}' enum.
@@ -18151,7 +18234,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4Modifier()
 	 * @generated
 	 */
-	int N4_MODIFIER = 195;
+	int N4_MODIFIER = 197;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Expression</em>' data type.
@@ -18161,7 +18244,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfExpression()
 	 * @generated
 	 */
-	int ITERATOR_OF_EXPRESSION = 196;
+	int ITERATOR_OF_EXPRESSION = 198;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Yield Expression</em>' data type.
@@ -18171,7 +18254,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfYieldExpression()
 	 * @generated
 	 */
-	int ITERATOR_OF_YIELD_EXPRESSION = 197;
+	int ITERATOR_OF_YIELD_EXPRESSION = 199;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Statement</em>' data type.
@@ -18181,7 +18264,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfStatement()
 	 * @generated
 	 */
-	int ITERATOR_OF_STATEMENT = 198;
+	int ITERATOR_OF_STATEMENT = 200;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Return Statement</em>' data type.
@@ -18191,7 +18274,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfReturnStatement()
 	 * @generated
 	 */
-	int ITERATOR_OF_RETURN_STATEMENT = 199;
+	int ITERATOR_OF_RETURN_STATEMENT = 201;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Node Iterable</em>' data type.
@@ -18201,7 +18284,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getParameterizedTypeRefNodeIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 200;
+	int PARAMETERIZED_TYPE_REF_NODE_ITERABLE = 202;
 
 
 	/**
@@ -24598,6 +24681,59 @@ public interface N4JSPackage extends EPackage {
 	EClass getJSXFragment();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.AmbientModuleDeclaration <em>Ambient Module Declaration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Ambient Module Declaration</em>'.
+	 * @see org.eclipse.n4js.n4JS.AmbientModuleDeclaration
+	 * @generated
+	 */
+	EClass getAmbientModuleDeclaration();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.AmbientModuleDeclaration#getName <em>Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Name</em>'.
+	 * @see org.eclipse.n4js.n4JS.AmbientModuleDeclaration#getName()
+	 * @see #getAmbientModuleDeclaration()
+	 * @generated
+	 */
+	EAttribute getAmbientModuleDeclaration_Name();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.AmbientModuleDeclaration#getScriptElements <em>Script Elements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Script Elements</em>'.
+	 * @see org.eclipse.n4js.n4JS.AmbientModuleDeclaration#getScriptElements()
+	 * @see #getAmbientModuleDeclaration()
+	 * @generated
+	 */
+	EReference getAmbientModuleDeclaration_ScriptElements();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.GlobalDeclaration <em>Global Declaration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Global Declaration</em>'.
+	 * @see org.eclipse.n4js.n4JS.GlobalDeclaration
+	 * @generated
+	 */
+	EClass getGlobalDeclaration();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.GlobalDeclaration#getElements <em>Elements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Elements</em>'.
+	 * @see org.eclipse.n4js.n4JS.GlobalDeclaration#getElements()
+	 * @see #getGlobalDeclaration()
+	 * @generated
+	 */
+	EReference getGlobalDeclaration_Elements();
+
+	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.n4JS.ModuleSpecifierForm <em>Module Specifier Form</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -30106,6 +30242,50 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass JSX_FRAGMENT = eINSTANCE.getJSXFragment();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.AmbientModuleDeclarationImpl <em>Ambient Module Declaration</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.n4JS.impl.AmbientModuleDeclarationImpl
+		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAmbientModuleDeclaration()
+		 * @generated
+		 */
+		EClass AMBIENT_MODULE_DECLARATION = eINSTANCE.getAmbientModuleDeclaration();
+
+		/**
+		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute AMBIENT_MODULE_DECLARATION__NAME = eINSTANCE.getAmbientModuleDeclaration_Name();
+
+		/**
+		 * The meta object literal for the '<em><b>Script Elements</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference AMBIENT_MODULE_DECLARATION__SCRIPT_ELEMENTS = eINSTANCE.getAmbientModuleDeclaration_ScriptElements();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.GlobalDeclarationImpl <em>Global Declaration</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.n4JS.impl.GlobalDeclarationImpl
+		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getGlobalDeclaration()
+		 * @generated
+		 */
+		EClass GLOBAL_DECLARATION = eINSTANCE.getGlobalDeclaration();
+
+		/**
+		 * The meta object literal for the '<em><b>Elements</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference GLOBAL_DECLARATION__ELEMENTS = eINSTANCE.getGlobalDeclaration_Elements();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.ModuleSpecifierForm <em>Module Specifier Form</em>}' enum.

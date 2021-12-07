@@ -68,4 +68,12 @@ public interface ExpressionInTypeRef extends EObject {
 	 */
 	EList<String> getIdentifierNames();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getExpressionAsString();
+
 } // ExpressionInTypeRef

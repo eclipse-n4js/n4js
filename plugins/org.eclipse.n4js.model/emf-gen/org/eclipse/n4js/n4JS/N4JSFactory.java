@@ -1220,6 +1220,24 @@ public interface N4JSFactory extends EFactory {
 	JSXFragment createJSXFragment();
 
 	/**
+	 * Returns a new object of class '<em>Ambient Module Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Ambient Module Declaration</em>'.
+	 * @generated
+	 */
+	AmbientModuleDeclaration createAmbientModuleDeclaration();
+
+	/**
+	 * Returns a new object of class '<em>Global Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Global Declaration</em>'.
+	 * @generated
+	 */
+	GlobalDeclaration createGlobalDeclaration();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

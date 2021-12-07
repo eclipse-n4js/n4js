@@ -31,6 +31,7 @@ import org.eclipse.n4js.n4JS.AbstractCatchBlock;
 import org.eclipse.n4js.n4JS.AbstractIntLiteral;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.AdditiveOperator;
+import org.eclipse.n4js.n4JS.AmbientModuleDeclaration;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.AnnotableExpression;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
@@ -96,6 +97,7 @@ import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
+import org.eclipse.n4js.n4JS.GlobalDeclaration;
 import org.eclipse.n4js.n4JS.HexIntLiteral;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IfStatement;
@@ -1508,6 +1510,20 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass jsxFragmentEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass ambientModuleDeclarationEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass globalDeclarationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -7874,6 +7890,56 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getAmbientModuleDeclaration() {
+		return ambientModuleDeclarationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getAmbientModuleDeclaration_Name() {
+		return (EAttribute)ambientModuleDeclarationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAmbientModuleDeclaration_ScriptElements() {
+		return (EReference)ambientModuleDeclarationEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getGlobalDeclaration() {
+		return globalDeclarationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getGlobalDeclaration_Elements() {
+		return (EReference)globalDeclarationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EEnum getModuleSpecifierForm() {
 		return moduleSpecifierFormEEnum;
 	}
@@ -8885,6 +8951,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		jsxFragmentEClass = createEClass(JSX_FRAGMENT);
 
+		ambientModuleDeclarationEClass = createEClass(AMBIENT_MODULE_DECLARATION);
+		createEAttribute(ambientModuleDeclarationEClass, AMBIENT_MODULE_DECLARATION__NAME);
+		createEReference(ambientModuleDeclarationEClass, AMBIENT_MODULE_DECLARATION__SCRIPT_ELEMENTS);
+
+		globalDeclarationEClass = createEClass(GLOBAL_DECLARATION);
+		createEReference(globalDeclarationEClass, GLOBAL_DECLARATION__ELEMENTS);
+
 		// Create enums
 		moduleSpecifierFormEEnum = createEEnum(MODULE_SPECIFIER_FORM);
 		variableStatementKeywordEEnum = createEEnum(VARIABLE_STATEMENT_KEYWORD);
@@ -9205,6 +9278,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxElementEClass.getESuperTypes().add(this.getJSXAbstractElement());
 		jsxFragmentEClass.getESuperTypes().add(this.getJSXChild());
 		jsxFragmentEClass.getESuperTypes().add(this.getJSXAbstractElement());
+		ambientModuleDeclarationEClass.getESuperTypes().add(this.getScriptElement());
+		globalDeclarationEClass.getESuperTypes().add(this.getScriptElement());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(namedElementEClass, NamedElement.class, "NamedElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -10260,6 +10335,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getJSXElement_JsxClosingName(), this.getJSXElementName(), null, "jsxClosingName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(jsxFragmentEClass, JSXFragment.class, "JSXFragment", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(ambientModuleDeclarationEClass, AmbientModuleDeclaration.class, "AmbientModuleDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAmbientModuleDeclaration_Name(), theEcorePackage.getEString(), "name", null, 0, 1, AmbientModuleDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAmbientModuleDeclaration_ScriptElements(), this.getScriptElement(), null, "scriptElements", null, 0, -1, AmbientModuleDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(globalDeclarationEClass, GlobalDeclaration.class, "GlobalDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getGlobalDeclaration_Elements(), this.getNamespaceElement(), null, "elements", null, 0, -1, GlobalDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(moduleSpecifierFormEEnum, ModuleSpecifierForm.class, "ModuleSpecifierForm");

@@ -19,6 +19,7 @@ import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.AbstractElementAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.AlternativeAlias;
+import org.eclipse.xtext.serializer.analysis.GrammarAlias.GroupAlias;
 import org.eclipse.xtext.serializer.analysis.GrammarAlias.TokenAlias;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynNavigable;
 import org.eclipse.xtext.serializer.analysis.ISyntacticSequencerPDAProvider.ISynTransition;
@@ -38,12 +39,21 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_ArrayBindingPattern_CommaKeyword_3_2_0_q;
 	protected AbstractElementAlias match_ArrayNTypeExpression_CommaKeyword_1_1_2_q;
 	protected AbstractElementAlias match_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q;
+	protected AbstractElementAlias match_DeclareDeclaration_DeclareKeyword_0_q;
 	protected AbstractElementAlias match_DoStatement_SemiParserRuleCall_6_q;
 	protected AbstractElementAlias match_ExportClause_CommaKeyword_1_2_q;
-	protected AbstractElementAlias match_FieldDeclarationImpl_ReadonlyKeyword_0_q;
+	protected AbstractElementAlias match_ExportDeclarationImpl___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a;
+	protected AbstractElementAlias match_FieldDeclarationImpl_ReadonlyKeyword_1_q;
 	protected AbstractElementAlias match_FunctionDeclaration_SemiParserRuleCall_1_q;
 	protected AbstractElementAlias match_ImportSpecifiersExceptDefault_CommaKeyword_1_1_2_q;
 	protected AbstractElementAlias match_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1;
+	protected AbstractElementAlias match_IntersectionTypeExpression_AmpersandKeyword_0_q;
+	protected AbstractElementAlias match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q__a;
+	protected AbstractElementAlias match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q__p;
+	protected AbstractElementAlias match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__a;
+	protected AbstractElementAlias match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__p;
+	protected AbstractElementAlias match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___VerticalLineKeyword_0_q_AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0__a;
+	protected AbstractElementAlias match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___VerticalLineKeyword_0_q_AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0__p;
 	protected AbstractElementAlias match_MappedTypeRef_PlusSignKeyword_1_0_0_q;
 	protected AbstractElementAlias match_MappedTypeRef_PlusSignKeyword_7_0_0_q;
 	protected AbstractElementAlias match_MappedTypeRef_SemicolonKeyword_9_q;
@@ -58,8 +68,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q;
 	protected AbstractElementAlias match_ObjectLiteral_CommaKeyword_2_2_q;
 	protected AbstractElementAlias match_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q;
-	protected AbstractElementAlias match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_a;
-	protected AbstractElementAlias match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p;
 	protected AbstractElementAlias match_PropertyMethodDeclaration_SemicolonKeyword_1_q;
 	protected AbstractElementAlias match_StrictFormalParameters_CommaKeyword_1_2_q;
 	protected AbstractElementAlias match_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q;
@@ -70,6 +78,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q;
 	protected AbstractElementAlias match_TStructMethod_CommaKeyword_0_0_1_3_q;
 	protected AbstractElementAlias match_TypeParameters_CommaKeyword_3_q;
+	protected AbstractElementAlias match_UnionTypeExpression_VerticalLineKeyword_0_q;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
@@ -84,12 +93,21 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_ArrayBindingPattern_CommaKeyword_3_2_0_q = new TokenAlias(false, true, grammarAccess.getArrayBindingPatternAccess().getCommaKeyword_3_2_0());
 		match_ArrayNTypeExpression_CommaKeyword_1_1_2_q = new TokenAlias(false, true, grammarAccess.getArrayNTypeExpressionAccess().getCommaKeyword_1_1_2());
 		match_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q = new TokenAlias(false, true, grammarAccess.getArrowFunctionTypeExpressionAccess().getCommaKeyword_0_0_2_3());
+		match_DeclareDeclaration_DeclareKeyword_0_q = new TokenAlias(false, true, grammarAccess.getDeclareDeclarationAccess().getDeclareKeyword_0());
 		match_DoStatement_SemiParserRuleCall_6_q = new TokenAlias(false, true, grammarAccess.getDoStatementAccess().getSemiParserRuleCall_6());
 		match_ExportClause_CommaKeyword_1_2_q = new TokenAlias(false, true, grammarAccess.getExportClauseAccess().getCommaKeyword_1_2());
-		match_FieldDeclarationImpl_ReadonlyKeyword_0_q = new TokenAlias(false, true, grammarAccess.getFieldDeclarationImplAccess().getReadonlyKeyword_0());
+		match_ExportDeclarationImpl___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a = new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getFullStopKeyword_1_4_2_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_4_2_1()));
+		match_FieldDeclarationImpl_ReadonlyKeyword_1_q = new TokenAlias(false, true, grammarAccess.getFieldDeclarationImplAccess().getReadonlyKeyword_1());
 		match_FunctionDeclaration_SemiParserRuleCall_1_q = new TokenAlias(false, true, grammarAccess.getFunctionDeclarationAccess().getSemiParserRuleCall_1());
 		match_ImportSpecifiersExceptDefault_CommaKeyword_1_1_2_q = new TokenAlias(false, true, grammarAccess.getImportSpecifiersExceptDefaultAccess().getCommaKeyword_1_1_2());
 		match_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getInterfaceExtendsListAccess().getExtendsKeyword_0_0()), new TokenAlias(false, false, grammarAccess.getInterfaceExtendsListAccess().getImplementsKeyword_0_1()));
+		match_IntersectionTypeExpression_AmpersandKeyword_0_q = new TokenAlias(false, true, grammarAccess.getIntersectionTypeExpressionAccess().getAmpersandKeyword_0());
+		match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q__a = new GroupAlias(true, true, new TokenAlias(false, true, grammarAccess.getIntersectionTypeExpressionAccess().getAmpersandKeyword_0()), new TokenAlias(false, false, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0()), new TokenAlias(false, true, grammarAccess.getUnionTypeExpressionAccess().getVerticalLineKeyword_0()));
+		match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q__p = new GroupAlias(true, false, new TokenAlias(false, true, grammarAccess.getIntersectionTypeExpressionAccess().getAmpersandKeyword_0()), new TokenAlias(false, false, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0()), new TokenAlias(false, true, grammarAccess.getUnionTypeExpressionAccess().getVerticalLineKeyword_0()));
+		match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__a = new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0()), new TokenAlias(false, true, grammarAccess.getUnionTypeExpressionAccess().getVerticalLineKeyword_0()), new TokenAlias(false, true, grammarAccess.getIntersectionTypeExpressionAccess().getAmpersandKeyword_0()));
+		match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__p = new GroupAlias(true, false, new TokenAlias(false, false, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0()), new TokenAlias(false, true, grammarAccess.getUnionTypeExpressionAccess().getVerticalLineKeyword_0()), new TokenAlias(false, true, grammarAccess.getIntersectionTypeExpressionAccess().getAmpersandKeyword_0()));
+		match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___VerticalLineKeyword_0_q_AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0__a = new GroupAlias(true, true, new TokenAlias(false, true, grammarAccess.getUnionTypeExpressionAccess().getVerticalLineKeyword_0()), new TokenAlias(false, true, grammarAccess.getIntersectionTypeExpressionAccess().getAmpersandKeyword_0()), new TokenAlias(false, false, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0()));
+		match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___VerticalLineKeyword_0_q_AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0__p = new GroupAlias(true, false, new TokenAlias(false, true, grammarAccess.getUnionTypeExpressionAccess().getVerticalLineKeyword_0()), new TokenAlias(false, true, grammarAccess.getIntersectionTypeExpressionAccess().getAmpersandKeyword_0()), new TokenAlias(false, false, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0()));
 		match_MappedTypeRef_PlusSignKeyword_1_0_0_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getPlusSignKeyword_1_0_0());
 		match_MappedTypeRef_PlusSignKeyword_7_0_0_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getPlusSignKeyword_7_0_0());
 		match_MappedTypeRef_SemicolonKeyword_9_q = new TokenAlias(false, true, grammarAccess.getMappedTypeRefAccess().getSemicolonKeyword_9());
@@ -104,8 +122,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_NumericLiteralTypeRef_PlusSignKeyword_0_0_q = new TokenAlias(false, true, grammarAccess.getNumericLiteralTypeRefAccess().getPlusSignKeyword_0_0());
 		match_ObjectLiteral_CommaKeyword_2_2_q = new TokenAlias(false, true, grammarAccess.getObjectLiteralAccess().getCommaKeyword_2_2());
 		match_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q = new AlternativeAlias(false, true, new TokenAlias(false, false, grammarAccess.getParameterizedTypeRefStructuralAccess().getCommaKeyword_0_2_1_1()), new TokenAlias(false, false, grammarAccess.getParameterizedTypeRefStructuralAccess().getSemicolonKeyword_0_2_1_0()));
-		match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_a = new TokenAlias(true, true, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0());
-		match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p = new TokenAlias(true, false, grammarAccess.getPrimaryTypeExpressionAccess().getLeftParenthesisKeyword_6_0());
 		match_PropertyMethodDeclaration_SemicolonKeyword_1_q = new TokenAlias(false, true, grammarAccess.getPropertyMethodDeclarationAccess().getSemicolonKeyword_1());
 		match_StrictFormalParameters_CommaKeyword_1_2_q = new TokenAlias(false, true, grammarAccess.getStrictFormalParametersAccess().getCommaKeyword_1_2());
 		match_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q = new TokenAlias(false, true, grammarAccess.getTAnonymousFormalParameterListWithDeclaredThisTypeAccess().getCommaKeyword_2());
@@ -116,16 +132,21 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q = new AlternativeAlias(false, true, new TokenAlias(false, false, grammarAccess.getTStructMemberListAccess().getCommaKeyword_1_1_1()), new TokenAlias(false, false, grammarAccess.getTStructMemberListAccess().getSemicolonKeyword_1_1_0()));
 		match_TStructMethod_CommaKeyword_0_0_1_3_q = new TokenAlias(false, true, grammarAccess.getTStructMethodAccess().getCommaKeyword_0_0_1_3());
 		match_TypeParameters_CommaKeyword_3_q = new TokenAlias(false, true, grammarAccess.getTypeParametersAccess().getCommaKeyword_3());
+		match_UnionTypeExpression_VerticalLineKeyword_0_q = new TokenAlias(false, true, grammarAccess.getUnionTypeExpressionAccess().getVerticalLineKeyword_0());
 	}
 	
 	@Override
 	protected String getUnassignedRuleCallToken(EObject semanticObject, RuleCall ruleCall, INode node) {
 		if (ruleCall.getRule() == grammarAccess.getArrowRule())
 			return getArrowToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getIdentifierNameRule())
+			return getIdentifierNameToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getNO_LINE_TERMINATORRule())
 			return getNO_LINE_TERMINATORToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getNO_WHITE_SPACERule())
 			return getNO_WHITE_SPACEToken(semanticObject, ruleCall, node);
+		else if (ruleCall.getRule() == grammarAccess.getSTRINGRule())
+			return getSTRINGToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getSemiRule())
 			return getSemiToken(semanticObject, ruleCall, node);
 		else if (ruleCall.getRule() == grammarAccess.getTemplateExpressionEndRule())
@@ -141,6 +162,17 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		if (node != null)
 			return getTokenText(node);
 		return "= >";
+	}
+	
+	/**
+	 * IdentifierName:
+	 * 	IDENTIFIER | ReservedWord | N4Keyword
+	 * ;
+	 */
+	protected String getIdentifierNameToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "";
 	}
 	
 	/**
@@ -161,6 +193,18 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		if (node != null)
 			return getTokenText(node);
 		return "//6";
+	}
+	
+	/**
+	 * terminal STRING:
+	 * 	  '"' DOUBLE_STRING_CHAR* '"'?
+	 * 	| "'" SINGLE_STRING_CHAR* "'"?
+	 * ;
+	 */
+	protected String getSTRINGToken(EObject semanticObject, RuleCall ruleCall, INode node) {
+		if (node != null)
+			return getTokenText(node);
+		return "\"";
 	}
 	
 	/**
@@ -209,18 +253,36 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_ArrayNTypeExpression_CommaKeyword_1_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q.equals(syntax))
 				emit_ArrowFunctionTypeExpression_CommaKeyword_0_0_2_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_DeclareDeclaration_DeclareKeyword_0_q.equals(syntax))
+				emit_DeclareDeclaration_DeclareKeyword_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_DoStatement_SemiParserRuleCall_6_q.equals(syntax))
 				emit_DoStatement_SemiParserRuleCall_6_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ExportClause_CommaKeyword_1_2_q.equals(syntax))
 				emit_ExportClause_CommaKeyword_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_FieldDeclarationImpl_ReadonlyKeyword_0_q.equals(syntax))
-				emit_FieldDeclarationImpl_ReadonlyKeyword_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ExportDeclarationImpl___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a.equals(syntax))
+				emit_ExportDeclarationImpl___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_FieldDeclarationImpl_ReadonlyKeyword_1_q.equals(syntax))
+				emit_FieldDeclarationImpl_ReadonlyKeyword_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_FunctionDeclaration_SemiParserRuleCall_1_q.equals(syntax))
 				emit_FunctionDeclaration_SemiParserRuleCall_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ImportSpecifiersExceptDefault_CommaKeyword_1_1_2_q.equals(syntax))
 				emit_ImportSpecifiersExceptDefault_CommaKeyword_1_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1.equals(syntax))
 				emit_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_IntersectionTypeExpression_AmpersandKeyword_0_q.equals(syntax))
+				emit_IntersectionTypeExpression_AmpersandKeyword_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q__a.equals(syntax))
+				emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q__a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q__p.equals(syntax))
+				emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q__p(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__a.equals(syntax))
+				emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__p.equals(syntax))
+				emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__p(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___VerticalLineKeyword_0_q_AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0__a.equals(syntax))
+				emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___VerticalLineKeyword_0_q_AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0__a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___VerticalLineKeyword_0_q_AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0__p.equals(syntax))
+				emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___VerticalLineKeyword_0_q_AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0__p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_MappedTypeRef_PlusSignKeyword_1_0_0_q.equals(syntax))
 				emit_MappedTypeRef_PlusSignKeyword_1_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_MappedTypeRef_PlusSignKeyword_7_0_0_q.equals(syntax))
@@ -249,10 +311,6 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_ObjectLiteral_CommaKeyword_2_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q.equals(syntax))
 				emit_ParameterizedTypeRefStructural___CommaKeyword_0_2_1_1_or_SemicolonKeyword_0_2_1_0__q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_a.equals(syntax))
-				emit_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p.equals(syntax))
-				emit_PrimaryTypeExpression_LeftParenthesisKeyword_6_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_PropertyMethodDeclaration_SemicolonKeyword_1_q.equals(syntax))
 				emit_PropertyMethodDeclaration_SemicolonKeyword_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_StrictFormalParameters_CommaKeyword_1_2_q.equals(syntax))
@@ -273,6 +331,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_TStructMethod_CommaKeyword_0_0_1_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_TypeParameters_CommaKeyword_3_q.equals(syntax))
 				emit_TypeParameters_CommaKeyword_3_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_UnionTypeExpression_VerticalLineKeyword_0_q.equals(syntax))
+				emit_UnionTypeExpression_VerticalLineKeyword_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
@@ -407,6 +467,17 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
+	 *     'declare'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) 'module' name=STRING
+	 */
+	protected void emit_DeclareDeclaration_DeclareKeyword_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
 	 *     Semi?
 	 *
 	 * This ambiguous syntax occurs at:
@@ -430,15 +501,26 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
+	 *     ('.' IdentifierName)*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) 'export' '=' IdentifierName (ambiguity) Semi (rule start)
+	 *     {ExportDeclaration.annotationList=} 'export' '=' IdentifierName (ambiguity) Semi (rule end)
+	 */
+	protected void emit_ExportDeclarationImpl___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
 	 *     'readonly'?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) declaredModifiers+=N4Modifier
 	 *     (rule start) (ambiguity) declaredName=LiteralOrComputedPropertyName
-	 *     {N4FieldDeclaration.annotationList=} (ambiguity) declaredModifiers+=N4Modifier
+	 *     declaredModifiers+=N4Modifier (ambiguity) declaredName=LiteralOrComputedPropertyName
 	 *     {N4FieldDeclaration.annotationList=} (ambiguity) declaredName=LiteralOrComputedPropertyName
 	 */
-	protected void emit_FieldDeclarationImpl_ReadonlyKeyword_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_FieldDeclarationImpl_ReadonlyKeyword_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -491,11 +573,307 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
+	 *     '&'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' 'this' ':' declaredThisType=TypeRef
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' declaredTypeArgs+=Wildcard
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' fpars+=TAnonymousFormalParameter
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=BINARY_INT
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=DOUBLE
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=HEX_INT
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=INT
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=LEGACY_OCTAL_INT
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=OCTAL_INT
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=SCIENTIFIC_INT
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '<' ownedTypeVars+=TypeVariable
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* 'infer' typeVarName=IDENTIFIER
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* 'intersection' '{' typeRefs+=TypeRef
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* 'this' (rule start)
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* 'this' dynamic?='+'
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* 'type' '{' typeArg=TypeArgInTypeTypeRef
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* 'typeof' expr=PropertyAccessExpressionInTypeRef
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* 'union' '{' typeRefs+=TypeRef
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '{' '+'? includeReadonly?='readonly'
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '{' '-' excludeReadonly?='readonly'
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '{' '[' propName=IdentifierName
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '{' '}' (rule start)
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '{' '}' dynamic?='+'
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '{' astStructuralMembers+=TStructMember
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* arrayNTypeExpression?='['
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* astNegated?='-'
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* astValue='false'
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* astValue='true'
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* astValue=STRING
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* constructorRef?='constructor'
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* declaredType=[Type|TypeReferenceName]
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* declaredTypeArgs+=WildcardOldNotationWithoutBound
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* definedTypingStrategy=TypingStrategyUseSiteOperator
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* dtsAbstract?='abstract'
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* dtsConstructor?='new'
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* namespaceLikeRefs+=NamespaceLikeRef
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* op=TypeOperator
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* {IndexAccessTypeRef.targetTypeRef=}
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* {ParameterizedTypeRef.declaredTypeArgs+=}
+	 *     (rule start) (ambiguity) '(' ('|'? (ambiguity) '(')* {ConditionalTypeRef.typeRef=}
+	 *     (rule start) (ambiguity) '(' ('|'? (ambiguity) '(')* {UnionTypeExpression.typeRefs+=}
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' 'this' ':' declaredThisType=TypeRef
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' declaredTypeArgs+=Wildcard
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' fpars+=TAnonymousFormalParameter
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=BINARY_INT
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=DOUBLE
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=HEX_INT
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=INT
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=LEGACY_OCTAL_INT
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=OCTAL_INT
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '+'? astValue=SCIENTIFIC_INT
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '<' ownedTypeVars+=TypeVariable
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* 'infer' typeVarName=IDENTIFIER
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* 'intersection' '{' typeRefs+=TypeRef
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* 'this' (rule start)
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* 'this' dynamic?='+'
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* 'type' '{' typeArg=TypeArgInTypeTypeRef
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* 'typeof' expr=PropertyAccessExpressionInTypeRef
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* 'union' '{' typeRefs+=TypeRef
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '{' '+'? includeReadonly?='readonly'
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '{' '-' excludeReadonly?='readonly'
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '{' '[' propName=IdentifierName
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '{' '}' (rule start)
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '{' '}' dynamic?='+'
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '{' astStructuralMembers+=TStructMember
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* arrayNTypeExpression?='['
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* astNegated?='-'
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* astValue='false'
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* astValue='true'
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* astValue=STRING
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* constructorRef?='constructor'
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* declaredType=[Type|TypeReferenceName]
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* declaredTypeArgs+=WildcardOldNotationWithoutBound
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* definedTypingStrategy=TypingStrategyUseSiteOperator
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* dtsAbstract?='abstract'
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* dtsConstructor?='new'
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* namespaceLikeRefs+=NamespaceLikeRef
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* op=TypeOperator
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* {IndexAccessTypeRef.targetTypeRef=}
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* {ParameterizedTypeRef.declaredTypeArgs+=}
+	 */
+	protected void emit_IntersectionTypeExpression_AmpersandKeyword_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('&'? '(' '|'?)*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) '(' '|'? (ambiguity) {IntersectionTypeExpression.typeRefs+=}
+	 *     (rule start) '|'? (ambiguity) {IntersectionTypeExpression.typeRefs+=}
+	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
+	 */
+	protected void emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('&'? '(' '|'?)+
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
+	 */
+	protected void emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('(' '|'? '&'?)*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) '&'? (ambiguity) '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     (rule start) '&'? (ambiguity) '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) '&'? (ambiguity) '(' 'this' ':' declaredThisType=TypeRef
+	 *     (rule start) '&'? (ambiguity) '(' declaredTypeArgs+=Wildcard
+	 *     (rule start) '&'? (ambiguity) '(' fpars+=TAnonymousFormalParameter
+	 *     (rule start) '&'? (ambiguity) '+'? astValue=BINARY_INT
+	 *     (rule start) '&'? (ambiguity) '+'? astValue=DOUBLE
+	 *     (rule start) '&'? (ambiguity) '+'? astValue=HEX_INT
+	 *     (rule start) '&'? (ambiguity) '+'? astValue=INT
+	 *     (rule start) '&'? (ambiguity) '+'? astValue=LEGACY_OCTAL_INT
+	 *     (rule start) '&'? (ambiguity) '+'? astValue=OCTAL_INT
+	 *     (rule start) '&'? (ambiguity) '+'? astValue=SCIENTIFIC_INT
+	 *     (rule start) '&'? (ambiguity) '<' ownedTypeVars+=TypeVariable
+	 *     (rule start) '&'? (ambiguity) 'infer' typeVarName=IDENTIFIER
+	 *     (rule start) '&'? (ambiguity) 'intersection' '{' typeRefs+=TypeRef
+	 *     (rule start) '&'? (ambiguity) 'this' (rule start)
+	 *     (rule start) '&'? (ambiguity) 'this' dynamic?='+'
+	 *     (rule start) '&'? (ambiguity) 'type' '{' typeArg=TypeArgInTypeTypeRef
+	 *     (rule start) '&'? (ambiguity) 'typeof' expr=PropertyAccessExpressionInTypeRef
+	 *     (rule start) '&'? (ambiguity) 'union' '{' typeRefs+=TypeRef
+	 *     (rule start) '&'? (ambiguity) '{' '+'? includeReadonly?='readonly'
+	 *     (rule start) '&'? (ambiguity) '{' '-' excludeReadonly?='readonly'
+	 *     (rule start) '&'? (ambiguity) '{' '[' propName=IdentifierName
+	 *     (rule start) '&'? (ambiguity) '{' '}' (rule start)
+	 *     (rule start) '&'? (ambiguity) '{' '}' dynamic?='+'
+	 *     (rule start) '&'? (ambiguity) '{' astStructuralMembers+=TStructMember
+	 *     (rule start) '&'? (ambiguity) arrayNTypeExpression?='['
+	 *     (rule start) '&'? (ambiguity) astNegated?='-'
+	 *     (rule start) '&'? (ambiguity) astValue='false'
+	 *     (rule start) '&'? (ambiguity) astValue='true'
+	 *     (rule start) '&'? (ambiguity) astValue=STRING
+	 *     (rule start) '&'? (ambiguity) constructorRef?='constructor'
+	 *     (rule start) '&'? (ambiguity) declaredType=[Type|TypeReferenceName]
+	 *     (rule start) '&'? (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
+	 *     (rule start) '&'? (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
+	 *     (rule start) '&'? (ambiguity) dtsAbstract?='abstract'
+	 *     (rule start) '&'? (ambiguity) dtsConstructor?='new'
+	 *     (rule start) '&'? (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
+	 *     (rule start) '&'? (ambiguity) op=TypeOperator
+	 *     (rule start) '&'? (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
+	 *     (rule start) '&'? (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
+	 *     (rule start) '|'? '&'? (ambiguity) '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     (rule start) '|'? '&'? (ambiguity) '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) '|'? '&'? (ambiguity) '(' 'this' ':' declaredThisType=TypeRef
+	 *     (rule start) '|'? '&'? (ambiguity) '(' declaredTypeArgs+=Wildcard
+	 *     (rule start) '|'? '&'? (ambiguity) '(' fpars+=TAnonymousFormalParameter
+	 *     (rule start) '|'? '&'? (ambiguity) '+'? astValue=BINARY_INT
+	 *     (rule start) '|'? '&'? (ambiguity) '+'? astValue=DOUBLE
+	 *     (rule start) '|'? '&'? (ambiguity) '+'? astValue=HEX_INT
+	 *     (rule start) '|'? '&'? (ambiguity) '+'? astValue=INT
+	 *     (rule start) '|'? '&'? (ambiguity) '+'? astValue=LEGACY_OCTAL_INT
+	 *     (rule start) '|'? '&'? (ambiguity) '+'? astValue=OCTAL_INT
+	 *     (rule start) '|'? '&'? (ambiguity) '+'? astValue=SCIENTIFIC_INT
+	 *     (rule start) '|'? '&'? (ambiguity) '<' ownedTypeVars+=TypeVariable
+	 *     (rule start) '|'? '&'? (ambiguity) 'infer' typeVarName=IDENTIFIER
+	 *     (rule start) '|'? '&'? (ambiguity) 'intersection' '{' typeRefs+=TypeRef
+	 *     (rule start) '|'? '&'? (ambiguity) 'this' (rule start)
+	 *     (rule start) '|'? '&'? (ambiguity) 'this' dynamic?='+'
+	 *     (rule start) '|'? '&'? (ambiguity) 'type' '{' typeArg=TypeArgInTypeTypeRef
+	 *     (rule start) '|'? '&'? (ambiguity) 'typeof' expr=PropertyAccessExpressionInTypeRef
+	 *     (rule start) '|'? '&'? (ambiguity) 'union' '{' typeRefs+=TypeRef
+	 *     (rule start) '|'? '&'? (ambiguity) '{' '+'? includeReadonly?='readonly'
+	 *     (rule start) '|'? '&'? (ambiguity) '{' '-' excludeReadonly?='readonly'
+	 *     (rule start) '|'? '&'? (ambiguity) '{' '[' propName=IdentifierName
+	 *     (rule start) '|'? '&'? (ambiguity) '{' '}' (rule start)
+	 *     (rule start) '|'? '&'? (ambiguity) '{' '}' dynamic?='+'
+	 *     (rule start) '|'? '&'? (ambiguity) '{' astStructuralMembers+=TStructMember
+	 *     (rule start) '|'? '&'? (ambiguity) arrayNTypeExpression?='['
+	 *     (rule start) '|'? '&'? (ambiguity) astNegated?='-'
+	 *     (rule start) '|'? '&'? (ambiguity) astValue='false'
+	 *     (rule start) '|'? '&'? (ambiguity) astValue='true'
+	 *     (rule start) '|'? '&'? (ambiguity) astValue=STRING
+	 *     (rule start) '|'? '&'? (ambiguity) constructorRef?='constructor'
+	 *     (rule start) '|'? '&'? (ambiguity) declaredType=[Type|TypeReferenceName]
+	 *     (rule start) '|'? '&'? (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
+	 *     (rule start) '|'? '&'? (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
+	 *     (rule start) '|'? '&'? (ambiguity) dtsAbstract?='abstract'
+	 *     (rule start) '|'? '&'? (ambiguity) dtsConstructor?='new'
+	 *     (rule start) '|'? '&'? (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
+	 *     (rule start) '|'? '&'? (ambiguity) op=TypeOperator
+	 *     (rule start) '|'? '&'? (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
+	 *     (rule start) '|'? '&'? (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
+	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) (ambiguity) '(' 'this' ':' declaredThisType=TypeRef
+	 *     (rule start) (ambiguity) '(' declaredTypeArgs+=Wildcard
+	 *     (rule start) (ambiguity) '(' fpars+=TAnonymousFormalParameter
+	 *     (rule start) (ambiguity) '+'? astValue=BINARY_INT
+	 *     (rule start) (ambiguity) '+'? astValue=DOUBLE
+	 *     (rule start) (ambiguity) '+'? astValue=HEX_INT
+	 *     (rule start) (ambiguity) '+'? astValue=INT
+	 *     (rule start) (ambiguity) '+'? astValue=LEGACY_OCTAL_INT
+	 *     (rule start) (ambiguity) '+'? astValue=OCTAL_INT
+	 *     (rule start) (ambiguity) '+'? astValue=SCIENTIFIC_INT
+	 *     (rule start) (ambiguity) '<' ownedTypeVars+=TypeVariable
+	 *     (rule start) (ambiguity) 'infer' typeVarName=IDENTIFIER
+	 *     (rule start) (ambiguity) 'intersection' '{' typeRefs+=TypeRef
+	 *     (rule start) (ambiguity) 'this' (rule start)
+	 *     (rule start) (ambiguity) 'this' dynamic?='+'
+	 *     (rule start) (ambiguity) 'type' '{' typeArg=TypeArgInTypeTypeRef
+	 *     (rule start) (ambiguity) 'typeof' expr=PropertyAccessExpressionInTypeRef
+	 *     (rule start) (ambiguity) 'union' '{' typeRefs+=TypeRef
+	 *     (rule start) (ambiguity) '{' '+'? includeReadonly?='readonly'
+	 *     (rule start) (ambiguity) '{' '-' excludeReadonly?='readonly'
+	 *     (rule start) (ambiguity) '{' '[' propName=IdentifierName
+	 *     (rule start) (ambiguity) '{' '}' (rule start)
+	 *     (rule start) (ambiguity) '{' '}' dynamic?='+'
+	 *     (rule start) (ambiguity) '{' astStructuralMembers+=TStructMember
+	 *     (rule start) (ambiguity) arrayNTypeExpression?='['
+	 *     (rule start) (ambiguity) astNegated?='-'
+	 *     (rule start) (ambiguity) astValue='false'
+	 *     (rule start) (ambiguity) astValue='true'
+	 *     (rule start) (ambiguity) astValue=STRING
+	 *     (rule start) (ambiguity) constructorRef?='constructor'
+	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
+	 *     (rule start) (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
+	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
+	 *     (rule start) (ambiguity) dtsAbstract?='abstract'
+	 *     (rule start) (ambiguity) dtsConstructor?='new'
+	 *     (rule start) (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
+	 *     (rule start) (ambiguity) op=TypeOperator
+	 *     (rule start) (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
+	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
+	 */
+	protected void emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('(' '|'? '&'?)+
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) '(' declaredTypeArgs+=Wildcard
+	 *     (rule start) (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
+	 *     (rule start) (ambiguity) op=TypeOperator
+	 *     (rule start) (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
+	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
+	 */
+	protected void emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('|'? '&'? '(')*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) '&'? '(' (ambiguity) {ConditionalTypeRef.typeRef=}
+	 *     (rule start) '&'? '(' (ambiguity) {UnionTypeExpression.typeRefs+=}
+	 *     (rule start) '(' (ambiguity) {ConditionalTypeRef.typeRef=}
+	 *     (rule start) '(' (ambiguity) {UnionTypeExpression.typeRefs+=}
+	 *     (rule start) (ambiguity) {ConditionalTypeRef.typeRef=}
+	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
+	 */
+	protected void emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___VerticalLineKeyword_0_q_AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('|'? '&'? '(')+
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) {ConditionalTypeRef.typeRef=}
+	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
+	 */
+	protected void emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___VerticalLineKeyword_0_q_AmpersandKeyword_0_q_LeftParenthesisKeyword_6_0__p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
 	 *     '+'?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) '('* '{' (ambiguity) includeReadonly?='readonly'
+	 *     (rule start) '&'? ('(' '|'? '&'?)* '{' (ambiguity) includeReadonly?='readonly'
 	 *     (rule start) '{' (ambiguity) includeReadonly?='readonly'
+	 *     (rule start) '|'? '&'? ('(' '|'? '&'?)* '{' (ambiguity) includeReadonly?='readonly'
+	 *     (rule start) ('(' '|'? '&'?)* '{' (ambiguity) includeReadonly?='readonly'
 	 */
 	protected void emit_MappedTypeRef_PlusSignKeyword_1_0_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -659,13 +1037,27 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     '+'?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) '('* (ambiguity) astValue=BINARY_INT
-	 *     (rule start) '('* (ambiguity) astValue=DOUBLE
-	 *     (rule start) '('* (ambiguity) astValue=HEX_INT
-	 *     (rule start) '('* (ambiguity) astValue=INT
-	 *     (rule start) '('* (ambiguity) astValue=LEGACY_OCTAL_INT
-	 *     (rule start) '('* (ambiguity) astValue=OCTAL_INT
-	 *     (rule start) '('* (ambiguity) astValue=SCIENTIFIC_INT
+	 *     (rule start) '&'? ('(' '|'? '&'?)* (ambiguity) astValue=BINARY_INT
+	 *     (rule start) '&'? ('(' '|'? '&'?)* (ambiguity) astValue=DOUBLE
+	 *     (rule start) '&'? ('(' '|'? '&'?)* (ambiguity) astValue=HEX_INT
+	 *     (rule start) '&'? ('(' '|'? '&'?)* (ambiguity) astValue=INT
+	 *     (rule start) '&'? ('(' '|'? '&'?)* (ambiguity) astValue=LEGACY_OCTAL_INT
+	 *     (rule start) '&'? ('(' '|'? '&'?)* (ambiguity) astValue=OCTAL_INT
+	 *     (rule start) '&'? ('(' '|'? '&'?)* (ambiguity) astValue=SCIENTIFIC_INT
+	 *     (rule start) '|'? '&'? ('(' '|'? '&'?)* (ambiguity) astValue=BINARY_INT
+	 *     (rule start) '|'? '&'? ('(' '|'? '&'?)* (ambiguity) astValue=DOUBLE
+	 *     (rule start) '|'? '&'? ('(' '|'? '&'?)* (ambiguity) astValue=HEX_INT
+	 *     (rule start) '|'? '&'? ('(' '|'? '&'?)* (ambiguity) astValue=INT
+	 *     (rule start) '|'? '&'? ('(' '|'? '&'?)* (ambiguity) astValue=LEGACY_OCTAL_INT
+	 *     (rule start) '|'? '&'? ('(' '|'? '&'?)* (ambiguity) astValue=OCTAL_INT
+	 *     (rule start) '|'? '&'? ('(' '|'? '&'?)* (ambiguity) astValue=SCIENTIFIC_INT
+	 *     (rule start) ('(' '|'? '&'?)* (ambiguity) astValue=BINARY_INT
+	 *     (rule start) ('(' '|'? '&'?)* (ambiguity) astValue=DOUBLE
+	 *     (rule start) ('(' '|'? '&'?)* (ambiguity) astValue=HEX_INT
+	 *     (rule start) ('(' '|'? '&'?)* (ambiguity) astValue=INT
+	 *     (rule start) ('(' '|'? '&'?)* (ambiguity) astValue=LEGACY_OCTAL_INT
+	 *     (rule start) ('(' '|'? '&'?)* (ambiguity) astValue=OCTAL_INT
+	 *     (rule start) ('(' '|'? '&'?)* (ambiguity) astValue=SCIENTIFIC_INT
 	 *     (rule start) (ambiguity) astValue=BINARY_INT
 	 *     (rule start) (ambiguity) astValue=DOUBLE
 	 *     (rule start) (ambiguity) astValue=HEX_INT
@@ -704,6 +1096,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
+<<<<<<< HEAD
 	 *     '('*
 	 *
 	 * This ambiguous syntax occurs at:
@@ -798,6 +1191,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
+=======
+>>>>>>> 7669961a5 (ambient module declarations and global declarations + re-generate)
 	 *     ';'?
 	 *
 	 * This ambiguous syntax occurs at:
@@ -956,6 +1351,59 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     typeVars+=N4TypeVariable (ambiguity) '>' generator?='*'
 	 */
 	protected void emit_TypeParameters_CommaKeyword_3_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     '|'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) '(' (ambiguity) ('&'? '(' (ambiguity))* {IntersectionTypeExpression.typeRefs+=}
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' 'this' ':' declaredThisType=TypeRef
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' declaredTypeArgs+=Wildcard
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' fpars+=TAnonymousFormalParameter
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '+'? astValue=BINARY_INT
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '+'? astValue=DOUBLE
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '+'? astValue=HEX_INT
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '+'? astValue=INT
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '+'? astValue=LEGACY_OCTAL_INT
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '+'? astValue=OCTAL_INT
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '+'? astValue=SCIENTIFIC_INT
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '<' ownedTypeVars+=TypeVariable
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* 'infer' typeVarName=IDENTIFIER
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* 'intersection' '{' typeRefs+=TypeRef
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* 'this' (rule start)
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* 'this' dynamic?='+'
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* 'type' '{' typeArg=TypeArgInTypeTypeRef
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* 'typeof' expr=PropertyAccessExpressionInTypeRef
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* 'union' '{' typeRefs+=TypeRef
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '{' '+'? includeReadonly?='readonly'
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '{' '-' excludeReadonly?='readonly'
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '{' '[' propName=IdentifierName
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '{' '}' (rule start)
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '{' '}' dynamic?='+'
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '{' astStructuralMembers+=TStructMember
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* arrayNTypeExpression?='['
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* astNegated?='-'
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* astValue='false'
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* astValue='true'
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* astValue=STRING
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* constructorRef?='constructor'
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* declaredType=[Type|TypeReferenceName]
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* declaredTypeArgs+=WildcardOldNotationWithoutBound
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* definedTypingStrategy=TypingStrategyUseSiteOperator
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* dtsAbstract?='abstract'
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* dtsConstructor?='new'
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* namespaceLikeRefs+=NamespaceLikeRef
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* op=TypeOperator
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* {IndexAccessTypeRef.targetTypeRef=}
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* {ParameterizedTypeRef.declaredTypeArgs+=}
+	 *     (rule start) (ambiguity) ('&'? '(' (ambiguity))* {IntersectionTypeExpression.typeRefs+=}
+	 */
+	protected void emit_UnionTypeExpression_VerticalLineKeyword_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

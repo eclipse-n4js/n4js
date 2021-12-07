@@ -2647,3 +2647,17 @@ class JSXElement extends Expression, JSXChild, JSXAbstractElement {
 
 class JSXFragment extends JSXChild, JSXAbstractElement {
 }
+
+
+/* Only allowed in DTS. */
+class AmbientModuleDeclaration extends ScriptElement {
+	
+	String name
+	contains ScriptElement[] scriptElements
+}
+
+/* Only allowed in DTS. */
+class GlobalDeclaration extends ScriptElement {
+
+	contains NamespaceElement[] elements
+}

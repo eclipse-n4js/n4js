@@ -202,6 +202,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.JSX_SPREAD_ATTRIBUTE: return createJSXSpreadAttribute();
 			case N4JSPackage.JSX_ELEMENT: return createJSXElement();
 			case N4JSPackage.JSX_FRAGMENT: return createJSXFragment();
+			case N4JSPackage.AMBIENT_MODULE_DECLARATION: return createAmbientModuleDeclaration();
+			case N4JSPackage.GLOBAL_DECLARATION: return createGlobalDeclaration();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -1759,6 +1761,28 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public JSXFragment createJSXFragment() {
 		JSXFragmentImpl jsxFragment = new JSXFragmentImpl();
 		return jsxFragment;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public AmbientModuleDeclaration createAmbientModuleDeclaration() {
+		AmbientModuleDeclarationImpl ambientModuleDeclaration = new AmbientModuleDeclarationImpl();
+		return ambientModuleDeclaration;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public GlobalDeclaration createGlobalDeclaration() {
+		GlobalDeclarationImpl globalDeclaration = new GlobalDeclarationImpl();
+		return globalDeclaration;
 	}
 
 	/**

@@ -54,6 +54,8 @@ Script: {Script}
  */
 ScriptElement:
 	  AnnotatedScriptElement
+	| GlobalDeclaration
+	| => AmbientModuleDeclaration // syntactic predicate required, because "module" is also a valid RootStatement > ExpressionStatement > ... > IdentifierRef
 	| N4NamespaceDeclaration<Yield=false>
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
@@ -76,6 +78,26 @@ N4NamespaceDeclaration <Yield> returns N4NamespaceDeclaration:
 	)
 	'{'
 		ownedElementsRaw+=NamespaceElement<Yield>*
+	'}'
+;
+
+AmbientModuleDeclaration:
+	=>(
+		'module'
+		name=STRING
+	)
+	'{'
+		scriptElements+=ScriptElement*
+	'}'
+;
+
+GlobalDeclaration:
+	=>(
+		{GlobalDeclaration}
+		'global'
+	)
+	'{'
+		elements+=NamespaceElement<Yield=false>*
 	'}'
 ;
 
@@ -184,8 +206,14 @@ AnnotatedNamespaceElement returns NamespaceElement:
 	)
 ;
 
-DeclareDeclaration returns ExportDeclaration:
-	=>'declare' exportedElement=ExportableElement
+DeclareDeclaration returns ScriptElement:
+	=>'declare'
+	(
+		{ExportDeclaration}
+		exportedElement=ExportableElement
+	|
+		AmbientModuleDeclaration
+	)
 ;
 
 ExportDeclaration:
@@ -199,6 +227,8 @@ fragment ExportDeclarationImpl *:
 	|	ExportClause ->ExportFromClause? Semi
 	|	exportedElement=ExportableElement
 	|	defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
+	|	'=' IdentifierName ('.' IdentifierName)* Semi // legacy export syntax (only allowed in DTS)
+	|	'import' IdentifierName '=' defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi // legacy export syntax (only allowed in DTS)
 	)
 ;
 
@@ -280,9 +310,11 @@ ImportDeclaration:
 ;
 
 fragment ImportDeclarationImpl*:
-	'import' (
-		ImportClause importFrom?='from'
-	)? module=[types::TModule|ModuleSpecifier] Semi
+	'import'
+	(
+		(ImportClause importFrom?='from')? module=[types::TModule|ModuleSpecifier] Semi
+	|	=>(IdentifierName '=') IdentifierName '(' STRING ')' Semi // legacy import syntax (only allowed in DTS)
+	)
 ;
 
 fragment ImportClause returns ImportDeclaration:
@@ -1447,8 +1479,8 @@ AnnotatedN4MemberDeclaration <Yield> returns N4MemberDeclaration:
 ;
 
 fragment FieldDeclarationImpl <Yield>*:
-	'readonly'?
 	(declaredModifiers+=N4Modifier)*
+	'readonly'?
 	declaredName=LiteralOrComputedPropertyName<Yield>
 	(declaredOptional?='?')?
 	ColonSepDeclaredTypeRef?

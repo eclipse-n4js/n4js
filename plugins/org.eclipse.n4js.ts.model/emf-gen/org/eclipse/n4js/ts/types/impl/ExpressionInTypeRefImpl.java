@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -30,6 +32,8 @@ import org.eclipse.n4js.ts.types.ExpressionInTypeRef;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
+
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * <!-- begin-user-doc -->
@@ -149,6 +153,32 @@ public class ExpressionInTypeRefImpl extends ProxyResolvingEObjectImpl implement
 	 * @generated
 	 */
 	@Override
+	public String getExpressionAsString() {
+		String _elvis = null;
+		LiteralTypeRef _nameTypeRef = this.getNameTypeRef();
+		String _typeRefAsString = null;
+		if (_nameTypeRef!=null) {
+			_typeRefAsString=_nameTypeRef.getTypeRefAsString();
+		}
+		if (_typeRefAsString != null) {
+			_elvis = _typeRefAsString;
+		} else {
+			EList<String> _identifierNames = this.getIdentifierNames();
+			String _join = null;
+			if (_identifierNames!=null) {
+				_join=IterableExtensions.join(_identifierNames, ".");
+			}
+			_elvis = _join;
+		}
+		return _elvis;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.EXPRESSION_IN_TYPE_REF__NAME_TYPE_REF:
@@ -225,6 +255,20 @@ public class ExpressionInTypeRefImpl extends ProxyResolvingEObjectImpl implement
 				return identifierNames != null && !identifierNames.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.EXPRESSION_IN_TYPE_REF___GET_EXPRESSION_AS_STRING:
+				return getExpressionAsString();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

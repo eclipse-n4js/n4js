@@ -1968,6 +1968,20 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.AMBIENT_MODULE_DECLARATION: {
+				AmbientModuleDeclaration ambientModuleDeclaration = (AmbientModuleDeclaration)theEObject;
+				T1 result = caseAmbientModuleDeclaration(ambientModuleDeclaration);
+				if (result == null) result = caseScriptElement(ambientModuleDeclaration);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.GLOBAL_DECLARATION: {
+				GlobalDeclaration globalDeclaration = (GlobalDeclaration)theEObject;
+				T1 result = caseGlobalDeclaration(globalDeclaration);
+				if (result == null) result = caseScriptElement(globalDeclaration);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -4699,6 +4713,36 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseJSXFragment(JSXFragment object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Ambient Module Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Ambient Module Declaration</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseAmbientModuleDeclaration(AmbientModuleDeclaration object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Global Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Global Declaration</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseGlobalDeclaration(GlobalDeclaration object) {
 		return null;
 	}
 

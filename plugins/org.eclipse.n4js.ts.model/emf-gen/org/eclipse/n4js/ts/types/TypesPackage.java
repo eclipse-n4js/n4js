@@ -7562,13 +7562,22 @@ public interface TypesPackage extends EPackage {
 	int EXPRESSION_IN_TYPE_REF_FEATURE_COUNT = 2;
 
 	/**
+	 * The operation id for the '<em>Get Expression As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPRESSION_IN_TYPE_REF___GET_EXPRESSION_AS_STRING = 0;
+
+	/**
 	 * The number of operations of the '<em>Expression In Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPRESSION_IN_TYPE_REF_OPERATION_COUNT = 0;
+	int EXPRESSION_IN_TYPE_REF_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMethodImpl <em>TMethod</em>}' class.
@@ -15667,6 +15676,16 @@ public interface TypesPackage extends EPackage {
 	EAttribute getExpressionInTypeRef_IdentifierNames();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.ExpressionInTypeRef#getExpressionAsString() <em>Get Expression As String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Expression As String</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.ExpressionInTypeRef#getExpressionAsString()
+	 * @generated
+	 */
+	EOperation getExpressionInTypeRef__GetExpressionAsString();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TMethod <em>TMethod</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -18396,6 +18415,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute EXPRESSION_IN_TYPE_REF__IDENTIFIER_NAMES = eINSTANCE.getExpressionInTypeRef_IdentifierNames();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Expression As String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPRESSION_IN_TYPE_REF___GET_EXPRESSION_AS_STRING = eINSTANCE.getExpressionInTypeRef__GetExpressionAsString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TMethodImpl <em>TMethod</em>}' class.

@@ -45,11 +45,13 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getAlternatives_1_3_0(), "rule__AnnotatedScriptElement__Alternatives_1_3_0");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getAlternatives_1(), "rule__AnnotatedNamespaceElement__Alternatives_1");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getAlternatives_1_1_0(), "rule__AnnotatedNamespaceElement__Alternatives_1_1_0");
+			builder.put(grammarAccess.getDeclareDeclarationAccess().getAlternatives_1(), "rule__DeclareDeclaration__Alternatives_1");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getAlternatives_1(), "rule__ExportDeclarationImpl__Alternatives_1");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getAlternatives_1_3_1(), "rule__ExportDeclarationImpl__Alternatives_1_3_1");
 			builder.put(grammarAccess.getExportableElementAccess().getAlternatives(), "rule__ExportableElement__Alternatives");
 			builder.put(grammarAccess.getAnnotatedExportableElementAccess().getAlternatives_1(), "rule__AnnotatedExportableElement__Alternatives_1");
 			builder.put(grammarAccess.getAnnotatedExportableElementAccess().getAlternatives_1_2_0(), "rule__AnnotatedExportableElement__Alternatives_1_2_0");
+			builder.put(grammarAccess.getImportDeclarationImplAccess().getAlternatives_1(), "rule__ImportDeclarationImpl__Alternatives_1");
 			builder.put(grammarAccess.getImportClauseAccess().getAlternatives(), "rule__ImportClause__Alternatives");
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getAlternatives(), "rule__ImportSpecifiersExceptDefault__Alternatives");
 			builder.put(grammarAccess.getNamedImportSpecifierAccess().getAlternatives(), "rule__NamedImportSpecifier__Alternatives");
@@ -168,6 +170,12 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getGroup(), "rule__N4NamespaceDeclaration__Group__0");
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getGroup_0(), "rule__N4NamespaceDeclaration__Group_0__0");
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getGroup_0_0(), "rule__N4NamespaceDeclaration__Group_0_0__0");
+			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getGroup(), "rule__AmbientModuleDeclaration__Group__0");
+			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getGroup_0(), "rule__AmbientModuleDeclaration__Group_0__0");
+			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getGroup_0_0(), "rule__AmbientModuleDeclaration__Group_0_0__0");
+			builder.put(grammarAccess.getGlobalDeclarationAccess().getGroup(), "rule__GlobalDeclaration__Group__0");
+			builder.put(grammarAccess.getGlobalDeclarationAccess().getGroup_0(), "rule__GlobalDeclaration__Group_0__0");
+			builder.put(grammarAccess.getGlobalDeclarationAccess().getGroup_0_0(), "rule__GlobalDeclaration__Group_0_0__0");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup(), "rule__AnnotatedScriptElement__Group__0");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup_1_0(), "rule__AnnotatedScriptElement__Group_1_0__0");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup_1_1(), "rule__AnnotatedScriptElement__Group_1_1__0");
@@ -191,12 +199,16 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup_1_2_6(), "rule__AnnotatedNamespaceElement__Group_1_2_6__0");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getGroup_1_3(), "rule__AnnotatedNamespaceElement__Group_1_3__0");
 			builder.put(grammarAccess.getDeclareDeclarationAccess().getGroup(), "rule__DeclareDeclaration__Group__0");
+			builder.put(grammarAccess.getDeclareDeclarationAccess().getGroup_1_0(), "rule__DeclareDeclaration__Group_1_0__0");
 			builder.put(grammarAccess.getExportDeclarationAccess().getGroup(), "rule__ExportDeclaration__Group__0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup(), "rule__ExportDeclarationImpl__Group__0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_0(), "rule__ExportDeclarationImpl__Group_1_0__0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_1(), "rule__ExportDeclarationImpl__Group_1_1__0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_3(), "rule__ExportDeclarationImpl__Group_1_3__0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_3_1_1(), "rule__ExportDeclarationImpl__Group_1_3_1_1__0");
+			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_4(), "rule__ExportDeclarationImpl__Group_1_4__0");
+			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_4_2(), "rule__ExportDeclarationImpl__Group_1_4_2__0");
+			builder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_5(), "rule__ExportDeclarationImpl__Group_1_5__0");
 			builder.put(grammarAccess.getExportFromClauseAccess().getGroup(), "rule__ExportFromClause__Group__0");
 			builder.put(grammarAccess.getExportClauseAccess().getGroup(), "rule__ExportClause__Group__0");
 			builder.put(grammarAccess.getExportClauseAccess().getGroup_1(), "rule__ExportClause__Group_1__0");
@@ -215,7 +227,11 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedExportableElementAccess().getGroup_1_4(), "rule__AnnotatedExportableElement__Group_1_4__0");
 			builder.put(grammarAccess.getImportDeclarationAccess().getGroup(), "rule__ImportDeclaration__Group__0");
 			builder.put(grammarAccess.getImportDeclarationImplAccess().getGroup(), "rule__ImportDeclarationImpl__Group__0");
-			builder.put(grammarAccess.getImportDeclarationImplAccess().getGroup_1(), "rule__ImportDeclarationImpl__Group_1__0");
+			builder.put(grammarAccess.getImportDeclarationImplAccess().getGroup_1_0(), "rule__ImportDeclarationImpl__Group_1_0__0");
+			builder.put(grammarAccess.getImportDeclarationImplAccess().getGroup_1_0_0(), "rule__ImportDeclarationImpl__Group_1_0_0__0");
+			builder.put(grammarAccess.getImportDeclarationImplAccess().getGroup_1_1(), "rule__ImportDeclarationImpl__Group_1_1__0");
+			builder.put(grammarAccess.getImportDeclarationImplAccess().getGroup_1_1_0(), "rule__ImportDeclarationImpl__Group_1_1_0__0");
+			builder.put(grammarAccess.getImportDeclarationImplAccess().getGroup_1_1_0_0(), "rule__ImportDeclarationImpl__Group_1_1_0_0__0");
 			builder.put(grammarAccess.getImportClauseAccess().getGroup_0(), "rule__ImportClause__Group_0__0");
 			builder.put(grammarAccess.getImportClauseAccess().getGroup_0_1(), "rule__ImportClause__Group_0_1__0");
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getGroup_1(), "rule__ImportSpecifiersExceptDefault__Group_1__0");
@@ -603,11 +619,11 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getConditionalTypeRefAccess().getGroup_1_0(), "rule__ConditionalTypeRef__Group_1_0__0");
 			builder.put(grammarAccess.getConditionalTypeRefAccess().getGroup_1_0_0(), "rule__ConditionalTypeRef__Group_1_0_0__0");
 			builder.put(grammarAccess.getUnionTypeExpressionAccess().getGroup(), "rule__UnionTypeExpression__Group__0");
-			builder.put(grammarAccess.getUnionTypeExpressionAccess().getGroup_1(), "rule__UnionTypeExpression__Group_1__0");
-			builder.put(grammarAccess.getUnionTypeExpressionAccess().getGroup_1_1(), "rule__UnionTypeExpression__Group_1_1__0");
+			builder.put(grammarAccess.getUnionTypeExpressionAccess().getGroup_2(), "rule__UnionTypeExpression__Group_2__0");
+			builder.put(grammarAccess.getUnionTypeExpressionAccess().getGroup_2_1(), "rule__UnionTypeExpression__Group_2_1__0");
 			builder.put(grammarAccess.getIntersectionTypeExpressionAccess().getGroup(), "rule__IntersectionTypeExpression__Group__0");
-			builder.put(grammarAccess.getIntersectionTypeExpressionAccess().getGroup_1(), "rule__IntersectionTypeExpression__Group_1__0");
-			builder.put(grammarAccess.getIntersectionTypeExpressionAccess().getGroup_1_1(), "rule__IntersectionTypeExpression__Group_1_1__0");
+			builder.put(grammarAccess.getIntersectionTypeExpressionAccess().getGroup_2(), "rule__IntersectionTypeExpression__Group_2__0");
+			builder.put(grammarAccess.getIntersectionTypeExpressionAccess().getGroup_2_1(), "rule__IntersectionTypeExpression__Group_2_1__0");
 			builder.put(grammarAccess.getOperatorTypeRefAccess().getGroup_0(), "rule__OperatorTypeRef__Group_0__0");
 			builder.put(grammarAccess.getArrayTypeExpressionAccess().getGroup_0(), "rule__ArrayTypeExpression__Group_0__0");
 			builder.put(grammarAccess.getArrayTypeExpressionAccess().getGroup_0_4(), "rule__ArrayTypeExpression__Group_0_4__0");
@@ -705,8 +721,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTypePredicateWithPrimaryAccess().getGroup_0(), "rule__TypePredicateWithPrimary__Group_0__0");
 			builder.put(grammarAccess.getTypePredicateWithPrimaryAccess().getGroup_0_0(), "rule__TypePredicateWithPrimary__Group_0_0__0");
 			builder.put(grammarAccess.getTLiteralOrComputedPropertyNameAccess().getGroup_3(), "rule__TLiteralOrComputedPropertyName__Group_3__0");
-			builder.put(grammarAccess.getExpressionInTypeRefAccess().getGroup_2(), "rule__ExpressionInTypeRef__Group_2__0");
-			builder.put(grammarAccess.getExpressionInTypeRefAccess().getGroup_2_1(), "rule__ExpressionInTypeRef__Group_2_1__0");
+			builder.put(grammarAccess.getPropertyAccessExpressionInTypeRefAccess().getGroup(), "rule__PropertyAccessExpressionInTypeRef__Group__0");
+			builder.put(grammarAccess.getPropertyAccessExpressionInTypeRefAccess().getGroup_1(), "rule__PropertyAccessExpressionInTypeRef__Group_1__0");
 			builder.put(grammarAccess.getArrowAccess().getGroup(), "rule__Arrow__Group__0");
 			builder.put(grammarAccess.getScriptAccess().getHashbangAssignment_1(), "rule__Script__HashbangAssignment_1");
 			builder.put(grammarAccess.getScriptAccess().getAnnotationsAssignment_2_0(), "rule__Script__AnnotationsAssignment_2_0");
@@ -714,6 +730,9 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getDeclaredModifiersAssignment_0_0_1(), "rule__N4NamespaceDeclaration__DeclaredModifiersAssignment_0_0_1");
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getNameAssignment_0_0_3(), "rule__N4NamespaceDeclaration__NameAssignment_0_0_3");
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getOwnedElementsRawAssignment_2(), "rule__N4NamespaceDeclaration__OwnedElementsRawAssignment_2");
+			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getNameAssignment_0_0_1(), "rule__AmbientModuleDeclaration__NameAssignment_0_0_1");
+			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getScriptElementsAssignment_2(), "rule__AmbientModuleDeclaration__ScriptElementsAssignment_2");
+			builder.put(grammarAccess.getGlobalDeclarationAccess().getElementsAssignment_2(), "rule__GlobalDeclaration__ElementsAssignment_2");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersAssignment_1_2_1_0_0(), "rule__AnnotatedScriptElement__DeclaredModifiersAssignment_1_2_1_0_0");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersAssignment_1_3_0_0_1(), "rule__AnnotatedScriptElement__DeclaredModifiersAssignment_1_3_0_0_1");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getTypingStrategyAssignment_1_3_0_0_3(), "rule__AnnotatedScriptElement__TypingStrategyAssignment_1_3_0_0_3");
@@ -742,12 +761,13 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getDeclaredModifiersAssignment_1_3_1(), "rule__AnnotatedNamespaceElement__DeclaredModifiersAssignment_1_3_1");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getNameAssignment_1_3_3(), "rule__AnnotatedNamespaceElement__NameAssignment_1_3_3");
 			builder.put(grammarAccess.getAnnotatedNamespaceElementAccess().getDeclaredTypeRefNodeAssignment_1_3_6(), "rule__AnnotatedNamespaceElement__DeclaredTypeRefNodeAssignment_1_3_6");
-			builder.put(grammarAccess.getDeclareDeclarationAccess().getExportedElementAssignment_1(), "rule__DeclareDeclaration__ExportedElementAssignment_1");
+			builder.put(grammarAccess.getDeclareDeclarationAccess().getExportedElementAssignment_1_0_1(), "rule__DeclareDeclaration__ExportedElementAssignment_1_0_1");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getWildcardExportAssignment_1_0_0(), "rule__ExportDeclarationImpl__WildcardExportAssignment_1_0_0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getExportedElementAssignment_1_2(), "rule__ExportDeclarationImpl__ExportedElementAssignment_1_2");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getDefaultExportAssignment_1_3_0(), "rule__ExportDeclarationImpl__DefaultExportAssignment_1_3_0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getExportedElementAssignment_1_3_1_0(), "rule__ExportDeclarationImpl__ExportedElementAssignment_1_3_1_0");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getDefaultExportedExpressionAssignment_1_3_1_1_0(), "rule__ExportDeclarationImpl__DefaultExportedExpressionAssignment_1_3_1_1_0");
+			builder.put(grammarAccess.getExportDeclarationImplAccess().getDefaultExportedExpressionAssignment_1_5_3(), "rule__ExportDeclarationImpl__DefaultExportedExpressionAssignment_1_5_3");
 			builder.put(grammarAccess.getExportFromClauseAccess().getReexportedFromAssignment_1(), "rule__ExportFromClause__ReexportedFromAssignment_1");
 			builder.put(grammarAccess.getExportClauseAccess().getNamedExportsAssignment_1_0(), "rule__ExportClause__NamedExportsAssignment_1_0");
 			builder.put(grammarAccess.getExportClauseAccess().getNamedExportsAssignment_1_1_1(), "rule__ExportClause__NamedExportsAssignment_1_1_1");
@@ -771,8 +791,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredModifiersAssignment_1_4_1(), "rule__AnnotatedExportableElement__DeclaredModifiersAssignment_1_4_1");
 			builder.put(grammarAccess.getAnnotatedExportableElementAccess().getNameAssignment_1_4_3(), "rule__AnnotatedExportableElement__NameAssignment_1_4_3");
 			builder.put(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredTypeRefNodeAssignment_1_4_6(), "rule__AnnotatedExportableElement__DeclaredTypeRefNodeAssignment_1_4_6");
-			builder.put(grammarAccess.getImportDeclarationImplAccess().getImportFromAssignment_1_1(), "rule__ImportDeclarationImpl__ImportFromAssignment_1_1");
-			builder.put(grammarAccess.getImportDeclarationImplAccess().getModuleAssignment_2(), "rule__ImportDeclarationImpl__ModuleAssignment_2");
+			builder.put(grammarAccess.getImportDeclarationImplAccess().getImportFromAssignment_1_0_0_1(), "rule__ImportDeclarationImpl__ImportFromAssignment_1_0_0_1");
+			builder.put(grammarAccess.getImportDeclarationImplAccess().getModuleAssignment_1_0_1(), "rule__ImportDeclarationImpl__ModuleAssignment_1_0_1");
 			builder.put(grammarAccess.getImportClauseAccess().getImportSpecifiersAssignment_0_0(), "rule__ImportClause__ImportSpecifiersAssignment_0_0");
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getImportSpecifiersAssignment_0(), "rule__ImportSpecifiersExceptDefault__ImportSpecifiersAssignment_0");
 			builder.put(grammarAccess.getImportSpecifiersExceptDefaultAccess().getImportSpecifiersAssignment_1_1_0(), "rule__ImportSpecifiersExceptDefault__ImportSpecifiersAssignment_1_1_0");
@@ -1081,7 +1101,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDtsDeclaredOptionalAssignment_1_2_0_0_2_0_2(), "rule__AnnotatedN4MemberDeclaration__DtsDeclaredOptionalAssignment_1_2_0_0_2_0_2");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredNameAssignment_1_2_0_0_2_1_1(), "rule__AnnotatedN4MemberDeclaration__DeclaredNameAssignment_1_2_0_0_2_1_1");
 			builder.put(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDtsDeclaredOptionalAssignment_1_2_0_0_2_1_2(), "rule__AnnotatedN4MemberDeclaration__DtsDeclaredOptionalAssignment_1_2_0_0_2_1_2");
-			builder.put(grammarAccess.getFieldDeclarationImplAccess().getDeclaredModifiersAssignment_1(), "rule__FieldDeclarationImpl__DeclaredModifiersAssignment_1");
+			builder.put(grammarAccess.getFieldDeclarationImplAccess().getDeclaredModifiersAssignment_0(), "rule__FieldDeclarationImpl__DeclaredModifiersAssignment_0");
 			builder.put(grammarAccess.getFieldDeclarationImplAccess().getDeclaredNameAssignment_2(), "rule__FieldDeclarationImpl__DeclaredNameAssignment_2");
 			builder.put(grammarAccess.getFieldDeclarationImplAccess().getDeclaredOptionalAssignment_3(), "rule__FieldDeclarationImpl__DeclaredOptionalAssignment_3");
 			builder.put(grammarAccess.getFieldDeclarationImplAccess().getExpressionAssignment_5_1(), "rule__FieldDeclarationImpl__ExpressionAssignment_5_1");
@@ -1141,8 +1161,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getConditionalTypeRefAccess().getUpperBoundAssignment_1_1(), "rule__ConditionalTypeRef__UpperBoundAssignment_1_1");
 			builder.put(grammarAccess.getConditionalTypeRefAccess().getTrueTypeRefAssignment_1_3(), "rule__ConditionalTypeRef__TrueTypeRefAssignment_1_3");
 			builder.put(grammarAccess.getConditionalTypeRefAccess().getFalseTypeRefAssignment_1_5(), "rule__ConditionalTypeRef__FalseTypeRefAssignment_1_5");
-			builder.put(grammarAccess.getUnionTypeExpressionAccess().getTypeRefsAssignment_1_1_1(), "rule__UnionTypeExpression__TypeRefsAssignment_1_1_1");
-			builder.put(grammarAccess.getIntersectionTypeExpressionAccess().getTypeRefsAssignment_1_1_1(), "rule__IntersectionTypeExpression__TypeRefsAssignment_1_1_1");
+			builder.put(grammarAccess.getUnionTypeExpressionAccess().getTypeRefsAssignment_2_1_1(), "rule__UnionTypeExpression__TypeRefsAssignment_2_1_1");
+			builder.put(grammarAccess.getIntersectionTypeExpressionAccess().getTypeRefsAssignment_2_1_1(), "rule__IntersectionTypeExpression__TypeRefsAssignment_2_1_1");
 			builder.put(grammarAccess.getOperatorTypeRefAccess().getOpAssignment_0_1(), "rule__OperatorTypeRef__OpAssignment_0_1");
 			builder.put(grammarAccess.getOperatorTypeRefAccess().getTypeRefAssignment_0_2(), "rule__OperatorTypeRef__TypeRefAssignment_0_2");
 			builder.put(grammarAccess.getArrayTypeExpressionAccess().getDeclaredTypeArgsAssignment_0_1(), "rule__ArrayTypeExpression__DeclaredTypeArgsAssignment_0_1");
@@ -1233,7 +1253,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTypeVariableAccess().getNameAssignment_1(), "rule__TypeVariable__NameAssignment_1");
 			builder.put(grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundAssignment_2_1(), "rule__TypeVariable__DeclaredUpperBoundAssignment_2_1");
 			builder.put(grammarAccess.getTypeVariableAccess().getDefaultArgumentAssignment_3_1(), "rule__TypeVariable__DefaultArgumentAssignment_3_1");
-			builder.put(grammarAccess.getQueryTypeRefAccess().getElementAssignment_1(), "rule__QueryTypeRef__ElementAssignment_1");
+			builder.put(grammarAccess.getQueryTypeRefAccess().getExprAssignment_1(), "rule__QueryTypeRef__ExprAssignment_1");
 			builder.put(grammarAccess.getInferTypeRefAccess().getTypeVarNameAssignment_1(), "rule__InferTypeRef__TypeVarNameAssignment_1");
 			builder.put(grammarAccess.getTypePredicateAccess().getReferringToThisAssignment_0_0_0_0(), "rule__TypePredicate__ReferringToThisAssignment_0_0_0_0");
 			builder.put(grammarAccess.getTypePredicateAccess().getFparAssignment_0_0_0_1(), "rule__TypePredicate__FparAssignment_0_0_0_1");
@@ -1247,8 +1267,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTLiteralOrComputedPropertyNameAccess().getDtsComputedNameExpressionAssignment_3_1(), "rule__TLiteralOrComputedPropertyName__DtsComputedNameExpressionAssignment_3_1");
 			builder.put(grammarAccess.getExpressionInTypeRefAccess().getNameTypeRefAssignment_0(), "rule__ExpressionInTypeRef__NameTypeRefAssignment_0");
 			builder.put(grammarAccess.getExpressionInTypeRefAccess().getNameTypeRefAssignment_1(), "rule__ExpressionInTypeRef__NameTypeRefAssignment_1");
-			builder.put(grammarAccess.getExpressionInTypeRefAccess().getIdentifierNamesAssignment_2_0(), "rule__ExpressionInTypeRef__IdentifierNamesAssignment_2_0");
-			builder.put(grammarAccess.getExpressionInTypeRefAccess().getIdentifierNamesAssignment_2_1_1(), "rule__ExpressionInTypeRef__IdentifierNamesAssignment_2_1_1");
+			builder.put(grammarAccess.getPropertyAccessExpressionInTypeRefAccess().getIdentifierNamesAssignment_0(), "rule__PropertyAccessExpressionInTypeRef__IdentifierNamesAssignment_0");
+			builder.put(grammarAccess.getPropertyAccessExpressionInTypeRefAccess().getIdentifierNamesAssignment_1_1(), "rule__PropertyAccessExpressionInTypeRef__IdentifierNamesAssignment_1_1");
 		}
 	}
 	

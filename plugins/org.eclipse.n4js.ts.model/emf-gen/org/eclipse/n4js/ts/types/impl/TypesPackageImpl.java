@@ -2852,6 +2852,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getExpressionInTypeRef__GetExpressionAsString() {
+		return expressionInTypeRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTMethod() {
 		return tMethodEClass;
 	}
@@ -3983,6 +3993,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		expressionInTypeRefEClass = createEClass(EXPRESSION_IN_TYPE_REF);
 		createEReference(expressionInTypeRefEClass, EXPRESSION_IN_TYPE_REF__NAME_TYPE_REF);
 		createEAttribute(expressionInTypeRefEClass, EXPRESSION_IN_TYPE_REF__IDENTIFIER_NAMES);
+		createEOperation(expressionInTypeRefEClass, EXPRESSION_IN_TYPE_REF___GET_EXPRESSION_AS_STRING);
 
 		tMethodEClass = createEClass(TMETHOD);
 		createEAttribute(tMethodEClass, TMETHOD__DECLARED_ABSTRACT);
@@ -4604,6 +4615,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(expressionInTypeRefEClass, ExpressionInTypeRef.class, "ExpressionInTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getExpressionInTypeRef_NameTypeRef(), theTypeRefsPackage.getLiteralTypeRef(), null, "nameTypeRef", null, 0, 1, ExpressionInTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExpressionInTypeRef_IdentifierNames(), theEcorePackage.getEString(), "identifierNames", null, 0, -1, ExpressionInTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getExpressionInTypeRef__GetExpressionAsString(), theEcorePackage.getEString(), "getExpressionAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tMethodEClass, TMethod.class, "TMethod", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTMethod_DeclaredAbstract(), theEcorePackage.getEBoolean(), "declaredAbstract", null, 0, 1, TMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
