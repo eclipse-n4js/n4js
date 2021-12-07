@@ -152,6 +152,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTStructMemberListAccess().getAlternatives_1_1(), "rule__TStructMemberList__Alternatives_1_1");
 			builder.put(grammarAccess.getTStructMemberAccess().getAlternatives(), "rule__TStructMember__Alternatives");
 			builder.put(grammarAccess.getColonSepReturnTypeRefAccess().getAlternatives_1(), "rule__ColonSepReturnTypeRef__Alternatives_1");
+			builder.put(grammarAccess.getTStructFieldAccess().getAlternatives_0(), "rule__TStructField__Alternatives_0");
 			builder.put(grammarAccess.getTypingStrategyUseSiteOperatorAccess().getAlternatives_1(), "rule__TypingStrategyUseSiteOperator__Alternatives_1");
 			builder.put(grammarAccess.getTypeTypeRefAccess().getAlternatives_1(), "rule__TypeTypeRef__Alternatives_1");
 			builder.put(grammarAccess.getTypeReferenceNameAccess().getAlternatives(), "rule__TypeReferenceName__Alternatives");
@@ -708,6 +709,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getColonSepTypeRefAccess().getGroup(), "rule__ColonSepTypeRef__Group__0");
 			builder.put(grammarAccess.getColonSepReturnTypeRefAccess().getGroup(), "rule__ColonSepReturnTypeRef__Group__0");
 			builder.put(grammarAccess.getTStructFieldAccess().getGroup(), "rule__TStructField__Group__0");
+			builder.put(grammarAccess.getTStructFieldAccess().getGroup_0_1(), "rule__TStructField__Group_0_1__0");
+			builder.put(grammarAccess.getTStructFieldAccess().getGroup_0_1_0(), "rule__TStructField__Group_0_1_0__0");
 			builder.put(grammarAccess.getTStructGetterAccess().getGroup(), "rule__TStructGetter__Group__0");
 			builder.put(grammarAccess.getTStructGetterAccess().getGroup_0(), "rule__TStructGetter__Group_0__0");
 			builder.put(grammarAccess.getTStructGetterAccess().getGroup_0_0(), "rule__TStructGetter__Group_0_0__0");
@@ -715,6 +718,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getTStructSetterAccess().getGroup_0(), "rule__TStructSetter__Group_0__0");
 			builder.put(grammarAccess.getTStructSetterAccess().getGroup_0_0(), "rule__TStructSetter__Group_0_0__0");
 			builder.put(grammarAccess.getTStructIndexSignatureAccess().getGroup(), "rule__TStructIndexSignature__Group__0");
+			builder.put(grammarAccess.getTStructIndexSignatureAccess().getGroup_0(), "rule__TStructIndexSignature__Group_0__0");
+			builder.put(grammarAccess.getTStructIndexSignatureAccess().getGroup_0_0(), "rule__TStructIndexSignature__Group_0_0__0");
 			builder.put(grammarAccess.getTypingStrategyUseSiteOperatorAccess().getGroup(), "rule__TypingStrategyUseSiteOperator__Group__0");
 			builder.put(grammarAccess.getTypeTypeRefAccess().getGroup(), "rule__TypeTypeRef__Group__0");
 			builder.put(grammarAccess.getWildcardOldNotationAccess().getGroup(), "rule__WildcardOldNotation__Group__0");
@@ -1251,14 +1256,14 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getColonSepTypeRefAccess().getTypeRefAssignment_1(), "rule__ColonSepTypeRef__TypeRefAssignment_1");
 			builder.put(grammarAccess.getColonSepReturnTypeRefAccess().getReturnTypePredicateAssignment_1_0(), "rule__ColonSepReturnTypeRef__ReturnTypePredicateAssignment_1_0");
 			builder.put(grammarAccess.getColonSepReturnTypeRefAccess().getReturnTypeRefAssignment_1_1(), "rule__ColonSepReturnTypeRef__ReturnTypeRefAssignment_1_1");
-			builder.put(grammarAccess.getTStructFieldAccess().getOptionalAssignment_2(), "rule__TStructField__OptionalAssignment_2");
+			builder.put(grammarAccess.getTStructFieldAccess().getOptionalAssignment_1(), "rule__TStructField__OptionalAssignment_1");
 			builder.put(grammarAccess.getTStructGetterAccess().getOptionalAssignment_1(), "rule__TStructGetter__OptionalAssignment_1");
 			builder.put(grammarAccess.getTStructSetterAccess().getOptionalAssignment_1(), "rule__TStructSetter__OptionalAssignment_1");
 			builder.put(grammarAccess.getTStructSetterAccess().getFparAssignment_3(), "rule__TStructSetter__FparAssignment_3");
-			builder.put(grammarAccess.getTStructIndexSignatureAccess().getReadonlyAssignment_0(), "rule__TStructIndexSignature__ReadonlyAssignment_0");
-			builder.put(grammarAccess.getTStructIndexSignatureAccess().getKeyNameAssignment_2(), "rule__TStructIndexSignature__KeyNameAssignment_2");
-			builder.put(grammarAccess.getTStructIndexSignatureAccess().getKeyTypeRefAssignment_4(), "rule__TStructIndexSignature__KeyTypeRefAssignment_4");
-			builder.put(grammarAccess.getTStructIndexSignatureAccess().getValueTypeRefAssignment_7(), "rule__TStructIndexSignature__ValueTypeRefAssignment_7");
+			builder.put(grammarAccess.getTStructIndexSignatureAccess().getReadonlyAssignment_0_0_1(), "rule__TStructIndexSignature__ReadonlyAssignment_0_0_1");
+			builder.put(grammarAccess.getTStructIndexSignatureAccess().getKeyNameAssignment_1(), "rule__TStructIndexSignature__KeyNameAssignment_1");
+			builder.put(grammarAccess.getTStructIndexSignatureAccess().getKeyTypeRefAssignment_3(), "rule__TStructIndexSignature__KeyTypeRefAssignment_3");
+			builder.put(grammarAccess.getTStructIndexSignatureAccess().getValueTypeRefAssignment_6(), "rule__TStructIndexSignature__ValueTypeRefAssignment_6");
 			builder.put(grammarAccess.getTypeTypeRefAccess().getConstructorRefAssignment_1_1(), "rule__TypeTypeRef__ConstructorRefAssignment_1_1");
 			builder.put(grammarAccess.getTypeTypeRefAccess().getTypeArgAssignment_3(), "rule__TypeTypeRef__TypeArgAssignment_3");
 			builder.put(grammarAccess.getWildcardOldNotationAccess().getDeclaredUpperBoundAssignment_1_0_1(), "rule__WildcardOldNotation__DeclaredUpperBoundAssignment_1_0_1");

@@ -2127,34 +2127,63 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	public class TStructFieldElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TStructField");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cReadonlyKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final RuleCall cTLiteralOrComputedPropertyNameParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
-		private final Assignment cOptionalAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final Keyword cOptionalQuestionMarkKeyword_2_0 = (Keyword)cOptionalAssignment_2.eContents().get(0);
-		private final RuleCall cColonSepTypeRefParserRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
+		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
+		private final RuleCall cTLiteralOrComputedPropertyNameParserRuleCall_0_0 = (RuleCall)cAlternatives_0.eContents().get(0);
+		private final Group cGroup_0_1 = (Group)cAlternatives_0.eContents().get(1);
+		private final Group cGroup_0_1_0 = (Group)cGroup_0_1.eContents().get(0);
+		private final Keyword cReadonlyKeyword_0_1_0_0 = (Keyword)cGroup_0_1_0.eContents().get(0);
+		private final RuleCall cTLiteralOrComputedPropertyNameParserRuleCall_0_1_0_1 = (RuleCall)cGroup_0_1_0.eContents().get(1);
+		private final Assignment cOptionalAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Keyword cOptionalQuestionMarkKeyword_1_0 = (Keyword)cOptionalAssignment_1.eContents().get(0);
+		private final RuleCall cColonSepTypeRefParserRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
 		
 		//TStructField:
-		//    'readonly'? TLiteralOrComputedPropertyName (optional?='?')? ColonSepTypeRef?
+		//    (
+		//        TLiteralOrComputedPropertyName
+		//    |    =>('readonly' TLiteralOrComputedPropertyName)
+		//    )
+		//    (optional?='?')?
+		//    ColonSepTypeRef?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'readonly'? TLiteralOrComputedPropertyName (optional?='?')? ColonSepTypeRef?
+		//(
+		//    TLiteralOrComputedPropertyName
+		//|    =>('readonly' TLiteralOrComputedPropertyName)
+		//)
+		//(optional?='?')?
+		//ColonSepTypeRef?
 		public Group getGroup() { return cGroup; }
 		
-		//'readonly'?
-		public Keyword getReadonlyKeyword_0() { return cReadonlyKeyword_0; }
+		//(
+		//    TLiteralOrComputedPropertyName
+		//|    =>('readonly' TLiteralOrComputedPropertyName)
+		//)
+		public Alternatives getAlternatives_0() { return cAlternatives_0; }
 		
 		//TLiteralOrComputedPropertyName
-		public RuleCall getTLiteralOrComputedPropertyNameParserRuleCall_1() { return cTLiteralOrComputedPropertyNameParserRuleCall_1; }
+		public RuleCall getTLiteralOrComputedPropertyNameParserRuleCall_0_0() { return cTLiteralOrComputedPropertyNameParserRuleCall_0_0; }
+		
+		//=>('readonly' TLiteralOrComputedPropertyName)
+		public Group getGroup_0_1() { return cGroup_0_1; }
+		
+		//'readonly' TLiteralOrComputedPropertyName
+		public Group getGroup_0_1_0() { return cGroup_0_1_0; }
+		
+		//'readonly'
+		public Keyword getReadonlyKeyword_0_1_0_0() { return cReadonlyKeyword_0_1_0_0; }
+		
+		//TLiteralOrComputedPropertyName
+		public RuleCall getTLiteralOrComputedPropertyNameParserRuleCall_0_1_0_1() { return cTLiteralOrComputedPropertyNameParserRuleCall_0_1_0_1; }
 		
 		//(optional?='?')?
-		public Assignment getOptionalAssignment_2() { return cOptionalAssignment_2; }
+		public Assignment getOptionalAssignment_1() { return cOptionalAssignment_1; }
 		
 		//'?'
-		public Keyword getOptionalQuestionMarkKeyword_2_0() { return cOptionalQuestionMarkKeyword_2_0; }
+		public Keyword getOptionalQuestionMarkKeyword_1_0() { return cOptionalQuestionMarkKeyword_1_0; }
 		
 		//ColonSepTypeRef?
-		public RuleCall getColonSepTypeRefParserRuleCall_3() { return cColonSepTypeRefParserRuleCall_3; }
+		public RuleCall getColonSepTypeRefParserRuleCall_2() { return cColonSepTypeRefParserRuleCall_2; }
 	}
 	public class TStructGetterElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TStructGetter");
@@ -2291,68 +2320,90 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	public class TStructIndexSignatureElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TStructIndexSignature");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cReadonlyAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final Keyword cReadonlyReadonlyKeyword_0_0 = (Keyword)cReadonlyAssignment_0.eContents().get(0);
-		private final Keyword cLeftSquareBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cKeyNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cKeyNameIdentifierNameParserRuleCall_2_0 = (RuleCall)cKeyNameAssignment_2.eContents().get(0);
-		private final Keyword cColonKeyword_3 = (Keyword)cGroup.eContents().get(3);
-		private final Assignment cKeyTypeRefAssignment_4 = (Assignment)cGroup.eContents().get(4);
-		private final RuleCall cKeyTypeRefTypeRefParserRuleCall_4_0 = (RuleCall)cKeyTypeRefAssignment_4.eContents().get(0);
-		private final Keyword cRightSquareBracketKeyword_5 = (Keyword)cGroup.eContents().get(5);
-		private final Keyword cColonKeyword_6 = (Keyword)cGroup.eContents().get(6);
-		private final Assignment cValueTypeRefAssignment_7 = (Assignment)cGroup.eContents().get(7);
-		private final RuleCall cValueTypeRefTypeRefParserRuleCall_7_0 = (RuleCall)cValueTypeRefAssignment_7.eContents().get(0);
+		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
+		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
+		private final Action cTStructIndexSignatureAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
+		private final Assignment cReadonlyAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
+		private final Keyword cReadonlyReadonlyKeyword_0_0_1_0 = (Keyword)cReadonlyAssignment_0_0_1.eContents().get(0);
+		private final Keyword cLeftSquareBracketKeyword_0_0_2 = (Keyword)cGroup_0_0.eContents().get(2);
+		private final Assignment cKeyNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cKeyNameIdentifierNameParserRuleCall_1_0 = (RuleCall)cKeyNameAssignment_1.eContents().get(0);
+		private final Keyword cColonKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		private final Assignment cKeyTypeRefAssignment_3 = (Assignment)cGroup.eContents().get(3);
+		private final RuleCall cKeyTypeRefTypeRefParserRuleCall_3_0 = (RuleCall)cKeyTypeRefAssignment_3.eContents().get(0);
+		private final Keyword cRightSquareBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		private final Keyword cColonKeyword_5 = (Keyword)cGroup.eContents().get(5);
+		private final Assignment cValueTypeRefAssignment_6 = (Assignment)cGroup.eContents().get(6);
+		private final RuleCall cValueTypeRefTypeRefParserRuleCall_6_0 = (RuleCall)cValueTypeRefAssignment_6.eContents().get(0);
 		
 		//TStructIndexSignature:
+		//    => ({TStructIndexSignature}
 		//    (readonly?='readonly')?
-		//    '[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
+		//    '[')
+		//    keyName=IdentifierName ':' keyTypeRef=TypeRef
+		//    ']'
 		//    ':'
 		//    valueTypeRef=TypeRef
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
+		//=> ({TStructIndexSignature}
 		//(readonly?='readonly')?
-		//'[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
+		//'[')
+		//keyName=IdentifierName ':' keyTypeRef=TypeRef
+		//']'
 		//':'
 		//valueTypeRef=TypeRef
 		public Group getGroup() { return cGroup; }
 		
+		//=> ({TStructIndexSignature}
 		//(readonly?='readonly')?
-		public Assignment getReadonlyAssignment_0() { return cReadonlyAssignment_0; }
+		//'[')
+		public Group getGroup_0() { return cGroup_0; }
+		
+		//{TStructIndexSignature}
+		//    (readonly?='readonly')?
+		//    '['
+		public Group getGroup_0_0() { return cGroup_0_0; }
+		
+		//{TStructIndexSignature}
+		public Action getTStructIndexSignatureAction_0_0_0() { return cTStructIndexSignatureAction_0_0_0; }
+		
+		//(readonly?='readonly')?
+		public Assignment getReadonlyAssignment_0_0_1() { return cReadonlyAssignment_0_0_1; }
 		
 		//'readonly'
-		public Keyword getReadonlyReadonlyKeyword_0_0() { return cReadonlyReadonlyKeyword_0_0; }
+		public Keyword getReadonlyReadonlyKeyword_0_0_1_0() { return cReadonlyReadonlyKeyword_0_0_1_0; }
 		
 		//'['
-		public Keyword getLeftSquareBracketKeyword_1() { return cLeftSquareBracketKeyword_1; }
+		public Keyword getLeftSquareBracketKeyword_0_0_2() { return cLeftSquareBracketKeyword_0_0_2; }
 		
 		//keyName=IdentifierName
-		public Assignment getKeyNameAssignment_2() { return cKeyNameAssignment_2; }
+		public Assignment getKeyNameAssignment_1() { return cKeyNameAssignment_1; }
 		
 		//IdentifierName
-		public RuleCall getKeyNameIdentifierNameParserRuleCall_2_0() { return cKeyNameIdentifierNameParserRuleCall_2_0; }
+		public RuleCall getKeyNameIdentifierNameParserRuleCall_1_0() { return cKeyNameIdentifierNameParserRuleCall_1_0; }
 		
 		//':'
-		public Keyword getColonKeyword_3() { return cColonKeyword_3; }
+		public Keyword getColonKeyword_2() { return cColonKeyword_2; }
 		
 		//keyTypeRef=TypeRef
-		public Assignment getKeyTypeRefAssignment_4() { return cKeyTypeRefAssignment_4; }
+		public Assignment getKeyTypeRefAssignment_3() { return cKeyTypeRefAssignment_3; }
 		
 		//TypeRef
-		public RuleCall getKeyTypeRefTypeRefParserRuleCall_4_0() { return cKeyTypeRefTypeRefParserRuleCall_4_0; }
+		public RuleCall getKeyTypeRefTypeRefParserRuleCall_3_0() { return cKeyTypeRefTypeRefParserRuleCall_3_0; }
 		
 		//']'
-		public Keyword getRightSquareBracketKeyword_5() { return cRightSquareBracketKeyword_5; }
+		public Keyword getRightSquareBracketKeyword_4() { return cRightSquareBracketKeyword_4; }
 		
 		//':'
-		public Keyword getColonKeyword_6() { return cColonKeyword_6; }
+		public Keyword getColonKeyword_5() { return cColonKeyword_5; }
 		
 		//valueTypeRef=TypeRef
-		public Assignment getValueTypeRefAssignment_7() { return cValueTypeRefAssignment_7; }
+		public Assignment getValueTypeRefAssignment_6() { return cValueTypeRefAssignment_6; }
 		
 		//TypeRef
-		public RuleCall getValueTypeRefTypeRefParserRuleCall_7_0() { return cValueTypeRefTypeRefParserRuleCall_7_0; }
+		public RuleCall getValueTypeRefTypeRefParserRuleCall_6_0() { return cValueTypeRefTypeRefParserRuleCall_6_0; }
 	}
 	public class TypingStrategyUseSiteOperatorElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypingStrategyUseSiteOperator");
@@ -3314,10 +3365,11 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Keyword cDeclareKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
 		private final Keyword cGlobalKeyword_26 = (Keyword)cAlternatives.eContents().get(26);
 		private final Keyword cModuleKeyword_27 = (Keyword)cAlternatives.eContents().get(27);
-		private final Keyword cIsKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
-		private final Keyword cKeyofKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
-		private final Keyword cUniqueKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
-		private final Keyword cInferKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
+		private final Keyword cReadonlyKeyword_28 = (Keyword)cAlternatives.eContents().get(28);
+		private final Keyword cIsKeyword_29 = (Keyword)cAlternatives.eContents().get(29);
+		private final Keyword cKeyofKeyword_30 = (Keyword)cAlternatives.eContents().get(30);
+		private final Keyword cUniqueKeyword_31 = (Keyword)cAlternatives.eContents().get(31);
+		private final Keyword cInferKeyword_32 = (Keyword)cAlternatives.eContents().get(32);
 		
 		//N4Keyword:
 		//    'get' | 'set'
@@ -3339,7 +3391,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    // namespace keyword
 		//    | 'namespace'
 		//    // .d.ts keywords
-		//    | 'declare' | 'global' | 'module' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
+		//    | 'declare' | 'global' | 'module' | 'readonly' | 'is' | 'keyof' | 'unique' | 'infer'
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -3362,7 +3414,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//// namespace keyword
 		//| 'namespace'
 		//// .d.ts keywords
-		//| 'declare' | 'global' | 'module' | 'is' | 'keyof' | 'unique' | 'infer'
+		//| 'declare' | 'global' | 'module' | 'readonly' | 'is' | 'keyof' | 'unique' | 'infer'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'get'
@@ -3449,17 +3501,20 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'module'
 		public Keyword getModuleKeyword_27() { return cModuleKeyword_27; }
 		
+		//'readonly'
+		public Keyword getReadonlyKeyword_28() { return cReadonlyKeyword_28; }
+		
 		//'is'
-		public Keyword getIsKeyword_28() { return cIsKeyword_28; }
+		public Keyword getIsKeyword_29() { return cIsKeyword_29; }
 		
 		//'keyof'
-		public Keyword getKeyofKeyword_29() { return cKeyofKeyword_29; }
+		public Keyword getKeyofKeyword_30() { return cKeyofKeyword_30; }
 		
 		//'unique'
-		public Keyword getUniqueKeyword_30() { return cUniqueKeyword_30; }
+		public Keyword getUniqueKeyword_31() { return cUniqueKeyword_31; }
 		
 		//'infer'
-		public Keyword getInferKeyword_31() { return cInferKeyword_31; }
+		public Keyword getInferKeyword_32() { return cInferKeyword_32; }
 	}
 	public class NumericLiteralAsStringElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.NumericLiteralAsString");
@@ -4284,7 +4339,12 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//TStructField:
-	//    'readonly'? TLiteralOrComputedPropertyName (optional?='?')? ColonSepTypeRef?
+	//    (
+	//        TLiteralOrComputedPropertyName
+	//    |    =>('readonly' TLiteralOrComputedPropertyName)
+	//    )
+	//    (optional?='?')?
+	//    ColonSepTypeRef?
 	//;
 	public TStructFieldElements getTStructFieldAccess() {
 		return pTStructField;
@@ -4325,8 +4385,11 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	}
 	
 	//TStructIndexSignature:
+	//    => ({TStructIndexSignature}
 	//    (readonly?='readonly')?
-	//    '[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
+	//    '[')
+	//    keyName=IdentifierName ':' keyTypeRef=TypeRef
+	//    ']'
 	//    ':'
 	//    valueTypeRef=TypeRef
 	//;
@@ -4609,7 +4672,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//    // namespace keyword
 	//    | 'namespace'
 	//    // .d.ts keywords
-	//    | 'declare' | 'global' | 'module' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
+	//    | 'declare' | 'global' | 'module' | 'readonly' | 'is' | 'keyof' | 'unique' | 'infer'
 	//;
 	public N4KeywordElements getN4KeywordAccess() {
 		return pN4Keyword;

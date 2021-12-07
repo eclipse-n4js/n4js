@@ -80,7 +80,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_TAnonymousFormalParameterList_CommaKeyword_2_q;
 	protected AbstractElementAlias match_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q;
 	protected AbstractElementAlias match_TFormalParameter_QuestionMarkKeyword_2_q;
-	protected AbstractElementAlias match_TStructField_ReadonlyKeyword_0_q;
+	protected AbstractElementAlias match_TStructField_ReadonlyKeyword_0_1_0_0_q;
 	protected AbstractElementAlias match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q;
 	protected AbstractElementAlias match_TStructMethod_CommaKeyword_0_0_1_3_q;
 	protected AbstractElementAlias match_TypeParameters_CommaKeyword_3_q;
@@ -140,7 +140,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_TAnonymousFormalParameterList_CommaKeyword_2_q = new TokenAlias(false, true, grammarAccess.getTAnonymousFormalParameterListAccess().getCommaKeyword_2());
 		match_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q = new TokenAlias(false, true, grammarAccess.getTAnonymousFormalParameterAccess().getQuestionMarkKeyword_1_0_0_1());
 		match_TFormalParameter_QuestionMarkKeyword_2_q = new TokenAlias(false, true, grammarAccess.getTFormalParameterAccess().getQuestionMarkKeyword_2());
-		match_TStructField_ReadonlyKeyword_0_q = new TokenAlias(false, true, grammarAccess.getTStructFieldAccess().getReadonlyKeyword_0());
+		match_TStructField_ReadonlyKeyword_0_1_0_0_q = new TokenAlias(false, true, grammarAccess.getTStructFieldAccess().getReadonlyKeyword_0_1_0_0());
 		match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q = new AlternativeAlias(false, true, new TokenAlias(false, false, grammarAccess.getTStructMemberListAccess().getCommaKeyword_1_1_1()), new TokenAlias(false, false, grammarAccess.getTStructMemberListAccess().getSemicolonKeyword_1_1_0()));
 		match_TStructMethod_CommaKeyword_0_0_1_3_q = new TokenAlias(false, true, grammarAccess.getTStructMethodAccess().getCommaKeyword_0_0_1_3());
 		match_TypeParameters_CommaKeyword_3_q = new TokenAlias(false, true, grammarAccess.getTypeParametersAccess().getCommaKeyword_3());
@@ -362,8 +362,8 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_TAnonymousFormalParameter_QuestionMarkKeyword_1_0_0_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_TFormalParameter_QuestionMarkKeyword_2_q.equals(syntax))
 				emit_TFormalParameter_QuestionMarkKeyword_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_TStructField_ReadonlyKeyword_0_q.equals(syntax))
-				emit_TStructField_ReadonlyKeyword_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_TStructField_ReadonlyKeyword_0_1_0_0_q.equals(syntax))
+				emit_TStructField_ReadonlyKeyword_0_1_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q.equals(syntax))
 				emit_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_TStructMethod_CommaKeyword_0_0_1_3_q.equals(syntax))
@@ -1419,7 +1419,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) name=NumericLiteralAsString
 	 *     (rule start) (ambiguity) name=STRING
 	 */
-	protected void emit_TStructField_ReadonlyKeyword_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_TStructField_ReadonlyKeyword_0_1_0_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

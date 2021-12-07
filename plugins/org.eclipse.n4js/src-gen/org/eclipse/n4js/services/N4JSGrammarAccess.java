@@ -17354,7 +17354,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//TStructField:
-	//    'readonly'? TLiteralOrComputedPropertyName (optional?='?')? ColonSepTypeRef?
+	//    (
+	//        TLiteralOrComputedPropertyName
+	//    |    =>('readonly' TLiteralOrComputedPropertyName)
+	//    )
+	//    (optional?='?')?
+	//    ColonSepTypeRef?
 	//;
 	public TypeExpressionsGrammarAccess.TStructFieldElements getTStructFieldAccess() {
 		return gaTypeExpressions.getTStructFieldAccess();
@@ -17395,8 +17400,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//TStructIndexSignature:
+	//    => ({TStructIndexSignature}
 	//    (readonly?='readonly')?
-	//    '[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
+	//    '[')
+	//    keyName=IdentifierName ':' keyTypeRef=TypeRef
+	//    ']'
 	//    ':'
 	//    valueTypeRef=TypeRef
 	//;
@@ -17679,7 +17687,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    // namespace keyword
 	//    | 'namespace'
 	//    // .d.ts keywords
-	//    | 'declare' | 'global' | 'module' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
+	//    | 'declare' | 'global' | 'module' | 'readonly' | 'is' | 'keyof' | 'unique' | 'infer'
 	//;
 	public TypeExpressionsGrammarAccess.N4KeywordElements getN4KeywordAccess() {
 		return gaTypeExpressions.getN4KeywordAccess();

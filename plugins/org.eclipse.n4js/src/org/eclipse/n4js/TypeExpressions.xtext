@@ -261,7 +261,12 @@ fragment ColonSepReturnTypeRef*:
 ;
 
 TStructField:
-	'readonly'? TLiteralOrComputedPropertyName (optional?='?')? ColonSepTypeRef?
+	(
+		TLiteralOrComputedPropertyName
+	|	=>('readonly' TLiteralOrComputedPropertyName)
+	)
+	(optional?='?')?
+	ColonSepTypeRef?
 ;
 
 TStructGetter:
@@ -281,8 +286,11 @@ TStructSetter:
 ;
 
 TStructIndexSignature:
+	=> ({TStructIndexSignature}
 	(readonly?='readonly')?
-	'[' keyName=IdentifierName ':' keyTypeRef=TypeRef ']'
+	'[')
+	keyName=IdentifierName ':' keyTypeRef=TypeRef
+	']'
 	':'
 	valueTypeRef=TypeRef
 ;
@@ -415,7 +423,7 @@ N4Keyword:
 	// namespace keyword
 	| 'namespace'
 	// .d.ts keywords
-	| 'declare' | 'global' | 'module' | 'is' | 'keyof' | 'unique' | 'infer' // | 'readonly'
+	| 'declare' | 'global' | 'module' | 'readonly' | 'is' | 'keyof' | 'unique' | 'infer'
 ;
 
 NumericLiteralAsString:
