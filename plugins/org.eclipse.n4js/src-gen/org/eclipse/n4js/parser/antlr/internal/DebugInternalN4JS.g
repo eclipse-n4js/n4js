@@ -634,7 +634,11 @@ ruleExportClause:
 
 // Rule ExportSpecifier
 ruleExportSpecifier:
-	ruleIdentifierRef
+	(
+		ruleIdentifierRef
+		    |
+		'default'
+	)
 	(
 		'as'
 		ruleIdentifierName

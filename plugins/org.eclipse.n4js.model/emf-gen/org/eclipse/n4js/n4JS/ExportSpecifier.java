@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportSpecifier#getElement <em>Element</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ExportSpecifier#isDefault <em>Default</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportSpecifier#getAlias <em>Alias</em>}</li>
  * </ul>
  *
@@ -51,6 +52,28 @@ public interface ExportSpecifier extends EObject {
 	 * @generated
 	 */
 	void setElement(IdentifierRef value);
+
+	/**
+	 * Returns the value of the '<em><b>Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Default</em>' attribute.
+	 * @see #setDefault(boolean)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportSpecifier_Default()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isDefault();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ExportSpecifier#isDefault <em>Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Default</em>' attribute.
+	 * @see #isDefault()
+	 * @generated
+	 */
+	void setDefault(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Alias</b></em>' attribute.

@@ -12367,7 +12367,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ExportSpecifier returns ExportSpecifier
 	 *
 	 * Constraint:
-	 *     (element=IdentifierRef alias=IdentifierName?)
+	 *     ((element=IdentifierRef | default?='default') alias=IdentifierName?)
 	 */
 	protected void sequence_ExportSpecifier(ISerializationContext context, ExportSpecifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

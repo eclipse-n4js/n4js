@@ -11453,6 +11453,27 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__ExportSpecifier__Alternatives_0
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getExportSpecifierAccess().getElementAssignment_0_0()); }
+		(rule__ExportSpecifier__ElementAssignment_0_0)
+		{ after(grammarAccess.getExportSpecifierAccess().getElementAssignment_0_0()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getExportSpecifierAccess().getDefaultAssignment_0_1()); }
+		(rule__ExportSpecifier__DefaultAssignment_0_1)
+		{ after(grammarAccess.getExportSpecifierAccess().getDefaultAssignment_0_1()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__ExportableElement__Alternatives
 	@init {
 		int stackSize = keepStackSize();
@@ -22100,9 +22121,9 @@ rule__ExportSpecifier__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getExportSpecifierAccess().getElementAssignment_0()); }
-	(rule__ExportSpecifier__ElementAssignment_0)
-	{ after(grammarAccess.getExportSpecifierAccess().getElementAssignment_0()); }
+	{ before(grammarAccess.getExportSpecifierAccess().getAlternatives_0()); }
+	(rule__ExportSpecifier__Alternatives_0)
+	{ after(grammarAccess.getExportSpecifierAccess().getAlternatives_0()); }
 )
 ;
 finally {
@@ -88936,15 +88957,34 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ExportSpecifier__ElementAssignment_0
+rule__ExportSpecifier__ElementAssignment_0_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0()); }
+		{ before(grammarAccess.getExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0_0()); }
 		ruleIdentifierRef
-		{ after(grammarAccess.getExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0()); }
+		{ after(grammarAccess.getExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0_0()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__ExportSpecifier__DefaultAssignment_0_1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getExportSpecifierAccess().getDefaultDefaultKeyword_0_1_0()); }
+		(
+			{ before(grammarAccess.getExportSpecifierAccess().getDefaultDefaultKeyword_0_1_0()); }
+			Default
+			{ after(grammarAccess.getExportSpecifierAccess().getDefaultDefaultKeyword_0_1_0()); }
+		)
+		{ after(grammarAccess.getExportSpecifierAccess().getDefaultDefaultKeyword_0_1_0()); }
 	)
 ;
 finally {

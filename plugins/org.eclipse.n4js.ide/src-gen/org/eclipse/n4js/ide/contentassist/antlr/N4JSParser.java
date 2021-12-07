@@ -49,6 +49,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getDeclareDeclarationAccess().getAlternatives_1(), "rule__DeclareDeclaration__Alternatives_1");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getAlternatives_2(), "rule__ExportDeclarationImpl__Alternatives_2");
 			builder.put(grammarAccess.getExportDeclarationImplAccess().getAlternatives_2_3_1(), "rule__ExportDeclarationImpl__Alternatives_2_3_1");
+			builder.put(grammarAccess.getExportSpecifierAccess().getAlternatives_0(), "rule__ExportSpecifier__Alternatives_0");
 			builder.put(grammarAccess.getExportableElementAccess().getAlternatives(), "rule__ExportableElement__Alternatives");
 			builder.put(grammarAccess.getAnnotatedExportableElementAccess().getAlternatives_1(), "rule__AnnotatedExportableElement__Alternatives_1");
 			builder.put(grammarAccess.getAnnotatedExportableElementAccess().getAlternatives_1_2_0(), "rule__AnnotatedExportableElement__Alternatives_1_2_0");
@@ -787,7 +788,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getExportFromClauseAccess().getReexportedFromAssignment_1(), "rule__ExportFromClause__ReexportedFromAssignment_1");
 			builder.put(grammarAccess.getExportClauseAccess().getNamedExportsAssignment_1_0(), "rule__ExportClause__NamedExportsAssignment_1_0");
 			builder.put(grammarAccess.getExportClauseAccess().getNamedExportsAssignment_1_1_1(), "rule__ExportClause__NamedExportsAssignment_1_1_1");
-			builder.put(grammarAccess.getExportSpecifierAccess().getElementAssignment_0(), "rule__ExportSpecifier__ElementAssignment_0");
+			builder.put(grammarAccess.getExportSpecifierAccess().getElementAssignment_0_0(), "rule__ExportSpecifier__ElementAssignment_0_0");
+			builder.put(grammarAccess.getExportSpecifierAccess().getDefaultAssignment_0_1(), "rule__ExportSpecifier__DefaultAssignment_0_1");
 			builder.put(grammarAccess.getExportSpecifierAccess().getAliasAssignment_1_1(), "rule__ExportSpecifier__AliasAssignment_1_1");
 			builder.put(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredModifiersAssignment_1_0_1(), "rule__AnnotatedExportableElement__DeclaredModifiersAssignment_1_0_1");
 			builder.put(grammarAccess.getAnnotatedExportableElementAccess().getDeclaredModifiersAssignment_1_1_1(), "rule__AnnotatedExportableElement__DeclaredModifiersAssignment_1_1_1");

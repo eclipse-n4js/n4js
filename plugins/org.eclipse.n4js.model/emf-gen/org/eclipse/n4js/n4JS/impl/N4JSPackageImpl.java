@@ -1930,8 +1930,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getExportSpecifier_Alias() {
+	public EAttribute getExportSpecifier_Default() {
 		return (EAttribute)exportSpecifierEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getExportSpecifier_Alias() {
+		return (EAttribute)exportSpecifierEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -8178,6 +8188,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		exportSpecifierEClass = createEClass(EXPORT_SPECIFIER);
 		createEReference(exportSpecifierEClass, EXPORT_SPECIFIER__ELEMENT);
+		createEAttribute(exportSpecifierEClass, EXPORT_SPECIFIER__DEFAULT);
 		createEAttribute(exportSpecifierEClass, EXPORT_SPECIFIER__ALIAS);
 
 		exportableElementEClass = createEClass(EXPORTABLE_ELEMENT);
@@ -9309,6 +9320,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(exportSpecifierEClass, ExportSpecifier.class, "ExportSpecifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getExportSpecifier_Element(), this.getIdentifierRef(), null, "element", null, 0, 1, ExportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getExportSpecifier_Default(), theEcorePackage.getEBoolean(), "default", null, 0, 1, ExportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExportSpecifier_Alias(), theEcorePackage.getEString(), "alias", null, 0, 1, ExportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(exportableElementEClass, ExportableElement.class, "ExportableElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

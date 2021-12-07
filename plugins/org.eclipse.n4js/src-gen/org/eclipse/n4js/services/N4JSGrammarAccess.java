@@ -1771,26 +1771,38 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	public class ExportSpecifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportSpecifier");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Assignment cElementAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cElementIdentifierRefParserRuleCall_0_0 = (RuleCall)cElementAssignment_0.eContents().get(0);
+		private final Alternatives cAlternatives_0 = (Alternatives)cGroup.eContents().get(0);
+		private final Assignment cElementAssignment_0_0 = (Assignment)cAlternatives_0.eContents().get(0);
+		private final RuleCall cElementIdentifierRefParserRuleCall_0_0_0 = (RuleCall)cElementAssignment_0_0.eContents().get(0);
+		private final Assignment cDefaultAssignment_0_1 = (Assignment)cAlternatives_0.eContents().get(1);
+		private final Keyword cDefaultDefaultKeyword_0_1_0 = (Keyword)cDefaultAssignment_0_1.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cAsKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
 		private final Assignment cAliasAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cAliasIdentifierNameParserRuleCall_1_1_0 = (RuleCall)cAliasAssignment_1_1.eContents().get(0);
 		
 		//ExportSpecifier:
-		//    element=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+		//    (element=IdentifierRef<Yield=false> | default?='default') ('as' alias=IdentifierName)?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//element=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+		//(element=IdentifierRef<Yield=false> | default?='default') ('as' alias=IdentifierName)?
 		public Group getGroup() { return cGroup; }
 		
+		//(element=IdentifierRef<Yield=false> | default?='default')
+		public Alternatives getAlternatives_0() { return cAlternatives_0; }
+		
 		//element=IdentifierRef<Yield=false>
-		public Assignment getElementAssignment_0() { return cElementAssignment_0; }
+		public Assignment getElementAssignment_0_0() { return cElementAssignment_0_0; }
 		
 		//IdentifierRef<Yield=false>
-		public RuleCall getElementIdentifierRefParserRuleCall_0_0() { return cElementIdentifierRefParserRuleCall_0_0; }
+		public RuleCall getElementIdentifierRefParserRuleCall_0_0_0() { return cElementIdentifierRefParserRuleCall_0_0_0; }
+		
+		//default?='default'
+		public Assignment getDefaultAssignment_0_1() { return cDefaultAssignment_0_1; }
+		
+		//'default'
+		public Keyword getDefaultDefaultKeyword_0_1_0() { return cDefaultDefaultKeyword_0_1_0; }
 		
 		//('as' alias=IdentifierName)?
 		public Group getGroup_1() { return cGroup_1; }
@@ -13797,7 +13809,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//ExportSpecifier:
-	//    element=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+	//    (element=IdentifierRef<Yield=false> | default?='default') ('as' alias=IdentifierName)?
 	//;
 	public ExportSpecifierElements getExportSpecifierAccess() {
 		return pExportSpecifier;

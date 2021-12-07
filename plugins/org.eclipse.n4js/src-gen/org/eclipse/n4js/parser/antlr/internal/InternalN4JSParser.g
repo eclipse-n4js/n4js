@@ -2926,34 +2926,51 @@ ruleExportSpecifier returns [EObject current=null]
 	(
 		(
 			(
-				{
-					newCompositeNode(grammarAccess.getExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0());
-				}
-				lv_element_0_0=ruleIdentifierRef
-				{
-					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getExportSpecifierRule());
+				(
+					{
+						newCompositeNode(grammarAccess.getExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0_0());
 					}
-					set(
-						$current,
-						"element",
-						lv_element_0_0,
-						"org.eclipse.n4js.N4JS.IdentifierRef");
-					afterParserOrEnumRuleCall();
-				}
+					lv_element_0_0=ruleIdentifierRef
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getExportSpecifierRule());
+						}
+						set(
+							$current,
+							"element",
+							lv_element_0_0,
+							"org.eclipse.n4js.N4JS.IdentifierRef");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+			    |
+			(
+				(
+					lv_default_1_0=Default
+					{
+						newLeafNode(lv_default_1_0, grammarAccess.getExportSpecifierAccess().getDefaultDefaultKeyword_0_1_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getExportSpecifierRule());
+						}
+						setWithLastConsumed($current, "default", lv_default_1_0 != null, "default");
+					}
+				)
 			)
 		)
 		(
-			otherlv_1=As
+			otherlv_2=As
 			{
-				newLeafNode(otherlv_1, grammarAccess.getExportSpecifierAccess().getAsKeyword_1_0());
+				newLeafNode(otherlv_2, grammarAccess.getExportSpecifierAccess().getAsKeyword_1_0());
 			}
 			(
 				(
 					{
 						newCompositeNode(grammarAccess.getExportSpecifierAccess().getAliasIdentifierNameParserRuleCall_1_1_0());
 					}
-					lv_alias_2_0=ruleIdentifierName
+					lv_alias_3_0=ruleIdentifierName
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getExportSpecifierRule());
@@ -2961,7 +2978,7 @@ ruleExportSpecifier returns [EObject current=null]
 						set(
 							$current,
 							"alias",
-							lv_alias_2_0,
+							lv_alias_3_0,
 							"org.eclipse.n4js.TypeExpressions.IdentifierName");
 						afterParserOrEnumRuleCall();
 					}

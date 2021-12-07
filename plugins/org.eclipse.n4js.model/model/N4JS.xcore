@@ -129,6 +129,7 @@ class ExportDeclaration extends AnnotableScriptElement, NamespaceElement {
 
 class ExportSpecifier {
 	contains IdentifierRef element
+	boolean ^default
 	String alias
 }
 

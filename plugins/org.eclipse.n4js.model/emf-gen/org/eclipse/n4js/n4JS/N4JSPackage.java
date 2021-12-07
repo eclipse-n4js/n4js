@@ -566,13 +566,22 @@ public interface N4JSPackage extends EPackage {
 	int EXPORT_SPECIFIER__ELEMENT = 0;
 
 	/**
+	 * The feature id for the '<em><b>Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORT_SPECIFIER__DEFAULT = 1;
+
+	/**
 	 * The feature id for the '<em><b>Alias</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_SPECIFIER__ALIAS = 1;
+	int EXPORT_SPECIFIER__ALIAS = 2;
 
 	/**
 	 * The number of structural features of the '<em>Export Specifier</em>' class.
@@ -581,7 +590,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_SPECIFIER_FEATURE_COUNT = 2;
+	int EXPORT_SPECIFIER_FEATURE_COUNT = 3;
 
 	/**
 	 * The number of operations of the '<em>Export Specifier</em>' class.
@@ -18500,6 +18509,17 @@ public interface N4JSPackage extends EPackage {
 	EReference getExportSpecifier_Element();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ExportSpecifier#isDefault <em>Default</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Default</em>'.
+	 * @see org.eclipse.n4js.n4JS.ExportSpecifier#isDefault()
+	 * @see #getExportSpecifier()
+	 * @generated
+	 */
+	EAttribute getExportSpecifier_Default();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ExportSpecifier#getAlias <em>Alias</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -25122,6 +25142,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference EXPORT_SPECIFIER__ELEMENT = eINSTANCE.getExportSpecifier_Element();
+
+		/**
+		 * The meta object literal for the '<em><b>Default</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute EXPORT_SPECIFIER__DEFAULT = eINSTANCE.getExportSpecifier_Default();
 
 		/**
 		 * The meta object literal for the '<em><b>Alias</b></em>' attribute feature.

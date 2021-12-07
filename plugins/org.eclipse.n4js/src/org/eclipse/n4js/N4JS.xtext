@@ -252,7 +252,7 @@ fragment ExportClause*:
 ;
 
 ExportSpecifier:
-	element=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+	(element=IdentifierRef<Yield=false> | default?='default') ('as' alias=IdentifierName)?
 ;
 
 ExportableElement:

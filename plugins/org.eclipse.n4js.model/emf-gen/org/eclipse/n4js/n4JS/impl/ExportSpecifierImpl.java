@@ -33,6 +33,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportSpecifierImpl#getElement <em>Element</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportSpecifierImpl#isDefault <em>Default</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportSpecifierImpl#getAlias <em>Alias</em>}</li>
  * </ul>
  *
@@ -48,6 +49,26 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 * @ordered
 	 */
 	protected IdentifierRef element;
+
+	/**
+	 * The default value of the '{@link #isDefault() <em>Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DEFAULT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDefault() <em>Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean default_ = DEFAULT_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getAlias() <em>Alias</em>}' attribute.
@@ -139,6 +160,29 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 * @generated
 	 */
 	@Override
+	public boolean isDefault() {
+		return default_;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDefault(boolean newDefault) {
+		boolean oldDefault = default_;
+		default_ = newDefault;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_SPECIFIER__DEFAULT, oldDefault, default_));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String getAlias() {
 		return alias;
 	}
@@ -180,6 +224,8 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 		switch (featureID) {
 			case N4JSPackage.EXPORT_SPECIFIER__ELEMENT:
 				return getElement();
+			case N4JSPackage.EXPORT_SPECIFIER__DEFAULT:
+				return isDefault();
 			case N4JSPackage.EXPORT_SPECIFIER__ALIAS:
 				return getAlias();
 		}
@@ -196,6 +242,9 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 		switch (featureID) {
 			case N4JSPackage.EXPORT_SPECIFIER__ELEMENT:
 				setElement((IdentifierRef)newValue);
+				return;
+			case N4JSPackage.EXPORT_SPECIFIER__DEFAULT:
+				setDefault((Boolean)newValue);
 				return;
 			case N4JSPackage.EXPORT_SPECIFIER__ALIAS:
 				setAlias((String)newValue);
@@ -215,6 +264,9 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 			case N4JSPackage.EXPORT_SPECIFIER__ELEMENT:
 				setElement((IdentifierRef)null);
 				return;
+			case N4JSPackage.EXPORT_SPECIFIER__DEFAULT:
+				setDefault(DEFAULT_EDEFAULT);
+				return;
 			case N4JSPackage.EXPORT_SPECIFIER__ALIAS:
 				setAlias(ALIAS_EDEFAULT);
 				return;
@@ -232,6 +284,8 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 		switch (featureID) {
 			case N4JSPackage.EXPORT_SPECIFIER__ELEMENT:
 				return element != null;
+			case N4JSPackage.EXPORT_SPECIFIER__DEFAULT:
+				return default_ != DEFAULT_EDEFAULT;
 			case N4JSPackage.EXPORT_SPECIFIER__ALIAS:
 				return ALIAS_EDEFAULT == null ? alias != null : !ALIAS_EDEFAULT.equals(alias);
 		}
@@ -248,7 +302,9 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (alias: ");
+		result.append(" (default: ");
+		result.append(default_);
+		result.append(", alias: ");
 		result.append(alias);
 		result.append(')');
 		return result.toString();
