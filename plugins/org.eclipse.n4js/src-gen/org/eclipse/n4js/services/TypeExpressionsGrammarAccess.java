@@ -915,9 +915,9 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cArrowParserRuleCall_0_0_6 = (RuleCall)cGroup_0_0.eContents().get(6);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Assignment cReturnTypePredicateAssignment_1_0 = (Assignment)cAlternatives_1.eContents().get(0);
-		private final RuleCall cReturnTypePredicateTypePredicateWithPrimaryParserRuleCall_1_0_0 = (RuleCall)cReturnTypePredicateAssignment_1_0.eContents().get(0);
+		private final RuleCall cReturnTypePredicateTypePredicateWithOperatorTypeRefParserRuleCall_1_0_0 = (RuleCall)cReturnTypePredicateAssignment_1_0.eContents().get(0);
 		private final Assignment cReturnTypeRefAssignment_1_1 = (Assignment)cAlternatives_1.eContents().get(1);
-		private final RuleCall cReturnTypeRefPrimaryTypeExpressionParserRuleCall_1_1_0 = (RuleCall)cReturnTypeRefAssignment_1_1.eContents().get(0);
+		private final RuleCall cReturnTypeRefOperatorTypeRefParserRuleCall_1_1_0 = (RuleCall)cReturnTypeRefAssignment_1_1.eContents().get(0);
 		
 		//ArrowFunctionTypeExpression returns FunctionTypeExpression:
 		//    =>({FunctionTypeExpression}
@@ -925,7 +925,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//        ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* ','? '>')?
 		//        '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 		//        Arrow
-		//    ) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
+		//    ) (returnTypePredicate=TypePredicateWithOperatorTypeRef | returnTypeRef=OperatorTypeRef);
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=>({FunctionTypeExpression}
@@ -933,7 +933,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//    ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* ','? '>')?
 		//    '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 		//    Arrow
-		//) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)
+		//) (returnTypePredicate=TypePredicateWithOperatorTypeRef | returnTypeRef=OperatorTypeRef)
 		public Group getGroup() { return cGroup; }
 		
 		//=>({FunctionTypeExpression}
@@ -1011,20 +1011,20 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//Arrow
 		public RuleCall getArrowParserRuleCall_0_0_6() { return cArrowParserRuleCall_0_0_6; }
 		
-		//(returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)
+		//(returnTypePredicate=TypePredicateWithOperatorTypeRef | returnTypeRef=OperatorTypeRef)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
-		//returnTypePredicate=TypePredicateWithPrimary
+		//returnTypePredicate=TypePredicateWithOperatorTypeRef
 		public Assignment getReturnTypePredicateAssignment_1_0() { return cReturnTypePredicateAssignment_1_0; }
 		
-		//TypePredicateWithPrimary
-		public RuleCall getReturnTypePredicateTypePredicateWithPrimaryParserRuleCall_1_0_0() { return cReturnTypePredicateTypePredicateWithPrimaryParserRuleCall_1_0_0; }
+		//TypePredicateWithOperatorTypeRef
+		public RuleCall getReturnTypePredicateTypePredicateWithOperatorTypeRefParserRuleCall_1_0_0() { return cReturnTypePredicateTypePredicateWithOperatorTypeRefParserRuleCall_1_0_0; }
 		
-		//returnTypeRef=PrimaryTypeExpression
+		//returnTypeRef=OperatorTypeRef
 		public Assignment getReturnTypeRefAssignment_1_1() { return cReturnTypeRefAssignment_1_1; }
 		
-		//PrimaryTypeExpression
-		public RuleCall getReturnTypeRefPrimaryTypeExpressionParserRuleCall_1_1_0() { return cReturnTypeRefPrimaryTypeExpressionParserRuleCall_1_1_0; }
+		//OperatorTypeRef
+		public RuleCall getReturnTypeRefOperatorTypeRefParserRuleCall_1_1_0() { return cReturnTypeRefOperatorTypeRefParserRuleCall_1_1_0; }
 	}
 	public class TAnonymousFormalParameterListElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TAnonymousFormalParameterList");
@@ -2847,8 +2847,8 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//TypeRef
 		public RuleCall getTypeRefTypeRefParserRuleCall_1_0() { return cTypeRefTypeRefParserRuleCall_1_0; }
 	}
-	public class TypePredicateWithPrimaryElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypePredicateWithPrimary");
+	public class TypePredicateWithOperatorTypeRefElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TypePredicateWithOperatorTypeRef");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
@@ -2860,14 +2860,14 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cFparIdentifiableElementBindingIdentifierParserRuleCall_0_0_0_1_0_1 = (RuleCall)cFparIdentifiableElementCrossReference_0_0_0_1_0.eContents().get(1);
 		private final Keyword cIsKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
 		private final Assignment cTypeRefAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cTypeRefPrimaryTypeExpressionParserRuleCall_1_0 = (RuleCall)cTypeRefAssignment_1.eContents().get(0);
+		private final RuleCall cTypeRefOperatorTypeRefParserRuleCall_1_0 = (RuleCall)cTypeRefAssignment_1.eContents().get(0);
 		
-		//TypePredicateWithPrimary returns TypePredicate:
-		//    =>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=PrimaryTypeExpression
+		//TypePredicateWithOperatorTypeRef returns TypePredicate:
+		//    =>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=OperatorTypeRef
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=PrimaryTypeExpression
+		//=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=OperatorTypeRef
 		public Group getGroup() { return cGroup; }
 		
 		//=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is')
@@ -2897,11 +2897,11 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		//'is'
 		public Keyword getIsKeyword_0_0_1() { return cIsKeyword_0_0_1; }
 		
-		//typeRef=PrimaryTypeExpression
+		//typeRef=OperatorTypeRef
 		public Assignment getTypeRefAssignment_1() { return cTypeRefAssignment_1; }
 		
-		//PrimaryTypeExpression
-		public RuleCall getTypeRefPrimaryTypeExpressionParserRuleCall_1_0() { return cTypeRefPrimaryTypeExpressionParserRuleCall_1_0; }
+		//OperatorTypeRef
+		public RuleCall getTypeRefOperatorTypeRefParserRuleCall_1_0() { return cTypeRefOperatorTypeRefParserRuleCall_1_0; }
 	}
 	public class TLiteralOrComputedPropertyNameElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.TypeExpressions.TLiteralOrComputedPropertyName");
@@ -3609,7 +3609,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	private final QueryTypeRefElements pQueryTypeRef;
 	private final InferTypeRefElements pInferTypeRef;
 	private final TypePredicateElements pTypePredicate;
-	private final TypePredicateWithPrimaryElements pTypePredicateWithPrimary;
+	private final TypePredicateWithOperatorTypeRefElements pTypePredicateWithOperatorTypeRef;
 	private final TLiteralOrComputedPropertyNameElements pTLiteralOrComputedPropertyName;
 	private final ExpressionInTypeRefElements pExpressionInTypeRef;
 	private final PropertyAccessExpressionInTypeRefElements pPropertyAccessExpressionInTypeRef;
@@ -3708,7 +3708,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		this.pQueryTypeRef = new QueryTypeRefElements();
 		this.pInferTypeRef = new InferTypeRefElements();
 		this.pTypePredicate = new TypePredicateElements();
-		this.pTypePredicateWithPrimary = new TypePredicateWithPrimaryElements();
+		this.pTypePredicateWithOperatorTypeRef = new TypePredicateWithOperatorTypeRefElements();
 		this.pTLiteralOrComputedPropertyName = new TLiteralOrComputedPropertyNameElements();
 		this.pExpressionInTypeRef = new ExpressionInTypeRefElements();
 		this.pPropertyAccessExpressionInTypeRef = new PropertyAccessExpressionInTypeRefElements();
@@ -4003,7 +4003,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 	//        ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* ','? '>')?
 	//        '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 	//        Arrow
-	//    ) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
+	//    ) (returnTypePredicate=TypePredicateWithOperatorTypeRef | returnTypeRef=OperatorTypeRef);
 	public ArrowFunctionTypeExpressionElements getArrowFunctionTypeExpressionAccess() {
 		return pArrowFunctionTypeExpression;
 	}
@@ -4488,15 +4488,15 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return getTypePredicateAccess().getRule();
 	}
 	
-	//TypePredicateWithPrimary returns TypePredicate:
-	//    =>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=PrimaryTypeExpression
+	//TypePredicateWithOperatorTypeRef returns TypePredicate:
+	//    =>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=OperatorTypeRef
 	//;
-	public TypePredicateWithPrimaryElements getTypePredicateWithPrimaryAccess() {
-		return pTypePredicateWithPrimary;
+	public TypePredicateWithOperatorTypeRefElements getTypePredicateWithOperatorTypeRefAccess() {
+		return pTypePredicateWithOperatorTypeRef;
 	}
 	
-	public ParserRule getTypePredicateWithPrimaryRule() {
-		return getTypePredicateWithPrimaryAccess().getRule();
+	public ParserRule getTypePredicateWithOperatorTypeRefRule() {
+		return getTypePredicateWithOperatorTypeRefAccess().getRule();
 	}
 	
 	//// FIXME WIP

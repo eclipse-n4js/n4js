@@ -1724,8 +1724,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_TLiteralOrComputedPropertyName_TStructSetter(context, (TStructSetter) semanticObject); 
 				return; 
 			case TypesPackage.TYPE_PREDICATE:
-				if (rule == grammarAccess.getTypePredicateWithPrimaryRule()) {
-					sequence_TypePredicateWithPrimary(context, (TypePredicate) semanticObject); 
+				if (rule == grammarAccess.getTypePredicateWithOperatorTypeRefRule()) {
+					sequence_TypePredicateWithOperatorTypeRef(context, (TypePredicate) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypePredicateRule()) {

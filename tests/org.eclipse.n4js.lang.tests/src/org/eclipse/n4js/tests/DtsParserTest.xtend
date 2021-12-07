@@ -36,6 +36,10 @@ class DtsParserTest extends AbstractParserTest {
 	private Path DEFINITELY_TYPED = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/DefinitelyTyped/types");
 	private Path NODE_API = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/DefinitelyTyped/types/node");
 
+	private String[] DEFINITELY_TYPED__EXCLUDED_PACKAGES = #[
+		"carbon__icons-react", "carbon__pictograms-react"
+	];
+
 	@BeforeClass
 	def static void turnOffASTStructureValidator() {
 		ASTStructureValidator.SUPPRESS_AST_STRUCTURE_VALIDATION = true;
@@ -62,7 +66,10 @@ class DtsParserTest extends AbstractParserTest {
 //		val folder = TYPE_SCRIPT_LIBS;
 //		val folder = NODE_API;
 		val folder = DEFINITELY_TYPED;
-		val files = Files.walk(folder, FileVisitOption.FOLLOW_LINKS).filter[fileName.toString.endsWith(".d.ts")].collect(Collectors.toList);
+		val files = Files.walk(folder, FileVisitOption.FOLLOW_LINKS)
+			.filter[fileName.toString.endsWith(".d.ts")]
+			.filter[!isExcluded]
+			.collect(Collectors.toList);
 		Collections.sort(files, [p1,p2|p1.toString.compareTo(p2.toString)]);
 		val filesCount = files.size;
 		println("Processing " + filesCount + " files ...");
@@ -84,6 +91,16 @@ class DtsParserTest extends AbstractParserTest {
 		}
 		println("Done processing " + filesCount + " files: good " + good + " (" + percent(good, filesCount) + "%) / bad " + bad + " (" + percent(bad, filesCount) + "%).");
 		assertEquals(filesCount, good + bad);
+	}
+
+	def private boolean isExcluded(Path path) {
+		val pathStr = path.toString;
+		for (name : DEFINITELY_TYPED__EXCLUDED_PACKAGES) {
+			if (pathStr.startsWith("/Users/mark-oliver.reiser/Desktop/dtsParser/DefinitelyTyped/types/" + name + "/")) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	def private String getLine(String str, int lineNo) {

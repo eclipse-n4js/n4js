@@ -319,8 +319,8 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 				sequence_TLiteralOrComputedPropertyName_TStructSetter(context, (TStructSetter) semanticObject); 
 				return; 
 			case TypesPackage.TYPE_PREDICATE:
-				if (rule == grammarAccess.getTypePredicateWithPrimaryRule()) {
-					sequence_TypePredicateWithPrimary(context, (TypePredicate) semanticObject); 
+				if (rule == grammarAccess.getTypePredicateWithOperatorTypeRefRule()) {
+					sequence_TypePredicateWithOperatorTypeRef(context, (TypePredicate) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypePredicateRule()) {
@@ -499,7 +499,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (dtsAbstract?='abstract'? dtsConstructor?='new')? 
 	 *         (ownedTypeVars+=TypeVariable ownedTypeVars+=TypeVariable*)? 
 	 *         ((declaredThisType=TypeRef | fpars+=TAnonymousFormalParameter) fpars+=TAnonymousFormalParameter*)? 
-	 *         (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression)
+	 *         (returnTypePredicate=TypePredicateWithOperatorTypeRef | returnTypeRef=OperatorTypeRef)
 	 *     )
 	 */
 	protected void sequence_ArrowFunctionTypeExpression_TAnonymousFormalParameterListWithDeclaredThisType(ISerializationContext context, FunctionTypeExpression semanticObject) {
@@ -1217,12 +1217,12 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	/**
 	 * Contexts:
-	 *     TypePredicateWithPrimary returns TypePredicate
+	 *     TypePredicateWithOperatorTypeRef returns TypePredicate
 	 *
 	 * Constraint:
-	 *     ((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier]) typeRef=PrimaryTypeExpression)
+	 *     ((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier]) typeRef=OperatorTypeRef)
 	 */
-	protected void sequence_TypePredicateWithPrimary(ISerializationContext context, TypePredicate semanticObject) {
+	protected void sequence_TypePredicateWithOperatorTypeRef(ISerializationContext context, TypePredicate semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

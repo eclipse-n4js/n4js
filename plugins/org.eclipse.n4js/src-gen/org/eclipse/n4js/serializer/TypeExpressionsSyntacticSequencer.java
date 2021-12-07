@@ -166,8 +166,8 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     ','?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
-	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' ')' Arrow returnTypePredicate=TypePredicateWithOperatorTypeRef
+	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' ')' Arrow returnTypeRef=OperatorTypeRef
 	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' 'this' ':' declaredThisType=TypeRef
 	 *     ownedTypeVars+=TypeVariable (ambiguity) '>' '(' fpars+=TAnonymousFormalParameter
 	 */
@@ -180,8 +180,8 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     '&'?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
-	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypePredicate=TypePredicateWithOperatorTypeRef
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypeRef=OperatorTypeRef
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' 'this' ':' declaredThisType=TypeRef
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' declaredTypeArgs+=Wildcard
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '(' fpars+=TAnonymousFormalParameter
@@ -223,8 +223,8 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* {ParameterizedTypeRef.declaredTypeArgs+=}
 	 *     (rule start) (ambiguity) '(' ('|'? (ambiguity) '(')* {ConditionalTypeRef.typeRef=}
 	 *     (rule start) (ambiguity) '(' ('|'? (ambiguity) '(')* {UnionTypeExpression.typeRefs+=}
-	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
-	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypePredicate=TypePredicateWithOperatorTypeRef
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' ')' Arrow returnTypeRef=OperatorTypeRef
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' 'this' ':' declaredThisType=TypeRef
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' declaredTypeArgs+=Wildcard
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '(' fpars+=TAnonymousFormalParameter
@@ -298,8 +298,8 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     ('(' '|'? '&'?)*
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     (rule start) '&'? (ambiguity) '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
-	 *     (rule start) '&'? (ambiguity) '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) '&'? (ambiguity) '(' ')' Arrow returnTypePredicate=TypePredicateWithOperatorTypeRef
+	 *     (rule start) '&'? (ambiguity) '(' ')' Arrow returnTypeRef=OperatorTypeRef
 	 *     (rule start) '&'? (ambiguity) '(' 'this' ':' declaredThisType=TypeRef
 	 *     (rule start) '&'? (ambiguity) '(' declaredTypeArgs+=Wildcard
 	 *     (rule start) '&'? (ambiguity) '(' fpars+=TAnonymousFormalParameter
@@ -339,8 +339,8 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) '&'? (ambiguity) op=TypeOperator
 	 *     (rule start) '&'? (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
 	 *     (rule start) '&'? (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
-	 *     (rule start) '|'? '&'? (ambiguity) '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
-	 *     (rule start) '|'? '&'? (ambiguity) '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) '|'? '&'? (ambiguity) '(' ')' Arrow returnTypePredicate=TypePredicateWithOperatorTypeRef
+	 *     (rule start) '|'? '&'? (ambiguity) '(' ')' Arrow returnTypeRef=OperatorTypeRef
 	 *     (rule start) '|'? '&'? (ambiguity) '(' 'this' ':' declaredThisType=TypeRef
 	 *     (rule start) '|'? '&'? (ambiguity) '(' declaredTypeArgs+=Wildcard
 	 *     (rule start) '|'? '&'? (ambiguity) '(' fpars+=TAnonymousFormalParameter
@@ -380,8 +380,8 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) '|'? '&'? (ambiguity) op=TypeOperator
 	 *     (rule start) '|'? '&'? (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
 	 *     (rule start) '|'? '&'? (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
-	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
-	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypePredicate=TypePredicateWithOperatorTypeRef
+	 *     (rule start) (ambiguity) '(' ')' Arrow returnTypeRef=OperatorTypeRef
 	 *     (rule start) (ambiguity) '(' 'this' ':' declaredThisType=TypeRef
 	 *     (rule start) (ambiguity) '(' declaredTypeArgs+=Wildcard
 	 *     (rule start) (ambiguity) '(' fpars+=TAnonymousFormalParameter
@@ -590,10 +590,10 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     ','?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     declaredThisType=TypeRef (ambiguity) ')' Arrow returnTypePredicate=TypePredicateWithPrimary
-	 *     declaredThisType=TypeRef (ambiguity) ')' Arrow returnTypeRef=PrimaryTypeExpression
-	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' Arrow returnTypePredicate=TypePredicateWithPrimary
-	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     declaredThisType=TypeRef (ambiguity) ')' Arrow returnTypePredicate=TypePredicateWithOperatorTypeRef
+	 *     declaredThisType=TypeRef (ambiguity) ')' Arrow returnTypeRef=OperatorTypeRef
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' Arrow returnTypePredicate=TypePredicateWithOperatorTypeRef
+	 *     fpars+=TAnonymousFormalParameter (ambiguity) ')' Arrow returnTypeRef=OperatorTypeRef
 	 */
 	protected void emit_TAnonymousFormalParameterListWithDeclaredThisType_CommaKeyword_2_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
@@ -685,8 +685,8 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) '(' (ambiguity) ('&'? '(' (ambiguity))* {IntersectionTypeExpression.typeRefs+=}
-	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' ')' Arrow returnTypePredicate=TypePredicateWithPrimary
-	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' ')' Arrow returnTypeRef=PrimaryTypeExpression
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' ')' Arrow returnTypePredicate=TypePredicateWithOperatorTypeRef
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' ')' Arrow returnTypeRef=OperatorTypeRef
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' 'this' ':' declaredThisType=TypeRef
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' declaredTypeArgs+=Wildcard
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '(' fpars+=TAnonymousFormalParameter

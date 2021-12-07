@@ -10172,10 +10172,10 @@ ruleArrowFunctionTypeExpression:
 			)
 			'is'
 			)=>
-			ruleTypePredicateWithPrimary
+			ruleTypePredicateWithOperatorTypeRef
 		)
 		    |
-		rulePrimaryTypeExpression
+		ruleOperatorTypeRef
 	)
 ;
 
@@ -10707,8 +10707,8 @@ ruleTypePredicate:
 	ruleTypeRef
 ;
 
-// Rule TypePredicateWithPrimary
-ruleTypePredicateWithPrimary:
+// Rule TypePredicateWithOperatorTypeRef
+ruleTypePredicateWithOperatorTypeRef:
 	(
 		((
 			'this'
@@ -10724,7 +10724,7 @@ ruleTypePredicateWithPrimary:
 		)
 		'is'
 	)
-	rulePrimaryTypeExpression
+	ruleOperatorTypeRef
 ;
 
 // Rule TLiteralOrComputedPropertyName

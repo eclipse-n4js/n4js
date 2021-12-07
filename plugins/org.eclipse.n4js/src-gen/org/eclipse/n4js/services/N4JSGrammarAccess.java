@@ -17049,7 +17049,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//        ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* ','? '>')?
 	//        '(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 	//        Arrow
-	//    ) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
+	//    ) (returnTypePredicate=TypePredicateWithOperatorTypeRef | returnTypeRef=OperatorTypeRef);
 	public TypeExpressionsGrammarAccess.ArrowFunctionTypeExpressionElements getArrowFunctionTypeExpressionAccess() {
 		return gaTypeExpressions.getArrowFunctionTypeExpressionAccess();
 	}
@@ -17534,15 +17534,15 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getTypePredicateAccess().getRule();
 	}
 	
-	//TypePredicateWithPrimary returns TypePredicate:
-	//    =>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=PrimaryTypeExpression
+	//TypePredicateWithOperatorTypeRef returns TypePredicate:
+	//    =>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=OperatorTypeRef
 	//;
-	public TypeExpressionsGrammarAccess.TypePredicateWithPrimaryElements getTypePredicateWithPrimaryAccess() {
-		return gaTypeExpressions.getTypePredicateWithPrimaryAccess();
+	public TypeExpressionsGrammarAccess.TypePredicateWithOperatorTypeRefElements getTypePredicateWithOperatorTypeRefAccess() {
+		return gaTypeExpressions.getTypePredicateWithOperatorTypeRefAccess();
 	}
 	
-	public ParserRule getTypePredicateWithPrimaryRule() {
-		return getTypePredicateWithPrimaryAccess().getRule();
+	public ParserRule getTypePredicateWithOperatorTypeRefRule() {
+		return getTypePredicateWithOperatorTypeRefAccess().getRule();
 	}
 	
 	//// FIXME WIP

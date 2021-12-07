@@ -134,7 +134,7 @@ ArrowFunctionTypeExpression returns FunctionTypeExpression:
 		('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* ','? '>')?
 		'(' TAnonymousFormalParameterListWithDeclaredThisType ')'
 		Arrow
-	) (returnTypePredicate=TypePredicateWithPrimary | returnTypeRef=PrimaryTypeExpression);
+	) (returnTypePredicate=TypePredicateWithOperatorTypeRef | returnTypeRef=OperatorTypeRef);
 
 // TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard
 fragment TAnonymousFormalParameterList* :
@@ -343,8 +343,8 @@ TypePredicate:
 	=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=TypeRef
 ;
 
-TypePredicateWithPrimary returns TypePredicate:
-	=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=PrimaryTypeExpression
+TypePredicateWithOperatorTypeRef returns TypePredicate:
+	=>((referringToThis?='this' | fpar=[IdentifiableElement|BindingIdentifier<Yield=false>]) 'is') typeRef=OperatorTypeRef
 ;
 
 // FIXME WIP

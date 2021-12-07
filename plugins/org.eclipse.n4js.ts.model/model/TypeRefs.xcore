@@ -1434,12 +1434,6 @@ class EnumLiteralTypeRef extends LiteralTypeRef {
 	}
 }
 
-enum TypeOperator {
-	keyof = 0
-	^unique = 1
-	^readonly = 2
-}
-
 /* Only allowed in DTS. */
 class QueryTypeRef extends TypeRef {
 	contains ExpressionInTypeRef expr
@@ -1457,6 +1451,12 @@ class OperatorTypeRef extends TypeRef {
 	op String internalGetTypeRefAsString() {
 		op + " " + getTypeRef()?.typeRefAsString
 	}
+}
+
+enum TypeOperator {
+	keyof = 0
+	^unique = 1
+	^readonly = 2
 }
 
 /* Only allowed in DTS. */

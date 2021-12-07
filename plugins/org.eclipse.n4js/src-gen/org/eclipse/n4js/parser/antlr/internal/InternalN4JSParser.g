@@ -41034,9 +41034,9 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 				)=>
 				(
 					{
-						newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypePredicateTypePredicateWithPrimaryParserRuleCall_1_0_0());
+						newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypePredicateTypePredicateWithOperatorTypeRefParserRuleCall_1_0_0());
 					}
-					lv_returnTypePredicate_13_0=ruleTypePredicateWithPrimary
+					lv_returnTypePredicate_13_0=ruleTypePredicateWithOperatorTypeRef
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getArrowFunctionTypeExpressionRule());
@@ -41045,7 +41045,7 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 							$current,
 							"returnTypePredicate",
 							lv_returnTypePredicate_13_0,
-							"org.eclipse.n4js.TypeExpressions.TypePredicateWithPrimary");
+							"org.eclipse.n4js.TypeExpressions.TypePredicateWithOperatorTypeRef");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -41054,9 +41054,9 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypeRefPrimaryTypeExpressionParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypeRefOperatorTypeRefParserRuleCall_1_1_0());
 					}
-					lv_returnTypeRef_14_0=rulePrimaryTypeExpression
+					lv_returnTypeRef_14_0=ruleOperatorTypeRef
 					{
 						if ($current==null) {
 							$current = createModelElementForParent(grammarAccess.getArrowFunctionTypeExpressionRule());
@@ -41065,7 +41065,7 @@ ruleArrowFunctionTypeExpression returns [EObject current=null]
 							$current,
 							"returnTypeRef",
 							lv_returnTypeRef_14_0,
-							"org.eclipse.n4js.TypeExpressions.PrimaryTypeExpression");
+							"org.eclipse.n4js.TypeExpressions.OperatorTypeRef");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -43846,15 +43846,15 @@ ruleTypePredicate returns [EObject current=null]
 	)
 ;
 
-// Entry rule entryRuleTypePredicateWithPrimary
-entryRuleTypePredicateWithPrimary returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getTypePredicateWithPrimaryRule()); }
-	iv_ruleTypePredicateWithPrimary=ruleTypePredicateWithPrimary
-	{ $current=$iv_ruleTypePredicateWithPrimary.current; }
+// Entry rule entryRuleTypePredicateWithOperatorTypeRef
+entryRuleTypePredicateWithOperatorTypeRef returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getTypePredicateWithOperatorTypeRefRule()); }
+	iv_ruleTypePredicateWithOperatorTypeRef=ruleTypePredicateWithOperatorTypeRef
+	{ $current=$iv_ruleTypePredicateWithOperatorTypeRef.current; }
 	EOF;
 
-// Rule TypePredicateWithPrimary
-ruleTypePredicateWithPrimary returns [EObject current=null]
+// Rule TypePredicateWithOperatorTypeRef
+ruleTypePredicateWithOperatorTypeRef returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -43886,11 +43886,11 @@ ruleTypePredicateWithPrimary returns [EObject current=null]
 						(
 							lv_referringToThis_0_0=This
 							{
-								newLeafNode(lv_referringToThis_0_0, grammarAccess.getTypePredicateWithPrimaryAccess().getReferringToThisThisKeyword_0_0_0_0_0());
+								newLeafNode(lv_referringToThis_0_0, grammarAccess.getTypePredicateWithOperatorTypeRefAccess().getReferringToThisThisKeyword_0_0_0_0_0());
 							}
 							{
 								if ($current==null) {
-									$current = createModelElement(grammarAccess.getTypePredicateWithPrimaryRule());
+									$current = createModelElement(grammarAccess.getTypePredicateWithOperatorTypeRefRule());
 								}
 								setWithLastConsumed($current, "referringToThis", lv_referringToThis_0_0 != null, "this");
 							}
@@ -43901,11 +43901,11 @@ ruleTypePredicateWithPrimary returns [EObject current=null]
 						(
 							{
 								if ($current==null) {
-									$current = createModelElement(grammarAccess.getTypePredicateWithPrimaryRule());
+									$current = createModelElement(grammarAccess.getTypePredicateWithOperatorTypeRefRule());
 								}
 							}
 							{
-								newCompositeNode(grammarAccess.getTypePredicateWithPrimaryAccess().getFparIdentifiableElementCrossReference_0_0_0_1_0());
+								newCompositeNode(grammarAccess.getTypePredicateWithOperatorTypeRefAccess().getFparIdentifiableElementCrossReference_0_0_0_1_0());
 							}
 							ruleBindingIdentifier
 							{
@@ -43916,25 +43916,25 @@ ruleTypePredicateWithPrimary returns [EObject current=null]
 				)
 				otherlv_2=Is
 				{
-					newLeafNode(otherlv_2, grammarAccess.getTypePredicateWithPrimaryAccess().getIsKeyword_0_0_1());
+					newLeafNode(otherlv_2, grammarAccess.getTypePredicateWithOperatorTypeRefAccess().getIsKeyword_0_0_1());
 				}
 			)
 		)
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getTypePredicateWithPrimaryAccess().getTypeRefPrimaryTypeExpressionParserRuleCall_1_0());
+					newCompositeNode(grammarAccess.getTypePredicateWithOperatorTypeRefAccess().getTypeRefOperatorTypeRefParserRuleCall_1_0());
 				}
-				lv_typeRef_3_0=rulePrimaryTypeExpression
+				lv_typeRef_3_0=ruleOperatorTypeRef
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getTypePredicateWithPrimaryRule());
+						$current = createModelElementForParent(grammarAccess.getTypePredicateWithOperatorTypeRefRule());
 					}
 					set(
 						$current,
 						"typeRef",
 						lv_typeRef_3_0,
-						"org.eclipse.n4js.TypeExpressions.PrimaryTypeExpression");
+						"org.eclipse.n4js.TypeExpressions.OperatorTypeRef");
 					afterParserOrEnumRuleCall();
 				}
 			)
