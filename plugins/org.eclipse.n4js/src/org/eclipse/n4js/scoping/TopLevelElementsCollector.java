@@ -82,6 +82,11 @@ public class TopLevelElementsCollector {
 		}
 
 		if (includeVariables) {
+			/*
+			 * Note this is handled differently (no InvisibleTypeOrVariableDescription are created) compared to
+			 * includeHollows because: ParameterizedTypeRef#declaredType is of type Type. Since TVariable is no subtype
+			 * of Type, it cannot be linked to that property 'declaredType'.
+			 */
 			for (TVariable var : module.getVariables()) {
 				TypeVisibility typeVisiblity = variableVisibilityChecker.isVisible(contextResource, var);
 				if (typeVisiblity.visibility) {
