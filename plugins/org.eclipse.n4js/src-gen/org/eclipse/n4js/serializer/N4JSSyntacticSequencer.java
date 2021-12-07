@@ -42,9 +42,12 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_DeclareDeclaration_DeclareKeyword_0_q;
 	protected AbstractElementAlias match_DoStatement_SemiParserRuleCall_6_q;
 	protected AbstractElementAlias match_ExportClause_CommaKeyword_1_2_q;
-	protected AbstractElementAlias match_ExportDeclarationImpl___AsKeyword_1_5_0_NamespaceKeyword_1_5_1_IdentifierNameParserRuleCall_1_5_2_SemiParserRuleCall_1_5_3___or___EqualsSignKeyword_1_4_0_IdentifierNameParserRuleCall_1_4_1___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a_SemiParserRuleCall_1_4_3__;
+	protected AbstractElementAlias match_ExportDeclarationImpl_DeclareKeyword_1_q;
+	protected AbstractElementAlias match_ExportDeclarationImpl___AsKeyword_2_5_0_NamespaceKeyword_2_5_1_IdentifierNameParserRuleCall_2_5_2_SemiParserRuleCall_2_5_3___or___EqualsSignKeyword_2_4_0_IdentifierNameParserRuleCall_2_4_1___FullStopKeyword_2_4_2_0_IdentifierNameParserRuleCall_2_4_2_1__a_SemiParserRuleCall_2_4_3__;
 	protected AbstractElementAlias match_FieldDeclarationImpl_ReadonlyKeyword_1_q;
 	protected AbstractElementAlias match_FunctionDeclaration_SemiParserRuleCall_1_q;
+	protected AbstractElementAlias match_ImportDeclarationImpl___FullStopKeyword_1_1_2_0_IdentifierNameParserRuleCall_1_1_2_1__a;
+	protected AbstractElementAlias match_ImportDeclarationImpl___LeftParenthesisKeyword_1_1_3_0_STRINGTerminalRuleCall_1_1_3_1_RightParenthesisKeyword_1_1_3_2__q;
 	protected AbstractElementAlias match_ImportSpecifiersExceptDefault_CommaKeyword_1_1_2_q;
 	protected AbstractElementAlias match_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1;
 	protected AbstractElementAlias match_IntersectionTypeExpression_AmpersandKeyword_0_q;
@@ -98,9 +101,12 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_DeclareDeclaration_DeclareKeyword_0_q = new TokenAlias(false, true, grammarAccess.getDeclareDeclarationAccess().getDeclareKeyword_0());
 		match_DoStatement_SemiParserRuleCall_6_q = new TokenAlias(false, true, grammarAccess.getDoStatementAccess().getSemiParserRuleCall_6());
 		match_ExportClause_CommaKeyword_1_2_q = new TokenAlias(false, true, grammarAccess.getExportClauseAccess().getCommaKeyword_1_2());
-		match_ExportDeclarationImpl___AsKeyword_1_5_0_NamespaceKeyword_1_5_1_IdentifierNameParserRuleCall_1_5_2_SemiParserRuleCall_1_5_3___or___EqualsSignKeyword_1_4_0_IdentifierNameParserRuleCall_1_4_1___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a_SemiParserRuleCall_1_4_3__ = new AlternativeAlias(false, false, new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getAsKeyword_1_5_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getNamespaceKeyword_1_5_1()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_5_2()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getSemiParserRuleCall_1_5_3())), new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getEqualsSignKeyword_1_4_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_4_1()), new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getFullStopKeyword_1_4_2_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_4_2_1())), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getSemiParserRuleCall_1_4_3())));
+		match_ExportDeclarationImpl_DeclareKeyword_1_q = new TokenAlias(false, true, grammarAccess.getExportDeclarationImplAccess().getDeclareKeyword_1());
+		match_ExportDeclarationImpl___AsKeyword_2_5_0_NamespaceKeyword_2_5_1_IdentifierNameParserRuleCall_2_5_2_SemiParserRuleCall_2_5_3___or___EqualsSignKeyword_2_4_0_IdentifierNameParserRuleCall_2_4_1___FullStopKeyword_2_4_2_0_IdentifierNameParserRuleCall_2_4_2_1__a_SemiParserRuleCall_2_4_3__ = new AlternativeAlias(false, false, new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getAsKeyword_2_5_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getNamespaceKeyword_2_5_1()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_2_5_2()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getSemiParserRuleCall_2_5_3())), new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getEqualsSignKeyword_2_4_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_2_4_1()), new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getFullStopKeyword_2_4_2_0()), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getIdentifierNameParserRuleCall_2_4_2_1())), new TokenAlias(false, false, grammarAccess.getExportDeclarationImplAccess().getSemiParserRuleCall_2_4_3())));
 		match_FieldDeclarationImpl_ReadonlyKeyword_1_q = new TokenAlias(false, true, grammarAccess.getFieldDeclarationImplAccess().getReadonlyKeyword_1());
 		match_FunctionDeclaration_SemiParserRuleCall_1_q = new TokenAlias(false, true, grammarAccess.getFunctionDeclarationAccess().getSemiParserRuleCall_1());
+		match_ImportDeclarationImpl___FullStopKeyword_1_1_2_0_IdentifierNameParserRuleCall_1_1_2_1__a = new GroupAlias(true, true, new TokenAlias(false, false, grammarAccess.getImportDeclarationImplAccess().getFullStopKeyword_1_1_2_0()), new TokenAlias(false, false, grammarAccess.getImportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_1_2_1()));
+		match_ImportDeclarationImpl___LeftParenthesisKeyword_1_1_3_0_STRINGTerminalRuleCall_1_1_3_1_RightParenthesisKeyword_1_1_3_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getImportDeclarationImplAccess().getLeftParenthesisKeyword_1_1_3_0()), new TokenAlias(false, false, grammarAccess.getImportDeclarationImplAccess().getSTRINGTerminalRuleCall_1_1_3_1()), new TokenAlias(false, false, grammarAccess.getImportDeclarationImplAccess().getRightParenthesisKeyword_1_1_3_2()));
 		match_ImportSpecifiersExceptDefault_CommaKeyword_1_1_2_q = new TokenAlias(false, true, grammarAccess.getImportSpecifiersExceptDefaultAccess().getCommaKeyword_1_1_2());
 		match_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getInterfaceExtendsListAccess().getExtendsKeyword_0_0()), new TokenAlias(false, false, grammarAccess.getInterfaceExtendsListAccess().getImplementsKeyword_0_1()));
 		match_IntersectionTypeExpression_AmpersandKeyword_0_q = new TokenAlias(false, true, grammarAccess.getIntersectionTypeExpressionAccess().getAmpersandKeyword_0());
@@ -278,12 +284,18 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_DoStatement_SemiParserRuleCall_6_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ExportClause_CommaKeyword_1_2_q.equals(syntax))
 				emit_ExportClause_CommaKeyword_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_ExportDeclarationImpl___AsKeyword_1_5_0_NamespaceKeyword_1_5_1_IdentifierNameParserRuleCall_1_5_2_SemiParserRuleCall_1_5_3___or___EqualsSignKeyword_1_4_0_IdentifierNameParserRuleCall_1_4_1___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a_SemiParserRuleCall_1_4_3__.equals(syntax))
-				emit_ExportDeclarationImpl___AsKeyword_1_5_0_NamespaceKeyword_1_5_1_IdentifierNameParserRuleCall_1_5_2_SemiParserRuleCall_1_5_3___or___EqualsSignKeyword_1_4_0_IdentifierNameParserRuleCall_1_4_1___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a_SemiParserRuleCall_1_4_3__(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ExportDeclarationImpl_DeclareKeyword_1_q.equals(syntax))
+				emit_ExportDeclarationImpl_DeclareKeyword_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ExportDeclarationImpl___AsKeyword_2_5_0_NamespaceKeyword_2_5_1_IdentifierNameParserRuleCall_2_5_2_SemiParserRuleCall_2_5_3___or___EqualsSignKeyword_2_4_0_IdentifierNameParserRuleCall_2_4_1___FullStopKeyword_2_4_2_0_IdentifierNameParserRuleCall_2_4_2_1__a_SemiParserRuleCall_2_4_3__.equals(syntax))
+				emit_ExportDeclarationImpl___AsKeyword_2_5_0_NamespaceKeyword_2_5_1_IdentifierNameParserRuleCall_2_5_2_SemiParserRuleCall_2_5_3___or___EqualsSignKeyword_2_4_0_IdentifierNameParserRuleCall_2_4_1___FullStopKeyword_2_4_2_0_IdentifierNameParserRuleCall_2_4_2_1__a_SemiParserRuleCall_2_4_3__(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_FieldDeclarationImpl_ReadonlyKeyword_1_q.equals(syntax))
 				emit_FieldDeclarationImpl_ReadonlyKeyword_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_FunctionDeclaration_SemiParserRuleCall_1_q.equals(syntax))
 				emit_FunctionDeclaration_SemiParserRuleCall_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ImportDeclarationImpl___FullStopKeyword_1_1_2_0_IdentifierNameParserRuleCall_1_1_2_1__a.equals(syntax))
+				emit_ImportDeclarationImpl___FullStopKeyword_1_1_2_0_IdentifierNameParserRuleCall_1_1_2_1__a(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if (match_ImportDeclarationImpl___LeftParenthesisKeyword_1_1_3_0_STRINGTerminalRuleCall_1_1_3_1_RightParenthesisKeyword_1_1_3_2__q.equals(syntax))
+				emit_ImportDeclarationImpl___LeftParenthesisKeyword_1_1_3_0_STRINGTerminalRuleCall_1_1_3_1_RightParenthesisKeyword_1_1_3_2__q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ImportSpecifiersExceptDefault_CommaKeyword_1_1_2_q.equals(syntax))
 				emit_ImportSpecifiersExceptDefault_CommaKeyword_1_1_2_q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_InterfaceExtendsList_ExtendsKeyword_0_0_or_ImplementsKeyword_0_1.equals(syntax))
@@ -527,13 +539,35 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
+	 *     'declare'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) 'export' (ambiguity) 'import' IdentifierName '=' defaultExportedExpression=AssignmentExpression
+	 *     (rule start) 'export' (ambiguity) '{' '}' 'from' reexportedFrom=[TModule|ModuleSpecifier]
+	 *     (rule start) 'export' (ambiguity) '{' namedExports+=ExportSpecifier
+	 *     (rule start) 'export' (ambiguity) defaultExport?='default'
+	 *     (rule start) 'export' (ambiguity) exportedElement=ExportableElement
+	 *     (rule start) 'export' (ambiguity) wildcardExport?='*'
+	 *     {ExportDeclaration.annotationList=} 'export' (ambiguity) 'import' IdentifierName '=' defaultExportedExpression=AssignmentExpression
+	 *     {ExportDeclaration.annotationList=} 'export' (ambiguity) '{' '}' 'from' reexportedFrom=[TModule|ModuleSpecifier]
+	 *     {ExportDeclaration.annotationList=} 'export' (ambiguity) '{' namedExports+=ExportSpecifier
+	 *     {ExportDeclaration.annotationList=} 'export' (ambiguity) defaultExport?='default'
+	 *     {ExportDeclaration.annotationList=} 'export' (ambiguity) exportedElement=ExportableElement
+	 *     {ExportDeclaration.annotationList=} 'export' (ambiguity) wildcardExport?='*'
+	 */
+	protected void emit_ExportDeclarationImpl_DeclareKeyword_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
 	 *     ('=' IdentifierName ('.' IdentifierName)* Semi) | ('as' 'namespace' IdentifierName Semi)
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) 'export' (ambiguity) (rule start)
 	 *     {ExportDeclaration.annotationList=} 'export' (ambiguity) (rule end)
 	 */
-	protected void emit_ExportDeclarationImpl___AsKeyword_1_5_0_NamespaceKeyword_1_5_1_IdentifierNameParserRuleCall_1_5_2_SemiParserRuleCall_1_5_3___or___EqualsSignKeyword_1_4_0_IdentifierNameParserRuleCall_1_4_1___FullStopKeyword_1_4_2_0_IdentifierNameParserRuleCall_1_4_2_1__a_SemiParserRuleCall_1_4_3__(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+	protected void emit_ExportDeclarationImpl___AsKeyword_2_5_0_NamespaceKeyword_2_5_1_IdentifierNameParserRuleCall_2_5_2_SemiParserRuleCall_2_5_3___or___EqualsSignKeyword_2_4_0_IdentifierNameParserRuleCall_2_4_1___FullStopKeyword_2_4_2_0_IdentifierNameParserRuleCall_2_4_2_1__a_SemiParserRuleCall_2_4_3__(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
@@ -568,6 +602,30 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     typeVars+=N4TypeVariable ','? '>' '(' ')' (ambiguity) (rule end)
 	 */
 	protected void emit_FunctionDeclaration_SemiParserRuleCall_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('.' IdentifierName)*
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) 'import' IdentifierName '=' IdentifierName (ambiguity) ('(' STRING ')')? Semi (rule start)
+	 *     {ImportDeclaration.annotationList=} 'import' IdentifierName '=' IdentifierName (ambiguity) ('(' STRING ')')? Semi (rule end)
+	 */
+	protected void emit_ImportDeclarationImpl___FullStopKeyword_1_1_2_0_IdentifierNameParserRuleCall_1_1_2_1__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('(' STRING ')')?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) 'import' IdentifierName '=' IdentifierName ('.' IdentifierName)* (ambiguity) Semi (rule start)
+	 *     {ImportDeclaration.annotationList=} 'import' IdentifierName '=' IdentifierName ('.' IdentifierName)* (ambiguity) Semi (rule end)
+	 */
+	protected void emit_ImportDeclarationImpl___LeftParenthesisKeyword_1_1_3_0_STRINGTerminalRuleCall_1_1_3_1_RightParenthesisKeyword_1_1_3_2__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

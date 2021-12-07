@@ -565,6 +565,7 @@ ruleExportDeclaration:
 // Rule ExportDeclarationImpl
 ruleExportDeclarationImpl:
 	'export'
+	'declare'?
 	(
 		'*'
 		ruleExportFromClause
@@ -820,9 +821,15 @@ ruleImportDeclarationImpl:
 			'='
 		)
 		ruleIdentifierName
-		'('
-		RULE_STRING
-		')'
+		(
+			'.'
+			ruleIdentifierName
+		)*
+		(
+			'('
+			RULE_STRING
+			')'
+		)?
 		ruleSemi
 	)
 ;
