@@ -262,9 +262,13 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
-		private final Keyword cModuleKeyword_0_0_0 = (Keyword)cGroup_0_0.eContents().get(0);
-		private final Assignment cNameAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
-		private final RuleCall cNameSTRINGTerminalRuleCall_0_0_1_0 = (RuleCall)cNameAssignment_0_0_1.eContents().get(0);
+		private final Action cAmbientModuleDeclarationAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
+		private final Keyword cModuleKeyword_0_0_1 = (Keyword)cGroup_0_0.eContents().get(1);
+		private final Alternatives cAlternatives_0_0_2 = (Alternatives)cGroup_0_0.eContents().get(2);
+		private final Assignment cNameAssignment_0_0_2_0 = (Assignment)cAlternatives_0_0_2.eContents().get(0);
+		private final RuleCall cNameBindingIdentifierParserRuleCall_0_0_2_0_0 = (RuleCall)cNameAssignment_0_0_2_0.eContents().get(0);
+		private final Assignment cNameAssignment_0_0_2_1 = (Assignment)cAlternatives_0_0_2.eContents().get(1);
+		private final RuleCall cNameSTRINGTerminalRuleCall_0_0_2_1_0 = (RuleCall)cNameAssignment_0_0_2_1.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Assignment cScriptElementsAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cScriptElementsScriptElementParserRuleCall_2_0 = (RuleCall)cScriptElementsAssignment_2.eContents().get(0);
@@ -272,8 +276,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//AmbientModuleDeclaration:
 		//    =>(
+		//        {AmbientModuleDeclaration}
 		//        'module'
-		//        name=STRING
+		//        (
+		//            name=BindingIdentifier<Yield=false>
+		//        |    name=STRING
+		//        )
 		//    )
 		//    '{'
 		//        scriptElements+=ScriptElement*
@@ -282,8 +290,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=>(
+		//    {AmbientModuleDeclaration}
 		//    'module'
-		//    name=STRING
+		//    (
+		//        name=BindingIdentifier<Yield=false>
+		//    |    name=STRING
+		//    )
 		//)
 		//'{'
 		//    scriptElements+=ScriptElement*
@@ -291,23 +303,46 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		public Group getGroup() { return cGroup; }
 		
 		//=>(
+		//    {AmbientModuleDeclaration}
 		//    'module'
-		//    name=STRING
+		//    (
+		//        name=BindingIdentifier<Yield=false>
+		//    |    name=STRING
+		//    )
 		//)
 		public Group getGroup_0() { return cGroup_0; }
 		
+		//{AmbientModuleDeclaration}
 		//'module'
-		//name=STRING
+		//(
+		//    name=BindingIdentifier<Yield=false>
+		//|    name=STRING
+		//)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
+		//{AmbientModuleDeclaration}
+		public Action getAmbientModuleDeclarationAction_0_0_0() { return cAmbientModuleDeclarationAction_0_0_0; }
+		
 		//'module'
-		public Keyword getModuleKeyword_0_0_0() { return cModuleKeyword_0_0_0; }
+		public Keyword getModuleKeyword_0_0_1() { return cModuleKeyword_0_0_1; }
+		
+		//(
+		//    name=BindingIdentifier<Yield=false>
+		//|    name=STRING
+		//)
+		public Alternatives getAlternatives_0_0_2() { return cAlternatives_0_0_2; }
+		
+		//name=BindingIdentifier<Yield=false>
+		public Assignment getNameAssignment_0_0_2_0() { return cNameAssignment_0_0_2_0; }
+		
+		//BindingIdentifier<Yield=false>
+		public RuleCall getNameBindingIdentifierParserRuleCall_0_0_2_0_0() { return cNameBindingIdentifierParserRuleCall_0_0_2_0_0; }
 		
 		//name=STRING
-		public Assignment getNameAssignment_0_0_1() { return cNameAssignment_0_0_1; }
+		public Assignment getNameAssignment_0_0_2_1() { return cNameAssignment_0_0_2_1; }
 		
 		//STRING
-		public RuleCall getNameSTRINGTerminalRuleCall_0_0_1_0() { return cNameSTRINGTerminalRuleCall_0_0_1_0; }
+		public RuleCall getNameSTRINGTerminalRuleCall_0_0_2_1_0() { return cNameSTRINGTerminalRuleCall_0_0_2_1_0; }
 		
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_1() { return cLeftCurlyBracketKeyword_1; }
@@ -1323,6 +1358,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Assignment cExportedElementAssignment_1_0_1 = (Assignment)cGroup_1_0.eContents().get(1);
 		private final RuleCall cExportedElementExportableElementParserRuleCall_1_0_1_0 = (RuleCall)cExportedElementAssignment_1_0_1.eContents().get(0);
 		private final RuleCall cAmbientModuleDeclarationParserRuleCall_1_1 = (RuleCall)cAlternatives_1.eContents().get(1);
+		private final RuleCall cGlobalDeclarationParserRuleCall_1_2 = (RuleCall)cAlternatives_1.eContents().get(2);
 		
 		//DeclareDeclaration returns ScriptElement:
 		//    =>'declare'
@@ -1331,6 +1367,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//        exportedElement=ExportableElement
 		//    |
 		//        AmbientModuleDeclaration
+		//    |
+		//        GlobalDeclaration
 		//    )
 		//;
 		@Override public ParserRule getRule() { return rule; }
@@ -1341,6 +1379,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    exportedElement=ExportableElement
 		//|
 		//    AmbientModuleDeclaration
+		//|
+		//    GlobalDeclaration
 		//)
 		public Group getGroup() { return cGroup; }
 		
@@ -1352,6 +1392,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    exportedElement=ExportableElement
 		//|
 		//    AmbientModuleDeclaration
+		//|
+		//    GlobalDeclaration
 		//)
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
@@ -1370,6 +1412,9 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//AmbientModuleDeclaration
 		public RuleCall getAmbientModuleDeclarationParserRuleCall_1_1() { return cAmbientModuleDeclarationParserRuleCall_1_1; }
+		
+		//GlobalDeclaration
+		public RuleCall getGlobalDeclarationParserRuleCall_1_2() { return cGlobalDeclarationParserRuleCall_1_2; }
 	}
 	public class ExportDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportDeclaration");
@@ -13343,8 +13388,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//AmbientModuleDeclaration:
 	//    =>(
+	//        {AmbientModuleDeclaration}
 	//        'module'
-	//        name=STRING
+	//        (
+	//            name=BindingIdentifier<Yield=false>
+	//        |    name=STRING
+	//        )
 	//    )
 	//    '{'
 	//        scriptElements+=ScriptElement*
@@ -13505,6 +13554,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//        exportedElement=ExportableElement
 	//    |
 	//        AmbientModuleDeclaration
+	//    |
+	//        GlobalDeclaration
 	//    )
 	//;
 	public DeclareDeclarationElements getDeclareDeclarationAccess() {

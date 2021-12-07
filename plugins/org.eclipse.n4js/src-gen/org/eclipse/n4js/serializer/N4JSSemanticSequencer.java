@@ -2099,7 +2099,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     DeclareDeclaration returns AmbientModuleDeclaration
 	 *
 	 * Constraint:
-	 *     (name=STRING scriptElements+=ScriptElement*)
+	 *     ((name=BindingIdentifier | name=STRING) scriptElements+=ScriptElement*)
 	 */
 	protected void sequence_AmbientModuleDeclaration(ISerializationContext context, AmbientModuleDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -12637,6 +12637,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Contexts:
 	 *     ScriptElement returns GlobalDeclaration
 	 *     GlobalDeclaration returns GlobalDeclaration
+	 *     DeclareDeclaration returns GlobalDeclaration
 	 *
 	 * Constraint:
 	 *     elements+=NamespaceElement*

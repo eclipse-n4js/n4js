@@ -470,6 +470,9 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     'declare'?
 	 *
 	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) 'global' '{' '}' (rule start)
+	 *     (rule start) (ambiguity) 'global' '{' elements+=NamespaceElement
+	 *     (rule start) (ambiguity) 'module' name=BindingIdentifier
 	 *     (rule start) (ambiguity) 'module' name=STRING
 	 */
 	protected void emit_DeclareDeclaration_DeclareKeyword_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {

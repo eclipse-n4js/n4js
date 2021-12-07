@@ -40,6 +40,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 		private static void init(ImmutableMap.Builder<AbstractElement, String> builder, N4JSGrammarAccess grammarAccess) {
 			builder.put(grammarAccess.getScriptAccess().getAlternatives_2(), "rule__Script__Alternatives_2");
 			builder.put(grammarAccess.getScriptElementAccess().getAlternatives(), "rule__ScriptElement__Alternatives");
+			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getAlternatives_0_0_2(), "rule__AmbientModuleDeclaration__Alternatives_0_0_2");
 			builder.put(grammarAccess.getNamespaceElementAccess().getAlternatives(), "rule__NamespaceElement__Alternatives");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getAlternatives_1(), "rule__AnnotatedScriptElement__Alternatives_1");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getAlternatives_1_3_0(), "rule__AnnotatedScriptElement__Alternatives_1_3_0");
@@ -731,7 +732,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getDeclaredModifiersAssignment_0_0_1(), "rule__N4NamespaceDeclaration__DeclaredModifiersAssignment_0_0_1");
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getNameAssignment_0_0_3(), "rule__N4NamespaceDeclaration__NameAssignment_0_0_3");
 			builder.put(grammarAccess.getN4NamespaceDeclarationAccess().getOwnedElementsRawAssignment_2(), "rule__N4NamespaceDeclaration__OwnedElementsRawAssignment_2");
-			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getNameAssignment_0_0_1(), "rule__AmbientModuleDeclaration__NameAssignment_0_0_1");
+			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getNameAssignment_0_0_2_0(), "rule__AmbientModuleDeclaration__NameAssignment_0_0_2_0");
+			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getNameAssignment_0_0_2_1(), "rule__AmbientModuleDeclaration__NameAssignment_0_0_2_1");
 			builder.put(grammarAccess.getAmbientModuleDeclarationAccess().getScriptElementsAssignment_2(), "rule__AmbientModuleDeclaration__ScriptElementsAssignment_2");
 			builder.put(grammarAccess.getGlobalDeclarationAccess().getElementsAssignment_2(), "rule__GlobalDeclaration__ElementsAssignment_2");
 			builder.put(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersAssignment_1_2_1_0_0(), "rule__AnnotatedScriptElement__DeclaredModifiersAssignment_1_2_1_0_0");

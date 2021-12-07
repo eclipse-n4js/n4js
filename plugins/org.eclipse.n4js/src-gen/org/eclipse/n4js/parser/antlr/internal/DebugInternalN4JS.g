@@ -157,10 +157,18 @@ norm1_N4NamespaceDeclaration:
 ruleAmbientModuleDeclaration:
 	(
 		('module'
-		RULE_STRING
+		(
+			ruleBindingIdentifier
+			    |
+			RULE_STRING
+		)
 		)=>
 		'module'
-		RULE_STRING
+		(
+			ruleBindingIdentifier
+			    |
+			RULE_STRING
+		)
 	)
 	'{'
 	ruleScriptElement
@@ -504,9 +512,19 @@ ruleDeclareDeclaration:
 		    |
 		(
 			('module'
-			RULE_STRING
+			(
+				ruleBindingIdentifier
+				    |
+				RULE_STRING
+			)
 			)=>
 			ruleAmbientModuleDeclaration
+		)
+		    |
+		(
+			('global'
+			)=>
+			ruleGlobalDeclaration
 		)
 	)
 ;

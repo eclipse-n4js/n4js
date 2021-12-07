@@ -650,49 +650,88 @@ ruleAmbientModuleDeclaration returns [EObject current=null]
 	(
 		(
 			((
+				(
+				)
 				Module
 				(
 					(
-						RULE_STRING
+						(
+							ruleBindingIdentifier
+						)
+					)
+					    |
+					(
+						(
+							RULE_STRING
+						)
 					)
 				)
 			)
 			)=>
 			(
-				otherlv_0=Module
+				(
+					{
+						$current = forceCreateModelElement(
+							grammarAccess.getAmbientModuleDeclarationAccess().getAmbientModuleDeclarationAction_0_0_0(),
+							$current);
+					}
+				)
+				otherlv_1=Module
 				{
-					newLeafNode(otherlv_0, grammarAccess.getAmbientModuleDeclarationAccess().getModuleKeyword_0_0_0());
+					newLeafNode(otherlv_1, grammarAccess.getAmbientModuleDeclarationAccess().getModuleKeyword_0_0_1());
 				}
 				(
 					(
-						lv_name_1_0=RULE_STRING
-						{
-							newLeafNode(lv_name_1_0, grammarAccess.getAmbientModuleDeclarationAccess().getNameSTRINGTerminalRuleCall_0_0_1_0());
-						}
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getAmbientModuleDeclarationRule());
+						(
+							{
+								newCompositeNode(grammarAccess.getAmbientModuleDeclarationAccess().getNameBindingIdentifierParserRuleCall_0_0_2_0_0());
 							}
-							setWithLastConsumed(
-								$current,
-								"name",
-								lv_name_1_0,
-								"org.eclipse.n4js.TypeExpressions.STRING");
-						}
+							lv_name_2_0=ruleBindingIdentifier
+							{
+								if ($current==null) {
+									$current = createModelElementForParent(grammarAccess.getAmbientModuleDeclarationRule());
+								}
+								set(
+									$current,
+									"name",
+									lv_name_2_0,
+									"org.eclipse.n4js.TypeExpressions.BindingIdentifier");
+								afterParserOrEnumRuleCall();
+							}
+						)
+					)
+					    |
+					(
+						(
+							lv_name_3_0=RULE_STRING
+							{
+								newLeafNode(lv_name_3_0, grammarAccess.getAmbientModuleDeclarationAccess().getNameSTRINGTerminalRuleCall_0_0_2_1_0());
+							}
+							{
+								if ($current==null) {
+									$current = createModelElement(grammarAccess.getAmbientModuleDeclarationRule());
+								}
+								setWithLastConsumed(
+									$current,
+									"name",
+									lv_name_3_0,
+									"org.eclipse.n4js.TypeExpressions.STRING");
+							}
+						)
 					)
 				)
 			)
 		)
-		otherlv_2=LeftCurlyBracket
+		otherlv_4=LeftCurlyBracket
 		{
-			newLeafNode(otherlv_2, grammarAccess.getAmbientModuleDeclarationAccess().getLeftCurlyBracketKeyword_1());
+			newLeafNode(otherlv_4, grammarAccess.getAmbientModuleDeclarationAccess().getLeftCurlyBracketKeyword_1());
 		}
 		(
 			(
 				{
 					newCompositeNode(grammarAccess.getAmbientModuleDeclarationAccess().getScriptElementsScriptElementParserRuleCall_2_0());
 				}
-				lv_scriptElements_3_0=ruleScriptElement
+				lv_scriptElements_5_0=ruleScriptElement
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getAmbientModuleDeclarationRule());
@@ -700,15 +739,15 @@ ruleAmbientModuleDeclaration returns [EObject current=null]
 					add(
 						$current,
 						"scriptElements",
-						lv_scriptElements_3_0,
+						lv_scriptElements_5_0,
 						"org.eclipse.n4js.N4JS.ScriptElement");
 					afterParserOrEnumRuleCall();
 				}
 			)
 		)*
-		otherlv_4=RightCurlyBracket
+		otherlv_6=RightCurlyBracket
 		{
-			newLeafNode(otherlv_4, grammarAccess.getAmbientModuleDeclarationAccess().getRightCurlyBracketKeyword_3());
+			newLeafNode(otherlv_6, grammarAccess.getAmbientModuleDeclarationAccess().getRightCurlyBracketKeyword_3());
 		}
 	)
 ;
@@ -2347,10 +2386,20 @@ ruleDeclareDeclaration returns [EObject current=null]
 			    |
 			(
 				((
+					(
+					)
 					Module
 					(
 						(
-							RULE_STRING
+							(
+								ruleBindingIdentifier
+							)
+						)
+						    |
+						(
+							(
+								RULE_STRING
+							)
 						)
 					)
 				)
@@ -2361,6 +2410,23 @@ ruleDeclareDeclaration returns [EObject current=null]
 				this_AmbientModuleDeclaration_3=ruleAmbientModuleDeclaration
 				{
 					$current = $this_AmbientModuleDeclaration_3.current;
+					afterParserOrEnumRuleCall();
+				}
+			)
+			    |
+			(
+				((
+					(
+					)
+					Global
+				)
+				)=>
+				{
+					newCompositeNode(grammarAccess.getDeclareDeclarationAccess().getGlobalDeclarationParserRuleCall_1_2());
+				}
+				this_GlobalDeclaration_4=ruleGlobalDeclaration
+				{
+					$current = $this_GlobalDeclaration_4.current;
 					afterParserOrEnumRuleCall();
 				}
 			)

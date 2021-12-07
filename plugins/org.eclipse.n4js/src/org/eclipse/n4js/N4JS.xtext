@@ -83,8 +83,12 @@ N4NamespaceDeclaration <Yield> returns N4NamespaceDeclaration:
 
 AmbientModuleDeclaration:
 	=>(
+		{AmbientModuleDeclaration}
 		'module'
-		name=STRING
+		(
+			name=BindingIdentifier<Yield=false>
+		|	name=STRING
+		)
 	)
 	'{'
 		scriptElements+=ScriptElement*
@@ -213,6 +217,8 @@ DeclareDeclaration returns ScriptElement:
 		exportedElement=ExportableElement
 	|
 		AmbientModuleDeclaration
+	|
+		GlobalDeclaration
 	)
 ;
 
