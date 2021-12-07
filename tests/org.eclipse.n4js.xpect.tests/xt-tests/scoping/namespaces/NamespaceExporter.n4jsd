@@ -12,6 +12,15 @@
 
 
 
-export namespace NS1 {
-	const c2 = 10;
+export external namespace NS1 {
+	type c1 = int;
+	const c1:int;
+	
+	enum Color {
+		blue
+	}
+}
+
+export external namespace NS2 {
+	private const c2:int;
 }
