@@ -252,7 +252,6 @@ public final class N4JSGlobals {
 			N4JS_RUNTIME_ECMA402,
 			new N4JSPackageName("n4js-runtime-es2015"),
 			new N4JSPackageName("n4js-runtime-esnext"),
-			new N4JSPackageName("n4js-runtime-fetch"),
 			N4JS_RUNTIME_HTML5,
 			N4JS_RUNTIME_NODE,
 			new N4JSPackageName("n4js-runtime-node-tests"),
@@ -261,8 +260,6 @@ public final class N4JSGlobals {
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert"),
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert.test"),
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.console"),
-			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.ide"),
-			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.ide.test"),
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.xunit"),
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft.test"));
 

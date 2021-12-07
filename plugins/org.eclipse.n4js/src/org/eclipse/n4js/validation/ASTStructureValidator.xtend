@@ -793,7 +793,12 @@ class ASTStructureValidator {
 		val name = model.name
 		if (name !== null) {
 			if (name == LOCAL_ARGUMENTS_VARIABLE_NAME && !(model instanceof LocalArgumentsVariable)) {
-				issueArgumentsError(model, name, constraints.isStrict, producer)
+				val isLocalArgsVar = model instanceof LocalArgumentsVariable;
+				val isFparInN4jsd = constraints.isExternal // here: isExternal <==> file extension is ".n4jsd"
+						&& (model instanceof FormalParameter);
+				if (!isLocalArgsVar && !isFparInN4jsd) {
+					issueArgumentsError(model, name, constraints.isStrict, producer)
+				}
 			} else {
 				if (name != YIELD_KEYWORD && (languageHelper.getECMAKeywords.contains(name)
 					|| 'enum'.equals(name) || 'await'.equals(name)

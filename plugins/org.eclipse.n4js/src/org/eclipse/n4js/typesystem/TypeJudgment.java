@@ -649,6 +649,13 @@ import com.google.inject.Inject;
 									if (typeArg instanceof TypeRef) {
 										instanceofType = (TypeRef) typeArg;
 									}
+								} else {
+									TMethod constructSig = tsh.getConstructSignature(G, instanceofType);
+									TypeRef returnTypeRef = constructSig != null ? constructSig.getReturnTypeRef()
+											: null;
+									if (returnTypeRef != null) {
+										instanceofType = returnTypeRef;
+									}
 								}
 
 								TypeUtils.sanitizeRawTypeRef(instanceofType);

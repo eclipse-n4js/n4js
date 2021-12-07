@@ -50,7 +50,7 @@ mv "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-es2015/src/n4js/Iterator.n
 rm -f "${REPO_ROOT_DIR}"/plugins/org.eclipse.n4js/src-env/env/builtin_js.n4jsd
 rm -f "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-es2015/src/n4js/*.n4jsd
 rm -f "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-esnext/src/n4js/*.n4jsd
-#rm -f "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-html5/src/n4js/*.n4jsd
+rm -f "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-html5/src/n4js/*.n4jsd
 
 # temporary work-around: remove this when deleting deprecated file Iterator.n4jsd in 'n4js-runtime-es2015'
 mv "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-es2015/src/n4js/Iterator.n4jsd_ "${REPO_ROOT_DIR}"/n4js-libs/packages/n4js-runtime-es2015/src/n4js/Iterator.n4jsd
@@ -87,7 +87,7 @@ rm -rf "src-dts"
 mkdir "src-dts"
 cp "${SOURCE_DIR}/es5.d.ts" "src-dts"
 cp "${SOURCE_DIR}"/es20*.d.ts "src-dts"
-#cp "${SOURCE_DIR}"/dom*.d.ts "src-dts"
+cp "${SOURCE_DIR}"/dom*.d.ts "src-dts"
 
 # delete some files we do not need/want to convert
 # (they only contain triple slash directives, for the most part):
@@ -116,4 +116,4 @@ cp es2017*.n4jsd "${REPO_ROOT_DIR}/n4js-libs/packages/n4js-runtime-esnext/src/n4
 cp es2018*.n4jsd "${REPO_ROOT_DIR}/n4js-libs/packages/n4js-runtime-esnext/src/n4js"
 cp es2019*.n4jsd "${REPO_ROOT_DIR}/n4js-libs/packages/n4js-runtime-esnext/src/n4js"
 cp es2020*.n4jsd "${REPO_ROOT_DIR}/n4js-libs/packages/n4js-runtime-esnext/src/n4js"
-#cp dom*.n4jsd "${REPO_ROOT_DIR}/n4js-libs/packages/n4js-runtime-html5/src/n4js"
+cp dom*.n4jsd "${REPO_ROOT_DIR}/n4js-libs/packages/n4js-runtime-html5/src/n4js"

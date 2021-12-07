@@ -16,7 +16,7 @@ export external public class Map<K,V> {
 
 export external public type MapConstructor = constructor{Map};
 
-export external public class WeakMap<K,V> {
+export external public class WeakMap<K extends Object,V> {
 	public delete(key: K): boolean;
 	public get(key: K): V;
 	public has(key: K): boolean;
@@ -38,7 +38,7 @@ export external public class Set<T> {
 
 export external public type SetConstructor = constructor{Set};
 
-export external public class WeakSet<T> {
+export external public class WeakSet<T extends Object> {
 	public add(value: T): this;
 	public delete(value: T): boolean;
 	public has(value: T): boolean;

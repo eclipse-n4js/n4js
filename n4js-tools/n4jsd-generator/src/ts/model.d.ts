@@ -71,6 +71,8 @@ export abstract class NamedElement {
 export abstract class ExportableElement extends NamedElement {
 	exported: boolean;
 	exportedAsDefault: boolean;
+	/** If defined, all other properties will be ignored and this string will be emitted. */
+	replacementCode?: string;
 }
 
 export enum VariableKeyword {
@@ -94,18 +96,29 @@ export enum PrimitiveBasedKind {
 	STRING_BASED, NUMBER_BASED
 }
 
-export class Type extends ExportableElement implements AnnotatableElement {
-	annotations: Annotation[];
+export interface GenericElement {
+	typeParams: TypeParameter[];
+}
+
+export class TypeParameter extends NamedElement {
+	upperBound?: TypeRef;
+	defaultArgument?: TypeRef;
+}
+
+export class Type extends ExportableElement implements AnnotatableElement, GenericElement {
 	kind: TypeKind;
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
-	typeParams: string[];
 	extends: TypeRef[];
 	implements: TypeRef[];
 	members: Member[];
 	literals: EnumLiteral[];
 	aliasedType: TypeRef;
 	additionalCode: string[];
+
+	// from interfaces:
+	annotations: Annotation[];
+	typeParams: TypeParameter[];
 }
 
 export class EnumLiteral extends NamedElement {
@@ -113,12 +126,12 @@ export class EnumLiteral extends NamedElement {
 }
 
 export enum MemberKind {
-	CTOR, CALLABLE_CTOR, INDEX_SIGNATURE,
+	CTOR,
+	CALL_SIGNATURE, CONSTRUCT_SIGNATURE, INDEX_SIGNATURE,
 	FIELD, GETTER, SETTER, METHOD
 }
 
 export class Member extends NamedElement implements AnnotatableElement {
-	annotations: Annotation[];
 	kind: MemberKind;
 	accessibility: Accessibility;
 	isStatic: boolean;
@@ -127,13 +140,18 @@ export class Member extends NamedElement implements AnnotatableElement {
 	type?: TypeRef;
 	signatures?: Signature[];
 	replacementCode?: string;
+
+	// from interfaces:
+	annotations: Annotation[];
 }
 
-export class Signature {
-	typeParams: string[];
+export class Signature implements GenericElement {
 	parameters: Parameter[];
 	/** Will be undefined iff this signature belongs to a constructor. */
 	returnType?: TypeRef;
+
+	// from interfaces:
+	typeParams: TypeParameter[];
 }
 
 export class Parameter extends NamedElement {
@@ -155,8 +173,11 @@ export enum TypeRefKind {
 	INTERSECTION,
 	PARENTHESES,
 	// the following are not actually supported on N4JS side:
-	PREDICATE,
+	TYPE_PREDICATE,
+	TYPE_QUERY,
 	INDEXED_ACCESS_TYPE,
+	CONDITIONAL_TYPE,
+	INFER_TYPE,
 	MAPPED_TYPE
 }
 
@@ -167,8 +188,8 @@ export enum TypeRefOperator {
 }
 
 export class TypeRef implements AnnotatableElement { // note: annotations only supported for TypeRefKind === FUNCTION
-	annotations: Annotation[];
 	kind: TypeRefKind;
+	builtIn: boolean;
 	dynamic: boolean;
 	targetTypeName: string;
 	targetTypeArgs: TypeRef[];
@@ -180,6 +201,9 @@ export class TypeRef implements AnnotatableElement { // note: annotations only s
 	tsOperators: TypeRefOperator[];
 	/** The type reference as given in the TypeScript source code. */
 	tsSourceString: string;
+
+	// from interfaces:
+	annotations: Annotation[];
 
 	public isBuiltInUndefined(): boolean;
 	public isComposed(): boolean;

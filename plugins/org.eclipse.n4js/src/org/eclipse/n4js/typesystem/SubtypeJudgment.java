@@ -16,6 +16,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.collectAllImplicitSuperTypes;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getContextResource;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getReplacement;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.hasReplacements;
@@ -264,6 +265,16 @@ import com.google.common.collect.Iterables;
 				return resultFromBoolean(
 						isObject(G, right)
 								|| isFunction(G, right));
+			}
+		}
+		if (right.getDeclaredType() == functionType(G)) {
+			final TMethod callSig = tsh.getCallSignature(G, left);
+			if (callSig != null) {
+				return success();
+			}
+			final TMethod constructSig = tsh.getConstructSignature(G, left);
+			if (constructSig != null) {
+				return success();
 			}
 		}
 

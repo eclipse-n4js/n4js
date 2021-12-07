@@ -15,6 +15,8 @@ import * as utils from "./utils";
 
 // utilities related to TypeScript
 
+export const UTILITY_TYPES = utils.TS_UTILITY_TYPES;
+
 export function getFilePath(node: ts.Node): string | undefined {
 	while (node && !ts.isSourceFile(node)) {
 		node = node.parent;
@@ -47,8 +49,20 @@ export function traverse(sourceFile: ts.SourceFile, fn: (node: ts.Node, indent: 
 
 export function isExported(node: ts.Declaration): boolean {
 	const flags = ts.getCombinedModifierFlags(node);
-	return utils.testFlag(flags, ts.ModifierFlags.Export)
-		|| (!!node.parent && node.parent.kind === ts.SyntaxKind.SourceFile);
+	if (utils.testFlag(flags, ts.ModifierFlags.Export)) {
+		return true;
+	}
+	let parent = node.parent;
+	if (parent?.kind === ts.SyntaxKind.VariableDeclarationList) {
+		parent = parent.parent;
+	}
+	if (parent?.kind === ts.SyntaxKind.VariableStatement) {
+		parent = parent.parent;
+	}
+	if (parent?.kind === ts.SyntaxKind.SourceFile) {
+		return true;
+	}
+	return false;
 }
 
 export function isExportedAsDefault(node: ts.NamedDeclaration, checker: ts.TypeChecker, exportAssignment?: ts.ExportAssignment): boolean {
@@ -278,4 +292,30 @@ export function getContextForNode(node: ts.Node, checker: ts.TypeChecker): strin
 		node = node.parent;
 	}
 	return result;
+}
+
+export function isBuiltInType(type: ts.Type, runtimeLibs: boolean): boolean {
+	let pathSuffix: string;
+	if (!runtimeLibs) {
+		// standard case: we assume TypeScript is installed as a dependency in a node_modules folder
+		// and the built-in types are defined in the compiler's "lib" folder
+		pathSuffix = "/node_modules/typescript/lib/";
+	} else {
+		// special case of converting runtime libraries:
+		// the built-in types are defined in one of the files being converted
+		pathSuffix = "/";
+	}
+	const fileNamesWithBuiltInTypes = [ "es5.d.ts" ];
+	for (const decl of type?.getSymbol()?.getDeclarations() ?? []) {
+		const sourceFileName = decl.getSourceFile()?.fileName;
+		if (!sourceFileName) {
+			continue;
+		}
+		for (const fn of fileNamesWithBuiltInTypes) {
+			if (sourceFileName.endsWith(pathSuffix + fn)) {
+				return true;
+			}
+		}
+	}
+	return false;
 }

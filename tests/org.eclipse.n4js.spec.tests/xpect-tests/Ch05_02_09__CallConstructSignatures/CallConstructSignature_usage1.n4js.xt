@@ -66,12 +66,14 @@ new structTypeRefOnlyCall();
 // ------------------------------------------------------------------------------------------------------------------------
 // only construct signature:
 
-// XPECT errors --> "Not a function or method: IfcOnlyConstruct." at "ifcOnlyConstruct"
+// for an explanation why the following is allowed, for now, see (**) below
+// XPECT FIXME errors --> "Not a function or method: IfcOnlyConstruct." at "ifcOnlyConstruct"
 ifcOnlyConstruct();
 // XPECT noerrors -->
 new ifcOnlyConstruct("", true);
 
-// XPECT errors --> "Not a function or method: ~Object with { new(p1: string, p2: boolean): ConstructResultCls }." at "structTypeRefOnlyConstruct"
+// for an explanation why the following is allowed, for now, see (**) below
+// XPECT FIXME errors --> "Not a function or method: ~Object with { new(p1: string, p2: boolean): ConstructResultCls }." at "structTypeRefOnlyConstruct"
 structTypeRefOnlyConstruct();
 // XPECT noerrors -->
 new structTypeRefOnlyConstruct("", true);
@@ -115,3 +117,19 @@ new structTypeRefBoth("", 42);
 let resultConstructStructTypeRefBoth = new structTypeRefBoth("", true);
 // XPECT type of 'resultConstructStructTypeRefBoth' --> ConstructResultCls
 resultConstructStructTypeRefBoth;
+
+
+
+// (**)
+// For now, a construct signature without a call signature can be invoked via a call expression
+// and no parameter type checking will be performed in this case!
+//
+// This is consistent with how "constructor{?}" behaves with call expression:
+
+let ctor: constructor{?};
+// XPECT noerrors -->
+ctor();
+// XPECT noerrors -->
+ctor("hello", 42);
+
+// TODO GH-2279: this should probably be changed in the future

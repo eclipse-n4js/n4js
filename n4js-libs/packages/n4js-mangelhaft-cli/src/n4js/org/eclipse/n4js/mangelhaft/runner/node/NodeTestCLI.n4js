@@ -21,7 +21,7 @@ const nomnomOptions: Object = {
         position: 0,
         list: false,
         default: ".",
-        metavar: "URL|PATH|NPM-relpath",
+        metavar: "PATH|NPM-relpath",
         help: "Test catalog (JSON) or project location to be inspected for test cases."
     },
     filter: {

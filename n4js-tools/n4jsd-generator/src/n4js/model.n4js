@@ -76,6 +76,8 @@ export abstract class NamedElement {
 export abstract class ExportableElement extends NamedElement {
 	exported: boolean;
 	exportedAsDefault: boolean;
+	/** If defined, all other properties will be ignored and this string will be emitted. */
+	replacementCode?: string;
 }
 
 export enum VariableKeyword {
@@ -99,11 +101,19 @@ export enum PrimitiveBasedKind {
 	STRING_BASED, NUMBER_BASED
 }
 
-export class Type extends ExportableElement implements AnnotatableElement {
+export interface GenericElement {
+	typeParams: TypeParameter[] = [];
+}
+
+export class TypeParameter extends NamedElement {
+	upperBound?: TypeRef;
+	defaultArgument?: TypeRef;
+}
+
+export class Type extends ExportableElement implements AnnotatableElement, GenericElement {
 	kind: TypeKind;
 	defSiteStructural?: boolean;
 	primitiveBased?: PrimitiveBasedKind;
-	typeParams: string[] = [];
 	extends: TypeRef[] = [];
 	implements: TypeRef[] = [];
 	members: Member[] = [];
@@ -117,7 +127,8 @@ export class EnumLiteral extends NamedElement {
 }
 
 export enum MemberKind {
-	CTOR, CALLABLE_CTOR, INDEX_SIGNATURE,
+	CTOR,
+	CALL_SIGNATURE, CONSTRUCT_SIGNATURE, INDEX_SIGNATURE,
 	FIELD, GETTER, SETTER, METHOD
 }
 
@@ -132,8 +143,7 @@ export class Member extends NamedElement implements AnnotatableElement {
 	replacementCode?: string;
 }
 
-export class Signature {
-	typeParams: string[] = [];
+export class Signature implements GenericElement {
 	parameters: Parameter[] = [];
 	/** Will be undefined iff this signature belongs to a constructor. */
 	returnType?: TypeRef;
@@ -158,8 +168,11 @@ export enum TypeRefKind {
 	INTERSECTION,
 	PARENTHESES,
 	// the following are not actually supported on N4JS side:
-	PREDICATE,
+	TYPE_PREDICATE,
+	TYPE_QUERY,
 	INDEXED_ACCESS_TYPE,
+	CONDITIONAL_TYPE,
+	INFER_TYPE,
 	MAPPED_TYPE
 }
 
@@ -171,6 +184,7 @@ export enum TypeRefOperator {
 
 export class TypeRef implements AnnotatableElement { // note: annotations only supported for TypeRefKind === FUNCTION
 	kind: TypeRefKind;
+	builtIn: boolean = false;
 	dynamic: boolean;
 	targetTypeName: string;
 	targetTypeArgs: TypeRef[] = [];
@@ -184,7 +198,13 @@ export class TypeRef implements AnnotatableElement { // note: annotations only s
 	tsSourceString: string;
 
 	public isBuiltInUndefined(): boolean {
-		return this.kind === TypeRefKind.NAMED && this.targetTypeName === "undefined";
+		return this.kind === TypeRefKind.NAMED && this.builtIn && this.targetTypeName === "undefined";
+	}
+	public isBuiltInVoid(): boolean {
+		return this.kind === TypeRefKind.NAMED && this.builtIn && this.targetTypeName === "void";
+	}
+	public isBuiltInUtilityType(): boolean {
+		return this.kind === TypeRefKind.NAMED && this.builtIn && utils.TS_UTILITY_TYPES.has(this.targetTypeName);
 	}
 	public isComposed(): boolean {
 		return this.kind === TypeRefKind.UNION || this.kind === TypeRefKind.INTERSECTION;
@@ -284,6 +304,10 @@ class Emitter {
 	emitVariable(variable: Variable) {
 		const buff = this.buff;
 		this.emitDocumentation(variable);
+		if (variable.replacementCode) {
+			this.emitCode(variable.replacementCode);
+			return;
+		}
 		this.emitExportKeywordIfNecessary(variable);
 		if (variable.exported) {
 			buff.push("public ");
@@ -298,6 +322,10 @@ class Emitter {
 	emitFunction(fun: Function) {
 		const buff = this.buff;
 		this.emitDocumentation(fun);
+		if (fun.replacementCode) {
+			this.emitCode(fun.replacementCode);
+			return;
+		}
 		this.emitExportKeywordIfNecessary(fun);
 		buff.push("external ");
 		buff.push("public ");
@@ -315,6 +343,10 @@ class Emitter {
 	emitType(type: Type) {
 		const buff = this.buff;
 		this.emitDocumentation(type);
+		if (type.replacementCode) {
+			this.emitCode(type.replacementCode);
+			return;
+		}
 		this.emitAnnotations(type, true);
 		if (type.primitiveBased === PrimitiveBasedKind.STRING_BASED) {
 			buff.pushln("@StringBased");
@@ -329,9 +361,8 @@ class Emitter {
 			buff.push("~");
 		}
 		buff.push(type.name);
-		if (type.typeParams.length > 0) {
-			buff.push("<", type.typeParams.join(","), ">");
-		}
+		const supportsOptionalTypeParams = type.kind === TypeKind.INTERFACE || type.kind === TypeKind.CLASS;
+		this.emitTypeParameters(type, supportsOptionalTypeParams);
 		if (type.extends.length > 0) {
 			buff.push(" extends ");
 			this.emitTypeRefs(type.extends, true);
@@ -364,6 +395,30 @@ class Emitter {
 				buff.pushln();
 			}
 			buff.push("}");
+		}
+	}
+
+	emitTypeParameters(genericElem: GenericElement, allowOptionalParams: boolean) {
+		const buff = this.buff;
+		if (genericElem.typeParams.length > 0) {
+			buff.push("<");
+			let isFirst = true;
+			for (const typeParam of genericElem.typeParams) {
+				if (!isFirst) {
+					buff.push(",");
+				}
+				buff.push(typeParam.name);
+				if (typeParam.upperBound) {
+					buff.push(" extends ");
+					this.emitTypeRef(typeParam.upperBound);
+				}
+				if (allowOptionalParams && typeParam.defaultArgument) {
+					buff.push("=");
+					this.emitTypeRef(typeParam.defaultArgument);
+				}
+				isFirst = false;
+			}
+			buff.push(">");
 		}
 	}
 
@@ -421,13 +476,13 @@ class Emitter {
 		}
 		this.emitAnnotations(member, true);
 		if (member.accessibility !== undefined) {
-			if (member.kind !== MemberKind.CALLABLE_CTOR) { // TODO how to define accessibility of a callable ctor?
+			if (member.kind !== MemberKind.CALL_SIGNATURE) { // TODO how to define accessibility of a callable ctor?
 				this.emitAccessibility(member);
 				buff.push(" ");
 			}
 		}
 		if (member.isStatic) {
-			if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALLABLE_CTOR) {
+			if (member.kind !== MemberKind.CTOR && member.kind !== MemberKind.CALL_SIGNATURE) {
 				buff.push("static ");
 			}
 		}
@@ -446,7 +501,13 @@ class Emitter {
 				this.emitSignaturePart2(signature, true);
 				buff.push(";");
 				break;
-			case MemberKind.CALLABLE_CTOR:
+			case MemberKind.CALL_SIGNATURE:
+				this.emitSignaturePart2(signature);
+				buff.push(";");
+				break;
+			case MemberKind.CONSTRUCT_SIGNATURE:
+				this.emitSignaturePart1(signature);
+				buff.push("new");
 				this.emitSignaturePart2(signature);
 				buff.push(";");
 				break;
@@ -494,7 +555,8 @@ class Emitter {
 	emitSignaturePart1(sig: Signature) {
 		const buff = this.buff;
 		if (sig.typeParams.length > 0) {
-			buff.push("<", sig.typeParams.join(","), "> ");
+			this.emitTypeParameters(sig, false);
+			buff.push(" ");
 		}
 	}
 
@@ -512,7 +574,7 @@ class Emitter {
 		}
 		buff.push(")");
 		if (!ignoreReturnType) {
-			this.emitTypeAnnotation(simplifyUnion(sig.returnType));
+			this.emitTypeAnnotation(simplifyUnion(sig.returnType), undefined, true); // keep 'void'
 		}
 	}
 
@@ -543,12 +605,16 @@ class Emitter {
 		}
 	}
 
-	emitTypeAnnotation(typeRef: TypeRef, separator: string = ": ") {
+	emitTypeAnnotation(typeRef: TypeRef, separator: string = ": ", keepVoid = false) {
 		const buff = this.buff;
 		if (getGlobalOptions()?.copyTypeRefs) {
 			if (typeRef) {
 				buff.push(separator);
-				this.emitTypeRef(typeRef);
+				if (keepVoid && typeRef.isBuiltInVoid()) {
+					buff.push("void");
+				} else {
+					this.emitTypeRef(typeRef);
+				}
 			} else {
 				buff.push(separator, "any+");
 			}
@@ -607,10 +673,19 @@ class Emitter {
 				this.emitTypeRef(typeRef.parenthesizedTypeRef);
 				buff.push(")");
 				break;
-			case TypeRefKind.PREDICATE:
+			case TypeRefKind.TYPE_PREDICATE:
 				buff.push("boolean");
 				break;
+			case TypeRefKind.TYPE_QUERY:
+				buff.push("any+");
+				break;
 			case TypeRefKind.INDEXED_ACCESS_TYPE:
+				buff.push("any+");
+				break;
+			case TypeRefKind.CONDITIONAL_TYPE:
+				buff.push("any+");
+				break;
+			case TypeRefKind.INFER_TYPE:
 				buff.push("any+");
 				break;
 			case TypeRefKind.MAPPED_TYPE:
@@ -626,6 +701,14 @@ class Emitter {
 			throw "expected a TypeRef of kind TypeRefKind.NAMED, but got: " + typeRef.kind;
 		}
 		const buff = this.buff;
+		if (typeRef.isBuiltInVoid()) {
+			// in TypeScript, 'void' can be used anywhere but in N4JS only as return type of functions/methods
+			// -> replace 'void' by 'undefined' by default:
+			typeRef = createUndefined();
+		} else if (typeRef.isBuiltInUtilityType()) {
+			// something like Pick<...> or Record<...>
+			typeRef = createAnyPlus();
+		}
 		buff.push(typeRef.targetTypeName);
 		if (typeRef.targetTypeArgs.length > 0) {
 			buff.push("<");
@@ -667,7 +750,11 @@ class Emitter {
 			if (needParens) {
 				buff.push("(");
 			}
-			this.emitTypeRef(returnType);
+			if (returnType.isBuiltInVoid()) {
+				buff.push("void");
+			} else {
+				this.emitTypeRef(returnType);
+			}
 			if (needParens) {
 				buff.push(")");
 			}
@@ -840,7 +927,7 @@ export function simplifyUnion(typeRef: TypeRef): TypeRef {
 	const typeRefs = [...typeRef.composedTypeRefs];
 	while (idx < typeRefs.length) {
 		const curr = typeRefs[idx];
-		if (curr.isBuiltInUndefined()) {
+		if (curr.isBuiltInUndefined() || curr.isBuiltInVoid()) {
 			typeRefs.splice(idx,1);
 		} else {
 			++idx;
@@ -891,13 +978,14 @@ export function getSymbolNameFromPropertyName(propertyName: string): string {
 	return undefined; // not a symbol
 }
 
-export function createNamedTypeRef(targetType: Type | string): TypeRef {
+export function createNamedTypeRef(targetType: Type | string, builtIn: boolean = false): TypeRef {
 	const result = new TypeRef();
 	result.kind = TypeRefKind.NAMED;
+	result.builtIn = builtIn;
 	if (targetType instanceof Type) {
 		result.targetTypeName = targetType.name;
 		for (const typeParam of targetType.typeParams) {
-			result.targetTypeArgs.push(createNamedTypeRef(typeParam));
+			result.targetTypeArgs.push(createNamedTypeRef(typeParam.name));
 		}
 	} else {
 		result.targetTypeName = targetType;
@@ -908,6 +996,7 @@ export function createNamedTypeRef(targetType: Type | string): TypeRef {
 export function createUndefined(): TypeRef {
 	const result = new TypeRef();
 	result.kind = TypeRefKind.NAMED;
+	result.builtIn = true;
 	result.targetTypeName = "undefined";
 	return result;
 }
@@ -915,6 +1004,7 @@ export function createUndefined(): TypeRef {
 export function createAnyPlus(): TypeRef {
 	const result = new TypeRef();
 	result.kind = TypeRefKind.NAMED;
+	result.builtIn = true;
 	result.targetTypeName = "any";
 	result.dynamic = true;
 	return result;

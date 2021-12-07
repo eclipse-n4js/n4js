@@ -367,15 +367,24 @@ export class Converter {
 		return [result, isNew];
 	}
 
-	private convertTypeParameters(node: ts.NamedDeclaration): string[] {
-		const sym = this.checker.getSymbolAtLocation(node.name);
-		const result = [];
-		sym.members?.forEach((symMember, name) => {
-			const representativeNode = symMember.declarations[0] as ts.NamedDeclaration;
-			if (ts.isTypeParameterDeclaration(representativeNode)) {
-				result.push(symMember.name);
-			}
-		});
+	private convertTypeParameters(node: ts.ClassDeclaration | ts.InterfaceDeclaration | ts.TypeAliasDeclaration | ts.SignatureDeclaration | ts.ConstructSignatureDeclaration | ts.IndexSignatureDeclaration | ts.FunctionTypeNode): model.TypeParameter[] {
+		const result = [] as model.TypeParameter[];
+		for (const typeParam of node.typeParameters ?? []) {
+			const n4jsTypeParam = this.convertTypeParameter(typeParam);
+			result.push(n4jsTypeParam);
+		}
+		return result;
+	}
+
+	private convertTypeParameter(node: ts.TypeParameterDeclaration): model.TypeParameter {
+		const result = new model.TypeParameter();
+		result.name = node.name.text;
+		if (node.constraint) {
+			result.upperBound = this.convertTypeReference(node.constraint);
+		}
+		if (node.default) {
+			result.defaultArgument = this.convertTypeReference(node.default);
+		}
 		return result;
 	}
 
@@ -463,11 +472,11 @@ export class Converter {
 			result.signatures = this.convertConstructSignatures(sourceFile, symContainingClassifier);
 			return result;
 		} else if (ts.isConstructSignatureDeclaration(node)) {
-			result.kind = model.MemberKind.CTOR;
+			result.kind = model.MemberKind.CONSTRUCT_SIGNATURE;
 			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
 			return result;
 		} else if (ts.isCallSignatureDeclaration(node)) {
-			result.kind = model.MemberKind.CALLABLE_CTOR;
+			result.kind = model.MemberKind.CALL_SIGNATURE;
 			result.signatures = this.convertSignatureDeclarationsInAST(symMember.declarations);
 			return result;
 		} else if (ts.isIndexSignatureDeclaration(node)) {
@@ -539,8 +548,9 @@ export class Converter {
 			}
 			const result = new model.Signature();
 			if (sig.typeParameters) {
-				for (const typeParam of sig.typeParameters) {
-					result.typeParams.push(typeParam.symbol.name);
+				const sigDecl = sig.declaration;
+				if (sigDecl && !ts.isJSDocSignature(sigDecl)) { // note: there is no "ts.is...()" method for ts.SignatureDeclaration!
+					result.typeParams.push(...this.convertTypeParameters(sigDecl));
 				}
 			}
 			result.parameters = sig.getParameters().map(param => this.convertParameter(param));
@@ -558,9 +568,8 @@ export class Converter {
 	private convertSignatureDeclarationsInAST(decls: ts.Declaration[]): model.Signature[] {
 		const results = [] as model.Signature[];
 		for (const decl of decls) {
-			const isConstructSigDecl = ts.isConstructSignatureDeclaration(decl);
-			if (isConstructSigDecl
-				|| ts.isCallSignatureDeclaration(decl)
+			if (ts.isCallSignatureDeclaration(decl)
+				|| ts.isConstructSignatureDeclaration(decl)
 				|| ts.isIndexSignatureDeclaration(decl)
 				|| ts.isFunctionTypeNode(decl)) {
 				const result = new model.Signature();
@@ -569,9 +578,7 @@ export class Converter {
 					const typeParamsSupported = !ts.isCallSignatureDeclaration(decl);
 					if (typeParamsSupported) {
 						// yes
-						for (const typeParam of decl.typeParameters) {
-							result.typeParams.push(typeParam.name.text);
-						}
+						result.typeParams.push(...this.convertTypeParameters(decl));
 					} else {
 						// no, type parameters are not supported on N4JS side for this member,
 						// so in the signature of this member we have to suppress all references to these type parameters:
@@ -584,8 +591,8 @@ export class Converter {
 						result.parameters.push(this.convertParameter(paramSym));
 					}
 				}
-				if (!isConstructSigDecl && decl.type) {
-					result.returnType = this.convertTypeReference(decl.type);
+				if (decl.type) {
+					result.returnType = this.convertTypeReference(decl.type); // note: even construct signatures have a return type
 				}
 				results.push(result);
 			}
@@ -631,7 +638,7 @@ export class Converter {
 		result.kind = model.TypeKind.TYPE_ALIAS;
 		result.name = utils_ts.getLocalNameOfExportableElement(node, this.checker, this.exportAssignment);
 		result.jsdoc = utils_ts.getJSDocForNode(node);
-		result.typeParams.push(...(node.typeParameters ?? []).map((p: ts.TypeParameterDeclaration) => p.name.text));
+		result.typeParams.push(...this.convertTypeParameters(node));
 		result.exported = utils_ts.isExported(node);
 		result.exportedAsDefault = utils_ts.isExportedAsDefault(node, this.checker, this.exportAssignment);
 		result.aliasedType = this.convertTypeReference(node.type);
@@ -703,10 +710,12 @@ export class Converter {
 			|| kind === ts.SyntaxKind.UndefinedKeyword) {
 			// type keyword supported by N4JS
 			result.kind = model.TypeRefKind.NAMED;
+			result.builtIn = true;
 			result.targetTypeName = sourceStr;
 		} else if (kind === ts.SyntaxKind.ObjectKeyword) {
 			// type keyword NOT supported by N4JS, but it can be converted
 			result.kind = model.TypeRefKind.NAMED;
+			result.builtIn = true;
 			result.targetTypeName = "Object";
 		} else if (kind === ts.SyntaxKind.NullKeyword
 			|| kind === ts.SyntaxKind.NeverKeyword
@@ -721,6 +730,7 @@ export class Converter {
 				return model.createAnyPlus();
 			}
 			result.kind = model.TypeRefKind.NAMED;
+			result.builtIn = utils_ts.isBuiltInType(type, this.runtimeLibs);
 			result.targetTypeName = node.typeName.getText().trim();
 			if (node.typeArguments) {
 				for (const typeArg of node.typeArguments) {
@@ -827,12 +837,24 @@ export class Converter {
 			return resultNested;
 		} else if (ts.isTypePredicateNode(node)) {
 			// e.g. "this is Cls"
-			result.kind = model.TypeRefKind.PREDICATE;
+			result.kind = model.TypeRefKind.TYPE_PREDICATE;
 			this.createWarningForNode("type predicate will be replaced by boolean", node);
+		} else if (ts.isTypeQueryNode(node)) {
+			// e.g. "typeof x" (with x being a variable, etc.)
+			result.kind = model.TypeRefKind.TYPE_QUERY;
+			this.createWarningForNode("type query will be replaced by any+", node);
 		} else if (ts.isIndexedAccessTypeNode(node)) {
 			// e.g. "SomeType['someProperty']"
 			result.kind = model.TypeRefKind.INDEXED_ACCESS_TYPE;
 			this.createWarningForNode("indexed access type will be replaced by any+", node);
+		} else if (ts.isConditionalTypeNode(node)) {
+			// e.g. "X extends Y ? Cls : string"
+			result.kind = model.TypeRefKind.CONDITIONAL_TYPE;
+			this.createWarningForNode("conditional type will be replaced by any+", node);
+		} else if (ts.isInferTypeNode(node)) {
+			// e.g. "infer X" (only allowed in extends clause of a conditional type)
+			result.kind = model.TypeRefKind.INFER_TYPE;
+			this.createWarningForNode("infer declaration will be replaced by any+", node);
 		} else if (ts.isMappedTypeNode(node)) {
 			// e.g. { [P in K]: T[P]; }
 			result.kind = model.TypeRefKind.MAPPED_TYPE;

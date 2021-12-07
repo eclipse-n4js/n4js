@@ -302,7 +302,7 @@ export default {
 				 * encapsulates. A rejected promise indicates erroneous or abnormal completion
 				 * of the process.
 				 */
-				export external public class Promise<out S, out F> extends Object {
+				export external public class Promise<out S, out F = any> extends Object {
 
 					public constructor(
 						executor: {function(
@@ -374,14 +374,15 @@ export default {
 				// odd stuff:
 				"ThisParameterType", "OmitThisParameter", "CallableFunction", "NewableFunction", "PromiseConstructorLike"
 			],
+			convertAllCtorInstanceTypes: true,
+			ctorInstanceTypes: [
+				"Symbol", "SymbolConstructor",
+				"Promise", "PromiseConstructor"
+			],
 			polyfills: [],
 			changeToClass: [
 				"RegExpMatchArray",
 				"RegExpExecArray"
-			],
-			ctorInstanceTypes: [
-				"Symbol", "SymbolConstructor",
-				"Promise", "PromiseConstructor"
 			],
 			patchMembers: {
 				// required due to odd return types on TypeScript side
@@ -504,6 +505,7 @@ export default {
 				// read-only types:
 				"ReadonlyArray"
 			],
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
 				"Object#keys": { addAnnotations: [ "@Override" ] },
 				"Date#constructor": undefined,
@@ -518,6 +520,7 @@ export default {
 				// read-only types:
 				"ReadonlySet", "ReadonlyMap"
 			],
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
 				// TypeScript provides constructors accepting Iterables via overloading in file "es2015.iterable.d.ts" (which we do not support):
 				"Map#constructor": { replaceBy: "public constructor(entries: Iterable<Iterable2<K,V>> = );" },
@@ -533,13 +536,15 @@ export default {
 		"es2015.symbol.d.ts": {
 			ignore: [
 				"Symbol", "SymbolConstructor" // Symbol was moved to es5.n4jsd (see above)
-			]
+			],
+			convertAllCtorInstanceTypes: true
 		},
 		"es2015.symbol.wellknown.d.ts": {
 			ignore: [
 				"Symbol", "SymbolConstructor", // Symbol was moved to es5.n4jsd (see above)
 				"Promise", "PromiseConstructor" // this would work fine, except for different number of type parameters
 			],
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
 				// the signatures of the following members use computed property names inside ~Object with {}
 				"String#replace": undefined,
@@ -557,6 +562,7 @@ export default {
 				// read-only types:
 				"ReadonlyArray", "ReadonlySet", "ReadonlyMap"
 			],
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
 				"Symbol#iterator": undefined, // was moved to es5.n4jsd (see above)
 				"Array#[Symbol.iterator]": undefined, // was moved to es5.n4jsd (see above)
@@ -603,15 +609,17 @@ export default {
 			ignore: [
 				"Generator" // Generator was moved to es5.n4jsd (see above)
 			],
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
-				"GeneratorFunction#()": undefined,           // callable ctor not supported in interface
-				"GeneratorFunctionConstructor#()": undefined // callable ctor not supported in interface
+				"GeneratorFunction#new": { replaceBy: "new(...args: any): Generator<any,any,any>;" }, // optional type parameters missing
+				"GeneratorFunction#()": { replaceBy: "(...args: any): Generator<any,any,any>;" } // optional type parameters missing
 			}
 		},
 		"es2015.promise.d.ts": {
 			ignore: [
 				"Promise", "PromiseConstructor" // Promise was moved to es5.n4jsd (see above)
-			]
+			],
+			convertAllCtorInstanceTypes: true
 		},
 		"es2015.proxy.d.ts": {
 			ignore: [
@@ -620,6 +628,8 @@ export default {
 				// 2) use of unfortunate type 'any' instead of 'Object' for parameters "thisArg" and "receiver"
 				"ProxyHandler"
 			],
+			// cannot convert ctor/instance type "Proxy" to class, because construct signature in ProxyConstructor has an odd return type:
+			convertAllCtorInstanceTypes: false,
 			suffix: `
 				export external public interface ~ProxyHandler<T> {
 					apply?: (target: T, thisArg: Object, argArray: Array<any>) => any;
@@ -638,23 +648,32 @@ export default {
 				}
 			`
 		},
-		"es2015.reflect.d.ts": {},
+		"es2015.reflect.d.ts": {
+			convertAllCtorInstanceTypes: true
+		},
 		"es2016.array.include.d.ts": {
 			ignore: [
 				// read-only types:
 				"ReadonlyArray"
-			]
+			],
+			convertAllCtorInstanceTypes: true
 		},
-		"es2017.string.d.ts": {},
+		"es2017.string.d.ts": {
+			convertAllCtorInstanceTypes: true
+		},
 		"es2017.object.d.ts": {
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
 				// required due to overloading:
 				"Object#values": { replaceBy: "public static values(obj: Object): any[];" },
 				"Object#entries": { replaceBy: "public static entries(obj: Object): Iterable2<string, any>[];" }
 			}
 		},
-		"es2017.sharedmemory.d.ts": {},
+		"es2017.sharedmemory.d.ts": {
+			convertAllCtorInstanceTypes: true
+		},
 		"es2017.typedarrays.d.ts": {
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
 				// cannot add overload signatures via polyfill:
 				"Int8Array#constructor": undefined,
@@ -668,12 +687,15 @@ export default {
 				"Float64Array#constructor": undefined
 			}
 		},
-		"es2017.intl.d.ts": {},
+		"es2017.intl.d.ts": {
+			convertAllCtorInstanceTypes: true
+		},
 		"es2018.asynciterable.d.ts": {
 			ignore: [
 				"AsyncIterator", // AsyncIterator was moved to es5.n4jsd (see above)
 				"AsyncIterable" // AsyncIterable was moved to es5.n4jsd (see above)
 			],
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
 				"Symbol#asyncIterator": undefined // was moved to es5.n4jsd (see above)
 			}
@@ -682,23 +704,26 @@ export default {
 			ignore: [
 				"AsyncGenerator" // AsyncGenerator was moved to es5.n4jsd (see above)
 			],
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
-				"AsyncGeneratorFunction#()": undefined,           // callable ctor not supported in interface
-				"AsyncGeneratorFunctionConstructor#()": undefined // callable ctor not supported in interface
+				"AsyncGeneratorFunction#new": { replaceBy: "new(...args: any): AsyncGenerator<any,any,any>;" }, // optional type parameters missing
+				"AsyncGeneratorFunction#()": { replaceBy: "(...args: any): AsyncGenerator<any,any,any>;" } // optional type parameters missing
 			}
 		},
 		"es2018.promise.d.ts": {
 			ignore: [
 				"Promise", "PromiseConstructor" // this would work fine, except for different number of type parameters
 			],
+			convertAllCtorInstanceTypes: true,
 			suffix: `
 				@Polyfill
-				export external public class Promise<out S, out F> extends Promise<S,F> {
+				export external public class Promise<out S, out F = any> extends Promise<S,F> {
 					public finally(onfinally: (()=>void) = ): Promise<S,F>;
 				}
 			`
 		},
 		"es2018.regexp.d.ts": {
+			convertAllCtorInstanceTypes: true,
 			polyfills: [
 				"RegExpMatchArray",
 				"RegExpExecArray"
@@ -708,17 +733,27 @@ export default {
 				"RegExpExecArray"
 			],
 		},
-		"es2018.intl.d.ts": {},
-		"es2019.string.d.ts": {},
-		"es2019.object.d.ts": {},
+		"es2018.intl.d.ts": {
+			convertAllCtorInstanceTypes: true
+		},
+		"es2019.string.d.ts": {
+			convertAllCtorInstanceTypes: true
+		},
+		"es2019.object.d.ts": {
+			convertAllCtorInstanceTypes: true
+		},
 		"es2019.array.d.ts": {
 			ignore: [
 				// read-only types:
 				"ReadonlyArray"
-			]
+			],
+			convertAllCtorInstanceTypes: true
 		},
-		"es2019.symbol.d.ts": {},
+		"es2019.symbol.d.ts": {
+			convertAllCtorInstanceTypes: true
+		},
 		"es2020.bigint.d.ts": {
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
 				"BigInt#toString": { addAnnotations: [ "@Override" ] },
 				"BigInt#toLocaleString": { addAnnotations: [ "@Override" ] },
@@ -731,19 +766,23 @@ export default {
 				"BigUint64Array#valueOf": { addAnnotations: [ "@Override" ] }
 			}
 		},
-		"es2020.string.d.ts": {},
+		"es2020.string.d.ts": {
+			convertAllCtorInstanceTypes: true
+		},
 		"es2020.promise.d.ts": {
 			ignore: [
 				"Promise", "PromiseConstructor" // this would work fine, except for different number of type parameters
 			],
+			convertAllCtorInstanceTypes: true,
 			suffix: `
 				@Polyfill
-				export external public class Promise<out S, out F> extends Promise<S,F> {
+				export external public class Promise<out S, out F = any> extends Promise<S,F> {
 					public static allSettled(...args: any+): any+; // overloading not supported
 				}
 			`
 		},
 		"es2020.sharedmemory.d.ts": {
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
 				// these are cases of adding overloads to existing methods:
 				"Atomics#add": undefined,
@@ -760,19 +799,51 @@ export default {
 			}
 		},
 		"es2020.symbol.wellknown.d.ts": {
+			convertAllCtorInstanceTypes: true,
 			patchMembers: {
 				"Symbol#matchAll": undefined // was moved to es5.n4jsd (see above)
 			}
 		},
-		"es2020.intl.d.ts": {},
-		/*
+		"es2020.intl.d.ts": {
+			convertAllCtorInstanceTypes: true
+		},
 		"dom.generated.d.ts": {
 			ignore: [
 				"*#prototype",
 				"*#addEventListener#signature0",
-				"*#removeEventListener#signature0"
+				"*#removeEventListener#signature0",
+				// cases of overriding a field with a field with a non-equal type:
+				"BeforeUnloadEvent#returnValue",
+				// cases of a writable field being turned into a read-only property (by way of overriding the field with a getter but not a setter)
+				// (not allowed in N4JS but allowed in TypeScript!!)
+				"ByteLengthQueuingStrategy#highWaterMark",
+				"ByteLengthQueuingStrategy#size",
+				"CountQueuingStrategy#highWaterMark",
+				"CountQueuingStrategy#size",
+				"DOMException#name",
+				"DOMException#message",
+				"SVGElement#className" // in this case, also the type is changed in an incompatible way!
+			],
+			replace: {
+				// need to replace variable 'window' (only the lower case one!) with custom code, to make it dynamic:
+				"window": "export public var window: Window+;"
+				// otherwise this .d.ts code:                 declare var window: Window & typeof globalThis;
+				// ... would be turned into this .n4jsd code: export public var window: Window & any+;
+			},
+			convertSelectedCtorInstanceTypes: [
+				"DOMException", "OverconstrainedError" // must convert because their super type "Error" is converted from ctor/instance pattern to class
 			],
 			patchMembers: {
+				// because TS is using a very nifty way of defining the event listener signatures in subtypes of EventTarget
+				// we have to make the type of the event listener's parameter dynamic (basically turning off type checking here!)
+				// TODO find better approach
+				"EventListener#()": { replaceBy: "(evt: Event+): void;" },
+				// use 'any+' instead of the default type argument 'any'
+				// (a cleaner approach would be to use in/out for the type parameters of Readable/WritableStream and related
+				// classes, but that would (1) require patching in many places and (2) make us run into a bug in the N4JS structural subtyping;
+				// also using wildcards instead of 'any+' would be cleaner, but would make us run into the same bug)
+				"GenericTransformStream#readable": { replaceBy: "get readable(): ReadableStream<any+>;" },
+				"GenericTransformStream#writable": { replaceBy: "get writable(): WritableStream<any+>;" },
 				// @Override annotations:
 				// misc. methods ====================================================================================
 				"AudioBufferSourceNode#start": { addAnnotations: [ "@Override" ] },
@@ -813,10 +884,14 @@ export default {
 				"DOMRect#fromRect": { addAnnotations: [ "@Override" ] },
 				"Document#getElementById": { addAnnotations: [ "@Override" ] },
 				"DocumentFragment#getElementById": { addAnnotations: [ "@Override" ] },
+				"HTMLCollectionOf#item": { addAnnotations: [ "@Override" ] },
 				"HTMLOptionsCollection#length": { addAnnotations: [ "@Override" ] },
 				"HTMLSelectElement#remove": { addAnnotations: [ "@Override" ] },
+				"NodeListOf#forEach": { addAnnotations: [ "@Override" ] },
+				"NodeListOf#item": { addAnnotations: [ "@Override" ] },
 				"PerformanceNavigationTiming#toJSON": { addAnnotations: [ "@Override" ] },
 				"PerformanceResourceTiming#toJSON": { addAnnotations: [ "@Override" ] },
+				"ProgressEvent#target": { addAnnotations: [ "@Override" ] },
 				"Text#assignedSlot": { addAnnotations: [ "@Override" ] },
 				"TextDecoderStream#readable": { addAnnotations: [ "@Override" ] },
 				"TextDecoderStream#writable": { addAnnotations: [ "@Override" ] },
@@ -832,15 +907,6 @@ export default {
 				"DocumentType#ownerDocument": { addAnnotations: [ "@Override" ] },
 				"Element#ownerDocument": { addAnnotations: [ "@Override" ] },
 				"ProcessingInstruction#ownerDocument": { addAnnotations: [ "@Override" ] },
-				// method toString ==================================================================================
-				"DOMMatrixReadOnly#toString": { addAnnotations: [ "@Override" ] },
-				"DOMTokenList#toString": { addAnnotations: [ "@Override" ] },
-				"Location#toString": { addAnnotations: [ "@Override" ] },
-				"MediaList#toString": { addAnnotations: [ "@Override" ] },
-				"Range#toString": { addAnnotations: [ "@Override" ] },
-				"Selection#toString": { addAnnotations: [ "@Override" ] },
-				"URL#toString": { addAnnotations: [ "@Override" ] },
-				"URLSearchParams#toString": { addAnnotations: [ "@Override" ] },
 				// method addEventListener ==========================================================================
 				"AbortSignal#addEventListener": { addAnnotations: [ "@Override" ] },
 				"Animation#addEventListener": { addAnnotations: [ "@Override" ] },
@@ -870,6 +936,7 @@ export default {
 				"HTMLDataElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLDataListElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLDetailsElement#addEventListener": { addAnnotations: [ "@Override" ] },
+				"HTMLDialogElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLDirectoryElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLDivElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLDocument#addEventListener": { addAnnotations: [ "@Override" ] },
@@ -918,7 +985,9 @@ export default {
 				"HTMLTableCaptionElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTableCellElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTableColElement#addEventListener": { addAnnotations: [ "@Override" ] },
+				"HTMLTableDataCellElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTableElement#addEventListener": { addAnnotations: [ "@Override" ] },
+				"HTMLTableHeaderCellElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTableRowElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTableSectionElement#addEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTemplateElement#addEventListener": { addAnnotations: [ "@Override" ] },
@@ -1076,6 +1145,7 @@ export default {
 				"HTMLDataElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLDataListElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLDetailsElement#removeEventListener": { addAnnotations: [ "@Override" ] },
+				"HTMLDialogElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLDirectoryElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLDivElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLDocument#removeEventListener": { addAnnotations: [ "@Override" ] },
@@ -1124,7 +1194,9 @@ export default {
 				"HTMLTableCaptionElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTableCellElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTableColElement#removeEventListener": { addAnnotations: [ "@Override" ] },
+				"HTMLTableDataCellElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTableElement#removeEventListener": { addAnnotations: [ "@Override" ] },
+				"HTMLTableHeaderCellElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTableRowElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTableSectionElement#removeEventListener": { addAnnotations: [ "@Override" ] },
 				"HTMLTemplateElement#removeEventListener": { addAnnotations: [ "@Override" ] },
@@ -1255,9 +1327,184 @@ export default {
 				"XMLHttpRequestUpload#removeEventListener": { addAnnotations: [ "@Override" ] },
 			}
 		},
-		"dom.iterable.d.ts": {},
-		"dom.iterable.generated.d.ts": {}
-		*/
+		"dom.iterable.d.ts": {
+			// TODO: with all the below removals, this file is empty and could maybe be removed entirely!
+			polyfills: [
+				"DOMTokenList",
+				"Headers",
+				"NodeList",
+				"NodeListOf",
+				"HTMLCollectionBase",
+				"HTMLCollectionOf",
+				"FormData",
+				"URLSearchParams"
+			],
+			patchMembers: {
+				// the following members are also polyfilled in file 'dom.iterable.generated.d.ts';
+				// N4JS does not allow several polyfills for the same member, so we ignore them here
+				// (note: their signature seems to be identical, so these seem to be duplicates anyway)
+				"DOMTokenList#[Symbol.iterator]": undefined,
+				"Headers#[Symbol.iterator]": undefined,
+				"Headers#entries": undefined,
+				"Headers#keys": undefined,
+				"Headers#values": undefined,
+				"NodeList#entries": undefined,
+				"NodeList#keys": undefined,
+				"NodeList#values": undefined,
+				"NodeList#[Symbol.iterator]": undefined,
+				"NodeListOf#entries": undefined,
+				"NodeListOf#keys": undefined,
+				"NodeListOf#values": undefined,
+				"NodeListOf#[Symbol.iterator]": undefined,
+				"HTMLCollectionBase#[Symbol.iterator]": undefined,
+				"HTMLCollectionOf#[Symbol.iterator]": undefined,
+				"FormData#entries": undefined,
+				"FormData#keys": undefined,
+				"FormData#values": undefined,
+				"FormData#[Symbol.iterator]": undefined,
+				"URLSearchParams#entries": undefined,
+				"URLSearchParams#keys": undefined,
+				"URLSearchParams#values": undefined,
+				"URLSearchParams#[Symbol.iterator]": undefined,
+				// cannot add overload signatures via polyfill
+				// (note: their signature seems to be identical, so these seem to be duplicates anyway)
+				"NodeList#forEach": undefined,
+				"NodeListOf#forEach": undefined
+			}
+		},
+		"dom.iterable.generated.d.ts": {
+			changeToClass: [
+				// the following need to be converted to classes, because they extend built-in types Map, Set, ReadonlyMap
+				// (which are currrently being converted from the ctor/instance pattern to a class)
+				"AudioParamMap",
+				"FontFaceSet",
+				"RTCStatsReport"
+			],
+			polyfills: [
+				"BaseAudioContext",
+				"CSSRuleList",
+				"CSSStyleDeclaration",
+				"Cache",
+				"CanvasPathDrawingStyles",
+				"DOMRectList",
+				"DOMStringList",
+				"DOMTokenList",
+				"DataTransferItemList",
+				"FileList",
+				"FormData",
+				"HTMLAllCollection",
+				"HTMLCollectionBase",
+				"HTMLCollectionOf",
+				"HTMLFormElement",
+				"HTMLSelectElement",
+				"Headers",
+				"IDBDatabase",
+				"IDBObjectStore",
+				"MediaKeyStatusMap",
+				"MediaList",
+				"MessageEvent",
+				"MimeTypeArray",
+				"NamedNodeMap",
+				"Navigator",
+				"NodeList",
+				"NodeListOf",
+				"Plugin",
+				"PluginArray",
+				"ReadableStream",
+				"SVGLengthList",
+				"SVGNumberList",
+				"SVGPointList",
+				"SVGStringList",
+				"SVGTransformList",
+				"SourceBufferList",
+				"SpeechRecognitionResult",
+				"SpeechRecognitionResultList",
+				"StyleSheetList",
+				"SubtleCrypto",
+				"TextTrackCueList",
+				"TextTrackList",
+				"TouchList",
+				"URLSearchParams",
+				"WEBGL_draw_buffers",
+				"WebGL2RenderingContextBase",
+				"WebGL2RenderingContextOverloads",
+				"WebGLRenderingContextBase",
+				"WebGLRenderingContextOverloads"
+			],
+			patchMembers: {
+				// another nasty case:
+				// the main file 'dom.generated.d.ts' assumes that NodeListOf is a subtype of NodeList, but polyfilling the two members
+				// NodeList.entries(): IterableIterator<[number,Node]>;
+				// NodeListOf.entries(): IterableIterator<[number,TNode]>;
+				// would break this assumption due to the use of Array2 instead of Iterable2; therefore we have to patch as follows:
+				"NodeList#entries": { replaceBy: "entries(): IterableIterator<Iterable2<number,Node>>;" },
+				"NodeListOf#entries": { replaceBy: "entries(): IterableIterator<Iterable2<number,TNode>>;" },
+				// cannot add overload signatures via polyfill:
+				"Navigator#vibrate": undefined,
+				"WebGL2RenderingContextBase#getUniformIndices": undefined,
+				// missing @Override annotations:
+				// (TODO: are these overrides actually cases of adding overload signatures via polyfill???)
+				"BaseAudioContext#createIIRFilter": { addAnnotations: [ "@Override" ] },
+				"BaseAudioContext#createPeriodicWave": { addAnnotations: [ "@Override" ] },
+				"Cache#addAll": { addAnnotations: [ "@Override" ] },
+				"CanvasPathDrawingStyles#setLineDash": { addAnnotations: [ "@Override" ] },
+				"IDBDatabase#transaction": { addAnnotations: [ "@Override" ] },
+				"IDBObjectStore#createIndex": { addAnnotations: [ "@Override" ] },
+				"MessageEvent#initMessageEvent": { addAnnotations: [ "@Override" ] },
+				"Navigator#requestMediaKeySystemAccess": { addAnnotations: [ "@Override" ] },
+				"SubtleCrypto#deriveKey": { addAnnotations: [ "@Override" ] },
+				"SubtleCrypto#generateKey": { addAnnotations: [ "@Override" ] },
+				"SubtleCrypto#importKey": { addAnnotations: [ "@Override" ] },
+				"SubtleCrypto#unwrapKey": { addAnnotations: [ "@Override" ] },
+				"WEBGL_draw_buffers#drawBuffersWEBGL": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#clearBufferfv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#clearBufferiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#clearBufferuiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#drawBuffers": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#getActiveUniforms": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#invalidateFramebuffer": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#invalidateSubFramebuffer": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#transformFeedbackVaryings": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniform1uiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniform2uiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniform3uiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniform4uiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix2x3fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix2x4fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix3x2fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix3x4fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix4x2fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#uniformMatrix4x3fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#vertexAttribI4iv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextBase#vertexAttribI4uiv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform1fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform1iv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform2fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform2iv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform3fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform3iv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform4fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniform4iv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniformMatrix2fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniformMatrix3fv": { addAnnotations: [ "@Override" ] },
+				"WebGL2RenderingContextOverloads#uniformMatrix4fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextBase#vertexAttrib1fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextBase#vertexAttrib2fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextBase#vertexAttrib3fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextBase#vertexAttrib4fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform1fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform1iv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform2fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform2iv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform3fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform3iv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform4fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniform4iv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniformMatrix2fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniformMatrix3fv": { addAnnotations: [ "@Override" ] },
+				"WebGLRenderingContextOverloads#uniformMatrix4fv": { addAnnotations: [ "@Override" ] }
+			}
+		}
 	},
 	addFiles: {
 		"es2020.globalThis.n4jsd": `

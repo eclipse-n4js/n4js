@@ -3,10 +3,12 @@
 
 @@Global @@ProvidedByRuntime
 
-export external public class Proxy<T> {
-	public static <T> revocable(target: T, handler: ProxyHandler<T>): ~Object with { proxy: T; revoke: ()=>void; };
-	public constructor(target: T, handler: ProxyHandler<T>);
+export external public interface ~ProxyConstructor {
+	<T extends Object> revocable(target: T, handler: ProxyHandler<T>): ~Object with { proxy: T; revoke: ()=>void; };
+	<T extends Object> new(target: T, handler: ProxyHandler<T>): T;
 }
+
+export public var Proxy: ProxyConstructor;
 
 export external public interface ~ProxyHandler<T> {
 	apply?: (target: T, thisArg: Object, argArray: Array<any>) => any;

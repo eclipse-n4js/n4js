@@ -33,9 +33,12 @@ class FileGenConfig {
 	public prefix: string;
 	public suffix: string;
 	public ignore = new Set<string>();
+	public replace = new Map<string, string>();
+	public convertAllCtorInstanceTypes: boolean;
+	public convertSelectedCtorInstanceTypes = new Set<string>();
+	public ctorInstanceTypes = [] as string[];
 	public polyfills = new Set<string>();
 	public changeToClass = new Set<string>();
-	public ctorInstanceTypes = [] as string[];
 	public patchMembers = new Map<string, PatchMemberConfig>();
 	public appendCode = new Map<string, string>();
 }
@@ -44,15 +47,18 @@ class PatchMemberConfig {
 	public addAnnotations: string[];
 }
 const GEN_CONFIG_TYPE_INFO = new Map<string,PropertyTypeInfo>([
-	[ "GenConfig#patchFiles",             new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "GenConfig#addFiles",               new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#ignore",             new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#polyfills",          new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#changeToClass",      new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#ctorInstanceTypes",  new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#patchMembers",       new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "FileGenConfig#appendCode",         new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
-	[ "PatchMemberConfig#addAnnotations", new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo]
+	[ "GenConfig#patchFiles",                           new PropertyTypeInfo({ type: FileGenConfig,     collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "GenConfig#addFiles",                             new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#ignore",                           new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#replace",                          new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#convertAllCtorInstanceTypes",      new PropertyTypeInfo({ type: Boolean                                  }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#convertSelectedCtorInstanceTypes", new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#ctorInstanceTypes",                new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#polyfills",                        new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#changeToClass",                    new PropertyTypeInfo({ type: String,            collectionType: Set   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#patchMembers",                     new PropertyTypeInfo({ type: PatchMemberConfig, collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "FileGenConfig#appendCode",                       new PropertyTypeInfo({ type: String,            collectionType: Map   }) ] as [string,PropertyTypeInfo],
+	[ "PatchMemberConfig#addAnnotations",               new PropertyTypeInfo({ type: String,            collectionType: Array }) ] as [string,PropertyTypeInfo]
 ]);
 
 
@@ -64,7 +70,15 @@ export public function isIgnored(filePath: string, elementName: string =, member
 	}
 	let elemQualifier = "";
 	if (memberName) {
-		elemQualifier += "#" + memberName;
+		elemQualifier += "#";
+		const symbolName = model.getSymbolNameFromPropertyName(memberName);
+		if (symbolName) {
+			// 'memberName' denotes a symbol
+			elemQualifier += "[Symbol." + symbolName + "]";
+		} else {
+			// standard case: not a symbol
+			elemQualifier += memberName;
+		}
 		if (signatureIndex !== undefined && signatureIndex >= 0) {
 			elemQualifier += "#signature" + signatureIndex;
 		}
@@ -176,8 +190,10 @@ class RuntimeLibsPatcher {
 					let memberName: string;
 					if (member.kind === model.MemberKind.CTOR) {
 						memberName = "constructor";
-					} else if (member.kind === model.MemberKind.CALLABLE_CTOR) {
+					} else if (member.kind === model.MemberKind.CALL_SIGNATURE) {
 						memberName = "()";
+					} else if (member.kind === model.MemberKind.CONSTRUCT_SIGNATURE) {
+						memberName = "new";
 					} else {
 						memberName = member.name;
 						const symbolName = model.getSymbolNameFromPropertyName(memberName);
@@ -223,6 +239,22 @@ class RuntimeLibsPatcher {
 				}
 			}
 		}
+		// replacement of top-level elements
+		const replacements = fileConfig?.replace;
+		if (replacements && replacements.size > 0) {
+			for (const elem of script.topLevelElements) {
+				if (!(elem instanceof model.ExportableElement)) {
+					continue;
+				}
+				const elemName = elem.name;
+				if (elemName && replacements.has(elemName)) {
+					const code = replacements.get(elemName);
+					if (code !== undefined && code !== null) {
+						elem.replacementCode = utils.trimMultiLineString(code);
+					}
+				}
+			}
+		}
 	}
 
 	private removeMetaProperties(script: model.Script) {
@@ -244,6 +276,12 @@ class RuntimeLibsPatcher {
 	}
 
 	private handleCtorInstanceTypePattern(script: model.Script) {
+		const config = getGenConfig();
+		const fileConfig = config.patchFiles.get(script.tsFileName);
+		if (!(fileConfig && (fileConfig.convertAllCtorInstanceTypes || fileConfig.convertSelectedCtorInstanceTypes.size > 0))) {
+			return; // not converted by default
+		}
+
 		const elemsByName = new Map<string,model.ExportableElement[]>();
 		for (const elem of script.topLevelElements) {
 			const name = elem.name;
@@ -281,14 +319,15 @@ class RuntimeLibsPatcher {
 		}
 		for (const elem of script.topLevelElements) {
 			if (elem instanceof model.Variable) {
-				this.adjustCtorInstanceTypesForVarDecl(elem, elemsByName, topLevelElementModifications);
+				if (fileConfig.convertAllCtorInstanceTypes || fileConfig.convertSelectedCtorInstanceTypes.has(elem.name)) {
+					this.adjustCtorInstanceTypesForVarDecl(elem, elemsByName, topLevelElementModifications);
+				}
 			}
 		}
 
 		topLevelElementModifications.applyTo(script);
 
 		// register additional known ctor/instance types, as requested by this file's FileGenConfig
-		const fileConfig = getGenConfig().patchFiles.get(script.tsFileName);
 		for (const typeName of fileConfig?.ctorInstanceTypes ?? []) {
 			if (typeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
 				this.knownCtorTypes.add(typeName);
@@ -415,7 +454,10 @@ class RuntimeLibsPatcher {
 			if (ctorTypeName.endsWith(CONSTRUCTOR_TYPE_SUFFIX)) {
 				ctorType.name = ctorTypeName.substring(0, ctorTypeName.length - CONSTRUCTOR_TYPE_SUFFIX.length);
 			}
-			ctorType.members.forEach(m => m.isStatic = true);
+			ctorType.members.forEach(m => {
+				m.isStatic = true;
+				changeConstructSignatureToConstructor(m);
+			});
 		}
 		// change "instance type" to a class
 		if (instanceType) {
@@ -435,6 +477,7 @@ class RuntimeLibsPatcher {
 					m.accessibility = model.Accessibility.PUBLIC;
 				}
 				m.isStatic = true; // enfore static
+				changeConstructSignatureToConstructor(m);
 				instanceType.members.push(m);
 			});
 		}
@@ -516,6 +559,17 @@ function changeInterfaceToClass(ifc: model.Type, defSiteStructural: boolean | un
 	// set 'defSiteStructural', if requested
 	if (defSiteStructural !== undefined) {
 		ifc.defSiteStructural = defSiteStructural;
+	}
+}
+
+function changeConstructSignatureToConstructor(m: model.Member) {
+	if (m.kind !== model.MemberKind.CONSTRUCT_SIGNATURE) {
+		return;
+	}
+	m.kind = model.MemberKind.CTOR;
+	for (const sig of m.signatures) {
+		sig.typeParams.length = 0;
+		sig.returnType = undefined;
 	}
 }
 
