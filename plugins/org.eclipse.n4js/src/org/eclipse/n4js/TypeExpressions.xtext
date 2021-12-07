@@ -48,10 +48,10 @@ ConditionalTypeRef returns TypeRef:
 	UnionTypeExpression (=> ({ConditionalTypeRef.typeRef=current} 'extends') upperBound=UnionTypeExpression '?' trueTypeRef=ConditionalTypeRef ':' falseTypeRef=ConditionalTypeRef)?;
 
 UnionTypeExpression returns TypeRef:
-	IntersectionTypeExpression ({UnionTypeExpression.typeRefs+=current} ("|" typeRefs+=IntersectionTypeExpression)+)?;
+	'|'? IntersectionTypeExpression ({UnionTypeExpression.typeRefs+=current} ("|" typeRefs+=IntersectionTypeExpression)+)?;
 
 IntersectionTypeExpression returns TypeRef:
-	OperatorTypeRef ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=OperatorTypeRef)+)?;
+	'&'? OperatorTypeRef ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=OperatorTypeRef)+)?;
 
 OperatorTypeRef returns TypeRef:
 	  ({OperatorTypeRef} op=TypeOperator typeRef=ArrayTypeExpression)
