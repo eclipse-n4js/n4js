@@ -197,6 +197,7 @@ abstract class ExportableElement extends NamespaceElement {
 }
 
 class ImportDeclaration extends AnnotableScriptElement {
+	boolean dtsTypeImport
 	contains ImportSpecifier[] importSpecifiers
 	boolean importFrom
 	refers TModule module

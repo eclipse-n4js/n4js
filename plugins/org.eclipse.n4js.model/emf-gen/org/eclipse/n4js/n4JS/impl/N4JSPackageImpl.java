@@ -2040,8 +2040,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getImportDeclaration_DtsTypeImport() {
+		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getImportDeclaration_ImportSpecifiers() {
-		return (EReference)importDeclarationEClass.getEStructuralFeatures().get(0);
+		return (EReference)importDeclarationEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2051,7 +2061,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EAttribute getImportDeclaration_ImportFrom() {
-		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(1);
+		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -2061,7 +2071,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EReference getImportDeclaration_Module() {
-		return (EReference)importDeclarationEClass.getEStructuralFeatures().get(2);
+		return (EReference)importDeclarationEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2071,7 +2081,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EAttribute getImportDeclaration_ModuleSpecifierAsText() {
-		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -2081,7 +2091,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EAttribute getImportDeclaration_ModuleSpecifierForm() {
-		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(4);
+		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -8201,6 +8211,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(exportableElementEClass, EXPORTABLE_ELEMENT___IS_HOLLOW);
 
 		importDeclarationEClass = createEClass(IMPORT_DECLARATION);
+		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__DTS_TYPE_IMPORT);
 		createEReference(importDeclarationEClass, IMPORT_DECLARATION__IMPORT_SPECIFIERS);
 		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__IMPORT_FROM);
 		createEReference(importDeclarationEClass, IMPORT_DECLARATION__MODULE);
@@ -9340,6 +9351,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getExportableElement__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(importDeclarationEClass, ImportDeclaration.class, "ImportDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getImportDeclaration_DtsTypeImport(), theEcorePackage.getEBoolean(), "dtsTypeImport", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getImportDeclaration_ImportSpecifiers(), this.getImportSpecifier(), null, "importSpecifiers", null, 0, -1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportDeclaration_ImportFrom(), theEcorePackage.getEBoolean(), "importFrom", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getImportDeclaration_Module(), theTypesPackage.getTModule(), null, "module", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

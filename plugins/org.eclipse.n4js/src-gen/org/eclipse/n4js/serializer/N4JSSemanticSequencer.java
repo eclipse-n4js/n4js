@@ -4629,6 +4629,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         annotationList=AnnotatedScriptElement_ImportDeclaration_1_1_0 
+	 *         dtsTypeImport?='type'? 
 	 *         (
 	 *             (
 	 *                 importSpecifiers+=DefaultImportSpecifier? 
@@ -4651,6 +4652,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         annotationList=AnnotatedScriptElement_ImportDeclaration_1_1_0? 
+	 *         dtsTypeImport?='type'? 
 	 *         (
 	 *             (
 	 *                 importSpecifiers+=DefaultImportSpecifier? 
@@ -13966,13 +13968,16 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
+	 *         dtsTypeImport?='type'? 
 	 *         (
-	 *             importSpecifiers+=DefaultImportSpecifier? 
-	 *             (importSpecifiers+=NamespaceImportSpecifier | (importSpecifiers+=NamedImportSpecifier importSpecifiers+=NamedImportSpecifier*))? 
-	 *             importFrom?='from'
-	 *         )? 
-	 *         module=[TModule|ModuleSpecifier]
-	 *     )?
+	 *             (
+	 *                 importSpecifiers+=DefaultImportSpecifier? 
+	 *                 (importSpecifiers+=NamespaceImportSpecifier | (importSpecifiers+=NamedImportSpecifier importSpecifiers+=NamedImportSpecifier*))? 
+	 *                 importFrom?='from'
+	 *             )? 
+	 *             module=[TModule|ModuleSpecifier]
+	 *         )?
+	 *     )
 	 */
 	protected void sequence_ImportClause_ImportDeclaration_ImportDeclarationImpl_ImportSpecifiersExceptDefault(ISerializationContext context, ImportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

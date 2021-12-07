@@ -2370,33 +2370,36 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ImportDeclarationImpl");
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Keyword cImportKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
-		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
-		private final Group cGroup_1_0_0 = (Group)cGroup_1_0.eContents().get(0);
-		private final RuleCall cImportClauseParserRuleCall_1_0_0_0 = (RuleCall)cGroup_1_0_0.eContents().get(0);
-		private final Assignment cImportFromAssignment_1_0_0_1 = (Assignment)cGroup_1_0_0.eContents().get(1);
-		private final Keyword cImportFromFromKeyword_1_0_0_1_0 = (Keyword)cImportFromAssignment_1_0_0_1.eContents().get(0);
-		private final Assignment cModuleAssignment_1_0_1 = (Assignment)cGroup_1_0.eContents().get(1);
-		private final CrossReference cModuleTModuleCrossReference_1_0_1_0 = (CrossReference)cModuleAssignment_1_0_1.eContents().get(0);
-		private final RuleCall cModuleTModuleModuleSpecifierParserRuleCall_1_0_1_0_1 = (RuleCall)cModuleTModuleCrossReference_1_0_1_0.eContents().get(1);
-		private final RuleCall cSemiParserRuleCall_1_0_2 = (RuleCall)cGroup_1_0.eContents().get(2);
-		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
-		private final Group cGroup_1_1_0 = (Group)cGroup_1_1.eContents().get(0);
-		private final Group cGroup_1_1_0_0 = (Group)cGroup_1_1_0.eContents().get(0);
-		private final RuleCall cIdentifierNameParserRuleCall_1_1_0_0_0 = (RuleCall)cGroup_1_1_0_0.eContents().get(0);
-		private final Keyword cEqualsSignKeyword_1_1_0_0_1 = (Keyword)cGroup_1_1_0_0.eContents().get(1);
-		private final RuleCall cIdentifierNameParserRuleCall_1_1_1 = (RuleCall)cGroup_1_1.eContents().get(1);
-		private final Group cGroup_1_1_2 = (Group)cGroup_1_1.eContents().get(2);
-		private final Keyword cFullStopKeyword_1_1_2_0 = (Keyword)cGroup_1_1_2.eContents().get(0);
-		private final RuleCall cIdentifierNameParserRuleCall_1_1_2_1 = (RuleCall)cGroup_1_1_2.eContents().get(1);
-		private final Group cGroup_1_1_3 = (Group)cGroup_1_1.eContents().get(3);
-		private final Keyword cLeftParenthesisKeyword_1_1_3_0 = (Keyword)cGroup_1_1_3.eContents().get(0);
-		private final RuleCall cSTRINGTerminalRuleCall_1_1_3_1 = (RuleCall)cGroup_1_1_3.eContents().get(1);
-		private final Keyword cRightParenthesisKeyword_1_1_3_2 = (Keyword)cGroup_1_1_3.eContents().get(2);
-		private final RuleCall cSemiParserRuleCall_1_1_4 = (RuleCall)cGroup_1_1.eContents().get(4);
+		private final Assignment cDtsTypeImportAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final Keyword cDtsTypeImportTypeKeyword_1_0 = (Keyword)cDtsTypeImportAssignment_1.eContents().get(0);
+		private final Alternatives cAlternatives_2 = (Alternatives)cGroup.eContents().get(2);
+		private final Group cGroup_2_0 = (Group)cAlternatives_2.eContents().get(0);
+		private final Group cGroup_2_0_0 = (Group)cGroup_2_0.eContents().get(0);
+		private final RuleCall cImportClauseParserRuleCall_2_0_0_0 = (RuleCall)cGroup_2_0_0.eContents().get(0);
+		private final Assignment cImportFromAssignment_2_0_0_1 = (Assignment)cGroup_2_0_0.eContents().get(1);
+		private final Keyword cImportFromFromKeyword_2_0_0_1_0 = (Keyword)cImportFromAssignment_2_0_0_1.eContents().get(0);
+		private final Assignment cModuleAssignment_2_0_1 = (Assignment)cGroup_2_0.eContents().get(1);
+		private final CrossReference cModuleTModuleCrossReference_2_0_1_0 = (CrossReference)cModuleAssignment_2_0_1.eContents().get(0);
+		private final RuleCall cModuleTModuleModuleSpecifierParserRuleCall_2_0_1_0_1 = (RuleCall)cModuleTModuleCrossReference_2_0_1_0.eContents().get(1);
+		private final RuleCall cSemiParserRuleCall_2_0_2 = (RuleCall)cGroup_2_0.eContents().get(2);
+		private final Group cGroup_2_1 = (Group)cAlternatives_2.eContents().get(1);
+		private final Group cGroup_2_1_0 = (Group)cGroup_2_1.eContents().get(0);
+		private final Group cGroup_2_1_0_0 = (Group)cGroup_2_1_0.eContents().get(0);
+		private final RuleCall cIdentifierNameParserRuleCall_2_1_0_0_0 = (RuleCall)cGroup_2_1_0_0.eContents().get(0);
+		private final Keyword cEqualsSignKeyword_2_1_0_0_1 = (Keyword)cGroup_2_1_0_0.eContents().get(1);
+		private final RuleCall cIdentifierNameParserRuleCall_2_1_1 = (RuleCall)cGroup_2_1.eContents().get(1);
+		private final Group cGroup_2_1_2 = (Group)cGroup_2_1.eContents().get(2);
+		private final Keyword cFullStopKeyword_2_1_2_0 = (Keyword)cGroup_2_1_2.eContents().get(0);
+		private final RuleCall cIdentifierNameParserRuleCall_2_1_2_1 = (RuleCall)cGroup_2_1_2.eContents().get(1);
+		private final Group cGroup_2_1_3 = (Group)cGroup_2_1.eContents().get(3);
+		private final Keyword cLeftParenthesisKeyword_2_1_3_0 = (Keyword)cGroup_2_1_3.eContents().get(0);
+		private final RuleCall cSTRINGTerminalRuleCall_2_1_3_1 = (RuleCall)cGroup_2_1_3.eContents().get(1);
+		private final Keyword cRightParenthesisKeyword_2_1_3_2 = (Keyword)cGroup_2_1_3.eContents().get(2);
+		private final RuleCall cSemiParserRuleCall_2_1_4 = (RuleCall)cGroup_2_1.eContents().get(4);
 		
 		//fragment ImportDeclarationImpl*:
 		//    'import'
+		//    dtsTypeImport?='type'? // only allowed in DTS
 		//    (
 		//        (ImportClause importFrom?='from')? module=[types::TModule|ModuleSpecifier] Semi
 		//    |    =>(IdentifierName '=') IdentifierName ('.' IdentifierName)* ('(' STRING ')')? Semi // legacy import syntax (only allowed in DTS)
@@ -2405,6 +2408,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'import'
+		//dtsTypeImport?='type'? // only allowed in DTS
 		//(
 		//    (ImportClause importFrom?='from')? module=[types::TModule|ModuleSpecifier] Semi
 		//|    =>(IdentifierName '=') IdentifierName ('.' IdentifierName)* ('(' STRING ')')? Semi // legacy import syntax (only allowed in DTS)
@@ -2414,80 +2418,87 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'import'
 		public Keyword getImportKeyword_0() { return cImportKeyword_0; }
 		
-		//(
-		//    (ImportClause importFrom?='from')? module=[types::TModule|ModuleSpecifier] Semi
-		//|    =>(IdentifierName '=') IdentifierName ('.' IdentifierName)* ('(' STRING ')')? Semi // legacy import syntax (only allowed in DTS)
-		//)
-		public Alternatives getAlternatives_1() { return cAlternatives_1; }
+		//dtsTypeImport?='type'?
+		public Assignment getDtsTypeImportAssignment_1() { return cDtsTypeImportAssignment_1; }
+		
+		//'type'
+		public Keyword getDtsTypeImportTypeKeyword_1_0() { return cDtsTypeImportTypeKeyword_1_0; }
+		
+		//// only allowed in DTS
+		//   (
+		//       (ImportClause importFrom?='from')? module=[types::TModule|ModuleSpecifier] Semi
+		//   |    =>(IdentifierName '=') IdentifierName ('.' IdentifierName)* ('(' STRING ')')? Semi // legacy import syntax (only allowed in DTS)
+		//   )
+		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 		
 		//(ImportClause importFrom?='from')? module=[types::TModule|ModuleSpecifier] Semi
-		public Group getGroup_1_0() { return cGroup_1_0; }
+		public Group getGroup_2_0() { return cGroup_2_0; }
 		
 		//(ImportClause importFrom?='from')?
-		public Group getGroup_1_0_0() { return cGroup_1_0_0; }
+		public Group getGroup_2_0_0() { return cGroup_2_0_0; }
 		
 		//ImportClause
-		public RuleCall getImportClauseParserRuleCall_1_0_0_0() { return cImportClauseParserRuleCall_1_0_0_0; }
+		public RuleCall getImportClauseParserRuleCall_2_0_0_0() { return cImportClauseParserRuleCall_2_0_0_0; }
 		
 		//importFrom?='from'
-		public Assignment getImportFromAssignment_1_0_0_1() { return cImportFromAssignment_1_0_0_1; }
+		public Assignment getImportFromAssignment_2_0_0_1() { return cImportFromAssignment_2_0_0_1; }
 		
 		//'from'
-		public Keyword getImportFromFromKeyword_1_0_0_1_0() { return cImportFromFromKeyword_1_0_0_1_0; }
+		public Keyword getImportFromFromKeyword_2_0_0_1_0() { return cImportFromFromKeyword_2_0_0_1_0; }
 		
 		//module=[types::TModule|ModuleSpecifier]
-		public Assignment getModuleAssignment_1_0_1() { return cModuleAssignment_1_0_1; }
+		public Assignment getModuleAssignment_2_0_1() { return cModuleAssignment_2_0_1; }
 		
 		//[types::TModule|ModuleSpecifier]
-		public CrossReference getModuleTModuleCrossReference_1_0_1_0() { return cModuleTModuleCrossReference_1_0_1_0; }
+		public CrossReference getModuleTModuleCrossReference_2_0_1_0() { return cModuleTModuleCrossReference_2_0_1_0; }
 		
 		//ModuleSpecifier
-		public RuleCall getModuleTModuleModuleSpecifierParserRuleCall_1_0_1_0_1() { return cModuleTModuleModuleSpecifierParserRuleCall_1_0_1_0_1; }
+		public RuleCall getModuleTModuleModuleSpecifierParserRuleCall_2_0_1_0_1() { return cModuleTModuleModuleSpecifierParserRuleCall_2_0_1_0_1; }
 		
 		//Semi
-		public RuleCall getSemiParserRuleCall_1_0_2() { return cSemiParserRuleCall_1_0_2; }
+		public RuleCall getSemiParserRuleCall_2_0_2() { return cSemiParserRuleCall_2_0_2; }
 		
 		//=>(IdentifierName '=') IdentifierName ('.' IdentifierName)* ('(' STRING ')')? Semi
-		public Group getGroup_1_1() { return cGroup_1_1; }
+		public Group getGroup_2_1() { return cGroup_2_1; }
 		
 		//=>(IdentifierName '=')
-		public Group getGroup_1_1_0() { return cGroup_1_1_0; }
+		public Group getGroup_2_1_0() { return cGroup_2_1_0; }
 		
 		//IdentifierName '='
-		public Group getGroup_1_1_0_0() { return cGroup_1_1_0_0; }
+		public Group getGroup_2_1_0_0() { return cGroup_2_1_0_0; }
 		
 		//IdentifierName
-		public RuleCall getIdentifierNameParserRuleCall_1_1_0_0_0() { return cIdentifierNameParserRuleCall_1_1_0_0_0; }
+		public RuleCall getIdentifierNameParserRuleCall_2_1_0_0_0() { return cIdentifierNameParserRuleCall_2_1_0_0_0; }
 		
 		//'='
-		public Keyword getEqualsSignKeyword_1_1_0_0_1() { return cEqualsSignKeyword_1_1_0_0_1; }
+		public Keyword getEqualsSignKeyword_2_1_0_0_1() { return cEqualsSignKeyword_2_1_0_0_1; }
 		
 		//IdentifierName
-		public RuleCall getIdentifierNameParserRuleCall_1_1_1() { return cIdentifierNameParserRuleCall_1_1_1; }
+		public RuleCall getIdentifierNameParserRuleCall_2_1_1() { return cIdentifierNameParserRuleCall_2_1_1; }
 		
 		//('.' IdentifierName)*
-		public Group getGroup_1_1_2() { return cGroup_1_1_2; }
+		public Group getGroup_2_1_2() { return cGroup_2_1_2; }
 		
 		//'.'
-		public Keyword getFullStopKeyword_1_1_2_0() { return cFullStopKeyword_1_1_2_0; }
+		public Keyword getFullStopKeyword_2_1_2_0() { return cFullStopKeyword_2_1_2_0; }
 		
 		//IdentifierName
-		public RuleCall getIdentifierNameParserRuleCall_1_1_2_1() { return cIdentifierNameParserRuleCall_1_1_2_1; }
+		public RuleCall getIdentifierNameParserRuleCall_2_1_2_1() { return cIdentifierNameParserRuleCall_2_1_2_1; }
 		
 		//('(' STRING ')')?
-		public Group getGroup_1_1_3() { return cGroup_1_1_3; }
+		public Group getGroup_2_1_3() { return cGroup_2_1_3; }
 		
 		//'('
-		public Keyword getLeftParenthesisKeyword_1_1_3_0() { return cLeftParenthesisKeyword_1_1_3_0; }
+		public Keyword getLeftParenthesisKeyword_2_1_3_0() { return cLeftParenthesisKeyword_2_1_3_0; }
 		
 		//STRING
-		public RuleCall getSTRINGTerminalRuleCall_1_1_3_1() { return cSTRINGTerminalRuleCall_1_1_3_1; }
+		public RuleCall getSTRINGTerminalRuleCall_2_1_3_1() { return cSTRINGTerminalRuleCall_2_1_3_1; }
 		
 		//')'
-		public Keyword getRightParenthesisKeyword_1_1_3_2() { return cRightParenthesisKeyword_1_1_3_2; }
+		public Keyword getRightParenthesisKeyword_2_1_3_2() { return cRightParenthesisKeyword_2_1_3_2; }
 		
 		//Semi
-		public RuleCall getSemiParserRuleCall_1_1_4() { return cSemiParserRuleCall_1_1_4; }
+		public RuleCall getSemiParserRuleCall_2_1_4() { return cSemiParserRuleCall_2_1_4; }
 	}
 	public class ImportClauseElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ImportClause");
@@ -13905,6 +13916,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//fragment ImportDeclarationImpl*:
 	//    'import'
+	//    dtsTypeImport?='type'? // only allowed in DTS
 	//    (
 	//        (ImportClause importFrom?='from')? module=[types::TModule|ModuleSpecifier] Semi
 	//    |    =>(IdentifierName '=') IdentifierName ('.' IdentifierName)* ('(' STRING ')')? Semi // legacy import syntax (only allowed in DTS)

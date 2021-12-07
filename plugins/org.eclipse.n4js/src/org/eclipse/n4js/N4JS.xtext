@@ -320,6 +320,7 @@ ImportDeclaration:
 
 fragment ImportDeclarationImpl*:
 	'import'
+	dtsTypeImport?='type'? // only allowed in DTS
 	(
 		(ImportClause importFrom?='from')? module=[types::TModule|ModuleSpecifier] Semi
 	|	=>(IdentifierName '=') IdentifierName ('.' IdentifierName)* ('(' STRING ')')? Semi // legacy import syntax (only allowed in DTS)

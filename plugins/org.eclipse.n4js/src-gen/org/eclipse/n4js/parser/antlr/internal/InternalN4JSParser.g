@@ -3856,29 +3856,43 @@ ruleImportDeclarationImpl[EObject in_current]  returns [EObject current=in_curre
 		}
 		(
 			(
+				lv_dtsTypeImport_1_0=Type
+				{
+					newLeafNode(lv_dtsTypeImport_1_0, grammarAccess.getImportDeclarationImplAccess().getDtsTypeImportTypeKeyword_1_0());
+				}
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getImportDeclarationImplRule());
+					}
+					setWithLastConsumed($current, "dtsTypeImport", lv_dtsTypeImport_1_0 != null, "type");
+				}
+			)
+		)?
+		(
+			(
 				(
 					{
 						if ($current==null) {
 							$current = createModelElement(grammarAccess.getImportDeclarationImplRule());
 						}
-						newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getImportClauseParserRuleCall_1_0_0_0());
+						newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getImportClauseParserRuleCall_2_0_0_0());
 					}
-					this_ImportClause_1=ruleImportClause[$current]
+					this_ImportClause_2=ruleImportClause[$current]
 					{
-						$current = $this_ImportClause_1.current;
+						$current = $this_ImportClause_2.current;
 						afterParserOrEnumRuleCall();
 					}
 					(
 						(
-							lv_importFrom_2_0=From
+							lv_importFrom_3_0=From
 							{
-								newLeafNode(lv_importFrom_2_0, grammarAccess.getImportDeclarationImplAccess().getImportFromFromKeyword_1_0_0_1_0());
+								newLeafNode(lv_importFrom_3_0, grammarAccess.getImportDeclarationImplAccess().getImportFromFromKeyword_2_0_0_1_0());
 							}
 							{
 								if ($current==null) {
 									$current = createModelElement(grammarAccess.getImportDeclarationImplRule());
 								}
-								setWithLastConsumed($current, "importFrom", lv_importFrom_2_0 != null, "from");
+								setWithLastConsumed($current, "importFrom", lv_importFrom_3_0 != null, "from");
 							}
 						)
 					)
@@ -3891,7 +3905,7 @@ ruleImportDeclarationImpl[EObject in_current]  returns [EObject current=in_curre
 							}
 						}
 						{
-							newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getModuleTModuleCrossReference_1_0_1_0());
+							newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getModuleTModuleCrossReference_2_0_1_0());
 						}
 						ruleModuleSpecifier
 						{
@@ -3900,7 +3914,7 @@ ruleImportDeclarationImpl[EObject in_current]  returns [EObject current=in_curre
 					)
 				)
 				{
-					newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getSemiParserRuleCall_1_0_2());
+					newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getSemiParserRuleCall_2_0_2());
 				}
 				ruleSemi
 				{
@@ -3917,32 +3931,32 @@ ruleImportDeclarationImpl[EObject in_current]  returns [EObject current=in_curre
 					)=>
 					(
 						{
-							newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_1_0_0_0());
+							newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getIdentifierNameParserRuleCall_2_1_0_0_0());
 						}
 						ruleIdentifierName
 						{
 							afterParserOrEnumRuleCall();
 						}
-						otherlv_6=EqualsSign
+						otherlv_7=EqualsSign
 						{
-							newLeafNode(otherlv_6, grammarAccess.getImportDeclarationImplAccess().getEqualsSignKeyword_1_1_0_0_1());
+							newLeafNode(otherlv_7, grammarAccess.getImportDeclarationImplAccess().getEqualsSignKeyword_2_1_0_0_1());
 						}
 					)
 				)
 				{
-					newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_1_1());
+					newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getIdentifierNameParserRuleCall_2_1_1());
 				}
 				ruleIdentifierName
 				{
 					afterParserOrEnumRuleCall();
 				}
 				(
-					otherlv_8=FullStop
+					otherlv_9=FullStop
 					{
-						newLeafNode(otherlv_8, grammarAccess.getImportDeclarationImplAccess().getFullStopKeyword_1_1_2_0());
+						newLeafNode(otherlv_9, grammarAccess.getImportDeclarationImplAccess().getFullStopKeyword_2_1_2_0());
 					}
 					{
-						newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getIdentifierNameParserRuleCall_1_1_2_1());
+						newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getIdentifierNameParserRuleCall_2_1_2_1());
 					}
 					ruleIdentifierName
 					{
@@ -3950,21 +3964,21 @@ ruleImportDeclarationImpl[EObject in_current]  returns [EObject current=in_curre
 					}
 				)*
 				(
-					otherlv_10=LeftParenthesis
+					otherlv_11=LeftParenthesis
 					{
-						newLeafNode(otherlv_10, grammarAccess.getImportDeclarationImplAccess().getLeftParenthesisKeyword_1_1_3_0());
+						newLeafNode(otherlv_11, grammarAccess.getImportDeclarationImplAccess().getLeftParenthesisKeyword_2_1_3_0());
 					}
-					this_STRING_11=RULE_STRING
+					this_STRING_12=RULE_STRING
 					{
-						newLeafNode(this_STRING_11, grammarAccess.getImportDeclarationImplAccess().getSTRINGTerminalRuleCall_1_1_3_1());
+						newLeafNode(this_STRING_12, grammarAccess.getImportDeclarationImplAccess().getSTRINGTerminalRuleCall_2_1_3_1());
 					}
-					otherlv_12=RightParenthesis
+					otherlv_13=RightParenthesis
 					{
-						newLeafNode(otherlv_12, grammarAccess.getImportDeclarationImplAccess().getRightParenthesisKeyword_1_1_3_2());
+						newLeafNode(otherlv_13, grammarAccess.getImportDeclarationImplAccess().getRightParenthesisKeyword_2_1_3_2());
 					}
 				)?
 				{
-					newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getSemiParserRuleCall_1_1_4());
+					newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getSemiParserRuleCall_2_1_4());
 				}
 				ruleSemi
 				{

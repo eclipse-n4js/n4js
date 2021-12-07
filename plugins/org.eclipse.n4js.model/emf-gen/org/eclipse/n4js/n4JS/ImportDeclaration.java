@@ -23,6 +23,7 @@ import org.eclipse.n4js.ts.types.TModule;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#isDtsTypeImport <em>Dts Type Import</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getImportSpecifiers <em>Import Specifiers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#isImportFrom <em>Import From</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModule <em>Module</em>}</li>
@@ -35,6 +36,28 @@ import org.eclipse.n4js.ts.types.TModule;
  * @generated
  */
 public interface ImportDeclaration extends AnnotableScriptElement {
+	/**
+	 * Returns the value of the '<em><b>Dts Type Import</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Dts Type Import</em>' attribute.
+	 * @see #setDtsTypeImport(boolean)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportDeclaration_DtsTypeImport()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isDtsTypeImport();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ImportDeclaration#isDtsTypeImport <em>Dts Type Import</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Dts Type Import</em>' attribute.
+	 * @see #isDtsTypeImport()
+	 * @generated
+	 */
+	void setDtsTypeImport(boolean value);
+
 	/**
 	 * Returns the value of the '<em><b>Import Specifiers</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.ImportSpecifier}.

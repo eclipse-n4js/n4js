@@ -809,6 +809,8 @@ ruleImportDeclaration:
 // Rule ImportDeclarationImpl
 ruleImportDeclarationImpl:
 	'import'
+	'type'
+	?
 	(
 		(
 			ruleImportClause

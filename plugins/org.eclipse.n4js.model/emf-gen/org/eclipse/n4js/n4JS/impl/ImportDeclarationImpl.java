@@ -46,6 +46,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#isDtsTypeImport <em>Dts Type Import</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getImportSpecifiers <em>Import Specifiers</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#isImportFrom <em>Import From</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModule <em>Module</em>}</li>
@@ -56,6 +57,26 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * @generated
  */
 public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements ImportDeclaration {
+	/**
+	 * The default value of the '{@link #isDtsTypeImport() <em>Dts Type Import</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDtsTypeImport()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DTS_TYPE_IMPORT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDtsTypeImport() <em>Dts Type Import</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDtsTypeImport()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean dtsTypeImport = DTS_TYPE_IMPORT_EDEFAULT;
+
 	/**
 	 * The cached value of the '{@link #getImportSpecifiers() <em>Import Specifiers</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -153,6 +174,29 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.IMPORT_DECLARATION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDtsTypeImport() {
+		return dtsTypeImport;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDtsTypeImport(boolean newDtsTypeImport) {
+		boolean oldDtsTypeImport = dtsTypeImport;
+		dtsTypeImport = newDtsTypeImport;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IMPORT_DECLARATION__DTS_TYPE_IMPORT, oldDtsTypeImport, dtsTypeImport));
 	}
 
 	/**
@@ -323,6 +367,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.IMPORT_DECLARATION__DTS_TYPE_IMPORT:
+				return isDtsTypeImport();
 			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
 				return getImportSpecifiers();
 			case N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM:
@@ -347,6 +393,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.IMPORT_DECLARATION__DTS_TYPE_IMPORT:
+				setDtsTypeImport((Boolean)newValue);
+				return;
 			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
 				getImportSpecifiers().clear();
 				getImportSpecifiers().addAll((Collection<? extends ImportSpecifier>)newValue);
@@ -375,6 +424,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.IMPORT_DECLARATION__DTS_TYPE_IMPORT:
+				setDtsTypeImport(DTS_TYPE_IMPORT_EDEFAULT);
+				return;
 			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
 				getImportSpecifiers().clear();
 				return;
@@ -402,6 +454,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.IMPORT_DECLARATION__DTS_TYPE_IMPORT:
+				return dtsTypeImport != DTS_TYPE_IMPORT_EDEFAULT;
 			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
 				return importSpecifiers != null && !importSpecifiers.isEmpty();
 			case N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM:
@@ -442,7 +496,9 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (importFrom: ");
+		result.append(" (dtsTypeImport: ");
+		result.append(dtsTypeImport);
+		result.append(", importFrom: ");
 		result.append(importFrom);
 		result.append(", moduleSpecifierAsText: ");
 		result.append(moduleSpecifierAsText);

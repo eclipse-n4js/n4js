@@ -785,13 +785,22 @@ public interface N4JSPackage extends EPackage {
 	int IMPORT_DECLARATION__ANNOTATION_LIST = ANNOTABLE_SCRIPT_ELEMENT__ANNOTATION_LIST;
 
 	/**
+	 * The feature id for the '<em><b>Dts Type Import</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_DECLARATION__DTS_TYPE_IMPORT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Import Specifiers</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION__IMPORT_SPECIFIERS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 0;
+	int IMPORT_DECLARATION__IMPORT_SPECIFIERS = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Import From</b></em>' attribute.
@@ -800,7 +809,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION__IMPORT_FROM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 1;
+	int IMPORT_DECLARATION__IMPORT_FROM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Module</b></em>' reference.
@@ -809,7 +818,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION__MODULE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 2;
+	int IMPORT_DECLARATION__MODULE = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier As Text</b></em>' attribute.
@@ -818,7 +827,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 3;
+	int IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier Form</b></em>' attribute.
@@ -827,7 +836,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION__MODULE_SPECIFIER_FORM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 4;
+	int IMPORT_DECLARATION__MODULE_SPECIFIER_FORM = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The number of structural features of the '<em>Import Declaration</em>' class.
@@ -836,7 +845,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 5;
+	int IMPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -18621,6 +18630,17 @@ public interface N4JSPackage extends EPackage {
 	EClass getImportDeclaration();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.ImportDeclaration#isDtsTypeImport <em>Dts Type Import</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Dts Type Import</em>'.
+	 * @see org.eclipse.n4js.n4JS.ImportDeclaration#isDtsTypeImport()
+	 * @see #getImportDeclaration()
+	 * @generated
+	 */
+	EAttribute getImportDeclaration_DtsTypeImport();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.ImportDeclaration#getImportSpecifiers <em>Import Specifiers</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -25234,6 +25254,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass IMPORT_DECLARATION = eINSTANCE.getImportDeclaration();
+
+		/**
+		 * The meta object literal for the '<em><b>Dts Type Import</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute IMPORT_DECLARATION__DTS_TYPE_IMPORT = eINSTANCE.getImportDeclaration_DtsTypeImport();
 
 		/**
 		 * The meta object literal for the '<em><b>Import Specifiers</b></em>' containment reference list feature.
