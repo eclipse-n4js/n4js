@@ -369,7 +369,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	 * Calls LSP endpoint 'completion'.
 	 *
 	 * <pre>
-	 * // Xpect completion --&gt; &ltCOMPLETIONS&gt
+	 * // Xpect completion at '&ltLOCATION&gt' --&gt; &ltCOMPLETIONS&gt
 	 * </pre>
 	 *
 	 * COMPLETIONS is a comma separated list.
