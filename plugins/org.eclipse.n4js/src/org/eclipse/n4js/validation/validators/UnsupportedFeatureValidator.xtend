@@ -141,7 +141,7 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 	def void checkNamespaceOutsideN4JSD(N4NamespaceDeclaration namespace) {
 		if (!jsVariantHelper.isExternalMode(namespace)) {
 			val markElem = if (namespace.eContainer instanceof ExportDeclaration) namespace.eContainer else namespace;
-			//unsupported("namespaces in n4js/n4jsx files", markElem)
+			unsupported("namespaces in n4js/n4jsx files", markElem)
 		}
 	}
 	

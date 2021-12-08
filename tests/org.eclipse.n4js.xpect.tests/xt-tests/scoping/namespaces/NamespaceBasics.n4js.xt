@@ -10,6 +10,11 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+    
+   	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+	}
+   
    END_SETUP
  */
 

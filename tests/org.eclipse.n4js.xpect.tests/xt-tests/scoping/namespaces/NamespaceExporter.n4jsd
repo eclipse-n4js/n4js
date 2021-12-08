@@ -13,8 +13,8 @@
 
 
 export external namespace NS1 {
-	type c1 = int;
-	const c1:int;
+	type c1 = Color;
+	const c1 : int;
 	
 	enum Color {
 		blue

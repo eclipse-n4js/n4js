@@ -10,6 +10,11 @@
  */
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+    
+   	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+	}
+   
    END_SETUP
  */
 
@@ -43,3 +48,6 @@ namespace NS1 {
 class C1 extends NS1.NS1C1 {}
 // XPECT noerrors -->
 class C2 extends NS1.NS1NS1.NS1NS1C1 {}
+
+// XPECT noerrors -->
+type T1 = NS1.NS1NS1.NS1NS1C1
