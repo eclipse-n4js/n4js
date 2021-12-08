@@ -1,0 +1,122 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   
+	Workspace {
+		JavaProject "NamespaceExImport" {
+			Folder "src1" {
+				ThisFile {}
+				File "NamespaceVsVirtualExporter1.n4jsd" {}
+				File "NamespaceVsVirtualExporter2.n4jsd" {}
+			}
+			File "package.json" { from="NamespaceExImport.package.json" }
+		}
+	}
+	
+   END_SETUP
+ */
+
+import * as A from "NamespaceVsVirtualExporter1"
+import {NS1} from "NamespaceVsVirtualExporter2"
+
+
+// XPECT type of 'x1' --> A
+// XPECT noerrors -->
+let x1 = A;
+// XPECT type of 'x1c' --> int
+// XPECT noerrors -->
+let x1c = x1.c0;
+// following type C0 only available due to courtesy of n4js
+// XPECT type of 'xt1' --> C0
+/* XPECT errors ---
+   "C0 has been imported as A.C0." at "C0"
+   "Couldn't resolve reference to Type 'x1'." at "x1"   
+--- */
+let xt1 : x1.C0;
+// XPECT type of 'x1n' --> C0
+// XPECT noerrors -->
+let x1n = new x1.C0();
+// XPECT type of 'x2' --> NS1
+// XPECT noerrors -->
+let x2 = NS1;
+// XPECT type of 'x2c' --> int
+// XPECT noerrors -->
+let x2c = x2.c1;
+// XPECT type of 'xt2' --> null
+/* XPECT errors ---
+   "Couldn't resolve reference to Type 'C1'." at "C1"
+   "Couldn't resolve reference to Type 'x2'." at "x2"   
+--- */
+let xt2 : x2.C1;
+// XPECT type of 'x2n' --> C1
+// XPECT noerrors -->
+let x2n = new x2.C1();
+
+
+
+// XPECT noerrors -->
+type T1 = A;
+// XPECT errors --> "T1 cannot be used as a value." at "T1"
+let t1v = T1.c0;
+// following namespace like access via type alias not supported
+/* XPECT errors ---
+   "Couldn't resolve reference to Type 'T1'." at "T1"
+   "C0 has been imported as A.C0." at "C0"
+--- */
+let t1i : T1.C0;
+// XPECT noerrors -->
+let tt1 : T1;
+// XPECT noerrors -->
+tt1 = A;
+// XPECT noerrors -->
+let tt1c = tt1.c0;
+
+
+
+// XPECT noerrors -->
+type T2 = NS1;
+// XPECT errors --> "T2 cannot be used as a value." at "T2"
+let t2v = T2.c1;
+// following namespace like access via type alias not supported
+/* XPECT errors ---
+   "Couldn't resolve reference to Type 'T2'." at "T2"   
+   "Couldn't resolve reference to Type 'C1'." at "C1"
+--- */
+let t2i : T2.C1;
+// XPECT noerrors -->
+let tt2 : T2;
+// XPECT noerrors -->
+tt2 = NS1;
+// XPECT noerrors -->
+let tt2c = tt2.c1;
+
+
+
+// XPECT noerrors -->
+let z1 : A;
+/* XPECT errors ---
+   "Couldn't resolve reference to Type 'z1'." at "z1"
+   "C0 has been imported as A.C0." at "C0"
+--- */
+let z1t : z1.C0;
+// X-PECT warnings --> "Variable z1 is undefined" at "z1"
+let zn1 = new z1.C0();
+
+// XPECT noerrors -->
+let z2 : NS1;
+/* XPECT errors ---
+   "Couldn't resolve reference to Type 'z2'." at "z2"   
+   "Couldn't resolve reference to Type 'C1'." at "C1"
+--- */
+let z2t : z2.C1;
+// X-PECT warnings --> "Variable z2 is undefined" at "z2"
+let zn2 = new z2.C1();

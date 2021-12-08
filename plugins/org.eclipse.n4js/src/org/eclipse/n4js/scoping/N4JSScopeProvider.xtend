@@ -565,6 +565,13 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		// take upper bound to get rid of ExistentialTypeRefs, ThisTypeRefs, etc.
 		// (literal types are handled in dispatch method #members() of MemberScopingHelper)
 		val TypeRef typeRef = ts.upperBoundWithReopenAndResolveTypeVars(G, typeRefRaw);
+		val declaredType = typeRef.declaredType;
+		if (declaredType instanceof TNamespace) {
+			return scope_AllTopLevelElementsFromAbstractNamespace(declaredType, propertyAccess, false, true);
+		}
+		if (declaredType instanceof ModuleNamespaceVirtualType) {
+			return createScopeForNamespaceAccess(declaredType, propertyAccess, false, true);
+		}
 
 		val staticAccess = typeRef instanceof TypeTypeRef;
 		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
