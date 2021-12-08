@@ -1,0 +1,18 @@
+// generated from https://github.com/microsoft/TypeScript/blob/5d0d7ae85d1ff52d3ef4cb6cac653f33f7e76724/src/lib/es2018.asyncgenerator.d.ts
+// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+
+@@Global @@ProvidedByRuntime
+
+export external public interface ~AsyncGeneratorFunction {
+	new(...args: any): AsyncGenerator<any,any,any>;
+	(...args: any): AsyncGenerator<any,any,any>;
+	get length(): number;
+	get name(): string;
+}
+
+export external public interface ~AsyncGeneratorFunctionConstructor {
+	new(...args: string): AsyncGeneratorFunction;
+	(...args: string): AsyncGeneratorFunction;
+	get length(): number;
+	get name(): string;
+}

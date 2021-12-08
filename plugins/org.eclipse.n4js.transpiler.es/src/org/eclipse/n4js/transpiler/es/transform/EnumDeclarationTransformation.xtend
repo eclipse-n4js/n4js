@@ -21,7 +21,6 @@ import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.RequiresAfter
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
-import org.eclipse.n4js.transpiler.im.ImFactory
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
@@ -41,8 +40,6 @@ class EnumDeclarationTransformation extends Transformation {
 	@Inject private ReflectionAssistant reflectionAssistant;
 	@Inject private TypeAssistant typeAssistant;
 
-	private SymbolTableEntry n4EnumSTE;
-
 
 	override assertPreConditions() {
 		assertFalse("only top-level enums are supported, for now",
@@ -55,10 +52,7 @@ class EnumDeclarationTransformation extends Transformation {
 	}
 
 	override analyze() {
-		n4EnumSTE = getSymbolTableEntryOriginal(state.G.n4EnumType, true);
-		if (n4EnumSTE === null) {
-			throw new IllegalStateException("could not find required members of built-in types");
-		}
+		// nothing to do
 	}
 
 	override transform() {
@@ -82,8 +76,7 @@ class EnumDeclarationTransformation extends Transformation {
 		val fieldsForLiterals = enumDecl.literals.map[convertLiteralToField(it, classSTE)];
 
 		classDecl.declaredModifiers += enumDecl.declaredModifiers;  // reuse existing modifiers
-		val newPTR = ImFactory.eINSTANCE.createParameterizedTypeRef_IM => [declaredType_IM = n4EnumSTE];
-		classDecl.superClassRef = _TypeReferenceNode(newPTR);
+		classDecl.superClassRef = _TypeReferenceNode(state, state.G.n4EnumTypeRef);
 
 		classDecl.ownedMembersRaw += createEnumConstructor();
 		classDecl.ownedMembersRaw += fieldsForLiterals;

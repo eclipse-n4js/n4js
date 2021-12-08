@@ -55,3 +55,13 @@ export external public class MObject extends MObject {
 	// XPECT errors --> "The method MObject.k (line 56) overriding method MObject.k must be annotated with @Override." at "k"
 	public k(n : number) : number;
 }
+
+@ProvidedByRuntime
+@Polyfill
+export external public interface ~MIfc extends MIfc {
+	// XPECT errors --> "Signature of method MIfc.mi (line 63) does not conform to implemented method MIfc.mi: {function():Object} is not a subtype of {function():string}." at "mi"
+	public mi() : Object;
+
+	// XPECT errors --> "The method MIfc.k (line 66) overriding method MIfc.k must be annotated with @Override." at "k"
+	public k(n : number) : number;
+}

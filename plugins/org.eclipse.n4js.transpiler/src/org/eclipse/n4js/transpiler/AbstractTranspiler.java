@@ -12,11 +12,12 @@ package org.eclipse.n4js.transpiler;
 
 import java.io.Writer;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
@@ -72,7 +73,9 @@ public abstract class AbstractTranspiler {
 	 * Returns an optional preamble that will be prepended to the output code in each output file. Use '\n' as line
 	 * separator. See {@link PrettyPrinter#print(TranspilerState, Writer, Optional, Optional)} for details.
 	 */
-	protected abstract Optional<String> getPreamble();
+	protected Optional<String> getPreamble() {
+		return Optional.of(N4JSGlobals.OUTPUT_FILE_PREAMBLE);
+	}
 
 	/**
 	 * To customize the transpilation process, subclasses should here provide the concrete AST transformations to be
@@ -150,22 +153,25 @@ public abstract class AbstractTranspiler {
 	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
 			Optional<SourceMapInfo> optSourceMapInfo) {
 
-		// step 1: create initial transpiler state (i.e. create intermediate model, etc.)
-		final TranspilerState state = prepare(resource, options);
+		try (Measurement m = ifActive(N4JSDataCollectors.dcTranspilation::getMeasurement)) {
 
-		try {
+			// step 1: create initial transpiler state (i.e. create intermediate model, etc.)
+			final TranspilerState state = prepare(resource, options);
 
-			// step 2: execute all transformations on the transpiler state
-			transform(state);
+			try {
 
-			// step 3: pretty-print the intermediate model + emit source maps (optional)
-			final Optional<String> optPreamble = getPreamble();
-			prettyPrint(state, outCode, optPreamble, optSourceMapInfo);
+				// step 2: execute all transformations on the transpiler state
+				transform(state);
 
-		} finally {
+				// step 3: pretty-print the intermediate model + emit source maps (optional)
+				final Optional<String> optPreamble = getPreamble();
+				prettyPrint(state, outCode, optPreamble, optSourceMapInfo);
 
-			// step 4: clean up temporary types (if any)
-			cleanUpTemporaryTypes(state);
+			} finally {
+
+				// step 4: clean up temporary types (if any)
+				cleanUpTemporaryTypes(state);
+			}
 		}
 	}
 
@@ -180,7 +186,9 @@ public abstract class AbstractTranspiler {
 		if (script == null || script.eIsProxy()) {
 			throw new IllegalArgumentException("given N4JSResource does not contain a script or script is a proxy");
 		}
-		return preparationStep.prepare(script, options);
+		try (Measurement m = ifActive(N4JSDataCollectors.dcTranspilationPreparation::getMeasurement)) {
+			return preparationStep.prepare(script, options);
+		}
 	}
 
 	/**
@@ -197,9 +205,9 @@ public abstract class AbstractTranspiler {
 			}
 
 			// step 1: ask transformation manager for transformations to execute
-			Transformation[] transformationsPreFiler = null;
-			Transformation[] transformations = null;
-			try (Measurement m = N4JSDataCollectors.dcTranspilationStep1.getMeasurement()) {
+			Transformation[] transformationsPreFiler;
+			Transformation[] transformations;
+			try (Measurement m = ifActive(N4JSDataCollectors.dcTranspilationStep1::getMeasurement)) {
 				transformationsPreFiler = computeTransformationsToBeExecuted(state);
 				transformations = TransformationDependency
 						.filterByTranspilerOptions(transformationsPreFiler, state.options);
@@ -207,26 +215,20 @@ public abstract class AbstractTranspiler {
 			}
 
 			// step 2: give each transformation a chance to perform early analysis on the initial (unchanged!) state
-			try (Measurement m = N4JSDataCollectors.dcTranspilationStep2.getMeasurement()) {
+			try (Measurement m = ifActive(N4JSDataCollectors.dcTranspilationStep2::getMeasurement)) {
 				for (Transformation currT : transformations) {
-					String name = "T2_" + currT.getClass().getSimpleName();
-					DataCollector dcT2_ct = DataCollectors.INSTANCE
-							.getOrCreateDataCollector(name, N4JSDataCollectors.dcTranspilationStep2);
-
-					try (Measurement m2 = dcT2_ct.getMeasurement(name);) {
-						currT.analyze();
-					}
+					currT.analyze();
 				}
 			}
 
 			// step 3: actually perform the transformations (in the order defined by transformation manager)
-			try (Measurement m = N4JSDataCollectors.dcTranspilationStep3.getMeasurement()) {
+			try (Measurement m = ifActive(N4JSDataCollectors.dcTranspilationStep3::getMeasurement)) {
 				for (Transformation currT : transformations) {
 					String name = "T3_" + currT.getClass().getSimpleName();
-					DataCollector dcT3_ct = DataCollectors.INSTANCE
-							.getOrCreateDataCollector(name, N4JSDataCollectors.dcTranspilationStep3);
 
-					try (Measurement m2 = dcT3_ct.getMeasurement(name);) {
+					try (Measurement m2 = ifActive(() -> DataCollectors.INSTANCE
+							.getOrCreateDataCollector(name, N4JSDataCollectors.dcTranspilationStep3)
+							.getMeasurement(name))) {
 
 						if (DEBUG_DUMP_STATE) {
 							System.out
@@ -266,7 +268,9 @@ public abstract class AbstractTranspiler {
 	 */
 	protected void prettyPrint(TranspilerState state, Writer outCode, Optional<String> optPreamble,
 			Optional<SourceMapInfo> optSourceMapInfo) {
-		prettyPrintingStep.print(state, outCode, optPreamble, optSourceMapInfo);
+		try (Measurement m = ifActive(N4JSDataCollectors.dcTranspilationPrettyPrint::getMeasurement)) {
+			prettyPrintingStep.print(state, outCode, optPreamble, optSourceMapInfo);
+		}
 	}
 
 	/**
@@ -279,6 +283,20 @@ public abstract class AbstractTranspiler {
 	 */
 	protected void cleanUpTemporaryTypes(TranspilerState state) {
 		state.resource.clearTemporaryTypes();
+	}
+
+	private Measurement ifActive(Supplier<Measurement> supplier) {
+		if (isPerformanceDataCollectionActive()) {
+			return supplier.get();
+		}
+		return Measurement.NULL;
+	}
+
+	/**
+	 * Override this method and return <code>true</code> to turn on performance data collection for this transpiler.
+	 */
+	protected boolean isPerformanceDataCollectionActive() {
+		return false;
 	}
 
 	/**

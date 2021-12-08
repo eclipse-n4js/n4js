@@ -40,7 +40,7 @@ import org.eclipse.n4js.ts.types.TFunction;
  * @model abstract="true"
  * @generated
  */
-public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement, VersionedElement {
+public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement {
 	/**
 	 * Returns the value of the '<em><b>Fpars</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.FormalParameter}.

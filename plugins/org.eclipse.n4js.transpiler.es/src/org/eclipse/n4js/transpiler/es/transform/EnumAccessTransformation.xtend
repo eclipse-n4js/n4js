@@ -14,16 +14,14 @@ import java.util.Map
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ImportDeclaration
-import org.eclipse.n4js.n4JS.Literal
-import org.eclipse.n4js.n4JS.NumericLiteral
 import org.eclipse.n4js.n4JS.ParenExpression
-import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.transpiler.utils.TranspilerUtils
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TMember
@@ -84,7 +82,7 @@ class EnumAccessTransformation extends Transformation {
 	 */
 	private def transformEnumLiteralAccess(TEnum originalEnum, ParameterizedPropertyAccessExpression_IM expr, TEnumLiteral prop) {
 		if (originalEnum !== null && expr !== null && prop !== null) {
-			replace(expr, enumLiteralToNumericOrStringLiteral(prop));
+			replace(expr, TranspilerUtils.enumLiteralToNumericOrStringLiteral(prop));
 		}
 	}
 
@@ -151,7 +149,7 @@ class EnumAccessTransformation extends Transformation {
 
 	def private VariableDeclaration createLiteralsConstant(TEnum tEnum) {
 		val name = findUniqueNameForLiteralsConstant(tEnum);
-		val vdecl = _VariableDeclaration(name, _ArrLit(tEnum.literals.map[enumLiteralToNumericOrStringLiteral]));
+		val vdecl = _VariableDeclaration(name, _ArrLit(tEnum.literals.map[TranspilerUtils.enumLiteralToNumericOrStringLiteral(it)]));
 		val vstmnt = _VariableStatement(vdecl);
 		val lastImport = state.im.scriptElements.filter(ImportDeclaration).last;
 		if (lastImport !== null) {
@@ -176,24 +174,5 @@ class EnumAccessTransformation extends Transformation {
 			newName = newName + cnt;
 		}
 		return newName;
-	}
-
-	/** Assumes the given literal belongs to an enum that is either <code>@NumberBased</code> or <code>@StringBased</code>. */
-	def private Literal enumLiteralToNumericOrStringLiteral(TEnumLiteral enumLiteral) {
-		val tEnum = enumLiteral.eContainer() as TEnum;
-		val enumKind = N4JSLanguageUtils.getEnumKind(tEnum);
-		return switch (enumKind) {
-			case Normal: throw new IllegalStateException("expected given enum literal to belong to a number-/string-based enum")
-			case NumberBased: enumLiteralToNumericLiteral(enumLiteral)
-			case StringBased: enumLiteralToStringLiteral(enumLiteral)
-		}
-	}
-
-	def private NumericLiteral enumLiteralToNumericLiteral(TEnumLiteral enumLiteral) {
-		return _NumericLiteral(enumLiteral?.valueNumber);
-	}
-
-	def private StringLiteral enumLiteralToStringLiteral(TEnumLiteral enumLiteral) {
-		return _StringLiteral(enumLiteral?.valueString);
 	}
 }

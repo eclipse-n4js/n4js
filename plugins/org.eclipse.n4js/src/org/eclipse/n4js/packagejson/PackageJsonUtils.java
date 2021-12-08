@@ -46,10 +46,10 @@ import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescriptio
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Strings;
-import com.google.gson.JsonElement;
 
 /**
  * A utility methods for extracting N4JS-specific information from generic {@link JSONPackage} model instances
@@ -346,17 +346,17 @@ public class PackageJsonUtils {
 	}
 
 	/**
-	 * See {@link PackageJsonModificationUtils#setVersionOfDependenciesInAllPackageJsonFiles(Path, Set, JsonElement)}.
+	 * See {@link PackageJsonModificationUtils#setVersionOfDependenciesInAllPackageJsonFiles(Path, Set, String)}.
 	 */
 	public static void setVersionOfDependenciesInAllPackageJsonFiles(Path rootFolder,
-			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
+			Set<N4JSPackageName> namesOfDependencies, String versionToSet) throws FileNotFoundException, IOException {
 		PackageJsonModificationUtils.setVersionOfDependenciesInAllPackageJsonFiles(rootFolder, namesOfDependencies,
 				versionToSet);
 	}
 
-	/** See {@link PackageJsonModificationUtils#setVersionOfDependenciesInPackageJsonFile(Path, Set, JsonElement)}. */
+	/** See {@link PackageJsonModificationUtils#setVersionOfDependenciesInPackageJsonFile(Path, Set, String)}. */
 	public static void setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
-			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
+			Set<N4JSPackageName> namesOfDependencies, String versionToSet) throws FileNotFoundException, IOException {
 		PackageJsonModificationUtils.setVersionOfDependenciesInPackageJsonFile(packageJsonFile, namesOfDependencies,
 				versionToSet);
 	}

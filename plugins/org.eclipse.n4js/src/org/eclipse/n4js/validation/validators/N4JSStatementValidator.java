@@ -17,8 +17,11 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForPOLY_STATIC_PO
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForTYS_FOR_IN_VAR_STRING;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.AssignmentExpression;
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Statement;
@@ -119,9 +122,7 @@ public class N4JSStatementValidator extends AbstractN4JSDeclarativeValidator {
 		if (forStatement.isForIn()) {
 			TypeRef loopVarType = null;
 			EObject location = null;
-			RuleEnvironment G = (RuleEnvironment) getContext().get(RuleEnvironment.class);
-			if (G == null)
-				return; // wrongly configured test
+			RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(forStatement);
 			if (!forStatement.getVarDeclsOrBindings().isEmpty()) {
 				VariableDeclarationOrBinding varDeclOrBinding = forStatement.getVarDeclsOrBindings().iterator().next();
 				location = varDeclOrBinding;
@@ -135,12 +136,17 @@ public class N4JSStatementValidator extends AbstractN4JSDeclarativeValidator {
 					}
 				}
 			} else if (forStatement.getInitExpr() != null) {
-				location = forStatement.getInitExpr();
-				TypeRef res = typeSystem.type(G, forStatement.getInitExpr());
-				if (!(res instanceof UnknownTypeRef)) {
-					loopVarType = res;
+				Expression initExpr = forStatement.getInitExpr();
+				if (initExpr instanceof AssignmentExpression) {
+					initExpr = ((AssignmentExpression) initExpr).getLhs();
 				}
-
+				if (initExpr instanceof IdentifierRef) {
+					location = initExpr;
+					TypeRef res = typeSystem.type(G, initExpr);
+					if (!(res instanceof UnknownTypeRef)) {
+						loopVarType = res;
+					}
+				}
 			}
 			if (loopVarType != null) {
 				Result res = typeSystem.subtype(G, RuleEnvironmentExtensions.stringTypeRef(G), loopVarType);

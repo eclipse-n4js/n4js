@@ -21,14 +21,15 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.ThisLiteral
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 @Singleton
 package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuilder {
@@ -37,43 +38,20 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase, int idx) {
+		relinkMethod(methodDecl, classifier.ownedMembers.get(idx) as TMethod, preLinkingPhase);
+	}
+
+	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TMethod tMethod, boolean preLinkingPhase) {
 		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
 		if (methodDefinedType !== null && ! methodDefinedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
-		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callableConstructor) {
+		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callSignature) {
 			return false
 		}
-		val methodType = classifier.ownedMembers.get(idx) as TMethod;
+		val methodType = tMethod;
 		ensureEqualName(methodDecl, methodType);
 
-		methodType.relinkFormalParameters(methodDecl, preLinkingPhase)
-
-		// link
-		methodType.astElement = methodDecl
-		methodDecl.definedType = methodType
-
-		return true;
-	}
-	
-	def package boolean relinkCallableCtor(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase) {
-		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
-		if (methodDefinedType !== null && ! methodDefinedType.eIsProxy) {
-			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
-		}
-
-		if (!methodDecl.callableConstructor) {
-			throw new RuntimeException("Provided method was neither constructor nor callable constructor.");
-		}
-
-		if (!methodDecl.name.isNullOrEmpty) {
-			throw new RuntimeException("Callable ctor cannot have a name, had " + methodDecl.name);
-		}
-		if (methodDecl.hasComputedPropertyName) {
-			throw new RuntimeException("Callable constructor cannot have computed name.");
-		}
-
-		val methodType = classifier.callableCtor
 		methodType.relinkFormalParameters(methodDecl, preLinkingPhase)
 
 		// link
@@ -94,17 +72,21 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		if (methodDefinedType !== null && !methodDefinedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
-		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callableConstructor) {
+		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callSignature) {
 			return null
 		}
 		val methodType = TypesFactory::eINSTANCE.createTMethod();
-		methodType.setMemberName(methodDecl);
+		if (methodDecl.isCallSignature) {
+			methodType.name = N4JSLanguageUtils.CALL_SIGNATURE_NAME;
+		} else {
+			methodType.setMemberName(methodDecl);
+		}
 		methodType.declaredAbstract = methodDecl.abstract
 		methodType.declaredStatic = methodDecl.declaredStatic
 		methodType.declaredFinal = methodDecl.declaredFinal
 		methodType.declaredOverride = AnnotationDefinition.OVERRIDE.hasAnnotation(methodDecl);
 		methodType.constructor = methodDecl.constructor
-		methodType.declaredAsync = methodDecl.async // TODO change to declaredAsync one the annotation is gone
+		methodType.declaredAsync = methodDecl.async
 		methodType.declaredGenerator = methodDecl.generator
 
 		val providesDefaultImpl = AnnotationDefinition.PROVIDES_DEFAULT_IMPLEMENTATION.hasAnnotation(methodDecl);
@@ -112,7 +94,6 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 
 		methodType.lacksThisOrSuperUsage = hasNonNullBody(methodDecl.body) && !containsThisOrSuperUsage(methodDecl.body)
 
-		// TODO if possible, remove, see AbstractFunctionDefinitionTypesBuilder
 		val builtInTypeScope = BuiltInTypeScope.get(methodDecl.eResource.resourceSet)
 
 		methodType.setMemberAccessModifier(methodDecl)

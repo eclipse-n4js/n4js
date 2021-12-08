@@ -553,12 +553,17 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 		if (_isDeclaredAsync) {
 			strb.append("async ");
 		}
+		boolean _isCallSignature = this.isCallSignature();
+		boolean _not = (!_isCallSignature);
+		if (_not) {
+			strb.append(this.getName());
+		}
 		final Function1<TFormalParameter, String> _function_1 = new Function1<TFormalParameter, String>() {
 			public String apply(final TFormalParameter it) {
 				return it.getFormalParameterAsString();
 			}
 		};
-		strb.append(this.getName()).append("(").append(IterableExtensions.join(XcoreEListExtensions.<TFormalParameter, String>map(this.getFpars(), _function_1), ", ")).append(")");
+		strb.append("(").append(IterableExtensions.join(XcoreEListExtensions.<TFormalParameter, String>map(this.getFpars(), _function_1), ", ")).append(")");
 		TypeRef _returnTypeRef = this.getReturnTypeRef();
 		boolean _tripleNotEquals = (_returnTypeRef != null);
 		if (_tripleNotEquals) {

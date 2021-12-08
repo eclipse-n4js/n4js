@@ -47,8 +47,36 @@ Workflow {
 		}
 
 		language = XtextGeneratorLanguage {
+			name = "org.eclipse.n4js.TypeExpressions"
+			fileExtensions = "n4ts"
+
+			referencedResource = "platform:/resource/org.eclipse.emf.ecore.xcore.lib/model/XcoreLang.xcore"
+			referencedResource = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore"
+			referencedResource = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel"
+			referencedResource = "platform:/resource/org.eclipse.n4js.ts.model/model/Types.xcore"
+			referencedResource = "platform:/resource/org.eclipse.n4js.ts.model/model/TypeRefs.xcore"
+
+			// Java API to access grammar elements (required by several other fragments)
+			fragment = grammarAccess.GrammarAccessFragment2 {}
+
+			// serializer 2.0
+			fragment = serializer.SerializerFragment2 {
+				generateStub = false
+			}
+
+			// content assist API
+			fragment = ui.contentAssist.ContentAssistFragment2 {
+				inheritImplementation = false
+			}
+
+			fragment = formatting.Formatter2Fragment2 {
+				generateStub = false
+			}
+		}
+
+		language = XtextGeneratorLanguage {
 			name = "org.eclipse.n4js.N4JS"
-			fileExtensions = "n4js,n4jsx,js,jsx,n4jsd,n4idl"
+			fileExtensions = "n4js,n4jsx,js,jsx,n4jsd"
 
 			referencedResource = "platform:/resource/org.eclipse.emf.ecore.xcore.lib/model/XcoreLang.xcore"
 			referencedResource = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore"

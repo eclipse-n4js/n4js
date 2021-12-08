@@ -23,7 +23,7 @@ var a : A;
 
 // ok
 a.foo("Hello", "world");
-// XPECT errors --> "int is not a subtype of string." at "1"
+// XPECT errors --> "1 is not a subtype of string." at "1"
 a.foo("Hello", 1);
 // XPECT errors --> "Incorrect number of arguments: expected 2, got 1." at "a.foo("Hello")"
 a.foo("Hello");
@@ -32,7 +32,7 @@ a.foo("Hello", "world", "!");
 
 // ok
 a.bar("Hello", "world");
-// XPECT errors --> "int is not a subtype of string." at "1"
+// XPECT errors --> "1 is not a subtype of string." at "1"
 a.bar("Hello", 1);
 // ok
 a.bar("Hello");
@@ -41,7 +41,7 @@ a.bar("Hello", "world", "!");
 
 // ok
 a.baz("Hello", "world");
-// XPECT errors --> "int is not a subtype of string." at "1"
+// XPECT errors --> "1 is not a subtype of string." at "1"
 a.baz("Hello", 1);
 // ok
 a.baz("Hello");

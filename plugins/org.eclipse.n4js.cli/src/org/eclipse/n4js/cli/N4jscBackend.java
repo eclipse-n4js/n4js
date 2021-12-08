@@ -11,6 +11,7 @@
 package org.eclipse.n4js.cli;
 
 import org.eclipse.n4js.cli.compiler.N4jscCompiler;
+import org.eclipse.n4js.cli.init.N4jscInit;
 import org.eclipse.n4js.cli.lsp.LspServer;
 
 /**
@@ -43,5 +44,15 @@ public class N4jscBackend {
 	/** Runs the cli goal {@code watch} with the given options */
 	public N4jscExitState goalWatch(N4jscOptions options) throws Exception {
 		throw new N4jscException(N4jscExitCode.NOT_IMPLEMENTED);
+	}
+
+	/** Runs the cli goal {@code init} with the given options */
+	public N4jscExitState goalInit(N4jscOptions options) throws Exception {
+		return N4jscInit.start(options);
+	}
+
+	/** Runs the cli goal {@code set-versions} with the given options */
+	public N4jscExitState goalSetVersions(N4jscOptions options) throws Exception {
+		return N4jscSetVersions.start(options);
 	}
 }

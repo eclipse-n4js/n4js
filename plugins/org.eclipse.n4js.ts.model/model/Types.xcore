@@ -35,23 +35,12 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
-import org.eclipse.n4js.ts.versions.MigratableUtils
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.EcoreUtil2
 
 type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
-
-/*
- * Container used when explicitly defining types, e.g., for defining built in types or for tests.
- */
-class TypeDefs {
-	/*
-	 * Types defined in a single file. These types must not reference external types.
-	 */
-	contains Type[] types
-}
 
 /**
  * The TModule is the representation of the script on the type level.
@@ -69,10 +58,15 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	String qualifiedName
 	/**
-	 * The <em>N4JS project name</em> of the project containing this module, as defined at
-	 * {@link org.eclipse.n4js.utils.ProjectDescriptionUtils#isProjectNameWithScope(String)}.
+	 * The <em>package name</em> of the project containing this module, as defined at
+	 * {@link org.eclipse.n4js.packagejson.projectDescription.ProjectDescription#packageName}.
 	 */
-	String projectName
+	String packageName
+	/**
+	 * The <em>project id</em> of the project containing this module, as defined at
+	 * {@link org.eclipse.n4js.packagejson.projectDescription.ProjectDescription#id}.
+	 */
+	String projectID
 	/**
 	 * The vendorId of the project containing this module.
 	 */
@@ -412,6 +406,7 @@ class TypeVariable extends Type {
 	boolean declaredCovariant
 	boolean declaredContravariant
 	contains TypeRef declaredUpperBound
+	contains TypeRef defaultArgument
 
 	/*
 	 * Returns this type variable's {@link org.eclipse.n4js.ts.types.util.Variance variance}. Always returns
@@ -428,16 +423,18 @@ class TypeVariable extends Type {
 			return Variance.INV;
 		}
 	}
-	op TypeVariable[] getTypeVars() {
-		return emptyEList();
+	op boolean isOptional() {
+		return defaultArgument !== null;
 	}
+
 	op String getTypeAsString() {
 		return getTypeVariableAsString(declaredUpperBound);
 	}
 	op String getTypeVariableAsString(TypeRef upperBound) {
 		return (if(declaredCovariant) "out " else if(declaredContravariant) "in " else "")
 			+ name
-			+ (if (upperBound!==null) " extends " + upperBound.typeRefAsString else "");
+			+ (if (upperBound!==null) " extends " + upperBound.typeRefAsString else "")
+			+ (if (defaultArgument!==null) " = " + defaultArgument.typeRefAsString else "");
 	}
 }
 
@@ -451,7 +448,7 @@ class InferenceVariable extends TypeVariable {}
  * Represents a function declaration. In JavaScript, functions are first-class objects, hence
  * a function declaration also is a type declaration.
  */
-class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement, TVersionable {
+class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement, Type {
 	boolean external
 	/*
 	 * Formal parameters
@@ -488,11 +485,22 @@ class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElemen
 	 */
 	boolean constructor
 	/**
-	 * Tells whether this function is a method that represents a callable constructor.
+	 * Tells whether this function is a method that represents a call signature.
+	 * <p>
+	 * Does not work in case the receiver is an AST node (use {@link TStructMember#isASTCallSignature()} instead).
 	 */
-	op boolean isCallableConstructor() {
+	op boolean isCallSignature() {
 		val parent = eContainer;
-		return if(parent instanceof ContainerType<?>) parent.callableCtor===this else false;
+		return if(parent instanceof ContainerType<?>) parent.callSignature===this else false;
+	}
+	/**
+	 * Tells whether this function is a method that represents a construct signature.
+	 * <p>
+	 * Does not work in case the receiver is an AST node (use {@link TStructMember#isASTConstructSignature()} instead).
+	 */
+	op boolean isConstructSignature() {
+		val parent = eContainer;
+		return if(parent instanceof ContainerType<?>) parent.constructSignature===this else false;
 	}
 	/**
 	 * Returns the formal parameter corresponding to the argument at index 'argIndex' in a function call
@@ -574,7 +582,7 @@ enum MemberAccessModifier {
  * </p>
  */
 //TODO why not abstract (doesn't work when it is abstract, but why?)
-class Type extends TExportableElement, TAnnotableElement, org.eclipse.n4js.ts.typeRefs.Versionable {
+class Type extends TExportableElement, TAnnotableElement {
 
 	/** Returns true iff this type is a type alias. */
 	op boolean isAlias() {
@@ -591,16 +599,20 @@ class Type extends TExportableElement, TAnnotableElement, org.eclipse.n4js.ts.ty
 	}
 
 	/**
-	 * Returns true if type actually is a polyfill or a static-polyfill. The flag is usually set via annotations and false for most types (only TClass can actually be
-	 * declared to be a polyfill).  (c.f. {@link Type#isStaticPolyfill()})
+	 * Returns true iff type is a (static or non-static) polyfill.
+	 * <p>
+	 * The flag is usually set via annotations and false for most types (only TClassifier can actually be declared to be a polyfill).
+	 * (c.f. {@link Type#isStaticPolyfill()})
 	 */
 	op boolean isPolyfill() {
 		return false;
 	}
 
 	/**
-	 * Returns true if type actually is a static polyfill. The flag is usually set via annotations and false for most types (only TClass can actually be
-	 * declared to be a static polyfill).  (c.f. {@link Type#isPolyfill()})
+	 * Returns true iff type is a <em>static</em> polyfill (returns false for non-static polyfills).
+	 * <p>
+	 * The flag is usually set via annotations and false for most types (only TClass can actually be declared to be a static polyfill).
+	 * (c.f. {@link Type#isPolyfill()})
 	 */
 	op boolean isStaticPolyfill() {
 		return false;
@@ -743,7 +755,8 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 	transient EMap<NameAndAccess, ? extends TMember> ownedMembersByNameAndAccess
 
 	contains MT[] ownedMembers
-	contains TMethod callableCtor // required in TClass and TObjectPrototype
+	contains TMethod callSignature
+	contains TMethod constructSignature
 
 	/**
 	 * Convenience method returning the owned constructor or <code>null</code> if not available.
@@ -800,18 +813,6 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 }
 
 /*
- * Used for predefining members shared by all types of a certain meta-tyes, such as
- * enumerations all providing a getter method value. It sole purpose is to mix in the defined members here into the
- * actual types transparently inheriting from that type.
- */
-class VirtualBaseType extends ContainerType<TMember>, ArrayLike {
-	/*
-	 * Directly contained members, that is predefined members of all enums
-	 */
-	contains TMember[] declaredOwnedMembers
-}
-
-/*
  * Virtual type for ES6 namespace imports. Not directly available for N4JS users, can be used only
  * like TypeReferenceName. See ES6::9.4.6 Module Namespace Exotic Objects
  */
@@ -833,9 +834,9 @@ class ModuleNamespaceVirtualType extends Type, SyntaxRelatedTElement {
 }
 
 /*
- * Primitive types are modeled similar to TClassifiers, except that they have no access modifier and cannot be parameterized.
+ * Primitive types are modeled similar to TClassifiers, except that they have no access modifier and cannot have members.
  */
-class PrimitiveType extends ContainerType<TMember>, ArrayLike {
+class PrimitiveType extends GenericType, ArrayLike {
 	/*
 	 * Specifies a type to and from which this type is assignment compatible.
 	 * Only used for special stringish types such as typename or pathSelector,
@@ -852,16 +853,11 @@ class PrimitiveType extends ContainerType<TMember>, ArrayLike {
 }
 
 // SZ: update documentation below, maybe ContainerType?
-class BuiltInType extends Type {
-
-	op TypeVariable[] getTypeVars() {
-		return emptyEList();
-	}
-}
+class BuiltInType extends Type {}
 
 class AnyType extends BuiltInType {
 	/**
-	 * Of course any can be subtyped, it is the bottom type.
+	 * Of course any can be subtyped, it is the top type.
 	 */
 	op boolean isFinal() {
 		return false;
@@ -900,104 +896,10 @@ class TStructuralType extends ContainerType<TStructMember>, SyntaxRelatedTElemen
 	}
 }
 
-/**
- * Base class for all versionable types.
- */
-abstract class TVersionable extends Type {
-	/**
-	 * The declared version of the type. This is not used by N4JS at the moment but only
-	 * in derived languages such as N4IDL. It needs to be stored in the type model though as
-	 * it is required to be cached (i.e. stored in the Xtext index) for scoping etc.
-	 *
-	 * This is set by the N4IDL types builder.
-	 */
-	int declaredVersion
-
-	/*
-	 * Overrides default implementation of type, returns the actually declared version (which
-	 * is 0 in N4JS as it cannot be set there). Only used for derived languages such as N4IDL.
-	 */
-	op int getVersion() {
-		return declaredVersion;
-	}
-}
-
-/**
- * A migratable element represent a type that can be subject to N4IDL migrations.
- * 
- * @see TMigration
- */
-abstract class TMigratable {
-	/**
-	 * The declared migrations for this {@link TMigratable} element.
-	 */
-	refers TMigration[] migrations
-}
-
-/**
- * Represents an N4IDL migration.
- */
-class TMigration extends TFunction {
-	
-	/**
-	 * The source model version of this migration.
-	 */
-	int sourceVersion
-	/**
-	 * The target model version of this migration.
-	 */
-	int targetVersion
-	
-	/**
-	 * Returns {@code true} iff migration has an explicitly declared
-	 * source and target version.
-	 */
-	boolean hasDeclaredSourceAndTargetVersion
-	
-	/**
-	 * The source TypeRefs of this migration.
-	 */
-	refers TypeRef[] sourceTypeRefs
-	
-	/**
-	 * The target TypeRefs of this migration.
-	 */
-	refers TypeRef[] targetTypeRefs	
-	
-	
-	/** Transient principal argument type. Access through #getPrincipalArgumentType() */
-	refers transient TMigratable _principalArgumentType
-	
-	/**
-	 * The principal argument of this migration.
-	 */
-	op TMigratable getPrincipalArgumentType() {
-		if (_principalArgumentType === null) {
-			EcoreUtilN4.doWithDeliver(false,
-				[|
-					_principalArgumentType = MigratableUtils.findPrincipalMigrationArgument(sourceTypeRefs).orElse(null);
-				], this);
-		}
-		return _principalArgumentType;
-	}
-	
-	/**
-	 * Returns string representation of this migration.
-	 * 
-	 * This includes source types and target types.
-	 */
-	op String getMigrationAsString() {
-		return String.format("%s (%s) => (%s)",
-				this.name,
-				this.sourceTypeRefs.map[t | t.getTypeRefAsString()].join(", "),
-				this.targetTypeRefs.map[t | t.getTypeRefAsString()].join(", "));
-	}
-}
-
 /*
  * Base class for N4 specific classifiers, i.e., class, interface, or role.
  */
-abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement, TVersionable {
+abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement, Type {
 
 	/*
 	 * Tells if this classifier is itself annotated with <code>@CovariantConstructor</code> or if it has an owned
@@ -1052,27 +954,6 @@ abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement
 	}
 }
 
-/*
- * Plain JavaScript objects with super type (=prototype).
- * This is used for defining predefined types such as Object, String, Date etc.
- */
-class TObjectPrototype extends TClassifier, AccessibleTypeElement, ArrayLike {
-	contains ParameterizedTypeRef superType
-
-	boolean declaredFinal
-
-	op TMethod getOwnedCtor() {
-		return ownedMembers.filter(TMethod).findFirst[name.equals('constructor')]
-	}
-
-	/**
-	 * Returns value of declaredFinal attribute.
-	 */
-	op boolean isFinal() {
-		return declaredFinal;
-	}
-}
-
 /**
  * 'Trait' that allows to mark a certain type as "array like". If an elementType is
  * provided, that one is assumed to be the return type of index access expressions with a numeric index.
@@ -1092,7 +973,9 @@ abstract class ArrayLike {
 	op TypeRef getElementType()
 }
 
-class TN4Classifier extends TClassifier, AccessibleTypeElement, TMigratable {
+class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike {
+
+	boolean declaredNonStaticPolyfill
 	/*
 	 * Flag indicating whether references to this type may be flagged as dynamic.
 	 */
@@ -1103,6 +986,10 @@ class TN4Classifier extends TClassifier, AccessibleTypeElement, TMigratable {
 	 * The latter is only available on use site.
 	 */
 	TypingStrategy typingStrategy
+
+	op boolean isPolyfill() {
+		return declaredNonStaticPolyfill;
+	}
 }
 
 class TClass extends TN4Classifier {
@@ -1110,7 +997,6 @@ class TClass extends TN4Classifier {
 	boolean declaredAbstract
 	boolean declaredN4JS
 	boolean declaredFinal
-	boolean declaredPolyfill
 	boolean declaredStaticPolyfill
 	boolean observable
 	contains ParameterizedTypeRef superClassRef
@@ -1143,16 +1029,10 @@ class TClass extends TN4Classifier {
 		return implementedInterfaceRefs;
 	}
 
-	/**
-	 * Returns true if the class actually is a polyfill or a static-polyfill. (c.f. {@link TClass#isStaticPolyfill()})
-	 */
 	op boolean isPolyfill() {
-		return declaredPolyfill;
+		return declaredNonStaticPolyfill || declaredStaticPolyfill;
 	}
 
-	/**
-	 * Returns true if the class actually is a static polyfill (c.f. {@link TClass#isPolyfill()})
-	 */
 	op boolean isStaticPolyfill() {
 		return declaredStaticPolyfill;
 	}
@@ -1392,6 +1272,22 @@ abstract class TStructMember extends TMember {
 	op MemberAccessModifier getMemberAccessModifier() {
 		return MemberAccessModifier.PUBLIC
 	}
+
+	/*
+	 * If this TStructMember plays the role of an AST node, this method tells whether it is a call signature;
+	 * if this TStructMember is not an AST node, the return value is undefined (i.e. this method does not check
+	 * whether the receiver is actually an AST node).
+	 * <p>
+	 * Note: this method is required because {@link TFunction#isCallSignature()} does not work for AST nodes.
+	 */
+	op boolean isASTCallSignature() {
+		return this instanceof TStructMethod && this.name === null;
+	}
+
+	/* Same as {@link TStructMember#isASTCallSignature()}, but for construct signatures. */
+	op boolean isASTConstructSignature() {
+		return this instanceof TStructMethod && this.name == "new";
+	}
 }
 
 /*
@@ -1429,7 +1325,10 @@ class TMethod extends TFunction, TMemberWithAccessModifier {
 		val StringBuilder strb = new StringBuilder();
 		if (generic) strb.append("<").append(typeVars.map[typeAsString].join(",")).append("> ");
 		if (declaredAsync) strb.append("async ");
-		strb.append(name).append("(").append(fpars.map[formalParameterAsString].join(", ")).append(")");
+		if (!isCallSignature()) {
+			strb.append(name);
+		}
+		strb.append("(").append(fpars.map[formalParameterAsString].join(", ")).append(")");
 		if (returnTypeRef!==null) strb.append(": ").append(returnTypeRef.typeRefAsString);
 		if (returnValueOptional) strb.append('?');
 		return strb.toString();
@@ -1690,14 +1589,10 @@ class TStructSetter extends TSetter, TStructMember {
  * Represents a user defined enumeration type. All enums implicitly (and transparently
  * to the user) inherit from N4Enum, which provides properties shared by all enums.
  */
-class TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElement, TVersionable, TMigratable {
+class TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElement {
 
 	boolean external
 	contains TEnumLiteral[] literals
-	
-	op TypeVariable[] getTypeVars() {
-		return emptyEList();
-	}
 }
 
 /*

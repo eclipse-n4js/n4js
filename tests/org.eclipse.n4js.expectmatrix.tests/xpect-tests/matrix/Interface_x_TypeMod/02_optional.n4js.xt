@@ -40,7 +40,7 @@ a.f();
 // not enough arguments XPECT noerrors -->
 a.f(true);
 
-// argument in wrong place XPECT errors --> "int is not a subtype of boolean." at "5"
+// argument in wrong place XPECT errors --> "5 is not a subtype of boolean." at "5"
 a.f(5);
 
 // good arguments XPECT noerrors -->

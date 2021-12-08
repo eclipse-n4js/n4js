@@ -17,43 +17,40 @@ import java.util.HashMap
 import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4idl.scoping.utils.MultiImportedElementsMap
-import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.resource.N4JSEObjectDescription
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
+import org.eclipse.n4js.scoping.TopLevelElementsCollector
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.NoPrimitiveTypesScope
 import org.eclipse.n4js.scoping.members.MemberScope.MemberScopeFactory
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
-import org.eclipse.n4js.scoping.utils.MergedScope
-import org.eclipse.n4js.scoping.utils.ScopesHelper
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.typeRefs.Versionable
+import org.eclipse.n4js.scoping.utils.MultiImportedElementsMap
+import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
+import org.eclipse.n4js.scoping.utils.UberParentScope
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.versions.VersionableUtils
 import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
-import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
 
 /** internal helper collection type */
@@ -88,21 +85,21 @@ class ImportedElementsScopingHelper {
 	private MemberScopeFactory memberScopeFactory
 
 	@Inject
-	private ScopesHelper scopesHelper;
-
+	private ScopeSnapshotHelper scopesHelper;
+	
 	@Inject
-	private JavaScriptVariantHelper variantHelper;
+	private TopLevelElementsCollector topLevelElementCollector
 
-	@Inject
-	private VersionHelper versionHelper;
+
 
 	def IScope getImportedIdentifiables(IScope parentScope, Script script) {
 		val IScope scriptScope = cache.get(script -> 'importedIdentifiables', script.eResource) [|
 			// TODO parentScope (usually global scope) arg is not part of cache key but used in value!
 			// filter out primitive types in next line (otherwise code like "let x = int;" would be allowed)
-			val builtInTypes = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet))
-			val globalObjectScope = getGlobalObjectProperties(new MergedScope(parentScope, builtInTypes), script)
-			val result = script.findImportedElements(globalObjectScope, true);
+			val noPrimitiveBuiltIns = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet));
+			val uberParent = new UberParentScope("ImportedElementsScopingHelper-uberParent", noPrimitiveBuiltIns, parentScope);
+			val globalObjectScope = getGlobalObjectProperties(uberParent, script);
+			val result = findImportedElements(script, globalObjectScope, true, true);
 			return result;
 		]
 		return scriptScope
@@ -110,7 +107,18 @@ class ImportedElementsScopingHelper {
 
 	def IScope getImportedTypes(IScope parentScope, Script script) {
 		val IScope scriptScope = cache.get(script -> 'importedTypes', script.eResource) [|
-			val result = script.findImportedElements(parentScope, false);
+			return findImportedElements(script, parentScope, true, false);
+		]
+		return scriptScope
+	}
+
+	def IScope getImportedValues(IScope parentScope, Script script) {
+		val IScope scriptScope = cache.get(script -> 'importedValues', script.eResource) [|
+			// filter out primitive types in next line (otherwise code like "let x = int;" would be allowed)
+			val noPrimitiveBuiltIns = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet));
+			val uberParent = new UberParentScope("ImportedElementsScopingHelper-uberParent", noPrimitiveBuiltIns, parentScope);
+			val globalObjectScope = getGlobalObjectProperties(uberParent, script);
+			val result = findImportedElements(script, globalObjectScope, false, true);
 			return result;
 		]
 		return scriptScope
@@ -145,11 +153,11 @@ class ImportedElementsScopingHelper {
 		return QualifiedName.create(namespace, getImportedName(type));
 	}
 
-	private def IScope findImportedElements(Script script, IScope parentScope, boolean includeVariables) {
+	private def IScope findImportedElements(Script script, IScope parentScope, boolean includeHollows, boolean includeVariables) {
 		val contextResource = script.eResource;
 		val imports = script.scriptElements.filter(ImportDeclaration)
 
-		if (imports.empty) return parentScope
+		if (imports.empty) return parentScope;
 
 		/** broken/invisible imported eObjects descriptions 
 		 *  - in case of broken state of imports this can be {@link AmbiguousImportDescription}
@@ -161,12 +169,17 @@ class ImportedElementsScopingHelper {
 		val originatorMap = new IEODesc2ISpec
 
 		for (imp : imports) {
-			if (imp?.module !== null) {
+			val module = imp?.module;
+			if (module !== null) {
+				
+				val topLevelElements = topLevelElementCollector.getTopLevelElements(module, contextResource, includeHollows, includeVariables);
+				val tleScope = scopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", module, IScope.NULLSCOPE, false, topLevelElements)
+			
 				for (specifier : imp.importSpecifiers) {
 					switch (specifier) {
 						NamedImportSpecifier: {
 							processNamedImportSpecifier(specifier, imp, contextResource, originatorMap, validImports,
-								invalidImports, includeVariables)
+								invalidImports, includeVariables, tleScope)
 						}
 						NamespaceImportSpecifier: {
 							processNamespaceSpecifier(specifier, imp, script, contextResource, originatorMap, validImports,
@@ -177,23 +190,32 @@ class ImportedElementsScopingHelper {
 			}
 		}
 
-		// local broken elements are hidden by parent scope, both are hidden by valid local elements
-		val invalidLocalScope = new SimpleScope(invalidImports.values)
-		val localBaseScope = new MergedScope(invalidLocalScope, parentScope)
-		val localValidScope = scopesHelper.mapBasedScopeFor(script, localBaseScope, validImports.values)
 
-		return new OriginAwareScope(localValidScope, originatorMap);
+//		 local broken elements are hidden by parent scope, both are hidden by valid local elements
+		val invalidLocalScope = scopesHelper.scopeFor("findImportedElements-invalidImports", script, invalidImports.values)
+		val localValidScope = scopesHelper.scopeFor("findImportedElements-validImports", script, parentScope, validImports.values)
+		val importScope = new UberParentScope("findImportedElements-uberParent", localValidScope, invalidLocalScope)
+		return new OriginAwareScope(script, importScope, originatorMap);
 	}
 
 	protected def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
-		Resource contextResource, IEODesc2ISpec originatorMap,
-		ImportedElementsMap validImports,
-		ImportedElementsMap invalidImports, boolean importVariables) {
+			Resource contextResource, IEODesc2ISpec originatorMap,
+			ImportedElementsMap validImports,
+			ImportedElementsMap invalidImports, boolean importVariables, IScope tleScope) {
 
 		val element = if (specifier.declaredDynamic) {
 			(specifier.eResource as N4JSResource).module.internalDynamicElements.findFirst[it.astElement === specifier];
 		} else {
-			specifier.importedElement
+			val name = if (specifier instanceof DefaultImportSpecifier)
+						"default" else specifier.importedElementAsText;
+			val qName = QualifiedName.create(name);
+						
+			val importedElem = tleScope.getSingleElement(qName);
+			if (importedElem !== null && importedElem.EObjectOrProxy instanceof TExportableElement) {
+				importedElem.EObjectOrProxy as TExportableElement
+			} else {
+				null
+			}
 		};
 
 		if (element !== null && !element.eIsProxy) {
@@ -223,21 +245,8 @@ class ImportedElementsScopingHelper {
 
 	private def void addNamedImports(NamedImportSpecifier specifier, TExportableElement element, QualifiedName importedName,
 		IEODesc2ISpec originatorMap, ImportedElementsMap validImports) {
-		if (variantHelper.allowVersionedTypes(specifier) && VersionableUtils.isTVersionable(element)) {
-			// If the current context supports versioned types, import all versions of the
-			// specified type.
-			versionHelper.findTypeVersions(element as Type).forEach[ type |
-				val description = validImports.putOrError(type, importedName,
-					IssueCodes.IMP_AMBIGUOUS
-				);
-				originatorMap.putWithOrigin(description, specifier);
-			]
-		} else {
-			// Otherwise only import the type which was linked to the import specifier
-			// at link-time.
-			val ieod = validImports.putOrError(element, importedName, IssueCodes.IMP_AMBIGUOUS);
-			originatorMap.putWithOrigin(ieod, specifier)
-		}
+		val ieod = validImports.putOrError(element, importedName, IssueCodes.IMP_AMBIGUOUS);
+		originatorMap.putWithOrigin(ieod, specifier)
 	}
 
 	private def void processNamespaceSpecifier(
@@ -389,11 +398,7 @@ class ImportedElementsScopingHelper {
 	 */
 	protected def boolean isAmbiguous(IEObjectDescription existing, IdentifiableElement element) {
 		// make sure ambiguity is only detected in case of the same imported version of a type
-		if (existing.getEObjectOrProxy instanceof Versionable && element instanceof Versionable) {
-			return (existing.getEObjectOrProxy as Versionable).version == (element as Versionable).version;
-		} else {
-			return true;
-		}
+		return true;
 	}
 
 	private def IEObjectDescription putOrError(ImportedElementsMap result,
@@ -402,7 +407,7 @@ class ImportedElementsScopingHelper {
 		var IEObjectDescription ret = null;
 		val existing = result.getElements(importedName)
 
-		if (!existing.empty && existing.findFirst[isAmbiguous(it, element)] !== null) {
+		if (!existing.empty && existing.get(0) !== null) {
 			if (issueCode !== null) {
 				switch existing {
 					AmbiguousImportDescription: {

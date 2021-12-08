@@ -56,7 +56,7 @@ public class XtFileDataParser {
 		XtWorkspace workspace = setupParseResult.workspace;
 		if (workspace == null) {
 			File xtFileStripped = XtFileData.stripXtExtension(xtFile);
-			workspace = createDefaultWorkspace(xtFileStripped.getName(), xtFileContent);
+			workspace = createDefaultWorkspace(xtFileStripped.getName(), xtFileContent, setupParseResult);
 		}
 
 		List<XtMethodData> startupMethodData = getDefaultStartupMethodData();
@@ -86,7 +86,8 @@ public class XtFileDataParser {
 		return xtFileContent.substring(idxStart, idxEnd + XT_SETUP_END.length());
 	}
 
-	static XtWorkspace createDefaultWorkspace(String fileName, String xtFileContent) {
+	static XtWorkspace createDefaultWorkspace(String fileName, String xtFileContent,
+			XtSetupParseResult setupParseResult) {
 		String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 		String moduleName = fileName.substring(0, fileName.length() - 1 - extension.length());
 
@@ -96,9 +97,12 @@ public class XtFileDataParser {
 		srcFolder.addModule(xtFileModule);
 		Project project = new Project(DEFAULT_PROJECT_NAME, VENDOR, VENDOR_NAME);
 		project.addSourceFolder(srcFolder);
+		project.setGenerateDts(setupParseResult.generateDts);
+
 		XtWorkspace workspace = new XtWorkspace();
 		workspace.addProject(project);
 		workspace.moduleNameOfXtFile = fileName;
+
 		return workspace;
 	}
 
@@ -220,7 +224,8 @@ public class XtFileDataParser {
 			int offset = commentToken.start + locEnd.end;
 			String mdComment = comment.substring(locStart.end, locKeyword.start).trim();
 			String mdMethodAndArgs = comment.substring(locModifier.end, locExpectation.start).trim();
-			String mdExpectation = comment.substring(locExpectation.end, locEnd.start);
+			String mdExpectationRaw = comment.substring(locExpectation.end, locEnd.start);
+			String mdExpectation = mdExpectationRaw;
 			boolean isFixme = XT_FIXME.equals(locModifier.text);
 			boolean isIgnore = XT_IGNORE.equals(locModifier.text);
 			int idxEndOfName = mdMethodAndArgs.indexOf(" ");
@@ -230,12 +235,14 @@ public class XtFileDataParser {
 			methodNameCounters.put(name, counter + 1);
 
 			if (!isLiteral) {
-				mdExpectation = mdExpectation.replaceAll("[ \\t]*\\n[ \\t]*(?:\\/\\/|\\*)[ \\t]*", "\n");
+				mdExpectation = mdExpectationRaw.replaceAll("[ \\t]*\\n[ \\t]*(?:\\/\\/|\\*)[ \\t]*", "\n");
 			}
+			mdExpectationRaw = mdExpectationRaw.trim();
 			mdExpectation = mdExpectation.trim();
 
 			cursorInComment = locEnd.end;
-			return new XtMethodData(fileName, mdComment, name, args, counter, mdExpectation, offset, isFixme, isIgnore);
+			return new XtMethodData(fileName, mdComment, name, args, counter, mdExpectation, mdExpectationRaw, offset,
+					isFixme, isIgnore);
 		}
 	}
 

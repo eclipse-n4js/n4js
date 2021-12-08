@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import static org.eclipse.n4js.ts.utils.TypeExtensions.ref;
+import static org.eclipse.n4js.types.utils.TypeExtensions.ref;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRefDynamic;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.argumentsTypeRef;
@@ -87,14 +87,14 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
-import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.EcoreUtil2;
@@ -185,35 +185,40 @@ import com.google.inject.Inject;
 				} else {
 					// expected type of argument
 
-					// compute ctor
-					final TypeRef ctorTypeRefPlain = ts.type(G, expr.getCallee());
-					if (!(ctorTypeRefPlain instanceof TypeTypeRef)) {
+					// obtain constructor or construct signature
+					final TypeRef calleeTypeRef = ts.type(G, expr.getCallee());
+					final TMethod ctorOrConstructSig = tsh.getConstructorOrConstructSignature(G, calleeTypeRef, false);
+					if (ctorOrConstructSig == null) {
 						return unknown();
 					}
-					final TypeTypeRef ctorTypeRef = (TypeTypeRef) ctorTypeRefPlain;
 
-					// add type variable mappings based on the type
-					// of the instance to be created
-					// --> for this, create a ParameterizedTypeRef taking the staticType from
-					// the CtorTypeRef and the type arguments from the NewExpression
-					final TypeRef typeRefOfInstanceToCreate = typeSystemHelper.createTypeRefFromStaticType(
-							G, ctorTypeRef, expr);
-					final Type typeOfInstanceToCreatePlain = typeRefOfInstanceToCreate.getDeclaredType();
-					if (!(typeOfInstanceToCreatePlain instanceof ContainerType<?>)) {
-						return unknown();
-					}
-					final ContainerType<?> typeOfInstanceToCreate = (ContainerType<?>) typeOfInstanceToCreatePlain;
+					// prepare rule environment for substitution
 					final RuleEnvironment G2 = wrap(G);
-					typeSystemHelper.addSubstitutions(G2, typeRefOfInstanceToCreate);
-					setThisBinding(G2, typeRefOfInstanceToCreate); // required if we refer to a ctor with a parameter of
-																	// type [~]~this (esp. default ctor)
+					if (ctorOrConstructSig.isConstructSignature()) {
+						// special case: interface with construct signature
+						typeSystemHelper.addSubstitutions(G2, expr, ctorOrConstructSig);
 
-					final TMethod ctor = containerTypesHelper.fromContext(expr.eResource())
-							.findConstructor(typeOfInstanceToCreate);
+					} else if (calleeTypeRef instanceof TypeTypeRef) {
+						// standard case:
+						final TypeTypeRef calleeTypeRefCasted = (TypeTypeRef) calleeTypeRef;
 
-					final TFormalParameter fpar = ctor != null
-							? ctor.getFparForArgIdx(ECollections.indexOf(expr.getArguments(), argument, 0))
-							: null;
+						// add type variable mappings based on the type
+						// of the instance to be created
+						// --> for this, create a ParameterizedTypeRef taking the staticType from
+						// the CtorTypeRef and the type arguments from the NewExpression
+						final TypeRef typeRefOfInstanceToCreate = typeSystemHelper.createTypeRefFromStaticType(
+								G, calleeTypeRefCasted, expr);
+						typeSystemHelper.addSubstitutions(G2, typeRefOfInstanceToCreate);
+
+						// required if we refer to a ctor with a parameter of type [~]~this (esp. default ctor)
+						setThisBinding(G2, typeRefOfInstanceToCreate);
+
+					} else {
+						return unknown();
+					}
+
+					final int argIdx = ECollections.indexOf(expr.getArguments(), argument, 0);
+					final TFormalParameter fpar = ctorOrConstructSig.getFparForArgIdx(argIdx);
 					if (fpar == null) {
 						// consequential error or ignored:
 						return unknown();
@@ -453,7 +458,7 @@ import com.google.inject.Inject;
 				if (javaScriptVariantHelper.isTypeAware(e)) {
 					// TODO this looks expensive...
 					final UnionTypeExpression primsTR = TypeUtils.createNonSimplifiedUnionType(
-							numberTypeRef(G), stringTypeRef(G), booleanTypeRef(G));
+							booleanTypeRef(G), numberTypeRef(G), stringTypeRef(G));
 					final Expression otherSide = expression == e.getLhs() ? e.getRhs() : e.getLhs();
 					final TypeRef otherSideTR = ts.type(G, otherSide);
 					if (otherSideTR == null) {
@@ -461,7 +466,7 @@ import com.google.inject.Inject;
 					}
 					if (ts.subtype(G, otherSideTR, primsTR).isSuccess()
 							&& !ts.subtype(G, otherSideTR, nullTypeRef(G)).isSuccess()) {
-						return otherSideTR;
+						return ts.upperBoundWithReopenAndResolveBoth(G, otherSideTR);
 					} else {
 						return primsTR;
 					}
@@ -526,6 +531,10 @@ import com.google.inject.Inject;
 					return bottomTypeRef(G); // no expectation
 				} else {
 					// right-hand side:
+					if (!N4JSLanguageUtils.hasValidLHS(expr)) {
+						// suppress follow-up error
+						return NO_EXPECTATION; // no type expectation at all
+					}
 					// right-hand side is expected to be of same type (or subtype) as left-hand side
 					return ts.type(G, expr.getLhs()); // note: this gives us the type for write access on LHS
 				}
@@ -542,6 +551,10 @@ import com.google.inject.Inject;
 					return TypeUtils.createNonSimplifiedIntersectionType(numberTypeRef(G), stringTypeRef(G));
 				} else {
 					// right hand side:
+					if (!N4JSLanguageUtils.hasValidLHS(expr)) {
+						// suppress follow-up error
+						return NO_EXPECTATION; // no type expectation at all
+					}
 					final TypeRef lhsTypeRef = ts.type(G, expr.getLhs());
 					if (lhsTypeRef == null) {
 						return unknown();

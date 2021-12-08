@@ -7,12 +7,10 @@
  *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
- */@@Global
-@@ProvidedByRuntime
+ */
+@@Global @@ProvidedByRuntime
 
-import {CollatorOptions} from "IntlClasses";
 
-@Final
 @Polyfill export external public class String extends String {
 
 	/**
@@ -52,4 +50,3 @@ import {CollatorOptions} from "IntlClasses";
 	@Override
 	public toLocaleUpperCase(locales: string | string[]=): string
 }
-

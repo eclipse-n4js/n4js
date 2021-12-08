@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	 Workspace {
+		Project "PolyfillTest" {
+			Folder "src" {
+				ThisFile {}
+				File "F.n4jsd" {}
+				File "P1.n4jsd" {}
+				File "P2.n4jsd" {}
+			}
+			File "package.json" { from="../package.json" }
+		}
+	}
+
+	END_SETUP
+ */
+
+
+class SubCls extends Cls {}
+
+let s = new SubCls();
+// XPECT noerrors --> "bind to original def"
+s.initialMethod();
+// XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
+s.additionalMethod();
+// XPECT noerrors --> "bind to polyfill in P1"
+s.additionalMethod1();
+// XPECT noerrors --> "bind to polyfill in P2"
+s.additionalMethod2();
+// XPECT noerrors --> "bind to polyfill in P1"
+SubCls.addStatic();
+
+
+interface SubIfc extends Ifc {}
+
+let si: SubIfc;
+// XPECT noerrors --> "bind to original def"
+si.initialMethod();
+// XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
+si.additionalMethod();
+// XPECT noerrors --> "bind to polyfill in P1"
+si.additionalMethod1();
+// XPECT noerrors --> "bind to polyfill in P2"
+si.additionalMethod2();
+// no static methods in external interfaces (even if they are annotated with @N4JS)
+//SubIfc.addStatic();
+
+
+// XPECT errors --> "Class ImplCls must either be declared abstract or implement method Ifc.additionalMethod2 and method Ifc.additionalMethod1." at "ImplCls"
+class ImplCls implements Ifc {
+	@Override public initialMethod() {}
+	// XPECT errors --> "Signature of method ImplCls.additionalMethod does not conform to implemented method Ifc.additionalMethod: {function(string):void} is not a subtype of {function():void}." at "additionalMethod"
+	@Override public additionalMethod(p: string) {}
+}

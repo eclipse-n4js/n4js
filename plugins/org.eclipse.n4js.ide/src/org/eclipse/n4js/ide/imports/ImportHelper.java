@@ -37,7 +37,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -116,7 +116,7 @@ public class ImportHelper {
 		}
 
 		TModule module = importDecl.getModule();
-		N4JSProjectName targetProjectName = new N4JSProjectName(module.getProjectName());
+		N4JSPackageName targetProjectName = new N4JSPackageName(module.getPackageName());
 		QualifiedName targetModule = qualifiedNameConverter.toQualifiedName(module.getQualifiedName());
 
 		String moduleSpecifier = importDecl.getModuleSpecifierAsText();

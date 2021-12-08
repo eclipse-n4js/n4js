@@ -26,5 +26,5 @@ class E extends D {
 new D();
 // XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "new E()"
 new E();
-// XPECT errors --> "int is not a subtype of string." at "1"
+// XPECT errors --> "1 is not a subtype of string." at "1"
 new E(1);

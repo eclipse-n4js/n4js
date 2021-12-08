@@ -150,6 +150,19 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 	}
 
 	@Test
+	def void testTwoInferenceVariables_oneInfluencingTheOther() {
+		script.assertSolution(
+			#[
+				constraint(alpha,'<:',beta),
+				constraint(A, '<:',beta),
+				constraint(I1,'<:',alpha)
+			],
+			alpha -> I1.ref,
+			beta -> I1.ref
+		)
+	}
+
+	@Test
 	def void testTwoInferenceVariables_leadingToIntersection_01() {
 		script.assertSolution(
 			#[
@@ -319,15 +332,22 @@ class InferenceContextTest extends AbstractInferenceContextTest {
 	}
 
 	@Test
-	def void testTEMP() {
+	def void testUnionVsUnion01() {
 		script.assertSolution(
 			#[
-				constraint(alpha,'<:',beta),
-				constraint(A, '<:',beta),
-				constraint(I1,'<:',alpha)
+				constraint(union(_G.stringTypeRef, G.of(A), H.of(A)), '<:', union(_G.stringTypeRef, G.of(alpha), H.of(alpha))) // string|G<A>|H<A> <: string|G<α>|H<α>
 			],
-			alpha -> I1.ref,
-			beta -> I1.ref
+			alpha -> A.ref
+		)
+	}
+
+	@Test
+	def void testUnionVsUnion02() {
+		script.assertSolution(
+			#[
+				constraint(union(_G.stringTypeRef, B.ref, G.of(A)), '<:', union(_G.stringTypeRef, alpha.ref, G.of(alpha))) // string|G<A>|H<A> <: string|G<α>|H<α>
+			],
+			alpha -> A.ref
 		)
 	}
 }

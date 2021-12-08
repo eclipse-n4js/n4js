@@ -104,6 +104,9 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			expectedCompletionItems = '''
 				[Property, Snippet] definesPackage -> "definesPackage": "$1"$0 [[4, 2] .. [4, 2]]
 				[Property, Snippet] extendedRuntimeEnvironment -> "extendedRuntimeEnvironment": "$1"$0 [[4, 2] .. [4, 2]]
+				[Class, Snippet] generator (Configurations for the generator) -> "generator": {
+				    $1
+				}$0 [[4, 2] .. [4, 2]]
 				[Property, Snippet] implementationId -> "implementationId": "$1"$0 [[4, 2] .. [4, 2]]
 				[Value, Snippet] implementedProjects -> "implementedProjects": [
 				    $1

@@ -28,24 +28,14 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
-
-import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
-
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
 
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
-import org.eclipse.n4js.ts.types.TMigratable;
-import org.eclipse.n4js.ts.types.TMigration;
-import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
-import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -59,8 +49,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumImpl#getAstElement <em>Ast Element</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumImpl#getDeclaredVersion <em>Declared Version</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumImpl#getMigrations <em>Migrations</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumImpl#isExternal <em>External</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TEnumImpl#getLiterals <em>Literals</em>}</li>
  * </ul>
@@ -117,36 +105,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 	 * @ordered
 	 */
 	protected EObject astElement;
-
-	/**
-	 * The default value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final int DECLARED_VERSION_EDEFAULT = 0;
-
-	/**
-	 * The cached value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDeclaredVersion()
-	 * @generated
-	 * @ordered
-	 */
-	protected int declaredVersion = DECLARED_VERSION_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getMigrations() <em>Migrations</em>}' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getMigrations()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<TMigration> migrations;
 
 	/**
 	 * The default value of the '{@link #isExternal() <em>External</em>}' attribute.
@@ -289,42 +247,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 	 * @generated
 	 */
 	@Override
-	public int getDeclaredVersion() {
-		return declaredVersion;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDeclaredVersion(int newDeclaredVersion) {
-		int oldDeclaredVersion = declaredVersion;
-		declaredVersion = newDeclaredVersion;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TENUM__DECLARED_VERSION, oldDeclaredVersion, declaredVersion));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<TMigration> getMigrations() {
-		if (migrations == null) {
-			migrations = new EObjectResolvingEList<TMigration>(TMigration.class, this, TypesPackage.TENUM__MIGRATIONS);
-		}
-		return migrations;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isExternal() {
 		return external;
 	}
@@ -353,26 +275,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 			literals = new EObjectContainmentEList<TEnumLiteral>(TEnumLiteral.class, this, TypesPackage.TENUM__LITERALS);
 		}
 		return literals;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<TypeVariable> getTypeVars() {
-		return XcoreCollectionLiterals.<TypeVariable>emptyEList();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int getVersion() {
-		return this.getDeclaredVersion();
 	}
 
 	/**
@@ -435,10 +337,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 			case TypesPackage.TENUM__AST_ELEMENT:
 				if (resolve) return getAstElement();
 				return basicGetAstElement();
-			case TypesPackage.TENUM__DECLARED_VERSION:
-				return getDeclaredVersion();
-			case TypesPackage.TENUM__MIGRATIONS:
-				return getMigrations();
 			case TypesPackage.TENUM__EXTERNAL:
 				return isExternal();
 			case TypesPackage.TENUM__LITERALS:
@@ -464,13 +362,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 				return;
 			case TypesPackage.TENUM__AST_ELEMENT:
 				setAstElement((EObject)newValue);
-				return;
-			case TypesPackage.TENUM__DECLARED_VERSION:
-				setDeclaredVersion((Integer)newValue);
-				return;
-			case TypesPackage.TENUM__MIGRATIONS:
-				getMigrations().clear();
-				getMigrations().addAll((Collection<? extends TMigration>)newValue);
 				return;
 			case TypesPackage.TENUM__EXTERNAL:
 				setExternal((Boolean)newValue);
@@ -500,12 +391,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 			case TypesPackage.TENUM__AST_ELEMENT:
 				setAstElement((EObject)null);
 				return;
-			case TypesPackage.TENUM__DECLARED_VERSION:
-				setDeclaredVersion(DECLARED_VERSION_EDEFAULT);
-				return;
-			case TypesPackage.TENUM__MIGRATIONS:
-				getMigrations().clear();
-				return;
 			case TypesPackage.TENUM__EXTERNAL:
 				setExternal(EXTERNAL_EDEFAULT);
 				return;
@@ -530,10 +415,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 				return declaredProvidedByRuntime != DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
 			case TypesPackage.TENUM__AST_ELEMENT:
 				return astElement != null;
-			case TypesPackage.TENUM__DECLARED_VERSION:
-				return declaredVersion != DECLARED_VERSION_EDEFAULT;
-			case TypesPackage.TENUM__MIGRATIONS:
-				return migrations != null && !migrations.isEmpty();
 			case TypesPackage.TENUM__EXTERNAL:
 				return external != EXTERNAL_EDEFAULT;
 			case TypesPackage.TENUM__LITERALS:
@@ -562,18 +443,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 				default: return -1;
 			}
 		}
-		if (baseClass == TVersionable.class) {
-			switch (derivedFeatureID) {
-				case TypesPackage.TENUM__DECLARED_VERSION: return TypesPackage.TVERSIONABLE__DECLARED_VERSION;
-				default: return -1;
-			}
-		}
-		if (baseClass == TMigratable.class) {
-			switch (derivedFeatureID) {
-				case TypesPackage.TENUM__MIGRATIONS: return TypesPackage.TMIGRATABLE__MIGRATIONS;
-				default: return -1;
-			}
-		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -597,18 +466,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 				default: return -1;
 			}
 		}
-		if (baseClass == TVersionable.class) {
-			switch (baseFeatureID) {
-				case TypesPackage.TVERSIONABLE__DECLARED_VERSION: return TypesPackage.TENUM__DECLARED_VERSION;
-				default: return -1;
-			}
-		}
-		if (baseClass == TMigratable.class) {
-			switch (baseFeatureID) {
-				case TypesPackage.TMIGRATABLE__MIGRATIONS: return TypesPackage.TENUM__MIGRATIONS;
-				default: return -1;
-			}
-		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
@@ -619,18 +476,10 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == Versionable.class) {
-			switch (baseOperationID) {
-				case TypeRefsPackage.VERSIONABLE___GET_VERSION: return TypesPackage.TENUM___GET_VERSION;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
 		if (baseClass == Type.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TYPE___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TENUM___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.TYPE___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TENUM___GET_TYPE_ACCESS_MODIFIER;
-				case TypesPackage.TYPE___GET_TYPE_VARS: return TypesPackage.TENUM___GET_TYPE_VARS;
-				case TypesPackage.TYPE___GET_VERSION: return TypesPackage.TENUM___GET_VERSION;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -647,17 +496,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 				default: return -1;
 			}
 		}
-		if (baseClass == TVersionable.class) {
-			switch (baseOperationID) {
-				case TypesPackage.TVERSIONABLE___GET_VERSION: return TypesPackage.TENUM___GET_VERSION;
-				default: return -1;
-			}
-		}
-		if (baseClass == TMigratable.class) {
-			switch (baseOperationID) {
-				default: return -1;
-			}
-		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
@@ -669,10 +507,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypesPackage.TENUM___GET_TYPE_VARS:
-				return getTypeVars();
-			case TypesPackage.TENUM___GET_VERSION:
-				return getVersion();
 			case TypesPackage.TENUM___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TENUM___GET_TYPE_ACCESS_MODIFIER:
@@ -695,8 +529,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 		result.append(declaredTypeAccessModifier);
 		result.append(", declaredProvidedByRuntime: ");
 		result.append(declaredProvidedByRuntime);
-		result.append(", declaredVersion: ");
-		result.append(declaredVersion);
 		result.append(", external: ");
 		result.append(external);
 		result.append(')');

@@ -23,7 +23,7 @@ function foo1(): void {
 	return null;
 }
 function foo2(): void {
-	// XPECT errors --> "int is not a subtype of void." at "1"
+	// XPECT errors --> "1 is not a subtype of void." at "1"
 	return 1;
 }
 

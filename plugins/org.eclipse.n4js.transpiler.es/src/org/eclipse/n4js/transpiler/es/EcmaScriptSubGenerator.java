@@ -36,6 +36,7 @@ import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.OutputConfiguration;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;
@@ -131,7 +132,9 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 			final Path relativeNavigationToSrc = calculateNavigationFromOutputToSourcePath(ws, fsa, getCompilerID(),
 					resourceCasted);
 
-			boolean createSourceMap = true;
+			final N4JSProjectConfigSnapshot project = ws.findProjectContaining(resource.getURI());
+
+			boolean createSourceMap = project.getProjectDescription().isGeneratorEnabledSourceMaps();
 
 			if (filename != null) {
 				final EObject root = rootElement(resource);
@@ -177,6 +180,10 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 	// note: following method is only used for testing
 	@Override
 	public String getCompileResultAsText(Script root, GeneratorOption[] options) {
+		if (justCopy(root.eResource())) {
+			CharSequence scriptAsText = NodeModelUtils.getNode(root).getRootNode().getText();
+			return scriptAsText.toString();
+		}
 		final Resource resource = root.eResource();
 		if (!(resource instanceof N4JSResource)) {
 			throw new IllegalArgumentException("given script must be contained in an N4JSResource");

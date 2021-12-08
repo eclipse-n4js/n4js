@@ -38,7 +38,7 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -211,10 +211,13 @@ abstract class AbstractTypesystemTest {
 			throw new IllegalArgumentException("type may not be generic; use methods #of() to create TypeRefs for generic types");
 		return TypeUtils.createTypeRef(type);
 	}
-	def protected static TypeRef rawTypeRef(Type type) {
+	def protected static TypeRef rawTypeRef(Type type, TypeArgument... typeArgs) {
 		if(!type.generic)
 			throw new IllegalArgumentException("type must generic; use method #ref() to create TypeRefs for non-generic types");
-		return TypeUtils.createTypeRef(type);
+		val minArgCount = type.typeVars.filter[!optional].size;
+		if(typeArgs.size >= minArgCount)
+			throw new IllegalArgumentException("enough type arguments provided; use method #of() to create non-raw TypeRefs");
+		return TypeUtils.createTypeRef(type,typeArgs);
 	}
 	def protected static TypeRef of(Type type, Type... types) {
 		return of(type,types.map[ref]);
@@ -222,8 +225,12 @@ abstract class AbstractTypesystemTest {
 	def protected static TypeRef of(Type type, TypeArgument... typeArgs) {
 		if(!type.generic)
 			throw new IllegalArgumentException("type must generic; use method #ref() to create TypeRefs for non-generic types");
-		if(type.typeVars.size !== typeArgs.size)
-			throw new IllegalArgumentException("incorrect number of type arguments provided; required: "+type.typeVars.size+", got: "+typeArgs.size);
+		val minArgCount = type.typeVars.filter[!optional].size;
+		val maxArgCount = type.typeVars.size;
+		if(typeArgs.size < minArgCount)
+			throw new IllegalArgumentException("too few type arguments provided; required: at least "+minArgCount+", got: "+typeArgs.size);
+		if(typeArgs.size > maxArgCount)
+			throw new IllegalArgumentException("too many type arguments provided; required: not more than "+maxArgCount+", got: "+typeArgs.size);
 		return TypeUtils.createTypeRef(type,typeArgs);
 	}
 

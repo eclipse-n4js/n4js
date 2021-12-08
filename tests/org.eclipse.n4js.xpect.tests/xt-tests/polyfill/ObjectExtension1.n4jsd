@@ -14,7 +14,10 @@
 
 @ProvidedByRuntime
 export external public class MObject {
-
 	public k(n : number) : number
+}
 
+@ProvidedByRuntime
+export external public interface ~MIfc {
+	public k(n : number) : number
 }

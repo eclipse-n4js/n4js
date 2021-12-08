@@ -14,11 +14,15 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.packagejson.PackageJsonHelper;
+import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 import org.eclipse.n4js.utils.ImmutableDataClass;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.locations.FileURI;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Joiner;
@@ -30,7 +34,11 @@ import com.google.common.collect.ImmutableList;
 @SuppressWarnings("javadoc")
 public class ProjectDescription extends ImmutableDataClass {
 
-	private final String name;
+	private final FileURI location;
+	private final FileURI relatedRootlocation;
+	private final String id;
+
+	private final String packageName;
 	private final String vendorId;
 	private final String vendorName;
 	private final VersionNumber version;
@@ -53,18 +61,26 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final boolean esm;
 	private final boolean n4jsNature;
 	private final boolean yarnWorkspaceRoot;
+	private final boolean isGeneratorEnabledSourceMaps;
+	private final boolean isGeneratorEnabledDts;
 	private final ImmutableList<String> workspaces;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
-	public ProjectDescription(String name, String vendorId, String vendorName, VersionNumber version,
-			ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
+	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
+			String id, String packageName, String vendorId, String vendorName,
+			VersionNumber version, ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
 			Iterable<ProjectReference> implementedProjects, String outputPath, String outputExtension,
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
-			boolean esm, boolean n4jsNature, boolean yarnWorkspaceRoot, Iterable<String> workspaces) {
-		this.name = name;
+			boolean esm, boolean n4jsNature, boolean yarnWorkspaceRoot, boolean isGeneratorEnabledSourceMaps,
+			boolean isGeneratorEnabledDts, Iterable<String> workspaces) {
+
+		this.location = location;
+		this.relatedRootlocation = relatedRootlocation;
+		this.id = id;
+		this.packageName = packageName;
 		this.vendorId = vendorId;
 		this.vendorName = vendorName;
 		this.version = version != null ? EcoreUtil.copy(version) : null;
@@ -87,11 +103,16 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.esm = esm;
 		this.n4jsNature = n4jsNature;
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
+		this.isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps;
+		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
 		this.workspaces = ImmutableList.copyOf(workspaces);
 	}
 
 	public ProjectDescription(ProjectDescription template) {
-		this.name = template.name;
+		this.location = template.location;
+		this.relatedRootlocation = template.relatedRootlocation;
+		this.id = template.id;
+		this.packageName = template.packageName;
 		this.vendorId = template.vendorId;
 		this.vendorName = template.vendorName;
 		this.version = template.version != null ? EcoreUtil.copy(template.version) : null;
@@ -114,6 +135,8 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.esm = template.esm;
 		this.n4jsNature = template.n4jsNature;
 		this.yarnWorkspaceRoot = template.yarnWorkspaceRoot;
+		this.isGeneratorEnabledSourceMaps = template.isGeneratorEnabledSourceMaps;
+		this.isGeneratorEnabledDts = template.isGeneratorEnabledDts;
 		this.workspaces = template.workspaces;
 	}
 
@@ -124,7 +147,10 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	public ProjectDescriptionBuilder change() {
 		ProjectDescriptionBuilder builder = new ProjectDescriptionBuilder();
-		builder.setName(name);
+		builder.setLocation(location);
+		builder.setRelatedRootLocation(relatedRootlocation);
+		builder.setId(id);
+		builder.setPackageName(packageName);
 		builder.setVendorId(vendorId);
 		builder.setVendorName(vendorName);
 		builder.setVersion(version != null ? EcoreUtil.copy(version) : null);
@@ -146,17 +172,33 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setESM(esm);
 		builder.setN4JSNature(n4jsNature);
 		builder.setYarnWorkspaceRoot(yarnWorkspaceRoot);
+		builder.setGeneratorEnabledSourceMaps(isGeneratorEnabledSourceMaps);
+		builder.setGeneratorEnabledDts(isGeneratorEnabledDts);
 		builder.getWorkspaces().addAll(workspaces);
 		return builder;
 	}
 
-	/** The project name, possibly including a scope prefix (e.g. {@code "@someScope/myProject"}). */
-	public String getName() {
-		return name;
+	public FileURI getLocation() {
+		return location;
 	}
 
-	public N4JSProjectName getN4JSProjectName() {
-		return name != null ? new N4JSProjectName(name) : null;
+	/** The location of the transitive parent root. */
+	public FileURI getRelatedRootLocation() {
+		return relatedRootlocation;
+	}
+
+	/** The project id name is the relative path from the project root (which may be a yarn workspace). */
+	public String getId() {
+		return id;
+	}
+
+	/** The project name, possibly including a scope prefix (e.g. {@code "@someScope/myProject"}). */
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public N4JSPackageName getN4JSProjectName() {
+		return packageName != null ? new N4JSPackageName(packageName) : null;
 	}
 
 	public String getVendorId() {
@@ -175,6 +217,17 @@ public class ProjectDescription extends ImmutableDataClass {
 		return type;
 	}
 
+	/**
+	 * Returns the project's main module as an N4JS module specifier (not as a path) or <code>null</code> if the project
+	 * does not have a main module.
+	 * <p>
+	 * Usually this will return the value of the N4JS-specific <code>package.json</code>-property
+	 * {@link PackageJsonProperties#MAIN_MODULE mainModule}, but in case only node's top-level property
+	 * {@link PackageJsonProperties#MAIN main} is defined in the project's <code>package.json</code> file, then this
+	 * method will return a value derived from that top-level property 'main' (for details, see method
+	 * {@link PackageJsonHelper#adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder, boolean, String, String)
+	 * #adjustProjectDescriptionAfterConversion()}).
+	 */
 	public String getMainModule() {
 		return mainModule;
 	}
@@ -274,6 +327,18 @@ public class ProjectDescription extends ImmutableDataClass {
 		return yarnWorkspaceRoot;
 	}
 
+	/** Returns true iff source maps should be emitted. */
+	public boolean isGeneratorEnabledSourceMaps() {
+		return isGeneratorEnabledSourceMaps;
+	}
+
+	/**
+	 * IMPORTANT: most clients should use {@link N4JSLanguageUtils#isDtsGenerationActive(ProjectDescription)} instead!
+	 */
+	public boolean isGeneratorEnabledDts() {
+		return isGeneratorEnabledDts;
+	}
+
 	/**
 	 * Value of top-level property "workspaces" in package.json, used by yarn to denote the contained projects.
 	 */
@@ -284,7 +349,10 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
-				name,
+				id,
+				location,
+				relatedRootlocation,
+				packageName,
 				vendorId,
 				vendorName,
 				// projectVersion is covered by internalProjectVersionStr
@@ -307,13 +375,18 @@ public class ProjectDescription extends ImmutableDataClass {
 				esm,
 				n4jsNature,
 				yarnWorkspaceRoot,
+				isGeneratorEnabledSourceMaps,
+				isGeneratorEnabledDts,
 				workspaces);
 	}
 
 	@Override
 	protected boolean computeEquals(Object obj) {
 		ProjectDescription other = (ProjectDescription) obj;
-		return Objects.equals(name, other.name)
+		return Objects.equals(id, other.id)
+				&& Objects.equals(location, other.location)
+				&& Objects.equals(relatedRootlocation, other.relatedRootlocation)
+				&& Objects.equals(packageName, other.packageName)
 				&& Objects.equals(vendorId, other.vendorId)
 				&& Objects.equals(vendorName, other.vendorName)
 				// version is covered by internalVersionStr
@@ -336,6 +409,8 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& esm == other.esm
 				&& n4jsNature == other.n4jsNature
 				&& yarnWorkspaceRoot == other.yarnWorkspaceRoot
+				&& isGeneratorEnabledSourceMaps == other.isGeneratorEnabledSourceMaps
+				&& isGeneratorEnabledDts == other.isGeneratorEnabledDts
 				&& Objects.equals(workspaces, other.workspaces);
 	}
 
@@ -344,14 +419,14 @@ public class ProjectDescription extends ImmutableDataClass {
 		StringBuilder sb = new StringBuilder();
 		sb.append(getClass().getSimpleName());
 		sb.append(" {\n");
-		sb.append("    name: " + name + "\n");
+		sb.append("    name: " + packageName + "\n");
 		toStringAdditionalProperties(sb);
 		sb.append("    dependencies: [");
 		if (dependencies.isEmpty()) {
 			sb.append("]\n");
 		} else {
 			sb.append(' ');
-			sb.append(Joiner.on(", ").join(IterableExtensions.map(dependencies, ProjectDependency::getProjectName)));
+			sb.append(Joiner.on(", ").join(IterableExtensions.map(dependencies, ProjectDependency::getPackageName)));
 			sb.append(" ]\n");
 		}
 		sb.append("    sourceContainers: [");
@@ -385,7 +460,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		sb.append("    mainModule: " + mainModule + "\n");
 		if (!testedProjects.isEmpty()) {
 			String namesStr = Joiner.on(", ").join(
-					IterableExtensions.map(testedProjects, ProjectReference::getProjectName));
+					IterableExtensions.map(testedProjects, ProjectReference::getPackageName));
 			sb.append("    testedProjects: [ " + namesStr + " ]\n");
 		}
 		if (definesPackage != null) {

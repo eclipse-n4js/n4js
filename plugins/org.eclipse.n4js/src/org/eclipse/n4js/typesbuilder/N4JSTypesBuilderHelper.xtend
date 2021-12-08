@@ -30,7 +30,7 @@ import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
 import org.eclipse.n4js.postprocessing.ComputedNameProcessor
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.AccessibleTypeElement
@@ -43,7 +43,7 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 @Singleton
@@ -77,7 +77,7 @@ package class N4JSTypesBuilderHelper {
 	/**
 	 * Adds references to a feature (via the closure), but copies the references in order to avoid problems with containment relations.
 	 * The references are copied with proxies (see {@link TypeUtils#copyWithProxies(EObject)} in order to avoid
-	 * resolving of proxies here.
+	 * resolving of proxies here. Null values (usually caused by a syntax error) are omitted, i.e. indices are not preserved.
 	 * 
 	 * @param typeListAssignment closure, actually adds the processed list
 	 * @param listToAssign the list with references, there must be no proxy in the list
@@ -91,11 +91,7 @@ package class N4JSTypesBuilderHelper {
 		if (values.exists[it !== null && eIsProxy]) {
 			throw new IllegalStateException("There is a proxy in the list, cannot copy and set references");
 		}
-		// TODO this is a hack
-		if (values.exists[it === null]) {
-			return
-		}
-		target += values.map[TypeUtils.copyWithProxies(it)]
+		target += values.filterNull.map[TypeUtils.copyWithProxies(it)]
 	}
 
 	/**

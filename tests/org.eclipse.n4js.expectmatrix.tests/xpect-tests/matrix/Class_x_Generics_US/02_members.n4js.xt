@@ -46,7 +46,7 @@ class D<T> extends C { d : T; }
 
 var a1 : A<string> = new A<string>();
 
-// assigning T to T field XPECT errors --> "int is not a subtype of string." at "2"
+// assigning T to T field XPECT errors --> "2 is not a subtype of string." at "2"
 a1.a = 2;
 
 // calling the method returning A<T> XPECT errors --> "A<string> is not a subtype of number." at "a1.f2()"
@@ -55,7 +55,7 @@ var n1 : number = a1.f2();
 
 var b1 : B<A<string>, A<number>> = new B<A<string>, A<number>>();
 
-// accessing fields of the field XPECT errors --> "int is not a subtype of string." at "4"
+// accessing fields of the field XPECT errors --> "4 is not a subtype of string." at "4"
 b1.b.a = 4;
 
 // calling the method returning this XPECT errors --> "B<A<string>, A<number>> is not a subtype of number." at "b1.f2()"
@@ -68,7 +68,7 @@ var b2 : B<A<C>, A<D<string>>> = new B<A<C>, A<D<string>>>();
 // accessing fields of the parameterized field XPECT noerrors -->
 b2.b.a = new D<string>();
 
-// accessing fields of the field 2 levels deep XPECT errors --> "int is not a subtype of string." at "2"
+// accessing fields of the field 2 levels deep XPECT errors --> "2 is not a subtype of string." at "2"
 b2.c.a.d = 2;
 
 var e1 = new E<string>();

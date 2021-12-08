@@ -162,9 +162,9 @@ class JudgmentTypeTest extends AbstractTypesystemTest {
 			true;
 		'''.parse()
 
-		for (scriptElement : script.scriptElements.filter(ExpressionStatement)) {
-			assertTypeName("boolean", scriptElement.expression);
-		}
+		val expressions = script.scriptElements.filter(ExpressionStatement).map[expression].toList;
+		assertTypeName("false", expressions.get(0));
+		assertTypeName("true", expressions.get(1));
 
 		// eventually:
 		assertNoValidationErrors(script);
@@ -181,9 +181,10 @@ class JudgmentTypeTest extends AbstractTypesystemTest {
 			0xffff;
 		'''.parse()
 
-		for (scriptElement : script.scriptElements.filter(ExpressionStatement)) {
-			assertTypeName("int", scriptElement.expression);
-		}
+		val expressions = script.scriptElements.filter(ExpressionStatement).map[expression].toList;
+		assertTypeName("1", expressions.get(0));
+		assertTypeName("0", expressions.get(1));
+		assertTypeName("65535", expressions.get(2));
 
 		// eventually:
 		assertNoValidationErrors(script);
@@ -200,9 +201,10 @@ class JudgmentTypeTest extends AbstractTypesystemTest {
 			4e-5;
 		'''.parse()
 
-		for (scriptElement : script.scriptElements.filter(ExpressionStatement)) {
-			assertTypeName("number", scriptElement.expression);
-		}
+		val expressions = script.scriptElements.filter(ExpressionStatement).map[expression].toList;
+		assertTypeName("2.1", expressions.get(0));
+		assertTypeName("30000000000", expressions.get(1));
+		assertTypeName("0.00004", expressions.get(2));
 
 		// eventually:
 		assertNoValidationErrors(script);
@@ -221,9 +223,12 @@ class JudgmentTypeTest extends AbstractTypesystemTest {
 			"Hello\nWorld";
 		'''.parse()
 
-		for (scriptElement : script.scriptElements.filter(ExpressionStatement)) {
-			assertTypeName("string", scriptElement.expression);
-		}
+		val expressions = script.scriptElements.filter(ExpressionStatement).map[expression].toList;
+		assertTypeName("\"Hello\"", expressions.get(0));
+		assertTypeName("\"World\"", expressions.get(1));
+		assertTypeName("\"\"", expressions.get(2));
+		assertTypeName("\"\"", expressions.get(3));
+		assertTypeName("\"Hello\\nWorld\"", expressions.get(4));
 
 		// eventually:
 		assertNoValidationErrors(script);

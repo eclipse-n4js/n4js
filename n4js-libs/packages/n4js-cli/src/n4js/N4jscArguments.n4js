@@ -21,8 +21,10 @@ export public class N4jscArguments {
     vmArgs: string[] = [];
     n4jscJar: string = N4JSC_JAR;
     goal: string;
-    /** working directory */
+    /** argument: target directory */
     dir: string;
+    /** argument: e.g. new version for 'set-versions' */
+    otherArgument: string;
     n4jscOptions: string[] = [];
 
     static fromParameters(goal: Goal, dir: string, options: ~Options+, vmOptions: ~VmOptions+, log: {function(string)})
@@ -120,17 +122,18 @@ export public class N4jscArguments {
         if (allOptions && allOptions.length > 0) {
             let index = 0;
             // parse goal
+            args.goal = null;
             if (Goal.literals.indexOf(allOptions[index]) >= 0) {
                 args.goal = allOptions[index];
                 index++;
-            } else {
-                args.goal = Goal.compile;
             }
-            // parse dir
+            // parse one argument
             if (allOptions[index] && !allOptions[index].startsWith("-")) {
-                if (args.goal != Goal.lsp) {
+                if (([Goal.compile, Goal.clean, Goal.api, Goal.watch] as string[]).includes(args.goal)) {
                     // ignore directory argument when goal is LSP to support search for n4js-cli.config in LSP case
                     args.dir = allOptions[index];
+                } else {
+                    args.otherArgument = allOptions[index];
                 }
                 index++;
             }
@@ -147,11 +150,11 @@ export public class N4jscArguments {
     print(log: {function(string)}) {
         const n4jscOptionsString = this.n4jscOptions ? this.n4jscOptions.join(" ") : "";
         const vmOptionsString = this.vmArgs ? this.vmArgs.join(" ") : "";
-        log(`goal=${this.goal}; dir=${this.dir}; options=${n4jscOptionsString}; vmOptions=${vmOptionsString}`);
+        log(`goal=${this.goal}; dir=${this.dir}; otherArgument=${this.otherArgument}; options=${n4jscOptionsString}; vmOptions=${vmOptionsString}`);
     }
 
     toArray() : string[] {
-        const args = [this.jar, ...this.vmArgs, this.n4jscJar, this.goal, this.dir, ...this.n4jscOptions];
+        const args = [this.jar, ...this.vmArgs, this.n4jscJar, this.goal, this.dir, this.otherArgument, ...this.n4jscOptions];
         return args.filter(n => typeof n == "string"); // remove undfined/null values
     }
 }

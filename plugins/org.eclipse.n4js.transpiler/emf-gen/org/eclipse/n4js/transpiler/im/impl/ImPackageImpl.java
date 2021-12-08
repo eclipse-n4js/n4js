@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -18,8 +18,11 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.ETypeParameter;
 import org.eclipse.emf.ecore.EcorePackage;
+
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import org.eclipse.n4js.n4JS.N4JSPackage;
+
 import org.eclipse.n4js.transpiler.im.DelegatingGetterDeclaration;
 import org.eclipse.n4js.transpiler.im.DelegatingMember;
 import org.eclipse.n4js.transpiler.im.DelegatingMethodDeclaration;
@@ -27,9 +30,9 @@ import org.eclipse.n4js.transpiler.im.DelegatingSetterDeclaration;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.ImFactory;
 import org.eclipse.n4js.transpiler.im.ImPackage;
+import org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM;
-import org.eclipse.n4js.transpiler.im.ParameterizedTypeRefStructural_IM;
-import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM;
+import org.eclipse.n4js.transpiler.im.PlainReference;
 import org.eclipse.n4js.transpiler.im.ReferencingElementExpression_IM;
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
@@ -41,50 +44,56 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM;
-import org.eclipse.n4js.transpiler.im.VersionedIdentifierRef_IM;
-import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
-import org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM;
-import org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM;
+
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
- * <!-- begin-user-doc --> An implementation of the model <b>Package</b>. <!-- end-user-doc -->
+ * <!-- begin-user-doc -->
+ * An implementation of the model <b>Package</b>.
+ * <!-- end-user-doc -->
  * @generated
  */
 public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass script_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass symbolTableEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass symbolTableEntryEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass symbolTableEntryOriginalEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass symbolTableEntryIMOnlyEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass symbolTableEntryInternalEClass = null;
@@ -94,112 +103,102 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass typeReferenceNode_IMEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass referencingElement_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass manyReferencingElement_IMEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass plainReferenceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass referencingElementExpression_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass identifierRef_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass parameterizedPropertyAccessExpression_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass parameterizedTypeRef_IMEClass = null;
+	private EClass typeReferenceNode_IMEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass parameterizedTypeRefStructural_IMEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass snippetEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass delegatingMemberEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass delegatingGetterDeclarationEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass delegatingSetterDeclarationEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass delegatingMethodDeclarationEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private EClass stringLiteralForSTEEClass = null;
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass versionedParameterizedTypeRef_IMEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass versionedParameterizedTypeRefStructural_IMEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass versionedIdentifierRef_IMEClass = null;
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass versionedNamedImportSpecifier_IMEClass = null;
-
-	/**
-	 * Creates an instance of the model <b>Package</b>, registered with {@link org.eclipse.emf.ecore.EPackage.Registry
-	 * EPackage.Registry} by the package package URI value.
-	 * <p>
-	 * Note: the correct way to create the package is via the static factory method {@link #init init()}, which also
-	 * performs initialization of the package, or returns the registered package, if one already exists. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
+	 * Creates an instance of the model <b>Package</b>, registered with
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @see org.eclipse.emf.ecore.EPackage.Registry
 	 * @see org.eclipse.n4js.transpiler.im.ImPackage#eNS_URI
 	 * @see #init()
@@ -210,7 +209,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private static boolean isInited = false;
@@ -257,7 +257,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -266,7 +267,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -275,7 +277,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -284,7 +287,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -293,7 +297,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -302,7 +307,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -311,7 +317,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -320,7 +327,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -329,7 +337,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -338,7 +347,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -347,7 +357,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -356,7 +367,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -365,7 +377,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -374,7 +387,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -388,8 +402,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getTypeReferenceNode_IM() {
-		return typeReferenceNode_IMEClass;
+	public EClass getReferencingElement_IM() {
+		return referencingElement_IMEClass;
 	}
 
 	/**
@@ -398,30 +412,13 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTypeReferenceNode_IM__GetTypeRef() {
-		return typeReferenceNode_IMEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getReferencingElement_IM() {
-		return referencingElement_IMEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getReferencingElement_IM_RewiredTarget() {
 		return (EReference)referencingElement_IMEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -430,7 +427,68 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getManyReferencingElement_IM() {
+		return manyReferencingElement_IMEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getManyReferencingElement_IM_RewiredReferences() {
+		return (EReference)manyReferencingElement_IMEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getManyReferencingElement_IM__GetRewiredTargets() {
+		return manyReferencingElement_IMEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getManyReferencingElement_IM__AddRewiredTarget__SymbolTableEntry() {
+		return manyReferencingElement_IMEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getManyReferencingElement_IM__RemoveRewiredTarget__SymbolTableEntry() {
+		return manyReferencingElement_IMEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getPlainReference() {
+		return plainReferenceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -439,7 +497,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -448,7 +507,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -457,7 +517,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -466,7 +527,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -485,7 +547,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -494,7 +557,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -503,7 +567,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -512,7 +577,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -521,7 +587,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -530,7 +597,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -539,7 +607,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -558,39 +627,13 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public EClass getParameterizedTypeRef_IM() {
-		return parameterizedTypeRef_IMEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getParameterizedTypeRef_IM__GetDeclaredType_IM() {
-		return parameterizedTypeRef_IMEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getParameterizedTypeRef_IM__SetDeclaredType_IM__SymbolTableEntry() {
-		return parameterizedTypeRef_IMEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getParameterizedTypeRef_IM__GetDeclaredType() {
-		return parameterizedTypeRef_IMEClass.getEOperations().get(2);
+	public EClass getTypeReferenceNode_IM() {
+		return typeReferenceNode_IMEClass;
 	}
 
 	/**
@@ -599,44 +642,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getParameterizedTypeRef_IM__SetDeclaredType__Type() {
-		return parameterizedTypeRef_IMEClass.getEOperations().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getParameterizedTypeRefStructural_IM() {
-		return parameterizedTypeRefStructural_IMEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getParameterizedTypeRefStructural_IM__GetDeclaredType_IM() {
-		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getParameterizedTypeRefStructural_IM__SetDeclaredType_IM__SymbolTableEntry() {
-		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getParameterizedTypeRefStructural_IM__GetDeclaredType() {
-		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(2);
+	public EAttribute getTypeReferenceNode_IM_CodeToEmit() {
+		return (EAttribute)typeReferenceNode_IMEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -645,12 +652,33 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getParameterizedTypeRefStructural_IM__SetDeclaredType__Type() {
-		return parameterizedTypeRefStructural_IMEClass.getEOperations().get(3);
+	public EOperation getTypeReferenceNode_IM__GetRewiredReferences() {
+		return typeReferenceNode_IMEClass.getEOperations().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTypeReferenceNode_IM__GetTypeRef() {
+		return typeReferenceNode_IMEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTypeReferenceNode_IM__GetCachedProcessedTypeRef() {
+		return typeReferenceNode_IMEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -659,16 +687,18 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
-	public EAttribute getSnippet_Code() {
+	public EAttribute getSnippet_CodeToEmit() {
 		return (EAttribute)snippetEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -677,7 +707,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -686,7 +717,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -695,7 +727,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -704,7 +737,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -713,7 +747,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -722,7 +757,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -731,7 +767,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -740,7 +777,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -749,7 +787,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -758,7 +797,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -767,7 +807,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -776,61 +817,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getVersionedParameterizedTypeRef_IM() {
-		return versionedParameterizedTypeRef_IMEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getVersionedParameterizedTypeRefStructural_IM() {
-		return versionedParameterizedTypeRefStructural_IMEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getVersionedIdentifierRef_IM() {
-		return versionedIdentifierRef_IMEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getVersionedNamedImportSpecifier_IM() {
-		return versionedNamedImportSpecifier_IMEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getVersionedNamedImportSpecifier_IM_ImportedTypeVersions() {
-		return (EReference)versionedNamedImportSpecifier_IMEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getVersionedNamedImportSpecifier_IM_VersionedTypeImport() {
-		return (EAttribute)versionedNamedImportSpecifier_IMEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	@Override
@@ -839,7 +827,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isCreated = false;
@@ -847,7 +836,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	/**
 	 * Creates the meta-model objects for the package.  This method is
 	 * guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void createPackageContents() {
@@ -875,12 +865,17 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 
 		symbolTableEntryInternalEClass = createEClass(SYMBOL_TABLE_ENTRY_INTERNAL);
 
-		typeReferenceNode_IMEClass = createEClass(TYPE_REFERENCE_NODE_IM);
-		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_TYPE_REF);
-
 		referencingElement_IMEClass = createEClass(REFERENCING_ELEMENT_IM);
 		createEReference(referencingElement_IMEClass, REFERENCING_ELEMENT_IM__REWIRED_TARGET);
 		createEOperation(referencingElement_IMEClass, REFERENCING_ELEMENT_IM___GET_ORIGINAL_TARGET_OF_REWIRED_TARGET);
+
+		manyReferencingElement_IMEClass = createEClass(MANY_REFERENCING_ELEMENT_IM);
+		createEReference(manyReferencingElement_IMEClass, MANY_REFERENCING_ELEMENT_IM__REWIRED_REFERENCES);
+		createEOperation(manyReferencingElement_IMEClass, MANY_REFERENCING_ELEMENT_IM___GET_REWIRED_TARGETS);
+		createEOperation(manyReferencingElement_IMEClass, MANY_REFERENCING_ELEMENT_IM___ADD_REWIRED_TARGET__SYMBOLTABLEENTRY);
+		createEOperation(manyReferencingElement_IMEClass, MANY_REFERENCING_ELEMENT_IM___REMOVE_REWIRED_TARGET__SYMBOLTABLEENTRY);
+
+		plainReferenceEClass = createEClass(PLAIN_REFERENCE);
 
 		referencingElementExpression_IMEClass = createEClass(REFERENCING_ELEMENT_EXPRESSION_IM);
 
@@ -899,20 +894,14 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		createEOperation(parameterizedPropertyAccessExpression_IMEClass, PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM___GET_PROPERTY);
 		createEOperation(parameterizedPropertyAccessExpression_IMEClass, PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM___SET_PROPERTY__IDENTIFIABLEELEMENT);
 
-		parameterizedTypeRef_IMEClass = createEClass(PARAMETERIZED_TYPE_REF_IM);
-		createEOperation(parameterizedTypeRef_IMEClass, PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE_IM);
-		createEOperation(parameterizedTypeRef_IMEClass, PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY);
-		createEOperation(parameterizedTypeRef_IMEClass, PARAMETERIZED_TYPE_REF_IM___GET_DECLARED_TYPE);
-		createEOperation(parameterizedTypeRef_IMEClass, PARAMETERIZED_TYPE_REF_IM___SET_DECLARED_TYPE__TYPE);
-
-		parameterizedTypeRefStructural_IMEClass = createEClass(PARAMETERIZED_TYPE_REF_STRUCTURAL_IM);
-		createEOperation(parameterizedTypeRefStructural_IMEClass, PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE_IM);
-		createEOperation(parameterizedTypeRefStructural_IMEClass, PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE_IM__SYMBOLTABLEENTRY);
-		createEOperation(parameterizedTypeRefStructural_IMEClass, PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_DECLARED_TYPE);
-		createEOperation(parameterizedTypeRefStructural_IMEClass, PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___SET_DECLARED_TYPE__TYPE);
+		typeReferenceNode_IMEClass = createEClass(TYPE_REFERENCE_NODE_IM);
+		createEAttribute(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM__CODE_TO_EMIT);
+		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_REWIRED_REFERENCES);
+		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_TYPE_REF);
+		createEOperation(typeReferenceNode_IMEClass, TYPE_REFERENCE_NODE_IM___GET_CACHED_PROCESSED_TYPE_REF);
 
 		snippetEClass = createEClass(SNIPPET);
-		createEAttribute(snippetEClass, SNIPPET__CODE);
+		createEAttribute(snippetEClass, SNIPPET__CODE_TO_EMIT);
 
 		delegatingMemberEClass = createEClass(DELEGATING_MEMBER);
 		createEReference(delegatingMemberEClass, DELEGATING_MEMBER__DELEGATION_BASE_TYPE);
@@ -930,20 +919,11 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		createEReference(stringLiteralForSTEEClass, STRING_LITERAL_FOR_STE__ENTRY);
 		createEAttribute(stringLiteralForSTEEClass, STRING_LITERAL_FOR_STE__USE_EXPORTED_NAME);
 		createEOperation(stringLiteralForSTEEClass, STRING_LITERAL_FOR_STE___GET_VALUE_AS_STRING);
-
-		versionedParameterizedTypeRef_IMEClass = createEClass(VERSIONED_PARAMETERIZED_TYPE_REF_IM);
-
-		versionedParameterizedTypeRefStructural_IMEClass = createEClass(VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM);
-
-		versionedIdentifierRef_IMEClass = createEClass(VERSIONED_IDENTIFIER_REF_IM);
-
-		versionedNamedImportSpecifier_IMEClass = createEClass(VERSIONED_NAMED_IMPORT_SPECIFIER_IM);
-		createEReference(versionedNamedImportSpecifier_IMEClass, VERSIONED_NAMED_IMPORT_SPECIFIER_IM__IMPORTED_TYPE_VERSIONS);
-		createEAttribute(versionedNamedImportSpecifier_IMEClass, VERSIONED_NAMED_IMPORT_SPECIFIER_IM__VERSIONED_TYPE_IMPORT);
 	}
 
 	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	private boolean isInitialized = false;
@@ -951,7 +931,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	/**
 	 * Complete the initialization of the package and its meta-model.  This
 	 * method is guarded to have no affect on any invocation but its first.
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @generated
 	 */
 	public void initializePackageContents() {
@@ -981,21 +962,19 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		symbolTableEntryOriginalEClass.getESuperTypes().add(this.getSymbolTableEntry());
 		symbolTableEntryIMOnlyEClass.getESuperTypes().add(this.getSymbolTableEntry());
 		symbolTableEntryInternalEClass.getESuperTypes().add(this.getSymbolTableEntry());
-		g1 = createEGenericType(theN4JSPackage.getTypeReferenceNode());
-		EGenericType g2 = createEGenericType(typeReferenceNode_IMEClass_T);
-		g1.getETypeArguments().add(g2);
-		typeReferenceNode_IMEClass.getEGenericSuperTypes().add(g1);
+		plainReferenceEClass.getESuperTypes().add(this.getReferencingElement_IM());
 		referencingElementExpression_IMEClass.getESuperTypes().add(this.getReferencingElement_IM());
 		referencingElementExpression_IMEClass.getESuperTypes().add(theN4JSPackage.getExpression());
 		identifierRef_IMEClass.getESuperTypes().add(theN4JSPackage.getIdentifierRef());
 		identifierRef_IMEClass.getESuperTypes().add(this.getReferencingElementExpression_IM());
 		parameterizedPropertyAccessExpression_IMEClass.getESuperTypes().add(theN4JSPackage.getParameterizedPropertyAccessExpression());
 		parameterizedPropertyAccessExpression_IMEClass.getESuperTypes().add(this.getReferencingElementExpression_IM());
-		parameterizedTypeRef_IMEClass.getESuperTypes().add(theTypeRefsPackage.getParameterizedTypeRef());
-		parameterizedTypeRef_IMEClass.getESuperTypes().add(this.getReferencingElement_IM());
-		parameterizedTypeRefStructural_IMEClass.getESuperTypes().add(this.getParameterizedTypeRef_IM());
-		parameterizedTypeRefStructural_IMEClass.getESuperTypes().add(theTypeRefsPackage.getParameterizedTypeRefStructural());
-		parameterizedTypeRefStructural_IMEClass.getESuperTypes().add(this.getReferencingElement_IM());
+		g1 = createEGenericType(theN4JSPackage.getTypeReferenceNode());
+		EGenericType g2 = createEGenericType(typeReferenceNode_IMEClass_T);
+		g1.getETypeArguments().add(g2);
+		typeReferenceNode_IMEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getManyReferencingElement_IM());
+		typeReferenceNode_IMEClass.getEGenericSuperTypes().add(g1);
 		snippetEClass.getESuperTypes().add(theN4JSPackage.getExpression());
 		delegatingMemberEClass.getESuperTypes().add(theN4JSPackage.getN4MemberDeclaration());
 		delegatingGetterDeclarationEClass.getESuperTypes().add(theN4JSPackage.getN4GetterDeclaration());
@@ -1005,13 +984,6 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		delegatingMethodDeclarationEClass.getESuperTypes().add(theN4JSPackage.getN4MethodDeclaration());
 		delegatingMethodDeclarationEClass.getESuperTypes().add(this.getDelegatingMember());
 		stringLiteralForSTEEClass.getESuperTypes().add(theN4JSPackage.getStringLiteral());
-		versionedParameterizedTypeRef_IMEClass.getESuperTypes().add(this.getParameterizedTypeRef_IM());
-		versionedParameterizedTypeRef_IMEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedParameterizedTypeRef());
-		versionedParameterizedTypeRefStructural_IMEClass.getESuperTypes().add(this.getParameterizedTypeRef_IM());
-		versionedParameterizedTypeRefStructural_IMEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedParameterizedTypeRefStructural());
-		versionedIdentifierRef_IMEClass.getESuperTypes().add(this.getIdentifierRef_IM());
-		versionedIdentifierRef_IMEClass.getESuperTypes().add(theN4JSPackage.getVersionedIdentifierRef());
-		versionedNamedImportSpecifier_IMEClass.getESuperTypes().add(theN4JSPackage.getNamedImportSpecifier());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(script_IMEClass, Script_IM.class, "Script_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1035,14 +1007,23 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 
 		initEClass(symbolTableEntryInternalEClass, SymbolTableEntryInternal.class, "SymbolTableEntryInternal", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(typeReferenceNode_IMEClass, TypeReferenceNode_IM.class, "TypeReferenceNode_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getTypeReferenceNode_IM__GetTypeRef(), theTypeRefsPackage.getTypeRef(), "getTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
 		initEClass(referencingElement_IMEClass, ReferencingElement_IM.class, "ReferencingElement_IM", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getReferencingElement_IM_RewiredTarget(), this.getSymbolTableEntry(), this.getSymbolTableEntry_ReferencingElements(), "rewiredTarget", null, 0, 1, ReferencingElement_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getReferencingElement_IM__GetOriginalTargetOfRewiredTarget(), theTypesPackage.getIdentifiableElement(), "getOriginalTargetOfRewiredTarget", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(manyReferencingElement_IMEClass, ManyReferencingElement_IM.class, "ManyReferencingElement_IM", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getManyReferencingElement_IM_RewiredReferences(), this.getPlainReference(), null, "rewiredReferences", null, 0, -1, ManyReferencingElement_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getManyReferencingElement_IM__GetRewiredTargets(), this.getSymbolTableEntry(), "getRewiredTargets", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
+		EOperation op = initEOperation(getManyReferencingElement_IM__AddRewiredTarget__SymbolTableEntry(), null, "addRewiredTarget", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getSymbolTableEntry(), "ste", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getManyReferencingElement_IM__RemoveRewiredTarget__SymbolTableEntry(), null, "removeRewiredTarget", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, this.getSymbolTableEntry(), "ste", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(plainReferenceEClass, PlainReference.class, "PlainReference", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(referencingElementExpression_IMEClass, ReferencingElementExpression_IM.class, "ReferencingElementExpression_IM", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -1050,7 +1031,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 
 		initEOperation(getIdentifierRef_IM__GetId_IM(), this.getSymbolTableEntry(), "getId_IM", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		EOperation op = initEOperation(getIdentifierRef_IM__SetId_IM__SymbolTableEntry(), null, "setId_IM", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		op = initEOperation(getIdentifierRef_IM__SetId_IM__SymbolTableEntry(), null, "setId_IM", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, this.getSymbolTableEntry(), "target", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getIdentifierRef_IM__GetId(), theTypesPackage.getIdentifiableElement(), "getId", 0, 1, !IS_UNIQUE, IS_ORDERED);
@@ -1074,32 +1055,17 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		op = initEOperation(getParameterizedPropertyAccessExpression_IM__SetProperty__IdentifiableElement(), null, "setProperty", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theTypesPackage.getIdentifiableElement(), "ix", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(parameterizedTypeRef_IMEClass, ParameterizedTypeRef_IM.class, "ParameterizedTypeRef_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(typeReferenceNode_IMEClass, TypeReferenceNode_IM.class, "TypeReferenceNode_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTypeReferenceNode_IM_CodeToEmit(), theEcorePackage.getEString(), "codeToEmit", null, 0, 1, TypeReferenceNode_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getParameterizedTypeRef_IM__GetDeclaredType_IM(), this.getSymbolTableEntry(), "getDeclaredType_IM", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getTypeReferenceNode_IM__GetRewiredReferences(), this.getPlainReference(), "getRewiredReferences", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
-		op = initEOperation(getParameterizedTypeRef_IM__SetDeclaredType_IM__SymbolTableEntry(), null, "setDeclaredType_IM", 0, 1, !IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getSymbolTableEntry(), "target", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getTypeReferenceNode_IM__GetTypeRef(), theTypeRefsPackage.getTypeRef(), "getTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getParameterizedTypeRef_IM__GetDeclaredType(), theTypesPackage.getType(), "getDeclaredType", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getParameterizedTypeRef_IM__SetDeclaredType__Type(), null, "setDeclaredType", 0, 1, !IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theTypesPackage.getType(), "ix", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(parameterizedTypeRefStructural_IMEClass, ParameterizedTypeRefStructural_IM.class, "ParameterizedTypeRefStructural_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getParameterizedTypeRefStructural_IM__GetDeclaredType_IM(), this.getSymbolTableEntry(), "getDeclaredType_IM", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getParameterizedTypeRefStructural_IM__SetDeclaredType_IM__SymbolTableEntry(), null, "setDeclaredType_IM", 0, 1, !IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, this.getSymbolTableEntry(), "target", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getParameterizedTypeRefStructural_IM__GetDeclaredType(), theTypesPackage.getType(), "getDeclaredType", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getParameterizedTypeRefStructural_IM__SetDeclaredType__Type(), null, "setDeclaredType", 0, 1, !IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theTypesPackage.getType(), "ix", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getTypeReferenceNode_IM__GetCachedProcessedTypeRef(), theTypeRefsPackage.getTypeRef(), "getCachedProcessedTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(snippetEClass, Snippet.class, "Snippet", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getSnippet_Code(), theEcorePackage.getEString(), "code", null, 0, 1, Snippet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getSnippet_CodeToEmit(), theEcorePackage.getEString(), "codeToEmit", null, 0, 1, Snippet.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(delegatingMemberEClass, DelegatingMember.class, "DelegatingMember", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getDelegatingMember_DelegationBaseType(), this.getSymbolTableEntryOriginal(), null, "delegationBaseType", null, 0, 1, DelegatingMember.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1119,18 +1085,8 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 
 		initEOperation(getStringLiteralForSTE__GetValueAsString(), theEcorePackage.getEString(), "getValueAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(versionedParameterizedTypeRef_IMEClass, VersionedParameterizedTypeRef_IM.class, "VersionedParameterizedTypeRef_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(versionedParameterizedTypeRefStructural_IMEClass, VersionedParameterizedTypeRefStructural_IM.class, "VersionedParameterizedTypeRefStructural_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(versionedIdentifierRef_IMEClass, VersionedIdentifierRef_IM.class, "VersionedIdentifierRef_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEClass(versionedNamedImportSpecifier_IMEClass, VersionedNamedImportSpecifier_IM.class, "VersionedNamedImportSpecifier_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getVersionedNamedImportSpecifier_IM_ImportedTypeVersions(), this.getSymbolTableEntryOriginal(), null, "importedTypeVersions", null, 0, -1, VersionedNamedImportSpecifier_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getVersionedNamedImportSpecifier_IM_VersionedTypeImport(), theEcorePackage.getEBoolean(), "versionedTypeImport", null, 0, 1, VersionedNamedImportSpecifier_IM.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
-
 		// Create resource
 		createResource(eNS_URI);
 	}
 
-} // ImPackageImpl
+} //ImPackageImpl

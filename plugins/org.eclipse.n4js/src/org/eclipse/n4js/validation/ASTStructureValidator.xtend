@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
-import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression
 import org.eclipse.n4js.n4JS.BindingElement
 import org.eclipse.n4js.n4JS.Block
@@ -48,7 +47,6 @@ import org.eclipse.n4js.n4JS.IterationStatement
 import org.eclipse.n4js.n4JS.LabelRef
 import org.eclipse.n4js.n4JS.LabelledStatement
 import org.eclipse.n4js.n4JS.LegacyOctalIntLiteral
-import org.eclipse.n4js.n4JS.Literal
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.MethodDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
@@ -60,6 +58,7 @@ import org.eclipse.n4js.n4JS.N4FieldAccessor
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NewTarget
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
@@ -87,8 +86,13 @@ import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4JS.WithStatement
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.services.N4JSGrammarAccess
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
+import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -103,7 +107,6 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 
-import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.DestructureUtils.isTopOfDestructuringForStatement
 import static extension org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter.*
 
@@ -132,7 +135,8 @@ class ASTStructureValidator {
 
 	@ToString
 	protected static class Constraints {
-		static val STRICT = 1
+		static val BUILT_IN_TYPE_DEFINITION = 1
+		static val STRICT = BUILT_IN_TYPE_DEFINITION << 1
 		static val N4JS = STRICT << 1
 		static val EXTERNAL = N4JS << 1
 		static val ALLOW_NESTED_FUNCTION_DECLARATION = EXTERNAL << 1
@@ -152,8 +156,18 @@ class ASTStructureValidator {
 			if (b) value else 0
 		}
 
-		new(boolean n4js, boolean external) {
-			this(N4JS.getIf(n4js).bitwiseOr(EXTERNAL.getIf(external)).bitwiseOr(ALLOW_VAR_WITHOUT_INITIALIZER).bitwiseOr(ALLOW_YIELD_EXPRESSION))
+		new(boolean builtInTypeDefinition, boolean n4js, boolean external) {
+			this(
+				BUILT_IN_TYPE_DEFINITION.getIf(builtInTypeDefinition).bitwiseOr(
+					N4JS.getIf(n4js).bitwiseOr(
+						EXTERNAL.getIf(external).bitwiseOr(
+							ALLOW_VAR_WITHOUT_INITIALIZER.bitwiseOr(
+								ALLOW_YIELD_EXPRESSION
+							)
+						)
+					)
+				)
+			)
 		}
 
 		new(int bits) {
@@ -162,6 +176,10 @@ class ASTStructureValidator {
 
 		def private is(int bit) {
 			return this.bits.bitwiseAnd(bit) !== 0
+		}
+
+		def boolean isBuiltInTypeDefinition() {
+			return is(BUILT_IN_TYPE_DEFINITION)
 		}
 
 		def boolean isN4JS() {
@@ -283,7 +301,10 @@ class ASTStructureValidator {
 		if(resource !== null && !workspaceAccess.isNoValidate(resource, resource.getURI())) {
 			val producer = new ASTStructureDiagnosticProducer(consumer);
 			validateASTStructure(model, producer, Sets.newHashSetWithExpectedSize(2),
-				new Constraints(jsVariantHelper.isN4JSMode(model), jsVariantHelper.isExternalMode(model))
+				new Constraints(
+					N4Scheme.isResourceWithN4Scheme(resource),
+					jsVariantHelper.isN4JSMode(model),
+					jsVariantHelper.isExternalMode(model))
 			);
 		}
 	}
@@ -527,6 +548,33 @@ class ASTStructureValidator {
 	}
 
 	def private dispatch void validateASTStructure(
+		NumericLiteralTypeRef model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		if (constraints.isStrict) {
+			val node = NodeModelUtils.findNodesForFeature(model, TypeRefsPackage.Literals.LITERAL_TYPE_REF__AST_VALUE).head;
+			if (node !== null) {
+				val text = NodeModelUtils.getTokenText(node);
+				if (text.length() >= 2 && text.startsWith("0") && Character.isDigit(text.charAt(1))) {
+					producer.node = node;
+					producer.addDiagnostic(
+						new DiagnosticMessage(IssueCodes.messageForAST_STR_NO_OCTALS,
+							IssueCodes.getDefaultSeverity(IssueCodes.AST_STR_NO_OCTALS), IssueCodes.AST_STR_NO_OCTALS));
+				}
+			}
+		}
+
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
+	}
+
+	def private dispatch void validateASTStructure(
 		StringLiteral model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -559,7 +607,27 @@ class ASTStructureValidator {
 		)
 	}
 
-	def private addErrorForOctalEscapeSequence(String rawValue, Literal model, EAttribute valueEAttribute, ASTStructureDiagnosticProducer producer) {
+	def private dispatch void validateASTStructure(
+		StringLiteralTypeRef model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		val node = NodeModelUtils.findNodesForFeature(model, TypeRefsPackage.Literals.LITERAL_TYPE_REF__AST_VALUE).head;
+		if (node !== null) {
+			val text = NodeModelUtils.getTokenText(node);
+			addErrorForOctalEscapeSequence(text, model, TypeRefsPackage.Literals.LITERAL_TYPE_REF__AST_VALUE, producer);
+		}
+
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
+	}
+
+	def private addErrorForOctalEscapeSequence(String rawValue, EObject model, EAttribute valueEAttribute, ASTStructureDiagnosticProducer producer) {
 		val nodes = NodeModelUtils.findNodesForFeature(model, valueEAttribute);
 		val target = nodes.head;
 		val syntaxError = target.syntaxErrorMessage;
@@ -656,17 +724,14 @@ class ASTStructureValidator {
 			validLabels,
 			constraints
 		)
-		val lhs = model.lhs
-		if (lhs !== null && !lhs.isValidSimpleAssignmentTarget) {
-			if (model.op !== AssignmentOperator.ASSIGN || !model.isTopOfDestructuringAssignment) {
-				val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__LHS)
-				val target = nodes.head
-				producer.node = target
-				producer.addDiagnostic(
-					new DiagnosticMessage(IssueCodes.getMessageForAST_EXP_INVALID_LHS_ASS,
-						IssueCodes.getDefaultSeverity(IssueCodes.AST_EXP_INVALID_LHS_ASS),
-						IssueCodes.AST_EXP_INVALID_LHS_ASS))
-			}
+		if (model.lhs !== null && !N4JSLanguageUtils.hasValidLHS(model)) {
+			val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.ASSIGNMENT_EXPRESSION__LHS)
+			val target = nodes.head
+			producer.node = target
+			producer.addDiagnostic(
+				new DiagnosticMessage(IssueCodes.getMessageForAST_EXP_INVALID_LHS_ASS,
+					IssueCodes.getDefaultSeverity(IssueCodes.AST_EXP_INVALID_LHS_ASS),
+					IssueCodes.AST_EXP_INVALID_LHS_ASS))
 		}
 	}
 
@@ -728,7 +793,12 @@ class ASTStructureValidator {
 		val name = model.name
 		if (name !== null) {
 			if (name == LOCAL_ARGUMENTS_VARIABLE_NAME && !(model instanceof LocalArgumentsVariable)) {
-				issueArgumentsError(model, name, constraints.isStrict, producer)
+				val isLocalArgsVar = model instanceof LocalArgumentsVariable;
+				val isFparInN4jsd = constraints.isExternal // here: isExternal <==> file extension is ".n4jsd"
+						&& (model instanceof FormalParameter);
+				if (!isLocalArgsVar && !isFparInN4jsd) {
+					issueArgumentsError(model, name, constraints.isStrict, producer)
+				}
 			} else {
 				if (name != YIELD_KEYWORD && (languageHelper.getECMAKeywords.contains(name)
 					|| 'enum'.equals(name) || 'await'.equals(name)
@@ -1208,7 +1278,8 @@ class ASTStructureValidator {
 	def private void validateName(PropertyNameOwner model, Constraints constraints, ASTStructureDiagnosticProducer producer) {
 		val name = model.name
 		if (name !== null) {
-			if (!model.isValidName) {
+			if (!model.isValidName
+					&& !constraints.isBuiltInTypeDefinition) {
 				issueNameDiagnostic(model, producer, name)
 			} else {
 				if (constraints.isN4JS) {
@@ -1769,5 +1840,52 @@ class ASTStructureValidator {
 					IssueCodes.AST_BINARY_LOGICAL_EXPRESSION_MISSING_PART))
 
 		}
+	}
+	def private dispatch void validateASTStructure(
+		N4TypeVariable model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		if (model.optional) {
+			if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(model.eContainer, model.eContainmentFeature)) {
+				producer.node = NodeModelUtils.findNodesForFeature(model, N4JSPackage.eINSTANCE.n4TypeVariable_DeclaredDefaultArgumentNode).head;
+				producer.addDiagnostic(
+					new DiagnosticMessage(IssueCodes.messageForAST_INVALID_OPTIONAL_TYPE_PARAMS,
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS),
+						IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS))
+			}
+		}
+
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
+	}
+
+	def private dispatch void validateASTStructure(
+		TypeVariable model,
+		ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels,
+		Constraints constraints
+	) {
+		if (model.optional) {
+			if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(model.eContainer, model.eContainmentFeature)) {
+				producer.node = NodeModelUtils.findNodesForFeature(model, TypesPackage.eINSTANCE.typeVariable_DefaultArgument).head;
+				producer.addDiagnostic(
+					new DiagnosticMessage(IssueCodes.messageForAST_INVALID_OPTIONAL_TYPE_PARAMS,
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS),
+						IssueCodes.AST_INVALID_OPTIONAL_TYPE_PARAMS))
+			}
+		}
+
+		recursiveValidateASTStructure(
+			model,
+			producer,
+			validLabels,
+			constraints
+		)
 	}
 }

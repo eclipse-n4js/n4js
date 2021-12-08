@@ -18,6 +18,7 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.PostProcessingAwareResource
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor
 import org.eclipse.n4js.tests.issues.IssueUtils
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.validation.N4JSResourceValidator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.XtextResource
@@ -91,6 +92,9 @@ class AvoidFollowUpExceptionsInValidationTest extends AbstractN4JSTest {
 	private static class FailingN4JSPostProcessor extends N4JSPostProcessor {
 		override public void performPostProcessing(PostProcessingAwareResource resource, CancelIndicator cancelIndicator) {
 			super.performPostProcessing(resource, cancelIndicator);
+			if (N4Scheme.isResourceWithN4Scheme(resource)) {
+				return; // <-- don't simulate exceptions while resolving built-in types
+			}
 			throw new FailedPostProcessingException(); // <-- simulate exception thrown during post-processing
 		}
 	}

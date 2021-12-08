@@ -63,7 +63,16 @@ public class JSONModelUtils {
 	 * <code>true</code>, otherwise <code>false</code>.
 	 */
 	public static boolean asBooleanOrFalse(JSONValue jsonValue) {
-		return jsonValue instanceof JSONBooleanLiteral ? ((JSONBooleanLiteral) jsonValue).isBooleanValue() : false;
+		return asBooleanOrDefault(jsonValue, false);
+	}
+
+	/**
+	 * If the given JSON value is a {@link JSONBooleanLiteral} with a value of <code>true</code>, returns
+	 * <code>true</code>, otherwise the given default value.
+	 */
+	public static boolean asBooleanOrDefault(JSONValue jsonValue, boolean defaultValue) {
+		return jsonValue instanceof JSONBooleanLiteral ? ((JSONBooleanLiteral) jsonValue).isBooleanValue()
+				: defaultValue;
 	}
 
 	/**

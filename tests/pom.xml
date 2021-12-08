@@ -24,75 +24,11 @@ Contributors:
 	</parent>
 
 	<modules>
-		<!-- ************************************** JUnit Tests -->
+		<!-- most test modules are included below via profile "execute-basic-tests" (which is active by default) -->
 
-		<!-- Release Engineering Tools Tests -->
-		<module>org.eclipse.n4js.releng.utils.tests</module>
-
-		<!-- JSDoc tests -->
-		<module>org.eclipse.n4js.jsdoc2spec.tests</module>
-
-		<!-- Type system tests -->
-		<module>org.eclipse.n4js.ts.model.tests</module>
-		<module>org.eclipse.n4js.ts.tests</module>
-		<module>org.eclipse.n4js.ts.xpect.tests</module>
-
-		<!-- Regex tests -->
-		<module>org.eclipse.n4js.regex.tests</module>
-
-		<!-- JS tests -->
-		<module>org.eclipse.n4js.lang.tests</module>
-		<module>org.eclipse.n4js.spec.tests</module>
 		<module>org.eclipse.n4js.tests.ecmatestsuite</module>
-		<module>org.eclipse.n4js.xpect.tests</module>
-
-		<!-- transpiler tests -->
-		<module>org.eclipse.n4js.transpiler.tests</module>
-		<module>org.eclipse.n4js.transpiler.es5.tests</module>
-		<module>org.eclipse.n4js.transpiler.es.tests</module>
-
-		<!-- Package.json tests -->
-		<module>org.eclipse.n4js.packagejson.xpect.tests</module>
-
-		<!-- access control tests -->
 		<module>org.eclipse.n4js.accesscontrol.tests</module>
-
-		<!-- JSON tests -->
-		<module>org.eclipse.n4js.json.tests</module>
-		<module>org.eclipse.n4js.json.xpect.tests</module>
-
-		<!-- SEMVER tests -->
-		<module>org.eclipse.n4js.semver.tests</module>
-
-		<!--  **************************************Other tests -->
-
-		<!-- Smoke tests -->
 		<module>org.eclipse.n4js.smoke.tests</module>
-		<module>org.eclipse.n4js.jsdoc.tests</module>
-		<!-- utils -->
-		<module>org.eclipse.n4js.utils.tests</module>
-		<!-- Expect Matrix test -->
-		<module>org.eclipse.n4js.expectmatrix.tests</module>
-		<!-- Bug reports -->
-		<module>org.eclipse.n4js.bugreports.tests</module>
-		<!-- Spec Examples test -->
-		<module>org.eclipse.n4js.spec.examples.xpect.tests</module>
-
-		<!-- *************************************** Headless Tools Tests -->
-		<module>org.eclipse.n4js.cli.tests</module>
-
-		<!-- *************************************** IDE Tests -->
-		<module>org.eclipse.n4js.ide.tests.helper.tests</module>
-		<module>org.eclipse.n4js.ide.tests</module>
-		<module>org.eclipse.n4js.ide.tests.jar</module>
-		<module>org.eclipse.n4js.ui.tests</module> <!-- note the bad name: these are actually IDE tests -->
-
-		<!-- *************************************** flow graph tests -->
-		<module>org.eclipse.n4js.flowgraphs.tests</module>
-
-		<!-- *************************************** N4IDL Tests -->
-		<module>org.eclipse.n4js.n4idl.lang.tests</module>
-		<module>org.eclipse.n4js.n4idl.spec.tests</module>
 
 	</modules>
 
@@ -255,7 +191,6 @@ Contributors:
 							<exclude>**/*PluginUITest.java</exclude>
 							<exclude>**/*PerformanceTest.java</exclude>
 							<exclude>**/*SmokeTest.java</exclude>
-							<exclude>**/*JarTest.java</exclude>
 						</excludes>
 					</configuration>
 					<executions>
@@ -375,6 +310,54 @@ Contributors:
 				<WORKSPACE>${user.home}</WORKSPACE>
 			</properties>
 		</profile>		
+
+		<!-- This profile is active by default; can be deactivated on command line with "-P-execute-basic-tests" -->
+		<profile>
+			<id>execute-basic-tests</id>
+			<activation>
+				<property><name>!doNotExecuteBasicTests</name></property>
+			</activation>
+			<modules>
+
+				<module>org.eclipse.n4js.lang.tests</module>
+				<module>org.eclipse.n4js.spec.tests</module>
+
+				<module>org.eclipse.n4js.bugreports.tests</module>
+				<module>org.eclipse.n4js.expectmatrix.tests</module>
+				<module>org.eclipse.n4js.flowgraphs.tests</module>
+				<module>org.eclipse.n4js.spec.examples.xpect.tests</module>
+				<module>org.eclipse.n4js.xpect.tests</module>
+
+				<module>org.eclipse.n4js.ts.model.tests</module>
+
+				<module>org.eclipse.n4js.transpiler.tests</module>
+				<module>org.eclipse.n4js.transpiler.es5.tests</module>
+				<module>org.eclipse.n4js.transpiler.es.tests</module>
+
+				<module>org.eclipse.n4js.json.tests</module>
+				<module>org.eclipse.n4js.json.xpect.tests</module>
+
+				<module>org.eclipse.n4js.packagejson.xpect.tests</module>
+
+				<module>org.eclipse.n4js.semver.tests</module>
+
+				<module>org.eclipse.n4js.jsdoc.tests</module>
+
+				<module>org.eclipse.n4js.utils.tests</module>
+				<module>org.eclipse.n4js.releng.utils.tests</module>
+
+				<module>org.eclipse.n4js.regex.tests</module>
+
+				<module>org.eclipse.n4js.jsdoc2spec.tests</module>
+
+				<module>org.eclipse.n4js.ide.tests</module>
+				<module>org.eclipse.n4js.ide.tests.helper.tests</module>
+				<module>org.eclipse.n4js.ui.tests</module> <!-- note the bad name: these are actually IDE tests -->
+
+				<module>org.eclipse.n4js.integration.tests</module>
+
+			</modules>
+		</profile>
 
 		<profile>
 			<id>execute-smoke-tests</id>

@@ -22,7 +22,12 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
      * Filter for matching test cases.
      */
     public filter: string[];
-    
+
+    /**
+     * Write istanbul test coverage into file.
+     */
+    public nycCoveragePath: string;
+
     /**
      * Attach V8 Inspector with --inspect-brk.
      */

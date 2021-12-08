@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+const c1: Iterable2<string, number> = ["12", 34];
+const c2: Iterable2<string, number>[] = null;
+
+function f1(): Iterable2<Iterable2<int, string>, number> { return null; }
+
+
+abstract class MyIterableClass<T> implements Iterable2<T, int> {}
+
+interface MyIterableInterface<T> extends Iterable3<T, string, int> {}
+interface MyOtherIterableInterface<T> extends Iterable3<Iterable2<T, int>, string, int> {}
+
+
+/* XPECT generated_dts ---
+declare const c1: Iterable2<string, number>;
+declare const c2: Array<Iterable2<string, number>>;
+declare function f1(): Iterable2<Iterable2<number, string>, number>;
+declare abstract class MyIterableClass<T> implements Iterable2<T, number> {
+	public abstract [Symbol.iterator](): Iterator<T | number>;
+}
+declare interface MyIterableInterface<T> extends Iterable3<T, string, number> {}
+declare interface MyOtherIterableInterface<T> extends Iterable3<Iterable2<T, number>, string, number> {}
+--- */

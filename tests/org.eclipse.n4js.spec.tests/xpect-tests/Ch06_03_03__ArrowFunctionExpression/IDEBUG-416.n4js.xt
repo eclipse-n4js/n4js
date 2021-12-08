@@ -18,12 +18,12 @@ function none(): void {}
 // XPECT noerrors --> "An arrow-function is used in a context where its body is expected to have some value as opposed to being void."
 foo(() => none())
 
-// XPECT errors --> "string is not a subtype of number." at """"
+// XPECT errors --> """ is not a subtype of number." at """"
 foo(() => "")
-// XPECT errors --> "boolean is not a subtype of number." at "true"
+// XPECT errors --> "true is not a subtype of number." at "true"
 foo(() => true)
 
-// XPECT errors --> "string is not a subtype of number." at """"
+// XPECT errors --> """ is not a subtype of number." at """"
 foo(() => { return "" })
 
 class A {}

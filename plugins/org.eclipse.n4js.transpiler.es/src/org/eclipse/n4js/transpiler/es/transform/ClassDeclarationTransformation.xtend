@@ -32,7 +32,7 @@ import org.eclipse.n4js.transpiler.es.assistants.DelegationAssistant
 import org.eclipse.n4js.transpiler.es.assistants.ReflectionAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 

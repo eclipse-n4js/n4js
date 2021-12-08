@@ -68,6 +68,15 @@ var b6 : union{G<A>, union{GG<A>, I}};
 
 
 
+// XPECT warnings --> "The use of the any type in a union type is discouraged." at "any"
+var c1 : A | any;
+
+
+// XPECT warnings --> "The use of redundant subtypes is discouraged." at "A"
+var c2 : A | Object;
+
+
+
 // XPECT FIXME warnings --> "The use of unnecessary subtypes is discouraged." at "AA"
 var a5 : union{~A, AA};
 

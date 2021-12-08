@@ -62,6 +62,7 @@ class StaticPolyfill_inheriting_from_filled_type__IdeTest extends AbstractStatic
 				"(Error, [17:14 - 17:18], Couldn't resolve reference to IdentifiableElement 'test'.)",
 				"(Error, [21:11 - 21:15], Couldn't resolve reference to IdentifiableElement 'test'.)",
 				"(Error, [27:34 - 27:39], Couldn't resolve reference to Type 'Buddy'.)",
+    			"(Error, [29:20 - 29:24], Couldn't resolve reference to Type 'Poly'.)",
 				"(Error, [36:8 - 36:12], Couldn't resolve reference to IdentifiableElement 'test'.)"
 			],
 			"src2/A2.n4js" -> #[
@@ -94,10 +95,6 @@ class StaticPolyfill_inheriting_from_filled_type__IdeTest extends AbstractStatic
 		assertIssues(
 			"src2/A.n4js" -> #[
 				"(Error, [4:53 - 4:57], Couldn't resolve reference to Type 'Poly'.)",
-				"(Error, [6:34 - 6:35], Couldn't resolve reference to Type 'T'.)",
-				"(Error, [7:33 - 7:34], Couldn't resolve reference to Type 'T'.)",
-				"(Error, [9:32 - 9:33], Couldn't resolve reference to Type 'T'.)",
-				"(Error, [9:43 - 9:44], Couldn't resolve reference to Type 'T'.)",
 				"(Error, [10:22 - 10:26], Couldn't resolve reference to IdentifiableElement 'unit'.)",
 				"(Error, [16:30 - 16:34], Couldn't resolve reference to IdentifiableElement 'unit'.)"
 			]

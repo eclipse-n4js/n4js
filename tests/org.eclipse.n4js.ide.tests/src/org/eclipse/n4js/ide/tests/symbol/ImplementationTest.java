@@ -17,11 +17,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractImplementationTest;
 import org.eclipse.n4js.ide.tests.helper.server.StringLSP4J;
@@ -62,17 +62,18 @@ public class ImplementationTest extends AbstractImplementationTest {
 		testWorkspaceManager.createTestProjectOnDisk(Collections.emptyMap());
 		startAndWaitForLspServer();
 
-		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
-		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4ts"));
-		// see position from test above
-		textDocumentPositionParams.setPosition(new Position(838, 15));
+		DefinitionParams definitionParams = new DefinitionParams();
+		definitionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4jsd"));
+		// see position from test in DefinitionTest.java
+		definitionParams.setPosition(new Position(DefinitionTest.STRING_LENGTH_LINE, 12));
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
-				.definition(textDocumentPositionParams);
+				.definition(definitionParams);
 		Either<List<? extends Location>, List<? extends LocationLink>> definitions = definitionsFuture.get();
 
 		File root = getRoot();
 		String actualSignatureHelp = new StringLSP4J(root).toString4(definitions);
-		assertEquals("(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])", actualSignatureHelp.trim());
+		assertEquals("(n4scheme:/builtin_js.n4jsd, [" + DefinitionTest.STRING_LENGTH_LINE + ":12 - "
+				+ DefinitionTest.STRING_LENGTH_LINE + ":18])", actualSignatureHelp.trim());
 	}
 
 }

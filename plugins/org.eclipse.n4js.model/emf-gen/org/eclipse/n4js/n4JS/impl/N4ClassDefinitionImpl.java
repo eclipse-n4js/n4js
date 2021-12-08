@@ -227,9 +227,16 @@ public abstract class N4ClassDefinitionImpl extends N4ClassifierDefinitionImpl i
 	 */
 	@Override
 	public Iterable<TypeReferenceNode<ParameterizedTypeRef>> getSuperClassifierRefs() {
-		TypeReferenceNode<ParameterizedTypeRef> _superClassRef = this.getSuperClassRef();
-		EList<TypeReferenceNode<ParameterizedTypeRef>> _implementedInterfaceRefs = this.getImplementedInterfaceRefs();
-		return Iterables.<TypeReferenceNode<ParameterizedTypeRef>>concat(java.util.Collections.<TypeReferenceNode<ParameterizedTypeRef>>unmodifiableList(org.eclipse.xtext.xbase.lib.CollectionLiterals.<TypeReferenceNode<ParameterizedTypeRef>>newArrayList(_superClassRef)), _implementedInterfaceRefs);
+		final TypeReferenceNode<ParameterizedTypeRef> _superClassRef = this.getSuperClassRef();
+		Iterable<TypeReferenceNode<ParameterizedTypeRef>> _xifexpression = null;
+		if ((_superClassRef != null)) {
+			EList<TypeReferenceNode<ParameterizedTypeRef>> _implementedInterfaceRefs = this.getImplementedInterfaceRefs();
+			_xifexpression = Iterables.<TypeReferenceNode<ParameterizedTypeRef>>concat(java.util.Collections.<TypeReferenceNode<ParameterizedTypeRef>>unmodifiableList(org.eclipse.xtext.xbase.lib.CollectionLiterals.<TypeReferenceNode<ParameterizedTypeRef>>newArrayList(_superClassRef)), _implementedInterfaceRefs);
+		}
+		else {
+			_xifexpression = this.getImplementedInterfaceRefs();
+		}
+		return _xifexpression;
 	}
 
 	/**

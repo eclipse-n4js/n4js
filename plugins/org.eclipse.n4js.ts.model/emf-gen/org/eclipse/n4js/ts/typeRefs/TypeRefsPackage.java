@@ -78,43 +78,6 @@ public interface TypeRefsPackage extends EPackage {
 	TypeRefsPackage eINSTANCE = org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl.init();
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.VersionableImpl <em>Versionable</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.VersionableImpl
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getVersionable()
-	 * @generated
-	 */
-	int VERSIONABLE = 0;
-
-	/**
-	 * The number of structural features of the '<em>Versionable</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONABLE_FEATURE_COUNT = 0;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONABLE___GET_VERSION = 0;
-
-	/**
-	 * The number of operations of the '<em>Versionable</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONABLE_OPERATION_COUNT = 1;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeArgumentImpl <em>Type Argument</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -122,7 +85,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeArgument()
 	 * @generated
 	 */
-	int TYPE_ARGUMENT = 1;
+	int TYPE_ARGUMENT = 0;
 
 	/**
 	 * The number of structural features of the '<em>Type Argument</em>' class.
@@ -186,7 +149,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeRef()
 	 * @generated
 	 */
-	int TYPE_REF = 2;
+	int TYPE_REF = 1;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -231,7 +194,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_MODIFIERS_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 1;
+	int TYPE_REF___GET_MODIFIERS_AS_STRING = TYPE_ARGUMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Type Ref</em>' operation.
@@ -240,7 +203,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_TYPE_REF = TYPE_ARGUMENT_OPERATION_COUNT + 2;
+	int TYPE_REF___IS_TYPE_REF = TYPE_ARGUMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
@@ -249,7 +212,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_ALIAS_UNRESOLVED = TYPE_ARGUMENT_OPERATION_COUNT + 3;
+	int TYPE_REF___IS_ALIAS_UNRESOLVED = TYPE_ARGUMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
@@ -258,7 +221,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_ALIAS_RESOLVED = TYPE_ARGUMENT_OPERATION_COUNT + 4;
+	int TYPE_REF___IS_ALIAS_RESOLVED = TYPE_ARGUMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -267,7 +230,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_FINAL_BY_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 5;
+	int TYPE_REF___IS_FINAL_BY_TYPE = TYPE_ARGUMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -276,7 +239,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_ARRAY_LIKE = TYPE_ARGUMENT_OPERATION_COUNT + 6;
+	int TYPE_REF___IS_ARRAY_LIKE = TYPE_ARGUMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Unknown</em>' operation.
@@ -285,7 +248,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_UNKNOWN = TYPE_ARGUMENT_OPERATION_COUNT + 7;
+	int TYPE_REF___IS_UNKNOWN = TYPE_ARGUMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
@@ -294,7 +257,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_DYNAMIC = TYPE_ARGUMENT_OPERATION_COUNT + 8;
+	int TYPE_REF___IS_DYNAMIC = TYPE_ARGUMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Existential</em>' operation.
@@ -303,7 +266,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_EXISTENTIAL = TYPE_ARGUMENT_OPERATION_COUNT + 9;
+	int TYPE_REF___IS_EXISTENTIAL = TYPE_ARGUMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -312,7 +275,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_GENERIC = TYPE_ARGUMENT_OPERATION_COUNT + 10;
+	int TYPE_REF___IS_GENERIC = TYPE_ARGUMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -321,7 +284,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_PARAMETERIZED = TYPE_ARGUMENT_OPERATION_COUNT + 11;
+	int TYPE_REF___IS_PARAMETERIZED = TYPE_ARGUMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -330,7 +293,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_RAW = TYPE_ARGUMENT_OPERATION_COUNT + 12;
+	int TYPE_REF___IS_RAW = TYPE_ARGUMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
@@ -339,7 +302,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_DECLARED_UPPER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 13;
+	int TYPE_REF___GET_DECLARED_UPPER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
@@ -348,16 +311,25 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 14;
+	int TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_ARGUMENT_OPERATION_COUNT + 13;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_TYPE_ARGS = TYPE_ARGUMENT_OPERATION_COUNT + 15;
+	int TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_ARGUMENT_OPERATION_COUNT + 14;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_ARGUMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -459,22 +431,13 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 26;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REF___GET_VERSION = TYPE_ARGUMENT_OPERATION_COUNT + 27;
-
-	/**
 	 * The number of operations of the '<em>Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 28;
+	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 27;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StaticBaseTypeRefImpl <em>Static Base Type Ref</em>}' class.
@@ -484,7 +447,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getStaticBaseTypeRef()
 	 * @generated
 	 */
-	int STATIC_BASE_TYPE_REF = 3;
+	int STATIC_BASE_TYPE_REF = 2;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -649,13 +612,22 @@ public interface TypeRefsPackage extends EPackage {
 	int STATIC_BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STATIC_BASE_TYPE_REF___GET_TYPE_ARGS = TYPE_REF___GET_TYPE_ARGS;
+	int STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -757,15 +729,6 @@ public interface TypeRefsPackage extends EPackage {
 	int STATIC_BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STATIC_BASE_TYPE_REF___GET_VERSION = TYPE_REF___GET_VERSION;
-
-	/**
 	 * The number of operations of the '<em>Static Base Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -782,7 +745,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getBaseTypeRef()
 	 * @generated
 	 */
-	int BASE_TYPE_REF = 4;
+	int BASE_TYPE_REF = 3;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -947,13 +910,22 @@ public interface TypeRefsPackage extends EPackage {
 	int BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND = STATIC_BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_TYPE_REF___GET_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS;
+	int BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -1055,15 +1027,6 @@ public interface TypeRefsPackage extends EPackage {
 	int BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = STATIC_BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_TYPE_REF___GET_VERSION = STATIC_BASE_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1089,7 +1052,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getComposedTypeRef()
 	 * @generated
 	 */
-	int COMPOSED_TYPE_REF = 5;
+	int COMPOSED_TYPE_REF = 4;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1254,13 +1217,22 @@ public interface TypeRefsPackage extends EPackage {
 	int COMPOSED_TYPE_REF___GET_DECLARED_LOWER_BOUND = STATIC_BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_TYPE_REF___GET_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS;
+	int COMPOSED_TYPE_REF___GET_DECLARED_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -1353,15 +1325,6 @@ public interface TypeRefsPackage extends EPackage {
 	int COMPOSED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = STATIC_BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPOSED_TYPE_REF___GET_VERSION = STATIC_BASE_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1396,7 +1359,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getUnionTypeExpression()
 	 * @generated
 	 */
-	int UNION_TYPE_EXPRESSION = 6;
+	int UNION_TYPE_EXPRESSION = 5;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1561,13 +1524,22 @@ public interface TypeRefsPackage extends EPackage {
 	int UNION_TYPE_EXPRESSION___GET_DECLARED_LOWER_BOUND = COMPOSED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNION_TYPE_EXPRESSION___GET_TYPE_ARGS = COMPOSED_TYPE_REF___GET_TYPE_ARGS;
+	int UNION_TYPE_EXPRESSION___GET_DECLARED_TYPE_ARGS = COMPOSED_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___GET_TYPE_ARGS_WITH_DEFAULTS = COMPOSED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -1660,15 +1632,6 @@ public interface TypeRefsPackage extends EPackage {
 	int UNION_TYPE_EXPRESSION___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = COMPOSED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNION_TYPE_EXPRESSION___GET_VERSION = COMPOSED_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1703,7 +1666,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getIntersectionTypeExpression()
 	 * @generated
 	 */
-	int INTERSECTION_TYPE_EXPRESSION = 7;
+	int INTERSECTION_TYPE_EXPRESSION = 6;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -1868,13 +1831,22 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___GET_DECLARED_LOWER_BOUND = COMPOSED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_ARGS = COMPOSED_TYPE_REF___GET_TYPE_ARGS;
+	int INTERSECTION_TYPE_EXPRESSION___GET_DECLARED_TYPE_ARGS = COMPOSED_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___GET_TYPE_ARGS_WITH_DEFAULTS = COMPOSED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -1967,15 +1939,6 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = COMPOSED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION___GET_VERSION = COMPOSED_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2010,7 +1973,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getThisTypeRef()
 	 * @generated
 	 */
-	int THIS_TYPE_REF = 8;
+	int THIS_TYPE_REF = 7;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -2175,13 +2138,22 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF___GET_DECLARED_LOWER_BOUND = BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF___GET_TYPE_ARGS = BASE_TYPE_REF___GET_TYPE_ARGS;
+	int THIS_TYPE_REF___GET_DECLARED_TYPE_ARGS = BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -2247,15 +2219,6 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF___GET_VERSION = BASE_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2317,7 +2280,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getThisTypeRefNominal()
 	 * @generated
 	 */
-	int THIS_TYPE_REF_NOMINAL = 9;
+	int THIS_TYPE_REF_NOMINAL = 8;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -2482,13 +2445,22 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_NOMINAL___GET_DECLARED_LOWER_BOUND = THIS_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_NOMINAL___GET_TYPE_ARGS = THIS_TYPE_REF___GET_TYPE_ARGS;
+	int THIS_TYPE_REF_NOMINAL___GET_DECLARED_TYPE_ARGS = THIS_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___GET_TYPE_ARGS_WITH_DEFAULTS = THIS_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -2554,15 +2526,6 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_NOMINAL___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = THIS_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_NOMINAL___GET_VERSION = THIS_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2624,7 +2587,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getThisTypeRefStructural()
 	 * @generated
 	 */
-	int THIS_TYPE_REF_STRUCTURAL = 10;
+	int THIS_TYPE_REF_STRUCTURAL = 9;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -2834,13 +2797,22 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_STRUCTURAL___GET_DECLARED_LOWER_BOUND = THIS_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_ARGS = THIS_TYPE_REF___GET_TYPE_ARGS;
+	int THIS_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE_ARGS = THIS_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___GET_TYPE_ARGS_WITH_DEFAULTS = THIS_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -2906,15 +2878,6 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_STRUCTURAL___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = THIS_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_STRUCTURAL___GET_VERSION = THIS_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2924,13 +2887,22 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_STRUCTURAL___GET_MODIFIERS_AS_STRING = THIS_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Structural Members With Call Construct Signatures</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES = THIS_TYPE_REF_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = THIS_TYPE_REF_OPERATION_COUNT + 3;
+	int THIS_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = THIS_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -2939,7 +2911,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 4;
+	int THIS_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Set Typing Strategy</em>' operation.
@@ -2948,7 +2920,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 5;
+	int THIS_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -2957,7 +2929,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___IS_USE_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 6;
+	int THIS_TYPE_REF_STRUCTURAL___IS_USE_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -2966,7 +2938,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS = THIS_TYPE_REF_OPERATION_COUNT + 7;
+	int THIS_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS = THIS_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -2975,7 +2947,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF_OPERATION_COUNT + 8;
+	int THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF_OPERATION_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>This Type Ref Structural</em>' class.
@@ -2984,7 +2956,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL_OPERATION_COUNT = THIS_TYPE_REF_OPERATION_COUNT + 9;
+	int THIS_TYPE_REF_STRUCTURAL_OPERATION_COUNT = THIS_TYPE_REF_OPERATION_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.BoundThisTypeRefImpl <em>Bound This Type Ref</em>}' class.
@@ -2994,7 +2966,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getBoundThisTypeRef()
 	 * @generated
 	 */
-	int BOUND_THIS_TYPE_REF = 11;
+	int BOUND_THIS_TYPE_REF = 10;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -3204,13 +3176,22 @@ public interface TypeRefsPackage extends EPackage {
 	int BOUND_THIS_TYPE_REF___GET_DECLARED_LOWER_BOUND = THIS_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___GET_TYPE_ARGS = THIS_TYPE_REF___GET_TYPE_ARGS;
+	int BOUND_THIS_TYPE_REF___GET_DECLARED_TYPE_ARGS = THIS_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = THIS_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -3276,13 +3257,22 @@ public interface TypeRefsPackage extends EPackage {
 	int BOUND_THIS_TYPE_REF___GET_MODIFIERS_AS_STRING = THIS_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Structural Members With Call Construct Signatures</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES = THIS_TYPE_REF_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = THIS_TYPE_REF_OPERATION_COUNT + 3;
+	int BOUND_THIS_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = THIS_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -3291,7 +3281,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___GET_TYPING_STRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 4;
+	int BOUND_THIS_TYPE_REF___GET_TYPING_STRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Set Typing Strategy</em>' operation.
@@ -3300,7 +3290,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___SET_TYPING_STRATEGY__TYPINGSTRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 5;
+	int BOUND_THIS_TYPE_REF___SET_TYPING_STRATEGY__TYPINGSTRATEGY = THIS_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -3309,7 +3299,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF_OPERATION_COUNT + 6;
+	int BOUND_THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = THIS_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
@@ -3318,7 +3308,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___GET_DECLARED_UPPER_BOUND = THIS_TYPE_REF_OPERATION_COUNT + 7;
+	int BOUND_THIS_TYPE_REF___GET_DECLARED_UPPER_BOUND = THIS_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -3327,7 +3317,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 8;
+	int BOUND_THIS_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -3336,7 +3326,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 9;
+	int BOUND_THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -3345,16 +3335,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS = THIS_TYPE_REF_OPERATION_COUNT + 10;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOUND_THIS_TYPE_REF___GET_VERSION = THIS_TYPE_REF_OPERATION_COUNT + 11;
+	int BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS = THIS_TYPE_REF_OPERATION_COUNT + 11;
 
 	/**
 	 * The number of operations of the '<em>Bound This Type Ref</em>' class.
@@ -3373,7 +3354,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getParameterizedTypeRef()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF = 12;
+	int PARAMETERIZED_TYPE_REF = 11;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -3421,13 +3402,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT = BASE_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Declared Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__TYPE_ARGS = BASE_TYPE_REF_FEATURE_COUNT + 2;
+	int PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS = BASE_TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
@@ -3439,22 +3420,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * The feature id for the '<em><b>Array NType Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__AST_NAMESPACE = BASE_TYPE_REF_FEATURE_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = BASE_TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -3583,13 +3564,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND = BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS = BASE_TYPE_REF___GET_TYPE_ARGS;
+	int PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE_ARGS = BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -3655,15 +3636,6 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF___GET_VERSION = BASE_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3682,13 +3654,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY = BASE_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = BASE_TYPE_REF_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 1;
+	int PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -3697,7 +3678,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = BASE_TYPE_REF_OPERATION_COUNT + 2;
+	int PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = BASE_TYPE_REF_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -3706,7 +3687,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_GENERIC = BASE_TYPE_REF_OPERATION_COUNT + 3;
+	int PARAMETERIZED_TYPE_REF___IS_GENERIC = BASE_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -3715,7 +3696,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_RAW = BASE_TYPE_REF_OPERATION_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF___IS_RAW = BASE_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -3724,7 +3705,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -3733,7 +3714,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>Parameterized Type Ref</em>' class.
@@ -3742,7 +3723,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 7;
+	int PARAMETERIZED_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StructuralTypeRefImpl <em>Structural Type Ref</em>}' class.
@@ -3752,7 +3733,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getStructuralTypeRef()
 	 * @generated
 	 */
-	int STRUCTURAL_TYPE_REF = 13;
+	int STRUCTURAL_TYPE_REF = 12;
 
 	/**
 	 * The feature id for the '<em><b>Ast Structural Members</b></em>' containment reference list.
@@ -3827,13 +3808,22 @@ public interface TypeRefsPackage extends EPackage {
 	int STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = 2;
 
 	/**
+	 * The operation id for the '<em>Get Structural Members With Call Construct Signatures</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES = 3;
+
+	/**
 	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STRUCTURAL_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = 3;
+	int STRUCTURAL_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = 4;
 
 	/**
 	 * The number of operations of the '<em>Structural Type Ref</em>' class.
@@ -3842,7 +3832,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int STRUCTURAL_TYPE_REF_OPERATION_COUNT = 4;
+	int STRUCTURAL_TYPE_REF_OPERATION_COUNT = 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefStructuralImpl <em>Parameterized Type Ref Structural</em>}' class.
@@ -3852,7 +3842,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getParameterizedTypeRefStructural()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL = 14;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL = 13;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -3900,13 +3890,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
 
 	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Declared Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL__TYPE_ARGS = PARAMETERIZED_TYPE_REF__TYPE_ARGS;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__DECLARED_TYPE_ARGS = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS;
 
 	/**
 	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
@@ -3918,22 +3908,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * The feature id for the '<em><b>Array NType Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_NTYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_NAMESPACE = PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_DECLARED_TYPE_QUALIFIER = PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -4098,13 +4088,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_LOWER_BOUND = PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE_ARGS = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE_ARGS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -4161,15 +4151,6 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_VERSION = PARAMETERIZED_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4177,6 +4158,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_ARGS_WITH_DEFAULTS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -4224,13 +4214,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_DEF_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
+	 * The operation id for the '<em>Get Structural Members With Call Construct Signatures</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 3;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -4239,7 +4238,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Set Typing Strategy</em>' operation.
@@ -4248,7 +4247,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -4257,7 +4256,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -4266,7 +4265,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 7;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>Parameterized Type Ref Structural</em>' class.
@@ -4275,7 +4274,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 8;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ExistentialTypeRefImpl <em>Existential Type Ref</em>}' class.
@@ -4285,7 +4284,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getExistentialTypeRef()
 	 * @generated
 	 */
-	int EXISTENTIAL_TYPE_REF = 15;
+	int EXISTENTIAL_TYPE_REF = 14;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -4450,13 +4449,22 @@ public interface TypeRefsPackage extends EPackage {
 	int EXISTENTIAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF___GET_TYPE_ARGS = TYPE_REF___GET_TYPE_ARGS;
+	int EXISTENTIAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -4549,15 +4557,6 @@ public interface TypeRefsPackage extends EPackage {
 	int EXISTENTIAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXISTENTIAL_TYPE_REF___GET_VERSION = TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Is Existential</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4610,7 +4609,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getUnknownTypeRef()
 	 * @generated
 	 */
-	int UNKNOWN_TYPE_REF = 16;
+	int UNKNOWN_TYPE_REF = 15;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -4766,13 +4765,22 @@ public interface TypeRefsPackage extends EPackage {
 	int UNKNOWN_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNKNOWN_TYPE_REF___GET_TYPE_ARGS = TYPE_REF___GET_TYPE_ARGS;
+	int UNKNOWN_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -4865,15 +4873,6 @@ public interface TypeRefsPackage extends EPackage {
 	int UNKNOWN_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNKNOWN_TYPE_REF___GET_VERSION = TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Is Unknown</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4908,7 +4907,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeTypeRef()
 	 * @generated
 	 */
-	int TYPE_TYPE_REF = 17;
+	int TYPE_TYPE_REF = 16;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -5091,13 +5090,22 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_TYPE_REF___GET_DECLARED_LOWER_BOUND = BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_TYPE_REF___GET_TYPE_ARGS = BASE_TYPE_REF___GET_TYPE_ARGS;
+	int TYPE_TYPE_REF___GET_DECLARED_TYPE_ARGS = BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -5190,15 +5198,6 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_TYPE_REF___GET_VERSION = BASE_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5233,7 +5232,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getWildcard()
 	 * @generated
 	 */
-	int WILDCARD = 18;
+	int WILDCARD = 17;
 
 	/**
 	 * The feature id for the '<em><b>Declared Upper Bound</b></em>' containment reference.
@@ -5342,7 +5341,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getFunctionTypeExprOrRef()
 	 * @generated
 	 */
-	int FUNCTION_TYPE_EXPR_OR_REF = 19;
+	int FUNCTION_TYPE_EXPR_OR_REF = 18;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -5489,13 +5488,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_LOWER_BOUND = STATIC_BASE_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS;
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_TYPE_ARGS = STATIC_BASE_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_ARGS_WITH_DEFAULTS = STATIC_BASE_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -5586,15 +5594,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_EXPR_OR_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = STATIC_BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___GET_VERSION = STATIC_BASE_TYPE_REF___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Get Declared This Type</em>' operation.
@@ -5712,7 +5711,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getFunctionTypeRef()
 	 * @generated
 	 */
-	int FUNCTION_TYPE_REF = 20;
+	int FUNCTION_TYPE_REF = 19;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -5760,13 +5759,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
 
 	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Declared Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF__TYPE_ARGS = PARAMETERIZED_TYPE_REF__TYPE_ARGS;
+	int FUNCTION_TYPE_REF__DECLARED_TYPE_ARGS = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS;
 
 	/**
 	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
@@ -5778,22 +5777,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * The feature id for the '<em><b>Array NType Expression</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
+	int FUNCTION_TYPE_REF__ARRAY_NTYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF__AST_NAMESPACE = PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
+	int FUNCTION_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -5922,13 +5921,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF___GET_DECLARED_LOWER_BOUND = PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS;
+	int FUNCTION_TYPE_REF___GET_DECLARED_TYPE_ARGS = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE_ARGS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -5994,15 +5993,6 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_REF___GET_VERSION = PARAMETERIZED_TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6019,6 +6009,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_REF___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -6163,7 +6162,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getFunctionTypeExpression()
 	 * @generated
 	 */
-	int FUNCTION_TYPE_EXPRESSION = 21;
+	int FUNCTION_TYPE_EXPRESSION = 20;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -6391,13 +6390,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION___GET_DECLARED_LOWER_BOUND = FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_ARGS = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_ARGS;
+	int FUNCTION_TYPE_EXPRESSION___GET_DECLARED_TYPE_ARGS = FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___GET_TYPE_ARGS_WITH_DEFAULTS = FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -6488,15 +6496,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_EXPRESSION___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = FUNCTION_TYPE_EXPR_OR_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPRESSION___GET_VERSION = FUNCTION_TYPE_EXPR_OR_REF___GET_VERSION;
 
 	/**
 	 * The operation id for the '<em>Get Declared This Type</em>' operation.
@@ -6614,7 +6613,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getDeferredTypeRef()
 	 * @generated
 	 */
-	int DEFERRED_TYPE_REF = 22;
+	int DEFERRED_TYPE_REF = 21;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -6779,13 +6778,22 @@ public interface TypeRefsPackage extends EPackage {
 	int DEFERRED_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DEFERRED_TYPE_REF___GET_TYPE_ARGS = TYPE_REF___GET_TYPE_ARGS;
+	int DEFERRED_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
 	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
@@ -6878,15 +6886,6 @@ public interface TypeRefsPackage extends EPackage {
 	int DEFERRED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DEFERRED_TYPE_REF___GET_VERSION = TYPE_REF___GET_VERSION;
-
-	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6912,7 +6911,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeVariableMapping()
 	 * @generated
 	 */
-	int TYPE_VARIABLE_MAPPING = 23;
+	int TYPE_VARIABLE_MAPPING = 22;
 
 	/**
 	 * The feature id for the '<em><b>Type Var</b></em>' reference.
@@ -6951,69 +6950,14 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_VARIABLE_MAPPING_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.VersionedReferenceImpl <em>Versioned Reference</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.LiteralTypeRefImpl <em>Literal Type Ref</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.VersionedReferenceImpl
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getVersionedReference()
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.LiteralTypeRefImpl
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getLiteralTypeRef()
 	 * @generated
 	 */
-	int VERSIONED_REFERENCE = 24;
-
-	/**
-	 * The feature id for the '<em><b>Requested Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_REFERENCE__REQUESTED_VERSION = 0;
-
-	/**
-	 * The number of structural features of the '<em>Versioned Reference</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_REFERENCE_FEATURE_COUNT = 1;
-
-	/**
-	 * The operation id for the '<em>Has Requested Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_REFERENCE___HAS_REQUESTED_VERSION = 0;
-
-	/**
-	 * The operation id for the '<em>Get Requested Version Or Zero</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_REFERENCE___GET_REQUESTED_VERSION_OR_ZERO = 1;
-
-	/**
-	 * The number of operations of the '<em>Versioned Reference</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_REFERENCE_OPERATION_COUNT = 2;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.VersionedParameterizedTypeRefImpl <em>Versioned Parameterized Type Ref</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.VersionedParameterizedTypeRefImpl
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getVersionedParameterizedTypeRef()
-	 * @generated
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF = 25;
+	int LITERAL_TYPE_REF = 23;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -7022,7 +6966,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = PARAMETERIZED_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
+	int LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
 	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
@@ -7031,106 +6975,25 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = PARAMETERIZED_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+	int LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
 
 	/**
-	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
+	 * The feature id for the '<em><b>Ast Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__DYNAMIC = PARAMETERIZED_TYPE_REF__DYNAMIC;
+	int LITERAL_TYPE_REF__AST_VALUE = TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
+	 * The number of structural features of the '<em>Literal Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE = PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT = PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
-
-	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__TYPE_ARGS = PARAMETERIZED_TYPE_REF__TYPE_ARGS;
-
-	/**
-	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__AST_NAMESPACE = PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
-
-	/**
-	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Requested Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF__REQUESTED_VERSION = PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Versioned Parameterized Type Ref</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_FEATURE_COUNT = PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 1;
+	int LITERAL_TYPE_REF_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -7139,169 +7002,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE = PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_TYPE_REF = PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
-
-	/**
-	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_ALIAS_UNRESOLVED = PARAMETERIZED_TYPE_REF___IS_ALIAS_UNRESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_ALIAS_RESOLVED = PARAMETERIZED_TYPE_REF___IS_ALIAS_RESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Final By Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_FINAL_BY_TYPE = PARAMETERIZED_TYPE_REF___IS_FINAL_BY_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE = PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Is Unknown</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_UNKNOWN = PARAMETERIZED_TYPE_REF___IS_UNKNOWN;
-
-	/**
-	 * The operation id for the '<em>Is Dynamic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_DYNAMIC = PARAMETERIZED_TYPE_REF___IS_DYNAMIC;
-
-	/**
-	 * The operation id for the '<em>Is Existential</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_EXISTENTIAL = PARAMETERIZED_TYPE_REF___IS_EXISTENTIAL;
-
-	/**
-	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_UPPER_BOUND = PARAMETERIZED_TYPE_REF___GET_DECLARED_UPPER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND = PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS = PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___TO_STRING = PARAMETERIZED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Top Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_TOP_TYPE = PARAMETERIZED_TYPE_REF___IS_TOP_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Bottom Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_BOTTOM_TYPE = PARAMETERIZED_TYPE_REF___IS_BOTTOM_TYPE;
-
-	/**
-	 * The operation id for the '<em>Get Structural Members</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF___GET_STRUCTURAL_MEMBERS;
-
-	/**
-	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+	int LITERAL_TYPE_REF___GET_DECLARED_TYPE = TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -7310,34 +7011,79 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING;
+	int LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING = TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY = PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
+	int LITERAL_TYPE_REF___IS_TYPE_REF = TYPE_REF___IS_TYPE_REF;
 
 	/**
-	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
+	int LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED = TYPE_REF___IS_ALIAS_UNRESOLVED;
 
 	/**
-	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED;
+	int LITERAL_TYPE_REF___IS_ALIAS_RESOLVED = TYPE_REF___IS_ALIAS_RESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Final By Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___IS_FINAL_BY_TYPE = TYPE_REF___IS_FINAL_BY_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Array Like</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___IS_ARRAY_LIKE = TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___IS_UNKNOWN = TYPE_REF___IS_UNKNOWN;
+
+	/**
+	 * The operation id for the '<em>Is Dynamic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___IS_DYNAMIC = TYPE_REF___IS_DYNAMIC;
+
+	/**
+	 * The operation id for the '<em>Is Existential</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___IS_EXISTENTIAL = TYPE_REF___IS_EXISTENTIAL;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -7346,7 +7092,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_GENERIC = PARAMETERIZED_TYPE_REF___IS_GENERIC;
+	int LITERAL_TYPE_REF___IS_GENERIC = TYPE_REF___IS_GENERIC;
+
+	/**
+	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___IS_PARAMETERIZED = TYPE_REF___IS_PARAMETERIZED;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -7355,7 +7110,115 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_RAW = PARAMETERIZED_TYPE_REF___IS_RAW;
+	int LITERAL_TYPE_REF___IS_RAW = TYPE_REF___IS_RAW;
+
+	/**
+	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND = TYPE_REF___GET_DECLARED_UPPER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = TYPE_REF___GET_DECLARED_LOWER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___TO_STRING = TYPE_REF___TO_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Top Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___IS_TOP_TYPE = TYPE_REF___IS_TOP_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Bottom Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___IS_BOTTOM_TYPE = TYPE_REF___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_TYPING_STRATEGY = TYPE_REF___GET_TYPING_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Structural Members</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -7364,7 +7227,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
+	int LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -7373,53 +7236,44 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
+	int LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Has Requested Version</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___HAS_REQUESTED_VERSION = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 0;
+	int LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
-	 * The operation id for the '<em>Get Requested Version Or Zero</em>' operation.
+	 * The operation id for the '<em>Get Value</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_REQUESTED_VERSION_OR_ZERO = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 1;
+	int LITERAL_TYPE_REF___GET_VALUE = TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
+	 * The number of operations of the '<em>Literal Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF___GET_VERSION = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 2;
+	int LITERAL_TYPE_REF_OPERATION_COUNT = TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
-	 * The number of operations of the '<em>Versioned Parameterized Type Ref</em>' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.BooleanLiteralTypeRefImpl <em>Boolean Literal Type Ref</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT = PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 3;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.VersionedFunctionTypeRefImpl <em>Versioned Function Type Ref</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.VersionedFunctionTypeRefImpl
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getVersionedFunctionTypeRef()
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.BooleanLiteralTypeRefImpl
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getBooleanLiteralTypeRef()
 	 * @generated
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF = 26;
+	int BOOLEAN_LITERAL_TYPE_REF = 24;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -7428,7 +7282,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = VERSIONED_PARAMETERIZED_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
+	int BOOLEAN_LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
 	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
@@ -7437,106 +7291,34 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = VERSIONED_PARAMETERIZED_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+	int BOOLEAN_LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
 
 	/**
-	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
+	 * The feature id for the '<em><b>Ast Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF__DYNAMIC = VERSIONED_PARAMETERIZED_TYPE_REF__DYNAMIC;
+	int BOOLEAN_LITERAL_TYPE_REF__AST_VALUE = LITERAL_TYPE_REF__AST_VALUE;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF__DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
+	int BOOLEAN_LITERAL_TYPE_REF__VALUE = LITERAL_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * The number of structural features of the '<em>Boolean Literal Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF__DECLARED_TYPE_AS_TEXT = VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
-
-	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF__TYPE_ARGS = VERSIONED_PARAMETERIZED_TYPE_REF__TYPE_ARGS;
-
-	/**
-	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF__ARRAY_TYPE_EXPRESSION = VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF__ITERABLE_TYPE_EXPRESSION = VERSIONED_PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF__AST_NAMESPACE = VERSIONED_PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
-
-	/**
-	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = VERSIONED_PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF__DEFINED_TYPING_STRATEGY = VERSIONED_PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Requested Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF__REQUESTED_VERSION = VERSIONED_PARAMETERIZED_TYPE_REF__REQUESTED_VERSION;
-
-	/**
-	 * The number of structural features of the '<em>Versioned Function Type Ref</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF_FEATURE_COUNT = VERSIONED_PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 0;
+	int BOOLEAN_LITERAL_TYPE_REF_FEATURE_COUNT = LITERAL_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -7545,169 +7327,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_TYPE_REF = VERSIONED_PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
-
-	/**
-	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_ALIAS_UNRESOLVED = VERSIONED_PARAMETERIZED_TYPE_REF___IS_ALIAS_UNRESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_ALIAS_RESOLVED = VERSIONED_PARAMETERIZED_TYPE_REF___IS_ALIAS_RESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Final By Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_FINAL_BY_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___IS_FINAL_BY_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_ARRAY_LIKE = VERSIONED_PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Is Unknown</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_UNKNOWN = VERSIONED_PARAMETERIZED_TYPE_REF___IS_UNKNOWN;
-
-	/**
-	 * The operation id for the '<em>Is Dynamic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_DYNAMIC = VERSIONED_PARAMETERIZED_TYPE_REF___IS_DYNAMIC;
-
-	/**
-	 * The operation id for the '<em>Is Existential</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_EXISTENTIAL = VERSIONED_PARAMETERIZED_TYPE_REF___IS_EXISTENTIAL;
-
-	/**
-	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_DECLARED_UPPER_BOUND = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_UPPER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_DECLARED_LOWER_BOUND = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_TYPE_ARGS = VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING = VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___TO_STRING = VERSIONED_PARAMETERIZED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Top Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_TOP_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___IS_TOP_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Bottom Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_BOTTOM_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___IS_BOTTOM_TYPE;
-
-	/**
-	 * The operation id for the '<em>Get Structural Members</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_STRUCTURAL_MEMBERS = VERSIONED_PARAMETERIZED_TYPE_REF___GET_STRUCTURAL_MEMBERS;
-
-	/**
-	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = VERSIONED_PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+	int BOOLEAN_LITERAL_TYPE_REF___GET_DECLARED_TYPE = LITERAL_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -7716,88 +7336,79 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_MODIFIERS_AS_STRING = VERSIONED_PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING;
+	int BOOLEAN_LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING = LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_TYPING_STRATEGY = VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
+	int BOOLEAN_LITERAL_TYPE_REF___IS_TYPE_REF = LITERAL_TYPE_REF___IS_TYPE_REF;
 
 	/**
-	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_PARAMETERIZED = VERSIONED_PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED;
+	int BOOLEAN_LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED = LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED;
 
 	/**
-	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = VERSIONED_PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
+	int BOOLEAN_LITERAL_TYPE_REF___IS_ALIAS_RESOLVED = LITERAL_TYPE_REF___IS_ALIAS_RESOLVED;
 
 	/**
-	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * The operation id for the '<em>Is Final By Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = VERSIONED_PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
+	int BOOLEAN_LITERAL_TYPE_REF___IS_FINAL_BY_TYPE = LITERAL_TYPE_REF___IS_FINAL_BY_TYPE;
 
 	/**
-	 * The operation id for the '<em>Has Requested Version</em>' operation.
+	 * The operation id for the '<em>Is Array Like</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___HAS_REQUESTED_VERSION = VERSIONED_PARAMETERIZED_TYPE_REF___HAS_REQUESTED_VERSION;
+	int BOOLEAN_LITERAL_TYPE_REF___IS_ARRAY_LIKE = LITERAL_TYPE_REF___IS_ARRAY_LIKE;
 
 	/**
-	 * The operation id for the '<em>Get Requested Version Or Zero</em>' operation.
+	 * The operation id for the '<em>Is Unknown</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_REQUESTED_VERSION_OR_ZERO = VERSIONED_PARAMETERIZED_TYPE_REF___GET_REQUESTED_VERSION_OR_ZERO;
+	int BOOLEAN_LITERAL_TYPE_REF___IS_UNKNOWN = LITERAL_TYPE_REF___IS_UNKNOWN;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
+	 * The operation id for the '<em>Is Dynamic</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_VERSION = VERSIONED_PARAMETERIZED_TYPE_REF___GET_VERSION;
+	int BOOLEAN_LITERAL_TYPE_REF___IS_DYNAMIC = LITERAL_TYPE_REF___IS_DYNAMIC;
 
 	/**
-	 * The operation id for the '<em>Get Function Type</em>' operation.
+	 * The operation id for the '<em>Is Existential</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_FUNCTION_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_RETURN_VALUE_OPTIONAL = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 5;
+	int BOOLEAN_LITERAL_TYPE_REF___IS_EXISTENTIAL = LITERAL_TYPE_REF___IS_EXISTENTIAL;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -7806,7 +7417,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_GENERIC = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 7;
+	int BOOLEAN_LITERAL_TYPE_REF___IS_GENERIC = LITERAL_TYPE_REF___IS_GENERIC;
+
+	/**
+	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___IS_PARAMETERIZED = LITERAL_TYPE_REF___IS_PARAMETERIZED;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -7815,16 +7435,142 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___IS_RAW = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 8;
+	int BOOLEAN_LITERAL_TYPE_REF___IS_RAW = LITERAL_TYPE_REF___IS_RAW;
 
 	/**
-	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
+	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_FPAR_FOR_ARG_IDX__INT = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 9;
+	int BOOLEAN_LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Top Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___IS_TOP_TYPE = LITERAL_TYPE_REF___IS_TOP_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Bottom Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___IS_BOTTOM_TYPE = LITERAL_TYPE_REF___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_TYPING_STRATEGY = LITERAL_TYPE_REF___GET_TYPING_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Structural Members</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Value</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___GET_VALUE = LITERAL_TYPE_REF___GET_VALUE;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -7833,71 +7579,26 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 10;
+	int BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
-	 * The operation id for the '<em>Get Declared This Type</em>' operation.
+	 * The number of operations of the '<em>Boolean Literal Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_DECLARED_THIS_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 11;
+	int BOOLEAN_LITERAL_TYPE_REF_OPERATION_COUNT = LITERAL_TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl <em>Numeric Literal Type Ref</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_TYPE_VARS = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 12;
-
-	/**
-	 * The operation id for the '<em>Get Type Var Upper Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 13;
-
-	/**
-	 * The operation id for the '<em>Get Fpars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_FPARS = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 14;
-
-	/**
-	 * The operation id for the '<em>Get Return Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF___GET_RETURN_TYPE_REF = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 15;
-
-	/**
-	 * The number of operations of the '<em>Versioned Function Type Ref</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_FUNCTION_TYPE_REF_OPERATION_COUNT = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 16;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.VersionedParameterizedTypeRefStructuralImpl <em>Versioned Parameterized Type Ref Structural</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.VersionedParameterizedTypeRefStructuralImpl
-	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getVersionedParameterizedTypeRefStructural()
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getNumericLiteralTypeRef()
 	 * @generated
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL = 27;
+	int NUMERIC_LITERAL_TYPE_REF = 25;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -7906,7 +7607,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__FOLLOWED_BY_QUESTION_MARK = VERSIONED_PARAMETERIZED_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
+	int NUMERIC_LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
 	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
@@ -7915,142 +7616,43 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__ORIGINAL_ALIAS_TYPE_REF = VERSIONED_PARAMETERIZED_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+	int NUMERIC_LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
 
 	/**
-	 * The feature id for the '<em><b>Dynamic</b></em>' attribute.
+	 * The feature id for the '<em><b>Ast Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__DYNAMIC = VERSIONED_PARAMETERIZED_TYPE_REF__DYNAMIC;
+	int NUMERIC_LITERAL_TYPE_REF__AST_VALUE = LITERAL_TYPE_REF__AST_VALUE;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Negated</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE;
+	int NUMERIC_LITERAL_TYPE_REF__AST_NEGATED = LITERAL_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__DECLARED_TYPE_AS_TEXT = VERSIONED_PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT;
+	int NUMERIC_LITERAL_TYPE_REF__VALUE = LITERAL_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
+	 * The number of structural features of the '<em>Numeric Literal Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__TYPE_ARGS = VERSIONED_PARAMETERIZED_TYPE_REF__TYPE_ARGS;
-
-	/**
-	 * The feature id for the '<em><b>Array Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_TYPE_EXPRESSION = VERSIONED_PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Iterable Type Expression</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__ITERABLE_TYPE_EXPRESSION = VERSIONED_PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Ast Namespace</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_NAMESPACE = VERSIONED_PARAMETERIZED_TYPE_REF__AST_NAMESPACE;
-
-	/**
-	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_NODE_OPTIONAL_FIELD_STRATEGY = VERSIONED_PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__DEFINED_TYPING_STRATEGY = VERSIONED_PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Requested Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__REQUESTED_VERSION = VERSIONED_PARAMETERIZED_TYPE_REF__REQUESTED_VERSION;
-
-	/**
-	 * The feature id for the '<em><b>Ast Structural Members</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_STRUCTURAL_MEMBERS = VERSIONED_PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Structural Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__STRUCTURAL_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Gen Structural Members</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__GEN_STRUCTURAL_MEMBERS = VERSIONED_PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Postponed Substitutions</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL__POSTPONED_SUBSTITUTIONS = VERSIONED_PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 3;
-
-	/**
-	 * The number of structural features of the '<em>Versioned Parameterized Type Ref Structural</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_FEATURE_COUNT = VERSIONED_PARAMETERIZED_TYPE_REF_FEATURE_COUNT + 4;
+	int NUMERIC_LITERAL_TYPE_REF_FEATURE_COUNT = LITERAL_TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -8059,160 +7661,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Type Ref</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_TYPE_REF = VERSIONED_PARAMETERIZED_TYPE_REF___IS_TYPE_REF;
-
-	/**
-	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_ALIAS_UNRESOLVED = VERSIONED_PARAMETERIZED_TYPE_REF___IS_ALIAS_UNRESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_ALIAS_RESOLVED = VERSIONED_PARAMETERIZED_TYPE_REF___IS_ALIAS_RESOLVED;
-
-	/**
-	 * The operation id for the '<em>Is Final By Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_FINAL_BY_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___IS_FINAL_BY_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_ARRAY_LIKE = VERSIONED_PARAMETERIZED_TYPE_REF___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Is Unknown</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_UNKNOWN = VERSIONED_PARAMETERIZED_TYPE_REF___IS_UNKNOWN;
-
-	/**
-	 * The operation id for the '<em>Is Dynamic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_DYNAMIC = VERSIONED_PARAMETERIZED_TYPE_REF___IS_DYNAMIC;
-
-	/**
-	 * The operation id for the '<em>Is Existential</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_EXISTENTIAL = VERSIONED_PARAMETERIZED_TYPE_REF___IS_EXISTENTIAL;
-
-	/**
-	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_UPPER_BOUND = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_UPPER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_DECLARED_LOWER_BOUND = VERSIONED_PARAMETERIZED_TYPE_REF___GET_DECLARED_LOWER_BOUND;
-
-	/**
-	 * The operation id for the '<em>Get Type Args</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_ARGS = VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING = VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = VERSIONED_PARAMETERIZED_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
-
-	/**
-	 * The operation id for the '<em>To String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___TO_STRING = VERSIONED_PARAMETERIZED_TYPE_REF___TO_STRING;
-
-	/**
-	 * The operation id for the '<em>Is Top Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_TOP_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___IS_TOP_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Bottom Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_BOTTOM_TYPE = VERSIONED_PARAMETERIZED_TYPE_REF___IS_BOTTOM_TYPE;
-
-	/**
-	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = VERSIONED_PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+	int NUMERIC_LITERAL_TYPE_REF___GET_DECLARED_TYPE = LITERAL_TYPE_REF___GET_DECLARED_TYPE;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -8221,16 +7670,79 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_MODIFIERS_AS_STRING = VERSIONED_PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING;
+	int NUMERIC_LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING = LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_PARAMETERIZED = VERSIONED_PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED;
+	int NUMERIC_LITERAL_TYPE_REF___IS_TYPE_REF = LITERAL_TYPE_REF___IS_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED = LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_ALIAS_RESOLVED = LITERAL_TYPE_REF___IS_ALIAS_RESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Final By Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_FINAL_BY_TYPE = LITERAL_TYPE_REF___IS_FINAL_BY_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Array Like</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_ARRAY_LIKE = LITERAL_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_UNKNOWN = LITERAL_TYPE_REF___IS_UNKNOWN;
+
+	/**
+	 * The operation id for the '<em>Is Dynamic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_DYNAMIC = LITERAL_TYPE_REF___IS_DYNAMIC;
+
+	/**
+	 * The operation id for the '<em>Is Existential</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_EXISTENTIAL = LITERAL_TYPE_REF___IS_EXISTENTIAL;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -8239,7 +7751,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_GENERIC = VERSIONED_PARAMETERIZED_TYPE_REF___IS_GENERIC;
+	int NUMERIC_LITERAL_TYPE_REF___IS_GENERIC = LITERAL_TYPE_REF___IS_GENERIC;
+
+	/**
+	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_PARAMETERIZED = LITERAL_TYPE_REF___IS_PARAMETERIZED;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -8248,61 +7769,88 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_RAW = VERSIONED_PARAMETERIZED_TYPE_REF___IS_RAW;
+	int NUMERIC_LITERAL_TYPE_REF___IS_RAW = LITERAL_TYPE_REF___IS_RAW;
 
 	/**
-	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_USE_SITE_STRUCTURAL_TYPING = VERSIONED_PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
+	int NUMERIC_LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_DEF_SITE_STRUCTURAL_TYPING = VERSIONED_PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
+	int NUMERIC_LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND;
 
 	/**
-	 * The operation id for the '<em>Has Requested Version</em>' operation.
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___HAS_REQUESTED_VERSION = VERSIONED_PARAMETERIZED_TYPE_REF___HAS_REQUESTED_VERSION;
+	int NUMERIC_LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS;
 
 	/**
-	 * The operation id for the '<em>Get Requested Version Or Zero</em>' operation.
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_REQUESTED_VERSION_OR_ZERO = VERSIONED_PARAMETERIZED_TYPE_REF___GET_REQUESTED_VERSION_OR_ZERO;
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 
 	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_VERSION = VERSIONED_PARAMETERIZED_TYPE_REF___GET_VERSION;
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
 
 	/**
-	 * The operation id for the '<em>Has Postponed Substitution For</em>' operation.
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 3;
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Top Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_TOP_TYPE = LITERAL_TYPE_REF___IS_TOP_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Bottom Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_BOTTOM_TYPE = LITERAL_TYPE_REF___IS_BOTTOM_TYPE;
 
 	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
@@ -8311,16 +7859,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 4;
-
-	/**
-	 * The operation id for the '<em>Set Typing Strategy</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___SET_TYPING_STRATEGY__TYPINGSTRATEGY = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 5;
+	int NUMERIC_LITERAL_TYPE_REF___GET_TYPING_STRATEGY = LITERAL_TYPE_REF___GET_TYPING_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Structural Members</em>' operation.
@@ -8329,7 +7868,43 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 6;
+	int NUMERIC_LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Value</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___GET_VALUE = LITERAL_TYPE_REF___GET_VALUE;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -8338,16 +7913,675 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 7;
+	int NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
 
 	/**
-	 * The number of operations of the '<em>Versioned Parameterized Type Ref Structural</em>' class.
+	 * The number of operations of the '<em>Numeric Literal Type Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_OPERATION_COUNT = VERSIONED_PARAMETERIZED_TYPE_REF_OPERATION_COUNT + 8;
+	int NUMERIC_LITERAL_TYPE_REF_OPERATION_COUNT = LITERAL_TYPE_REF_OPERATION_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StringLiteralTypeRefImpl <em>String Literal Type Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.StringLiteralTypeRefImpl
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getStringLiteralTypeRef()
+	 * @generated
+	 */
+	int STRING_LITERAL_TYPE_REF = 26;
+
+	/**
+	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
+
+	/**
+	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Ast Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF__AST_VALUE = LITERAL_TYPE_REF__AST_VALUE;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF__VALUE = LITERAL_TYPE_REF_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>String Literal Type Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF_FEATURE_COUNT = LITERAL_TYPE_REF_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_DECLARED_TYPE = LITERAL_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING = LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_TYPE_REF = LITERAL_TYPE_REF___IS_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED = LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_ALIAS_RESOLVED = LITERAL_TYPE_REF___IS_ALIAS_RESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Final By Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_FINAL_BY_TYPE = LITERAL_TYPE_REF___IS_FINAL_BY_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Array Like</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_ARRAY_LIKE = LITERAL_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_UNKNOWN = LITERAL_TYPE_REF___IS_UNKNOWN;
+
+	/**
+	 * The operation id for the '<em>Is Dynamic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_DYNAMIC = LITERAL_TYPE_REF___IS_DYNAMIC;
+
+	/**
+	 * The operation id for the '<em>Is Existential</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_EXISTENTIAL = LITERAL_TYPE_REF___IS_EXISTENTIAL;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_GENERIC = LITERAL_TYPE_REF___IS_GENERIC;
+
+	/**
+	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_PARAMETERIZED = LITERAL_TYPE_REF___IS_PARAMETERIZED;
+
+	/**
+	 * The operation id for the '<em>Is Raw</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_RAW = LITERAL_TYPE_REF___IS_RAW;
+
+	/**
+	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Top Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_TOP_TYPE = LITERAL_TYPE_REF___IS_TOP_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Bottom Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_BOTTOM_TYPE = LITERAL_TYPE_REF___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_TYPING_STRATEGY = LITERAL_TYPE_REF___GET_TYPING_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Structural Members</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Value</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___GET_VALUE = LITERAL_TYPE_REF___GET_VALUE;
+
+	/**
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>String Literal Type Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF_OPERATION_COUNT = LITERAL_TYPE_REF_OPERATION_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.EnumLiteralTypeRefImpl <em>Enum Literal Type Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.EnumLiteralTypeRefImpl
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getEnumLiteralTypeRef()
+	 * @generated
+	 */
+	int ENUM_LITERAL_TYPE_REF = 27;
+
+	/**
+	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = LITERAL_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
+
+	/**
+	 * The feature id for the '<em><b>Original Alias Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF = LITERAL_TYPE_REF__ORIGINAL_ALIAS_TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Ast Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF__AST_VALUE = LITERAL_TYPE_REF__AST_VALUE;
+
+	/**
+	 * The feature id for the '<em><b>Value</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF__VALUE = LITERAL_TYPE_REF_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Enum Literal Type Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF_FEATURE_COUNT = LITERAL_TYPE_REF_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_DECLARED_TYPE = LITERAL_TYPE_REF___GET_DECLARED_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING = LITERAL_TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Type Ref</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_TYPE_REF = LITERAL_TYPE_REF___IS_TYPE_REF;
+
+	/**
+	 * The operation id for the '<em>Is Alias Unresolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED = LITERAL_TYPE_REF___IS_ALIAS_UNRESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Alias Resolved</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_ALIAS_RESOLVED = LITERAL_TYPE_REF___IS_ALIAS_RESOLVED;
+
+	/**
+	 * The operation id for the '<em>Is Final By Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_FINAL_BY_TYPE = LITERAL_TYPE_REF___IS_FINAL_BY_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Array Like</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_ARRAY_LIKE = LITERAL_TYPE_REF___IS_ARRAY_LIKE;
+
+	/**
+	 * The operation id for the '<em>Is Unknown</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_UNKNOWN = LITERAL_TYPE_REF___IS_UNKNOWN;
+
+	/**
+	 * The operation id for the '<em>Is Dynamic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_DYNAMIC = LITERAL_TYPE_REF___IS_DYNAMIC;
+
+	/**
+	 * The operation id for the '<em>Is Existential</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_EXISTENTIAL = LITERAL_TYPE_REF___IS_EXISTENTIAL;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_GENERIC = LITERAL_TYPE_REF___IS_GENERIC;
+
+	/**
+	 * The operation id for the '<em>Is Parameterized</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_PARAMETERIZED = LITERAL_TYPE_REF___IS_PARAMETERIZED;
+
+	/**
+	 * The operation id for the '<em>Is Raw</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_RAW = LITERAL_TYPE_REF___IS_RAW;
+
+	/**
+	 * The operation id for the '<em>Get Declared Upper Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_UPPER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Lower Bound</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND = LITERAL_TYPE_REF___GET_DECLARED_LOWER_BOUND;
+
+	/**
+	 * The operation id for the '<em>Get Declared Type Args</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS = LITERAL_TYPE_REF___GET_DECLARED_TYPE_ARGS;
+
+	/**
+	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = LITERAL_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Type Ref As String With Alias Resolution</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION = LITERAL_TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION;
+
+	/**
+	 * The operation id for the '<em>To String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___TO_STRING = LITERAL_TYPE_REF___TO_STRING;
+
+	/**
+	 * The operation id for the '<em>Is Top Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_TOP_TYPE = LITERAL_TYPE_REF___IS_TOP_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Bottom Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_BOTTOM_TYPE = LITERAL_TYPE_REF___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_TYPING_STRATEGY = LITERAL_TYPE_REF___GET_TYPING_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Structural Members</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
+
+	/**
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = LITERAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
+
+	/**
+	 * The operation id for the '<em>Get Value</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_VALUE = LITERAL_TYPE_REF___GET_VALUE;
+
+	/**
+	 * The operation id for the '<em>Get Enum Type</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___GET_ENUM_TYPE = LITERAL_TYPE_REF_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = LITERAL_TYPE_REF_OPERATION_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Enum Literal Type Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF_OPERATION_COUNT = LITERAL_TYPE_REF_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}' enum.
@@ -8369,26 +8603,6 @@ public interface TypeRefsPackage extends EPackage {
 	 */
 	int UUID = 29;
 
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.Versionable <em>Versionable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Versionable</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.Versionable
-	 * @generated
-	 */
-	EClass getVersionable();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.Versionable#getVersion() <em>Get Version</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Version</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.Versionable#getVersion()
-	 * @generated
-	 */
-	EOperation getVersionable__GetVersion();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument <em>Type Argument</em>}'.
@@ -8613,14 +8827,24 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getTypeRef__GetDeclaredLowerBound();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeArgs() <em>Get Type Args</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getDeclaredTypeArgs() <em>Get Declared Type Args</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Type Args</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeArgs()
+	 * @return the meta object for the '<em>Get Declared Type Args</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getDeclaredTypeArgs()
 	 * @generated
 	 */
-	EOperation getTypeRef__GetTypeArgs();
+	EOperation getTypeRef__GetDeclaredTypeArgs();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeArgsWithDefaults() <em>Get Type Args With Defaults</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Args With Defaults</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeArgsWithDefaults()
+	 * @generated
+	 */
+	EOperation getTypeRef__GetTypeArgsWithDefaults();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getTypeRefAsString() <em>Get Type Ref As String</em>}' operation.
@@ -8731,16 +8955,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTypeRef__GetASTNodeOptionalFieldStrategy();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getVersion() <em>Get Version</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Version</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getVersion()
-	 * @generated
-	 */
-	EOperation getTypeRef__GetVersion();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.StaticBaseTypeRef <em>Static Base Type Ref</em>}'.
@@ -9098,16 +9312,6 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getBoundThisTypeRef__GetStructuralMembers();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef#getVersion() <em>Get Version</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Version</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef#getVersion()
-	 * @generated
-	 */
-	EOperation getBoundThisTypeRef__GetVersion();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef <em>Parameterized Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9140,15 +9344,15 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getParameterizedTypeRef_DeclaredTypeAsText();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeArgs <em>Declared Type Args</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Type Args</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs()
+	 * @return the meta object for the containment reference list '<em>Declared Type Args</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeArgs()
 	 * @see #getParameterizedTypeRef()
 	 * @generated
 	 */
-	EReference getParameterizedTypeRef_TypeArgs();
+	EReference getParameterizedTypeRef_DeclaredTypeArgs();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}'.
@@ -9162,26 +9366,26 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getParameterizedTypeRef_ArrayTypeExpression();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression <em>Iterable Type Expression</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Iterable Type Expression</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression()
+	 * @return the meta object for the attribute '<em>Array NType Expression</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression()
 	 * @see #getParameterizedTypeRef()
 	 * @generated
 	 */
-	EAttribute getParameterizedTypeRef_IterableTypeExpression();
+	EAttribute getParameterizedTypeRef_ArrayNTypeExpression();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Ast Namespace</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace()
+	 * @return the meta object for the reference '<em>Ast Declared Type Qualifier</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier()
 	 * @see #getParameterizedTypeRef()
 	 * @generated
 	 */
-	EReference getParameterizedTypeRef_AstNamespace();
+	EReference getParameterizedTypeRef_AstDeclaredTypeQualifier();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}'.
@@ -9214,6 +9418,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getParameterizedTypeRef__GetTypingStrategy();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgsWithDefaults() <em>Get Type Args With Defaults</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Type Args With Defaults</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgsWithDefaults()
+	 * @generated
+	 */
+	EOperation getParameterizedTypeRef__GetTypeArgsWithDefaults();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
@@ -9358,6 +9572,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getStructuralTypeRef__GetStructuralMembers();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.StructuralTypeRef#getStructuralMembersWithCallConstructSignatures() <em>Get Structural Members With Call Construct Signatures</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Structural Members With Call Construct Signatures</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.StructuralTypeRef#getStructuralMembersWithCallConstructSignatures()
+	 * @generated
+	 */
+	EOperation getStructuralTypeRef__GetStructuralMembersWithCallConstructSignatures();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.StructuralTypeRef#hasPostponedSubstitutionFor(org.eclipse.n4js.ts.types.TypeVariable) <em>Has Postponed Substitution For</em>}' operation.
@@ -10019,85 +10243,180 @@ public interface TypeRefsPackage extends EPackage {
 	EReference getTypeVariableMapping_TypeArg();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.VersionedReference <em>Versioned Reference</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.LiteralTypeRef <em>Literal Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Versioned Reference</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedReference
+	 * @return the meta object for class '<em>Literal Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 	 * @generated
 	 */
-	EClass getVersionedReference();
+	EClass getLiteralTypeRef();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.VersionedReference#getRequestedVersion <em>Requested Version</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.LiteralTypeRef#getAstValue <em>Ast Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Requested Version</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedReference#getRequestedVersion()
-	 * @see #getVersionedReference()
+	 * @return the meta object for the attribute '<em>Ast Value</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.LiteralTypeRef#getAstValue()
+	 * @see #getLiteralTypeRef()
 	 * @generated
 	 */
-	EAttribute getVersionedReference_RequestedVersion();
+	EAttribute getLiteralTypeRef_AstValue();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.VersionedReference#hasRequestedVersion() <em>Has Requested Version</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.LiteralTypeRef#getValue() <em>Get Value</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Has Requested Version</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedReference#hasRequestedVersion()
+	 * @return the meta object for the '<em>Get Value</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.LiteralTypeRef#getValue()
 	 * @generated
 	 */
-	EOperation getVersionedReference__HasRequestedVersion();
+	EOperation getLiteralTypeRef__GetValue();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.VersionedReference#getRequestedVersionOrZero() <em>Get Requested Version Or Zero</em>}' operation.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef <em>Boolean Literal Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Requested Version Or Zero</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedReference#getRequestedVersionOrZero()
+	 * @return the meta object for class '<em>Boolean Literal Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 	 * @generated
 	 */
-	EOperation getVersionedReference__GetRequestedVersionOrZero();
+	EClass getBooleanLiteralTypeRef();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef <em>Versioned Parameterized Type Ref</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef#getValue <em>Value</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Versioned Parameterized Type Ref</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef#getValue()
+	 * @see #getBooleanLiteralTypeRef()
 	 * @generated
 	 */
-	EClass getVersionedParameterizedTypeRef();
+	EAttribute getBooleanLiteralTypeRef_Value();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef#getVersion() <em>Get Version</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Version</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef#getVersion()
+	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef#internalGetTypeRefAsString()
 	 * @generated
 	 */
-	EOperation getVersionedParameterizedTypeRef__GetVersion();
+	EOperation getBooleanLiteralTypeRef__InternalGetTypeRefAsString();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.VersionedFunctionTypeRef <em>Versioned Function Type Ref</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef <em>Numeric Literal Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Versioned Function Type Ref</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedFunctionTypeRef
+	 * @return the meta object for class '<em>Numeric Literal Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 	 * @generated
 	 */
-	EClass getVersionedFunctionTypeRef();
+	EClass getNumericLiteralTypeRef();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural <em>Versioned Parameterized Type Ref Structural</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isAstNegated <em>Ast Negated</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Versioned Parameterized Type Ref Structural</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
+	 * @return the meta object for the attribute '<em>Ast Negated</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#isAstNegated()
+	 * @see #getNumericLiteralTypeRef()
 	 * @generated
 	 */
-	EClass getVersionedParameterizedTypeRefStructural();
+	EAttribute getNumericLiteralTypeRef_AstNegated();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#getValue()
+	 * @see #getNumericLiteralTypeRef()
+	 * @generated
+	 */
+	EAttribute getNumericLiteralTypeRef_Value();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef#internalGetTypeRefAsString()
+	 * @generated
+	 */
+	EOperation getNumericLiteralTypeRef__InternalGetTypeRefAsString();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef <em>String Literal Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>String Literal Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
+	 * @generated
+	 */
+	EClass getStringLiteralTypeRef();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Value</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef#getValue()
+	 * @see #getStringLiteralTypeRef()
+	 * @generated
+	 */
+	EAttribute getStringLiteralTypeRef_Value();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef#internalGetTypeRefAsString()
+	 * @generated
+	 */
+	EOperation getStringLiteralTypeRef__InternalGetTypeRefAsString();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef <em>Enum Literal Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Enum Literal Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
+	 * @generated
+	 */
+	EClass getEnumLiteralTypeRef();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef#getValue <em>Value</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Value</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef#getValue()
+	 * @see #getEnumLiteralTypeRef()
+	 * @generated
+	 */
+	EReference getEnumLiteralTypeRef_Value();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef#getEnumType() <em>Get Enum Type</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Enum Type</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef#getEnumType()
+	 * @generated
+	 */
+	EOperation getEnumLiteralTypeRef__GetEnumType();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef#internalGetTypeRefAsString() <em>Internal Get Type Ref As String</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Internal Get Type Ref As String</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef#internalGetTypeRefAsString()
+	 * @generated
+	 */
+	EOperation getEnumLiteralTypeRef__InternalGetTypeRefAsString();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}'.
@@ -10143,24 +10462,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	interface Literals {
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.VersionableImpl <em>Versionable</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.VersionableImpl
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getVersionable()
-		 * @generated
-		 */
-		EClass VERSIONABLE = eINSTANCE.getVersionable();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation VERSIONABLE___GET_VERSION = eINSTANCE.getVersionable__GetVersion();
-
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.TypeArgumentImpl <em>Type Argument</em>}' class.
 		 * <!-- begin-user-doc -->
@@ -10342,12 +10643,20 @@ public interface TypeRefsPackage extends EPackage {
 		EOperation TYPE_REF___GET_DECLARED_LOWER_BOUND = eINSTANCE.getTypeRef__GetDeclaredLowerBound();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Type Args</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Declared Type Args</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TYPE_REF___GET_TYPE_ARGS = eINSTANCE.getTypeRef__GetTypeArgs();
+		EOperation TYPE_REF___GET_DECLARED_TYPE_ARGS = eINSTANCE.getTypeRef__GetDeclaredTypeArgs();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Args With Defaults</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = eINSTANCE.getTypeRef__GetTypeArgsWithDefaults();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Type Ref As String</b></em>' operation.
@@ -10436,14 +10745,6 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = eINSTANCE.getTypeRef__GetASTNodeOptionalFieldStrategy();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE_REF___GET_VERSION = eINSTANCE.getTypeRef__GetVersion();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StaticBaseTypeRefImpl <em>Static Base Type Ref</em>}' class.
@@ -10744,14 +11045,6 @@ public interface TypeRefsPackage extends EPackage {
 		EOperation BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS = eINSTANCE.getBoundThisTypeRef__GetStructuralMembers();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation BOUND_THIS_TYPE_REF___GET_VERSION = eINSTANCE.getBoundThisTypeRef__GetVersion();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl <em>Parameterized Type Ref</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -10778,12 +11071,12 @@ public interface TypeRefsPackage extends EPackage {
 		EAttribute PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT = eINSTANCE.getParameterizedTypeRef_DeclaredTypeAsText();
 
 		/**
-		 * The meta object literal for the '<em><b>Type Args</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Declared Type Args</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PARAMETERIZED_TYPE_REF__TYPE_ARGS = eINSTANCE.getParameterizedTypeRef_TypeArgs();
+		EReference PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS = eINSTANCE.getParameterizedTypeRef_DeclaredTypeArgs();
 
 		/**
 		 * The meta object literal for the '<em><b>Array Type Expression</b></em>' attribute feature.
@@ -10794,20 +11087,20 @@ public interface TypeRefsPackage extends EPackage {
 		EAttribute PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION = eINSTANCE.getParameterizedTypeRef_ArrayTypeExpression();
 
 		/**
-		 * The meta object literal for the '<em><b>Iterable Type Expression</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Array NType Expression</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION = eINSTANCE.getParameterizedTypeRef_IterableTypeExpression();
+		EAttribute PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION = eINSTANCE.getParameterizedTypeRef_ArrayNTypeExpression();
 
 		/**
-		 * The meta object literal for the '<em><b>Ast Namespace</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Ast Declared Type Qualifier</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PARAMETERIZED_TYPE_REF__AST_NAMESPACE = eINSTANCE.getParameterizedTypeRef_AstNamespace();
+		EReference PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = eINSTANCE.getParameterizedTypeRef_AstDeclaredTypeQualifier();
 
 		/**
 		 * The meta object literal for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute feature.
@@ -10832,6 +11125,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY = eINSTANCE.getParameterizedTypeRef__GetTypingStrategy();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Type Args With Defaults</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = eINSTANCE.getParameterizedTypeRef__GetTypeArgsWithDefaults();
 
 		/**
 		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.
@@ -10946,6 +11247,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = eINSTANCE.getStructuralTypeRef__GetStructuralMembers();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Structural Members With Call Construct Signatures</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES = eINSTANCE.getStructuralTypeRef__GetStructuralMembersWithCallConstructSignatures();
 
 		/**
 		 * The meta object literal for the '<em><b>Has Postponed Substitution For</b></em>' operation.
@@ -11480,76 +11789,150 @@ public interface TypeRefsPackage extends EPackage {
 		EReference TYPE_VARIABLE_MAPPING__TYPE_ARG = eINSTANCE.getTypeVariableMapping_TypeArg();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.VersionedReferenceImpl <em>Versioned Reference</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.LiteralTypeRefImpl <em>Literal Type Ref</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.VersionedReferenceImpl
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getVersionedReference()
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.LiteralTypeRefImpl
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getLiteralTypeRef()
 		 * @generated
 		 */
-		EClass VERSIONED_REFERENCE = eINSTANCE.getVersionedReference();
+		EClass LITERAL_TYPE_REF = eINSTANCE.getLiteralTypeRef();
 
 		/**
-		 * The meta object literal for the '<em><b>Requested Version</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Ast Value</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute VERSIONED_REFERENCE__REQUESTED_VERSION = eINSTANCE.getVersionedReference_RequestedVersion();
+		EAttribute LITERAL_TYPE_REF__AST_VALUE = eINSTANCE.getLiteralTypeRef_AstValue();
 
 		/**
-		 * The meta object literal for the '<em><b>Has Requested Version</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Value</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation VERSIONED_REFERENCE___HAS_REQUESTED_VERSION = eINSTANCE.getVersionedReference__HasRequestedVersion();
+		EOperation LITERAL_TYPE_REF___GET_VALUE = eINSTANCE.getLiteralTypeRef__GetValue();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Requested Version Or Zero</b></em>' operation.
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.BooleanLiteralTypeRefImpl <em>Boolean Literal Type Ref</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.BooleanLiteralTypeRefImpl
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getBooleanLiteralTypeRef()
 		 * @generated
 		 */
-		EOperation VERSIONED_REFERENCE___GET_REQUESTED_VERSION_OR_ZERO = eINSTANCE.getVersionedReference__GetRequestedVersionOrZero();
+		EClass BOOLEAN_LITERAL_TYPE_REF = eINSTANCE.getBooleanLiteralTypeRef();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.VersionedParameterizedTypeRefImpl <em>Versioned Parameterized Type Ref</em>}' class.
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.VersionedParameterizedTypeRefImpl
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getVersionedParameterizedTypeRef()
 		 * @generated
 		 */
-		EClass VERSIONED_PARAMETERIZED_TYPE_REF = eINSTANCE.getVersionedParameterizedTypeRef();
+		EAttribute BOOLEAN_LITERAL_TYPE_REF__VALUE = eINSTANCE.getBooleanLiteralTypeRef_Value();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
+		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation VERSIONED_PARAMETERIZED_TYPE_REF___GET_VERSION = eINSTANCE.getVersionedParameterizedTypeRef__GetVersion();
+		EOperation BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getBooleanLiteralTypeRef__InternalGetTypeRefAsString();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.VersionedFunctionTypeRefImpl <em>Versioned Function Type Ref</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl <em>Numeric Literal Type Ref</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.VersionedFunctionTypeRefImpl
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getVersionedFunctionTypeRef()
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.NumericLiteralTypeRefImpl
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getNumericLiteralTypeRef()
 		 * @generated
 		 */
-		EClass VERSIONED_FUNCTION_TYPE_REF = eINSTANCE.getVersionedFunctionTypeRef();
+		EClass NUMERIC_LITERAL_TYPE_REF = eINSTANCE.getNumericLiteralTypeRef();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.VersionedParameterizedTypeRefStructuralImpl <em>Versioned Parameterized Type Ref Structural</em>}' class.
+		 * The meta object literal for the '<em><b>Ast Negated</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.VersionedParameterizedTypeRefStructuralImpl
-		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getVersionedParameterizedTypeRefStructural()
 		 * @generated
 		 */
-		EClass VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL = eINSTANCE.getVersionedParameterizedTypeRefStructural();
+		EAttribute NUMERIC_LITERAL_TYPE_REF__AST_NEGATED = eINSTANCE.getNumericLiteralTypeRef_AstNegated();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NUMERIC_LITERAL_TYPE_REF__VALUE = eINSTANCE.getNumericLiteralTypeRef_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getNumericLiteralTypeRef__InternalGetTypeRefAsString();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StringLiteralTypeRefImpl <em>String Literal Type Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.StringLiteralTypeRefImpl
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getStringLiteralTypeRef()
+		 * @generated
+		 */
+		EClass STRING_LITERAL_TYPE_REF = eINSTANCE.getStringLiteralTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute STRING_LITERAL_TYPE_REF__VALUE = eINSTANCE.getStringLiteralTypeRef_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation STRING_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getStringLiteralTypeRef__InternalGetTypeRefAsString();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.EnumLiteralTypeRefImpl <em>Enum Literal Type Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.EnumLiteralTypeRefImpl
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getEnumLiteralTypeRef()
+		 * @generated
+		 */
+		EClass ENUM_LITERAL_TYPE_REF = eINSTANCE.getEnumLiteralTypeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Value</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ENUM_LITERAL_TYPE_REF__VALUE = eINSTANCE.getEnumLiteralTypeRef_Value();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Enum Type</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ENUM_LITERAL_TYPE_REF___GET_ENUM_TYPE = eINSTANCE.getEnumLiteralTypeRef__GetEnumType();
+
+		/**
+		 * The meta object literal for the '<em><b>Internal Get Type Ref As String</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ENUM_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getEnumLiteralTypeRef__InternalGetTypeRefAsString();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}' enum.

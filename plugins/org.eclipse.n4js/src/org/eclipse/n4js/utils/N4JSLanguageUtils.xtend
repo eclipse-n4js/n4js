@@ -12,9 +12,11 @@ package org.eclipse.n4js.utils
 
 import java.io.IOException
 import java.io.InputStream
+import java.math.BigDecimal
 import java.util.Properties
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
@@ -22,7 +24,10 @@ import org.eclipse.n4js.common.unicode.CharTypes
 import org.eclipse.n4js.compileTime.CompileTimeValue
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
 import org.eclipse.n4js.n4JS.AnnotableElement
+import org.eclipse.n4js.n4JS.AssignmentExpression
+import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.ConditionalExpression
+import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FormalParameter
@@ -33,15 +38,18 @@ import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
+import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NewExpression
@@ -59,20 +67,27 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.parser.conversion.IdentifierValueConverter
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
-import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
@@ -90,23 +105,27 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
 import org.eclipse.n4js.ts.types.util.Variance
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeCompareUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.resource.IEObjectDescription
+import org.eclipse.xtext.scoping.IScope
 
 import static org.eclipse.n4js.N4JSLanguageConstants.*
 
@@ -134,9 +153,39 @@ public class N4JSLanguageUtils {
 	public static boolean OPAQUE_JS_MODULES = true;
 
 	/**
-	 * See {@link ComputedPropertyNameValueConverter#SYMBOL_IDENTIFIER_PREFIX}.
+	 * Special name used for {@link TMethod}s that represent a call signature. Only used in type model
+	 * (not in AST). Do not use this name to check if a {@code TMethod} is a call signature; use
+	 * {@link TFunction#isCallSignature() #isCallSignature()} for this purpose.
 	 */
-	public static final String SYMBOL_IDENTIFIER_PREFIX = ComputedPropertyNameValueConverter.SYMBOL_IDENTIFIER_PREFIX;
+	public static final String CALL_SIGNATURE_NAME = "()";
+
+	/**
+	 * Prefix used in names of members that are identified by a built-in symbol.
+	 * <p>
+	 * Take this example:
+	 *
+	 * <pre>
+	 * class C&lt;T> {
+	 *     Iterator&lt;T> [Symbol.iterator]() {
+	 *         // ...
+	 *     }
+	 * }
+	 * </pre>
+	 *
+	 * Here, class C has a single method identified by built-in symbol 'iterator'. Internally, this will be represented
+	 * by a method with name {@link #SYMBOL_IDENTIFIER_PREFIX} + "iterator".
+	 */
+	public static final String SYMBOL_IDENTIFIER_PREFIX = "#";
+
+	/**
+	 * Internally special-casing [Symbol.iterator] as a member named hash-iterator.
+	 */
+	public static final String SYMBOL_ITERATOR_MANGLED = SYMBOL_IDENTIFIER_PREFIX + "iterator";
+
+	/**
+	 * Internally special-casing [Symbol.asyncIterator] as a member named hash-iterator.
+	 */
+	public static final String SYMBOL_ASYNC_ITERATOR_MANGLED = SYMBOL_IDENTIFIER_PREFIX + "asyncIterator";
 
 	/**
 	 * The default language version returned by method {@link #getLanguageVersion()} in case no actual
@@ -197,6 +246,22 @@ public class N4JSLanguageUtils {
 		return value;
 	}
 
+	/** Tells whether .d.ts file generation is <em>actually</em> active in a given project. */
+	def public static boolean isDtsGenerationActive(ProjectDescription pd) {
+		return pd !== null && pd.isGeneratorEnabledDts() && !N4JSGlobals.PROJECT_TYPES_WITHOUT_DTS_GENERATION.contains(pd.type);
+	}
+
+	/** Tells whether the given module is the {@link ProjectDescription#getMainModule() main module} of the given project. */
+	def public static boolean isMainModule(N4JSProjectConfigSnapshot project, TModule module) {
+		val qn = module.qualifiedName;
+		return isMainModule(project, qn);
+	}
+
+	/** Tells whether the module with the given qualified name is the {@link ProjectDescription#getMainModule() main module} of the given project. */
+	def public static boolean isMainModule(N4JSProjectConfigSnapshot project, String moduleQualifiedName) {
+		return project.mainModule == moduleQualifiedName;
+	}
+
 	/** Convenience method for {@link #isOpaqueModule(ProjectType, URI)}. */
 	def public static boolean isOpaqueModule(N4JSWorkspaceConfigSnapshot workspaceConfig, URI resourceURI) {
 		val project = workspaceConfig?.findProjectContaining(resourceURI);
@@ -220,8 +285,7 @@ public class N4JSLanguageUtils {
 			return OPAQUE_JS_MODULES; // JavaScript modules are not processed iff OPAQUE_JS_MODULES is true
 
 		} else if (resourceType === ResourceType.N4JS
-			|| resourceType === ResourceType.N4JSX
-			|| resourceType === ResourceType.N4IDL) {
+			|| resourceType === ResourceType.N4JSX) {
 
 			if (typeOfContainingProject === null) {
 				return false; // happens in tests
@@ -238,6 +302,19 @@ public class N4JSLanguageUtils {
 
 		// default: process file
 		return false;
+	}
+
+	/**
+	 * Some {@link IEObjectDescription}s returned by our {@link IScope scope} implementations do not represent actual,
+	 * valid elements in the scope but are used only for error reporting, etc. This method returns <code>true</code>
+	 * iff the given description represents an actual, existing element.
+	 */
+	def static boolean isActualElementInScope(IEObjectDescription desc) {
+		if (desc instanceof IEObjectDescriptionWithError
+			|| desc instanceof UnresolvableObjectDescription) {
+			return false;
+		}
+		return true;
 	}
 
 	static enum EnumKind {
@@ -326,6 +403,44 @@ public class N4JSLanguageUtils {
 		return null;
 	}
 
+	/**
+	 * Returns <code>true</code> iff the given type reference points to the expected special return type of the given
+	 * asynchronous and/or generator function OR the given function is neither asynchronous nor a generator.
+	 * <p>
+	 * WARNING: returns <code>false</code> for subtypes of the expected special return types!
+	 */
+	def static boolean hasExpectedSpecialReturnType(TypeRef typeRef, FunctionDefinition funDef, BuiltInTypeScope scope) {
+		val expectedType = getExpectedSpecialReturnType(funDef, scope);
+		return expectedType === null || typeRef.declaredType === expectedType;
+	}
+
+	/**
+	 * If the given function is an asynchronous and/or generator function, this method returns the expected special return type;
+	 * otherwise <code>null</code> is returned.
+	 */
+	def static Type getExpectedSpecialReturnType(FunctionDefinition funDef, BuiltInTypeScope scope) {
+		return getExpectedSpecialReturnType(funDef.async, funDef.generator, scope);
+	}
+
+	/**
+	 * Returns the expected special return type of an asynchronous and/or generator function, or <code>null</code> if both
+	 * 'isAsync' and 'isGenerator' are <code>false</code>.
+	 */
+	def static Type getExpectedSpecialReturnType(boolean isAsync, boolean isGenerator, BuiltInTypeScope scope) {
+		if (isGenerator) {
+			if (isAsync) {
+				return scope.asyncGeneratorType;
+			} else {
+				return scope.generatorType;
+			}
+		} else {
+			if (isAsync) {
+				return scope.promiseType;
+			} else {
+				return null;
+			}
+		}
+	}
 
 	/** See {@link N4JSASTUtils#isASTNode(EObject)}. */
 	def static boolean isASTNode(EObject obj) {
@@ -477,7 +592,7 @@ public class N4JSLanguageUtils {
 			return false;
 		}
 		val pseudoStaticType = (typeArg as TypeRef).declaredType;
-		return pseudoStaticType instanceof TN4Classifier || pseudoStaticType instanceof TObjectPrototype;
+		return pseudoStaticType instanceof TN4Classifier;
 	}
 
 	/**
@@ -557,7 +672,7 @@ public class N4JSLanguageUtils {
 				var Variance vFactor = null;
 				// case #1: curr is nested in parent's type arguments
 				val parentDeclType = parent.declaredType;
-				val parentTypeArgs = parent.typeArgs;
+				val parentTypeArgs = parent.declaredTypeArgs;
 				val parentTypeArgsSize = parentTypeArgs.size;
 				for(var idx=0;vFactor===null && idx<parentTypeArgsSize;idx++) {
 					val arg = parentTypeArgs.get(idx);
@@ -635,77 +750,102 @@ public class N4JSLanguageUtils {
 
 
 	/**
-	 * Tells if the given numeric literal is a Javascript int32.
+	 * Tells whether 'baseTypeRefCandidate' is the given literal type's {@link #getLiteralTypeBase(RuleEnvironment, TypeRef)
+	 * base type}, without requiring a rule environment and with considering the semantic equality of 'int' and 'number'.
 	 */
-	def static boolean isIntLiteral(NumericLiteral numLit) {
-		val parent = numLit.eContainer;
-		val node = NodeModelUtils.findActualNodeFor(numLit);
-		val text = NodeModelUtils.getTokenText(node);
-		val result = isIntLiteral(text);
-		if(result===2) {
-			return parent instanceof UnaryExpression && (parent as UnaryExpression).op===UnaryOperator.NEG;
-		}
-		return result===1;
-	}
-	/**
-	 * Tells if the given string represents a Javascript int32. Returns 0 if not, 1 if it does, and 2 if the literal
-	 * represents a number that is an int32 only if it is negative, but not if it is positive (only for literal
-	 * "2147483648" and equivalent literals).
-	 * <p>
-	 * Some notes:
-	 * <ol>
-	 * <li>the range of int32 is asymmetric: [ -2147483648, 2147483647 ]
-	 * <li>in Java, 1E0 etc. are always of type double, so we follow the same rule below.
-	 * <li>hexadecimal and octal literals are always interpreted as positive integers (important difference to Java).
-	 * </ol>
-	 * See N4JS Specification, Section 8.1.3.1 for details.
-	 */
-	def static int isIntLiteral(String numLitStr) {
-		if(numLitStr===null || numLitStr.length===0) {
-			return 0;
-		}
-		val hasFractionOrExponent = numLitStr.containsOneOf('.','e','E');
-		if(hasFractionOrExponent) {
-			return 0;
-		}
-		try {
-			val isHex = numLitStr.startsWith("0x") || numLitStr.startsWith("0X");
-			val isOct = !isHex && numLitStr.startsWith("0") && numLitStr.length>1 && !numLitStr.containsOneOf('8','9');
-			val value = if(isHex) {
-				Long.parseLong(numLitStr.substring(2), 16)
-			} else if(isOct) {
-				Long.parseLong(numLitStr.substring(1), 8)
-			} else {
-				Long.parseLong(numLitStr) // here we support a leading '+' or '-'
-			};
-			if(value==2147483648L) { // <-- the one value that is in int32 range if negative, but outside if positive
-				return 2;
+	def public static boolean isLiteralTypeBase(LiteralTypeRef literalTypeRef, TypeRef baseTypeRefCandidate) {
+		// the only chance for success is that 'baseTypeRefCandidate' is a type reference pointing to a primitive
+		// type, so on the success path we can assume that 'baseTypeRefCandidate' will give us a declared type we
+		// can use for building a rule environment (to avoid the need for clients to pass in a rule environment):
+		val declType = baseTypeRefCandidate.getDeclaredType();
+		if (declType !== null) {
+			val G = declType.newRuleEnvironment;
+			val baseTypeRef = getLiteralTypeBase(G, literalTypeRef);
+			if (TypeCompareUtils.isEqual(baseTypeRef, baseTypeRefCandidate)) {
+				return true;
 			}
-			if(Integer.MIN_VALUE<=value && value<=Integer.MAX_VALUE) {
-				return 1;
-			}
-			return 0;
-		}
-		catch(NumberFormatException e) {
-			return 0;
-		}
-	}
-
-	def private static boolean containsOneOf(String str, char... ch) {
-		val len = str.length;
-		for(var i=0;i<len;i++) {
-			val chStr = str.charAt(i);
-			for(var j=0;j<ch.length;j++) {
-				if(chStr===ch.get(j)) {
-					return true;
-				}
+			val tInt = G.intType;
+			val tNumber = G.numberType;
+			if ((declType === tInt && baseTypeRef.declaredType === tNumber)
+				|| (declType === tNumber && baseTypeRef.declaredType === tInt)) {
+				return true;
 			}
 		}
 		return false;
 	}
 
+	/**
+	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts
+	 * type references of any kind and converts them only if they are {@link LiteralTypeRef}s.
+	 * <p>
+	 * Note that this does not support nesting, i.e. literal type references nested within
+	 * a type reference of another kind won't be converted!
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof LiteralTypeRef) {
+			return getLiteralTypeBase(G, typeRef);
+		}
+		return typeRef;
+	}
+
+	/**
+	 * Returns the "base type" for the given literal type, e.g. type string for literal type "hello".
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, LiteralTypeRef literalTypeRef) {
+		return switch(literalTypeRef) {
+			BooleanLiteralTypeRef: G.booleanTypeRef
+			NumericLiteralTypeRef: getLiteralTypeBase(G, literalTypeRef)
+			StringLiteralTypeRef: G.stringTypeRef
+			EnumLiteralTypeRef: getLiteralTypeBase(G, literalTypeRef)
+			default: throw new UnsupportedOperationException("unknown subclass of " + LiteralTypeRef.simpleName)
+		};
+	}
+
+	/**
+	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts only numeric
+	 * literal type references.
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, NumericLiteralTypeRef literalTypeRef) {
+		return if (isInt32(literalTypeRef.value)) G.intTypeRef else G.numberTypeRef;
+	}
+
+	/**
+	 * Same as {@link #getLiteralTypeBase(RuleEnvironment, LiteralTypeRef)}, but accepts only enum
+	 * literal type references.
+	 */
+	def public static TypeRef getLiteralTypeBase(RuleEnvironment G, EnumLiteralTypeRef literalTypeRef) {
+		val enumType = literalTypeRef.enumType;
+		return if (enumType !== null) TypeUtils.createTypeRef(enumType) else TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
+	}
+
+	/**
+	 * Tells whether the given {@link BigDecimal} represents a Javascript int32.
+	 * <p>
+	 * Some notes:
+	 * <ol>
+	 * <li>the range of int32 is asymmetric: [ -2147483648, 2147483647 ]
+	 * <li>in Java, literals such as 1E0 etc. are always of type double, but we cannot follow the same rule here, because
+	 * the literal is not available and on the basis of the given {@code BigDecimal} we cannot distinguish this.
+	 * <li>hexadecimal and octal literals are always interpreted as positive integers (important difference to Java).
+	 * </ol>
+	 * See N4JS Specification, Section 8.1.3.1 for details.
+	 */
+	def static boolean isInt32(BigDecimal value) {
+		if (value === null) {
+			return false;
+		}
+		// note: normally the correct way of telling whether a BigDecimal is a whole number would be:
+		// boolean isWholeNumber = value.stripTrailingZeros().scale() <= 0;
+		// However, we here want BigDecimals like 0.0, 1.00, -42.0 to *NOT* be treated as a whole numbers,
+		// so we instead go with:
+		val isWholeNumber = value.scale() <= 0;
+		return isWholeNumber
+			&& N4JSGlobals.INT32_MIN_VALUE_BD.compareTo(value) <= 0
+			&& value.compareTo(N4JSGlobals.INT32_MAX_VALUE_BD) <= 0;
+	}
+
 	/** Checks presence of {@link AnnotationDefinition#POLYFILL} annotation. See also {@link N4JSLanguageUtils#isStaticPolyfill(AnnotableElement) }*/
-	def static boolean isPolyfill(AnnotableElement astElement) {
+	def static boolean isNonStaticPolyfill(AnnotableElement astElement) {
 		return AnnotationDefinition.POLYFILL.hasAnnotation( astElement );
 	}
 
@@ -1056,7 +1196,8 @@ public class N4JSLanguageUtils {
 			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
 		val isNumberOrStringBasedEnum = typeDecl instanceof N4EnumDeclaration
 			&& getEnumKind(typeDecl as N4EnumDeclaration) !== EnumKind.Normal;
-		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum;
+		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
+		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
 	}
 
 	/**
@@ -1072,7 +1213,36 @@ public class N4JSLanguageUtils {
 			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
 		val isNumberOrStringBasedEnum = element instanceof TEnum
 			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
-		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum;
+		val isTypeAlias = element instanceof TypeAlias;
+		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
+	}
+	
+	
+	/**
+	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
+	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
+	 */
+	def static boolean isHollowElement(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
+			&& javaScriptVariantHelper.isExternalMode(typeDecl)
+			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
+		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
+		// TODO: namespace
+		return typeDecl !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
+	}
+	
+	
+	/**
+	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
+	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
+	 */
+	def static boolean isHollowElement(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
+			&& javaScriptVariantHelper.isExternalMode(element)
+			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
+		val isTypeAlias = element instanceof TypeAlias;
+		// TODO: namespace
+		return element !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
 	}
 
 	/**
@@ -1143,12 +1313,31 @@ public class N4JSLanguageUtils {
 	}
 
 	/**
+	 * Tells whether the given assignment expression has a valid left-hand side.
+	 */
+	def static boolean hasValidLHS(AssignmentExpression assignExpr) {
+		val lhs = assignExpr.lhs;
+		return lhs !== null && (
+			lhs.isValidSimpleAssignmentTarget()
+			|| (assignExpr.op === AssignmentOperator.ASSIGN && DestructureUtils.isTopOfDestructuringAssignment(assignExpr))
+		);
+	}
+
+	/**
 	 * Tells whether the given AST node is at a valid location for an await expression or a for-await-of loop.
 	 * Does not check whether the given node is actually an await expression/statement.
 	 */
 	def static boolean isValidLocationForAwait(EObject astNode) {
 		val containingFunDef = EcoreUtil2.getContainerOfType(astNode, FunctionDefinition);
 		return containingFunDef !== null && containingFunDef.async;
+	}
+
+	/** Tells whether the given AST node and EReference is a valid location for an optional type parameter. */
+	def static boolean isValidLocationForOptionalTypeParameter(EObject astNode, EReference reference) {
+		// for now, type parameters may be optional only in class, interface, and type alias declarations
+		// (not in function/method declarations or in FunctionTypeExpression or TStructMethod):
+		return reference === N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS
+			&& (astNode instanceof N4ClassifierDefinition || astNode instanceof N4TypeAliasDeclaration);
 	}
 
 	/** Tells whether the given type may be referenced structurally, i.e. with modifiers '~', '~~', '~r~', etc. */

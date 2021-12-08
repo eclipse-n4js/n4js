@@ -42,7 +42,7 @@ import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.packagejson.projectDescription.ModuleFilterType
-import org.eclipse.n4js.ts.validation.TypesKeywordProvider
+import org.eclipse.n4js.validation.utils.TypesKeywordProvider
 
 /**
  * Helper returning the keyword of a given AST or type element, e.g., "class" for a class declaration.
@@ -83,7 +83,15 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 	}
 
 	def dispatch String keyword(N4MethodDeclaration n4MethodDeclaration) {
-		if(n4MethodDeclaration.isConstructor) "constructor" else "method"
+		if (n4MethodDeclaration.isConstructor) {
+			"constructor"
+		} else if (n4MethodDeclaration.isCallSignature) {
+			"call signature"
+		} else if (n4MethodDeclaration.isConstructSignature) {
+			"construct signature"
+		} else {
+			"method"
+		}
 	}
 
 	def dispatch String keyword(N4GetterDeclaration n4GetterDeclaration) {

@@ -23,7 +23,6 @@ import org.eclipse.xtext.validation.SeverityConverter;
  *
  * Provides issue severities based on SEMVER-related issue codes of {@link SemverIssueCodes}.
  */
-@SuppressWarnings("restriction")
 public class SemverIssueSeverities extends IssueSeverities {
 	@SuppressWarnings("javadoc")
 	protected final Map<String, PreferenceKey> configurableIssueCodes;

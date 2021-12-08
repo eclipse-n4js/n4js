@@ -32,8 +32,6 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.Versionable
-import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
@@ -321,6 +319,7 @@ class TypeReferenceNode<T extends TypeRef> {
 interface TypeProvidingElement {
 	op TypeRef getDeclaredTypeRef()
 	op TypeRef getDeclaredTypeRefInAST()
+	op TypeReferenceNode<TypeRef> getDeclaredTypeRefNode()
 }
 
 /* A typed element, such as Variable, a Member or a NameValuePair, may provide a declared type.
@@ -582,7 +581,7 @@ abstract class FunctionOrFieldAccessor extends AnnotableElement, VariableEnviron
 /* A function definition is either a FunctionDeclaration, a FunctionExpression or a MethodDeclaration.
  * Note that, since an anonymous function expression has no name, the function definition is not a named element.
  */
-abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement, VersionedElement {
+abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement {
 	contains FormalParameter[] fpars
 	/*
 	 * Tells if the return value is optional.
@@ -639,15 +638,19 @@ abstract class FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEleme
 
 	boolean declaredOptional
 
-	op TypeRef getDeclaredTypeRef() {
-		return null;
-	}
 	/*
-     * The declared type of the field accessor, which is either the return type of the getter or the type of the formal parameter in case of a setter
+     * The declared type of the field accessor (resolved), which is either the return type of the getter or the type of the formal parameter in case of a setter.
      */
-	op TypeRef getDeclaredTypeRefInAST() {
-		return null;
-	}
+	op TypeRef getDeclaredTypeRef()
+	/*
+     * The declared type of the field accessor (from the AST), which is either the return type of the getter or the type of the formal parameter in case of a setter.
+     */
+	op TypeRef getDeclaredTypeRefInAST()
+	/*
+     * The declared type of the field accessor (as node), which is either the return type of the getter or the type of the formal parameter in case of a setter.
+     */
+	op TypeReferenceNode<TypeRef> getDeclaredTypeRefNode()
+
 	/*
 	 * Returns the defined FieldAccessor in the TModule, either a TGetter or a TSetter.
 	 */
@@ -674,22 +677,6 @@ class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Sta
 	 */
 	op boolean isExternal() {
 		declaredModifiers.contains(N4Modifier.EXTERNAL)
-	}
-	
-	
-	/** Transient {@code MigrationContext} arguments variable. Access through #getMigrationContextVariable()  */
-	contains transient MigrationContextVariable _migrationContext
-	/** Lazy initialized reference to transient localArgurmentsVariable */
-	op MigrationContextVariable getMigrationContextVariable() {
-		if (_migrationContext === null) {
-			val newMigrationContext = N4JSFactory::eINSTANCE.createMigrationContextVariable;
-			newMigrationContext.name = "context";
-			EcoreUtilN4.doWithDeliver(false,
-				[|
-					_migrationContext = newMigrationContext;
-				], this);
-		}
-		return _migrationContext;
 	}
 }
 
@@ -900,7 +887,7 @@ abstract class VariableDeclarationContainer {
 	VariableStatementKeyword varStmtKeyword
 
 	op VariableDeclaration[] getVarDecl() {
-		varDeclsOrBindings.map[it.getVariableDeclarations()].flatten.toEList
+		varDeclsOrBindings.map[it.getAllVariableDeclarations()].flatten.toEList
 	}
 	op boolean isBlockScoped() {
 		switch(varStmtKeyword) {
@@ -926,7 +913,7 @@ class ExportedVariableStatement extends VariableStatement, ExportableElement, An
 
 abstract class VariableDeclarationOrBinding extends ControlFlowElement {
 
-	op VariableDeclaration[] getVariableDeclarations() {
+	op VariableDeclaration[] getAllVariableDeclarations() {
 		switch(this) {
 		VariableDeclaration: #[this as VariableDeclaration].toEList
 		VariableBinding: eAllContents.filter(VariableDeclaration).toEList
@@ -1136,7 +1123,7 @@ class ParenExpression extends PrimaryExpression {
 	}
 }
 
-class IdentifierRef extends PrimaryExpression, StrictModeRelevant, org.eclipse.n4js.ts.typeRefs.Versionable {
+class IdentifierRef extends PrimaryExpression, StrictModeRelevant {
 	refers IdentifiableElement ^id
 	transient String idAsText
 
@@ -1271,6 +1258,11 @@ class LiteralOrComputedPropertyName {
 	 * @see ComputedNameProcessor
 	 */
 	transient String computedName
+	/*
+	 * Iff this is a computed property name and the expression is one of the special cases that can be evaluated at
+	 * compile time, then this will tell whether the expression evaluated to a symbol.
+	 */
+	transient boolean computedSymbol
 	/* The expression provided in the source code for computing the property name, or <code>null</code>. */
 	contains Expression expression
 
@@ -1408,6 +1400,9 @@ abstract class SetterDeclaration extends FieldAccessor {
 	}
 	op TypeRef getDeclaredTypeRef() {
 		return fpar?.declaredTypeRefNode?.typeRef;
+	}
+	op TypeReferenceNode<TypeRef> getDeclaredTypeRefNode() {
+		return fpar?.declaredTypeRefNode;
 	}
 	/*
 	 * Returns the declared type of the formal parameter
@@ -1995,10 +1990,19 @@ class N4TypeVariable extends IdentifiableElement, NamedElement {
 
 	boolean declaredCovariant
 	boolean declaredContravariant
+	boolean declaredOptional
+
+	contains TypeReferenceNode<TypeRef> declaredUpperBoundNode
+
+	/* The default type argument or {@code null}. */
+	contains TypeReferenceNode<TypeRef> declaredDefaultArgumentNode 
+
 	op TypeRef getDeclaredUpperBound() {
 		return declaredUpperBoundNode?.typeRef;
 	}
-	contains TypeReferenceNode<TypeRef> declaredUpperBoundNode
+	op boolean isOptional() {
+		return declaredOptional;
+	}
 }
 
 /*
@@ -2040,14 +2044,15 @@ abstract class N4ClassifierDeclaration extends N4TypeDeclaration, N4ClassifierDe
 abstract class N4ClassifierDefinition extends N4TypeDefinition {
 	/**
 	 * Members directly defined in this classifier, i.e. w/o inherited members.
+	 * Includes also constructors and call/construct signatures.
 	 */
 	contains N4MemberDeclaration[] ownedMembersRaw opposite owner
 	/**
-	 * Returns a view on ownedMembersRaw filtering out non-members and callable constructors.
+	 * Returns a view on ownedMembersRaw filtering out call/construct signatures.
  	 */
 	op N4MemberDeclaration[] getOwnedMembers() {
-		val methods = ownedMembersRaw.filter(N4MemberDeclaration).filter[!isCallableConstructor]
-		return new BasicEList(methods.toList)
+		val methods = ownedMembersRaw.filter[!isCallSignature && !isConstructSignature];
+		return new BasicEList(methods.toList);
 	}
 	/**
 	 * Returns explicitly defined constructor of receiving class or <code>null</code> if none was defined.
@@ -2056,17 +2061,23 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isConstructor]
 	}
 	/**
-	 * Returns explicitly defined callable constructor of receiving class or <code>null</code> if none was defined.
-	 * This is *not* the actual constructor but instead the function used for direct invocations in call expressions.
+	 * Returns the explicitly defined call signature of the receiving class or <code>null</code> if none was defined.
+	 * This is *not* the actual constructor but instead the signature used for direct invocations in call expressions.
  	 */
-	op N4MethodDeclaration getOwnedCallableCtor() {
-		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isCallableConstructor]
+	op N4MethodDeclaration getOwnedCallSignature() {
+		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isCallSignature]
 	}
 	/**
-	 * Returns a view on ownedMembersRaw filtering out non-methods.
+	 * Returns the explicitly defined construct signature of the receiving class or <code>null</code> if none was defined.
+ 	 */
+	op N4MethodDeclaration getOwnedConstructSignature() {
+		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isConstructSignature]
+	}
+	/**
+	 * Returns a view on ownedMembersRaw filtering out non-methods and call/construct signatures.
  	 */
 	op N4MethodDeclaration[] getOwnedMethods() {
-		val methods = ownedMembersRaw.filter(N4MethodDeclaration).filter[!isConstructor && !isCallableConstructor]
+		val methods = ownedMembersRaw.filter(N4MethodDeclaration).filter[!isConstructor && !isCallSignature]
 		return new BasicEList(methods.toList)
 	}
 	/**
@@ -2118,25 +2129,20 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 		return definedType as TClass;
 	}
 	op ParameterizedTypeRefNodeIterable getSuperClassifierRefs() {
-		return #[superClassRef] + implementedInterfaceRefs;
+		val _superClassRef = superClassRef;
+		return if (_superClassRef !== null) #[_superClassRef] + implementedInterfaceRefs else implementedInterfaceRefs;
 	}
 	op ParameterizedTypeRefNodeIterable getImplementedOrExtendedInterfaceRefs() {
 		return implementedInterfaceRefs;
 	}
 }
 
-class N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration, Versionable, VersionedElement {
+class N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration {
 	/**
 	 * Returns true if the class is declared as abstract.
 	 */
 	op boolean isAbstract() {
 		declaredModifiers.contains(N4Modifier.ABSTRACT)
-	}
-	/*
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 */
-	op int getVersion() {
-		return declaredVersionOrZero
 	}
 }
 
@@ -2147,7 +2153,7 @@ class N4ClassExpression extends N4ClassDefinition, PrimaryExpression, AnnotableE
 	String name
 }
 
-class N4InterfaceDeclaration extends N4ClassifierDeclaration, Versionable, VersionedElement {
+class N4InterfaceDeclaration extends N4ClassifierDeclaration {
 	contains TypeReferenceNode<ParameterizedTypeRef>[] superInterfaceRefs
 	/*
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TInterface}.
@@ -2161,28 +2167,15 @@ class N4InterfaceDeclaration extends N4ClassifierDeclaration, Versionable, Versi
 	op ParameterizedTypeRefNodeIterable getImplementedOrExtendedInterfaceRefs() {
 		return superInterfaceRefs;
 	}
-	/*
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 */
-	op int getVersion() {
-		return declaredVersionOrZero
-	}
 }
 
-class N4EnumDeclaration extends N4TypeDeclaration, Versionable, VersionedElement {
+class N4EnumDeclaration extends N4TypeDeclaration {
 	contains N4EnumLiteral[] literals
 	/*
 	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TEnum}.
 	 */
 	op TEnum getDefinedTypeAsEnum() {
 		return definedType as TEnum;
-	}
-
-	/*
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 */
-	op int getVersion() {
-		return declaredVersionOrZero
 	}
 }
 
@@ -2269,7 +2262,10 @@ abstract class N4MemberDeclaration extends AnnotableElement, ModifiableElement, 
 	op boolean isConstructor() {
 		false // will be overridden below in N4MethodDeclaration
 	}
-	op boolean isCallableConstructor() {
+	op boolean isCallSignature() {
+		false // will be overridden below in N4MethodDeclaration
+	}
+	op boolean isConstructSignature() {
 		false // will be overridden below in N4MethodDeclaration
 	}
 }
@@ -2363,8 +2359,11 @@ class N4MethodDeclaration extends AnnotableN4MemberDeclaration, MethodDeclaratio
 	op boolean isConstructor() {
 		return name == 'constructor' && !isStatic
 	}
-	op boolean isCallableConstructor() {
+	op boolean isCallSignature() {
 		return declaredName === null;
+	}
+	op boolean isConstructSignature() {
+		return name == 'new' && !isStatic && eContainer instanceof N4InterfaceDeclaration;
 	}
 	op boolean isStatic() {
 		return declaredModifiers.contains(N4Modifier.STATIC)
@@ -2510,44 +2509,4 @@ class JSXElement extends Expression, JSXChild, JSXAbstractElement {
 }
 
 class JSXFragment extends JSXChild, JSXAbstractElement {
-}
-
-// ****************************************************************************************************
-// N4IDL related model elements
-// ****************************************************************************************************
-
-/*
- * This is a base class for all AST nodes where the user can explicitly declare a specific version.
- */
-abstract class VersionedElement {
-	/*
-	 * The version as declared by the user in the source code. Unlike the requestedVersion attribute of class
-	 * VersionedReference, the value of this attribute is set by the parser and never changed by the type system.
-	 */
-	BigDecimal declaredVersion
-	/*
-	 * Indicates whether this type reference has an explicitly declared version.
-	 */
-	op boolean hasDeclaredVersion() {
-		return declaredVersion !== null
-	}
-	op int getDeclaredVersionOrZero() {
-		if (hasDeclaredVersion) declaredVersion.intValue else 0
-	}
-}
-
-class VersionedIdentifierRef extends IdentifierRef, VersionedReference {
-	/*
-	 * Override VersionedElement#getVersion() to return the declared version.
-	 */
-	op int getVersion() {
-		return requestedVersionOrZero
-	}
-}
-
-/**  Implicit variable in migration bodies referencing the current {@code MigrationContext}. */
-class MigrationContextVariable extends Variable {
-	op String getName() {
-		return "context";
-	}
 }

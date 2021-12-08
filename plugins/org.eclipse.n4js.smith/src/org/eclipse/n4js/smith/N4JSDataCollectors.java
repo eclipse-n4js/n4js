@@ -22,29 +22,30 @@ public final class N4JSDataCollectors {
 
 	public static final DataCollector dcBuild = create("Build");
 
-	public static final DataCollector dcAstPostprocess = create("AstPostprocess", dcBuild);
-	public static final DataCollector dcRuntimeDepsCollect = create("RuntimeDepsCollect", dcAstPostprocess);
-	public static final DataCollector dcRuntimeDepsFindCycles = create("RuntimeDepsFindCycles", dcAstPostprocess);
+	public static final DataCollector dcParser = create("Parser", dcBuild);
+
+	public static final DataCollector dcPreProcess = create("Pre-Processing (Lazy Linking, etc.)", dcBuild);
+
+	public static final DataCollector dcTypesBuilder = create("Types Builder", dcBuild);
+	public static final DataCollector dcTypesBuilderCreate = create("Create (standard case)", dcTypesBuilder);
+	public static final DataCollector dcTypesBuilderRelink = create("Relink TModule to Source", dcTypesBuilder);
+
+	public static final DataCollector dcAstPostProcess = create("AstPostProcess", dcBuild);
+	public static final DataCollector dcRuntimeDepsCollect = create("RuntimeDepsCollect", dcAstPostProcess);
+	public static final DataCollector dcRuntimeDepsFindCycles = create("RuntimeDepsFindCycles", dcAstPostProcess);
 
 	public static final DataCollector dcValidations = create("Validations", dcBuild);
 
 	public static final DataCollector dcValidationsPackageJson = create("Validations (package.json)", dcBuild);
 
-	public static final DataCollector dcTranspilation = create("Transpilation", dcBuild);
-	public static final DataCollector dcTranspilationStep1 = create("T1", dcTranspilation);
-	public static final DataCollector dcTranspilationStep2 = create("T2", dcTranspilation);
-	public static final DataCollector dcTranspilationStep3 = create("T3", dcTranspilation);
+	public static final DataCollector dcTranspilation = create("Transpilation (ECMAScript)", dcBuild);
+	public static final DataCollector dcTranspilationPreparation = create("Preparation (create IM)", dcTranspilation);
+	public static final DataCollector dcTranspilationStep1 = create("Step 1 (get transformations)", dcTranspilation);
+	public static final DataCollector dcTranspilationStep2 = create("Step 2 (analyze)", dcTranspilation);
+	public static final DataCollector dcTranspilationStep3 = create("Step 3 (transform)", dcTranspilation);
+	public static final DataCollector dcTranspilationPrettyPrint = create("Pretty Print", dcTranspilation);
 
-	public static final DataCollector dcLibMngr = create("Library Manager");
-	public static final DataCollector dcNpmInstall = create("Install NPMs", dcLibMngr);
-	public static final DataCollector dcNpmUninstall = create("Uninstall NPMs", dcLibMngr);
-	public static final DataCollector dcIndexSynchronizer = create("Index Synchronizer", dcLibMngr);
-
-	public static final DataCollector dcInstallHelper = create("External Libraries Install Helper");
-	public static final DataCollector dcCollectMissingDeps = create("Collect missing dependencies", dcInstallHelper);
-	public static final DataCollector dcInstallMissingDeps = create("Install missing dependencies", dcInstallHelper);
-
-	public static final DataCollector dcExtLibBuilder = create("External Library Builder");
+	public static final DataCollector dcDtsGeneration = create("d.ts generation", dcBuild);
 
 	public static final DataCollector dcFlowGraphs = create("Flow Graphs");
 	public static final DataCollector dcCreateGraph = create("Create Graphs", dcFlowGraphs);

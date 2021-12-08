@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;
@@ -35,10 +36,10 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -55,10 +56,10 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDeclaredTypeAsText <em>Declared Type As Text</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getTypeArgs <em>Type Args</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDeclaredTypeArgs <em>Declared Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayTypeExpression <em>Array Type Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isIterableTypeExpression <em>Iterable Type Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getAstNamespace <em>Ast Namespace</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -97,14 +98,14 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	protected String declaredTypeAsText = DECLARED_TYPE_AS_TEXT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getTypeArgs() <em>Type Args</em>}' containment reference list.
+	 * The cached value of the '{@link #getDeclaredTypeArgs() <em>Declared Type Args</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getTypeArgs()
+	 * @see #getDeclaredTypeArgs()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TypeArgument> typeArgs;
+	protected EList<TypeArgument> declaredTypeArgs;
 
 	/**
 	 * The default value of the '{@link #isArrayTypeExpression() <em>Array Type Expression</em>}' attribute.
@@ -127,34 +128,34 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	protected boolean arrayTypeExpression = ARRAY_TYPE_EXPRESSION_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #isIterableTypeExpression() <em>Iterable Type Expression</em>}' attribute.
+	 * The default value of the '{@link #isArrayNTypeExpression() <em>Array NType Expression</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isIterableTypeExpression()
+	 * @see #isArrayNTypeExpression()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final boolean ITERABLE_TYPE_EXPRESSION_EDEFAULT = false;
+	protected static final boolean ARRAY_NTYPE_EXPRESSION_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #isIterableTypeExpression() <em>Iterable Type Expression</em>}' attribute.
+	 * The cached value of the '{@link #isArrayNTypeExpression() <em>Array NType Expression</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #isIterableTypeExpression()
+	 * @see #isArrayNTypeExpression()
 	 * @generated
 	 * @ordered
 	 */
-	protected boolean iterableTypeExpression = ITERABLE_TYPE_EXPRESSION_EDEFAULT;
+	protected boolean arrayNTypeExpression = ARRAY_NTYPE_EXPRESSION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getAstNamespace() <em>Ast Namespace</em>}' reference.
+	 * The cached value of the '{@link #getAstDeclaredTypeQualifier() <em>Ast Declared Type Qualifier</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getAstNamespace()
+	 * @see #getAstDeclaredTypeQualifier()
 	 * @generated
 	 * @ordered
 	 */
-	protected ModuleNamespaceVirtualType astNamespace;
+	protected Type astDeclaredTypeQualifier;
 
 	/**
 	 * The default value of the '{@link #getASTNodeOptionalFieldStrategy() <em>AST Node Optional Field Strategy</em>}' attribute.
@@ -284,11 +285,11 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public EList<TypeArgument> getTypeArgs() {
-		if (typeArgs == null) {
-			typeArgs = new EObjectContainmentEList<TypeArgument>(TypeArgument.class, this, TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS);
+	public EList<TypeArgument> getDeclaredTypeArgs() {
+		if (declaredTypeArgs == null) {
+			declaredTypeArgs = new EObjectContainmentEList<TypeArgument>(TypeArgument.class, this, TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS);
 		}
-		return typeArgs;
+		return declaredTypeArgs;
 	}
 
 	/**
@@ -320,8 +321,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public boolean isIterableTypeExpression() {
-		return iterableTypeExpression;
+	public boolean isArrayNTypeExpression() {
+		return arrayNTypeExpression;
 	}
 
 	/**
@@ -330,11 +331,11 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public void setIterableTypeExpression(boolean newIterableTypeExpression) {
-		boolean oldIterableTypeExpression = iterableTypeExpression;
-		iterableTypeExpression = newIterableTypeExpression;
+	public void setArrayNTypeExpression(boolean newArrayNTypeExpression) {
+		boolean oldArrayNTypeExpression = arrayNTypeExpression;
+		arrayNTypeExpression = newArrayNTypeExpression;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION, oldIterableTypeExpression, iterableTypeExpression));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION, oldArrayNTypeExpression, arrayNTypeExpression));
 	}
 
 	/**
@@ -343,16 +344,16 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public ModuleNamespaceVirtualType getAstNamespace() {
-		if (astNamespace != null && astNamespace.eIsProxy()) {
-			InternalEObject oldAstNamespace = (InternalEObject)astNamespace;
-			astNamespace = (ModuleNamespaceVirtualType)eResolveProxy(oldAstNamespace);
-			if (astNamespace != oldAstNamespace) {
+	public Type getAstDeclaredTypeQualifier() {
+		if (astDeclaredTypeQualifier != null && astDeclaredTypeQualifier.eIsProxy()) {
+			InternalEObject oldAstDeclaredTypeQualifier = (InternalEObject)astDeclaredTypeQualifier;
+			astDeclaredTypeQualifier = (Type)eResolveProxy(oldAstDeclaredTypeQualifier);
+			if (astDeclaredTypeQualifier != oldAstDeclaredTypeQualifier) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE, oldAstNamespace, astNamespace));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER, oldAstDeclaredTypeQualifier, astDeclaredTypeQualifier));
 			}
 		}
-		return astNamespace;
+		return astDeclaredTypeQualifier;
 	}
 
 	/**
@@ -360,8 +361,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public ModuleNamespaceVirtualType basicGetAstNamespace() {
-		return astNamespace;
+	public Type basicGetAstDeclaredTypeQualifier() {
+		return astDeclaredTypeQualifier;
 	}
 
 	/**
@@ -370,11 +371,11 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public void setAstNamespace(ModuleNamespaceVirtualType newAstNamespace) {
-		ModuleNamespaceVirtualType oldAstNamespace = astNamespace;
-		astNamespace = newAstNamespace;
+	public void setAstDeclaredTypeQualifier(Type newAstDeclaredTypeQualifier) {
+		Type oldAstDeclaredTypeQualifier = astDeclaredTypeQualifier;
+		astDeclaredTypeQualifier = newAstDeclaredTypeQualifier;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE, oldAstNamespace, astNamespace));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER, oldAstDeclaredTypeQualifier, astDeclaredTypeQualifier));
 	}
 
 	/**
@@ -450,6 +451,39 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
+	public EList<TypeArgument> getTypeArgsWithDefaults() {
+		final Type declType = this.getDeclaredType();
+		if (((declType != null) && declType.isGeneric())) {
+			final EList<TypeArgument> declTypeArgs = this.getDeclaredTypeArgs();
+			final int declTypeArgsCount = declTypeArgs.size();
+			final EList<TypeVariable> typeParams = declType.getTypeVars();
+			final int typeParamCount = typeParams.size();
+			if ((typeParamCount > declTypeArgsCount)) {
+				final TypeArgument[] args = new TypeArgument[typeParamCount];
+				for (int i = 0; (i < typeParamCount); i++) {
+					if ((i < declTypeArgsCount)) {
+						args[i] = declTypeArgs.get(i);
+					}
+					else {
+						final TypeRef defArg = typeParams.get(i).getDefaultArgument();
+						if ((defArg == null)) {
+							return declTypeArgs;
+						}
+						args[i] = defArg;
+					}
+				}
+				return XcoreCollectionLiterals.<TypeArgument>newImmutableEList(args);
+			}
+		}
+		return this.getDeclaredTypeArgs();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public String internalGetTypeRefAsString() {
 		Type _declaredType = this.getDeclaredType();
 		String _rawTypeAsString = null;
@@ -457,33 +491,23 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			_rawTypeAsString=_declaredType.getRawTypeAsString();
 		}
 		String _xifexpression = null;
-		int _version = this.getVersion();
-		boolean _greaterThan = (_version > 0);
-		if (_greaterThan) {
-			int _version_1 = this.getVersion();
-			_xifexpression = ("#" + Integer.valueOf(_version_1));
+		boolean _isEmpty = this.getDeclaredTypeArgs().isEmpty();
+		if (_isEmpty) {
+			_xifexpression = "";
 		}
 		else {
-			String _xifexpression_1 = null;
-			boolean _isEmpty = this.getTypeArgs().isEmpty();
-			if (_isEmpty) {
-				_xifexpression_1 = "";
-			}
-			else {
-				final Function1<TypeArgument, String> _function = new Function1<TypeArgument, String>() {
-					public String apply(final TypeArgument it) {
-						return it.getTypeRefAsString();
-					}
-				};
-				String _join = IterableExtensions.join(XcoreEListExtensions.<TypeArgument, String>map(this.getTypeArgs(), _function), ",");
-				String _plus = ("<" + _join);
-				_xifexpression_1 = (_plus + ">");
-			}
-			String _plus_1 = ("" + _xifexpression_1);
-			String _modifiersAsString = this.getModifiersAsString();
-			_xifexpression = (_plus_1 + _modifiersAsString);
+			final Function1<TypeArgument, String> _function = new Function1<TypeArgument, String>() {
+				public String apply(final TypeArgument it) {
+					return it.getTypeRefAsString();
+				}
+			};
+			String _join = IterableExtensions.join(XcoreEListExtensions.<TypeArgument, String>map(this.getDeclaredTypeArgs(), _function), ",");
+			String _plus = ("<" + _join);
+			_xifexpression = (_plus + ">");
 		}
-		return (_rawTypeAsString + _xifexpression);
+		String _plus_1 = (_rawTypeAsString + _xifexpression);
+		String _modifiersAsString = this.getModifiersAsString();
+		return (_plus_1 + _modifiersAsString);
 	}
 
 	/**
@@ -493,7 +517,7 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 */
 	@Override
 	public boolean isParameterized() {
-		boolean _isEmpty = this.getTypeArgs().isEmpty();
+		boolean _isEmpty = this.getDeclaredTypeArgs().isEmpty();
 		return (!_isEmpty);
 	}
 
@@ -514,7 +538,19 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 */
 	@Override
 	public boolean isRaw() {
-		return (this.isGeneric() && (this.getTypeArgs().size() < this.getDeclaredType().getTypeVars().size()));
+		boolean _isGeneric = this.isGeneric();
+		if (_isGeneric) {
+			final Function1<TypeVariable, Boolean> _function = new Function1<TypeVariable, Boolean>() {
+				public Boolean apply(final TypeVariable it) {
+					boolean _isOptional = it.isOptional();
+					return Boolean.valueOf((!_isOptional));
+				}
+			};
+			final int mandatoryTypeParamsCount = IterableExtensions.size(IterableExtensions.<TypeVariable>filter(this.getDeclaredType().getTypeVars(), _function));
+			int _size = this.getDeclaredTypeArgs().size();
+			return (_size < mandatoryTypeParamsCount);
+		}
+		return false;
 	}
 
 	/**
@@ -556,8 +592,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
-				return ((InternalEList<?>)getTypeArgs()).basicRemove(otherEnd, msgs);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS:
+				return ((InternalEList<?>)getDeclaredTypeArgs()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -575,15 +611,15 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return basicGetDeclaredType();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT:
 				return getDeclaredTypeAsText();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
-				return getTypeArgs();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS:
+				return getDeclaredTypeArgs();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION:
 				return isArrayTypeExpression();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION:
-				return isIterableTypeExpression();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
-				if (resolve) return getAstNamespace();
-				return basicGetAstNamespace();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
+				return isArrayNTypeExpression();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
+				if (resolve) return getAstDeclaredTypeQualifier();
+				return basicGetAstDeclaredTypeQualifier();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return getASTNodeOptionalFieldStrategy();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY:
@@ -607,18 +643,18 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT:
 				setDeclaredTypeAsText((String)newValue);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
-				getTypeArgs().clear();
-				getTypeArgs().addAll((Collection<? extends TypeArgument>)newValue);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS:
+				getDeclaredTypeArgs().clear();
+				getDeclaredTypeArgs().addAll((Collection<? extends TypeArgument>)newValue);
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION:
 				setArrayTypeExpression((Boolean)newValue);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION:
-				setIterableTypeExpression((Boolean)newValue);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
+				setArrayNTypeExpression((Boolean)newValue);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
-				setAstNamespace((ModuleNamespaceVirtualType)newValue);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
+				setAstDeclaredTypeQualifier((Type)newValue);
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				setASTNodeOptionalFieldStrategy((OptionalFieldStrategy)newValue);
@@ -644,17 +680,17 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT:
 				setDeclaredTypeAsText(DECLARED_TYPE_AS_TEXT_EDEFAULT);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
-				getTypeArgs().clear();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS:
+				getDeclaredTypeArgs().clear();
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION:
 				setArrayTypeExpression(ARRAY_TYPE_EXPRESSION_EDEFAULT);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION:
-				setIterableTypeExpression(ITERABLE_TYPE_EXPRESSION_EDEFAULT);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
+				setArrayNTypeExpression(ARRAY_NTYPE_EXPRESSION_EDEFAULT);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
-				setAstNamespace((ModuleNamespaceVirtualType)null);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
+				setAstDeclaredTypeQualifier((Type)null);
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				setASTNodeOptionalFieldStrategy(AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT);
@@ -678,14 +714,14 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return declaredType != null;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_AS_TEXT:
 				return DECLARED_TYPE_AS_TEXT_EDEFAULT == null ? declaredTypeAsText != null : !DECLARED_TYPE_AS_TEXT_EDEFAULT.equals(declaredTypeAsText);
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_ARGS:
-				return typeArgs != null && !typeArgs.isEmpty();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS:
+				return declaredTypeArgs != null && !declaredTypeArgs.isEmpty();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_EXPRESSION:
 				return arrayTypeExpression != ARRAY_TYPE_EXPRESSION_EDEFAULT;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ITERABLE_TYPE_EXPRESSION:
-				return iterableTypeExpression != ITERABLE_TYPE_EXPRESSION_EDEFAULT;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE:
-				return astNamespace != null;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
+				return arrayNTypeExpression != ARRAY_NTYPE_EXPRESSION_EDEFAULT;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
+				return astDeclaredTypeQualifier != null;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return aSTNodeOptionalFieldStrategy != AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY:
@@ -712,6 +748,7 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				case TypeRefsPackage.TYPE_REF___IS_GENERIC: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_GENERIC;
 				case TypeRefsPackage.TYPE_REF___IS_PARAMETERIZED: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED;
 				case TypeRefsPackage.TYPE_REF___IS_RAW: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_RAW;
+				case TypeRefsPackage.TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS;
 				case TypeRefsPackage.TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
 				case TypeRefsPackage.TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
@@ -731,6 +768,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		switch (operationID) {
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY:
 				return getTypingStrategy();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS:
+				return getTypeArgsWithDefaults();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
 				return internalGetTypeRefAsString();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED:
@@ -761,8 +800,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		result.append(declaredTypeAsText);
 		result.append(", arrayTypeExpression: ");
 		result.append(arrayTypeExpression);
-		result.append(", iterableTypeExpression: ");
-		result.append(iterableTypeExpression);
+		result.append(", arrayNTypeExpression: ");
+		result.append(arrayNTypeExpression);
 		result.append(", aSTNodeOptionalFieldStrategy: ");
 		result.append(aSTNodeOptionalFieldStrategy);
 		result.append(", definedTypingStrategy: ");

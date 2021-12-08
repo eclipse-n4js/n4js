@@ -145,14 +145,8 @@ class JudgmentExpectedTypeInTest extends AbstractTypesystemTest {
 		var result = ts.type(G, mul1);
 		assertType(result, builtInTypeScope.numberType)
 
-		result = ts.type(G, mul1.lhs)
-		assertType(result, builtInTypeScope.intType)
-
 		result = ts.type(G, mul2);
 		assertType(result, builtInTypeScope.numberType)
-
-		result = ts.type(G, mul2.rhs)
-		assertType(result, builtInTypeScope.stringType)
 
 	}
 
@@ -188,11 +182,11 @@ class JudgmentExpectedTypeInTest extends AbstractTypesystemTest {
 		result = ts.type(G, add3);
 		assertType(result, builtInTypeScope.stringType)
 
-		result = ts.type(G, sub1.lhs)
-		assertType(result, builtInTypeScope.intType)
+		result = ts.type(G, sub1)
+		assertType(result, builtInTypeScope.numberType)
 
-		result = ts.type(G, sub2.lhs)
-		assertType(result, builtInTypeScope.intType)
+		result = ts.type(G, sub2)
+		assertType(result, builtInTypeScope.numberType)
 
 	}
 

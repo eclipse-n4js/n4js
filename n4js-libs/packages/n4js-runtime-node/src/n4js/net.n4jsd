@@ -11,7 +11,7 @@
 
 
 import {IDuplex, Duplex} from "stream";
-export external public interface ISocket extends IDuplex {
+export external public interface ~ISocket extends IDuplex {
     // Extended base methods
     public connect(portOrPath: union{number, string}
             , hostOrConnectionListener: union{string, Function}=, connectionListener: Function=): void;
@@ -62,7 +62,7 @@ export external public class Socket extends Duplex implements ISocket {
     @Override public end(data: any=, encoding: string=, cb: Function=): void;
 };
 
-export external public interface IServer extends ISocket {
+export external public interface ~IServer extends ISocket {
     public listen(port: number, host: string=, backlog: number=, listeningListener: Function=): this;
     public close(callback: Function=): this;
     public maxConnections: number;

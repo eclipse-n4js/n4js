@@ -18,7 +18,6 @@ import org.eclipse.xtext.preferences.PreferenceKey;
 /**
  * Formatting preference provider for N4JS language.
  */
-@SuppressWarnings("restriction")
 public class N4JSSimpleFormattingPreferenceProvider extends FormatterPreferenceValuesProvider {
 
 	@Override

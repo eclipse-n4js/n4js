@@ -11,16 +11,17 @@
 package org.eclipse.n4js.tests.typesbuilder
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.Literal
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.tests.typesbuilder.extensions.ASTStructureAssertionExtension
 import org.eclipse.n4js.tests.typesbuilder.extensions.TypesStructureAssertionExtension
 import org.eclipse.n4js.tests.typesbuilder.utils.AbstractTypesBuilderTest
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Assert
@@ -80,19 +81,19 @@ class VariablesAndConstantsTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		val firstVariable = assertTVariable(phase, newN4jsResource, 0, "a", false)
 		val firstVariableType = assertTypeRef(phase, firstVariable, newN4jsResource)
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, firstVariableType, "//@types.5")  // int
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, firstVariableType, "/1/@topLevelTypes.8")  // int
 
 		val secondVariable = assertTVariable(phase, newN4jsResource, 1, "b", false)
 		val secondVariableType = assertTypeRef(phase, secondVariable, newN4jsResource)
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, secondVariableType, "//@types.3")
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, secondVariableType, "/1/@topLevelTypes.4")
 
 		val thirdVariable = assertTVariable(phase, newN4jsResource, 2, "CONST1", true)
-		val thirdVariableType = assertTypeRef(phase, thirdVariable, newN4jsResource)
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, thirdVariableType, "//@types.4")  // number
+		assertTrue(thirdVariable.typeRef instanceof NumericLiteralTypeRef)
+		assertEquals("6", thirdVariable.typeRef.typeRefAsString)
 
 		val fourthVariable = assertTVariable(phase, newN4jsResource, 3, "CONST2", true)
 		val fourthVariableType = assertTypeRef(phase, fourthVariable, newN4jsResource)
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, fourthVariableType, "//@types.4")
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, fourthVariableType, "/1/@topLevelTypes.3")
 
 		Assert.assertEquals("Should have only 4 exported variables as the fifth one is not marked as exported",
 			4, (newN4jsResource.contents.get(1) as TModule).variables.size

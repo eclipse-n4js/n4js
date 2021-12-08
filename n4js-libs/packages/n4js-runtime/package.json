@@ -15,9 +15,11 @@
     "node": ">= 8.0.0"
   },
   "main": "./src-gen/index.js",
+  "types": "./n4jsglobals.d.ts",
   "files": [
     "src",
-    "src-gen"
+    "src-gen",
+    "n4jsglobals.d.ts"
   ],
   "dependencies": {
     "n4js-runtime-es2015": "^0.1.0",

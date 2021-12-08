@@ -40,7 +40,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TStructSetter
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageHelper
@@ -502,7 +502,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 		val G = funDef.newRuleEnvironment;
-		val returnTypeRefUB = ts.upperBoundWithReopenAndResolve(G, returnTypeRef);
+		val returnTypeRefUB = ts.upperBoundWithReopenAndResolveTypeVars(G, returnTypeRef);
 		val async = funDef.async;
 		val isGeneratorType = TypeUtils.isGenerator(returnTypeRefUB, G.builtInTypeScope);
 		val isAsyncGeneratorType = TypeUtils.isAsyncGenerator(returnTypeRefUB, G.builtInTypeScope);

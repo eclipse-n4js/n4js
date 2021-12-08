@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// XPECT type of '[ 42 ]' --> Array<union{0,42}>
+let arr1: Array<0|42> = [ 42 ];
+
+// XPECT type of 'arr2' --> Array<int>
+// XPECT type of '[ 42 ]' --> Array<int>
+let arr2 = [ 42 ];
+
+// XPECT type of 'arr3' --> Array<int>
+let arr3 = [ 0, 42 ];
+
+// XPECT type of 'arr4' --> Array<number>
+let arr4 = [ 42, 4.3 ];
+
+// XPECT type of 'arr5' --> Array<union{int,string}>
+let arr5 = [ 42, "hello" ];

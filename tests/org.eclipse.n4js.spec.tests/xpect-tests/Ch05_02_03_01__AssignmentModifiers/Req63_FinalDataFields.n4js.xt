@@ -58,7 +58,7 @@ class B {
 
 
 //
-// globals from GlobalObject (see file "global.n4ts")
+// globals from GlobalObject (see file "global.n4jsd")
 // (they don't look like fields, but they actually are fields)
 //
 

@@ -1,0 +1,75 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+export external class CallResultCls {}
+export external class ConstructResultCls {}
+export external class CallResultGenCls<T> { getValue(): T; }
+export external class ConstructResultGenCls<T> { getValue(): T; }
+
+export external interface ~IfcNone {}
+
+export external interface ~IfcOnlyCall {
+	(p: string): CallResultCls;
+}
+
+export external interface ~IfcOnlyConstruct {
+	new(p1: string, p2: boolean): ConstructResultCls;
+}
+
+export external interface ~IfcBoth {
+	(p: string): CallResultCls;
+	new(p1: string, p2: boolean): ConstructResultCls;
+}
+
+export external interface ~SubIfcOnlyCall extends IfcOnlyCall {}
+export external interface ~SubIfcOnlyConstruct extends IfcOnlyConstruct {}
+
+export external interface ~IfcGen {
+	<T> (p: T): CallResultGenCls<T>;
+	<T> new(p: T): ConstructResultGenCls<T>;
+}
+
+export external interface ~IfcPrivateConstruct {
+	private new(p1: string, p2: boolean): ConstructResultCls;
+}
+
+
+
+export let structTypeRefNone: ~Object with {};
+
+export let structTypeRefOnlyCall: ~Object with {
+	(p: string): CallResultCls;
+};
+
+export let structTypeRefOnlyConstruct: ~Object with {
+	new(p1: string, p2: boolean): ConstructResultCls;
+};
+
+export let structTypeRefBoth: ~Object with {
+	(p: string): CallResultCls;
+	new(p1: string, p2: boolean): ConstructResultCls;
+};
+
+export let structTypeRefGen: ~Object with {
+	<T> (p: T): CallResultGenCls<T>;
+	<T> new(p: T): ConstructResultGenCls<T>;
+}
+
+
+
+export external type AliasedIfcOnlyCall = IfcOnlyCall;
+export external type AliasedIfcOnlyConstruct = IfcOnlyConstruct;
+export external type AliasedStructTypeRefOnlyCall = ~Object with {
+	(p: string): CallResultCls;
+};
+export external type AliasedStructTypeRefOnlyConstruct = ~Object with {
+	new(p1: string, p2: boolean): ConstructResultCls;
+};

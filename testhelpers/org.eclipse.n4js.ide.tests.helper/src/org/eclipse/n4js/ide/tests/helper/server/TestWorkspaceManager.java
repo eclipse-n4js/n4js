@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.tests.codegen.Folder;
@@ -32,7 +34,8 @@ import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
 import org.junit.Assert;
@@ -52,6 +55,8 @@ public class TestWorkspaceManager {
 
 	/** Special suffix to denote a "selected" module (to be appended to the module name). */
 	static final public String MODULE_SELECTOR = "*";
+	/** Special divider to used in special keys */
+	static final public String NAME_DIVIDER = "#";
 
 	/** Folder where test data is created */
 	static final public String TEST_DATA_FOLDER = "/test-workspace";
@@ -74,34 +79,34 @@ public class TestWorkspaceManager {
 	 * of project names.<br>
 	 * see {@link Documentation#CFG_DEPENDENCIES}
 	 */
-	static final public String CFG_DEPENDENCIES = "#DEPENDENCY";
+	static final public String CFG_DEPENDENCIES = NAME_DIVIDER + "DEPENDENCY";
 	/**
 	 * Reserved string to define the main module property "main" of a project, usually done in the package.json.<br>
 	 * see {@link Documentation#CFG_MAIN_MODULE}
 	 */
-	static final public String CFG_MAIN_MODULE = "#MAIN_MODULE";
+	static final public String CFG_MAIN_MODULE = NAME_DIVIDER + "MAIN_MODULE";
 	/**
 	 * Reserved string to define the source folder of a project, usually done in the package.json.<br>
 	 * Usage is similar to {@link #CFG_MAIN_MODULE}, see {@link Documentation#CFG_MAIN_MODULE}.
 	 */
-	static final public String CFG_SOURCE_FOLDER = "#SOURCE_FOLDER";
+	static final public String CFG_SOURCE_FOLDER = NAME_DIVIDER + "SOURCE_FOLDER";
 	/**
 	 * Reserved string placeholder for the directory 'node_modules'<br>
 	 * see {@link Documentation#PROJECT_NODE_MODULES} and {@link Documentation#WORKSPACE_NODE_MODULES}
 	 */
-	static final public String CFG_NODE_MODULES = "#NODE_MODULES:";
+	static final public String CFG_NODE_MODULES = NAME_DIVIDER + "NODE_MODULES:";
 	/**
 	 * Reserved string to define the workspaces folder name, usually done in the package.json of a yarn project.<br>
 	 * see {@link Documentation#CFG_WORKSPACES_FOLDER}
 	 */
-	static final public String CFG_WORKSPACES_FOLDER = "#CFG_WORKSPACES_FOLDER:";
+	static final public String CFG_WORKSPACES_FOLDER = NAME_DIVIDER + "CFG_WORKSPACES_FOLDER:";
 	/**
 	 * Reserved string placeholder for the src folder of a project<br>
 	 * see {@link #CFG_NODE_MODULES}
 	 */
-	static final public String CFG_SRC = "#SRC:";
+	static final public String CFG_SRC = NAME_DIVIDER + "SRC:";
 	/** Reserved string placeholder for the name of the yarn project */
-	static final public String CFG_YARN_PROJECT = "#CFG_YARN_PROJECT:";
+	static final public String CFG_YARN_PROJECT = NAME_DIVIDER + "CFG_YARN_PROJECT:";
 	/** Name of n4js library 'n4js-runtime' */
 	static final public String N4JS_RUNTIME = N4JSGlobals.N4JS_RUNTIME.getRawName();
 	/** Default project object for 'n4js-runtime' */
@@ -166,11 +171,11 @@ public class TestWorkspaceManager {
 	/** @return the main node_modules folder of the workspace. */
 	public File getNodeModulesFolder() {
 		String rootProjectName = isYarnWorkspace() ? YARN_TEST_PROJECT : DEFAULT_PROJECT_NAME;
-		return getNodeModulesFolder(new N4JSProjectName(rootProjectName));
+		return getNodeModulesFolder(new N4JSPackageName(rootProjectName));
 	}
 
 	/** @return the node_modules folder of the project with the given name. Respects yarn workspace setups. */
-	public File getNodeModulesFolder(N4JSProjectName projectName) {
+	public File getNodeModulesFolder(N4JSPackageName projectName) {
 		final File projectLocation = getProjectLocation();
 		final File projectFolder = projectName.getLocation(projectLocation.toPath());
 		final File nodeModulesFolder = isYarnWorkspace()
@@ -215,6 +220,35 @@ public class TestWorkspaceManager {
 					"project folder of project \"" + projectName + "\" does not exist: " + projectFolder);
 		}
 		return projectFolder;
+	}
+
+	/**
+	 * For this method, it is sufficient if the given file is located somewhere inside a project; strict
+	 * {@link SourceFolderSnapshot#contains(URI) containment in a source folder} is *not* required.
+	 *
+	 * @return the root folder of the project containing the given file or <code>null</code>.
+	 */
+	public File getProjectRootContaining(File file) {
+		List<Project> allProjects = new ArrayList<>();
+		if (createdProject instanceof YarnWorkspaceProject) {
+			allProjects.addAll(((YarnWorkspaceProject) createdProject).getMemberProjects());
+		} else {
+			allProjects.add(createdProject);
+		}
+		Path filePath = file.toPath();
+		Path resultPath = null;
+		for (Project project : allProjects) {
+			File projectRoot = getProjectRoot(project.getName());
+			if (projectRoot != null) {
+				Path projectRootPath = projectRoot.toPath();
+				if (filePath.startsWith(projectRootPath)) {
+					if (resultPath == null || projectRootPath.getNameCount() > resultPath.getNameCount()) {
+						resultPath = projectRootPath;
+					}
+				}
+			}
+		}
+		return resultPath != null ? resultPath.toFile() : null;
 	}
 
 	private File getProjectRootFailSafe(String projectName) {
@@ -295,6 +329,9 @@ public class TestWorkspaceManager {
 	 * </pre>
 	 *
 	 * this method will return the file URI of the <code>package.json</code> file of the project with the given name.
+	 *
+	 * @throws IllegalStateException
+	 *             when no module or multiple modules are found for the given name, or some other error occurred.
 	 */
 	public FileURI getFileURIFromModuleName(String moduleName) {
 		// special case for package.json files:
@@ -311,23 +348,23 @@ public class TestWorkspaceManager {
 		String extension = getN4JSNameAndExtension(moduleName).extension == null ? "." + DEFAULT_EXTENSION : "";
 		String moduleNameWithExtension = getModuleNameOrDefault(moduleName) + extension;
 
+		List<Path> allMatches;
 		try {
-			List<Path> allMatches = Files
+			allMatches = Files
 					.find(getRoot().toPath(), 99, (path, options) -> path.endsWith(moduleNameWithExtension))
 					.collect(Collectors.toList());
-
-			if (allMatches.isEmpty()) {
-				throw new IllegalStateException("Module not found with name " + moduleNameWithExtension);
-			}
-			if (allMatches.size() > 1) {
-				throw new IllegalStateException("Multiple modules found with name " + moduleNameWithExtension);
-			}
-
-			return new FileURI(allMatches.get(0).toFile());
-
 		} catch (IOException e) {
 			throw new IllegalStateException("Error when searching for module " + moduleNameWithExtension, e);
 		}
+
+		if (allMatches.isEmpty()) {
+			throw new IllegalStateException("Module not found with name " + moduleNameWithExtension);
+		}
+		if (allMatches.size() > 1) {
+			throw new IllegalStateException("Multiple modules found with name " + moduleNameWithExtension);
+		}
+
+		return new FileURI(allMatches.get(0).toFile());
 	}
 
 	/** Tells whether the test workspace has already been created. */
@@ -364,7 +401,9 @@ public class TestWorkspaceManager {
 	 */
 	public Project createTestProjectOnDisk(Iterable<? extends Pair<String, ? extends CharSequence>> modulesContents) {
 		Map<String, ? extends CharSequence> modulesContentsAsMap = Streams.stream(modulesContents)
-				.collect(Collectors.toMap(Pair::getKey, Pair::getValue));
+				.collect(Collectors.toMap(Pair::getKey, Pair::getValue, (a, b) -> {
+					throw new IllegalStateException(String.format("Duplicate key %s", a));
+				}, LinkedHashMap::new));
 
 		return createTestProjectOnDisk(modulesContentsAsMap);
 	}
@@ -478,6 +517,7 @@ public class TestWorkspaceManager {
 
 		for (String moduleName : modulesContents.keySet()) {
 			String contents = modulesContents.get(moduleName).toString();
+
 			if (moduleName.equals(CFG_DEPENDENCIES)) {
 				String[] allDeps = contents.split(",");
 				for (String dependency : allDeps) {
@@ -496,17 +536,17 @@ public class TestWorkspaceManager {
 				project.setProjectDescriptionContent(contents);
 
 			} else if (moduleName.startsWith(CFG_NODE_MODULES)) {
-				int indexOfSrc = moduleName.indexOf(CFG_SRC);
-				if (moduleName.equals(CFG_NODE_MODULES + N4JS_RUNTIME) && indexOfSrc == -1) {
+				int length = CFG_NODE_MODULES.length();
+				int endIdx = moduleName.indexOf(NAME_DIVIDER, length);
+				String nmName = moduleName.substring(length, endIdx < 0 ? moduleName.length() : endIdx);
+
+				if (moduleName.equals(CFG_NODE_MODULES + N4JS_RUNTIME)) {
 					project.addNodeModuleProject(N4JS_RUNTIME_FAKE);
 					project.addProjectDependency(N4JS_RUNTIME_FAKE.getName());
 
-				} else {
-					if (indexOfSrc == -1) {
-						throw new IllegalArgumentException("Missing #SRC: in module location");
-					}
+				} else if (moduleName.indexOf(CFG_SRC, length) > 0) {
+					int indexOfSrc = moduleName.indexOf(CFG_SRC);
 					String nmModuleName = moduleName.substring(indexOfSrc + CFG_SRC.length());
-					String nmName = moduleName.substring(CFG_NODE_MODULES.length(), indexOfSrc);
 					Project nmProject = project.getNodeModuleProject(nmName);
 					if (nmProject == null) {
 						nmProject = new Project(nmName, VENDOR, VENDOR + "_name", prjType);
@@ -516,6 +556,26 @@ public class TestWorkspaceManager {
 					}
 					Folder nmSourceFolder = nmProject.getSourceFolders().iterator().next();
 					createAndAddModule(contents, nmModuleName, nmSourceFolder);
+				} else if (moduleName.indexOf(CFG_DEPENDENCIES, length) > 0) {
+					Project nmProject = project.getNodeModuleProject(nmName);
+					String[] allDeps = contents.split(",");
+					for (String dependency : allDeps) {
+						String dependencyTrimmed = dependency.trim();
+						dependencies.put(nmName, dependencyTrimmed);
+						nmProject.addProjectDependency(dependencyTrimmed);
+					}
+
+				} else if (moduleName.indexOf(CFG_NODE_MODULES, length) > 0) {
+					Project nmProject = project.getNodeModuleProject(nmName);
+					int startIdx = moduleName.indexOf(CFG_NODE_MODULES, length) + CFG_NODE_MODULES.length();
+					String nmnmName = moduleName.substring(startIdx);
+					Project nmnmProject = new Project(nmnmName, VENDOR, VENDOR + "_name", prjType);
+					nmnmProject.createSourceFolder(DEFAULT_SOURCE_FOLDER);
+					nmProject.addNodeModuleProject(nmnmProject);
+					nmProject.addProjectDependency(nmnmProject.getName());
+
+				} else {
+					throw new IllegalArgumentException("Unknown specifier: " + moduleName);
 				}
 
 			} else {
@@ -677,7 +737,8 @@ public class TestWorkspaceManager {
 						selectedProjectPath = projectPath;
 						selectedModule = moduleName;
 					}
-					modulesMap.put(moduleName, moduleContent.getValue().toString());
+					String value = moduleContent.getValue() == null ? "" : moduleContent.getValue().toString();
+					modulesMap.put(moduleName, value);
 				}
 			}
 			addHere.put(projectPath, modulesMap);

@@ -17,16 +17,18 @@ import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.eclipse.n4js.tooling.compare.ProjectCompareHelper
 import org.eclipse.n4js.tooling.compare.ProjectCompareResult.Status
 import org.eclipse.n4js.workspace.WorkspaceAccess
-import org.eclipse.n4js.workspace.utils.N4JSProjectName
+import org.junit.Ignore
 import org.junit.Test
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.workspace.utils.N4JSPackageName
 
+@Ignore // Api/Impl concept is doomed
 class ApiImplCompareTest extends ConvertedIdeTest {
 
-	protected static val PROJECT_ID_API = new N4JSProjectName("org.eclipse.n4js.sample.api")
-	protected static val PROJECT_ID_IMPL = new N4JSProjectName("org.eclipse.n4js.sample.n4js")
-	protected static val PROJECT_ID_UTILS = new N4JSProjectName("org.eclipse.n4js.sample.utils")
+	protected static val PROJECT_ID_API = new N4JSPackageName("org.eclipse.n4js.sample.api")
+	protected static val PROJECT_ID_IMPL = new N4JSPackageName("org.eclipse.n4js.sample.n4js")
+	protected static val PROJECT_ID_UTILS = new N4JSPackageName("org.eclipse.n4js.sample.utils")
 
 	@Inject
 	private ProjectCompareHelper projectCompareHelper;

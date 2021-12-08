@@ -1,0 +1,31 @@
+// generated from https://github.com/microsoft/TypeScript/blob/5d0d7ae85d1ff52d3ef4cb6cac653f33f7e76724/src/lib/es2017.typedarrays.d.ts
+// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class Int8Array extends Int8Array {}
+
+@Polyfill
+export external public class Uint8Array extends Uint8Array {}
+
+@Polyfill
+export external public class Uint8ClampedArray extends Uint8ClampedArray {}
+
+@Polyfill
+export external public class Int16Array extends Int16Array {}
+
+@Polyfill
+export external public class Uint16Array extends Uint16Array {}
+
+@Polyfill
+export external public class Int32Array extends Int32Array {}
+
+@Polyfill
+export external public class Uint32Array extends Uint32Array {}
+
+@Polyfill
+export external public class Float32Array extends Float32Array {}
+
+@Polyfill
+export external public class Float64Array extends Float64Array {}

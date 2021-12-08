@@ -23,13 +23,13 @@ import org.eclipse.n4js.XtextParametrizedRunner.Parameters
 import org.eclipse.n4js.resource.UserDataMapper
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex
 import org.eclipse.xtext.testing.RepeatedTest
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.eclipse.n4js.workspace.utils.N4JSPackageName
 
 /**
  * Yet another test that ensures a valid index after the build was run in consequence of certain simulated user
@@ -94,7 +94,7 @@ public class ReproduceInvalidIndexIdeTest extends ConvertedIdeTest {
 		// not executing anything, so a dummy n4js-runtime is sufficient:
 		importProject(testdataLocation, N4JSGlobals.N4JS_RUNTIME);
 		for (String projectName : projectsToImport) {
-			importProject(testdataLocation, new N4JSProjectName(projectName));
+			importProject(testdataLocation, new N4JSPackageName(projectName));
 		}
 		if (incremental) {
 			joinServerRequests();
@@ -113,7 +113,7 @@ public class ReproduceInvalidIndexIdeTest extends ConvertedIdeTest {
 		// export export const a = new A();
 		// B;a;
 
-		val description = concurrentIndex.getProjectIndex("Client").allResourceDescriptions
+		val description = concurrentIndex.getProjectIndex("yarn-test-project/packages/Client").allResourceDescriptions
 			.findFirst[URI.toString.endsWith("/Client/src/Client.n4js")];
 		Assert.assertNotNull(description);
 		val moduleDescription = Iterables.getOnlyElement(
@@ -123,7 +123,7 @@ public class ReproduceInvalidIndexIdeTest extends ConvertedIdeTest {
 				description.getURI());
 		Assert.assertNotNull(moduleAsString);
 		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n" +
-				"<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" simpleName=\"Client\" qualifiedName=\"Client\" projectName=\"Client\" vendorID=\"org.eclipse.n4js\">\n"
+				"<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" simpleName=\"Client\" qualifiedName=\"Client\" packageName=\"Client\" projectID=\"yarn-test-project/packages/Client\" vendorID=\"org.eclipse.n4js\">\n"
 				+
 				"  <astElement href=\"#/0\"/>\n" +
 				"  <variables name=\"a\" exportedName=\"a\" const=\"true\" newExpression=\"true\">\n" +

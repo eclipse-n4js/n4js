@@ -1,0 +1,22 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+@@StaticPolyfillModule
+
+@StaticPolyfill
+export public class SomeClass<T> extends SomeClass<T> {
+	public fieldFilled: T;
+	public get getterFilled(): T { return null; }
+	public set setterFilled(value: T) {}
+	public methodFilled(p: T): T { return null; }
+
+	public static <TM extends G<TM>> staticMethodFilled(p: Iterable<TM>): Array<TM> { return null; }
+}

@@ -10,26 +10,45 @@
  */
 package org.eclipse.n4js.packagejson;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.utils.JsonUtils;
+import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.collect.FluentIterable;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -188,52 +207,252 @@ public class PackageJsonModificationUtils {
 	}
 
 	/**
-	 * Same as {@link #setVersionOfDependenciesInPackageJsonFile(Path, Set, JsonElement)}, but for all package.json
-	 * files in the entire folder tree below the given root folder.
+	 * Same as {@link #setVersionOfDependenciesInPackageJsonFile(Path, Set, String)}, but for all
+	 * <code>package.json</code> files in the entire folder tree below the given root folder.
+	 *
+	 * @return list of all modified package.json files
 	 */
-	public static void setVersionOfDependenciesInAllPackageJsonFiles(Path rootFolder,
-			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
-		List<Path> packageJsonFiles = Files.walk(rootFolder, FileVisitOption.FOLLOW_LINKS)
-				.filter(p -> UtilN4.PACKAGE_JSON.equals(p.getFileName().toString()))
-				.collect(Collectors.toList());
-		for (Path packageJsonFile : packageJsonFiles) {
-			setVersionOfDependenciesInPackageJsonFile(packageJsonFile, namesOfDependencies, versionToSet);
+	public static List<Path> setVersionOfDependenciesInAllPackageJsonFiles(Path root, Set<N4JSPackageName> projectNames,
+			String versionConstraintToSet) throws IOException {
+
+		List<Path> packageJsonFiles = new LinkedList<>();
+		EnumSet<FileVisitOption> options = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+		Files.walkFileTree(root, options, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+			@Override
+			public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+				if (dir.endsWith("node_modules") || dir.endsWith(".git")) {
+					return FileVisitResult.SKIP_SUBTREE;
+				}
+				return FileVisitResult.CONTINUE;
+			}
+
+			@Override
+			public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+				if (file.endsWith("package.json")) {
+					packageJsonFiles.add(file);
+				}
+				return FileVisitResult.CONTINUE;
+			}
+		});
+
+		List<Path> modifiedFiles = new LinkedList<>();
+		for (Path file : packageJsonFiles) {
+			boolean modified = setVersionOfDependenciesInPackageJsonFile(file, projectNames, versionConstraintToSet);
+			if (modified) {
+				modifiedFiles.add(file);
+			}
 		}
+		return modifiedFiles;
 	}
 
 	/**
-	 * Same as {@link #setVersionOfDependenciesInPackageJsonFile(JsonElement, Set, JsonElement)}, but changes a
+	 * Same as {@link #setVersionOfDependenciesInPackageJsonString(String, Set, String)}, but changes a
 	 * <code>package.json</code> file on disk.
+	 *
+	 * @return true iff the package.json file was modified
 	 */
-	public static void setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
-			Set<String> namesOfDependencies, JsonElement versionToSet) throws FileNotFoundException, IOException {
-		JsonElement root = JsonUtils.loadJson(packageJsonFile);
-		boolean changed = setVersionOfDependenciesInPackageJsonFile(root, namesOfDependencies, versionToSet);
-		if (changed) {
-			JsonUtils.saveJson(packageJsonFile, root);
+	public static boolean setVersionOfDependenciesInPackageJsonFile(Path packageJsonFile,
+			Set<N4JSPackageName> projectNames, String versionConstraintToSet) throws IOException {
+		String packageJsonStr = Files.readString(packageJsonFile);
+		Optional<String> result = setVersionOfDependenciesInPackageJsonString(packageJsonStr, projectNames,
+				versionConstraintToSet);
+		if (result.isPresent()) {
+			Files.writeString(packageJsonFile, result.get(), StandardOpenOption.TRUNCATE_EXISTING);
 		}
+		return result.isPresent();
 	}
 
 	/**
 	 * Changes the version of all dependencies and devDependencies to packages with a name contained in
-	 * {@code namesOfDependencies} to the given version. Names given in the set that are not among the dependencies in
-	 * the package.json file will be ignored; dependencies in the package.json file that are not denoted by the names in
-	 * the set will remain unchanged.
+	 * {@code projectNames} to the given version. Names given in the set that are not among the dependencies in the
+	 * package.json file will be ignored (i.e. this method won't add any dependencies); dependencies in the package.json
+	 * file that are not denoted by the names in the set will remain unchanged.
+	 *
+	 * @return the <code>package.json</code> string after all replacements were done, or {@link Optional#absent()
+	 *         absent} in case the JSON string was successfully parsed, but this operation did not lead to any changes.
+	 * @throws IllegalArgumentException
+	 *             in case of parse errors.
 	 */
-	public static boolean setVersionOfDependenciesInPackageJsonFile(JsonElement root, Set<String> namesOfDependencies,
-			JsonElement versionToSet) {
-		if (namesOfDependencies.isEmpty()) {
+	public static Optional<String> setVersionOfDependenciesInPackageJsonString(String packageJson,
+			Set<N4JSPackageName> projectNames, String versionConstraintToSet) {
+		List<ElementWithRegion> deps = findDependenciesWithRegion(packageJson);
+		if (deps.isEmpty()) {
+			return Optional.absent();
+		}
+		StringBuilder result = null;
+		Collections.sort(deps, (dep1, dep2) -> Integer.compare(dep2.offset, dep1.offset));
+		for (ElementWithRegion dep : deps) {
+			if (projectNames.contains(new N4JSPackageName(dep.elementName))) {
+				if (result == null) {
+					result = new StringBuilder(packageJson);
+				}
+				result.replace(dep.offset + 1, dep.offset + dep.length - 1, versionConstraintToSet);
+			}
+		}
+		return result != null ? Optional.of(result.toString()) : Optional.absent();
+	}
+
+	private static class ElementWithRegion {
+		/** Parent property names */
+		@SuppressWarnings("unused")
+		public final Stack<String> propertyPath;
+		/**
+		 * Name of the json element. Can be null. Derived from
+		 * {@link com.fasterxml.jackson.core.JsonParser#getCurrentName()}
+		 */
+		public final String elementName;
+		/** Value of the parsed element */
+		public final String value;
+		/** Zero-based offset of the version constraint in the original JSON input string. */
+		public final int offset;
+		/** Length of the version constraint. */
+		public final int length;
+
+		public ElementWithRegion(Stack<String> propertyPath, String elementName, String value, int offset, int length) {
+			this.propertyPath = propertyPath;
+			this.elementName = elementName;
+			this.value = value;
+			this.offset = offset;
+			this.length = length;
+		}
+	}
+
+	/**
+	 * Given a <code>package.json</code> as string, this method returns all dependencies and devDependencies, including
+	 * their version constraint and the text region of the version constraint.
+	 *
+	 * @throw {@link IllegalArgumentException} in case of parse errors.
+	 */
+	private static List<ElementWithRegion> findDependenciesWithRegion(String jsonStr) {
+		return findElementsWithRegion(jsonStr, "dependencies", "devDependencies");
+	}
+
+	/*
+	 * Unfortunately, we cannot use GSON for implementing this method. Since Jackson was already among the dependencies
+	 * of N4JS (at time of writing), we can use that. To avoid confusion with GSON, we use fully qualified names when
+	 * referring to the types of Jackson in this method.
+	 */
+	private static List<ElementWithRegion> findElementsWithRegion(String jsonStr, String... parentPropertyPaths) {
+		Multimap<Integer, String> parents = HashMultimap.create();
+		for (String parentPropertyPath : parentPropertyPaths) {
+			int depth = parentPropertyPath.split("/").length;
+			parents.put(depth, parentPropertyPath);
+		}
+
+		List<ElementWithRegion> result = new ArrayList<>();
+		com.fasterxml.jackson.core.JsonFactory factory = new com.fasterxml.jackson.core.JsonFactory();
+		try (com.fasterxml.jackson.core.JsonParser parser = factory.createParser(jsonStr)) {
+			com.fasterxml.jackson.core.JsonToken token = parser.nextToken();
+			if (token != com.fasterxml.jackson.core.JsonToken.START_OBJECT) {
+				throw new IllegalArgumentException("expected a JSON object at top level");
+			}
+
+			Stack<String> propertyPath = new Stack<>(); // may contain 'null' values
+
+			while ((token = parser.nextToken()) != null) {
+				if (token == com.fasterxml.jackson.core.JsonToken.START_ARRAY
+						|| token == com.fasterxml.jackson.core.JsonToken.START_OBJECT) {
+					propertyPath.push(parser.getCurrentName());
+				} else if (token == com.fasterxml.jackson.core.JsonToken.END_ARRAY
+						|| token == com.fasterxml.jackson.core.JsonToken.END_OBJECT) {
+					if (!propertyPath.isEmpty()) {
+						propertyPath.pop();
+					}
+				} else if (token == com.fasterxml.jackson.core.JsonToken.VALUE_STRING
+						&& parents.containsKey(propertyPath.size())
+						&& parents.get(propertyPath.size()).contains(Strings.join("/", propertyPath))) {
+					String elementName = parser.getCurrentName();
+					long offs = parser.getTokenLocation().getCharOffset();
+					long len = parser.getTextLength() + 2;
+					String valueRaw = jsonStr.substring((int) offs, (int) (offs + len));
+					result.add(new ElementWithRegion(propertyPath, elementName, valueRaw, (int) offs, (int) len));
+				}
+			}
+		} catch (IOException e) { // includes JsonParseException
+			throw new IllegalArgumentException("failed to parse JSON: " + e.getMessage(), e);
+		}
+		return result;
+	}
+
+	/**
+	 * Adds the given String to the 'workspaces' property of a package.json file of a yarn project. The 'workspaces'
+	 * property is not created if it does not exist.
+	 *
+	 * @param packageJson
+	 *            The file that is modified.
+	 * @param additionalWorkspaces
+	 *            String that is added to the 'workspaces' property.
+	 */
+	public static boolean addToWorkspaces(File packageJson, String additionalWorkspaces) throws IOException {
+		String packageJsonStr = Files.readString(packageJson.toPath());
+		List<ElementWithRegion> workspacesEntries = findElementsWithRegion(packageJsonStr,
+				"workspaces", "workspaces/packages");
+		if (workspacesEntries.isEmpty()) {
 			return false;
 		}
-		boolean changed = false;
-		JsonElement deps = JsonUtils.getDeep(root, UtilN4.PACKAGE_JSON__DEPENDENCIES);
-		if (deps != null && deps.isJsonObject()) {
-			changed |= JsonUtils.changeProperties((JsonObject) deps, namesOfDependencies, versionToSet);
+		ElementWithRegion workspacesEntry = workspacesEntries.get(0);
+		String newValue = workspacesEntry.value + ", \"" + additionalWorkspaces + "\"";
+		StringBuilder newPackageJsonStr = new StringBuilder(packageJsonStr);
+		int startIdx = workspacesEntry.offset;
+		int endIdx = workspacesEntry.offset + workspacesEntry.length;
+		newPackageJsonStr.replace(startIdx, endIdx, newValue);
+		try (FileWriter fw = new FileWriter(packageJson, false)) {
+			fw.write(newPackageJsonStr.toString());
 		}
-		JsonElement devDeps = JsonUtils.getDeep(root, UtilN4.PACKAGE_JSON__DEV_DEPENDENCIES);
-		if (devDeps != null && devDeps.isJsonObject()) {
-			changed |= JsonUtils.changeProperties((JsonObject) devDeps, namesOfDependencies, versionToSet);
+		return true;
+	}
+
+	/**
+	 * Adds/replaces all given json elements in the given file.
+	 *
+	 * @param packageJson
+	 *            file to be modified
+	 * @param elements
+	 *            to be added or replaced into the given file
+	 */
+	public static void addProperties(File packageJson, Set<Entry<String, JsonElement>> elements) throws IOException {
+		Gson gson = JsonUtils.createGson();
+		String packageJsonStr = Files.readString(packageJson.toPath());
+		StringBuilder newPackageJsonStr = new StringBuilder(packageJsonStr);
+		String indent = "  ";
+		String NL = System.lineSeparator();
+
+		Pattern insertAtEndPositionPattern = Pattern.compile("(?=\\s*\\}\\s*$)");
+
+		for (Entry<String, JsonElement> element : elements) {
+			List<ElementWithRegion> elementsWithRegion = findElementsWithRegion(packageJsonStr, element.getKey());
+			String newValue = gson.toJson(element.getValue());
+			if (elementsWithRegion.isEmpty()) {
+				newValue = newValue.replace(NL, NL + indent);
+				String newProperty = "," + NL + indent + "\"" + element.getKey() + "\" : " + newValue;
+				Matcher matcher = insertAtEndPositionPattern.matcher(newPackageJsonStr.toString());
+				matcher.find();
+				int idx = matcher.start();
+				newPackageJsonStr.insert(idx, newProperty);
+
+			} else {
+				ElementWithRegion eWithRegion = elementsWithRegion.get(0); // replaces only first occurrence
+				int startIdx = eWithRegion.offset;
+				int endIdx = startIdx + eWithRegion.length;
+				String comma = eWithRegion.length > 0 ? ",\n" : "";
+				if (element.getValue() instanceof JsonArray) {
+					// adds the element(s) to the array
+					JsonArray addArray = (JsonArray) element.getValue();
+					newValue = Strings.join(", ", addArray);
+					newPackageJsonStr.replace(endIdx, endIdx, comma + newValue);
+				} else if (element.getValue() instanceof JsonObject) {
+					// adds the element(s) to the object
+					JsonObject addObject = (JsonObject) element.getValue();
+					newValue = Strings.join(",\n", addObject);
+					newPackageJsonStr.replace(endIdx, endIdx, comma + newValue);
+				} else {
+					// replaces the element
+					newPackageJsonStr.replace(startIdx, endIdx, newValue);
+				}
+			}
 		}
-		return changed;
+		try (FileWriter fw = new FileWriter(packageJson, false)) {
+			fw.write(newPackageJsonStr.toString());
+		}
 	}
 }

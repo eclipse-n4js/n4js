@@ -4,9 +4,7 @@
 	"fileTypes": [
 		"n4js",
 		"n4jsx",
-		"n4jsd",
-		"n4idl",
-		"n4ts"
+		"n4jsd"
 	],
 	"patterns": [
 		{

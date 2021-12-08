@@ -14,6 +14,7 @@
 	Workspace {
 		Project "Test" {
 			Folder "src" {
+				File "Other.n4jsd" { from="./Other.n4jsd" }
 				ThisFile {}
 			}
 			File "package.json" { from="../package.json" }
@@ -27,11 +28,11 @@
 @@ProvidedByRuntime
 
 // XPECT noerrors -->
-@Final @Polyfill export external public class Function extends Function {
+@Final @Polyfill export external public class SomeFinalClass extends SomeFinalClass {
     public get name(): string;
 }
 
 
 // only to assert that the built-in Function is actually declared @Final:
-// XPECT errors --> "Cannot extend final class Function." at "Function"
-external class SubFunction extends Function {}
+// XPECT errors --> "Cannot extend final class SomeFinalClass." at "SomeFinalClass"
+external class SubClass extends SomeFinalClass {}

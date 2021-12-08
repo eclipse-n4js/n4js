@@ -17,8 +17,6 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
-import org.eclipse.n4js.ts.typeRefs.Versionable;
-
 import org.eclipse.n4js.ts.types.*;
 
 /**
@@ -77,10 +75,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 */
 	protected TypesSwitch<Adapter> modelSwitch =
 		new TypesSwitch<Adapter>() {
-			@Override
-			public Adapter caseTypeDefs(TypeDefs object) {
-				return createTypeDefsAdapter();
-			}
 			@Override
 			public Adapter caseTModule(TModule object) {
 				return createTModuleAdapter();
@@ -162,10 +156,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createContainerTypeAdapter();
 			}
 			@Override
-			public Adapter caseVirtualBaseType(VirtualBaseType object) {
-				return createVirtualBaseTypeAdapter();
-			}
-			@Override
 			public Adapter caseModuleNamespaceVirtualType(ModuleNamespaceVirtualType object) {
 				return createModuleNamespaceVirtualTypeAdapter();
 			}
@@ -198,24 +188,8 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createTStructuralTypeAdapter();
 			}
 			@Override
-			public Adapter caseTVersionable(TVersionable object) {
-				return createTVersionableAdapter();
-			}
-			@Override
-			public Adapter caseTMigratable(TMigratable object) {
-				return createTMigratableAdapter();
-			}
-			@Override
-			public Adapter caseTMigration(TMigration object) {
-				return createTMigrationAdapter();
-			}
-			@Override
 			public Adapter caseTClassifier(TClassifier object) {
 				return createTClassifierAdapter();
-			}
-			@Override
-			public Adapter caseTObjectPrototype(TObjectPrototype object) {
-				return createTObjectPrototypeAdapter();
 			}
 			@Override
 			public Adapter caseArrayLike(ArrayLike object) {
@@ -314,10 +288,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createTVariableAdapter();
 			}
 			@Override
-			public Adapter caseVersionable(Versionable object) {
-				return createVersionableAdapter();
-			}
-			@Override
 			public Adapter defaultCase(EObject object) {
 				return createEObjectAdapter();
 			}
@@ -336,20 +306,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TypeDefs <em>Type Defs</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.TypeDefs
-	 * @generated
-	 */
-	public Adapter createTypeDefsAdapter() {
-		return null;
-	}
 
 	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TModule <em>TModule</em>}'.
@@ -632,20 +588,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.VirtualBaseType <em>Virtual Base Type</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.VirtualBaseType
-	 * @generated
-	 */
-	public Adapter createVirtualBaseTypeAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType <em>Module Namespace Virtual Type</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -758,48 +700,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TVersionable <em>TVersionable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.TVersionable
-	 * @generated
-	 */
-	public Adapter createTVersionableAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TMigratable <em>TMigratable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.TMigratable
-	 * @generated
-	 */
-	public Adapter createTMigratableAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TMigration <em>TMigration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.TMigration
-	 * @generated
-	 */
-	public Adapter createTMigrationAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TClassifier <em>TClassifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -810,20 +710,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTClassifierAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TObjectPrototype <em>TObject Prototype</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.TObjectPrototype
-	 * @generated
-	 */
-	public Adapter createTObjectPrototypeAdapter() {
 		return null;
 	}
 
@@ -1160,20 +1046,6 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTVariableAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.Versionable <em>Versionable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.Versionable
-	 * @generated
-	 */
-	public Adapter createVersionableAdapter() {
 		return null;
 	}
 

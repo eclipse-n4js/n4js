@@ -63,10 +63,11 @@ function $getReflectionForEnum(staticProto: Object, reflectionString: string) {
  */
 function $defineFields(target: Object, ...names: string) {
     for (const name of names) {
-        Object.defineProperty(target, name, {
+        Object.<any>defineProperty(target, name, {
             writable: true,
             enumerable: true,
-            configurable: true
+            configurable: true,
+            value: undefined
         });
     }
 }

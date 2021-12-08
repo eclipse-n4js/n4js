@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import org.eclipse.n4js.transpiler.im.*;
+
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 /**
@@ -70,20 +71,15 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 			case ImPackage.SYMBOL_TABLE_ENTRY_ORIGINAL: return createSymbolTableEntryOriginal();
 			case ImPackage.SYMBOL_TABLE_ENTRY_IM_ONLY: return createSymbolTableEntryIMOnly();
 			case ImPackage.SYMBOL_TABLE_ENTRY_INTERNAL: return createSymbolTableEntryInternal();
-			case ImPackage.TYPE_REFERENCE_NODE_IM: return createTypeReferenceNode_IM();
+			case ImPackage.PLAIN_REFERENCE: return createPlainReference();
 			case ImPackage.IDENTIFIER_REF_IM: return createIdentifierRef_IM();
 			case ImPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM: return createParameterizedPropertyAccessExpression_IM();
-			case ImPackage.PARAMETERIZED_TYPE_REF_IM: return createParameterizedTypeRef_IM();
-			case ImPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL_IM: return createParameterizedTypeRefStructural_IM();
+			case ImPackage.TYPE_REFERENCE_NODE_IM: return createTypeReferenceNode_IM();
 			case ImPackage.SNIPPET: return createSnippet();
 			case ImPackage.DELEGATING_GETTER_DECLARATION: return createDelegatingGetterDeclaration();
 			case ImPackage.DELEGATING_SETTER_DECLARATION: return createDelegatingSetterDeclaration();
 			case ImPackage.DELEGATING_METHOD_DECLARATION: return createDelegatingMethodDeclaration();
 			case ImPackage.STRING_LITERAL_FOR_STE: return createStringLiteralForSTE();
-			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_IM: return createVersionedParameterizedTypeRef_IM();
-			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM: return createVersionedParameterizedTypeRefStructural_IM();
-			case ImPackage.VERSIONED_IDENTIFIER_REF_IM: return createVersionedIdentifierRef_IM();
-			case ImPackage.VERSIONED_NAMED_IMPORT_SPECIFIER_IM: return createVersionedNamedImportSpecifier_IM();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -150,9 +146,9 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * @generated
 	 */
 	@Override
-	public <T extends TypeRef> TypeReferenceNode_IM<T> createTypeReferenceNode_IM() {
-		TypeReferenceNode_IMImpl<T> typeReferenceNode_IM = new TypeReferenceNode_IMImpl<T>();
-		return typeReferenceNode_IM;
+	public PlainReference createPlainReference() {
+		PlainReferenceImpl plainReference = new PlainReferenceImpl();
+		return plainReference;
 	}
 
 	/**
@@ -183,20 +179,9 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	 * @generated
 	 */
 	@Override
-	public ParameterizedTypeRef_IM createParameterizedTypeRef_IM() {
-		ParameterizedTypeRef_IMImpl parameterizedTypeRef_IM = new ParameterizedTypeRef_IMImpl();
-		return parameterizedTypeRef_IM;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public ParameterizedTypeRefStructural_IM createParameterizedTypeRefStructural_IM() {
-		ParameterizedTypeRefStructural_IMImpl parameterizedTypeRefStructural_IM = new ParameterizedTypeRefStructural_IMImpl();
-		return parameterizedTypeRefStructural_IM;
+	public <T extends TypeRef> TypeReferenceNode_IM<T> createTypeReferenceNode_IM() {
+		TypeReferenceNode_IMImpl<T> typeReferenceNode_IM = new TypeReferenceNode_IMImpl<T>();
+		return typeReferenceNode_IM;
 	}
 
 	/**
@@ -252,50 +237,6 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	public StringLiteralForSTE createStringLiteralForSTE() {
 		StringLiteralForSTEImpl stringLiteralForSTE = new StringLiteralForSTEImpl();
 		return stringLiteralForSTE;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public VersionedParameterizedTypeRef_IM createVersionedParameterizedTypeRef_IM() {
-		VersionedParameterizedTypeRef_IMImpl versionedParameterizedTypeRef_IM = new VersionedParameterizedTypeRef_IMImpl();
-		return versionedParameterizedTypeRef_IM;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public VersionedParameterizedTypeRefStructural_IM createVersionedParameterizedTypeRefStructural_IM() {
-		VersionedParameterizedTypeRefStructural_IMImpl versionedParameterizedTypeRefStructural_IM = new VersionedParameterizedTypeRefStructural_IMImpl();
-		return versionedParameterizedTypeRefStructural_IM;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public VersionedIdentifierRef_IM createVersionedIdentifierRef_IM() {
-		VersionedIdentifierRef_IMImpl versionedIdentifierRef_IM = new VersionedIdentifierRef_IMImpl();
-		return versionedIdentifierRef_IM;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public VersionedNamedImportSpecifier_IM createVersionedNamedImportSpecifier_IM() {
-		VersionedNamedImportSpecifier_IMImpl versionedNamedImportSpecifier_IM = new VersionedNamedImportSpecifier_IMImpl();
-		return versionedNamedImportSpecifier_IM;
 	}
 
 	/**

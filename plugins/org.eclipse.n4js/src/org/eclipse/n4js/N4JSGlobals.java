@@ -14,6 +14,8 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableCollection;
 
+import java.math.BigDecimal;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashSet;
@@ -21,18 +23,32 @@ import java.util.Set;
 
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
-import org.eclipse.n4js.ts.utils.N4TSGlobals;
 import org.eclipse.n4js.utils.UtilN4;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSetMultimap;
 
 /**
  * Global hook for static information about the current setup. Contains file extensions, library names, and other
  * "useful" strings.
  */
 public final class N4JSGlobals {
+
+	/** Maximum value of type 'int' in N4JS. */
+	public static final int INT32_MAX_VALUE = Integer.MAX_VALUE;
+	/** Minimum value of type 'int' in N4JS. */
+	public static final int INT32_MIN_VALUE = Integer.MIN_VALUE;
+	/** Same as #{@link #INT32_MAX_VALUE}, but as a {@link BigDecimal}. */
+	public static final BigDecimal INT32_MAX_VALUE_BD = new BigDecimal(INT32_MAX_VALUE);
+	/** Same as #{@link #INT32_MIN_VALUE}, but as a {@link BigDecimal}. */
+	public static final BigDecimal INT32_MIN_VALUE_BD = new BigDecimal(INT32_MIN_VALUE);
+
+	/**
+	 * The hashbang prefix is used to start a hashbang at the beginning of a module or script. E.g. #!/usr/bin/env node
+	 */
+	public static final String HASHBANG_PREFIX = "#!";
 
 	/**
 	 * Files extension of JS source files (<b>not</b> including the separator dot).
@@ -69,18 +85,9 @@ public final class N4JSGlobals {
 	public static final String N4JSD_FILE_EXTENSION = "n4jsd";
 
 	/**
-	 * Files extension of N4TS source files (<b>not</b> including the separator dot).
-	 */
-	public static final String N4TS_FILE_EXTENSION = "n4ts";
-	/**
 	 * Files extension of XT source files (<b>not</b> including the separator dot).
 	 */
 	public static final String XT_FILE_EXTENSION = "xt";
-
-	/**
-	 * Files extension of N4IDL source files (<b>not</b> including the separator dot).
-	 */
-	public static final String N4IDL_FILE_EXTENSION = "n4idl";
 
 	/**
 	 * Vendor ID
@@ -89,16 +96,16 @@ public final class N4JSGlobals {
 	/**
 	 * Mangelhaft
 	 */
-	public static final N4JSProjectName MANGELHAFT = new N4JSProjectName(VENDOR_ID + ".mangelhaft");
+	public static final N4JSPackageName MANGELHAFT = new N4JSPackageName(VENDOR_ID + ".mangelhaft");
 	/**
 	 * Mangelhaft Assert
 	 */
-	public static final N4JSProjectName MANGELHAFT_ASSERT = new N4JSProjectName(MANGELHAFT + ".assert");
+	public static final N4JSPackageName MANGELHAFT_ASSERT = new N4JSPackageName(MANGELHAFT + ".assert");
 
 	/**
 	 * Name of the npm package containing the mangelhaft command-line interface.
 	 */
-	public static final N4JSProjectName MANGELHAFT_CLI = new N4JSProjectName("n4js-mangelhaft-cli");
+	public static final N4JSPackageName MANGELHAFT_CLI = new N4JSPackageName("n4js-mangelhaft-cli");
 
 	/**
 	 * Unmodifiable list containing {@link #N4JS_FILE_EXTENSION}, {@link #N4JSD_FILE_EXTENSION},
@@ -145,7 +152,7 @@ public final class N4JSGlobals {
 	 * Path to the folder in the N4JS Git repository containing the source code of the "n4js-libs", relative to the
 	 * repository's root folder.
 	 */
-	public static final String N4JS_LIBS_SOURCES_PATH = N4JS_LIBS_FOLDER_NAME + "/" + "packages";
+	public static final Path N4JS_LIBS_SOURCES_PATH = Path.of(N4JS_LIBS_FOLDER_NAME, "packages");
 
 	/**
 	 * Name of the npm package containing the N4JS bootstrap and runtime code, i.e. the code defining internal low-level
@@ -154,12 +161,27 @@ public final class N4JSGlobals {
 	 * It is expected that this npm package lives in the N4JS Git repository at path {@value #N4JS_LIBS_SOURCES_PATH},
 	 * cf. {@link #N4JS_LIBS_SOURCES_PATH}.
 	 */
-	public static final N4JSProjectName N4JS_RUNTIME = new N4JSProjectName("n4js-runtime");
+	public static final N4JSPackageName N4JS_RUNTIME = new N4JSPackageName("n4js-runtime");
+
+	/**
+	 * Runtime for ECMA 402.
+	 */
+	public static final N4JSPackageName N4JS_RUNTIME_ECMA402 = new N4JSPackageName("n4js-runtime-ecma402");
 
 	/**
 	 * Runtime for node.js
 	 */
-	public static final N4JSProjectName N4JS_RUNTIME_NODE = new N4JSProjectName("n4js-runtime-node");
+	public static final N4JSPackageName N4JS_RUNTIME_NODE = new N4JSPackageName("n4js-runtime-node");
+
+	/**
+	 * Runtime for HTML5 DOM definitions, i.e. <code>window</code>, <code>document</code>, etc.
+	 */
+	public static final N4JSPackageName N4JS_RUNTIME_HTML5 = new N4JSPackageName("n4js-runtime-html5");
+
+	/**
+	 * The wrapper npm package for the N4JS command line interface.
+	 */
+	public static final N4JSPackageName N4JS_CLI = new N4JSPackageName("n4js-cli");
 
 	/**
 	 * Project types for which a dependency to the {@link #N4JS_RUNTIME n4js-runtime} is mandatory.
@@ -176,6 +198,24 @@ public final class N4JSGlobals {
 			ProjectType.PLAINJS,
 			ProjectType.DEFINITION,
 			ProjectType.VALIDATION);
+
+	/**
+	 * Project types for which .d.ts generation will always be inactive, even if
+	 *
+	 * <pre>
+	 * "generator": {
+	 *     "d.ts": true
+	 * }
+	 * </pre>
+	 *
+	 * is given in the package.json file.
+	 */
+	public static final Set<ProjectType> PROJECT_TYPES_WITHOUT_DTS_GENERATION = ImmutableSet.of(
+			ProjectType.PLAINJS,
+			ProjectType.DEFINITION,
+			ProjectType.VALIDATION,
+			ProjectType.RUNTIME_ENVIRONMENT,
+			ProjectType.RUNTIME_LIBRARY);
 
 	/**
 	 * The name of an npm command.
@@ -195,6 +235,18 @@ public final class N4JSGlobals {
 	public static final String PACKAGE_JSON = UtilN4.PACKAGE_JSON;
 
 	/**
+	 * Projects with a name ending in one of these suffixes are assumed to be API projects as defined by the API/Impl
+	 * concept.
+	 * <p>
+	 * NOTE: normally API projects should be identified by a project type of {@link ProjectType#API API}. Use of these
+	 * suffixes is only intended in temporary work-around implementations.
+	 * <p>
+	 * IMPORTANT: in addition to the direct references to this constant, another use of these suffixes is located in
+	 * file {@code NodeTestRunner.n4js}.
+	 */
+	public static final String[] API_PROJECT_NAME_SUFFIXES = { ".api", "-api" };
+
+	/**
 	 * The name of the files storing each N4JS project's meta-information (serialized TModules, etc.).
 	 */
 	public static final String N4JS_PROJECT_STATE = ".n4js.projectstate";
@@ -205,11 +257,45 @@ public final class N4JSGlobals {
 	public static final String TEST_CATALOG = "test-catalog.json";
 
 	/**
+	 * The name of the tsconfig.json file.
+	 */
+	public static final String TS_CONFIG = "tsconfig.json";
+
+	/**
+	 * All project names of n4js libraries.
+	 */
+	public static final Set<N4JSPackageName> ALL_N4JS_LIBS = ImmutableSet.of(
+			new N4JSPackageName("n4js-cli"),
+			new N4JSPackageName("n4js-mangelhaft-cli"),
+			N4JS_RUNTIME,
+			N4JS_RUNTIME_ECMA402,
+			new N4JSPackageName("n4js-runtime-es2015"),
+			new N4JSPackageName("n4js-runtime-esnext"),
+			N4JS_RUNTIME_HTML5,
+			N4JS_RUNTIME_NODE,
+			new N4JSPackageName("n4js-runtime-node-tests"),
+			new N4JSPackageName("n4js-runtime-v8"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert.test"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.console"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.xunit"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.test"));
+
+	/**
+	 * The values of this map define TypeScript libraries to be included in the "lib" property of an auto-generated
+	 * <code>tsconfig.json</code> file whenever the corresponding N4JS runtime library is declared as required runtime
+	 * library in the containing project's <code>package.json</code> file.
+	 */
+	public static final ImmutableSetMultimap<N4JSPackageName, String> N4JS_DTS_LIB_CORRESPONDENCE = ImmutableSetMultimap
+			.of(N4JS_RUNTIME_HTML5, "dom");
+
+	/**
 	 * String used to separate segments in the string representation of a {@link QualifiedName qualified name}.
 	 *
 	 * @see N4JSQualifiedNameConverter#DELIMITER
 	 */
-	public static final String QUALIFIED_NAME_DELIMITER = N4TSGlobals.QUALIFIED_NAME_DELIMITER;
+	public static final String QUALIFIED_NAME_DELIMITER = "/";
 
 	/**
 	 * Character used to separate the namespace name from the exported element's name when referring to an element via a
@@ -221,7 +307,7 @@ public final class N4JSGlobals {
 	 * let c: NS.OtherClass;
 	 * </pre>
 	 */
-	public static final char NAMESPACE_ACCESS_DELIMITER = N4TSGlobals.NAMESPACE_ACCESS_DELIMITER;
+	public static final char NAMESPACE_ACCESS_DELIMITER = '.';
 
 	/**
 	 * All HTML tags.
@@ -266,6 +352,31 @@ public final class N4JSGlobals {
 			"mesh", "meshgradient", "meshpatch", "meshrow", "metadata", "missing-glyph", "mpath", "path", "pattern",
 			"polygon", "polyline", "radialGradient", "rect", "script", "set", "solidcolor", "stop", "style", "svg",
 			"switch", "symbol", "text", "textPath", "title", "tref", "tspan", "unknown", "use", "view", "vkern"));
+
+	/**
+	 * The preamble added to all output files generated by the N4JS {@code EcmaScriptTranspiler} and .d.ts generator.
+	 */
+	public static final String OUTPUT_FILE_PREAMBLE = "// Generated by N4JS transpiler; for copyright see original N4JS source file.\n";
+
+	/**
+	 * File name of {@code n4js-runtime/n4jsglobals.d.ts}.
+	 */
+	public static final String N4JS_GLOBALS_DTS = "n4jsglobals.d.ts";
+
+	/**
+	 * Mandatory import for every generated d.ts file used by the d.ts generator.
+	 */
+	public static final String IMPORT_N4JSGLOBALS = "import 'n4js-runtime'";
+
+	/**
+	 * Standard maven target folder-name, the base of maven-compile results.
+	 */
+	public static final String TARGET = "target";
+
+	/**
+	 * Name of the N4JS headless builder JAR.
+	 */
+	public static final String N4JSC_JAR = "n4jsc.jar";
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.

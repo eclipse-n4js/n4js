@@ -1398,6 +1398,20 @@ They are mainly intended for type system support of array destructuring literals
 
 NOTE: This is not documented in detail yet, because we want to gain experience with the current solution first, major refinement may be incoming.
 
+
+[[ArrayN]]
+=== ArrayN
+
+[.todo]
+Work in progress.
+
+Currently there are built-in types `Array2<T1,T2>`...`Array9<T1,...,T9>`.
+
+NOTE: This is not documented in detail yet, because we want to gain experience with the current solution first, major refinement may be incoming.
+
+
+
+
 [.language-n4js]
 == Type Modifiers
 
@@ -1407,6 +1421,7 @@ Type modifiers can not be used in type arguments.
 
 The general type modifiers $nullable$, $nonnull$ and $dynamic$ can be used for variables, attributes, method parameters and method types.
 Optional and variadic modifiers can only be applied for formal parameters.
+
 
 
 [[Type_Modifiers_Dynamic]]
@@ -3091,6 +3106,63 @@ a1 = a2;
 ----
 
 
+[.language-n4js]
+== Literal Types
+
+N4JS supports boolean, numeric, and string literal types. These types are a specialization of the primitive types
+`boolean`, `number`, and `string`, respectively, and have only a single valid value (not considering `undefined` and `null`).
+Furthermore, enum literal types are supported, which are a specialization of the literal's containing enum type
+and have the enum literal as their only valid value.
+
+For example, using string literal types:
+
+[source,n4js]
+----
+let greeting: "hello" | "bye";
+greeting = "hello"; // ok
+greeting = "bye"; // ok
+greeting = "see ya"; // error: "see ya" is not a subtype of union{"hello","bye"}.
+
+let str: string;
+str = greeting; // ok
+greeting = str; // error: string is not a subtype of union{"hello","bye"}.
+----
+
+Similarly, with enum literal types:
+
+[source,n4js]
+----
+enum Status { ON, OFF, UNKNOWN }
+let onOff: Status.ON | Status.OFF;
+onOff = Status.ON; // ok
+onOff = Status.OFF; // ok
+onOff = Status.UNKNOWN; // error: Status.UNKNOWN is not a subtype of union{Status.ON,Status.OFF}.
+
+let status: Status;
+status = onOff; // ok
+onOff = status; // error: Status is not a subtype of union{Status.ON,Status.OFF}.
+
+let onOffUnknown: Status.ON | Status.OFF | Status.UNKNOWN;
+onOffUnknown = status; // ok, because the union comprises all literals of enum Status
+----
+
+Together with union types, these literal types can be used, for example, to realize anonymous enumerations:
+
+[source,n4js]
+----
+function getStatus(): "on" | "off" | "unknown" {
+    // ...
+}
+----
+
+Literal types will be used as the implicitly inferred type of variables, fields, etc. only if they are immutable:
+
+[source,n4js]
+----
+const immutable = "hello"; // type of 'immutable' will be "hello" (not string)
+let mutable = "world";     // type of 'mutable' will be string (not "world")
+----
+
 
 [.language-n4js]
 == Short-Hand Syntax
@@ -3129,9 +3201,9 @@ let arr: Array<Array<Array<string>>>;
 ----
 
 
-=== IterableN Short-Hand Syntax
+=== ArrayN Short-Hand Syntax
 
-The built-in IterableN types (i.e. `Iterable2`, `Iterable3`, ... `Iterable9`, see <<IterableN>>) are
+The built-in ArrayN types (i.e. `Array2`, `Array3`, ... `Array9`, see <<ArrayN>>) are
 also provided with a short-hand syntax. For example, writing
 
 [source,n4js]
@@ -3143,7 +3215,7 @@ would be equivalent to
 
 [source,n4js]
 ----
-let i3: Iterable3<string,number,Array<string>>;
+let i3: Array3<string,number,Array<string>>;
 ----
 
 Note the following special cases:
@@ -3159,10 +3231,8 @@ which is equivalent to
 
 [source,n4js]
 ----
-let i0: Iterable<?>;
-let i1: Iterable<string>;
+let i0: Array<?>;
+let i1: Array<string>;
 let union: union{string,Array<number>}; // not: Array<union{string,number}>
 ----
 
-Further note: while this syntax is very similar to TypeScript's tuple syntax, the semantics
-of tuples and IterableN are very different.

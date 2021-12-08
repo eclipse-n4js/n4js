@@ -31,7 +31,7 @@ function <T> fd(param : T) : A<T> { return null; }
 // note: above error message would be better, cf. IDE-1727
 // XPECT errors ---
 // "A<T> is not a subtype of A<string>." at "fd(42)"
-// "int is not a subtype of T." at "42"
+// "42 is not a subtype of T." at "42"
 // ---
 var s01 : A<string> = fd(42);
 
@@ -55,7 +55,7 @@ var fe = function <T> (param : T) : A<T> { return null; };
 // note: above error message would be better, cf. IDE-1727
 // XPECT errors ---
 // "A<T> is not a subtype of A<string>." at "fe(42)"
-// "int is not a subtype of T." at "42"
+// "42 is not a subtype of T." at "42"
 // ---
 var s11 : A<string> = fe(42);
 
@@ -82,7 +82,7 @@ var c : C;
 // note: above error message would be better, cf. IDE-1727
 // XPECT errors ---
 // "A<T> is not a subtype of A<string>." at "c.m(42)"
-// "int is not a subtype of T." at "42"
+// "42 is not a subtype of T." at "42"
 // ---
 var s21 : A<string> = c.m(42);
 
@@ -97,7 +97,7 @@ var s23 : A<string> = c.m(undefined);
 // note: above error message would be better, cf. IDE-1727
 // XPECT errors ---
 // "A<T> is not a subtype of A<string>." at "C.m(42)"
-// "int is not a subtype of T." at "42"
+// "42 is not a subtype of T." at "42"
 // ---
 var s31 : A<string> = C.m(42);
 

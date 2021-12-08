@@ -15,8 +15,7 @@ import static org.eclipse.n4js.AnnotationDefinition.GLOBAL;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillAware;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillModule;
-import static org.eclipse.n4js.utils.N4JSLanguageUtils.isPolyfill;
-import static org.eclipse.n4js.utils.N4JSLanguageUtils.isStaticPolyfill;
+import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_GLOBALS;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_MODIFIER;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_MODULE_SPECIFIER;
@@ -24,12 +23,15 @@ import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_NAME
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_TYPEPARS;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_EXTEND_MISSING;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME;
+import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_INCOMPLETE_TYPEARGS;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NOT_PROVIDEDBYRUNTIME;
-import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NO_IMPLEMENTS_OR_CONSUMES;
+import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NO_EXTENDS_ADDITIONAL;
+import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NO_IMPLEMENTS;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_STATIC_DIFFERENT_VARIANT;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_STATIC_FILLED_TYPE_NOT_AWARE;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS;
 import static org.eclipse.n4js.validation.IssueCodes.POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_GLOBALS;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_MODIFIER;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_MODULE_SPECIFIER;
@@ -37,8 +39,10 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_D
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_DIFFERENT_TYPEPARS;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_EXTEND_MISSING;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_INCOMPLETE_TYPEARGS;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NOT_PROVIDEDBYRUNTIME;
-import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NO_IMPLEMENTS_OR_CONSUMES;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NO_EXTENDS_ADDITIONAL;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NO_IMPLEMENTS;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_STATIC_DIFFERENT_VARIANT;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_STATIC_FILLED_TYPE_NOT_AWARE;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS;
@@ -51,22 +55,28 @@ import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.ts.types.TypingStrategy;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
@@ -75,8 +85,11 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
+import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.inject.Inject;
@@ -105,51 +118,61 @@ public class PolyfillValidatorFragment {
 	 * Value object used internally to avoid passing around all these objects separately.
 	 */
 	private static class PolyfillValidationState {
-		N4JSClassValidator host;
-		N4ClassDeclaration n4Class;
-		TClass polyType;
-		TClassifier filledType;
+		/** A {@link N4JSClassValidator} or {@link N4JSInterfaceValidator}, used for adding issues. */
+		PolyfillValidatorHost host;
+		CancelIndicator cancelIndicator;
+		N4ClassifierDeclaration n4Classifier;
+		TypeReferenceNode<ParameterizedTypeRef> superClassifierNode;
+		TN4Classifier polyType;
+		TN4Classifier filledType;
 		String name;
 	}
 
 	private void addIssue(PolyfillValidationState state, String msg, String issueCode) {
-		state.host.addIssue(msg, state.n4Class, N4_TYPE_DECLARATION__NAME, issueCode);
+		state.host.addIssue(msg, state.n4Classifier, N4_TYPE_DECLARATION__NAME, issueCode);
 	}
 
 	/**
 	 * Checks polyfill constraints on given class declaration using validator to issue errors. Constraints (Polyfill
 	 * Class) 156: Polyfill
 	 */
-	public boolean holdsPolyfill(N4JSClassValidator validator, N4ClassDeclaration n4Class) {
-		boolean isStaticPolyFill = isStaticPolyfill(n4Class);
-		if (isStaticPolyFill || isPolyfill(n4Class)) {
+	public boolean holdsPolyfill(PolyfillValidatorHost validator, N4ClassifierDeclaration n4Classifier,
+			CancelIndicator cancelIndicator) {
+		boolean isStaticPolyFill = N4JSLanguageUtils.isStaticPolyfill(n4Classifier);
+		if (isStaticPolyFill || N4JSLanguageUtils.isNonStaticPolyfill(n4Classifier)) {
 			PolyfillValidationState state = new PolyfillValidationState();
 			state.host = validator;
-			state.n4Class = n4Class;
-			state.name = n4Class.getName();
+			state.cancelIndicator = cancelIndicator;
+			state.n4Classifier = n4Classifier;
+			state.name = n4Classifier.getName();
 
-			if (state.name == null || !(n4Class.getDefinedType() instanceof TClass)) {
+			if (state.name == null || !(n4Classifier.getDefinedType() instanceof TN4Classifier)) {
 				return true; // consequential error, AST corrupt
 			}
-			state.polyType = (TClass) n4Class.getDefinedType();
+			state.polyType = (TN4Classifier) n4Classifier.getDefinedType();
 			if (state.polyType == null || state.name == null) {
 				return true; // consequential error
 			}
 
-			if (!holdsExpliciteExtends(state)) {
+			state.superClassifierNode = IterableExtensions.head(n4Classifier.getSuperClassifierRefs());
+			if (!holdsExplicitExtends(state)) {
 				return false;
 			}
+			// now we know that state.superClassifierNode !== null
 
-			final TypeReferenceNode<ParameterizedTypeRef> superClassRef = n4Class.getSuperClassRef();
-			final Type superType = superClassRef != null ? superClassRef.getTypeRef().getDeclaredType() : null;
-			if (!(superType instanceof TClassifier)) { // TClass or TObjectPrototype
+			final Type superType = state.superClassifierNode.getTypeRef() != null
+					? state.superClassifierNode.getTypeRef().getDeclaredType()
+					: null;
+			if (!(superType instanceof TN4Classifier)) { // TClass or TInterface
 				return true; // consequential error
 			}
-			state.filledType = (TClassifier) superType;
+			state.filledType = (TN4Classifier) superType;
 
 			// Different rules for static/non-static polyfills:
 			if (!isStaticPolyFill) {
-				if (!(holdPolyfillName(state) //
+				// non-static polyfill case
+				if (!(holdPolyfillClassifierKind(state) //
+						&& holdPolyfillName(state) //
 						&& holdsProvidedByRuntime(state) //
 						&& holdsNoImplementsOrConsumes(state) //
 						&& holdsEqualModifiers(state) //
@@ -160,7 +183,8 @@ public class PolyfillValidatorFragment {
 				}
 			} else {
 				// static polyfill case, IDE-1735
-				if (!(holdPolyfillName(state) //
+				if (!(holdPolyfillClassifierKind(state)
+						&& holdPolyfillName(state) //
 						// && holdsProvidedByRuntime(state) //
 						// && holdsNoImplementsOrConsumes(state) //
 						&& holdsFilledClassIsStaticPolyfillAware(state) //
@@ -175,10 +199,10 @@ public class PolyfillValidatorFragment {
 
 		}
 
-		// § 140.1 only polyfills are allowed in StaticPolyfillModule.
-		if (!isStaticPolyFill && isContainedInStaticPolyfillModule(n4Class)) {
-			// n4Class is toplevel by default
-			validator.addIssue(getMessageForPOLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES(), n4Class,
+		// § 140.1 only static polyfills are allowed in StaticPolyfillModule.
+		if (!isStaticPolyFill && isContainedInStaticPolyfillModule(n4Classifier)) {
+			// n4Classifier is top-level by default
+			validator.addIssue(getMessageForPOLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES(), n4Classifier,
 					N4_TYPE_DECLARATION__NAME, POLY_STATIC_POLYFILL_MODULE_ONLY_FILLING_CLASSES);
 			return false;
 		}
@@ -220,11 +244,24 @@ public class PolyfillValidatorFragment {
 	/**
 	 * Constraint (Polyfill Class) 156.1
 	 */
-	private boolean holdsExpliciteExtends(PolyfillValidationState state) {
-		final TypeReferenceNode<ParameterizedTypeRef> filledTypeRef = state.n4Class.getSuperClassRef();
+	private boolean holdsExplicitExtends(PolyfillValidationState state) {
+		final TypeReferenceNode<ParameterizedTypeRef> filledTypeRef = state.superClassifierNode;
 		if (filledTypeRef == null) { // (Polyfill Class) 156.1
-			final String msg = getMessageForCLF_POLYFILL_EXTEND_MISSING(state.name);
+			final String msg = getMessageForCLF_POLYFILL_EXTEND_MISSING(state.name,
+					keywordProvider.keywordWithIndefiniteArticle(state.polyType));
 			addIssue(state, msg, CLF_POLYFILL_EXTEND_MISSING);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean holdPolyfillClassifierKind(PolyfillValidationState state) {
+		if (state.polyType.eClass() != state.filledType.eClass()) {
+			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND(
+					keywordProvider.keyword(state.filledType), state.name,
+					keywordProvider.keywordWithIndefiniteArticle(state.filledType),
+					keywordProvider.keywordWithIndefiniteArticle(state.polyType));
+			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_CLASSIFIER_KIND);
 			return false;
 		}
 		return true;
@@ -236,7 +273,7 @@ public class PolyfillValidatorFragment {
 	private boolean holdPolyfillName(PolyfillValidationState state) {
 		if (!state.name.equals(state.filledType.getName())) { // (Polyfill Class) 156.2
 			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_NAME(state.name,
-					state.filledType.getName());
+					keywordProvider.keyword(state.filledType), state.filledType.getName());
 			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_NAME);
 			return false;
 		}
@@ -287,10 +324,18 @@ public class PolyfillValidatorFragment {
 	 * Constraint (Polyfill Class) 156.4
 	 */
 	private boolean holdsNoImplementsOrConsumes(PolyfillValidationState state) {
-		if (!state.n4Class.getImplementedInterfaceRefs().isEmpty()) {
-			final String msg = getMessageForCLF_POLYFILL_NO_IMPLEMENTS_OR_CONSUMES(state.name);
-			addIssue(state, msg, CLF_POLYFILL_NO_IMPLEMENTS_OR_CONSUMES);
-			return false;
+		if (state.n4Classifier instanceof N4ClassDeclaration) {
+			if (!((N4ClassDeclaration) state.n4Classifier).getImplementedInterfaceRefs().isEmpty()) {
+				final String msg = getMessageForCLF_POLYFILL_NO_IMPLEMENTS(state.name);
+				addIssue(state, msg, CLF_POLYFILL_NO_IMPLEMENTS);
+				return false;
+			}
+		} else if (state.n4Classifier instanceof N4InterfaceDeclaration) {
+			if (((N4InterfaceDeclaration) state.n4Classifier).getSuperInterfaceRefs().size() > 1) {
+				final String msg = getMessageForCLF_POLYFILL_NO_EXTENDS_ADDITIONAL(state.name);
+				addIssue(state, msg, CLF_POLYFILL_NO_EXTENDS_ADDITIONAL);
+				return false;
+			}
 		}
 		return true;
 	}
@@ -303,12 +348,15 @@ public class PolyfillValidatorFragment {
 		if (state.polyType.getTypeAccessModifier() != state.filledType.getTypeAccessModifier()) {
 			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_MODIFIER(state.name,
 					keywordProvider.keyword(state.polyType.getTypeAccessModifier()),
-					keywordProvider.keyword(state.filledType.getTypeAccessModifier()));
+					keywordProvider.keyword(state.filledType.getTypeAccessModifier()),
+					keywordProvider.keyword(state.filledType));
 			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_MODIFIER);
 			result = false;
 		}
 		result &= holdsEqualModifier(state, "abstract", state.polyType.isAbstract(), state.filledType.isAbstract());
 		result &= holdsEqualModifier(state, "@" + FINAL.name, state.polyType.isFinal(), state.filledType.isFinal());
+		result &= holdsEqualTypingStrategy(state, state.polyType.getTypingStrategy(),
+				state.filledType.getTypingStrategy());
 		return result;
 	}
 
@@ -316,7 +364,24 @@ public class PolyfillValidatorFragment {
 			boolean filled) {
 		if (poly != filled) {
 			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_MODIFIER(state.name,
-					(poly ? "" : "non-") + modifierName, (filled ? "" : "non-") + modifierName);
+					(poly ? "" : "non-") + modifierName,
+					(filled ? "" : "non-") + modifierName,
+					keywordProvider.keyword(state.filledType));
+			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_MODIFIER);
+			return false;
+		}
+		return true;
+	}
+
+	private boolean holdsEqualTypingStrategy(PolyfillValidationState state, TypingStrategy poly,
+			TypingStrategy filled) {
+		poly = poly == TypingStrategy.DEFAULT ? TypingStrategy.NOMINAL : poly;
+		filled = filled == TypingStrategy.DEFAULT ? TypingStrategy.NOMINAL : filled;
+		if (poly != filled) {
+			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_MODIFIER(state.name,
+					(poly != TypingStrategy.NOMINAL ? "definition-site " : "") + keywordProvider.keyword(poly),
+					(filled != TypingStrategy.NOMINAL ? "definition-site " : "") + keywordProvider.keyword(filled),
+					keywordProvider.keyword(state.filledType));
 			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_MODIFIER);
 			return false;
 		}
@@ -333,16 +398,26 @@ public class PolyfillValidatorFragment {
 		final String typeVars2 = Joiner.on(',').join(
 				state.filledType.getTypeVars().stream().map(v -> v.getTypeAsString()).toArray());
 		if (!typeVars1.equals(typeVars2)) {
-			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_TYPEPARS(state.name);
+			final String msg = getMessageForCLF_POLYFILL_DIFFERENT_TYPEPARS(state.name,
+					keywordProvider.keyword(state.filledType));
 			addIssue(state, msg, CLF_POLYFILL_DIFFERENT_TYPEPARS);
 			return false;
 		}
 
-		final TypeReferenceNode<ParameterizedTypeRef> superClassRefInAST = state.n4Class.getSuperClassRef();
-		final TypeRef superClassRef = superClassRefInAST != null ? superClassRefInAST.getTypeRef() : null;
-		List<TypeArgument> args = superClassRef != null ? superClassRef.getTypeArgs() : Collections.emptyList();
-		if (args.size() != state.polyType.getTypeVars().size()) {
+		final TypeReferenceNode<ParameterizedTypeRef> superClassifierRefInAST = state.superClassifierNode;
+		final TypeRef superClassRef = superClassifierRefInAST != null ? superClassifierRefInAST.getTypeRef() : null;
+		final List<TypeArgument> args = superClassRef != null ? superClassRef.getDeclaredTypeArgs()
+				: Collections.emptyList();
+		final int expectedTypeParamCountMax = state.polyType.getTypeVars().size();
+		final int expectedTypeParamCountMin = FluentIterable.from(state.polyType.getTypeVars())
+				.filter(tv -> !tv.isOptional())
+				.size();
+		if (args.size() < expectedTypeParamCountMin || args.size() > expectedTypeParamCountMax) {
 			return true; // consequential error
+		} else if (args.size() != expectedTypeParamCountMax) {
+			final String msg = getMessageForCLF_POLYFILL_INCOMPLETE_TYPEARGS(state.name);
+			addIssue(state, msg, CLF_POLYFILL_INCOMPLETE_TYPEARGS);
+			return false;
 		}
 		for (int i = state.polyType.getTypeVars().size() - 1; i >= 0; i--) {
 			TypeArgument arg = args.get(i);
@@ -354,7 +429,6 @@ public class PolyfillValidatorFragment {
 				addIssue(state, msg, CLF_POLYFILL_TYPEPARS_DIFFER_TYPEARGS);
 				return false;
 			}
-
 		}
 
 		return true;
@@ -379,7 +453,7 @@ public class PolyfillValidatorFragment {
 				.getResourceDescription(res), index);
 		// Iterable over all exported Polyfills
 		Iterable<IEObjectDescription> iterEObj = container.getExportedObjects(TypesPackage.Literals.TCLASSIFIER,
-				N4TSQualifiedNameProvider.getPolyfillFQN(state.filledType, qualifiedNameProvider), false);
+				PolyfillUtils.getNonStaticPolyfillFQN(state.filledType, qualifiedNameProvider), false);
 
 		// collection of involved TModules for each Member.
 		ListMultimap<TMember, TModule> clashProviders = LinkedListMultimap.create();
@@ -390,6 +464,12 @@ public class PolyfillValidatorFragment {
 			// Resolve
 			if (eob.eIsProxy()) {
 				eob = EcoreUtil.resolve(eob, res);
+				if (!eob.eIsProxy()) {
+					Resource filledResource = eob.eResource();
+					if (filledResource instanceof N4JSResource) {
+						((N4JSResource) filledResource).performPostProcessing(state.cancelIndicator);
+					}
+				}
 			}
 
 			if (eob == state.polyType) {
@@ -444,7 +524,7 @@ public class PolyfillValidatorFragment {
 	 *            current validated Polyfill
 	 * @param pivotPolyMember
 	 *            other polyfill in same project
-	 * @return pairs of contrandicting or same polyfills.
+	 * @return pairs of contradicting or same polyfills.
 	 */
 	private ListMultimap<TMember, TMember> findClashingMembersByName(EList<TMember> myPolyMember,
 			EList<TMember> pivotPolyMember) {

@@ -10,9 +10,7 @@
  */
 @@Global @@ProvidedByRuntime
 
-import {NumberFormatOptions} from "IntlClasses";
 
-@Final
 @Polyfill export external public class Number extends Number {
 	/**
 	 * Returns formatted number using locales and options as defined in 
@@ -22,7 +20,6 @@ import {NumberFormatOptions} from "IntlClasses";
 	 *
 	 * @see https://www.ecma-international.org/ecma-402/4.0/
 	 */
-    @Override
-    public toLocaleString (locales: string | string[]=, options: ~r~NumberFormatOptions=): string
+//    @Override
+//    public toLocaleString (locales: string | string[]=, options: ~r~NumberFormatOptions=): string
 }
-

@@ -36,11 +36,10 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.ScriptElement;
+import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.Variable;
-import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
-import org.eclipse.n4js.n4idl.versioning.MigrationUtils;
-import org.eclipse.n4js.n4idl.versioning.VersionHelper;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
@@ -51,7 +50,6 @@ import org.eclipse.n4js.transpiler.im.ReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
-import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -59,7 +57,6 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
@@ -88,16 +85,6 @@ public class PreparationStep {
 					ImPackage.eINSTANCE.getIdentifierRef_IM())
 			.put(N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression(),
 					ImPackage.eINSTANCE.getParameterizedPropertyAccessExpression_IM())
-			.put(N4JSPackage.eINSTANCE.getVersionedIdentifierRef(),
-					ImPackage.eINSTANCE.getVersionedIdentifierRef_IM())
-			.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef(),
-					ImPackage.eINSTANCE.getParameterizedTypeRef_IM())
-			.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural(),
-					ImPackage.eINSTANCE.getParameterizedTypeRefStructural_IM())
-			.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRef(),
-					ImPackage.eINSTANCE.getVersionedParameterizedTypeRef_IM())
-			.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural(),
-					ImPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural_IM())
 			.build();
 
 	private static final EReference[] REWIRED_REFERENCES = {
@@ -111,9 +98,6 @@ public class PreparationStep {
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
-
-	@Inject
-	private VersionHelper versionHelper;
 
 	/**
 	 * Creates and initializes the transpiler state. In particular, this will create the intermediate model as a copy of
@@ -131,7 +115,8 @@ public class PreparationStep {
 		final InformationRegistry info = new InformationRegistry();
 		final STECache steCache = createIM(script, tracer, info);
 
-		return new TranspilerState(resource, project, options, memberCollector, steCache.im, steCache, tracer, info);
+		return new TranspilerState(resource, project, options, memberCollector, steCache.im, steCache, tracer, info,
+				workspaceAccess);
 	}
 
 	private STECache createIM(Script script, Tracer tracer, InformationRegistry info) {
@@ -216,6 +201,12 @@ public class PreparationStep {
 		protected EObject createCopy(EObject eObject) {
 			final EObject copy = super.createCopy(eObject);
 			tracer.setOriginalASTNode_internal(copy, eObject);
+
+			if (copy instanceof TypeDefiningElement) {
+				info.setOriginalDefinedType_internal((TypeDefiningElement) copy,
+						((TypeDefiningElement) eObject).getDefinedType());
+			}
+
 			if (copy instanceof Script_IM) {
 				initializeScript_IM((Script_IM) copy);
 			} else if (copy instanceof ImportDeclaration) {
@@ -223,17 +214,18 @@ public class PreparationStep {
 						((ImportDeclaration) eObject).getModule());
 			} else if (copy instanceof ImportSpecifier) {
 				// remember which TModule elements were imported via ImportSpecifiers
-				if (copy instanceof NamedImportSpecifier)
+				if (copy instanceof NamedImportSpecifier) {
 					// cast to IM-specific class is safe due to ECLASS_REPLACEMENT
 					handleCopyNamedImportSpecifier((NamedImportSpecifier) eObject);
-				else if (copy instanceof NamespaceImportSpecifier)
+				} else if (copy instanceof NamespaceImportSpecifier) {
+					// note: update of info registry done above by "if (copy instanceof TypeDefiningElement) {}"
 					importedModules.put(((ImportDeclaration) eObject.eContainer()).getModule(),
 							(NamespaceImportSpecifier) eObject);
-				else
+				} else {
 					throw new IllegalStateException("unsupported sub-class of ImportSpecifier: " + copy.eClass());
+				}
 			} else if (copy instanceof N4TypeDeclaration) {
-				info.setOriginalDefinedType_internal((N4TypeDeclaration) copy,
-						((N4TypeDeclaration) eObject).getDefinedType());
+				// note: update of info registry done above by "if (copy instanceof TypeDefiningElement) {}"
 			} else if (copy instanceof N4MemberDeclaration) {
 				info.setOriginalDefinedMember_internal((N4MemberDeclaration) copy,
 						((N4MemberDeclaration) eObject).getDefinedTypeElement());
@@ -253,13 +245,12 @@ public class PreparationStep {
 		}
 
 		@Override
-		protected EClass getTarget(EObject eObject) {
-			// special-handling for named import specifiers of versioned types
-			if (eObject instanceof NamedImportSpecifier &&
-					N4IDLTranspilerUtils.isVersionedImportSpecifier((NamedImportSpecifier) eObject)) {
-				return ImPackage.eINSTANCE.getVersionedNamedImportSpecifier_IM();
+		protected void copyContainment(EReference eReference, EObject eObject, EObject copyEObject) {
+			if (eReference == N4JSPackage.Literals.TYPE_REFERENCE_NODE__TYPE_REF_IN_AST) {
+				// should always be 'null' in the intermediate model
+			} else {
+				super.copyContainment(eReference, eObject, copyEObject);
 			}
-			return super.getTarget(eObject);
 		}
 
 		@Override
@@ -306,25 +297,29 @@ public class PreparationStep {
 					}
 				}
 			}
+			// ... and for imports that were not referenced yet (e.g. because they are used in type references only)
+			for (ScriptElement topLevelElem : script.getScriptElements()) {
+				if (topLevelElem instanceof ImportDeclaration) {
+					for (ImportSpecifier importSpec : ((ImportDeclaration) topLevelElem).getImportSpecifiers()) {
+						if (importSpec instanceof NamedImportSpecifier) {
+							TExportableElement importedElement = getActualImportedElement(
+									(NamedImportSpecifier) importSpec);
+							getSymbolTableEntry(importedElement, true);
+						} else if (importSpec instanceof NamespaceImportSpecifier) {
+							Type namespaceType = ((NamespaceImportSpecifier) importSpec).getDefinedType();
+							getSymbolTableEntry(namespaceType, true);
+						}
+					}
+				}
+			}
 		}
 
 		/**
 		 * Handler for when a {@link NamedImportSpecifier} is encountered in the copying process.
 		 */
 		private void handleCopyNamedImportSpecifier(NamedImportSpecifier namedImportSpecifier) {
-			TExportableElement importedElement = namedImportSpecifier.getImportedElement();
-
-			if (importedElement instanceof Type) {
-				// add all versions of the type to the importedElements map.
-				Iterable<? extends Type> versions = versionHelper.findTypeVersions((Type) importedElement);
-				versions.forEach(v -> {
-					importedElements.put(v, namedImportSpecifier);
-				});
-			} else {
-				// for non-type imports, there is no versions
-				importedElements.put(importedElement,
-						namedImportSpecifier);
-			}
+			TExportableElement importedElement = getActualImportedElement(namedImportSpecifier);
+			importedElements.put(importedElement, namedImportSpecifier);
 		}
 
 		/**
@@ -356,8 +351,6 @@ public class PreparationStep {
 					// name of a JSX element, e.g. the "div" in something like: <div prop='value'></div>
 					String tagName = ((IdentifierRef) eObject).getIdAsText();
 					((IdentifierRef_IM) copyEObject).setIdAsText(tagName);
-				} else if (MigrationUtils.isMigrateCall(eObject.eContainer())) {
-					// unresolved migrate-calls can still be transpiled
 				} else {
 					ICompositeNode node = NodeModelUtils.findActualNodeFor(eObject);
 					LineAndColumn pos = node != null ? NodeModelUtils.getLineAndColumn(node, node.getOffset()) : null;
@@ -369,9 +362,9 @@ public class PreparationStep {
 		private boolean isDynamicNamespaceReference(EObject eObject) {
 			if (eObject instanceof ParameterizedTypeRef) {
 				ParameterizedTypeRef ptr = (ParameterizedTypeRef) eObject;
-				ModuleNamespaceVirtualType astNamespace = ptr.getAstNamespace();
-				if (astNamespace != null) {
-					return astNamespace.isDeclaredDynamic();
+				Type astQualifier = ptr.getAstDeclaredTypeQualifier();
+				if (astQualifier instanceof ModuleNamespaceVirtualType) {
+					return ((ModuleNamespaceVirtualType) astQualifier).isDeclaredDynamic();
 				}
 			}
 			return false;
@@ -382,7 +375,7 @@ public class PreparationStep {
 			if (e != null)
 				return e;
 			if (create) {
-				String versionedName = N4IDLTranspilerUtils.getVersionedInternalName(elem);
+				String versionedName = elem.getName();
 				return createSymbolTableEntry(versionedName, elem);
 			}
 			return null;
@@ -405,16 +398,9 @@ public class PreparationStep {
 				entry.getElementsOfThisName().add((Variable) copy);
 			} else {
 				final EObject astElement = getASTElementIfInSameResource(elem);
-				if (astElement instanceof ImportSpecifier) {
-					// special case of exported imports
+				if (astElement instanceof NamedElement) {
 					final EObject copy = getCopyOf(astElement);
-					entry.setImportSpecifier((ImportSpecifier) copy);
-				} else {
-					// standard case:
-					if (astElement instanceof NamedElement) {
-						final EObject copy = getCopyOf(astElement);
-						entry.getElementsOfThisName().add((NamedElement) copy);
-					}
+					entry.getElementsOfThisName().add((NamedElement) copy);
 				}
 			}
 			final ImportSpecifier impSpec = getImportSpecifierForImportedElement(elem);
@@ -426,21 +412,6 @@ public class PreparationStep {
 					String alias = ((NamedImportSpecifier) impSpec).getAlias();
 					if (null != alias) {
 						entry.setName(alias); // exported name is visible via operation entry#exportedName())
-					}
-					if (N4IDLTranspilerUtils.refersToVersionedType(entry)) {
-						// In this block, we may now assume that 'entry' is actually of type {@link
-						// VersionedNamedImportSpecifier_IM} (cf. {@link #getTarget(EObject)}).
-
-						// Add referenced type version to the list of imported type versions of the import specifier
-						// copy. This is only executed once per type version, as the returned STE of this method is
-						// cached.
-						((VersionedNamedImportSpecifier_IM) copy).getImportedTypeVersions().add(entry);
-
-						if (null != alias) {
-							// Make sure to compute the versioned internal name based on the alias
-							entry.setName(N4IDLTranspilerUtils.getVersionedInternalAlias(entry.getName(),
-									(TVersionable) entry.getOriginalTarget()));
-						}
 					}
 				}
 			}
@@ -463,9 +434,16 @@ public class PreparationStep {
 			ImportSpecifier impSpec = importedElements.get(element);
 			if (impSpec == null) {
 				// case #2: namespace import
-				final TModule module = EcoreUtil2.getContainerOfType(element, TModule.class);
-				if (module != null) {
-					impSpec = importedModules.get(module);
+				if (element instanceof ModuleNamespaceVirtualType) {
+					final EObject astElement = getASTElementIfInSameResource(element);
+					if (astElement instanceof NamespaceImportSpecifier) {
+						impSpec = (NamespaceImportSpecifier) astElement;
+					}
+				} else {
+					final TModule module = EcoreUtil2.getContainerOfType(element, TModule.class);
+					if (module != null) {
+						impSpec = importedModules.get(module);
+					}
 				}
 			}
 			return impSpec;
@@ -517,5 +495,11 @@ public class PreparationStep {
 		if (nodeInOriginalAST instanceof ParameterizedTypeRef)
 			return ((ParameterizedTypeRef) nodeInOriginalAST).getDeclaredType();
 		throw new IllegalArgumentException("not an AST node that requires rewiring: " + nodeInOriginalAST);
+	}
+
+	private static TExportableElement getActualImportedElement(NamedImportSpecifier namedImportSpecifier) {
+		return namedImportSpecifier.isDeclaredDynamic()
+				? namedImportSpecifier.getDefinedDynamicElement()
+				: namedImportSpecifier.getImportedElement();
 	}
 }

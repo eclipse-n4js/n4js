@@ -76,10 +76,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	protected TypeRefsSwitch<Adapter> modelSwitch =
 		new TypeRefsSwitch<Adapter>() {
 			@Override
-			public Adapter caseVersionable(Versionable object) {
-				return createVersionableAdapter();
-			}
-			@Override
 			public Adapter caseTypeArgument(TypeArgument object) {
 				return createTypeArgumentAdapter();
 			}
@@ -172,20 +168,24 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 				return createTypeVariableMappingAdapter();
 			}
 			@Override
-			public Adapter caseVersionedReference(VersionedReference object) {
-				return createVersionedReferenceAdapter();
+			public Adapter caseLiteralTypeRef(LiteralTypeRef object) {
+				return createLiteralTypeRefAdapter();
 			}
 			@Override
-			public Adapter caseVersionedParameterizedTypeRef(VersionedParameterizedTypeRef object) {
-				return createVersionedParameterizedTypeRefAdapter();
+			public Adapter caseBooleanLiteralTypeRef(BooleanLiteralTypeRef object) {
+				return createBooleanLiteralTypeRefAdapter();
 			}
 			@Override
-			public Adapter caseVersionedFunctionTypeRef(VersionedFunctionTypeRef object) {
-				return createVersionedFunctionTypeRefAdapter();
+			public Adapter caseNumericLiteralTypeRef(NumericLiteralTypeRef object) {
+				return createNumericLiteralTypeRefAdapter();
 			}
 			@Override
-			public Adapter caseVersionedParameterizedTypeRefStructural(VersionedParameterizedTypeRefStructural object) {
-				return createVersionedParameterizedTypeRefStructuralAdapter();
+			public Adapter caseStringLiteralTypeRef(StringLiteralTypeRef object) {
+				return createStringLiteralTypeRefAdapter();
+			}
+			@Override
+			public Adapter caseEnumLiteralTypeRef(EnumLiteralTypeRef object) {
+				return createEnumLiteralTypeRefAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -206,20 +206,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 		return modelSwitch.doSwitch((EObject)target);
 	}
 
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.Versionable <em>Versionable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.Versionable
-	 * @generated
-	 */
-	public Adapter createVersionableAdapter() {
-		return null;
-	}
 
 	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.TypeArgument <em>Type Argument</em>}'.
@@ -544,58 +530,72 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedReference <em>Versioned Reference</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.LiteralTypeRef <em>Literal Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedReference
+	 * @see org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 	 * @generated
 	 */
-	public Adapter createVersionedReferenceAdapter() {
+	public Adapter createLiteralTypeRefAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef <em>Versioned Parameterized Type Ref</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef <em>Boolean Literal Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
+	 * @see org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 	 * @generated
 	 */
-	public Adapter createVersionedParameterizedTypeRefAdapter() {
+	public Adapter createBooleanLiteralTypeRefAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedFunctionTypeRef <em>Versioned Function Type Ref</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef <em>Numeric Literal Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedFunctionTypeRef
+	 * @see org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 	 * @generated
 	 */
-	public Adapter createVersionedFunctionTypeRefAdapter() {
+	public Adapter createNumericLiteralTypeRefAdapter() {
 		return null;
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural <em>Versioned Parameterized Type Ref Structural</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef <em>String Literal Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
+	 * @see org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
 	 * @generated
 	 */
-	public Adapter createVersionedParameterizedTypeRefStructuralAdapter() {
+	public Adapter createStringLiteralTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef <em>Enum Literal Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
+	 * @generated
+	 */
+	public Adapter createEnumLiteralTypeRefAdapter() {
 		return null;
 	}
 

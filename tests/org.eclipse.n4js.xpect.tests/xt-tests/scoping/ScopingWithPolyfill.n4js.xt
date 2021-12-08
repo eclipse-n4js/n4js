@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+
+	Workspace {
+		JavaProject "ScopingWithPolyfill" {
+			Folder "src1" {
+				ThisFile {}
+			}
+			Folder "src2" {
+				File "ScopingWithPolyfill.n4js" {}
+			}
+			File "package.json" { from="ScopingWithPolyfill.package.json" }
+		}
+	}
+
+   END_SETUP
+ */
+
+
+@@StaticPolyfillModule
+
+@StaticPolyfill
+export public class G<T> extends G<T> {
+    method(other_) {
+        if (!(other_ instanceof G)) {
+            return;
+        }
+        // XPECT noerrors -->
+        let other: G<T> = other_ as G<T>;
+        other;
+    }
+}
+

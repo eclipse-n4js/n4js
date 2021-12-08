@@ -19,7 +19,7 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.NamedElement
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClassifier
@@ -30,7 +30,7 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.Result
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
@@ -373,7 +373,7 @@ class ValidatorMessageHelper {
 			}
 
 			val ptr = tfunction.returnTypeRef as ParameterizedTypeRef;
-			val asyncReturnType = ptr.typeArgs.get(0);
+			val asyncReturnType = ptr.declaredTypeArgs.get(0);
 			if (asyncReturnType !== null) {
 				if (TypeUtils.isUndefined(asyncReturnType)) {
 					strb.append("void");

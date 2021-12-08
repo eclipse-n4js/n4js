@@ -14,7 +14,7 @@
  * Optionally the event loop can be kept active while the promise hasn't resolved.
  */
 export public function waitAndExitProcess(proc: Function, keepEventLoop = false): void {
-    let timerHandle: number;
+    let timerHandle: Timeout;
     if (keepEventLoop) {
         // dummy interval to avoid termination on open main/exec promise:
         timerHandle = setInterval(function() {}, 0x7fffffff /* max 32bit signed int */);

@@ -81,7 +81,7 @@ class AT_136_AccessPredefinedTypesTest {
 			s.toLowerCase().toLowerCase()
 		'''.parse
 		script.assertErrors(
-			"ERROR:string is not a subtype of String. (__synthetic0.n4js line : 1 column : 17)"
+			"ERROR:\"\" is not a subtype of String. (__synthetic0.n4js line : 1 column : 17)"
 		)
 	}
 
@@ -91,7 +91,7 @@ class AT_136_AccessPredefinedTypesTest {
 			var b: Boolean = true
 		'''.parse
 		script.assertErrors(
-			"ERROR:boolean is not a subtype of Boolean. (__synthetic0.n4js line : 1 column : 18)"
+			"ERROR:true is not a subtype of Boolean. (__synthetic0.n4js line : 1 column : 18)"
 		)
 	}
 
@@ -109,7 +109,7 @@ class AT_136_AccessPredefinedTypesTest {
 			var n: Number = 1
 		'''.parse
 		script.assertErrors(
-			"ERROR:int is not a subtype of Number. (__synthetic0.n4js line : 1 column : 17)"
+			"ERROR:1 is not a subtype of Number. (__synthetic0.n4js line : 1 column : 17)"
 		)
 	}
 

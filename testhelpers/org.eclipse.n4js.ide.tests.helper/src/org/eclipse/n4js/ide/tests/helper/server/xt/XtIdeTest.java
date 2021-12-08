@@ -10,9 +10,16 @@
  */
 package org.eclipse.n4js.ide.tests.helper.server.xt;
 
+import static org.eclipse.n4js.N4JSGlobals.IMPORT_N4JSGLOBALS;
+import static org.eclipse.n4js.N4JSGlobals.OUTPUT_FILE_PREAMBLE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,6 +35,11 @@ import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.cli.helper.CliTools;
+import org.eclipse.n4js.cli.helper.CliTools.CliException;
+import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
+import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
@@ -35,6 +47,7 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodPattern.Match;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -43,6 +56,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.XtextResource;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -52,6 +66,11 @@ import com.google.inject.Inject;
  * Class that provides / delegates of xt methods
  */
 public class XtIdeTest extends AbstractIdeTest {
+
+	static final File TSC_PROVIDER = new File("test-tscProvider");
+
+	static final File TSC2 = new File(TSC_PROVIDER, N4JSGlobals.NODE_MODULES + "/.bin/tsc");
+	static final File TSC = new File(TSC_PROVIDER, N4JSGlobals.NODE_MODULES + "/typescript/lib/tsc");
 
 	static final XtMethodPattern PATTERN_PREDS = XtMethodPattern.builder().keyword("preds")
 			.textOpt("type", (Object[]) ControlFlowType.values())
@@ -91,6 +110,12 @@ public class XtIdeTest extends AbstractIdeTest {
 	XtextResource resource;
 	XtResourceEObjectAccessor eobjProvider;
 	Set<String> suppressedIssues;
+
+	@Override
+	public File getProjectRoot() {
+		String projectName = xtData.workspace.getProjects().get(0).getName();
+		return testWorkspaceManager.getProjectRoot(projectName);
+	}
 
 	/**
 	 * Call this before calling any other methods of {@link XtIdeTest}.
@@ -160,7 +185,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	/**
 	 * Delegates xt methods found in xt files to their implementations
 	 */
-	public void invokeTestMethod(XtMethodData testMethodData) throws InterruptedException, ExecutionException {
+	public void invokeTestMethod(XtMethodData testMethodData) throws Exception {
 		switch (testMethodData.name) {
 		// 1st pass test methods
 		case "nowarnings": {
@@ -209,6 +234,9 @@ public class XtIdeTest extends AbstractIdeTest {
 			break;
 		case "output":
 			output(testMethodData);
+			break;
+		case "generated_dts":
+			generated_dts(testMethodData);
 			break;
 		case "scope":
 			scope(testMethodData);
@@ -260,7 +288,6 @@ public class XtIdeTest extends AbstractIdeTest {
 			succs(testMethodData);
 			break;
 		// unsupported test methods
-		case "migration":
 		case "typeSwitch":
 		case "typeSwitchTypeRef":
 		case "version":
@@ -507,6 +534,78 @@ public class XtIdeTest extends AbstractIdeTest {
 	}
 
 	/**
+	 * Compares the content of the generated .d.ts file with the expectation string.
+	 *
+	 * <pre>
+	 * // XPECT generated_dts ---
+	 * &lt;EXPECTED CONTENT OF GENERATED D.TS FILE&gt;
+	 * // ---
+	 * </pre>
+	 */
+	@Xpect
+	public void generated_dts(XtMethodData data) throws IOException {
+		String moduleName = xtData.workspace.moduleNameOfXtFile;
+		int idxStart = Math.max(moduleName.lastIndexOf("/") + 1, 0);
+		int idxEnd = moduleName.lastIndexOf(".");
+		String genDtsFileName = moduleName.substring(idxStart, idxEnd) + ".d.ts";
+
+		try {
+			FileURI genDtsFileURI = getFileURIFromModuleName(genDtsFileName);
+			String genDtsCode = Files.readString(genDtsFileURI.toPath());
+			assertTrue(genDtsCode.startsWith(OUTPUT_FILE_PREAMBLE));
+			String genDtsCodeTrimmedPreamble = genDtsCode.substring(OUTPUT_FILE_PREAMBLE.length()).trim();
+			assertTrue(genDtsCodeTrimmedPreamble.startsWith(IMPORT_N4JSGLOBALS));
+			String genDtsCodeTrimmed = genDtsCodeTrimmedPreamble.substring(IMPORT_N4JSGLOBALS.length()).trim();
+
+			assertEquals(data.getUnescapeExpectationRaw(), genDtsCodeTrimmed);
+
+			CliTools cliTools = new CliTools();
+			ensureTSC(cliTools);
+
+			List<Project> allProjectsWithGenerateDts = FluentIterable.from(xtData.workspace.getAllProjects())
+					.filter(Project::isGenerateDts)
+					.toList();
+			assertFalse("no projects found with .d.ts generation turned on", allProjectsWithGenerateDts.isEmpty());
+
+			for (Project project : allProjectsWithGenerateDts) {
+				File workingDir = getProjectRoot(project.getName());
+
+				// copy n4jsglobals.d.ts to output dir to make d.ts globals available
+				Path n4jsGlobalsDTS = N4jsLibsAccess.getN4JSGlobalsDTS();
+				Files.copy(n4jsGlobalsDTS, workingDir.toPath().resolve("src-gen/n4jsglobals.d.ts"));
+
+				ProcessResult result;
+				try {
+					result = cliTools.nodejsRun(workingDir.toPath(), TSC2.getAbsoluteFile().toPath());
+				} catch (CliException e) {
+					throw new AssertionError("error while running tsc in working directory: " + workingDir, e);
+				}
+				assertFalse("TypeScript Error: " + result.getStdOut(), result.getStdOut().contains(": error "));
+			}
+
+		} catch (IllegalStateException e) {
+			throw new RuntimeException("Could not find file " + genDtsFileName + "\nDid you set: "
+					+ XtSetupParser.GENERATE_DTS + " in SETUP section?", e);
+		}
+	}
+
+	private void ensureTSC(CliTools cliTools) {
+		if (TSC_PROVIDER.isDirectory() && TSC2.isFile()) {
+			return;
+		}
+
+		if (TSC_PROVIDER.exists()) {
+			TSC_PROVIDER.delete();
+		}
+		TSC_PROVIDER.mkdirs();
+
+		// npm install --prefix . typescript@4.3.2
+		ProcessResult result = cliTools.npmRun(TSC_PROVIDER.toPath(), "install", "--prefix", ".", "typescript@4.3.2");
+
+		assertEquals(0, result.getExitCode());
+	}
+
+	/**
 	 * Checks the scope at a given location. Usage:
 	 *
 	 * <pre>
@@ -520,7 +619,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void scope(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scope", "at");
-		List<String> scopeStr = xtMethods.getScopeString(ocr);
+		Set<String> scopeStr = xtMethods.getScopeString(ocr);
 		assertEqualIterables(data.expectation, scopeStr);
 	}
 
@@ -538,7 +637,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void scopeWithPosition(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scopeWithPosition", "at");
-		List<String> scopeStr = xtMethods.getScopeWithPositionString(ocr);
+		Set<String> scopeStr = xtMethods.getScopeWithPositionString(ocr);
 		assertEqualIterables(data.expectation, scopeStr);
 	}
 
@@ -556,7 +655,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void scopeWithResource(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "scopeWithResource", "at");
-		List<String> scopeStr = xtMethods.getScopeWithResourceString(ocr);
+		Set<String> scopeStr = xtMethods.getScopeWithResourceString(ocr);
 		assertEqualIterables(data.expectation, scopeStr);
 	}
 

@@ -12,8 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP  */
 
 var ol = {
-// XPECT errors --> "string is not a subtype of int." at "'foo'"
+// XPECT errors --> ""foo" is not a subtype of int." at "'foo'"
 	int foo: 'foo',
-// XPECT errors --> "int is not a subtype of string." at "3"
+// XPECT errors --> "3 is not a subtype of string." at "3"
 	string bar : 3
 }

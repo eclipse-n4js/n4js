@@ -19,6 +19,16 @@ import org.eclipse.n4js.utils.TameAutoClosable;
 public interface Measurement extends TameAutoClosable {
 
 	/**
+	 * A measurement not actually measuring anything.
+	 */
+	public static final Measurement NULL = new Measurement() {
+		@Override
+		public void close() {
+			// nothing to close
+		}
+	};
+
+	/**
 	 * Ends given measurement. Concrete implementations can do some data processing in this step. Collected data is
 	 * passed to the {@link DataCollector} that created this instance. It is expected that caller invokes
 	 * {@link #close()} only once, but concrete implementations need to assure that this method is safe to call multiple

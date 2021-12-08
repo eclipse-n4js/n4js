@@ -38,6 +38,16 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 
 	private static final Logger logger = Logger.getLogger(N4JSDocumentationProvider.class);
 
+	/** Same as {@link #findComment(EObject)} but with parameter {@code enableSpecialASIFix} */
+	public String findComment(EObject o, boolean enableSpecialASIFix) {
+		String returnValue = null;
+		List<INode> documentationNodes = getDocumentationNodes(o, enableSpecialASIFix);
+		if (!documentationNodes.isEmpty()) {
+			return documentationNodes.get(0).getText();
+		}
+		return returnValue;
+	}
+
 	/**
 	 * Returns documentation nodes for N4JS AST and type elements (in which case the method returns the nodes of the
 	 * corresponding AST element). If the AST element has no documentation nodes itself, but is an exportable element,
@@ -45,6 +55,14 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 	 */
 	@Override
 	public List<INode> getDocumentationNodes(EObject object) {
+		return getDocumentationNodes(object, true);
+	}
+
+	/**
+	 * Same as {@link #getDocumentationNodes(EObject)} but with parameter {@code enableSpecialASIFix} to disable special
+	 * fix for ASI
+	 */
+	public List<INode> getDocumentationNodes(EObject object, boolean enableSpecialASIFix) {
 		EObject astNode = N4JSASTUtils.getCorrespondingASTNode(object);
 		// TODO GH-1958 approach for documentation look-up in case of hash mismatch:
 		// if (astNode != null && astNode.eIsProxy()) {
@@ -77,12 +95,14 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 					nodes = super.getDocumentationNodes(astNode.eContainer());
 				}
 			}
-			if (nodes.isEmpty()) {
+			if (enableSpecialASIFix && nodes.isEmpty()) {
 				// failure case, was ASI grabbing the doc?
 				// backward search for first non-hidden element, over-stepping if it is a LeafNodeWithSyntaxError from
 				// ASI.
 				ICompositeNode ptNodeOfASTNode = NodeModelUtils.getNode(astNode);
+
 				LeafNode lNode = ptNodeOfASTNode != null ? searchLeafNodeDocumentation(ptNodeOfASTNode) : null;
+
 				if (lNode != null) {
 					return Collections.<INode> singletonList(lNode);
 				}
@@ -93,6 +113,8 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 	}
 
 	/**
+	 * <b>Attention</b>: This fix impacts performance for very long statements / files
+	 * <p>
 	 * This is a fix for shadowed jsdoc-style documentation. Example:
 	 *
 	 * <pre>
@@ -120,8 +142,11 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 	 *         {@code null} if no jsdoc-style documentation could be found.
 	 */
 	private LeafNode searchLeafNodeDocumentation(ICompositeNode ptNodeOfASTNode) {
-
-		BidiTreeIterator<INode> rootIterator = ptNodeOfASTNode.getRootNode().getAsTreeIterable().iterator();
+		ICompositeNode parent = ptNodeOfASTNode;
+		for (int i = 0; i < 3 && parent.getParent() != null; i++) {
+			parent = parent.getParent();
+		}
+		BidiTreeIterator<INode> rootIterator = parent.getAsTreeIterable().iterator();
 
 		// First linearly search the current node, then go back until a documentation or a non-hidden node is
 		// encountered.

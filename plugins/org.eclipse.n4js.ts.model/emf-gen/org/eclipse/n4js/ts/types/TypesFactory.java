@@ -30,15 +30,6 @@ public interface TypesFactory extends EFactory {
 	TypesFactory eINSTANCE = org.eclipse.n4js.ts.types.impl.TypesFactoryImpl.init();
 
 	/**
-	 * Returns a new object of class '<em>Type Defs</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Type Defs</em>'.
-	 * @generated
-	 */
-	TypeDefs createTypeDefs();
-
-	/**
 	 * Returns a new object of class '<em>TModule</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -165,15 +156,6 @@ public interface TypesFactory extends EFactory {
 	Type createType();
 
 	/**
-	 * Returns a new object of class '<em>Virtual Base Type</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Virtual Base Type</em>'.
-	 * @generated
-	 */
-	VirtualBaseType createVirtualBaseType();
-
-	/**
 	 * Returns a new object of class '<em>Module Namespace Virtual Type</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -244,24 +226,6 @@ public interface TypesFactory extends EFactory {
 	 * @generated
 	 */
 	TStructuralType createTStructuralType();
-
-	/**
-	 * Returns a new object of class '<em>TMigration</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>TMigration</em>'.
-	 * @generated
-	 */
-	TMigration createTMigration();
-
-	/**
-	 * Returns a new object of class '<em>TObject Prototype</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>TObject Prototype</em>'.
-	 * @generated
-	 */
-	TObjectPrototype createTObjectPrototype();
 
 	/**
 	 * Returns a new object of class '<em>TN4 Classifier</em>'.

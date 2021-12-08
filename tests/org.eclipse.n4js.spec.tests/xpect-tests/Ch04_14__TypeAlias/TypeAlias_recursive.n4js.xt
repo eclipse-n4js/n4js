@@ -42,9 +42,9 @@ n = { value: "root node", left: n, right: null };
 // XPECT noerrors -->
 n.right = { value: "right node", left: null, right: null };
 
-// XPECT typeWithAliasResolution of 'left' --> Node<T> <=> ~Object with { value: T; left: Node<T>; right: Node<T> } [[T->string]]
+// XPECT typeWithAliasResolution of 'left' --> Node<string> <=> ~Object with { value: T; left: Node<T>; right: Node<T> } [[T->string]]
 let left = n.left;
-// XPECT typeWithAliasResolution of 'right' --> Node<T> <=> ~Object with { value: T; left: Node<T>; right: Node<T> } [[T->string]]
+// XPECT typeWithAliasResolution of 'right' --> Node<string> <=> ~Object with { value: T; left: Node<T>; right: Node<T> } [[T->string]]
 let right = n.left.right.left.right;
 
 
@@ -78,7 +78,7 @@ no = { value: "root node", left: no };
 // XPECT noerrors -->
 no.right = { value: "right node" };
 
-// XPECT typeWithAliasResolution of 'leftWithOpt' --> NodeWithOpt<T> <=> ~Object with { value: T; left?: NodeWithOpt<T>; right?: NodeWithOpt<T> } [[T->string]]
+// XPECT typeWithAliasResolution of 'leftWithOpt' --> NodeWithOpt<string> <=> ~Object with { value: T; left?: NodeWithOpt<T>; right?: NodeWithOpt<T> } [[T->string]]
 let leftWithOpt = no.left;
-// XPECT typeWithAliasResolution of 'rightWithOpt' --> NodeWithOpt<T> <=> ~Object with { value: T; left?: NodeWithOpt<T>; right?: NodeWithOpt<T> } [[T->string]]
+// XPECT typeWithAliasResolution of 'rightWithOpt' --> NodeWithOpt<string> <=> ~Object with { value: T; left?: NodeWithOpt<T>; right?: NodeWithOpt<T> } [[T->string]]
 let rightWithOpt = no.left.right.left.right;

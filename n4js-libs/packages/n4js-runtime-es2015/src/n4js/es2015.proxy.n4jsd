@@ -1,0 +1,27 @@
+// generated from https://github.com/microsoft/TypeScript/blob/5d0d7ae85d1ff52d3ef4cb6cac653f33f7e76724/src/lib/es2015.proxy.d.ts
+// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+
+@@Global @@ProvidedByRuntime
+
+export external public interface ~ProxyConstructor {
+	<T extends Object> revocable(target: T, handler: ProxyHandler<T>): ~Object with { proxy: T; revoke: ()=>void; };
+	<T extends Object> new(target: T, handler: ProxyHandler<T>): T;
+}
+
+export public var Proxy: ProxyConstructor;
+
+export external public interface ~ProxyHandler<T> {
+	apply?: (target: T, thisArg: Object, argArray: Array<any>) => any;
+	construct?: (target: T, argArray: Array<any>, newTarget: Function) => Object;
+	defineProperty?: (target: T, p: string | symbol, attributes: PropertyDescriptor) => boolean;
+	deleteProperty?: (target: T, p: string | symbol) => boolean;
+	get?: (target: T, p: string | symbol, receiver: Object) => any;
+	getOwnPropertyDescriptor?: (target: T, p: string | symbol) => PropertyDescriptor;
+	getPrototypeOf?: (target: T) => Object;
+	has?: (target: T, p: string | symbol) => boolean;
+	isExtensible?: (target: T) => boolean;
+	ownKeys?: (target: T) => ArrayLike<string | symbol>;
+	preventExtensions?: (target: T) => boolean;
+	set?: (target: T, p: string | symbol, value: any, receiver: Object) => boolean;
+	setPrototypeOf?: (target: T, v: Object) => boolean;
+}

@@ -46,67 +46,6 @@ Contributors:
 				<artifactId>maven-clean-plugin</artifactId>
 			</plugin>
 
-			<!--
-				=============================================================================================================
-				STARTING A VERDACCIO INSTANCE FOR TESTING PURPOSES
-
-				Only required for hlc integration tests. Activation of the following plugin executions is
-				controlled via '-Pexecute-hlc-integration-tests' and '-DstartAndKeepVerdaccio' (see	above).
-			-->
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>${maven-antrun-plugin.version}</version>
-				<executions>
-					<!-- Stop verdaccio if exists to free port -->
-					<execution>
-						<id>stop-verdaccio-before-start</id>
-						<phase>${internal_startVerdaccioPhase}</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<exec executable="docker" spawn="false">
-									<arg value="rm"/>
-									<arg value="-f"/>
-									<arg value="n4js-test-verdaccio"/>
-								</exec>
-							</target>
-						</configuration>
-					</execution>
-					
-					<!-- Start verdaccio -->
-					<execution>
-						<id>start-verdaccio</id>
-						<phase>${internal_startVerdaccioPhase}</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<exec executable="docker" spawn="false">
-									<arg value="run"/>
-									<arg value="-d"/>
-									<arg value="-it"/>
-									<arg value="--rm"/>
-									<arg value="--name"/>
-									<arg value="n4js-test-verdaccio"/>
-									<arg value="-p"/>
-									<arg value="4873:4873"/>
-									<arg value="-v"/>
-									<arg value="${project.basedir}/verdaccioConfig/config.yaml:/verdaccio/conf/config.yaml"/>
-									<!-- verdaccio/verdaccio:3.12 -->
-									<arg value="verdaccio/verdaccio@sha256:e64056b6aa104197dbac07e77a1fbcf8f5c67d9b443e0ed2a191d41a1da7a944"/>
-								</exec>
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<!--
-				=============================================================================================================
-			-->
-
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -133,23 +72,6 @@ Contributors:
 								 do not try to kill the daemons of MWE, default timed out after 15s and gave Exceptions to build
 								 -->
 							<cleanupDaemonThreads>false</cleanupDaemonThreads>
-						</configuration>
-					</execution>
-					<!-- Populate verdaccio: publish n4js-libs into verdaccio after starting it and before integration tests. -->
-					<execution>
-						<id>publish-n4js-libs</id>
-						<phase>${internal_startVerdaccioPhase}</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>bash</executable>
-							<arguments>
-								<argument>${project.basedir}/../../releng/utils/scripts/publish-n4js-libs.sh</argument>
-								<argument>local</argument>
-								<argument>0.0.1</argument>
-								<!-- use default dist-tag "latest" to make sure tests will install this version by default -->
-							</arguments>
 						</configuration>
 					</execution>
 				</executions>

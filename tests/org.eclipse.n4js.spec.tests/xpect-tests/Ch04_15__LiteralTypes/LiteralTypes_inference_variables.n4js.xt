@@ -1,0 +1,72 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// XPECT type of 'v01' --> boolean
+var v01 = true;
+// XPECT type of 'v02' --> int
+var v02 = 42;
+// XPECT type of 'v03' --> number
+var v03 = 42.1;
+// XPECT type of 'v04' --> string
+var v04 = "hello";
+
+
+// XPECT type of 'v11' --> boolean
+let v11 = true;
+// XPECT type of 'v12' --> int
+let v12 = 42;
+// XPECT type of 'v13' --> number
+let v13 = 42.1;
+// XPECT type of 'v14' --> string
+let v14 = "hello";
+
+
+// XPECT type of 'v21' --> true
+const v21 = true;
+// XPECT type of 'v22' --> 42
+const v22 = 42;
+// XPECT type of 'v23' --> 42.1
+const v23 = 42.1;
+// XPECT type of 'v24' --> "hello"
+const v24 = "hello";
+
+
+class Cls {
+	// XPECT type of 'v31' --> boolean
+	v31 = true;
+	// XPECT type of 'v32' --> int
+	v32 = 42;
+	// XPECT type of 'v33' --> number
+	v33 = 42.1;
+	// XPECT type of 'v34' --> string
+	v34 = "hello";
+
+	// XPECT type of 'v41' --> true
+	const v41 = true;
+	// XPECT type of 'v42' --> 42
+	const v42 = 42;
+	// XPECT type of 'v43' --> 42.1
+	const v43 = 42.1;
+	// XPECT type of 'v44' --> "hello"
+	const v44 = "hello";
+
+	// XPECT type of 'v51' --> boolean
+	@Final v51 = true;
+	// XPECT type of 'v52' --> int
+	@Final v52 = 42;
+	// XPECT type of 'v53' --> number
+	@Final v53 = 42.1;
+	// XPECT type of 'v54' --> string
+	@Final v54 = "hello";
+}

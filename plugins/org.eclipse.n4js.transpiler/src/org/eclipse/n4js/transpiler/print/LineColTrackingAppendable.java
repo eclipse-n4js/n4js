@@ -20,12 +20,17 @@ import org.eclipse.n4js.transpiler.sourcemap.FilePosition;
  * <b>NOTE: this class only supports pure <code>'\n'</code> line endings; it ignores <code>'\r'</code> (i.e. treats it
  * as an ordinary, printable character).</b>
  */
-/* package */ class LineColTrackingAppendable implements Appendable {
+public class LineColTrackingAppendable implements Appendable {
 
 	private final Appendable out;
 	private final CharSequence indent;
 
 	private int currentIndentLevel = 0;
+	/**
+	 * Iff greater 0, every new line started with {@link #newLine()} will be commented out using single-line comments.
+	 */
+	private int commentedOut = 0;
+	private int commentedIndentLevel = 0;
 
 	private int currentLine = 0;
 	private int currentCol = 0;
@@ -84,10 +89,17 @@ import org.eclipse.n4js.transpiler.sourcemap.FilePosition;
 	public void newLine() throws IOException {
 		out.append('\n');
 		for (int n = 0; n < currentIndentLevel; n++) {
+			if (commentedOut > 0 && n == commentedIndentLevel) {
+				out.append("// ");
+			}
 			out.append(indent);
 		}
+		if (commentedOut > 0 && currentIndentLevel <= commentedIndentLevel) {
+			out.append("// ");
+		}
+
 		currentLine++;
-		currentCol = currentIndentLevel * indent.length();
+		currentCol = currentIndentLevel * indent.length() + (commentedOut > 0 ? 3 : 0);
 	}
 
 	/**
@@ -119,6 +131,29 @@ import org.eclipse.n4js.transpiler.sourcemap.FilePosition;
 		if (currentIndentLevel <= 0)
 			throw new IllegalStateException();
 		currentIndentLevel--;
+	}
+
+	/**
+	 * Start commenting out (with single-line comments) all upcoming lines started with {@link #newLine()}.
+	 */
+	public void startCommentingOut() {
+		if (commentedOut == 0) {
+			commentedIndentLevel = currentIndentLevel;
+		}
+		commentedOut++;
+	}
+
+	/**
+	 * End commenting out upcoming lines.
+	 */
+	public void endCommentingOut() {
+		if (commentedOut <= 0) {
+			return;
+		}
+		commentedOut--;
+		if (commentedOut == 0) {
+			commentedIndentLevel = 0;
+		}
 	}
 
 	/**

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.im;
 
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**
@@ -20,7 +21,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  *
  * <!-- begin-model-doc -->
  * SymbolTable-aware replacement for {@link ParameterizedPropertyAccessExpression}.
- * Original property {@link ParameterizedPropertyAccessExpression.property} is always {@code null}.
+ * Original property {@link ParameterizedPropertyAccessExpression#getProperty()} is always {@code null}.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -39,10 +40,6 @@ public interface ParameterizedPropertyAccessExpression_IM extends ParameterizedP
 	/**
 	 * Returns the value of the '<em><b>Any Plus Access</b></em>' attribute.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Any Plus Access</em>' attribute isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Any Plus Access</em>' attribute.
 	 * @see #setAnyPlusAccess(boolean)

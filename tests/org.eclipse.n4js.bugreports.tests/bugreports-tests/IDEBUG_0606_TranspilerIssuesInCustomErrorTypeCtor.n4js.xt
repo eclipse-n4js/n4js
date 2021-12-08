@@ -78,5 +78,5 @@ console.log()
 console.log('C: ' + new C(42, 'message for ctor C').message)
 console.log()
 
-console.log('D: ' + new D({n: 42, message: 'message for ctor D'}).message)
+console.log('D: ' + new D({n: 42, name: 'ErrorD', message: 'message for ctor D', stack: undefined}).message)
 console.log()

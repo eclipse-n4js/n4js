@@ -18,15 +18,16 @@ import java.util.Arrays
 import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
+import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ParameterizedAccess
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.YieldExpression
-import org.eclipse.n4js.n4idl.versioning.N4IDLVersionResolver
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -42,17 +43,18 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.util.Variance
-import org.eclipse.n4js.ts.utils.TypeExtensions
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeExtensions
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.typesystem.utils.StructuralTypingComputer.StructTypingInfo
+import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
@@ -78,8 +80,6 @@ class TypeSystemHelper {
 
 	@Inject private N4JSTypeSystem ts;
 
-	@Inject private N4IDLVersionResolver versionResolver;
-
 	// *****************************************************************************************************
 	//   forwarding of utility methods implemented in strategy classes
 	// *****************************************************************************************************
@@ -97,6 +97,8 @@ class TypeSystemHelper {
 	@Inject private IterableComputer iterableComputer;
 	@Inject private TypeAliasComputer typeAliasComputer;
 
+	@Inject private ContainerTypesHelper containerTypesHelper;
+
 
 @Inject private StructuralTypesHelper structuralTypesHelper;
 def StructuralTypesHelper getStructuralTypesHelper() {
@@ -107,8 +109,11 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
 		genericsComputer.addSubstitutions(G,typeRef)
 	}
-	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, TypeRef targetTypeRef) {
+	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, FunctionTypeExprOrRef targetTypeRef) {
 		genericsComputer.addSubstitutions(G,callExpr,targetTypeRef)
+	}
+	def void addSubstitutions(RuleEnvironment G, NewExpression newExpr, TMethod constructSignature) {
+		genericsComputer.addSubstitutions(G, newExpr, constructSignature);
 	}
 	def void addSubstitutions(RuleEnvironment G, ParameterizedPropertyAccessExpression accessExpr) {
 		genericsComputer.addSubstitutions(G,accessExpr)
@@ -254,12 +259,17 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return true;
 	}
 
-	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw) {
+	public def TypeRef sanitizeTypeOfVariableFieldPropertyParameter(RuleEnvironment G, TypeArgument typeRaw, boolean resolveLiteralTypes) {
 		if (typeRaw===null || typeRaw instanceof UnknownTypeRef) {
 			return G.anyTypeRef;
 		}
 		// take upper bound to get rid of wildcards, etc. (if any)
-		val typeUB = ts.upperBoundWithReopen(G, typeRaw);
+		val typeUB = if (resolveLiteralTypes) {
+			// ... and also replace literal types by their base type
+			ts.upperBoundWithReopenAndResolveLiteralTypes(G, typeRaw)
+		} else {
+			ts.upperBoundWithReopen(G, typeRaw)
+		};
 		// replace silly types
 		val declType = typeUB.declaredType
 		if (declType===G.undefinedType || declType===G.nullType || declType===G.voidType) {
@@ -349,10 +359,14 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		if(isClassConstructorFunction(G, typeRef)) {
 			// don't allow direct invocation of class constructors
 			if(getCallableClassConstructorFunction(G, typeRef)!==null)
-				return true; // exception: this is a class that provides a callable constructor function
+				return true; // exception: this is a class that provides a call signature
 			return false;
 		}
-		if(typeRef.declaredType instanceof TFunction)
+		if(getCallSignature(G, typeRef) !== null) {
+			return true;
+		}
+		val declType = typeRef.declaredType;
+		if(declType instanceof TFunction)
 			return true;
 		if(typeRef instanceof FunctionTypeExprOrRef)
 			return true;
@@ -382,7 +396,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		}
 		if(typeRef instanceof TypeTypeRef) {
 			val cls = getStaticType(G, typeRef);
-			if(cls instanceof TClass || cls instanceof TObjectPrototype)
+			if(cls instanceof TClass)
 				return true;
 		}
 		return false;
@@ -403,11 +417,77 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		}
 		if(typeRef instanceof TypeTypeRef) {
 			val cls = getStaticType(G, typeRef);
-			if(cls instanceof TClass || cls instanceof TObjectPrototype)
+			if(cls instanceof TClass)
 				type = cls;
 		}
-		if(type instanceof ContainerType<?>) {
-			return type.callableCtor;
+		if(type instanceof TClass) {
+			// note: "callable constructors" (i.e. call signatures in classes) are not inherited
+			// and cannot appear in StructuralTypeRefs, so no need for ContainerTypesHelper or
+			// checking for TStructuralType here:
+			return type.callSignature;
+		}
+		return null;
+	}
+
+	def public TMethod getConstructorOrConstructSignature(RuleEnvironment G, NewExpression newExpr, boolean ignoreConstructSignatures) {
+		val calleeTypeRef = ts.type(G, newExpr.callee);
+		return getConstructorOrConstructSignature(G, calleeTypeRef, ignoreConstructSignatures);
+	}
+
+	def public TMethod getConstructorOrConstructSignature(RuleEnvironment G, TypeRef calleeTypeRef, boolean ignoreConstructSignatures) {
+		if (calleeTypeRef instanceof TypeTypeRef) {
+			val staticType = getStaticType(G, calleeTypeRef, true);
+			if (staticType instanceof ContainerType<?>) {
+				val ctor = containerTypesHelper.fromContext(G.contextResource).findConstructor(staticType);
+				if (ctor !== null) {
+					return ctor;
+				}
+			}
+		}
+		if (!ignoreConstructSignatures) {
+			return getConstructSignature(G, calleeTypeRef);
+		}
+		return null;
+	}
+
+	def public TMethod getCallSignature(RuleEnvironment G, TypeRef calleeTypeRef) {
+		return getCallSignature(G.contextResource, calleeTypeRef);
+	}
+
+	def public TMethod getCallSignature(Resource context, TypeRef calleeTypeRef) {
+		return getCallConstructSignature(context, calleeTypeRef, false);
+	}
+
+	def public TMethod getConstructSignature(RuleEnvironment G, TypeRef calleeTypeRef) {
+		return getConstructSignature(G.contextResource, calleeTypeRef);
+	}
+
+	def public TMethod getConstructSignature(Resource context, TypeRef calleeTypeRef) {
+		return getCallConstructSignature(context, calleeTypeRef, true);
+	}
+
+	/**
+	 * NOTE: does not cover "callable constructors" (i.e. call signatures in classes); use method
+	 * {@link #getCallableClassConstructorFunction(RuleEnvironment,TypeRef)} for this purpose.
+	 */
+	def private TMethod getCallConstructSignature(Resource context, TypeRef calleeTypeRef, boolean searchConstructSig) {
+		val declType = calleeTypeRef.declaredType;
+		if (declType instanceof TInterface) {
+			return if (searchConstructSig) {
+				containerTypesHelper.fromContext(context).findConstructSignature(declType);
+			} else {
+				containerTypesHelper.fromContext(context).findCallSignature(declType);
+			};
+		}
+		if (calleeTypeRef instanceof StructuralTypeRef) {
+			val structType = calleeTypeRef.structuralType;
+			if (structType !== null) {
+				return if (searchConstructSig) {
+					structType.constructSignature
+				} else {
+					structType.callSignature
+				};
+			}
 		}
 		return null;
 	}
@@ -437,7 +517,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	def public TypeRef getStaticTypeRef(RuleEnvironment G, TypeTypeRef typeTypeRef, boolean resolveTypeVariables) {
 		val typeArg = typeTypeRef.typeArg;
 		val typeArgUB = if (resolveTypeVariables) {
-			ts.upperBoundWithReopenAndResolve(G, typeArg)
+			ts.upperBoundWithReopenAndResolveTypeVars(G, typeArg)
 		} else {
 			ts.upperBoundWithReopen(G, typeArg)
 		};
@@ -456,8 +536,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		 val typeRef = getStaticTypeRef(G, ctr);
 		 val type = typeRef?.declaredType;
 		 if (type !== null) {
-		 	 var resultTypeRef = TypeExtensions.ref(type,typeArgs);
-		 	 return versionResolver.resolveVersion(resultTypeRef, typeRef);
+		 	 return TypeExtensions.ref(type, typeArgs);
 		 }
 		 return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 	 }
@@ -526,10 +605,12 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	 */
 	def TypeRef getGeneratorTYield(RuleEnvironment G, TypeRef generatorTypeRef) {
 		var TypeRef yieldTypeRef = null;
-		if (generatorTypeRef.typeArgs.length === 3) {
-			val yieldTypeArg = generatorTypeRef.typeArgs.get(0);
+		if (generatorTypeRef.declaredTypeArgs.size >= 1) {
+			val yieldTypeArg = generatorTypeRef.declaredTypeArgs.get(0);
 			if (yieldTypeArg !== null)
 				yieldTypeRef = ts.upperBound(G, yieldTypeArg); // take upper bound to get rid of Wildcard, etc.
+		} else {
+			yieldTypeRef = G.generatorType.typeVars.get(0).defaultArgument;
 		}
 		return yieldTypeRef;
 	}
@@ -539,10 +620,12 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	 */
 	def TypeRef getGeneratorTReturn(RuleEnvironment G, TypeRef generatorTypeRef) {
 		var TypeRef returnTypeRef = null;
-		if (generatorTypeRef.typeArgs.length === 3) {
-			val returnTypeArg = generatorTypeRef.typeArgs.get(1);
+		if (generatorTypeRef.declaredTypeArgs.size >= 2) {
+			val returnTypeArg = generatorTypeRef.declaredTypeArgs.get(1);
 			if (returnTypeArg !== null)
 				returnTypeRef = ts.upperBound(G, returnTypeArg); // take upper bound to get rid of Wildcard, etc.
+		} else {
+			returnTypeRef = G.generatorType.typeVars.get(1).defaultArgument;
 		}
 		return returnTypeRef;
 	}
@@ -552,10 +635,12 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	 */
 	def TypeRef getGeneratorTNext(RuleEnvironment G, TypeRef generatorTypeRef) {
 		var TypeRef nextTypeRef = null;
-		if (generatorTypeRef.typeArgs.length === 3) {
-			val nextTypeArg = generatorTypeRef.typeArgs.get(2);
+		if (generatorTypeRef.declaredTypeArgs.size >= 3) {
+			val nextTypeArg = generatorTypeRef.declaredTypeArgs.get(2);
 			if (nextTypeArg !== null)
 				nextTypeRef = ts.upperBound(G, nextTypeArg); // take upper bound to get rid of Wildcard, etc.
+		} else {
+			nextTypeRef = G.generatorType.typeVars.get(2).defaultArgument;
 		}
 		return nextTypeRef;
 	}

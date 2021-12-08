@@ -34,8 +34,11 @@ public enum N4jscExitCode {
 	/** Feature is not implemented */
 	NOT_IMPLEMENTED(2, "Feature is not implemented"),
 
+	/** User cancelled process */
+	USER_CANCELLED(3, "User cancelled process"),
+
 	/** Errors during validation */
-	VALIDATION_ERRORS(3, "Errors during validation"),
+	VALIDATION_ERRORS(4, "Errors during validation"),
 
 	// Errors on N4jsc frontend
 
@@ -57,8 +60,19 @@ public enum N4jscExitCode {
 
 	// Errors on N4jsc goal lsp
 
-	/** Error while executing the user command provided via option <code>--exec</code> */
+	/** Error when executing the user command provided via option <code>--exec</code> */
 	EXEC_ERROR(210, "Error executing user command provided via option --exec"),
+
+	// Errors on N4jsc goal set-versions
+
+	/** Error while modifying n4js related package.json files */
+	SET_VERSIONS_ERROR(310, "Error while modifying n4js related package.json files"),
+
+	// Errors on N4jsc goal init
+
+	/** Error: Unsupported working directory */
+	INIT_ERROR_WORKING_DIR(410, "Error: Unsupported working directory"),
+
 	;
 
 	private static final Map<Integer, N4jscExitCode> lookup = new HashMap<>();

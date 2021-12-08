@@ -13,7 +13,7 @@ package org.eclipse.n4js.ide.server;
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 

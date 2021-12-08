@@ -1,0 +1,51 @@
+// generated from https://github.com/microsoft/TypeScript/blob/5d0d7ae85d1ff52d3ef4cb6cac653f33f7e76724/src/lib/es2015.collection.d.ts
+// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+
+@@Global @@ProvidedByRuntime
+
+export external public class Map<K,V> {
+	public clear(): void;
+	public delete(key: K): boolean;
+	public forEach(callbackfn: (value: V, key: K, map: Map<K,V>)=>void, thisArg: any = ): void;
+	public get(key: K): V;
+	public has(key: K): boolean;
+	public set(key: K, value: V): this;
+	public get size(): number;
+	public constructor(entries: Iterable<Iterable2<K,V>> = );
+}
+
+export external public type MapConstructor = constructor{Map};
+
+export external public class WeakMap<K extends Object,V> {
+	public delete(key: K): boolean;
+	public get(key: K): V;
+	public has(key: K): boolean;
+	public set(key: K, value: V): this;
+	public constructor(entries: Iterable<Iterable2<K,V>> = );
+}
+
+export external public type WeakMapConstructor = constructor{WeakMap};
+
+export external public class Set<T> {
+	public add(value: T): this;
+	public clear(): void;
+	public delete(value: T): boolean;
+	public forEach(callbackfn: (value: T, value2: T, set: Set<T>)=>void, thisArg: any = ): void;
+	public has(value: T): boolean;
+	public get size(): number;
+	public constructor(values: Iterable<T> = );
+}
+
+export external public type SetConstructor = constructor{Set};
+
+export external public class WeakSet<T extends Object> {
+	public add(value: T): this;
+	public delete(value: T): boolean;
+	public has(value: T): boolean;
+	public constructor(values: Iterable<T> = );
+}
+
+export external public type WeakSetConstructor = constructor{WeakSet};
+
+export external public type ReadonlySet<T> = Set<T>;
+export external public type ReadonlyMap<K,V> = Map<K,V>;

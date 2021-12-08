@@ -1,0 +1,26 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+package org.eclipse.n4js.scoping.validation;
+
+import org.eclipse.xtext.resource.IEObjectDescription;
+
+/**
+ * Interface for validators of scope elements.
+ */
+public interface IScopeValidator {
+
+	/** Returns true iff the given {@link IEObjectDescription} is not filtered out by this validator */
+	boolean isValid(IEObjectDescription objDescr);
+
+	/** Returns an issue or null for a given {@link IEObjectDescription} */
+	ScopeElementIssue getIssue(IEObjectDescription objDescr);
+
+}

@@ -38,7 +38,7 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -481,7 +481,8 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 			boolean alreadyCopied) {
 
 		final List<TypeVariable> typeParams = declType.getTypeVars();
-		final List<TypeArgument> typeArgs = typeRef.getTypeArgs();
+		final List<TypeArgument> typeArgs = getTypeArgumentsToProcess(typeRef);
+		final boolean gotMoreToProcessThanDeclared = typeArgs.size() > typeRef.getDeclaredTypeArgs().size();
 
 		final int lenParams = typeParams.size();
 		final int lenArgs = typeArgs.size();
@@ -502,19 +503,29 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		}
 
 		// (b) update 'typeRef' with changed type arguments iff(!) one or more have changed
-		if (haveChange) {
+		if (haveChange || gotMoreToProcessThanDeclared) {
 			if (!alreadyCopied) {
 				typeRef = TypeUtils.copy(typeRef);
 			}
+
+			List<TypeArgument> resultTypeArgs = typeRef.getDeclaredTypeArgs();
+			for (int i = resultTypeArgs.size(); i < lenArgs; i++) {
+				resultTypeArgs.add(typeArgs.get(i));
+			}
+
 			for (int i = 0; i < lenArgs; i++) {
 				final TypeArgument argCh = argsChanged[i];
 				if (argCh != null) {
-					typeRef.getTypeArgs().set(i, argCh);
+					resultTypeArgs.set(i, argCh);
 				}
 			}
 		}
 
 		return typeRef;
+	}
+
+	protected List<TypeArgument> getTypeArgumentsToProcess(TypeRef typeRef) {
+		return typeRef.getDeclaredTypeArgs();
 	}
 
 	protected TypeArgument caseParameterizedTypeRef_processTypeArgument(RuleEnvironment G2,

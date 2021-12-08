@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.ImplementationParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
@@ -99,7 +100,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 	@Override
 	protected Either<List<? extends Location>, List<? extends LocationLink>> implementation(ResourceTaskContext rtc,
-			TextDocumentPositionParams positionParams, CancelIndicator cancelIndicator) {
+			ImplementationParams params, CancelIndicator cancelIndicator) {
 
 		URI uri = rtc.getURI();
 		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(rtc.getResource());
@@ -112,7 +113,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 			Path projectLocation = project.getPathAsFileURI().toFileSystemPath();
 			Path genFilePath = projectLocation.resolve(outputPath + "/" + targetFileName);
 
-			Range range = findRange(positionParams, genFilePath);
+			Range range = findRange(params, genFilePath);
 			Location location = new Location();
 			location.setUri(new FileURI(genFilePath.toFile()).toString());
 			location.setRange(range);

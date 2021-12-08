@@ -11,7 +11,6 @@
 package org.eclipse.n4js.utils;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
@@ -32,6 +31,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.stream.JsonWriter;
 
 /**
  * Utility methods for dealing with JSON files on a low level, using Google's GSON library.
@@ -193,18 +193,35 @@ public class JsonUtils {
 	 */
 	public static JsonElement loadJson(Path path) throws FileNotFoundException, IOException {
 		try (BufferedReader in = Files.newBufferedReader(path)) {
-			JsonParser parser = new JsonParser();
-			return parser.parse(in);
+			return JsonParser.parseReader(in);
 		}
+	}
+
+	/**
+	 * Like {@link #saveJson(Path, JsonElement, String)}, using a default indent string of 4 spaces.
+	 */
+	public static void saveJson(Path path, JsonElement jsonElement)
+			throws FileNotFoundException, IOException {
+		saveJson(path, jsonElement, "    ");
 	}
 
 	/**
 	 * Save given {@link JsonElement} to given file. Will overwrite the file, if it exists.
 	 */
-	public static void saveJson(Path path, JsonElement jsonElement) throws FileNotFoundException, IOException {
-		try (BufferedWriter out = Files.newBufferedWriter(path, StandardOpenOption.TRUNCATE_EXISTING)) {
-			Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-			gson.toJson(jsonElement, out);
+	public static void saveJson(Path path, JsonElement jsonElement, String indent)
+			throws FileNotFoundException, IOException {
+		Gson gson = createGson();
+		try (
+				@SuppressWarnings("resource")
+				JsonWriter jsonWriter = gson.newJsonWriter(
+						Files.newBufferedWriter(path, StandardOpenOption.TRUNCATE_EXISTING))) {
+			jsonWriter.setIndent(indent != null ? indent : "");
+			gson.toJson(jsonElement, jsonWriter);
 		}
+	}
+
+	/** Creates configured {@link Gson} instance */
+	public static Gson createGson() {
+		return new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 	}
 }

@@ -23,7 +23,12 @@ d = Object.getOwnPropertyDescriptor(o, "bar");
 console.log(d);
 
 o = {};
-Object.defineProperty(o, "baz", { value: 8675309, writable: false, enumerable: false });
+// IDE-2140 XPECT warnings --> "Unnecessary cast from 8675309 to any" at "8675309 as any"
+Object.defineProperty(o, "baz", { value: 8675309 as any,
+                                  // IDE-2140 XPECT warnings --> "Unnecessary cast from false to boolean" at "false as boolean"
+                                  writable: false as boolean,
+                                  // IDE-2140 XPECT warnings --> "Unnecessary cast from false to boolean" at "false as boolean"
+                                  enumerable: false as boolean });
 d = Object.getOwnPropertyDescriptor(o, "baz");
 console.log(d);
 

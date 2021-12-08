@@ -14,8 +14,7 @@ import com.google.common.collect.Lists
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -26,11 +25,12 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
-import static extension org.eclipse.n4js.ts.utils.TypeUtils.convertTypeArgsToRefs
+import static extension org.eclipse.n4js.types.utils.TypeUtils.convertTypeArgsToRefs
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
@@ -74,13 +74,16 @@ class IterableComputer extends TypeSystemHelperStrategy {
 
 	private def Iterable<? extends TypeRef> extractIterableElementTypes(RuleEnvironment G, TypeRef typeRefRaw, Type iterableType, boolean includeIterableN) {
 		var Iterable<? extends TypeRef> result = null;
-		val typeRef = ts.upperBoundWithReopenAndResolve(G, typeRefRaw);
+		val typeRef = ts.upperBoundWithReopenAndResolveBoth(G, typeRefRaw);
 		val declType = typeRef?.declaredType;
 		if(declType===iterableType || (includeIterableN && G.isIterableN(declType))) {
 			// simple: typeRef directly points to Iterable<> or an IterableN<>
-			result = typeRef.typeArgs.convertTypeArgsToRefs;
+			result = typeRef.declaredTypeArgs.convertTypeArgsToRefs;
+		} else if(declType===G.arrayType || (includeIterableN && G.isArrayN(declType))) {
+			// simple: typeRef directly points to Array<> or an ArrayN<>
+			result = typeRef.declaredTypeArgs.convertTypeArgsToRefs;
 		} else if(declType instanceof PrimitiveType) {
-			// note: the 'elementType' property we read in the next line is also used with instances of TObjectPrototype
+			// note: the 'elementType' property we read in the next line is also used with certain instances of TClass
 			// (e.g. upper-case 'String'), but we need not and should not handle those within this block, because those
 			// types are expected to be structural subtypes of Iterable<>, which is handled below in the if-block for
 			// ContainerType<?>
@@ -113,9 +116,10 @@ class IterableComputer extends TypeSystemHelperStrategy {
 				if(superTypeRef?.declaredType===iterableType || (includeIterableN && G.isIterableN(superTypeRef))) {
 					// next if() is important: sorts out the super-type references to IterableN-1 in IterableN
 					// (but only required if including the IterableN)
-					val isContainedInIterable = G.isIterableN(superTypeRef.eContainer);
-					if(!(includeIterableN && isContainedInIterable)) {
-						results.add(superTypeRef.typeArgs.convertTypeArgsToRefs);
+					val isContainedInIterableN = G.isIterableN(superTypeRef.eContainer);
+					val isContainedInArrayN = G.isArrayN(superTypeRef.eContainer);
+					if(!(includeIterableN && (isContainedInIterableN || isContainedInArrayN))) {
+						results.add(superTypeRef.declaredTypeArgs.convertTypeArgsToRefs);
 					}
 				}
 			}
@@ -134,16 +138,16 @@ class IterableComputer extends TypeSystemHelperStrategy {
 				val res = G.get(Resource);
 				if(res instanceof Resource) {
 					val memberName = if(iterableType===G.asyncIterableType) {
-						ComputedPropertyNameValueConverter.SYMBOL_ASYNC_ITERATOR_MANGLED;
+						N4JSLanguageUtils.SYMBOL_ASYNC_ITERATOR_MANGLED;
 					} else {
-						ComputedPropertyNameValueConverter.SYMBOL_ITERATOR_MANGLED;
+						N4JSLanguageUtils.SYMBOL_ITERATOR_MANGLED;
 					};
 					val m = containerTypesHelper.fromContext(res).findMember(declType,memberName,false,false);
 					if(m instanceof TMethod) {
-						result = m.returnTypeRef?.typeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
+						result = m.returnTypeRef?.declaredTypeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
 					}
 					else if(m instanceof TGetter) {
-						result = m.typeRef?.typeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
+						result = m.typeRef?.declaredTypeArgs.convertTypeArgsToRefs; // no problem if we set 'result' to null (it's the default anyway)
 					}
 				}
 				else {
@@ -158,7 +162,9 @@ class IterableComputer extends TypeSystemHelperStrategy {
 		val G2 = G.wrap;
 		tsh.addSubstitutions(G2,typeRef);
 		val resultSubst = result.map[ts.substTypeVariables(G2,it)]
-				.filter(TypeRef); // note the invariant of judgment 'substTypeVariables': if you put TypeRefs in, you'll get TypeRefs back
+				.filter(TypeRef) // note the invariant of judgment 'substTypeVariables': if you put TypeRefs in, you'll get TypeRefs back
+				.map[if (it instanceof ComposedTypeRef) tsh.simplify(G, it) else it];
+
 		return resultSubst;
 	}
 

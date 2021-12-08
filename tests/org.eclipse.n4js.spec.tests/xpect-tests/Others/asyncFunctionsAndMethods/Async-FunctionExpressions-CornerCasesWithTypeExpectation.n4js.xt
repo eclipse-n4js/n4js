@@ -39,7 +39,7 @@ foo2(
 function foo3( p : {function():Promise<number,?>} ) {}
 
 foo3(
-	// XPECT errors --> "string is not a subtype of number." at "'hello'"
+	// XPECT errors --> ""hello" is not a subtype of number." at "'hello'"
 	async function() {return 'hello';}
 );
 

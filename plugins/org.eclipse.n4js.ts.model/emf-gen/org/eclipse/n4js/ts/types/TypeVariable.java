@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ts.types;
 
-import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.util.Variance;
@@ -28,6 +26,7 @@ import org.eclipse.n4js.ts.types.util.Variance;
  *   <li>{@link org.eclipse.n4js.ts.types.TypeVariable#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TypeVariable#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TypeVariable#getDeclaredUpperBound <em>Declared Upper Bound</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TypeVariable#getDefaultArgument <em>Default Argument</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTypeVariable()
@@ -102,6 +101,28 @@ public interface TypeVariable extends Type {
 	void setDeclaredUpperBound(TypeRef value);
 
 	/**
+	 * Returns the value of the '<em><b>Default Argument</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Default Argument</em>' containment reference.
+	 * @see #setDefaultArgument(TypeRef)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTypeVariable_DefaultArgument()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TypeRef getDefaultArgument();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TypeVariable#getDefaultArgument <em>Default Argument</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Default Argument</em>' containment reference.
+	 * @see #getDefaultArgument()
+	 * @generated
+	 */
+	void setDefaultArgument(TypeRef value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -119,7 +140,7 @@ public interface TypeVariable extends Type {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	EList<TypeVariable> getTypeVars();
+	boolean isOptional();
 
 	/**
 	 * <!-- begin-user-doc -->

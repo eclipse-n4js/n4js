@@ -218,7 +218,7 @@ public class FileChecker extends AbstractFileChecker {
 			"tools/org.eclipse.n4js.hlc/src/main/resources/org/eclipse/emf/ecore/plugin/plugin.properties",
 
 			/* API description is copied from ECMAScript Language Specification */
-			"plugins/org.eclipse.n4js.ts/src-env/env/builtin_js.n4ts",
+			"plugins/org.eclipse.n4js/src-env/env/builtin_js.n4jsd",
 	};
 
 	/** Same as {@link #BANNED_WORDS_WHITELIST}, but for Xsemantics. */
@@ -479,7 +479,7 @@ public class FileChecker extends AbstractFileChecker {
 			}
 		}
 
-		String[] moreCRHs = { ".xml", ".html", ".sh", ".tex", ".grammar", "adoc", "n4ts", "n4js", "n4jsx",
+		String[] moreCRHs = { ".xml", ".html", ".sh", ".tex", ".grammar", "adoc", "n4js", "n4jsx",
 				"n4jsd", "xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED", ".idx", ".js",
 				".ant", ".css", ".txt", ".mwe2txt", ".oldxsem", ".md", ".xtypes", ".xcoretxt", ".yml", ".fjcached",
 				".xpt", ".def" };
@@ -722,7 +722,7 @@ public class FileChecker extends AbstractFileChecker {
 		} else if (hasExtension(path, ".adoc")) {
 			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_ADOC);
 
-		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".n4ts", ".xt",
+		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".xt",
 				"xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED")) {
 			if (MODE == Mode.Xpect) {
 				return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_V2);

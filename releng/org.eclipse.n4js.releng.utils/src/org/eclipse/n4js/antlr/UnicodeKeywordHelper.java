@@ -25,7 +25,6 @@ import com.google.common.base.Strings;
  * A keyword helper that produces lexer rules with support for unicode escapes. Used by Xtend 1 extension
  * UnicodeKeywordHelper.ext.
  */
-@SuppressWarnings("restriction")
 public class UnicodeKeywordHelper {
 
 	/**

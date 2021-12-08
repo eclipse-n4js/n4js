@@ -26,12 +26,14 @@ import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
-import org.eclipse.n4js.ts.utils.TypeCompareUtils
+import org.eclipse.n4js.types.utils.TypeCompareUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -80,7 +82,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			&& STRUCTURAL_FIELD_INITIALIZER !== leftStrategy && STRUCTURAL_FIELD_INITIALIZER !== rightStrategy
 			&& left.declaredType === right.declaredType
 			&& left.structuralMembers.empty && right.structuralMembers.empty
-			&& left.typeArgs.empty) {
+			&& !left.generic) {
 			return result(left, right, emptyList, emptyList);
 		}
 
@@ -323,6 +325,22 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		if (left === null) {
 			// no corresponding member found on left side
 			if (memberIsMissing(leftTypeRef, right, info)) {
+
+				if (right instanceof TMethod) {
+					if (right.isCallSignature) {
+						// in case a call signature is missing on the left side, it is ok
+						// if the left side is itself a function and is override-compatible:
+						val result = ts.subtype(G, info.left, TypeUtils.createTypeRef(right));
+						if (result.success) {
+							return; // success
+						}
+						if (ts.subtypeSucceeded(G, info.left, G.functionTypeRef)) {
+							info.wrongMembers.add(keywordProvider.keyword(right, info.rightStrategy) + " failed: " + result.failureMessage);
+							return;
+						}
+					}
+				}
+
 				info.missingMembers.add(keywordProvider.keyword(right, info.rightStrategy) + " " + right.name);
 			}
 
@@ -359,7 +377,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 
 			val result = tsh.checkTypeArgumentCompatibility(G, mtypes.key, mtypes.value, Optional.of(variance), true);
 			if (result.failure) {
-				info.wrongMembers.add(right.name + " failed: " + result.failureMessage);
+				info.wrongMembers.add(getMemberName(right) + " failed: " + result.failureMessage);
 			}
 		}
 	}
@@ -376,6 +394,14 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		if (left === null) {
 			// no corresponding member found on left side
 			if (memberIsMissing(leftTypeRef, right, info)) {
+				if (right instanceof TMethod) {
+					if (right.isCallSignature) {
+						// in case a call signature is missing on the left side, it is ok
+						// if the left side is itself a function and is override-compatible:
+						return Collections.singletonList(
+							new TypeConstraint(info.left, TypeUtils.createTypeRef(right), Variance.CO));
+					}
+				}
 				return Collections.singletonList(TypeConstraint.FALSE);
 			} else {
 				return Collections.emptyList(); // this is like returning TypeConstraint.TRUE
@@ -585,4 +611,14 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		it instanceof TSetter && PROVIDES_INITIALZER.hasAnnotation(it);
 	}
 
+	def private String getMemberName(TMember member) {
+		if (member instanceof TMethod) {
+			if (member.isCallSignature) {
+				return "call signature";
+			} else if (member.isConstructSignature) {
+				return "construct signature";
+			}
+		}
+		return member.name;
+	}
 }

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +27,7 @@ import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.Guard;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardMerger;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardStructure;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardStructureFactory;
 import org.eclipse.n4js.flowgraphs.dataflow.guards.GuardType;
@@ -60,7 +60,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 		return getGuards(cfe, GuardAssertion.AlwaysHolds);
 	}
 
-	/** @return all {@code instanceof} guards that <b>never</b> hold at the given element */
+	/** @return all {@code instanceof} guards that <b>always</b> hold or <b>never</b> hold at the given element */
 	public Collection<InstanceofGuard> getDefinitiveGuards(ControlFlowElement cfe) {
 		return getGuards(cfe, GuardAssertion.AlwaysHolds, GuardAssertion.NeverHolds);
 	}
@@ -102,7 +102,7 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 			}
 
 			InstanceofBranchWalker ibw = (InstanceofBranchWalker) bwiIter.next();
-			joinedIBW.guards.putAll(ibw.guards);
+			Collection<InstanceofGuard> mergedGuards = new ArrayList<>(ibw.guards.values());
 
 			while (bwiIter.hasNext()) {
 				ibw = (InstanceofBranchWalker) bwiIter.next();
@@ -110,13 +110,11 @@ public class InstanceofGuardAnalyser extends GraphVisitorInternal {
 					continue;
 				}
 
-				Set<Symbol> joinedKeySet = joinedIBW.guards.keySet();
-				joinedKeySet.retainAll(ibw.guards.keySet());
-				// avoid ConcurrentModificationException since entries of key set might be removed in the following loop
-				HashSet<Symbol> joinedKeySetCopy = new HashSet<>(joinedKeySet);
-				for (Symbol symbol : joinedKeySetCopy) {
-					joinedIBW.guards.get(symbol).retainAll(ibw.guards.get(symbol));
-				}
+				mergedGuards = GuardMerger.mergeInstanceofGuards(getSymbolFactory(), mergedGuards, ibw.guards.values());
+			}
+
+			for (InstanceofGuard guard : mergedGuards) {
+				joinedIBW.guards.put(guard.getSymbol(), guard);
 			}
 
 			return joinedIBW;

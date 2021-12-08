@@ -52,9 +52,11 @@ public class WorkspaceConfigAdapter extends AdapterImpl {
 			return;
 		}
 		uninstallWorkspaceConfig(resourceSet);
-		EcoreUtilN4.doWithDeliver(false, () -> {
-			resourceSet.eAdapters().add(new WorkspaceConfigAdapter(workspaceConfig));
-		}, resourceSet);
+		if (workspaceConfig != null) {
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				resourceSet.eAdapters().add(new WorkspaceConfigAdapter(workspaceConfig));
+			}, resourceSet);
+		}
 	}
 
 	/** Remove the workspace configuration attached to the given resource set (if any). */

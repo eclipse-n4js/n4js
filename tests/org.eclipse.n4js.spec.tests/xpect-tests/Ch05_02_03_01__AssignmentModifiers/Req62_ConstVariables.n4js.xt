@@ -34,7 +34,7 @@ c2e = "not";
 
 
 function foo() {
-	const cLocal = "Hello";
+	const cLocal = "Hel" + "lo";
 
 	// XPECT errors --> "Const variable c2 is read-only." at "c2"
 	c2 = "not";
@@ -49,7 +49,7 @@ function foo() {
 
 class C {
 	m() {
-		const cLocal = "Hello";
+		const cLocal = "Hel" + "lo";
 
 		// XPECT errors --> "Const variable c2 is read-only." at "c2"
 		c2 = "not";
@@ -63,7 +63,7 @@ class C {
 
 
 
-for (const foo = 9; ;
+for (const foo = 3 * 3; ;
 	// XPECT errors --> "Const variable foo is read-only." at "foo"
 	foo = 3
 );

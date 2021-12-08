@@ -11,21 +11,22 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.common.collect.Lists
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.types.ContainerType
-import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.n4js.ts.types.TMember
-import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.util.AbstractCompleteHierarchyTraverser
-import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import java.util.ArrayList
 import java.util.Collections
 import java.util.List
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.PrimitiveType
+import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.util.AbstractCompleteHierarchyTraverser
+import org.eclipse.n4js.types.utils.TypeUtils
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 
 /**
  * Collects all members, including inherited members, of a type and omits some members overridden in the type hierarchy.
@@ -113,6 +114,10 @@ public class LazyOverrideAwareMemberCollector extends AbstractCompleteHierarchyT
 			val ownedMembers = type.getOwnedMembers()
 			result.addAll(ownedMembers);
 		}
+	}
+
+	override protected doProcess(PrimitiveType currentType) {
+		// nothing to do in this case
 	}
 
 	def protected processAndReplace(TClassifier type) {

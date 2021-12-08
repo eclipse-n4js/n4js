@@ -33,7 +33,7 @@ class C implements R1  {
 var c : C;
 var a : A;
 c.foo(a);
-// XPECT errors --> "string is not a subtype of A." at ""x""
+// XPECT errors --> ""x" is not a subtype of A." at ""x""
 c.foo("x");
 
 

@@ -17,9 +17,18 @@
 @@Global
 
 @Polyfill
-export external public class F extends F {
+export external public class Cls extends Cls {
 	additionalMethod();
 	additionalMethod1();
 
 	static addStatic();
+}
+
+@Polyfill
+export external public interface Ifc extends Ifc {
+	additionalMethod();
+	additionalMethod1();
+
+    // no static methods in external interfaces (even if they are annotated with @N4JS)
+	//static addStatic();
 }

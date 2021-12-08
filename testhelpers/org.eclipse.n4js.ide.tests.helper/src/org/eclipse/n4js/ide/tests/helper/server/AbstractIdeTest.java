@@ -14,7 +14,9 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,6 +53,7 @@ import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
@@ -77,7 +80,6 @@ import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
 import org.eclipse.lsp4j.WorkspaceClientCapabilities;
@@ -99,7 +101,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.ide.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
@@ -107,6 +109,8 @@ import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
 import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.BuildOrderIterator;
+import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.LanguageInfo;
 import org.eclipse.xtext.ide.server.UriExtensions;
@@ -320,8 +324,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return testWorkspaceManager.getNodeModulesFolder();
 	}
 
-	/** @see TestWorkspaceManager#getNodeModulesFolder(N4JSProjectName) */
-	public File getNodeModulesFolder(N4JSProjectName projectName) {
+	/** @see TestWorkspaceManager#getNodeModulesFolder(N4JSPackageName) */
+	public File getNodeModulesFolder(N4JSPackageName projectName) {
 		return testWorkspaceManager.getNodeModulesFolder(projectName);
 	}
 
@@ -346,6 +350,16 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** @return the root folder of the project with the given name. */
 	public File getProjectRoot(String projectName) {
 		return testWorkspaceManager.getProjectRoot(projectName);
+	}
+
+	/**
+	 * For this method, it is sufficient if the given file is located somewhere inside a project; strict
+	 * {@link SourceFolderSnapshot#contains(URI) containment in a source folder} is *not* required.
+	 *
+	 * @return the root folder of the project containing the given file or <code>null</code>.
+	 */
+	public File getProjectRootContaining(File file) {
+		return testWorkspaceManager.getProjectRootContaining(file);
 	}
 
 	/**
@@ -1477,7 +1491,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected List<Diagnostic> getIssuesInFile(FileURI fileURI, boolean withIgnoredIssues) {
 		Stream<Diagnostic> issuesInFile = languageClient.getIssues(fileURI).stream();
 		if (!withIgnoredIssues) {
-			issuesInFile = issuesInFile.filter(issue -> !getIgnoredIssueCodes().contains(issue.getCode()));
+			issuesInFile = issuesInFile.filter(
+					issue -> issue.getCode() == null || !getIgnoredIssueCodes().contains(issue.getCode().getLeft()));
 		}
 		return issuesInFile.collect(Collectors.toList());
 	}
@@ -1649,11 +1664,11 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> callDefinition(
 			String completeFileUri, int line, int column) {
 
-		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
-		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
-		textDocumentPositionParams.setPosition(new Position(line, column));
+		DefinitionParams definitionParams = new DefinitionParams();
+		definitionParams.setTextDocument(new TextDocumentIdentifier(completeFileUri));
+		definitionParams.setPosition(new Position(line, column));
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> future = languageServer
-				.definition(textDocumentPositionParams);
+				.definition(definitionParams);
 
 		return future;
 	}
@@ -1685,21 +1700,54 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 				"", result.getErrOut().trim());
 	}
 
-	/**
-	 * Asserts the workspace contains the given projects. Each project is represented as a path to its project folder,
-	 * relative to the {@link #getRoot() root folder}.
-	 */
-	protected void assertProjectsInWorkspace(String... expectedProjects) {
-		Set<String> expectedProjectPathStrs = FluentIterable.from(expectedProjects)
-				.transform(String::trim)
-				.toSet();
+	/** Asserts the workspace contains the given file. {@link #getFileURIFromModuleName(String)} */
+	protected void assertFile(String moduleName) {
+		try {
+			FileURI file = getFileURIFromModuleName(moduleName);
+			assertNotNull(file);
+		} catch (Exception e) {
+			fail();
+		}
+	}
 
+	/** Asserts the workspace does not contain the given file. {@link #getFileURIFromModuleName(String)} */
+	protected void assertNoFile(String moduleName) {
+		try {
+			getFileURIFromModuleName(moduleName);
+			fail();
+		} catch (IllegalStateException e) {
+			// pass
+		} catch (Exception e) {
+			fail();
+		}
+	}
+
+	/** Asserts the workspace contains the given project ids. */
+	protected void assertProjectsInWorkspace(String... expectedProjects) {
 		Path baseFolder = getRoot().toPath();
 		WorkspaceConfigSnapshot wc = concurrentIndex.getWorkspaceConfigSnapshot();
 		Set<String> actualProjectPathStrs = FluentIterable.from(wc.getProjects())
 				.transform(p -> Path.of(p.getPath().toFileString()))
 				.transform(path -> baseFolder.relativize(path))
 				.transform(Object::toString)
+				.toSet();
+
+		assertProjectsInWorkspace(expectedProjects, actualProjectPathStrs);
+	}
+
+	/**
+	 * Asserts that the project with the given project ids has dependencies to the expected list of project ids.
+	 */
+	protected void assertDependenciesOf(String projectID, String... expectedProjects) {
+		WorkspaceConfigSnapshot wc = concurrentIndex.getWorkspaceConfigSnapshot();
+		ProjectConfigSnapshot project = wc.findProjectByID(projectID);
+		ImmutableSet<String> dependencies = project.getDependencies();
+		assertProjectsInWorkspace(expectedProjects, dependencies);
+	}
+
+	private void assertProjectsInWorkspace(String[] expectedProjects, Set<String> actualProjectPathStrs) {
+		Set<String> expectedProjectPathStrs = FluentIterable.from(expectedProjects)
+				.transform(String::trim)
 				.toSet();
 
 		SetView<String> missing = Sets.difference(expectedProjectPathStrs, actualProjectPathStrs);
@@ -1727,8 +1775,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 */
 	protected void installN4JSRuntime() {
 		File root = getProjectRoot();
-		N4JSProjectName projectName = new N4JSProjectName(root);
-		installN4jsLibs(projectName, new N4JSProjectName[] { N4JSGlobals.N4JS_RUNTIME });
+		N4JSPackageName projectName = new N4JSPackageName(root);
+		installN4jsLibs(projectName, new N4JSPackageName[] { N4JSGlobals.N4JS_RUNTIME });
 	}
 
 	/**
@@ -1736,7 +1784,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 *
 	 * @see N4jsLibsAccess#installN4jsLibs
 	 */
-	protected void installN4jsLibs(N4JSProjectName targetProject, N4JSProjectName[] libsToInstall) {
+	protected void installN4jsLibs(N4JSPackageName targetProject, N4JSPackageName[] libsToInstall) {
 		if (libsToInstall == null || libsToInstall.length == 0) {
 			return;
 		}
@@ -1761,8 +1809,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return runInNodejs(fileToRun.toFile().getParentFile().getParentFile(), fileToRun, options);
 	}
 
-	/** Delegates to {@link CliTools#runNodejs(Path, Path, String...)}. */
+	/** Delegates to {@link CliTools#nodejsRun(Path, Path, String...)}. */
 	protected ProcessResult runInNodejs(File workingDir, FileURI fileToRun, String... options) {
-		return new CliTools().runNodejs(workingDir.toPath(), fileToRun.toPath(), options);
+		return new CliTools().nodejsRun(workingDir.toPath(), fileToRun.toPath(), options);
 	}
 }

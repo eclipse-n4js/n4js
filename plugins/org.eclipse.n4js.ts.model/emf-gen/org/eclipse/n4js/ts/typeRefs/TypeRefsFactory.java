@@ -165,31 +165,40 @@ public interface TypeRefsFactory extends EFactory {
 	TypeVariableMapping createTypeVariableMapping();
 
 	/**
-	 * Returns a new object of class '<em>Versioned Parameterized Type Ref</em>'.
+	 * Returns a new object of class '<em>Boolean Literal Type Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Versioned Parameterized Type Ref</em>'.
+	 * @return a new object of class '<em>Boolean Literal Type Ref</em>'.
 	 * @generated
 	 */
-	VersionedParameterizedTypeRef createVersionedParameterizedTypeRef();
+	BooleanLiteralTypeRef createBooleanLiteralTypeRef();
 
 	/**
-	 * Returns a new object of class '<em>Versioned Function Type Ref</em>'.
+	 * Returns a new object of class '<em>Numeric Literal Type Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Versioned Function Type Ref</em>'.
+	 * @return a new object of class '<em>Numeric Literal Type Ref</em>'.
 	 * @generated
 	 */
-	VersionedFunctionTypeRef createVersionedFunctionTypeRef();
+	NumericLiteralTypeRef createNumericLiteralTypeRef();
 
 	/**
-	 * Returns a new object of class '<em>Versioned Parameterized Type Ref Structural</em>'.
+	 * Returns a new object of class '<em>String Literal Type Ref</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Versioned Parameterized Type Ref Structural</em>'.
+	 * @return a new object of class '<em>String Literal Type Ref</em>'.
 	 * @generated
 	 */
-	VersionedParameterizedTypeRefStructural createVersionedParameterizedTypeRefStructural();
+	StringLiteralTypeRef createStringLiteralTypeRef();
+
+	/**
+	 * Returns a new object of class '<em>Enum Literal Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Enum Literal Type Ref</em>'.
+	 * @generated
+	 */
+	EnumLiteralTypeRef createEnumLiteralTypeRef();
 
 	/**
 	 * Returns the package supported by this factory.

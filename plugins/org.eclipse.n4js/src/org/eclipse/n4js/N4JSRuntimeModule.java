@@ -49,15 +49,14 @@ import org.eclipse.n4js.resource.UserDataMapper;
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
+import org.eclipse.n4js.scoping.builtin.BuiltInSchemeRegistrar;
+import org.eclipse.n4js.scoping.builtin.ConfiguredResourceSetProvider;
 import org.eclipse.n4js.scoping.builtin.ScopeRegistrar;
 import org.eclipse.n4js.scoping.imports.ImportedElementsMap;
 import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider;
 import org.eclipse.n4js.tooling.N4JSDocumentationProvider;
 import org.eclipse.n4js.tooling.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.tooling.findReferences.InferredElementsTargetURICollector;
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
-import org.eclipse.n4js.ts.scoping.builtin.ConfiguredResourceSetProvider;
-import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSEObjectAtOffsetHelper;
@@ -69,6 +68,8 @@ import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider;
 import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
+import org.eclipse.n4js.validation.utils.TypesKeywordProvider;
+import org.eclipse.n4js.xtext.resource.containers.XStateBasedContainerManager;
 import org.eclipse.n4js.xtext.serializer.SerializerPatchModule;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.impl.STRINGValueConverter;
@@ -91,6 +92,7 @@ import org.eclipse.xtext.parsetree.reconstr.IHiddenTokenHelper;
 import org.eclipse.xtext.preferences.IPreferenceValuesProvider;
 import org.eclipse.xtext.resource.DescriptionUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
+import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -228,6 +230,11 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends IResourceDescription.Manager> bindIResourceDescriptionManager() {
 		return N4JSResourceDescriptionManager.class;
+	}
+
+	@Override
+	public Class<? extends IContainer.Manager> bindIContainer$Manager() {
+		return XStateBasedContainerManager.class;
 	}
 
 	/**
@@ -518,10 +525,7 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 		new SerializerPatchModule().configure(binder);
 	}
 
-	//// N4IDL specific bindings
-
-	/**
-	 */
+	/**  */
 	public Class<? extends ImportedElementsMap.Provider> bindImportedElementsMapProvider() {
 		return ImportedElementsMap.Provider.class;
 	}

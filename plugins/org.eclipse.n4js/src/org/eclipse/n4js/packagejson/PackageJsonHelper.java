@@ -10,11 +10,14 @@
  */
 package org.eclipse.n4js.packagejson;
 
+import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asBooleanOrDefault;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNameValuePairsOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringsInArrayOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_DTS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_SOURCE_MAPS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
@@ -87,6 +90,7 @@ public class PackageJsonHelper {
 	 */
 	public ProjectDescriptionBuilder convertToProjectDescription(JSONDocument packageJSON, boolean applyDefaultValues,
 			String defaultProjectName) {
+
 		JSONValue rootValue = packageJSON.getContent();
 		if (!(rootValue instanceof JSONObject)) {
 			return null;
@@ -114,7 +118,7 @@ public class PackageJsonHelper {
 			JSONValue value = pair.getValue();
 			switch (property) {
 			case NAME:
-				target.setName(asNonEmptyStringOrNull(value));
+				target.setPackageName(asNonEmptyStringOrNull(value));
 				break;
 			case VERSION:
 				target.setVersion(asVersionNumberOrNull(value));
@@ -217,6 +221,17 @@ public class PackageJsonHelper {
 			case DEFINES_PACKAGE:
 				target.setDefinesPackage(asStringOrNull(value));
 				break;
+			case GENERATOR:
+				convertN4jsPairs(target, asNameValuePairsOrEmpty(value));
+				break;
+			case GENERATOR_SOURCE_MAPS:
+				target.setGeneratorEnabledSourceMaps(
+						asBooleanOrDefault(value, (Boolean) PackageJsonProperties.GENERATOR_SOURCE_MAPS.defaultValue));
+				break;
+			case GENERATOR_DTS:
+				target.setGeneratorEnabledDts(
+						asBooleanOrDefault(value, (Boolean) PackageJsonProperties.GENERATOR_DTS.defaultValue));
+				break;
 			default:
 				break;
 			}
@@ -231,7 +246,7 @@ public class PackageJsonHelper {
 		Set<String> existingProjectNames = new HashSet<>();
 		if (avoidDuplicates) {
 			for (ProjectDependency pd : target.getDependencies()) {
-				existingProjectNames.add(pd.getProjectName());
+				existingProjectNames.add(pd.getPackageName());
 			}
 		}
 
@@ -286,14 +301,17 @@ public class PackageJsonHelper {
 		Set<String> projectNamesToRemove = new HashSet<>();
 		List<ProjectDependency> projectDependencies = target.getDependencies();
 		for (ProjectDependency dep : projectDependencies) {
-			String otherProject = dep.getProjectName();
-			if (otherProject.endsWith(".api")) {
-				projectNamesToRemove.add(otherProject.substring(0, otherProject.length() - ".api".length()));
+			String otherProject = dep.getPackageName();
+			for (String suffix : N4JSGlobals.API_PROJECT_NAME_SUFFIXES) {
+				if (otherProject.endsWith(suffix)) {
+					projectNamesToRemove.add(otherProject.substring(0, otherProject.length() - suffix.length()));
+					break;
+				}
 			}
 		}
 		if (!projectNamesToRemove.isEmpty()) {
 			for (int i = projectDependencies.size() - 1; i >= 0; i--) {
-				if (projectNamesToRemove.contains(projectDependencies.get(i).getProjectName())) {
+				if (projectNamesToRemove.contains(projectDependencies.get(i).getPackageName())) {
 					projectDependencies.remove(i);
 				}
 			}
@@ -310,30 +328,36 @@ public class PackageJsonHelper {
 		if (!target.hasN4JSNature() || target.getType() == null) {
 			// for non-N4JS projects, and if the project type is unset, enforce the default project type, i.e.
 			// project type 'PLAINJS':
-			target.setType(parseProjectType(PROJECT_TYPE.defaultValue));
+			target.setType(parseProjectType((String) PROJECT_TYPE.defaultValue));
 		}
-		if (target.getName() == null) {
-			target.setName(defaultProjectName);
+		if (target.getPackageName() == null) {
+			target.setPackageName(defaultProjectName);
 		}
 		if (target.getVersion() == null) {
 			target.setVersion(createDefaultVersionNumber());
 		}
 		if (target.getVendorId() == null) {
-			target.setVendorId(VENDOR_ID.defaultValue);
+			target.setVendorId((String) VENDOR_ID.defaultValue);
 		}
 		if (target.getMainModule() == null) {
-			target.setMainModule(MAIN_MODULE.defaultValue);
+			target.setMainModule((String) MAIN_MODULE.defaultValue);
 		}
 		if (target.getOutputPath() == null) {
 			// note that in case the project is a yarn workspace project and there is a 'clean build' running
 			// the entire contents will be deleted.
-			target.setOutputPath(OUTPUT.defaultValue);
+			target.setOutputPath((String) OUTPUT.defaultValue);
+		}
+		if (target.isGeneratorEnabledSourceMaps() == null) {
+			target.setGeneratorEnabledSourceMaps((Boolean) GENERATOR_SOURCE_MAPS.defaultValue);
+		}
+		if (target.isGeneratorEnabledDts() == null) {
+			target.setGeneratorEnabledDts((Boolean) GENERATOR_DTS.defaultValue);
 		}
 		if (target.getOutputExtension() == null) {
 			if (valueOfTopLevelPropertyType != null && valueOfTopLevelPropertyType.trim().equals("module")) {
 				target.setOutputExtension(N4JSGlobals.JS_FILE_EXTENSION);
 			} else {
-				target.setOutputExtension(OUTPUT_EXTENSION.defaultValue);
+				target.setOutputExtension((String) OUTPUT_EXTENSION.defaultValue);
 			}
 		}
 
@@ -360,7 +384,7 @@ public class PackageJsonHelper {
 		}
 		sourceContainers.add(new SourceContainerDescription(
 				SourceContainerType.SOURCE,
-				Collections.singleton(OUTPUT.defaultValue)));
+				Collections.singleton((String) OUTPUT.defaultValue)));
 	}
 
 	private VersionNumber asVersionNumberOrNull(JSONValue value) {
@@ -370,7 +394,7 @@ public class PackageJsonHelper {
 
 	private VersionNumber createDefaultVersionNumber() {
 		if (cachedDefaultVersionNumber == null) {
-			cachedDefaultVersionNumber = semverHelper.parseVersionNumber(VERSION.defaultValue);
+			cachedDefaultVersionNumber = semverHelper.parseVersionNumber((String) VERSION.defaultValue);
 		}
 		return EcoreUtil.copy(cachedDefaultVersionNumber);
 	}

@@ -17,7 +17,7 @@ package org.eclipse.n4js.ts.types;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * Primitive types are modeled similar to TClassifiers, except that they have no access modifier and cannot be parameterized.
+ * Primitive types are modeled similar to TClassifiers, except that they have no access modifier and cannot have members.
  * <!-- end-model-doc -->
  *
  * <p>
@@ -32,7 +32,7 @@ package org.eclipse.n4js.ts.types;
  * @model
  * @generated
  */
-public interface PrimitiveType extends ContainerType<TMember>, ArrayLike {
+public interface PrimitiveType extends GenericType, ArrayLike {
 	/**
 	 * Returns the value of the '<em><b>Assignment Compatible</b></em>' reference.
 	 * <!-- begin-user-doc -->

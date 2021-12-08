@@ -81,15 +81,15 @@ class YarnWorkspacesPropertyTest extends AbstractIdeTest {
 		// main assertion:
 		val workspaceConfig = concurrentIndex.workspaceConfigSnapshot;
 		assertEquals("there should be 4 projects in the workspace", 4, workspaceConfig.projects.size);
-		assertNotNull("the yarn workspace project should have been discovered", workspaceConfig.findProjectByName(TestWorkspaceManager.YARN_TEST_PROJECT));
-		assertNotNull("project 'n4js-runtime' should have been discovered", workspaceConfig.findProjectByName(N4JS_RUNTIME));
-		assertNotNull("project 'ProjectA' should have been discovered", workspaceConfig.findProjectByName("ProjectA"));
-		assertNotNull("project 'ProjectB' should have been discovered", workspaceConfig.findProjectByName("ProjectB"));
+		assertNotNull("the yarn workspace project should have been discovered", workspaceConfig.findProjectByID(TestWorkspaceManager.YARN_TEST_PROJECT));
+		assertNotNull("project 'n4js-runtime' should have been discovered", workspaceConfig.findProjectByID("yarn-test-project/node_modules/n4js-runtime"));
+		assertNotNull("project 'ProjectA' should have been discovered", workspaceConfig.findProjectByID("yarn-test-project/packages/ProjectA"));
+		assertNotNull("project 'ProjectB' should have been discovered", workspaceConfig.findProjectByID("yarn-test-project/packages/ProjectB"));
 
 		// additional assertion to make sure every thing is working correctly:
 		assertIssues(
 			"B" -> #[
-				"(Error, [1:4 - 1:6], int is not a subtype of string.)"
+				"(Error, [1:4 - 1:6], 42 is not a subtype of string.)"
 			]
 		);
 	}

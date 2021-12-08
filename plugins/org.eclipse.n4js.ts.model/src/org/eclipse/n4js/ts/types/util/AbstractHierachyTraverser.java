@@ -19,10 +19,8 @@ import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TInterface;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.VirtualBaseType;
 import org.eclipse.n4js.utils.RecursionGuard;
 
 /**
@@ -57,12 +55,23 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	/**
 	 * The type which the traverser has to traverse, that is the bottom type of the hierarchy.
 	 */
-	protected final ContainerType<?> bottomType;
+	protected final Type bottomType;
 
 	/**
 	 * Creates a new traverser that is used to safely process a potentially cyclic inheritance tree.
 	 */
 	public AbstractHierachyTraverser(ContainerType<?> type) {
+		this((Type) type);
+	}
+
+	/**
+	 * Creates a new traverser that is used to safely process a potentially cyclic inheritance tree.
+	 */
+	public AbstractHierachyTraverser(PrimitiveType type) {
+		this((Type) type);
+	}
+
+	private AbstractHierachyTraverser(Type type) {
 		this.bottomType = type;
 		guard = new RecursionGuard<>();
 	}
@@ -88,6 +97,15 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	 * @return {@code true} if the processing is finished and no further types should be considered.
 	 */
 	protected abstract boolean process(ContainerType<?> type);
+
+	/**
+	 * Process the given primitive type. The traversal itself is handled by this class.
+	 *
+	 * @param type
+	 *            the processed type.
+	 * @return {@code true} if the processing is finished and no further types should be considered.
+	 */
+	protected abstract boolean process(PrimitiveType type);
 
 	private void traverse() {
 		Boolean result = doSwitch(bottomType);
@@ -115,25 +133,6 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 		return Boolean.FALSE;
 	}
 
-	@Override
-	public Boolean caseTObjectPrototype(TObjectPrototype object) {
-		if (guard.tryNext(object)) {
-			if (!object.isPolyfill()) {
-				if (doProcess(getPolyfills(object))) {
-					return true;
-				}
-			}
-			if (process(object)) {
-				return Boolean.TRUE;
-			}
-			if (!object.isPolyfill()) {
-				return doProcess(getSuperTypes(object));
-			}
-
-		}
-		return Boolean.FALSE;
-	}
-
 	/**
 	 * Processes declared consumed roles, implemented interfaces and super type. Note that implicit super types are
 	 * <b>not</b> not processes, see class description for details.
@@ -143,7 +142,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 		if (guard.tryNext(object)) {
 			if (!object.isPolyfill()) {
 				if (doProcess(getPolyfills(object))) {
-					return true;
+					return Boolean.TRUE;
 				}
 			}
 			if (process(object)) {
@@ -152,9 +151,9 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 			if (!object.isPolyfill() || object.isStaticPolyfill()) {
 				// enqueueInterface(object.getConsumedRoles());
 				if (doProcessSuperTypes(object)) {
-					return true;
+					return Boolean.TRUE;
 				}
-				if (doProcessConsumedRoles(object)) {
+				if (doProcessImplementedInterfaces(object)) {
 					return Boolean.TRUE;
 				}
 			}
@@ -172,17 +171,26 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	/**
 	 * Process the consumed roles of a class.
 	 */
-	protected boolean doProcessConsumedRoles(TClass object) {
+	protected boolean doProcessImplementedInterfaces(TClass object) {
 		return doProcess(object.getImplementedInterfaceRefs());
 	}
 
 	@Override
 	public Boolean caseTInterface(TInterface object) {
 		if (guard.tryNext(object)) {
+			if (!object.isPolyfill()) {
+				if (doProcess(getPolyfills(object))) {
+					return Boolean.TRUE;
+				}
+			}
 			if (process(object)) {
 				return Boolean.TRUE;
 			}
-			return doProcessSuperInterfaces(object);
+			if (!object.isPolyfill()) {
+				if (doProcessSuperInterfaces(object)) {
+					return Boolean.TRUE;
+				}
+			}
 		}
 		return Boolean.FALSE;
 	}
@@ -196,14 +204,6 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 
 	@Override
 	public Boolean caseTStructuralType(TStructuralType object) {
-		if (guard.tryNext(object)) {
-			return process(object);
-		}
-		return Boolean.FALSE;
-	}
-
-	@Override
-	public Boolean caseVirtualBaseType(VirtualBaseType object) {
 		if (guard.tryNext(object)) {
 			return process(object);
 		}
@@ -252,8 +252,6 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 			return Collections.singletonList(((TClass) t).getSuperClassRef());
 		else if (t instanceof TInterface && !((TInterface) t).getSuperInterfaceRefs().isEmpty())
 			return ((TInterface) t).getSuperInterfaceRefs();
-		else if (t instanceof TObjectPrototype && ((TObjectPrototype) t).getSuperType() != null)
-			return Collections.singletonList(((TObjectPrototype) t).getSuperType());
 		return getImplicitSuperTypes(t);
 	}
 

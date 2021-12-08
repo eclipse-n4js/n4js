@@ -1,0 +1,19 @@
+// generated from https://github.com/microsoft/TypeScript/blob/5d0d7ae85d1ff52d3ef4cb6cac653f33f7e76724/src/lib/es2018.regexp.d.ts
+// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+
+@@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public class ~RegExpMatchArray extends RegExpMatchArray {
+	public groups?: ~Object+;
+}
+
+@Polyfill
+export external public class ~RegExpExecArray extends RegExpExecArray {
+	public groups?: ~Object+;
+}
+
+@Polyfill
+export external public class RegExp extends RegExp {
+	public get dotAll(): boolean;
+}

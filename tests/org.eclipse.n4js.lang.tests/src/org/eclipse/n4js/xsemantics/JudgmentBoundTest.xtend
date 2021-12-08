@@ -14,12 +14,15 @@ import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.N4JSTestHelper
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.utils.TypeCompareHelper
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeCompareHelper
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.xtext.testing.InjectWith
@@ -50,6 +53,7 @@ class JudgmentBoundTest extends AbstractTypesystemTest {
 	private TClass G;
 	private TClass GI;
 	private TClass GO;
+	private TEnum E;
 
 
 	@Before
@@ -59,6 +63,7 @@ class JudgmentBoundTest extends AbstractTypesystemTest {
 			class G<T> {}
 			class GO<out T> {}
 			class GI<in T> {}
+			enum E { L1, L2 }
 		'''.parseAndValidateSuccessfully
 
 		_G = RuleEnvironmentExtensions.newRuleEnvironment(script);
@@ -68,10 +73,12 @@ class JudgmentBoundTest extends AbstractTypesystemTest {
 		G = classes.get(1);
 		GO = classes.get(2);
 		GI = classes.get(3);
+		E = script.eAllContents.filter(N4EnumDeclaration).map[definedTypeAsEnum].head;
 		assertEquals("C", C.name);
 		assertEquals("G", G.name);
 		assertEquals("GO", GO.name);
 		assertEquals("GI", GI.name);
+		assertEquals("E", E.name);
 	}
 
 
@@ -81,36 +88,78 @@ class JudgmentBoundTest extends AbstractTypesystemTest {
 		val captureSupC = TypeUtils.captureWildcard(wildcardSuper(C));
 		val thisOfC = TypeUtils.createBoundThisTypeRef(C.ref as ParameterizedTypeRef);
 		val typeVarBelowC = (TypesFactory.eINSTANCE.createTypeVariable() => [name = "T";declaredUpperBound = C.ref]).ref;
+		val strLitHello = TypeRefsFactory.eINSTANCE.createStringLiteralTypeRef() => [value = "hello"];
+		val enumLit1 = TypeRefsFactory.eINSTANCE.createEnumLiteralTypeRef() => [value = E.literals.findFirst[name == "L1"]];
 
 		assertTypeEquals(captureExtC,      ts.upperBound(_G, captureExtC));
 		assertTypeEquals(captureSupC,      ts.upperBound(_G, captureSupC));
 		assertTypeEquals(thisOfC,          ts.upperBound(_G, thisOfC));
 		assertTypeEquals(typeVarBelowC,    ts.upperBound(_G, typeVarBelowC));
+		assertTypeEquals(strLitHello,      ts.upperBound(_G, strLitHello));
+		assertTypeEquals(enumLit1,         ts.upperBound(_G, enumLit1));
 
 		assertTypeEquals(captureExtC,      ts.lowerBound(_G, captureExtC));
 		assertTypeEquals(captureSupC,      ts.lowerBound(_G, captureSupC));
 		assertTypeEquals(thisOfC,          ts.lowerBound(_G, thisOfC));
 		assertTypeEquals(typeVarBelowC,    ts.lowerBound(_G, typeVarBelowC));
+		assertTypeEquals(strLitHello,      ts.lowerBound(_G, strLitHello));
+		assertTypeEquals(enumLit1,         ts.lowerBound(_G, enumLit1));
 
 		assertTypeEquals(C.ref,            ts.upperBoundWithReopen(_G, captureExtC));
 		assertTypeEquals(_G.topTypeRef,    ts.upperBoundWithReopen(_G, captureSupC));
 		assertTypeEquals(C.ref,            ts.upperBoundWithReopen(_G, thisOfC));
 		assertTypeEquals(typeVarBelowC,    ts.upperBoundWithReopen(_G, typeVarBelowC));
+		assertTypeEquals(strLitHello,      ts.upperBoundWithReopen(_G, strLitHello));
+		assertTypeEquals(enumLit1,         ts.upperBoundWithReopen(_G, enumLit1));
 
 		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopen(_G, captureExtC));
 		assertTypeEquals(C.ref,            ts.lowerBoundWithReopen(_G, captureSupC));
 		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopen(_G, thisOfC));
 		assertTypeEquals(typeVarBelowC,    ts.lowerBoundWithReopen(_G, typeVarBelowC));
+		assertTypeEquals(strLitHello,      ts.lowerBoundWithReopen(_G, strLitHello));
+		assertTypeEquals(enumLit1,         ts.lowerBoundWithReopen(_G, enumLit1));
 
-		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, captureExtC));
-		assertTypeEquals(_G.topTypeRef,    ts.upperBoundWithReopenAndResolve(_G, captureSupC));
-		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, thisOfC));
-		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolve(_G, typeVarBelowC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolveTypeVars(_G, captureExtC));
+		assertTypeEquals(_G.topTypeRef,    ts.upperBoundWithReopenAndResolveTypeVars(_G, captureSupC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolveTypeVars(_G, thisOfC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolveTypeVars(_G, typeVarBelowC));
+		assertTypeEquals(strLitHello,      ts.upperBoundWithReopenAndResolveTypeVars(_G, strLitHello));
+		assertTypeEquals(enumLit1,         ts.upperBoundWithReopenAndResolveTypeVars(_G, enumLit1));
 
-		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, captureExtC));
-		assertTypeEquals(C.ref,            ts.lowerBoundWithReopenAndResolve(_G, captureSupC));
-		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, thisOfC));
-		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolve(_G, typeVarBelowC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveTypeVars(_G, captureExtC));
+		assertTypeEquals(C.ref,            ts.lowerBoundWithReopenAndResolveTypeVars(_G, captureSupC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveTypeVars(_G, thisOfC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveTypeVars(_G, typeVarBelowC));
+		assertTypeEquals(strLitHello,      ts.lowerBoundWithReopenAndResolveTypeVars(_G, strLitHello));
+		assertTypeEquals(enumLit1,         ts.lowerBoundWithReopenAndResolveTypeVars(_G, enumLit1));
+
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolveLiteralTypes(_G, captureExtC));
+		assertTypeEquals(_G.topTypeRef,    ts.upperBoundWithReopenAndResolveLiteralTypes(_G, captureSupC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolveLiteralTypes(_G, thisOfC));
+		assertTypeEquals(typeVarBelowC,    ts.upperBoundWithReopenAndResolveLiteralTypes(_G, typeVarBelowC));
+		assertTypeEquals(_G.stringTypeRef, ts.upperBoundWithReopenAndResolveLiteralTypes(_G, strLitHello));
+		assertTypeEquals(E.ref,            ts.upperBoundWithReopenAndResolveLiteralTypes(_G, enumLit1));
+
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveLiteralTypes(_G, captureExtC));
+		assertTypeEquals(C.ref,            ts.lowerBoundWithReopenAndResolveLiteralTypes(_G, captureSupC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveLiteralTypes(_G, thisOfC));
+		assertTypeEquals(typeVarBelowC,    ts.lowerBoundWithReopenAndResolveLiteralTypes(_G, typeVarBelowC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveLiteralTypes(_G, strLitHello));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveLiteralTypes(_G, enumLit1));
+
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolveBoth(_G, captureExtC));
+		assertTypeEquals(_G.topTypeRef,    ts.upperBoundWithReopenAndResolveBoth(_G, captureSupC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolveBoth(_G, thisOfC));
+		assertTypeEquals(C.ref,            ts.upperBoundWithReopenAndResolveBoth(_G, typeVarBelowC));
+		assertTypeEquals(_G.stringTypeRef, ts.upperBoundWithReopenAndResolveBoth(_G, strLitHello));
+		assertTypeEquals(E.ref,            ts.upperBoundWithReopenAndResolveBoth(_G, enumLit1));
+
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveBoth(_G, captureExtC));
+		assertTypeEquals(C.ref,            ts.lowerBoundWithReopenAndResolveBoth(_G, captureSupC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveBoth(_G, thisOfC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveBoth(_G, typeVarBelowC));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveBoth(_G, strLitHello));
+		assertTypeEquals(_G.bottomTypeRef, ts.lowerBoundWithReopenAndResolveBoth(_G, enumLit1));
 	}
 
 	@Test

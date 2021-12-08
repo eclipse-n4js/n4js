@@ -10,17 +10,19 @@
  */
 package org.eclipse.n4js.typesbuilder;
 
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TStructGetter
+import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TStructSetter
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 /**
  * Methods for creating types from TypeRefs are collected in this class.
@@ -50,20 +52,37 @@ public class N4JSTypesFromTypeRefBuilder {
 			val builtInTypeScope = BuiltInTypeScope.get(resSet);
 			val structType = TypesFactory.eINSTANCE.createTStructuralType;
 
-			structType.ownedMembers.addAll(
-				structTypeRef.astStructuralMembers.map [ currStructMember |
-					val clone = TypeUtils.copyWithProxies(currStructMember);
-					applyDefaults(builtInTypeScope, clone);
-					clone.astElement = currStructMember;
-					currStructMember.definedMember = clone;
-					return clone;
-				]);
+			for (memberInAST : structTypeRef.astStructuralMembers) {
+				val memberForTModule = createTStructMember(memberInAST, builtInTypeScope);
+				if (memberInAST.isASTCallSignature()) {
+					if (structType.callSignature === null) {
+						structType.callSignature = memberForTModule as TStructMethod;
+					}
+				} else if (memberInAST.isASTConstructSignature()) {
+					if (structType.constructSignature === null) {
+						structType.constructSignature = memberForTModule as TStructMethod;
+					}
+				} else {
+					structType.ownedMembers += memberForTModule;
+				}
+			}
 
 			structTypeRef.structuralType = structType;
 
 			target.internalTypes += structType;
 
 		}
+	}
+
+	def private <T extends TStructMember> T createTStructMember(T memberInAST, BuiltInTypeScope builtInTypeScope) {
+		if (memberInAST === null) {
+			return null;
+		}
+		val memberForModule = TypeUtils.copyWithProxies(memberInAST);
+		applyDefaults(builtInTypeScope, memberForModule);
+		memberForModule.astElement = memberInAST;
+		memberInAST.definedMember = memberForModule;
+		return memberForModule;
 	}
 
 
@@ -125,6 +144,9 @@ public class N4JSTypesFromTypeRefBuilder {
 		applyDefaults(builtInTypeScope, setter.fpar);
 	}
 	def private dispatch void applyDefaults(BuiltInTypeScope builtInTypeScope, TStructMethod method) {
+		if (method.isASTCallSignature) {
+			method.name = N4JSLanguageUtils.CALL_SIGNATURE_NAME;
+		}
 		method.fpars.forEach[applyDefaults(builtInTypeScope, it)];
 		if(method.returnTypeRef===null) {
 			method.returnTypeRef = builtInTypeScope.voidTypeRef

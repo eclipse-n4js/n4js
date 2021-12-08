@@ -113,7 +113,7 @@ fex19;
 var fex20 = (i:int=1)=>{};
 fex20;
 
-// XPECT errors --> "string is not a subtype of int." at ""1""
+// XPECT errors --> ""1" is not a subtype of int." at ""1""
 var fex21 = (i:int="1")=>{};
 fex21;
 

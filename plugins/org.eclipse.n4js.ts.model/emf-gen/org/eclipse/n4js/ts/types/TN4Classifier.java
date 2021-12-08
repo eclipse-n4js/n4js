@@ -20,6 +20,7 @@ package org.eclipse.n4js.ts.types;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#isDeclaredNonStaticPolyfill <em>Declared Non Static Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#isDynamizable <em>Dynamizable</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TN4Classifier#getTypingStrategy <em>Typing Strategy</em>}</li>
  * </ul>
@@ -28,7 +29,29 @@ package org.eclipse.n4js.ts.types;
  * @model
  * @generated
  */
-public interface TN4Classifier extends TClassifier, AccessibleTypeElement, TMigratable {
+public interface TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike {
+	/**
+	 * Returns the value of the '<em><b>Declared Non Static Polyfill</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Declared Non Static Polyfill</em>' attribute.
+	 * @see #setDeclaredNonStaticPolyfill(boolean)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTN4Classifier_DeclaredNonStaticPolyfill()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isDeclaredNonStaticPolyfill();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TN4Classifier#isDeclaredNonStaticPolyfill <em>Declared Non Static Polyfill</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Declared Non Static Polyfill</em>' attribute.
+	 * @see #isDeclaredNonStaticPolyfill()
+	 * @generated
+	 */
+	void setDeclaredNonStaticPolyfill(boolean value);
+
 	/**
 	 * Returns the value of the '<em><b>Dynamizable</b></em>' attribute.
 	 * The default value is <code>"true"</code>.
@@ -84,5 +107,13 @@ public interface TN4Classifier extends TClassifier, AccessibleTypeElement, TMigr
 	 * @generated
 	 */
 	void setTypingStrategy(TypingStrategy value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isPolyfill();
 
 } // TN4Classifier

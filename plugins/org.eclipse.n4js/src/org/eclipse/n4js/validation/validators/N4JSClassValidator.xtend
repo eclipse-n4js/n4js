@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.scoping.members.TypingStrategyFilter
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -38,13 +39,13 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypesPackage
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
@@ -59,12 +60,10 @@ import static org.eclipse.n4js.ts.types.TypingStrategy.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
 
-import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-
 /**
  * superfluous properties in {@code @Spec} constructor.
  */
-class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
+class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements PolyfillValidatorHost {
 
 	@Inject private N4JSTypeSystem ts;
 
@@ -201,7 +200,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 			if (field !== null) {
 				val containingClassifier = field.containingType;
 				if (containingClassifier instanceof TInterface) {
-					if (containingClassifier.builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation) {
+					if (N4JSLanguageUtils.builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation(containingClassifier)) {
 						val message = getMessageForCLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION(field.name, containingClassifier.name);
 						addIssue(message, property.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION);
 					}
@@ -218,7 +217,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		if (polyfillValidatorFragment.holdsPolyfill(this, n4Class)) {
+		if (polyfillValidatorFragment.holdsPolyfill(this, n4Class, getCancelIndicator())) {
 			val tClass = n4Class.definedType as TClass;
 			internalCheckAbstractFinal(tClass);
 
@@ -253,9 +252,11 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 		if (superType !== null && superType.name !== null) { // note: in case superType.name===null, the type reference is completely invalid and other, more appropriate error messages have been created elsewhere
 
 			if (superType instanceof PrimitiveType) {
-				val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(superType.name);
-				addIssue(message, n4Class.superClassRef, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE);
-			} else if (!(superType instanceof TClass) && !(superType instanceof TObjectPrototype)) {
+				if (!N4Scheme.isFromResourceWithN4Scheme(n4Class)) { // primitive types may be extended in built-in types
+					val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(superType.name);
+					addIssue(message, n4Class.superClassRef, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE);
+				}
+			} else if (!(superType instanceof TClass)) {
 				if (superType instanceof TInterface) {
 					val message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(n4Class.description, "extend",
 						superType.description, "implements");
@@ -265,11 +266,11 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(message, n4Class.superClassRef, null, CLF_WRONG_META_TYPE);
 					return false;
 				}
-			} else if (superType instanceof TClass) {
+			} else if(superType instanceof TClass) {
 				// (got a super class; now validate it ...)
 
 				// super class must not be final (except in case of polyfills)
-				if (superType.final && !(n4Class.isPolyfill || n4Class.isStaticPolyfill)) {
+				if (superType.final && !(N4JSLanguageUtils.isNonStaticPolyfill(n4Class) || N4JSLanguageUtils.isStaticPolyfill(n4Class))) {
 					val message = getMessageForCLF_EXTEND_FINAL(superType.name);
 
 					val superTypeAstElement = superType.eGet(TypesPackage.eINSTANCE.syntaxRelatedTElement_AstElement,
@@ -295,11 +296,6 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 				if (superType.observable && !(n4Class.definedType as TClass).observable) {
 					val message = getMessageForCLF_OBSERVABLE_MISSING(n4Class.name, superType.name);
 					addIssue(message, n4Class, N4_TYPE_DECLARATION__NAME, CLF_OBSERVABLE_MISSING);
-					return false;
-				}
-			} else if (superType instanceof TObjectPrototype) {
-				// the following applies to TObjectPrototype as well (not just to TClass)
-				if (!holdsCtorOfSuperTypeIsAccessible(n4Class, superType)) {
 					return false;
 				}
 			}
@@ -333,8 +329,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 
 				// consumed type must be an interface
 				if (!(consumedType instanceof TInterface)) {
-					if ((consumedType instanceof TClass || consumedType instanceof TObjectPrototype) &&
-						n4Class.superClassRef === null) {
+					if (consumedType instanceof TClass && n4Class.superClassRef === null) {
 						val message = getMessageForSYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP(n4Class.description, "implement",
 							consumedType.description, "extends");
 						addIssue(message, it, null, SYN_KW_EXTENDS_IMPLEMENTS_MIXED_UP);
@@ -342,6 +337,14 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 						val message = getMessageForCLF_WRONG_META_TYPE(n4Class.description, "implement",
 							consumedType.description);
 						addIssue(message, it, null, CLF_WRONG_META_TYPE);
+					}
+				} else {
+					val tIfc = consumedType as TInterface;
+					val cth = containerTypesHelper.fromContext(n4Class);
+					val hasCallConstructSig = cth.findCallSignature(tIfc) !== null || cth.findConstructSignature(tIfc) !== null;
+					if (hasCallConstructSig) {
+						val message = getMessageForCLF_CALL_CONSTRUCT_SIG_CANNOT_IMPLEMENT();
+						addIssue(message, it, null, CLF_CALL_CONSTRUCT_SIG_CANNOT_IMPLEMENT);
 					}
 				}
 			} else if (consumedTypeRef !== null && consumedTypeRef.isAliasResolved) {

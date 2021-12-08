@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	Workspace {
+		Project "XtTestProject" {
+			Folder "src" {
+				ThisFile {}
+			}
+			Folder "src-poly" {
+				File "StaticPolyfills.n4js" { from="./StaticPolyfills_Filler.n4js" }
+			}
+		}
+	}
+
+	GENERATE_DTS
+
+END_SETUP */
+
+
+@@StaticPolyfillAware
+
+export public class SomeClass {
+	public field = "hello";
+	public get getter(): string { return null; }
+	public set setter(value: string) {}
+	public method() {}
+}
+
+
+
+/* XPECT generated_dts ---
+export class SomeClass {
+	public field: string;
+	public get getter(): string;
+	public set setter(value: string);
+	public method(): void;
+	public fieldFilled: number;
+	public get getterFilled(): number;
+	public set setterFilled(value: number);
+	public methodFilled(): void;
+}
+--- */

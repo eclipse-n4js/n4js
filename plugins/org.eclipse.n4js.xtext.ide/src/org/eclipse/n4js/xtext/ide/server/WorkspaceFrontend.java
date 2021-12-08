@@ -17,11 +17,11 @@ import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.n4js.xtext.ide.server.findReferences.XWorkspaceResourceAccess;
+import org.eclipse.n4js.xtext.ide.server.util.XChunkedResourceDescriptions;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
 import org.eclipse.xtext.ide.server.ILanguageServerAccess;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
 import org.eclipse.xtext.ide.server.symbol.WorkspaceSymbolService;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.inject.Inject;
@@ -63,7 +63,7 @@ public class WorkspaceFrontend {
 
 	/** Compute the symbol information. Executed in a read request. */
 	protected List<? extends SymbolInformation> symbol(WorkspaceSymbolParams params, CancelIndicator cancelIndicator) {
-		ResourceDescriptionsData liveScopeIndex = resourceTaskManager.createLiveScopeIndex();
+		XChunkedResourceDescriptions liveScopeIndex = resourceTaskManager.createLiveScopeIndex();
 		return workspaceSymbolService.getSymbols(params.getQuery(), resourceAccess, liveScopeIndex, cancelIndicator);
 	}
 

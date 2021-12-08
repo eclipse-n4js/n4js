@@ -36,12 +36,13 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.util.Variance;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.n4js.utils.CharDiscreteDomain;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
@@ -140,6 +141,9 @@ public final class InferenceContext {
 
 	/** Tells if {@link #solve()} was invoked. */
 	private boolean isSolved = false;
+
+	/** The state of {@link #currentBounds} right before phase resolution started. */
+	private BoundSet preResolutionBounds = null;
 
 	/** The solution as returned by {@link #solve()}, or <code>null</code> if unsolvable. */
 	private Map<InferenceVariable, TypeRef> solution = null;
@@ -345,7 +349,8 @@ public final class InferenceContext {
 	 * <li>otherwise, a map from each inference variable returned from {@link #getInferenceVariables()} to its
 	 * instantiation.
 	 * </ul>
-	 * At this time, no partial solutions are returned in case of unsolvable constraint systems.
+	 * At this time, no partial solutions are returned in case of unsolvable constraint systems, but method
+	 * {@link #isPromisingPartialSolution(InferenceVariable, TypeRef)} might be helpful in some cases.
 	 */
 	public Map<InferenceVariable, TypeRef> solve() {
 		if (isSolved) {
@@ -390,8 +395,7 @@ public final class InferenceContext {
 		if (DEBUG) {
 			log("****** Resolution");
 		}
-		final boolean success = !isDoomed() ? resolve() : false;
-		solution = success ? currentBounds.getInstantiations() : null;
+		final boolean success = resolve();
 		if (DEBUG) {
 			if (!success) {
 				log("NO SOLUTION FOUND");
@@ -409,6 +413,37 @@ public final class InferenceContext {
 		return solution;
 	}
 
+	/**
+	 * Tells whether the given candidate type reference looks like a promising partial solution for inference variable
+	 * 'infVar' within an overall unsolvable constraint system. Must only be used with unsolvable inference contexts,
+	 * i.e. {@link #solve()} must have been called before and must have returned <code>false</code>; otherwise an
+	 * exception is thrown.
+	 * <p>
+	 * This method does not provide any strong guarantees and should only be used for non-critical heuristics, e.g.
+	 * tweaking error messages.
+	 */
+	public boolean isPromisingPartialSolution(InferenceVariable infVar, TypeRef candidateTypeRef) {
+		if (!isSolved) {
+			throw new IllegalStateException("must not invoke #isPromisingPartialSolution() before #solve()");
+		}
+		if (solution != null) {
+			throw new IllegalStateException("method #isPromisingPartialSolution() may only be used if solution failed");
+		}
+		TypeRef[] upperBounds = preResolutionBounds.collectUpperBounds(infVar, true, true);
+		for (TypeRef upperBound : upperBounds) {
+			if (!ts.subtypeSucceeded(G, candidateTypeRef, upperBound)) {
+				return false;
+			}
+		}
+		TypeRef[] lowerBounds = preResolutionBounds.collectLowerBounds(infVar, true, true);
+		for (TypeRef lowerBound : lowerBounds) {
+			if (!ts.subtypeSucceeded(G, lowerBound, candidateTypeRef)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	// ###############################################################################################################
 	// RESOLUTION
 
@@ -416,11 +451,18 @@ public final class InferenceContext {
 	 * Performs resolution of all inference variables of the receiving inference context. This might trigger further
 	 * reduction and incorporation steps.
 	 * <p>
-	 * If a solution is found, <code>true</code> is returned and {@link #currentBounds} will contain instantiations for
-	 * all inference variables. Otherwise, <code>false</code> is returned and {@link #currentBounds} will be in an
-	 * undefined state.
+	 * If a solution is found, <code>true</code> is returned, {@link #currentBounds} will contain instantiations for all
+	 * inference variables, and {@link #solution} will contain instantiations for all inference variables. Otherwise,
+	 * <code>false</code> is returned, {@link #currentBounds} will be in an undefined state, and {@link #solution} will
+	 * be <code>null</code>. In both cases, {@link #preResolutionBounds} will contain the state of
+	 * {@link #currentBounds} right before resolution started.
 	 */
 	private boolean resolve() {
+		preResolutionBounds = currentBounds.copy();
+		solution = null;
+		if (isDoomed()) {
+			return false;
+		}
 		Set<InferenceVariable> currVariableSet;
 		while ((currVariableSet = getSmallestVariableSet(inferenceVariables)) != null) {
 			for (InferenceVariable currVariable : currVariableSet) {
@@ -448,6 +490,7 @@ public final class InferenceContext {
 				return false;
 			}
 		}
+		solution = currentBounds.getInstantiations();
 		return true;
 	}
 
@@ -491,14 +534,33 @@ public final class InferenceContext {
 		if (lowerBounds.length > 0 && !preferUpperOverLower) {
 			// take upper bound of all lower bounds
 			// (if we have a type bound `α :> ? extends A` this will give us A as a lower bound for α)
+			final TypeRef[] lowerBoundsWithoutLiteralTypes = new TypeRef[lowerBounds.length];
+			boolean foundLiteralType = false;
 			for (int i = 0; i < lowerBounds.length; i++) {
-				lowerBounds[i] = ts.upperBound(G, lowerBounds[i]);
+				TypeRef curr = ts.upperBound(G, lowerBounds[i]);
+				TypeRef currBase = N4JSLanguageUtils.getLiteralTypeBase(G, curr);
+				lowerBounds[i] = curr;
+				lowerBoundsWithoutLiteralTypes[i] = currBase;
+				foundLiteralType |= currBase != curr;
 			}
-			final TypeRef result = tsh.createUnionType(G, lowerBounds);
+			final TypeRef result;
+			if (foundLiteralType) {
+				TypeRef resultWithoutLiteralTypes = tsh.createUnionType(G, lowerBoundsWithoutLiteralTypes);
+				final TypeRef[] upperBounds = upperBoundsPreview != null ? upperBoundsPreview
+						: currentBounds.collectUpperBounds(infVar, true, true);
+				if (isSubtypeOfAll(resultWithoutLiteralTypes, upperBounds)) {
+					result = resultWithoutLiteralTypes;
+				} else {
+					result = tsh.createUnionType(G, lowerBounds);
+				}
+			} else {
+				result = tsh.createUnionType(G, lowerBounds);
+			}
 			assert TypeUtils.isProper(result) : "not a proper LUB: " + str(result);
 			return result;
 		} else {
-			final TypeRef[] upperBounds = currentBounds.collectUpperBounds(infVar, true, true);
+			final TypeRef[] upperBounds = upperBoundsPreview != null ? upperBoundsPreview
+					: currentBounds.collectUpperBounds(infVar, true, true);
 			if (upperBounds.length > 0) {
 				// take lower bound of all upper bounds
 				for (int i = 0; i < upperBounds.length; i++) {
@@ -651,6 +713,15 @@ public final class InferenceContext {
 						return false;
 					}
 				}
+			}
+		}
+		return true;
+	}
+
+	private boolean isSubtypeOfAll(TypeRef left, TypeRef... rights) {
+		for (TypeRef right : rights) {
+			if (!ts.subtypeSucceeded(G, left, right)) {
+				return false;
 			}
 		}
 		return true;

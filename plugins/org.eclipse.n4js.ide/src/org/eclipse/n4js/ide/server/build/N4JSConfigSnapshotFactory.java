@@ -47,8 +47,8 @@ public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 	public N4JSProjectConfigSnapshot createProjectConfigSnapshot(XIProjectConfig projectConfig) {
 		N4JSProjectConfig projectConfigCasted = (N4JSProjectConfig) projectConfig;
 
-		List<String> semanticDependencies = Lists.transform(projectConfigCasted.computeSemanticDependencies(),
-				ProjectDependency::getProjectName);
+		List<String> semanticDependencies = Lists.transform(projectConfigCasted.getSemanticDependencies(),
+				ProjectDependency::getPackageName);
 
 		return new N4JSProjectConfigSnapshot(
 				projectConfigCasted.getProjectDescription(),
@@ -56,7 +56,8 @@ public class N4JSConfigSnapshotFactory extends ConfigSnapshotFactory {
 				projectConfig.indexOnly(),
 				projectConfig.isGeneratorEnabled(),
 				semanticDependencies,
-				Iterables.transform(projectConfig.getSourceFolders(), this::createSourceFolderSnapshot));
+				Iterables.transform(projectConfig.getSourceFolders(), this::createSourceFolderSnapshot),
+				projectConfigCasted.getPackageNameForProjectIdMap());
 	}
 
 	@Override

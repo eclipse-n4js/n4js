@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
@@ -79,6 +80,12 @@ public final class FileURI extends SafeURI<FileURI> {
 
 	public Path toPath() {
 		return toFile().toPath();
+	}
+
+	/** {@link FileURI}s are always absolute */
+	public Path relativize(FileURI location) {
+		List<String> deresolve = location.deresolve(this);
+		return Path.of(String.join(File.separator, deresolve));
 	}
 
 	@Override

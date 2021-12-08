@@ -12,7 +12,6 @@ package org.eclipse.n4js.ts.typeRefs;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
@@ -36,10 +35,10 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeAsText <em>Declared Type As Text</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeArgs <em>Declared Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression <em>Iterable Type Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -94,22 +93,29 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	void setDeclaredTypeAsText(String value);
 
 	/**
-	 * Returns the value of the '<em><b>Type Args</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Declared Type Args</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.TypeArgument}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Type Args</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_TypeArgs()
+	 * <!-- begin-model-doc -->
+	 * The type arguments provided with this type reference, <b>NOT</b> including defaults for optional type parameters.
+	 * Use {@link ParameterizedTypeRef#getTypeArgsWithDefaults() #getTypeArgsWithDefaults()} to also obtain those defaults.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Declared Type Args</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_DeclaredTypeArgs()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TypeArgument> getTypeArgs();
+	EList<TypeArgument> getDeclaredTypeArgs();
 
 	/**
 	 * Returns the value of the '<em><b>Array Type Expression</b></em>' attribute.
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  An array type in the AST, i.e. something like {@code let x: string[];}. Don't confuse with {@link ParameterizedTypeRef#isArrayNTypeExpression() arrayNTypeExpression}.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Array Type Expression</em>' attribute.
 	 * @see #setArrayTypeExpression(boolean)
 	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_ArrayTypeExpression()
@@ -129,53 +135,60 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	void setArrayTypeExpression(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Iterable Type Expression</b></em>' attribute.
+	 * Returns the value of the '<em><b>Array NType Expression</b></em>' attribute.
 	 * The default value is <code>"false"</code>.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Iterable Type Expression</em>' attribute.
-	 * @see #setIterableTypeExpression(boolean)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_IterableTypeExpression()
+	 * <!-- begin-model-doc -->
+	 *  An ArrayN type in the AST, i.e. something like {@code let x: [string,number];}. Don't confuse with {@link ParameterizedTypeRef#isArrayTypeExpression() arrayTypeExpression}.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Array NType Expression</em>' attribute.
+	 * @see #setArrayNTypeExpression(boolean)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_ArrayNTypeExpression()
 	 * @model default="false" unique="false"
 	 * @generated
 	 */
-	boolean isIterableTypeExpression();
+	boolean isArrayNTypeExpression();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isIterableTypeExpression <em>Iterable Type Expression</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Iterable Type Expression</em>' attribute.
-	 * @see #isIterableTypeExpression()
+	 * @param value the new value of the '<em>Array NType Expression</em>' attribute.
+	 * @see #isArrayNTypeExpression()
 	 * @generated
 	 */
-	void setIterableTypeExpression(boolean value);
+	void setArrayNTypeExpression(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Ast Namespace</b></em>' reference.
+	 * Returns the value of the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source
-	 * code, referred to via the namespace of a namespace import, then this is non-null and points to that namespace.
+	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node <em>and</em> ...
+	 * <ol>
+	 * <li>the declared type is, in the source code, referred to via the namespace of a namespace import, then this is non-null
+	 * and points to that namespace.
+	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
+	 * </ol>
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Ast Namespace</em>' reference.
-	 * @see #setAstNamespace(ModuleNamespaceVirtualType)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstNamespace()
+	 * @return the value of the '<em>Ast Declared Type Qualifier</em>' reference.
+	 * @see #setAstDeclaredTypeQualifier(Type)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstDeclaredTypeQualifier()
 	 * @model transient="true"
 	 * @generated
 	 */
-	ModuleNamespaceVirtualType getAstNamespace();
+	Type getAstDeclaredTypeQualifier();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespace <em>Ast Namespace</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Ast Namespace</em>' reference.
-	 * @see #getAstNamespace()
+	 * @param value the new value of the '<em>Ast Declared Type Qualifier</em>' reference.
+	 * @see #getAstDeclaredTypeQualifier()
 	 * @generated
 	 */
-	void setAstNamespace(ModuleNamespaceVirtualType value);
+	void setAstDeclaredTypeQualifier(Type value);
 
 	/**
 	 * Returns the value of the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -250,6 +263,25 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * Returns all type arguments: those given in this type reference as well as default arguments
+	 * of <em>optional</em> type parameters for which the argument is omitted.
+	 * <p>
+	 * If a type argument is missing in this type reference for a <em>mandatory</em> type parameter
+	 * (i.e. this type reference is a {@link ParameterizedTypeRef#isRaw() raw type reference}) then
+	 * nothing will be added and only the type arguments actually given in this type reference will
+	 * be returned (i.e. same return value as {@link ParameterizedTypeRef#getDeclaredTypeArgs() #getDeclaredTypeArgs()}).
+	 * This is to ensure consistent behavior of this method and {@code #getDeclaredTypeArgs()} with
+	 * respect to raw type references.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	EList<TypeArgument> getTypeArgsWithDefaults();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
@@ -272,7 +304,7 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Delegates to {@link Type.isGeneric()}
+	 * Delegates to {@link Type#isGeneric()}
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
@@ -283,7 +315,9 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Overrides {@link TypeRef#isRaw()}.
+	 * Returns true iff the given type reference is "raw", i.e. if it points to a generic type and has fewer type
+	 * arguments than the generic type has mandatory(!) type parameters.
+	 * 	 * Overrides {@link TypeRef#isRaw()}.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

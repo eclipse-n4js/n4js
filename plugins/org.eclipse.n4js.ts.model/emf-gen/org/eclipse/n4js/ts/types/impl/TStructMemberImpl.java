@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import com.google.common.base.Objects;
+
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -24,6 +26,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -145,6 +148,26 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 	 * @generated
 	 */
 	@Override
+	public boolean isASTCallSignature() {
+		return ((this instanceof TStructMethod) && (this.getName() == null));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isASTConstructSignature() {
+		return ((this instanceof TStructMethod) && Objects.equal(this.getName(), "new"));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.TSTRUCT_MEMBER__DEFINED_MEMBER:
@@ -229,6 +252,10 @@ public abstract class TStructMemberImpl extends TMemberImpl implements TStructMe
 				return isStatic();
 			case TypesPackage.TSTRUCT_MEMBER___GET_MEMBER_ACCESS_MODIFIER:
 				return getMemberAccessModifier();
+			case TypesPackage.TSTRUCT_MEMBER___IS_AST_CALL_SIGNATURE:
+				return isASTCallSignature();
+			case TypesPackage.TSTRUCT_MEMBER___IS_AST_CONSTRUCT_SIGNATURE:
+				return isASTConstructSignature();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

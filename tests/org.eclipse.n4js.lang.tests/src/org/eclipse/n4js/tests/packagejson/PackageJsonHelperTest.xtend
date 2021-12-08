@@ -71,20 +71,20 @@ class PackageJsonHelperTest {
 		val dep3 = pd.projectDependencies.get(3);
 		val dep4 = pd.projectDependencies.get(4);
 
-		assertEquals("express", dep0.projectName);
+		assertEquals("express", dep0.getPackageName);
 		assertEquals(">=1.2.3", dep0.versionRequirement.toString);
-		assertEquals("lodash", dep1.projectName);
+		assertEquals("lodash", dep1.getPackageName);
 		assertEquals("~2.3.4", dep1.versionRequirement.toString);
-		assertEquals("eslint", dep2.projectName);
+		assertEquals("eslint", dep2.getPackageName);
 		assertEquals("^3.4.5", dep2.versionRequirement.toString);
 
 		// a dependency with an empty version requirement:
-		assertEquals("emptyVersionRequirement", dep3.projectName);
+		assertEquals("emptyVersionRequirement", dep3.getPackageName);
 		assertTrue("empty string as version requirement should be parsed to an empty VersionRangeSetRequirement",
 			dep3.versionRequirement instanceof VersionRangeSetRequirement
 			&& (dep3.versionRequirement as VersionRangeSetRequirement).ranges.empty);
 		// a dependency with version requirement "latest":
-		assertEquals("latestVersionRequirement", dep4.projectName);
+		assertEquals("latestVersionRequirement", dep4.getPackageName);
 		assertTrue("'latest' as version requirement should be parsed to a TagVersionRequirement",
 			dep4.versionRequirement instanceof TagVersionRequirement);
 		assertEquals("latest", (dep4.versionRequirement as TagVersionRequirement).tagName);
@@ -102,14 +102,14 @@ class PackageJsonHelperTest {
 		'''.parseAndConvert
 
 		// make sure no dependency was added for the invalid entry with empty key:
-		assertNull(pd.projectDependencies.filter[projectName.nullOrEmpty].head);
+		assertNull(pd.projectDependencies.filter[getPackageName.nullOrEmpty].head);
 
 		assertEquals(1, pd.projectDependencies.size);
 		val dep0 = pd.projectDependencies.get(0);
 
 		// a dependency with an invalid version requirement is not ignored entirely,
 		// just the version requirement is omitted:
-		assertEquals("invalidVersionRequirement", dep0.projectName);
+		assertEquals("invalidVersionRequirement", dep0.getPackageName);
 		assertEquals(null, dep0.versionRequirement);
 	}
 
@@ -256,7 +256,7 @@ class PackageJsonHelperTest {
 
 
 	def private assertCorrectDefaults(ProjectDescription pd, boolean hasDefaultProjectType) {
-		assertEquals(DEFAULT_PROJECT_ID, pd.getName);
+		assertEquals(DEFAULT_PROJECT_ID, pd.getPackageName);
 		assertEquals(VERSION.defaultValue, pd.getVersion.toString);
 		assertEquals(VENDOR_ID.defaultValue, pd.vendorId);
 		assertEquals(null, pd.vendorName);

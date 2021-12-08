@@ -1,0 +1,6 @@
+!bin/
+.DS_Store
+.vscode
+node_modules
+src-gen
+/TEMP/

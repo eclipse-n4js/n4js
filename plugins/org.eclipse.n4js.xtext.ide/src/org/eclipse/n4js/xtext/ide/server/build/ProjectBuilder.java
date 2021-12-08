@@ -35,7 +35,6 @@ import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.xtext.ide.server.issues.PublishingIssueAcceptor;
-import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
@@ -56,6 +55,7 @@ import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
+import org.eclipse.xtext.validation.Issue.IssueImpl;
 
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableList;
@@ -69,7 +69,6 @@ import com.google.inject.Provider;
 /**
  * TODO JavaDoc
  */
-@SuppressWarnings({ "deprecation" })
 public class ProjectBuilder {
 	private static final Logger LOG = LogManager.getLogger(ProjectBuilder.class);
 
@@ -192,12 +191,12 @@ public class ProjectBuilder {
 	}
 
 	class ProjectStateUpdater implements AfterValidateListener, AfterDeleteListener, AfterBuildListener {
-		final Map<URI, ImmutableList<? extends LSPIssue>> newValidationIssues = new HashMap<>();
+		final Map<URI, ImmutableList<? extends Issue>> newValidationIssues = new HashMap<>();
 		final List<URI> deleted = new ArrayList<>();
 
 		@Override
 		public void afterValidate(URI source, List<? extends Issue> issues) {
-			newValidationIssues.put(source, ImmutableList.copyOf(LSPIssue.cast(issues)));
+			newValidationIssues.put(source, ImmutableList.copyOf(issues));
 		}
 
 		@Override
@@ -423,7 +422,7 @@ public class ProjectBuilder {
 	/** Report an issue related to the whole project. */
 	public void reportProjectIssue(String message, String code, Severity severity) {
 		URI uri = getBaseDir();
-		LSPIssue issue = new LSPIssue();
+		IssueImpl issue = new IssueImpl();
 		issue.setMessage(message);
 		issue.setCode(code);
 		issue.setSeverity(severity);
@@ -435,7 +434,7 @@ public class ProjectBuilder {
 		issue.setColumnEnd(1);
 
 		ImmutableProjectState updatedState = projectStateSnapshot.updateAndGet(snapshot -> {
-			ImmutableListMultimap.Builder<URI, LSPIssue> builder = ImmutableListMultimap.builder();
+			ImmutableListMultimap.Builder<URI, Issue> builder = ImmutableListMultimap.builder();
 			builder.putAll(snapshot.getValidationIssues());
 			builder.put(uri, issue);
 			return ImmutableProjectState.withoutCopy(snapshot.internalGetResourceDescriptions(),
@@ -547,7 +546,7 @@ public class ProjectBuilder {
 	}
 
 	/** Getter */
-	public String getName() {
+	public String getProjectID() {
 		return getProjectConfig().getName();
 	}
 
@@ -717,7 +716,7 @@ public class ProjectBuilder {
 	/** Updates the index state, file hashes and validation issues */
 	private void updateProjectState(
 			XBuildResult result,
-			Map<URI, ? extends List<? extends LSPIssue>> issuesFromIncrementalBuild,
+			Map<URI, ? extends List<? extends Issue>> issuesFromIncrementalBuild,
 			List<URI> deletedFiles) {
 
 		ImmutableMap.Builder<String, Boolean> newDependenciesBuilder = ImmutableMap.builder();
@@ -743,7 +742,7 @@ public class ProjectBuilder {
 				newHashedFileContents.remove(deletedFile);
 			}
 
-			ImmutableListMultimap.Builder<URI, LSPIssue> newIssues = ImmutableListMultimap.builder();
+			ImmutableListMultimap.Builder<URI, Issue> newIssues = ImmutableListMultimap.builder();
 			snapshot.getValidationIssues().asMap().forEach((uri, oldIssues) -> {
 				if (!issuesFromIncrementalBuild.containsKey(uri)) {
 					newIssues.putAll(uri, oldIssues);
@@ -821,12 +820,12 @@ public class ProjectBuilder {
 	/**
 	 * Returns the known issues for the given resource.
 	 */
-	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
+	public ImmutableList<? extends Issue> getValidationIssues(URI uri) {
 		return getValidationIssues().get(uri);
 	}
 
 	/** @return the validation issues as an unmodifiable map. */
-	private ImmutableListMultimap<URI, LSPIssue> getValidationIssues() {
+	private ImmutableListMultimap<URI, Issue> getValidationIssues() {
 		return projectStateSnapshot.get().getValidationIssues();
 	}
 

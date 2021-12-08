@@ -29,7 +29,6 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
 
 import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.TStructMember;
@@ -319,7 +318,17 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
-	public EList<TypeArgument> getTypeArgs() {
+	public EList<TypeArgument> getDeclaredTypeArgs() {
+		return XcoreCollectionLiterals.<TypeArgument>emptyEList();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TypeArgument> getTypeArgsWithDefaults() {
 		return XcoreCollectionLiterals.<TypeArgument>emptyEList();
 	}
 
@@ -441,25 +450,6 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
-	public int getVersion() {
-		int _xifexpression = (int) 0;
-		Type _declaredType = this.getDeclaredType();
-		boolean _tripleNotEquals = (_declaredType != null);
-		if (_tripleNotEquals) {
-			_xifexpression = this.getDeclaredType().getVersion();
-		}
-		else {
-			_xifexpression = 0;
-		}
-		return _xifexpression;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypeRefsPackage.TYPE_REF__ORIGINAL_ALIAS_TYPE_REF:
@@ -550,12 +540,6 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
-		if (baseClass == Versionable.class) {
-			switch (baseOperationID) {
-				case TypeRefsPackage.VERSIONABLE___GET_VERSION: return TypeRefsPackage.TYPE_REF___GET_VERSION;
-				default: return -1;
-			}
-		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
@@ -595,8 +579,10 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return getDeclaredUpperBound();
 			case TypeRefsPackage.TYPE_REF___GET_DECLARED_LOWER_BOUND:
 				return getDeclaredLowerBound();
-			case TypeRefsPackage.TYPE_REF___GET_TYPE_ARGS:
-				return getTypeArgs();
+			case TypeRefsPackage.TYPE_REF___GET_DECLARED_TYPE_ARGS:
+				return getDeclaredTypeArgs();
+			case TypeRefsPackage.TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS:
+				return getTypeArgsWithDefaults();
 			case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING:
 				return getTypeRefAsString();
 			case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION:
@@ -617,8 +603,6 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return isDefSiteStructuralTyping();
 			case TypeRefsPackage.TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return getASTNodeOptionalFieldStrategy();
-			case TypeRefsPackage.TYPE_REF___GET_VERSION:
-				return getVersion();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -16,11 +16,8 @@ import java.lang.reflect.Method
 import org.eclipse.emf.common.util.BasicDiagnostic
 import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.n4js.smith.N4JSDataCollectors
-import org.eclipse.n4js.ts.validation.TypesValidator
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.validators.IDEBUGValidator
-import org.eclipse.n4js.validation.validators.N4IDLMigrationValidator
-import org.eclipse.n4js.validation.validators.N4IDLValidator
 import org.eclipse.n4js.validation.validators.N4JSAccessModifierValidator
 import org.eclipse.n4js.validation.validators.N4JSAnnotationValidator
 import org.eclipse.n4js.validation.validators.N4JSClassValidator
@@ -57,11 +54,6 @@ import org.eclipse.xtext.validation.ComposedChecks
 
 /**
  * Validation rules for N4JS.
- * 
- * Validation of type expression is defined in
- * {@link TypesValidator}. However, some context
- * sensitive validations such as type ref of formal parameters or return types
- * have to be repeated here, as the rules are overwritten.
  * <p>
  * Note on contained validators:
  * It is required to override
@@ -74,7 +66,6 @@ import org.eclipse.xtext.validation.ComposedChecks
  * 
  * @see http://www.eclipse.org/Xtext/documentation.html#validation
  * @see <a name="N4JSSpec">[N4JSSpec]</a> N4JS Specification / NumberFour AG. Berlin, 2013 <a href="https://github.com/NumberFour/specs/">[GitHub]</a>
- * @see TypesValidator
  */
 @ComposedChecks(validators=#[
 	// N4JSStrictValidator,
@@ -108,8 +99,6 @@ import org.eclipse.xtext.validation.ComposedChecks
 	N4JSXValidator,
 	ThirdPartyValidator,
 	UnsupportedFeatureValidator,
-	N4IDLValidator,
-	N4IDLMigrationValidator,
 	RuntimeDependencyValidator
 ])
 @Log

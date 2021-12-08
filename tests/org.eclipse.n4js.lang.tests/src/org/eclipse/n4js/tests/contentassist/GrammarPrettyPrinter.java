@@ -16,6 +16,7 @@ import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.CrossReference;
 import org.eclipse.xtext.XtextRuntimeModule;
+import org.eclipse.xtext.formatting2.IFormatter2;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.serializer.diagnostic.ISerializationDiagnostic.Acceptor;
 import org.eclipse.xtext.serializer.impl.Serializer;
@@ -44,6 +45,12 @@ public class GrammarPrettyPrinter implements Function1<AbstractElement, String> 
 		@SuppressWarnings("unused")
 		public Class<? extends CrossReferenceSerializer> bindCrossReferenceSerializer() {
 			return MyCrossReferenceSerializer.class;
+		}
+
+		@Override
+		public Class<? extends IFormatter2> bindIFormatter2() {
+			// unbind the XtextFormatterJava
+			return null;
 		}
 
 	}).getInstance(Serializer.class);

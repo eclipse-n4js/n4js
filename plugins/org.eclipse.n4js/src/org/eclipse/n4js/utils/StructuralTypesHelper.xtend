@@ -12,8 +12,10 @@ package org.eclipse.n4js.utils
 
 import com.google.inject.Inject
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TMember
@@ -106,8 +108,9 @@ class StructuralTypesHelper {
 		Function1<TMember, Boolean> predicate) {
 
 		val structMembersOfThis = doCollectMembers(G, ref.actualThisTypeRef, predicate);
-		if (!ref.structuralMembers.empty) {
-			return structMembersOfThis.concat(ref.structuralMembers);
+		val structMembersOfRef = ref.structuralMembersWithCallConstructSignatures;
+		if (!structMembersOfRef.empty) {
+			return structMembersOfThis.concat(structMembersOfRef);
 		}
 		return structMembersOfThis;
 	}
@@ -116,10 +119,19 @@ class StructuralTypesHelper {
 		Function1<TMember, Boolean> predicate) {
 
 		val nominalMembers = doCollectMembersOfType(G, ref.declaredType, predicate);
-		if (!ref.structuralMembers.empty) {
-			return nominalMembers.concat(ref.structuralMembers);
+		if (ref instanceof StructuralTypeRef) {
+			val structMembersOfRef = ref.structuralMembersWithCallConstructSignatures;
+			if (!structMembersOfRef.empty) {
+				return nominalMembers.concat(structMembersOfRef);
+			}
 		}
 		return nominalMembers;
+	}
+
+	def private dispatch Iterable<TMember> doCollectMembers(RuleEnvironment G, FunctionTypeExpression ref,
+		Function1<TMember, Boolean> predicate) {
+
+		return doCollectMembersOfType(G, G.functionType, predicate);
 	}
 
 	def private dispatch Iterable<TMember> doCollectMembersOfType(RuleEnvironment G, Type type,
@@ -131,7 +143,7 @@ class StructuralTypesHelper {
 	def private dispatch Iterable<TMember> doCollectMembersOfType(RuleEnvironment G, ContainerType<?> type,
 		Function1<TMember, Boolean> predicate) {
 
-		return containerTypesHelper.fromContext(G.contextResource).members(type).filter(predicate);
+		return containerTypesHelper.fromContext(G.contextResource).members(type, true, true, true).filter(predicate);
 	}
 
 	def private dispatch Iterable<TMember> doCollectMembersOfType(RuleEnvironment G, TypeVariable type,

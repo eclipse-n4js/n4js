@@ -80,7 +80,7 @@ class AT_223_UseTypeLikeVarTest {
 			a();
 		'''.parse
 		script.assertErrors(
-			"ERROR:string is not a subtype of {function():void}. (__synthetic0.n4js line : 3 column : 7)"
+			'''ERROR:"Hello" is not a subtype of {function():void}. (__synthetic0.n4js line : 3 column : 7)'''
 		)
 	}
 

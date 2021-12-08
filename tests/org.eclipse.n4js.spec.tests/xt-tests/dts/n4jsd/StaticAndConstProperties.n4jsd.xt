@@ -1,0 +1,58 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+
+external class C {
+	static field1: any;
+	const field2: any;
+	static f(): void;
+    static get g(): number;
+    static set s(v: number);
+}
+external interface ~I {
+	static field1: any;
+	const field2: any;
+	static f(): void {}
+    static get a(): number {return 0;}
+    static set a(v: number) {};
+    static get g(): number {return 0;}
+    static set s(v: number) {}
+}
+
+
+/* XPECT generated_dts ---
+declare class C {
+	static field1: any;
+	static f(): void;
+	static get g(): number;
+	static set s(v: number);
+}
+declare namespace C {
+	const field2: any;
+}
+declare interface I {}
+declare namespace I {
+	let field1: any;
+	const field2: any;
+	function f(): void;
+	let a: number;
+	let g: number; // Attention: Use as getter only!
+	let s: number; // Attention: Use as setter only!
+}
+
+
+--- */

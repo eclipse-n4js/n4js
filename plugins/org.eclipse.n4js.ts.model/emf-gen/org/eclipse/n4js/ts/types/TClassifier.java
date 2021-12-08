@@ -32,7 +32,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
  * @model abstract="true"
  * @generated
  */
-public interface TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement, TVersionable {
+public interface TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement, Type {
 	/**
 	 * Returns the value of the '<em><b>Declared Covariant Constructor</b></em>' attribute.
 	 * <!-- begin-user-doc -->

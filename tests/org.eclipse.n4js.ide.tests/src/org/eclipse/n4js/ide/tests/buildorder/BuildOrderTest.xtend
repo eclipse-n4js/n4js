@@ -19,7 +19,10 @@ class BuildOrderTest extends AbstractBuildOrderTest {
 
 	@Test
 	def void testSingleDependency1() {
-		test("yarn-test-project, n4js-runtime, P1", 
+		test("yarn-test-project, " + 
+				"yarn-test-project/node_modules/n4js-runtime, " + 
+				"yarn-test-project/packages/P1", 
+
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				CFG_DEPENDENCIES -> '''
@@ -31,7 +34,11 @@ class BuildOrderTest extends AbstractBuildOrderTest {
 	
 	@Test
 	def void testTwoDependencies1() {
-		test("yarn-test-project, n4js-runtime, P1, P2", 
+		test("yarn-test-project, " + 
+				"yarn-test-project/node_modules/n4js-runtime, " + 
+				"yarn-test-project/packages/P1, " + 
+				"yarn-test-project/packages/P2",
+ 
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				CFG_DEPENDENCIES -> '''
@@ -48,7 +55,11 @@ class BuildOrderTest extends AbstractBuildOrderTest {
 	
 	@Test
 	def void testTwoDependencies2() {
-		test("yarn-test-project, n4js-runtime, P1, P2", 
+		test("yarn-test-project, " + 
+				"yarn-test-project/node_modules/n4js-runtime, " + 
+				"yarn-test-project/packages/P1, " + 
+				"yarn-test-project/packages/P2", 
+
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				CFG_DEPENDENCIES -> '''
@@ -66,7 +77,11 @@ class BuildOrderTest extends AbstractBuildOrderTest {
 	
 	@Test
 	def void testTwoDependencies3() {
-		test("yarn-test-project, n4js-runtime, P2, P1", 
+		test("yarn-test-project, " + 
+				"yarn-test-project/node_modules/n4js-runtime, " + 
+				"yarn-test-project/packages/P2, " + 
+				"yarn-test-project/packages/P1",
+
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				CFG_DEPENDENCIES -> '''
@@ -84,8 +99,12 @@ class BuildOrderTest extends AbstractBuildOrderTest {
 	
 	@Test
 	def void testCycle1() {
-		test("yarn-test-project, n4js-runtime, P2, P1",
-			#[#["P1", "P2"]],
+		test("yarn-test-project, " + 
+				"yarn-test-project/node_modules/n4js-runtime, " + 
+				"yarn-test-project/packages/P2, " + 
+				"yarn-test-project/packages/P1",
+
+			#[#["yarn-test-project/packages/P1", "yarn-test-project/packages/P2"]],
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				CFG_DEPENDENCIES -> '''
@@ -104,8 +123,13 @@ class BuildOrderTest extends AbstractBuildOrderTest {
 	
 	@Test
 	def void testCycle2() {
-		test("yarn-test-project, n4js-runtime, P2, P1, P3",
-			#[#["P1", "P2"]],
+		test("yarn-test-project, " + 
+				"yarn-test-project/node_modules/n4js-runtime, " + 
+				"yarn-test-project/packages/P2, " + 
+				"yarn-test-project/packages/P1, " + 
+				"yarn-test-project/packages/P3",
+
+			#[#["yarn-test-project/packages/P1", "yarn-test-project/packages/P2"]],
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				CFG_DEPENDENCIES -> '''
@@ -130,8 +154,13 @@ class BuildOrderTest extends AbstractBuildOrderTest {
 	
 	@Test
 	def void testCycle3() {
-		test("yarn-test-project, n4js-runtime, P3, P2, P1",
-			#[#["P1", "P2", "P3"]],
+		test("yarn-test-project, " + 
+				"yarn-test-project/node_modules/n4js-runtime, " + 
+				"yarn-test-project/packages/P3, " + 
+				"yarn-test-project/packages/P2, " + 
+				"yarn-test-project/packages/P1",
+
+			#[#["yarn-test-project/packages/P1", "yarn-test-project/packages/P2", "yarn-test-project/packages/P3"]],
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				CFG_DEPENDENCIES -> '''
@@ -156,8 +185,17 @@ class BuildOrderTest extends AbstractBuildOrderTest {
 	
 	@Test
 	def void testCycles1() {
-		test("yarn-test-project, n4js-runtime, P2, P1, P4, P3",
-			#[#["P1", "P2"], #["P3", "P4"]],
+		test("yarn-test-project, " + 
+				"yarn-test-project/node_modules/n4js-runtime, " + 
+				"yarn-test-project/packages/P2, " + 
+				"yarn-test-project/packages/P1, " + 
+				"yarn-test-project/packages/P4, " + 
+				"yarn-test-project/packages/P3",
+
+			#[
+				#["yarn-test-project/packages/P1", "yarn-test-project/packages/P2"],
+				#["yarn-test-project/packages/P3", "yarn-test-project/packages/P4"]
+			],
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				CFG_DEPENDENCIES -> '''
@@ -188,8 +226,17 @@ class BuildOrderTest extends AbstractBuildOrderTest {
 	
 	@Test
 	def void testCycles4000() {
-		test("yarn-test-project, n4js-runtime, P4, P3, P2, P1",
-			#[#["P1", "P2", "P3", "P4"], #["P2", "P3"]],
+		test("yarn-test-project, " + 
+				"yarn-test-project/node_modules/n4js-runtime, " + 
+				"yarn-test-project/packages/P4, " + 
+				"yarn-test-project/packages/P3, " + 
+				"yarn-test-project/packages/P2, " + 
+				"yarn-test-project/packages/P1",
+
+			#[
+				#["yarn-test-project/packages/P1", "yarn-test-project/packages/P2", "yarn-test-project/packages/P3", "yarn-test-project/packages/P4"],
+				#["yarn-test-project/packages/P2", "yarn-test-project/packages/P3"]
+			],
 			CFG_NODE_MODULES + "n4js-runtime" -> null,
 			"P1" -> #[
 				CFG_DEPENDENCIES -> '''

@@ -26,16 +26,27 @@
 	END_SETUP
  */
 
-var f = new F();
+let cls = new Cls();
 // XPECT noerrors --> "bind to original def"
-f.initialMethod();
+cls.initialMethod();
 // XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
-f.additionalMethod();
+cls.additionalMethod();
 // XPECT noerrors --> "bind to polyfill in P1"
-f.additionalMethod1();
+cls.additionalMethod1();
 // XPECT noerrors --> "bind to polyfill in P2"
-f.additionalMethod2();
-
-
+cls.additionalMethod2();
 // XPECT noerrors --> "bind to polyfill in P1"
-F.addStatic();
+Cls.addStatic();
+
+
+let ifc: Ifc;
+// XPECT noerrors --> "bind to original def"
+ifc.initialMethod();
+// XPECT noerrors --> "Conflicts (P1 and P2 provide method) are checked in manifest"
+ifc.additionalMethod();
+// XPECT noerrors --> "bind to polyfill in P1"
+ifc.additionalMethod1();
+// XPECT noerrors --> "bind to polyfill in P2"
+ifc.additionalMethod2();
+// no static methods in external interfaces (even if they are annotated with @N4JS)
+//Ifc.addStatic();

@@ -1,0 +1,383 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+
+export public class ConvertClassifiersTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testClassifiers() {
+		this.assertConversion(
+			{
+				name: "buffer",
+				dts: `
+					export class Buffer {}
+				`
+			},
+			{
+				name: "main",
+				dts: `
+					import { Buffer } from "./buffer"
+
+					export interface Writable {}
+					export interface Writable2 extends Writable {}
+
+					export class Stream implements Writable {}
+					export class Stream2 extends Stream implements Writable2 {}
+				`,
+				n4jsd: `
+					import { Buffer } from "buffer";
+
+					export external public interface ~Writable {}
+
+					export external public interface ~Writable2 extends Writable {}
+
+					export external public class ~Stream implements Writable {}
+
+					export external public class ~Stream2 extends Stream implements Writable2 {}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testClassifiersInheritance() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {}
+					export interface IfcOther {}
+					export interface SubIfc extends Ifc, IfcOther {}
+					export class Cls implements Ifc {}
+					export class SubCls extends Cls implements SubIfc, IfcOther {}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {}
+
+					export external public interface ~IfcOther {}
+
+					export external public interface ~SubIfc extends Ifc, IfcOther {}
+
+					export external public class ~Cls implements Ifc {}
+
+					export external public class ~SubCls extends Cls implements SubIfc, IfcOther {}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testGenerics() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc<T1,T2> {}
+					export class Cls<T1,T2> {}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc<T1,T2> {}
+
+					export external public class ~Cls<T1,T2> {}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testGenericMembers() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {
+						m<T>(p: T): T;
+						// no static members in interfaces
+					}
+					export class Cls {
+						public m<T>(p: T): T;
+						public static sm<T>(p: T): T;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						<T> m(p: T): T;
+					}
+
+					export external public class ~Cls {
+						public <T> m(p: T): T;
+						public static <T> sm(p: T): T;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembers() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface Ifc {
+						field: string;
+						get getter(): string;
+						set setter(p: string);
+						method1(): void;
+						method2(p1: string, p2: number): string;
+					}
+					
+					export class Cls {
+						field: string;
+						get getter(): string;
+						set setter(p: string);
+						method1(): void;
+						method2(p1: string, p2: number): string;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						field: any+;
+						get getter(): any+;
+						set setter(value: any+);
+						method1(): any+;
+						method2(p1: any+, p2: any+): any+;
+					}
+					
+					export external public class ~Cls {
+						field: any+;
+						get getter(): any+;
+						set setter(value: any+);
+						method1(): any+;
+						method2(p1: any+, p2: any+): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembersStatic() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					// static members in interfaces not supported by TypeScript
+
+					export class Cls {
+						static field: string;
+						static get getter(): string;
+						static set setter(p: string);
+						static method1(): void;
+						static method2(p1: string, p2: number): string;
+					}
+				`,
+				n4jsd: `
+					export external public class ~Cls {
+						static field: any+;
+						static get getter(): any+;
+						static set setter(value: any+);
+						static method1(): any+;
+						static method2(p1: any+, p2: any+): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembersAccesibility() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export interface SomeInterface {
+						m1(): void; // accesibility modifiers not allowed here!
+					}
+					export class SomeClass {
+						m1(): void;
+						public m2(): void;
+						protected m3(): void;
+						private m4(): void;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~SomeInterface {
+						m1(): any+;
+					}
+
+					export external public class ~SomeClass {
+						m1(): any+;
+						public m2(): any+;
+						protected m3(): any+;
+						private m4(): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testMembersUseCase() {
+		this.assertConversion(
+			{
+				name: "buffer",
+				dts: `
+					export class Buffer {}
+				`
+			},
+			{
+				name: "main",
+				dts: `
+					import { Buffer } from "./buffer"
+
+					export interface Writable {
+						field: string;
+						readonly fieldReadOnly: Buffer;
+
+						write(chunk: any, fn: () => void): Buffer;
+						write(chunk: any, encoding: string, fn: () => void): boolean;
+
+						get getter(): Buffer;
+						// set setter(value: Buffer); // not supported by TypeScript
+					}
+
+					export class Stream implements Writable {
+						public field: string;
+						readonly fieldReadOnly: Buffer;
+
+						public constructor(buff: Buffer);
+						public constructor(opts: {fastMode: boolean});
+
+						public write(chunk: any, fn: () => void): Buffer;
+						public write(chunk: any, encoding: string, fn: () => void): boolean;
+
+						get getter(): Buffer;
+						set setter(value: Buffer);
+					}
+				`,
+				n4jsd: `
+					import { Buffer } from "buffer";
+
+					export external public interface ~Writable {
+						field: any+;
+						get fieldReadOnly(): any+;
+						write(...args: any+): any+; // overloading not supported
+						get getter(): any+;
+					}
+
+					export external public class ~Stream implements Writable {
+						public field: any+;
+						get fieldReadOnly(): any+;
+						public constructor(...args: any+); // overloading not supported
+						public write(...args: any+): any+; // overloading not supported
+						get getter(): any+;
+						set setter(value: any+);
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testConstructSignatures() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
+						new(p1: string, p2: number): Ifc;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						new(p1: string, p2: number): Ifc;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testConstructSignatures_withOverloading() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
+						new(p: string): Ifc;
+						new(p1: string, p2: number): Ifc;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						new(...args: any+): any+; // overloading not supported
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCallSignatures() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
+						(p: string): number;
+						(p1: string, p2: number): boolean;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						(...args: any+): any+; // overloading not supported
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCallSignatures_genericsUnsupported() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--copy-type-refs" ]
+			},
+			{
+				name: "es5.d.ts",
+				dts: `
+					export interface Ifc {
+						<T>(value: T): boolean;
+					}
+				`,
+				n4jsd: `
+					export external public interface ~Ifc {
+						(value: any+): boolean;
+					}
+				`
+			}
+		);
+	}
+}

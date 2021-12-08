@@ -23,5 +23,5 @@ var c = {
 // XPECT errors ---> "string is not a subtype of number." at "c['g']"
 var v : number = c['g']
 
-// XPECT errors ---> "int is not a subtype of string." at "2"
+// XPECT errors ---> "2 is not a subtype of string." at "2"
 c['g'] = 2

@@ -36,7 +36,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * @model abstract="true"
  * @generated
  */
-public interface TypeRef extends TypeArgument, Versionable {
+public interface TypeRef extends TypeArgument {
 	/**
 	 * Returns the value of the '<em><b>Followed By Question Mark</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -294,7 +294,18 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	EList<TypeArgument> getTypeArgs();
+	EList<TypeArgument> getDeclaredTypeArgs();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Convenience method to avoid type casts, does return unmodifiable empty list for all type references except parameterized type refs.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	EList<TypeArgument> getTypeArgsWithDefaults();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -424,16 +435,5 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * @generated
 	 */
 	OptionalFieldStrategy getASTNodeOptionalFieldStrategy();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Override Versioned#getVersion()
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	int getVersion();
 
 } // TypeRef

@@ -33,7 +33,7 @@ class ~Props  {
 	public myProp: string;
 }
 
-function PureFnComponent(props: Props): React.Element {
+function PureFnComponent(props: Props): React.ReactElement {
 	return (<div>{props.myProp}</div>);
 }
 
@@ -54,7 +54,7 @@ class LowerComponent extends React.Component<~React.ComponentProps with {whatTex
   	}
 
 	@Override
-	public render(): React.Element {
+	public render(): React.ReactElement {
 		// XPECT noerrors
 		return (<div>{this.props.whatTextShouldIShow}</div>);
 	}
@@ -64,7 +64,7 @@ class MyComponent extends
 	React.Component<~React.ComponentProps with {aProp: string}, String> {
 
 	@Override
-	public render(): React.Element {
+	public render(): React.ReactElement {
 		const constText = "some text";
 		// XPECT noerrors
 		return (<LowerComponent whatTextShouldIShow="Hallo">{constText}</LowerComponent>
@@ -76,7 +76,7 @@ class MyHigherComponent extends
 	React.Component<~React.ComponentProps with {someCondition: Number}, ~Object with {aStateProp: Boolean}> {
 
 	@Override
-	public render(): React.Element {
+	public render(): React.ReactElement {
 		let d = this.state.aStateProp;
 		// XPECT warnings --> "Attribute simplePropForMyComponent is not a declared property in the props of MyComponent." at "simplePropForMyComponent"
 		return (<MyComponent aProp="A text" simplePropForMyComponent={

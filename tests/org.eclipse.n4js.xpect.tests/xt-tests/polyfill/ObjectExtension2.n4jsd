@@ -18,6 +18,12 @@
 @Polyfill
 export external public class MObject extends MObject {
 	public mi() : string;
+	public z0() : string;
+}
 
+//@ProvidedByRuntime
+@Polyfill
+export external public interface ~MIfc extends MIfc {
+	public mi() : string;
 	public z0() : string;
 }

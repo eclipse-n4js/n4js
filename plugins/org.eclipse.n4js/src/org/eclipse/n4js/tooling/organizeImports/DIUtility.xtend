@@ -142,7 +142,7 @@ class DIUtility {
 		}
 		var nestedTypeRef = it;
 		while (nestedTypeRef.providerType && nestedTypeRef instanceof ParameterizedTypeRef) {
-			val typeArgs = (nestedTypeRef as ParameterizedTypeRef).typeArgs.filter(TypeRef);
+			val typeArgs = (nestedTypeRef as ParameterizedTypeRef).declaredTypeArgs.filter(TypeRef);
 			nestedTypeRef = if (typeArgs.nullOrEmpty) null else typeArgs.head;
 		}
 		return nestedTypeRef?.declaredType;

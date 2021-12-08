@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.transpiler.es.tests
 
-import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
-import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
-import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
+import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TVariable
@@ -26,7 +26,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 
 /**
  * Tests the code in the transpiler that creates the initial transpiler state, mainly the intermediate model.
@@ -104,6 +103,7 @@ class PreparationStepTest extends AbstractTranspilerTest {
 
 			import { B1 } from "B1"
 			var b1 : B1;
+			B1;
 
 		'''.createTranspilerState(resSet);
 
@@ -114,7 +114,7 @@ class PreparationStepTest extends AbstractTranspilerTest {
 		.originalTarget(state.findFirstInRemoteModule("B1",TClass))
 		.elementsOfThisName() // should be empty, because class B1 is in a remote resource
 		.importSpecifier(state.findFirstInIM(NamedImportSpecifier))
-		.referencingElements(state.findFirstInIM(ParameterizedTypeRef_IM))
+		.referencingElements(state.findFirstInIM(IdentifierRef_IM)) // note: the type reference pointing to B1 does not appear here
 
 		state.assertSymbolTableEntry("b1");
 	}
@@ -130,6 +130,7 @@ class PreparationStepTest extends AbstractTranspilerTest {
 
 			import { B1 as BX } from "B1"
 			var b1 : BX;
+			BX;
 
 		'''.createTranspilerState(resSet);
 
@@ -140,7 +141,7 @@ class PreparationStepTest extends AbstractTranspilerTest {
 		.originalTarget(state.findFirstInRemoteModule("B1",TClass))
 		.elementsOfThisName() // should be empty, because class B1 is in a remote resource
 		.importSpecifier(state.findFirstInIM(NamedImportSpecifier))
-		.referencingElements(state.findFirstInIM(ParameterizedTypeRef_IM))
+		.referencingElements(state.findFirstInIM(IdentifierRef_IM)) // note: the type reference pointing to BX does not appear here
 
 		state.assertSymbolTableEntry("b1");
 	}
@@ -160,19 +161,15 @@ class PreparationStepTest extends AbstractTranspilerTest {
 		'''.createTranspilerState(resSet);
 
 		state.validateState;
-		state.assertNumOfSymbolTableEntries(3);
+		state.assertNumOfSymbolTableEntries(2);
+
+		// no STE for class B1, because only a type reference is referring to B1
 
 		state.assertSymbolTableEntry("NS")
 		.originalTarget(state.findFirstInModule(ModuleNamespaceVirtualType))
 		.elementsOfThisName() // should be empty for namespace symbol table entries
 		.importSpecifier(state.findFirstInIM(NamespaceImportSpecifier))
 		.referencingElements() // no direct reference to namespace in this case (compare with next test case!)
-
-		state.assertSymbolTableEntry("B1")
-		.originalTarget(state.findFirstInRemoteModule("B1",TClass))
-		.elementsOfThisName() // should be empty, because class B1 is in a remote resource
-		.importSpecifier(state.findFirstInIM(NamespaceImportSpecifier))
-		.referencingElements(state.findFirstInIM(ParameterizedTypeRef_IM))
 
 		state.assertSymbolTableEntry("b1");
 	}
@@ -217,13 +214,9 @@ class PreparationStepTest extends AbstractTranspilerTest {
 		'''.createTranspilerState;
 
 		state.validateState;
-		state.assertNumOfSymbolTableEntries(2);
+		state.assertNumOfSymbolTableEntries(1);
 
-		state.assertSymbolTableEntry("string")
-		.originalTarget(state.G.stringType)
-		.elementsOfThisName()
-		.importSpecifier(null)
-		.referencingElements(state.findFirstInIM(ParameterizedTypeRef_IM))
+		// no STE for 'string', because only a type reference is referring to 'string'
 
 		state.assertSymbolTableEntry("x")
 		.originalTarget(state.findFirstInAST(VariableDeclaration))
@@ -233,7 +226,7 @@ class PreparationStepTest extends AbstractTranspilerTest {
 	}
 
 	@Test
-	def void testBuiltIn_referenceToBuiltInType() throws AssertionError {
+	def void testBuiltIn_referenceToBuiltInType_typeRef() throws AssertionError {
 
 		val state = '''
 
@@ -242,19 +235,32 @@ class PreparationStepTest extends AbstractTranspilerTest {
 		'''.createTranspilerState;
 
 		state.validateState;
-		state.assertNumOfSymbolTableEntries(2);
-
-		state.assertSymbolTableEntry("N4Object")
-		.originalTarget(state.G.n4ObjectType)
-		.elementsOfThisName()
-		.importSpecifier(null)
-		.referencingElements(state.findFirstInIM(ParameterizedTypeRef_IM))
+		state.assertNumOfSymbolTableEntries(1);
 
 		state.assertSymbolTableEntry("x")
 		.originalTarget(state.findFirstInAST(VariableDeclaration))
 		.elementsOfThisName(state.findFirstInIM(VariableDeclaration))
 		.importSpecifier(null)
 		.referencingElements()
+	}
+
+	@Test
+	def void testBuiltIn_referenceToBuiltInType_identifierRef() throws AssertionError {
+
+		val state = '''
+
+			N4Object;
+
+		'''.createTranspilerState;
+
+		state.validateState;
+		state.assertNumOfSymbolTableEntries(1);
+
+		state.assertSymbolTableEntry("N4Object")
+		.originalTarget(state.G.n4ObjectType)
+		.elementsOfThisName()
+		.importSpecifier(null)
+		.referencingElements(state.findFirstInIM(IdentifierRef_IM))
 	}
 
 	@Test

@@ -10,17 +10,21 @@
  */
 package org.eclipse.n4js.ide.server;
 
-import org.eclipse.n4js.N4JSGlobals;
+import static org.eclipse.n4js.N4JSGlobals.JSX_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.N4JSX_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.N4JS_FILE_EXTENSION;
+
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.generator.SubGeneratorRegistry;
 import org.eclipse.n4js.json.JSONGlobals;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
-import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.resource.PackageJsonResourceDescriptionExtension;
+import org.eclipse.n4js.transpiler.dts.DtsSubGenerator;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
-import org.eclipse.n4js.transpiler.es.n4idl.N4IDLSubGenerator;
 import org.eclipse.n4js.validation.validators.packagejson.N4JSProjectSetupJsonValidatorExtension;
 import org.eclipse.n4js.validation.validators.packagejson.PackageJsonValidatorExtension;
 import org.eclipse.n4js.xtext.ide.server.util.IHeadlessExtensionRegistrationHelper;
@@ -44,7 +48,7 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 	private EcmaScriptSubGenerator ecmaScriptSubGenerator;
 
 	@Inject
-	private N4IDLSubGenerator n4idlSubGenerator;
+	private DtsSubGenerator dtsSubGenerator;
 
 	@Inject
 	private PackageJsonValidatorExtension packageJsonValidatorExtension;
@@ -62,22 +66,23 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 	@Override
 	public void registerExtensions() {
 		// Register file extensions
-		registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
-		registerRunnableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
-				N4JSGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
-		registerTranspilableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION,
-				N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION, N4IDLGlobals.N4IDL_FILE_EXTENSION);
-		registerTypableFiles(N4JSGlobals.N4JSD_FILE_EXTENSION, N4JSGlobals.N4JS_FILE_EXTENSION,
-				N4JSGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
-				N4JSGlobals.JSX_FILE_EXTENSION, N4IDLGlobals.N4IDL_FILE_EXTENSION);
-		registerRawFiles(N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
+		registerTestableFiles(N4JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION);
+		registerRunnableFiles(N4JS_FILE_EXTENSION, JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION, JSX_FILE_EXTENSION);
+		registerTranspilableFiles(N4JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION, JS_FILE_EXTENSION, JSX_FILE_EXTENSION);
+		registerTypableFiles(N4JSD_FILE_EXTENSION, N4JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION, JS_FILE_EXTENSION,
+				JSX_FILE_EXTENSION);
+		registerRawFiles(JS_FILE_EXTENSION, JSX_FILE_EXTENSION);
+
+		// Register d.ts subgenerator
+		subGeneratorRegistry.register(dtsSubGenerator, N4JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(dtsSubGenerator, N4JSX_FILE_EXTENSION);
+		subGeneratorRegistry.register(dtsSubGenerator, N4JSD_FILE_EXTENSION);
 
 		// Register ECMAScript subgenerator
-		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.N4JS_FILE_EXTENSION);
-		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JS_FILE_EXTENSION);
-		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
-		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JSX_FILE_EXTENSION);
-		subGeneratorRegistry.register(n4idlSubGenerator, N4IDLGlobals.N4IDL_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator, JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSX_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator, JSX_FILE_EXTENSION);
 
 		// register N4JS-specific package.json behavior with JSONExtensionRegistry
 		registerJSONLanguageExtension();

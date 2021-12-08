@@ -145,7 +145,7 @@ class NoValidationIdeTest extends ConvertedIdeTest {
 
 		assertIssues(
 			DEFAULT_PROJECT_NAME+ "/package.json" -> #[
-				"(Error, [7:65 - 7:75], Module filters of type noValidate must not match N4JS modules/files.)"
+				"(Error, [7:69 - 7:79], Module filters of type noValidate must not match N4JS modules/files.)"
 			]
 		);
 		assertEquals("file package.json should have 1 marker since the module filter is invalid", 1, getIssuesInFile(packageJsonFileURI).size);

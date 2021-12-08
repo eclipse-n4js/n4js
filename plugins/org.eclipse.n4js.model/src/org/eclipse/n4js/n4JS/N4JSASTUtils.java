@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -39,14 +38,9 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Charsets;
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableListMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.ListMultimap;
 import com.google.common.hash.Hashing;
 
 /**
@@ -60,31 +54,6 @@ public abstract class N4JSASTUtils {
 
 	/** The reserved {@value} keyword. */
 	public static final String CONSTRUCTOR = "constructor";
-
-	/**
-	 * Maps {@link EClass}es of {@link N4JSPackage} to their containment {@link EReference}s of type
-	 * {@link TypeReferenceNode}, including both owned and inherited references. The references may be single- or
-	 * many-valued.
-	 * <p>
-	 * Most clients will want to use utility method {@link #getContainedTypeReferenceNodes(EObject)} instead.
-	 */
-	public static final ListMultimap<EClass, EReference> containersOfTypeReferenceNodes;
-
-	static {
-		ListMultimap<EClass, EReference> eClassToOwnedRefs = ArrayListMultimap.create();
-		for (EClass eClass : IterableExtensions.filter(N4JSPackage.eINSTANCE.getEClassifiers(), EClass.class)) {
-			eClassToOwnedRefs.putAll(eClass, IterableExtensions.filter(eClass.getEReferences(),
-					eRef -> eRef.isContainment()
-							&& N4JSPackage.Literals.TYPE_REFERENCE_NODE.isSuperTypeOf(eRef.getEReferenceType())));
-		}
-		ListMultimap<EClass, EReference> map2 = ArrayListMultimap.create();
-		for (EClass eClass : IterableExtensions.filter(N4JSPackage.eINSTANCE.getEClassifiers(), EClass.class)) {
-			map2.putAll(eClass, Iterables.concat(
-					eClassToOwnedRefs.get(eClass),
-					IterableExtensions.flatMap(eClass.getEAllSuperTypes(), eClassToOwnedRefs::get)));
-		}
-		containersOfTypeReferenceNodes = ImmutableListMultimap.copyOf(map2);
-	}
 
 	/**
 	 * Tells if the given {@link EObject} represents a write access, e.g. left-hand side of an assignment.
@@ -207,7 +176,7 @@ public abstract class N4JSASTUtils {
 	 */
 	public static List<TypeReferenceNode<?>> getContainedTypeReferenceNodes(EObject astNode) {
 		List<TypeReferenceNode<?>> result = new ArrayList<>();
-		for (EReference eRef : containersOfTypeReferenceNodes.get(astNode.eClass())) {
+		for (EReference eRef : N4JSMetaModelUtils.containersOfTypeReferenceNodes.get(astNode.eClass())) {
 			// we know eRef is a containment reference, so no need to worry about proxy resolution in next line
 			Object value = astNode.eGet(eRef);
 			if (value != null) {
@@ -221,6 +190,51 @@ public abstract class N4JSASTUtils {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Returns <code>true</code> iff the given AST node is a variable, field, or property that is immutable (e.g. const,
+	 * final).
+	 */
+	public static boolean isImmutable(EObject astNode) {
+		if (astNode instanceof PropertyNameValuePair) {
+			return isImmutable((PropertyNameValuePair) astNode);
+		} else if (astNode instanceof N4FieldDeclaration) {
+			return isImmutable((N4FieldDeclaration) astNode);
+		} else if (astNode instanceof VariableDeclaration) {
+			return isImmutable((VariableDeclaration) astNode);
+		}
+		return false;
+	}
+
+	/** Same as {@link #isImmutable(EObject)}, but only for properties. */
+	public static boolean isImmutable(@SuppressWarnings("unused") PropertyNameValuePair nameValuePair) {
+		return false;
+	}
+
+	/** Same as {@link #isImmutable(EObject)}, but only for fields. */
+	public static boolean isImmutable(N4FieldDeclaration fieldDecl) {
+		// note regarding @Final:
+		// it is tempting to treat an @Final field as immutable iff it has an initializer expression;
+		// however, even in case an initializer expression is provided for a @Final field, its value
+		// may be changed via a @Spec-constructor (not in ordinary constructor code) and actually this
+		// is a common case because it is an important reason for choosing a @Final field over a const
+		// field; thus, we have to treat @Final fields as mutable for the purpose of this method!
+		return fieldDecl.isConst();
+	}
+
+	/** Same as {@link #isImmutable(EObject)}, but only for variables. */
+	public static boolean isImmutable(VariableDeclaration vdecl) {
+		return getVariableStatementKeyword(vdecl) == VariableStatementKeyword.CONST;
+	}
+
+	/**
+	 * Returns the {@link VariableStatementKeyword} of the given variable, i.e. {@code var}, {@code let}, or
+	 * {@code const}.
+	 */
+	public static VariableStatementKeyword getVariableStatementKeyword(VariableDeclaration vdecl) {
+		VariableDeclarationContainer container = getVariableDeclarationContainer(vdecl);
+		return container != null ? container.getVarStmtKeyword() : null;
 	}
 
 	/**
@@ -555,7 +569,7 @@ public abstract class N4JSASTUtils {
 	/**
 	 * Returns the name of the given AST or types model element or <code>null</code> if it does not have a name.
 	 *
-	 * @see N4JSFeatureUtils#getElementNameFeature(EObject)
+	 * @see N4JSMetaModelUtils#getElementNameFeature(EObject)
 	 */
 	public static String getElementName(EObject element) {
 		if (element == null) {
@@ -563,7 +577,7 @@ public abstract class N4JSASTUtils {
 		} else if (element instanceof LiteralOrComputedPropertyName) {
 			return ((LiteralOrComputedPropertyName) element).getName();
 		}
-		EStructuralFeature nameFeature = N4JSFeatureUtils.getElementNameFeature(element);
+		EStructuralFeature nameFeature = N4JSMetaModelUtils.getElementNameFeature(element);
 		if (nameFeature != null) {
 			Object name = element.eGet(nameFeature);
 			if (name instanceof LiteralOrComputedPropertyName) {

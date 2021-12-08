@@ -12,7 +12,7 @@ package org.eclipse.n4js.tests.typesbuilder.extensions
 
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.TypedElement
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
@@ -24,7 +24,6 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.types.TMigration
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TSetter
@@ -237,29 +236,6 @@ public class TypesStructureAssertionExtension {
 		tFunction
 	}
 	
-	def assertTMigration(String phase, Resource newN4jsResource, String name,
-		int sourceVersion, int targetVersion, 
-		int sourceTypeRefCount, int targetTypeRefCount,
-		boolean hasDeclaredSourceAndTargetVersion) {
-		val type = assertTypeForName(newN4jsResource, name, phase)
-		assertTrue(phase + ": TMigration expected", type instanceof TMigration)
-		val tMigration = type as TMigration
-		assertEquals(phase + ": Should be named", name, tMigration.name)
-		
-		val sourceTypeRefs = tMigration.sourceTypeRefs;
-		val targetTypeRefs = tMigration.targetTypeRefs;
-		
-		assertEquals(phase + ": TMigration " + name +  " source type ref count", sourceTypeRefCount, sourceTypeRefs.size)
-		assertEquals(phase + ": TMigration " + name +  " target type ref count", targetTypeRefCount, targetTypeRefs.size)
-		
-		assertEquals(phase + ": TMigration " + name +  " target version", targetVersion, tMigration.targetVersion)
-		assertEquals(phase + ": TMigration " + name +  " source version", sourceVersion, tMigration.sourceVersion)
-		
-		assertEquals(phase + ": TMigration " + name + " has an explicitly declared source and target version", hasDeclaredSourceAndTargetVersion, tMigration.hasDeclaredSourceAndTargetVersion);
-		
-		tMigration
-	}
-
 	def assertTypeVariables(String phase, TFunction function, Resource resource, String... expectedTypeVarNames) {
 		assertEquals(phase + ": Should have expected type vars count", function.typeVars.size, expectedTypeVarNames.size)
 		expectedTypeVarNames.map[expectedTypeVarNames.indexOf(it) -> it].forEach[

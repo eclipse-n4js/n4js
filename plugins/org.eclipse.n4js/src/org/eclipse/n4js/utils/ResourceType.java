@@ -33,11 +33,19 @@ public enum ResourceType {
 	N4JSD,
 	/** Raw file has extension is <code>.xt</code> */
 	XT,
-	/** Raw file has extension <code>.n4idl</code> or <code>.n4idl.xt</code> */
-	N4IDL,
 
 	/** Not recognized, e.g. <code>.exe</code> or invalid data, e.g. <code>null</code>. */
 	UNKOWN;
+
+	/** Tells whether this is one of the plain Javascript resource types. */
+	public boolean isPlainJS() {
+		return this == JS || this == JSX;
+	}
+
+	/** Tells whether this is one of the N4JS-related resource types. */
+	public boolean isN4JS() {
+		return this == N4JS || this == N4JSX || this == N4JSD;
+	}
 
 	private final static String EXT_JS = N4JSGlobals.JS_FILE_EXTENSION;
 	private final static String EXT_JSX = N4JSGlobals.JSX_FILE_EXTENSION;
@@ -45,7 +53,6 @@ public enum ResourceType {
 	private final static String EXT_N4JSX = N4JSGlobals.N4JSX_FILE_EXTENSION;
 	private final static String EXT_N4JSD = N4JSGlobals.N4JSD_FILE_EXTENSION;
 	private final static String EXT_XT = N4JSGlobals.XT_FILE_EXTENSION;
-	private final static String EXT_N4IDL = N4JSGlobals.N4IDL_FILE_EXTENSION;
 
 	/**
 	 * Based on {@link URI} of the provided {@link EObject eObject} determines type of the resource. Delegates to
@@ -130,8 +137,6 @@ public enum ResourceType {
 			return N4JSD;
 		case EXT_XT:
 			return XT;
-		case EXT_N4IDL:
-			return N4IDL;
 		default:
 			return UNKOWN;
 		}

@@ -22,15 +22,17 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
-import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.N4Scheme
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -43,13 +45,12 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TN4Classifier
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.VoidType
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.RecursionGuard
@@ -57,7 +58,7 @@ import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 
-import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
+import static extension org.eclipse.n4js.types.utils.TypeUtils.*
 
 /**
  * Extensions of class RuleEnvironment for handling substitutions and
@@ -109,6 +110,8 @@ class RuleEnvironmentExtensions {
 	public static final String GUARD_VARIABLE_DECLARATION = "varDecl";
 	public static final String GUARD_TYPE_CALL_EXPRESSION = "typeCallExpression";
 	public static final String GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION = "typePropertyAccessExpression";
+	public static final String GUARD_SUBTYPE__REPLACE_BOOLEAN_BY_UNION = "subtypeRef__replaceBooleanByUnion";
+	public static final String GUARD_SUBTYPE__REPLACE_ENUM_TYPE_BY_UNION = "subtypeRef__replaceEnumTypeByUnion";
 	public static final String GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__STRUCT = "subtypeRefParameterizedTypeRef__struct";
 	public static final String GUARD_SUBST_TYPE_VARS = "substTypeVariablesInParameterizedTypeRef";
 	public static final String GUARD_SUBST_TYPE_VARS__IMPLICIT_UPPER_BOUND_OF_WILDCARD = "substTypeVars_implicitUpperBoundOfWildcard";
@@ -180,9 +183,8 @@ class RuleEnvironmentExtensions {
 		}
 		val builtInTypeScope = BuiltInTypeScope.get(resourceSet);
 		val globalObjectTypeScope = GlobalObjectScope.get(resourceSet);
-		val virtualBaseTypeScope = VirtualBaseTypeScope.get(resourceSet);
 		G.put(PredefinedTypes.PREDEFINED_TYPES_KEY,
-			new PredefinedTypes(builtInTypeScope, globalObjectTypeScope, virtualBaseTypeScope));
+			new PredefinedTypes(builtInTypeScope, globalObjectTypeScope));
 	}
 
 	def static setPredefinedTypes(RuleEnvironment G, PredefinedTypes predefinedTypes) {
@@ -255,10 +257,13 @@ class RuleEnvironmentExtensions {
 		switch (actualThisTypeRef) {
 			TypeTypeRef: // IDE-785 decompose
 				if (actualThisTypeRef.getTypeArg instanceof TypeRef) {
-					setThisBinding(G,actualThisTypeRef.getTypeArg as TypeRef)
+					val typeArg = TypeUtils.copy(actualThisTypeRef.getTypeArg as TypeRef);
+					sanitizeRawTypeRef(typeArg);
+					setThisBinding(G, typeArg)
 				}
-			ParameterizedTypeRef:
+			ParameterizedTypeRef:{
 				G.put(KEY__THIS_BINDING, TypeUtils.createBoundThisTypeRef(actualThisTypeRef))
+			}
 			BoundThisTypeRef:
 				G.put(KEY__THIS_BINDING, actualThisTypeRef)
 		}
@@ -564,6 +569,16 @@ class RuleEnvironmentExtensions {
 		G.functionType.createTypeRef
 	}
 
+	/* Returns built-in type {@code IArguments} */
+	public def static argumentsType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.argumentsType
+	}
+
+	/* Returns newly created reference to built-in type {@code IArguments} */
+	public def static argumentsTypeRef(RuleEnvironment G) {
+		G.argumentsType.createTypeRef
+	}
+
 	/* Returns built-in type {@code N4Object} */
 	public def static n4ObjectType(RuleEnvironment G) {
 		G.getPredefinedTypes().builtInTypeScope.n4ObjectType
@@ -632,24 +647,24 @@ class RuleEnvironmentExtensions {
 		G.errorType.createTypeRef
 	}
 
-	/* Returns built-in type {@code ArgumentsType} */
-	public def static argumentsType(RuleEnvironment G) {
-		G.getPredefinedTypes().virtualBaseTypeScope.argumentsType
+	/* Returns built-in type {@code Iterator<T>} */
+	public def static iteratorType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.iteratorType
 	}
 
-	/* Returns newly created reference to built-in type {@code ArgumentsType} */
-	public def static argumentsTypeRef(RuleEnvironment G) {
-		G.argumentsType.createTypeRef
+	/* Returns newly created reference to built-in type {@code Iterator<T>} */
+	public def static iteratorTypeRef(RuleEnvironment G, TypeArgument typeArg) {
+		createTypeRef(G.iteratorType, typeArg);
 	}
-	
-	/* Returns built-in type {@code MigrationContext} */
-	public def static migrationContextType(RuleEnvironment G) {
-		G.getPredefinedTypes().builtInTypeScope.migrationContextType;
+
+	/* Returns built-in type {@code IteratorEntry<T>} */
+	public def static iteratorEntryType(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.iteratorEntryType
 	}
-	
-	/* Returns newly created reference to built-in type {@code MigrationContext} */
-	public def static migrationContextTypeRef(RuleEnvironment G) {
-		G.migrationContextType.createTypeRef;
+
+	/* Returns newly created reference to built-in type {@code IteratorEntry<T>} */
+	public def static iteratorEntryTypeRef(RuleEnvironment G, TypeArgument typeArg) {
+		createTypeRef(G.iteratorEntryType, typeArg);
 	}
 
 	/* Returns built-in type {@code Iterable<T>} */
@@ -697,7 +712,43 @@ class RuleEnvironmentExtensions {
 			Type: obj
 			TypeRef: obj.declaredType
 		};
-		return type!==null && G.iterableNTypes.contains(type);
+		return isIterableN(G, type);
+	}
+
+	public def static boolean isIterableN(RuleEnvironment G, Type type) {
+		return type !== null && G.iterableNTypes.contains(type);
+	}
+
+	/* Returns built-in type {@code ArrayN<T1...TN>} */
+	public def static arrayNType(RuleEnvironment G, int n) {
+		G.getPredefinedTypes().builtInTypeScope.getArrayNType(n)
+	}
+
+	/* Returns newly created reference to built-in type {@code ArrayN<T1...TN>} */
+	public def static arrayNTypeRef(RuleEnvironment G, int n, TypeArgument... typeArgs) {
+		createTypeRef(G.arrayNType(n), typeArgs);
+	}
+
+	/* Returns built-in type {@code ArrayN<T1...TN>} */
+	public def static arrayNTypes(RuleEnvironment G) {
+		G.getPredefinedTypes().builtInTypeScope.getArrayNTypes
+	}
+
+	/**
+	 * Returns true iff <code>obj</code> is a {@link Type} or {@link TypeRef} and is or points to
+	 * one of the <code>ArrayN&lt;...></code> built-in types. Does <b>not</b> check for the
+	 * built-in type <code>Array&lt;T></code>.
+	 */
+	public def static boolean isArrayN(RuleEnvironment G, EObject obj) {
+		val type = switch(obj) {
+			Type: obj
+			TypeRef: obj.declaredType
+		};
+		return isArrayN(G, type);
+	}
+
+	public def static boolean isArrayN(RuleEnvironment G, Type type) {
+		return type !== null && G.arrayNTypes.contains(type);
 	}
 
 	/* Returns built-in type {@code Promise<S,F>} */
@@ -831,6 +882,10 @@ class RuleEnvironmentExtensions {
 		if (typeRef===null) {
 			return false;
 		}
+		if (typeRef instanceof BooleanLiteralTypeRef
+			|| typeRef instanceof NumericLiteralTypeRef) {
+			return true;
+		}
 		if (G.predefinedTypes.builtInTypeScope.isNumericOperand(typeRef.declaredType)) {
 			return true;
 		}
@@ -925,8 +980,8 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
-	 * Returns the declared or implicit super type of a class. This might be a TClass or, in case
-	 * of implicit super types and external classes, a TObjectPrototype (i.e. "Object").
+	 * Returns the declared or implicit super type of a class. This might be a TClassifier or, in case
+	 * of implicit super types and external classes, a TClass (i.e. "Object").
 	 */
 	public def static TClassifier getDeclaredOrImplicitSuperType(RuleEnvironment G, TClass tClass) {
 		// this method is called by validator, AST and type model may be corrupt
@@ -958,7 +1013,7 @@ class RuleEnvironmentExtensions {
 			if (declaredType instanceof TClass) {
 				if (declaredType == G.n4ObjectType || (declaredType.external && !declaredType.declaredN4JS) ||
 						declaredType.typingStrategy==TypingStrategy.STRUCTURAL) {
-							return G.objectPrototypesAllImplicitSuperTypeRefs;
+							return G.builtInTypesAllImplicitSuperTypeRefs;
 				} else {
 					return G.n4ClassifiersAllImplicitSuperTypeRefs;
 				}
@@ -969,10 +1024,14 @@ class RuleEnvironmentExtensions {
 
 		switch (declaredType) {
 			TClass:
-				if (declaredType == G.n4ObjectType || (declaredType.external && !declaredType.declaredN4JS) ||
-					declaredType.typingStrategy==TypingStrategy.STRUCTURAL)
-					G.objectPrototypesAllImplicitSuperTypeRefs
-				else {
+				if (declaredType == G.objectType) {
+					emptyList
+				} else if (declaredType == G.n4ObjectType
+						|| (declaredType.external && !declaredType.declaredN4JS)
+						|| declaredType.typingStrategy==TypingStrategy.STRUCTURAL
+						|| N4Scheme.isFromResourceWithN4Scheme(declaredType) ) {
+					G.builtInTypesAllImplicitSuperTypeRefs
+				} else {
 					if (declaredType.superClassRef===null) {
 						G.n4ClassifiersAllImplicitSuperTypeRefs
 					} else {
@@ -981,11 +1040,6 @@ class RuleEnvironmentExtensions {
 				}
 			TN4Classifier:
 				G.n4ClassifiersAllImplicitSuperTypeRefs
-			TObjectPrototype:
-				if (declaredType == G.objectType)
-					emptyList
-				else
-					G.objectPrototypesAllImplicitSuperTypeRefs
 			TEnum:
 				switch (N4JSLanguageUtils.getEnumKind(declaredType)) {
 					case Normal: #[G.objectTypeRef]
@@ -1070,8 +1124,8 @@ class RuleEnvironmentExtensions {
 	 * Returns unmodifiable list of type references to all implicit super types of all built-in JavaScript object types,
 	 * object literals and via constructor created elements: {@code Object}.
 	 */
-	public def static getObjectPrototypesAllImplicitSuperTypeRefs(RuleEnvironment G) {
-		return G.getPredefinedTypes().builtInTypeScope.objectPrototypesAllImplicitSuperTypeRefs
+	public def static getBuiltInTypesAllImplicitSuperTypeRefs(RuleEnvironment G) {
+		return G.getPredefinedTypes().builtInTypeScope.builtInTypesAllImplicitSuperTypeRefs
 	}
 
 	/**

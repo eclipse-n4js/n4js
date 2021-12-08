@@ -33,7 +33,7 @@ import org.eclipse.n4js.ts.types.InferenceVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.util.Variance;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
@@ -89,6 +89,22 @@ import com.google.common.collect.SetMultimap;
 		this.ic = ic;
 		this.G = G;
 		this.ts = ts;
+	}
+
+	private BoundSet(BoundSet other) {
+		this(other.ic, other.G, other.ts);
+		this.boundsPerInfVar.putAll(other.boundsPerInfVar);
+		this.instantiations.putAll(other.instantiations);
+		this.incorporatedBounds.addAll(other.incorporatedBounds);
+		this.haveBoundFALSE = other.haveBoundFALSE;
+		this.haveRawTypeRef = other.haveRawTypeRef;
+	}
+
+	/**
+	 * Creates a copy of this bound set's current state.
+	 */
+	public BoundSet copy() {
+		return new BoundSet(this);
 	}
 
 	/**

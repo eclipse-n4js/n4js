@@ -47,10 +47,11 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.scoping.N4JSScopeProvider
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.members.TypingStrategyFilter
 import org.eclipse.n4js.scoping.utils.ExpressionExtensions
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
@@ -64,6 +65,7 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
@@ -71,14 +73,14 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
-import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
-import org.eclipse.n4js.ts.utils.TypeCompareHelper
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeCompareHelper
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
@@ -88,6 +90,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
@@ -121,6 +124,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
 
+	@Inject
+	private WorkspaceAccess workspaceAccess;
+
 	/**
 	 * NEEDED
 	 * 
@@ -146,13 +152,13 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			val ub = typeVar.declaredUpperBound;
 			if (ub !== null) {
 				val declType = ub.declaredType;
-				if (declType instanceof ContainerType<?> && declType.final) {
+				if ((declType instanceof ContainerType<?> || declType instanceof PrimitiveType) && declType.final) {
 					if (declType === functionType) {
 						// important exception (until function type expressions are supported as bounds):
 						// class C<T extends Function> {} makes sense even though Function is final
 						return;
 					}
-					val ubInAST = typeVar.declaredUpperBoundNode.typeRefInAST;
+					val ubInAST = typeVar.declaredUpperBoundNode.typeRefInAST; // never 'null' because 'typeVar.declaredUpperBound' returned non-null value
 					val message = getMessageForCLF_UPPER_BOUND_FINAL(declType.name, typeVar.name);
 					addIssue(message, ubInAST, PARAMETERIZED_TYPE_REF__DECLARED_TYPE, CLF_UPPER_BOUND_FINAL);
 				}
@@ -183,7 +189,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		if (isInTypeTypeRef) {
 			internalCheckValidTypeInTypeTypeRef(paramTypeRefInAST);
 		} else {
-			internalCheckTypeArguments(declaredType.typeVars, paramTypeRefInAST.typeArgs, Optional.absent, false,
+			internalCheckTypeArguments(declaredType.typeVars, paramTypeRefInAST.declaredTypeArgs, Optional.absent, false,
 				declaredType, paramTypeRefInAST, TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType);
 		}
 		internalCheckDynamic(paramTypeRefInAST);
@@ -203,7 +209,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	def private void internalCheckValidTypeInTypeTypeRef(ParameterizedTypeRef paramTypeRefInAST) {
 		// IDE-785 uses ParamterizedTypeRefs in ClassifierTypeRefs. Currently Type Arguments are not supported in ClassifierTypeRefs, so
 		// we actively forbid them here. Will be loosened for IDE-1310
-		if (! paramTypeRefInAST.typeArgs.isEmpty) {
+		if (!paramTypeRefInAST.declaredTypeArgs.isEmpty) {
 			addIssue(IssueCodes.getMessageForAST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF)
 		} else if (paramTypeRefInAST instanceof FunctionTypeRef) {
@@ -284,8 +290,21 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		val typeRef = tsh.resolveTypeAliasFlat(G, typeRefInAST);
 		if (typeRef.declaredType === bits.symbolObjectType) {
 			// we have a type reference to 'Symbol'
-			addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRefInAST, BIT_SYMBOL_INVALID_USE);
+			val isAllowed = isExtendsClauseInRuntimeLibrary(typeRefInAST);
+			if (!isAllowed) {
+				addIssue(IssueCodes.getMessageForBIT_SYMBOL_INVALID_USE, typeRefInAST, BIT_SYMBOL_INVALID_USE);
+			}
 		}
+	}
+
+	def private boolean isExtendsClauseInRuntimeLibrary(TypeRef typeRefInAST) {
+		if (typeRefInAST.eContainer?.eContainmentFeature === N4JSPackage.Literals.N4_CLASS_DEFINITION__SUPER_CLASS_REF) {
+			val project = workspaceAccess.findProjectContaining(typeRefInAST);
+			if (project !== null && project.type === ProjectType.RUNTIME_LIBRARY) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/*
@@ -306,12 +325,12 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 		// TODO reconsider this warning or its implementation; re-generating the scope can become quite expensive
 		// (but note that moving this to the scoping code is not trivial, because warning has to be generated also
-		// if not references to the type parameter are made!)
+		// if no references to the type parameter are made!)
 		if (!genDecl.typeVars.empty) {
 			val staticAccess = genDecl instanceof N4MemberDeclaration && (genDecl as N4MemberDeclaration).static;
 			val scope = n4jsScopeProvider.getTypeScope( // note: calling #getTypeScope() here, NOT #getScope()!
-			genDecl.eContainer, // use container, because we do not want to see type variables we are currently validating
-			staticAccess);
+				genDecl.eContainer, // use container, because we do not want to see type variables we are currently validating
+				staticAccess);
 			genDecl.typeVars.forEach [
 				if (!it.name.nullOrEmpty) {
 					val hiddenTypeDscr = scope.getSingleElement(QualifiedName.create(it.name));
@@ -485,17 +504,32 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 
-	def void internalCheckSuperfluousPropertiesInObjectLiteralRek(RuleEnvironment G, TypeRef expectedTypeRef, Expression expression) {
+	def private void internalCheckSuperfluousPropertiesInObjectLiteralRek(RuleEnvironment G, TypeRef expectedTypeRef, Expression expression) {
 		if (expression instanceof ObjectLiteral) {
-			internalCheckSuperfluousPropertiesInObjectLiteral(expectedTypeRef, expression);
+			internalCheckSuperfluousPropertiesInObjectLiteral(G, expectedTypeRef, expression);
 
 		} else if (expression instanceof ArrayLiteral) {
-			if (!expectedTypeRef.typeArgs.empty) {
-				val arrayElementType = expectedTypeRef.typeArgs.get(0);
-				val typeArgTypeRef = ts.upperBoundWithReopenAndResolve(G, arrayElementType);
-				for (arrElem : expression.elements) {
-					val arrExpr = arrElem.expression;
-					internalCheckSuperfluousPropertiesInObjectLiteralRek(G, typeArgTypeRef, arrExpr);
+			val expectedElemTypeRefs = tsh.extractIterableElementTypes(G, expectedTypeRef);
+			if (!expectedElemTypeRefs.empty) {
+				// we have Iterable, Array, IterableN, ArrayN or a subtype thereof
+				var cachedLastElementTypeRefUB = null as TypeRef;
+				val expectedElemTypeRefsCount = expectedElemTypeRefs.size;
+				val elems = expression.elements;
+				val elemsCount = elems.size;
+				for (var i = 0; i < elemsCount; i++) {
+					val currElemExpr = elems.get(i)?.expression;
+					val currExpectedElemTypeRefUB = if (i < expectedElemTypeRefsCount - 1) {
+						ts.upperBoundWithReopenAndResolveTypeVars(G, expectedElemTypeRefs.get(i))
+					} else {
+						if (cachedLastElementTypeRefUB === null) {
+							cachedLastElementTypeRefUB = ts.upperBoundWithReopenAndResolveTypeVars(G,
+								expectedElemTypeRefs.get(expectedElemTypeRefsCount - 1));
+						}
+						cachedLastElementTypeRefUB
+					};
+					if (currElemExpr !== null) {
+						internalCheckSuperfluousPropertiesInObjectLiteralRek(G, currExpectedElemTypeRefUB, currElemExpr);
+					}
 				}
 			}
 		}
@@ -506,7 +540,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 * #225: always check for superfluous properties in object literal
 	 * req-id IDE-22501
 	 */
-	def void internalCheckSuperfluousPropertiesInObjectLiteral(TypeRef typeRef, ObjectLiteral objectLiteral) {
+	def private void internalCheckSuperfluousPropertiesInObjectLiteral(RuleEnvironment G, TypeRef typeRef, ObjectLiteral objectLiteral) {
 		val typingStrategy = typeRef.typingStrategy;
 		if (typingStrategy != TypingStrategy.NOMINAL && typingStrategy != TypingStrategy.DEFAULT) {
 			if (typeRef.isDynamic) {
@@ -521,21 +555,18 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				return;
 			}
 
-			val G = RuleEnvironmentExtensions.newRuleEnvironment(objectLiteral);
 			val structuralMembers = typeRef.structuralMembers;
 			if (structuralMembers.isEmpty && type == RuleEnvironmentExtensions.objectType(G)) {
 				return;
 			}
-			
-			
-			val isSpecArgument = isSpecArgument(objectLiteral);
-			val ctor = containerTypesHelper.fromContext(objectLiteral).findConstructor(type as ContainerType<?>);
+
+			val isSpecArgument = isSpecArgument(G, objectLiteral);
 			val strategyFilter = new TypingStrategyFilter(typingStrategy,
 				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
-				isSpecArgumentToSpecCtor(objectLiteral, ctor));
+				isSpecArgument);
 			val strategyFilterIncludeNotAccessible = new TypingStrategyFilter(typingStrategy,
 				typingStrategy === TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS,
-				isSpecArgumentToSpecCtor(objectLiteral, ctor), true);
+				isSpecArgument, true);
 			val expectedMembers = containerTypesHelper.fromContext(objectLiteral).allMembers(
 				type as ContainerType<?>).filter[member|strategyFilter.apply(member)].map[member|member.name].toSet();
 			val expectedMembersPlusNotAccessibles = containerTypesHelper.fromContext(objectLiteral).allMembers(
@@ -581,29 +612,27 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-
-	def private boolean isSpecArgument(ObjectLiteral objectLiteral) {
-		val usedInConstructor = objectLiteral.eContainer?.eContainer instanceof NewExpression;
-		if (usedInConstructor) {
-			val newExpression = objectLiteral.eContainer?.eContainer as NewExpression;
-			val newTypeRef = ts.tau(newExpression); // no context, we only need the number of fpars
-			var newType = newTypeRef.declaredType;
-			if (newType===null && newTypeRef instanceof BoundThisTypeRef) {
-				newType = (newTypeRef as BoundThisTypeRef).actualThisTypeRef?.declaredType;
-			}
-			if (newType instanceof ContainerType<?>) {
-				val newCtor = containerTypesHelper.fromContext(newExpression).findConstructor(newType);
-				val pos = newExpression.arguments.indexOf(objectLiteral.eContainer);
-				if (newCtor !== null && pos >= 0) {
-					val formalParam = newCtor.getFparForArgIdx(pos);
-					val hasSpecAnnotation = formalParam.annotations.exists[an|an.name.equals("Spec")];
-					return hasSpecAnnotation;
-				}
-			}
+	def private boolean isSpecArgument(RuleEnvironment G, ObjectLiteral objectLiteral) {
+		val parent = objectLiteral?.eContainer;
+		val grandParent = parent?.eContainer;
+		if (!(parent instanceof Argument && grandParent instanceof NewExpression)) {
+			return false;
 		}
-		return false;
+		val arg = parent as Argument;
+		val newExpr = grandParent as NewExpression;
+		// note: since the @Spec annotation may only be used in the constructor of a class,
+		// we can here skip the handling of construct signatures (i.e. last argument is 'true'):
+		val ctor = tsh.getConstructorOrConstructSignature(G, newExpr, true);
+		if (ctor === null) {
+			return false;
+		}
+		val argIdx = newExpr.arguments.indexOf(arg);
+		val ctorFpar = ctor.getFparForArgIdx(argIdx);
+		if (ctorFpar === null) {
+			return false;
+		}
+		return AnnotationDefinition.SPEC.hasAnnotation(ctorFpar);
 	}
-
 
 	def private void internalCheckUseOfUndefinedExpression(RuleEnvironment G, Expression expression,
 		TypeRef expectedTypeRef, TypeRef actualTypeRef) {
@@ -796,7 +825,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 							val typeArgsPerVariable = 
 								extractNonStructTypeRefs(ptrs.map[
 									ptr|
-									val ta = ptr.typeArgs.get(vIndex);
+									val ta = ptr.declaredTypeArgs.get(vIndex);
 									var TypeRef upper;
 									if (ta instanceof TypeRef) {
 										upper = ta; 
@@ -814,7 +843,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 						}
 						
 						// all type args use super:
-					} else if (ptrs.forall[ptr | ptr.typeArgs.forall(ta| ta instanceof Wildcard &&
+					} else if (ptrs.forall[ptr | ptr.declaredTypeArgs.forall(ta| ta instanceof Wildcard &&
 							(ta as Wildcard).declaredLowerBound !== null)]) {
 						// all common super types, at least Object, as type arg would work! no warning.
 					} else {
@@ -836,7 +865,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		for (var i=0; i<length; i++) {
 			if (! typeVars.get(i).declaredCovariant) {
 				for (TypeRef ref: refs) {
-					val ta = ref.typeArgs.get(i);
+					val ta = ref.declaredTypeArgs.get(i);
 					if (ta instanceof Wildcard) {
 						if (ta.declaredUpperBound===null) {
 							return false;
@@ -862,6 +891,96 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(message, tClassR, INTER_REDUNDANT_SUPERTYPE);
 		}
 	}
+
+	@Check
+	def void checkTypeParameters(GenericDeclaration genDecl) {
+		if (genDecl.typeVars.empty) {
+			return; // nothing to check
+		}
+		if (!N4JSLanguageUtils.isValidLocationForOptionalTypeParameter(genDecl, N4JSPackage.Literals.GENERIC_DECLARATION__TYPE_VARS)) {
+			return; // avoid duplicate error messages
+		}
+		if (holdsOptionalTypeParameterNotFollowedByMandatory(genDecl)) {
+			if (holdsDefaultArgumentsContainValidReferences(genDecl)) {
+				holdsDefaultArgumentsComplyToBounds(genDecl);
+			}
+		}
+	}
+
+	def private boolean holdsOptionalTypeParameterNotFollowedByMandatory(GenericDeclaration genDecl) {
+		var haveOptional = false;
+		for (n4TypeParam : genDecl.typeVars) {
+			if (haveOptional && !n4TypeParam.optional) {
+				val message = messageForTYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL;
+				addIssue(message, n4TypeParam, TypesPackage.eINSTANCE.identifiableElement_Name, TYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL);
+				return false;
+			}
+			haveOptional = haveOptional || n4TypeParam.optional;
+		}
+		return true;
+	}
+
+	/**
+	 * Currently this method only checks for forward references in default arguments (e.g. <code>G&lt;T1=T2,T2=any> {}</code>).
+	 * In the future, we might also check for cyclic default arguments.
+	 */
+	def private boolean holdsDefaultArgumentsContainValidReferences(GenericDeclaration genDecl) {
+		// find forward references to type parameters declared after the current type parameter
+		val badTypeVars = genDecl.typeVars.map[definedTypeVariable].filterNull.toSet;
+		if (badTypeVars.size < genDecl.typeVars.size) {
+			return true; // syntax error
+		}
+		val forwardReferences = <ParameterizedTypeRef>newArrayList;
+		for (n4TypeParam : genDecl.typeVars) {
+			val defaultArgInAST = n4TypeParam.declaredDefaultArgumentNode?.typeRefInAST;
+			if (defaultArgInAST !== null) {
+				TypeUtils.forAllTypeRefs(defaultArgInAST, ParameterizedTypeRef, true, false, null, [ptr|
+					val declType = ptr.declaredType;
+					if (declType instanceof TypeVariable && badTypeVars.contains(declType)) {
+						val isContainedInAST = EcoreUtil2.getContainerOfType(ptr, Script) !== null;
+						if (isContainedInAST) {
+							forwardReferences.add(ptr);
+						}
+					}
+					return true; // continue with traversal
+				], null);
+			}
+			// from now on, the current type variable may be referenced in the default argument of all following type variables:
+			badTypeVars.remove(n4TypeParam.definedTypeVariable);
+		}
+		// create error markers
+		if (!forwardReferences.empty) {
+			for (badRef : forwardReferences) {
+				val message = messageForTYP_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM;
+				addIssue(message, badRef, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, TYP_TYPE_PARAM_DEFAULT_REFERENCES_LATER_TYPE_PARAM);
+			}
+			return false;
+		}
+		return true;
+	}
+
+	def private boolean holdsDefaultArgumentsComplyToBounds(GenericDeclaration genDecl) {
+		val G = genDecl.newRuleEnvironment;
+		var haveInvalidDefault = false;
+		for (n4TypeParam : genDecl.typeVars) {
+			if (n4TypeParam.name !== null) {
+				val defaultArgInAST = n4TypeParam.declaredDefaultArgumentNode?.typeRefInAST;
+				val defaultArg = n4TypeParam.declaredDefaultArgumentNode?.typeRef;
+				val ub = n4TypeParam.declaredUpperBound;
+				if (defaultArgInAST !== null && defaultArg !== null && ub !== null) {
+					val result = ts.subtype(G, defaultArg, ub);
+					if (result.failure) {
+						val message = getMessageForTYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND(n4TypeParam.name, result.compiledFailureMessage);
+						addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__DECLARED_DEFAULT_ARGUMENT_NODE, TYP_TYPE_PARAM_DEFAULT_NOT_SUBTYPE_OF_BOUND);
+						haveInvalidDefault = true;
+					}
+				}
+			}
+		}
+		return !haveInvalidDefault;
+	}
+
+
 
 	def private List<TypeRef> extractNonStructTypeRefs(ComposedTypeRef ctr) {
 		val typeRefs = new TreeSet<TypeRef>(typeCompareHelper.getTypeRefComparator);
@@ -895,22 +1014,4 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		return tClassRefs;
 	}
 
-	def private static boolean isSpecArgumentToSpecCtor(Expression expr, TMethod ctor) {
-		if (ctor === null) {
-			return false;
-		}
-		val parent = expr?.eContainer;
-		val grandParent = parent?.eContainer;
-		if (parent instanceof Argument) {
-			if (grandParent instanceof NewExpression) {
-				val Argument arg = parent 
-				val argIdx = grandParent.arguments.indexOf(arg);
-				val ctorFpar = ctor.getFparForArgIdx(argIdx);
-				if (ctorFpar !== null) {
-					return AnnotationDefinition.SPEC.hasAnnotation(ctorFpar);
-				}
-			}
-		}
-		return false;
-	}
 }

@@ -45,6 +45,7 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * <!-- begin-model-doc -->
 	 * *
 	 * Members directly defined in this classifier, i.e. w/o inherited members.
+	 * Includes also constructors and call/construct signatures.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Owned Members Raw</em>' containment reference list.
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4ClassifierDefinition_OwnedMembersRaw()
@@ -59,7 +60,7 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns a view on ownedMembersRaw filtering out non-members and callable constructors.
+	 * Returns a view on ownedMembersRaw filtering out call/construct signatures.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
@@ -83,20 +84,32 @@ public interface N4ClassifierDefinition extends N4TypeDefinition {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns explicitly defined callable constructor of receiving class or <code>null</code> if none was defined.
-	 * This is *not* the actual constructor but instead the function used for direct invocations in call expressions.
+	 * Returns the explicitly defined call signature of the receiving class or <code>null</code> if none was defined.
+	 * This is *not* the actual constructor but instead the signature used for direct invocations in call expressions.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	N4MethodDeclaration getOwnedCallableCtor();
+	N4MethodDeclaration getOwnedCallSignature();
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns a view on ownedMembersRaw filtering out non-methods.
+	 * Returns the explicitly defined construct signature of the receiving class or <code>null</code> if none was defined.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	N4MethodDeclaration getOwnedConstructSignature();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Returns a view on ownedMembersRaw filtering out non-methods and call/construct signatures.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated

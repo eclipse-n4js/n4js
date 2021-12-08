@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.ide.server.XIWorkspaceConfigFactory;
-import org.eclipse.n4js.xtext.server.LSPIssue;
 import org.eclipse.n4js.xtext.workspace.BuildOrderInfo;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
@@ -28,6 +27,7 @@ import org.eclipse.n4js.xtext.workspace.XIWorkspaceConfig;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
+import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.ImmutableList;
@@ -54,7 +54,6 @@ import com.google.inject.Singleton;
  * @author Sven Efftinge - Initial contribution and API
  * @since 2.11
  */
-@SuppressWarnings({ "deprecation" })
 @Singleton
 public class XWorkspaceManager {
 
@@ -73,7 +72,7 @@ public class XWorkspaceManager {
 	@Inject
 	private ConfigSnapshotFactory configSnapshotFactory;
 
-	private final Map<String, ProjectBuilder> projectName2ProjectBuilder = new HashMap<>();
+	private final Map<String, ProjectBuilder> projectID2ProjectBuilder = new HashMap<>();
 
 	private XIWorkspaceConfig workspaceConfig;
 
@@ -81,6 +80,8 @@ public class XWorkspaceManager {
 
 	/** The result of a {@link XWorkspaceManager#update(Set, Set, boolean) workspace update}. */
 	public static class UpdateResult {
+		/** The old workspace config snapshot. Can be null */
+		public final WorkspaceConfigSnapshot oldWorkspaceConfigSnapshot;
 		/** The workspace changes. */
 		public final WorkspaceChanges changes;
 		/** Former contents of the projects that were removed. */
@@ -92,10 +93,11 @@ public class XWorkspaceManager {
 		public final List<String> cyclicProjectChanges;
 
 		/** Creates a new {@link UpdateResult}. */
-		public UpdateResult(WorkspaceChanges changes,
+		public UpdateResult(WorkspaceConfigSnapshot oldWorkspaceConfigSnapshot, WorkspaceChanges changes,
 				Iterable<? extends IResourceDescription> removedProjectsContents,
 				Iterable<String> cyclicProjectChanges) {
 
+			this.oldWorkspaceConfigSnapshot = oldWorkspaceConfigSnapshot;
 			this.changes = changes;
 			this.removedProjectsContents = ImmutableList.copyOf(removedProjectsContents);
 			this.cyclicProjectChanges = ImmutableList.copyOf(cyclicProjectChanges);
@@ -127,8 +129,8 @@ public class XWorkspaceManager {
 			return;
 		}
 
-		projectName2ProjectBuilder.values().forEach(b -> b.doClearWithNotification());
-		projectName2ProjectBuilder.clear();
+		projectID2ProjectBuilder.values().forEach(b -> b.doClearWithNotification());
+		projectID2ProjectBuilder.clear();
 
 		this.workspaceConfig = workspaceConfig;
 
@@ -158,7 +160,8 @@ public class XWorkspaceManager {
 	 */
 	public UpdateResult update(Set<URI> dirtyFiles, Set<URI> deletedFiles, boolean refresh) {
 		if (workspaceConfig == null) {
-			return new UpdateResult(WorkspaceChanges.NO_CHANGES, Collections.emptyList(), Collections.emptyList());
+			return new UpdateResult(null, WorkspaceChanges.NO_CHANGES, Collections.emptyList(),
+					Collections.emptyList());
 		}
 
 		WorkspaceChanges changes = workspaceConfig.update(workspaceConfigSnapshot, dirtyFiles, deletedFiles, refresh);
@@ -177,7 +180,8 @@ public class XWorkspaceManager {
 		updateProjects(changes.getChangedProjects());
 		addProjects(changes.getAddedProjects());
 
-		Collection<ImmutableList<String>> oldCycles = workspaceConfigSnapshot.getBuildOrderInfo()
+		WorkspaceConfigSnapshot oldWCS = workspaceConfigSnapshot;
+		Collection<ImmutableList<String>> oldCycles = oldWCS.getBuildOrderInfo()
 				.getProjectCycles();
 
 		workspaceConfigSnapshot = workspaceIndex.changeOrRemoveProjects(
@@ -194,7 +198,7 @@ public class XWorkspaceManager {
 			}
 		}
 
-		return new UpdateResult(changes, removedProjectsContents, cyclicProjectChanges);
+		return new UpdateResult(oldWCS, changes, removedProjectsContents, cyclicProjectChanges);
 	}
 
 	private List<IResourceDescription> collectAllResourceDescriptions(
@@ -202,8 +206,8 @@ public class XWorkspaceManager {
 
 		List<IResourceDescription> result = new ArrayList<>();
 		for (ProjectConfigSnapshot pc : projects) {
-			String projectName = pc.getName();
-			ResourceDescriptionsData data = workspaceIndex.getProjectIndex(projectName);
+			String projectID = pc.getName();
+			ResourceDescriptionsData data = workspaceIndex.getProjectIndex(projectID);
 			if (data != null) {
 				Iterables.addAll(result, data.getAllResourceDescriptions());
 			}
@@ -216,15 +220,15 @@ public class XWorkspaceManager {
 		for (ProjectConfigSnapshot projectConfig : withoutDuplicates(projectConfigs)) {
 			ProjectBuilder projectBuilder = projectBuilderProvider.get();
 			projectBuilder.initialize(projectConfig);
-			projectName2ProjectBuilder.put(projectConfig.getName(), projectBuilder);
+			projectID2ProjectBuilder.put(projectConfig.getName(), projectBuilder);
 		}
 	}
 
 	/** Removes a project from the workspace */
 	protected void removeProjects(Iterable<? extends ProjectConfigSnapshot> projectConfigs) {
 		for (ProjectConfigSnapshot projectConfig : projectConfigs) { // no need for #withoutDuplicates() here
-			String projectName = projectConfig.getName();
-			ProjectBuilder projectBuilder = projectName2ProjectBuilder.remove(projectName);
+			String projectID = projectConfig.getName();
+			ProjectBuilder projectBuilder = projectID2ProjectBuilder.remove(projectID);
 			if (projectBuilder != null) {
 				projectBuilder.doClearWithoutNotification();
 			}
@@ -268,11 +272,11 @@ public class XWorkspaceManager {
 	 */
 	public ProjectBuilder getProjectBuilder(URI nestedURI) {
 		ProjectConfigSnapshot projectConfig = getProjectConfig(nestedURI);
-		String name = null;
+		String projectID = null;
 		if (projectConfig != null) {
-			name = projectConfig.getName();
+			projectID = projectConfig.getName();
 		}
-		return getProjectBuilder(name);
+		return getProjectBuilder(projectID);
 	}
 
 	/** Find the project that contains the uri. */
@@ -290,18 +294,18 @@ public class XWorkspaceManager {
 	 * @return all project builders.
 	 */
 	public Collection<ProjectBuilder> getProjectBuilders() {
-		return Collections.unmodifiableCollection(projectName2ProjectBuilder.values());
+		return Collections.unmodifiableCollection(projectID2ProjectBuilder.values());
 	}
 
 	/**
-	 * Return the project builder for the project with the given name.
+	 * Return the project builder for the project with the given id.
 	 *
-	 * @param projectName
-	 *            the project name
+	 * @param projectID
+	 *            the project id
 	 * @return the project builder
 	 */
-	public ProjectBuilder getProjectBuilder(String projectName) {
-		return projectName2ProjectBuilder.get(projectName);
+	public ProjectBuilder getProjectBuilder(String projectID) {
+		return projectID2ProjectBuilder.get(projectID);
 	}
 
 	/**
@@ -310,7 +314,7 @@ public class XWorkspaceManager {
 	 * @see ProjectBuilder#clearResourceSet()
 	 */
 	public void clearResourceSets() {
-		for (ProjectBuilder pb : projectName2ProjectBuilder.values()) {
+		for (ProjectBuilder pb : projectID2ProjectBuilder.values()) {
 			pb.clearResourceSet();
 		}
 	}
@@ -325,7 +329,7 @@ public class XWorkspaceManager {
 	/**
 	 * Returns the workspace issues known for the given URI.
 	 */
-	public ImmutableList<? extends LSPIssue> getValidationIssues(URI uri) {
+	public ImmutableList<? extends Issue> getValidationIssues(URI uri) {
 		ProjectBuilder projectBuilder = getProjectBuilder(uri);
 		if (projectBuilder != null) {
 			return projectBuilder.getValidationIssues(uri);

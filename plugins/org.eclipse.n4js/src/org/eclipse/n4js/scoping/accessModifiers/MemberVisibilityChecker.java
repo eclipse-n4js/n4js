@@ -23,18 +23,18 @@ import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.SuperLiteral;
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
+import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
@@ -218,7 +218,7 @@ public class MemberVisibilityChecker {
 				return null;
 			// Change receiverType to implicit super class Function.
 			BuiltInTypeScope builtInTypeScope = BuiltInTypeScope.get(resourceSet);
-			TObjectPrototype functionType = builtInTypeScope.getFunctionType();
+			TClass functionType = builtInTypeScope.getFunctionType();
 			return functionType;
 		}
 		return receiverType.getDeclaredType();
@@ -308,14 +308,18 @@ public class MemberVisibilityChecker {
 
 		// Protected means, that the context-type is a sub-type of the receiver-type
 		if (contextType == null) {
-			// not type information available, maybe just parsing the script: context is relevant here.
+			// no type information available, maybe just parsing the script: context is relevant here.
+			return false;
+		}
+		if (!(declaredReceiverType instanceof TClassifier)) {
+			// only TClassifiers can have sub-types
 			return false;
 		}
 
 		// contextType must be a super-type of declaredRecieverType:
 		List<TClassifier> receiverSuperTypes = AllSuperTypesCollector.collect((TClassifier) declaredReceiverType);
 		if (!receiverSuperTypes.contains(contextType)) {
-			// Problem: if super-keyword was usesed, the call is still valid.
+			// Problem: if super-keyword was used, the call is still valid.
 			if (!supercall) {
 				return false;
 			}
@@ -324,8 +328,7 @@ public class MemberVisibilityChecker {
 		// and the member is part of a super-type (including default-method of implemented interfaces) of the
 		// receiver-type
 		TClassifier memberClsfContainer = EcoreUtil2.getContainerOfType(member, TClassifier.class);
-		if (declaredReceiverType instanceof TClassifier &&
-				receiverSuperTypes.contains(memberClsfContainer)) {
+		if (receiverSuperTypes.contains(memberClsfContainer)) {
 			// definition of member is done in the super-type-tree of the receiver.
 			return true;
 		}
@@ -360,7 +363,7 @@ public class MemberVisibilityChecker {
 		TModule memberModule = EcoreUtil2.getContainerOfType(member, TModule.class);
 		// receiverModule == null indicates either a follow-up problem or a builtin type
 		return memberModule == null || memberModule == contextModule
-				|| Strings.equal(memberModule.getProjectName(), contextModule.getProjectName())
+				|| Strings.equal(memberModule.getProjectID(), contextModule.getProjectID())
 						&& Strings.equal(contextModule.getVendorID(), memberModule.getVendorID())
 				|| typeVisibilityChecker.isTestedProjectOf(contextModule, memberModule);
 	}

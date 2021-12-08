@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.typesystem.utils
 
+import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.List
@@ -21,7 +22,7 @@ import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -168,7 +169,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 					// both are non-void
 					if (left.isReturnValueOptional && !isRightReturnOptional) {
 						return false;
-					} else if (!isSubtype(G, leftReturnTypeRef, rightReturnTypeRef)) {
+					} else if (!checkTypeArgumentCompatibility(G, leftReturnTypeRef, rightReturnTypeRef, Variance.CO)) {
 						return false;
 					}
 				} else {
@@ -194,7 +195,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 						return false;
 					}
 
-					if (!isSubtype(G, R.typeRef, L.typeRef))
+					if (!checkTypeArgumentCompatibility(G, L.typeRef, R.typeRef, Variance.CONTRA))
 						return false;
 					i = i + 1;
 				}
@@ -202,7 +203,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 				if (L.variadic) {
 					while (i < n) {
 						val R = right.fpars.get(i);
-						if (!isSubtype(G, R.typeRef, L.typeRef))
+						if (!checkTypeArgumentCompatibility(G, L.typeRef, R.typeRef, Variance.CONTRA))
 							return false;
 						i = i + 1;
 					}
@@ -220,7 +221,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 					return false;
 				}
 
-				if (!isSubtype(G, R.typeRef, L.typeRef))
+				if (!checkTypeArgumentCompatibility(G, L.typeRef, R.typeRef, Variance.CONTRA))
 					return false;
 				i = i + 1;
 			}
@@ -236,7 +237,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 					return false;
 				}
 				if (R !== null && R.variadic) {
-					if (!isSubtype(G, R.typeRef, L.typeRef))
+					if (!checkTypeArgumentCompatibility(G, L.typeRef, R.typeRef, Variance.CONTRA))
 						return false;
 				}
 				i = i + 1;
@@ -248,7 +249,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 		val rThis = right.declaredThisType
 		val lThis = left.declaredThisType
 		if (rThis !== null) {
-			return lThis === null || isSubtype(G, rThis, lThis);
+			return lThis === null || checkTypeArgumentCompatibility(G, lThis, rThis, Variance.CONTRA);
 		} else {
 
 			// Should fail:
@@ -258,6 +259,11 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 		}
 
 		return true;
+	}
+
+	private def boolean checkTypeArgumentCompatibility(RuleEnvironment G, TypeArgument leftArg, TypeArgument rightArg, Variance variance) {
+		val result = tsh.checkTypeArgumentCompatibility(G, leftArg, rightArg, Optional.of(variance), false);
+		return result.success;
 	}
 
 	/**

@@ -10,11 +10,10 @@
  */
 @@ProvidedByRuntime
 
+// TODO remove this file (after updating the @n4jsd packages)
+
 /**
- * Use this interface type to denote common ES2015 work-around cases
- * used to make Iterators compatible with for..of loops.
- *
- * Dirty, but properly represents the ES2015 work-around.
+ * Deprecated! Use IterableIterator instead.
  */
 export public interface ~IteratorExt<out T> extends Iterator<T>, Iterable<T> {
 //    @Override

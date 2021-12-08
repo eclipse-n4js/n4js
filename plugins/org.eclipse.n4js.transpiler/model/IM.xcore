@@ -25,6 +25,7 @@
 
 package org.eclipse.n4js.transpiler.im
 
+import org.eclipse.emf.common.util.ECollections
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportSpecifier
@@ -33,21 +34,13 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedElement
-import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.TypeReferenceNode
-import org.eclipse.n4js.n4JS.VersionedIdentifierRef
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TExportableElement
-import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.versions.VersionableUtils
 
 
 
@@ -199,14 +192,6 @@ class SymbolTableEntryInternal extends SymbolTableEntry {
 }
 
 
-class TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T> {
-
-	op TypeRef getTypeRef() {
-		throw new IllegalStateException("attempt to access resolution of a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
-	}
-}
-
-
 /*
  * An element of the intermediate model that refers to some other element. The other element may either be an element
  * within the same resource (AST or TModule) OR an element in a remote resource (TModule). The reference is not pointing
@@ -229,13 +214,44 @@ abstract class ReferencingElement_IM {
 	}
 }
 
+/*
+ * Like {@link ReferencingElement_IM}, but may refer to <em>several</em> other elements.
+ */
+abstract class ManyReferencingElement_IM {
+
+	contains PlainReference[] rewiredReferences
+
+	op SymbolTableEntry[] getRewiredTargets() {
+		return ECollections.newBasicEList(rewiredReferences.map[rewiredTarget]);
+	}
+	op void addRewiredTarget(SymbolTableEntry ste) {
+		for (ref : rewiredReferences) {
+			if (ref.rewiredTarget === ste) {
+				return;
+			}
+		}
+		rewiredReferences += ImFactory.eINSTANCE.createPlainReference() => [
+			rewiredTarget = ste;
+		];
+	}
+	op void removeRewiredTarget(SymbolTableEntry ste) {
+		rewiredReferences.removeIf[rewiredTarget === ste];
+	}
+}
+
+/*
+ * A reference that does not represent an intermediate model element itself.
+ * Used only in {@link ManyReferencingElement_IM} to implement many-valued references.
+ */
+class PlainReference extends ReferencingElement_IM {}
+
 /** Base superclass for Expression-usable ReferencingElement_IM */
 abstract class ReferencingElementExpression_IM extends ReferencingElement_IM, Expression { }
 
 
 /*
  * SymbolTable-aware replacement for {@link IdentifierRef}.
- * Original property {@link IdentifierRef.id} is always {@code null}.
+ * Original property {@link IdentifierRef#getId()} is always {@code null}.
  */
 class IdentifierRef_IM extends IdentifierRef, ReferencingElementExpression_IM {
 
@@ -253,7 +269,7 @@ class IdentifierRef_IM extends IdentifierRef, ReferencingElementExpression_IM {
 
 /*
  * SymbolTable-aware replacement for {@link ParameterizedPropertyAccessExpression}.
- * Original property {@link ParameterizedPropertyAccessExpression.property} is always {@code null}.
+ * Original property {@link ParameterizedPropertyAccessExpression#getProperty()} is always {@code null}.
  */
 class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAccessExpression, ReferencingElementExpression_IM {
 
@@ -290,39 +306,37 @@ class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAcce
 }
 
 /*
- * SymbolTable-aware replacement for {@link ParameterizedTypeRef}.
- * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ * SymbolTable-aware replacement for {@link TypeReferenceNode}.
+ * Original properties {@link TypeReferenceNode#getTypeRefInAST()} and {@link TypeReferenceNode#getCachedProcessedTypeRef()} are always {@code null}.
  */
-class ParameterizedTypeRef_IM extends ParameterizedTypeRef, ReferencingElement_IM {
+class TypeReferenceNode_IM<T extends TypeRef> extends TypeReferenceNode<T>, ManyReferencingElement_IM {
 
-	op SymbolTableEntry getDeclaredType_IM() {
-		return rewiredTarget;
+	/*
+	 * The code to emit for the type reference represented by this node. This will be <code>null</code> initially
+	 * and transformations are responsible for either setting this to a non-<code>null</code> value or removing
+	 * this entire {@code TypeReferenceNode_IM} from the intermediate model.
+	 * <p>
+	 * When changing this value, property {@link TypeReferenceNode_IM#getRewiredReferences() rewiredReferences} should
+	 * be updated accordingly, to ensure that functionality such as removal of unused imports can properly consider
+	 * the types being referenced from within this string.
+	 */
+	String codeToEmit
+
+	/*
+	 * The symbol table entries of the types actually being referenced from within the string {@link TypeReferenceNode_IM#getCodeToEmit() codeToEmit}.
+	 */
+	op PlainReference[] getRewiredReferences()
+
+	op TypeRef getTypeRef() {
+		throw new IllegalStateException("attempt to access resolution of a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
 	}
-	op void setDeclaredType_IM(SymbolTableEntry target) {
-		rewiredTarget = target;
+	op TypeRef getCachedProcessedTypeRef() {
+		throw new IllegalStateException("attempt to access resolution of a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
 	}
-
-	/* overridden attribute access to always return null */
-	op  Type getDeclaredType() { return null; }
-	op void setDeclaredType(Type ix) { if(ix!==null) throw new IllegalArgumentException("ParameterizedTypeRef_IM cannot accept types. Use #declaredType_IM."); }
-}
-
-/*
- * SymbolTable-aware replacement for {@link ParameterizedTypeRefStructural}.
- * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
- */
-class ParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM, ParameterizedTypeRefStructural, ReferencingElement_IM {
-
-	op SymbolTableEntry getDeclaredType_IM() {
-		return rewiredTarget;
-	}
-	op void setDeclaredType_IM(SymbolTableEntry target) {
-		rewiredTarget = target;
-	}
-
-	/* overridden attribute access to always return null */
-	op  Type getDeclaredType() { return null; }
-	op void setDeclaredType(Type ix) { if(ix!==null) throw new IllegalArgumentException("ParameterizedTypeRef_IM cannot accept types. Use #declaredType_IM."); }
+// cannot add the following fail-fast check, because EMF's tree iterator, etc. will invoke this getter:
+//	op T getTypeRefInAST() {
+//		throw new IllegalStateException("attempt to access a typeRefInAST from transpiler; use InformationRegistry#getOriginalProcessedTypeRef() instead");
+//	}
 }
 
 
@@ -330,7 +344,7 @@ class ParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM, Paramet
  * A pre-formatted code snippet that will be emitted to the target code as is.
  */
 class Snippet extends Expression {
-	String code
+	String codeToEmit
 }
 
 
@@ -371,7 +385,7 @@ class DelegatingMethodDeclaration extends N4MethodDeclaration, DelegatingMember 
 class StringLiteralForSTE extends StringLiteral {
 	refers SymbolTableEntry entry
 	/**
-	 * If true, use the element's exported name instead of its actual name. If true, the {@link #entry}'s original
+	 * If true, use the element's exported name instead of its actual name. If true, the {@link #getEntry()}'s original
 	 */
 	boolean useExportedName
 
@@ -386,40 +400,3 @@ class StringLiteralForSTE extends StringLiteral {
 	}
 }
 
-// ****************************************************************************************************
-// N4IDL related model elements
-// ****************************************************************************************************
-
-/*
- * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRef}.
- * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
- */
-class VersionedParameterizedTypeRef_IM extends ParameterizedTypeRef_IM, VersionedParameterizedTypeRef {}
-
-/*
- * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.
- * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
- */
-class VersionedParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM, VersionedParameterizedTypeRefStructural {}
-
-/*
- * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.
- * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
- */
-class VersionedIdentifierRef_IM extends IdentifierRef_IM, VersionedIdentifierRef {}
-
-/**
- * Import specifier that is aware of multiple versions of the imported type.
- */
-class VersionedNamedImportSpecifier_IM extends NamedImportSpecifier {
-	refers SymbolTableEntryOriginal[] importedTypeVersions
-
-	/**
-	 * Returns {@code true} if this import specifiers imports a
-	 * versioned type.
-	 */
-	boolean versionedTypeImport get {
-		return importedTypeVersions.size > 0 && (importedTypeVersions.size > 1 /*shortcut*/ ||
-			VersionableUtils.isTVersionable(importedTypeVersions.get(0).originalTarget));
-	}
-}

@@ -10,11 +10,13 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TypingStrategy
@@ -29,7 +31,10 @@ import static extension org.eclipse.n4js.validation.validators.StaticPolyfillVal
 
 /**
  */
-class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator {
+class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator implements PolyfillValidatorHost {
+
+	@Inject
+	private PolyfillValidatorFragment polyfillValidatorFragment;
 
 	/**
 	 * NEEDED
@@ -47,16 +52,19 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator {
 	def checkN4InterfaceDeclaration(N4InterfaceDeclaration n4Interface) {
 
 		// wrong parsed
-		if (n4Interface.definedType === null) {
-			return
+		if (!(n4Interface.definedType instanceof TInterface)) {
+			return;
 		}
 
-		holdsNoCyclicInheritance(n4Interface)
+		if (polyfillValidatorFragment.holdsPolyfill(this, n4Interface, getCancelIndicator())) {
 
-		n4Interface.internalCheckExtendedInterfaces
-		n4Interface.internalCheckNotFinal
-		n4Interface.internalCheckNoFieldInitizializer
-		n4Interface.internalCheckNotInStaticPolyfillModule(this) // IDE-1735
+			holdsNoCyclicInheritance(n4Interface)
+
+			n4Interface.internalCheckExtendedInterfaces
+			n4Interface.internalCheckNotFinal
+			n4Interface.internalCheckNoFieldInitizializer
+			n4Interface.internalCheckNotInStaticPolyfillModule(this) // IDE-1735
+		}
 	}
 
 	// publish this method.
@@ -96,8 +104,10 @@ class N4JSInterfaceValidator extends AbstractN4JSDeclarativeValidator {
 				// extended type must be an interface
 				if (!(extendedType instanceof TInterface)) {
 					if (extendedType instanceof PrimitiveType) {
-						val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(extendedType.name);
-						addIssue(message, it, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE)
+						if (!N4Scheme.isFromResourceWithN4Scheme(n4Interface)) { // primitive types may be extended in built-in types
+							val message = getMessageForCLF_EXTENDS_PRIMITIVE_GENERIC_TYPE(extendedType.name);
+							addIssue(message, it, null, CLF_EXTENDS_PRIMITIVE_GENERIC_TYPE)
+						}
 					} else {
 						val message = IssueCodes.getMessageForCLF_WRONG_META_TYPE(n4Interface.description, "extend",
 							extendedType.description);

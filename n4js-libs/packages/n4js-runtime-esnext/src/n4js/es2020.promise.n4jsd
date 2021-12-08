@@ -1,0 +1,21 @@
+// generated from https://github.com/microsoft/TypeScript/blob/5d0d7ae85d1ff52d3ef4cb6cac653f33f7e76724/src/lib/es2020.promise.d.ts
+// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+
+@@Global @@ProvidedByRuntime
+
+export external public interface ~PromiseFulfilledResult<T> {
+	status: "fulfilled";
+	value: T;
+}
+
+export external public interface ~PromiseRejectedResult {
+	status: "rejected";
+	reason: any;
+}
+
+export external public type PromiseSettledResult<T> = PromiseFulfilledResult<T> | PromiseRejectedResult;
+
+@Polyfill
+export external public class Promise<out S, out F = any> extends Promise<S,F> {
+	public static allSettled(...args: any+): any+; // overloading not supported
+}

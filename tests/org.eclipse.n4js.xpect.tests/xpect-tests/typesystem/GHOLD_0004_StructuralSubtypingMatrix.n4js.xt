@@ -57,7 +57,7 @@ class ~SA { public f : string}
 // Tests for T <: Object
 {
 	{
-		// Primitive !<: Object XPECT issues --> "int is not a subtype of Object." at "3"
+		// Primitive !<: Object XPECT issues --> "3 is not a subtype of Object." at "3"
 		let o : Object = 3;
 	}
 	{
@@ -96,7 +96,7 @@ class ~SA { public f : string}
 // Tests for T <: N4Object
 {
 	{
-		// Primitive !<: N4Object XPECT issues --> "int is not a subtype of N4Object." at "3"
+		// Primitive !<: N4Object XPECT issues --> "3 is not a subtype of N4Object." at "3"
 		let n4Object : N4Object = 3;
 	}
 	{

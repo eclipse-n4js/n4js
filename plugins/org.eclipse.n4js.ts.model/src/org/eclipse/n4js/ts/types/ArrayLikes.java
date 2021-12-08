@@ -28,8 +28,11 @@ public class ArrayLikes {
 	 * @return the element type or null
 	 */
 	public static Object getElementType(Object type) {
-		if (type instanceof ContainerType)
+		if (type instanceof ContainerType) {
 			return new FindElementTypeHelper((ContainerType<?>) type).getResult();
+		} else if (type instanceof PrimitiveType) {
+			return new FindElementTypeHelper((PrimitiveType) type).getResult();
+		}
 		return null;
 	}
 

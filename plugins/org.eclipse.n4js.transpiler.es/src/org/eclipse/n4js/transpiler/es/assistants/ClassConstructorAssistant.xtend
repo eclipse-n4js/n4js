@@ -10,11 +10,13 @@
  */
 package org.eclipse.n4js.transpiler.es.assistants
 
+import com.google.common.collect.ImmutableSet
 import com.google.inject.Inject
 import java.util.ArrayList
 import java.util.Collection
 import java.util.LinkedHashSet
 import java.util.List
+import java.util.Objects
 import java.util.Set
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSLanguageConstants
@@ -37,12 +39,13 @@ import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.types.TObjectPrototype
+import org.eclipse.n4js.types.utils.TypeUtils
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -57,6 +60,25 @@ class ClassConstructorAssistant extends TransformationAssistant {
 	@Inject private TypeAssistant typeAssistant;
 	@Inject private ClassifierAssistant classifierAssistant;
 
+	private static final class SpecInfo {
+		/**
+		 * The <code>@Spec</code>-fpar in the intermediate model. Never <code>null</code>.
+		 */
+		public final FormalParameter fpar;
+		/**
+		 * Names of properties in the with-clause of the <code>@Spec</code>-fpar's type. For example, as in:
+		 * <pre>
+		 * constructor(@Spec specObj: ~i~this with { addProp: string }) { ... }
+		 * </code>.
+		 */
+		public final ImmutableSet<String> additionalProps;
+
+		new(FormalParameter fpar, Iterable<String> additionalProps) {
+			this.fpar = Objects.requireNonNull(fpar);
+			this.additionalProps = ImmutableSet.copyOf(additionalProps);
+		}
+	}
+
 	/**
 	 * Amend the constructor of the given class with implicit functionality (e.g. initialization of instance fields).
 	 * Will create an implicit constructor declaration iff no constructor is defined in the N4JS source code AND an
@@ -69,11 +91,11 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		val ctorDecl = explicitCtorDecl ?: _N4MethodDecl(N4JSLanguageConstants.CONSTRUCTOR);
 
 		// amend formal parameters
-		amendFormalParametersOfConstructor(classDecl, ctorDecl, explicitCtorDecl);
+		val specInfo = amendFormalParametersOfConstructor(classDecl, ctorDecl, explicitCtorDecl);
 
 		// amend body
 		val isNonTrivial = amendBodyOfConstructor(classDecl, classSTE, superClassSTE,
-			ctorDecl, explicitCtorDecl, fieldsRequiringExplicitDefinition);
+			ctorDecl, explicitCtorDecl, specInfo, fieldsRequiringExplicitDefinition);
 
 		// add constructor to classDecl (if necessary)
 		if (ctorDecl.eContainer === null && isNonTrivial) {
@@ -81,22 +103,45 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		}
 	}
 
-	def private void amendFormalParametersOfConstructor(N4ClassDeclaration classDecl, N4MethodDeclaration ctorDecl, N4MethodDeclaration explicitCtorDecl) {
+	def private SpecInfo amendFormalParametersOfConstructor(N4ClassDeclaration classDecl, N4MethodDeclaration ctorDecl, N4MethodDeclaration explicitCtorDecl) {
+		var specFpar = null as FormalParameter;
+		var specFparTypeRef = null as TypeRef;
+		
 		val hasExplicitCtor = explicitCtorDecl !== null;
 		if (hasExplicitCtor) {
 			// explicitly defined constructor
 			// --> nothing to be changed (use fpars from N4JS source code)
+
+			specFpar = ctorDecl.fpars.filter[AnnotationDefinition.SPEC.hasAnnotation(it)].head;
+			if (specFpar !== null) {
+				val typeRefNode = specFpar.declaredTypeRefNode;
+				if (typeRefNode !== null) {
+					specFparTypeRef = state.info.getOriginalProcessedTypeRef(typeRefNode);
+				}
+			}
 		} else {
 			// implicit constructor
 			// --> create fpars using fpars of nearest constructor in hierarchy as template
+
 			val templateCtor = getNearestConstructorInHierarchy(classDecl);
-			if (templateCtor!==null) {
-				ctorDecl.fpars += templateCtor.fpars.map[
-					val typeRefIM = copyAlienElement(it.typeRef);
-					_Fpar(it.name, it.variadic, typeRefIM, AnnotationDefinition.SPEC.hasAnnotation(it))
-				];
+			if (templateCtor !== null) {
+				for (templateFpar : templateCtor.fpars) {
+					val isSpecFpar = AnnotationDefinition.SPEC.hasAnnotation(templateFpar);
+					val newFpar = _Fpar(templateFpar.name, templateFpar.variadic, isSpecFpar);
+					ctorDecl.fpars += newFpar;
+					
+					if (isSpecFpar && specFpar === null) {
+						specFpar = newFpar;
+						specFparTypeRef = TypeUtils.copy(templateFpar.typeRef);
+					}
+				}
 			}
 		}
+
+		if (specFpar !== null) {
+			return new SpecInfo(specFpar, specFparTypeRef?.structuralMembers?.map[name] ?: #[]);
+		}
+		return null;
 	}
 
 	/**
@@ -104,14 +149,11 @@ class ClassConstructorAssistant extends TransformationAssistant {
 	 * than just the default super call.
 	 */
 	def private boolean amendBodyOfConstructor(N4ClassDeclaration classDecl, SymbolTableEntry classSTE, SymbolTableEntryOriginal superClassSTE,
-		N4MethodDeclaration ctorDecl, N4MethodDeclaration explicitCtorDecl,
+		N4MethodDeclaration ctorDecl, N4MethodDeclaration explicitCtorDecl, SpecInfo specInfo,
 		LinkedHashSet<N4FieldDeclaration> fieldsRequiringExplicitDefinition) {
 
 		val hasExplicitCtor = explicitCtorDecl !== null;
 		val body = ctorDecl.body;
-
-		// within the (maybe newly created) fpars of our ctor, search the @Spec fpar
-		val specFpar = ctorDecl.fpars.filter[AnnotationDefinition.SPEC.hasAnnotation(it)].head;
 
 		val isDirectSubclassOfError = superClassSTE?.originalTarget===state.G.errorType;
 		val superCallIndex = if(explicitCtorDecl?.body!==null) explicitCtorDecl.superCallIndex else -1;
@@ -151,9 +193,9 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		// if we are in a spec-constructor: prepare a local variable for the spec-object and
 		// ensure it is never 'undefined' or 'null'
 		var specObjSTE = null as SymbolTableEntry;
-		if (specFpar !== null) {
+		if (specInfo !== null) {
 			// let $specObj = specFpar || {};
-			val specFparSTE = findSymbolTableEntryForElement(specFpar, true);
+			val specFparSTE = findSymbolTableEntryForElement(specInfo.fpar, true);
 			val specObjVarDecl = _VariableDeclaration("$specObj", _OR(_IdentRef(specFparSTE), _ObjLit));
 			idx = body.statements.insertAt(idx, _VariableStatement(VariableStatementKeyword.CONST, specObjVarDecl));
 
@@ -164,7 +206,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		idx = body.statements.insertAt(idx, classifierAssistant.createExplicitFieldDefinitions(classSTE, false, fieldsRequiringExplicitDefinition));
 
 		// add initialization code for instance fields
-		idx = body.statements.insertAt(idx, createInstanceFieldInitCode(classDecl, specFpar, specObjSTE, fieldsRequiringExplicitDefinition));
+		idx = body.statements.insertAt(idx, createInstanceFieldInitCode(classDecl, specInfo, specObjSTE, fieldsRequiringExplicitDefinition));
 
 		// add delegation to field initialization functions of all directly implemented interfaces
 		idx = body.statements.insertAt(idx, createDelegationToFieldInitOfImplementedInterfaces(classDecl, specObjSTE));
@@ -179,18 +221,17 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		return isNonTrivialCtor;
 	}
 
-	def private Statement[] createInstanceFieldInitCode(N4ClassDeclaration classDecl, FormalParameter specFpar, SymbolTableEntry specObjSTE, Set<N4FieldDeclaration> fieldsWithExplicitDefinition) {
+	def private Statement[] createInstanceFieldInitCode(N4ClassDeclaration classDecl, SpecInfo specInfo, SymbolTableEntry specObjSTE, Set<N4FieldDeclaration> fieldsWithExplicitDefinition) {
 		val allFields = classDecl.ownedFields.filter[!isStatic && !isConsumedFromInterface].toList;
-		if(specFpar!==null) {
+		if(specInfo!==null) {
 			// we have a spec-parameter -> we are in a spec-style constructor
 			val result = <Statement>newArrayList;
-			val structFields = specFpar.declaredTypeRefNode.typeRefInAST.structuralMembers;
 
 			// step #1: initialize all fields either with data from the specFpar OR or their initializer expression
 			val currFields = <N4FieldDeclaration>newArrayList;
 			var currFieldsAreSpecced = false;
 			for(field : allFields) {
-				val isSpecced = isPublic(field) || structFields.exists[name == field.name];
+				val isSpecced = isPublic(field) || specInfo.additionalProps.contains(field.name);
 				if (isSpecced === currFieldsAreSpecced) {
 					currFields += field;
 				} else {
@@ -432,8 +473,6 @@ class ClassConstructorAssistant extends TransformationAssistant {
 	def private TMethod getNearestConstructorInHierarchy(TClassifier clazz) {
 		val ownedCtor = if (clazz instanceof TClass) {
 			clazz.ownedCtor
-		} else if (clazz instanceof TObjectPrototype) {
-			clazz.ownedCtor
 		};
 
 		if (ownedCtor !== null) {
@@ -441,8 +480,6 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		} else {
 			val superType = if (clazz instanceof TClass) {
 				clazz.getSuperClassRef?.declaredType
-			} else if (clazz instanceof TObjectPrototype) {
-				clazz.superType?.declaredType
 			};
 			if (superType instanceof TClassifier) {
 				return superType.getNearestConstructorInHierarchy;
@@ -455,6 +492,7 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		return state.info.isConsumedFromInterface(memberDecl);
 	}
 
+	// TODO GH-2153 use reusable utility method for computing actual accessibility
 	def private boolean isPublic(N4MemberDeclaration memberDecl) {
 		// no need to bother with default accessibility, here, because 'public' is never the default
 		// (not ideal; would be better if the utility method handled default accessibility)

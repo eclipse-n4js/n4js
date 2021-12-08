@@ -17,6 +17,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.transpiler.dts.DtsSubGenerator;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
@@ -60,14 +61,19 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 
 	private Set<OutputConfiguration> getOutputConfigurationSet(N4JSProjectConfigSnapshot project) {
 		Set<OutputConfiguration> outputConfs = new HashSet<>();
-		OutputConfiguration outputConf = getOutputConfiguration(project);
+
+		OutputConfiguration outputConf = getESOutputConfigurations(project);
+		if (outputConf != null) {
+			outputConfs.add(outputConf);
+		}
+		outputConf = getDTSOutputConfigurations(project);
 		if (outputConf != null) {
 			outputConfs.add(outputConf);
 		}
 		return outputConfs;
 	}
 
-	private OutputConfiguration getOutputConfiguration(N4JSProjectConfigSnapshot project) {
+	private OutputConfiguration getESOutputConfigurations(N4JSProjectConfigSnapshot project) {
 		if (project != null
 				&& N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(project.getType())) {
 			return null;
@@ -78,10 +84,28 @@ public class N4JSOutputConfigurationProvider extends OutputConfigurationProvider
 			outputPath = project.getOutputPath();
 		}
 
-		OutputConfiguration defaultOutputConfig = EcmaScriptSubGenerator.createDefaultOutputConfiguration();
+		OutputConfiguration defaultESOutputConfig = EcmaScriptSubGenerator.createDefaultOutputConfiguration();
 		if (outputPath != null) {
-			defaultOutputConfig.setOutputDirectory(outputPath);
+			defaultESOutputConfig.setOutputDirectory(outputPath);
 		}
-		return defaultOutputConfig;
+		return defaultESOutputConfig;
+	}
+
+	private OutputConfiguration getDTSOutputConfigurations(N4JSProjectConfigSnapshot project) {
+		if (project != null
+				&& N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(project.getType())) {
+			return null;
+		}
+
+		String outputPath = null;
+		if (project != null) {
+			outputPath = project.getOutputPath();
+		}
+
+		OutputConfiguration defaultESOutputConfig = DtsSubGenerator.createDefaultOutputConfiguration();
+		if (outputPath != null) {
+			defaultESOutputConfig.setOutputDirectory(outputPath);
+		}
+		return defaultESOutputConfig;
 	}
 }

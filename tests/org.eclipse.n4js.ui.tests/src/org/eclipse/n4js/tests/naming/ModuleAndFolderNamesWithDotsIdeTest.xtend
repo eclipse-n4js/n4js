@@ -14,10 +14,10 @@ import java.io.File
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.tests.utils.ConvertedIdeTest
 import org.eclipse.n4js.workspace.locations.FileURI
-import org.eclipse.n4js.workspace.utils.N4JSProjectName
 import org.junit.Test
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.workspace.utils.N4JSPackageName
 
 /**
  * Testing module and folder names containing dots.
@@ -27,7 +27,7 @@ class ModuleAndFolderNamesWithDotsIdeTest extends ConvertedIdeTest {
 
 	private static final String PROBANDS = "probands";
 	private static final String SUBFOLDER = "ModuleAndFolderNamesWithDots";
-	private static final N4JSProjectName PROJECT_NAME = new N4JSProjectName("ModuleAndFolderNamesWithDots");
+	private static final N4JSPackageName PROJECT_NAME = new N4JSPackageName("ModuleAndFolderNamesWithDots");
 
 	@Test
 	def void testModuleAndFolderNamesWithDots() {

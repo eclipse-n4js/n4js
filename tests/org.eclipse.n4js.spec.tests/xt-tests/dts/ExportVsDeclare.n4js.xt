@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+// non-exported elements must be prefixed with keyword 'declare'
+
+
+var varD;
+export var varE;
+
+let letD;
+export let letE;
+
+const constD = 42;
+export const constE = 42;
+
+
+function fnD() {}
+export function fnE() {}
+
+
+class ClsD {}
+export class ClsE {}
+
+interface IfcD {}
+export interface IfcE {}
+
+enum EnumD { L }
+export enum EnumE { L }
+
+type AliD = ClsD;
+export type AliE = ClsE;
+
+
+/* XPECT generated_dts ---
+declare var varD: any;
+export var varE: any;
+declare let letD: any;
+export let letE: any;
+declare const constD: 42;
+export const constE: 42;
+declare function fnD(): void;
+export function fnE(): void;
+declare class ClsD {}
+export class ClsE {}
+declare interface IfcD {}
+export interface IfcE {}
+declare enum EnumD {
+	L
+}
+declare namespace EnumD {
+	export const literals: Array<EnumD>;
+	export function findLiteralByName(name: string): EnumD;
+	export function findLiteralByValue (value: string): EnumD;
+}
+
+export enum EnumE {
+	L
+}
+export namespace EnumE {
+	export const literals: Array<EnumE>;
+	export function findLiteralByName(name: string): EnumE;
+	export function findLiteralByValue (value: string): EnumE;
+}
+
+declare type AliD = ClsD;
+export type AliE = ClsE;
+--- */

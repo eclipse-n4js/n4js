@@ -34,7 +34,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElement, TVersionable, TMigratable {
+public interface TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElement {
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -68,13 +68,5 @@ public interface TEnum extends Type, AccessibleTypeElement, SyntaxRelatedTElemen
 	 * @generated
 	 */
 	EList<TEnumLiteral> getLiterals();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	EList<TypeVariable> getTypeVars();
 
 } // TEnum

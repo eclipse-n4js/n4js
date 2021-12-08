@@ -1,0 +1,14 @@
+import * as React from "react";
+
+export public interface ~YProps extends React.ComponentProps<any> {}
+
+export public interface ~YState {}
+
+export public class Y extends React.Component<YProps, YState, Object> {
+	@Override
+    public render(): React.ReactElement<?> {
+    	return (
+    		<div>{"DA FUK"}</div>
+    	);
+    }
+}

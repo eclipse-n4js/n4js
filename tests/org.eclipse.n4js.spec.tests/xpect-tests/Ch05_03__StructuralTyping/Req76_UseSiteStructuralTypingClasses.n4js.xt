@@ -84,8 +84,8 @@ class G<T> {
 }
 
 function g(p : ~G<string> with {n : number;}) {
-	// XPECT errors --> "int is not a subtype of string." at "1"
+	// XPECT errors --> "1 is not a subtype of string." at "1"
 	p.s = 1;
-	// XPECT errors --> "string is not a subtype of number." at ""hello""
+	// XPECT errors --> ""hello" is not a subtype of number." at ""hello""
 	p.n = "hello";
 }

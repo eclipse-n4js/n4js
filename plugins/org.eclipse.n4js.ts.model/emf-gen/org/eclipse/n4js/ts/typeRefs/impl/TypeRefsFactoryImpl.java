@@ -82,9 +82,10 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION: return createFunctionTypeExpression();
 			case TypeRefsPackage.DEFERRED_TYPE_REF: return createDeferredTypeRef();
 			case TypeRefsPackage.TYPE_VARIABLE_MAPPING: return createTypeVariableMapping();
-			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF: return createVersionedParameterizedTypeRef();
-			case TypeRefsPackage.VERSIONED_FUNCTION_TYPE_REF: return createVersionedFunctionTypeRef();
-			case TypeRefsPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL: return createVersionedParameterizedTypeRefStructural();
+			case TypeRefsPackage.BOOLEAN_LITERAL_TYPE_REF: return createBooleanLiteralTypeRef();
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF: return createNumericLiteralTypeRef();
+			case TypeRefsPackage.STRING_LITERAL_TYPE_REF: return createStringLiteralTypeRef();
+			case TypeRefsPackage.ENUM_LITERAL_TYPE_REF: return createEnumLiteralTypeRef();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -295,9 +296,9 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * @generated
 	 */
 	@Override
-	public VersionedParameterizedTypeRef createVersionedParameterizedTypeRef() {
-		VersionedParameterizedTypeRefImpl versionedParameterizedTypeRef = new VersionedParameterizedTypeRefImpl();
-		return versionedParameterizedTypeRef;
+	public BooleanLiteralTypeRef createBooleanLiteralTypeRef() {
+		BooleanLiteralTypeRefImpl booleanLiteralTypeRef = new BooleanLiteralTypeRefImpl();
+		return booleanLiteralTypeRef;
 	}
 
 	/**
@@ -306,9 +307,9 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * @generated
 	 */
 	@Override
-	public VersionedFunctionTypeRef createVersionedFunctionTypeRef() {
-		VersionedFunctionTypeRefImpl versionedFunctionTypeRef = new VersionedFunctionTypeRefImpl();
-		return versionedFunctionTypeRef;
+	public NumericLiteralTypeRef createNumericLiteralTypeRef() {
+		NumericLiteralTypeRefImpl numericLiteralTypeRef = new NumericLiteralTypeRefImpl();
+		return numericLiteralTypeRef;
 	}
 
 	/**
@@ -317,9 +318,20 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	 * @generated
 	 */
 	@Override
-	public VersionedParameterizedTypeRefStructural createVersionedParameterizedTypeRefStructural() {
-		VersionedParameterizedTypeRefStructuralImpl versionedParameterizedTypeRefStructural = new VersionedParameterizedTypeRefStructuralImpl();
-		return versionedParameterizedTypeRefStructural;
+	public StringLiteralTypeRef createStringLiteralTypeRef() {
+		StringLiteralTypeRefImpl stringLiteralTypeRef = new StringLiteralTypeRefImpl();
+		return stringLiteralTypeRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EnumLiteralTypeRef createEnumLiteralTypeRef() {
+		EnumLiteralTypeRefImpl enumLiteralTypeRef = new EnumLiteralTypeRefImpl();
+		return enumLiteralTypeRef;
 	}
 
 	/**

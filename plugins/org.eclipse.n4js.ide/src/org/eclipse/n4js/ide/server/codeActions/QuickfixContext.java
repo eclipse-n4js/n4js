@@ -49,7 +49,7 @@ public class QuickfixContext {
 	public Diagnostic getDiagnostic() {
 		CodeActionContext context = options.getCodeActionParams().getContext();
 		for (Diagnostic d : context.getDiagnostics()) {
-			if (issueCode.equals(d.getCode())) {
+			if (issueCode.equals(d.getCode().getLeft())) {
 				if (Ranges.containsRange(d.getRange(), options.getCodeActionParams().getRange())) {
 					return d;
 				}

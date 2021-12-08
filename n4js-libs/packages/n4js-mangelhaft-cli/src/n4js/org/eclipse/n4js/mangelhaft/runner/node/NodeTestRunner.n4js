@@ -9,8 +9,6 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import fetch from "deps/node-fetch";
-import cli_color_+ from "cli-color";
 import {Module} from "module";
 import {N4Injector} from "n4js/lang/N4Injector";
 import {FIXME1} from "org/eclipse/n4js/mangelhaft/Test";
@@ -19,7 +17,6 @@ import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test";
 import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test";
 import {TestController} from "org/eclipse/n4js/mangelhaft/TestController";
 import {ConsoleReporter} from "org/eclipse/n4js/mangelhaft/reporter/console/ConsoleReporter";
-import {IDEReporter} from "org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter";
 import {XUnitReporter} from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter";
 import {NodeTestCLI} from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestCLI";
 import {ITestReporter} from "org/eclipse/n4js/mangelhaft/types/ITestReporter";
@@ -27,12 +24,13 @@ import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent
 import {TestInfo} from "org/eclipse/n4js/mangelhaft/types/TestInfo";
 import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
 import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
-import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
 import {findProjectDirectories} from "org/eclipse/n4js/mangelhaft/runner/node/ProjectDiscoverer";
-import {parse} from "url";
+import cli_color_+ from "cli-color";
 import * as lib_path from "path";
 import * as lib_fs from "fs";
+import * as lib_coverage+ from "istanbul-lib-coverage";
+import {mkdirp} from "org/eclipse/n4js/mangelhaft/reporter/xunit/XUnitReporter";
 
 
 class NodeTestRunner  {
@@ -42,8 +40,6 @@ class NodeTestRunner  {
     consoleReporter: ConsoleReporter;
     @Inject
     xunitReporter: XUnitReporter;
-    @Inject
-    ideReporter: IDEReporter;
 
     @Final public async run(): void {
         const options = NodeTestCLI.parseCommandLine();
@@ -65,15 +61,8 @@ class NodeTestRunner  {
                 log("Did not find any test catalogs in: " + projectDirs);
                 return;
             }
-        } else if (isHTTP_re.test(options.testCatalog)) { // running IDE
-            const req = await fetch(options.testCatalog, {
-                headers: {
-                    "Content-Type": "application/vnd.n4js.assemble_test_catalog_req.tm+json"
-                }
-            });
-            testCatalog = (await req.json()) as TestInfos;
         } else {
-            throw "Unknown value for option 'testCatalog': " + options.testCatalog;
+            throw "Unsupported value for option 'testCatalog': " + options.testCatalog;
         }
 
         if (options.filter && options.filter.length) { // filter out tests
@@ -119,18 +108,6 @@ class NodeTestRunner  {
             reporters.push(this.xunitReporter);
         }
 
-        const ideReportEndpoint = testCatalog.endpoint;
-        if (ideReportEndpoint) {
-            if (!isHTTP_re.test(ideReportEndpoint)) {
-                throw new Error(`no report URL: ${ideReportEndpoint}`);
-            }
-            // make sure IDE reporting hostname matches the one used when fetching the catalog:
-            if (!isHTTP_re.test(options.testCatalog) || parse(options.testCatalog).hostname === parse(ideReportEndpoint).hostname) {
-                this.ideReporter.endpoint = ideReportEndpoint;
-                reporters.push(this.ideReporter);
-            }
-        }
-
         this.controller.reporters = reporters;
 
         const resGroups = await this.controller.runGroups(testCatalog, 420187, options.testScope);
@@ -143,6 +120,22 @@ class NodeTestRunner  {
         const failed = (resGroups.failures !== 0) || (resGroups.errors !== 0);
         if (failed) {
             log(`${fail("Test run failed.")} To rerun just the failing tests use the command: \n n4js-mangelhaft ${this.consoleReporter.unsuccessfulTests.map(test => `\\\n    -f ${test}`).join(" ")}`);
+        }
+
+        const nycCoveragePath = options.nycCoveragePath;
+        const coverage = globalThis.__coverage__;
+        if (nycCoveragePath && coverage) {
+            const coverageMap = lib_coverage.createCoverageMap(coverage);
+            mkdirp(lib_path.dirname(nycCoveragePath));
+            log("Writing %s", nycCoveragePath);
+            lib_fs.writeFileSync(nycCoveragePath, JSON.stringify(coverageMap, null, 2), { encoding: "UTF-8" });
+
+            const coverageSummary = lib_coverage.createCoverageSummary();
+            for (const file of coverageMap.files()) {
+                const fc = coverageMap.fileCoverageFor(file);
+                coverageSummary.merge(fc.toSummary());
+            }
+            console.log("Coverage Summary:", coverageSummary);
         }
 
         // Don't wait for async promises to finish.
@@ -206,9 +199,14 @@ const root = N4Injector.of(Root, parentinj).create(Root);
 if (process.env.N4JS_RT_strip_api_prj_suffix) {
     const objModule: Object+ = Module;
     const _resolveFilename = objModule._resolveFilename;
-    const stripApiSuffix_re = /^([^/]+)\.api\//;
+    const stripApiSuffix_re = /^([^/]+)[-.]api\//;
+    const stripScopedApiSuffix_re = /^([^/]+)\/([^/]+)[-.]api\//;
     objModule._resolveFilename = function(request: string, parent, isMain) {
-        request = request.replace(stripApiSuffix_re, "$1/");
+        if (request[0] === "@") {
+            request = request.replace(stripScopedApiSuffix_re, "$1/$2/");
+        } else {
+            request = request.replace(stripApiSuffix_re, "$1/");
+        }
         return _resolveFilename(request, parent, isMain);
     };
 }

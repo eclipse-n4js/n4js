@@ -12,6 +12,7 @@ package org.eclipse.n4js.cli.compiler;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -20,6 +21,7 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializedParams;
+import org.eclipse.lsp4j.WorkspaceFolder;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.cli.N4jscException;
 import org.eclipse.n4js.cli.N4jscExitCode;
@@ -80,9 +82,9 @@ public class N4jscCompiler {
 			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID, "No base directory");
 		}
 
-		params.setRootUri(baseDir.toURI().toString());
+		params.setWorkspaceFolders(Collections.singletonList(new WorkspaceFolder(baseDir.toURI().toString())));
 		languageServer.initialize(params).get();
-		warnIfNoProjectsFound();
+		throwIfNoProjectsFound();
 		verbosePrintAllProjects();
 
 		switch (options.getGoal()) {
@@ -140,10 +142,11 @@ public class N4jscCompiler {
 		buildRequestFactory.setAfterBuildListener(callback);
 	}
 
-	private void warnIfNoProjectsFound() {
+	private void throwIfNoProjectsFound() throws N4jscException {
 		Set<? extends ProjectConfigSnapshot> projects = workspaceManager.getProjectConfigs();
 		if (projects.isEmpty()) {
-			N4jscConsole.println("No projects found at the given location: " + options.getDirs().get(0));
+			throw new N4jscException(N4jscExitCode.ARGUMENT_DIRS_INVALID,
+					"No projects found at the given location: " + options.getDir());
 		}
 	}
 
@@ -157,11 +160,11 @@ public class N4jscCompiler {
 			String prjNameWithPadding = "%-" + maxPrjNameLength + "s";
 
 			if (!projects.isEmpty()) {
-				Path workspace = options.getDirs().get(0).toPath();
+				Path workspace = options.getDir().toPath();
 
-				SortedMap<String, String> projectNameList = new TreeMap<>();
+				SortedMap<String, String> projectList = new TreeMap<>();
 				for (ProjectConfigSnapshot prj : projects) {
-					String prjName = prj.getName() == null ? "[no_name]" : prj.getName();
+					String prjID = prj.getName() == null ? "[no_name]" : prj.getName();
 					String locationStr = null;
 					if (prj.getPath() == null) {
 						locationStr = "[no_location]";
@@ -171,11 +174,11 @@ public class N4jscCompiler {
 							locationStr = ".";
 						}
 					}
-					String outputLine = String.format(prjNameWithPadding + " at %s", prjName, locationStr);
-					projectNameList.put(locationStr, outputLine);
+					String outputLine = String.format(prjNameWithPadding + " at %s", prjID, locationStr);
+					projectList.put(locationStr, outputLine);
 				}
 
-				LOG.info(projects.size() + " projects: \n   " + String.join("\n   ", projectNameList.values()));
+				LOG.info(projects.size() + " projects: \n   " + String.join("\n   ", projectList.values()));
 			}
 		}
 	}
@@ -188,13 +191,13 @@ public class N4jscCompiler {
 	}
 
 	private void printCompileResults(Stopwatch elapsedTime) {
-		long trsnp = callback.getTranspilationsCount();
+		long trsnp = callback.getGeneratedCount();
 		long deltd = callback.getDeletionsCount();
 		long errs = callback.getErrorsCount();
 		long wrns = callback.getWarningsCount();
 		String durationStr = elapsedTime.toString();
 		String msg = String.format(
-				"Compile results - Transpiled: %d, Deleted: %d, Errors: %d, Warnings: %d, Duration: %s",
+				"Compile results - Generated: %d, Deleted: %d, Errors: %d, Warnings: %d, Duration: %s",
 				trsnp, deltd, errs, wrns, durationStr);
 		N4jscConsole.println(msg);
 	}

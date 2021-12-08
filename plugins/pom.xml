@@ -30,8 +30,6 @@ Contributors:
 		<module>org.eclipse.n4js.common.unicode</module>
 		<!-- types -->
 		<module>org.eclipse.n4js.ts.model</module>
-		<module>org.eclipse.n4js.ts</module>
-		<module>org.eclipse.n4js.ts.ide</module>
 		<!-- regex -->
 		<module>org.eclipse.n4js.regex</module>
 		<module>org.eclipse.n4js.regex.ide</module>
@@ -50,6 +48,7 @@ Contributors:
 		<module>org.eclipse.n4js.semver.ide</module>
 		<!-- transpiler -->
 		<module>org.eclipse.n4js.transpiler</module>
+		<module>org.eclipse.n4js.transpiler.dts</module>
 		<module>org.eclipse.n4js.transpiler.es</module>
 		<!-- jsdoc -->
 		<module>org.eclipse.n4js.jsdoc</module>

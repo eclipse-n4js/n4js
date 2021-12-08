@@ -194,12 +194,6 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	public static final ValidationFeature<Boolean> MULTI_QN_SCOPE = new ValidationFeature<>(false);
 
 	/**
-	 * Variant allows for the declaration and reference of versioned types and the corresponding declaration of
-	 * migrations.
-	 */
-	public static final ValidationFeature<Boolean> VERSIONED_TYPES = new ValidationFeature<>(false);
-
-	/**
 	 * Variant allows for top-level statements in modules.
 	 */
 	public static final ValidationFeature<Boolean> TOP_LEVEL_STATEMENTS = new ValidationFeature<>(true);
@@ -627,15 +621,6 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	@Override
 	public boolean isMultiQNScope(EObject eobj) {
 		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), MULTI_QN_SCOPE);
-	}
-
-	/**
-	 * Returns {@code true} if the script allows for the declaration and reference of versioned types as well as
-	 * corresponding migrations.
-	 */
-	@Override
-	public boolean allowVersionedTypes(EObject eobj) {
-		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), VERSIONED_TYPES);
 	}
 
 	/**

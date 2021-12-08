@@ -1,0 +1,19 @@
+{
+	"name": "TestProject",
+	"version": "0.0.1",
+	"type": "module",
+	"dependencies": {
+		"n4js-runtime": "*"
+	},
+	"n4js": {
+		"projectType": "library",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"output": "src-gen",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

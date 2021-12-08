@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+function foo(...more: string) {}
+
+function bar1(...more: any) {}
+function bar2(...more) {}
+
+class Cls {
+	method(...more: number) {}
+}
+
+
+/* XPECT generated_dts ---
+declare function foo(...more: string[]): void;
+declare function bar1(...more: any[]): void;
+declare function bar2(...more: any[]): void;
+declare class Cls {
+	method(...more: number[]): void;
+}
+--- */

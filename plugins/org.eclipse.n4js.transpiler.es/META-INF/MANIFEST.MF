@@ -8,7 +8,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.transpiler,
  org.apache.log4j,
- org.eclipse.n4js.ts,
  org.eclipse.n4js.ts.model,
  org.eclipse.n4js.xtext,
  org.eclipse.emf.ecore.xcore;bundle-version="1.3.1",
@@ -16,6 +15,6 @@ Require-Bundle: org.eclipse.n4js,
  com.google.guava,
  com.google.gson,
  org.eclipse.n4js.smith
-Export-Package: org.eclipse.n4js.transpiler.es.n4idl,
- org.eclipse.n4js.transpiler.es
+Export-Package: org.eclipse.n4js.transpiler.es,
+ org.eclipse.n4js.transpiler.es.transform
 Automatic-Module-Name: org.eclipse.n4js.transpiler.es

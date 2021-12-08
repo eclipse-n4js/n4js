@@ -14,15 +14,14 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
-import org.eclipse.n4js.xtext.server.LSPIssue;
+import org.eclipse.xtext.validation.Issue;
 
 /**
  * Minimal protocol to communicate issues to interested parties.
  *
- * Differs from the {@link AfterValidateListener} such that it only allows {@link LSPIssue}. May become obsolete with
- * more recent Xtext versions.
+ * Differs from the {@link AfterValidateListener} such that it only allows {@link Issue}. May become obsolete with more
+ * recent Xtext versions.
  */
-@SuppressWarnings("deprecation")
 public interface IssueAcceptor {
 	/**
 	 * Call to announce that the list of issues relates to the resource with the given URI. Neither the list nor the uri
@@ -30,5 +29,5 @@ public interface IssueAcceptor {
 	 *
 	 * Announce an empty list of issues if there are no issues.
 	 */
-	void accept(URI uri, List<? extends LSPIssue> issues);
+	void accept(URI uri, List<? extends Issue> issues);
 }

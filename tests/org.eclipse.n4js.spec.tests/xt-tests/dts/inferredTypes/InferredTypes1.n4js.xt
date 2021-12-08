@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+class Cls {}
+
+function implicitReturn() { return null; }
+function implicitVoid() { }
+
+function supplyString(): string { return null; }
+function supplyObject(): Object { return null; }
+function supplyCls(): Cls { return null; }
+function paramString(p = ""): void { }
+
+export let x1 = supplyString();
+export let x2 = supplyObject();
+export let x3 = supplyCls();
+
+export class ClassWithFields {
+    constructor(p = 2) { }
+	public f1 = supplyString();
+	public f2 = supplyObject();
+	public f3 = supplyCls();
+	paramString(p = ""): void { }
+}
+
+
+/* XPECT generated_dts ---
+declare class Cls {}
+declare function implicitReturn(): any;
+declare function implicitVoid(): void;
+declare function supplyString(): string;
+declare function supplyObject(): Object;
+declare function supplyCls(): Cls;
+declare function paramString(p?: string): void;
+export let x1: string;
+export let x2: Object;
+export let x3: Cls;
+export class ClassWithFields {
+	constructor(p?: number);
+	public f1: string;
+	public f2: Object;
+	public f3: Cls;
+	paramString(p?: string): void;
+}
+--- */

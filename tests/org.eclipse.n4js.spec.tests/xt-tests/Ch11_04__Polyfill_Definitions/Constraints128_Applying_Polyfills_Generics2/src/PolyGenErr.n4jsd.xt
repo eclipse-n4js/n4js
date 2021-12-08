@@ -24,17 +24,26 @@
 	END_SETUP
  */
 
-
 // Test needs to be run in project configured as ProjectType: runtimeEnvironment (i.e. need package.json in this or parent folder)
 
 @@ProvidedByRuntime
 @@Global
 
 @Polyfill
-// XPECT errors --> "Polyfill F must declare same type parameters as filled class." at "F"
-export external public class F<S>
+// XPECT errors --> "Polyfill Cls must declare same type parameters as the filled class." at "Cls"
+export external public class Cls<S>
 	// XPECT errors --> "Couldn't resolve reference to Type 'T'." at "T"
-	extends F<T> {
+	extends Cls<T> {
+
+	// XPECT noerrors --> "but we can use T"
+	genMethod(t : T) : T;
+}
+
+@Polyfill
+// XPECT errors --> "Polyfill Ifc must declare same type parameters as the filled interface." at "Ifc"
+export external public interface ~Ifc<S>
+	// XPECT errors --> "Couldn't resolve reference to Type 'T'." at "T"
+	extends Ifc<T> {
 
 	// XPECT noerrors --> "but we can use T"
 	genMethod(t : T) : T;

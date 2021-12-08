@@ -25,50 +25,26 @@
 package org.eclipse.n4js.ts.typeRefs
 
 import java.util.UUID
+import org.eclipse.emf.common.util.ECollections
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TStructMember
+import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils
+import org.eclipse.n4js.utils.Strings
 
 type UUID wraps UUID
 
-/*
- * Base class for all things that can provide a version. The returned value will be 0 in any language that does not
- * support versions. In those languages that do support versions, the return value depends on the semantics of the
- * actual subclass and how it implements the getVersion method.
- *
- * All type references and all types extend this class. In addition, some AST nodes such as IdentifierRef and
- * N4IDLClassDeclaration also extend this class.
- *
- * Type references generally delegate a call to getVersion to the type that they reference (via declaredType).
- * Exceptions are BoundThisTypeRef, which delegates to actualThisTypeRef, and ParameterizedTypeRef, which will return
- * the requested version if the user provided one.
- *
- * Types usually return 0 unless they are explicitly versionable, in which case they return the declared version.
- * In N4IDL, this only applies to TClassifier, which returns the version that was declared by the user (as set by the
- * types builder).
- *
- * For AST nodes, the return value depends highly on the type of the node itself. For example, the IdentifierRef returns
- * the explicitly requested version if the user provided one, otherwise it returns 0. For an N4IDLClassDeclaration,
- * getVersion returns the version that was declared by the user for that class.
- *
- * It was decided that TypeRef and Type should extend Versionable to avoid switching on the type of a the Type or
- * TypeRef instance under consideration. This is possible since 0 is a sensible default for unversioned objects.
- */
-abstract class Versionable {
-	op int getVersion() {
-		return 0
-	}
-}
 
 /*
  * Optional field strategy enum defines three strategies for handling optional fields while checking structural subtypes.
@@ -127,7 +103,7 @@ abstract class TypeArgument {
 /*
  * Base class for all type references
  */
-abstract class TypeRef extends TypeArgument, Versionable {
+abstract class TypeRef extends TypeArgument {
 
 	/*
 	 * <b>SHOULD NOT BE USED, EXCEPT FOR DECLARATION OF OPTIONAL RETURN VALUES</b>
@@ -278,7 +254,13 @@ abstract class TypeRef extends TypeArgument, Versionable {
 	/*
 	 * Convenience method to avoid type casts, does return unmodifiable empty list for all type references except parameterized type refs.
 	 */
-	op TypeArgument[] getTypeArgs() {
+	op TypeArgument[] getDeclaredTypeArgs() {
+		return emptyEList
+	}
+	/*
+	 * Convenience method to avoid type casts, does return unmodifiable empty list for all type references except parameterized type refs.
+	 */
+	op TypeArgument[] getTypeArgsWithDefaults() {
 		return emptyEList
 	}
 	/* See {@link TypeArgument#getTypeRefAsString()}. */
@@ -353,13 +335,6 @@ abstract class TypeRef extends TypeArgument, Versionable {
 	 /* @see ParameterizedTypeRef#astOptionalFieldStrategy */
 	op OptionalFieldStrategy getASTNodeOptionalFieldStrategy() {
 		return OptionalFieldStrategy.OFF;
-	}
-
-	/*
-	 * Override Versioned#getVersion()
-	 */
-	op int getVersion() {
-		if (declaredType !== null) declaredType.version else 0
 	}
 }
 
@@ -566,13 +541,6 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 		return (if (structuralType !== null) structuralType.ownedMembers else if (!astStructuralMembers.empty) astStructuralMembers else genStructuralMembers).
 			unmodifiableView;
 	}
-
-	/*
-	 * Override VersionedElement#getVersion() to return the version of the actual this type reference.
-	 */
-	op int getVersion() {
-		actualThisTypeRef.version
-	}
 }
 
 /**
@@ -585,15 +553,25 @@ class BoundThisTypeRef extends ThisTypeRef, StructuralTypeRef {
 class ParameterizedTypeRef extends BaseTypeRef {
 	refers Type declaredType
 	transient String declaredTypeAsText
-	contains TypeArgument[] typeArgs
+	/*
+	 * The type arguments provided with this type reference, <b>NOT</b> including defaults for optional type parameters.
+	 * Use {@link ParameterizedTypeRef#getTypeArgsWithDefaults() #getTypeArgsWithDefaults()} to also obtain those defaults.
+	 */
+	contains TypeArgument[] declaredTypeArgs
+	/* An array type in the AST, i.e. something like {@code let x: string[];}. Don't confuse with {@link ParameterizedTypeRef#isArrayNTypeExpression() arrayNTypeExpression}. */
 	boolean arrayTypeExpression = "false"
-	boolean iterableTypeExpression = "false"
+	/* An ArrayN type in the AST, i.e. something like {@code let x: [string,number];}. Don't confuse with {@link ParameterizedTypeRef#isArrayTypeExpression() arrayTypeExpression}. */
+	boolean arrayNTypeExpression = "false"
 
 	/*
-	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node and the declared type is, in the source
-	 * code, referred to via the namespace of a namespace import, then this is non-null and points to that namespace.
+	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node <em>and</em> ...
+	 * <ol>
+	 * <li>the declared type is, in the source code, referred to via the namespace of a namespace import, then this is non-null
+	 * and points to that namespace.
+	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
+	 * </ol>
 	 */
-	refers transient ModuleNamespaceVirtualType astNamespace
+	refers transient Type astDeclaredTypeQualifier
 
 	/* @see TypeRef#getASTOptionalFieldStrategy() */
 	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy
@@ -617,16 +595,56 @@ class ParameterizedTypeRef extends BaseTypeRef {
 		}
 		return definedTypingStrategy
 	}
+
+	/*
+	 * Returns all type arguments: those given in this type reference as well as default arguments
+	 * of <em>optional</em> type parameters for which the argument is omitted.
+	 * <p>
+	 * If a type argument is missing in this type reference for a <em>mandatory</em> type parameter
+	 * (i.e. this type reference is a {@link ParameterizedTypeRef#isRaw() raw type reference}) then
+	 * nothing will be added and only the type arguments actually given in this type reference will
+	 * be returned (i.e. same return value as {@link ParameterizedTypeRef#getDeclaredTypeArgs() #getDeclaredTypeArgs()}).
+	 * This is to ensure consistent behavior of this method and {@code #getDeclaredTypeArgs()} with
+	 * respect to raw type references.
+	 */
+	op TypeArgument[] getTypeArgsWithDefaults() {
+		val declType = this.getDeclaredType();
+		if (declType !== null && declType.generic) {
+			val declTypeArgs = this.getDeclaredTypeArgs();
+			val declTypeArgsCount = declTypeArgs.size;
+			val typeParams = declType.typeVars;
+			val typeParamCount = typeParams.size;
+			if (typeParamCount > declTypeArgsCount) {
+				val args = <TypeArgument>newArrayOfSize(typeParamCount);
+				for (var i = 0; i < typeParamCount; i++) {
+					if (i < declTypeArgsCount) {
+						args.set(i, declTypeArgs.get(i));
+					} else {
+						val defArg = typeParams.get(i).defaultArgument; // will be 'null' if type parameter #i isn't optional
+						if (defArg === null) {
+							// no type argument given in declTypeArgs for non-optional type parameter #i
+							// --> we have a raw type reference and want this method to behave consistently
+							// with #getDeclaredTypeArgs() (see above)
+							return declTypeArgs;
+						}
+						args.set(i, defArg);
+					};
+				}
+				return newImmutableEList(args);
+			}
+		}
+		return declaredTypeArgs;
+	}
+
 	/*
 	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
 	op String internalGetTypeRefAsString() {
 		return declaredType?.rawTypeAsString
-		+ if (version > 0) { "#" + version } else { "" }
-		+ (if (typeArgs.empty) {
+		+ (if (declaredTypeArgs.empty) {
 			""
 		} else {
-			"<" + typeArgs.map[typeRefAsString].join(",") + ">"
+			"<" + declaredTypeArgs.map[typeRefAsString].join(",") + ">"
 		})
 		+ getModifiersAsString();
 	}
@@ -634,19 +652,26 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	 * Convenience method, returns true if type reference contains type arguments.
 	 */
 	op boolean isParameterized() {
-		return ! typeArgs.empty;
+		return ! declaredTypeArgs.empty;
 	}
 	/*
-	 * Delegates to {@link Type.isGeneric()}
+	 * Delegates to {@link Type#isGeneric()}
 	 */
 	op boolean isGeneric() {
 		return declaredType!==null && declaredType.generic;
 	}
 	/*
+	 * Returns true iff the given type reference is "raw", i.e. if it points to a generic type and has fewer type
+	 * arguments than the generic type has mandatory(!) type parameters.
+	 *
 	 * Overrides {@link TypeRef#isRaw()}.
 	 */
 	op boolean isRaw() {
-		return isGeneric() && typeArgs.size<declaredType.typeVars.size;
+		if (isGeneric()) {
+			val mandatoryTypeParamsCount = declaredType.typeVars.filter[!optional].size;
+			return declaredTypeArgs.size < mandatoryTypeParamsCount;
+		}
+		return false;
 	}
 
 	/*
@@ -751,6 +776,25 @@ abstract class StructuralTypeRef {
 		return (if (structuralType !== null) structuralType.ownedMembers else if (!astStructuralMembers.empty) astStructuralMembers else genStructuralMembers).
 			unmodifiableView;
 	}
+	op TStructMember[] getStructuralMembersWithCallConstructSignatures() {
+		val structType = getStructuralType();
+		val callSig = structType?.callSignature as TStructMethod;
+		val constructSig = structType?.constructSignature as TStructMethod;
+		if (callSig !== null || constructSig !== null) {
+			val structMembers = getStructuralMembers();
+			val result = ECollections.<TStructMember>newBasicEListWithCapacity(structMembers.size + 2);
+			if (callSig !== null) {
+				result += callSig;
+			}
+			if (constructSig !== null) {
+				result += constructSig;
+			}
+			result += structMembers;
+			return result;
+		}
+		return getStructuralMembers();
+	}
+
 	/*
 	 * Returns true iff there exists a type variable mapping for 'typeVar' in property 'typeVarMappings'.
 	 */
@@ -797,14 +841,15 @@ class ParameterizedTypeRefStructural extends ParameterizedTypeRef, StructuralTyp
 	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
 	 */
 	op String internalGetTypeRefAsString() {
-		return typingStrategy + declaredType?.rawTypeAsString + (if (typeArgs.empty) {
+		val membersWithCallConstructSigs = getStructuralMembersWithCallConstructSignatures();
+		return typingStrategy + declaredType?.rawTypeAsString + (if (declaredTypeArgs.empty) {
 			""
 		} else {
-			"<" + typeArgs.map[typeRefAsString].join(",") + ">"
-		}) + (if (structuralMembers.empty) {
+			"<" + declaredTypeArgs.map[typeRefAsString].join(",") + ">"
+		}) + (if (membersWithCallConstructSigs.empty) {
 			""
 		} else {
-			" with { " + structuralMembers.map[memberAsString].join("; ") + " }" +
+			" with { " + (#[] + membersWithCallConstructSigs).map[memberAsString].join("; ") + " }" +
 			(if (postponedSubstitutions.empty) "" else " [[" + postponedSubstitutions.map[it.typeVar.typeAsString + "->" + it.typeArg.typeRefAsString].join(", ") + "]]")
 		});
 	}
@@ -981,7 +1026,7 @@ class Wildcard extends TypeArgument {
 		// try to compute implicit upper bound from corresponding type parameter (without resolving proxies!)
 		val parent = eContainer;
 		if (parent instanceof ParameterizedTypeRef) {
-			val typeArgIndex = parent.getTypeArgs().indexOf(this);
+			val typeArgIndex = parent.declaredTypeArgs.indexOf(this);
 			if (typeArgIndex >= 0) {
 				val declType = parent.eGet(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(), false);
 				if (declType instanceof ContainerType<?>) {
@@ -1065,7 +1110,11 @@ abstract class FunctionTypeExprOrRef extends StaticBaseTypeRef {
 	 * Overrides {@link TypeRef#isRaw()}.
 	 */
 	op boolean isRaw() {
-		return isGeneric() && typeArgs.size<typeVars.size;
+		if (isGeneric()) {
+			val mandatoryTypeParamsCount = typeVars.filter[!optional].size;
+			return declaredTypeArgs.size < mandatoryTypeParamsCount;
+		}
+		return false;
 	}
 	/**
 	 * Returns the formal parameter corresponding to the argument at index 'argIndex' in a function call
@@ -1299,50 +1348,52 @@ class TypeVariableMapping {
 	contains TypeArgument typeArg
 }
 
-// ****************************************************************************************************
-// N4IDL related model elements
-// ****************************************************************************************************
+
+abstract class LiteralTypeRef extends TypeRef {
+	transient Object astValue
+	op Object getValue()
+}
+
+class BooleanLiteralTypeRef extends LiteralTypeRef {
+	Boolean value
+
+	op String internalGetTypeRefAsString() {
+		return value?.toString ?: "null";
+	}
+}
+
+class NumericLiteralTypeRef extends LiteralTypeRef {
+	/* True iff this is used as an AST node <em>and</em> the {@link LiteralTypeRef#getAstValue() astValue} needs to be negated to obtain the actual value. */
+	boolean astNegated
+	BigDecimal value
+
+	op String internalGetTypeRefAsString() {
+		return value?.stripTrailingZeros?.toPlainString ?: "null";
+	}
+}
+
+class StringLiteralTypeRef extends LiteralTypeRef {
+	String value
+
+	op String internalGetTypeRefAsString() {
+		if (value === null) {
+			return "null";
+		}
+		return '"' + Strings.escapeNonPrintable(value) + '"';
+	}
+}
 
 /*
- * This is a base class for all AST nodes that represent a reference to a versioned object and where the user can
- * explicitly request a specific version. Currently, this includes ParameterizedTypeRef (for explicitly versioned
- * parameter types and local variables in N4IDL migration scripts) and IdentifierRef (for explicitly versioned
- * references to identifiers as the callee of a NewExpression).
- *
- * If an instance of this class does not have an explicitly requested version (set by the parser), then the type system
- * may compute the requested version from context information and store the result in the requestedVersion attribute.
- *
- * The latter only happens in N4IDL via N4IDLVersionResolver.
+ * Not directly available to the programmer. Only used internally as the type of enum literals.
  */
-abstract class VersionedReference {
-	BigDecimal requestedVersion
+class EnumLiteralTypeRef extends LiteralTypeRef {
+	refers TEnumLiteral value
 
-	/*
-	 * Indicates whether this type reference has an explicitly requested version. A requested version can either be
-	 * set by the parser when the user explicitly requests a specific version in source code, or by the type system
-	 * when computing the implicitly requested version, e.g. for property access expressions.
-	 */
-	op boolean hasRequestedVersion() {
-		return requestedVersion !== null
+	op TEnum getEnumType() {
+		return value?.eContainer as TEnum;
 	}
 
-	op int getRequestedVersionOrZero() {
-		if (hasRequestedVersion) requestedVersion.intValue else 0
+	op String internalGetTypeRefAsString() {
+		return enumType?.name + "." + value?.name
 	}
 }
-
-class VersionedParameterizedTypeRef extends ParameterizedTypeRef, VersionedReference {
-	op int getVersion() {
-		/*
-		 * If a specific version was requested, then we return that, otherwise we delegate to the overridden method,
-		 * which will delegate to the declared type.
-		 */
-		if (hasRequestedVersion) requestedVersion.intValue else super.version
-	}
-}
-
-
-class VersionedFunctionTypeRef extends VersionedParameterizedTypeRef, FunctionTypeRef {}
-
-class VersionedParameterizedTypeRefStructural extends VersionedParameterizedTypeRef, ParameterizedTypeRefStructural {}
-

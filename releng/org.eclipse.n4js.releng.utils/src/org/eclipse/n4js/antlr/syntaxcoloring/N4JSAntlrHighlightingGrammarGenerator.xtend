@@ -102,6 +102,7 @@ class N4JSAntlrHighlightingGrammarGenerator extends AbstractAntlrGrammarWithActi
 			protected boolean forcedRewind(int position) { return true; } // overridden in subtype
 			protected void promoteEOL() {} // overridden in subtype
 			protected boolean hasDisallowedEOL() { return false; } // overridden in subtype
+			protected boolean hasDisallowedWhiteSpace() { return false; } // overridden in subtype
 			protected boolean isTypeRefNoTrailingLineBreak() { return true; } // overridden in subtype
 			protected void setInRegularExpression() {} // overridden in subtype
 			protected void setInTemplateSegment() {} // overridden in subtype

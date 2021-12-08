@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.typeRefs.impl;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -17,6 +19,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 
@@ -36,10 +39,11 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.TypeVariableMapping;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
 
+import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TStructMember;
+import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
@@ -421,8 +425,33 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 	 * @generated
 	 */
 	@Override
-	public int getVersion() {
-		return this.getActualThisTypeRef().getVersion();
+	public EList<TStructMember> getStructuralMembersWithCallConstructSignatures() {
+		final TStructuralType structType = this.getStructuralType();
+		TMethod _callSignature = null;
+		if (structType!=null) {
+			_callSignature=structType.getCallSignature();
+		}
+		final TStructMethod callSig = ((TStructMethod) _callSignature);
+		TMethod _constructSignature = null;
+		if (structType!=null) {
+			_constructSignature=structType.getConstructSignature();
+		}
+		final TStructMethod constructSig = ((TStructMethod) _constructSignature);
+		if (((callSig != null) || (constructSig != null))) {
+			final EList<TStructMember> structMembers = this.getStructuralMembers();
+			int _size = structMembers.size();
+			int _plus = (_size + 2);
+			final BasicEList<TStructMember> result = ECollections.<TStructMember>newBasicEListWithCapacity(_plus);
+			if ((callSig != null)) {
+				result.add(callSig);
+			}
+			if ((constructSig != null)) {
+				result.add(constructSig);
+			}
+			Iterables.<TStructMember>addAll(result, structMembers);
+			return result;
+		}
+		return this.getStructuralMembers();
 	}
 
 	/**
@@ -628,12 +657,6 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
-		if (baseClass == Versionable.class) {
-			switch (baseOperationID) {
-				case TypeRefsPackage.VERSIONABLE___GET_VERSION: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_VERSION;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
 		if (baseClass == TypeRef.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.TYPE_REF___GET_DECLARED_UPPER_BOUND: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_DECLARED_UPPER_BOUND;
@@ -641,7 +664,6 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 				case TypeRefsPackage.TYPE_REF___GET_STRUCTURAL_MEMBERS: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 				case TypeRefsPackage.TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.BOUND_THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING;
 				case TypeRefsPackage.TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.BOUND_THIS_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
-				case TypeRefsPackage.TYPE_REF___GET_VERSION: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_VERSION;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -659,6 +681,7 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 				case TypeRefsPackage.STRUCTURAL_TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.STRUCTURAL_TYPE_REF___SET_TYPING_STRATEGY__TYPINGSTRATEGY: return TypeRefsPackage.BOUND_THIS_TYPE_REF___SET_TYPING_STRATEGY__TYPINGSTRATEGY;
 				case TypeRefsPackage.STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+				case TypeRefsPackage.STRUCTURAL_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES: return TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES;
 				case TypeRefsPackage.STRUCTURAL_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE: return TypeRefsPackage.BOUND_THIS_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE;
 				default: return -1;
 			}
@@ -689,8 +712,8 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 				return isUseSiteStructuralTyping();
 			case TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS:
 				return getStructuralMembers();
-			case TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_VERSION:
-				return getVersion();
+			case TypeRefsPackage.BOUND_THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES:
+				return getStructuralMembersWithCallConstructSignatures();
 			case TypeRefsPackage.BOUND_THIS_TYPE_REF___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE:
 				return hasPostponedSubstitutionFor((TypeVariable)arguments.get(0));
 		}

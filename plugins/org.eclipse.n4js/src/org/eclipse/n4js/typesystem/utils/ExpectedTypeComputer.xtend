@@ -20,7 +20,7 @@ import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.xtext.EcoreUtil2
 
@@ -91,7 +91,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		if (tFun instanceof TFunction) {
 			val actualReturnTypeRef = getAndResolveOuterReturnType(G, tFun);
 			if (TypeUtils.isPromise(actualReturnTypeRef, G.getPredefinedTypes().builtInTypeScope)) {
-				val firstTypeArg = actualReturnTypeRef.typeArgs.head;
+				val firstTypeArg = actualReturnTypeRef.declaredTypeArgs.head;
 				if (firstTypeArg !== null)
 					return ts.upperBound(G, firstTypeArg); // take upper bound to get rid of Wildcard, etc.
 			}
@@ -146,7 +146,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 				val yieldTypeRef = tsh.getGeneratorTYield(G, actualReturnTypeRef);
 				val yieldTypeRefCopy = TypeUtils.copyWithProxies(yieldTypeRef);
 				if (yieldExpr.isMany()) {
-					val exprTypeRef = ts.upperBoundWithReopenAndResolve(G, exprTypeRefRaw);
+					val exprTypeRef = ts.upperBoundWithReopenAndResolveTypeVars(G, exprTypeRefRaw);
 					if (TypeUtils.isGeneratorOrAsyncGenerator(exprTypeRef, scope)) {
 						val nextTypeRef = tsh.getGeneratorTNext(G, actualReturnTypeRef);
 						val nextTypeRefCopy = TypeUtils.copyWithProxies(nextTypeRef);
@@ -177,7 +177,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 	private def TypeRef getAndResolveOuterReturnType(RuleEnvironment G, TFunction tFun) {
 		val actualReturnTypeRef = tFun.returnTypeRef;
 		if (actualReturnTypeRef !== null) {
-			return ts.upperBoundWithReopenAndResolve(G, actualReturnTypeRef);
+			return ts.upperBoundWithReopenAndResolveTypeVars(G, actualReturnTypeRef);
 		}
 		return null;
 	}

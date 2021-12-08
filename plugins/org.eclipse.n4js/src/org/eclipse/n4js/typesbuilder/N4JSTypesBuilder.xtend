@@ -30,6 +30,7 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.naming.ModuleNameComputer
 import org.eclipse.n4js.naming.SpecifierConverter
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.smith.N4JSDataCollectors
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
@@ -109,6 +110,16 @@ public class N4JSTypesBuilder {
 	 * state of the AST and TModule are undefined (i.e. linking may have taken place partially).
 	 */
 	def public void relinkTModuleToSource(DerivedStateAwareResource resource, boolean preLinkingPhase) {
+		try (val m1 = N4JSDataCollectors.dcTypesBuilder.getMeasurement();
+			 val m2 = N4JSDataCollectors.dcTypesBuilderRelink.getMeasurement()) {
+			m1.getClass(); // suppress unused variable warning from Xtend
+			m2.getClass(); // suppress unused variable warning from Xtend
+
+			doRelinkTModuleToSource(resource, preLinkingPhase);
+		}
+	}
+
+	def private void doRelinkTModuleToSource(DerivedStateAwareResource resource, boolean preLinkingPhase) {
 		val parseResult = resource.getParseResult();
 		if (parseResult !== null) {
 
@@ -150,6 +161,16 @@ public class N4JSTypesBuilder {
 	 * as declared type. The parameterized type ref is then assigned as type ref to the {@link TVariable}.
 	 */
 	def public void createTModuleFromSource(DerivedStateAwareResource resource, boolean preLinkingPhase) {
+		try (val m1 = N4JSDataCollectors.dcTypesBuilder.getMeasurement();
+			 val m2 = N4JSDataCollectors.dcTypesBuilderCreate.getMeasurement()) {
+			m1.getClass(); // suppress unused variable warning from Xtend
+			m2.getClass(); // suppress unused variable warning from Xtend
+
+			doCreateTModuleFromSource(resource, preLinkingPhase);
+		}
+	}
+
+	def private void doCreateTModuleFromSource(DerivedStateAwareResource resource, boolean preLinkingPhase) {
 		val parseResult = resource.getParseResult();
 		if (parseResult !== null) {
 
@@ -168,7 +189,8 @@ public class N4JSTypesBuilder {
 
 			val project = workspaceAccess.findProjectContaining(resource);
 			if (project !== null) {
-				result.projectName = project.name;
+				result.projectID = project.name;
+				result.packageName = project.packageName;
 				result.vendorID = project.vendorId;
 
 				// main module

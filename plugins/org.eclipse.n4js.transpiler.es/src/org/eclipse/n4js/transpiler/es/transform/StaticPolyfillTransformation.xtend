@@ -23,7 +23,6 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.tooling.organizeImports.ScriptDependencyResolver
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
-import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -32,6 +31,7 @@ import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.xtext.EcoreUtil2
 
@@ -92,7 +92,7 @@ class StaticPolyfillTransformation extends Transformation {
 
 	def private void doStaticPolyfilling(N4ClassDeclaration classFilled, N4ClassDeclaration classFiller) {
 		// fill additionally implemented interfaces
-		val currentIfcs = classFilled.implementedInterfaceRefs.filter(ParameterizedTypeRef_IM).map[declaredType_IM].filter(TInterface).toSet;
+		val currentIfcs = classFilled.implementedInterfaceRefs.map[state.info.getOriginalProcessedTypeRef(it)?.declaredType].filterNull.filter(TInterface).toSet;
 		classFiller.implementedInterfaceRefs
 			.map[typeAssistant.getOriginalDeclaredType(it)]
 			.filter(TInterface)
@@ -104,8 +104,7 @@ class StaticPolyfillTransformation extends Transformation {
 	def private void insertImplementedInterface(N4ClassDefinition classFilled, TInterface ifcToBeInserted,
 		Set<TInterface> currentIfcs) {
 		if(!currentIfcs.contains(ifcToBeInserted)) { // avoid duplicates!
-			val ifcSTE = getSymbolTableEntryOriginal(ifcToBeInserted, true);
-			classFilled.implementedInterfaceRefs += <ParameterizedTypeRef>_TypeReferenceNode(_ParameterizedTypeRef(ifcSTE));
+			classFilled.implementedInterfaceRefs += <ParameterizedTypeRef>_TypeReferenceNode(state, TypeUtils.createTypeRef(ifcToBeInserted));
 		}
 	}
 

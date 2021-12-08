@@ -13,7 +13,7 @@
 
 
 class A {
-    const X = "x";
+    const X = "x" + "y"; // using an addition here to have X inferred to type string instead of type "x"
     const Y : string = "y";
     const Z : A = new A();
     const Zsame : A = new A();

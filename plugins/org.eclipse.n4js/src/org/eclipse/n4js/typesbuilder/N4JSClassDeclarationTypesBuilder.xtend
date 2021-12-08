@@ -18,9 +18,8 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.utils.TypeUtils
-
-import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.types.utils.TypeUtils
+import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationTypesBuilder {
 
@@ -45,8 +44,8 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 		// modifiers
 		tclass.setTypeAccessModifier(n4Class);
 		tclass.setProvidedByRuntime(n4Class, preLinkingPhase);
-		tclass.declaredStaticPolyfill = n4Class.isStaticPolyfill;
-		tclass.declaredPolyfill = n4Class.isPolyfill || tclass.declaredStaticPolyfill;
+		tclass.declaredNonStaticPolyfill = N4JSLanguageUtils.isNonStaticPolyfill(n4Class);
+		tclass.declaredStaticPolyfill = N4JSLanguageUtils.isStaticPolyfill(n4Class);
 		tclass.declaredCovariantConstructor = n4Class.isDeclaredCovariantConstructor;
 		tclass.addTypeParameters(n4Class, preLinkingPhase);
 
@@ -116,8 +115,6 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 			}
 		);
 		
-		VersionedTypesBuilderUtil.setTypeVersion(tclass, classDecl);
-
 		return tclass;
 	}
 

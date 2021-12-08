@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.resource
 
-import com.google.common.base.Preconditions
 import com.google.common.collect.ImmutableMap
 import com.google.inject.Inject
 import java.util.Collection
@@ -29,7 +28,6 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference
 import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
-import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
@@ -40,6 +38,7 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
+import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of
@@ -129,9 +128,15 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 		if (!candidate.isPackageJSON) {
 			return false; // not responsible
 		}
+		
+		val changedProjectNames = deltas
+			.filter[it.uri.isPackageJSON]
+			.map[(if (it.getNew === null) it.old else it.getNew).exportedObjects]
+			.filter[!it.empty]
+			.map[it.get(0).getProjectName]
+			.map[SemanticDependencySupplier.convertProjectIdToPackageName(it)]
+			.toSet;
 
-		// Contains only those project IDs that were changed via its N4JS manifest.
-		val changedProjectNames = deltas.map[uri].filter[isPackageJSON].map[projectNameFromPackageJSONUri].toSet;
 
 		// Collect all referenced project IDs of the candidate.
 		val referencedProjectNames = newLinkedList;
@@ -172,7 +177,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			LOGGER.error("creation of EObjectDescriptions failed: cannot derive project location from document");
 			return;
 		}
-		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, document);
+		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, null, document);
 		if(description === null) {
 			// this can happen when package.json files are opened that do not belong to a valid N4JS or PLAINJS project
 			// (maybe during manual creation of a new project); therefore we cannot log an error here:
@@ -189,7 +194,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	private def Map<String, String> createProjectDescriptionUserData(ProjectDescription it) {
 		val builder = ImmutableMap.builder;
 		builder.put(PROJECT_TYPE_KEY, '''«PackageJsonUtils.getProjectTypeStringRepresentation(getType)»''');
-		builder.put(PROJECT_NAME_KEY, getName.nullToEmpty);
+		builder.put(PROJECT_NAME_KEY, id.nullToEmpty);
 		builder.put(IMPLEMENTATION_ID_KEY, implementationId.nullToEmpty);
 
 		val vers = getVersion;
@@ -312,24 +317,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 	}
 
 	private static def String asString(Iterable<? extends ProjectReference> it) {
-		it.filterNull.map[projectName].filterNull.join(SEPARATOR)
-	}
-
-	/**
-	 * Returns with the projectName of an N4JS project by appending the second segment from the end of a N4JS manifest URI argument.
-	 * This method only works for N4JS manifest URIs and throws {@link IllegalArgumentException} for all other URIs.
-	 * Since this method accepts only N4JS manifest URIs it is guaranteed to get the container project name as the second URI
-	 * segment from the end. We cannot simply grab and return with the first segment as the project name, because external
-	 * projects have a file URI with an absolute path that can be any arbitrary location on the file system.
-	 *
-	 * The ultimate solution would be to look up the container N4JS project from the nested URI argument and simply get
-	 * the project ID of the project but due to plug-in dependency issues N4JS core service is not available from here.
-	 *
-	 */
-	private static def String getProjectNameFromPackageJSONUri(URI uri) {
-		Preconditions.checkArgument(uri.isPackageJSON, '''Expected URI with «N4JSGlobals.PACKAGE_JSON» as last segment. Was: «uri»''');
-		val projectURI = uri.trimSegments(1);
-		return ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(projectURI);
+		it.filterNull.map[getPackageName].filterNull.join(SEPARATOR)
 	}
 
 	private static def boolean isPackageJSON(IResourceDescription desc) {

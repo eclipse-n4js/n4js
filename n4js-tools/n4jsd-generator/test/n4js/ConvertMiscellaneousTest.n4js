@@ -1,0 +1,87 @@
+/**
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {AbstractN4jsdGeneratorTest} from "AbstractN4jsdGeneratorTest";
+
+export public class ConvertMiscellaneousTest extends AbstractN4jsdGeneratorTest {
+
+	@Test
+	public testNoTypeAnnotation() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export var someVarUndeclared;
+					export function funUndeclared(p);
+					export class ClassUndeclared {
+						field;
+						get getter();
+						set setter(value);
+						method(p);
+					}
+				`,
+				n4jsd: `
+					export public var someVarUndeclared: any+;
+
+					export external public function funUndeclared(p: any+): any+;
+
+					export external public class ~ClassUndeclared {
+						field: any+;
+						get getter(): any+;
+						set setter(value: any+);
+						method(p: any+): any+;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testInvalidMemberNames() {
+		this.assertConversion(
+			{
+				name: "main",
+				dts: `
+					export class Cls {
+						_field: string;
+						$1: string;
+						"&": string;
+						"+": string;
+						"\`": string;
+						"'": string;
+						'"': string;
+						"f&": string;
+						"f+": string;
+						"f\`": string;
+						"f'": string;
+						'f"': string;
+					}
+				`,
+				n4jsd: `
+					export external public class ~Cls {
+						_field: any+;
+						$1: any+;
+						"&": any+;
+						"+": any+;
+						"\`": any+;
+						"'": any+;
+						"\\"": any+;
+						"f&": any+;
+						"f+": any+;
+						"f\`": any+;
+						"f'": any+;
+						"f\\"": any+;
+					}
+				`
+			}
+		);
+	}
+}

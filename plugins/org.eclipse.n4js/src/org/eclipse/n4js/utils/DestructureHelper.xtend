@@ -38,7 +38,7 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -126,7 +126,7 @@ class DestructureHelper {
 		// in the root node, the defaultExpr is the main value to be destructured and
 		// the node's type is simply the type of that value (nothing needs to be destructured yet)
 		var valueTypeRef = ts.type(G,rootNode.defaultExpr);
-		valueTypeRef = ts.upperBoundWithReopenAndResolve(G, valueTypeRef);
+		valueTypeRef = ts.upperBoundWithReopenAndResolveBoth(G, valueTypeRef);
 		// special case: ForStatement
 		// we might have something like for([a,b] of expr){} (in which case rootNode.defaultExpr points to the 'expr')
 		if(rootNode.defaultExpr.eContainer instanceof ForStatement) {

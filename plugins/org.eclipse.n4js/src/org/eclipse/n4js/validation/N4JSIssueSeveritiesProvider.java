@@ -23,7 +23,6 @@ import com.google.inject.Inject;
  * Customization to create {@link N4JSIssueSeverities} in
  * {@link N4JSIssueSeveritiesProvider#getIssueSeverities(Resource)}.
  */
-@SuppressWarnings("restriction")
 public class N4JSIssueSeveritiesProvider extends IssueSeveritiesProvider {
 	@SuppressWarnings("javadoc")
 	@Inject

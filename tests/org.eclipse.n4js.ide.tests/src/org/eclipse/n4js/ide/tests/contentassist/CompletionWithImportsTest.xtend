@@ -238,6 +238,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			Obj<|>
 		''', ''' 
 			(Object, Class, Object, , , 00000, , , , ([0:0 - 0:3], Object), [], [], , )
+			(ObjectConstructor, Text, ObjectConstructor, , , 00001, , , , ([0:0 - 0:3], ObjectConstructor), [], [], , )
 		''');
 	}
 
@@ -270,9 +271,24 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
 			(any, Keyword, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
 			(Array, Class, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
-			(AsyncGenerator, Interface, AsyncGenerator, , , 00005, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
-			(AsyncIterable, Interface, AsyncIterable, , , 00006, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
-			(AsyncIterator, Interface, AsyncIterator, , , 00007, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
+			(Array2, Class, Array2, , , 00005, , , , ([0:8 - 0:9], Array2), [], [], , )
+			(Array3, Class, Array3, , , 00006, , , , ([0:8 - 0:9], Array3), [], [], , )
+			(Array4, Class, Array4, , , 00007, , , , ([0:8 - 0:9], Array4), [], [], , )
+			(Array5, Class, Array5, , , 00008, , , , ([0:8 - 0:9], Array5), [], [], , )
+			(Array6, Class, Array6, , , 00009, , , , ([0:8 - 0:9], Array6), [], [], , )
+			(Array7, Class, Array7, , , 00010, , , , ([0:8 - 0:9], Array7), [], [], , )
+			(Array8, Class, Array8, , , 00011, , , , ([0:8 - 0:9], Array8), [], [], , )
+			(Array9, Class, Array9, , , 00012, , , , ([0:8 - 0:9], Array9), [], [], , )
+			(ArrayBuffer, Class, ArrayBuffer, , , 00013, , , , ([0:8 - 0:9], ArrayBuffer), [], [], , )
+			(ArrayBufferConstructor, Text, ArrayBufferConstructor, , , 00014, , , , ([0:8 - 0:9], ArrayBufferConstructor), [], [], , )
+			(ArrayBufferLike, Text, ArrayBufferLike, , , 00015, , , , ([0:8 - 0:9], ArrayBufferLike), [], [], , )
+			(ArrayBufferTypes, Interface, ArrayBufferTypes, , , 00016, , , , ([0:8 - 0:9], ArrayBufferTypes), [], [], , )
+			(ArrayBufferView, Interface, ArrayBufferView, , , 00017, , , , ([0:8 - 0:9], ArrayBufferView), [], [], , )
+			(ArrayConstructor, Text, ArrayConstructor, , , 00018, , , , ([0:8 - 0:9], ArrayConstructor), [], [], , )
+			(ArrayLike, Interface, ArrayLike, , , 00019, , , , ([0:8 - 0:9], ArrayLike), [], [], , )
+			(AsyncGenerator, Interface, AsyncGenerator, , , 00020, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
+			(AsyncIterable, Interface, AsyncIterable, , , 00021, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
+			(AsyncIterator, Interface, AsyncIterator, , , 00022, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
 		''');
 	}
 
@@ -286,9 +302,24 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			(A2, Class, MBA, , , 00002, , , , ([0:8 - 0:9], A2), [], [], , )
 			(any, Keyword, any, , , 00003, , , , ([0:8 - 0:9], any), [], [], , )
 			(Array, Class, Array, , , 00004, , , , ([0:8 - 0:9], Array), [], [], , )
-			(AsyncGenerator, Interface, AsyncGenerator, , , 00005, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
-			(AsyncIterable, Interface, AsyncIterable, , , 00006, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
-			(AsyncIterator, Interface, AsyncIterator, , , 00007, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
+			(Array2, Class, Array2, , , 00005, , , , ([0:8 - 0:9], Array2), [], [], , )
+			(Array3, Class, Array3, , , 00006, , , , ([0:8 - 0:9], Array3), [], [], , )
+			(Array4, Class, Array4, , , 00007, , , , ([0:8 - 0:9], Array4), [], [], , )
+			(Array5, Class, Array5, , , 00008, , , , ([0:8 - 0:9], Array5), [], [], , )
+			(Array6, Class, Array6, , , 00009, , , , ([0:8 - 0:9], Array6), [], [], , )
+			(Array7, Class, Array7, , , 00010, , , , ([0:8 - 0:9], Array7), [], [], , )
+			(Array8, Class, Array8, , , 00011, , , , ([0:8 - 0:9], Array8), [], [], , )
+			(Array9, Class, Array9, , , 00012, , , , ([0:8 - 0:9], Array9), [], [], , )
+			(ArrayBuffer, Class, ArrayBuffer, , , 00013, , , , ([0:8 - 0:9], ArrayBuffer), [], [], , )
+			(ArrayBufferConstructor, Text, ArrayBufferConstructor, , , 00014, , , , ([0:8 - 0:9], ArrayBufferConstructor), [], [], , )
+			(ArrayBufferLike, Text, ArrayBufferLike, , , 00015, , , , ([0:8 - 0:9], ArrayBufferLike), [], [], , )
+			(ArrayBufferTypes, Interface, ArrayBufferTypes, , , 00016, , , , ([0:8 - 0:9], ArrayBufferTypes), [], [], , )
+			(ArrayBufferView, Interface, ArrayBufferView, , , 00017, , , , ([0:8 - 0:9], ArrayBufferView), [], [], , )
+			(ArrayConstructor, Text, ArrayConstructor, , , 00018, , , , ([0:8 - 0:9], ArrayConstructor), [], [], , )
+			(ArrayLike, Interface, ArrayLike, , , 00019, , , , ([0:8 - 0:9], ArrayLike), [], [], , )
+			(AsyncGenerator, Interface, AsyncGenerator, , , 00020, , , , ([0:8 - 0:9], AsyncGenerator), [], [], , )
+			(AsyncIterable, Interface, AsyncIterable, , , 00021, , , , ([0:8 - 0:9], AsyncIterable), [], [], , )
+			(AsyncIterator, Interface, AsyncIterator, , , 00022, , , , ([0:8 - 0:9], AsyncIterator), [], [], , )
 		''');
 	}
 
@@ -302,4 +333,49 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 		''');
 	}
 
+	@Test
+	def void testUnresolvedReferenceDoesNotCauseAliasImport_inN4JS() {
+		testAtCursor('''
+			A1<|>;
+			// the fact we have the following unresolved reference to the proposed element "A1" in the source code
+			// should not cause an alias import to be created:
+			A1;
+		''',
+		'''
+			(A1, Class, MA, , , 00000, , , , ([0:0 - 0:2], A1), [([0:0 - 0:0], import {A1} from "MA";
+			)], [], , )
+		''')
+	}
+
+	@Test
+	def void testUnresolvedReferenceDoesNotCauseAliasImport_inN4JSX() {
+		testAtCursorInN4JSX('''
+			<A1<|>
+			/>;
+			// the fact we have the following unresolved reference to the proposed element "A1" in the source code
+			// should not cause an alias import to be created:
+			<A1/>;
+		''', '''
+			(A1, Class, MA, , , 00000, , , , ([0:1 - 0:3], A1), [([0:0 - 0:0], import {A1} from "MA";
+			)], [], , )
+		''');
+	}
+
+	/**
+	 * Similar to {@link #testUnresolvedReferenceDoesNotCauseAliasImport_inN4JSX}, but the unresolved reference
+	 * is not located elsewhere in the source code but right where the content assist is triggered.
+	 */
+	@Test
+	def void testExistingJSXTagDoesNotCauseAliasImport() {
+		// the important point in this test code is that one of the proposals (i.e. "A1") is already completely given
+		// in the source code, which causes the JSX support in scoping to create a UnresolvableObjectDescription which
+		// must not trigger creation of an alias import:
+		testAtCursorInN4JSX('''
+			<A1<|>
+			/>;
+		''', '''
+			(A1, Class, MA, , , 00000, , , , ([0:1 - 0:3], A1), [([0:0 - 0:0], import {A1} from "MA";
+			)], [], , )
+		''');
+	}
 }

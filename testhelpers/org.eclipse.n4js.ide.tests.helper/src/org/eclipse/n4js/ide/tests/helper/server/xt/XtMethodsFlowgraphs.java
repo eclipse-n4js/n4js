@@ -173,11 +173,13 @@ public class XtMethodsFlowgraphs {
 		for (InstanceofGuard ioGuard : ioGuards) {
 			if (ioGuard.asserts == GuardAssertion.AlwaysHolds) {
 				String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
-				String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
+				String typeText = org.eclipse.n4js.utils.Strings.join("|", FGUtils::getSourceText,
+						ioGuard.typeIdentifiers);
 				commonPredStrs.add(symbolText + "<:" + typeText);
 			} else if (ioGuard.asserts == GuardAssertion.NeverHolds) {
 				String symbolText = FGUtils.getSourceText(ioGuard.symbolCFE);
-				String typeText = FGUtils.getSourceText(ioGuard.typeIdentifier);
+				String typeText = org.eclipse.n4js.utils.Strings.join("|", FGUtils::getSourceText,
+						ioGuard.typeIdentifiers);
 				commonPredStrs.add(symbolText + "!<:" + typeText);
 			}
 		}

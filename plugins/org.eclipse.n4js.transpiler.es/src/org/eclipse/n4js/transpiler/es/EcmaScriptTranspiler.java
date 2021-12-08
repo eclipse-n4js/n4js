@@ -10,14 +10,6 @@
  */
 package org.eclipse.n4js.transpiler.es;
 
-import java.io.IOException;
-import java.io.Writer;
-
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.generator.GeneratorOption;
-import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
 import org.eclipse.n4js.transpiler.Transformation;
 import org.eclipse.n4js.transpiler.TranspilerState;
@@ -35,6 +27,7 @@ import org.eclipse.n4js.transpiler.es.transform.ExpressionTransformation;
 import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.JSXTransformation;
 import org.eclipse.n4js.transpiler.es.transform.MemberPatchingTransformation;
+import org.eclipse.n4js.transpiler.es.transform.ModuleSpecifierTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
 import org.eclipse.n4js.transpiler.es.transform.RestParameterTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
@@ -42,10 +35,7 @@ import org.eclipse.n4js.transpiler.es.transform.SimplifyTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TemplateStringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TrimTransformation;
-import org.eclipse.n4js.utils.ResourceType;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
-import com.google.common.base.Optional;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -60,50 +50,47 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<DestructuringTransformation> destructuringTransformation;
 	@Inject
-	private Provider<MemberPatchingTransformation> memberPatchingTransformationProvider;
+	private Provider<MemberPatchingTransformation> memberPatchingTransformation;
 	@Inject
-	private Provider<ApiImplStubGenerationTransformation> apiImplStubGenerationTransformationProvider;
+	private Provider<ApiImplStubGenerationTransformation> apiImplStubGenerationTransformation;
 	@Inject
-	private Provider<StaticPolyfillTransformation> staticPolyfillTransformationProvider;
+	private Provider<StaticPolyfillTransformation> staticPolyfillTransformation;
 	@Inject
-	private Provider<TemplateStringTransformation> templateStringTransformationProvider;
+	private Provider<TemplateStringTransformation> templateStringTransformation;
 	@Inject
-	private Provider<ExpressionTransformation> expressionTransformationProvider;
+	private Provider<ExpressionTransformation> expressionTransformation;
 	@Inject
-	private Provider<EnumAccessTransformation> enumAccessTransformationProvider;
+	private Provider<EnumAccessTransformation> enumAccessTransformation;
 	@Inject
 	private Provider<DependencyInjectionTransformation> dependencyInjectionTransformation;
 	@Inject
-	private Provider<ClassDeclarationTransformation> classDeclarationTransformationProvider;
+	private Provider<ClassDeclarationTransformation> classDeclarationTransformation;
 	@Inject
-	private Provider<InterfaceDeclarationTransformation> interfaceDeclarationTransformationProvider;
+	private Provider<InterfaceDeclarationTransformation> interfaceDeclarationTransformation;
 	@Inject
-	private Provider<EnumDeclarationTransformation> enumDeclarationTransformationProvider;
+	private Provider<EnumDeclarationTransformation> enumDeclarationTransformation;
 	@Inject
 	private Provider<SimplifyTransformation> simplifyTransformation;
 	@Inject
 	private Provider<TrimTransformation> trimTransformation;
 	@Inject
-	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformationProvider;
+	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformation;
 	@Inject
 	private Provider<CommonJsImportsTransformation> commonJsImportsTransformation;
 	@Inject
-	private Provider<ModuleWrappingTransformation> moduleWrappingTransformationProvider;
+	private Provider<ModuleWrappingTransformation> moduleWrappingTransformation;
 	@Inject
-	private Provider<BlockTransformation> blockTransformationProvider;
+	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformation;
 	@Inject
-	private Provider<RestParameterTransformation> restParameterTransformationProvider;
+	private Provider<BlockTransformation> blockTransformation;
 	@Inject
-	private Provider<ArrowFunction_Part1_Transformation> arrowFunction_Part1_TransformationProvider;
+	private Provider<RestParameterTransformation> restParameterTransformation;
 	@Inject
-	private Provider<ArrowFunction_Part2_Transformation> arrowFunction_Part2_TransformationProvider;
+	private Provider<ArrowFunction_Part1_Transformation> arrowFunction_Part1_Transformation;
 	@Inject
-	private Provider<JSXTransformation> jsxTransformationProvider;
-
-	@Override
-	protected Optional<String> getPreamble() {
-		return Optional.of("// Generated by N4JS transpiler; for copyright see original N4JS source file.\n");
-	}
+	private Provider<ArrowFunction_Part2_Transformation> arrowFunction_Part2_Transformation;
+	@Inject
+	private Provider<JSXTransformation> jsxTransformation;
 
 	/**
 	 * Returns the AST transformations to be executed for the resource to transpile in the given transpiler state, in
@@ -117,82 +104,36 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Override
 	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
 		return new Transformation[] {
-				jsxTransformationProvider.get(),
-				staticPolyfillTransformationProvider.get(),
-				memberPatchingTransformationProvider.get(),
-				apiImplStubGenerationTransformationProvider.get(),
+				// ---- preparatory transformations (e.g. getting rid of certain language features)
+				jsxTransformation.get(),
+				staticPolyfillTransformation.get(),
+				// ---- main transformations related to individual language features
+				memberPatchingTransformation.get(),
+				apiImplStubGenerationTransformation.get(), // preparatory transformation moved here due to requirement
 				destructuringTransformation.get(),
-				templateStringTransformationProvider.get(),
-				expressionTransformationProvider.get(),
-				enumAccessTransformationProvider.get(),
+				templateStringTransformation.get(),
+				expressionTransformation.get(),
+				enumAccessTransformation.get(),
 				dependencyInjectionTransformation.get(),
-				enumDeclarationTransformationProvider.get(),
-				classDeclarationTransformationProvider.get(),
-				interfaceDeclarationTransformationProvider.get(),
-				arrowFunction_Part1_TransformationProvider.get(),
-				blockTransformationProvider.get(),
-				restParameterTransformationProvider.get(),
-				arrowFunction_Part2_TransformationProvider.get(),
+				enumDeclarationTransformation.get(),
+				classDeclarationTransformation.get(),
+				interfaceDeclarationTransformation.get(),
+				arrowFunction_Part1_Transformation.get(),
+				blockTransformation.get(),
+				restParameterTransformation.get(),
+				arrowFunction_Part2_Transformation.get(),
+				// ---- clean up / generic / technical transformations
 				simplifyTransformation.get(),
 				trimTransformation.get(),
-				sanitizeImportsTransformationProvider.get(),
+				sanitizeImportsTransformation.get(),
 				commonJsImportsTransformation.get(),
-				moduleWrappingTransformationProvider.get()
+				moduleSpecifierTransformation.get(),
+				moduleWrappingTransformation.get()
 		};
 	}
 
-	/**
-	 * General entry-point. Overridden to handle plain-JS-wrapping without transforming.
-	 */
 	@Override
-	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
-			Optional<SourceMapInfo> optSourceMapInfo) {
-		if (!requiresTranspilation(resource)) {
-			copyWithoutTranspilation(resource, outCode);
-		} else {
-			try (Measurement m = N4JSDataCollectors.dcTranspilation.getMeasurement()) {
-				super.transpile(resource, options, outCode, optSourceMapInfo);
-			}
-		}
+	protected boolean isPerformanceDataCollectionActive() {
+		return true;
 	}
-
-	/**
-	 * Take the content of resource and copy it over to the output folder without any transformation.
-	 *
-	 * @param resource
-	 *            JS-code snippet which will be treated as text.
-	 * @param outCode
-	 *            writer to output to.
-	 */
-	private void copyWithoutTranspilation(N4JSResource resource, Writer outCode) {
-		// get script
-		EObject script = resource.getContents().get(0);
-
-		// obtain text
-		CharSequence scriptAsText = NodeModelUtils.getNode(script).getRootNode().getText();
-
-		// write
-		String decorated = scriptAsText.toString();
-		try {
-
-			outCode.write(decorated);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Depending on the file-extension, determines if the given resource requires actual transpilation as opposed to
-	 * simply copying the source file to the output folder.
-	 *
-	 * @param eResource
-	 *            N4JS resource to check.
-	 * @return true if the code requires transpilation.
-	 */
-	private boolean requiresTranspilation(N4JSResource eResource) {
-		ResourceType resourceType = ResourceType.getResourceType(eResource);
-		return !(resourceType.equals(ResourceType.JS) || resourceType.equals(ResourceType.JSX));
-	}
-
 }

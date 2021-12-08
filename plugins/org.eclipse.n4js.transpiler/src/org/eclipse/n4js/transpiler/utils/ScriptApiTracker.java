@@ -57,9 +57,9 @@ import org.eclipse.n4js.ts.types.impl.TMethodImpl;
 import org.eclipse.n4js.ts.types.impl.TSetterImpl;
 import org.eclipse.n4js.ts.types.util.AccessorTuple;
 import org.eclipse.n4js.ts.types.util.MemberList;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.xbase.lib.Pair;
 
@@ -182,7 +182,7 @@ public class ScriptApiTracker {
 		/**
 		 * concrete implementation to compare against, if null this adapter doesn't deliver any compare-results
 		 */
-		private final N4JSProjectName implementationID;
+		private final N4JSPackageName implementationID;
 
 		/**
 		 * This CompareAdapter will be initialized with an TModule from an concrete API-implementation. It then reads
@@ -553,10 +553,10 @@ public class ScriptApiTracker {
 	}
 
 	/**
-	 * Compares projectName and vendorId
+	 * Compares packageName and vendorId
 	 */
 	boolean isSameProject(TModule m1, TModule m2) {
-		return m1 != null && m1.getProjectName().equals(m2.getProjectName())
+		return m1 != null && m1.getPackageName().equals(m2.getPackageName())
 				&& m1.getVendorID().equals(m2.getVendorID());
 	}
 

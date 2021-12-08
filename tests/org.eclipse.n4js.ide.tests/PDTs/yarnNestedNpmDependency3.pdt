@@ -1,0 +1,21 @@
+# Project Discovery Test
+# working dir marked with '*'
+
+# Projects in the local node_modules folders of a yarn workspace projects have priority over
+# the projects in the global yarn workspace node_modules folder.
+
+FOLDERS
+- someFolder
+--*P1 [PROJECT workspaces=["packages/*"]]
+--- packages
+---- D1 [PROJECT dependencies={"Q1":"*"}]
+----- node_modules
+------ Q1 [PROJECT]
+--- node_modules
+---- D1 [SYMLINK_TO_PATH someFolder/P1/packages/D1]
+---- Q1 [PROJECT]
+
+EXPECT
+- someFolder/P1
+- someFolder/P1/packages/D1
+- someFolder/P1/packages/D1/node_modules/Q1

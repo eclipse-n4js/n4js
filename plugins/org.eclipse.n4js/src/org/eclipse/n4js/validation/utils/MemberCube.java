@@ -10,15 +10,21 @@
  */
 package org.eclipse.n4js.validation.utils;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.UtilN4;
@@ -39,16 +45,28 @@ public class MemberCube {
 	public MemberCube(TClassifier tClassifier, MemberCollector memberCollector) {
 		this.memberMatrixesByName = new HashMap<>();
 		addMembers(MemberMatrix.OWNED, tClassifier.getOwnedMembers());
+		if (tClassifier instanceof TInterface) {
+			TMethod callSig = tClassifier.getCallSignature();
+			TMethod constructSig = tClassifier.getConstructSignature();
+			if (callSig != null) {
+				addMembers(MemberMatrix.OWNED, Collections.singletonList(callSig));
+			}
+			if (constructSig != null) {
+				addMembers(MemberMatrix.OWNED, Collections.singletonList(constructSig));
+			}
+		}
 		if (tClassifier instanceof TClass) {
-			addMembers(MemberMatrix.INHERITED, memberCollector
-					.inheritedMembers((TClass) tClassifier));
+			addMembers(MemberMatrix.INHERITED,
+					memberCollector.inheritedMembers((TClass) tClassifier));
 		}
 		// interfaces must not contain constructors anyway
-		addMembers(MemberMatrix.IMPLEMENTED, memberCollector.membersOfImplementedInterfacesForConsumption(tClassifier));
+		addMembers(MemberMatrix.IMPLEMENTED,
+				memberCollector.membersOfImplementedInterfacesForConsumption(tClassifier, true));
 	}
 
 	private void addMembers(int source, List<TMember> members) {
 		for (TMember member : members) {
+			ensureResolution(member);
 			NameStaticPair nsp = NameStaticPair.of(member);
 			MemberMatrix memberMatrix = memberMatrixesByName.get(nsp);
 			if (memberMatrix == null) {
@@ -56,6 +74,24 @@ public class MemberCube {
 				memberMatrixesByName.put(nsp, memberMatrix);
 			}
 			memberMatrix.add(source, member);
+		}
+	}
+
+	/**
+	 * TEMPORARY WORK-AROUND
+	 *
+	 * This is required to avoid exceptions when compiling n4js-libs.
+	 *
+	 * TODO GH-2235 find a better place to ensure resolution of polyfilled members
+	 */
+	private void ensureResolution(EObject obj) {
+		// ensure we do not use types from resources that are only partially resolved
+		Resource polyfillResource = obj.eResource();
+		if (polyfillResource instanceof N4JSResource) {
+			// Note: the following call will be a no-op if
+			// 1) the resource was already post-processed, or
+			// 2) the resource was loaded from the index.
+			((N4JSResource) polyfillResource).performPostProcessing();
 		}
 	}
 

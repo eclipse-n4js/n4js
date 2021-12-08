@@ -49,20 +49,20 @@ var v14 = gDyn.mDyn(undefined);
 
 // part #2: writing
 
-// XPECT errors --> "string is not a subtype of C." at """"
+// XPECT errors --> """ is not a subtype of C." at """"
 g.field = "";
-// XPECT errors --> "string is not a subtype of C+." at """"
+// XPECT errors --> """ is not a subtype of C+." at """"
 g.fieldDyn = "";
-// XPECT errors --> "string is not a subtype of C." at """"
+// XPECT errors --> """ is not a subtype of C." at """"
 g.m("");
-// XPECT errors --> "string is not a subtype of C+." at """"
+// XPECT errors --> """ is not a subtype of C+." at """"
 g.mDyn("");
 
-// XPECT errors --> "string is not a subtype of C+." at """"
+// XPECT errors --> """ is not a subtype of C+." at """"
 gDyn.field = "";
-// XPECT errors --> "string is not a subtype of C+." at """"
+// XPECT errors --> """ is not a subtype of C+." at """"
 gDyn.fieldDyn = "";
-// XPECT errors --> "string is not a subtype of C+." at """"
+// XPECT errors --> """ is not a subtype of C+." at """"
 gDyn.m("");
-// XPECT errors --> "string is not a subtype of C+." at """"
+// XPECT errors --> """ is not a subtype of C+." at """"
 gDyn.mDyn("");

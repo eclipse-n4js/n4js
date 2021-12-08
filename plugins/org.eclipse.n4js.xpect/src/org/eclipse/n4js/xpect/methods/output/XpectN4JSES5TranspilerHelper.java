@@ -127,7 +127,7 @@ public class XpectN4JSES5TranspilerHelper {
 		Script testScript = resource.getScript();
 		TModule testModule = resource.getModule();
 
-		Path projectFolder = root.resolve(testModule.getProjectName().replace("/", File.separator));
+		Path projectFolder = root.resolve(testModule.getPackageName().replace("/", File.separator));
 		createPackageJson(projectFolder);
 
 		// replace n4jsd resource with provided js resource
@@ -150,20 +150,20 @@ public class XpectN4JSES5TranspilerHelper {
 		String fileToRun = jsModulePathToRun(testScript);
 
 		// Not in UI case, hence manually set up the resources
-		String artificialProjectName = testScript.getModule().getProjectName();
+		String artificialPackageName = testScript.getModule().getPackageName();
 
 		// provide n4js-runtime in the version of the current build
 		N4jsLibsAccess.installN4jsLibs(
-				root.resolve(artificialProjectName).resolve(N4JSGlobals.NODE_MODULES),
+				root.resolve(artificialPackageName).resolve(N4JSGlobals.NODE_MODULES),
 				true, false, false,
 				N4JSGlobals.N4JS_RUNTIME);
 
-		Path artificialProjectPath = root.resolve(artificialProjectName);
+		Path artificialProjectPath = root.resolve(artificialPackageName);
 		return doExecute(artificialProjectPath, artificialProjectPath.resolve(fileToRun), decorateStdStreams);
 	}
 
 	private String doExecute(Path workingDir, Path fileToRun, boolean decorateStdStreams, String... options) {
-		ProcessResult processResult = new CliTools().runNodejs(workingDir, fileToRun, options);
+		ProcessResult processResult = new CliTools().nodejsRun(workingDir, fileToRun, options);
 		StringBuffer output = new StringBuffer();
 		output.append(processResult.getStdOut().trim());
 		String errOut = processResult.getErrOut().trim();
@@ -271,10 +271,10 @@ public class XpectN4JSES5TranspilerHelper {
 	}
 
 	private void createPackageJson(Path folder) throws IOException {
-		String projectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromPath(folder);
+		String packageName = ProjectDescriptionUtils.deriveN4JSPackageNameFromPath(folder);
 		Files.createDirectories(folder);
 		Files.writeString(folder.resolve(N4JSGlobals.PACKAGE_JSON), "{\n"
-				+ "  \"name\": \"" + projectName + "\",\n"
+				+ "  \"name\": \"" + packageName + "\",\n"
 				+ "  \"version\": \"0.0.1\",\n"
 				+ "  \"type\": \"module\"\n"
 				+ "}\n");

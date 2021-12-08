@@ -36,9 +36,7 @@
         "extensions": [
           ".n4js",
           ".n4jsd",
-          ".n4jsx",
-          ".n4idl",
-          ".n4ts"
+          ".n4jsx"
         ],
         "configuration": "./n4js.configuration.json"
       },
@@ -66,7 +64,9 @@
       {
         "type": "n4js",
         "label": "N4JS Debug",
-        "languages": [ "n4js" ],
+        "languages": [
+          "n4js"
+        ],
         "configurationSnippets": [
           {
             "label": "N4JS: Launch/Debug N4JS",
@@ -76,7 +76,10 @@
               "request": "launch",
               "name": "Launch/Debug N4JS",
               "runtimeExecutable": "/usr/local/bin/node",
-              "runtimeArgs": [ "-r", "esm" ],
+              "runtimeArgs": [
+                "-r",
+                "esm"
+              ],
               "program": "${file}",
               "args": [],
               "sourceMaps": true,
@@ -97,7 +100,10 @@
             "request": "launch",
             "name": "Launch/Debug N4JS",
             "runtimeExecutable": "/usr/local/bin/node",
-            "runtimeArgs": [ "-r", "esm" ],
+            "runtimeArgs": [
+              "-r",
+              "esm"
+            ],
             "program": "${file}",
             "args": [],
             "sourceMaps": true,
@@ -209,8 +215,8 @@
     }
   },
   "devDependencies": {
-    "json": "9.0.6",
-    "vsce": "1.71.0"
+    "json": "11.0.0",
+    "vsce": "1.95.1"
   },
   "dependencies": {
     "n4js-cli": "latest",
@@ -218,7 +224,7 @@
     "n4js-runtime-node": "latest",
     "n4js-runtime-es2015": "latest",
     "npmlog": "4.1.2",
-    "vscode-languageclient": "6.1.0"
+    "vscode-languageclient": "7.0.0"
   },
   "scripts": {},
   "n4js": {

@@ -1,0 +1,15 @@
+{
+	"name": "Test",
+	"version": "0.0.1",
+	"type": "module",
+	"n4js": {
+		"projectType": "runtimeLibrary",
+		"vendorId": "org.eclipse.n4js",
+		"vendorName": "Eclipse N4JS Project",
+		"sources": {
+			"source": [
+				"src"
+			]
+		}
+	}
+}

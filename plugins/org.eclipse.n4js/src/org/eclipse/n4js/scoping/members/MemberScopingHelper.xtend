@@ -21,13 +21,19 @@ import org.eclipse.n4js.scoping.accessModifiers.StaticWriteAccessFilterScope
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope
 import org.eclipse.n4js.scoping.utils.CompositeScope
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.scoping.builtin.N4Scheme
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -35,14 +41,13 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
+import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -53,6 +58,8 @@ import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
+
+import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
  */
@@ -169,6 +176,30 @@ class MemberScopingHelper {
 		return new DynamicPseudoScope()
 	}
 
+	private def dispatch IScope members(LiteralTypeRef ltr, MemberScopeRequest request) {
+		throw new UnsupportedOperationException("missing dispatch method for " + ltr.eClass().getName());
+	}
+
+	private def dispatch IScope members(BooleanLiteralTypeRef ltr, MemberScopeRequest request) {
+		val G = request.context.newRuleEnvironment;
+		return members(G.booleanTypeRef, request);
+	}
+
+	private def dispatch IScope members(NumericLiteralTypeRef ltr, MemberScopeRequest request) {
+		val G = request.context.newRuleEnvironment;
+		return members(G.numberTypeRef, request); // no need to distinguish between number and int
+	}
+
+	private def dispatch IScope members(StringLiteralTypeRef ltr, MemberScopeRequest request) {
+		val G = request.context.newRuleEnvironment;
+		return members(G.stringTypeRef, request);
+	}
+
+	private def dispatch IScope members(EnumLiteralTypeRef ltr, MemberScopeRequest request) {
+		val G = request.context.newRuleEnvironment;
+		return members(N4JSLanguageUtils.getLiteralTypeBase(G, ltr), request);
+	}
+
 	private def dispatch IScope members(ParameterizedTypeRef ptr, MemberScopeRequest request) {
 		val IScope result = membersOfType(ptr.declaredType, request);
 		if (ptr.dynamic && !(result instanceof DynamicPseudoScope)) {
@@ -206,7 +237,7 @@ class MemberScopingHelper {
 		// taking the upper bound to "resolve" the ThisTypeRef:
 		// this[C] --> C (ParameterizedTypeRef)
 		// ~~this[C] with { number prop; } --> ~~C with { number prop; } (ParameterizedTypeRefStructural)
-		val ub = ts.upperBoundWithReopen(RuleEnvironmentExtensions.newRuleEnvironment(request.context), thisTypeRef);
+		val ub = ts.upperBoundWithReopen(request.context.newRuleEnvironment, thisTypeRef);
 
 		if (ub !== null) { // ThisTypeRef was resolved
 			return members(ub, request);
@@ -218,7 +249,7 @@ class MemberScopingHelper {
 
 	private def dispatch IScope members(TypeTypeRef ttr, MemberScopeRequest request) {
 		val MemberScopeRequest staticRequest = request.enforceStatic;
-		val G = RuleEnvironmentExtensions.newRuleEnvironment(request.context);
+		val G = request.context.newRuleEnvironment;
 		val ctrStaticType = tsh.getStaticType(G, ttr, true);
 		var IScope staticMembers = membersOfType(ctrStaticType, staticRequest) // staticAccess is always true in this case
 		if (ctrStaticType instanceof TEnum) {
@@ -337,10 +368,10 @@ class MemberScopingHelper {
 			IScope.NULLSCOPE
 		};
 
-		if (!request.staticAccess && type instanceof TObjectPrototype) {
-			// TObjectPrototypes defined in builtin_js.n4ts and builtin_n4.n4ts are allowed to extend primitive
+		if (!request.staticAccess && type instanceof TClass && N4Scheme.isFromResourceWithN4Scheme(type)) {
+			// classifiers defined in builtin_js.n4jsd and builtin_n4.n4jsd are allowed to extend primitive
 			// types, and the following is required to support auto-boxing in such a case:
-			val rootSuperType = getRootSuperType(type as TObjectPrototype);
+			val rootSuperType = getRootSuperType(type as TClass);
 			if (rootSuperType instanceof PrimitiveType) {
 				val boxedType = rootSuperType.autoboxedType;
 				if(boxedType!==null) {
@@ -363,7 +394,7 @@ class MemberScopingHelper {
 		val builtInTypeScope = BuiltInTypeScope.get(getResourceSet(enumeration, request.context));
 		// IDE-1221 select built-in type depending on whether this enumeration is tagged number-/string-based
 		val enumKind = N4JSLanguageUtils.getEnumKind(enumeration);
-		val TObjectPrototype specificEnumType = switch(enumKind) {
+		val specificEnumType = switch(enumKind) {
 			case Normal: builtInTypeScope.n4EnumType
 			case NumberBased: builtInTypeScope.n4NumberBasedEnumType
 			case StringBased: builtInTypeScope.n4StringBasedEnumType
@@ -385,11 +416,11 @@ class MemberScopingHelper {
 		return result;
 	}
 
-	def private Type getRootSuperType(TObjectPrototype type) {
+	def private Type getRootSuperType(TClass type) {
 		var Type curr = type;
 		var Type next;
 		do {
-			next = if(curr instanceof TObjectPrototype) curr.superType?.declaredType;
+			next = if(curr instanceof TClass) curr.superClassRef?.declaredType;
 			if (next !== null) {
 				curr = next;
 			}

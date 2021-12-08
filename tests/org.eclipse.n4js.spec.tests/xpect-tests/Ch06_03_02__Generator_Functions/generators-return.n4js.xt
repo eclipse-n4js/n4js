@@ -75,11 +75,11 @@ async function * <T> ag3c(p: T) : T {
 
 // return must return a value of type TReturn (if given using the explicit form)
 function * g4a() : Generator<?, int, ?> {
-	// XPECT errors --> "string is not a subtype of int." at "'bad'"
+	// XPECT errors --> ""bad" is not a subtype of int." at "'bad'"
 	return 'bad';
 }
 function * <T> g4b() : Generator<?, T, ?> {
-	// XPECT errors --> "string is not a subtype of T." at "'bad'"
+	// XPECT errors --> ""bad" is not a subtype of T." at "'bad'"
 	return 'bad';
 }
 function * <T> g4c(p: T) : Generator<?, T, ?> {
@@ -91,11 +91,11 @@ function * g4d() : Generator<?, ?, ?> {
 	return 'good';
 }
 async function * ag4a() : AsyncGenerator<?, int, ?> {
-	// XPECT errors --> "string is not a subtype of int." at "'bad'"
+	// XPECT errors --> ""bad" is not a subtype of int." at "'bad'"
 	return 'bad';
 }
 async function * <T> ag4b() : AsyncGenerator<?, T, ?> {
-	// XPECT errors --> "string is not a subtype of T." at "'bad'"
+	// XPECT errors --> ""bad" is not a subtype of T." at "'bad'"
 	return 'bad';
 }
 async function * <T> ag4c(p: T) : AsyncGenerator<?, T, ?> {
@@ -110,10 +110,10 @@ async function * ag4d() : AsyncGenerator<?, ?, ?> {
 
 // return must not return a value in void generators
 function * g5() : void {
-	// XPECT errors --> "string is not a subtype of undefined." at "'bad'"
+	// XPECT errors --> ""bad" is not a subtype of undefined." at "'bad'"
 	return 'bad';
 }
 async function * ag5() : void {
-	// XPECT errors --> "string is not a subtype of undefined." at "'bad'"
+	// XPECT errors --> ""bad" is not a subtype of undefined." at "'bad'"
 	return 'bad';
 }

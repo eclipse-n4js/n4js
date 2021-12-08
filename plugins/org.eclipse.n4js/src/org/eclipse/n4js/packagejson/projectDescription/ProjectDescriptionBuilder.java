@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.packagejson.projectDescription;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
+import org.eclipse.n4js.workspace.locations.FileURI;
 
 import com.google.common.collect.Iterables;
 
@@ -23,7 +26,11 @@ import com.google.common.collect.Iterables;
 @SuppressWarnings("javadoc")
 public class ProjectDescriptionBuilder {
 
-	private String name;
+	private FileURI location;
+	private FileURI relatedRootLocation;
+	private String id;
+
+	private String packageName;
 	private String vendorId;
 	private String vendorName;
 	private VersionNumber version;
@@ -45,6 +52,8 @@ public class ProjectDescriptionBuilder {
 	private boolean esm;
 	private boolean n4jsNature;
 	private boolean yarnWorkspaceRoot;
+	private Boolean isGeneratorEnabledSourceMaps;
+	private Boolean isGeneratorEnabledDts;
 	private final List<String> workspaces = new ArrayList<>();
 
 	public ProjectDescriptionBuilder() {
@@ -52,19 +61,82 @@ public class ProjectDescriptionBuilder {
 
 	/** Create the new instance of {@link ProjectDescription}. */
 	public ProjectDescription build() {
-		return new ProjectDescription(name, vendorId, vendorName, version, type, mainModule,
-				extendedRuntimeEnvironment, providedRuntimeLibraries, requiredRuntimeLibraries, dependencies,
-				implementationId, implementedProjects, outputPath, outputExtension, sourceContainers, moduleFilters,
-				testedProjects, definesPackage, nestedNodeModulesFolder, esm, n4jsNature, yarnWorkspaceRoot,
-				workspaces);
+		id = id == null ? computeProjectID() : id;
+		isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps == null ? false : isGeneratorEnabledSourceMaps;
+		isGeneratorEnabledDts = isGeneratorEnabledDts == null ? false : isGeneratorEnabledDts;
+
+		return new ProjectDescription(location, relatedRootLocation, id,
+				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
+				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
+				outputPath, outputExtension, sourceContainers, moduleFilters, testedProjects, definesPackage,
+				nestedNodeModulesFolder, esm, n4jsNature, yarnWorkspaceRoot,
+				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, workspaces);
 	}
 
-	public String getName() {
-		return name;
+	public String computeProjectID() {
+		if (relatedRootLocation == null) {
+			relatedRootLocation = location;
+		}
+
+		if (location != null) {
+			if (relatedRootLocation != null && relatedRootLocation.getParent() != null) {
+				Path parent = relatedRootLocation.getParent().toPath();
+				if (parent.getFileName() != null
+						&& parent.getFileName().toString().startsWith("@")
+						&& parent.getParent() != null) {
+
+					parent = parent.getParent();
+				}
+				Path relativeLocation = parent.relativize(location.toPath());
+				return relativeLocation.toString();
+			}
+		}
+		return packageName;
 	}
 
-	public ProjectDescriptionBuilder setName(String name) {
-		this.name = name;
+	public FileURI getLocation() {
+		return location;
+	}
+
+	public ProjectDescriptionBuilder setLocation(FileURI location) {
+		this.location = location;
+		return this;
+	}
+
+	public ProjectDescriptionBuilder setLocation(URI location) {
+		this.location = location == null ? null : new FileURI(location);
+		return this;
+	}
+
+	public FileURI getRelatedRootLocation() {
+		return relatedRootLocation;
+	}
+
+	public ProjectDescriptionBuilder setRelatedRootLocation(FileURI relatedRootlocation) {
+		this.relatedRootLocation = relatedRootlocation;
+		return this;
+	}
+
+	public ProjectDescriptionBuilder setRelatedRootLocation(URI relatedRootlocation) {
+		this.relatedRootLocation = relatedRootlocation == null ? null : new FileURI(relatedRootlocation);
+		return this;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public ProjectDescriptionBuilder setId(String id) {
+		this.id = id;
+		return this;
+	}
+
+	public String getPackageName() {
+		return packageName;
+	}
+
+	public ProjectDescriptionBuilder setPackageName(String packageName) {
+		this.packageName = packageName;
 		return this;
 	}
 
@@ -260,6 +332,24 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setYarnWorkspaceRoot(boolean yarnWorkspaceRoot) {
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
+		return this;
+	}
+
+	public Boolean isGeneratorEnabledSourceMaps() {
+		return isGeneratorEnabledSourceMaps;
+	}
+
+	public ProjectDescriptionBuilder setGeneratorEnabledSourceMaps(boolean isGeneratorEnabledSourceMaps) {
+		this.isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps;
+		return this;
+	}
+
+	public Boolean isGeneratorEnabledDts() {
+		return isGeneratorEnabledDts;
+	}
+
+	public ProjectDescriptionBuilder setGeneratorEnabledDts(boolean isGeneratorEnabledDts) {
+		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
 		return this;
 	}
 

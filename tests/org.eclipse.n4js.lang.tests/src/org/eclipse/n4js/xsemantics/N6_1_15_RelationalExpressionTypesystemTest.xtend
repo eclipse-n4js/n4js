@@ -11,13 +11,13 @@
 package org.eclipse.n4js.xsemantics
 
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.eclipse.n4js.validation.JavaScriptVariant.*
-import org.eclipse.n4js.validation.JavaScriptVariant
 
 /**
  * Test class for operator test (6.1.10- 6.1.18)
@@ -33,7 +33,6 @@ class N6_1_15_RelationalExpressionTypesystemTest extends AbstractOperatorExpress
 			for (op : #["<", "<=", ">", ">=", "instanceof", "in"]) {
 				assertOperatorType(mode, "boolean", '''n1 «op» n2''')
 				assertOperatorType(mode, "boolean", '''s1 «op» s2''')
-
 			}
 		}
 	}
@@ -46,10 +45,9 @@ class N6_1_15_RelationalExpressionTypesystemTest extends AbstractOperatorExpress
 			assertBinaryOperatorExpectedType(n4js, "number", "number", '''n1 «op» n2''');
 			assertBinaryOperatorExpectedType(n4js, "string", "string", '''s1 «op» s2''');
 			assertBinaryOperatorExpectedType(n4js, "boolean", "boolean", '''f1 «op» f2''');
-			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}", '''undefined «op» f2''');
-			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}", '''null «op» f2''');
-			assertBinaryOperatorExpectedType(n4js, "boolean", "union{number,string,boolean}", '''a «op» f2''');
-
+			assertBinaryOperatorExpectedType(n4js, "boolean", "union{boolean,number,string}", '''undefined «op» f2''');
+			assertBinaryOperatorExpectedType(n4js, "boolean", "union{boolean,number,string}", '''null «op» f2''');
+			assertBinaryOperatorExpectedType(n4js, "boolean", "union{boolean,number,string}", '''a «op» f2''');
 		}
 	}
 

@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class X {}
+
+// XPECT noerrors -->
+class G01<T0,T1=T0> {}
+// XPECT noerrors -->
+class G02<T0,T1=Array<T0>> {}
+// XPECT errors --> "Default type arguments may only reference type parameters that are declared before the current type parameter." at "T1"
+class G03<T0,T1=T1> {}
+// XPECT errors --> "Default type arguments may only reference type parameters that are declared before the current type parameter." at "T2"
+class G04<T0,T1=T2,T2=any> {}
+// XPECT errors --> "Default type arguments may only reference type parameters that are declared before the current type parameter." at "T2"
+class G05<T0,T1=Array<T2>,T2=any> {}
+// XPECT errors --> "Default type arguments may only reference type parameters that are declared before the current type parameter." at "T2"
+class G06<T0,T1=~Object with { prop: T2 },T2=any> {}
+
+
+// same, but with type aliases:
+
+// XPECT noerrors -->
+type Alias01<T0,T1=T0> = X;
+// XPECT noerrors -->
+type Alias02<T0,T1=Array<T0>> = X;
+// XPECT errors --> "Default type arguments may only reference type parameters that are declared before the current type parameter." at "T1"
+type Alias03<T0,T1=T1> = X;
+// XPECT errors --> "Default type arguments may only reference type parameters that are declared before the current type parameter." at "T2"
+type Alias04<T0,T1=T2,T2=any> = X;
+// XPECT errors --> "Default type arguments may only reference type parameters that are declared before the current type parameter." at "T2"
+type Alias05<T0,T1=Array<T2>,T2=any> = X;
+// XPECT errors --> "Default type arguments may only reference type parameters that are declared before the current type parameter." at "T2"
+type Alias06<T0,T1=~Object with { prop: T2 },T2=any> = X;

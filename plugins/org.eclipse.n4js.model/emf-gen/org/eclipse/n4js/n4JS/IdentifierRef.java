@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import org.eclipse.n4js.ts.typeRefs.Versionable;
-
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**
@@ -32,7 +30,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * @model
  * @generated
  */
-public interface IdentifierRef extends PrimaryExpression, StrictModeRelevant, Versionable {
+public interface IdentifierRef extends PrimaryExpression, StrictModeRelevant {
 	/**
 	 * Returns the value of the '<em><b>Id</b></em>' reference.
 	 * <!-- begin-user-doc -->

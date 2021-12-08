@@ -25,14 +25,13 @@ import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
-import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.utils.TypeExtensions
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.EcoreUtil2
 
-import static extension org.eclipse.n4js.ts.utils.TypeExtensions.*
+import static extension org.eclipse.n4js.types.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
 /**
@@ -84,7 +83,7 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 			if (thisTarget instanceof N4ClassDeclaration) {
 				val clazz = thisTarget.definedTypeAsClass;
 				if (clazz !== null && clazz.isStaticPolyfill()) {
-					val actualClazz = clazz.superClassRef.declaredType;
+					val actualClazz = clazz.superClassRef?.declaredType;
 					if (actualClazz !== null) {
 						thisTargetDefType = actualClazz;
 					}
@@ -96,7 +95,7 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 				if (containingFunction instanceof N4MethodDeclaration &&
 						(containingFunction as N4MemberDeclaration).isStatic) {
 					if (isInReturnDeclaration_Of_StaticMethod(location, containingFunction as N4MethodDeclaration)) {
-						return getThisTypeAtLocation(G, thisTargetDefType.createTypeRefWithParamsAsArgs);
+						return getThisTypeAtLocation(G, thisTargetDefType.createTypeRef(TypingStrategy.DEFAULT, true));
 					} else if (isInBody_Of_StaticMethod(location, containingFunction as N4MethodDeclaration)) {
 						return TypeUtils.createClassifierBoundThisTypeRef(
 								TypeUtils.createTypeTypeRef(thisTargetDefType.createTypeRefWithParamsAsArgs, false));
@@ -136,22 +135,5 @@ class ThisTypeComputer extends TypeSystemHelperStrategy {
 			// actually be inferred to 'any', by default, not to 'Object':
 			return G.anyTypeRef;
 		}
-	}
-
-	/**
-	 * Similar to utility methods [1] and [2], but if the given type is generic, then the generic type's
-	 * type parameters / type variables will be used as type arguments for the newly created ParameterizedTypeRef.
-	 * The utility methods [1] and [2] would instead either create a raw type reference or use wildcards as type
-	 * arguments.
-	 * <p>
-	 * [1] {@link TypeExtensions#ref(Type, TypeArgument...)}<br>
-	 * [2] {@link TypeUtils#createTypeRef(Type, TypingStrategy, boolean, TypeArgument...)}
-	 */
-	def private TypeRef createTypeRefWithParamsAsArgs(Type type) {
-		if (type.generic) {
-			val typeArgs = type.typeVars.map[ref].toList;
-			return type.ref(typeArgs);
-		}
-		return type.ref;
 	}
 }

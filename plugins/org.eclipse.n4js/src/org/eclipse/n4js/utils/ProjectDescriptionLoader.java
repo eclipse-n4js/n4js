@@ -83,25 +83,34 @@ public class ProjectDescriptionLoader {
 	 * <p>
 	 * Returns {@code null} if the project description cannot be loaded successfully (e.g. missing package.json).
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(SafeURI<?> location) {
+	public ProjectDescription loadProjectDescriptionAtLocation(SafeURI<?> location, SafeURI<?> relatedRootLocation) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON == null) {
 			return null;
 		}
-		return loadProjectDescriptionAtLocation(location.toURI(), packageJSON);
+		URI relatedRootLocationUri = relatedRootLocation == null ? null : relatedRootLocation.toURI();
+		return loadProjectDescriptionAtLocation(location.toURI(), relatedRootLocationUri, packageJSON);
 	}
 
 	/**
 	 * Same as {@link #loadPackageJSONAtLocation(SafeURI)}.
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(URI location, JSONDocument packageJSON) {
+	public ProjectDescription loadProjectDescriptionAtLocation(URI location, URI relatedRootLocation,
+			JSONDocument packageJSON) {
+
+		if (location == null) {
+			return null;
+		}
+
 		adjustMainPath(location, packageJSON);
-		String defaultProjectName = ProjectDescriptionUtils.deriveN4JSProjectNameFromURI(location);
 		ProjectDescriptionBuilder pdbFromPackageJSON = packageJSON != null
-				? packageJsonHelper.convertToProjectDescription(packageJSON, true, defaultProjectName)
+				? packageJsonHelper.convertToProjectDescription(packageJSON, true, null)
 				: null;
 		if (pdbFromPackageJSON != null) {
 			setInformationFromFileSystem(location, pdbFromPackageJSON);
+			pdbFromPackageJSON.setLocation(location);
+			pdbFromPackageJSON.setRelatedRootLocation(relatedRootLocation);
+
 			ProjectDescription result = pdbFromPackageJSON.build();
 			return result;
 		} else {
@@ -218,7 +227,7 @@ public class ProjectDescriptionLoader {
 			String jsonString = Files.readString(path, StandardCharsets.UTF_8);
 			try {
 				JSONDocument doc = JSONFactory.eINSTANCE.createJSONDocument();
-				JsonElement jsonElement = new JsonParser().parse(jsonString);
+				JsonElement jsonElement = JsonParser.parseString(jsonString);
 				doc.setContent(copy(jsonElement));
 				return doc;
 			} catch (JsonParseException e) {

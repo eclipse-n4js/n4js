@@ -11,7 +11,6 @@
 package org.eclipse.n4js.transpiler
 
 import java.util.Collection
-import java.util.stream.Collectors
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
@@ -26,11 +25,12 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
-import org.eclipse.n4js.transpiler.im.VersionedNamedImportSpecifier_IM
+import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.NameAndAccess
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TModule
 
 /**
  */
@@ -50,9 +50,23 @@ class SymbolTableManagement {
 		if(originalTarget instanceof NamedElement) {
 			newEntry.elementsOfThisName += originalTarget as NamedElement;
 		}
+
+		// if a namespace import exists for the module containing 'originalTarget', we use it for this new STE
+		newEntry.importSpecifier = getExistingNamespaceImportSpecifierForModule(state, originalTarget.containingModule);
+
 		state.addOriginal(newEntry)
 
 		return newEntry;
+	}
+
+	def private static NamespaceImportSpecifier getExistingNamespaceImportSpecifierForModule(TranspilerState state, TModule module) {
+		if (module !== null) {
+			val importSpec = state.steCache.mapImportedModule_2_STE.get(module)?.importSpecifier;
+			if (importSpec instanceof NamespaceImportSpecifier) {
+				return importSpec;
+			}
+		}
+		return null;
 	}
 
 	/** add a {@link SymbolTableEntryOriginal} */
@@ -68,6 +82,13 @@ class SymbolTableManagement {
 			throw new IllegalStateException(
 					"It is not allowed to register more then one STEOriginal for the same original Target. Already had: "
 							+ old);
+		val originalTarget = steOriginal.originalTarget;
+		if (originalTarget instanceof ModuleNamespaceVirtualType) {
+			val namespaceModule = originalTarget.module;
+			if (namespaceModule !== null) {
+				steCache.mapImportedModule_2_STE.put(namespaceModule, steOriginal);
+			}
+		}
 		steCache.im.getSymbolTable().getEntries().add(steOriginal);
 		steCache.inverseMap(steOriginal);
 	}
@@ -368,27 +389,32 @@ class SymbolTableManagement {
 	}
 
 	/**
-	 * Finds and returns all STEs that hold a reference to the given {@link VersionedNamedImportSpecifier_IM}
-	 *
-	 * In case of the import of an unversioned type, this method defaults
+	 * This method defaults
 	 * to {@link SymbolTableManagement.findSymbolTableEntryForNamedImport(TranspilerState, NamedImportSpecifier)}.
 	 */
-	def static public Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(TranspilerState state, VersionedNamedImportSpecifier_IM importspec) {
-		// avoid expensive computation for unversioned imports
-		if (!importspec.isVersionedTypeImport) {
-			return #[findSymbolTableEntryForNamedImport(state, importspec)];
-		}
+	def static public Collection<SymbolTableEntryOriginal> findSymbolTableEntriesForVersionedTypeImport(TranspilerState state, NamedImportSpecifier importspec) {
+		return #[findSymbolTableEntryForNamedImport(state, importspec)];
+	}
 
-		// Since we need to know about the complete set of used versions of the
-		// imported type, we need to look at least at importspec.importedTypeVersion.size many
-		// distinct STEs with the importSpecifier set to importspec.
-		return state.steCache.mapOriginal.values().parallelStream()
-				.unordered // order is not of importance
-				.filter[getImportSpecifier() == importspec]
-				.distinct // This is comparatively expensive but allows us to exit earlier
-						  // due to the following limit-condition
-				.limit(importspec.importedTypeVersions.size)
-				.collect(Collectors.toList);
+
+	/**
+	 * Records in property {@link TypeReferenceNode_IM#getRewiredReferences() rewiredReferences} that the given type reference node refers
+	 * to the type represented by the given symbol table entry.
+	 */
+	def static public void recordReferenceToType(TranspilerState state, TypeReferenceNode_IM<?> typeRefNode, SymbolTableEntryOriginal ste) {
+		// 1) record the reference to the type represented by 'ste' itself
+		typeRefNode.addRewiredTarget(ste);
+		// 2) record the reference to the namespace iff the type represented by 'ste' was imported via a namespace import
+		val importSpec = ste.importSpecifier;
+		if (importSpec instanceof NamespaceImportSpecifier) {
+			val namespaceType = state.info.getOriginalDefinedType(importSpec);
+			if (namespaceType !== null) {
+				val namespaceSTE = getSymbolTableEntryOriginal(state, namespaceType, false);
+				if (namespaceSTE !== null) {
+					typeRefNode.addRewiredTarget(namespaceSTE);
+				}
+			}
+		}
 	}
 
 

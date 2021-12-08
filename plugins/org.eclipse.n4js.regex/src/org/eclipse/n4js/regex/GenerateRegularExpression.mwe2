@@ -46,7 +46,6 @@ Workflow {
 		language = XtextGeneratorLanguage {
 			name = "org.eclipse.n4js.regex.RegularExpression"
 			fileExtensions = "regex"
-			generateXtendStubs = false
 
 			// Java API to access grammar elements (required by several other fragments)
 			// fragment = org.eclipse.n4js.antlr.grammarAccess.WindowsAwareGrammarAccessFragment auto-inject {}

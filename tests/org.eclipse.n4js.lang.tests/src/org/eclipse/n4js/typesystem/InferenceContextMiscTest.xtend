@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AbstractN4JSTest
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.xtext.service.OperationCanceledManager

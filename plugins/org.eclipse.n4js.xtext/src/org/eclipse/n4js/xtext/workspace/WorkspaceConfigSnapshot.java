@@ -35,7 +35,7 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 
 	/** The root path of the workspace */
 	protected final URI path;
-	/** Set of projects in the workspace, prepared for fast lookup by name, path, etc. */
+	/** Set of projects in the workspace, prepared for fast lookup by id, path, etc. */
 	protected final ProjectSet projects;
 	/** Project build order */
 	protected final BuildOrderInfo buildOrderInfo;
@@ -68,8 +68,8 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 	}
 
 	/** Find the project with the given name. */
-	public ProjectConfigSnapshot findProjectByName(String name) {
-		return projects.findProjectByName(name);
+	public ProjectConfigSnapshot findProjectByID(String projectID) {
+		return projects.findProjectByID(projectID);
 	}
 
 	/** See {@link ProjectSet#findProjectByPath(URI)}. */
@@ -99,9 +99,9 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 		return projects.findProjectAndSourceFolderContaining(nestedSourceLocation);
 	}
 
-	/** Returns all projects that depend on the project with the given name or an empty set if the name is not found. */
-	public ImmutableSet<? extends ProjectConfigSnapshot> getProjectsDependingOn(String projectName) {
-		return projects.getProjectsDependingOn(projectName);
+	/** Returns all projects that depend on the project with the given id or an empty set if the id is not found. */
+	public ImmutableSet<? extends ProjectConfigSnapshot> getProjectsDependingOn(String projectID) {
+		return projects.getProjectsDependingOn(projectID);
 	}
 
 	/** Get build order of all projects of this workspace snapshot */
@@ -115,9 +115,9 @@ public class WorkspaceConfigSnapshot extends Snapshot {
 	}
 
 	/** Return true iff the given project is part of a dependency cycle */
-	public boolean isInDependencyCycle(String projectName) {
+	public boolean isInDependencyCycle(String projectID) {
 		for (List<String> projectCycle : buildOrderInfo.projectCycles) {
-			if (projectCycle.contains(projectName)) {
+			if (projectCycle.contains(projectID)) {
 				return true;
 			}
 		}

@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -39,7 +38,7 @@ import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.junit.Assert;
 
 import com.google.common.base.Charsets;
@@ -122,12 +121,12 @@ public class N4jsLibsAccess {
 	 *             if the {@link #findN4jsLibsLocation() n4js-libs location} cannot be obtained or there is not library
 	 *             with the given name.
 	 */
-	public static Path findN4jsLib(N4JSProjectName projectName) {
+	public static Path findN4jsLib(N4JSPackageName projectName) {
 		Path base = findN4jsLibsLocation();
 		return findN4jsLib(base, projectName, false);
 	}
 
-	private static Path findN4jsLib(Path n4jsLibs, N4JSProjectName projectName, boolean searchNodeModules) {
+	private static Path findN4jsLib(Path n4jsLibs, N4JSPackageName projectName, boolean searchNodeModules) {
 		Path result = toProjectPath(n4jsLibs, projectName);
 		if (searchNodeModules && !Files.exists(result)) {
 			// 2nd attempt: check in node_modules folder of the containing yarn workspace
@@ -150,37 +149,37 @@ public class N4jsLibsAccess {
 	 *             if the {@link #findN4jsLibsLocation() n4js-libs location} cannot be obtained or some other havoc
 	 *             occurred.
 	 */
-	public static Map<N4JSProjectName, Path> findAllN4jsLibs() {
+	public static Map<N4JSPackageName, Path> findAllN4jsLibs() {
 		Path location = findN4jsLibsLocation();
 		try {
-			return Files.list(location)
+			Map<N4JSPackageName, Path> libsLocations = Files.list(location)
 					.filter(p -> isNpmPackage(p))
-					.collect(Collectors.toMap(p -> new N4JSProjectName(p.getFileName().toString()),
-							Function.identity()));
+					.collect(Collectors.toMap(p -> new N4JSPackageName(p.getFileName().toString()), p -> p));
+			return libsLocations;
 		} catch (IOException e) {
 			throw new IllegalStateException("cannot obtain list of n4js-libs: " + e.getMessage(), e);
 		}
 	}
 
 	/**
-	 * Same as {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSProjectName...)} but will install all
+	 * Same as {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...)} but will install all
 	 * n4js-libs.
 	 */
-	public static Map<N4JSProjectName, Path> installAllN4jsLibs(Path targetPath, boolean includeDependencies,
+	public static Map<N4JSPackageName, Path> installAllN4jsLibs(Path targetPath, boolean includeDependencies,
 			boolean useSymbolicLinks, boolean deleteOnExit) throws IOException {
 		return installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit,
 				Predicates.alwaysTrue());
 	}
 
 	/**
-	 * Same as {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSProjectName...)} but a predicate can be
+	 * Same as {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...)} but a predicate can be
 	 * supplied.
 	 */
-	public static Map<N4JSProjectName, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
-			boolean useSymbolicLinks, boolean deleteOnExit, Predicate<N4JSProjectName> n4jsLibsToInstall)
+	public static Map<N4JSPackageName, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
+			boolean useSymbolicLinks, boolean deleteOnExit, Predicate<N4JSPackageName> n4jsLibsToInstall)
 			throws IOException {
-		Map<N4JSProjectName, Path> allN4jsLibs = findAllN4jsLibs();
-		Map<N4JSProjectName, Path> toBeInstalled = allN4jsLibs.entrySet().stream()
+		Map<N4JSPackageName, Path> allN4jsLibs = findAllN4jsLibs();
+		Map<N4JSPackageName, Path> toBeInstalled = allN4jsLibs.entrySet().stream()
 				.filter(e -> n4jsLibsToInstall.test(e.getKey()))
 				.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
 		return installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
@@ -214,21 +213,21 @@ public class N4jsLibsAccess {
 	 * @throws IOException
 	 *             in case of trouble.
 	 */
-	public static Map<N4JSProjectName, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
-			boolean useSymbolicLinks, boolean deleteOnExit, N4JSProjectName... n4jsLibsNames) throws IOException {
+	public static Map<N4JSPackageName, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
+			boolean useSymbolicLinks, boolean deleteOnExit, N4JSPackageName... n4jsLibsNames) throws IOException {
 		Path n4jsLibsLocation = findN4jsLibsLocation();
-		Map<N4JSProjectName, Path> toBeInstalled = new HashMap<>();
-		for (N4JSProjectName projectName : n4jsLibsNames) {
+		Map<N4JSPackageName, Path> toBeInstalled = new HashMap<>();
+		for (N4JSPackageName projectName : n4jsLibsNames) {
 			Path projectPath = findN4jsLib(n4jsLibsLocation, projectName, false);
 			toBeInstalled.put(projectName, projectPath);
 		}
 		return installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
 	}
 
-	private static Map<N4JSProjectName, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
-			boolean useSymbolicLinks, boolean deleteOnExit, Map<N4JSProjectName, Path> n4jsLibsToBeInstalled)
+	private static Map<N4JSPackageName, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
+			boolean useSymbolicLinks, boolean deleteOnExit, Map<N4JSPackageName, Path> n4jsLibsToBeInstalled)
 			throws IOException {
-		Map<N4JSProjectName, Path> toBeInstalled = new LinkedHashMap<>();
+		Map<N4JSPackageName, Path> toBeInstalled = new LinkedHashMap<>();
 		// add projects in 'projectNames' to 'toBeInstalled'
 		toBeInstalled.putAll(n4jsLibsToBeInstalled);
 		// add dependencies of projects in 'toBeInstalled' to 'toBeInstalled' (if requested)
@@ -239,8 +238,8 @@ public class N4jsLibsAccess {
 			}
 		}
 		// actually install projects in 'toBeInstalled'
-		for (Entry<N4JSProjectName, Path> projectEntry : toBeInstalled.entrySet()) {
-			N4JSProjectName projectName = projectEntry.getKey();
+		for (Entry<N4JSPackageName, Path> projectEntry : toBeInstalled.entrySet()) {
+			N4JSPackageName projectName = projectEntry.getKey();
 			Path projectPath = projectEntry.getValue();
 			Path targetProjectPath = toProjectPath(targetPath, projectName);
 			if (useSymbolicLinks) {
@@ -260,10 +259,10 @@ public class N4jsLibsAccess {
 		return toBeInstalled;
 	}
 
-	private static void collectDependencies(Path n4jsLibsLocation, Path projectPath, Map<N4JSProjectName, Path> addHere)
+	private static void collectDependencies(Path n4jsLibsLocation, Path projectPath, Map<N4JSPackageName, Path> addHere)
 			throws IOException {
-		Set<N4JSProjectName> dependencyNames = loadDepenencies(projectPath, false, true, true);
-		for (N4JSProjectName dependencyName : dependencyNames) {
+		Set<N4JSPackageName> dependencyNames = loadDepenencies(projectPath, false, true, true);
+		for (N4JSPackageName dependencyName : dependencyNames) {
 			Path dependencyPath = findN4jsLib(n4jsLibsLocation, dependencyName, true);
 			if (addHere.putIfAbsent(dependencyName, dependencyPath) == null) {
 				collectDependencies(n4jsLibsLocation, dependencyPath, addHere);
@@ -271,17 +270,17 @@ public class N4jsLibsAccess {
 		}
 	}
 
-	private static Set<N4JSProjectName> loadDepenencies(Path projectPath, boolean includeDevDependencies,
+	private static Set<N4JSPackageName> loadDepenencies(Path projectPath, boolean includeDevDependencies,
 			boolean excludeNestedProjects, boolean includeDepsOfNestedProjects) throws IOException {
-		Set<N4JSProjectName> result = new LinkedHashSet<>();
-		Map<N4JSProjectName, Path> nestedProjects = getNestedProjects(projectPath);
+		Set<N4JSPackageName> result = new LinkedHashSet<>();
+		Map<N4JSPackageName, Path> nestedProjects = getNestedProjects(projectPath);
 		// add dependencies of project at 'projectPath'
-		List<N4JSProjectName> dependencyNames = loadDepenencies(projectPath, includeDevDependencies);
+		List<N4JSPackageName> dependencyNames = loadDepenencies(projectPath, includeDevDependencies);
 		result.addAll(dependencyNames);
 		// add dependencies of nested projects (if requested)
 		if (includeDepsOfNestedProjects) {
 			for (Path nestedProjectPath : nestedProjects.values()) {
-				Set<N4JSProjectName> nestedDependencyNames = loadDepenencies(nestedProjectPath,
+				Set<N4JSPackageName> nestedDependencyNames = loadDepenencies(nestedProjectPath,
 						false, // never include devDependencies of nested projects!
 						excludeNestedProjects, includeDepsOfNestedProjects);
 				result.addAll(nestedDependencyNames);
@@ -294,15 +293,15 @@ public class N4jsLibsAccess {
 		return result;
 	}
 
-	private static List<N4JSProjectName> loadDepenencies(Path projectPath, boolean includeDevDependencies)
+	private static List<N4JSPackageName> loadDepenencies(Path projectPath, boolean includeDevDependencies)
 			throws IOException {
-		List<N4JSProjectName> result = new ArrayList<>();
+		List<N4JSPackageName> result = new ArrayList<>();
 		Path packageJsonPath = projectPath.resolve(N4JSGlobals.PACKAGE_JSON);
 		JSONDocument packageJsonDoc = JSONModelUtils.loadJSON(packageJsonPath, Charsets.UTF_8);
 		JSONObject dependenciesObj = (JSONObject) JSONModelUtils.getProperty(packageJsonDoc,
 				PackageJsonProperties.DEPENDENCIES.name).orElse(null);
 		if (dependenciesObj != null) {
-			result.addAll(dependenciesObj.getNameValuePairs().stream().map(nvp -> new N4JSProjectName(nvp.getName()))
+			result.addAll(dependenciesObj.getNameValuePairs().stream().map(nvp -> new N4JSPackageName(nvp.getName()))
 					.collect(Collectors.toList()));
 		}
 		if (includeDevDependencies) {
@@ -310,7 +309,7 @@ public class N4jsLibsAccess {
 					PackageJsonProperties.DEV_DEPENDENCIES.name).orElse(null);
 			if (devDependenciesObj != null) {
 				result.addAll(
-						devDependenciesObj.getNameValuePairs().stream().map(nvp -> new N4JSProjectName(nvp.getName()))
+						devDependenciesObj.getNameValuePairs().stream().map(nvp -> new N4JSPackageName(nvp.getName()))
 								.collect(Collectors.toList()));
 			}
 		}
@@ -320,20 +319,20 @@ public class N4jsLibsAccess {
 	/**
 	 * Returns name/path of all projects nested inside the node_modules folder of the project at the given location.
 	 */
-	private static Map<N4JSProjectName, Path> getNestedProjects(Path projectPath) {
-		Map<N4JSProjectName, Path> result = new HashMap<>();
+	private static Map<N4JSPackageName, Path> getNestedProjects(Path projectPath) {
+		Map<N4JSPackageName, Path> result = new HashMap<>();
 		Path nodeModulesPath = projectPath.resolve(N4JSGlobals.NODE_MODULES);
 		if (Files.exists(nodeModulesPath)) {
 			for (File childDir : nodeModulesPath.toFile().listFiles(File::isDirectory)) {
 				if (childDir.getName().startsWith("@")) {
 					for (File grandChildDir : childDir.listFiles(File::isDirectory)) {
 						if (isNpmPackage(grandChildDir.toPath())) {
-							result.put(new N4JSProjectName(childDir.getName() + '/' + grandChildDir.getName()),
+							result.put(new N4JSPackageName(childDir.getName() + '/' + grandChildDir.getName()),
 									grandChildDir.toPath());
 						}
 					}
 				} else if (isNpmPackage(childDir.toPath())) {
-					result.put(new N4JSProjectName(childDir.getName()), childDir.toPath());
+					result.put(new N4JSPackageName(childDir.getName()), childDir.toPath());
 				}
 			}
 		}
@@ -346,7 +345,7 @@ public class N4jsLibsAccess {
 				&& Files.isReadable(path.resolve(N4JSGlobals.PACKAGE_JSON));
 	}
 
-	private static Path toProjectPath(Path location, N4JSProjectName projectName) {
+	private static Path toProjectPath(Path location, N4JSPackageName projectName) {
 		String projectNameAsPath = projectName.getRawName().replace('/', File.separatorChar);
 		return location.resolve(projectNameAsPath);
 	}
@@ -373,5 +372,14 @@ public class N4jsLibsAccess {
 				Files.exists(n4jsRuntimeLink));
 		Assert.assertTrue("src-gen folder in n4js-runtime does not exist: " + n4jsRuntimeSrcGen + warning,
 				Files.isDirectory(n4jsRuntimeSrcGen));
+	}
+
+	/**
+	 * @return file {@code n4js-runtime/n4jsglobals.d.ts}
+	 */
+	public static Path getN4JSGlobalsDTS() {
+		Path n4jsRuntimePath = findN4jsLib(N4JSGlobals.N4JS_RUNTIME);
+		Path n4jsGlobalsDts = n4jsRuntimePath.resolve(N4JSGlobals.N4JS_GLOBALS_DTS);
+		return n4jsGlobalsDts;
 	}
 }

@@ -48,15 +48,15 @@ let ag52 = async function * () : void {
 
 // return with expression is not ok when void
 let g53 = function * () : void {
-	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	// XPECT errors --> "1 is not a subtype of undefined." at "1"
 	yield 1;
-	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	// XPECT errors --> "1 is not a subtype of undefined." at "1"
 	return 1;
 }
 let ag53 = async function * () : void {
-	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	// XPECT errors --> "1 is not a subtype of undefined." at "1"
 	yield 1;
-	// XPECT errors --> "int is not a subtype of undefined." at "1"
+	// XPECT errors --> "1 is not a subtype of undefined." at "1"
 	return 1;
 }
 

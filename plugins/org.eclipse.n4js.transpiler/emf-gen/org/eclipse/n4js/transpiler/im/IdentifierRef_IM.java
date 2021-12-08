@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.im;
 
 import org.eclipse.n4js.n4JS.IdentifierRef;
+
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**
@@ -20,7 +21,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  *
  * <!-- begin-model-doc -->
  * SymbolTable-aware replacement for {@link IdentifierRef}.
- * Original property {@link IdentifierRef.id} is always {@code null}.
+ * Original property {@link IdentifierRef#getId()} is always {@code null}.
  * <!-- end-model-doc -->
  *
  *

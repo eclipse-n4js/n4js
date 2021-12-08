@@ -45,7 +45,6 @@ ruleScriptElement:
 			?
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4ClassDeclaration
 		)
@@ -58,7 +57,6 @@ ruleScriptElement:
 			?
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4InterfaceDeclaration
 		)
@@ -69,7 +67,6 @@ ruleScriptElement:
 			'enum'
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4EnumDeclaration
 		)
@@ -136,7 +133,6 @@ ruleAnnotatedScriptElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
-			ruleVersionDeclaration?
 			ruleTypeParameters?
 			ruleClassExtendsImplements?
 			    |
@@ -146,7 +142,6 @@ ruleAnnotatedScriptElement:
 			ruleTypingStrategyDefSiteOperator
 			?
 			ruleBindingIdentifier
-			ruleVersionDeclaration?
 			ruleTypeParameters?
 			ruleInterfaceExtendsList?
 		)
@@ -156,7 +151,6 @@ ruleAnnotatedScriptElement:
 		*
 		'enum'
 		ruleBindingIdentifier
-		ruleVersionDeclaration?
 		'{'
 		ruleN4EnumLiteral
 		(
@@ -263,7 +257,6 @@ ruleExportableElement:
 			?
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4ClassDeclaration
 		)
@@ -276,7 +269,6 @@ ruleExportableElement:
 			?
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4InterfaceDeclaration
 		)
@@ -287,7 +279,6 @@ ruleExportableElement:
 			'enum'
 			ruleBindingIdentifier
 			?
-			ruleVersionDeclaration?
 			)=>
 			ruleN4EnumDeclaration
 		)
@@ -642,7 +633,6 @@ ruleFunctionHeader:
 	ruleTypeParameters?
 	ruleBindingIdentifier
 	?
-	ruleVersionDeclaration?
 	ruleStrictFormalParameters
 	(
 		(':')=>
@@ -655,7 +645,6 @@ norm1_FunctionHeader:
 	ruleTypeParameters?
 	norm1_BindingIdentifier
 	?
-	ruleVersionDeclaration?
 	ruleStrictFormalParameters
 	(
 		(':')=>
@@ -668,7 +657,6 @@ norm2_FunctionHeader:
 	ruleTypeParameters?
 	ruleBindingIdentifier
 	?
-	ruleVersionDeclaration?
 	norm1_StrictFormalParameters
 	(
 		(':')=>
@@ -681,7 +669,6 @@ norm3_FunctionHeader:
 	ruleTypeParameters?
 	norm1_BindingIdentifier
 	?
-	ruleVersionDeclaration?
 	norm1_StrictFormalParameters
 	(
 		(':')=>
@@ -807,7 +794,7 @@ ruleArrowExpression:
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 		)=>
 		(
 			ruleStrictFormalParameters
@@ -829,7 +816,7 @@ ruleArrowExpression:
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 	)
 	(
 		(
@@ -866,7 +853,7 @@ norm1_ArrowExpression:
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 		)=>
 		(
 			ruleStrictFormalParameters
@@ -888,7 +875,7 @@ norm1_ArrowExpression:
 			    |
 			ruleBindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 	)
 	(
 		(
@@ -925,7 +912,7 @@ norm2_ArrowExpression:
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 		)=>
 		(
 			norm1_StrictFormalParameters
@@ -947,7 +934,7 @@ norm2_ArrowExpression:
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 	)
 	(
 		(
@@ -984,7 +971,7 @@ norm3_ArrowExpression:
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 		)=>
 		(
 			norm1_StrictFormalParameters
@@ -1006,7 +993,7 @@ norm3_ArrowExpression:
 			    |
 			norm1_BindingIdentifierAsFormalParameter
 		)
-		'=>'
+		ruleArrow
 	)
 	(
 		(
@@ -1129,6 +1116,11 @@ ruleN4TypeVariable:
 	(
 		'extends'
 		ruleTypeReferenceNode
+	)?
+	(
+		'='
+		ruleTypeReferenceNode
+		?
 	)?
 ;
 
@@ -2790,22 +2782,12 @@ norm1_ParenExpression:
 
 // Rule IdentifierRef
 ruleIdentifierRef:
-	(
-		ruleBindingIdentifier
-		    |
-		ruleBindingIdentifier
-		ruleVersionRequest
-	)
+	ruleBindingIdentifier
 ;
 
 // Rule IdentifierRef
 norm1_IdentifierRef:
-	(
-		norm1_BindingIdentifier
-		    |
-		norm1_BindingIdentifier
-		ruleVersionRequest
-	)
+	norm1_BindingIdentifier
 ;
 
 // Rule SuperLiteral
@@ -6075,7 +6057,7 @@ ruleAssignmentExpression:
 				    |
 				ruleBindingIdentifierAsFormalParameter
 			)
-			'=>'
+			ruleArrow
 			)=>
 			ruleArrowExpression
 		)
@@ -6129,7 +6111,7 @@ norm1_AssignmentExpression:
 				    |
 				ruleBindingIdentifierAsFormalParameter
 			)
-			'=>'
+			ruleArrow
 			)=>
 			norm1_ArrowExpression
 		)
@@ -6183,7 +6165,7 @@ norm2_AssignmentExpression:
 				    |
 				norm1_BindingIdentifierAsFormalParameter
 			)
-			'=>'
+			ruleArrow
 			)=>
 			norm2_ArrowExpression
 		)
@@ -6239,7 +6221,7 @@ norm3_AssignmentExpression:
 				    |
 				norm1_BindingIdentifierAsFormalParameter
 			)
-			'=>'
+			ruleArrow
 			)=>
 			norm3_ArrowExpression
 		)
@@ -6689,6 +6671,11 @@ ruleNoLineTerminator:
 	RULE_NO_LINE_TERMINATOR?
 ;
 
+// Rule NoWhiteSpace
+ruleNoWhiteSpace:
+	RULE_NO_WHITE_SPACE?
+;
+
 // Rule Annotation
 ruleAnnotation:
 	'@'
@@ -6706,9 +6693,10 @@ ruleAnnotationNoAtSign:
 	ruleAnnotationName
 	(
 		(
-			('(')=>
-			'('
+			(ruleNoWhiteSpace)=>
+			ruleNoWhiteSpace
 		)
+		'('
 		(
 			ruleAnnotationArgument
 			(
@@ -6723,7 +6711,10 @@ ruleAnnotationNoAtSign:
 // Rule AnnotationArgument
 ruleAnnotationArgument:
 	(
-		ruleLiteralAnnotationArgument
+		(
+			(ruleLiteralAnnotationArgument)=>
+			ruleLiteralAnnotationArgument
+		)
 		    |
 		ruleTypeRefAnnotationArgument
 	)
@@ -6817,7 +6808,6 @@ ruleN4ClassDeclaration:
 		?
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
@@ -6826,7 +6816,6 @@ ruleN4ClassDeclaration:
 		?
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 	)
 	ruleTypeParameters?
 	ruleClassExtendsImplements?
@@ -6948,7 +6937,6 @@ ruleN4InterfaceDeclaration:
 		?
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
@@ -6957,7 +6945,6 @@ ruleN4InterfaceDeclaration:
 		?
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 	)
 	ruleTypeParameters?
 	ruleInterfaceExtendsList?
@@ -6986,14 +6973,12 @@ ruleN4EnumDeclaration:
 		'enum'
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
 		'enum'
 		ruleBindingIdentifier
 		?
-		ruleVersionDeclaration?
 	)
 	'{'
 	(
@@ -7217,9 +7202,9 @@ ruleN4MemberDeclaration:
 			ruleN4MethodDeclaration
 		)
 		    |
-		ruleN4FieldDeclaration
+		ruleN4CallSignatureDeclaration
 		    |
-		ruleN4CallableConstructorDeclaration
+		ruleN4FieldDeclaration
 	)
 ;
 
@@ -7404,9 +7389,9 @@ norm1_N4MemberDeclaration:
 			norm1_N4MethodDeclaration
 		)
 		    |
-		norm1_N4FieldDeclaration
+		norm1_N4CallSignatureDeclaration
 		    |
-		norm1_N4CallableConstructorDeclaration
+		norm1_N4FieldDeclaration
 	)
 ;
 
@@ -7629,6 +7614,18 @@ ruleAnnotatedN4MemberDeclaration:
 					('(')=>
 					ruleMethodParamsReturnAndBody
 				)
+			)
+		)
+		';'?
+		    |
+		(
+			(ruleTypeParameters?
+			'('
+			)=>
+			ruleTypeParameters?
+			(
+				('(')=>
+				ruleMethodParamsReturnAndBody
 			)
 		)
 		';'?
@@ -7860,6 +7857,18 @@ norm1_AnnotatedN4MemberDeclaration:
 		)
 		';'?
 		    |
+		(
+			(ruleTypeParameters?
+			'('
+			)=>
+			ruleTypeParameters?
+			(
+				('(')=>
+				ruleMethodParamsReturnAndBody
+			)
+		)
+		';'?
+		    |
 		norm1_FieldDeclarationImpl
 	)
 ;
@@ -7980,14 +7989,16 @@ norm1_N4MethodDeclaration:
 	';'?
 ;
 
-// Rule N4CallableConstructorDeclaration
-ruleN4CallableConstructorDeclaration:
+// Rule N4CallSignatureDeclaration
+ruleN4CallSignatureDeclaration:
+	ruleTypeParameters?
 	ruleMethodParamsReturnAndBody
 	';'?
 ;
 
-// Rule N4CallableConstructorDeclaration
-norm1_N4CallableConstructorDeclaration:
+// Rule N4CallSignatureDeclaration
+norm1_N4CallSignatureDeclaration:
+	ruleTypeParameters?
 	ruleMethodParamsReturnAndBody
 	';'?
 ;
@@ -8803,11 +8814,6 @@ ruleJSXPropertyAttribute:
 	)?
 ;
 
-// Rule VersionDeclaration
-ruleVersionDeclaration:
-	RULE_VERSION
-;
-
 // Rule TypeRef
 ruleTypeRef:
 	ruleIntersectionTypeExpression
@@ -8871,16 +8877,18 @@ ruleArrayTypeExpression:
 // Rule PrimaryTypeExpression
 rulePrimaryTypeExpression:
 	(
+		ruleLiteralTypeRef
+		    |
 		(
 			('('
 			ruleTAnonymousFormalParameterList
 			')'
-			'=>'
+			ruleArrow
 			)=>
 			ruleArrowFunctionTypeExpression
 		)
 		    |
-		ruleIterableTypeExpression
+		ruleArrayNTypeExpression
 		    |
 		ruleTypeRefWithModifiers
 		    |
@@ -8929,7 +8937,7 @@ ruleTypeRefFunctionTypeExpression:
 	(
 		ruleParameterizedTypeRef
 		    |
-		ruleIterableTypeExpression
+		ruleArrayNTypeExpression
 		    |
 		ruleTypeTypeRef
 		    |
@@ -8952,6 +8960,55 @@ ruleTypeArgInTypeTypeRef:
 			ruleWildcardOldNotation
 		)
 	)
+;
+
+// Rule LiteralTypeRef
+ruleLiteralTypeRef:
+	(
+		ruleBooleanLiteralTypeRef
+		    |
+		ruleNumericLiteralTypeRef
+		    |
+		ruleStringLiteralTypeRef
+	)
+;
+
+// Rule BooleanLiteralTypeRef
+ruleBooleanLiteralTypeRef:
+	(
+		'true'
+		    |
+		'false'
+	)
+;
+
+// Rule NumericLiteralTypeRef
+ruleNumericLiteralTypeRef:
+	(
+		'+'
+		    |
+		'-'
+	)?
+	(
+		RULE_INT
+		    |
+		RULE_DOUBLE
+		    |
+		RULE_OCTAL_INT
+		    |
+		RULE_LEGACY_OCTAL_INT
+		    |
+		RULE_HEX_INT
+		    |
+		RULE_BINARY_INT
+		    |
+		RULE_SCIENTIFIC_INT
+	)
+;
+
+// Rule StringLiteralTypeRef
+ruleStringLiteralTypeRef:
+	RULE_STRING
 ;
 
 // Rule ThisTypeRef
@@ -9011,12 +9068,12 @@ ruleArrowFunctionTypeExpression:
 		('('
 		ruleTAnonymousFormalParameterList
 		')'
-		'=>'
+		ruleArrow
 		)=>
 		'('
 		ruleTAnonymousFormalParameterList
 		')'
-		'=>'
+		ruleArrow
 	)
 	rulePrimaryTypeExpression
 ;
@@ -9097,12 +9154,7 @@ ruleParameterizedTypeRef:
 
 // Rule ParameterizedTypeRefNominal
 ruleParameterizedTypeRefNominal:
-	(
-		ruleTypeReference
-		    |
-		ruleTypeReference
-		ruleVersionRequest
-	)
+	ruleTypeReference
 	(
 		('<')=>
 		ruleTypeArguments
@@ -9111,14 +9163,8 @@ ruleParameterizedTypeRefNominal:
 
 // Rule ParameterizedTypeRefStructural
 ruleParameterizedTypeRefStructural:
-	(
-		ruleTypingStrategyUseSiteOperator
-		ruleTypeReference
-		    |
-		ruleTypingStrategyUseSiteOperator
-		ruleTypeReference
-		ruleVersionRequest
-	)
+	ruleTypingStrategyUseSiteOperator
+	ruleTypeReference
 	(
 		('<')=>
 		ruleTypeArguments
@@ -9129,8 +9175,8 @@ ruleParameterizedTypeRefStructural:
 	)?
 ;
 
-// Rule IterableTypeExpression
-ruleIterableTypeExpression:
+// Rule ArrayNTypeExpression
+ruleArrayNTypeExpression:
 	'['
 	(
 		ruleEmptyIterableTypeExpressionTail
@@ -9147,11 +9193,6 @@ ruleIterableTypeExpression:
 // Rule EmptyIterableTypeExpressionTail
 ruleEmptyIterableTypeExpressionTail:
 	']'
-;
-
-// Rule VersionRequest
-ruleVersionRequest:
-	RULE_VERSION
 ;
 
 // Rule TypeArguments
@@ -9197,8 +9238,17 @@ ruleTStructMember:
 		)
 		    |
 		(
-			(ruleTypeVariables?
+			((
+				'<'
+				ruleTypeVariable
+				(
+					','
+					ruleTypeVariable
+				)*
+				'>'
+			)?
 			ruleIdentifierName
+			?
 			'('
 			)=>
 			ruleTStructMethod
@@ -9211,28 +9261,35 @@ ruleTStructMember:
 // Rule TStructMethod
 ruleTStructMethod:
 	(
-		(ruleTypeVariables?
+		((
+			'<'
+			ruleTypeVariable
+			(
+				','
+				ruleTypeVariable
+			)*
+			'>'
+		)?
 		ruleIdentifierName
+		?
 		'('
 		)=>
-		ruleTypeVariables?
+		(
+			'<'
+			ruleTypeVariable
+			(
+				','
+				ruleTypeVariable
+			)*
+			'>'
+		)?
 		ruleIdentifierName
+		?
 		'('
 	)
 	ruleTAnonymousFormalParameterList
 	')'
 	ruleColonSepReturnTypeRef?
-;
-
-// Rule TypeVariables
-ruleTypeVariables:
-	'<'
-	ruleTypeVariable
-	(
-		','
-		ruleTypeVariable
-	)*
-	'>'
 ;
 
 // Rule ColonSepTypeRef
@@ -9378,6 +9435,10 @@ ruleTypeVariable:
 	RULE_IDENTIFIER
 	(
 		'extends'
+		ruleTypeRef
+	)?
+	(
+		'='
 		ruleTypeRef
 	)?
 ;
@@ -9547,6 +9608,12 @@ ruleN4Keyword:
 	)
 ;
 
+// Rule Arrow
+ruleArrow:
+	'='
+	'>'
+;
+
 // Rule VariableStatementKeyword
 ruleVariableStatementKeyword:
 	(
@@ -9663,31 +9730,7 @@ ruleN4ModifierWithoutConst:
 	)
 ;
 
-RULE_DOUBLE : ('.' RULE_DECIMAL_DIGIT_FRAGMENT+ RULE_EXPONENT_PART?|RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT* RULE_EXPONENT_PART?);
-
-RULE_HEX_INT : '0' ('x'|'X') RULE_INT_SUFFIX;
-
-RULE_BINARY_INT : '0' ('b'|'B') RULE_INT_SUFFIX;
-
-RULE_OCTAL_INT : '0' ('o'|'O') RULE_INT_SUFFIX;
-
-RULE_LEGACY_OCTAL_INT : '0' RULE_DECIMAL_DIGIT_FRAGMENT RULE_INT_SUFFIX;
-
-fragment RULE_INT_SUFFIX : RULE_IDENTIFIER_PART*;
-
-RULE_SCIENTIFIC_INT : RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT RULE_EXPONENT_PART;
-
-fragment RULE_EXPONENT_PART : (('e'|'E') RULE_SIGNED_INT|RULE_IDENTIFIER);
-
-fragment RULE_SIGNED_INT : ('+'|'-') RULE_DECIMAL_DIGIT_FRAGMENT+ RULE_IDENTIFIER?;
-
-RULE_STRING : ('"' RULE_DOUBLE_STRING_CHAR* '"'?|'\'' RULE_SINGLE_STRING_CHAR* '\''?);
-
 RULE_HASH_BANG : '#!' ~(RULE_LINE_TERMINATOR_FRAGMENT)*;
-
-fragment RULE_DOUBLE_STRING_CHAR : (~((RULE_LINE_TERMINATOR_FRAGMENT|'"'|'\\'))|'\\' (RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT|~(RULE_LINE_TERMINATOR_FRAGMENT))?);
-
-fragment RULE_SINGLE_STRING_CHAR : (~((RULE_LINE_TERMINATOR_FRAGMENT|'\''|'\\'))|'\\' (RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT|~(RULE_LINE_TERMINATOR_FRAGMENT))?);
 
 fragment RULE_BACKSLASH_SEQUENCE : '\\' ~(RULE_LINE_TERMINATOR_FRAGMENT)?;
 
@@ -9717,11 +9760,37 @@ fragment RULE_TEMPLATE_CONTINUATION : '//4';
 
 RULE_NO_LINE_TERMINATOR : '//5';
 
+RULE_NO_WHITE_SPACE : '//6';
+
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w'|'\u2205') '~';
 
 RULE_IDENTIFIER : RULE_IDENTIFIER_START RULE_IDENTIFIER_PART*;
 
 RULE_INT : RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT;
+
+RULE_DOUBLE : ('.' RULE_DECIMAL_DIGIT_FRAGMENT+ RULE_EXPONENT_PART?|RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT* RULE_EXPONENT_PART?);
+
+RULE_BINARY_INT : '0' ('b'|'B') RULE_INT_SUFFIX;
+
+RULE_OCTAL_INT : '0' ('o'|'O') RULE_INT_SUFFIX;
+
+RULE_LEGACY_OCTAL_INT : '0' RULE_DECIMAL_DIGIT_FRAGMENT RULE_INT_SUFFIX;
+
+RULE_HEX_INT : '0' ('x'|'X') RULE_INT_SUFFIX;
+
+fragment RULE_INT_SUFFIX : RULE_IDENTIFIER_PART*;
+
+RULE_SCIENTIFIC_INT : RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT RULE_EXPONENT_PART;
+
+fragment RULE_EXPONENT_PART : (('e'|'E') RULE_SIGNED_INT|RULE_IDENTIFIER);
+
+fragment RULE_SIGNED_INT : ('+'|'-') RULE_DECIMAL_DIGIT_FRAGMENT+ RULE_IDENTIFIER?;
+
+RULE_STRING : ('"' RULE_DOUBLE_STRING_CHAR* '"'?|'\'' RULE_SINGLE_STRING_CHAR* '\''?);
+
+fragment RULE_DOUBLE_STRING_CHAR : (~((RULE_LINE_TERMINATOR_FRAGMENT|'"'|'\\'))|'\\' (RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT|~(RULE_LINE_TERMINATOR_FRAGMENT))?);
+
+fragment RULE_SINGLE_STRING_CHAR : (~((RULE_LINE_TERMINATOR_FRAGMENT|'\''|'\\'))|'\\' (RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT|~(RULE_LINE_TERMINATOR_FRAGMENT))?);
 
 RULE_ML_COMMENT : RULE_ML_COMMENT_FRAGMENT {skip();};
 
@@ -9738,8 +9807,6 @@ fragment RULE_IDENTIFIER_START : (RULE_UNICODE_LETTER_FRAGMENT|'$'|'_'|RULE_UNIC
 fragment RULE_IDENTIFIER_PART : (RULE_UNICODE_LETTER_FRAGMENT|RULE_UNICODE_ESCAPE_FRAGMENT|'$'|RULE_UNICODE_COMBINING_MARK_FRAGMENT|RULE_UNICODE_DIGIT_FRAGMENT|RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT|RULE_ZWNJ|RULE_ZWJ);
 
 RULE_DOT_DOT : '..';
-
-RULE_VERSION : '#' RULE_WS* RULE_INT;
 
 fragment RULE_HEX_DIGIT : (RULE_DECIMAL_DIGIT_FRAGMENT|'a'..'f'|'A'..'F');
 

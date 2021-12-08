@@ -38,13 +38,13 @@ import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
 import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
 import org.eclipse.n4js.xtext.ide.server.build.ConcurrentIndex;
-import org.eclipse.n4js.xtext.ide.server.issues.LSPIssueToLSPDiagnosticConverter;
-import org.eclipse.n4js.xtext.server.LSPIssue;
+import org.eclipse.n4js.xtext.ide.server.issues.IssueToDiagnosticConverter;
 import org.eclipse.xtext.ide.server.UriExtensions;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Strings;
@@ -58,7 +58,7 @@ import com.google.inject.Singleton;
 /**
  * Infrastructure for LSP code actions
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings("restriction")
 @Singleton
 public class N4JSCodeActionService implements ICodeActionService2 {
 
@@ -196,7 +196,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private TextDocumentFrontend textDocumentFrontend;
 
 	@Inject
-	private LSPIssueToLSPDiagnosticConverter diagnosticIssueConverter;
+	private IssueToDiagnosticConverter diagnosticIssueConverter;
 
 	@Inject
 	private UriExtensions uriExtensions;
@@ -279,10 +279,11 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	}
 
 	/** Finds quick-fixes for the given issue code and adds these quick-fixes to the acceptor iff available. */
-	public void findQuickfixes(String code, Options options, CodeActionAcceptor acceptor) {
-		for (QuickFixImplementation qfix : quickfixMap.get(code)) {
+	public void findQuickfixes(Either<String, Integer> code, Options options, CodeActionAcceptor acceptor) {
+		String diagCode = code.getLeft();
+		for (QuickFixImplementation qfix : quickfixMap.get(diagCode)) {
 			ICodeActionAcceptor accTmp = qfix.multiFix ? new MultiQuickfixAcceptor(qfix.id, acceptor) : acceptor;
-			qfix.compute(code, options, accTmp);
+			qfix.compute(diagCode, options, accTmp);
 		}
 	}
 
@@ -347,10 +348,10 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		ResourceTaskManager resourceTaskManager = languageServer.getResourceTaskManager();
 		resourceTaskManager.<Void> runInTemporaryContext(uri, "doApplyToFile", false, cancelIndicator, (ofc, ci) -> {
 			XtextResource res = ofc.getResource();
-			List<? extends LSPIssue> issues = ofc.resolveAndValidateResource(ci);
+			List<? extends Issue> issues = ofc.resolveAndValidateResource(ci);
 
 			XDocument doc = ofc.getDocument();
-			for (LSPIssue issue : issues) {
+			for (Issue issue : issues) {
 				if (issueCode.equals(issue.getCode())) {
 					Options newOptions = createOptions(res, doc, textDocId, issue, ci);
 					quickfix.compute(issueCode, newOptions, collector);
@@ -363,7 +364,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	}
 
 	private Options createOptions(XtextResource res, XDocument doc, TextDocumentIdentifier docIdentifier,
-			LSPIssue issue, CancelIndicator cancelIndicator) {
+			Issue issue, CancelIndicator cancelIndicator) {
 		Diagnostic diagnostic = diagnosticIssueConverter.toDiagnostic(issue);
 		CodeActionContext context = new CodeActionContext(Collections.singletonList(diagnostic));
 		CodeActionParams codeActionParams = new CodeActionParams(docIdentifier, diagnostic.getRange(), context);

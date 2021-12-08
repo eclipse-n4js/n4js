@@ -49,7 +49,7 @@ public enum PackageJsonProperties {
 	DEPENDENCIES(UtilN4.PACKAGE_JSON__DEPENDENCIES, "Dependencies of this npm", JSONObject.class),
 	/** Key of package.json property "devDependences". */
 	DEV_DEPENDENCIES(UtilN4.PACKAGE_JSON__DEV_DEPENDENCIES, "Development dependencies of this npm", JSONObject.class),
-	/** Key of package.json property "main". */
+	/** Key of node's standard, top-level package.json property "main". Do not confuse with {@link #MAIN_MODULE}. */
 	MAIN("main", "Main module. Path is relative to package root"),
 
 	// Yarn properties
@@ -92,7 +92,7 @@ public enum PackageJsonProperties {
 	SOURCES(UtilN4.PACKAGE_JSON__SOURCES, "Source folders", JSONObject.class, N4JS),
 	/** Key of package.json property "moduleFilters". */
 	MODULE_FILTERS("moduleFilters", "", JSONObject.class, N4JS),
-	/** Key of package.json property "mainModule". */
+	/** Key of the N4JS-specific package.json property "mainModule". Do not confuse with {@link #MAIN}. */
 	MAIN_MODULE("mainModule", "Main module specifier. Starts from source folder(s)", "index", N4JS),
 	/** Key of package.json property "testedProjects". */
 	TESTED_PROJECTS("testedProjects", "Projects that are tested by this project", JSONArray.class, N4JS),
@@ -119,7 +119,17 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "source" inside "sources". */
 	SOURCE("source", "List of source folders", JSONArray.class, N4JS, SOURCES),
 	/** Key of package.json property "test" inside "sources". */
-	TEST("test", "List of source folders for tests", JSONArray.class, N4JS, SOURCES);
+	TEST("test", "List of source folders for tests", JSONArray.class, N4JS, SOURCES),
+
+	/** Key of package.json property "generator". */
+	GENERATOR("generator", "Configurations for the generator", JSONObject.class, N4JS),
+	/** Key of package.json property "generator"/"source-maps". */
+	GENERATOR_SOURCE_MAPS("source-maps", "Turn on/off generation of source maps", JSONBooleanLiteral.class, true,
+			N4JS, GENERATOR),
+	/** Key of package.json property "generator"/"d.ts". */
+	GENERATOR_DTS("d.ts", "Turn on/off generation of d.ts files", JSONBooleanLiteral.class, false, N4JS, GENERATOR),
+
+	;
 
 	/** section of the property within the package.json as a path of parents starting at the top level */
 	final public PackageJsonProperties[] parents;
@@ -128,7 +138,7 @@ public enum PackageJsonProperties {
 	/** description of the property */
 	final public String description;
 	/** default value of the property if the property is missing or null */
-	final public String defaultValue;
+	final public Object defaultValue;
 	/** json value type of the property */
 	final public Class<? extends JSONValue> valueType;
 
@@ -149,7 +159,7 @@ public enum PackageJsonProperties {
 	}
 
 	private PackageJsonProperties(String name, String description, Class<? extends JSONValue> valueType,
-			String defaultValue, PackageJsonProperties... parents) {
+			Object defaultValue, PackageJsonProperties... parents) {
 
 		this.parents = parents;
 		this.name = name;
@@ -175,6 +185,9 @@ public enum PackageJsonProperties {
 
 	/** @return the result of {@link Enum#valueOf(Class, String)} or null. Does not throw an {@link Exception}. */
 	static public PackageJsonProperties valueOfNameValuePairOrNull(NameValuePair nvPair) {
+		if (nvPair.getName() == null || nvPair.getValue() == null) {
+			return null; // syntax error in JSON file
+		}
 		Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = nameToEnum.get(nvPair.getName());
 		if (typeMap != null) {
 			Class<? extends JSONValue> valueClass = nvPair.getValue().getClass();

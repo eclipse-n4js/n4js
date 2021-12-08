@@ -47,9 +47,7 @@ public enum JavaScriptVariant {
 	/** N4JS mode */
 	n4js,
 	/** external mode */
-	external,
-	/** N4IDL mode */
-	n4idl;
+	external;
 
 	private final static Logger LOGGER = Logger.getLogger(JavaScriptVariant.class);
 

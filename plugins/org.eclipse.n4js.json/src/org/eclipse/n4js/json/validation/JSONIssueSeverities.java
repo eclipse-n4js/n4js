@@ -23,7 +23,6 @@ import org.eclipse.xtext.validation.SeverityConverter;
  * 
  * Provides issue severities based on JSON-related issue codes of {@link JSONIssueCodes}.
  */
-@SuppressWarnings("restriction")
 public class JSONIssueSeverities extends IssueSeverities {
 	@SuppressWarnings("javadoc")
 	protected final Map<String, PreferenceKey> configurableIssueCodes;

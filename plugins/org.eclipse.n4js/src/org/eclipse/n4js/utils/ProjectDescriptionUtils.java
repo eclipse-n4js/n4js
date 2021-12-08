@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
@@ -27,7 +26,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.workspace.locations.SafeURI;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.naming.QualifiedName;
 
 import com.google.common.base.Joiner;
@@ -44,9 +43,6 @@ public class ProjectDescriptionUtils {
 	public static final String NPM_SCOPE_PREFIX = "@";
 	/** Character used in N4JS project names for separating the scope name from the plain project name. */
 	public static final char NPM_SCOPE_SEPARATOR = '/';
-	/** Like {@link #NPM_SCOPE_SEPARATOR}, but used in Eclipse project names. Obsolete: no longer used. */
-	@Deprecated
-	public static final char NPM_SCOPE_SEPARATOR_ECLIPSE = ':';
 
 	/**
 	 * Regular expression for valid package.json identifier (e.g. package name, vendor ID).
@@ -89,17 +85,9 @@ public class ProjectDescriptionUtils {
 	 * </tr>
 	 * <tr>
 	 * <td>N4JS project name</td>
-	 * <td>The value the value returned by {@link ProjectDescription#getName()}. Always equal to<br>
+	 * <td>The value the value returned by {@link ProjectDescription#getPackageName()}. Always equal to<br>
 	 * the value of the top-level property "name" in the project's <code>package.json</code> file.</td>
 	 * <td>{@code @myScope/myProject}</td>
-	 * </tr>
-	 * <tr>
-	 * <td>Eclipse project name<br>
-	 * (obsolete; no longer used)</td>
-	 * <td>The value returned by {@link IProject#getName()}. Different from the N4JS project name,<br>
-	 * because Eclipse does not support NPM's scope separator character {@value #NPM_SCOPE_SEPARATOR} in project
-	 * names.</td>
-	 * <td>{@code @myScope:myProject}</td>
 	 * </tr>
 	 * <tr>
 	 * <td>plain project name</td>
@@ -114,8 +102,8 @@ public class ProjectDescriptionUtils {
 	 * </tr>
 	 * </table>
 	 * In case the intended meaning is apparent from the context, the "N4JS project name" can simply be referred to as
-	 * "project name" (as is common practice in the context of npm). For non-scoped projects, the N4JS project name, the
-	 * Eclipse project name, and the plain project name are equal.
+	 * "project name" (as is common practice in the context of npm). For non-scoped projects, the N4JS project name and
+	 * the plain project name are equal.
 	 * <p>
 	 * Due to conventions and rules we cannot influence, an N4JS project name including a scope has to be encoded in
 	 * {@link URI}s and {@link QualifiedName}s in various ways:
@@ -124,12 +112,6 @@ public class ProjectDescriptionUtils {
 	 * <th></th>
 	 * <th>Encoding</th>
 	 * <th>Example</th>
-	 * </tr>
-	 * <tr>
-	 * <td>{@link URI#isPlatform() platform URIs}</td>
-	 * <td>Scope and plain project name represented as <em>a single</em> segment.<br>
-	 * {@link #NPM_SCOPE_SEPARATOR_ECLIPSE} used as separator.</td>
-	 * <td>{@code platform:resource/@myScope:myProject}</td>
 	 * </tr>
 	 * <tr>
 	 * <td>{@link URI#isFile() file URIs}</td>
@@ -143,59 +125,59 @@ public class ProjectDescriptionUtils {
 	 * <td>{@code "@myScope/myProject"/"f"/"M"}</td>
 	 * </tr>
 	 * </table>
-	 * These encoding rules are implemented in methods {@link #deriveN4JSProjectNameFromURI(SafeURI)},
-	 * {@link N4JSProjectName#toQualifiedName()}, and {@link N4JSQualifiedNameConverter#toQualifiedName(String)}.
+	 * These encoding rules are implemented in methods {@link #deriveN4JSPackageNameFromURI(SafeURI)},
+	 * {@link N4JSPackageName#toQualifiedName()}, and {@link N4JSQualifiedNameConverter#toQualifiedName(String)}.
 	 */
-	public static boolean isProjectNameWithScope(String projectName) {
+	public static boolean isPackageNameWithScope(String projectName) {
 		return projectName != null
 				&& projectName.startsWith(NPM_SCOPE_PREFIX)
 				&& projectName.indexOf(NPM_SCOPE_SEPARATOR) >= 0;
 	}
 
 	/**
-	 * Given an N4JS project name that may or may not {@link #isProjectNameWithScope(String) include an npm scope}, this
+	 * Given an N4JS project name that may or may not {@link #isPackageNameWithScope(String) include an npm scope}, this
 	 * method returns the scope name or <code>null</code> if the given project name does not include an npm scope.
 	 * <p>
 	 * NOTE: the returned scope name includes the {@link #NPM_SCOPE_PREFIX}!
 	 * <p>
-	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
+	 * For details on N4JS project name handling, see {@link #isPackageNameWithScope(String)}.
 	 */
 	public static String getScopeName(String projectName) {
-		return isProjectNameWithScope(projectName)
+		return isPackageNameWithScope(projectName)
 				? projectName.substring(0, projectName.indexOf(NPM_SCOPE_SEPARATOR))
 				: null;
 	}
 
 	/**
-	 * Given an N4JS project name that may or may not {@link #isProjectNameWithScope(String) include an npm scope}, this
+	 * Given an N4JS project name that may or may not {@link #isPackageNameWithScope(String) include an npm scope}, this
 	 * method returns the plain project name without scope. If the given project name does not include an npm scope,
 	 * that name is returned without change.
 	 * <p>
-	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
+	 * For details on N4JS project name handling, see {@link #isPackageNameWithScope(String)}.
 	 */
-	public static String getPlainProjectName(String projectName) {
-		return isProjectNameWithScope(projectName)
+	public static String getPlainPackageName(String projectName) {
+		return isPackageNameWithScope(projectName)
 				? projectName.substring(projectName.indexOf(NPM_SCOPE_SEPARATOR) + 1)
 				: projectName;
 	}
 
 	/**
 	 * Tells if the given N4JS project name is valid, i.e. the name may include an npm scope as described
-	 * {@link #isProjectNameWithScope(String) here}.
+	 * {@link #isPackageNameWithScope(String) here}.
 	 */
 	public static boolean isValidProjectName(String name) {
 		String scopeName = getScopeName(name);
 		if (scopeName != null) {
-			String plainProjectName = getPlainProjectName(name);
-			return isValidScopeName(scopeName) && isValidPlainProjectName(plainProjectName);
+			String plainProjectName = getPlainPackageName(name);
+			return isValidScopeName(scopeName) && isValidPlainPackageName(plainProjectName);
 		}
-		return isValidPlainProjectName(name);
+		return isValidPlainPackageName(name);
 	}
 
 	/**
 	 * Tells if the given plain project name is valid.
 	 */
-	public static boolean isValidPlainProjectName(String name) {
+	public static boolean isValidPlainPackageName(String name) {
 		return isValidNpmPackageName(name);
 	}
 
@@ -218,36 +200,31 @@ public class ProjectDescriptionUtils {
 				&& IDENTIFIER_PATTERN.matcher(name).matches();
 	}
 
-	/** Same as {@link #deriveN4JSProjectNameFromURI(URI)}, accepting a {@link SafeURI}. */
-	public static String deriveN4JSProjectNameFromURI(SafeURI<?> location) {
+	/** Same as {@link #deriveN4JSPackageNameFromURI(URI)}, accepting a {@link SafeURI}. */
+	public static String deriveN4JSPackageNameFromURI(SafeURI<?> location) {
 		if (location == null) {
 			return null;
 		}
-		return deriveN4JSProjectNameFromURI(location.toURI());
+		return deriveN4JSPackageNameFromURI(location.toURI());
 	}
 
 	/**
-	 * Given a URI as used internally to identify N4JS projects, this method returns the corresponding N4JS project name
-	 * which may or may not {@link #isProjectNameWithScope(String) include an npm scope}. The given URI may be a
-	 * {@link URI#isFile() file URI} (headless case) or a {@link URI#isPlatform() platform URI} (UI case).
+	 * This method derives a N4JS project name including its scope from a given URI (iff scope folder exists).
 	 * <p>
-	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
+	 * <b>Attention:</b> Note that project names defined in packages.json files can differ from the names of their
+	 * parent folders. This method can usually be used safely in node_modules folders since we can assume that npm and
+	 * yarn create package folders according to the package names.
+	 * <p>
+	 * For details on N4JS project name handling, see {@link #isPackageNameWithScope(String)}.
 	 */
 	// keep aligned to #deriveN4JSProjectNameFromPath(Path) below!
-	public static String deriveN4JSProjectNameFromURI(URI uri) {
+	public static String deriveN4JSPackageNameFromURI(URI uri) {
 		if (uri == null) {
 			return null;
 		}
 		int segCount = uri.segmentCount();
 		String last = segCount > 0 ? uri.segment(segCount - 1) : null;
-		if (uri.isPlatform()) {
-			// due to Eclipse conventions we cannot influence, the scope name and plain project name are represented
-			// within a single segment in platform URIs:
-			if (last != null && last.startsWith(NPM_SCOPE_PREFIX)) {
-				last = replaceFirst(last, NPM_SCOPE_SEPARATOR_ECLIPSE, NPM_SCOPE_SEPARATOR);
-			}
-			return last;
-		} else if (uri.isFile()) {
+		if (uri.isFile()) {
 			// due to conventions we cannot influence, the scope name and plain project name are represented as two
 			// separate segments in file URIs:
 			String secondToLast = segCount > 1 ? uri.segment(segCount - 2) : null;
@@ -256,12 +233,12 @@ public class ProjectDescriptionUtils {
 			}
 			return last;
 		}
-		throw new IllegalArgumentException("neither a file nor a platform URI: " + uri);
+		throw new IllegalArgumentException("not a file URI: " + uri);
 	}
 
-	/** Same as {@link #deriveN4JSProjectNameFromURI(URI)}, but from a {@link Path path}. */
+	/** Same as {@link #deriveN4JSPackageNameFromURI(URI)}, but from a {@link Path path}. */
 	// keep aligned to #deriveN4JSProjectNameFromURI(URI) above!
-	public static String deriveN4JSProjectNameFromPath(Path path) {
+	public static String deriveN4JSPackageNameFromPath(Path path) {
 		if (path == null) {
 			return null;
 		}
@@ -276,44 +253,9 @@ public class ProjectDescriptionUtils {
 		return last;
 	}
 
-	/** Same as {@link #deriveN4JSProjectNameFromURI(URI)}, but from a {@link File file}. */
-	public static String deriveN4JSProjectNameFromFile(File file) {
-		return deriveN4JSProjectNameFromPath(file.toPath());
-	}
-
-	/**
-	 * Converts the given N4JS project name into an Eclipse project name. Returns given name unchanged if it does not
-	 * {@link #isProjectNameWithScope(String) include an npm scope}.
-	 * <p>
-	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
-	 */
-	public static String convertN4JSProjectNameToEclipseProjectName(String name) {
-		if (name != null && name.startsWith(NPM_SCOPE_PREFIX)) {
-			return replaceFirst(name, NPM_SCOPE_SEPARATOR, NPM_SCOPE_SEPARATOR_ECLIPSE);
-		}
-		return name;
-	}
-
-	/**
-	 * Converts the given Eclipse project name into an N4JS project name.
-	 * <p>
-	 * For details on N4JS project name handling, see {@link #isProjectNameWithScope(String)}.
-	 */
-	public static String convertEclipseProjectNameToN4JSProjectName(String name) {
-		if (name != null && name.startsWith(NPM_SCOPE_PREFIX)) {
-			return replaceFirst(name, NPM_SCOPE_SEPARATOR_ECLIPSE, NPM_SCOPE_SEPARATOR);
-		}
-		return name;
-	}
-
-	private static String replaceFirst(String str, char oldChar, char newChar) {
-		if (str != null) {
-			final int idx = str.indexOf(oldChar);
-			if (idx >= 0) {
-				return str.substring(0, idx) + newChar + str.substring(idx + 1);
-			}
-		}
-		return str;
+	/** Same as {@link #deriveN4JSPackageNameFromURI(URI)}, but from a {@link File file}. */
+	public static String deriveN4JSPackageNameFromFile(File file) {
+		return deriveN4JSPackageNameFromPath(file.toPath());
 	}
 
 	/**

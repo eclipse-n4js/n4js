@@ -159,17 +159,17 @@ class CommonJsImportsTransformation extends Transformation {
 	}
 
 	def private String computeNameForIntermediateDefaultImport(TModule targetModule) {
-		var projectNameRaw = targetModule.projectName;
-		if (projectNameRaw !== null) {
+		var packageNameRaw = targetModule.packageName;
+		if (packageNameRaw !== null) {
 			val n4jsdScopeWithSep = N4JSGlobals.N4JSD_SCOPE + ProjectDescriptionUtils.NPM_SCOPE_SEPARATOR;
-			if (projectNameRaw.startsWith(n4jsdScopeWithSep)) {
-				projectNameRaw = projectNameRaw.substring(n4jsdScopeWithSep.length);
+			if (packageNameRaw.startsWith(n4jsdScopeWithSep)) {
+				packageNameRaw = packageNameRaw.substring(n4jsdScopeWithSep.length);
 			}
 		}
 
-		val projectName = Strings.toIdentifier(projectNameRaw, '_');
+		val packageName = Strings.toIdentifier(packageNameRaw, '_');
 		val moduleName = Strings.toIdentifier(targetModule.qualifiedName, '_');
-		val baseName = "$cjsImport__" + projectName + "__" + moduleName;
+		val baseName = "$cjsImport__" + packageName + "__" + moduleName;
 
 		var idx = 0;
 		var candidate = baseName;

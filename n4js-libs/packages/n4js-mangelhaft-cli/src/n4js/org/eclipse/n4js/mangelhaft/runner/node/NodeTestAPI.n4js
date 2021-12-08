@@ -15,7 +15,6 @@ import NodeTestOptions from "org/eclipse/n4js/mangelhaft/runner/node/NodeTestOpt
 import {fsSafeAccessSync} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util/npm";
-import {isHTTP_re} from "org/eclipse/n4js/mangelhaft/util/npm";
 import * as child_process from "child_process";
 import * as lib_path from "path";
 import * as lib_url from "url";
@@ -38,17 +37,15 @@ export default public class NodeTestAPI {
     public static async exec(options: NodeTestOptions): void {
         log("options: %O", options);
 
-        if (!isHTTP_re.test(options.testCatalog)) {
-            // try to resolve file:
-            const file = lib_path.resolve(process.cwd(), options.testCatalog);
-            if (fsSafeAccessSync(file)) {
-                options.testCatalog = file;
-            } else { // try to resolve via NPM
-                try {
-                    options.testCatalog = require.resolve(options.testCatalog);
-                } catch (exc) {
-                    throw new Error(`Cannot resolve test catalog: ${options.testCatalog}`);
-                }
+        // try to resolve file:
+        const file = lib_path.resolve(process.cwd(), options.testCatalog);
+        if (fsSafeAccessSync(file)) {
+            options.testCatalog = file;
+        } else { // try to resolve via NPM
+            try {
+                options.testCatalog = require.resolve(options.testCatalog);
+            } catch (exc) {
+                throw new Error(`Cannot resolve test catalog: ${options.testCatalog}`);
             }
         }
 

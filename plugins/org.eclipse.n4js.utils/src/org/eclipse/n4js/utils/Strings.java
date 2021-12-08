@@ -157,4 +157,62 @@ abstract public class Strings {
 		}
 		return sb.toString();
 	}
+
+	/** Escapes all non-printable characters in the given string or replaces them by '?'. */
+	public static final String escapeNonPrintable(String str) {
+		StringBuilder result = new StringBuilder(str.length());
+		int i = 0;
+		while (i < str.length()) {
+			int codePoint = str.codePointAt(i);
+
+			switch (codePoint) {
+			case '\t':
+				result.append("\\t");
+				break;
+			case '\b':
+				result.append("\\b");
+				break;
+			case '\n':
+				result.append("\\n");
+				break;
+			case '\r':
+				result.append("\\r");
+				break;
+			case '\f':
+				result.append("\\f");
+				break;
+			case '\'':
+				result.append("\\'");
+				break;
+			case '\"':
+				result.append("\\\"");
+				break;
+			case '\\':
+				result.append("\\\\");
+				break;
+			default:
+				switch (Character.getType(codePoint)) {
+				case Character.CONTROL:
+				case Character.FORMAT:
+				case Character.PRIVATE_USE:
+				case Character.SURROGATE:
+				case Character.UNASSIGNED:
+					result.append("\\u");
+					String hexString = Integer.toHexString(codePoint);
+					for (int j = hexString.length(); j < 4; j++) {
+						result.append('0');
+					}
+					result.append(hexString);
+					break;
+				default:
+					result.append(Character.toChars(codePoint));
+					break;
+				}
+				break;
+			}
+
+			i += Character.charCount(codePoint);
+		}
+		return result.toString();
+	}
 }

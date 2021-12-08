@@ -36,7 +36,7 @@ import org.eclipse.n4js.cli.utils.BinariesUtils;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 
@@ -58,12 +58,11 @@ public class N4CliHelper {
 	/**
 	 * A black list of n4js-libs that are never copied into a headless compiler test workspace.
 	 */
-	private static final Set<N4JSProjectName> N4JS_LIBS_BLACKLIST = new HashSet<>(
+	private static final Set<N4JSPackageName> N4JS_LIBS_BLACKLIST = new HashSet<>(
 			Arrays.asList(
-					new N4JSProjectName("n4js-cli"),
-					new N4JSProjectName("org.eclipse.n4js.mangelhaft.test"),
-					new N4JSProjectName("org.eclipse.n4js.mangelhaft.assert.test"),
-					new N4JSProjectName("org.eclipse.n4js.mangelhaft.reporter.ide.test")));
+					new N4JSPackageName("n4js-cli"),
+					new N4JSPackageName("org.eclipse.n4js.mangelhaft.test"),
+					new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert.test")));
 
 	/**
 	 * @param expectedString
@@ -303,7 +302,7 @@ public class N4CliHelper {
 	 * Parameter {@code createYarnWorkspace} is inferred from number of directories in {@code sourceLocation}
 	 */
 	public static void setupWorkspace(Path sourceLocation, Path destinationLocation,
-			Predicate<N4JSProjectName> n4jsLibrariesPredicate) throws IOException {
+			Predicate<N4JSPackageName> n4jsLibrariesPredicate) throws IOException {
 
 		List<Path> fixtureSubFolders = Files.list(sourceLocation).filter(p -> Files.isDirectory(p))
 				.collect(Collectors.toList());
@@ -323,7 +322,7 @@ public class N4CliHelper {
 	 * @returns file indicating the relative path to the copied data set
 	 */
 	public static void setupWorkspace(Path sourceLocation, Path destinationLocation,
-			Predicate<N4JSProjectName> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
+			Predicate<N4JSPackageName> n4jsLibrariesPredicate, boolean createYarnWorkspace) throws IOException {
 
 		Path projectLocation = createYarnWorkspace ? destinationLocation.resolve(PACKAGES) : destinationLocation;
 
@@ -376,7 +375,7 @@ public class N4CliHelper {
 	 * Same as {@link #copyN4jsLibsToLocation(Path, Predicate)}, but the n4js libraries that are to be installed can be
 	 * provided by name instead of a predicate.
 	 */
-	public static void copyN4jsLibsToLocation(Path location, N4JSProjectName... n4jsLibs) throws IOException {
+	public static void copyN4jsLibsToLocation(Path location, N4JSPackageName... n4jsLibs) throws IOException {
 		copyN4jsLibsToLocation(location, libName -> org.eclipse.xtext.util.Arrays.contains(n4jsLibs, libName));
 	}
 
@@ -388,7 +387,7 @@ public class N4CliHelper {
 	 * @throws IOException
 	 *             In case the copying is not successful.
 	 */
-	public static void copyN4jsLibsToLocation(Path location, Predicate<N4JSProjectName> n4jsLibrariesPredicate)
+	public static void copyN4jsLibsToLocation(Path location, Predicate<N4JSPackageName> n4jsLibrariesPredicate)
 			throws IOException {
 
 		GlobalStateMemento originalGlobalState = null;

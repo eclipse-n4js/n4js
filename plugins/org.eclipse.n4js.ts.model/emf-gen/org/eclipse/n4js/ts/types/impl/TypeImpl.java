@@ -28,8 +28,6 @@ import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.typeRefs.Versionable;
 
 import org.eclipse.n4js.ts.types.ArrayLikes;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
@@ -274,16 +272,6 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * @generated
 	 */
 	@Override
-	public int getVersion() {
-		return 0;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TYPE__ANNOTATIONS:
@@ -365,11 +353,6 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 				default: return -1;
 			}
 		}
-		if (baseClass == Versionable.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -386,33 +369,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 				default: return -1;
 			}
 		}
-		if (baseClass == Versionable.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == TAnnotableElement.class) {
-			switch (baseOperationID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == Versionable.class) {
-			switch (baseOperationID) {
-				case TypeRefsPackage.VERSIONABLE___GET_VERSION: return TypesPackage.TYPE___GET_VERSION;
-				default: return -1;
-			}
-		}
-		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
 	/**
@@ -451,8 +408,6 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 				return getRawTypeAsString();
 			case TypesPackage.TYPE___GET_TYPE_AS_STRING:
 				return getTypeAsString();
-			case TypesPackage.TYPE___GET_VERSION:
-				return getVersion();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

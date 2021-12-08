@@ -13,7 +13,6 @@ package org.eclipse.n4js.ide.imports;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -24,21 +23,21 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ide.editor.contentassist.ContentAssistDataCollectors;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4idl.N4IDLGlobals;
+import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
-import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
+import org.eclipse.n4js.scoping.members.WrongTypingStrategyDescription;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
-import org.eclipse.n4js.workspace.utils.N4JSProjectName;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.conversion.ValueConverterException;
 import org.eclipse.xtext.ide.editor.contentassist.IPrefixMatcher;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -53,6 +52,7 @@ import org.eclipse.xtext.scoping.IScopeProvider;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -145,7 +145,13 @@ public class ReferenceResolutionFinder {
 
 		// iterate over candidates, filter them, and create ICompletionProposals for them
 
-		List<IEObjectDescription> candidates = collectAllElements(scope, acceptor);
+		boolean isPropertyAccess = reference.eReference == N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY;
+		boolean needCollisionCheck = !isUnresolvedReference && !isPropertyAccess;
+
+		List<IEObjectDescription> candidates = new ArrayList<>(512);
+		Set<QualifiedName> candidateNames = needCollisionCheck ? new HashSet<>() : null;
+		collectAllElements(scope, candidates, candidateNames, acceptor);
+
 		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
 			Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 			for (IEObjectDescription candidate : candidates) {
@@ -160,10 +166,15 @@ public class ReferenceResolutionFinder {
 				// note: must go on with resolution computation even if 'candidateProject' is 'null', because this will
 				// happen in some valid cases (e.g. built-in types)
 
-				final Optional<IScope> scopeForCollisionCheck = isUnresolvedReference ? Optional.absent()
-						: Optional.of(scope);
+				final Optional<IScope> scopeForCollisionCheck = needCollisionCheck
+						? Optional.of(scope)
+						: Optional.absent();
+				final Optional<Set<QualifiedName>> allElementsForCollisionCheck = needCollisionCheck
+						? Optional.of(candidateNames)
+						: Optional.absent();
 				final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
-						requireFullMatch, candidate, candidateProject, scopeForCollisionCheck, conflictChecker);
+						requireFullMatch, candidate, candidateProject, isPropertyAccess, scopeForCollisionCheck,
+						allElementsForCollisionCheck, conflictChecker);
 				if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
 					acceptor.accept(resolution);
 				}
@@ -172,21 +183,31 @@ public class ReferenceResolutionFinder {
 	}
 
 	/**
+	 * @param addHere
+	 *            elements will be added here.
+	 * @param addHereNames
+	 *            iff non-<code>null</code>, names of all elements will be added here.
 	 * @param acceptor
 	 *            no resolutions will be passed to the acceptor by this method, only used for cancellation handling.
 	 */
-	private List<IEObjectDescription> collectAllElements(IScope scope, IResolutionAcceptor acceptor) {
+	private void collectAllElements(IScope scope, List<IEObjectDescription> addHere, Set<QualifiedName> addHereNames,
+			IResolutionAcceptor acceptor) {
 		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
 			if (!acceptor.canAcceptMoreProposals()) {
-				return Collections.emptyList();
+				return;
 			}
-			List<IEObjectDescription> result = new ArrayList<>(42);
 			Iterator<IEObjectDescription> iter = scope.getAllElements().iterator();
 			// note: checking #canAcceptMoreProposals() in next line is required to quickly react to cancellation
 			while (acceptor.canAcceptMoreProposals() && iter.hasNext()) {
-				result.add(iter.next());
+				IEObjectDescription curr = iter.next();
+				if (!isRelevantDescription(curr)) {
+					continue;
+				}
+				addHere.add(curr);
+				if (addHereNames != null) {
+					addHereNames.add(curr.getName());
+				}
 			}
-			return result;
 		}
 	}
 
@@ -206,6 +227,10 @@ public class ReferenceResolutionFinder {
 	 * @param candidateProjectOrNull
 	 *            the containing project of the <code>candidate</code> or <code>null</code> if not available /
 	 *            applicable (e.g. in case the candidate represents a built-in type).
+	 * @param isPropertyAccess
+	 *            <code>true</code> iff content assist is performed for the property of a property access expression;
+	 *            means that all computations related to adding missing imports, etc. (including collision checks) can
+	 *            be skipped.
 	 * @param scopeForCollisionCheck
 	 *            a scope that will be used for a collision check. If the reference being resolved is known to be an
 	 *            unresolved reference and <code>requireFullMatch</code> is set to <code>true</code>, then this
@@ -213,22 +238,22 @@ public class ReferenceResolutionFinder {
 	 * @return the resolution of <code>null</code> if the candidate is not a valid match for the reference.
 	 */
 	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
-			IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull,
-			Optional<IScope> scopeForCollisionCheck, Predicate<String> conflictChecker) {
+			IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull, boolean isPropertyAccess,
+			Optional<IScope> scopeForCollisionCheck, Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
+			Predicate<String> conflictChecker) {
 
 		try (Measurement m1 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
 			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, candidateProjectOrNull,
-					scopeForCollisionCheck, text, requireFullMatch, parseTreeNode, conflictChecker);
+					isPropertyAccess, scopeForCollisionCheck, allElementNamesForCollisionCheck,
+					text, requireFullMatch, parseTreeNode, conflictChecker);
 
 			if (!rrc.isValid) {
 				return null;
 			}
 
 			try (Measurement m2 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
-				int version = N4JSResourceDescriptionStrategy.getVersion(candidate);
-
 				String proposal = getProposal(rrc);
-				String label = getLabel(rrc, version);
+				String label = getLabel(rrc);
 				String description = getDescription(rrc);
 				ImportDescriptor importToBeAdded = getImportToBeAdded(rrc);
 
@@ -257,8 +282,8 @@ public class ReferenceResolutionFinder {
 		return rrc.shortName;
 	}
 
-	private String getLabel(ReferenceResolutionCandidate rrc, int version) {
-		String typeVersion = (version == 0) ? "" : N4IDLGlobals.VERSION_SEPARATOR + String.valueOf(version);
+	private String getLabel(ReferenceResolutionCandidate rrc) {
+		String typeVersion = "";
 		if (rrc.isAlias()) {
 			return rrc.aliasName + typeVersion;
 		}
@@ -289,7 +314,15 @@ public class ReferenceResolutionFinder {
 		}
 
 		QualifiedName rrcQN = rrc.qualifiedName;
-		QualifiedName descrQN = (rrcQN.getSegmentCount() > 1) ? rrcQN.skipLast(1) : rrcQN;
+		final int segCount = rrcQN.getSegmentCount();
+		final QualifiedName descrQN;
+		if (segCount > 0 && rrcQN.getFirstSegment().equals(N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT)) {
+			descrQN = rrcQN.skipFirst(1);
+		} else if (rrcQN.getSegmentCount() > 1) {
+			descrQN = rrcQN.skipLast(1);
+		} else {
+			descrQN = rrcQN;
+		}
 		return qualifiedNameConverter.toString(descrQN);
 	}
 
@@ -302,8 +335,8 @@ public class ReferenceResolutionFinder {
 		QualifiedName qualifiedName = requestedImport.name;
 		String optionalAlias = requestedImport.alias;
 
-		N4JSProjectName projectName = rrc.candidateProjectOrNull != null
-				? rrc.candidateProjectOrNull.getN4JSProjectName()
+		N4JSPackageName projectName = rrc.candidateProjectOrNull != null
+				? rrc.candidateProjectOrNull.getN4JSPackageName()
 				: null;
 		if (projectName == null) {
 			return null;
@@ -333,6 +366,8 @@ public class ReferenceResolutionFinder {
 	private class ReferenceResolutionCandidate {
 		final IEObjectDescription candidate;
 		final IEObjectDescription candidateViaScopeShortName;
+		/** If <code>true</code>, then collision check and computation of a new import will be skipped. */
+		final boolean isPropertyAccess;
 		/** The project containing the candidate. Might be <code>null</code>, e.g. in case of built-in types. */
 		final N4JSProjectConfigSnapshot candidateProjectOrNull;
 		final boolean isScopedCandidateEqual;
@@ -348,24 +383,31 @@ public class ReferenceResolutionFinder {
 		final NameAndAlias addedImportNameAndAlias;
 
 		ReferenceResolutionCandidate(IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull,
-				Optional<IScope> scopeForCollisionCheck,
+				boolean isPropertyAccess,
+				Optional<IScope> scopeForCollisionCheck, Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
 				String text, boolean requireFullMatch, INode parseTreeNode, Predicate<String> conflictChecker) {
 
 			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate1().getMeasurement()) {
-				if (!requireFullMatch && !scopeForCollisionCheck.isPresent()) {
+				if (!isPropertyAccess && !requireFullMatch && !scopeForCollisionCheck.isPresent()) {
 					throw new IllegalArgumentException(
-							"collision check should only be omitted if a full match is required");
+							"collision check may only be omitted if candidate never needs an import OR a full match is required");
+				}
+				if (isPropertyAccess && scopeForCollisionCheck.isPresent()) {
+					throw new IllegalArgumentException(
+							"collision check should be omitted if candidate never needs an import");
 				}
 
 				this.candidate = candidate;
 				this.candidateProjectOrNull = candidateProjectOrNull;
+				this.isPropertyAccess = isPropertyAccess;
 				this.shortName = getShortName();
 				this.qualifiedName = getQualifiedName();
 				this.parentImportElement = getParentImportElement(parseTreeNode);
 				this.parentImportModuleName = getParentImportModuleName();
 			}
 			try (Measurement m = contentAssistDataCollectors.dcDetectProposalConflicts().getMeasurement()) {
-				this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck);
+				this.candidateViaScopeShortName = getCorrectCandidateViaScope(scopeForCollisionCheck,
+						allElementNamesForCollisionCheck);
 			}
 			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate2().getMeasurement()) {
 				this.isScopedCandidateEqual = isEqualCandidateName(candidateViaScopeShortName, qualifiedName);
@@ -419,19 +461,27 @@ public class ReferenceResolutionFinder {
 			return qName;
 		}
 
-		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck) {
-			if (scopeForCollisionCheck.isPresent()) {
+		private IEObjectDescription getCorrectCandidateViaScope(Optional<IScope> scopeForCollisionCheck,
+				Optional<Set<QualifiedName>> allElementNamesForCollisionCheck) {
+			if (!isPropertyAccess && scopeForCollisionCheck.isPresent()) {
 				IScope scope = scopeForCollisionCheck.get();
-				IEObjectDescription candidateViaScope = getCandidateViaScope(scope);
+				Set<QualifiedName> allElementNames = allElementNamesForCollisionCheck.get();
+				IEObjectDescription candidateViaScope = getCandidateViaScope(scope, allElementNames);
 				candidateViaScope = specialcaseNamespaceShadowsOwnElement(scope, candidateViaScope);
 				return candidateViaScope;
 			}
 			return null;
 		}
 
-		private IEObjectDescription getCandidateViaScope(IScope scope) {
-			// performance issue: scope.getElements
-			List<IEObjectDescription> elements = Lists.newArrayList(scope.getElements(QualifiedName.create(shortName)));
+		private IEObjectDescription getCandidateViaScope(IScope scope, Set<QualifiedName> allElementNames) {
+			QualifiedName shortNameQN = QualifiedName.create(shortName);
+			// because 'scope.getElements()' is slow-ish and we are invoked for every element in
+			// 'scope.getAllElements()' (see #collectAllElements() above), we use this guard:
+			if (!allElementNames.contains(shortNameQN)) {
+				return null;
+			}
+			List<IEObjectDescription> elements = Lists.newArrayList(Iterables.filter(
+					scope.getElements(shortNameQN), ReferenceResolutionFinder::isRelevantDescription));
 			if (elements.isEmpty()) {
 				return null;
 			}
@@ -519,6 +569,9 @@ public class ReferenceResolutionFinder {
 		 *         the same short name
 		 */
 		private boolean isScopedCandidateCollisioning() {
+			if (isPropertyAccess) {
+				return false;
+			}
 			if (isScopedCandidateEqual) {
 				return false;
 			}
@@ -598,6 +651,10 @@ public class ReferenceResolutionFinder {
 		}
 
 		private NameAndAlias getImportChanges() {
+			if (isPropertyAccess) {
+				return null;
+			}
+
 			if (parentImportElement != null) {
 				return null;
 			}
@@ -620,7 +677,7 @@ public class ReferenceResolutionFinder {
 
 			// Globally available elements should not generate imports
 			if (importName.getSegmentCount() == 2
-					&& N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(importName.getFirstSegment())) {
+					&& N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(importName.getFirstSegment())) {
 				// type name is a simple name from global Namespace - no need to hassle with imports
 				return null;
 			}
@@ -643,16 +700,19 @@ public class ReferenceResolutionFinder {
 
 		/** Return fully qualified name (= module specifier + element name) of the element to be imported. */
 		private QualifiedName getImportName() {
-			QualifiedName qfn = candidate.getQualifiedName();
-			int qfnSegmentCount = qfn.getSegmentCount();
-			String tmodule = (qfnSegmentCount >= 2) ? qfn.getSegment(qfnSegmentCount - 2) : null;
+			QualifiedName candidateModuleQN = candidate.getQualifiedName().getSegmentCount() >= 2
+					? candidate.getQualifiedName().skipLast(1)
+					: null;
+			String candidateModuleQNStr = candidateModuleQN != null
+					? qualifiedNameConverter.toString(candidateModuleQN)
+					: null;
 			ProjectType projectType = candidateProjectOrNull != null ? candidateProjectOrNull.getType() : null;
 
 			QualifiedName candidateName;
-			if (candidateProjectOrNull != null && tmodule != null
-					&& tmodule.equals(candidateProjectOrNull.getMainModule())) {
+			if (candidateProjectOrNull != null && candidateModuleQNStr != null
+					&& N4JSLanguageUtils.isMainModule(candidateProjectOrNull, candidateModuleQNStr)) {
 				// use project import when importing from a main module (e.g. index.Element -> react.Element)
-				N4JSProjectName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
+				N4JSPackageName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
 				String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
 				candidateName = projectName.toQualifiedName().append(lastSegmentOfQFN);
 
@@ -660,7 +720,7 @@ public class ReferenceResolutionFinder {
 					&& (projectType == ProjectType.PLAINJS || projectType == ProjectType.DEFINITION)) {
 				// use complete module specifier when importing from PLAINJS or DEFINITION project
 				// (i.e. prepend project name)
-				N4JSProjectName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
+				N4JSPackageName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
 				candidateName = projectName.toQualifiedName().append(candidate.getQualifiedName());
 
 			} else {
@@ -687,14 +747,31 @@ public class ReferenceResolutionFinder {
 		}
 	}
 
-	private static N4JSProjectName getNameOfDefinedOrGivenProject(N4JSProjectConfigSnapshot project) {
+	/**
+	 * Returns <code>true</code> iff the given description is relevant for the purpose of reference resolution finding
+	 * in this class. All other descriptions will be ignored.
+	 */
+	private static boolean isRelevantDescription(IEObjectDescription desc) {
+		if (desc instanceof PlainAccessOfAliasedImportDescription
+				|| desc instanceof PlainAccessOfNamespacedImportDescription
+				|| desc instanceof WrongTypingStrategyDescription) {
+			// for these subclasses of IEObjectDescriptionWithError method #isActualElementInScope() would return
+			// 'false'; but because some special handling exists in the above code for these classes, we actually have
+			// to treat them as relevant, i.e. return 'true' for them:
+			return true;
+		}
+		// standard case:
+		return N4JSLanguageUtils.isActualElementInScope(desc);
+	}
+
+	private static N4JSPackageName getNameOfDefinedOrGivenProject(N4JSProjectConfigSnapshot project) {
 		if (project.getType() == ProjectType.DEFINITION) {
-			N4JSProjectName definedProjectName = project.getDefinesPackage();
+			N4JSPackageName definedProjectName = project.getDefinesPackage();
 			if (definedProjectName != null) {
 				return definedProjectName;
 			}
 		}
-		return project.getN4JSProjectName();
+		return project.getN4JSPackageName();
 	}
 
 	private static class NameAndAlias {

@@ -39,7 +39,7 @@ import { LowerComponent } from "LowerComponent"
 class MyComponent extends LowerComponent {
 
 	@Override
-	public render() : React.Element{
+	public render() : React.ReactElement{
 		// XPECT noerrors --> "The method render is not visible." at "render"
 		return super.render();
 	}

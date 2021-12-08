@@ -23,17 +23,17 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
+import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.utils.ResourceNameComputer
 
@@ -158,8 +158,9 @@ class ExpressionTransformation extends Transformation {
 			if(originalTarget instanceof TFunction) { // could be a method
 				val originalTargetTypeRef = TypeUtils.createTypeRef(originalTarget) as FunctionTypeRef;
 				val returnTypeRef = promisifyHelper.extractPromisifiedReturnType(state.G, originalTargetTypeRef);
-				val hasErrorValue = !TypeUtils.isUndefined(returnTypeRef.typeArgs.drop(1).head); // isUndefined() is null-safe
-				val hasMoreThan1SuccessValue = state.G.isIterableN(returnTypeRef.typeArgs.head); // isIterableN() is null-safe
+				val returnTypeRefTypeArgs = returnTypeRef.typeArgsWithDefaults;
+				val hasErrorValue = !TypeUtils.isUndefined(returnTypeRefTypeArgs.drop(1).head); // isUndefined() is null-safe
+				val hasMoreThan1SuccessValue = state.G.isIterableN(returnTypeRefTypeArgs.head); // isIterableN() is null-safe
 				if(target instanceof ParameterizedPropertyAccessExpression_IM && targetSTE.originalTarget instanceof TMethod) {
 					// we have a method invocation, so we need to preserve the 'this' argument:
 

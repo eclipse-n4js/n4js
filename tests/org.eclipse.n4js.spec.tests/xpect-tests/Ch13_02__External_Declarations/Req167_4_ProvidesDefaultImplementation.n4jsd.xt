@@ -28,7 +28,7 @@ export external public interface I {
 }
 
 
-export external public interface K {
+export external public interface ~K {
 	// XPECT errors --> "@ProvidesDefaultImplementation must only be used in interfaces annotated with @N4JS." at "foo"
 	@ProvidesDefaultImplementation foo()
 

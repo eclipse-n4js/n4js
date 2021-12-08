@@ -11,12 +11,12 @@
 package org.eclipse.n4js.utils;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.INHERITED;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.MIXEDIN;
 import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.OWNED;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillAware;
 
+import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,11 +38,12 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.members.TMemberEntry;
 import org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.NameAndAccess;
+import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TField;
@@ -50,13 +51,12 @@ import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TN4Classifier;
-import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.AbstractHierachyTraverser;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.ts.types.util.NonSymetricMemberKey;
-import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -68,6 +68,7 @@ import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 
@@ -151,6 +152,22 @@ public class ContainerTypesHelper {
 		}
 
 		/**
+		 * Finds the owned or inherited call signature of the given {@link TInterface}.
+		 */
+		public TMethod findCallSignature(TInterface tInterface) {
+			return cache.get(Arrays.asList("findCallSignature", tInterface), contextResource,
+					() -> new FindCallConstructSignatureHelper(tInterface, false).getResult());
+		}
+
+		/**
+		 * Finds the owned or inherited construct signature of the given {@link TInterface}.
+		 */
+		public TMethod findConstructSignature(TInterface tInterface) {
+			return cache.get(Arrays.asList("findConstructSignature", tInterface), contextResource,
+					() -> new FindCallConstructSignatureHelper(tInterface, true).getResult());
+		}
+
+		/**
 		 * Convenience method, finds a member with a given name in members (owned and members of super types and
 		 * polyfills).
 		 */
@@ -193,9 +210,13 @@ public class ContainerTypesHelper {
 		 * E.g., in
 		 *
 		 * <pre>
-		 * interface I { m() {} }
-		 * interface J extends I {}
-		 * class A implements J {}
+		 * interface I {
+		 * 	m(){}
+		 * }
+		 * interface J extends I {
+		 * }
+		 * class A implements J {
+		 * }
 		 * </pre>
 		 *
 		 * a (pseudo) call {@code directSuperTypeBequestingMember(A, m)} would return {@code J}.
@@ -241,7 +262,16 @@ public class ContainerTypesHelper {
 		 * Similar to {@link #members(ContainerType)} but with a filter to only accept certain elements.
 		 */
 		private MemberList<TMember> members(ContainerType<?> type, Predicate<TMember> filter) {
-			return new CollectMembersHelper(type, true, true, filter).getResult();
+			return new CollectMembersHelper(type, true, true, false, filter).getResult();
+		}
+
+		/**
+		 * Same as {@link #members(ContainerType, boolean, boolean, boolean)}, but never includes call/construct
+		 * signatures.
+		 */
+		public MemberList<TMember> members(ContainerType<?> type, boolean includeImplicitSuperTypes,
+				boolean includePolyfills) {
+			return members(type, includeImplicitSuperTypes, includePolyfills, false);
 		}
 
 		/**
@@ -249,13 +279,19 @@ public class ContainerTypesHelper {
 		 *
 		 * @param includePolyfills
 		 *            if set to {@code true}, members defined in dynamic or static polyfills are collected as well
+		 * @param includeCallConstructSignatures
+		 *            if set, call/construct signatures of interfaces will be included as well. Call signatures in
+		 *            classes are not inherited and are therefore never included, even if this is set to
+		 *            <code>true</code>.
 		 */
 		public MemberList<TMember> members(ContainerType<?> type, boolean includeImplicitSuperTypes,
-				boolean includePolyfills) {
-			return cache.get(Arrays.asList("members", type, includeImplicitSuperTypes, includePolyfills),
+				boolean includePolyfills, boolean includeCallConstructSignatures) {
+			return cache.get(
+					Arrays.asList("members", type, includeImplicitSuperTypes, includePolyfills,
+							includeCallConstructSignatures),
 					contextResource,
-					() -> new CollectMembersHelper(type, includeImplicitSuperTypes, includePolyfills, m -> true)
-							.getResult());
+					() -> new CollectMembersHelper(type, includeImplicitSuperTypes, includePolyfills,
+							includeCallConstructSignatures, m -> true).getResult());
 		}
 
 		/**
@@ -319,6 +355,31 @@ public class ContainerTypesHelper {
 		}
 
 		/**
+		 * Returns all inherited members from all super classes and interfaces transitively.
+		 */
+		public MemberList<TMember> allInheritedMembers(TClass clazz) {
+			MemberList<TMember> allInheritedMembers = new MemberList<>();
+
+			allInheritedMembers.addAll(inheritedMembers(clazz));
+
+			Iterable<ParameterizedTypeRef> interfaces = clazz.getImplementedInterfaceRefs();
+			for (ParameterizedTypeRef interfaceTypeRef : interfaces) {
+
+				allInheritedMembers.addAll(members((ContainerType<?>) interfaceTypeRef.getDeclaredType(),
+						m -> m.getContainingType() != clazz)); // avoid problems with cycles
+			}
+			return allInheritedMembers;
+		}
+
+		/**
+		 * Same as {@link #membersOfImplementedInterfacesForConsumption(TClassifier, boolean)}, but never includes
+		 * call/construct signatures.
+		 */
+		public MemberList<TMember> membersOfImplementedInterfacesForConsumption(TClassifier classifier) {
+			return membersOfImplementedInterfacesForConsumption(classifier, false);
+		}
+
+		/**
 		 * Returns all members of (directly) implemented interfaces that are candidates for being consumed by an
 		 * implementing class. This list does not contain any duplicates. Note that the members may not actually be
 		 * consumed by the class, as they may either already be defined in a super class (in which case they do not get
@@ -330,8 +391,14 @@ public class ContainerTypesHelper {
 		 * Members of the implicit super type of interfaces (i.e. N4Object) are not included, because those members will
 		 * never be consumed (currently, N4Object only has a single non-static member, i.e. its constructor, so this
 		 * applies only to this one member).
+		 *
+		 * @param includeCallConstructSignatures
+		 *            if set, call/construct signatures of interfaces will be included as well. Call signatures in
+		 *            classes are not inherited and are therefore never included, even if this is set to
+		 *            <code>true</code>.
 		 */
-		public MemberList<TMember> membersOfImplementedInterfacesForConsumption(TClassifier classifier) {
+		public MemberList<TMember> membersOfImplementedInterfacesForConsumption(TClassifier classifier,
+				boolean includeCallConstructSignatures) {
 
 			Iterator<ParameterizedTypeRef> iter = classifier.getImplementedOrExtendedInterfaceRefs().iterator();
 			if (!iter.hasNext()) {
@@ -341,7 +408,7 @@ public class ContainerTypesHelper {
 			if (!iter.hasNext()) { // only one interface, simply create members of that interface directly
 				if (first.getDeclaredType() instanceof TInterface) {
 					TInterface tinterface = (TInterface) first.getDeclaredType();
-					return members(tinterface, false, true);
+					return members(tinterface, false, true, includeCallConstructSignatures);
 				}
 				return MemberList.emptyList();
 			}
@@ -350,7 +417,7 @@ public class ContainerTypesHelper {
 			for (ParameterizedTypeRef interfaceRef : classifier.getImplementedOrExtendedInterfaceRefs()) {
 				if (interfaceRef.getDeclaredType() instanceof TInterface) {
 					TInterface tinterface = (TInterface) interfaceRef.getDeclaredType();
-					memberList.addAll(members(tinterface, false, true));
+					memberList.addAll(members(tinterface, false, true, includeCallConstructSignatures));
 				}
 			}
 			return memberList;
@@ -427,9 +494,6 @@ public class ContainerTypesHelper {
 			} else if (type instanceof TInterface) {
 				superType = null;
 				interfaces = ((TInterface) type).getSuperInterfaceRefs();
-			} else if (type instanceof TObjectPrototype) {
-				superType = explicitOrImplicitSuperType(type);
-				interfaces = emptyList();
 			} else {
 				return MemberList.emptyList();
 			}
@@ -538,9 +602,6 @@ public class ContainerTypesHelper {
 				superType = null;
 				interfaces = new ArrayList<>(((TInterface) type).getSuperInterfaceRefs());
 				interfaces.addAll(((TInterface) spolyBuddy).getSuperInterfaceRefs());
-			} else if (type instanceof TObjectPrototype) {
-				superType = explicitOrImplicitSuperType(type);
-				interfaces = emptyList();
 			} else {
 				return MemberList.emptyList();
 			}
@@ -718,11 +779,11 @@ public class ContainerTypesHelper {
 
 			@Override
 			protected List<ParameterizedTypeRef> getPolyfills(Type filledType) {
-				if (includePolyfills && (filledType instanceof TClass || filledType instanceof TObjectPrototype)) {
+				if (includePolyfills && filledType instanceof TClassifier) {
 					TClassifier tClassifier = (TClassifier) filledType;
 					if (filledType.isProvidedByRuntime() // only runtime types can be polyfilled, but
 					) {
-						QualifiedName qn = N4TSQualifiedNameProvider.getPolyfillFQN(tClassifier, qualifiedNameProvider);
+						QualifiedName qn = PolyfillUtils.getNonStaticPolyfillFQN(tClassifier, qualifiedNameProvider);
 						if (qn != null) { // may be a class expression which has no name,
 							// if there is no name, there cannot be a polyfill
 
@@ -732,10 +793,10 @@ public class ContainerTypesHelper {
 									polyFill -> TypeUtils.createTypeRef(polyFill)).collect(Collectors.toList());
 						}
 					}
-					if (isContainedInStaticPolyfillAware(filledType) // static-polyfilled work as well
+					if (filledType instanceof TClass // only classes can be statically polyfilled
+							&& isContainedInStaticPolyfillAware(filledType) // and only types in "aware" modules
 					) {
-						QualifiedName qn = N4TSQualifiedNameProvider.getStaticPolyfillFQN(tClassifier,
-								qualifiedNameProvider);
+						QualifiedName qn = PolyfillUtils.getStaticPolyfillFQN(tClassifier, qualifiedNameProvider);
 						if (qn != null) { // may be a class expression which has no name,
 							// if there is no name, there cannot be a polyfill
 
@@ -782,6 +843,12 @@ public class ContainerTypesHelper {
 				return false;
 			}
 
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
+
 			/**
 			 * Returns true if the given container type is a polyfill of the bottom type.
 			 * <p>
@@ -793,7 +860,7 @@ public class ContainerTypesHelper {
 				if (!containerType.isStaticPolyfill() || !(bottomType instanceof TClassifier)) {
 					return false;
 				}
-				QualifiedName qn = N4TSQualifiedNameProvider.getStaticPolyfillFQN((TClassifier) bottomType,
+				QualifiedName qn = PolyfillUtils.getStaticPolyfillFQN((TClassifier) bottomType,
 						qualifiedNameProvider);
 				if (containerType instanceof TClass) { // short cut
 					return qn.equals(qualifiedNameProvider.getFullyQualifiedName(containerType));
@@ -818,6 +885,11 @@ public class ContainerTypesHelper {
 		 */
 		private class CollectMembersHelper extends AbstractMemberCollector<MemberList<TMember>> {
 
+			/**
+			 * Flag indicating whether call/construct signatures are collected as well.
+			 */
+			protected final boolean includeCallConstructSignatures;
+
 			private final Map<NameAndAccess, TMember> nameAccessToMember;
 			private final Predicate<TMember> filter;
 
@@ -825,12 +897,14 @@ public class ContainerTypesHelper {
 			 * Creates a new collector that is used to safely traverse a potentially cyclic inheritance tree and collect
 			 * the members of the type.
 			 *
-			 * @filter only members passing the filter are added to the collection. If the filter is null, everything is
-			 *         accepted
+			 * @param filter
+			 *            only members passing the filter are added to the collection. If the filter is null, everything
+			 *            is accepted
 			 */
-			public CollectMembersHelper(ContainerType<?> type,
-					boolean includeImplicitSuperTypes, boolean includePolyfills, Predicate<TMember> filter) {
+			public CollectMembersHelper(ContainerType<?> type, boolean includeImplicitSuperTypes,
+					boolean includePolyfills, boolean includeCallConstructSignatures, Predicate<TMember> filter) {
 				super(type, includeImplicitSuperTypes, includePolyfills);
+				this.includeCallConstructSignatures = includeCallConstructSignatures;
 				this.filter = filter == null ? m -> true : filter;
 				nameAccessToMember = Maps.newLinkedHashMap();
 			}
@@ -842,9 +916,27 @@ public class ContainerTypesHelper {
 
 			@Override
 			protected boolean process(ContainerType<?> containerType) {
-				for (Entry<NameAndAccess, ? extends TMember> entry : containerType
-						.getOrCreateOwnedMembersByNameAndAccess()
-						.entrySet()) {
+				List<Entry<NameAndAccess, ? extends TMember>> ownedMembers = Lists.newArrayList(
+						containerType.getOrCreateOwnedMembersByNameAndAccess().entrySet());
+
+				if (includeCallConstructSignatures) {
+					// include call/construct signatures of interfaces
+					// (NOTE: call signatures in classes are *not* inherited (similarly to class constructors) and
+					// are therefore never included here)
+					if (containerType instanceof TInterface) {
+						TMethod callSig = containerType.getCallSignature();
+						TMethod constructSig = containerType.getConstructSignature();
+						if (callSig != null) {
+							ownedMembers.add(new SimpleImmutableEntry<>(NameAndAccess.of(callSig)[0], callSig));
+						}
+						if (constructSig != null) {
+							ownedMembers
+									.add(new SimpleImmutableEntry<>(NameAndAccess.of(constructSig)[0], constructSig));
+						}
+					}
+				}
+
+				for (Entry<NameAndAccess, ? extends TMember> entry : ownedMembers) {
 					final NameAndAccess key = entry.getKey();
 					final TMember m = entry.getValue();
 
@@ -861,6 +953,12 @@ public class ContainerTypesHelper {
 						}
 					}
 				}
+				return false;
+			}
+
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
 				return false;
 			}
 		}
@@ -908,11 +1006,51 @@ public class ContainerTypesHelper {
 			}
 
 			@Override
-			protected boolean doProcessConsumedRoles(TClass object) {
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
+
+			@Override
+			protected boolean doProcessImplementedInterfaces(TClass object) {
 				if (object == bottomType) {
 					source = MIXEDIN;
 				}
-				return super.doProcessConsumedRoles(object);
+				return super.doProcessImplementedInterfaces(object);
+			}
+		}
+
+		private class FindCallConstructSignatureHelper extends AbstractMemberCollector<TMethod> {
+			private final boolean searchConstructSig;
+			private TMethod foundMember = null;
+
+			FindCallConstructSignatureHelper(TInterface type, boolean searchConstructSig) {
+				super(type, true, true);
+				this.searchConstructSig = searchConstructSig;
+			}
+
+			@Override
+			protected boolean process(ContainerType<?> type) {
+				if (type instanceof TInterface) {
+					TMethod sig = searchConstructSig ? type.getConstructSignature() : type.getCallSignature();
+					if (sig != null) {
+						foundMember = sig;
+						return true;
+					}
+				}
+				return false;
+
+			}
+
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
+			}
+
+			@Override
+			protected TMethod doGetResult() {
+				return foundMember;
 			}
 		}
 
@@ -946,6 +1084,12 @@ public class ContainerTypesHelper {
 				}
 				return false;
 
+			}
+
+			@Override
+			protected boolean process(PrimitiveType type) {
+				// nothing to do in this case
+				return false;
 			}
 
 			@Override

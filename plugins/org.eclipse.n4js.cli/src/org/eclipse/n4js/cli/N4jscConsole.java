@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.cli;
 
+import java.io.BufferedReader;
+import java.io.Console;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.Stack;
 
@@ -76,5 +80,26 @@ public class N4jscConsole {
 		};
 
 		return ac;
+	}
+
+	/** Reads a string terminated with a new-line from the console */
+	public static String readLine() {
+		Console console = System.console();
+		if (console == null) {
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+			try {
+				return reader.readLine();
+				// System.in should not be closed by us
+
+			} catch (IOException e) {
+				throw new RuntimeException("Error while reading from console", e);
+			}
+
+			// Scanner scanInput = new Scanner(System.in);
+			// return scanInput.nextLine();
+			// throw new RuntimeException("No console available");
+		}
+		return console.readLine();
 	}
 }

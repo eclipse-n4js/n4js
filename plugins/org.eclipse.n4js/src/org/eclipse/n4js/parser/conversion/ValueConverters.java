@@ -12,7 +12,6 @@ package org.eclipse.n4js.parser.conversion;
 
 import java.math.BigDecimal;
 
-import org.eclipse.n4js.ts.conversions.IdentifierDelegateValueConverter;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.ValueConverter;
 import org.eclipse.xtext.conversion.impl.AbstractDeclarativeValueConverterService;
@@ -81,9 +80,6 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 
 	@Inject
 	private ModuleSpecifierValueConverter moduleSpecifierValueConverter;
-
-	@Inject
-	private VersionRequestValueConverter versionRequestValueConverter;
 
 	@Inject
 	private JSXIdentifierValueConverter jsxIdentifierValueConverter;
@@ -254,13 +250,5 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 	@ValueConverter(rule = "ModuleSpecifier")
 	public IValueConverter<String> ModuleSpecifier() {
 		return moduleSpecifierValueConverter;
-	}
-
-	/**
-	 * @return the registered value converter for the rule {@code VERSION_REQUEST}
-	 */
-	@ValueConverter(rule = "VERSION")
-	public IValueConverter<BigDecimal> VERSION() {
-		return versionRequestValueConverter;
 	}
 }

@@ -1,0 +1,1142 @@
+// generated from https://github.com/microsoft/TypeScript/blob/5d0d7ae85d1ff52d3ef4cb6cac653f33f7e76724/src/lib/es5.d.ts
+// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
+
+@@Global @@ProvidedByRuntime
+
+export external public type PropertyKey = string | number | symbol;
+
+export external public interface ~PropertyDescriptor {
+	configurable?: boolean;
+	enumerable?: boolean;
+	value?: any;
+	writable?: boolean;
+	get?: ()=>any;
+	set?: (value: any)=>void;
+}
+
+export external public interface ~PropertyDescriptorMap {}
+
+export external public class Object {
+	public toString(): string;
+	public toLocaleString(): string;
+	public valueOf(): any
+	public hasOwnProperty(v: PropertyKey): boolean;
+	public isPrototypeOf(v: Object): boolean;
+	public propertyIsEnumerable(v: PropertyKey): boolean;
+	public constructor(value: any = );
+	(...args: any): Object;
+	public static getPrototypeOf(o: any): Object;
+	public static getOwnPropertyDescriptor(o: any, p: PropertyKey): PropertyDescriptor;
+	public static getOwnPropertyNames(o: any): Array<string>;
+	public static create(proto: Object, props: Object = undefined): Object;
+	public static <T> defineProperty(o: T, p: PropertyKey, attributes: PropertyDescriptor & ThisType<any>): T;
+	public static <T> defineProperties(o: T, properties: PropertyDescriptorMap & ThisType<any>): T;
+	public static <T> seal(o: T): T;
+	public static <T extends Object> freeze(obj: T): T;
+	public static <T> preventExtensions(o: T): T;
+	public static isSealed(o: any): boolean;
+	public static isFrozen(o: any): boolean;
+	public static isExtensible(o: any): boolean;
+	public static keys(o: Object): Array<string>;
+	/**
+	 * The built-in ES5 property "__proto__", here modeled as a read-only property (i.e. no setter provided), because
+	 * changing an object's prototype after creation is strongly discouraged in todays Javascript engines.
+	 */
+	public get __proto__(): Object;
+	/**
+	 * The initial value of Object.prototype is the standard built-in Object prototype object (15.2.4).
+	 *
+	 * Remark: Modeled as getter to emulate const and to allow for overriding.
+	 * @see ES5, 15.2.3.1
+	 */
+	public static get prototype(): Object;
+}
+
+export external public type ObjectConstructor = constructor{Object};
+
+export external public class Function {
+	public apply(thisArg: any, argArray: any = ): any;
+	public call(thisArg: any, ...argArray: any): any;
+	public bind(thisArg: any, ...args: any): {function(... args: any): any}
+	@Override
+	public toString(): string;
+	public get length(): number;
+	public arguments: any;
+	public caller: Function;
+	public constructor(...args: string);
+	(...args: string): Function;
+	/**
+	 * The Function prototype object is itself a Function object (its [[Class]] is "Function") that, when invoked, accepts any arguments and returns undefined.
+	 */
+	@Override public static get prototype(): Function;
+	/**
+	 * The value of the prototype property is used to initialize the [[Prototype]] internal property of a newly created object before the Function object is invoked as a constructor for that newly created object. This property has the attribute { [[Writable]]: true, [[Enumerable]]: false, [[Configurable]]: false }.
+	 * NOTE Function objects created using Function.prototype.bind do not have a prototype property.
+	 *
+	 * @see ES5 15.3.5.2
+	 */
+	public get prototype(): Object;
+}
+
+export external public type FunctionConstructor = constructor{Function};
+
+export external public interface ~IArguments {
+	length: number;
+	callee: Function;
+}
+
+export external public class String {
+	@Override
+	public toString(): string;
+	public charAt(pos: number): string;
+	public charCodeAt(index: number): number;
+	public concat(...strings: string): string;
+	public indexOf(searchString: string, position: number = ): number;
+	public lastIndexOf(searchString: string, position: number = ): number;
+	public localeCompare(that: string, locales: string = undefined, options: any+ = undefined): number;
+	public match(regexp: string | RegExp): RegExpMatchArray;
+	public replace(searchValue: union{RegExp, string}, replaceValue: union{string, Function}): string;
+	public search(regexp: string | RegExp): number;
+	public slice(start: number = , end: number = ): string;
+	public split(separator: string | RegExp, limit: number = ): Array<string>;
+	public substring(start: number, end: number = ): string;
+	public toLowerCase(): string;
+	public toLocaleLowerCase(locales: string | Array<string> = ): string;
+	public toUpperCase(): string;
+	public toLocaleUpperCase(locales: string | Array<string> = ): string;
+	public trim(): string;
+	public get length(): number;
+	public substr(from: number, length: number = ): string;
+	@Override
+	public valueOf(): string;
+	public constructor(value: any = );
+	(value: any = ): string;
+	public static fromCharCode(...codes: number): string;
+	/**
+	 * Returns a new Iterator object that iterates over the code points of a String value, returning each code point as
+	 * a String value.
+	 */
+	public [Symbol.iterator](): Iterator<string>
+}
+
+export external public type StringConstructor = constructor{String};
+
+export external public class Boolean {
+	@Override
+	public valueOf(): boolean;
+	public constructor(value: any = );
+	(value: any+ = ): boolean;
+}
+
+export external public type BooleanConstructor = constructor{Boolean};
+
+export external public class Number {
+	@Override
+	public toString(radix: number = ): string;
+	public toFixed(fractionDigits: number = ): string;
+	public toExponential(fractionDigits: number = ): string;
+	public toPrecision(precision: number = ): string;
+	@Override
+	public valueOf(): number;
+	@Override public toLocaleString(locales: string | Array<string> = , options: Object = ): string;
+	public constructor(value: any = );
+	(value: any = ): number;
+	public static get MAX_VALUE(): number;
+	public static get MIN_VALUE(): number;
+	public static get NaN(): number;
+	public static get NEGATIVE_INFINITY(): number;
+	public static get POSITIVE_INFINITY(): number;
+}
+
+export external public type NumberConstructor = constructor{Number};
+
+export external public interface ~ImportMeta {}
+
+export external public interface ~ImportCallOptions {
+	assert?: ImportAssertions;
+}
+
+export external public interface ~ImportAssertions {}
+
+export external public class Math {
+	public static get E(): number;
+	public static get LN10(): number;
+	public static get LN2(): number;
+	public static get LOG2E(): number;
+	public static get LOG10E(): number;
+	public static get PI(): number;
+	public static get SQRT1_2(): number;
+	public static get SQRT2(): number;
+	public static abs(x: number): number;
+	public static acos(x: number): number;
+	public static asin(x: number): number;
+	public static atan(x: number): number;
+	public static atan2(y: number, x: number): number;
+	public static ceil(x: number): number;
+	public static cos(x: number): number;
+	public static exp(x: number): number;
+	public static floor(x: number): number;
+	public static log(x: number): number;
+	public static max(...values: number): number;
+	public static min(...values: number): number;
+	public static pow(x: number, y: number): number;
+	public static random(): number;
+	public static round(x: number): number;
+	public static sin(x: number): number;
+	public static sqrt(x: number): number;
+	public static tan(x: number): number;
+}
+
+export external public class Date {
+	@Override
+	public toString(): string;
+	public toDateString(): string;
+	public toTimeString(): string;
+	@Override
+	public toLocaleString(...args: any+): any+; // overloading not supported
+	public toLocaleDateString(...args: any+): any+; // overloading not supported
+	public toLocaleTimeString(...args: any+): any+; // overloading not supported
+	@Override
+	public valueOf(): number;
+	public getTime(): number;
+	public getFullYear(): number;
+	public getUTCFullYear(): number;
+	public getMonth(): number;
+	public getUTCMonth(): number;
+	public getDate(): number;
+	public getUTCDate(): number;
+	public getDay(): number;
+	public getUTCDay(): number;
+	public getHours(): number;
+	public getUTCHours(): number;
+	public getMinutes(): number;
+	public getUTCMinutes(): number;
+	public getSeconds(): number;
+	public getUTCSeconds(): number;
+	public getMilliseconds(): number;
+	public getUTCMilliseconds(): number;
+	public getTimezoneOffset(): number;
+	public setTime(time: number): number;
+	public setMilliseconds(ms: number): number;
+	public setUTCMilliseconds(ms: number): number;
+	public setSeconds(sec: number, ms: number = ): number;
+	public setUTCSeconds(sec: number, ms: number = ): number;
+	public setMinutes(min: number, sec: number = , ms: number = ): number;
+	public setUTCMinutes(min: number, sec: number = , ms: number = ): number;
+	public setHours(hours: number, min: number = , sec: number = , ms: number = ): number;
+	public setUTCHours(hours: number, min: number = , sec: number = , ms: number = ): number;
+	public setDate(date: number): number;
+	public setUTCDate(date: number): number;
+	public setMonth(month: number, date: number = ): number;
+	public setUTCMonth(month: number, date: number = ): number;
+	public setFullYear(year: number, month: number = , date: number = ): number;
+	public setUTCFullYear(year: number, month: number = , date: number = ): number;
+	public toUTCString(): string;
+	public toISOString(): string;
+	public toJSON(key: any = ): string;
+	public constructor(numberOrStringOrYear: union{string, number} = undefined, month: number = undefined, date: number = undefined, hours: number = undefined, minutes: number = undefined, seconds: number = undefined, ms: number = undefined);
+	(): string;
+	public static parse(s: string): number;
+	public static UTC(year: number, month: number, date: number = , hours: number = , minutes: number = , seconds: number = , ms: number = ): number;
+	public static now(): number;
+}
+
+export external public type DateConstructor = constructor{Date};
+
+export external public class ~RegExpMatchArray extends Array<string> {
+	public index?: number;
+	public input?: string;
+}
+
+export external public class ~RegExpExecArray extends Array<string> {
+	public index: number;
+	public input: string;
+}
+
+export external public class RegExp {
+	public exec(string: string): RegExpExecArray;
+	public test(string: string): boolean;
+	public get source(): string;
+	public get global(): boolean;
+	public get ignoreCase(): boolean;
+	public get multiline(): boolean;
+	public lastIndex: number;
+	public compile(pattern: string, flags: string = ): this;
+	public constructor(pattern: string = undefined, flags: string = undefined);
+	(...args: any+): any+; // overloading not supported
+	public static $1: string;
+	public static $2: string;
+	public static $3: string;
+	public static $4: string;
+	public static $5: string;
+	public static $6: string;
+	public static $7: string;
+	public static $8: string;
+	public static $9: string;
+	public static input: string;
+	public static $_: string;
+	public static lastMatch: string;
+	public static "$&": string;
+	public static lastParen: string;
+	public static "$+": string;
+	public static leftContext: string;
+	public static "$`": string;
+	public static rightContext: string;
+	public static "$'": string;
+}
+
+export external public type RegExpConstructor = constructor{RegExp};
+
+export external public class Error {
+	public name: string;
+	public message: string;
+	public stack?: string;
+	public constructor(message: string = );
+	(message: string = ): Error;
+}
+
+export external public type ErrorConstructor = constructor{Error};
+
+export external public class EvalError extends Error {
+	public constructor(message: string = );
+	(message: string = ): EvalError;
+}
+
+export external public type EvalErrorConstructor = constructor{EvalError};
+
+export external public class RangeError extends Error {
+	public constructor(message: string = );
+	(message: string = ): RangeError;
+}
+
+export external public type RangeErrorConstructor = constructor{RangeError};
+
+export external public class ReferenceError extends Error {
+	public constructor(message: string = );
+	(message: string = ): ReferenceError;
+}
+
+export external public type ReferenceErrorConstructor = constructor{ReferenceError};
+
+export external public class SyntaxError extends Error {
+	public constructor(message: string = );
+	(message: string = ): SyntaxError;
+}
+
+export external public type SyntaxErrorConstructor = constructor{SyntaxError};
+
+export external public class TypeError extends Error {
+	public constructor(message: string = );
+	(message: string = ): TypeError;
+}
+
+export external public type TypeErrorConstructor = constructor{TypeError};
+
+export external public class URIError extends Error {
+	public constructor(message: string = );
+	(message: string = ): URIError;
+}
+
+export external public type URIErrorConstructor = constructor{URIError};
+
+export external public class JSON {
+	public static parse(text: string, reviver: {@This(any) function(key: string, value: any): any} = ): any;
+	public static stringify(value: any, replacer: union{Array<?>, {function(key: string, value: any) : any} } = undefined, space: union{number , string} = undefined): string;
+}
+
+export external public interface ~ConcatArray<T> {
+	get length(): number;
+	join(separator: string = ): string;
+	slice(start: number = , end: number = ): Array<T>;
+}
+
+export external public class Array<T> {
+	public length: number;
+	@Override
+	public toString(): string;
+	@Override
+	public toLocaleString(): string;
+	public pop(): T;
+	public push(...items: T): number;
+	public concat(...items: union {T, Array<? extends T>}): Array<T>;
+	public join(separator: string = ): string;
+	public reverse(): Array<T>;
+	public shift(): T;
+	public slice(start: number = , end: number = ): Array<T>;
+	public sort(compareFn: (a: T, b: T)=>number = ): this;
+	public splice(start: number = undefined, deleteCount: number = undefined, ...items: T): Array<T>;
+	public unshift(...items: T): number;
+	public indexOf(searchElement: any, fromIndex: number = ): number;
+	public lastIndexOf(searchElement: any, fromIndex: number = ): number;
+	public <ThisT extends Object> every(callback: {function(value: T, index: number, traversedObject: Array<T>)}, thisObject: ThisT = undefined): boolean;
+	public some(predicate: (value: T, index: number, array: Array<T>)=>any+, thisArg: any = ): boolean;
+	public forEach(callbackfn: (value: T, index: number, array: Array<T>)=>void, thisArg: any = ): void;
+	public <U, ThisT extends Object> map(callback: {function(value: T, index: number, traversedObject: Array<T>) : U}, thisObject: ThisT = undefined): Array<U>;
+	public <ThisT extends Object> filter(callback: {function(value: T, index: number, traversedObject: Array<T>) : boolean}, thisObject: ThisT = undefined): Array<T>;
+	public <MemoT> reduce(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
+	public <MemoT> reduceRight(callback: {function(previousValue: MemoT, currentValue: T, index: number, traversedObject: Array<T>) : MemoT}, initialValue: MemoT = undefined): MemoT;
+	public constructor(first: union{number, T} = undefined, ...items: T);  // TODO: signature is type unsafe, allows to create arrays with elements of wrong type, new Array<string>(5, 'x', 'y'), but cannot write constructor(items : union {number, T... items} = undefined)
+	(...args: any+): any+; // overloading not supported
+	public static isArray(arg: any): boolean;
+	public [Symbol.iterator](): Iterator<T>;
+	/**
+	 * The initial value of Array.prototype is the Array prototype object (15.4.4).
+	 *
+	 * @see ES5 15.4.3.1
+	 */
+	@Override public static get prototype(): Array<? extends any>
+}
+
+export external public type ArrayConstructor = constructor{Array};
+
+export external public interface ~TypedPropertyDescriptor<T> {
+	enumerable?: boolean;
+	configurable?: boolean;
+	writable?: boolean;
+	value?: T;
+	get?: ()=>T;
+	set?: (value: T)=>void;
+}
+
+export external public interface ~PromiseLike<T> {
+	<TResult1,TResult2> then(onfulfilled: ((value: T)=>(TResult1 | PromiseLike<TResult1>)) = , onrejected: ((reason: any)=>(TResult2 | PromiseLike<TResult2>)) = ): PromiseLike<TResult1 | TResult2>;
+}
+
+export external public interface ~ArrayLike<T> {
+	get length(): number;
+}
+
+export external public interface ~ThisType<T> {}
+
+export external public class ArrayBuffer {
+	public get byteLength(): number;
+	public slice(begin: number, end: number = ): ArrayBuffer;
+	public constructor(byteLength: number);
+	public static isView(arg: any): boolean;
+}
+
+export external public type ArrayBufferConstructor = constructor{ArrayBuffer};
+
+export external public interface ~ArrayBufferTypes {
+	ArrayBuffer: ArrayBuffer;
+}
+
+export external public type ArrayBufferLike = any+;
+
+export external public class DataView {
+	public get buffer(): ArrayBuffer;
+	public get byteLength(): number;
+	public get byteOffset(): number;
+	public getFloat32(byteOffset: number, littleEndian: boolean = ): number;
+	public getFloat64(byteOffset: number, littleEndian: boolean = ): number;
+	public getInt8(byteOffset: number): number;
+	public getInt16(byteOffset: number, littleEndian: boolean = ): number;
+	public getInt32(byteOffset: number, littleEndian: boolean = ): number;
+	public getUint8(byteOffset: number): number;
+	public getUint16(byteOffset: number, littleEndian: boolean = ): number;
+	public getUint32(byteOffset: number, littleEndian: boolean = ): number;
+	public setFloat32(byteOffset: number, value: number, littleEndian: boolean = ): void;
+	public setFloat64(byteOffset: number, value: number, littleEndian: boolean = ): void;
+	public setInt8(byteOffset: number, value: number): void;
+	public setInt16(byteOffset: number, value: number, littleEndian: boolean = ): void;
+	public setInt32(byteOffset: number, value: number, littleEndian: boolean = ): void;
+	public setUint8(byteOffset: number, value: number): void;
+	public setUint16(byteOffset: number, value: number, littleEndian: boolean = ): void;
+	public setUint32(byteOffset: number, value: number, littleEndian: boolean = ): void;
+	public constructor(buffer: ArrayBufferLike, byteOffset: number = , byteLength: number = );
+}
+
+export external public type DataViewConstructor = constructor{DataView};
+
+export external public class Int8Array {
+	public get BYTES_PER_ELEMENT(): number;
+	public get buffer(): ArrayBufferLike;
+	public get byteLength(): number;
+	public get byteOffset(): number;
+	public copyWithin(target: number, start: number, end: number = ): this;
+	public every(predicate: (value: number, index: number, array: Int8Array)=>any+, thisArg: any = ): boolean;
+	public fill(value: number, start: number = , end: number = ): this;
+	public filter(predicate: (value: number, index: number, array: Int8Array)=>any, thisArg: any = ): Int8Array;
+	public find(predicate: (value: number, index: number, obj: Int8Array)=>boolean, thisArg: any = ): number;
+	public findIndex(predicate: (value: number, index: number, obj: Int8Array)=>boolean, thisArg: any = ): number;
+	public forEach(callbackfn: (value: number, index: number, array: Int8Array)=>void, thisArg: any = ): void;
+	public indexOf(searchElement: number, fromIndex: number = ): number;
+	public join(separator: string = ): string;
+	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
+	public get length(): number;
+	public map(callbackfn: (value: number, index: number, array: Int8Array)=>number, thisArg: any = ): Int8Array;
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
+	public reverse(): Int8Array;
+	public set(array: ArrayLike<number>, offset: number = ): void;
+	public slice(start: number = , end: number = ): Int8Array;
+	public some(predicate: (value: number, index: number, array: Int8Array)=>any+, thisArg: any = ): boolean;
+	public sort(compareFn: (a: number, b: number)=>number = ): this;
+	public subarray(begin: number = , end: number = ): Int8Array;
+	@Override
+	public toLocaleString(): string;
+	@Override
+	public toString(): string;
+	@Override
+	public valueOf(): Int8Array;
+	public constructor(...args: any+); // overloading not supported
+	public static get BYTES_PER_ELEMENT(): number;
+	public static of(...items: number): Int8Array;
+	public static from(...args: any+): any+; // overloading not supported
+}
+
+export external public type Int8ArrayConstructor = constructor{Int8Array};
+
+export external public class Uint8Array {
+	public get BYTES_PER_ELEMENT(): number;
+	public get buffer(): ArrayBufferLike;
+	public get byteLength(): number;
+	public get byteOffset(): number;
+	public copyWithin(target: number, start: number, end: number = ): this;
+	public every(predicate: (value: number, index: number, array: Uint8Array)=>any+, thisArg: any = ): boolean;
+	public fill(value: number, start: number = , end: number = ): this;
+	public filter(predicate: (value: number, index: number, array: Uint8Array)=>any, thisArg: any = ): Uint8Array;
+	public find(predicate: (value: number, index: number, obj: Uint8Array)=>boolean, thisArg: any = ): number;
+	public findIndex(predicate: (value: number, index: number, obj: Uint8Array)=>boolean, thisArg: any = ): number;
+	public forEach(callbackfn: (value: number, index: number, array: Uint8Array)=>void, thisArg: any = ): void;
+	public indexOf(searchElement: number, fromIndex: number = ): number;
+	public join(separator: string = ): string;
+	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
+	public get length(): number;
+	public map(callbackfn: (value: number, index: number, array: Uint8Array)=>number, thisArg: any = ): Uint8Array;
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
+	public reverse(): Uint8Array;
+	public set(array: ArrayLike<number>, offset: number = ): void;
+	public slice(start: number = , end: number = ): Uint8Array;
+	public some(predicate: (value: number, index: number, array: Uint8Array)=>any+, thisArg: any = ): boolean;
+	public sort(compareFn: (a: number, b: number)=>number = ): this;
+	public subarray(begin: number = , end: number = ): Uint8Array;
+	@Override
+	public toLocaleString(): string;
+	@Override
+	public toString(): string;
+	@Override
+	public valueOf(): Uint8Array;
+	public constructor(...args: any+); // overloading not supported
+	public static get BYTES_PER_ELEMENT(): number;
+	public static of(...items: number): Uint8Array;
+	public static from(...args: any+): any+; // overloading not supported
+}
+
+export external public type Uint8ArrayConstructor = constructor{Uint8Array};
+
+export external public class Uint8ClampedArray {
+	public get BYTES_PER_ELEMENT(): number;
+	public get buffer(): ArrayBufferLike;
+	public get byteLength(): number;
+	public get byteOffset(): number;
+	public copyWithin(target: number, start: number, end: number = ): this;
+	public every(predicate: (value: number, index: number, array: Uint8ClampedArray)=>any+, thisArg: any = ): boolean;
+	public fill(value: number, start: number = , end: number = ): this;
+	public filter(predicate: (value: number, index: number, array: Uint8ClampedArray)=>any, thisArg: any = ): Uint8ClampedArray;
+	public find(predicate: (value: number, index: number, obj: Uint8ClampedArray)=>boolean, thisArg: any = ): number;
+	public findIndex(predicate: (value: number, index: number, obj: Uint8ClampedArray)=>boolean, thisArg: any = ): number;
+	public forEach(callbackfn: (value: number, index: number, array: Uint8ClampedArray)=>void, thisArg: any = ): void;
+	public indexOf(searchElement: number, fromIndex: number = ): number;
+	public join(separator: string = ): string;
+	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
+	public get length(): number;
+	public map(callbackfn: (value: number, index: number, array: Uint8ClampedArray)=>number, thisArg: any = ): Uint8ClampedArray;
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
+	public reverse(): Uint8ClampedArray;
+	public set(array: ArrayLike<number>, offset: number = ): void;
+	public slice(start: number = , end: number = ): Uint8ClampedArray;
+	public some(predicate: (value: number, index: number, array: Uint8ClampedArray)=>any+, thisArg: any = ): boolean;
+	public sort(compareFn: (a: number, b: number)=>number = ): this;
+	public subarray(begin: number = , end: number = ): Uint8ClampedArray;
+	@Override
+	public toLocaleString(): string;
+	@Override
+	public toString(): string;
+	@Override
+	public valueOf(): Uint8ClampedArray;
+	public constructor(...args: any+); // overloading not supported
+	public static get BYTES_PER_ELEMENT(): number;
+	public static of(...items: number): Uint8ClampedArray;
+	public static from(...args: any+): any+; // overloading not supported
+}
+
+export external public type Uint8ClampedArrayConstructor = constructor{Uint8ClampedArray};
+
+export external public class Int16Array {
+	public get BYTES_PER_ELEMENT(): number;
+	public get buffer(): ArrayBufferLike;
+	public get byteLength(): number;
+	public get byteOffset(): number;
+	public copyWithin(target: number, start: number, end: number = ): this;
+	public every(predicate: (value: number, index: number, array: Int16Array)=>any+, thisArg: any = ): boolean;
+	public fill(value: number, start: number = , end: number = ): this;
+	public filter(predicate: (value: number, index: number, array: Int16Array)=>any, thisArg: any = ): Int16Array;
+	public find(predicate: (value: number, index: number, obj: Int16Array)=>boolean, thisArg: any = ): number;
+	public findIndex(predicate: (value: number, index: number, obj: Int16Array)=>boolean, thisArg: any = ): number;
+	public forEach(callbackfn: (value: number, index: number, array: Int16Array)=>void, thisArg: any = ): void;
+	public indexOf(searchElement: number, fromIndex: number = ): number;
+	public join(separator: string = ): string;
+	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
+	public get length(): number;
+	public map(callbackfn: (value: number, index: number, array: Int16Array)=>number, thisArg: any = ): Int16Array;
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
+	public reverse(): Int16Array;
+	public set(array: ArrayLike<number>, offset: number = ): void;
+	public slice(start: number = , end: number = ): Int16Array;
+	public some(predicate: (value: number, index: number, array: Int16Array)=>any+, thisArg: any = ): boolean;
+	public sort(compareFn: (a: number, b: number)=>number = ): this;
+	public subarray(begin: number = , end: number = ): Int16Array;
+	@Override
+	public toLocaleString(): string;
+	@Override
+	public toString(): string;
+	@Override
+	public valueOf(): Int16Array;
+	public constructor(...args: any+); // overloading not supported
+	public static get BYTES_PER_ELEMENT(): number;
+	public static of(...items: number): Int16Array;
+	public static from(...args: any+): any+; // overloading not supported
+}
+
+export external public type Int16ArrayConstructor = constructor{Int16Array};
+
+export external public class Uint16Array {
+	public get BYTES_PER_ELEMENT(): number;
+	public get buffer(): ArrayBufferLike;
+	public get byteLength(): number;
+	public get byteOffset(): number;
+	public copyWithin(target: number, start: number, end: number = ): this;
+	public every(predicate: (value: number, index: number, array: Uint16Array)=>any+, thisArg: any = ): boolean;
+	public fill(value: number, start: number = , end: number = ): this;
+	public filter(predicate: (value: number, index: number, array: Uint16Array)=>any, thisArg: any = ): Uint16Array;
+	public find(predicate: (value: number, index: number, obj: Uint16Array)=>boolean, thisArg: any = ): number;
+	public findIndex(predicate: (value: number, index: number, obj: Uint16Array)=>boolean, thisArg: any = ): number;
+	public forEach(callbackfn: (value: number, index: number, array: Uint16Array)=>void, thisArg: any = ): void;
+	public indexOf(searchElement: number, fromIndex: number = ): number;
+	public join(separator: string = ): string;
+	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
+	public get length(): number;
+	public map(callbackfn: (value: number, index: number, array: Uint16Array)=>number, thisArg: any = ): Uint16Array;
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
+	public reverse(): Uint16Array;
+	public set(array: ArrayLike<number>, offset: number = ): void;
+	public slice(start: number = , end: number = ): Uint16Array;
+	public some(predicate: (value: number, index: number, array: Uint16Array)=>any+, thisArg: any = ): boolean;
+	public sort(compareFn: (a: number, b: number)=>number = ): this;
+	public subarray(begin: number = , end: number = ): Uint16Array;
+	@Override
+	public toLocaleString(): string;
+	@Override
+	public toString(): string;
+	@Override
+	public valueOf(): Uint16Array;
+	public constructor(...args: any+); // overloading not supported
+	public static get BYTES_PER_ELEMENT(): number;
+	public static of(...items: number): Uint16Array;
+	public static from(...args: any+): any+; // overloading not supported
+}
+
+export external public type Uint16ArrayConstructor = constructor{Uint16Array};
+
+export external public class Int32Array {
+	public get BYTES_PER_ELEMENT(): number;
+	public get buffer(): ArrayBufferLike;
+	public get byteLength(): number;
+	public get byteOffset(): number;
+	public copyWithin(target: number, start: number, end: number = ): this;
+	public every(predicate: (value: number, index: number, array: Int32Array)=>any+, thisArg: any = ): boolean;
+	public fill(value: number, start: number = , end: number = ): this;
+	public filter(predicate: (value: number, index: number, array: Int32Array)=>any, thisArg: any = ): Int32Array;
+	public find(predicate: (value: number, index: number, obj: Int32Array)=>boolean, thisArg: any = ): number;
+	public findIndex(predicate: (value: number, index: number, obj: Int32Array)=>boolean, thisArg: any = ): number;
+	public forEach(callbackfn: (value: number, index: number, array: Int32Array)=>void, thisArg: any = ): void;
+	public indexOf(searchElement: number, fromIndex: number = ): number;
+	public join(separator: string = ): string;
+	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
+	public get length(): number;
+	public map(callbackfn: (value: number, index: number, array: Int32Array)=>number, thisArg: any = ): Int32Array;
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
+	public reverse(): Int32Array;
+	public set(array: ArrayLike<number>, offset: number = ): void;
+	public slice(start: number = , end: number = ): Int32Array;
+	public some(predicate: (value: number, index: number, array: Int32Array)=>any+, thisArg: any = ): boolean;
+	public sort(compareFn: (a: number, b: number)=>number = ): this;
+	public subarray(begin: number = , end: number = ): Int32Array;
+	@Override
+	public toLocaleString(): string;
+	@Override
+	public toString(): string;
+	@Override
+	public valueOf(): Int32Array;
+	public constructor(...args: any+); // overloading not supported
+	public static get BYTES_PER_ELEMENT(): number;
+	public static of(...items: number): Int32Array;
+	public static from(...args: any+): any+; // overloading not supported
+}
+
+export external public type Int32ArrayConstructor = constructor{Int32Array};
+
+export external public class Uint32Array {
+	public get BYTES_PER_ELEMENT(): number;
+	public get buffer(): ArrayBufferLike;
+	public get byteLength(): number;
+	public get byteOffset(): number;
+	public copyWithin(target: number, start: number, end: number = ): this;
+	public every(predicate: (value: number, index: number, array: Uint32Array)=>any+, thisArg: any = ): boolean;
+	public fill(value: number, start: number = , end: number = ): this;
+	public filter(predicate: (value: number, index: number, array: Uint32Array)=>any, thisArg: any = ): Uint32Array;
+	public find(predicate: (value: number, index: number, obj: Uint32Array)=>boolean, thisArg: any = ): number;
+	public findIndex(predicate: (value: number, index: number, obj: Uint32Array)=>boolean, thisArg: any = ): number;
+	public forEach(callbackfn: (value: number, index: number, array: Uint32Array)=>void, thisArg: any = ): void;
+	public indexOf(searchElement: number, fromIndex: number = ): number;
+	public join(separator: string = ): string;
+	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
+	public get length(): number;
+	public map(callbackfn: (value: number, index: number, array: Uint32Array)=>number, thisArg: any = ): Uint32Array;
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
+	public reverse(): Uint32Array;
+	public set(array: ArrayLike<number>, offset: number = ): void;
+	public slice(start: number = , end: number = ): Uint32Array;
+	public some(predicate: (value: number, index: number, array: Uint32Array)=>any+, thisArg: any = ): boolean;
+	public sort(compareFn: (a: number, b: number)=>number = ): this;
+	public subarray(begin: number = , end: number = ): Uint32Array;
+	@Override
+	public toLocaleString(): string;
+	@Override
+	public toString(): string;
+	@Override
+	public valueOf(): Uint32Array;
+	public constructor(...args: any+); // overloading not supported
+	public static get BYTES_PER_ELEMENT(): number;
+	public static of(...items: number): Uint32Array;
+	public static from(...args: any+): any+; // overloading not supported
+}
+
+export external public type Uint32ArrayConstructor = constructor{Uint32Array};
+
+export external public class Float32Array {
+	public get BYTES_PER_ELEMENT(): number;
+	public get buffer(): ArrayBufferLike;
+	public get byteLength(): number;
+	public get byteOffset(): number;
+	public copyWithin(target: number, start: number, end: number = ): this;
+	public every(predicate: (value: number, index: number, array: Float32Array)=>any+, thisArg: any = ): boolean;
+	public fill(value: number, start: number = , end: number = ): this;
+	public filter(predicate: (value: number, index: number, array: Float32Array)=>any, thisArg: any = ): Float32Array;
+	public find(predicate: (value: number, index: number, obj: Float32Array)=>boolean, thisArg: any = ): number;
+	public findIndex(predicate: (value: number, index: number, obj: Float32Array)=>boolean, thisArg: any = ): number;
+	public forEach(callbackfn: (value: number, index: number, array: Float32Array)=>void, thisArg: any = ): void;
+	public indexOf(searchElement: number, fromIndex: number = ): number;
+	public join(separator: string = ): string;
+	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
+	public get length(): number;
+	public map(callbackfn: (value: number, index: number, array: Float32Array)=>number, thisArg: any = ): Float32Array;
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
+	public reverse(): Float32Array;
+	public set(array: ArrayLike<number>, offset: number = ): void;
+	public slice(start: number = , end: number = ): Float32Array;
+	public some(predicate: (value: number, index: number, array: Float32Array)=>any+, thisArg: any = ): boolean;
+	public sort(compareFn: (a: number, b: number)=>number = ): this;
+	public subarray(begin: number = , end: number = ): Float32Array;
+	@Override
+	public toLocaleString(): string;
+	@Override
+	public toString(): string;
+	@Override
+	public valueOf(): Float32Array;
+	public constructor(...args: any+); // overloading not supported
+	public static get BYTES_PER_ELEMENT(): number;
+	public static of(...items: number): Float32Array;
+	public static from(...args: any+): any+; // overloading not supported
+}
+
+export external public type Float32ArrayConstructor = constructor{Float32Array};
+
+export external public class Float64Array {
+	public get BYTES_PER_ELEMENT(): number;
+	public get buffer(): ArrayBufferLike;
+	public get byteLength(): number;
+	public get byteOffset(): number;
+	public copyWithin(target: number, start: number, end: number = ): this;
+	public every(predicate: (value: number, index: number, array: Float64Array)=>any+, thisArg: any = ): boolean;
+	public fill(value: number, start: number = , end: number = ): this;
+	public filter(predicate: (value: number, index: number, array: Float64Array)=>any, thisArg: any = ): Float64Array;
+	public find(predicate: (value: number, index: number, obj: Float64Array)=>boolean, thisArg: any = ): number;
+	public findIndex(predicate: (value: number, index: number, obj: Float64Array)=>boolean, thisArg: any = ): number;
+	public forEach(callbackfn: (value: number, index: number, array: Float64Array)=>void, thisArg: any = ): void;
+	public indexOf(searchElement: number, fromIndex: number = ): number;
+	public join(separator: string = ): string;
+	public lastIndexOf(searchElement: number, fromIndex: number = ): number;
+	public get length(): number;
+	public map(callbackfn: (value: number, index: number, array: Float64Array)=>number, thisArg: any = ): Float64Array;
+	public reduce(...args: any+): any+; // overloading not supported
+	public reduceRight(...args: any+): any+; // overloading not supported
+	public reverse(): Float64Array;
+	public set(array: ArrayLike<number>, offset: number = ): void;
+	public slice(start: number = , end: number = ): Float64Array;
+	public some(predicate: (value: number, index: number, array: Float64Array)=>any+, thisArg: any = ): boolean;
+	public sort(compareFn: (a: number, b: number)=>number = ): this;
+	public subarray(begin: number = , end: number = ): Float64Array;
+	@Override
+	public toString(): string;
+	@Override
+	public valueOf(): Float64Array;
+	public constructor(...args: any+); // overloading not supported
+	public static get BYTES_PER_ELEMENT(): number;
+	public static of(...items: number): Float64Array;
+	public static from(...args: any+): any+; // overloading not supported
+}
+
+export external public type Float64ArrayConstructor = constructor{Float64Array};
+
+export external public type ReadonlyArray<T> = Array<T>;
+
+/**
+ * See [ECMA6] Section 19.4.
+ *
+ * A symbol is a unique and immutable data type and may be used as an identifier for object properties. The symbol
+ * object is an implicit object wrapper for the symbol primitive data type.
+ *
+ * TODO in ES6 this is defined to be a property of the global object and a constructor function
+ */
+export external public class Symbol extends Object {
+
+	/**
+	 * Creates a new, primitive symbol.
+	 *
+	 * @param description A description of the symbol which can be used for debugging but not to access the symbol itself.
+	 */
+	(description: string = undefined): symbol
+
+	/**
+	 * This "well-known" symbol may be used to define the default iterator of an object.
+	 *
+	 * @see ES6, 19.4.2.4
+	 */
+	public const iterator: symbol
+
+	// well-known symbols moved here from file 'es2015.symbol.wellknown.d.ts'
+	public const hasInstance: symbol;
+	public const isConcatSpreadable: symbol;
+	public const match: symbol;
+	public const replace: symbol;
+	public const search: symbol;
+	public const species: symbol;
+	public const split: symbol;
+	public const toPrimitive: symbol;
+	public const toStringTag: symbol;
+	public const unscopables: symbol;
+	// well-known symbols moved here from file 'es2018.asynciterable.d.ts'
+	public const asyncIterator: symbol;
+	// well-known symbols moved here from file 'es2020.symbol.wellknown.d.ts'
+	public const matchAll: symbol;
+
+	/**
+	 * Returns the shared symbol with the given key from the Javascript engine's shared symbol registry.
+	 * Creates a new symbol if not found.
+	 *
+	 * @see ES6, 19.4.2.1
+	 */
+	public static for(key: string): symbol
+
+	/**
+	 * Returns the key for the given shared symbol if found in the Javascript engine's shared symbol registry.
+	 * Otherwise 'undefined' is returned.
+	 *
+	 * @see ES6, 19.4.2.5
+	 */
+	public static keyFor(sym: symbol): string
+}
+
+/**
+ * An iterator over a collection, defining a standard way to produce a sequence of values (either finite
+ * or infinite).
+ * <p>
+ * Note that in ECMAScript 6 this is not a built-in type, but a protocol. This protocol can be implemented
+ * by any object respecting some conventions.
+ */
+export external public interface ~Iterator<out T> {
+	/**
+	 * A zero arguments function that returns an object with two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract next(): IteratorEntry<T>
+}
+
+/**
+ * Same as interface <code>Iterator</code>, but for asynchronous iteration.
+ */
+export external public interface ~AsyncIterator<out T> {
+	/**
+	 * A zero arguments function that returns a promise of an object with two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract next(): Promise<IteratorEntry<T>, ?>
+}
+
+/**
+ * The value returned by an Iterator's method next().
+ */
+export external public interface ~IteratorEntry<out T> {
+	/**
+	 * Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 * optionally specifies the return value of the iterator. The return values are explained here.
+	 * Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 * equivalent of not specifying the done property altogether.
+	 */
+	public done: boolean;
+//	public get done(): boolean
+	/**
+	 * Any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 */
+	// TODO dirty hack: to use covariant T as type of field 'value', we make the field final; but usually fields
+	// in interfaces cannot be final - only works because no validation in n4ts!
+	@Final public value?: T;
+	// this would be the alternative, but then we would lose the optionality of 'value':
+//	public get value(): T
+}
+
+/**
+ * An object that can be iterated over. Whenever an object needs to be iterated (such as at the beginning
+ * of a for..of loop), its <code>[Symbol.iterator]</code> method is called with no arguments, and the
+ * returned iterator is used to obtain the values to be iterated.
+ * <p>
+ * Note that in ECMAScript 6 this is not a built-in type, but a protocol. This protocol can be implemented
+ * by any object respecting some conventions.
+ * <p>
+ * For asynchronous iteration use interface <code>AsyncIterable</code> instead.
+ */
+export external public interface ~Iterable<out T> {
+	/**
+	 * Returns an object conforming to the iteration protocol.
+	 */
+	public abstract [Symbol.iterator](): Iterator<T>
+}
+
+/**
+ * Same as interface <code>Iterable</code>, but for asynchronous iteration.
+ */
+export external public interface ~AsyncIterable<out T> {
+	/**
+	 * Returns an object conforming to the asynchronous iteration protocol.
+	 */
+	public abstract [Symbol.asyncIterator](): AsyncIterator<T>
+}
+
+
+/**
+ * An iterator over a collection, defining a standard way to produce a sequence of values (either finite
+ * or infinite).
+ * <p>
+ * Note that in ECMAScript 6 this is not a built-in type, but a protocol. This protocol can be implemented
+ * by any object respecting some conventions.
+ */
+export external public interface ~Generator<out TYield, out TReturn, in TNext> extends Iterable<TYield>, Iterator<TYield> {
+
+	/**
+	 * A one (optional) argument function. The (optional) argument <code>value</code> is passed to the
+	 * current yield expression in the generator function. The return is an <code>IteratorEntry</code>
+	 * with two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	@Override public abstract next(value: TNext = undefined): IteratorEntry<TYield>
+
+	/**
+	 * A zero arguments function that returns the <code>this</code> object, conforming to the iterator
+	 * interface.
+	 * <p>
+	 * Note that the iterator can only be iterated once.
+	 */
+	@Override public abstract [Symbol.iterator](): Generator<TYield, TReturn, TNext>
+
+	/**
+	 * A one argument function. The argument <code>exception</code> is thrown at the current yield
+	 * expression in the generator function. The return is an <code>IteratorEntry</code> with two
+	 * properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract throw(exception: any): IteratorEntry<TYield>;
+
+    /**
+	 * A one (optional) argument function. The (optional) argument <code>value</code> is passed to the
+	 * current yield expression in the generator function. The return is an <code>IteratorEntry</code> with
+	 * two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract return(value: TNext = undefined): IteratorEntry<TReturn>;
+}
+
+/**
+ * An asynchronous generator object. See interface <code>Generator</code> for details.
+ */
+export external public interface ~AsyncGenerator<out TYield, out TReturn, in TNext> extends AsyncIterable<TYield>, AsyncIterator<TYield> {
+
+	/**
+	 * A one (optional) argument function. The (optional) argument <code>value</code> is passed to the
+	 * current yield expression in the generator function. Return a promise of an <code>IteratorEntry</code>
+	 * with two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	@Override public abstract next(value: TNext = undefined): Promise<IteratorEntry<TYield>, ?>
+
+	/**
+	 * A zero arguments function that returns the <code>this</code> object, conforming to the asynchronous
+	 * iterator interface.
+	 * <p>
+	 * Note that the iterator can only be iterated once.
+	 */
+	@Override public abstract [Symbol.asyncIterator](): AsyncGenerator<TYield, TReturn, TNext>
+
+	/**
+	 * A one argument function. The argument <code>exception</code> is thrown at the current yield
+	 * expression in the generator function. Returns a promise of an <code>IteratorEntry</code> with two
+	 * properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract throw(exception: any): Promise<IteratorEntry<TYield>, any>;
+
+    /**
+	 * A one (optional) argument function. The (optional) argument <code>value</code> is passed to the
+	 * current yield expression in the generator function. Returns a promise of an <code>IteratorEntry</code> with
+	 * two properties:
+	 * <ul>
+	 * <li>done (boolean)<br>
+	 *     Has the value true if the iterator is past the end of the iterated sequence. In this case value
+	 *     optionally specifies the return value of the iterator. The return values are explained here.
+	 *     Has the value false if the iterator was able to produce the next value in the sequence. This is
+	 *     equivalent of not specifying the done property altogether.
+	 * <li>value<br>
+	 *     any JavaScript value returned by the iterator. Can be omitted when done is true.
+	 * </ul>
+	 */
+	public abstract return(value: TNext = undefined): Promise<IteratorEntry<TReturn>, ?>;
+}
+
+/**
+ * A promise represents a proxy for a value that is usually not yet known
+ * when the promise is created.
+ * <p>
+ * A promise can exist in either of two states: "pending" and "settled".
+ * If the result value of a promise is not yet determined, the promise is
+ * "pending". Once the value has been determined, the promise becomes
+ * "settled".
+ * <p>
+ * A promise can either be fulfilled or rejected. A fulfilled promise
+ * indicates a successful completion of whatever asynchronous process it
+ * encapsulates. A rejected promise indicates erroneous or abnormal completion
+ * of the process.
+ */
+export external public class Promise<out S, out F = any> extends Object {
+
+	public constructor(
+		executor: {function(
+			resolveFn:{function(arg: S = undefined):void},
+			rejectFn: {function(arg: F = undefined):void}
+		): void}
+	)
+
+	public <Snew, Fnew> then(
+		onFulfilled: {function(arg:S = undefined): union{Snew, Promise<Snew, Fnew>}?},
+		onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?} = undefined
+	): Promise<Snew, Fnew>
+
+	public <Snew, Fnew> catch(
+		onRejected: {function(arg:F = undefined): union{Fnew, Promise<Snew, Fnew>}?}
+	): Promise<Snew, Fnew>
+
+	public static <S, F> reject(f: F): Promise<S, F>
+	public static <S, F> resolve(
+		s: union{
+			Promise<S, F>,
+			~Object with { then(...args: any): Promise<S, F>; }, // i.e. thenable
+			S
+		}
+	): Promise<S, F>
+
+	public static <T> all(iterable: Iterable<union{Promise<T,?>, T}>): Promise<Array<T>, any>
+	public static <T> race(iterable: Iterable<union{Promise<T,?>, T}>): Promise<T, any>
+}
+
+export external public type PromiseConstructor = constructor{Promise};
+
+
+export external public interface ~ArrayBufferView {
+	/**
+	 * The ArrayBuffer instance referenced by the array.
+	 */
+	get buffer(): ArrayBufferLike;
+
+	/**
+	 * The length in bytes of the array.
+	 */
+	get byteLength(): number;
+
+	/**
+	 * The offset in bytes of the array.
+	 */
+	get byteOffset(): number;
+}

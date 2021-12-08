@@ -46,7 +46,7 @@ for(var ivar0 of "abc") {
 console.log('#####################');
 
 var iStrNum : Iterable2<string,number> = ["one",2];
-// XPECT type of 'ivar1' --> union{string,number}
+// XPECT type of 'ivar1' --> union{number,string}
 for(var ivar1 of iStrNum) {
 	console.log(ivar1);
 }

@@ -147,7 +147,7 @@ public class ExecuteCommandParamsTypeAdapter extends TypeAdapter<ExecuteCommandP
 
 	private Object fromJson(JsonReader in, Type type) throws JsonIOException {
 		if (isNullOrVoidType(type)) {
-			return new JsonParser().parse(in);
+			return JsonParser.parseReader(in);
 		}
 		return gson.fromJson(in, type);
 	}

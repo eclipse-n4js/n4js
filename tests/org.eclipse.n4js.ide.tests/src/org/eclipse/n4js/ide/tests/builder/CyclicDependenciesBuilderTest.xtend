@@ -99,14 +99,14 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		assertNoIssues();
 
 		changeOpenedFile("P1/package.json", "\"n4js-runtime\": \"*\"" -> "\"n4js-runtime\": \"*\", \"P2\": \"*\"");
-		
+
 		assertNoIssues();
 		
 		saveOpenedFile("P1/package.json");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:24 - 16:28], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [16:24 - 16:28], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"]
 		);
 	}
 
@@ -117,8 +117,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		startAndWaitForLspServer();
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"]
 		);
 		
 		openFile("P1/package.json");
@@ -137,8 +137,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		startAndWaitForLspServer();
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"]
 		);
 		
 		openFile("M1");
@@ -146,24 +146,24 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		changeOpenedFile("M1", "export public class C1 {" -> "export public class C1 { #");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
 		);
 		
 		saveOpenedFile("M1");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
 		);
 		
 		closeFile("M1");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"]
 		);
 	}
 
@@ -174,8 +174,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		startAndWaitForLspServer();
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"]
 		);
 		
 		openFile("M1");
@@ -183,24 +183,24 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		changeOpenedFile("M1", "export public class C1 {" -> "export public class C1 { #");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
 		);
 		
 		saveOpenedFile("M1");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
 		);
 		
 		closeFile("M1");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"]
 		);
 			
 		
@@ -211,7 +211,7 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 
 		
 		assertIssues(
-			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
 		);
 	}
 
@@ -222,8 +222,8 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		startAndWaitForLspServer();
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"]
 		);
 		
 		openFile("M1");
@@ -231,17 +231,17 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		changeOpenedFile("M1", "export public class C1 {" -> "export public class C1 { #");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
 		);
 		
 		saveOpenedFile("M1");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: P1, P2.)"],
-			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
+			"P1/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
 		);
 			
 		
@@ -252,7 +252,7 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 
 		
 		assertIssues(
-			"M1"              -> #["(Error, [0:25 - 0:26], extraneous input '#' expecting '}')"]
+			"M1"              -> #["(Error, [0:25 - 1:0], extraneous input '#\\n' expecting '}')"]
 		);
 	}
 }

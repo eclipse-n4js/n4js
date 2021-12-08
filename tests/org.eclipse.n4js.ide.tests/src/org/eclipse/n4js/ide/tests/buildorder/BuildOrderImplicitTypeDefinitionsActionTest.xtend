@@ -48,11 +48,11 @@ class BuildOrderImplicitTypeDefinitionsActionTest extends AbstractBuildOrderTest
 			]
 		);
 		
-		assertBuildOrder("yarn-test-project, n4js-runtime, @n4jsd/DEF1, JS1, P");
+		assertBuildOrder("yarn-test-project, yarn-test-project/node_modules/n4js-runtime, yarn-test-project/packages/@n4jsd/DEF1, yarn-test-project/packages/JS1, yarn-test-project/packages/P");
 		
 		changeNonOpenedFile("P/package.json", '''"JS1"''' -> '''JS_UNAVAILABLE''');
 		
-		assertBuildOrder("yarn-test-project, n4js-runtime, @n4jsd/DEF1, JS1, P");
+		assertBuildOrder("yarn-test-project, yarn-test-project/node_modules/n4js-runtime, yarn-test-project/packages/@n4jsd/DEF1, yarn-test-project/packages/JS1, yarn-test-project/packages/P");
 	}
 	
 
@@ -87,11 +87,11 @@ class BuildOrderImplicitTypeDefinitionsActionTest extends AbstractBuildOrderTest
 			]
 		);
 		
-		assertBuildOrder("yarn-test-project, n4js-runtime, @n4jsd/DEF1, JS1, P");
+		assertBuildOrder("yarn-test-project, yarn-test-project/node_modules/n4js-runtime, yarn-test-project/packages/@n4jsd/DEF1, yarn-test-project/packages/JS1, yarn-test-project/packages/P");
 		
 		changeNonOpenedFile("@n4jsd/DEF1/package.json", '''"definesPackage": "JS1"''' -> '''"definesPackage": "JS_UNAVAILABLE"''');
 		
-		assertBuildOrder("yarn-test-project, n4js-runtime, @n4jsd/DEF1, JS1, P");
+		assertBuildOrder("yarn-test-project, yarn-test-project/node_modules/n4js-runtime, yarn-test-project/packages/@n4jsd/DEF1, yarn-test-project/packages/JS1, yarn-test-project/packages/P");
 	}
 //*/	
 }

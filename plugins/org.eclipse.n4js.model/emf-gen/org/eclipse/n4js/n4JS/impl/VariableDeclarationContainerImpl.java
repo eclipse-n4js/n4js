@@ -151,7 +151,7 @@ public abstract class VariableDeclarationContainerImpl extends ProxyResolvingEOb
 	public EList<VariableDeclaration> getVarDecl() {
 		final Function1<VariableDeclarationOrBinding, EList<VariableDeclaration>> _function = new Function1<VariableDeclarationOrBinding, EList<VariableDeclaration>>() {
 			public EList<VariableDeclaration> apply(final VariableDeclarationOrBinding it) {
-				return it.getVariableDeclarations();
+				return it.getAllVariableDeclarations();
 			}
 		};
 		return ECollections.<VariableDeclaration>toEList(Iterables.<VariableDeclaration>concat(XcoreEListExtensions.<VariableDeclarationOrBinding, EList<VariableDeclaration>>map(this.getVarDeclsOrBindings(), _function)));

@@ -33,7 +33,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TypableElement
-import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
@@ -372,8 +372,9 @@ public class TypeProcessor extends AbstractProcessor {
 				// semi-cyclic forward reference to a variable declaration in a for in/of loop:
 				// -> similar to cyclic variable declarations, we have to "guess" a type.
 				val declTypeRefNode = (node as VariableDeclaration).declaredTypeRefNode;
-				return if (declTypeRefNode !== null) {
-					declTypeRefNode.cachedProcessedTypeRef ?: tsh.resolveTypeAliases(G, declTypeRefNode.typeRefInAST)
+				val declTypeRefInAST = declTypeRefNode?.typeRefInAST;
+				return if (declTypeRefInAST !== null) {
+					declTypeRefNode.cachedProcessedTypeRef ?: tsh.resolveTypeAliases(G, declTypeRefInAST)
 				} else {
 					G.anyTypeRef
 				};

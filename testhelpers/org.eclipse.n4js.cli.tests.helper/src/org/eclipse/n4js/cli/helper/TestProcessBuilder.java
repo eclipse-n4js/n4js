@@ -70,6 +70,7 @@ public class TestProcessBuilder {
 	/** @return a process for running the given executable. */
 	public ProcessBuilder run(Path workingDirectory, Map<String, String> environment, Path executable,
 			String[] options) {
+		BinariesUtils.inheritNodeJsPathEnvVariable(environment); // necessary?
 		final String[] cmd = createCommand(workingDirectory, environment, executable, options);
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}

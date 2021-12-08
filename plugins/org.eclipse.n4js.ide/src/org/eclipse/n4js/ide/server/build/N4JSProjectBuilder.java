@@ -20,8 +20,11 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.tooling.tester.TestCatalogSupplier;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.ide.server.ResourceChangeSet;
@@ -59,7 +62,16 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 		writeTestCatalog();
 
+		onBuildDone();
+
 		return buildResult;
+	}
+
+	/**
+	 * This is a suitable place for measuring memory consumption with method {@link UtilN4#measureUsedMemory(boolean)}.
+	 */
+	private void onBuildDone() {
+		// UtilN4.measureUsedMemory(true);
 	}
 
 	@Override
@@ -67,6 +79,20 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 		super.doClean(buildRequest, cancelIndicator);
 
 		removeTestCatalog();
+	}
+
+	@Override
+	protected XBuildRequest newBuildRequest(IBuildRequestFactory buildRequestFactory, Set<URI> changedFiles,
+			Set<URI> deletedFiles, List<Delta> externalDeltas, CancelIndicator cancelIndicator) {
+
+		XBuildRequest request = super.newBuildRequest(buildRequestFactory, changedFiles, deletedFiles, externalDeltas,
+				cancelIndicator);
+
+		ProjectDescription pd = getProjectConfig().getProjectDescription();
+		if (N4JSLanguageUtils.isDtsGenerationActive(pd)) {
+			request.addAfterBuildListener(new DtsAfterBuildListener(getProjectConfig()));
+		}
+		return request;
 	}
 
 	@Override

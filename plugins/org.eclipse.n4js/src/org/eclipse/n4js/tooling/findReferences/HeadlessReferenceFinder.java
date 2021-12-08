@@ -28,8 +28,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
-
 /**
  * A reference finder that does not need any user interaction. This may be used during the build.
  */

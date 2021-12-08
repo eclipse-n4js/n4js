@@ -23,7 +23,8 @@ popd
 TARGET_DIR=${N4JS_DIR}/target
 EXTENSION_DIR=${N4JS_DIR}/lsp-clients/n4js-vscode-extension
 VERDACCIO_CONFIG_DIR=${N4JS_DIR}/releng/org.eclipse.n4js.libs.build/verdaccioConfig
-VERDACCIO_IMAGE=verdaccio/verdaccio@sha256:e64056b6aa104197dbac07e77a1fbcf8f5c67d9b443e0ed2a191d41a1da7a944
+# verdaccio 5.1.2
+VERDACCIO_IMAGE=verdaccio/verdaccio@sha256:818b76e40631cf888c288d1cfe9579a6e9e816f2e1e5f87fe1471eb3f36dc168
 
 
 
@@ -157,4 +158,4 @@ echo "==== STEP 8/8: Killing Verdaccio"
 docker rm -f extension-publish-verdaccio || true
 
 
-echo "==== PUBLISH N4JS-LIBS - DONE"
+echo "==== BUILD VSCODE EXTENSION - DONE"

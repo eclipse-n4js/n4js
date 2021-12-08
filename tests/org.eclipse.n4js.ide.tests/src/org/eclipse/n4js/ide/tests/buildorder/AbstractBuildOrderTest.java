@@ -50,6 +50,18 @@ abstract class AbstractBuildOrderTest extends AbstractIdeTest {
 	 *            test workspace
 	 */
 	@SafeVarargs
+	final void testProject(String buildOrder, Pair<String, ? extends CharSequence>... projectsModulesContents) {
+		initProject(projectsModulesContents);
+		assertBuildOrder(buildOrder, Collections.emptyList());
+	}
+
+	/**
+	 * @param buildOrder
+	 *            string of project names ordered in build order
+	 * @param projectsModulesContents
+	 *            test workspace
+	 */
+	@SafeVarargs
 	final void test(String buildOrder, Collection<Collection<String>> cycles,
 			Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
 
@@ -61,6 +73,12 @@ abstract class AbstractBuildOrderTest extends AbstractIdeTest {
 	@SafeVarargs
 	final void init(Pair<String, List<Pair<String, String>>>... projectsModulesContents) {
 		testWorkspaceManager.createTestOnDisk(projectsModulesContents);
+		startAndWaitForLspServer();
+	}
+
+	@SafeVarargs
+	final void initProject(Pair<String, ? extends CharSequence>... projectsModulesContents) {
+		testWorkspaceManager.createTestProjectOnDisk(projectsModulesContents);
 		startAndWaitForLspServer();
 	}
 

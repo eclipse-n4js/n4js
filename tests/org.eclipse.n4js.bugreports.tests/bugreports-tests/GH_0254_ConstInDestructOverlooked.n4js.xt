@@ -12,25 +12,27 @@
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 
 
-const c1 = "foo";
+let value: string;
+
+const c1 = value;
 // XPECT errors --> "Const variable c1 is read-only." at "c1"
-c1 = "works";
+c1 = value;
 
 
-const [c2a, c2b] = ["const foo", "const bar"];
+const [c2a, c2b] = [value, value];
 // XPECT errors --> "Const variable c2a is read-only." at "c2a"
-c2a = "oops not const foo";
+c2a = value;
 // XPECT errors --> "Const variable c2b is read-only." at "c2b"
-c2b = "oops not const foo";
+c2b = value;
 
 
-const {c3a, c3b} = {c3a: "", c3b: ""};
+const {c3a, c3b} = {c3a: value, c3b: value};
 // XPECT errors --> "Const variable c3a is read-only." at "c3a"
-c3a = "oops";
+c3a = value;
 // XPECT errors --> "Const variable c3b is read-only." at "c3b"
-c3b = "oops";
+c3b = value;
 
 
-const [,[,[c4]]] = [,[,["foo"]]];
+const [,[,[c4]]] = [,[,[value]]];
 // XPECT errors --> "Const variable c4 is read-only." at "c4"
-c4 = "oops";
+c4 = value;

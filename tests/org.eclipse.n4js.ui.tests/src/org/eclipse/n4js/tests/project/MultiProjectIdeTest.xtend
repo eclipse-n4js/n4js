@@ -132,7 +132,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
 			],
 			"multiProjectTest.first/package.json" -> #[
-				"(Error, [17:4 - 17:23], Project does not exist with project ID: thirdProject.)"
+				"(Error, [17:8 - 17:27], Project does not exist with project ID: thirdProject.)"
 			]
 			
 		);

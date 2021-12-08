@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.MarkedString;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.jsdoc2spec.adoc.Html2ADocConverter;
@@ -24,6 +25,7 @@ import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
 import org.eclipse.xtext.ide.server.Document;
 import org.eclipse.xtext.ide.server.hover.HoverContext;
 import org.eclipse.xtext.ide.server.hover.HoverService;
+import org.eclipse.xtext.ide.server.hover.IHoverService;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
@@ -37,6 +39,7 @@ import com.google.inject.Inject;
 /**
  * Subclass of {@link HoverService} to show signature information
  */
+@SuppressWarnings("deprecation") // due to MarkedString
 public class N4JSHoverService extends HoverService {
 
 	private static final String MARKUP_KIND_MARKDOWN = "markdown";
@@ -53,7 +56,11 @@ public class N4JSHoverService extends HoverService {
 	final private Html2ADocConverter html2adocConverter = new Html2ADocConverter();
 
 	@Override
-	protected List<Either<String, MarkedString>> getContents(HoverContext ctx) {
+	protected Hover hover(HoverContext ctx) {
+		if (ctx == null) {
+			return IHoverService.EMPTY_HOVER;
+		}
+
 		List<Either<String, MarkedString>> contents = new LinkedList<>();
 		EObject element = ctx.getElement();
 		EObject idRef = getIdentifierRefOrElement(ctx);
@@ -74,7 +81,7 @@ public class N4JSHoverService extends HoverService {
 			contents.add(Either.forRight(mdDocumentation));
 		}
 
-		return contents;
+		return new Hover(contents, getRange(ctx));
 	}
 
 	private EObject getIdentifierRefOrElement(HoverContext ctx) {

@@ -37,7 +37,7 @@ class Base<ValueT>
     extends React.PureComponent<Props<ValueT>, Object> {
 
     @Override
-    public render(): React.Element {
+    public render(): React.ReactElement {
              return (<div/>);
 
     }

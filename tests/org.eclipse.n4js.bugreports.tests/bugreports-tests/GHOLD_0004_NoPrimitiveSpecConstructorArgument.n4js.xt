@@ -25,7 +25,7 @@ class C {
 
 // XPECT noerrors -> 
 var c1: ~C = {};
-// XPECT errors --> "int is not a subtype of C." at "2" 
+// XPECT errors --> "2 is not a subtype of C." at "2" 
 var c2: C = 2;
 
 c1;c2;

@@ -131,11 +131,11 @@ for([a13,b13='bad',c13] of [v13]) {}
 
 var v14 : Iterable3<A,B,C>;
 var v15 : Iterable3<A,B,C>;
-// XPECT errors --> "string is not a subtype of B." at "'bad'"
+// XPECT errors --> ""bad" is not a subtype of B." at "'bad'"
 var [a14,b14 : B='bad',c14] = v14; // note the explicitly declared type of b14!
-// XPECT errors --> "string is not a subtype of B." at "'bad'"
+// XPECT errors --> ""bad" is not a subtype of B." at "'bad'"
 [a14,b14='bad',c14] = v14;
-// XPECT errors --> "string is not a subtype of B." at "'bad'"
+// XPECT errors --> ""bad" is not a subtype of B." at "'bad'"
 for(var [a15,b15 : B='bad',c15] of [v15]) {} // note the explicitly declared type of b15!
-// XPECT errors --> "string is not a subtype of B." at "'bad'"
+// XPECT errors --> ""bad" is not a subtype of B." at "'bad'"
 for([a15,b15='bad',c15] of [v15]) {}

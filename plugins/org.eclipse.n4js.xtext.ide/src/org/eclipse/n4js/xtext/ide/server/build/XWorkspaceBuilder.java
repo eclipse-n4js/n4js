@@ -47,6 +47,7 @@ import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 
 import com.google.common.base.Optional;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
@@ -118,7 +119,7 @@ public class XWorkspaceBuilder {
 
 	private final Set<URI> dirtyFiles = new LinkedHashSet<>();
 	private final Set<URI> deletedFiles = new LinkedHashSet<>();
-	private final Set<String> deletedProjects = new LinkedHashSet<>();
+	private final Set<ProjectConfigSnapshot> affectedByDeletedProjects = new LinkedHashSet<>();
 
 	/** Holds all deltas of all projects. In case of a cancelled build, this set is not empty at start of next build. */
 	private final List<IResourceDescription.Delta> toBeConsideredDeltas = new ArrayList<>();
@@ -164,8 +165,8 @@ public class XWorkspaceBuilder {
 
 			while (pboIterator.hasNext()) {
 				ProjectConfigSnapshot projectConfig = pboIterator.next();
-				String projectName = projectConfig.getName();
-				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectName);
+				String projectID = projectConfig.getName();
+				ProjectBuilder projectBuilder = workspaceManager.getProjectBuilder(projectID);
 				XBuildResult partialresult = projectBuilder.doInitialBuild(buildRequestFactory, allDeltas);
 				allDeltas.addAll(partialresult.getAffectedResources());
 			}
@@ -286,7 +287,7 @@ public class XWorkspaceBuilder {
 	 * <li>perform an update of the workspace configuration, if necessary, which may lead to additional "discovered
 	 * changes" (e.g. resources in newly added source folders),
 	 * <li><em>move</em> the "reported changes" together with the "discovered changes" to {@link #dirtyFiles} /
-	 * {@link #deletedFiles} / {@link #deletedProjects},
+	 * {@link #deletedFiles} / {@link #affectedByDeletedProjects},
 	 * <li>then trigger an incremental build.
 	 * </ol>
 	 */
@@ -338,12 +339,18 @@ public class XWorkspaceBuilder {
 		queue(this.deletedFiles, actualDirtyFiles, actualDeletedFiles);
 
 		// take care of removed projects
+		Set<ProjectConfigSnapshot> deletedProjects = new HashSet<>();
 		for (ProjectConfigSnapshot prjConfig : changes.getRemovedProjects()) {
-			this.deletedProjects.add(prjConfig.getName());
+			deletedProjects.add(prjConfig);
 		}
 		for (ProjectConfigSnapshot prjConfig : Iterables.concat(changes.getAddedProjects(),
 				changes.getChangedProjects())) {
-			this.deletedProjects.remove(prjConfig.getName()); // in case a deleted project is being re-created
+			deletedProjects.remove(prjConfig);
+		}
+		for (ProjectConfigSnapshot delPrj : deletedProjects) {
+			ImmutableSet<? extends ProjectConfigSnapshot> affected = updateResult.oldWorkspaceConfigSnapshot
+					.getProjectsDependingOn(delPrj.getName());
+			this.affectedByDeletedProjects.addAll(affected);
 		}
 		handleContentsOfRemovedProjects(updateResult.removedProjectsContents);
 
@@ -356,13 +363,13 @@ public class XWorkspaceBuilder {
 
 		for (String cyclicProject : updateResult.cyclicProjectChanges) {
 			ProjectConfigSnapshot projectConfig = workspaceManager.getWorkspaceConfig()
-					.findProjectByName(cyclicProject);
+					.findProjectByID(cyclicProject);
 
 			Collection<URI> projectDescriptionUris = projectConfig.getProjectDescriptionUris();
 			dirtyFiles.addAll(projectDescriptionUris);
 		}
 
-		if (dirtyFiles.isEmpty() && deletedFiles.isEmpty() && deletedProjects.isEmpty()) {
+		if (dirtyFiles.isEmpty() && deletedFiles.isEmpty() && affectedByDeletedProjects.isEmpty()) {
 			return new ResourceDescriptionChangeEvent(Collections.emptyList());
 		}
 
@@ -424,13 +431,10 @@ public class XWorkspaceBuilder {
 			Map<String, Set<URI>> project2deleted = computeProjectToUriMap(deletedFilesToBuild);
 			Set<String> changedProjects = Sets.union(project2dirty.keySet(), project2deleted.keySet());
 			List<ProjectConfigSnapshot> changedPCs = changedProjects.stream()
-					.map(workspaceConfig::findProjectByName).collect(Collectors.toList());
+					.map(workspaceConfig::findProjectByID).collect(Collectors.toList());
 
 			BuildOrderIterator pboIterator = buildOrderFactory.createBuildOrderIterator(workspaceConfig, changedPCs);
-
-			for (String deletedProjectName : deletedProjects) {
-				pboIterator.visitAffected(deletedProjectName);
-			}
+			pboIterator.visit(affectedByDeletedProjects);
 
 			while (pboIterator.hasNext()) {
 
@@ -500,7 +504,7 @@ public class XWorkspaceBuilder {
 			if (projectManager == null) {
 				continue; // happens when editing a package.json file in a newly created project
 			}
-			String projectName = projectManager.getName();
+			String projectName = projectManager.getProjectID();
 			if (!project2uris.containsKey(projectName)) {
 				project2uris.put(projectName, new HashSet<>());
 			}
@@ -590,7 +594,7 @@ public class XWorkspaceBuilder {
 	protected void discardIncrementalBuildQueue() {
 		dirtyFiles.clear();
 		deletedFiles.clear();
-		deletedProjects.clear();
+		affectedByDeletedProjects.clear();
 		toBeConsideredDeltas.clear();
 	}
 

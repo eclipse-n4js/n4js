@@ -17,11 +17,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.eclipse.lsp4j.DefinitionParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
-import org.eclipse.lsp4j.TextDocumentPositionParams;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractDefinitionTest;
 import org.eclipse.n4js.ide.tests.helper.server.StringLSP4J;
@@ -32,12 +32,17 @@ import org.junit.Test;
  */
 public class DefinitionTest extends AbstractDefinitionTest {
 
+	/**
+	 * Zero-based line number of getter "length" in type "String" in file "builtin_js.n4jsd".
+	 */
+	public static final int STRING_LENGTH_LINE = 107;
+
 	/***/
 	@Test
 	public void testDefinition_01() throws Exception {
 		testAtCursor(
 				"var s: s<|>tring = ''; s.length;",
-				"(n4scheme:/primitives_js.n4ts, [33:10 - 33:16])");
+				"(n4scheme:/primitives.n4jsd, [0:0 - 12:0])");
 	}
 
 	/***/
@@ -53,7 +58,7 @@ public class DefinitionTest extends AbstractDefinitionTest {
 	public void testDefinition_03() throws Exception {
 		testAtCursor(
 				"var s: string = ''; s.le<|>ngth;",
-				"(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])");
+				"(n4scheme:/builtin_js.n4jsd, [" + STRING_LENGTH_LINE + ":12 - " + STRING_LENGTH_LINE + ":18])");
 	}
 
 	/***/
@@ -62,17 +67,18 @@ public class DefinitionTest extends AbstractDefinitionTest {
 		testWorkspaceManager.createTestProjectOnDisk(Collections.emptyMap());
 		startAndWaitForLspServer();
 
-		TextDocumentPositionParams textDocumentPositionParams = new TextDocumentPositionParams();
-		textDocumentPositionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4ts"));
+		DefinitionParams definitionParams = new DefinitionParams();
+		definitionParams.setTextDocument(new TextDocumentIdentifier("n4scheme:/builtin_js.n4jsd"));
 		// see position from test above
-		textDocumentPositionParams.setPosition(new Position(838, 15));
+		definitionParams.setPosition(new Position(STRING_LENGTH_LINE, 12));
 		CompletableFuture<Either<List<? extends Location>, List<? extends LocationLink>>> definitionsFuture = languageServer
-				.definition(textDocumentPositionParams);
+				.definition(definitionParams);
 		Either<List<? extends Location>, List<? extends LocationLink>> definitions = definitionsFuture.get();
 
 		File root = getRoot();
 		String actualSignatureHelp = new StringLSP4J(root).toString4(definitions);
-		assertEquals("(n4scheme:/builtin_js.n4ts, [838:15 - 838:21])", actualSignatureHelp.trim());
+		assertEquals("(n4scheme:/builtin_js.n4jsd, [" + STRING_LENGTH_LINE + ":12 - " + STRING_LENGTH_LINE + ":18])",
+				actualSignatureHelp.trim());
 	}
 
 }

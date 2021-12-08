@@ -13,6 +13,7 @@ package org.eclipse.n4js.cli;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
@@ -31,8 +32,15 @@ public class N4jscMain {
 
 	/** Entry point of n4jsc compiler */
 	public static void main(String[] args) {
+		main(null, args);
+	}
 
+	/** Entry point of n4jsc compiler from tests to modify the working directory */
+	public static void main(Path workDir, String[] args) {
 		final N4jscOptions options = getOptions(args);
+		if (workDir != null) {
+			options.workingDir = workDir;
+		}
 
 		if (options.isVerbose()) {
 			Logger.getRootLogger().setLevel(Level.DEBUG);
@@ -78,6 +86,7 @@ public class N4jscMain {
 			}
 			System.exit(e.getExitCode());
 		}
+
 	}
 
 	private static N4jscOptions getOptions(String[] args) {
@@ -99,7 +108,6 @@ public class N4jscMain {
 
 		} catch (N4jscException e) {
 			N4jscConsole.println(e.toUserString());
-			N4jscConsole.println(N4jscOptions.USAGE);
 			System.exit(e.getExitCode());
 		}
 
@@ -107,18 +115,30 @@ public class N4jscMain {
 	}
 
 	/** @return a {@link N4jscExitState} for graceful termination of n4jsc */
+	@SuppressWarnings("resource")
 	private static N4jscExitState performGoal(N4jscOptions options) throws Exception {
 		N4jscBackend backend = N4jscFactory.createBackend();
 
-		switch (options.getGoal()) {
-		case help:
-			options.printUsage(N4jscConsole.getPrintStream());
-			return N4jscExitState.SUCCESS;
-
-		case version:
+		if (options.isVersion()) {
 			N4jscConsole.println(N4JSLanguageUtils.getLanguageVersion()
 					+ " (commit " + N4JSLanguageUtils.getLanguageCommit() + ")");
+		}
+
+		if (options.isHelp()) {
+			options.printUsage(N4jscConsole.getPrintStream());
+		}
+
+		// Options --version and --help (which are also goals) behave like a goal wrt. exiting after the version
+		// and or help was shown. Note that given as an option on the command line, the actual goal can still be
+		// something else, e.g. 'n4jsc compile --version' will show the version and then exit.
+		if (options.isHelp() || options.isVersion()) {
 			return N4jscExitState.SUCCESS;
+		}
+
+		switch (options.getGoal()) {
+		case version:
+			// version printed already above
+			break;
 
 		case lsp:
 			return backend.goalLsp(options);
@@ -127,6 +147,7 @@ public class N4jscMain {
 			return backend.goalClean(options);
 
 		case compile:
+		case compileImplicit:
 			return backend.goalCompile(options);
 
 		case api:
@@ -135,9 +156,18 @@ public class N4jscMain {
 		case watch:
 			return backend.goalWatch(options);
 
-		default:
-			throw new N4jscException(N4jscExitCode.ARGUMENT_GOAL_INVALID);
+		case init:
+			return backend.goalInit(options);
+
+		case help:
+			// help printed already above;
+			break;
+
+		case setversions:
+			return backend.goalSetVersions(options);
 		}
+
+		throw new N4jscException(N4jscExitCode.ARGUMENT_GOAL_INVALID);
 	}
 
 	private static void writePerformanceReportIfRequested(N4jscOptions options) throws N4jscException {
