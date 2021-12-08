@@ -74,7 +74,7 @@ if [ ! -f "../target/n4jsc.jar" ]; then
 	echo "ERROR: n4jsc.jar must have been built and copied to folder 'target' before running this script!"
 	exit 1
 fi
-if [ ! -f "./node_modules/.bin/n4jsc" ]; then
+if [ ! -L "./node_modules/n4js-runtime" ]; then
 	echo "ERROR: 'yarn install' must have been executed before running this script!"
 	exit 1
 fi
