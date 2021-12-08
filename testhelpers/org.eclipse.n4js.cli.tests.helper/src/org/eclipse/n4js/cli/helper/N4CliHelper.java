@@ -62,8 +62,7 @@ public class N4CliHelper {
 			Arrays.asList(
 					new N4JSPackageName("n4js-cli"),
 					new N4JSPackageName("org.eclipse.n4js.mangelhaft.test"),
-					new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert.test"),
-					new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.ide.test")));
+					new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert.test")));
 
 	/**
 	 * @param expectedString

@@ -23,7 +23,6 @@ Runtime definition files::
 	* n4js-runtime-ecma402
 	* n4js-runtime-es2015
 	* n4js-runtime-esnext
-	* n4js-runtime-fetch
 	* n4js-runtime-html5
 	* n4js-runtime-node
 	* n4js-runtime-v8
@@ -32,7 +31,6 @@ Mangelhaft::
 	* org.eclipse.n4js.mangelhaft
 	* org.eclipse.n4js.mangelhaft.assert
 	* org.eclipse.n4js.mangelhaft.reporter.console
-	* org.eclipse.n4js.mangelhaft.reporter.ide
 	* org.eclipse.n4js.mangelhaft.reporter.xunit
 	* org.eclipse.n4js.mangelhaft.runner.ide
 

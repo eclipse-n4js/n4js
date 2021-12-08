@@ -26,13 +26,11 @@
     "n4js-runtime": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0",
     "n4js-runtime-esnext": "^0.1.0",
-    "n4js-runtime-fetch": "^0.1.0",
     "n4js-runtime-node": "^0.1.0",
     "node-fetch": "~2.6.1",
     "nomnom-patched": "~1.8.2",
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.reporter.console": "^0.1.0",
-    "org.eclipse.n4js.mangelhaft.reporter.ide": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.reporter.xunit": "^0.1.0"
   },
   "n4js": {
@@ -48,7 +46,6 @@
     "requiredRuntimeLibraries": [
       "n4js-runtime-es2015",
       "n4js-runtime-esnext",
-      "n4js-runtime-fetch",
       "n4js-runtime-node"
     ]
   }

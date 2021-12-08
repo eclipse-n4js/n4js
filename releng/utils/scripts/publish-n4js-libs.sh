@@ -157,6 +157,7 @@ lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
 
 
 echo "==== STEP 5/5: Now publishing with version '${PUBLISH_VERSION}' and dist-tag '${DIST_TAG}' to registry ${NPM_REGISTRY}"
+echo "lerna publish --loglevel warn --no-git-tag-version --no-push --registry=${NPM_REGISTRY} --exact --yes --dist-tag=${DIST_TAG} ${PUBLISH_VERSION}"
 lerna publish --loglevel warn --no-git-tag-version --no-push --registry="${NPM_REGISTRY}" --exact --yes --dist-tag="${DIST_TAG}" "${PUBLISH_VERSION}"
 
 

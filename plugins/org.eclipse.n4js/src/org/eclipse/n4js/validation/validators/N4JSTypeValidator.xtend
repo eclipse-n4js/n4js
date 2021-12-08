@@ -504,7 +504,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 
-	def void internalCheckSuperfluousPropertiesInObjectLiteralRek(RuleEnvironment G, TypeRef expectedTypeRef, Expression expression) {
+	def private void internalCheckSuperfluousPropertiesInObjectLiteralRek(RuleEnvironment G, TypeRef expectedTypeRef, Expression expression) {
 		if (expression instanceof ObjectLiteral) {
 			internalCheckSuperfluousPropertiesInObjectLiteral(G, expectedTypeRef, expression);
 
@@ -540,7 +540,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	 * #225: always check for superfluous properties in object literal
 	 * req-id IDE-22501
 	 */
-	def void internalCheckSuperfluousPropertiesInObjectLiteral(RuleEnvironment G, TypeRef typeRef, ObjectLiteral objectLiteral) {
+	def private void internalCheckSuperfluousPropertiesInObjectLiteral(RuleEnvironment G, TypeRef typeRef, ObjectLiteral objectLiteral) {
 		val typingStrategy = typeRef.typingStrategy;
 		if (typingStrategy != TypingStrategy.NOMINAL && typingStrategy != TypingStrategy.DEFAULT) {
 			if (typeRef.isDynamic) {

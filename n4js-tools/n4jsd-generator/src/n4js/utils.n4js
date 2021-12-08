@@ -14,6 +14,13 @@ import * as glob_lib+ from "glob"
 
 export const PACKAGE_JSON = "package.json";
 
+export const TS_UTILITY_TYPES = new Set<string>([
+	"Partial", "Required", "Readonly", "Pick", "Record", "Exclude", "Extract", "Omit", "NonNullable",
+	"Parameters", "ConstructorParameters", "ReturnType", "InstanceType", "Uppercase", "Lowercase",
+	"Capitalize", "Uncapitalize", "Awaited"
+]);
+
+
 export enum IssueKind {
 	WARNING, ERROR
 }

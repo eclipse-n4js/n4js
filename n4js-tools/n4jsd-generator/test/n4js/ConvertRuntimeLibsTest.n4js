@@ -42,13 +42,16 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					@@Global @@ProvidedByRuntime
 
-					export external public class SomeType {
-						public someInstanceMethod(p: string): number;
-						public constructor(p: string);
-						public static someStaticMethod(p: string): number;
+					export external public interface ~SomeType {
+						someInstanceMethod(p: string): number;
 					}
 
-					export external public type SomeTypeConstructor = constructor{SomeType};
+					export external public interface ~SomeTypeConstructor {
+						new(p: string): SomeType;
+						someStaticMethod(p: string): number;
+					}
+
+					export public var SomeType: SomeTypeConstructor;
 				`
 			}
 		);
@@ -81,11 +84,11 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					@@Global @@ProvidedByRuntime
 
-					export external public class SomeType {
-						public someInstanceMethod(p: string): number;
-						public constructor(p: string);
-						public static someStaticMethod(p: string): number;
+					export external public interface ~SomeType {
+						someInstanceMethod(p: string): number;
 					}
+
+					export public var SomeType: ~Object with { new(p: string): SomeType; someStaticMethod(p: string): number; };
 				`
 			}
 		);
@@ -120,6 +123,134 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 				n4jsd: `
 					@@Global @@ProvidedByRuntime
 
+					export external public interface ~SomeGenType<T> {
+						someInstanceMethod(p: string): T;
+					}
+
+					export external public interface ~SomeGenTypeConstructor {
+						<T> new(...elems: T): SomeGenType<T>;
+						someStaticMethod(p: string): number;
+					}
+
+					export public var SomeGenType: SomeGenTypeConstructor;
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCtorInstanceTypePattern_convertToClass_flavor1() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {
+							convertAllCtorInstanceTypes: true
+						}
+					}
+				}
+			},
+			{
+				name: "es5test",
+				dts: `
+					interface SomeType {
+						someInstanceMethod(p: string): number;
+					}
+
+					interface SomeTypeConstructor {
+						new(p: string): SomeType;
+						someStaticMethod(p: string): number;
+					}
+
+					declare var SomeType: SomeTypeConstructor;
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
+					export external public class SomeType {
+						public someInstanceMethod(p: string): number;
+						public constructor(p: string);
+						public static someStaticMethod(p: string): number;
+					}
+
+					export external public type SomeTypeConstructor = constructor{SomeType};
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCtorInstanceTypePattern_convertToClass_flavor2() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {
+							convertAllCtorInstanceTypes: true
+						}
+					}
+				}
+			},
+			{
+				name: "es5test",
+				dts: `
+					interface SomeType {
+						someInstanceMethod(p: string): number;
+					}
+
+					declare var SomeType: {
+						new(p: string): SomeType;
+						someStaticMethod(p: string): number;
+					};
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
+					export external public class SomeType {
+						public someInstanceMethod(p: string): number;
+						public constructor(p: string);
+						public static someStaticMethod(p: string): number;
+					}
+				`
+			}
+		);
+	}
+
+	@Test
+	public testCtorInstanceTypePattern_convertToClass_withGenerics() {
+		this.assertConversionWithOptions(
+			{
+				args: [ "--runtime-libs", "--copy-type-refs" ],
+				runtimeLibsConfig: {
+					preamble: `@@Global @@ProvidedByRuntime`,
+					patchFiles: {
+						"es5test.d.ts": {
+							convertAllCtorInstanceTypes: true
+						}
+					}
+				}
+			},
+			{
+				name: "es5test",
+				dts: `
+					interface SomeGenType<T> {
+						someInstanceMethod(p: string): T;
+					}
+
+					interface SomeGenTypeConstructor {
+						new <T>(...elems: T[]): SomeGenType<T>;
+						someStaticMethod(p: string): number;
+					}
+
+					declare var SomeGenType: SomeGenTypeConstructor;
+				`,
+				n4jsd: `
+					@@Global @@ProvidedByRuntime
+
 					export external public class SomeGenType<T> {
 						public someInstanceMethod(p: string): T;
 						public constructor(...elems: T);
@@ -133,14 +264,16 @@ export public class ConvertRuntimeLibsTest extends AbstractN4jsdGeneratorTest {
 	}
 
 	@Test
-	public testCtorInstanceTypePattern_inheritance() {
+	public testCtorInstanceTypePattern_convertToClass_inheritance() {
 		this.assertConversionWithOptions(
 			{
 				args: [ "--runtime-libs", "--copy-type-refs" ],
 				runtimeLibsConfig: {
 					preamble: `@@Global @@ProvidedByRuntime`,
 					patchFiles: {
-						"es5test.d.ts": {}
+						"es5test.d.ts": {
+							convertAllCtorInstanceTypes: true
+						}
 					}
 				}
 			},

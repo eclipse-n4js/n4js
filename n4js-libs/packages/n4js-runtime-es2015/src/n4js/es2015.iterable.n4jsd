@@ -38,7 +38,7 @@ export external public class Map<K,V> extends Map<K,V> {
 }
 
 @Polyfill
-export external public class WeakMap<K,V> extends WeakMap<K,V> {}
+export external public class WeakMap<K extends Object,V> extends WeakMap<K,V> {}
 
 @Polyfill
 export external public class Set<T> extends Set<T> {
@@ -49,7 +49,7 @@ export external public class Set<T> extends Set<T> {
 }
 
 @Polyfill
-export external public class WeakSet<T> extends WeakSet<T> {}
+export external public class WeakSet<T extends Object> extends WeakSet<T> {}
 
 @Polyfill
 export external public class String extends String {}

@@ -5,7 +5,6 @@
 		"react": "16.2.0",
 		"react-dom": "16.2.0",
 		"n4js-runtime-html5": "*",
-		"n4js-runtime-fetch": "*",
 		"n4js-runtime-es2015": "*",
 		"@n4jsd/react": "*",
 		"@n4jsd/react-dom": "*"
@@ -22,7 +21,6 @@
 		},
 		"requiredRuntimeLibraries": [
 			"n4js-runtime-html5",
-			"n4js-runtime-fetch",
 			"n4js-runtime-es2015"
 		]
 	}
