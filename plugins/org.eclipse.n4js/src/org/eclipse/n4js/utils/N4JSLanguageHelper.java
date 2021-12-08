@@ -25,6 +25,7 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ParserRule;
 
@@ -121,7 +122,9 @@ public final class N4JSLanguageHelper {
 
 		N4JSProjectConfigSnapshot targetProject = workspaceAccess.findProjectContaining(resource);
 		if (targetProject != null && targetProject.getType() == ProjectType.DEFINITION) {
-			targetProject = workspaceAccess.findProjectByName(resource, targetProject.getDefinesPackage());
+			N4JSPackageName definedPackageName = targetProject.getDefinesPackage();
+			String definedProjectId = targetProject.getProjectIdForPackageName(definedPackageName.getRawName());
+			targetProject = workspaceAccess.findProjectByName(resource, definedProjectId);
 		}
 		if (targetProject == null) {
 			return true;

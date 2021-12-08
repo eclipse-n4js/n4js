@@ -21,7 +21,7 @@ echo "========= Running mangelhaft tests for all packages in yarn workspace 'n4j
 REPORT_NAME="./build/report.xml"
 mkdir -p "./build"
 echo "Run mangelhaft ..."
-packages/n4js-mangelhaft-cli/bin/n4js-mangelhaft-cli.js . \
+packages/n4js-mangelhaft-cli/src-gen/org/eclipse/n4js/mangelhaft/runner/node/NodeTestMain.js . \
         --xunitReportFile $REPORT_NAME \
         --xunitReportName test-report \
         --xunitReportPackage n4js-libs-report \
