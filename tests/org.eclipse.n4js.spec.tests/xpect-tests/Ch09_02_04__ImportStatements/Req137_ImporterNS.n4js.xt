@@ -65,8 +65,8 @@ NS.var1-=1;
 (NS.var1)+=1;
 
 /* **** **** **** **** ***** ***** */
-// As long as the following NameSpace access pattern faile, we do not need a read-only validation.
-// If at some time the parenthesized patter are allowed, the enable the validation:
+// As long as the following NameSpace access pattern fail, we do not need a read-only validation.
+// If at some time the parenthesized patter are allowed, enable the validation:
 /* **** **** **** **** ***** ***** */
 
 // XPECT errors --> "Imported element ((NS)).var1 is read-only." at "((NS)).var1"
