@@ -34,7 +34,7 @@
 @StaticPolyfill
 export public class A extends A {
 	
-	// XPECT linkedFragment at 'A' --> ../src2/ref_to_static_filled_type_scoping.n4js#/1/@topLevelTypes.0
+	// XPECT linkedFragment at 'A' --> ../src2/ref_to_static_filled_type_scoping.n4js#/1/@types.0
 	public member : A = null;
 }
 
@@ -42,7 +42,7 @@ export public class A extends A {
 @StaticPolyfill
 export public class B extends B {
 	
-	// XPECT linkedFragment at 'A' --> ../src2/ref_to_static_filled_type_scoping.n4js#/1/@topLevelTypes.0
+	// XPECT linkedFragment at 'A' --> ../src2/ref_to_static_filled_type_scoping.n4js#/1/@types.0
 	public member : A = null;
 }
 

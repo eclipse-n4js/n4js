@@ -186,7 +186,7 @@ public abstract class AbstractInferenceContextTest extends AbstractTypesystemTes
 
 
 	protected def Type selectType(String arg) {
-		val result = script.module.topLevelTypes.findFirst[name == arg];
+		val result = script.module.types.findFirst[name == arg];
 		Assert.assertNotNull(result);
 		return result;
 	}

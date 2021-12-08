@@ -10,14 +10,17 @@
  */
 package org.eclipse.n4js.scoping.utils
 
+import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import java.util.function.Supplier
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.xtext.resource.EObjectDescription
@@ -109,16 +112,33 @@ class LocallyKnownTypesScopingHelper {
 		];
 	}
 	
+	/** Returns scope with locally declared types (without import scope). */
+	def IScope scopeWithLocallyDeclaredTypes(Script script, IScope parent) {
+		return scopeWithLocallyDeclaredTypes(script.module, script, parent);
+	}
+	
+	/** Returns scope with locally declared types (without import scope). */
+	def IScope scopeWithLocallyDeclaredTypes(N4NamespaceDeclaration namespace, IScope parent) {
+		return scopeWithLocallyDeclaredTypes(namespace.definedType as AbstractNamespace, namespace, parent);
+	}
+	
+	/** Returns scope with locally declared types (without import scope). */
+	def IScope scopeWithLocallyDeclaredTypes(AbstractNamespace namespace, IScope parent) {
+		return scopeWithLocallyDeclaredTypes(namespace, namespace, parent);
+	}
+	
 	/**
 	 * Returns scope with locally declared types (without import scope).
 	 */
-	def IScope scopeWithLocallyDeclaredTypes(Script script, IScope parent) {
-		val TModule local = script.module;
-		if (local === null || local.eIsProxy) {
+	def private IScope scopeWithLocallyDeclaredTypes(AbstractNamespace ans, EObject context, IScope parent) {
+		if (ans === null || ans.eIsProxy) {
 			return parent;
 		}
-		val eoDescrs = local.topLevelTypes.filter[t | !t.polyfill ].map[ topLevelType | EObjectDescription.create(topLevelType.name, topLevelType) ];
-		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", script, parent, eoDescrs);
+		val tleAndNamespaces = Iterables.concat(ans.types, ans.namespaces);
+		val eoDescrs = tleAndNamespaces.filter[t | !t.polyfill ].map[ topLevelType |
+			return EObjectDescription.create(topLevelType.name, topLevelType);
+		];
+		return scopeSnapshotHelper.scopeFor("scopeWithLocallyDeclaredTypes", context, parent, eoDescrs);
 	}
 
 	/**
@@ -135,7 +155,7 @@ class LocallyKnownTypesScopingHelper {
 
 		// locally defined types except polyfillType itself
 		val local = script.module
-		val eoDescrs = local.topLevelTypes.filter[it !== polyfillType].map[EObjectDescription.create(name, it)];
+		val eoDescrs = local.types.filter[it !== polyfillType].map[EObjectDescription.create(name, it)];
 		val IScope localTypesScope = scopeSnapshotHelper.scopeFor("scopeWithLocallyKnownTypesForPolyfillSuperRef", script, importScope, eoDescrs);
 
 		// type variables of polyfill

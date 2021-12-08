@@ -65,6 +65,6 @@ class TypesAssertionsExtensions {
 	def void assertExpectedTypesCount(String phase, Resource testResource, int expectedTypesCount) {
 		assertEquals(phase + ": test content count", 2, testResource.contents.size)
 		val exportedScript = testResource.contents.last as TModule
-		assertEquals(phase + ": Should have the expected count of types", expectedTypesCount, exportedScript.topLevelTypes.size + exportedScript.variables.size)
+		assertEquals(phase + ": Should have the expected count of types", expectedTypesCount, exportedScript.types.size + exportedScript.variables.size)
 	}
 }

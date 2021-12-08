@@ -94,12 +94,25 @@ public interface AccessibleTypeElement extends EObject {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns declared type if specified, otherwise modifier is computed (exported = project, private otherwise)
+	 * Returns declared type modifier if specified, otherwise the default modifier.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	TypeAccessModifier getTypeAccessModifier();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Returns default type modifier. If this element is exported, 'project' otherwise 'private'.
+	 * Namespace elements inherit the default modifier from their parent namespace.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TypeAccessModifier getDefaultTypeAccessModifier();
 
 	/**
 	 * <!-- begin-user-doc -->

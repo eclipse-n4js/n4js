@@ -53,8 +53,8 @@ class LazyOverrideAwareMembersCollectorTest {
 		assertTrue(script.eResource.errors.empty)
 
 		val module = script.module;
-		val A = module.topLevelTypes.get(0) as TClass;
-		val B = module.topLevelTypes.get(1) as TClass;
+		val A = module.types.get(0) as TClass;
+		val B = module.types.get(1) as TClass;
 
 		val membersA = collectAllDeclaredMembers(A)
 		assertEquals(4, membersA.size);
@@ -91,8 +91,8 @@ class LazyOverrideAwareMembersCollectorTest {
 		assertTrue(script.eResource.errors.empty)
 
 		val module = script.module;
-		val A = module.topLevelTypes.get(0) as TClass;
-		val B = module.topLevelTypes.get(1) as TClass;
+		val A = module.types.get(0) as TClass;
+		val B = module.types.get(1) as TClass;
 
 		val membersA = collectAllDeclaredMembers(A)
 		assertEquals(4, membersA.size);
@@ -121,7 +121,7 @@ class LazyOverrideAwareMembersCollectorTest {
 		script.validate(); // there may be errors
 
 		val module = script.module;
-		val C = module.topLevelTypes.get(2) as TClass;
+		val C = module.types.get(2) as TClass;
 
 		val membersC = collectAllDeclaredMembers(C)
 		// actually we found more than we will have later -- the validator will warn us!
@@ -141,7 +141,7 @@ class LazyOverrideAwareMembersCollectorTest {
 		'''.parse // only parsed, not linked
 		script.validate(); // there may be errors
 		val module = script.module;
-		val C = module.topLevelTypes.get(2) as TClass;
+		val C = module.types.get(2) as TClass;
 		val membersC = collectAllDeclaredMembers(C)
 		assertEquals(2, membersC.size);
 	}

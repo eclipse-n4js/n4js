@@ -76,7 +76,7 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 		    attr EString projectID 'org.eclipse.n4js.lang.tests'
 		    attr EString qualifiedName 'org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles'
 		    attr EString simpleName 'ClassWithSuperClassAndRoles'
-		    cref Type topLevelTypes [
+		    cref Type types [
 		        0: TClass {
 		            ref EObject astElement ref: N4ClassDeclaration@(unresolved proxy src/org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles.n4js#/0/@scriptElements.0)
 		            attr EString name 'MyClass'

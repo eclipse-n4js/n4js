@@ -284,6 +284,7 @@ public class TStructSetterImpl extends TSetterImpl implements TStructSetter {
 		if (baseClass == TMemberWithAccessModifier.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER: return TypesPackage.TSTRUCT_SETTER___GET_MEMBER_ACCESS_MODIFIER;
+				case TypesPackage.TMEMBER_WITH_ACCESS_MODIFIER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER: return TypesPackage.TSTRUCT_SETTER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}

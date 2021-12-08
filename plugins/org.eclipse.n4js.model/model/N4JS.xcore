@@ -36,6 +36,7 @@ import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TExportableElement
@@ -59,7 +60,6 @@ import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.EcoreUtilN4
-import org.eclipse.n4js.ts.types.TDynamicElement
 
 type IteratorOfExpression wraps Iterator<Expression>
 type IteratorOfYieldExpression wraps Iterator<YieldExpression>
@@ -113,13 +113,18 @@ abstract class ScriptElement {
 // ****************************************************************************************************
 // Export and Import
 // ****************************************************************************************************
-class ExportDeclaration extends AnnotableScriptElement {
+class ExportDeclaration extends AnnotableScriptElement, NamespaceElement {
 	contains ExportableElement exportedElement
 	contains Expression defaultExportedExpression
 	contains ExportSpecifier[] namedExports
 	boolean wildcardExport
 	boolean defaultExport
 	refers TModule reexportedFrom
+	
+	
+	op boolean isHollow() {
+		return exportedElement.isHollow();
+	}
 }
 
 class ExportSpecifier {
@@ -134,24 +139,36 @@ class ExportSpecifier {
  * export {C as X}
  * </pre>
  */
-abstract class ExportableElement {
+abstract class ExportableElement extends NamespaceElement {
 	op boolean isExported() {
-		return this.eContainer instanceof ExportDeclaration;
+		return isDeclaredExported() || isExportedByNamespace();
+	}
+	op boolean isDeclaredExported() {
+		return eContainer instanceof ExportDeclaration;
+	}
+	op boolean isExportedByNamespace() {
+		var ns = namespace;
+		if (ns !== null) {
+			return ns.isExported;
+		}
+		return false;
 	}
 	op boolean isExportedAsDefault() {
-		return isExported() && (this.eContainer as ExportDeclaration).isDefaultExport;
+		return isDeclaredExported() && (eContainer as ExportDeclaration).isDefaultExport;
 	}
 	op String getExportedName() {
-		if(isExported) {
-			val exportDecl = this.eContainer as ExportDeclaration;
-			if(exportDecl.defaultExport) {
-				// note: using name "default" below seems like a dirty hack, but this is actually consistent with how
-				// ES6 default import/export is defined ("The default export is actually just a named export with the
-				// special name default.", A. Rauschmayer in "Exploring ES6", Section 16.4.5.2).
-				// For example, the following two lines are equivalent in ES6:
-				//     import myFoo from "Other"
-				//     import {default as myFoo} from "Other"
-				return "default";
+		if (isExported) {
+			if (isDeclaredExported()) {
+				val exportDecl = eContainer as ExportDeclaration;
+				if (exportDecl.defaultExport) {
+					// note: using name "default" below seems like a dirty hack, but this is actually consistent with how
+					// ES6 default import/export is defined ("The default export is actually just a named export with the
+					// special name default.", A. Rauschmayer in "Exploring ES6", Section 16.4.5.2).
+					// For example, the following two lines are equivalent in ES6:
+					//     import myFoo from "Other"
+					//     import {default as myFoo} from "Other"
+					return "default";
+				}
 			}
 			val me = this;
 			return switch(me) {
@@ -171,6 +188,10 @@ abstract class ExportableElement {
 			return eContainer.eContainer instanceof Script
 		}
 		return eContainer instanceof Script;
+	}
+	
+	op boolean isHollow() {
+		return false;
 	}
 }
 
@@ -451,7 +472,7 @@ abstract class AbstractAnnotationList {
  * This allows to handle syntax errors in the input file gracefully while
  * being able to left factor the grammar to make it parseable.
  */
-class AnnotationList extends AbstractAnnotationList, ScriptElement, Statement, ExportableElement {
+class AnnotationList extends AbstractAnnotationList, Statement, ExportableElement {
 }
 
 /*
@@ -666,7 +687,7 @@ abstract class FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingEleme
  * Function declarations should only be contained in the script or functions, that is, they should not be nested in blocks.
  * This is ensured by the ASTStructureValidator.
  */
-class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Statement, FunctionDefinition , GenericDeclaration, ExportableElement, NamedElement {
+class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Statement, FunctionDefinition, GenericDeclaration, ExportableElement, NamedElement {
 	/*
 	 * Function declarations are not treated as identifiable elements, as the binding should
 	 * refer to the inferred TFunction rather than this declaration. The name is mandatory.
@@ -676,7 +697,7 @@ class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Sta
 	 * Returns true if type is declared as external.
 	 */
 	op boolean isExternal() {
-		declaredModifiers.contains(N4Modifier.EXTERNAL)
+		return isDeclaredExternal() || isDefaultExternal();
 	}
 }
 
@@ -899,7 +920,7 @@ abstract class VariableDeclarationContainer {
 	}
 }
 
-class VariableStatement extends Statement, VariableDeclarationContainer {
+class VariableStatement extends Statement, VariableDeclarationContainer, NamespaceElement {
 }
 
 class ExportedVariableStatement extends VariableStatement, ExportableElement, AnnotableScriptElement, ModifiableElement {
@@ -907,7 +928,7 @@ class ExportedVariableStatement extends VariableStatement, ExportableElement, An
 	 * Returns true if type is declared as external.
 	 */
 	op boolean isExternal() {
-		declaredModifiers.contains(N4Modifier.EXTERNAL)
+		return isDeclaredExternal() || isDefaultExternal();
 	}
 }
 
@@ -2029,7 +2050,7 @@ abstract class N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElemen
 	 * Returns true if type is declared as external.
 	 */
 	op boolean isExternal() {
-		declaredModifiers.contains(N4Modifier.EXTERNAL)
+		return isDeclaredExternal() || isDefaultExternal();
 	}
 }
 
@@ -2137,6 +2158,51 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	}
 }
 
+
+class N4NamespaceDeclaration extends N4TypeDefinition, VariableEnvironmentElement, ModifiableElement, ExportableElement, NamedElement {
+	String name
+	contains NamespaceElement[] ownedElementsRaw
+	
+	/**
+	 * Returns true if type is declared as external.
+	 */
+	op boolean isExternal() {
+		return isDeclaredExternal() || isDefaultExternal();
+	}
+	
+	/**
+	 * Namespaces do not have annotations
+	 */
+	op Annotation[] getAnnotations() {
+		emptyEList
+	}
+	
+	op boolean isHollow() {
+		val hollow = ownedElementsRaw.forall[isHollow];
+		return hollow
+	}
+}
+
+class NamespaceElement extends ScriptElement {
+	op N4NamespaceDeclaration getNamespace() {
+		var parent = eContainer;
+		if (parent instanceof ExportDeclaration) {
+			parent = parent.eContainer;
+		}
+		if (parent instanceof N4NamespaceDeclaration) {
+			return parent;
+		}
+		return null;
+	}
+	op boolean isInNamespace() {
+		return getNamespace() !== null;
+	}
+	op boolean isHollow() {
+		return false;
+	}
+}
+
+
 class N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration {
 	/**
 	 * Returns true if the class is declared as abstract.
@@ -2167,6 +2233,10 @@ class N4InterfaceDeclaration extends N4ClassifierDeclaration {
 	op ParameterizedTypeRefNodeIterable getImplementedOrExtendedInterfaceRefs() {
 		return superInterfaceRefs;
 	}
+	
+	op boolean isHollow() {
+		return isExternal() && !allAnnotations.exists[it.name == "N4JS"]
+	}
 }
 
 class N4EnumDeclaration extends N4TypeDeclaration {
@@ -2190,6 +2260,11 @@ class N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration, Type
 
 	op TypeAlias getDefinedTypeAsTypeAlias() {
 		return definedType as TypeAlias;
+	}
+	
+	
+	op boolean isHollow() {
+		return true;
 	}
 }
 
@@ -2226,6 +2301,21 @@ enum N4Modifier {
  */
 abstract class ModifiableElement {
 	N4Modifier[] declaredModifiers
+	
+	
+	op boolean isDeclaredExternal() {
+		return declaredModifiers.contains(N4Modifier.EXTERNAL)
+	}
+	op boolean isDefaultExternal() {
+		var parent = eContainer();
+		if (parent instanceof ExportDeclaration) {
+			parent = parent.eContainer();
+		}
+		if (parent instanceof N4NamespaceDeclaration) {
+			return parent.isExternal;
+		}
+		return false;
+	}
 }
 
 abstract class N4MemberDeclaration extends AnnotableElement, ModifiableElement, TypableElement, NamedElement {

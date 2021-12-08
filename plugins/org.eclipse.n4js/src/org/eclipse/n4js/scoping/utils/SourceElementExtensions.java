@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
@@ -166,6 +167,13 @@ public class SourceElementExtensions {
 			this.allContents = allContents;
 			this.validIEs = validIEs;
 			this.invalidIEs = invalidIEs;
+		}
+
+		@Override
+		public Boolean caseN4NamespaceDeclaration(N4NamespaceDeclaration feature) {
+			collectVisibleTypedElement(feature, invalidIEs); // shapes will be validated to errors in VeeScopeValidator
+			allContents.prune();
+			return true;
 		}
 
 		@Override

@@ -42,12 +42,12 @@ interface GooSupperLongWordWithSomeSuperHeros4 {}
 interface GooSupperLongWordWithSomeSuperHeros5 {}
 
 @CovariantConstructor @Internal
-@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked as exported.")')
+@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked with modifier export.")')
 export public abstract class Shorty <ValueT extends SomethingLongHere> extends Array<int>
     implements Goo {}
 
 @CovariantConstructor @Internal
-@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked as exported.")')
+@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked with modifier export.")')
 export public abstract class Shortiest <ValueT> extends Array<int> implements Goo {
     noExtraLinefeedIfWeDontWrap: any;
 }
@@ -60,7 +60,7 @@ export public abstract class Shortiest <ValueT> extends Array<int> implements Go
  * @author cb
  *\/
 @CovariantConstructor @Internal
-@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked as exported.")')
+@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked with modifier export.")')
 export public abstract class GenericLongName <ValueT extends SomethingLongHere>
     extends Array<int> // comment here long comment sdfjsiofjsfo hsoh x<fgkjh <xkjh <yfkjhx<gkjl<hxkjl<yhf kl<jh< lkjh
     implements GooSupperLongWordWithSomeSuperHeros, GooSupperLongWordWithSomeSuperHeros2,
@@ -194,12 +194,12 @@ interface GooSupperLongWordWithSomeSuperHeros4 {}
 interface GooSupperLongWordWithSomeSuperHeros5 {}
 
 @CovariantConstructor @Internal
-@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked as exported.")')
+@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked with modifier export.")')
 export public abstract class Shorty<ValueT extends SomethingLongHere> extends Array<int>
     implements Goo {}
 
 @CovariantConstructor @Internal
-@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked as exported.")')
+@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked with modifier export.")')
 export public abstract class Shortiest<ValueT> extends Array<int> implements Goo {
     noExtraLinefeedIfWeDontWrap: any;
 }
@@ -212,7 +212,7 @@ export public abstract class Shortiest<ValueT> extends Array<int> implements Goo
  * @author cb
  */
 @CovariantConstructor @Internal
-@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked as exported.")')
+@Description('@IDEBUG(2424098, "A class with visibility @Internal public must be marked with modifier export.")')
 export public abstract class GenericLongName<ValueT extends SomethingLongHere>
     extends Array<int> // comment here long comment sdfjsiofjsfo hsoh x<fgkjh <xkjh <yfkjhx<gkjl<hxkjl<yhf kl<jh< lkjh
     implements GooSupperLongWordWithSomeSuperHeros, GooSupperLongWordWithSomeSuperHeros2,

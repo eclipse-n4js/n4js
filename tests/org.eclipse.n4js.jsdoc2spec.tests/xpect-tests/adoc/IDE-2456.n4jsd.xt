@@ -36,7 +36,7 @@
 /**
  * @spec Spec of Variable.
  */
-external async function async1() : void {}
+external async function async1() : void
 
 
 
@@ -65,9 +65,7 @@ external async function async1() : void {}
 /**
  * @spec Spec of Variable.
  */
-external async function async2() : Promise<string, ?> {
-	return "";
-}
+external async function async2() : Promise<string, ?>
 
 
 
@@ -97,7 +95,7 @@ external async function async2() : Promise<string, ?> {
 /**
  * @spec Spec of Variable.
  */
-external function * gen1() : void {}
+external function * gen1() : void
 
 
 /* XPECT specADoc ---
@@ -125,7 +123,7 @@ external function * gen1() : void {}
 /**
  * @spec Spec of Variable.
  */
-external function * gen2() : String {}
+external function * gen2() : String
 
 
 /* XPECT specADoc ---
@@ -153,4 +151,4 @@ external function * gen2() : String {}
 /**
  * @spec Spec of Variable.
  */
-external function * gen3() : Generator<String,Number,undefined> {}
+external function * gen3() : Generator<String,Number,undefined>

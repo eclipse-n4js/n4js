@@ -22,6 +22,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -30,11 +31,13 @@ import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamedElement;
 
 import org.eclipse.n4js.ts.types.TMember;
@@ -280,6 +283,33 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	 * @generated
 	 */
 	@Override
+	public boolean isDeclaredExternal() {
+		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDefaultExternal() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent).isExternal();
+		}
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_MEMBER_DECLARATION__OWNER:
@@ -450,6 +480,8 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == ModifiableElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL;
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL;
 				default: return -1;
 			}
 		}
@@ -497,6 +529,10 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 				return isConstructSignature();
 			case N4JSPackage.N4_MEMBER_DECLARATION___GET_NAME:
 				return getName();
+			case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL:
+				return isDeclaredExternal();
+			case N4JSPackage.N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL:
+				return isDefaultExternal();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

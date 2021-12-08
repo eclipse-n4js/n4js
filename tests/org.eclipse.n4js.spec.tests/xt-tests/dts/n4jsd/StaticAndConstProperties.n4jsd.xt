@@ -23,14 +23,15 @@ external class C {
     static get g(): number;
     static set s(v: number);
 }
-external interface ~I {
+@N4JS
+external interface I {
 	static field1: any;
 	const field2: any;
-	static f(): void {}
-    static get a(): number {return 0;}
-    static set a(v: number) {};
-    static get g(): number {return 0;}
-    static set s(v: number) {}
+	static f(): void
+    static get a(): number
+    static set a(v: number)
+    static get g(): number
+    static set s(v: number)
 }
 
 

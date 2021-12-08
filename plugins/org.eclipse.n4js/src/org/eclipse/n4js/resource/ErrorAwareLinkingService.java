@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -173,10 +174,13 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 		}
 		// standard cases:
 		String result = getCrossRefNodeAsString(node);
+
 		if (ref == PARAMETERIZED_TYPE_REF__DECLARED_TYPE && context instanceof ParameterizedTypeRef) {
 			// special case: we might have a reference to a type C imported via namespace import: NS.C
 			// -> replace '.' by '/' to make it a valid qualified name
-			result = result != null ? result.replace('.', '/') : null;
+			ParameterizedTypeRef ptr = (ParameterizedTypeRef) context;
+			result = ptr.getDeclaredTypeAsText();
+			result = result != null ? result.replace(".", N4JSGlobals.QUALIFIED_NAME_DELIMITER) : null;
 		}
 		return result;
 	}

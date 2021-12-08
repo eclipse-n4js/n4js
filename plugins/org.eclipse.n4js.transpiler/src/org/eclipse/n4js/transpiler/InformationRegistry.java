@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
@@ -23,6 +24,7 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant;
 import org.eclipse.n4js.transpiler.utils.ConcreteMembersOrderedForTranspiler;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
@@ -34,6 +36,7 @@ import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 
 import com.google.common.collect.HashMultimap;
@@ -48,6 +51,7 @@ public class InformationRegistry {
 	private final HashMultimap<Tag, EObject> hmTagged = HashMultimap.create();
 	private final Map<ImportDeclaration, TModule> importedModules = new HashMap<>();
 	private final Map<TypeDefiningElement, Type> originalDefinedTypes = new HashMap<>();
+	private final Map<VariableDeclaration, TVariable> originalDefinedVariable = new HashMap<>();
 	private final Map<N4MemberDeclaration, TMember> originalDefinedMembers = new HashMap<>();
 	private final Map<TypeReferenceNode<?>, TypeRef> originalProcessedTypeRefs = new HashMap<>();
 	private final Map<TClassifier, ConcreteMembersOrderedForTranspiler> cachedCMOFTs = new HashMap<>();
@@ -180,6 +184,33 @@ public class InformationRegistry {
 	 */
 	public void setOriginalDefinedType_internal(TypeDefiningElement elementInIM, Type originalDefinedType) {
 		originalDefinedTypes.put(elementInIM, originalDefinedType);
+	}
+
+	/**
+	 * Returns the original TVariable element, i.e. defined variable, of the given variable declaration in the
+	 * intermediate model.
+	 */
+	public TVariable getOriginalDefinedVariable(ExportedVariableDeclaration elementInIM) {
+		TranspilerUtils.assertIntermediateModelElement(elementInIM);
+		return originalDefinedVariable.get(elementInIM);
+	}
+
+	/**
+	 * Sets the <em>original defined variable</em> of the given variable declaration in the intermediate model.
+	 */
+	public void setOriginalDefinedVariable(ExportedVariableDeclaration elementInIM, TVariable originalDefinedType) {
+		TranspilerUtils.assertIntermediateModelElement(elementInIM);
+		setOriginalDefinedVariable_internal(elementInIM, originalDefinedType);
+	}
+
+	/**
+	 * As {@link #setOriginalDefinedVariable(ExportedVariableDeclaration, TVariable)}, but does not assert that
+	 * <code>elementInIM</code> is actually contained in the intermediate model. Should only be called from
+	 * {@link PreparationStep}.
+	 */
+	public void setOriginalDefinedVariable_internal(ExportedVariableDeclaration elementInIM,
+			TVariable originalDefinedType) {
+		originalDefinedVariable.put(elementInIM, originalDefinedType);
 	}
 
 	/**

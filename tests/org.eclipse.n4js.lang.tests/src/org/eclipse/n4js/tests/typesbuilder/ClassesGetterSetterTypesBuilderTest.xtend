@@ -72,17 +72,17 @@ class ClassesGetterSetterTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		val tClass = assertTClass(phase, newN4jsResource, "Callee", 8)
 
-		assertTField(phase, tClass, newN4jsResource, "a", "/1/@topLevelTypes.4")
-		assertTField(phase, tClass, newN4jsResource, "data_property_b", "/1/@topLevelTypes.4")
-		assertTField(phase, tClass, newN4jsResource, "data_property_c", "/1/@topLevelTypes.4")
-		assertTField(phase, tClass, newN4jsResource, "data_property_d", "/1/@topLevelTypes.4")
+		assertTField(phase, tClass, newN4jsResource, "a", "/1/@types.4")
+		assertTField(phase, tClass, newN4jsResource, "data_property_b", "/1/@types.4")
+		assertTField(phase, tClass, newN4jsResource, "data_property_c", "/1/@types.4")
+		assertTField(phase, tClass, newN4jsResource, "data_property_d", "/1/@types.4")
 
-		assertTGetter(phase, tClass, newN4jsResource, "b", "/1/@topLevelTypes.4")
-		assertTGetter(phase, tClass, newN4jsResource, "d", "/1/@topLevelTypes.4")
+		assertTGetter(phase, tClass, newN4jsResource, "b", "/1/@types.4")
+		assertTGetter(phase, tClass, newN4jsResource, "d", "/1/@types.4")
 
 
-		assertTSetter(phase, tClass, newN4jsResource, "c", "newC", "/1/@topLevelTypes.4")
-		assertTSetter(phase, tClass, newN4jsResource, "d", "newD", "/1/@topLevelTypes.8")
+		assertTSetter(phase, tClass, newN4jsResource, "c", "newC", "/1/@types.4")
+		assertTSetter(phase, tClass, newN4jsResource, "d", "newD", "/1/@types.8")
 	}
 
 	def private assertTField(String phase, TClass tClass, Resource newN4jsResource, String expectedName, String expectedTypeFragmentURI) {
@@ -118,16 +118,16 @@ class ClassesGetterSetterTypesBuilderTest extends AbstractTypesBuilderTest {
 		val exportableElement = assertExportDeclaration(phase, script, 0)
 		val n4Class = assertN4ClassDeclaration(phase, exportableElement, "Callee", 8)
 
-		assertN4Field(phase, n4Class, resource, "a", "/1/@topLevelTypes.4")
-		assertN4Field(phase, n4Class, resource, "data_property_b", "/1/@topLevelTypes.4")
-		assertN4Field(phase, n4Class, resource, "data_property_c", "/1/@topLevelTypes.4")
-		assertN4Field(phase, n4Class, resource, "data_property_d", "/1/@topLevelTypes.4")
+		assertN4Field(phase, n4Class, resource, "a", "/1/@types.4")
+		assertN4Field(phase, n4Class, resource, "data_property_b", "/1/@types.4")
+		assertN4Field(phase, n4Class, resource, "data_property_c", "/1/@types.4")
+		assertN4Field(phase, n4Class, resource, "data_property_d", "/1/@types.4")
 
-		assertN4Getter(phase, n4Class, resource, "b", "/1/@topLevelTypes.4")
-		assertN4Getter(phase, n4Class, resource, "d", "/1/@topLevelTypes.4")
+		assertN4Getter(phase, n4Class, resource, "b", "/1/@types.4")
+		assertN4Getter(phase, n4Class, resource, "d", "/1/@types.4")
 
-		assertN4Setter(phase, n4Class, resource, "c", "newC", "/1/@topLevelTypes.4")
-		assertN4Setter(phase, n4Class, resource, "d", "newD", "/1/@topLevelTypes.8")
+		assertN4Setter(phase, n4Class, resource, "c", "newC", "/1/@types.4")
+		assertN4Setter(phase, n4Class, resource, "d", "newD", "/1/@types.8")
 	}
 
 	def private void assertN4Field(String phase, N4ClassDeclaration n4Class, Resource resource, String expectedName, String expectedTypeFragmentURI) {

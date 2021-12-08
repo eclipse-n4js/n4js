@@ -96,7 +96,7 @@ class ModuleToModuleProxyIdeTest extends ConvertedIdeTest {
 		assertEquals(#["B.n4js"], resourceSet.resources.map[URI.lastSegment])
 
 		// make sure the reference to A was properly created as a m2m URI
-		val classB = resourceB.module.topLevelTypes.head as TClass
+		val classB = resourceB.module.types.head as TClass
 		val proxyToClassA = classB.superClassRef.declaredTypeNoResolve
 		assertTrue(proxyToClassA.eIsProxy)
 
@@ -127,8 +127,8 @@ class ModuleToModuleProxyIdeTest extends ConvertedIdeTest {
 		val resourceSet = resourceB.resourceSet
 
 		// (2) load file A by resolving proxies in modules of B and B2
-		val classB = resourceB.module.topLevelTypes.head as TClass
-		val classB2 = resourceB2.module.topLevelTypes.head as TClass
+		val classB = resourceB.module.types.head as TClass
+		val classB2 = resourceB2.module.types.head as TClass
 		val classA_beforeUnload = classB.superClassRef.declaredType
 		classB2.superClassRef.declaredType // also resolve the proxy in B2's module (required for tests after unloading)
 		assertEquals(#["B.n4js", "B2.n4js", "A.n4js"], resourceSet.resources.map[URI.lastSegment])
@@ -186,7 +186,7 @@ class ModuleToModuleProxyIdeTest extends ConvertedIdeTest {
 
 		try {
 			// (3) resolve the reference to A (this should load A.n4js from the file on disk)
-			val classB = resourceB.module.topLevelTypes.head as TClass
+			val classB = resourceB.module.types.head as TClass
 			val classA = classB.superClassRef.declaredType as TClass
 			assertFalse(classA.eIsProxy)
 

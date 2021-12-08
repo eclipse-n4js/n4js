@@ -11,7 +11,7 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-export function foo() { // /1/@topLevelTypes.0
+export function foo() { // /1/@types.0
     foo;
 
 	// XPECT scopeWithPosition at foo --> b - 20, foo - T14, ...

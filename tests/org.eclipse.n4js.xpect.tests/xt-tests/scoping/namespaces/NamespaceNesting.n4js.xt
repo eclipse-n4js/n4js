@@ -1,0 +1,53 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+    
+   	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+	}
+   
+   END_SETUP
+ */
+
+
+
+namespace NS1 {
+	class NS1C1 {}
+	namespace NS1NS1 {
+		class NS1NS1C1 {}
+	}
+	
+	// access on same level
+	// XPECT noerrors -->
+	class NS1C2 extends NS1C1 {}
+	// access on same level by qualified name
+	// XPECT noerrors -->
+	class NS1C3 extends NS1.NS1C1 {}
+	
+	
+	namespace NS1NS2 {
+		// access to upper level
+		// XPECT noerrors -->
+		class NS1NS2C1 extends NS1C2 {}
+		// access to upper level by qualified name
+		// XPECT noerrors -->
+		class NS1NS2C2 extends NS1.NS1C2 {}
+	}
+}
+
+// XPECT noerrors -->
+class C1 extends NS1.NS1C1 {}
+// XPECT noerrors -->
+class C2 extends NS1.NS1NS1.NS1NS1C1 {}
+
+// XPECT noerrors -->
+type T1 = NS1.NS1NS1.NS1NS1C1

@@ -216,14 +216,14 @@ class ReactHelper {
 			if (tModule === null)
 				return null;
 
-			val tClassifier = tModule.topLevelTypes.filter(TClassifier).findFirst[name == reactClassifierName];
+			val tClassifier = tModule.types.filter(TClassifier).findFirst[name == reactClassifierName];
 			return tClassifier;
 		]);
 	}
 
 	def private TClass lookUpReactFragmentComponent(TModule module) {
 		if (module !== null) {
-			for (Type currTopLevelType : module.getTopLevelTypes()) {
+			for (Type currTopLevelType : module.getTypes()) {
 				if (currTopLevelType instanceof TClass
 						&& REACT_FRAGMENT_NAME.equals(currTopLevelType.getName())) {
 					return currTopLevelType as TClass;
@@ -240,7 +240,7 @@ class ReactHelper {
 	 */
 	def private TFunction lookUpReactElementFactoryFunction(TModule module) {
 		if (module !== null) {
-			for (Type currTopLevelType : module.getTopLevelTypes()) {
+			for (Type currTopLevelType : module.getTypes()) {
 				if (currTopLevelType instanceof TFunction
 						&& REACT_ELEMENT_FACTORY_FUNCTION_NAME.equals(currTopLevelType.getName())) {
 					return currTopLevelType as TFunction;

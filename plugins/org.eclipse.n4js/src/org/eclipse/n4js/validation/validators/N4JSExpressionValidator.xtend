@@ -793,9 +793,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			// resolve parent-expressions wrapping simple identifiers:
 			return holdsWritableIdentifier(expression.expression);
 		} else if (expression instanceof ParameterizedPropertyAccessExpression) {
-			val target = expression.target;
 			// guard against broken models:
 			if (expression.property !== null && !expression.property.eIsProxy) {
+				var target = expression.target;
+				while (target instanceof ParenExpression) {
+					target = target.expression;
+				}
 				if (target instanceof IdentifierRef) {
 					val id = target.id;
 					// handle namespace imports:

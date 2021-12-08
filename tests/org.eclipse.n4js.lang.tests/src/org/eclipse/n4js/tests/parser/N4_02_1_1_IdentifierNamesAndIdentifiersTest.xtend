@@ -47,7 +47,7 @@ class N4_02_1_1_IdentifierNamesAndIdentifiersTest extends AbstractParserTest {
 			export public class X {}
 		'''.parse(URI.createURI("A.n4js"), rs).withVendorAndProject('V', 'B')
 
-		var classX = s1.module.topLevelTypes.head as TClass;
+		var classX = s1.module.types.head as TClass;
 		assertEquals("X", classX.name)
 		val fqn = qualifiedNameProvider.getFullyQualifiedName(classX)
 		assertEquals("A/X", qualifiedNameConverter.toString(fqn));
@@ -60,7 +60,7 @@ class N4_02_1_1_IdentifierNamesAndIdentifiersTest extends AbstractParserTest {
 			export public class A {}
 		'''.parse(URI.createURI("A.n4js"), rs).withVendorAndProject('V', 'B')
 
-		var classX = s1.module.topLevelTypes.head as TClass;
+		var classX = s1.module.types.head as TClass;
 		assertEquals("A", classX.name)
 		val fqn = qualifiedNameProvider.getFullyQualifiedName(classX)
 		assertEquals("A/A", qualifiedNameConverter.toString(fqn));

@@ -33,16 +33,16 @@
 class SameNamesCaller {
 
     call() {
-		// XPECT linkedFragment at 'SameNamesCallee.<|>method' --> SameNamesCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.2
+		// XPECT linkedFragment at 'SameNamesCallee.<|>method' --> SameNamesCallee.n4js#/1/@types.0/@ownedMembers.2
 		SameNamesCallee.method()
 
-		// XPECT linkedFragment at 'SameNamesCallee.<|>field' --> SameNamesCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.0
+		// XPECT linkedFragment at 'SameNamesCallee.<|>field' --> SameNamesCallee.n4js#/1/@types.0/@ownedMembers.0
 		SameNamesCallee.field
 
 		var c : SameNamesCallee;
-		// XPECT linkedFragment at 'c.<|>field' --> SameNamesCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.1
+		// XPECT linkedFragment at 'c.<|>field' --> SameNamesCallee.n4js#/1/@types.0/@ownedMembers.1
 		c.method()
-		// XPECT linkedFragment at 'c.<|>field' --> SameNamesCallee.n4js#/1/@topLevelTypes.0/@ownedMembers.1
+		// XPECT linkedFragment at 'c.<|>field' --> SameNamesCallee.n4js#/1/@types.0/@ownedMembers.1
 		c.field
 	}
 }

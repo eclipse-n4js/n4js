@@ -18,7 +18,7 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TStructGetter
 import org.eclipse.n4js.ts.types.TStructMember
@@ -36,7 +36,7 @@ public class N4JSObjectLiteralTypesBuilder {
 	@Inject extension N4JSFormalParameterTypesBuilder
 
 
-	def package void createObjectLiteral(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase) {
+	def package void createObjectLiteral(ObjectLiteral objectLiteral, AbstractNamespace target, boolean preLinkingPhase) {
 		val builtInTypeScope = BuiltInTypeScope.get(objectLiteral.eResource.resourceSet)
 		val TStructuralType structType = TypesFactory.eINSTANCE.createTStructuralType
 		objectLiteral.propertyAssignments.filter[name!==null || hasComputedPropertyName].forEach [
@@ -50,7 +50,7 @@ public class N4JSObjectLiteralTypesBuilder {
 		structType.astElement = objectLiteral;
 		objectLiteral.definedType = structType;
 
-		target.internalTypes += structType
+		target.containingModule.internalTypes += structType
 	}
 
 	// TODO GH-1337 add support for spread operator

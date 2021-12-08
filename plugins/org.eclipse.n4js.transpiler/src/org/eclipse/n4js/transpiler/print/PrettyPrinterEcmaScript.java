@@ -204,6 +204,15 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
+	public Boolean caseN4NamespaceDeclaration(N4NamespaceDeclaration original) {
+		write("namespace ");
+		write(original.getName());
+		write(' ');
+		processBlockLike(original.getOwnedElementsRaw(), '{', null, null, '}');
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseN4ClassDeclaration(N4ClassDeclaration original) {
 		write("class ");
 		write(original.getName());

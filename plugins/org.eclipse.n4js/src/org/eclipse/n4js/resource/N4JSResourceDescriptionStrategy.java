@@ -24,6 +24,7 @@ import org.eclipse.n4js.ts.types.TConstableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
@@ -213,7 +214,10 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (eObject instanceof TModule) {
 			TModule module = (TModule) eObject;
 			internalCreateEObjectDescriptionForRoot(module, acceptor);
-			for (Type type : module.getTopLevelTypes()) {
+			for (TNamespace namespace : module.getNamespaces()) {
+				internalCreateEObjectDescription(namespace, acceptor);
+			}
+			for (Type type : module.getTypes()) {
 				internalCreateEObjectDescription(type, acceptor);
 			}
 			for (TVariable variable : module.getVariables()) {

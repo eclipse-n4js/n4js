@@ -63,14 +63,14 @@ class N4JSScopingTestWithIndexTest {
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
 				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="Supplier" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" packageName="org.eclipse.n4js.lang.tests" projectID="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
-				  <astElement href="#/0"/>
-				  <topLevelTypes xsi:type="types:TClass" name="Supplier" exportedName="Supplier">
+				  <types xsi:type="types:TClass" name="Supplier" exportedName="Supplier">
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
 				      <astElement href="#/0/@scriptElements.0/@exportedElement/@ownedMembersRaw.0"/>
-				      <returnTypeRef xsi:type="typeRefs:ParameterizedTypeRef" declaredType="//@topLevelTypes.0"/>
+				      <returnTypeRef xsi:type="typeRefs:ParameterizedTypeRef" declaredType="//@types.0"/>
 				    </ownedMembers>
 				    <astElement href="#/0/@scriptElements.0/@exportedElement"/>
-				  </topLevelTypes>
+				  </types>
+				  <astElement href="#/0"/>
 				</types:TModule>
 			''', "5ef0928a4a8827880a4bdb03ff26f5fc");
 	}
@@ -86,20 +86,20 @@ class N4JSScopingTestWithIndexTest {
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
 				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="SupplierWithBuiltIn" qualifiedName="org/eclipse/n4js/tests/scoping/SupplierWithBuiltIn" packageName="org.eclipse.n4js.lang.tests" projectID="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
-				  <astElement href="#/0"/>
-				  <topLevelTypes xsi:type="types:TClass" name="SupplierWithBuiltIn" exportedName="SupplierWithBuiltIn">
+				  <types xsi:type="types:TClass" name="SupplierWithBuiltIn" exportedName="SupplierWithBuiltIn">
 				    <ownedMembers xsi:type="types:TField" name="s" declaredMemberAccessModifier="public">
 				      <astElement href="#/0/@scriptElements.0/@exportedElement/@ownedMembersRaw.0"/>
 				      <typeRef xsi:type="typeRefs:ParameterizedTypeRef">
-				        <declaredType href="n4scheme:/builtin_js.n4jsd#/1/@topLevelTypes.8"/>
+				        <declaredType href="n4scheme:/builtin_js.n4jsd#/1/@types.8"/>
 				      </typeRef>
 				    </ownedMembers>
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
 				      <astElement href="#/0/@scriptElements.0/@exportedElement/@ownedMembersRaw.1"/>
-				      <returnTypeRef xsi:type="typeRefs:ParameterizedTypeRef" declaredType="//@topLevelTypes.0"/>
+				      <returnTypeRef xsi:type="typeRefs:ParameterizedTypeRef" declaredType="//@types.0"/>
 				    </ownedMembers>
 				    <astElement href="#/0/@scriptElements.0/@exportedElement"/>
-				  </topLevelTypes>
+				  </types>
+				  <astElement href="#/0"/>
 				</types:TModule>
 			''', "e6baa3799092e2c27e34ed45f7d5e461");
 	}
@@ -306,7 +306,7 @@ class N4JSScopingTestWithIndexTest {
 		assertEquals("foo", accessExpr.property.name);
 
 		val supplierTModule = supplierResource.contents.last as TModule
-		val supplierType = supplierTModule.topLevelTypes.head as TClass
+		val supplierType = supplierTModule.types.head as TClass
 		assertSame(supplierType.ownedMembers.head, accessExpr.property)
 	}
 }

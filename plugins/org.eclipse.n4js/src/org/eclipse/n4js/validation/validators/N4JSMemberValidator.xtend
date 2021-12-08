@@ -60,6 +60,7 @@ import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.types.TN4Classifier
 
 /**
  * Validation of rules that apply to individual members of a classifier.<p>
@@ -493,7 +494,8 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	 * Constraints 49: abstract methods/getters/setters must not be static and vice versa.
 	 */
 	def private boolean holdsAbstractMethodMustNotBeStatic(TMember member) {
-		if (member.abstract && member.static) {
+		val isExternal = member.eContainer instanceof TN4Classifier && (member.eContainer as TN4Classifier).external;
+		if (member.abstract && member.static && !isExternal) {
 			addIssue(getMessageForCLF_STATIC_ABSTRACT(member.keyword, member.name), member.astElement,
 				PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_STATIC_ABSTRACT)
 			return false;

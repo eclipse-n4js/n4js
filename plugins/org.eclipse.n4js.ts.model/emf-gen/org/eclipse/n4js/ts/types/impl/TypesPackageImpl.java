@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 import org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl;
 
+import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.ArrayLike;
@@ -70,6 +71,8 @@ import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TN4Classifier;
+import org.eclipse.n4js.ts.types.TNamespace;
+import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructGetter;
@@ -238,6 +241,27 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass containerTypeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass abstractNamespaceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tNamespaceEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tNamespaceElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -776,7 +800,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_TopLevelTypes() {
+	public EReference getTModule_InternalTypes() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(15);
 	}
 
@@ -786,7 +810,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_Variables() {
+	public EReference getTModule_ExposedInternalTypes() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(16);
 	}
 
@@ -796,7 +820,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_InternalTypes() {
+	public EReference getTModule_InternalDynamicElements() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(17);
 	}
 
@@ -806,28 +830,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_ExposedInternalTypes() {
-		return (EReference)tModuleEClass.getEStructuralFeatures().get(18);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getTModule_InternalDynamicElements() {
-		return (EReference)tModuleEClass.getEStructuralFeatures().get(19);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getTModule_AstMD5() {
-		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(20);
+		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(18);
 	}
 
 	/**
@@ -837,7 +841,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	@Override
 	public EReference getTModule_ComposedMemberCaches() {
-		return (EReference)tModuleEClass.getEStructuralFeatures().get(21);
+		return (EReference)tModuleEClass.getEStructuralFeatures().get(19);
 	}
 
 	/**
@@ -847,7 +851,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	@Override
 	public EReference getTModule_TemporaryTypes() {
-		return (EReference)tModuleEClass.getEStructuralFeatures().get(22);
+		return (EReference)tModuleEClass.getEStructuralFeatures().get(20);
 	}
 
 	/**
@@ -857,7 +861,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	@Override
 	public EAttribute getTModule_ModuleSpecifier() {
-		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(23);
+		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(21);
 	}
 
 	/**
@@ -1636,8 +1640,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getAccessibleTypeElement__IsExported() {
+	public EOperation getAccessibleTypeElement__GetDefaultTypeAccessModifier() {
 		return accessibleTypeElementEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getAccessibleTypeElement__IsExported() {
+		return accessibleTypeElementEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -1728,6 +1742,96 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EOperation getContainerType__GetOrCreateOwnedMembersByNameAndAccess() {
 		return containerTypeEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getAbstractNamespace() {
+		return abstractNamespaceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAbstractNamespace_Types() {
+		return (EReference)abstractNamespaceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAbstractNamespace_Variables() {
+		return (EReference)abstractNamespaceEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAbstractNamespace_Namespaces() {
+		return (EReference)abstractNamespaceEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getAbstractNamespace__GetContainingModule() {
+		return abstractNamespaceEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getTNamespace() {
+		return tNamespaceEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getTNamespace_External() {
+		return (EAttribute)tNamespaceEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getTNamespaceElement() {
+		return tNamespaceElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTNamespaceElement__IsHollow() {
+		return tNamespaceElementEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -1996,7 +2100,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTN4Classifier_DeclaredNonStaticPolyfill() {
+	public EAttribute getTN4Classifier_External() {
 		return (EAttribute)tn4ClassifierEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2006,7 +2110,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTN4Classifier_Dynamizable() {
+	public EAttribute getTN4Classifier_DeclaredNonStaticPolyfill() {
 		return (EAttribute)tn4ClassifierEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -2016,8 +2120,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTN4Classifier_TypingStrategy() {
+	public EAttribute getTN4Classifier_Dynamizable() {
 		return (EAttribute)tn4ClassifierEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getTN4Classifier_TypingStrategy() {
+		return (EAttribute)tn4ClassifierEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -2046,7 +2160,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTClass_External() {
+	public EAttribute getTClass_DeclaredAbstract() {
 		return (EAttribute)tClassEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -2056,7 +2170,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTClass_DeclaredAbstract() {
+	public EAttribute getTClass_DeclaredN4JS() {
 		return (EAttribute)tClassEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -2066,7 +2180,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTClass_DeclaredN4JS() {
+	public EAttribute getTClass_DeclaredFinal() {
 		return (EAttribute)tClassEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -2076,7 +2190,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTClass_DeclaredFinal() {
+	public EAttribute getTClass_DeclaredStaticPolyfill() {
 		return (EAttribute)tClassEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -2086,7 +2200,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTClass_DeclaredStaticPolyfill() {
+	public EAttribute getTClass_Observable() {
 		return (EAttribute)tClassEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -2096,18 +2210,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTClass_Observable() {
-		return (EAttribute)tClassEClass.getEStructuralFeatures().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getTClass_SuperClassRef() {
-		return (EReference)tClassEClass.getEStructuralFeatures().get(6);
+		return (EReference)tClassEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -2117,7 +2221,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	@Override
 	public EReference getTClass_ImplementedInterfaceRefs() {
-		return (EReference)tClassEClass.getEStructuralFeatures().get(7);
+		return (EReference)tClassEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -2206,18 +2310,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTInterface_External() {
-		return (EAttribute)tInterfaceEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getTInterface_SuperInterfaceRefs() {
-		return (EReference)tInterfaceEClass.getEStructuralFeatures().get(1);
+		return (EReference)tInterfaceEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2248,6 +2342,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EOperation getTInterface__GetImplementedOrExtendedInterfaceRefs() {
 		return tInterfaceEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTInterface__IsHollow() {
+		return tInterfaceEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -2538,6 +2642,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EOperation getTMemberWithAccessModifier__GetMemberAccessModifier() {
 		return tMemberWithAccessModifierEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTMemberWithAccessModifier__GetDefaultMemberAccessModifier() {
+		return tMemberWithAccessModifierEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -3196,6 +3310,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getTypeAlias__IsHollow() {
+		return typeAliasEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getSyntaxRelatedTElement() {
 		return syntaxRelatedTElementEClass;
 	}
@@ -3435,8 +3559,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(tModuleEClass, TMODULE__CYCLIC_MODULES_RUNTIME);
 		createEReference(tModuleEClass, TMODULE__CYCLIC_MODULES_LOADTIME_FOR_INHERITANCE);
 		createEReference(tModuleEClass, TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS);
-		createEReference(tModuleEClass, TMODULE__TOP_LEVEL_TYPES);
-		createEReference(tModuleEClass, TMODULE__VARIABLES);
 		createEReference(tModuleEClass, TMODULE__INTERNAL_TYPES);
 		createEReference(tModuleEClass, TMODULE__EXPOSED_INTERNAL_TYPES);
 		createEReference(tModuleEClass, TMODULE__INTERNAL_DYNAMIC_ELEMENTS);
@@ -3539,6 +3661,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT__DECLARED_PROVIDED_BY_RUNTIME);
 		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME);
 		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER);
+		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER);
 		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED);
 
 		containerTypeEClass = createEClass(CONTAINER_TYPE);
@@ -3550,6 +3673,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING);
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING_BOOLEAN_BOOLEAN);
 		createEOperation(containerTypeEClass, CONTAINER_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS);
+
+		abstractNamespaceEClass = createEClass(ABSTRACT_NAMESPACE);
+		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__TYPES);
+		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__VARIABLES);
+		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__NAMESPACES);
+		createEOperation(abstractNamespaceEClass, ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE);
+
+		tNamespaceEClass = createEClass(TNAMESPACE);
+		createEAttribute(tNamespaceEClass, TNAMESPACE__EXTERNAL);
+
+		tNamespaceElementEClass = createEClass(TNAMESPACE_ELEMENT);
+		createEOperation(tNamespaceElementEClass, TNAMESPACE_ELEMENT___IS_HOLLOW);
 
 		moduleNamespaceVirtualTypeEClass = createEClass(MODULE_NAMESPACE_VIRTUAL_TYPE);
 		createEReference(moduleNamespaceVirtualTypeEClass, MODULE_NAMESPACE_VIRTUAL_TYPE__MODULE);
@@ -3587,13 +3722,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(arrayLikeEClass, ARRAY_LIKE___GET_ELEMENT_TYPE);
 
 		tn4ClassifierEClass = createEClass(TN4_CLASSIFIER);
+		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__EXTERNAL);
 		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__DECLARED_NON_STATIC_POLYFILL);
 		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__DYNAMIZABLE);
 		createEAttribute(tn4ClassifierEClass, TN4_CLASSIFIER__TYPING_STRATEGY);
 		createEOperation(tn4ClassifierEClass, TN4_CLASSIFIER___IS_POLYFILL);
 
 		tClassEClass = createEClass(TCLASS);
-		createEAttribute(tClassEClass, TCLASS__EXTERNAL);
 		createEAttribute(tClassEClass, TCLASS__DECLARED_ABSTRACT);
 		createEAttribute(tClassEClass, TCLASS__DECLARED_N4JS);
 		createEAttribute(tClassEClass, TCLASS__DECLARED_FINAL);
@@ -3610,11 +3745,11 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tClassEClass, TCLASS___IS_FINAL);
 
 		tInterfaceEClass = createEClass(TINTERFACE);
-		createEAttribute(tInterfaceEClass, TINTERFACE__EXTERNAL);
 		createEReference(tInterfaceEClass, TINTERFACE__SUPER_INTERFACE_REFS);
 		createEOperation(tInterfaceEClass, TINTERFACE___IS_ABSTRACT);
 		createEOperation(tInterfaceEClass, TINTERFACE___GET_SUPER_CLASSIFIER_REFS);
 		createEOperation(tInterfaceEClass, TINTERFACE___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS);
+		createEOperation(tInterfaceEClass, TINTERFACE___IS_HOLLOW);
 
 		tMemberEClass = createEClass(TMEMBER);
 		createEAttribute(tMemberEClass, TMEMBER__DECLARED_FINAL);
@@ -3646,6 +3781,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(tMemberWithAccessModifierEClass, TMEMBER_WITH_ACCESS_MODIFIER__HAS_NO_BODY);
 		createEAttribute(tMemberWithAccessModifierEClass, TMEMBER_WITH_ACCESS_MODIFIER__DECLARED_MEMBER_ACCESS_MODIFIER);
 		createEOperation(tMemberWithAccessModifierEClass, TMEMBER_WITH_ACCESS_MODIFIER___GET_MEMBER_ACCESS_MODIFIER);
+		createEOperation(tMemberWithAccessModifierEClass, TMEMBER_WITH_ACCESS_MODIFIER___GET_DEFAULT_MEMBER_ACCESS_MODIFIER);
 
 		tStructMemberEClass = createEClass(TSTRUCT_MEMBER);
 		createEReference(tStructMemberEClass, TSTRUCT_MEMBER__DEFINED_MEMBER);
@@ -3726,6 +3862,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		typeAliasEClass = createEClass(TYPE_ALIAS);
 		createEOperation(typeAliasEClass, TYPE_ALIAS___IS_ALIAS);
+		createEOperation(typeAliasEClass, TYPE_ALIAS___IS_HOLLOW);
 
 		syntaxRelatedTElementEClass = createEClass(SYNTAX_RELATED_TELEMENT);
 		createEReference(syntaxRelatedTElementEClass, SYNTAX_RELATED_TELEMENT__AST_ELEMENT);
@@ -3790,6 +3927,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		containerTypeEClass_MT.getEBounds().add(g1);
 
 		// Add supertypes to classes
+		tModuleEClass.getESuperTypes().add(this.getAbstractNamespace());
 		tModuleEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		tModuleEClass.getESuperTypes().add(this.getTAnnotableElement());
 		identifiableElementEClass.getESuperTypes().add(this.getTypableElement());
@@ -3807,8 +3945,14 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tFunctionEClass.getESuperTypes().add(this.getType());
 		typeEClass.getESuperTypes().add(this.getTExportableElement());
 		typeEClass.getESuperTypes().add(this.getTAnnotableElement());
+		typeEClass.getESuperTypes().add(this.getTNamespaceElement());
 		genericTypeEClass.getESuperTypes().add(this.getType());
 		containerTypeEClass.getESuperTypes().add(this.getGenericType());
+		tNamespaceEClass.getESuperTypes().add(this.getType());
+		tNamespaceEClass.getESuperTypes().add(this.getAbstractNamespace());
+		tNamespaceEClass.getESuperTypes().add(this.getAccessibleTypeElement());
+		tNamespaceEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
+		tNamespaceEClass.getESuperTypes().add(this.getTNamespaceElement());
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getType());
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		primitiveTypeEClass.getESuperTypes().add(this.getGenericType());
@@ -3880,6 +4024,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tVariableEClass.getESuperTypes().add(this.getTAnnotableElement());
 		tVariableEClass.getESuperTypes().add(this.getAccessibleTypeElement());
 		tVariableEClass.getESuperTypes().add(this.getTTypedElement());
+		tVariableEClass.getESuperTypes().add(this.getTNamespaceElement());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(tModuleEClass, TModule.class, "TModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -3898,8 +4043,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEReference(getTModule_CyclicModulesRuntime(), this.getTModule(), null, "cyclicModulesRuntime", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_CyclicModulesLoadtimeForInheritance(), this.getTModule(), null, "cyclicModulesLoadtimeForInheritance", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_RuntimeCyclicLoadtimeDependents(), this.getTModule(), null, "runtimeCyclicLoadtimeDependents", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTModule_TopLevelTypes(), this.getType(), null, "topLevelTypes", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTModule_Variables(), this.getTVariable(), null, "variables", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_InternalTypes(), this.getType(), null, "internalTypes", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_ExposedInternalTypes(), this.getType(), null, "exposedInternalTypes", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_InternalDynamicElements(), this.getTDynamicElement(), null, "internalDynamicElements", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4040,6 +4183,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getAccessibleTypeElement__GetTypeAccessModifier(), this.getTypeAccessModifier(), "getTypeAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getAccessibleTypeElement__GetDefaultTypeAccessModifier(), this.getTypeAccessModifier(), "getDefaultTypeAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEOperation(getAccessibleTypeElement__IsExported(), theEcorePackage.getEBoolean(), "isExported", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(containerTypeEClass, ContainerType.class, "ContainerType", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -4075,6 +4220,20 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		g3 = createEGenericType(this.getTMember());
 		g2.setEUpperBound(g3);
 		initEOperation(op, g1);
+
+		initEClass(abstractNamespaceEClass, AbstractNamespace.class, "AbstractNamespace", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getAbstractNamespace_Types(), this.getType(), null, "types", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAbstractNamespace_Variables(), this.getTVariable(), null, "variables", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAbstractNamespace_Namespaces(), this.getTNamespace(), null, "namespaces", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getAbstractNamespace__GetContainingModule(), this.getTModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(tNamespaceEClass, TNamespace.class, "TNamespace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTNamespace_External(), theEcorePackage.getEBoolean(), "external", null, 0, 1, TNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(tNamespaceElementEClass, TNamespaceElement.class, "TNamespaceElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getTNamespaceElement__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(moduleNamespaceVirtualTypeEClass, ModuleNamespaceVirtualType.class, "ModuleNamespaceVirtualType", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getModuleNamespaceVirtualType_Module(), this.getTModule(), null, "module", null, 0, 1, ModuleNamespaceVirtualType.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4121,6 +4280,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getArrayLike__GetElementType(), theTypeRefsPackage.getTypeRef(), "getElementType", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tn4ClassifierEClass, TN4Classifier.class, "TN4Classifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTN4Classifier_External(), theEcorePackage.getEBoolean(), "external", null, 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTN4Classifier_DeclaredNonStaticPolyfill(), theEcorePackage.getEBoolean(), "declaredNonStaticPolyfill", null, 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTN4Classifier_Dynamizable(), theEcorePackage.getEBoolean(), "dynamizable", "true", 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTN4Classifier_TypingStrategy(), this.getTypingStrategy(), "typingStrategy", null, 0, 1, TN4Classifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4128,7 +4288,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTN4Classifier__IsPolyfill(), theEcorePackage.getEBoolean(), "isPolyfill", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tClassEClass, TClass.class, "TClass", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getTClass_External(), theEcorePackage.getEBoolean(), "external", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_DeclaredAbstract(), theEcorePackage.getEBoolean(), "declaredAbstract", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_DeclaredN4JS(), theEcorePackage.getEBoolean(), "declaredN4JS", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTClass_DeclaredFinal(), theEcorePackage.getEBoolean(), "declaredFinal", null, 0, 1, TClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4152,7 +4311,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTClass__IsFinal(), theEcorePackage.getEBoolean(), "isFinal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tInterfaceEClass, TInterface.class, "TInterface", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getTInterface_External(), theEcorePackage.getEBoolean(), "external", null, 0, 1, TInterface.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTInterface_SuperInterfaceRefs(), theTypeRefsPackage.getParameterizedTypeRef(), null, "superInterfaceRefs", null, 0, -1, TInterface.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTInterface__IsAbstract(), theEcorePackage.getEBoolean(), "isAbstract", 0, 1, !IS_UNIQUE, IS_ORDERED);
@@ -4160,6 +4318,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTInterface__GetSuperClassifierRefs(), this.getParameterizedTypeRefIterable(), "getSuperClassifierRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTInterface__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTInterface__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tMemberEClass, TMember.class, "TMember", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTMember_DeclaredFinal(), theEcorePackage.getEBoolean(), "declaredFinal", null, 0, 1, TMember.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4214,6 +4374,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTMemberWithAccessModifier_DeclaredMemberAccessModifier(), this.getMemberAccessModifier(), "declaredMemberAccessModifier", null, 0, 1, TMemberWithAccessModifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTMemberWithAccessModifier__GetMemberAccessModifier(), this.getMemberAccessModifier(), "getMemberAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTMemberWithAccessModifier__GetDefaultMemberAccessModifier(), this.getMemberAccessModifier(), "getDefaultMemberAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tStructMemberEClass, TStructMember.class, "TStructMember", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTStructMember_DefinedMember(), this.getTStructMember(), null, "definedMember", null, 0, 1, TStructMember.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4327,6 +4489,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(typeAliasEClass, TypeAlias.class, "TypeAlias", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getTypeAlias__IsAlias(), theEcorePackage.getEBoolean(), "isAlias", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTypeAlias__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(syntaxRelatedTElementEClass, SyntaxRelatedTElement.class, "SyntaxRelatedTElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSyntaxRelatedTElement_AstElement(), theEcorePackage.getEObject(), null, "astElement", null, 0, 1, SyntaxRelatedTElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

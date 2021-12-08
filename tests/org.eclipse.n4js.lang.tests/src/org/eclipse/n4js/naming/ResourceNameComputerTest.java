@@ -55,7 +55,7 @@ public class ResourceNameComputerTest {
 		URI fileUri = rs.getURIConverter().normalize(URIUtils.toFileUri("src/p/C.n4js"));
 		this.script = parserHelper.parse("class C {}", fileUri, rs);
 		this.module = script.getModule();
-		this.type = module.getTopLevelTypes().get(0);
+		this.type = module.getTypes().get(0);
 	}
 
 	/**

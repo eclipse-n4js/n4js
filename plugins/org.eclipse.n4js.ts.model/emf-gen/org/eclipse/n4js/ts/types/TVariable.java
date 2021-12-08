@@ -35,7 +35,7 @@ package org.eclipse.n4js.ts.types;
  * @model
  * @generated
  */
-public interface TVariable extends TExportableElement, TConstableElement, SyntaxRelatedTElement, TAnnotableElement, AccessibleTypeElement, TTypedElement {
+public interface TVariable extends TExportableElement, TConstableElement, SyntaxRelatedTElement, TAnnotableElement, AccessibleTypeElement, TTypedElement, TNamespaceElement {
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->

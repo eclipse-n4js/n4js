@@ -14,9 +14,9 @@ import com.google.inject.Inject
 import java.math.BigDecimal
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
@@ -25,12 +25,12 @@ public class N4JSEnumDeclarationTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package boolean relinkTEnum(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase, int idx) {
+	def package boolean relinkTEnum(N4EnumDeclaration n4Enum, AbstractNamespace target, boolean preLinkingPhase, int idx) {
 		if (n4Enum.name === null) {
 			return false;
 		}
 
-		val TEnum enumType = target.topLevelTypes.get(idx) as TEnum
+		val TEnum enumType = target.types.get(idx) as TEnum
 		ensureEqualName(n4Enum, enumType);
 
 		relinkTEnumLiterals(n4Enum, enumType, preLinkingPhase);
@@ -57,7 +57,7 @@ public class N4JSEnumDeclarationTypesBuilder {
 		return true;
 	}
 
-	def protected TEnum createTEnum(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase) {
+	def protected TEnum createTEnum(N4EnumDeclaration n4Enum, AbstractNamespace target, boolean preLinkingPhase) {
 		if (n4Enum.name === null) {
 			return null;
 		}
@@ -73,7 +73,7 @@ public class N4JSEnumDeclarationTypesBuilder {
 		enumType.astElement = n4Enum
 		n4Enum.definedType = enumType
 
-		target.topLevelTypes += enumType
+		target.types += enumType
 
 		return enumType;
 	}

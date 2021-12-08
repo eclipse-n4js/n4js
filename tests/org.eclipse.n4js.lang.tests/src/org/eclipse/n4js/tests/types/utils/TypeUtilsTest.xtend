@@ -56,12 +56,12 @@ class TypeUtilsTest {
 
 		assertNotNull(script);
 
-		val A = script.module.topLevelTypes.get(0);
-		val B = script.module.topLevelTypes.get(1);
-		val C = script.module.topLevelTypes.get(2);
-		val D = script.module.topLevelTypes.get(3);
-		val E = script.module.topLevelTypes.get(4);
-		val F = script.module.topLevelTypes.get(5);
+		val A = script.module.types.get(0);
+		val B = script.module.types.get(1);
+		val C = script.module.types.get(2);
+		val D = script.module.types.get(3);
+		val E = script.module.types.get(4);
+		val F = script.module.types.get(5);
 
 		assertEquals("", TypeUtils.declaredSuperTypes(A).map[typeRefAsString].join(","));
 		assertEquals("A", TypeUtils.declaredSuperTypes(B).map[typeRefAsString].join(","));
@@ -83,9 +83,9 @@ class TypeUtilsTest {
 
 		assertNotNull(script);
 
-		val I = script.module.topLevelTypes.get(0);
-		val J = script.module.topLevelTypes.get(1);
-		val L = script.module.topLevelTypes.get(2);
+		val I = script.module.types.get(0);
+		val J = script.module.types.get(1);
+		val L = script.module.types.get(2);
 
 		assertEquals("", TypeUtils.declaredSuperTypes(I).map[typeRefAsString].join(","));
 		assertEquals("I", TypeUtils.declaredSuperTypes(J).map[typeRefAsString].join(","));

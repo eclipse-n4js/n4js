@@ -44,6 +44,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamedElement;
 
 import org.eclipse.n4js.ts.types.TMember;
@@ -289,6 +290,33 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * @generated
 	 */
 	@Override
+	public boolean isDeclaredExternal() {
+		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDefaultExternal() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent).isExternal();
+		}
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<Annotation> getAllAnnotations() {
 		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
 		final EObject parent = this.eContainer();
@@ -506,6 +534,8 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 		}
 		if (baseClass == ModifiableElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_EXTERNAL;
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DEFAULT_EXTERNAL;
 				default: return -1;
 			}
 		}
@@ -568,6 +598,10 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 				return isCallSignature();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCT_SIGNATURE:
 				return isConstructSignature();
+			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_EXTERNAL:
+				return isDeclaredExternal();
+			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_DEFAULT_EXTERNAL:
+				return isDefaultExternal();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_ALL_ANNOTATIONS:
 				return getAllAnnotations();
 		}

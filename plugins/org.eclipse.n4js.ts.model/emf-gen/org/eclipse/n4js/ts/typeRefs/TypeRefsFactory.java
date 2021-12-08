@@ -120,6 +120,15 @@ public interface TypeRefsFactory extends EFactory {
 	TypeTypeRef createTypeTypeRef();
 
 	/**
+	 * Returns a new object of class '<em>Namespace Like Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Namespace Like Ref</em>'.
+	 * @generated
+	 */
+	NamespaceLikeRef createNamespaceLikeRef();
+
+	/**
 	 * Returns a new object of class '<em>Wildcard</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

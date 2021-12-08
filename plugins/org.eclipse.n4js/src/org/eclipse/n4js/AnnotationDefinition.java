@@ -179,7 +179,8 @@ public final class AnnotationDefinition {
 	/**
 	 * 11.1.1. Declaring externals
 	 */
-	public final static AnnotationDefinition N4JS = define("N4JS").targets(N4_CLASS_DECLARATION, EXPORT_DECLARATION)
+	public final static AnnotationDefinition N4JS = define("N4JS")
+			.targets(N4_CLASS_DECLARATION, N4_INTERFACE_DECLARATION, EXPORT_DECLARATION)
 			.retention(RetentionPolicy.TYPE).end();
 
 	/**

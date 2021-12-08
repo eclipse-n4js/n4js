@@ -35,14 +35,14 @@ public abstract class AbstractContainerTypesTest<T extends ContainerType<?>> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected T parseAndGetFirstType(CharSequence text) throws Exception {
-		return (T) parseHelper.parse(text).getModule().getTopLevelTypes().get(0);
+		return (T) parseHelper.parse(text).getModule().getTypes().get(0);
 	}
 
 	/**
 	 * Parses the given text and returns the top level types.
 	 */
 	protected EList<Type> parseAndGetTypes(CharSequence text) throws Exception {
-		return parseHelper.parse(text).getModule().getTopLevelTypes();
+		return parseHelper.parse(text).getModule().getTypes();
 	}
 
 	/**

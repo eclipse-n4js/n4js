@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+
+external namespace NS1 {
+    const c;
+    var v;
+    let l;
+    function F():void
+    namespace NS2 {}
+    interface ~I {}
+    class C {}
+    type T = C;
+}
+
+export external namespace NS2 {
+    const c;
+    var v;
+    let l;
+    function F():void
+    namespace NS2 {}
+    interface ~I {}
+    class C {}
+    type T = C;
+}
+
+export external namespace NS3 {
+    private const c;
+    private var v;
+    private let l;
+    private function F():void
+    private namespace NS2 {}
+    private interface ~I {}
+    private class C {}
+    private type T = C;
+}
+
+
+
+/* XPECT generated_dts ---
+declare namespace NS1 {
+	const c;
+	var v;
+	let l;
+	function F(): void;
+	namespace NS2 {}
+	interface I {}
+	class C {}
+	type T = C;
+}
+export namespace NS2 {
+	export const c;
+	export var v;
+	export let l;
+	export function F(): void;
+	export namespace NS2 {}
+	export interface I {}
+	export class C {}
+	export type T = C;
+}
+export namespace NS3 {
+	const c;
+	var v;
+	let l;
+	function F(): void;
+	namespace NS2 {}
+	interface I {}
+	class C {}
+	type T = C;
+}
+--- */

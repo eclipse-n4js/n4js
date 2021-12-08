@@ -58,6 +58,7 @@ import org.eclipse.n4js.n4JS.N4FieldAccessor
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NewTarget
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -1679,7 +1680,11 @@ class ASTStructureValidator {
 	}
 
 	def private boolean isValidConstOrLetPosition(EObject model) {
-		if (model.eContainer instanceof Block || model.eContainer instanceof Script || model.eContainer instanceof AbstractCaseClause) {
+		if (model.eContainer instanceof Block
+			|| model.eContainer instanceof Script
+			|| model.eContainer instanceof AbstractCaseClause
+			|| model.eContainer instanceof N4NamespaceDeclaration
+		) {
 			return true
 		}
 		if (model.eContainer instanceof ExportDeclaration) {

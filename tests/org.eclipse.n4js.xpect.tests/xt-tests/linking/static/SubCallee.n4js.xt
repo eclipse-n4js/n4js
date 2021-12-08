@@ -34,12 +34,12 @@ import { Callee } from "linking/static/Callee"
 class SubCallee extends Callee {
 
    call() {
-		// XPECT linkedFragment at 'this.<|>myNonStaticField' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.0
+		// XPECT linkedFragment at 'this.<|>myNonStaticField' --> Callee.n4js#/1/@types.0/@ownedMembers.0
 		this.myNonStaticField
    }
 
    static callStatic() {
-		// XPECT linkedFragment at 'this.<|>myStaticField' --> Callee.n4js#/1/@topLevelTypes.0/@ownedMembers.1
+		// XPECT linkedFragment at 'this.<|>myStaticField' --> Callee.n4js#/1/@types.0/@ownedMembers.1
 		this.myStaticField
    }
 }

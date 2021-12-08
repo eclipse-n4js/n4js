@@ -47,10 +47,10 @@ export external public function MyFunction() : any
 
 /* pos 8 */
 export external public class MySuperClass<T extends MyInterface> extends MySuperDuperClass implements Comparable {
-// LF-1 XPECT linkedFragment at 'number' --> n4scheme:/primitives.n4jsd#/1/@topLevelTypes.3
+// LF-1 XPECT linkedFragment at 'number' --> n4scheme:/primitives.n4jsd#/1/@types.3
 	private counter: number;
-// LF-2 XPECT linkedFragment at 'any' --> n4scheme:/primitives.n4jsd#/1/@topLevelTypes.6
+// LF-2 XPECT linkedFragment at 'any' --> n4scheme:/primitives.n4jsd#/1/@types.6
 // LF-3 XPECT linkedFragment at 'any' --> Wrong Expectation
-// LF-4 XPECT linkedFragment at 'T' --> /1/@topLevelTypes.8/@typeVars.0
+// LF-4 XPECT linkedFragment at 'T' --> /1/@types.8/@typeVars.0
 	protected doStuff(input: T): any;
 }

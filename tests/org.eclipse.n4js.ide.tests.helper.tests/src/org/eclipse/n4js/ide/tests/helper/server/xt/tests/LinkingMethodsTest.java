@@ -48,7 +48,7 @@ public class LinkingMethodsTest extends AbstractXtParentRunnerTest {
 		assertResult("(LF-1)", "Passed: linkedFragment~0: LF-1 〔probands/LinkingMethods/LinkedFragment.n4jsd.xt〕");
 		assertResult("(LF-2)", "Passed: linkedFragment~1: LF-2 〔probands/LinkingMethods/LinkedFragment.n4jsd.xt〕");
 		assertResult("(LF-3)",
-				"Failed: linkedFragment~2: LF-3 〔probands/LinkingMethods/LinkedFragment.n4jsd.xt〕. expected:<[Wrong Expectation]> but was:<[n4scheme:/primitives.n4jsd#/1/@topLevelTypes.6]>");
+				"Failed: linkedFragment~2: LF-3 〔probands/LinkingMethods/LinkedFragment.n4jsd.xt〕. expected:<[Wrong Expectation]> but was:<[n4scheme:/primitives.n4jsd#/1/@types.6]>");
 		assertResult("(LF-4)", "Passed: linkedFragment~3: LF-4 〔probands/LinkingMethods/LinkedFragment.n4jsd.xt〕");
 		assertResult("(LN-1)", "Passed: linkedName~0: LN-1 〔probands/LinkingMethods/LinkedName.n4jsd.xt〕");
 		assertResult("(LN-2)",

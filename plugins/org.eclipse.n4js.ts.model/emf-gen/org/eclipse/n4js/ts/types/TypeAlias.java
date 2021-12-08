@@ -36,4 +36,12 @@ public interface TypeAlias extends GenericType, AccessibleTypeElement, TTypedEle
 	 */
 	boolean isAlias();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isHollow();
+
 } // TypeAlias

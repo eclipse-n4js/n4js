@@ -32,7 +32,9 @@ import org.eclipse.n4js.parser.conversion.N4JSValueConverterWithValueException;
 import org.eclipse.n4js.scoping.members.ComposedMemberScope;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
+import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
@@ -72,6 +74,9 @@ public class N4JSLinker extends LazyLinker {
 
 	/** Custom delimiter to use for encoded URI fragments. */
 	public static final char N4JS_CROSSREF_DELIM = '|';
+
+	private static final EReference PARAMETERIZED_TYPE_REF__DECLARED_TYPE = TypeRefsPackage.eINSTANCE
+			.getParameterizedTypeRef_DeclaredType();
 
 	@Inject
 	private IValueConverterService valueConverterService;
@@ -280,7 +285,16 @@ public class N4JSLinker extends LazyLinker {
 			if (obj instanceof IdentifierRef && value instanceof String) {
 				((IdentifierRef) obj).setIdAsText((String) value);
 			} else if (obj instanceof ParameterizedTypeRef && value instanceof String) {
-				((ParameterizedTypeRef) obj).setDeclaredTypeAsText((String) value);
+				ParameterizedTypeRef ptr = (ParameterizedTypeRef) obj;
+				String valueStr = (String) value;
+				if (eRef == PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
+					ptr.setDeclaredTypeAsText(valueStr);
+				}
+				// Type typeProxy = (Type) proxy;
+				// typeProxy.setName(valueStr);
+
+			} else if (obj instanceof NamespaceLikeRef && value instanceof String) {
+				((NamespaceLikeRef) obj).setDeclaredTypeAsText((String) value);
 			} else if (obj instanceof LabelRef && value instanceof String) {
 				((LabelRef) obj).setLabelAsText((String) value);
 			} else if (obj instanceof ParameterizedPropertyAccessExpression && value instanceof String) {
@@ -343,6 +357,8 @@ public class N4JSLinker extends LazyLinker {
 			((ParameterizedPropertyAccessExpression) obj).setPropertyAsText(null);
 		} else if (obj instanceof ParameterizedTypeRef) {
 			((ParameterizedTypeRef) obj).setDeclaredTypeAsText(null);
+		} else if (obj instanceof NamespaceLikeRef) {
+			((NamespaceLikeRef) obj).setDeclaredTypeAsText(null);
 		}
 	}
 

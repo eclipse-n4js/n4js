@@ -35,7 +35,7 @@ import org.eclipse.n4js.ts.types.TModule;
  * @model
  * @generated
  */
-public interface ExportDeclaration extends AnnotableScriptElement {
+public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElement {
 	/**
 	 * Returns the value of the '<em><b>Exported Element</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -157,5 +157,13 @@ public interface ExportDeclaration extends AnnotableScriptElement {
 	 * @generated
 	 */
 	void setReexportedFrom(TModule value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isHollow();
 
 } // ExportDeclaration

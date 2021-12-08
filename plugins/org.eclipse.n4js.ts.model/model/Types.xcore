@@ -45,7 +45,7 @@ type Variance wraps Variance
 /**
  * The TModule is the representation of the script on the type level.
  */
-class TModule extends SyntaxRelatedTElement, TAnnotableElement {
+class TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElement {
 	/**
 	 * The module's simple name, i.e. the last segment of its qualified name.
 	 */
@@ -130,24 +130,6 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	refers TModule[] runtimeCyclicLoadtimeDependents
 
-	// TODO jvp: what does that mean:
-	// TODO: make sure these are only top level types in the script
-	// (ß): currently these may also contain nested types since the traversal
-	// in the types builder processes the complete AST
-	/*
-	 * A list of all types declarations in the script on the top level.
-	 * These include the exported classes, interfaces, function as well
-	 * as the types inferred from type defining elements that are not marked as exported.
-	 * This allows for better validation messages and diagnostics in later stages
-	 * of the processing.
-	 */
-	contains Type[] topLevelTypes
-	/*
-	 * A list of all top level variables in the script.
-	 * These include the exported variables as well as the internal variables.
-	 * Similar to #topLevelTypes, this allows for better validation messages and diagnostics.
-	 */
-	contains TVariable[] variables
 	/*
 	 * Internal types may be populated incrementally by the type checker. Typically these
 	 * are types derived from nested structures of the AST.
@@ -227,6 +209,14 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	derived String moduleSpecifier get {
 		return qualifiedName
 	}
+	
+	/**
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 */
+//	op TModule getContainingModule() {
+//		return this;
+//	}
 }
 
 /*
@@ -582,7 +572,7 @@ enum MemberAccessModifier {
  * </p>
  */
 //TODO why not abstract (doesn't work when it is abstract, but why?)
-class Type extends TExportableElement, TAnnotableElement {
+class Type extends TExportableElement, TAnnotableElement, TNamespaceElement {
 
 	/** Returns true iff this type is a type alias. */
 	op boolean isAlias() {
@@ -701,6 +691,7 @@ class Type extends TExportableElement, TAnnotableElement {
 			name
 		}
 	}
+	
 
 //	op String getTypeAsHTML() {
 //		return UtilN4.sanitizeForHTML(getTypeAsString());
@@ -727,17 +718,29 @@ abstract class AccessibleTypeElement {
 	}
 
 	/**
-	 * Returns declared type if specified, otherwise modifier is computed (exported = project, private otherwise)
+	 * Returns declared type modifier if specified, otherwise the default modifier.
 	 */
 	op TypeAccessModifier getTypeAccessModifier() {
 		if (declaredTypeAccessModifier == TypeAccessModifier.UNDEFINED) {
+			return getDefaultTypeAccessModifier();
+		}
+		return declaredTypeAccessModifier
+	}
+	
+	/**
+	 * Returns default type modifier. If this element is exported, 'project' otherwise 'private'.
+	 * Namespace elements inherit the default modifier from their parent namespace.
+	 */
+	op TypeAccessModifier getDefaultTypeAccessModifier() {
+		if (eContainer instanceof TNamespace) {
+			return (eContainer as TNamespace).getTypeAccessModifier;
+		} else {
 			if (exported) {
 				return TypeAccessModifier.PROJECT;
 			} else {
 				return TypeAccessModifier.PRIVATE;
 			}
 		}
-		return declaredTypeAccessModifier
 	}
 
 	op boolean isExported()
@@ -809,6 +812,53 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 			],this);
 		}
 		return ownedMembersByNameAndAccess;
+	}
+}
+
+abstract class AbstractNamespace {
+	// TODO jvp: what does that mean:
+	// TODO: make sure these are only top level types in the script
+	// (ß): currently these may also contain nested types since the traversal
+	// in the types builder processes the complete AST
+	/*
+	 * A list of all types declarations in the script on the top level.
+	 * These include the exported classes, interfaces, function as well
+	 * as the types inferred from type defining elements that are not marked as exported.
+	 * This allows for better validation messages and diagnostics in later stages
+	 * of the processing.
+	 */
+	contains Type[] types
+	/*
+	 * A list of all top level variables in the script.
+	 * These include the exported variables as well as the internal variables.
+	 * Similar to #types, this allows for better validation messages and diagnostics.
+	 */
+	contains TVariable[] variables
+	/*
+	 * A list of all top level namespaces in the script.
+	 * These include the exported namespaces as well as the internal namespaces.
+	 * Similar to #types, this allows for better validation messages and diagnostics.
+	 */
+	contains TNamespace[] namespaces
+	
+	/**
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 */
+	op TModule getContainingModule() {
+		return EcoreUtil2.getContainerOfType(this, TModule);
+	}
+}
+
+class TNamespace extends Type /* must be first to generate 'isExported' */,
+							AbstractNamespace, AccessibleTypeElement, SyntaxRelatedTElement, TNamespaceElement {
+	boolean external
+	
+}
+
+class TNamespaceElement {
+	op boolean isHollow() {
+		return false;
 	}
 }
 
@@ -974,6 +1024,7 @@ abstract class ArrayLike {
 }
 
 class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike {
+	boolean external
 
 	boolean declaredNonStaticPolyfill
 	/*
@@ -993,7 +1044,6 @@ class TN4Classifier extends TClassifier, AccessibleTypeElement, ArrayLike {
 }
 
 class TClass extends TN4Classifier {
-	boolean external
 	boolean declaredAbstract
 	boolean declaredN4JS
 	boolean declaredFinal
@@ -1046,7 +1096,6 @@ class TClass extends TN4Classifier {
 }
 
 class TInterface extends TN4Classifier {
-	boolean external
 	contains ParameterizedTypeRef[] superInterfaceRefs
 
 	op boolean isAbstract() {
@@ -1063,6 +1112,10 @@ class TInterface extends TN4Classifier {
 	 */
 	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
 		return superInterfaceRefs;
+	}
+	
+	op boolean isHollow() {
+		return isExternal() && !annotations.exists[it.name == "N4JS"]
 	}
 }
 
@@ -1212,29 +1265,35 @@ abstract class TMember extends IdentifiableElement, TAnnotableElement, SyntaxRel
  */
 abstract class TMemberWithAccessModifier extends TMember {
 
-	/** TODO mover to TMethod and accessors (not done yet due to 500 named elements restriction) */
+	/** TODO move to TMethod and accessors (not done yet due to 500 named elements restriction) */
 	boolean hasNoBody
 	MemberAccessModifier declaredMemberAccessModifier
 	/**
-	 * Returns either the declared access modifier (if possible) or
-	 * derives the access modifier from the type access modifier of the containing type.
-	 * <p>
-	 * Note that the modifier is calculated in case no declared modifier is present, but it is not "fixed" (
-	 * cf. org.eclipse.n4js.ts.model.util.AccessModifiers.fixed(TMember)).
-	 * Also see [N4JSSpec] Constraints 2 (Default Member Access Modifiers)
+	 * Returns either the declared (if possible) or the default access modifier
 	 */
 	op MemberAccessModifier getMemberAccessModifier() {
 		if (declaredMemberAccessModifier === MemberAccessModifier.UNDEFINED) {
-			val parent = this.eContainer
-			if (parent instanceof TInterface) { // IDEBUG-456 only interface-members inherit from enclosing type
-				val modifierDerivedFromType = org.eclipse.n4js.ts.types.util.AccessModifiers.toMemberModifier((parent as Type).getTypeAccessModifier())
-				if (modifierDerivedFromType !== MemberAccessModifier.PRIVATE) {
-					return modifierDerivedFromType
-				}
-			}
-			return MemberAccessModifier.PROJECT // default for all class-members, even abstract members.
+			return getDefaultMemberAccessModifier();
 		}
 		return declaredMemberAccessModifier
+	}
+	
+	/**
+	 * Returns the default access modifier derived from the type access modifier of the containing type.
+	 * <p>
+	 * Note that the default modifier is calculated in case no declared modifier is present, but it is not "fixed"
+	 * (cf. org.eclipse.n4js.ts.model.util.AccessModifiers.fixed(TMember)).
+	 * Also see [N4JSSpec] Constraints 2 (Default Member Access Modifiers)
+	 */
+	op MemberAccessModifier getDefaultMemberAccessModifier() {
+		val parent = this.eContainer
+		if (parent instanceof TInterface) { // IDEBUG-456 only interface-members inherit from enclosing type
+			val modifierDerivedFromType = org.eclipse.n4js.ts.types.util.AccessModifiers.toMemberModifier((parent as Type).getTypeAccessModifier())
+			if (modifierDerivedFromType !== MemberAccessModifier.PRIVATE) {
+				return modifierDerivedFromType
+			}
+		}
+		return MemberAccessModifier.PROJECT // default for all class-members, even abstract members.
 	}
 }
 
@@ -1623,6 +1682,10 @@ class TypeAlias extends GenericType, AccessibleTypeElement, TTypedElement, Synta
 	op boolean isAlias() {
 		return true;
 	}
+	
+	op boolean isHollow() {
+		return true;
+	}
 }
 
 /*
@@ -1658,7 +1721,7 @@ abstract class TConstableElement {
  * to Types (such as TClass, TInterface, TFunction). It references the variable declaration of the
  * export declaration (via SyntaxRelatedTElement's astElement).
  */
-class TVariable extends TExportableElement, TConstableElement, SyntaxRelatedTElement, TAnnotableElement, AccessibleTypeElement, TTypedElement {
+class TVariable extends TExportableElement, TConstableElement, SyntaxRelatedTElement, TAnnotableElement, AccessibleTypeElement, TTypedElement, TNamespaceElement {
 	boolean external
 	boolean objectLiteral
 	boolean newExpression

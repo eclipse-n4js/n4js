@@ -255,7 +255,7 @@ Since the types builder sometimes copies proxies from AST to TModule (e.g. type
 === Standard EMF Proxies
 
 * URI fragment contains a path to an EObject, using reference names and indices: +
-`platform:/resource/Project/src/A.n4js#/1/@topLevelTypes.1/@ownedMembers.0`
+`platform:/resource/Project/src/A.n4js#/1/@types.1/@ownedMembers.0`
 * created automatically by EMF
 ** during deserialization of a TModule $M$ from the Xtext index for all references to a different TModule $M'$ (see `UserdataMapper`).
 ** when unloading a resource.

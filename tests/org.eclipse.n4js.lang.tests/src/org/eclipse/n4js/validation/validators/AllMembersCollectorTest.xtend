@@ -54,8 +54,8 @@ class AllMembersCollectorTest {
 		assertTrue(script.eResource.errors.empty)
 
 		val module = script.module;
-		val A = module.topLevelTypes.get(0) as TClass;
-		val B = module.topLevelTypes.get(1) as TClass;
+		val A = module.types.get(0) as TClass;
+		val B = module.types.get(1) as TClass;
 
 		val membersA = allMembersCollectorHelper.fromContext(script).allMembers(A, false, false);
 		val membersB = allMembersCollectorHelper.fromContext(script).allMembers(B, false, false);
@@ -84,8 +84,8 @@ class AllMembersCollectorTest {
 		assertTrue(script.eResource.errors.empty)
 
 		val module = script.module;
-		val A = module.topLevelTypes.get(0) as TClass;
-		val B = module.topLevelTypes.get(1) as TClass;
+		val A = module.types.get(0) as TClass;
+		val B = module.types.get(1) as TClass;
 
 		val membersA = allMembersCollectorHelper.fromContext(script).allMembers(A, false, false);
 		val membersB = allMembersCollectorHelper.fromContext(script).allMembers(B, false, false);

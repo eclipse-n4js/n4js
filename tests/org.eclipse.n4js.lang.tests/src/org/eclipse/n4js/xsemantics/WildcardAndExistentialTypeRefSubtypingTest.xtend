@@ -57,7 +57,7 @@ class WildcardAndExistentialTypeRefSubtypingTest extends AbstractTypesystemTest 
 
 		G = script.newRuleEnvironment;
 
-		val types = script.module.topLevelTypes;
+		val types = script.module.types;
 		A = types.filter[name=="A"].head as TClass;
 		B = types.filter[name=="B"].head as TClass;
 		C = types.filter[name=="C"].head as TClass;

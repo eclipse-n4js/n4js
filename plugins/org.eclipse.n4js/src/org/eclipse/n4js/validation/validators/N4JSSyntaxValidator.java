@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators;
 
+import static org.eclipse.n4js.N4JSLanguageConstants.EXPORT_KEYWORD;
 import static org.eclipse.n4js.N4JSLanguageConstants.EXTENDS_KEYWORD;
 import static org.eclipse.n4js.N4JSLanguageConstants.IMPLEMENTS_KEYWORD;
 import static org.eclipse.n4js.validation.IssueCodes.AST_CATCH_VAR_TYPED;
@@ -27,12 +28,14 @@ import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.CatchVariable;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.ModifierUtils;
 import org.eclipse.n4js.n4JS.N4ClassDefinition;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
@@ -75,7 +78,7 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	private boolean checkModifiers(ModifiableElement elem) {
-		return holdsNoInvalidOrDuplicateModifiers(elem)
+		return holdsNoInvalidObsoleteOrDuplicateModifiers(elem)
 				&& holdsNotMoreThanOneAccessModifier(elem)
 				&& holdsCorrectOrder(elem);
 	}
@@ -83,13 +86,13 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 	/**
 	 * Check for invalid modifiers (e.g. ABSTRACT on a field) and duplicates.
 	 */
-	private boolean holdsNoInvalidOrDuplicateModifiers(ModifiableElement elem) {
+	private boolean holdsNoInvalidObsoleteOrDuplicateModifiers(ModifiableElement elem) {
 		boolean hasIssue = false;
 		final Set<N4Modifier> checked = new HashSet<>();
 		for (int idx = 0; idx < elem.getDeclaredModifiers().size(); idx++) {
 			final N4Modifier mod = elem.getDeclaredModifiers().get(idx);
 			final boolean duplicate = !checked.add(mod);
-			if (!ModifierUtils.isValid(elem.eClass(), mod)) {
+			if (!ModifierUtils.isValid(elem, mod)) {
 				final ILeafNode node = ModifierUtils.getNodeForModifier(elem, idx);
 				addIssue(IssueCodes.getMessageForSYN_MODIFIER_INVALID(mod.getName(), keywordProvider.keyword(elem)),
 						elem, node.getOffset(), node.getLength(),
@@ -100,6 +103,12 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 				addIssue(IssueCodes.getMessageForSYN_MODIFIER_DUPLICATE(mod.getName()),
 						elem, node.getOffset(), node.getLength(),
 						IssueCodes.SYN_MODIFIER_DUPLICATE);
+				hasIssue = true;
+			} else if (ModifierUtils.isObsolete(elem, mod)) {
+				final ILeafNode node = ModifierUtils.getNodeForModifier(elem, idx);
+				addIssue(IssueCodes.getMessageForSYN_UNNECESSARY_ELEMENT("modifier", mod.getName()),
+						elem, node.getOffset(), node.getLength(),
+						IssueCodes.SYN_UNNECESSARY_ELEMENT);
 				hasIssue = true;
 			}
 		}
@@ -155,6 +164,22 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Checks whether that exported elements are on script / top level only
+	 */
+	@Check
+	public void checkExportedKeyword(ExportDeclaration element) {
+		if (element.eContainer() instanceof N4NamespaceDeclaration) {
+			ICompositeNode node = NodeModelUtils.findActualNodeFor(element);
+			ILeafNode keywordNode = findLeafWithKeyword(element, "{", node, EXPORT_KEYWORD, false);
+			if (keywordNode != null) {
+				addIssue(IssueCodes.getMessageForEXP_ONLY_TOP_LEVEL_ELEMENTS(),
+						element, keywordNode.getTotalOffset(), keywordNode.getLength(),
+						IssueCodes.EXP_ONLY_TOP_LEVEL_ELEMENTS);
+			}
+		}
 	}
 
 	/**

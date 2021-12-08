@@ -67,7 +67,7 @@ abstract class AbstractN4JSClassDeclarationTypesBuilderTest {
 		assertEquals("test content count", 2, testResource.contents.size)
 
 		val exportedScript = testResource.contents.last as TModule
-		assertEquals(expectedExportedElementsCount, exportedScript.topLevelTypes.size + exportedScript.variables.size)
+		assertEquals(expectedExportedElementsCount, exportedScript.types.size + exportedScript.variables.size)
 
 		assertExpectedTypes(testResource, expectedTypeToNamePairs)
 		EcoreUtil2.resolveAll(testResource)
@@ -124,7 +124,7 @@ abstract class AbstractN4JSClassDeclarationTypesBuilderTest {
 	def abstract CharSequence getExpectedTypesSerialization();
 
 	def assertExpectedTypes(Resource testResource, List<? extends Pair<? extends Class<? extends EObject>, String>> expectedTypeToNamePairs) {
-		val types = (testResource.contents.last as TModule).topLevelTypes
+		val types = (testResource.contents.last as TModule).types
 		val variables = (testResource.contents.last as TModule).variables
 		val exported = types + variables
 		assertEquals("expectedTypes count", expectedTypeToNamePairs.size, exported.size)

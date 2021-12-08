@@ -31,4 +31,12 @@ public interface N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclar
 	 */
 	TypeAlias getDefinedTypeAsTypeAlias();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isHollow();
+
 } // N4TypeAliasDeclaration

@@ -17,7 +17,7 @@ import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -26,7 +26,7 @@ package class N4JSVariableStatementTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package int relinkVariableTypes(VariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase, int start) {
+	def package int relinkVariableTypes(VariableStatement n4VariableStatement, AbstractNamespace target, boolean preLinkingPhase, int start) {
 		return n4VariableStatement.varDecl.filter(ExportedVariableDeclaration).fold(start) [ idx, decl |
 			if (decl.relinkVariableType(target, idx)) {
 				return idx + 1;
@@ -35,7 +35,7 @@ package class N4JSVariableStatementTypesBuilder {
 		];
 	}
 
-	def private boolean relinkVariableType(ExportedVariableDeclaration n4VariableDeclaration, TModule target, int idx) {
+	def private boolean relinkVariableType(ExportedVariableDeclaration n4VariableDeclaration, AbstractNamespace target, int idx) {
 		if(n4VariableDeclaration.name === null) {
 			return false
 		}
@@ -47,7 +47,7 @@ package class N4JSVariableStatementTypesBuilder {
 		return true
 	}
 
-	def package void createVariableTypes(VariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase) {
+	def package void createVariableTypes(VariableStatement n4VariableStatement, AbstractNamespace target, boolean preLinkingPhase) {
 		val variables = n4VariableStatement.createVariables(preLinkingPhase)
 		target.variables += variables
 	}

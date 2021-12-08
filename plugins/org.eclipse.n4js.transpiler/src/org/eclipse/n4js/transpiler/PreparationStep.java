@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.TreeIterator;
@@ -50,6 +51,7 @@ import org.eclipse.n4js.transpiler.im.ReferencingElement_IM;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
+import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -207,6 +209,11 @@ public class PreparationStep {
 						((TypeDefiningElement) eObject).getDefinedType());
 			}
 
+			if (copy instanceof ExportedVariableDeclaration) {
+				info.setOriginalDefinedVariable_internal((ExportedVariableDeclaration) copy,
+						((ExportedVariableDeclaration) eObject).getDefinedVariable());
+			}
+
 			if (copy instanceof Script_IM) {
 				initializeScript_IM((Script_IM) copy);
 			} else if (copy instanceof ImportDeclaration) {
@@ -362,9 +369,12 @@ public class PreparationStep {
 		private boolean isDynamicNamespaceReference(EObject eObject) {
 			if (eObject instanceof ParameterizedTypeRef) {
 				ParameterizedTypeRef ptr = (ParameterizedTypeRef) eObject;
-				Type astQualifier = ptr.getAstDeclaredTypeQualifier();
-				if (astQualifier instanceof ModuleNamespaceVirtualType) {
-					return ((ModuleNamespaceVirtualType) astQualifier).isDeclaredDynamic();
+				List<NamespaceLikeRef> namespaceLikeRefs = ptr.getAstNamespaceLikeRefs();
+				if (!namespaceLikeRefs.isEmpty()
+						&& namespaceLikeRefs.get(0).getDeclaredType() instanceof ModuleNamespaceVirtualType) {
+
+					return ((ModuleNamespaceVirtualType) namespaceLikeRefs.get(0).getDeclaredType())
+							.isDeclaredDynamic();
 				}
 			}
 			return false;

@@ -33,7 +33,7 @@ class AT_556_TypeAccessModifierTest {
 
 	private def void typeIs(CharSequence script, TypeAccessModifier mod) {
 		val parsed = script.parse
-		val type = parsed.module.topLevelTypes.head
+		val type = parsed.module.types.head
 		Assert.assertEquals(mod, type.typeAccessModifier)
 	}
 
@@ -45,7 +45,7 @@ class AT_556_TypeAccessModifierTest {
 
 	private def void functionIs(CharSequence script, TypeAccessModifier mod) {
 		val parsed = script.parse
-		val function = parsed.module.topLevelTypes.head
+		val function = parsed.module.types.head
 		Assert.assertEquals(mod, function?.typeAccessModifier)
 	}
 

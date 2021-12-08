@@ -3429,13 +3429,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION = BASE_TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
-	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Namespace Like Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = BASE_TYPE_REF_FEATURE_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS = BASE_TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -3645,13 +3645,22 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING = BASE_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Previous Sibling</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___GET_PREVIOUS_SIBLING__NAMESPACELIKEREF = BASE_TYPE_REF_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY = BASE_TYPE_REF_OPERATION_COUNT + 0;
+	int PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY = BASE_TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
@@ -3660,7 +3669,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = BASE_TYPE_REF_OPERATION_COUNT + 1;
+	int PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS = BASE_TYPE_REF_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Internal Get Type Ref As String</em>' operation.
@@ -3669,7 +3678,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 2;
+	int PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = BASE_TYPE_REF_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Parameterized</em>' operation.
@@ -3678,7 +3687,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = BASE_TYPE_REF_OPERATION_COUNT + 3;
+	int PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED = BASE_TYPE_REF_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -3687,7 +3696,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_GENERIC = BASE_TYPE_REF_OPERATION_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF___IS_GENERIC = BASE_TYPE_REF_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Raw</em>' operation.
@@ -3696,7 +3705,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_RAW = BASE_TYPE_REF_OPERATION_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF___IS_RAW = BASE_TYPE_REF_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -3705,7 +3714,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -3714,7 +3723,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 7;
+	int PARAMETERIZED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>Parameterized Type Ref</em>' class.
@@ -3723,7 +3732,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 8;
+	int PARAMETERIZED_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StructuralTypeRefImpl <em>Structural Type Ref</em>}' class.
@@ -3917,13 +3926,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_NTYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Namespace Like Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_DECLARED_TYPE_QUALIFIER = PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_NAMESPACE_LIKE_REFS = PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -4158,6 +4167,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING;
+
+	/**
+	 * The operation id for the '<em>Get Previous Sibling</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_PREVIOUS_SIBLING__NAMESPACELIKEREF = PARAMETERIZED_TYPE_REF___GET_PREVIOUS_SIBLING__NAMESPACELIKEREF;
 
 	/**
 	 * The operation id for the '<em>Get Type Args With Defaults</em>' operation.
@@ -5225,6 +5243,61 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_TYPE_REF_OPERATION_COUNT = BASE_TYPE_REF_OPERATION_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.NamespaceLikeRefImpl <em>Namespace Like Ref</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.NamespaceLikeRefImpl
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getNamespaceLikeRef()
+	 * @generated
+	 */
+	int NAMESPACE_LIKE_REF = 17;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type As Text</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_LIKE_REF__DECLARED_TYPE_AS_TEXT = 0;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_LIKE_REF__DECLARED_TYPE = 1;
+
+	/**
+	 * The number of structural features of the '<em>Namespace Like Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_LIKE_REF_FEATURE_COUNT = 2;
+
+	/**
+	 * The operation id for the '<em>Get Previous Sibling</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_LIKE_REF___GET_PREVIOUS_SIBLING = 0;
+
+	/**
+	 * The number of operations of the '<em>Namespace Like Ref</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NAMESPACE_LIKE_REF_OPERATION_COUNT = 1;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.WildcardImpl <em>Wildcard</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5232,7 +5305,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getWildcard()
 	 * @generated
 	 */
-	int WILDCARD = 17;
+	int WILDCARD = 18;
 
 	/**
 	 * The feature id for the '<em><b>Declared Upper Bound</b></em>' containment reference.
@@ -5341,7 +5414,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getFunctionTypeExprOrRef()
 	 * @generated
 	 */
-	int FUNCTION_TYPE_EXPR_OR_REF = 18;
+	int FUNCTION_TYPE_EXPR_OR_REF = 19;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -5711,7 +5784,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getFunctionTypeRef()
 	 * @generated
 	 */
-	int FUNCTION_TYPE_REF = 19;
+	int FUNCTION_TYPE_REF = 20;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -5786,13 +5859,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__ARRAY_NTYPE_EXPRESSION = PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION;
 
 	/**
-	 * The feature id for the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
+	 * The feature id for the '<em><b>Ast Namespace Like Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER;
+	int FUNCTION_TYPE_REF__AST_NAMESPACE_LIKE_REFS = PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS;
 
 	/**
 	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -6002,6 +6075,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF___GET_MODIFIERS_AS_STRING = PARAMETERIZED_TYPE_REF___GET_MODIFIERS_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Previous Sibling</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___GET_PREVIOUS_SIBLING__NAMESPACELIKEREF = PARAMETERIZED_TYPE_REF___GET_PREVIOUS_SIBLING__NAMESPACELIKEREF;
+
+	/**
 	 * The operation id for the '<em>Get Typing Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6162,7 +6244,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getFunctionTypeExpression()
 	 * @generated
 	 */
-	int FUNCTION_TYPE_EXPRESSION = 20;
+	int FUNCTION_TYPE_EXPRESSION = 21;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -6613,7 +6695,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getDeferredTypeRef()
 	 * @generated
 	 */
-	int DEFERRED_TYPE_REF = 21;
+	int DEFERRED_TYPE_REF = 22;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -6911,7 +6993,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getTypeVariableMapping()
 	 * @generated
 	 */
-	int TYPE_VARIABLE_MAPPING = 22;
+	int TYPE_VARIABLE_MAPPING = 23;
 
 	/**
 	 * The feature id for the '<em><b>Type Var</b></em>' reference.
@@ -6957,7 +7039,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getLiteralTypeRef()
 	 * @generated
 	 */
-	int LITERAL_TYPE_REF = 23;
+	int LITERAL_TYPE_REF = 24;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -7273,7 +7355,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getBooleanLiteralTypeRef()
 	 * @generated
 	 */
-	int BOOLEAN_LITERAL_TYPE_REF = 24;
+	int BOOLEAN_LITERAL_TYPE_REF = 25;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -7598,7 +7680,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getNumericLiteralTypeRef()
 	 * @generated
 	 */
-	int NUMERIC_LITERAL_TYPE_REF = 25;
+	int NUMERIC_LITERAL_TYPE_REF = 26;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -7932,7 +8014,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getStringLiteralTypeRef()
 	 * @generated
 	 */
-	int STRING_LITERAL_TYPE_REF = 26;
+	int STRING_LITERAL_TYPE_REF = 27;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -8257,7 +8339,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getEnumLiteralTypeRef()
 	 * @generated
 	 */
-	int ENUM_LITERAL_TYPE_REF = 27;
+	int ENUM_LITERAL_TYPE_REF = 28;
 
 	/**
 	 * The feature id for the '<em><b>Followed By Question Mark</b></em>' attribute.
@@ -8591,7 +8673,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getOptionalFieldStrategy()
 	 * @generated
 	 */
-	int OPTIONAL_FIELD_STRATEGY = 28;
+	int OPTIONAL_FIELD_STRATEGY = 29;
 
 	/**
 	 * The meta object id for the '<em>UUID</em>' data type.
@@ -8601,7 +8683,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getUUID()
 	 * @generated
 	 */
-	int UUID = 29;
+	int UUID = 30;
 
 
 	/**
@@ -9377,15 +9459,15 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getParameterizedTypeRef_ArrayNTypeExpression();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespaceLikeRefs <em>Ast Namespace Like Refs</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Ast Declared Type Qualifier</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier()
+	 * @return the meta object for the containment reference list '<em>Ast Namespace Like Refs</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespaceLikeRefs()
 	 * @see #getParameterizedTypeRef()
 	 * @generated
 	 */
-	EReference getParameterizedTypeRef_AstDeclaredTypeQualifier();
+	EReference getParameterizedTypeRef_AstNamespaceLikeRefs();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}'.
@@ -9408,6 +9490,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getParameterizedTypeRef_DefinedTypingStrategy();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getPreviousSibling(org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef) <em>Get Previous Sibling</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Previous Sibling</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getPreviousSibling(org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef)
+	 * @generated
+	 */
+	EOperation getParameterizedTypeRef__GetPreviousSibling__NamespaceLikeRef();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypingStrategy() <em>Get Typing Strategy</em>}' operation.
@@ -9797,6 +9889,48 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTypeTypeRef__InternalGetTypeRefAsString();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef <em>Namespace Like Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Namespace Like Ref</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef
+	 * @generated
+	 */
+	EClass getNamespaceLikeRef();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef#getDeclaredTypeAsText <em>Declared Type As Text</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Declared Type As Text</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef#getDeclaredTypeAsText()
+	 * @see #getNamespaceLikeRef()
+	 * @generated
+	 */
+	EAttribute getNamespaceLikeRef_DeclaredTypeAsText();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef#getDeclaredType <em>Declared Type</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Declared Type</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef#getDeclaredType()
+	 * @see #getNamespaceLikeRef()
+	 * @generated
+	 */
+	EReference getNamespaceLikeRef_DeclaredType();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef#getPreviousSibling() <em>Get Previous Sibling</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Previous Sibling</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef#getPreviousSibling()
+	 * @generated
+	 */
+	EOperation getNamespaceLikeRef__GetPreviousSibling();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.typeRefs.Wildcard <em>Wildcard</em>}'.
@@ -11095,12 +11229,12 @@ public interface TypeRefsPackage extends EPackage {
 		EAttribute PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION = eINSTANCE.getParameterizedTypeRef_ArrayNTypeExpression();
 
 		/**
-		 * The meta object literal for the '<em><b>Ast Declared Type Qualifier</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Ast Namespace Like Refs</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER = eINSTANCE.getParameterizedTypeRef_AstDeclaredTypeQualifier();
+		EReference PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS = eINSTANCE.getParameterizedTypeRef_AstNamespaceLikeRefs();
 
 		/**
 		 * The meta object literal for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute feature.
@@ -11117,6 +11251,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = eINSTANCE.getParameterizedTypeRef_DefinedTypingStrategy();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Previous Sibling</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation PARAMETERIZED_TYPE_REF___GET_PREVIOUS_SIBLING__NAMESPACELIKEREF = eINSTANCE.getParameterizedTypeRef__GetPreviousSibling__NamespaceLikeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Typing Strategy</b></em>' operation.
@@ -11431,6 +11573,40 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TYPE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING = eINSTANCE.getTypeTypeRef__InternalGetTypeRefAsString();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.NamespaceLikeRefImpl <em>Namespace Like Ref</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.NamespaceLikeRefImpl
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getNamespaceLikeRef()
+		 * @generated
+		 */
+		EClass NAMESPACE_LIKE_REF = eINSTANCE.getNamespaceLikeRef();
+
+		/**
+		 * The meta object literal for the '<em><b>Declared Type As Text</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute NAMESPACE_LIKE_REF__DECLARED_TYPE_AS_TEXT = eINSTANCE.getNamespaceLikeRef_DeclaredTypeAsText();
+
+		/**
+		 * The meta object literal for the '<em><b>Declared Type</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference NAMESPACE_LIKE_REF__DECLARED_TYPE = eINSTANCE.getNamespaceLikeRef_DeclaredType();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Previous Sibling</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation NAMESPACE_LIKE_REF___GET_PREVIOUS_SIBLING = eINSTANCE.getNamespaceLikeRef__GetPreviousSibling();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.impl.WildcardImpl <em>Wildcard</em>}' class.
