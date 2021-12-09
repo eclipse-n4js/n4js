@@ -197,11 +197,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//        {N4NamespaceDeclaration}
 		//        (declaredModifiers+=N4Modifier)*
 		//        'namespace'
-<<<<<<< HEAD
-		//        name=BindingIdentifier<Yield>
-=======
 		//        (BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
->>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 		//    )
 		//    '{'
 		//        ownedElementsRaw+=NamespaceElement<Yield>*
@@ -213,11 +209,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    {N4NamespaceDeclaration}
 		//    (declaredModifiers+=N4Modifier)*
 		//    'namespace'
-<<<<<<< HEAD
-		//    name=BindingIdentifier<Yield>
-=======
 		//    (BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
->>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 		//)
 		//'{'
 		//    ownedElementsRaw+=NamespaceElement<Yield>*
@@ -228,22 +220,14 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    {N4NamespaceDeclaration}
 		//    (declaredModifiers+=N4Modifier)*
 		//    'namespace'
-<<<<<<< HEAD
-		//    name=BindingIdentifier<Yield>
-=======
 		//    (BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
->>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 		//)
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//{N4NamespaceDeclaration}
 		//(declaredModifiers+=N4Modifier)*
 		//'namespace'
-<<<<<<< HEAD
-		//name=BindingIdentifier<Yield>
-=======
 		//(BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
->>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{N4NamespaceDeclaration}
@@ -258,13 +242,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'namespace'
 		public Keyword getNamespaceKeyword_0_0_2() { return cNamespaceKeyword_0_0_2; }
 		
-<<<<<<< HEAD
-		//name=BindingIdentifier<Yield>
-		public Assignment getNameAssignment_0_0_3() { return cNameAssignment_0_0_3; }
-=======
 		//(BindingIdentifier<Yield> '.')*
 		public Group getGroup_0_0_3() { return cGroup_0_0_3; }
->>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 		
 		//BindingIdentifier<Yield>
 		public RuleCall getBindingIdentifierParserRuleCall_0_0_3_0() { return cBindingIdentifierParserRuleCall_0_0_3_0; }
@@ -13564,11 +13543,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//        {N4NamespaceDeclaration}
 	//        (declaredModifiers+=N4Modifier)*
 	//        'namespace'
-<<<<<<< HEAD
-	//        name=BindingIdentifier<Yield>
-=======
 	//        (BindingIdentifier<Yield> '.')* name=BindingIdentifier<Yield>
->>>>>>> 3f5af9ec6 (allow '.'-separated names of namespaces)
 	//    )
 	//    '{'
 	//        ownedElementsRaw+=NamespaceElement<Yield>*

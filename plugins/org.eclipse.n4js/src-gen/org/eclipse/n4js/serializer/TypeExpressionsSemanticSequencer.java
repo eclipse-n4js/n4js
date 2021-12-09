@@ -393,29 +393,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	/**
 	 * Contexts:
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             arrayNTypeExpression?='[' 
-	 *             (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
-	 *         ) | 
-	 *         (
-	 *             astNamespaceLikeRefs+=NamespaceLikeRef* 
-	 *             declaredType=[Type|TypeReferenceName] 
-	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?
-	 *         )
-	 *     )
-	 */
-	protected void sequence_ArrayNTypeExpression_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-=======
-=======
->>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *     TypeRef returns IndexAccessTypeRef
 	 *     ConditionalTypeRef returns IndexAccessTypeRef
 	 *     ConditionalTypeRef.ConditionalTypeRef_1_0_0_0 returns IndexAccessTypeRef
@@ -854,32 +831,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeArgument returns OperatorTypeRef
 	 *
 	 * Constraint:
-<<<<<<< HEAD
-<<<<<<< HEAD
-	 *     (
-<<<<<<< HEAD
-	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *         astStructuralMembers+=TStructMember* 
-=======
-	 *         (
-	 *             astStructuralMembers+=TStructMember+ | 
-	 *             (
-	 *                 definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *                 declaredType=[Type|TypeReferenceName] 
-	 *                 (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *                 astStructuralMembers+=TStructMember*
-	 *             )
-	 *         )? 
->>>>>>> 8b8567bc8 (early support for a few first constructs)
-	 *         dynamic?='+'? 
-	 *         followedByQuestionMark?='?'?
-	 *     )
-=======
-=======
->>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *     (op=TypeOperator typeRef=ArrayTypeExpression)
 	 */
 	protected void sequence_OperatorTypeRef(ISerializationContext context, OperatorTypeRef semanticObject) {
@@ -915,21 +866,11 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (
-<<<<<<< HEAD
-<<<<<<< HEAD
-	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *         astStructuralMembers+=TStructMember* 
-=======
-=======
->>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *         (
 	 *             astStructuralMembers+=TStructMember+ | 
 	 *             (
 	 *                 definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *                 namespaceLikeRefs+=NamespaceLikeRef* 
+	 *                 astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *                 declaredType=[Type|TypeReferenceName] 
 	 *                 (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *                 astStructuralMembers+=TStructMember*
@@ -950,21 +891,10 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (
-<<<<<<< HEAD
-<<<<<<< HEAD
-	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *         astStructuralMembers+=TStructMember*
-	 *     )
-=======
-=======
->>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *         astStructuralMembers+=TStructMember+ | 
 	 *         (
 	 *             definedTypingStrategy=TypingStrategyUseSiteOperator 
-	 *             namespaceLikeRefs+=NamespaceLikeRef* 
+	 *             astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *             declaredType=[Type|TypeReferenceName] 
 	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *             astStructuralMembers+=TStructMember*
@@ -1163,28 +1093,6 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeRefWithModifiers returns ParameterizedTypeRef
 	 *
 	 * Constraint:
-<<<<<<< HEAD
-<<<<<<< HEAD
-	 *     (
-	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
-	 *         declaredType=[Type|TypeReferenceName] 
-	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
-	 *         dynamic?='+'? 
-	 *         followedByQuestionMark?='?'?
-	 *     )
-	 */
-	protected void sequence_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     TypeRefWithoutModifiers returns ParameterizedTypeRef
-	 *
-	 * Constraint:
-=======
->>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *     (
 	 *         astNamespaceLikeRefs+=NamespaceLikeRef* 
 	 *         declaredType=[Type|TypeReferenceName] 

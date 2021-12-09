@@ -207,6 +207,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '{' '}' dynamic?='+'
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* '{' astStructuralMembers+=TStructMember
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* arrayNTypeExpression?='['
+	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* astNamespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* astNegated?='-'
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* astValue='false'
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* astValue='true'
@@ -217,7 +218,6 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* definedTypingStrategy=TypingStrategyUseSiteOperator
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* dtsAbstract?='abstract'
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* dtsConstructor?='new'
-	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* namespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* op=TypeOperator
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* {IndexAccessTypeRef.targetTypeRef=}
 	 *     (rule start) '|'? (ambiguity) ('(' '|'? (ambiguity))* {ParameterizedTypeRef.declaredTypeArgs+=}
@@ -250,6 +250,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '{' '}' dynamic?='+'
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* '{' astStructuralMembers+=TStructMember
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* arrayNTypeExpression?='['
+	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* astNamespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* astNegated?='-'
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* astValue='false'
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* astValue='true'
@@ -260,7 +261,6 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* definedTypingStrategy=TypingStrategyUseSiteOperator
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* dtsAbstract?='abstract'
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* dtsConstructor?='new'
-	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* namespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* op=TypeOperator
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* {IndexAccessTypeRef.targetTypeRef=}
 	 *     (rule start) (ambiguity) ('(' '|'? (ambiguity))* {ParameterizedTypeRef.declaredTypeArgs+=}
@@ -325,6 +325,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) '&'? (ambiguity) '{' '}' dynamic?='+'
 	 *     (rule start) '&'? (ambiguity) '{' astStructuralMembers+=TStructMember
 	 *     (rule start) '&'? (ambiguity) arrayNTypeExpression?='['
+	 *     (rule start) '&'? (ambiguity) astNamespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) '&'? (ambiguity) astNegated?='-'
 	 *     (rule start) '&'? (ambiguity) astValue='false'
 	 *     (rule start) '&'? (ambiguity) astValue='true'
@@ -335,7 +336,6 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) '&'? (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
 	 *     (rule start) '&'? (ambiguity) dtsAbstract?='abstract'
 	 *     (rule start) '&'? (ambiguity) dtsConstructor?='new'
-	 *     (rule start) '&'? (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) '&'? (ambiguity) op=TypeOperator
 	 *     (rule start) '&'? (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
 	 *     (rule start) '&'? (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
@@ -366,6 +366,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) '|'? '&'? (ambiguity) '{' '}' dynamic?='+'
 	 *     (rule start) '|'? '&'? (ambiguity) '{' astStructuralMembers+=TStructMember
 	 *     (rule start) '|'? '&'? (ambiguity) arrayNTypeExpression?='['
+	 *     (rule start) '|'? '&'? (ambiguity) astNamespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) '|'? '&'? (ambiguity) astNegated?='-'
 	 *     (rule start) '|'? '&'? (ambiguity) astValue='false'
 	 *     (rule start) '|'? '&'? (ambiguity) astValue='true'
@@ -376,7 +377,6 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) '|'? '&'? (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
 	 *     (rule start) '|'? '&'? (ambiguity) dtsAbstract?='abstract'
 	 *     (rule start) '|'? '&'? (ambiguity) dtsConstructor?='new'
-	 *     (rule start) '|'? '&'? (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) '|'? '&'? (ambiguity) op=TypeOperator
 	 *     (rule start) '|'? '&'? (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
 	 *     (rule start) '|'? '&'? (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
@@ -416,36 +416,10 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]
 	 *     (rule start) (ambiguity) declaredTypeArgs+=WildcardOldNotationWithoutBound
 	 *     (rule start) (ambiguity) definedTypingStrategy=TypingStrategyUseSiteOperator
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 5641a2d2d (early support for constructor type expressions)
-=======
->>>>>>> f7a1b4792 (constructor type expressions can be 'abstract')
-<<<<<<< HEAD
-	 *     (rule start) (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
-=======
-=======
-=======
-=======
->>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
 	 *     (rule start) (ambiguity) dtsAbstract?='abstract'
 	 *     (rule start) (ambiguity) dtsConstructor?='new'
-	 *     (rule start) (ambiguity) namespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) (ambiguity) op=TypeOperator
 	 *     (rule start) (ambiguity) {IndexAccessTypeRef.targetTypeRef=}
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> a919ae797 (early support for DTS type references, except mapped types)
->>>>>>> 400b52473 (early support for DTS type references, except mapped types)
-=======
->>>>>>> 3dec4b5c5 (re-generate the generated code after rebase)
-	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
-=======
->>>>>>> 7669961a5 (ambient module declarations and global declarations + re-generate)
 	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
 	 */
 	protected void emit_IntersectionTypeExpression_PrimaryTypeExpression_UnionTypeExpression___LeftParenthesisKeyword_6_0_VerticalLineKeyword_0_q_AmpersandKeyword_0_q__a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -712,6 +686,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '{' '}' dynamic?='+'
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* '{' astStructuralMembers+=TStructMember
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* arrayNTypeExpression?='['
+	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* astNamespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* astNegated?='-'
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* astValue='false'
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* astValue='true'
@@ -722,7 +697,6 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* definedTypingStrategy=TypingStrategyUseSiteOperator
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* dtsAbstract?='abstract'
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* dtsConstructor?='new'
-	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* namespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* op=TypeOperator
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* {IndexAccessTypeRef.targetTypeRef=}
 	 *     (rule start) (ambiguity) '&'? ('(' (ambiguity) '&'?)* {ParameterizedTypeRef.declaredTypeArgs+=}
