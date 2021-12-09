@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
@@ -52,6 +53,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
@@ -77,7 +79,9 @@ import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
 import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -662,6 +666,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	protected void updateInternalState(IParseResult newParseResult) {
 		setParseResult(newParseResult);
 		EObject newRootAstElement = newParseResult.getRootASTElement();
+
+		trimUnnecessaryFunctionBodies(newRootAstElement);
+
 		if (newRootAstElement != null && !getContents().contains(newRootAstElement)) {
 			// do not increment the modification counter here
 			sneakyAddToContent(newRootAstElement);
@@ -675,6 +682,32 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		IResourceScopeCache cache = getCache();
 		if (cache instanceof OnChangeEvictingCache) {
 			((OnChangeEvictingCache) cache).getOrCreate(this);
+		}
+	}
+
+	/**
+	 * Performance tweak. This method trims all bodies of {@link FunctionDefinition}s that:
+	 * <ul>
+	 * <li/>are in external projects (i.e. a dependency in a node_modules folder), and
+	 * <li/>declare a return type (otherwise, the poor man's return type inference wouldn't work anymore)
+	 * </ul>
+	 */
+	private void trimUnnecessaryFunctionBodies(EObject newRootAstElement) {
+		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, getURI().fileExtension())) {
+			return; // There are no function bodies in n4jsd files.
+		}
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(this);
+		if (project == null || !project.isExternal()) {
+			return;
+		}
+
+		List<FunctionDefinition> allFunDefs = EcoreUtil2.getAllContentsOfType(newRootAstElement,
+				FunctionDefinition.class);
+
+		for (FunctionDefinition funDef : allFunDefs) {
+			if (funDef.getDeclaredReturnTypeRefInAST() != null) {
+				funDef.setBody(null);
+			}
 		}
 	}
 
