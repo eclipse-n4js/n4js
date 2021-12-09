@@ -25,14 +25,22 @@ import org.junit.Test
 import static org.eclipse.n4js.validation.ASTStructureValidator.*
 
 /**
- *
+ * Current state as of Dec. 8, 2021:
+ * <p>
+ * Sample output of method {@link #testFolder()} for folder {@link #DEFINITELY_TYPED} at
+ * commit <code>98ba37aa412093a3158fd18d5481c2d476ef84ac</code> can be found in file
+ * <code>"n4js/plugins/org.eclipse.n4js.lang.tests/src/org/eclipse/n4js/tests/log_20211207_1630.txt"</code>
+ * (20788 files: good 20281 (97.5%) / bad 507 (2.4%)).
+ * <p>
+ * Method {@link #testFolder()} for folder {@link #TYPE_SCRIPT_LIBS} show no parse errors and
+ * for folder {@link #NODE_API} only three parse errors related to assert functions.
  */
 class DtsParserTest extends AbstractParserTest {
 
 	private Path FILE_TEST = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/test.d.ts");
 	private Path FILE_ES5 = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs/es5.d.ts");
 	private Path FILE_TEMP = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/DefinitelyTyped/types/actioncable/index.d.ts");
-	private Path TYPE_SCRIPT_LIBS = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs");
+	private Path TYPE_SCRIPT_LIBS = Path.of("/Users/mark-oliver.reiser/Desktop/TTT-IDE-3540/ts-libs"); // subfolder 'libs' in TypeScript git repository
 	private Path DEFINITELY_TYPED = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/DefinitelyTyped/types");
 	private Path NODE_API = Path.of("/Users/mark-oliver.reiser/Desktop/dtsParser/DefinitelyTyped/types/node");
 
