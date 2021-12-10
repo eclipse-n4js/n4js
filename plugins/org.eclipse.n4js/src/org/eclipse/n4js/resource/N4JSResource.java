@@ -119,6 +119,9 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class N4JSResource extends PostProcessingAwareResource implements ProxyResolvingResource {
+	/** @see #clearUnnecessaryFunctionBodies(EObject) */
+	public static final String OPTION_CLEAR_FUNCTION_BODIES = N4JSResource.class.getName() + ".TRIM_FUNCTION_BODIES";
+
 	private final static Logger LOGGER = Logger.getLogger(N4JSResource.class);
 
 	/**
@@ -266,6 +269,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * Set to true while we are currently discarding an adapter.
 	 */
 	private boolean removingAdapters;
+
+	/**
+	 * Default is {@code true}
+	 *
+	 * @see #OPTION_CLEAR_FUNCTION_BODIES
+	 */
+	private boolean optionClearFunctionBodies = true;
 
 	@Inject
 	private N4JSScopingDiagnostician scopingDiagnostician;
@@ -667,7 +677,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		setParseResult(newParseResult);
 		EObject newRootAstElement = newParseResult.getRootASTElement();
 
-		trimUnnecessaryFunctionBodies(newRootAstElement);
+		clearUnnecessaryFunctionBodies(newRootAstElement);
 
 		if (newRootAstElement != null && !getContents().contains(newRootAstElement)) {
 			// do not increment the modification counter here
@@ -686,13 +696,16 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Performance tweak. This method trims all bodies of {@link FunctionDefinition}s that:
+	 * Performance tweak. This method clears all bodies of {@link FunctionDefinition}s that:
 	 * <ul>
 	 * <li/>are in external projects (i.e. a dependency in a node_modules folder), and
 	 * <li/>declare a return type (otherwise, the poor man's return type inference wouldn't work anymore)
 	 * </ul>
 	 */
-	private void trimUnnecessaryFunctionBodies(EObject newRootAstElement) {
+	private void clearUnnecessaryFunctionBodies(EObject newRootAstElement) {
+		if (!optionClearFunctionBodies) {
+			return;
+		}
 		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, getURI().fileExtension())) {
 			return; // There are no function bodies in n4jsd files.
 		}
@@ -705,8 +718,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				FunctionDefinition.class);
 
 		for (FunctionDefinition funDef : allFunDefs) {
-			if (funDef.getDeclaredReturnTypeRefInAST() != null) {
-				funDef.setBody(null);
+			if (funDef.getDeclaredReturnTypeRefInAST() != null && funDef.getBody() != null) {
+				funDef.getBody().getStatements().clear();
 			}
 		}
 	}
@@ -735,6 +748,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	protected void doLoad(InputStream inputStream, Map<?, ?> options) throws IOException {
+		if (options != null && options.containsKey(OPTION_CLEAR_FUNCTION_BODIES)) {
+			optionClearFunctionBodies = Boolean.TRUE == options.get(OPTION_CLEAR_FUNCTION_BODIES);
+		}
 		if (contents != null && !contents.isEmpty()) {
 			discardStateFromDescription(true);
 		}

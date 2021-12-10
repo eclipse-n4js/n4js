@@ -14,8 +14,10 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.ArrayList
 import java.util.List
+import java.util.Objects
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.CatchBlock
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
@@ -45,6 +47,7 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
@@ -85,6 +88,8 @@ public class ASTProcessor extends AbstractProcessor {
 	private CompileTimeExpressionProcessor compileTimeExpressionProcessor;
 	@Inject
 	private RuntimeDependencyProcessor runtimeDependencyProcessor;
+	@Inject
+	private WorkspaceAccess workspaceAccess;
 
 	/**
 	 * Entry point for processing of the entire AST of the given resource.
@@ -181,6 +186,13 @@ public class ASTProcessor extends AbstractProcessor {
 		log(indentLevel, "processing: " + node.objectInfo);
 
 		checkCanceled(G);
+		
+//		if (trimUnnecessaryFunctionBodies(node)) {
+//			if (isDEBUG_LOG) {
+//				log(indentLevel, "(function body in external dependency module - skipping)");
+//			}
+//			return;
+//		}
 
 		// already done as part of a forward processing?
 		if (cache.forwardProcessedSubTrees.contains(node)) {
@@ -242,6 +254,30 @@ public class ASTProcessor extends AbstractProcessor {
 			cache.astNodesCurrentlyBeingTyped.remove(node);
 		}
 	}
+
+
+	/**
+	 * Performance tweak. This method trims all bodies of {@link FunctionDefinition}s that:
+	 * <ul>
+	 * <li/>are in external projects (i.e. a dependency in a node_modules folder), and
+	 * <li/>declare a return type (otherwise, the poor man's return type inference wouldn't work anymore)
+	 * </ul>
+	 */
+	def private boolean trimUnnecessaryFunctionBodies(EObject funDefCandidate) {
+		if (!(funDefCandidate instanceof FunctionDefinition)) {
+			return false;
+		}
+		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, funDefCandidate.eResource.URI.fileExtension())) {
+			return false; // There are no function bodies in n4jsd files.
+		}
+		val project = workspaceAccess.findProjectContaining(funDefCandidate);
+		if (project === null || !project.isExternal()) {
+			return false;
+		}
+
+		return true;
+	}
+
 
 	def private boolean isPostponedNode(EObject node) {
 		return isPostponedInitializer(node)

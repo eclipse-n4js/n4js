@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -257,12 +258,17 @@ public class ResourceTaskContext {
 		}
 
 		try (InputStream in = new LazyStringInputStream(document.getContents(), mainResource.getEncoding())) {
-			mainResource.load(in, null);
+			mainResource.load(in, getLoadOptions(mainResource));
 		} catch (IOException e) {
 			throw new RuntimeException("IOException while reading from string input stream", e);
 		}
 
 		resolveAndValidateResource(cancelIndicator);
+	}
+
+	/** Returns options passed when loading a resource */
+	protected Map<?, ?> getLoadOptions(@SuppressWarnings("unused") XtextResource resource) {
+		return null;
 	}
 
 	/**
