@@ -26,6 +26,7 @@ import org.eclipse.n4js.ide.server.N4JSLanguageServerFrontend;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
 import org.eclipse.n4js.ide.server.N4JSProjectDescriptionFactory;
 import org.eclipse.n4js.ide.server.N4JSProjectStatePersister;
+import org.eclipse.n4js.ide.server.N4JSResourceTaskContext;
 import org.eclipse.n4js.ide.server.N4JSStatefulIncrementalBuilder;
 import org.eclipse.n4js.ide.server.N4JSTextDocumentFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceConfigFactory;
@@ -53,6 +54,7 @@ import org.eclipse.n4js.xtext.ide.editor.contentassist.XIdeContentProposalAccept
 import org.eclipse.n4js.xtext.ide.server.DebugService;
 import org.eclipse.n4js.xtext.ide.server.LanguageServerFrontend;
 import org.eclipse.n4js.xtext.ide.server.QueuedExecutorService;
+import org.eclipse.n4js.xtext.ide.server.ResourceTaskContext;
 import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
 import org.eclipse.n4js.xtext.ide.server.WorkspaceFrontend;
 import org.eclipse.n4js.xtext.ide.server.XExecutableCommandRegistry;
@@ -198,6 +200,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends BuildOrderFactory.BuildOrderInfoComputer> bindBuildOrderInfoComputer() {
 		return N4JSBuildOrderInfoComputer.class;
+	}
+
+	public Class<? extends ResourceTaskContext> bindResourceTaskContext() {
+		return N4JSResourceTaskContext.class;
 	}
 
 	public Class<? extends ConfigSnapshotFactory> bindConfigSnapshotFactory() {

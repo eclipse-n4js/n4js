@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
@@ -52,6 +53,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
@@ -77,7 +79,9 @@ import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
 import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -115,6 +119,9 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class N4JSResource extends PostProcessingAwareResource implements ProxyResolvingResource {
+	/** @see #clearUnnecessaryFunctionBodies(EObject) */
+	public static final String OPTION_CLEAR_FUNCTION_BODIES = N4JSResource.class.getName() + ".TRIM_FUNCTION_BODIES";
+
 	private final static Logger LOGGER = Logger.getLogger(N4JSResource.class);
 
 	/**
@@ -262,6 +269,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * Set to true while we are currently discarding an adapter.
 	 */
 	private boolean removingAdapters;
+
+	/**
+	 * Default is {@code true}
+	 *
+	 * @see #OPTION_CLEAR_FUNCTION_BODIES
+	 */
+	private boolean optionClearFunctionBodies = true;
 
 	@Inject
 	private N4JSScopingDiagnostician scopingDiagnostician;
@@ -662,6 +676,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	protected void updateInternalState(IParseResult newParseResult) {
 		setParseResult(newParseResult);
 		EObject newRootAstElement = newParseResult.getRootASTElement();
+
+		clearUnnecessaryFunctionBodies(newRootAstElement);
+
 		if (newRootAstElement != null && !getContents().contains(newRootAstElement)) {
 			// do not increment the modification counter here
 			sneakyAddToContent(newRootAstElement);
@@ -675,6 +692,35 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		IResourceScopeCache cache = getCache();
 		if (cache instanceof OnChangeEvictingCache) {
 			((OnChangeEvictingCache) cache).getOrCreate(this);
+		}
+	}
+
+	/**
+	 * Performance tweak. This method clears all bodies of {@link FunctionDefinition}s that:
+	 * <ul>
+	 * <li/>are in external projects (i.e. a dependency in a node_modules folder), and
+	 * <li/>declare a return type (otherwise, the poor man's return type inference wouldn't work anymore)
+	 * </ul>
+	 */
+	private void clearUnnecessaryFunctionBodies(EObject newRootAstElement) {
+		if (!optionClearFunctionBodies) {
+			return;
+		}
+		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, getURI().fileExtension())) {
+			return; // There are no function bodies in n4jsd files.
+		}
+		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(this);
+		if (project == null || !project.isExternal()) {
+			return;
+		}
+
+		List<FunctionDefinition> allFunDefs = EcoreUtil2.getAllContentsOfType(newRootAstElement,
+				FunctionDefinition.class);
+
+		for (FunctionDefinition funDef : allFunDefs) {
+			if (funDef.getDeclaredReturnTypeRefInAST() != null && funDef.getBody() != null) {
+				funDef.getBody().getStatements().clear();
+			}
 		}
 	}
 
@@ -702,6 +748,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	protected void doLoad(InputStream inputStream, Map<?, ?> options) throws IOException {
+		if (options != null && options.containsKey(OPTION_CLEAR_FUNCTION_BODIES)) {
+			optionClearFunctionBodies = Boolean.TRUE == options.get(OPTION_CLEAR_FUNCTION_BODIES);
+		}
 		if (contents != null && !contents.isEmpty()) {
 			discardStateFromDescription(true);
 		}
