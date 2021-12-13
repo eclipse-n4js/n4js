@@ -10,7 +10,7 @@
  */
 
 import * as lib_jreProvider from "JreProvider";
-import log+ from "npmlog";
+import * as log+ from "npmlog";
 
 
 const NPM_NAME = process.env.npm_package_name ?? "n4js-cli";

@@ -86,7 +86,7 @@ export public function n4jsc(
  * set to 4GB if not set already.
  * The arguments will be collected from process.argv
  *
- * Used from src/n4jsc.n4js
+ * Used from bin/n4jsc.js
  */
  export public async function runN4jscSync(log: {function(string)} = npmlog.info) {
     const args = N4jscArguments.fromProcess(log);

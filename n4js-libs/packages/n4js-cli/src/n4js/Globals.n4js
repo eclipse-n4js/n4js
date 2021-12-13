@@ -10,10 +10,7 @@
  */
 
 import * as path from "path";
-import * as url from "url";
-import * as __import_meta+ from "__import_meta"
 
-const __dirname = path.dirname(url.fileURLToPath(__import_meta.url));
 
 export public const JAVA_DEFAULT = "java";
 export public const JAVA_VM_XMX = "-Xmx";

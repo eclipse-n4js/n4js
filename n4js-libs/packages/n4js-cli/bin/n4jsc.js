@@ -1,5 +1,7 @@
-/*
- * Copyright (c) 2021 NumberFour AG.
+#!/usr/bin/env node
+
+/**
+ * Copyright (c) 2016 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +10,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+"use strict";
 
-// TODO GH-1328: remove this work-around
-export const url = import.meta.url;
+
+// TODO GH-2044: Remove this file
+require = require("esm")(module);
+require("../src-gen/n4jsc.js");
+

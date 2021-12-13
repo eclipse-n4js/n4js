@@ -14,13 +14,13 @@ import * as childProcess from "child_process";
 import * as fs from "fs";
 import * as lib_url from "url";
 
-import _decompress+ from "decompress";
-import npmlog+ from "npmlog";
-import followRedirects+ from 'follow-redirects';
+import * as lib_decompress+ from "decompress";
+import * as npmlog+ from "npmlog";
+import * as followRedirects+ from 'follow-redirects';
 import {JreInfo, Platform, JRE_INFO_MAP, JAVA_DEFAULT, BIN_DIR, JRE_URL_DIR, JRE_DIR} from 'Globals';
 import {detectJavaVersion} from 'JavaVersion';
 
-const decompress: {function(string, string): Promise<any,any>} = _decompress;
+const decompress: {function(string, string): Promise<any,any>} = lib_decompress.default;
 export const JRE_VERSION = 11;
 
 
