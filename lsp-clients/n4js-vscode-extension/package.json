@@ -28,7 +28,7 @@
     "onLanguage:javascriptreact",
     "onLanguage:typescriptreact"
   ],
-  "main": "./extension",
+  "main": "./extension-bundled.js",
   "contributes": {
     "languages": [
       {
@@ -215,6 +215,7 @@
     }
   },
   "devDependencies": {
+    "esbuild": "0.14.3",
     "json": "11.0.0",
     "vsce": "1.95.1"
   },

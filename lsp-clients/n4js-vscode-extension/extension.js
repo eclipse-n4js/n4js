@@ -17,7 +17,7 @@
 const vscode = require("vscode");
 const vscodeLC = require("vscode-languageclient");
 
-require = require("esm")(module);
+//require = require("esm")(module);
 
 const extensionProvider = require("./src-gen/ExtensionProvider.js");
 

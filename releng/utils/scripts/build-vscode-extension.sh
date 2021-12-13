@@ -145,6 +145,15 @@ pushd ${EXTENSION_DIR}
     npm install --registry http://localhost:4873
 
 
+    #rm node_modules/n4js-cli/bin/OpenJDK11U-jre_x64_mac_hotspot_11.0.6_10.tar.gz
+    #rm -rf node_modules/n4js-cli/bin/jre
+    #./node_modules/.bin/ncc build ./extension.js -o ./out -e vscode -e vscode-languageclient
+    #cp -R images out/
+    #cp -R syntaxes out/
+    #cp n4js.configuration.json out
+    ./node_modules/.bin/esbuild ./extension.js --bundle --outfile=extension-bundled.js --external:vscode --format=cjs --platform=node
+
+
     echo "==== STEP 6/8: Pack extension"
     npx vsce package --out ${PACKAGE_NAME}
 
