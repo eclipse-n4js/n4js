@@ -1,2 +1,6 @@
 /.project
 /.n4js.projectstate
+/src
+# we bundle the entire code from src-gen into index-bundled.js (also converting it to CommonJS)
+# and therefore do not need to ship folder 'src-gen':
+/src-gen

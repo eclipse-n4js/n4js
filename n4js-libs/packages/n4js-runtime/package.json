@@ -14,13 +14,18 @@
   "engines": {
     "node": ">= 8.0.0"
   },
-  "main": "./src-gen/index.js",
+  "main": "./index-bundled.js",
   "types": "./n4jsglobals.d.ts",
   "files": [
-    "src",
-    "src-gen",
+    "index-bundled.js",
     "n4jsglobals.d.ts"
   ],
+  "scripts": {
+    "bundle": "./npm-bundle.sh"
+  },
+  "devDependencies": {
+    "esbuild": "0.14.3"
+  },
   "dependencies": {
     "n4js-runtime-es2015": "^0.1.0",
     "n4js-runtime-esnext": "^0.1.0"
@@ -34,7 +39,6 @@
     "n4jside",
     "n4js-ide"
   ],
-  "type": "module",
   "n4js": {
     "projectType": "library",
     "vendorId": "org.eclipse.n4js",
