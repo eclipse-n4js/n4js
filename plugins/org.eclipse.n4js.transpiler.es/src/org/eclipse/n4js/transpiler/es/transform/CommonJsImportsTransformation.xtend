@@ -56,6 +56,11 @@ class CommonJsImportsTransformation extends Transformation {
 	}
 
 	override void transform() {
+		if (!state.project.isESM) {
+			// only intended for N4JS projects with {@code "type": "module"} in the package.json
+			return;
+		}
+
 		val importDeclsPerImportedModule = FluentIterable.from(state.im.scriptElements)
 			.filter(ImportDeclaration)
 			.index[importDecl | state.info.getImportedModule(importDecl)];
