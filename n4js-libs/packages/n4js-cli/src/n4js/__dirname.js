@@ -9,5 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-// TODO GH-1328: remove this work-around
-export const url = import.meta.url;
+import * as path from "path";
+import * as url from "url";
+
+export default __dirname ? __dirname : path.dirname(url.fileURLToPath(import.meta.url));
