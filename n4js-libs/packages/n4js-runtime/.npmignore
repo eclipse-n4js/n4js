@@ -4,3 +4,4 @@
 # we bundle the entire code from src-gen into index-bundled.js (also converting it to CommonJS)
 # and therefore do not need to ship folder 'src-gen':
 /src-gen
+!/src-gen/n4js/lang/N4Injector.js

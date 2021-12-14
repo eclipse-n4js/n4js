@@ -17,6 +17,7 @@
   "main": "./index-bundled.js",
   "types": "./n4jsglobals.d.ts",
   "files": [
+	"src-gen/n4js/lang/N4Injector.js",
     "index-bundled.js",
     "n4jsglobals.d.ts"
   ],
