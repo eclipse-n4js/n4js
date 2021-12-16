@@ -63,7 +63,8 @@ public class ContentAssistTokenTypeMapper {
 		if (type != null) {
 			return type;
 		}
-		throw new IllegalArgumentException(text);
+
+		return InternalN4JSParser.RULE_ANY_OTHER;
 	}
 
 	/**
