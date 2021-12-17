@@ -63,6 +63,8 @@
       <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.12.1.v20210128-1726"/>
       <unit id="javax.xml.stream" version="1.0.1.v201004272200"/>
       <repository location="https://download.eclipse.org/tools/orbit/downloads/drops/R20210223232630/repository"/>
+	    <unit id="org.antlr.runtime" version="4.7.2.v20200218-0804"/>
+	    <unit id="org.antlr.runtime.source" version="4.7.2.v20200218-0804"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.emf.ecore.editor" version="2.17.0.v20190528-0725"/>
