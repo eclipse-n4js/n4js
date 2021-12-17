@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.n4js.dts;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-ClassPath: .
+Bundle-Vendor: %providerName
+Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
+ org.eclipse.emf.ecore.xcore.lib,
+ com.google.inject,
+ com.google.gson,
+ org.apache.commons.lang,
+ org.antlr.runtime;bundle-version="[4.7.0,5.0.0)"
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.n4js.dts
+Automatic-Module-Name: org.eclipse.n4js.cli
+Bundle-RequiredExecutionEnvironment: JavaSE-11
