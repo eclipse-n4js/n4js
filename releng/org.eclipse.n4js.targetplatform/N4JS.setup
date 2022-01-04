@@ -269,7 +269,7 @@
     <requirement
         name="org.eclipse.m2e.feature.feature.group"/>
     <repository
-        url="http://download.eclipse.org/technology/m2e/releases"/>
+        url="https://download.eclipse.org/technology/m2e/releases/1.19.0"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -381,6 +381,8 @@
             url="http://download.eclipse.org/eclipse/updates/4.20"/>
         <repository
             url="http://download.eclipse.org/egit/updates-5.7"/>
+        <repository
+            url="https://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.4.44.v20210927"/>
         <repository
             url="http://download.eclipse.org/modeling/emf/emf/builds/release/2.26"/>
         <repository
