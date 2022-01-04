@@ -12,6 +12,7 @@ package org.eclipse.n4js.packagejson.projectDescription;
 
 import java.util.Objects;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.model.SemverSerializer;
 
@@ -31,7 +32,7 @@ public class ProjectDependency extends ProjectReference {
 		super(projectName);
 		this.type = type;
 		this.versionRequirementString = versionRequirementString;
-		this.versionRequirement = versionRequirement;
+		this.versionRequirement = versionRequirement != null ? EcoreUtil.copy(versionRequirement) : null;
 		this.internalVersionRequirementStr = SemverSerializer.serialize(versionRequirement);
 	}
 
