@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL2/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.9.3
+// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.9.3
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
