@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -23,8 +24,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.ECollections;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.DependencyType;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDependency;
@@ -54,11 +53,11 @@ public class SemanticDependencySupplier {
 
 		Set<String> implicitDependencies = new LinkedHashSet<>();
 		Set<String> existingDependencies = new LinkedHashSet<>();
-		LinkedList<ProjectDependency> moveToTop = new LinkedList<>();
+		List<ProjectDependency> moveToTop = new LinkedList<>();
+		List<ProjectDependency> keepAtPosition = new LinkedList<>();
 
-		EList<ProjectDependency> pDeps = ECollections.newBasicEList(dependencies);
 		boolean sawDefinitionsOnly = true;
-		for (ProjectDependency dependency : pDeps) {
+		for (ProjectDependency dependency : dependencies) {
 			N4JSPackageName dependencyName = dependency.getN4JSProjectName();
 			existingDependencies.add(dependencyName.getRawName());
 			N4JSPackageName definitionProjectName = definitionProjects.getDefinitionProject(dependencyName);
@@ -69,7 +68,9 @@ public class SemanticDependencySupplier {
 			boolean isDefinitionProject = definitionProjects.isDefinitionProject(dependencyName);
 			sawDefinitionsOnly &= isDefinitionProject;
 			if (isDefinitionProject) {
-				moveToTop.addFirst(dependency); // add at index 0 to keep order. note below move(0, ...);
+				moveToTop.add(dependency);
+			} else {
+				keepAtPosition.add(dependency);
 			}
 		}
 		implicitDependencies.removeAll(existingDependencies);
@@ -78,18 +79,19 @@ public class SemanticDependencySupplier {
 			return dependencies;
 		}
 
+		List<ProjectDependency> result = new ArrayList<>(
+				implicitDependencies.size() + moveToTop.size() + keepAtPosition.size());
+		result.addAll(moveToTop);
 		for (String implicitDependencyString : implicitDependencies) {
 			ProjectDependency implicitDependency = new ProjectDependency(
 					implicitDependencyString,
 					DependencyType.IMPLICIT,
 					"",
 					SemverUtils.createEmptyVersionRequirement());
-			pDeps.add(0, implicitDependency);
+			result.add(implicitDependency);
 		}
-		for (ProjectDependency moveToTopDep : moveToTop) {
-			pDeps.move(0, moveToTopDep);
-		}
-		return pDeps;
+		result.addAll(keepAtPosition);
+		return result;
 	}
 
 	/**
