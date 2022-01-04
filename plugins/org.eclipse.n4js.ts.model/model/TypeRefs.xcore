@@ -564,14 +564,23 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	boolean arrayNTypeExpression = "false"
 
 	/*
-	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node <em>and</em> ...
-	 * <ol>
-	 * <li>the declared type is, in the source code, referred to via the namespace of a namespace import, then this is non-null
-	 * and points to that namespace.
-	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
-	 * </ol>
+	 * If and only if this {@code ParameterizedTypeRef} represents an AST node (i.e. was created by the parser).
+	 * The array consists of references in the following order:
+	 * ModuleNamespaceVirtualType? [TNamespace]* TEnum?
 	 */
-	refers transient Type astDeclaredTypeQualifier
+	contains NamespaceLikeRef[] astNamespaceLikeRefs
+	
+	op NamespaceLikeRef getPreviousSibling(NamespaceLikeRef nslRef) {
+		if (nslRef === null || nslRef.eContainer !== this) {
+			return null;
+		}
+		for (var i=1; i<astNamespaceLikeRefs.length; i++) {
+			if (astNamespaceLikeRefs.get(i) == nslRef) {
+				return astNamespaceLikeRefs.get(i - 1);
+			}
+		}
+		return null;
+	}
 
 	/* @see TypeRef#getASTOptionalFieldStrategy() */
 	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy
@@ -977,6 +986,19 @@ class TypeTypeRef extends BaseTypeRef {
 	}
 
 	// note: operation getStaticType moved to TypeSystemHelper#getStaticType()
+}
+
+class NamespaceLikeRef {
+	transient String declaredTypeAsText
+	refers Type declaredType
+	
+	
+	op NamespaceLikeRef getPreviousSibling() {
+		if (!(eContainer instanceof ParameterizedTypeRef)) {
+			return null;
+		}
+		return (eContainer as ParameterizedTypeRef).getPreviousSibling(this);
+	}
 }
 
 /*

@@ -32,6 +32,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ArrayLikes;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
+import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -272,6 +273,16 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TYPE__ANNOTATIONS:
@@ -353,6 +364,11 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 				default: return -1;
 			}
 		}
+		if (baseClass == TNamespaceElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -369,7 +385,33 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 				default: return -1;
 			}
 		}
+		if (baseClass == TNamespaceElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == TAnnotableElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == TNamespaceElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TNAMESPACE_ELEMENT___IS_HOLLOW: return TypesPackage.TYPE___IS_HOLLOW;
+				default: return -1;
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
 	/**
@@ -408,6 +450,8 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 				return getRawTypeAsString();
 			case TypesPackage.TYPE___GET_TYPE_AS_STRING:
 				return getTypeAsString();
+			case TypesPackage.TYPE___IS_HOLLOW:
+				return isHollow();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

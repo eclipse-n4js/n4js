@@ -112,7 +112,7 @@ class TypeAliasComputerTest extends AbstractTypesystemTest {
 	}
 
 	def private TypeAlias findTypeAliasA(Script script) {
-		val result = script.module.topLevelTypes.filter(TypeAlias).filter[name=="A"].head;
+		val result = script.module.types.filter(TypeAlias).filter[name=="A"].head;
 		assertNotNull(result);
 		return result;
 	}

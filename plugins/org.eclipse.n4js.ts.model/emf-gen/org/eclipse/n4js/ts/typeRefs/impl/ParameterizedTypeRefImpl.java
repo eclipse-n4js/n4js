@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.typeRefs.impl;
 
+import com.google.common.base.Objects;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -30,6 +32,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
+import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -59,7 +62,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDeclaredTypeArgs <em>Declared Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getAstNamespaceLikeRefs <em>Ast Namespace Like Refs</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ParameterizedTypeRefImpl#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -148,14 +151,14 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	protected boolean arrayNTypeExpression = ARRAY_NTYPE_EXPRESSION_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getAstDeclaredTypeQualifier() <em>Ast Declared Type Qualifier</em>}' reference.
+	 * The cached value of the '{@link #getAstNamespaceLikeRefs() <em>Ast Namespace Like Refs</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getAstDeclaredTypeQualifier()
+	 * @see #getAstNamespaceLikeRefs()
 	 * @generated
 	 * @ordered
 	 */
-	protected Type astDeclaredTypeQualifier;
+	protected EList<NamespaceLikeRef> astNamespaceLikeRefs;
 
 	/**
 	 * The default value of the '{@link #getASTNodeOptionalFieldStrategy() <em>AST Node Optional Field Strategy</em>}' attribute.
@@ -344,38 +347,11 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public Type getAstDeclaredTypeQualifier() {
-		if (astDeclaredTypeQualifier != null && astDeclaredTypeQualifier.eIsProxy()) {
-			InternalEObject oldAstDeclaredTypeQualifier = (InternalEObject)astDeclaredTypeQualifier;
-			astDeclaredTypeQualifier = (Type)eResolveProxy(oldAstDeclaredTypeQualifier);
-			if (astDeclaredTypeQualifier != oldAstDeclaredTypeQualifier) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER, oldAstDeclaredTypeQualifier, astDeclaredTypeQualifier));
-			}
+	public EList<NamespaceLikeRef> getAstNamespaceLikeRefs() {
+		if (astNamespaceLikeRefs == null) {
+			astNamespaceLikeRefs = new EObjectContainmentEList<NamespaceLikeRef>(NamespaceLikeRef.class, this, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS);
 		}
-		return astDeclaredTypeQualifier;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Type basicGetAstDeclaredTypeQualifier() {
-		return astDeclaredTypeQualifier;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setAstDeclaredTypeQualifier(Type newAstDeclaredTypeQualifier) {
-		Type oldAstDeclaredTypeQualifier = astDeclaredTypeQualifier;
-		astDeclaredTypeQualifier = newAstDeclaredTypeQualifier;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER, oldAstDeclaredTypeQualifier, astDeclaredTypeQualifier));
+		return astNamespaceLikeRefs;
 	}
 
 	/**
@@ -422,6 +398,26 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		definedTypingStrategy = newDefinedTypingStrategy == null ? DEFINED_TYPING_STRATEGY_EDEFAULT : newDefinedTypingStrategy;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY, oldDefinedTypingStrategy, definedTypingStrategy));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NamespaceLikeRef getPreviousSibling(final NamespaceLikeRef nslRef) {
+		if (((nslRef == null) || (nslRef.eContainer() != this))) {
+			return null;
+		}
+		for (int i = 1; (i < ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getAstNamespaceLikeRefs(), Object.class)).length); i++) {
+			NamespaceLikeRef _get = this.getAstNamespaceLikeRefs().get(i);
+			boolean _equals = Objects.equal(_get, nslRef);
+			if (_equals) {
+				return this.getAstNamespaceLikeRefs().get((i - 1));
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -594,6 +590,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		switch (featureID) {
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DECLARED_TYPE_ARGS:
 				return ((InternalEList<?>)getDeclaredTypeArgs()).basicRemove(otherEnd, msgs);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS:
+				return ((InternalEList<?>)getAstNamespaceLikeRefs()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -617,9 +615,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return isArrayTypeExpression();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
 				return isArrayNTypeExpression();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
-				if (resolve) return getAstDeclaredTypeQualifier();
-				return basicGetAstDeclaredTypeQualifier();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS:
+				return getAstNamespaceLikeRefs();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return getASTNodeOptionalFieldStrategy();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY:
@@ -653,8 +650,9 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
 				setArrayNTypeExpression((Boolean)newValue);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
-				setAstDeclaredTypeQualifier((Type)newValue);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS:
+				getAstNamespaceLikeRefs().clear();
+				getAstNamespaceLikeRefs().addAll((Collection<? extends NamespaceLikeRef>)newValue);
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				setASTNodeOptionalFieldStrategy((OptionalFieldStrategy)newValue);
@@ -689,8 +687,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
 				setArrayNTypeExpression(ARRAY_NTYPE_EXPRESSION_EDEFAULT);
 				return;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
-				setAstDeclaredTypeQualifier((Type)null);
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS:
+				getAstNamespaceLikeRefs().clear();
 				return;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				setASTNodeOptionalFieldStrategy(AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT);
@@ -720,8 +718,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return arrayTypeExpression != ARRAY_TYPE_EXPRESSION_EDEFAULT;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_NTYPE_EXPRESSION:
 				return arrayNTypeExpression != ARRAY_NTYPE_EXPRESSION_EDEFAULT;
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_DECLARED_TYPE_QUALIFIER:
-				return astDeclaredTypeQualifier != null;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NAMESPACE_LIKE_REFS:
+				return astNamespaceLikeRefs != null && !astNamespaceLikeRefs.isEmpty();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY:
 				return aSTNodeOptionalFieldStrategy != AST_NODE_OPTIONAL_FIELD_STRATEGY_EDEFAULT;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY:
@@ -766,6 +764,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_PREVIOUS_SIBLING__NAMESPACELIKEREF:
+				return getPreviousSibling((NamespaceLikeRef)arguments.get(0));
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY:
 				return getTypingStrategy();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS:

@@ -65,34 +65,34 @@ NS.var1-=1;
 (NS.var1)+=1;
 
 /* **** **** **** **** ***** ***** */
-// As long as the following NameSpace access pattern faile, we do not need a read-only validation.
-// If at some time the parenthesized patter are allowed, the enable the validation:
+// As long as the following NameSpace access pattern fail, we do not need a read-only validation.
+// If at some time the parenthesized patter are allowed, enable the validation:
 /* **** **** **** **** ***** ***** */
 
-// X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+// XPECT errors --> "Imported element ((NS)).var1 is read-only." at "((NS)).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ( 12, ((((NS)).var1)) = 17);
-// X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ++( ((NS).var1) );
 
-// X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 --((NS).var1);
 
-// X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ((NS).var1)--;
 
-// X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ((NS).var1)+=1;
 
 
-// X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ( 12, (((NS).var1)) = 17);
 
-// X-PECT errors --> "Imported element var1 is read-only." at "var1"
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
+// XPECT errors --> "Imported element (NS).var1 is read-only." at "(NS).var1"
+// X-PECT errors --> "Couldn't resolve reference to IdentifiableElement 'var1'." at "var1"
 ++( ((NS).var1) );

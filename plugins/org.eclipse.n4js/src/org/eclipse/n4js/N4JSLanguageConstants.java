@@ -119,7 +119,9 @@ public abstract class N4JSLanguageConstants {
 			// future reserved keywords in [ECM15], restricted via static semantic in [ECM15]
 			"implements", "interface", "private", "protected", "public", // package not used in N4JS
 			// definition-site variance
-			"out");
+			"out",
+			// namespace
+			"namespace");
 
 	/** Access modifiers for the N4JS language. */
 	public static final Collection<String> ACCESS_MODIFIERS = unmodifiableCollection(newHashSet(

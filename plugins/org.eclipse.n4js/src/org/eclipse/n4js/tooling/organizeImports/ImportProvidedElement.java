@@ -35,6 +35,9 @@ public class ImportProvidedElement {
 	/** Import specifier which imports the name. */
 	private final ImportSpecifier importSpec;
 
+	/** True iff the imported element is hollow */
+	private final boolean isHollow;
+
 	/** Imported module, providing this named element. */
 	private final TModule importedModule;
 
@@ -56,11 +59,12 @@ public class ImportProvidedElement {
 	 *            import-specifier, referencing the import-declaration.
 	 *
 	 */
-	public ImportProvidedElement(String localName, String exportedName, ImportSpecifier importer) {
+	public ImportProvidedElement(String localName, String exportedName, ImportSpecifier importer, boolean isHollow) {
 		this.localname = localName;
 		this.exportedName = exportedName;
 		this.importSpec = importer;
 		this.importedModule = ((ImportDeclaration) importer.eContainer()).getModule();
+		this.isHollow = isHollow;
 	}
 
 	/**
@@ -87,10 +91,24 @@ public class ImportProvidedElement {
 	}
 
 	/**
+	 * Returns the a unique name for collision checking.
+	 */
+	public String getCollisionUniqueName() {
+		return localname + (isHollow ? "!H" : "!V");
+	}
+
+	/**
 	 * Returns the exported name of this element.
 	 */
 	public String getExportedName() {
 		return exportedName;
+	}
+
+	/**
+	 * Returns the exported name of this element.
+	 */
+	public String getDuplicateImportUniqueName() {
+		return exportedName + (isHollow ? "!H" : "!V");
 	}
 
 	/**
@@ -105,6 +123,13 @@ public class ImportProvidedElement {
 	 */
 	public TModule getImportedModule() {
 		return importedModule;
+	}
+
+	/**
+	 * Returns true iff the imported element is hollow.
+	 */
+	public boolean isHollow() {
+		return isHollow;
 	}
 
 	/**

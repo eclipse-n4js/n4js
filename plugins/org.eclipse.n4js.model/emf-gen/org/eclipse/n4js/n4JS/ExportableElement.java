@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -30,7 +29,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface ExportableElement extends EObject {
+public interface ExportableElement extends NamespaceElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -38,6 +37,22 @@ public interface ExportableElement extends EObject {
 	 * @generated
 	 */
 	boolean isExported();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isDeclaredExported();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isExportedByNamespace();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -68,5 +83,13 @@ public interface ExportableElement extends EObject {
 	 * @generated
 	 */
 	boolean isToplevel();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isHollow();
 
 } // ExportableElement

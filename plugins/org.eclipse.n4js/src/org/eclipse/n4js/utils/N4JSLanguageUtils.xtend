@@ -43,7 +43,6 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
-import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList
@@ -52,6 +51,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
+import org.eclipse.n4js.n4JS.NamespaceElement
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.NullLiteral
 import org.eclipse.n4js.n4JS.NumericLiteral
@@ -109,7 +109,6 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
@@ -1191,13 +1190,9 @@ public class N4JSLanguageUtils {
 	 * in early stages before the types builder has run and in the transpiler!
 	 */
 	def static boolean hasRuntimeRepresentation(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
-			&& javaScriptVariantHelper.isExternalMode(typeDecl)
-			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
 		val isNumberOrStringBasedEnum = typeDecl instanceof N4EnumDeclaration
 			&& getEnumKind(typeDecl as N4EnumDeclaration) !== EnumKind.Normal;
-		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
-		return typeDecl !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
+		return typeDecl !== null && !isNumberOrStringBasedEnum && !isHollowElement(typeDecl, javaScriptVariantHelper);
 	}
 
 	/**
@@ -1208,13 +1203,9 @@ public class N4JSLanguageUtils {
 	 * that were loaded from the Xtext index.
 	 */
 	def static boolean hasRuntimeRepresentation(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
-			&& javaScriptVariantHelper.isExternalMode(element)
-			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
 		val isNumberOrStringBasedEnum = element instanceof TEnum
 			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
-		val isTypeAlias = element instanceof TypeAlias;
-		return element !== null && !isNonN4JSInterfaceInN4JSD && !isNumberOrStringBasedEnum && !isTypeAlias;
+		return element !== null && !isNumberOrStringBasedEnum && !isHollowElement(element, javaScriptVariantHelper);
 	}
 	
 	
@@ -1222,13 +1213,9 @@ public class N4JSLanguageUtils {
 	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
 	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
 	 */
-	def static boolean isHollowElement(N4TypeDeclaration typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isNonN4JSInterfaceInN4JSD = typeDecl instanceof N4InterfaceDeclaration
-			&& javaScriptVariantHelper.isExternalMode(typeDecl)
-			&& !AnnotationDefinition.N4JS.hasAnnotation(typeDecl as N4InterfaceDeclaration);
-		val isTypeAlias = typeDecl instanceof N4TypeAliasDeclaration;
-		// TODO: namespace
-		return typeDecl !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
+	def static boolean isHollowElement(TypeDefiningElement typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isHollow = typeDecl instanceof NamespaceElement && (typeDecl as NamespaceElement).isHollow;
+		return isHollow;
 	}
 	
 	
@@ -1237,12 +1224,8 @@ public class N4JSLanguageUtils {
 	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
 	 */
 	def static boolean isHollowElement(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isNonN4JSInterfaceInN4JSD = element instanceof TInterface
-			&& javaScriptVariantHelper.isExternalMode(element)
-			&& !AnnotationDefinition.N4JS.hasAnnotation(element as TInterface);
-		val isTypeAlias = element instanceof TypeAlias;
-		// TODO: namespace
-		return element !== null && (isNonN4JSInterfaceInN4JSD || isTypeAlias);
+		val isHollowElement = element instanceof Type && (element as Type).isHollow;
+		return isHollowElement;
 	}
 
 	/**

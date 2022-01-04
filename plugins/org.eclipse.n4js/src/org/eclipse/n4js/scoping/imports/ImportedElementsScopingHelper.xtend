@@ -316,7 +316,7 @@ class ImportedElementsScopingHelper {
 
 		// add types
 		// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
-		for (importedType : imp.module.topLevelTypes) {
+		for (importedType : imp.module.types) {
 			val typeVisibility = typeVisibilityChecker.isVisible(contextResource, importedType);
 
 			val qn = createImportedQualifiedTypeName(namespaceName, importedType)

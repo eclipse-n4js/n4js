@@ -58,10 +58,12 @@ import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
@@ -69,6 +71,7 @@ import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.StringLiteral;
+import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -84,7 +87,9 @@ import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM;
 import org.eclipse.n4js.transpiler.print.LineColTrackingAppendable;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
@@ -266,11 +271,37 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	}
 
 	@Override
-	public Boolean caseN4ClassDeclaration(N4ClassDeclaration original) {
-		if (!original.isExported()) {
-			writeJsdoc(original); // already written in #caseExportDeclaration()
-			write("declare ");
+	public Boolean caseN4NamespaceDeclaration(N4NamespaceDeclaration original) {
+		handleDeclareAndNamespaceElements(original);
+
+		write("namespace ");
+		write(original.getName());
+		write(" ");
+
+		processBlockLike(original.getOwnedElementsRaw(), '{', null, null, '}', true);
+
+		return DONE;
+	}
+
+	private void handleDeclareAndNamespaceElements(EObject original) {
+		if (((NamespaceElement) original).isInNamespace()) {
+			Type definedType = state.info.getOriginalDefinedType((TypeDefiningElement) original);
+			if (definedType != null && definedType.getTypeAccessModifier() != TypeAccessModifier.PRIVATE) {
+				write("export ");
+			}
+		} else {
+			if (!((ExportableElement) original).isExported()) {
+				writeJsdoc(original); // already written in #caseExportDeclaration()
+				write("declare ");
+			}
 		}
+
+	}
+
+	@Override
+	public Boolean caseN4ClassDeclaration(N4ClassDeclaration original) {
+		handleDeclareAndNamespaceElements(original);
+
 		processTopLevelElementModifiers(original.getDeclaredModifiers());
 		write("class ");
 		write(original.getName());
@@ -363,10 +394,8 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4InterfaceDeclaration(N4InterfaceDeclaration original) {
-		if (!original.isExported()) {
-			writeJsdoc(original); // already written in #caseExportDeclaration()
-			write("declare ");
-		}
+		handleDeclareAndNamespaceElements(original);
+
 		processTopLevelElementModifiers(original.getDeclaredModifiers());
 		write("interface ");
 		write(original.getName());
@@ -501,10 +530,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4EnumDeclaration(N4EnumDeclaration original) {
-		if (!original.isExported()) {
-			writeJsdoc(original); // already written in #caseExportDeclaration()
-			write("declare ");
-		}
+		handleDeclareAndNamespaceElements(original);
 
 		EnumKind enumKind = N4JSLanguageUtils.getEnumKind(original);
 		boolean literalBased = enumKind != EnumKind.Normal;
@@ -566,10 +592,8 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseN4TypeAliasDeclaration(N4TypeAliasDeclaration alias) {
-		if (!alias.isExported()) {
-			writeJsdoc(alias); // already written in #caseExportDeclaration()
-			write("declare ");
-		}
+		handleDeclareAndNamespaceElements(alias);
+
 		write("type ");
 		write(alias.getName());
 		if (!alias.getTypeVars().isEmpty()) {
@@ -700,10 +724,8 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseFunctionDeclaration(FunctionDeclaration original) {
-		if (!original.isExported()) {
-			writeJsdoc(original); // already written in #caseExportDeclaration()
-			write("declare ");
-		}
+		handleDeclareAndNamespaceElements(original);
+
 		processAnnotations(original.getAnnotations());
 		processTopLevelElementModifiers(original.getDeclaredModifiers());
 		if (original.isAsync()) {
@@ -819,6 +841,17 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			caseVariableStatement(original);
 
 		} else {
+			if (((NamespaceElement) original).isInNamespace()) {
+				if (!original.getVarDecl().isEmpty()
+						&& original.getVarDecl().get(0) instanceof ExportedVariableDeclaration) {
+
+					ExportedVariableDeclaration evd = (ExportedVariableDeclaration) original.getVarDecl().get(0);
+					TVariable tVariable = state.info.getOriginalDefinedVariable(evd);
+					if (tVariable != null && tVariable.getTypeAccessModifier() != TypeAccessModifier.PRIVATE) {
+						write("export ");
+					}
+				}
+			}
 			processTopLevelElementModifiers(original.getDeclaredModifiers());
 			caseVariableStatement(original);
 		}

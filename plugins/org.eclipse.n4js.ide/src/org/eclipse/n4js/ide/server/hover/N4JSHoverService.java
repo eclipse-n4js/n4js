@@ -20,6 +20,7 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.jsdoc2spec.adoc.Html2ADocConverter;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
 import org.eclipse.xtext.ide.server.Document;
@@ -91,6 +92,9 @@ public class N4JSHoverService extends HoverService {
 			idRef = ((N4JSHoverContext) ctx).getIdentifierRef();
 		}
 		if (idRef == null) {
+			idRef = ctx.getElement();
+		}
+		if (ctx.getElement() instanceof TNamespace) {
 			idRef = ctx.getElement();
 		}
 		return idRef;

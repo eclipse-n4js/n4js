@@ -20,6 +20,8 @@ import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.ModifiableElement
+import org.eclipse.n4js.n4JS.ModifierUtils
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
@@ -51,6 +53,7 @@ import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.xtext.nodemodel.ILeafNode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -66,14 +69,17 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	protected N4JSTypeSystem ts;
 
-	@Inject protected ContainerTypesHelper containerTypesHelper;
-
-	@Inject StructuralTypesHelper structuralTypesHelper;
-
-	@Inject StaticPolyfillHelper staticPolyfillHelper;
+	@Inject
+	protected ContainerTypesHelper containerTypesHelper;
 
 	@Inject
-	private JavaScriptVariantHelper jsVariantHelper;
+	protected StructuralTypesHelper structuralTypesHelper;
+
+	@Inject
+	protected StaticPolyfillHelper staticPolyfillHelper;
+
+	@Inject
+	protected JavaScriptVariantHelper jsVariantHelper;
 
 	/**
 	 * NEEEDED
@@ -102,15 +108,33 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (type !== null && !type.exported && type.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal) {
 			if (type instanceof SyntaxRelatedTElement) {
-				if (type.astElement !== null) {
+				val astElem = type.astElement;
+				if (astElem !== null) {
 					val message = getMessageForCLF_NOT_EXPORTED_NOT_PRIVATE(type.keyword,
-						type.typeAccessModifier.keyword)
-					val eObjectToNameFeature = type.astElement.findNameFeature
-					addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value,
-						CLF_NOT_EXPORTED_NOT_PRIVATE)
+						type.typeAccessModifier.keyword);
+					val node = findModifierNode(astElem, type.typeAccessModifier);
+					if (node !== null) {
+						addIssue(message, astElem, node.getOffset(), node.getLength(), CLF_NOT_EXPORTED_NOT_PRIVATE);
+					} else {
+						val eObjectToNameFeature = findNameFeature(astElem);
+						addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_NOT_EXPORTED_NOT_PRIVATE)
+					}
 				}
 			}
 		}
+	}
+	
+	def ILeafNode findModifierNode(EObject eo, TypeAccessModifier taModifier) {
+		if (eo instanceof ModifiableElement) {
+			for (var i = 0; i<eo.declaredModifiers.length; i++) {
+				val dm = eo.declaredModifiers.get(i);
+				if (dm.literal == taModifier.literal) {
+					val node = ModifierUtils.getNodeForModifier(eo, i);
+					return node;
+				}
+			}
+		}
+		return null;
 	}
 
 	@Check

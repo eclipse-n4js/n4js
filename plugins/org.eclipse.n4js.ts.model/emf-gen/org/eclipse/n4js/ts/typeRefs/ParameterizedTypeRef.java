@@ -38,7 +38,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredTypeArgs <em>Declared Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeExpression <em>Array Type Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayNTypeExpression <em>Array NType Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstNamespaceLikeRefs <em>Ast Namespace Like Refs</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
@@ -161,34 +161,21 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	void setArrayNTypeExpression(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Ast Declared Type Qualifier</b></em>' reference.
+	 * Returns the value of the '<em><b>Ast Namespace Like Refs</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * If and only if this {@code ParameterizedTypeRef} is used as an AST node <em>and</em> ...
-	 * <ol>
-	 * <li>the declared type is, in the source code, referred to via the namespace of a namespace import, then this is non-null
-	 * and points to that namespace.
-	 * <li>the declared type is an enum literal, then this is non-null and points to the TEnum containing the literal.
-	 * </ol>
+	 * If and only if this {@code ParameterizedTypeRef} represents an AST node (i.e. was created by the parser).
+	 * The array consists of references in the following order:
+	 * ModuleNamespaceVirtualType? [TNamespace]* TEnum?
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Ast Declared Type Qualifier</em>' reference.
-	 * @see #setAstDeclaredTypeQualifier(Type)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstDeclaredTypeQualifier()
-	 * @model transient="true"
+	 * @return the value of the '<em>Ast Namespace Like Refs</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_AstNamespaceLikeRefs()
+	 * @model containment="true"
 	 * @generated
 	 */
-	Type getAstDeclaredTypeQualifier();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getAstDeclaredTypeQualifier <em>Ast Declared Type Qualifier</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Ast Declared Type Qualifier</em>' reference.
-	 * @see #getAstDeclaredTypeQualifier()
-	 * @generated
-	 */
-	void setAstDeclaredTypeQualifier(Type value);
+	EList<NamespaceLikeRef> getAstNamespaceLikeRefs();
 
 	/**
 	 * Returns the value of the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
@@ -246,6 +233,14 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	 * @generated
 	 */
 	void setDefinedTypingStrategy(TypingStrategy value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model unique="false" nslRefUnique="false"
+	 * @generated
+	 */
+	NamespaceLikeRef getPreviousSibling(NamespaceLikeRef nslRef);
 
 	/**
 	 * <!-- begin-user-doc -->

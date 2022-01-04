@@ -28,14 +28,14 @@
 
 @Polyfill
 export external public class Array<T> extends Array<T> {
-	// XPECT linkedFragment at 'Array' --> n4scheme:/builtin_js.n4jsd#/1/@topLevelTypes.40
+	// XPECT linkedFragment at 'Array' --> n4scheme:/builtin_js.n4jsd#/1/@types.40
 	member: Array<number>; // correctly scoped to Array in builtin_js.n4jsd
 }
 
-// XPECT linkedFragment at 'Array' --> n4scheme:/builtin_js.n4jsd#/1/@topLevelTypes.40
+// XPECT linkedFragment at 'Array' --> n4scheme:/builtin_js.n4jsd#/1/@types.40
 const K : Array<string> = null;
 
 class SomeClass {
-	// XPECT linkedFragment at 'Array' --> n4scheme:/builtin_js.n4jsd#/1/@topLevelTypes.40
+	// XPECT linkedFragment at 'Array' --> n4scheme:/builtin_js.n4jsd#/1/@types.40
 	someMethod(): Array<string>; // make sure: not incorrectly scoped to Array in this module
 }

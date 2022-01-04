@@ -83,15 +83,15 @@ class FunctionsTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		val type = assertReturnTypeRef(phase, tFunction, newN4jsResource)
 
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, type, "/1/@topLevelTypes.8")
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, type, "/1/@types.8")
 
 		val firstParameterType = assertParameter(phase, tFunction, newN4jsResource, "input", false)
 
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, firstParameterType, "/1/@topLevelTypes.8")
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, firstParameterType, "/1/@types.8")
 
 		val secondParameterType = assertParameter(phase, tFunction, newN4jsResource, "hint", false)
 
-		assertBuiltinTypeFragmentURI(phase, newN4jsResource, secondParameterType, "/1/@topLevelTypes.8")
+		assertBuiltinTypeFragmentURI(phase, newN4jsResource, secondParameterType, "/1/@types.8")
 	}
 
 	def assertSecondTFunction(String phase, Resource newN4jsResource) {
@@ -118,15 +118,15 @@ class FunctionsTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		val type = assertReturnTypeRef(phase, n4Function, resource)
 
-		assertBuiltinTypeFragmentURI(phase, resource, type, "/1/@topLevelTypes.8")
+		assertBuiltinTypeFragmentURI(phase, resource, type, "/1/@types.8")
 
 		val firstParameterType = assertParameter(phase, n4Function, resource, "input", false)
 
-		assertBuiltinTypeFragmentURI(phase, resource, firstParameterType, "/1/@topLevelTypes.8")
+		assertBuiltinTypeFragmentURI(phase, resource, firstParameterType, "/1/@types.8")
 
 		val secondParameterType = assertParameter(phase, n4Function, resource, "hint", false)
 
-		assertBuiltinTypeFragmentURI(phase, resource, secondParameterType, "/1/@topLevelTypes.8")
+		assertBuiltinTypeFragmentURI(phase, resource, secondParameterType, "/1/@types.8")
 	}
 
 	def assertSecondFunction(String phase, Resource resource, ExportableElement exportableElement) {

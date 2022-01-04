@@ -71,7 +71,7 @@ class ClassWithEnumTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		val enumType = assertTypeRef(phase, n4ClassField, resource)
 
-		assertTypeFragmentURI(phase, resource, enumType, "/1/@topLevelTypes.0")
+		assertTypeFragmentURI(phase, resource, enumType, "/1/@types.0")
 
 		assertTEnum(phase, enumType, "StorageType", "FILESYSTEM", "DATABASE")
 	}
@@ -85,7 +85,7 @@ class ClassWithEnumTypesBuilderTest extends AbstractTypesBuilderTest {
 
 		val enumType = assertTypeRefOfTField(phase, tField, newN4jsResource)
 
-		assertTypeFragmentURI(phase, newN4jsResource, enumType, "/1/@topLevelTypes.0")
+		assertTypeFragmentURI(phase, newN4jsResource, enumType, "/1/@types.0")
 
 		assertTEnum(phase, enumType, "StorageType", "FILESYSTEM", "DATABASE")
 	}

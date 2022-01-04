@@ -37,7 +37,7 @@ class ~Props {
 	public myProp: string;
 }
 
-// XPECT linkedFragment at 'React.<|>ReactElement' --> ../../../react/index.n4jsd#/1/@topLevelTypes.0
+// XPECT linkedFragment at 'React.<|>ReactElement' --> ../../../react/index.n4jsd#/1/@types.0
 function PureFnComponent(props: Props): React.ReactElement {
 	return (<div>{props.myProp}</div>);
 }

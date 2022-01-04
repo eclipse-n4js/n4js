@@ -28,5 +28,5 @@ package org.eclipse.n4js.n4JS;
  * @model
  * @generated
  */
-public interface AnnotationList extends AbstractAnnotationList, ScriptElement, Statement, ExportableElement {
+public interface AnnotationList extends AbstractAnnotationList, Statement, ExportableElement {
 } // AnnotationList

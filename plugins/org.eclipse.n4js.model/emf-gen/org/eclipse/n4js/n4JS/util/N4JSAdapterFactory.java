@@ -669,6 +669,14 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createN4ClassDefinitionAdapter();
 			}
 			@Override
+			public Adapter caseN4NamespaceDeclaration(N4NamespaceDeclaration object) {
+				return createN4NamespaceDeclarationAdapter();
+			}
+			@Override
+			public Adapter caseNamespaceElement(NamespaceElement object) {
+				return createNamespaceElementAdapter();
+			}
+			@Override
 			public Adapter caseN4ClassDeclaration(N4ClassDeclaration object) {
 				return createN4ClassDeclarationAdapter();
 			}
@@ -2875,6 +2883,34 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createN4ClassDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.N4NamespaceDeclaration <em>N4 Namespace Declaration</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.N4NamespaceDeclaration
+	 * @generated
+	 */
+	public Adapter createN4NamespaceDeclarationAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.NamespaceElement <em>Namespace Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.NamespaceElement
+	 * @generated
+	 */
+	public Adapter createNamespaceElementAdapter() {
 		return null;
 	}
 

@@ -134,7 +134,7 @@ public class TypesStructureAssertionExtension {
 	}
 
 	def assertTypeForName(Resource newN4jsResource, String name, String phase) {
-		val type = (newN4jsResource.contents.get(1) as TModule).topLevelTypes.filter[it.name == name].head
+		val type = (newN4jsResource.contents.get(1) as TModule).types.filter[it.name == name].head
 		assertNotNull(phase + ": there should be a type with expected name " + name, type)
 		type
 	}

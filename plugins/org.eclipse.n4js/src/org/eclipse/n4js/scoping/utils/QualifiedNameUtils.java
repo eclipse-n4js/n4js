@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.xtext.naming.QualifiedName;
 
 /**
@@ -44,5 +47,38 @@ public class QualifiedNameUtils {
 			qn = qn.append(suffix);
 		}
 		return qn;
+	}
+
+	/**
+	 * Null-safe concatenation of qualified names.
+	 */
+	public static QualifiedName concat(QualifiedName prefix, QualifiedName qn) {
+		if (prefix == null && qn == null) {
+			return null;
+		}
+		if (prefix == null) {
+			return qn;
+		}
+		if (qn == null) {
+			return prefix;
+		}
+		List<String> segments = new ArrayList<>(prefix.getSegments());
+		segments.addAll(qn.getSegments());
+		return QualifiedName.create(segments);
+	}
+
+	/**
+	 * Null-safe pop operation of the last segment.
+	 */
+	public static QualifiedName pop(QualifiedName qn) {
+		if (qn == null) {
+			return null;
+		}
+		if (qn.getSegmentCount() < 1) {
+			return null;
+		}
+		List<String> segments = new ArrayList<>(qn.getSegments());
+		segments.remove(segments.size() - 1);
+		return QualifiedName.create(segments);
 	}
 }

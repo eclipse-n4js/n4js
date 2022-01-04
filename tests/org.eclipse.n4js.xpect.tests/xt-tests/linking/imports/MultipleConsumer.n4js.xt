@@ -28,15 +28,15 @@
 	END_SETUP
  */
 
-// XPECT linkedFragment at '{<|>Class1, Class2}' --> MultipleClasses.n4js#/1/@topLevelTypes.0
+// XPECT linkedFragment at '{<|>Class1, Class2}' --> MultipleClasses.n4js#/1/@types.0
 // XPECT linkedName at '{<|>Class1, Class2}' --> linking.imports.MultipleClasses.Class1
-// XPECT linkedFragment at '{Class1, <|>Class2}' --> MultipleClasses.n4js#/1/@topLevelTypes.1
+// XPECT linkedFragment at '{Class1, <|>Class2}' --> MultipleClasses.n4js#/1/@types.1
 // XPECT linkedName at '{Class1, <|>Class2}' --> linking.imports.MultipleClasses.Class2
 import {Class1, Class2} from "linking/imports/MultipleClasses"
 
-// XPECT linkedFragment at 'class1: <|>Class1' --> MultipleClasses.n4js#/1/@topLevelTypes.0
+// XPECT linkedFragment at 'class1: <|>Class1' --> MultipleClasses.n4js#/1/@types.0
 // XPECT linkedName at 'Class1' --> linking.imports.MultipleClasses.Class1
 var class1: Class1
-// XPECT linkedFragment at 'Class2' --> MultipleClasses.n4js#/1/@topLevelTypes.1
+// XPECT linkedFragment at 'Class2' --> MultipleClasses.n4js#/1/@types.1
 // XPECT linkedName at 'class2: <|>Class2' --> linking.imports.MultipleClasses.Class2
 var class2: Class2

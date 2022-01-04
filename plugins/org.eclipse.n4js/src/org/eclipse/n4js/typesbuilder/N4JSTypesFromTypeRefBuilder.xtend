@@ -14,7 +14,6 @@ import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.types.TFormalParameter
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TStructGetter
 import org.eclipse.n4js.ts.types.TStructMember
@@ -41,7 +40,7 @@ public class N4JSTypesFromTypeRefBuilder {
 	 * members defined (in the with-clause). For more details why this is required, see API
 	 * doc of StructuralTypeRef.
 	 */
-	def package void createStructuralType(StructuralTypeRef structTypeRef, TModule target) {
+	def package void createStructuralType(StructuralTypeRef structTypeRef) {
 		if (!structTypeRef.astStructuralMembers.empty) {
 
 			val resSet = structTypeRef.eResource.resourceSet;
@@ -68,9 +67,6 @@ public class N4JSTypesFromTypeRefBuilder {
 			}
 
 			structTypeRef.structuralType = structType;
-
-			target.internalTypes += structType;
-
 		}
 	}
 
@@ -90,7 +86,7 @@ public class N4JSTypesFromTypeRefBuilder {
 	 * Creates a TFunction in the target module if the FunctionTypeExpression is generic.
 	 * For more details why this is required, see API doc of FunctionTypeExpression.
 	 */
-	def package void createTFunction(FunctionTypeExpression fte, TModule target) {
+	def package void createTFunction(FunctionTypeExpression fte) {
 
 		if (fte.generic) {
 
@@ -118,9 +114,6 @@ public class N4JSTypesFromTypeRefBuilder {
 
 			fte.declaredType = ft;
 			ft.astElement = fte;
-
-			target.internalTypes += ft;
-
 		}
 	}
 

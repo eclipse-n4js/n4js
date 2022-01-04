@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tooling.organizeImports
 
 import com.google.common.collect.ArrayListMultimap
+import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
@@ -19,6 +20,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
+import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 import static extension org.eclipse.n4js.tooling.organizeImports.ImportSpecifiersUtil.*
 import static extension org.eclipse.n4js.tooling.organizeImports.ScriptDependencyResolver.*
@@ -29,6 +31,9 @@ import static extension org.eclipse.n4js.tooling.organizeImports.ScriptDependenc
 @Log
 class ImportStateCalculator {
 
+	@Inject
+	private JavaScriptVariantHelper jsVariantHelper;
+	
 	/**
 	 * Algorithm to check the Model for Issues with Imports.
 	 * @returns {@link RecordingImportState}
@@ -48,7 +53,7 @@ class ImportStateCalculator {
 		// collect all unused if stable
 		reg.registerUnusedAndBrokenImports(importSpecifiersUnAnalyzed)
 
-		val List<ImportProvidedElement> importProvidedElements = importSpecifiersUnAnalyzed.filter[!(reg.brokenImports.contains(it))].toList.mapToImportProvidedElements
+		val List<ImportProvidedElement> importProvidedElements = importSpecifiersUnAnalyzed.filter[!(reg.brokenImports.contains(it))].toList.mapToImportProvidedElements(jsVariantHelper)
 
 		//refactor into specific types, those are essentially Maps holding elements in insertion order (keys and values)
 		val List<Pair<String, List<ImportProvidedElement>>> lN2IPE = newArrayList()
@@ -56,11 +61,11 @@ class ImportStateCalculator {
 
 		//TODO refactor this, those composed collections should be encapsulated as specific types with proper get/set methods
 		for (ipe : importProvidedElements) {
-			val pN2IPE = lN2IPE.findFirst[it.key == ipe.getLocalName()];
+			val pN2IPE = lN2IPE.findFirst[it.key == ipe.getCollisionUniqueName()];
 			if(pN2IPE !== null){
 				pN2IPE.value.add(ipe)
 			}else{
-				lN2IPE.add(ipe.getLocalName() -> newArrayList(ipe))
+				lN2IPE.add(ipe.getCollisionUniqueName() -> newArrayList(ipe))
 			}
 			val pM2IPE = lM2IPE.findFirst[it.key == ipe.importedModule];
 			if(pM2IPE !== null){
@@ -90,9 +95,9 @@ class ImportStateCalculator {
 		}
 
 /*TODO review ambiguous imports
- * looks like reference to type that is ambigously imported can happen only if there are errors in the import declaratiosn,
+ * looks like reference to type that is ambiguously imported can happen only if there are errors in the import declaratiosn,
  * so should ignore those references and resolve issues in the imports only?
- * Or can this information be used to resolve those isseus in smarter way?
+ * Or can this information be used to resolve those issues in smarter way?
  */
 //		localname2importprovider.markAmbigousImports(script)
 
@@ -108,24 +113,24 @@ class ImportStateCalculator {
 			val fromMod = pair.value
 
 			// find duplicates in actual name, report them as duplicateImport
-			val actname2Import = ArrayListMultimap.create
+			val name2Import = ArrayListMultimap.create
 			for (ipe : fromMod)
-				actname2Import.put(ipe.exportedName, ipe)
+				name2Import.put(ipe.getDuplicateImportUniqueName, ipe)
 
-			for (act : actname2Import.keySet) {
-				val v = actname2Import.get(act).toList
-				val x = v
-				 //filter out ImportProvidedElements that reflect Namespace element itself
-				.filter[internalIPE|
-					val specifier = internalIPE.importSpecifier;
-					if(specifier instanceof NamespaceImportSpecifier){
-						internalIPE.exportedName != computeNamespaceActualName(specifier)
-					}else{
-						true
-					}
-				].toList
+			for (name : name2Import.keySet) {
+				val v = name2Import.get(name).toList
+				val actName = v.head.exportedName;
+				val x = v.filter[internalIPE|
+						// filter out ImportProvidedElements that reflect Namespace element itself
+						val specifier = internalIPE.importSpecifier;
+						if(specifier instanceof NamespaceImportSpecifier){
+							internalIPE.exportedName != computeNamespaceActualName(specifier)
+						}else{
+							true
+						}
+					].toList
 				if (x.size > 1) 
-					reg.registerDuplicateImportsOfSameElement(act, pair.key, x)
+					reg.registerDuplicateImportsOfSameElement(actName, pair.key, x)
 			}
 		}
 	}

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.naming
 
+import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
@@ -19,33 +20,33 @@ import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.FunctionDeclaration
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
+import org.eclipse.n4js.scoping.utils.PolyfillUtils
+import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
+import org.eclipse.xtext.naming.IQualifiedNameConverter
+import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 
 import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.n4js.scoping.utils.PolyfillUtils
-import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
-import org.eclipse.xtext.naming.IQualifiedNameConverter
-import com.google.inject.Inject
 
 /**
  * Calculates the fully qualified name for the passed in objects.
@@ -94,10 +95,14 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				if (name !== null && it.eContainer instanceof ExportDeclaration) rootContainer.fullyQualifiedName?.append(name)
 			N4TypeVariable:
 				null
+			N4NamespaceDeclaration:
+				if (name !== null) fqnNamespaceDeclaration(it)
+			TNamespace:
+				if (name !== null) fqnType(it)
 			TClass:
-				if (name !== null) fqnTClassifier(it)
+				if (name !== null) fqnType(it)
 			TInterface:
-				if (name !== null) fqnTClassifier(it)
+				if (name !== null) fqnType(it)
 			TEnum:
 				if (name !== null) rootContainer.fullyQualifiedName?.append(exportedName ?: name)
 			TypeAlias:
@@ -126,7 +131,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 
 
 	private def QualifiedName fqnTModule(TModule module) {
-
 		if ( module.qualifiedName.length != 0 && ! AnnotationDefinition.GLOBAL.hasAnnotation(module)) {
 			var plainQN = converter.toQualifiedName(module.qualifiedName);
 			if( module.isStaticPolyfillModule ) {
@@ -136,8 +140,8 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		} else {
 			return QualifiedName.create(GLOBAL_NAMESPACE_SEGMENT)
 		}
-
 	}
+
 	private def QualifiedName fqnTypeDeclaration(N4TypeDeclaration typeDecl) {
 		var prefix = typeDecl.rootContainer.fullyQualifiedName;
 		if ( typeDecl.isNonStaticPolyfill || typeDecl.isStaticPolyfill )
@@ -147,13 +151,26 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		val fqn = QualifiedNameUtils.append(prefix, typeDecl.exportedName ?: typeDecl.name);
 		return fqn;
 	}
+	
+	private def QualifiedName fqnNamespaceDeclaration(N4NamespaceDeclaration typeDecl) {
+		var prefix = typeDecl.rootContainer.fullyQualifiedName;
+		var qn = QualifiedName.create(typeDecl.exportedName ?: typeDecl.name);
+		var EObject tmpTypeDecl = typeDecl;
+		while (tmpTypeDecl.eContainer instanceof N4NamespaceDeclaration) {
+			tmpTypeDecl = tmpTypeDecl.eContainer;
+			val nsd = tmpTypeDecl as N4NamespaceDeclaration;
+			qn = QualifiedNameUtils.prepend(nsd.exportedName ?: nsd.name, qn);
+		}
+		val fqn = QualifiedNameUtils.concat(prefix, qn);
+		return fqn;
+	}
 
-	private def QualifiedName fqnTClassifier(TClassifier tClassifier) {
-		var prefix = tClassifier.rootContainer.fullyQualifiedName;
-		if (tClassifier.polyfill) {
+	private def QualifiedName fqnType(Type type) {
+		var prefix = type.rootContainer.fullyQualifiedName;
+		if (type.polyfill) {
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
-		val fqn = QualifiedNameUtils.append(prefix, tClassifier.exportedName ?: tClassifier.name);
+		val fqn = QualifiedNameUtils.append(prefix, type.exportedName ?: type.name);
 		return fqn;
 	}
 

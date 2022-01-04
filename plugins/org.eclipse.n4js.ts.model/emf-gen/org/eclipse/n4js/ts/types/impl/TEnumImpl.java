@@ -34,6 +34,7 @@ import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
+import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -297,6 +298,24 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 		TypeAccessModifier _declaredTypeAccessModifier = this.getDeclaredTypeAccessModifier();
 		boolean _equals = Objects.equal(_declaredTypeAccessModifier, TypeAccessModifier.UNDEFINED);
 		if (_equals) {
+			return this.getDefaultTypeAccessModifier();
+		}
+		return this.getDeclaredTypeAccessModifier();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TypeAccessModifier getDefaultTypeAccessModifier() {
+		EObject _eContainer = this.eContainer();
+		if ((_eContainer instanceof TNamespace)) {
+			EObject _eContainer_1 = this.eContainer();
+			return ((TNamespace) _eContainer_1).getTypeAccessModifier();
+		}
+		else {
 			boolean _isExported = this.isExported();
 			if (_isExported) {
 				return TypeAccessModifier.PROJECT;
@@ -305,7 +324,6 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 				return TypeAccessModifier.PRIVATE;
 			}
 		}
-		return this.getDeclaredTypeAccessModifier();
 	}
 
 	/**
@@ -487,6 +505,7 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 			switch (baseOperationID) {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TENUM___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TENUM___GET_TYPE_ACCESS_MODIFIER;
+				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER: return TypesPackage.TENUM___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED: return TypesPackage.TENUM___IS_EXPORTED;
 				default: return -1;
 			}
@@ -511,6 +530,8 @@ public class TEnumImpl extends TypeImpl implements TEnum {
 				return isProvidedByRuntime();
 			case TypesPackage.TENUM___GET_TYPE_ACCESS_MODIFIER:
 				return getTypeAccessModifier();
+			case TypesPackage.TENUM___GET_DEFAULT_TYPE_ACCESS_MODIFIER:
+				return getDefaultTypeAccessModifier();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

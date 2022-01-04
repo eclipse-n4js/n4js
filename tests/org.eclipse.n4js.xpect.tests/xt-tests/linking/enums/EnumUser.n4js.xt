@@ -29,6 +29,6 @@
  */
 
 import { MyEnum } from "linking/enums/MyEnum"
-// XPECT linkedFragment at 'MyEnum.<|>ONE' --> MyEnum.n4js#/1/@topLevelTypes.0/@literals.0
+// XPECT linkedFragment at 'MyEnum.<|>ONE' --> MyEnum.n4js#/1/@types.0/@literals.0
 // Literals do not have a fully qualified name XPECT ! linkedName at 'MyEnum.<|>ONE' --> ONE
 var myEnum: MyEnum = MyEnum.ONE;

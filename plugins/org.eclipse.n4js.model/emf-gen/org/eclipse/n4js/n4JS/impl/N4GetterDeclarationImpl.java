@@ -22,6 +22,7 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
@@ -34,6 +35,7 @@ import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.ModifiableElement;
@@ -45,6 +47,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 
@@ -392,6 +395,33 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 	 * @generated
 	 */
 	@Override
+	public boolean isDeclaredExternal() {
+		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDefaultExternal() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent).isExternal();
+		}
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_GETTER_DECLARATION__OWNER:
@@ -606,6 +636,8 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 		}
 		if (baseClass == ModifiableElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.N4_GETTER_DECLARATION___IS_DECLARED_EXTERNAL;
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.N4_GETTER_DECLARATION___IS_DEFAULT_EXTERNAL;
 				default: return -1;
 			}
 		}
@@ -672,6 +704,10 @@ public class N4GetterDeclarationImpl extends GetterDeclarationImpl implements N4
 				return isCallSignature();
 			case N4JSPackage.N4_GETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE:
 				return isConstructSignature();
+			case N4JSPackage.N4_GETTER_DECLARATION___IS_DECLARED_EXTERNAL:
+				return isDeclaredExternal();
+			case N4JSPackage.N4_GETTER_DECLARATION___IS_DEFAULT_EXTERNAL:
+				return isDefaultExternal();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

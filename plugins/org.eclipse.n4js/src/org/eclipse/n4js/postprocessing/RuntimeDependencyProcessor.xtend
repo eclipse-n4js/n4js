@@ -29,6 +29,7 @@ import org.eclipse.n4js.smith.N4JSDataCollectors
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.RuntimeDependency
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -68,9 +69,9 @@ class RuntimeDependencyProcessor {
 					if (N4JSLanguageUtils.hasRuntimeRepresentation(targetDeclType, variantHelper)) {
 						cache.elementsReferencedAtRuntime += targetDeclType;
 						// in case of namespace imports, we also want to remember that the namespace was referenced at run time:
-						val astQualifier = targetTypeRef.typeRefInAST?.astDeclaredTypeQualifier;
-						if (astQualifier instanceof ModuleNamespaceVirtualType) {
-							cache.elementsReferencedAtRuntime += astQualifier;
+						val namespaceLikeType = targetTypeRef.typeRefInAST?.astNamespaceLikeRefs?.head?.declaredType;
+						if (namespaceLikeType instanceof ModuleNamespaceVirtualType || namespaceLikeType instanceof TNamespace) {
+							cache.elementsReferencedAtRuntime += namespaceLikeType;
 						}
 						// remember that the target's containing module was referenced from an extends/implements clause:
 						val targetModule = if (!targetDeclType.eIsProxy) EcoreUtil2.getContainerOfType(targetDeclType, TModule);

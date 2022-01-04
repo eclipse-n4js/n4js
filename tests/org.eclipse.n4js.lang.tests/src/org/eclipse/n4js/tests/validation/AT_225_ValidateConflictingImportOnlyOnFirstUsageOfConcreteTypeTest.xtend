@@ -153,7 +153,7 @@ class AT_225_ValidateConflictingImportOnlyOnFirstUsageOfConcreteTypeTest {
 			import * as N2 from 'a/X';
 			var x: N1.X;
 		'''.parse(rs)
-		script.assertError(N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE_NAMESPACE, "Elements of a/X are already imported in namespace N1.")
+		script.assertError(N4JSPackage.Literals.IMPORT_SPECIFIER, IssueCodes.IMP_DUPLICATE_NAMESPACE, "Element N2.X of a/X is already imported in namespace N1.")
 	}
 
 	@Test

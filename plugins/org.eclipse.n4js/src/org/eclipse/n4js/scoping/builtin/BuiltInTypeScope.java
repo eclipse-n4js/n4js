@@ -676,7 +676,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 		beforeRegistration(fileName, module);
 
 		// register types
-		for (Type type : module.getTopLevelTypes()) {
+		for (Type type : module.getTypes()) {
 			IEObjectDescription description = EObjectDescription.create(type.getName(), type);
 			elements.put(description.getName(), description);
 		}
@@ -696,7 +696,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 		if (PRIMITIVES_N4JSD.equals(fileName)) {
 			List<Type> coreTypes = createCoreTypes();
 			EcoreUtilN4.doWithDeliver(false, () -> {
-				module.getTopLevelTypes().addAll(coreTypes);
+				module.getTypes().addAll(coreTypes);
 			}, module);
 		}
 	}

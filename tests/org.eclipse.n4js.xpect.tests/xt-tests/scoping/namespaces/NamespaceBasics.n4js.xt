@@ -1,0 +1,128 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+    
+   	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+	}
+   
+   END_SETUP
+ */
+
+
+// Test that all namespace elements can appear in a namespace
+// XPECT noerrors -->
+export namespace NS1 {
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export const c1 = 0;
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export var v1;
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export let l1 = 2;
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export function F1():void {}
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+	export namespace NS1 {}
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export interface I1 {}
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export class C1 {}
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export type T1 = C1;
+    const c2 = 10;
+    var v2;
+    let l2 = 12;
+    function F2():void {}
+    namespace NS2 {}
+    interface I2 {}
+    class C2 {}
+    type T2 = C2;
+}
+
+
+// Test that all namespace elements can have access modifiers
+// XPECT noerrors -->
+export namespace NS2 {
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export public const c1 = 0;
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export public var v1;
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export public let l1 = 2;
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export public function F1():void {}
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+	export public namespace NS1 {}
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export public interface I1 {}
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export public class C1 {}
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+    export public type T1 = C1;
+    public const c2 = 10;
+    public var v2;
+    public let l2 = 12;
+    public function F2():void {}
+    public namespace NS2 {}
+    public interface I2 {}
+    public class C2 {}
+    public type T2 = C2;
+}
+
+// Test that namespace elements cannot be exported without exporting their namespace
+namespace NS3 {
+	// XPECT errors --> "Only top level elements can be exported." at "export"
+	export const c2 = 10;
+}
+
+
+// Test that the access modifier of the namespace is inherited by all its namespace elements
+// XPECT noerrors -->
+export public namespace NS4 {
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
+    public const c1 = 0;
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
+    public var v1;
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
+    public let l1 = 2;
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
+    public function F1():void {}
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
+	public namespace NS1 {}
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
+    public interface I1 {}
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
+    public class C1 {}
+	// XPECT warnings --> "Unnecessary modifier public." at "public"
+    public type T1 = C1;
+}
+
+// Test that the access modifier of the namespace is inherited by all its namespace elements
+// XPECT noerrors -->
+export project namespace NS5 {
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
+    project const c1 = 0;
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
+    project var v1;
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
+    project let l1 = 2;
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
+    project function F1():void {}
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
+	project namespace NS1 {}
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
+    project interface I1 {}
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
+    project class C1 {}
+	// XPECT warnings --> "Unnecessary modifier project." at "project"
+    project type T1 = C1;
+}

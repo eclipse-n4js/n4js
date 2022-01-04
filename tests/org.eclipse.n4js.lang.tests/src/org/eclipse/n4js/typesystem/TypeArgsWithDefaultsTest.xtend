@@ -30,8 +30,8 @@ class TypeArgsWithDefaultsTest extends AbstractTypesystemTest {
 			class G<T0, T1=A, T2=A> {}
 		'''.parseAndValidateSuccessfully;
 
-		val B = script.module.topLevelTypes.findFirst[name == "B"] as TClass;
-		val G = script.module.topLevelTypes.findFirst[name == "G"] as TClass;
+		val B = script.module.types.findFirst[name == "B"] as TClass;
+		val G = script.module.types.findFirst[name == "G"] as TClass;
 
 		val typeRef01 = G.of(B);     // G<B>
 		val typeRef02 = G.of(B,B);   // G<B,B>
@@ -50,8 +50,8 @@ class TypeArgsWithDefaultsTest extends AbstractTypesystemTest {
 			class G<T0, T1, T2=A, T3=A> {}
 		'''.parseAndValidateSuccessfully;
 
-		val B = script.module.topLevelTypes.findFirst[name == "B"] as TClass;
-		val G = script.module.topLevelTypes.findFirst[name == "G"] as TClass;
+		val B = script.module.types.findFirst[name == "B"] as TClass;
+		val G = script.module.types.findFirst[name == "G"] as TClass;
 
 		val typeRef01 = G.rawTypeRef;        // G
 		val typeRef02 = G.rawTypeRef(B.ref); // G<B>

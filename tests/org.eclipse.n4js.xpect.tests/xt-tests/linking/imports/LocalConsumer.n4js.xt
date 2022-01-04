@@ -30,19 +30,19 @@
 
 import * as N from "linking/imports/MultipleClasses"
 
-// XPECT linkedFragment at '<|>Class1' --> MultipleClasses.n4js#/1/@topLevelTypes.0
+// XPECT linkedFragment at '<|>Class1' --> MultipleClasses.n4js#/1/@types.0
 // XPECT linkedName at '<|>Class1' --> linking.imports.MultipleClasses.Class1
 var class1FromImportedModule: N.Class1;
 
-// XPECT linkedFragment at '<|>Class2' --> MultipleClasses.n4js#/1/@topLevelTypes.1
+// XPECT linkedFragment at '<|>Class2' --> MultipleClasses.n4js#/1/@types.1
 // XPECT linkedName at '<|>Class2' --> linking.imports.MultipleClasses.Class2
 var class2FromImportedModule: N.Class2;
 
-// XPECT linkedFragment at '<|>Class1' --> /1/@topLevelTypes.0
+// XPECT linkedFragment at '<|>Class1' --> /1/@types.0
 // XPECT linkedName at '<|>Class1' --> linking.imports.LocalConsumer.Class1
 var class1FromLocalModule: Class1;
 
-// XPECT linkedFragment at '<|>Class2' --> /1/@topLevelTypes.1
+// XPECT linkedFragment at '<|>Class2' --> /1/@types.1
 // XPECT linkedName at '<|>Class2' --> linking.imports.LocalConsumer.Class2
 var class2FromLocalModule: Class2;
 

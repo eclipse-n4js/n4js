@@ -144,6 +144,10 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 				return createTypeTypeRefAdapter();
 			}
 			@Override
+			public Adapter caseNamespaceLikeRef(NamespaceLikeRef object) {
+				return createNamespaceLikeRefAdapter();
+			}
+			@Override
 			public Adapter caseWildcard(Wildcard object) {
 				return createWildcardAdapter();
 			}
@@ -442,6 +446,20 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTypeTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef <em>Namespace Like Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef
+	 * @generated
+	 */
+	public Adapter createNamespaceLikeRefAdapter() {
 		return null;
 	}
 

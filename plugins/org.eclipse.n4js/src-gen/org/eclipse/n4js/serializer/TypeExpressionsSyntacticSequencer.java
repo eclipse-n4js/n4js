@@ -144,6 +144,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) '{' 'function' '<' ownedTypeVars+=TypeVariable
 	 *     (rule start) (ambiguity) (('{' 'function' '(') | '(') fpars+=TAnonymousFormalParameter
 	 *     (rule start) (ambiguity) arrayNTypeExpression?='['
+	 *     (rule start) (ambiguity) astNamespaceLikeRefs+=NamespaceLikeRef
 	 *     (rule start) (ambiguity) astNegated?='-'
 	 *     (rule start) (ambiguity) astValue='false'
 	 *     (rule start) (ambiguity) astValue='true'

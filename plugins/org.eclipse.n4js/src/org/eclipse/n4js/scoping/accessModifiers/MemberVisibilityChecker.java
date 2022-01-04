@@ -140,8 +140,7 @@ public class MemberVisibilityChecker {
 	 * Returns the MemberVisibility of the <i>member</i> of the <i>receiverType</> in the given <i>context</i>
 	 */
 	private MemberVisibility isVisible(TModule contextModule, Type contextType, Type declaredReceiverType,
-			TMember member,
-			boolean supercall) {
+			TMember member, boolean supercall) {
 
 		int startIndex = member.getMemberAccessModifier().getValue();
 
@@ -163,8 +162,7 @@ public class MemberVisibilityChecker {
 				break;
 			case PROTECTED_INTERNAL:
 				visibilityForModifier = isProtectedInternalVisible(contextType, contextModule, declaredReceiverType,
-						member,
-						supercall);
+						member, supercall);
 				break;
 			case PROTECTED:
 				visibilityForModifier = isProtectedVisible(contextType, contextModule, declaredReceiverType, member,

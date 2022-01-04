@@ -445,7 +445,7 @@ public class ProjectCompareHelper {
 	private EObject[] computeChildren(EObject elem, boolean includeInheritedMembers, boolean includeNonPublic,
 			final boolean includePolyfills) {
 		if (elem instanceof TModule) {
-			return ((TModule) elem).getTopLevelTypes().stream()
+			return ((TModule) elem).getTypes().stream()
 					.filter(e -> includeNonPublic || isPublicOrPublicInternal(e))
 					.toArray(n -> new EObject[n]);
 		} else if (elem instanceof ContainerType<?>) {

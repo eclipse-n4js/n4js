@@ -39,7 +39,7 @@ public interface TMemberWithAccessModifier extends TMember {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * * TODO mover to TMethod and accessors (not done yet due to 500 named elements restriction)
+	 * * TODO move to TMethod and accessors (not done yet due to 500 named elements restriction)
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Has No Body</em>' attribute.
 	 * @see #setHasNoBody(boolean)
@@ -89,16 +89,27 @@ public interface TMemberWithAccessModifier extends TMember {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns either the declared access modifier (if possible) or
-	 * derives the access modifier from the type access modifier of the containing type.
-	 * <p>
-	 * Note that the modifier is calculated in case no declared modifier is present, but it is not "fixed" (
-	 * cf. org.eclipse.n4js.ts.model.util.AccessModifiers.fixed(TMember)).
-	 * Also see [N4JSSpec] Constraints 2 (Default Member Access Modifiers)
+	 * Returns either the declared (if possible) or the default access modifier
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	MemberAccessModifier getMemberAccessModifier();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Returns the default access modifier derived from the type access modifier of the containing type.
+	 * <p>
+	 * Note that the default modifier is calculated in case no declared modifier is present, but it is not "fixed"
+	 * (cf. org.eclipse.n4js.ts.model.util.AccessModifiers.fixed(TMember)).
+	 * Also see [N4JSSpec] Constraints 2 (Default Member Access Modifiers)
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	MemberAccessModifier getDefaultMemberAccessModifier();
 
 } // TMemberWithAccessModifier
