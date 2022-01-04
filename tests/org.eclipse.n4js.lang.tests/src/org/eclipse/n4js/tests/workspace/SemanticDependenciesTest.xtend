@@ -157,7 +157,7 @@ class SemanticDependenciesTest {
 		
 		val orderedDependencies = client.getSemanticDependencies();
 		assertOrder("Duplicate type definition project IDs do not prevent the dependency order computation from terminating successfully.",
-			orderedDependencies, #["client/node_modules/@n4jsd/impl", "client/node_modules/@n4jsd/impl", "client/node_modules/impl1", "client/node_modules/impl2"]);
+			orderedDependencies, #["client/node_modules/@n4jsd/impl", "client/node_modules/impl1", "client/node_modules/@n4jsd/impl", "client/node_modules/impl2"]);
 	}
 	
 	/** There is two type definition projects that both provide definitions for the same implementation project. */
