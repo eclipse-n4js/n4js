@@ -63,6 +63,7 @@ class CommonJsImportsTransformation extends Transformation {
 
 		val importDeclsPerImportedModule = FluentIterable.from(state.im.scriptElements)
 			.filter(ImportDeclaration)
+			.filter[!bare] // ignore bare imports
 			.index[importDecl | state.info.getImportedModule(importDecl)];
 
 		val varStmnts = newArrayList;
