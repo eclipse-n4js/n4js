@@ -105,6 +105,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	@Override
 	protected int computeHashCode() {
+		// note: no need to consider "packageNameToProjectIds" and "external" because it is derived information
 		return Objects.hash(
 				super.computeHashCode(),
 				projectDescription);
@@ -112,6 +113,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 
 	@Override
 	protected boolean computeEquals(Object obj) {
+		// note: no need to check "packageNameToProjectIds" and "external" because it is derived information
 		N4JSProjectConfigSnapshot other = (N4JSProjectConfigSnapshot) obj;
 		return super.computeEquals(other)
 				&& Objects.equals(projectDescription, other.projectDescription);

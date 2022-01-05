@@ -54,6 +54,7 @@ public class ProjectDependency extends ProjectReference {
 				super.computeHashCode(),
 				type,
 				versionRequirementString,
+				// versionRequirement is covered by internalVersionRequirementStr
 				internalVersionRequirementStr);
 	}
 
@@ -63,6 +64,7 @@ public class ProjectDependency extends ProjectReference {
 		return super.computeEquals(obj)
 				&& type == other.type
 				&& Objects.equals(versionRequirementString, other.versionRequirementString)
+				// versionRequirement is covered by internalVersionRequirementStr
 				&& Objects.equals(internalVersionRequirementStr, other.internalVersionRequirementStr);
 	}
 
