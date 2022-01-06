@@ -349,9 +349,9 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
-				id,
 				location,
 				relatedRootlocation,
+				id,
 				packageName,
 				vendorId,
 				vendorName,
@@ -383,9 +383,9 @@ public class ProjectDescription extends ImmutableDataClass {
 	@Override
 	protected boolean computeEquals(Object obj) {
 		ProjectDescription other = (ProjectDescription) obj;
-		return Objects.equals(id, other.id)
-				&& Objects.equals(location, other.location)
+		return Objects.equals(location, other.location)
 				&& Objects.equals(relatedRootlocation, other.relatedRootlocation)
+				&& Objects.equals(id, other.id)
 				&& Objects.equals(packageName, other.packageName)
 				&& Objects.equals(vendorId, other.vendorId)
 				&& Objects.equals(vendorName, other.vendorName)
