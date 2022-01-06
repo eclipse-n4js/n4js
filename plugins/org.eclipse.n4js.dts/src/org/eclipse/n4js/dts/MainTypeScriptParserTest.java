@@ -33,11 +33,14 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
+import org.eclipse.n4js.n4JS.Script;
 
 /**
  *
  */
 public class MainTypeScriptParserTest {
+	static final Path PARSE_SINGLE_FILE = Path.of("/Users/marcusmews/GitHub/DefinitelyTyped/types/3box/index.d.ts");
+
 	static final Path DEFINITELY_TYPED = Path.of("/Users/marcusmews/GitHub/DefinitelyTyped/types/");
 	static final String START_FROM = "";
 	static final String EXCLUDES[] = { "carbon__icons", "carbon__pictograms" };
@@ -49,6 +52,7 @@ public class MainTypeScriptParserTest {
 		// walker.walk(listener, tree);
 
 		long startTime = System.currentTimeMillis();
+		// testFile();
 		testFolder();
 		System.out.println("\n\nElapsed Time: " + (System.currentTimeMillis() - startTime) / 1000 + "s");
 	}
@@ -139,6 +143,17 @@ public class MainTypeScriptParserTest {
 		return stats;
 	}
 
+	static void testFile() throws IOException {
+		ParseStats stats = parse(PARSE_SINGLE_FILE);
+
+		ManualParseTreeWalker walker = new ManualParseTreeWalker(stats.tree);
+		DtsAstBuilder astBuilder = new DtsAstBuilder(walker);
+		walker.start();
+
+		Script script = astBuilder.getScript();
+		System.out.println("script created: " + (script != null));
+	}
+
 	static void testFolder() throws IOException {
 		List<Path> files = Files.walk(DEFINITELY_TYPED, FileVisitOption.FOLLOW_LINKS)
 				.filter(file -> {
@@ -168,6 +183,12 @@ public class MainTypeScriptParserTest {
 				ParseStats stats = parse(file);
 				if (stats.syntaxErrorCount == 0) {
 					good++;
+
+					// ParseTreeWalker walker = new ParseTreeWalker();
+					// DtsAstBuilder treeListener = new DtsAstBuilder();
+					// ManualParseTreeWalker w2 = new ManualParseTreeWalker(treeListener, stats.tree);
+					// w2.start();
+					// walker.walk(new TypeScriptParserBaseListener(), stats.tree);
 				} else {
 					bad++;
 				}
