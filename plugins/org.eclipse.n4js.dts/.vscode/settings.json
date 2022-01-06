@@ -6,6 +6,6 @@
         "package": "org.eclipse.n4js.dts",
         "listeners": true,
         "visitors": true,
-        "alternativeJar": "../lib/antlr-4.9.3-complete.jar"
+        "alternativeJar": "../lib/antlr4-4.7.2-complete.jar"
     }
 }
