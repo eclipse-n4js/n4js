@@ -40,7 +40,7 @@ public abstract class ImmutableDataClass {
 			return true;
 		if (obj.getClass() != getClass())
 			return false;
-		return super.equals(obj);
+		return computeEquals(obj);
 	}
 
 	/**
@@ -48,7 +48,8 @@ public abstract class ImmutableDataClass {
 	 *
 	 * @param obj
 	 *            the object to check. This will never be <code>null</code>, will never be <code>this</code>, and will
-	 *            always be of a subtype of <code>this.getClass()</code>, so you can immediately cast it.
+	 *            always be of type <code>this.getClass()</code>, so you can immediately cast it to the containing
+	 *            class.
 	 */
 	protected abstract boolean computeEquals(Object obj);
 }

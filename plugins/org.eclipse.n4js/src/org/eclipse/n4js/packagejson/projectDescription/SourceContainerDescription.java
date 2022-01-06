@@ -43,15 +43,15 @@ public class SourceContainerDescription extends ImmutableDataClass {
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
-				paths,
-				type);
+				type,
+				paths);
 	}
 
 	@Override
 	protected boolean computeEquals(Object obj) {
 		SourceContainerDescription other = (SourceContainerDescription) obj;
-		return Objects.equals(paths, other.paths)
-				&& type == other.type;
+		return type == other.type
+				&& Objects.equals(paths, other.paths);
 	}
 
 	@Override
