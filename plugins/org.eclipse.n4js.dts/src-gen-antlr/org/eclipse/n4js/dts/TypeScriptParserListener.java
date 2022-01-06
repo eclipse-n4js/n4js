@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.9.3
+// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -237,16 +237,6 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParameterizedTypeRef(TypeScriptParser.ParameterizedTypeRefContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#typeReference}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeReference(TypeScriptParser.TypeReferenceContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#typeReference}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeReference(TypeScriptParser.TypeReferenceContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#typeName}.
 	 * @param ctx the parse tree
@@ -737,6 +727,66 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitExportStatement(TypeScriptParser.ExportStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExportAsNamespace}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void enterExportAsNamespace(TypeScriptParser.ExportAsNamespaceContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExportAsNamespace}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void exitExportAsNamespace(TypeScriptParser.ExportAsNamespaceContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExportEquals}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void enterExportEquals(TypeScriptParser.ExportEqualsContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExportEquals}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void exitExportEquals(TypeScriptParser.ExportEqualsContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExportImport}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void enterExportImport(TypeScriptParser.ExportImportContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExportImport}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void exitExportImport(TypeScriptParser.ExportImportContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExportDeclareStatement}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void enterExportDeclareStatement(TypeScriptParser.ExportDeclareStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExportDeclareStatement}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void exitExportDeclareStatement(TypeScriptParser.ExportDeclareStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExportElement}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void enterExportElement(TypeScriptParser.ExportElementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExportElement}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void exitExportElement(TypeScriptParser.ExportElementContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#exportFromBlock}.
 	 * @param ctx the parse tree

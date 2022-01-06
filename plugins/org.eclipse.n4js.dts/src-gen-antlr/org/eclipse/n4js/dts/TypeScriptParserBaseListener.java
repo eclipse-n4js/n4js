@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.9.3
+// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -287,18 +287,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitParameterizedTypeRef(TypeScriptParser.ParameterizedTypeRefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTypeReference(TypeScriptParser.TypeReferenceContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeReference(TypeScriptParser.TypeReferenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -887,6 +875,66 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExportStatement(TypeScriptParser.ExportStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExportAsNamespace(TypeScriptParser.ExportAsNamespaceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExportAsNamespace(TypeScriptParser.ExportAsNamespaceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExportEquals(TypeScriptParser.ExportEqualsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExportEquals(TypeScriptParser.ExportEqualsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExportImport(TypeScriptParser.ExportImportContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExportImport(TypeScriptParser.ExportImportContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExportDeclareStatement(TypeScriptParser.ExportDeclareStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExportDeclareStatement(TypeScriptParser.ExportDeclareStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterExportElement(TypeScriptParser.ExportElementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExportElement(TypeScriptParser.ExportElementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

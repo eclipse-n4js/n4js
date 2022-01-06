@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.9.3
+// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -172,13 +172,6 @@ public class TypeScriptParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitParameterizedTypeRef(TypeScriptParser.ParameterizedTypeRefContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitTypeReference(TypeScriptParser.TypeReferenceContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -522,6 +515,41 @@ public class TypeScriptParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitExportStatement(TypeScriptParser.ExportStatementContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitExportAsNamespace(TypeScriptParser.ExportAsNamespaceContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitExportEquals(TypeScriptParser.ExportEqualsContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitExportImport(TypeScriptParser.ExportImportContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitExportDeclareStatement(TypeScriptParser.ExportDeclareStatementContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitExportElement(TypeScriptParser.ExportElementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

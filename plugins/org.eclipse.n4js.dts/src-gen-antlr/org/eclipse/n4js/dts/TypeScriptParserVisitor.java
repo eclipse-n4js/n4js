@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.9.3
+// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -148,12 +148,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParameterizedTypeRef(TypeScriptParser.ParameterizedTypeRefContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#typeReference}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTypeReference(TypeScriptParser.TypeReferenceContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#typeName}.
 	 * @param ctx the parse tree
@@ -448,6 +442,41 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExportStatement(TypeScriptParser.ExportStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExportAsNamespace}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExportAsNamespace(TypeScriptParser.ExportAsNamespaceContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExportEquals}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExportEquals(TypeScriptParser.ExportEqualsContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExportImport}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExportImport(TypeScriptParser.ExportImportContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExportDeclareStatement}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExportDeclareStatement(TypeScriptParser.ExportDeclareStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExportElement}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExportElement(TypeScriptParser.ExportElementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#exportFromBlock}.
 	 * @param ctx the parse tree
