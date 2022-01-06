@@ -16,20 +16,35 @@ import java.util.Set;
 import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
- *
+ * Utilities to retrieve information from the parse tree
  */
 public class ParserContextUtil {
 
+	/** @return true iff the given rule is contained in an {@link TypeScriptParser#RULE_exportStatement} */
 	public static boolean isExported(ParserRuleContext ctx) {
 		findParentContext(ctx, TypeScriptParser.RULE_exportStatement, TypeScriptParser.RULE_statement);
 		return false;
 	}
 
+	/**
+	 * Traverses the parent relation upwards from the given context. In case a parent matches the given rule id, it is
+	 * returned. In case a parent's rule id matches the given stopAtIds, null is returned. The given start context is
+	 * not checked.
+	 *
+	 * @return parent context with the given id or null.
+	 */
 	public static ParserRuleContext findParentContext(ParserRuleContext ctx, int parentContextId,
 			Integer... stopAtIds) {
 		return findParentContext(ctx, parentContextId, false, stopAtIds);
 	}
 
+	/**
+	 * Traverses the parent relation upwards from the given context. In case a parent matches the given rule id, it is
+	 * returned. In case a parent's rule id matches the given stopAtIds, null is returned. The given start context is
+	 * checked iff checkStart is true.
+	 *
+	 * @return parent context with the given id or null.
+	 */
 	public static ParserRuleContext findParentContext(ParserRuleContext ctx, int parentContextId, boolean checkStart,
 			Integer... stopAtIds) {
 

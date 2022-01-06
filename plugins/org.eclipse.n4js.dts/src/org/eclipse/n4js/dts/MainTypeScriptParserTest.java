@@ -36,8 +36,9 @@ import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.n4JS.Script;
 
 /**
- *
+ * Test class
  */
+@SuppressWarnings("javadoc")
 public class MainTypeScriptParserTest {
 	static final Path PARSE_SINGLE_FILE = Path.of("/Users/marcusmews/GitHub/DefinitelyTyped/types/3box/index.d.ts");
 
@@ -45,6 +46,7 @@ public class MainTypeScriptParserTest {
 	static final String START_FROM = "";
 	static final String EXCLUDES[] = { "carbon__icons", "carbon__pictograms" };
 
+	/** Test entry point */
 	static public void main(String[] args) throws IOException {
 		// ParseTree tree = parse("test.ts");
 		// ParseTreeWalker walker = new ParseTreeWalker();
@@ -95,6 +97,7 @@ public class MainTypeScriptParserTest {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	static public ParseStats parse(Path file) throws IOException, RecognitionException {
 		String fileName = file.toString();
 		CharStream fileContents = fromFileName(fileName);

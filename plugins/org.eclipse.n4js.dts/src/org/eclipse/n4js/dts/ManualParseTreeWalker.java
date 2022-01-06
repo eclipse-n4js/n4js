@@ -15,30 +15,38 @@ import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 /**
- *
+ * This parse tree walker is a variant of the {@link ParseTreeWalker} with the difference that it will not visit all
+ * children per default. Instead, the listener has to select the children that have to be visited next. The reason is
+ * that converting the parse tree to an AST is done by visiting elements driven by this walker but also by manually
+ * picking children and their information to create and initialize AST elements.
  */
 public class ManualParseTreeWalker {
 	private final ParserRuleContext startCtx;
 	private ParseTreeListener treeListener;
 	private ArrayList<ParserRuleContext> currentQueue;
 
+	/** Constructor. You must call {@link #setParseTreeListener(ParseTreeListener)}. */
 	public ManualParseTreeWalker(ParserRuleContext ctx) {
 		this(null, ctx);
 	}
 
+	/** Constructor. */
 	public ManualParseTreeWalker(ParseTreeListener treeListener, ParserRuleContext startCtx) {
 		this.treeListener = treeListener;
 		this.startCtx = startCtx;
 	}
 
+	/** Call this setter to initialize the listener. */
 	public void setParseTreeListener(ParseTreeListener treeListener) {
 		if (this.treeListener == null) {
 			this.treeListener = treeListener;
 		}
 	}
 
+	/** Starts the walker. Be sure to have the {@link #treeListener} set. */
 	public void start() {
 		visit(startCtx);
 	}
@@ -67,6 +75,7 @@ public class ManualParseTreeWalker {
 
 	}
 
+	/** Adds the given context to be visited by this walker */
 	public void enqueue(ParserRuleContext ctx) {
 		if (ctx == null) {
 			return;
@@ -74,6 +83,7 @@ public class ManualParseTreeWalker {
 		currentQueue.add(ctx);
 	}
 
+	/** Adds all given contexts to be visited by this walker */
 	public void enqueue(List<? extends ParserRuleContext> ctxs) {
 		if (ctxs == null) {
 			return;

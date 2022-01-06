@@ -34,7 +34,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 
 /**
- *
+ * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsTypeRefBuilder extends TypeScriptParserBaseListener {
 	final static Set<Integer> VISIT_CHILDREN_OF_RULES = java.util.Set.of(
@@ -49,6 +49,7 @@ public class DtsTypeRefBuilder extends TypeScriptParserBaseListener {
 	private ManualParseTreeWalker walker;
 	private TypeReferenceNode<TypeRef> resultTypeRefNode;
 
+	/** @return a {@link TypeReferenceNode} from the given context. Consumes the given context and all its children. */
 	public TypeReferenceNode<TypeRef> consume(ColonSepTypeRefContext ctx) {
 		if (ctx == null) {
 			return null;
@@ -56,6 +57,7 @@ public class DtsTypeRefBuilder extends TypeScriptParserBaseListener {
 		return consume(ctx.typeRef());
 	}
 
+	/** @return a {@link TypeReferenceNode} from the given context. Consumes the given context and all its children. */
 	public TypeReferenceNode<TypeRef> consume(TypeRefContext ctx) {
 		if (ctx == null) {
 			return null;

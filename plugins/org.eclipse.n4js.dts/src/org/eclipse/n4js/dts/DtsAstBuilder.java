@@ -53,12 +53,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 
 /**
- * Guide lines:
- * <ul>
- * <li/>Create elements at a single location completely (not: create somewhere, enrich somewhere else).
- * </ul>
+ * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
-@SuppressWarnings("javadoc")
 public class DtsAstBuilder extends TypeScriptParserBaseListener {
 	final static Set<Integer> VISIT_CHILDREN_OF_RULES = java.util.Set.of(
 			RULE_statement,
@@ -79,12 +75,14 @@ public class DtsAstBuilder extends TypeScriptParserBaseListener {
 	private Script script = null;
 	private N4ClassifierDefinition currentClassifierDefinition = null;
 
+	/** Constructor */
 	public DtsAstBuilder(ManualParseTreeWalker walker) {
 		this.walker = walker;
 		this.typeRefBuilder = new DtsTypeRefBuilder();
 		walker.setParseTreeListener(this);
 	}
 
+	/** @return the script that was created during visiting the parse tree */
 	public Script getScript() {
 		return script;
 	}
