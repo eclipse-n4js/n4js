@@ -146,11 +146,7 @@ typeRefWithModifiers:
 	| thisTypeRef
 ;
 
-parameterizedTypeRef:
-	typeReference
-;
-
-typeReference
+parameterizedTypeRef
     : typeName typeGeneric?
     ;
 
@@ -185,7 +181,7 @@ queryTypeRef:
 ;
 
 importTypeRef:
-    Import '(' StringLiteral ')' ('.' typeReference)?
+    Import '(' StringLiteral ')' ('.' parameterizedTypeRef)?
 ;
 
 anonymousFormalParameterListWithDeclaredThisType :
@@ -254,7 +250,7 @@ interfaceExtendsClause
     ;
 
 classOrInterfaceTypeList
-    : typeReference (',' typeReference)*
+    : parameterizedTypeRef (',' parameterizedTypeRef)*
     ;
 
 // A.7 Enum
@@ -400,18 +396,15 @@ importAliasDeclaration
     ;
 
 exportStatement
-    : Export
-    (
-          ( As Namespace identifierName eos)
-        | '=' namespaceName eos
-        | Import identifierName '=' namespaceName eos
-        | ( Default?
-            ( declareStatement
-            | exportFromBlock eos
-            | identifierName eos
-            )
-          )
-    )
+    : Export exportStatementTail
+    ;
+
+exportStatementTail
+    : As Namespace identifierName eos                   #ExportAsNamespace
+    | '=' namespaceName eos                             #ExportEquals
+    | Import identifierName '=' namespaceName eos       #ExportImport
+    | Default? declareStatement                         #ExportDeclareStatement
+    | Default? exportFromBlock eos                      #ExportElement
     ;
 
 exportFromBlock
@@ -552,7 +545,7 @@ classElementList
     ;
 
 classExtendsClause
-    : Extends typeReference
+    : Extends parameterizedTypeRef
     ;
 
 implementsClause
@@ -573,12 +566,14 @@ constructorDeclaration
 
 propertyMemberDeclaration
     : abstractDeclaration                                                                  
-    | propertyMemberBase (
+    | propertyMemberBase
+        (
           propertyName '?'? (
               (colonSepTypeRef? initializer?)
             | callSignature block?
         )
-        | (getAccessor | setAccessor)                                               
+        | getAccessor
+        | setAccessor
     )
     ;
 
