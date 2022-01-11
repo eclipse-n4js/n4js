@@ -189,12 +189,6 @@ public class CliTools {
 	}
 
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
-	public ProcessResult npmList(Path workingDir, String... options) {
-		String[] listOptions = Lists.asList("list", options).toArray(String[]::new);
-		return npmRun(workingDir, listOptions);
-	}
-
-	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
 	public ProcessResult npmRun(Path workingDir, String... options) {
 		return withoutCorruptingGlobalState(() -> {
 			return getExProcessExecuter().npmRun(workingDir, environment, options);

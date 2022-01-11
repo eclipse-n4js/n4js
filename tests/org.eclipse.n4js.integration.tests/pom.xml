@@ -27,6 +27,7 @@ Contributors:
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
 			</plugin>
 			<plugin>
@@ -36,6 +37,42 @@ Contributors:
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${codehaus-exec-maven-plugin.version}</version>
+				<executions>
+					<!-- start verdaccio before tests of this bundle are running -->
+					<execution>
+						<id>start-verdaccio</id>
+						<phase>generate-test-resources</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>bash</executable>
+							<arguments>
+								<argument>${project.basedir}/../../releng/utils/scripts/start-verdaccio.sh</argument>
+							</arguments>
+						</configuration>
+					</execution>
+					<!-- stop verdaccio after tests of this bundle have completed -->
+					<execution>
+						<id>stop-verdaccio</id>
+						<phase>post-integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>bash</executable>
+							<arguments>
+								<argument>${project.basedir}/../../releng/utils/scripts/stop-verdaccio.sh</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
