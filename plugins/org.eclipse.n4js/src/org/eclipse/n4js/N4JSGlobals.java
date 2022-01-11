@@ -50,6 +50,13 @@ public final class N4JSGlobals {
 	 */
 	public static final String NODE_VERSION = "14.16";
 
+	/** URL of the public npm registry. */
+	public static final String NPMJS_URL = "https://registry.npmjs.org/";
+	/** URL of the local verdaccio instance. */
+	public static final String VERDACCIO_URL = "http://localhost:4873/";
+	/** Version of all test artifacts (i.e. n4js-libs, stdlib) in the local verdaccio instance. */
+	public static final String VERDACCIO_TEST_VERSION = "0.0.1";
+
 	/** Maximum value of type 'int' in N4JS. */
 	public static final int INT32_MAX_VALUE = Integer.MAX_VALUE;
 	/** Minimum value of type 'int' in N4JS. */

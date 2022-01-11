@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -141,7 +142,7 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 
 	private static String[] addVerdaccioRegistry(String[] options) {
 		return ObjectArrays.concat(new String[] {
-				"--registry", "http://localhost:4873/"
+				"--registry", N4JSGlobals.VERDACCIO_URL
 		}, options, String.class);
 	}
 
