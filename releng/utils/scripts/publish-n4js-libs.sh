@@ -68,7 +68,7 @@ echo "Repository root directory: ${REPO_ROOT_DIR}"
 echo "Current working directory: $PWD"
 
 
-echo "==== STEP 1/5: check preconditions"
+echo "==== STEP 1/6: check preconditions"
 # check that everything was prepared (n4jsc.jar available; 'yarn install' in n4js-libs; building of n4js-libs)
 if [ ! -f "../target/n4jsc.jar" ]; then
 	echo "ERROR: n4jsc.jar must have been built and copied to folder 'target' before running this script!"
@@ -115,7 +115,7 @@ if [ "$DESTINATION" != "local" ]; then
 fi
 
 
-echo "==== STEP 2/5: prepare .npmrc and environment variables"
+echo "==== STEP 2/6: prepare .npmrc and environment variables"
 # prepare .npmrc for credentials
 if [ "$DESTINATION" != "local" ]; then
 	# we made sure above that NPM_TOKEN is set
@@ -136,7 +136,7 @@ export N4_N4JSC_JAR="${REPO_ROOT_DIR}/target/n4jsc.jar"
 # NOTE: we use our own property 'gitHeadN4jsLibs' instead of the official 'gitHead' property because:
 # 1) yarn isn't updating 'gitHead' at all at the moment (see https://github.com/yarnpkg/yarn/issues/2978 ) and
 # 2) behavior of lerna w.r.t. property 'gitHead' has recently changed and we want to avoid surprises in the future.
-echo "==== STEP 3/5: Updating property 'gitHeadN4jsLibs' in package.json of all n4js-libs to new local commit ID ..."
+echo "==== STEP 3/6: Updating property 'gitHeadN4jsLibs' in package.json of all n4js-libs to new local commit ID ..."
 # obtain commit ID of 'n4js' repository (used only for informational purposes):
 N4JS_COMMIT_ID_LOCAL=`git log -1 --format="%H"`
 # obtain commit ID of folder 'n4js-libs' in the local git working copy:
@@ -149,16 +149,22 @@ SCRIPT="\"
 lerna exec -- json -I -f package.json -e $SCRIPT
 
 
-echo "==== STEP 4/5: Appending version information to README.md files ..."
+echo "==== STEP 4/6: Appending version information to README.md files ..."
 # reset README.md files to avoid appending version info multiple times in case script is run more than once
 find ./packages -name "README.md" -exec git checkout HEAD -- {} \;
 export VERSION_INFO="\n\n## Version\n\nVersion ${PUBLISH_VERSION} of \${LERNA_PACKAGE_NAME} was built from commit [${N4JS_LIBS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_LIBS_COMMIT_ID_LOCAL}/n4js-libs/packages/\${LERNA_PACKAGE_NAME}).\n\nCompiled with an N4JS compiler built from commit [${N4JS_COMMIT_ID_LOCAL}](https://github.com/eclipse/n4js/tree/${N4JS_COMMIT_ID_LOCAL}).\n\n"
 lerna exec -- 'printf "'${VERSION_INFO}'" >> README.md'
 
 
-echo "==== STEP 5/5: Now publishing with version '${PUBLISH_VERSION}' and dist-tag '${DIST_TAG}' to registry ${NPM_REGISTRY}"
+echo "==== STEP 5/6: Now publishing with version '${PUBLISH_VERSION}' and dist-tag '${DIST_TAG}' to registry ${NPM_REGISTRY}"
 echo "lerna publish --loglevel warn --no-git-tag-version --no-push --registry=${NPM_REGISTRY} --exact --yes --dist-tag=${DIST_TAG} ${PUBLISH_VERSION}"
 lerna publish --loglevel warn --no-git-tag-version --no-push --registry="${NPM_REGISTRY}" --exact --yes --dist-tag="${DIST_TAG}" "${PUBLISH_VERSION}"
+
+
+echo "==== STEP 6/6: Reverting temporary changes in lerna.json, package.json, and README.md files ..."
+git checkout HEAD -- "n4js-libs/lerna.json"
+find ./packages -name "package.json" -exec git checkout HEAD -- {} \;
+find ./packages -name "README.md" -exec git checkout HEAD -- {} \;
 
 
 echo "==== PUBLISH N4JS-LIBS - DONE"
