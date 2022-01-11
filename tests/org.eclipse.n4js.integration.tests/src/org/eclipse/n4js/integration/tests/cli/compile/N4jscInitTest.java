@@ -204,6 +204,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals("{\n"
 				+ "  \"name\": \"TestInit\",\n"
 				+ "  \"version\": \"0.0.1\",\n"
+				+ "  \"type\": \"module\",\n"
 				+ "  \"main\": \"src-gen/index.js\",\n"
 				+ "  \"scripts\": {\n"
 				+ "    \"n4jsc\": \"n4jsc\",\n"
