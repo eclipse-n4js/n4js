@@ -15,5 +15,5 @@ Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.n4js.ts.model
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.n4js.dts
-Automatic-Module-Name: org.eclipse.n4js.cli
+Automatic-Module-Name: org.eclipse.n4js.dts
 Bundle-RequiredExecutionEnvironment: JavaSE-11
