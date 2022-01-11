@@ -36,6 +36,20 @@ import com.google.common.collect.ImmutableSetMultimap;
  */
 public final class N4JSGlobals {
 
+	/**
+	 * The version of node.js that is officially supported by N4JS. This version is used for testing and if several node
+	 * versions are found on the system (e.g. when nvm is used) this version is chosen.
+	 * <p>
+	 * This string
+	 * <ul>
+	 * <li>contains one or more version segments separated by ".",
+	 * <li>contains only digits and '.' characters (in particular, it never starts with "v"),
+	 * <li>never starts or ends with "." and never contains "..".
+	 * </ul>
+	 * If it contains fewer than three version segments, all numbers for the remaining segments are deemed compatible.
+	 */
+	public static final String NODE_VERSION = "14.16";
+
 	/** Maximum value of type 'int' in N4JS. */
 	public static final int INT32_MAX_VALUE = Integer.MAX_VALUE;
 	/** Minimum value of type 'int' in N4JS. */
@@ -394,5 +408,11 @@ public final class N4JSGlobals {
 			}
 		}
 		return false;
+	}
+
+	/** Tells whether the given node.js version string is compatible with {@link #NODE_VERSION}. */
+	public static boolean isCompatibleNodeVersion(String nodeVersionStr) {
+		String trimmedStr = nodeVersionStr.startsWith("v") ? nodeVersionStr.substring(1) : nodeVersionStr;
+		return trimmedStr.equals(NODE_VERSION) || trimmedStr.startsWith(NODE_VERSION + ".");
 	}
 }

@@ -186,6 +186,40 @@ public class N4jsLibsAccess {
 	}
 
 	/**
+	 * Same as {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...)} but will install the
+	 * n4js-libs specified as (dev-)dependencies in the given package.json file. Will throw an exception if the given
+	 * package.json file has dependencies that are not n4js-libs packages.
+	 *
+	 * @param targetPath
+	 *            see {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...) here}.
+	 * @param includeDependencies
+	 *            see {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...) here}.
+	 * @param useSymbolicLinks
+	 *            see {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...) here}.
+	 * @param deleteOnExit
+	 *            see {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...) here}.
+	 * @param packageJsonFile
+	 *            the package.json file to scan for [dev]Dependencies.
+	 * @param includeDevDependencies
+	 *            whether also the devDependencies of the given package.json file should be installed.
+	 */
+	public static Map<N4JSPackageName, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
+			boolean useSymbolicLinks, boolean deleteOnExit, Path packageJsonFile, boolean includeDevDependencies)
+			throws IOException {
+		if (!packageJsonFile.getFileName().toString().equals(N4JSGlobals.PACKAGE_JSON)) {
+			throw new IllegalArgumentException("path does not denote a package.json file: " + packageJsonFile);
+		}
+		Path n4jsLibsLocation = findN4jsLibsLocation();
+		Map<N4JSPackageName, Path> toBeInstalled = new HashMap<>();
+		List<N4JSPackageName> deps = loadDepenencies(packageJsonFile.getParent(), includeDevDependencies);
+		for (N4JSPackageName projectName : deps) {
+			Path projectPath = findN4jsLib(n4jsLibsLocation, projectName, false);
+			toBeInstalled.put(projectName, projectPath);
+		}
+		return installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
+	}
+
+	/**
 	 * Installs one or more N4JS libraries (i.e. the npm packages located under "n4js-libs/packages" in the N4JS Git
 	 * repository on the local file system) by copying or symbolically linking them from their location in the local
 	 * N4JS Git repository clone.
@@ -197,9 +231,10 @@ public class N4jsLibsAccess {
 	 * @param targetPath
 	 *            where to install.
 	 * @param includeDependencies
-	 *            if dependencies of the installed N4JS libraries should be installed, too. This includes both other
-	 *            N4JS libraries or third-party dependencies that reside under folder "n4js-libs/node_modules" and will
-	 *            be installed by MWE2 workflow BuildN4jsLibs in the early stages of the N4JS build.
+	 *            whether the transitive dependencies of the installed N4JS libraries should be installed, too. This may
+	 *            include both other N4JS libraries or third-party dependencies that reside under folder
+	 *            "n4js-libs/node_modules" and will be installed by MWE2 workflow BuildN4jsLibs in the early stages of
+	 *            the N4JS build.
 	 * @param useSymbolicLinks
 	 *            whether symbolic links should be used instead of copying the files.<br>
 	 *            WARNING: if your tests changes the installed packages, this will affect a global location that will
@@ -273,13 +308,13 @@ public class N4jsLibsAccess {
 	private static Set<N4JSPackageName> loadDepenencies(Path projectPath, boolean includeDevDependencies,
 			boolean excludeNestedProjects, boolean includeDepsOfNestedProjects) throws IOException {
 		Set<N4JSPackageName> result = new LinkedHashSet<>();
-		Map<N4JSPackageName, Path> nestedProjects = getNestedProjects(projectPath);
+		Map<N4JSPackageName, Path> nodeModuleProjects = getNodeModuleProjects(projectPath);
 		// add dependencies of project at 'projectPath'
 		List<N4JSPackageName> dependencyNames = loadDepenencies(projectPath, includeDevDependencies);
 		result.addAll(dependencyNames);
 		// add dependencies of nested projects (if requested)
 		if (includeDepsOfNestedProjects) {
-			for (Path nestedProjectPath : nestedProjects.values()) {
+			for (Path nestedProjectPath : nodeModuleProjects.values()) {
 				Set<N4JSPackageName> nestedDependencyNames = loadDepenencies(nestedProjectPath,
 						false, // never include devDependencies of nested projects!
 						excludeNestedProjects, includeDepsOfNestedProjects);
@@ -288,7 +323,7 @@ public class N4jsLibsAccess {
 		}
 		// remove nested projects (if requested)
 		if (excludeNestedProjects) {
-			result.removeAll(nestedProjects.keySet());
+			result.removeAll(nodeModuleProjects.keySet());
 		}
 		return result;
 	}
@@ -319,7 +354,7 @@ public class N4jsLibsAccess {
 	/**
 	 * Returns name/path of all projects nested inside the node_modules folder of the project at the given location.
 	 */
-	private static Map<N4JSPackageName, Path> getNestedProjects(Path projectPath) {
+	private static Map<N4JSPackageName, Path> getNodeModuleProjects(Path projectPath) {
 		Map<N4JSPackageName, Path> result = new HashMap<>();
 		Path nodeModulesPath = projectPath.resolve(N4JSGlobals.NODE_MODULES);
 		if (Files.exists(nodeModulesPath)) {

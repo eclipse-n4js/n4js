@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
 
 import com.google.common.base.Joiner;
 
@@ -22,12 +21,6 @@ import com.google.common.base.Joiner;
  * Utility functions for strings
  */
 abstract public class Strings {
-
-	/** Extends {@link Function} with {@link Exception} thrown by {@link Function#apply(Object)} */
-	public interface FunctionWithException<A, R, T extends Exception> {
-		/** Invokes the given lambda */
-		R apply(A a) throws T;
-	}
 
 	/**
 	 * Converts the given iterable to a string representation of an array

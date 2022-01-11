@@ -97,6 +97,11 @@ public class TestProcessBuilder {
 
 	private String[] createCommandYarnRun(Map<String, String> output_env, String[] options) {
 		List<String> cmd = getCommands(output_env, binariesLocatorHelper.getYarnBinary(), options);
+
+		// yarn will invoke node, so node must be on the path:
+		Path nodePath = binariesLocatorHelper.getNodeBinary().toAbsolutePath().getParent();
+		prependToPathString(output_env, nodePath);
+
 		return cmd.toArray(new String[0]);
 	}
 
@@ -131,8 +136,8 @@ public class TestProcessBuilder {
 				? workingDirectory.get().resolve(executable)
 				: executable.toAbsolutePath();
 
-		String additionalPath = executableAbsolute.getParent().toString();
-		output_env.put(BinariesUtils.PATH, additionalPath);
+		Path additionalPath = executableAbsolute.getParent();
+		prependToPathString(output_env, additionalPath);
 
 		ArrayList<String> cmd = new ArrayList<>();
 
@@ -168,4 +173,16 @@ public class TestProcessBuilder {
 		return pb;
 	}
 
+	private static void prependToPathString(Map<String, String> env, Path additionalPath) {
+		String oldPathStr = env.get(BinariesUtils.PATH);
+		String newPathStr = prependToPathString(oldPathStr, additionalPath);
+		env.put(BinariesUtils.PATH, newPathStr);
+	}
+
+	private static String prependToPathString(String oldPathStr, Path additionalPath) {
+		if (oldPathStr == null || oldPathStr.isEmpty()) {
+			return additionalPath.toString();
+		}
+		return additionalPath.toString() + File.pathSeparator + oldPathStr;
+	}
 }
