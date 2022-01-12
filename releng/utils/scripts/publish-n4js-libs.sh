@@ -162,7 +162,7 @@ lerna publish --loglevel warn --no-git-tag-version --no-push --registry="${NPM_R
 
 
 echo "==== STEP 6/6: Reverting temporary changes in lerna.json, package.json, and README.md files ..."
-git checkout HEAD -- "n4js-libs/lerna.json"
+git checkout HEAD -- "lerna.json"
 find ./packages -name "package.json" -exec git checkout HEAD -- {} \;
 find ./packages -name "README.md" -exec git checkout HEAD -- {} \;
 
