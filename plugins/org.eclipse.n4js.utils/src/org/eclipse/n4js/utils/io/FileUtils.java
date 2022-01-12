@@ -137,11 +137,12 @@ public abstract class FileUtils {
 		return file.toPath();
 	}
 
-	/**
-	 * Returns with the value of {@code System.getProperty("user.home")}. Never {@code null}.
-	 */
 	private static final String getUserHomeValue() {
 		return checkNotNull(StandardSystemProperty.USER_HOME.value(), "Null for user.home system property.");
+	}
+
+	private static final String getUserHomeValueFailSafe() {
+		return StandardSystemProperty.USER_HOME.value();
 	}
 
 	/**
@@ -151,8 +152,21 @@ public abstract class FileUtils {
 	 */
 	public static Path getUserHomeFolder() {
 		final File file = new File(getUserHomeValue());
-		if (!file.exists() || !file.canWrite()) {
+		if (!file.isDirectory() || !file.canRead()) {
 			throw new RuntimeException("Cannot access user home directory under: " + file);
+		}
+		return file.toPath();
+	}
+
+	/**
+	 * Returns with the path of the user home folder or <code>null</code> if not available.
+	 *
+	 * @return the path to the user home folder or <code>null</code>.
+	 */
+	public static Path getUserHomeFolderFailSafe() {
+		final File file = new File(getUserHomeValueFailSafe());
+		if (!file.isDirectory() || !file.canRead()) {
+			return null;
 		}
 		return file.toPath();
 	}

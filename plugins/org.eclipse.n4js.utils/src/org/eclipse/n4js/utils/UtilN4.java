@@ -413,7 +413,7 @@ public class UtilN4 {
 
 	/**
 	 * Same as {@link #findN4jsRepoRootPathFailSafe()}, but throws an {@link IllegalStateException} exception if the
-	 * path cannot be obtained.
+	 * path cannot be obtained or doesn't point to an existing directory.
 	 * <p>
 	 * Not intended to be used in production (only in MWE2 work flows, tests, etc.).
 	 */

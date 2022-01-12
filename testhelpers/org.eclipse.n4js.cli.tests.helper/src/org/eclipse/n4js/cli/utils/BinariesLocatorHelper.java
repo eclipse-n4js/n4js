@@ -11,13 +11,21 @@
 package org.eclipse.n4js.cli.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.utils.ExecutableLookupUtil;
+import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.utils.io.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -137,9 +145,20 @@ public class BinariesLocatorHelper {
 		}
 		debug("Could not resolve node path from OS dynamic lookup.");
 
-		// 5. use default, whether it is correct or not.
-		info("Could not resolve node path. Falling back to default path: " + nodePathCandidate);
-		nodePathCandidate = new File(BinariesConstants.BUILT_IN_DEFAULT_NODE_PATH).toPath();
+		// 5. as a last resort iff the default does not exist, try to find a node binary managed by nvm
+		Path defaultNodePath = Path.of(BinariesConstants.BUILT_IN_DEFAULT_NODE_PATH);
+		if (!Files.exists(defaultNodePath.resolve(BinariesConstants.NODE_BINARY_NAME))) {
+			nodePathCandidate = findNodeManagedByNVM();
+			if (nodePathCandidate != null) {
+				info("Obtained Node.js binary managed by NVM: " + nodePathCandidate);
+				return nodePathCandidate;
+			}
+			debug("Could not find a Node.js binary managed by NVM.");
+		}
+
+		// 6. use default, whether it is correct or not.
+		info("Could not resolve node path. Falling back to default path: " + defaultNodePath);
+		nodePathCandidate = defaultNodePath;
 
 		return nodePathCandidate;
 	}
@@ -261,6 +280,58 @@ public class BinariesLocatorHelper {
 		return javaPathCandidate;
 	}
 
+	/**
+	 * Returns the node binary selected via nvm's environment variable {@code NVM_BIN} or the binary of the latest node
+	 * version managed by nvm.
+	 */
+	private Path findNodeManagedByNVM() {
+		String nvmBin = System.getenv("NVM_BIN");
+		Path nvmBinPath = nvmBin != null ? Path.of(nvmBin) : null;
+		if (nvmBinPath != null && Files.isExecutable(nvmBinPath)) {
+			return nvmBinPath.getParent();
+		} else {
+			String nvmDir = System.getenv("NVM_DIR");
+			Path nvmDirPath = nvmDir != null ? Path.of(nvmDir) : null;
+			if (nvmDirPath == null) {
+				Path homePath = FileUtils.getUserHomeFolderFailSafe();
+				nvmDirPath = homePath != null ? homePath.resolve(".nvm") : null;
+			}
+			Path nvmInstallPath = nvmDirPath != null ? nvmDirPath.resolve("versions").resolve("node") : null;
+			if (nvmInstallPath != null && Files.isDirectory(nvmInstallPath)) {
+				// find all installed node versions managed by nvm
+				List<Path> installedVersions;
+				try {
+					installedVersions = Files.list(nvmInstallPath)
+							.filter(p -> p.getFileName().toString().startsWith("v"))
+							.collect(Collectors.toList());
+				} catch (IOException e) {
+					installedVersions = Collections.emptyList();
+				}
+				// filter down to compatible versions
+				List<Path> compatibleVersions = installedVersions.stream()
+						.filter(p -> N4JSGlobals.isCompatibleNodeVersion(p.getFileName().toString()))
+						.collect(Collectors.toList());
+				if (!compatibleVersions.isEmpty()) {
+					// choose the latest compatible version
+					Collections.sort(compatibleVersions, new Comparator<Path>() {
+						@Override
+						public int compare(Path p1, Path p2) {
+							return compareNodeVersionStrings(
+									p1.getFileName().toString(),
+									p2.getFileName().toString());
+						}
+					});
+					Path latestVersion = compatibleVersions.get(compatibleVersions.size() - 1);
+					Path latestVersionBinary = latestVersion.resolve("bin").resolve(BinariesConstants.NODE_BINARY_NAME);
+					if (Files.isExecutable(latestVersionBinary)) {
+						return latestVersionBinary.getParent();
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	private String lookForBinary(String binaryName) {
 		ProcessResult processResult = processExecutor.createAndExecute(
 				ExecutableLookupUtil.getExebutableLookupProcessBuilder(binaryName), "look for " + binaryName,
@@ -354,5 +425,28 @@ public class BinariesLocatorHelper {
 		if (LOG_TO_STD_OUT) {
 			System.out.println(message);
 		}
+	}
+
+	private static int compareNodeVersionStrings(String version1, String version2) {
+		if (version1.startsWith("v")) {
+			version1 = version1.substring(1);
+		}
+		if (version2.startsWith("v")) {
+			version2 = version2.substring(1);
+		}
+		String[] segments1 = version1.split("\\.");
+		String[] segments2 = version2.split("\\.");
+		int l1 = segments1.length;
+		int l2 = segments2.length;
+		int l = Math.max(l1, l2);
+		for (int i = 0; i < l; i++) {
+			long num1 = i < l1 ? Long.parseUnsignedLong(segments1[i].trim()) : 0L;
+			long num2 = i < l2 ? Long.parseUnsignedLong(segments2[i].trim()) : 0L;
+			int cmp = Long.compare(num1, num2);
+			if (cmp != 0) {
+				return cmp;
+			}
+		}
+		return 0;
 	}
 }

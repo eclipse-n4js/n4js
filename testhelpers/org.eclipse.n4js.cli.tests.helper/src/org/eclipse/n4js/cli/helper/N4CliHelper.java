@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.utils.BinariesUtils;
 import org.eclipse.n4js.json.JSONStandaloneSetup;
+import org.eclipse.n4js.utils.RunnableWithException;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
@@ -390,6 +391,41 @@ public class N4CliHelper {
 	public static void copyN4jsLibsToLocation(Path location, Predicate<N4JSPackageName> n4jsLibrariesPredicate)
 			throws IOException {
 
+		doWithGlobalStateBackup(() -> {
+
+			N4jsLibsAccess.installN4jsLibs(
+					location,
+					true,
+					false, // do not use symbolic links (because some tests modify the files in the destination folder)
+					false, // do not delete on exit (because tests using this method are responsible for cleaning up)
+					libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
+		});
+	}
+
+	/**
+	 * Copies the n4js libraries specified as dependencies of the given package.json file (including dev-dependencies)
+	 * to the given testing workspace {@code location}.
+	 *
+	 * For details, see {@link N4jsLibsAccess#installN4jsLibs(Path, boolean, boolean, boolean, Path, boolean)}.
+	 *
+	 * @throws IOException
+	 *             in case the copying is not successful.
+	 */
+	public static void copyN4jsLibsToLocation(Path location, Path packageJsonFile) throws IOException {
+
+		doWithGlobalStateBackup(() -> {
+
+			N4jsLibsAccess.installN4jsLibs(
+					location,
+					true,
+					false, // do not use symbolic links (because some tests modify the files in the destination folder)
+					false, // do not delete on exit (because tests using this method are responsible for cleaning up)
+					packageJsonFile,
+					true);
+		});
+	}
+
+	private static <T extends Exception> void doWithGlobalStateBackup(RunnableWithException<T> runnable) throws T {
 		GlobalStateMemento originalGlobalState = null;
 		if (!JSONStandaloneSetup.isSetUp()) {
 			originalGlobalState = GlobalRegistries.makeCopyOfGlobalState();
@@ -397,12 +433,7 @@ public class N4CliHelper {
 		}
 
 		try {
-			N4jsLibsAccess.installN4jsLibs(
-					location,
-					true,
-					false, // do not use symbolic links (because some tests modify the files in the destination folder)
-					false, // do not delete on exit (because tests using this method are responsible for cleaning up)
-					libName -> !N4JS_LIBS_BLACKLIST.contains(libName) && n4jsLibrariesPredicate.test(libName));
+			runnable.run();
 		} finally {
 			if (originalGlobalState != null) {
 				// Restore the original global state (if we had to change it)
@@ -417,5 +448,4 @@ public class N4CliHelper {
 			}
 		}
 	}
-
 }

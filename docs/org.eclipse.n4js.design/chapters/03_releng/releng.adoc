@@ -172,7 +172,8 @@ You may have to increase the memory for maven via `export MAVEN_OPTS="-Xmx2048m"
 Available optional maven profiles are:
 
 [horizontal]
-execute-basic-tests::           run basic tests (e.g. `org.eclipse.n4js.lang.tests`; also includes `org.eclipse.n4js.integration.tests`); active by default, use `-DdoNotExecuteBasicTests` to deactivate
+execute-basic-tests::           run basic tests (e.g. `org.eclipse.n4js.lang.tests`); active by default, use `-DdoNotExecuteBasicTests` to deactivate
+execute-integration-tests::     run tests in bundle `org.eclipse.n4js.integration.tests`
 execute-ecma-tests::            run ECMA test suite
 execute-smoke-tests::           run generated tests using corrupted source code as input
 execute-accesscontrol-tests::   run generated tests for checking accessibility of class/interface members
