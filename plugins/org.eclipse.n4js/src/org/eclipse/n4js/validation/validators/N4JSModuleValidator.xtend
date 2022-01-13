@@ -40,6 +40,7 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.utils.URIUtils
 
 /**
  * Contains module-level validations, i.e. validations that need to be checked once per module / file.
@@ -94,7 +95,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def void checkUniqueName(Script script) {
-		if (script.eResource.URI.fileExtension != N4JSGlobals.JS_FILE_EXTENSION) {
+		if (URIUtils.fileExtension(script.eResource.URI) != N4JSGlobals.JS_FILE_EXTENSION) {
 			script.checkUniqueName(script.module);
 		}
 	}
@@ -138,7 +139,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 		val resourceURIs = descriptions.map[
 			EObjectURI.trimFragment
 		].filter[
-			it != EcoreUtil2.getPlatformResourceOrNormalizedURI(resource) && fileExtension != N4JSGlobals.JS_FILE_EXTENSION
+			it != EcoreUtil2.getPlatformResourceOrNormalizedURI(resource) && URIUtils.fileExtension(it) != N4JSGlobals.JS_FILE_EXTENSION
 		].toSet;
 
 		if (resourceURIs.size > 0) {

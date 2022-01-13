@@ -20,6 +20,7 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.naming.QualifiedName
+import org.eclipse.n4js.utils.URIUtils
 
 /**
  * Utility class to calculate the qualified name of the resource depending on the project configuration.
@@ -55,24 +56,25 @@ class ModuleNameComputer {
 	 */
 	def public getQualifiedModuleName(Notifier context, URI uri) {
 		val sourceContainer = workspaceAccess.findSourceFolderContaining(context, uri);
+		val fileExtension = URIUtils.fileExtension(uri);
 		if (sourceContainer !== null) {
 			val location = sourceContainer.pathAsFileURI.withTrailingPathDelimiter.toURI
 			if(uri.uriStartsWith(location)) {
 				var relativeURI = uri.deresolve(location)
-				if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == uri.fileExtension.toLowerCase)) {
-					relativeURI = relativeURI.trimFileExtension.trimFileExtension
+				if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == fileExtension.toLowerCase)) {
+					relativeURI = URIUtils.trimFileExtension(URIUtils.trimFileExtension(relativeURI));
 				} else {
-					relativeURI = relativeURI.trimFileExtension
+					relativeURI = URIUtils.trimFileExtension(relativeURI);
 				}
 				return QualifiedName.create(relativeURI.segments)
 			}
-		} else if (uri.segmentCount == 1 && uri.fileExtension !== null) {
+		} else if (uri.segmentCount == 1 && fileExtension !== null) {
 			// Special case of synthesized test resources where we don't have a source container.
 			// In this case we deal with top-level test resources.
 			if (ResourceType.xtHidesOtherExtension(uri) ||
-				(N4JSGlobals.XT_FILE_EXTENSION == uri.fileExtension.toLowerCase)) {
+				(N4JSGlobals.XT_FILE_EXTENSION == fileExtension.toLowerCase)) {
 				// if applicable, remove double-file-extension
-				return QualifiedName.create(uri.trimFileExtension.trimFileExtension.segments)
+				return QualifiedName.create(URIUtils.trimFileExtension(URIUtils.trimFileExtension(uri)).segments)
 			}
 		}
 		return uri.createDefaultQualifiedName
@@ -80,7 +82,7 @@ class ModuleNameComputer {
 
 	/** Called only for URIs without container, e.g. from tests, or built-ins. Hardcoded values should be fine for those cases.*/
 	def private createDefaultQualifiedName(URI uri) {
-		var segmentList = uri.trimFileExtension.segmentsList
+		var segmentList = URIUtils.trimFileExtension(uri).segmentsList
 		val srcFolder = Math.max(segmentList.indexOf('src'), segmentList.indexOf('src-test'))
 		if (srcFolder != -1) {
 			segmentList = segmentList.subList(srcFolder + 1, segmentList.size)

@@ -25,6 +25,7 @@ import org.eclipse.n4js.cli.init.InitResources.IndexFile;
 import org.eclipse.n4js.cli.init.InitResources.PackageJsonContents;
 import org.eclipse.n4js.cli.init.InitResources.YarnPackageJsonContents;
 import org.eclipse.n4js.cli.init.N4jscInit.WorkingDirState;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Objects;
@@ -262,7 +263,7 @@ public class InitDialog {
 		if (!Strings.isNullOrEmpty(answers.main_module) && !Objects.equal(answers.main_module, packjson.main)) {
 			Pair<URI, URI> moduleNames = interpretModuleNames(answers.main_module);
 			packjson.main = moduleNames.getKey().toFileString();
-			packjson.n4js.mainModule = moduleNames.getValue().trimFileExtension().toFileString();
+			packjson.n4js.mainModule = URIUtils.trimFileExtension(moduleNames.getValue()).toFileString();
 			config.files.add(new IndexFile(moduleNames.getValue().toFileString()));
 			packjson.userModifications.add("main");
 			packjson.userModifications.add("n4js");

@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.common.hash.Funnels;
 import com.google.common.hash.HashFunction;
@@ -38,7 +39,7 @@ public class HashedFileContent {
 	/** Create a fingerprint of the given file at the given location. */
 	public HashedFileContent(URI uri, File file) throws IOException {
 		this.uri = uri;
-		String ext = uri.fileExtension();
+		String ext = URIUtils.fileExtension(uri);
 		if (ext == null || "ts".equals(ext) || "js".equals(ext) || "jsx".equals(ext) || "map".equals(ext)
 				|| "md".equals(ext)
 				|| "hbs".equals(ext)

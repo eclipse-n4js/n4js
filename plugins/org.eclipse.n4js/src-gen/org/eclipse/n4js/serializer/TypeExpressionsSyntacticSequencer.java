@@ -83,17 +83,21 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	}
 
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     ('{' 'function' '(') | '('
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) '('* (ambiguity) fpars+=TAnonymousFormalParameter
+	 
+	 * </pre>
 	 */
 	protected void emit_ArrowFunctionTypeExpression_FunctionTypeExpressionOLD_LeftParenthesisKeyword_0_0_1_or___LeftCurlyBracketKeyword_1_FunctionKeyword_3_LeftParenthesisKeyword_5__(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     '+'?
 	 *
@@ -112,12 +116,15 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) astValue=LEGACY_OCTAL_INT
 	 *     (rule start) (ambiguity) astValue=OCTAL_INT
 	 *     (rule start) (ambiguity) astValue=SCIENTIFIC_INT
+	 
+	 * </pre>
 	 */
 	protected void emit_NumericLiteralTypeRef_PlusSignKeyword_0_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     '('*
 	 *
@@ -141,7 +148,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) '{' 'function' '(' ')' ':' returnTypeRef=TypeRef
 	 *     (rule start) (ambiguity) '{' 'function' '(' ')' '}' (rule start)
 	 *     (rule start) (ambiguity) '{' 'function' '(' ')' '}' followedByQuestionMark?='?'
-	 *     (rule start) (ambiguity) '{' 'function' '<' ownedTypeVars+=TypeVariable
+	 *     (rule start) (ambiguity) '{' 'function' '&lt;' ownedTypeVars+=TypeVariable
 	 *     (rule start) (ambiguity) (('{' 'function' '(') | '(') fpars+=TAnonymousFormalParameter
 	 *     (rule start) (ambiguity) arrayNTypeExpression?='['
 	 *     (rule start) (ambiguity) astNamespaceLikeRefs+=NamespaceLikeRef
@@ -156,12 +163,15 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
 	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
+	 
+	 * </pre>
 	 */
 	protected void emit_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     '('+
 	 *
@@ -171,12 +181,15 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     (rule start) (ambiguity) {IntersectionTypeExpression.typeRefs+=}
 	 *     (rule start) (ambiguity) {ParameterizedTypeRef.declaredTypeArgs+=}
 	 *     (rule start) (ambiguity) {UnionTypeExpression.typeRefs+=}
+	 
+	 * </pre>
 	 */
 	protected void emit_PrimaryTypeExpression_LeftParenthesisKeyword_4_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	
 	/**
+	 * <pre>
 	 * Ambiguous syntax:
 	 *     (';' | ',')?
 	 *
@@ -185,6 +198,8 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	 *     astStructuralMembers+=TStructMember (ambiguity) '}' dynamic?='+'
 	 *     astStructuralMembers+=TStructMember (ambiguity) '}' followedByQuestionMark?='?'
 	 *     astStructuralMembers+=TStructMember (ambiguity) astStructuralMembers+=TStructMember
+	 
+	 * </pre>
 	 */
 	protected void emit_TStructMemberList___CommaKeyword_1_1_1_or_SemicolonKeyword_1_1_0__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);

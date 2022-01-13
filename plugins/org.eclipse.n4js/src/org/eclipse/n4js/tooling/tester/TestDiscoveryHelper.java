@@ -51,6 +51,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ResourceNameComputer;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
@@ -473,7 +474,7 @@ public class TestDiscoveryHelper {
 
 	private boolean isTestFile(final URI uri) {
 		return fileExtensionRegistry.getFileExtensions(FileExtensionType.TESTABLE_FILE_EXTENSION)
-				.contains(uri.fileExtension());
+				.contains(URIUtils.fileExtension(uri));
 	}
 
 	private boolean isTestModule(final ResourceSet resourceSet, final IResourceDescription module) {

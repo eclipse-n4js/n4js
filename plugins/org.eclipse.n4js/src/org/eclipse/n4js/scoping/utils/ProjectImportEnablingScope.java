@@ -30,6 +30,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.Strings;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
@@ -153,8 +154,8 @@ public class ProjectImportEnablingScope implements IScope {
 		if (size == 2) {
 			final IEObjectDescription first = result.get(0);
 			final IEObjectDescription second = result.get(1);
-			final String firstExtension = first.getEObjectURI().fileExtension();
-			final String secondExtension = second.getEObjectURI().fileExtension();
+			final String firstExtension = URIUtils.fileExtension(first.getEObjectURI());
+			final String secondExtension = URIUtils.fileExtension(second.getEObjectURI());
 			IEObjectDescription n4jsdObjDescr = null;
 			IEObjectDescription jsObjDescr = null;
 

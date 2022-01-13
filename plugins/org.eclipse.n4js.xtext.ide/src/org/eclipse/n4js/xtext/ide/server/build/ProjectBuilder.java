@@ -666,13 +666,14 @@ public class ProjectBuilder {
 	/**
 	 * Scans the file system for source files, going over all source folders.
 	 */
-	private Set<URI> scanForSourceFiles() {
+	protected Set<URI> scanForSourceFiles() {
 		Set<URI> result = new HashSet<>();
 		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
 			List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
 			for (URI srcFileUri : allSourceFileUris) {
 				if (!srcFileUri.hasTrailingPathSeparator()) {
-					if (resourceServiceProviders.getResourceServiceProvider(srcFileUri) != null) {
+					IResourceServiceProvider rsp = resourceServiceProviders.getResourceServiceProvider(srcFileUri);
+					if (rsp != null) {
 						result.add(srcFileUri);
 					}
 				}
