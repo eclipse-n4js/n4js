@@ -33,6 +33,7 @@ import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
+import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
 import org.eclipse.n4js.n4JS.Script;
 
 /**
@@ -150,7 +151,7 @@ public class MainTypeScriptParserTest {
 		ParseStats stats = parse(PARSE_SINGLE_FILE);
 
 		ManualParseTreeWalker walker = new ManualParseTreeWalker(stats.tree);
-		DtsAstBuilder astBuilder = new DtsAstBuilder(walker);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(walker);
 		walker.start();
 
 		Script script = astBuilder.getScript();

@@ -1230,15 +1230,15 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitGeneratorMethod(TypeScriptParser.GeneratorMethodContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#generatorFunctionDeclaration}.
+	 * Enter a parse tree produced by {@link TypeScriptParser#generatorFunctionExpressionDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterGeneratorFunctionDeclaration(TypeScriptParser.GeneratorFunctionDeclarationContext ctx);
+	void enterGeneratorFunctionExpressionDeclaration(TypeScriptParser.GeneratorFunctionExpressionDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#generatorFunctionDeclaration}.
+	 * Exit a parse tree produced by {@link TypeScriptParser#generatorFunctionExpressionDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitGeneratorFunctionDeclaration(TypeScriptParser.GeneratorFunctionDeclarationContext ctx);
+	void exitGeneratorFunctionExpressionDeclaration(TypeScriptParser.GeneratorFunctionExpressionDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#generatorBlock}.
 	 * @param ctx the parse tree
@@ -1865,18 +1865,6 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDeleteExpression(TypeScriptParser.DeleteExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code GeneratorsFunctionExpression}
-	 * labeled alternative in {@link TypeScriptParser#singleExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterGeneratorsFunctionExpression(TypeScriptParser.GeneratorsFunctionExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code GeneratorsFunctionExpression}
-	 * labeled alternative in {@link TypeScriptParser#singleExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitGeneratorsFunctionExpression(TypeScriptParser.GeneratorsFunctionExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ArrowFunctionExpression}
 	 * labeled alternative in {@link TypeScriptParser#singleExpression}.

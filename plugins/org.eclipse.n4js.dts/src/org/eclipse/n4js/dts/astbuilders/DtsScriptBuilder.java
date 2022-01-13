@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.dts;
+package org.eclipse.n4js.dts.astbuilders;
 
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classElement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classElementList;
@@ -21,41 +21,51 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMember;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMemberList;
 
+import java.util.List;
 import java.util.Set;
-import java.util.Stack;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
+import org.eclipse.n4js.dts.ManualParseTreeWalker;
+import org.eclipse.n4js.dts.ParserContextUtil;
+import org.eclipse.n4js.dts.TypeScriptParser;
+import org.eclipse.n4js.dts.TypeScriptParserBaseListener;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
-import org.eclipse.n4js.dts.TypeScriptParser.InterfaceExtendsClauseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
-import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertySignaturContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.FormalParameter;
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
+import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
+import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 
 /**
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
-public class DtsAstBuilder extends TypeScriptParserBaseListener {
+public class DtsScriptBuilder extends TypeScriptParserBaseListener {
 	final static Set<Integer> VISIT_CHILDREN_OF_RULES = java.util.Set.of(
 			RULE_statement,
 			RULE_statementList,
@@ -69,16 +79,21 @@ public class DtsAstBuilder extends TypeScriptParserBaseListener {
 			RULE_typeMemberList);
 
 	private final ManualParseTreeWalker walker;
-	private final DtsTypeRefBuilder typeRefBuilder;
-	private final Stack<N4NamespaceDeclaration> currentNamespace = new Stack<>();
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder();
+	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder();
+	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder();
+	private final DtsNamespaceBuilder namespaceBuilder = new DtsNamespaceBuilder();
+	private final DtsClassBuilder classBuilder = new DtsClassBuilder();
+	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder();
+	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder();
+	private final DtsExpressionBuilder expressionBuilder = new DtsExpressionBuilder();
 
 	private Script script = null;
-	private N4ClassifierDefinition currentClassifierDefinition = null;
+	private final N4ClassifierDefinition currentClassifierDefinition = null;
 
 	/** Constructor */
-	public DtsAstBuilder(ManualParseTreeWalker walker) {
+	public DtsScriptBuilder(ManualParseTreeWalker walker) {
 		this.walker = walker;
-		this.typeRefBuilder = new DtsTypeRefBuilder();
 		walker.setParseTreeListener(this);
 	}
 
@@ -87,12 +102,8 @@ public class DtsAstBuilder extends TypeScriptParserBaseListener {
 		return script;
 	}
 
-	void addToScriptOrNamespace(NamespaceElement elem) {
-		if (currentNamespace.empty()) {
-			script.getScriptElements().add(elem);
-		} else {
-			currentNamespace.peek().getOwnedElementsRaw().add(elem);
-		}
+	void addToScript(NamespaceElement elem) {
+		script.getScriptElements().add(elem);
 	}
 
 	@Override
@@ -117,104 +128,89 @@ public class DtsAstBuilder extends TypeScriptParserBaseListener {
 
 	@Override
 	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
-		N4NamespaceDeclaration nd = N4JSFactory.eINSTANCE.createN4NamespaceDeclaration();
+		N4NamespaceDeclaration nd = namespaceBuilder.consume(ctx);
 		nd.setName(ctx.namespaceName().getText());
-
-		boolean isExported = ParserContextUtil.isExported(ctx);
-		if (isExported) {
-			nd.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		}
-		if (isExported && currentNamespace.empty()) {
-			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
-			ed.setExportedElement(nd);
-			addToScriptOrNamespace(ed);
-		} else {
-			addToScriptOrNamespace(nd);
-		}
-
-		currentNamespace.push(nd);
-
-		walker.enqueue(ctx.block().statementList());
-	}
-
-	@Override
-	public void exitNamespaceDeclaration(NamespaceDeclarationContext ctx) {
-		currentNamespace.pop();
+		addAndHandleExported(ctx, nd);
 	}
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-	}
 
-	@Override
-	public void exitVariableStatement(VariableStatementContext ctx) {
 	}
 
 	@Override
 	public void enterInterfaceDeclaration(InterfaceDeclarationContext ctx) {
-		N4InterfaceDeclaration id = N4JSFactory.eINSTANCE.createN4InterfaceDeclaration();
-		id.setName(ctx.identifierName().getText());
-		id.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
-		boolean isExported = ParserContextUtil.isExported(ctx);
-		if (isExported) {
-			id.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		}
-		if (isExported && currentNamespace.empty()) {
-			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
-			ed.setExportedElement(id);
-			addToScriptOrNamespace(ed);
-		} else {
-			addToScriptOrNamespace(id);
-		}
-		currentClassifierDefinition = id;
-
-		InterfaceExtendsClauseContext extendsClause = ctx.interfaceExtendsClause();
-		if (extendsClause != null && extendsClause.classOrInterfaceTypeList() != null
-				&& extendsClause.classOrInterfaceTypeList().parameterizedTypeRef() != null
-				&& !extendsClause.classOrInterfaceTypeList().parameterizedTypeRef().isEmpty()) {
-
-			ParameterizedTypeRefContext extendsTypeRefCtx = extendsClause.classOrInterfaceTypeList()
-					.parameterizedTypeRef().get(0);
-
-			ParameterizedTypeRef pTypeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
-			pTypeRef.setDeclaredTypeAsText(extendsTypeRefCtx.typeName().getText());
-			TypeReferenceNode<ParameterizedTypeRef> typeRefNode = N4JSFactory.eINSTANCE.createTypeReferenceNode();
-			typeRefNode.setTypeRefInAST(pTypeRef);
-			id.getSuperInterfaceRefs().add(typeRefNode);
-		}
-
-		walker.enqueue(ctx.typeBody().typeMemberList());
-	}
-
-	@Override
-	public void exitInterfaceDeclaration(InterfaceDeclarationContext ctx) {
-		currentClassifierDefinition = null;
+		N4InterfaceDeclaration id = interfaceBuilder.consume(ctx);
+		addAndHandleExported(ctx, id);
 	}
 
 	@Override
 	public void enterClassDeclaration(ClassDeclarationContext ctx) {
-		N4ClassDeclaration cd = N4JSFactory.eINSTANCE.createN4ClassDeclaration();
-		cd.setName(ctx.identifierOrKeyWord().getText());
-		cd.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
-		boolean isExported = ParserContextUtil.isExported(ctx);
-		if (isExported) {
-			cd.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		}
-		if (isExported && currentNamespace.empty()) {
-			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
-			ed.setExportedElement(cd);
-			addToScriptOrNamespace(ed);
-		} else {
-			addToScriptOrNamespace(cd);
-		}
-		currentClassifierDefinition = cd;
-
-		walker.enqueue(ctx.classTail().classElementList());
+		N4ClassDeclaration cd = classBuilder.consume(ctx);
+		addAndHandleExported(ctx, cd);
 	}
 
 	@Override
-	public void exitClassDeclaration(ClassDeclarationContext ctx) {
-		currentClassifierDefinition = null;
+	public void enterEnumDeclaration(EnumDeclarationContext ctx) {
+		N4EnumDeclaration ed = enumBuilder.consume(ctx);
+		addAndHandleExported(ctx, ed);
+	}
+
+	@Override
+	public void enterTypeAliasDeclaration(TypeAliasDeclarationContext ctx) {
+		N4TypeAliasDeclaration tad = N4JSFactory.eINSTANCE.createN4TypeAliasDeclaration();
+		tad.setName(ctx.identifierName().getText());
+		tad.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
+		boolean isExported = ParserContextUtil.isExported(ctx);
+		if (isExported) {
+			tad.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
+			ed.setExportedElement(tad);
+			addToScript(ed);
+		} else {
+			addToScript(tad);
+		}
+
+		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.typeRef());
+		tad.setDeclaredTypeRefNode(trn);
+		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
+		tad.getTypeVars().addAll(typeVars);
+	}
+
+	@Override
+	public void enterFunctionDeclaration(FunctionDeclarationContext ctx) {
+		FunctionDeclaration fd = N4JSFactory.eINSTANCE.createFunctionDeclaration();
+		fd.setName(ctx.identifierName().getText());
+		fd.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
+		boolean isExported = ParserContextUtil.isExported(ctx);
+		if (isExported) {
+			fd.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
+			ed.setExportedElement(fd);
+			addToScript(ed);
+		} else {
+			addToScript(fd);
+		}
+
+		fd.setGenerator(ctx.Multiply() != null);
+		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
+		fd.setDeclaredReturnTypeRefNode(trn);
+		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.callSignature().typeParameters());
+		fd.getTypeVars().addAll(typeVars);
+		List<FormalParameter> fPars = formalParametersBuilder.consume(ctx.callSignature().parameterBlock());
+		fd.getFpars().addAll(fPars);
+	}
+
+	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement id) {
+		boolean isExported = ParserContextUtil.isExported(ctx);
+		if (isExported) {
+			((ModifiableElement) id).getDeclaredModifiers().add(N4Modifier.PUBLIC);
+			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
+			ed.setExportedElement(id);
+			addToScript(ed);
+		} else {
+			addToScript(id);
+		}
 	}
 
 	@Override
@@ -233,10 +229,6 @@ public class DtsAstBuilder extends TypeScriptParserBaseListener {
 	}
 
 	@Override
-	public void exitPropertySignatur(PropertySignaturContext ctx) {
-	}
-
-	@Override
 	public void enterPropertyMemberDeclaration(PropertyMemberDeclarationContext ctx) {
 		if (ctx.propertyMemberBase() != null && ctx.propertyName() != null) {
 			// this is a property
@@ -248,9 +240,4 @@ public class DtsAstBuilder extends TypeScriptParserBaseListener {
 			currentClassifierDefinition.getOwnedMembersRaw().add(fd);
 		}
 	}
-
-	@Override
-	public void exitPropertyMemberDeclaration(PropertyMemberDeclarationContext ctx) {
-	}
-
 }

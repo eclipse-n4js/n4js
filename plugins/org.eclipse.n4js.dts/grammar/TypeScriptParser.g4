@@ -350,7 +350,6 @@ declarationStatement
     | interfaceDeclaration //ADDED
     | typeAliasDeclaration //ADDED
     | functionDeclaration
-    | generatorFunctionDeclaration
     | classDeclaration
     | enumDeclaration      //ADDED
     | variableStatement
@@ -523,7 +522,7 @@ debuggerStatement
     ;
 
 functionDeclaration
-    : Function identifierName callSignature block? SemiColon?
+    : Function '*'? identifierName callSignature block? SemiColon?
     ;
 
 //Ovveride ECMA
@@ -590,7 +589,7 @@ generatorMethod
     : '*'?  Identifier parameterBlock block
     ;
 
-generatorFunctionDeclaration
+generatorFunctionExpressionDeclaration
     : Function '*' Identifier? parameterBlock block
     ;
 
@@ -747,7 +746,7 @@ expressionSequence
     ;
 
 functionExpressionDeclaration
-    : Function Identifier? parameterBlock colonSepTypeRef? block
+    : Function '*'? Identifier? parameterBlock colonSepTypeRef? block
     ;
 
 singleExpression
@@ -784,7 +783,6 @@ singleExpression
     | singleExpression templateStringLiteral                                 # TemplateStringExpression  // ECMAScript 6
     | iteratorBlock                                                          # IteratorsExpression // ECMAScript 6
     | generatorBlock                                                         # GeneratorsExpression // ECMAScript 6
-    | generatorFunctionDeclaration                                           # GeneratorsFunctionExpression // ECMAScript 6
     | yieldStatement                                                         # YieldExpression // ECMAScript 6
     | This                                                                   # ThisExpression
     | identifierName                                                         # IdentifierExpression
