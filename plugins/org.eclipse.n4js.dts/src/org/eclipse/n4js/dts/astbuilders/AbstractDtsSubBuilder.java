@@ -27,10 +27,14 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 		extends TypeScriptParserBaseListener {
 
 	final Set<Integer> VISIT_CHILDREN_OF_RULES = getVisitChildrenOfRules();
-
 	final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder();
+
 	ManualParseTreeWalker walker;
 	R result = null;
+
+	protected Set<Integer> getVisitChildrenOfRules() {
+		return Collections.emptySet();
+	}
 
 	/** Consumes the given context and all its children. */
 	public R consume(T ctx) {
@@ -43,10 +47,6 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 		R finalResult = result;
 		result = null;
 		return finalResult;
-	}
-
-	protected Set<Integer> getVisitChildrenOfRules() {
-		return Collections.emptySet();
 	}
 
 	@Override
