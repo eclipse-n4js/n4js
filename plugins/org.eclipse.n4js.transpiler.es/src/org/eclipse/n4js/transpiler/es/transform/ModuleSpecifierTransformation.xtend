@@ -14,17 +14,21 @@ import com.google.common.base.Joiner
 import com.google.inject.Inject
 import java.util.Arrays
 import java.util.Objects
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.utils.N4JSPackageName
+import org.eclipse.xtext.naming.IQualifiedNameConverter
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 
 /**
  * Converts the module specifiers of import statements from N4JS to ES6.
@@ -38,6 +42,12 @@ class ModuleSpecifierTransformation extends Transformation {
 
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
+
+	@Inject
+	private IQualifiedNameConverter qualifiedNameConverter;
+
+	@Inject
+	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	private String[] localModulePath = null; // will be set in #analyze()
 
@@ -180,9 +190,41 @@ class ModuleSpecifierTransformation extends Transformation {
 	}
 
 	def protected String getActualFileExtension(TModule targetModule) {
-		val ext = targetModule.eResource?.URI?.fileExtension;
-		if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext)) {
-			return ext;
+		val targetResource = targetModule.eResource;
+		if (targetResource !== null) {
+			val ext = targetResource.URI?.fileExtension;
+
+			if (ext == N4JSGlobals.N4JSD_FILE_EXTENSION) {
+				// in case of .n4jsd files, we have to inspect the file being described by the .n4jsd file:
+				return getActualFileExtensionForN4jsdFile(targetResource, targetModule);
+			}
+
+			if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext)) {
+				return ext;
+			}
+		}
+		return N4JSGlobals.JS_FILE_EXTENSION;
+	}
+
+	// FIXME improve implementation & reconsider performance!!!
+	def protected String getActualFileExtensionForN4jsdFile(Resource targetResource, TModule targetModule) {
+		val targetQN = qualifiedNameConverter.toQualifiedName(targetModule.getQualifiedName());
+		val index = resourceDescriptionsProvider.getResourceDescriptions(targetResource);
+		val matchingTModules = index.getExportedObjects(TypesPackage.Literals.TMODULE, targetQN, false);
+		var boolean gotCJS = false;
+		var boolean gotMJS = false;
+		for (desc : matchingTModules) {
+			val ext = desc.EObjectURI.fileExtension;
+			if (ext == N4JSGlobals.CJS_FILE_EXTENSION) {
+				gotCJS = true;
+			} else if (ext == N4JSGlobals.MJS_FILE_EXTENSION) {
+				gotMJS = true;
+			}
+		}
+		if (gotMJS) {
+			return N4JSGlobals.MJS_FILE_EXTENSION;
+		} else if (gotCJS) {
+			return N4JSGlobals.CJS_FILE_EXTENSION;
 		}
 		return N4JSGlobals.JS_FILE_EXTENSION;
 	}
