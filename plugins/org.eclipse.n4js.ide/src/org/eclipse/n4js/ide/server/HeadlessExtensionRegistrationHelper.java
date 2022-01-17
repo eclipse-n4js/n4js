@@ -10,8 +10,10 @@
  */
 package org.eclipse.n4js.ide.server;
 
+import static org.eclipse.n4js.N4JSGlobals.CJS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.JSX_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.MJS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSX_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JS_FILE_EXTENSION;
@@ -81,6 +83,8 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 		// Register ECMAScript subgenerator
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JS_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator, CJS_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator, MJS_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSX_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, JSX_FILE_EXTENSION);
 
