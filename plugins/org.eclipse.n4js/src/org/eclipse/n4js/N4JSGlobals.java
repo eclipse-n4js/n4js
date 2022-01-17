@@ -10,14 +10,9 @@
  */
 package org.eclipse.n4js;
 
-import static com.google.common.collect.Sets.newLinkedHashSet;
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableCollection;
-
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -132,23 +127,33 @@ public final class N4JSGlobals {
 	 * Unmodifiable list containing {@link #N4JS_FILE_EXTENSION}, {@link #N4JSD_FILE_EXTENSION},
 	 * {@link #N4JSX_FILE_EXTENSION}.
 	 */
-	public static final Collection<String> ALL_N4JS_FILE_EXTENSIONS = unmodifiableCollection(newLinkedHashSet(asList(
+	public static final Set<String> ALL_JS_FILE_EXTENSIONS = ImmutableSet.of(
+			JS_FILE_EXTENSION,
+			CJS_FILE_EXTENSION,
+			MJS_FILE_EXTENSION);
+
+	/**
+	 * Unmodifiable list containing {@link #N4JS_FILE_EXTENSION}, {@link #N4JSD_FILE_EXTENSION},
+	 * {@link #N4JSX_FILE_EXTENSION}.
+	 */
+	public static final Set<String> ALL_N4JS_FILE_EXTENSIONS = ImmutableSet.of(
 			N4JS_FILE_EXTENSION,
 			N4JSD_FILE_EXTENSION,
-			N4JSX_FILE_EXTENSION)));
+			N4JSX_FILE_EXTENSION);
 
 	/**
 	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
 	 * {@link #N4JS_FILE_EXTENSION},{@link #N4JSX_FILE_EXTENSION}, {@link #JS_FILE_EXTENSION},
-	 * {@link #JSX_FILE_EXTENSION}.
+	 * {@link #CJS_FILE_EXTENSION}, {@link #MJS_FILE_EXTENSION}, {@link #JSX_FILE_EXTENSION}.
 	 */
-	// TODO TODO IDE-2493 multiple languages topic
-	public static final Collection<String> ALL_N4_FILE_EXTENSIONS = unmodifiableCollection(newLinkedHashSet(asList(
+	public static final Set<String> ALL_N4_FILE_EXTENSIONS = ImmutableSet.of(
 			N4JS_FILE_EXTENSION,
 			N4JSD_FILE_EXTENSION,
 			N4JSX_FILE_EXTENSION,
 			JSX_FILE_EXTENSION,
-			JS_FILE_EXTENSION)));
+			JS_FILE_EXTENSION,
+			CJS_FILE_EXTENSION,
+			MJS_FILE_EXTENSION);
 
 	/**
 	 * Name of the N4JS Git repository, i.e. "n4js". Same as {@link UtilN4#N4JS_GIT_REPOSITORY_NAME}.

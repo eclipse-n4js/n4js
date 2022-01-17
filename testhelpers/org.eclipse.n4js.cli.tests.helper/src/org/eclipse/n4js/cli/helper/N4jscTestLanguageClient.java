@@ -94,9 +94,10 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 		}
 
 		String fileName = generated.lastSegment();
-		if (!fileName.endsWith(N4JSGlobals.JS_FILE_EXTENSION)
-				&& !fileName.endsWith(N4JSGlobals.MJS_FILE_EXTENSION)
-				&& !fileName.endsWith(N4JSGlobals.JSX_FILE_EXTENSION)) {
+		if (!fileName.endsWith("." + N4JSGlobals.JS_FILE_EXTENSION)
+				&& !fileName.endsWith("." + N4JSGlobals.CJS_FILE_EXTENSION)
+				&& !fileName.endsWith("." + N4JSGlobals.MJS_FILE_EXTENSION)
+				&& !fileName.endsWith("." + N4JSGlobals.JSX_FILE_EXTENSION)) {
 			return;
 		}
 

@@ -135,7 +135,7 @@ class ModuleSpecifierTransformation extends Transformation {
 		val goUpCount = localModulePath.length - i;
 		val result = (if (goUpCount > 0) "../".repeat(goUpCount) else "./")
 			+ Joiner.on("/").join(differingSegments + #[targetModuleName])
-			+ "." + N4JSGlobals.JS_FILE_EXTENSION;
+			+ "." + getActualFileExtension(targetModule);
 		return result;
 	}
 
@@ -174,9 +174,17 @@ class ModuleSpecifierTransformation extends Transformation {
 		sb.append(targetModuleSpecifier);
 
 		sb.append('.');
-		sb.append(N4JSGlobals.JS_FILE_EXTENSION);
+		sb.append(getActualFileExtension(targetModule));
 
 		return sb.toString();
+	}
+
+	def protected String getActualFileExtension(TModule targetModule) {
+		val ext = targetModule.eResource?.URI?.fileExtension;
+		if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext)) {
+			return ext;
+		}
+		return N4JSGlobals.JS_FILE_EXTENSION;
 	}
 
 	def protected N4JSPackageName getActualProjectName(N4JSProjectConfigSnapshot project) {

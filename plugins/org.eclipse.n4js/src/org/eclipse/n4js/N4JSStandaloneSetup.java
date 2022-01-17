@@ -10,8 +10,10 @@
  */
 package org.eclipse.n4js;
 
+import static org.eclipse.n4js.N4JSGlobals.CJS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.JSX_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.MJS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSX_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JS_FILE_EXTENSION;
@@ -115,6 +117,10 @@ public class N4JSStandaloneSetup implements ISetup {
 				serviceProvider);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(JS_FILE_EXTENSION, resourceFactory);
 		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(JS_FILE_EXTENSION, serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(CJS_FILE_EXTENSION, resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(CJS_FILE_EXTENSION, serviceProvider);
+		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(MJS_FILE_EXTENSION, resourceFactory);
+		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(MJS_FILE_EXTENSION, serviceProvider);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(JSX_FILE_EXTENSION, resourceFactory);
 		IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put(JSX_FILE_EXTENSION, serviceProvider);
 		Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put(N4JSD_FILE_EXTENSION, resourceFactory);

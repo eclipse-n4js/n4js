@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
-import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
+import static org.eclipse.n4js.N4JSGlobals.ALL_JS_FILE_EXTENSIONS;
 import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 
 import java.util.Collection;
@@ -158,10 +158,12 @@ public class ProjectImportEnablingScope implements IScope {
 			IEObjectDescription n4jsdObjDescr = null;
 			IEObjectDescription jsObjDescr = null;
 
-			if (JS_FILE_EXTENSION.equals(firstExtension) && N4JSD_FILE_EXTENSION.equals(secondExtension)) {
+			if (ALL_JS_FILE_EXTENSIONS.contains(firstExtension)
+					&& N4JSD_FILE_EXTENSION.equals(secondExtension)) {
 				n4jsdObjDescr = second;
 				jsObjDescr = first;
-			} else if (N4JSD_FILE_EXTENSION.equals(firstExtension) && JS_FILE_EXTENSION.equals(secondExtension)) {
+			} else if (N4JSD_FILE_EXTENSION.equals(firstExtension)
+					&& ALL_JS_FILE_EXTENSIONS.contains(secondExtension)) {
 				n4jsdObjDescr = first;
 				jsObjDescr = second;
 			}

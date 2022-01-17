@@ -138,7 +138,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 		val resourceURIs = descriptions.map[
 			EObjectURI.trimFragment
 		].filter[
-			it != EcoreUtil2.getPlatformResourceOrNormalizedURI(resource) && fileExtension != N4JSGlobals.JS_FILE_EXTENSION
+			it != EcoreUtil2.getPlatformResourceOrNormalizedURI(resource) && !N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(fileExtension)
 		].toSet;
 
 		if (resourceURIs.size > 0) {

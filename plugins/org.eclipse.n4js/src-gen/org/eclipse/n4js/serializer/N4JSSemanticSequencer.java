@@ -1713,6 +1713,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	}
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AdditiveExpression<Yield> returns AdditiveExpression
 	 *     AdditiveExpression returns AdditiveExpression
@@ -2045,6 +2046,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (lhs=AdditiveExpression_AdditiveExpression_1_0_0_0 op=AdditiveOperator rhs=MultiplicativeExpression)
+	 * </pre>
 	 */
 	protected void sequence_AdditiveExpression(ISerializationContext context, AdditiveExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -2064,6 +2066,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ExportableElement returns FunctionDeclaration
 	 *
@@ -2078,6 +2081,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2085,6 +2089,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedExportableElement<Yield> returns FunctionDeclaration
 	 *     AnnotatedExportableElement returns FunctionDeclaration
@@ -2101,6 +2106,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2108,6 +2114,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ExportableElement returns N4ClassDeclaration
 	 *
@@ -2136,6 +2143,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement_ClassExtendsClause_ClassImplementsList_Members_N4ClassDeclaration_TypeParameters(ISerializationContext context, N4ClassDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2143,6 +2151,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedExportableElement<Yield> returns N4ClassDeclaration
 	 *     AnnotatedExportableElement returns N4ClassDeclaration
@@ -2167,6 +2176,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement_ClassExtendsClause_ClassImplementsList_Members_TypeParameters(ISerializationContext context, N4ClassDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2174,6 +2184,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedExportableElement<Yield> returns ExportedVariableStatement
 	 *     AnnotatedExportableElement returns ExportedVariableStatement
@@ -2186,6 +2197,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         varDeclsOrBindings+=ExportedVariableDeclarationOrBinding 
 	 *         varDeclsOrBindings+=ExportedVariableDeclarationOrBinding*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement(ISerializationContext context, ExportedVariableStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2193,6 +2205,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ExportableElement returns ExportedVariableStatement
 	 *
@@ -2212,6 +2225,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             varDeclsOrBindings+=ExportedVariableDeclarationOrBinding*
 	 *         )
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement_ExportedVariableStatement(ISerializationContext context, ExportedVariableStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2219,6 +2233,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ExportableElement returns N4InterfaceDeclaration
 	 *
@@ -2237,6 +2252,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalNode superInterfaceRefs+=ParameterizedTypeRefNominalNode*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement_InterfaceExtendsList_Members_N4InterfaceDeclaration_TypeParameters(ISerializationContext context, N4InterfaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2244,6 +2260,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedExportableElement<Yield> returns N4InterfaceDeclaration
 	 *     AnnotatedExportableElement returns N4InterfaceDeclaration
@@ -2258,6 +2275,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalNode superInterfaceRefs+=ParameterizedTypeRefNominalNode*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement_InterfaceExtendsList_Members_TypeParameters(ISerializationContext context, N4InterfaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2265,6 +2283,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedExportableElement<Yield> returns N4EnumDeclaration
 	 *     AnnotatedExportableElement returns N4EnumDeclaration
@@ -2277,6 +2296,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         literals+=N4EnumLiteral 
 	 *         literals+=N4EnumLiteral*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement(ISerializationContext context, N4EnumDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2284,6 +2304,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ExportableElement returns N4EnumDeclaration
 	 *
@@ -2298,6 +2319,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement_N4EnumDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2305,6 +2327,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ExportableElement returns N4TypeAliasDeclaration
 	 *
@@ -2327,6 +2350,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? declaredTypeRefNode=TypeReferenceNode)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement_N4TypeAliasDeclaration_TypeParameters(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2334,6 +2358,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedExportableElement<Yield> returns N4TypeAliasDeclaration
 	 *     AnnotatedExportableElement returns N4TypeAliasDeclaration
@@ -2346,6 +2371,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
 	 *         declaredTypeRefNode=TypeReferenceNode
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExportableElement_TypeParameters(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2353,6 +2379,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns FunctionExpression
 	 *     PrimaryExpression returns FunctionExpression
@@ -2990,6 +3017,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExpression_AsyncFunctionExpression_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -2997,6 +3025,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedExpression<Yield> returns FunctionExpression
 	 *     AnnotatedExpression returns FunctionExpression
@@ -3012,6 +3041,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExpression_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3019,6 +3049,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedExpression<Yield> returns N4ClassExpression
 	 *     AnnotatedExpression returns N4ClassExpression
@@ -3040,6 +3071,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExpression_ClassExtendsClause_ClassImplementsList_Members(ISerializationContext context, N4ClassExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3047,6 +3079,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns N4ClassExpression
 	 *     PrimaryExpression returns N4ClassExpression
@@ -3690,6 +3723,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedExpression_ClassExtendsClause_ClassImplementsList_Members_N4ClassExpression(ISerializationContext context, N4ClassExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3697,6 +3731,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     Statement<Yield> returns FunctionDeclaration
 	 *     Statement returns FunctionDeclaration
@@ -3712,6 +3747,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3719,6 +3755,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedFunctionDeclaration<Yield,Default> returns FunctionDeclaration
 	 *     AnnotatedFunctionDeclaration<Yield> returns FunctionDeclaration
@@ -3737,6 +3774,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3744,6 +3782,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4MemberDeclaration<Yield> returns N4MethodDeclaration
 	 *     N4MemberDeclaration returns N4MethodDeclaration
@@ -3806,6 +3845,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3813,6 +3853,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedN4MemberDeclaration<Yield> returns N4MethodDeclaration
 	 *     AnnotatedN4MemberDeclaration returns N4MethodDeclaration
@@ -3840,6 +3881,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters_TypeParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3847,6 +3889,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedN4MemberDeclaration<Yield> returns N4FieldDeclaration
 	 *     AnnotatedN4MemberDeclaration returns N4FieldDeclaration
@@ -3860,6 +3903,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredTypeRefNode=TypeReferenceNode? 
 	 *         expression=Expression?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_FieldDeclarationImpl(ISerializationContext context, N4FieldDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3867,6 +3911,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4MemberDeclaration<Yield> returns N4FieldDeclaration
 	 *     N4MemberDeclaration returns N4FieldDeclaration
@@ -3880,6 +3925,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredTypeRefNode=TypeReferenceNode? 
 	 *         expression=Expression?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3887,6 +3933,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedN4MemberDeclaration<Yield> returns N4GetterDeclaration
 	 *     AnnotatedN4MemberDeclaration returns N4GetterDeclaration
@@ -3900,6 +3947,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_GetterHeader(ISerializationContext context, N4GetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3907,6 +3955,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4MemberDeclaration<Yield> returns N4GetterDeclaration
 	 *     N4MemberDeclaration returns N4GetterDeclaration
@@ -3919,6 +3968,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredTypeRefNode=TypeReferenceNode? 
 	 *         (body=Block | body=Block)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedN4MemberDeclaration_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3926,6 +3976,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedN4MemberDeclaration<Yield> returns N4SetterDeclaration
 	 *     AnnotatedN4MemberDeclaration returns N4SetterDeclaration
@@ -3939,6 +3990,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         fpar=FormalParameter 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedN4MemberDeclaration(ISerializationContext context, N4SetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3946,6 +3998,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4MemberDeclaration<Yield> returns N4SetterDeclaration
 	 *     N4MemberDeclaration returns N4SetterDeclaration
@@ -3962,6 +4015,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (declaredModifiers+=N4Modifier* declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? fpar=FormalParameter body=Block?)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedN4MemberDeclaration_N4SetterDeclaration(ISerializationContext context, N4SetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3969,6 +4023,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NamespaceElement<Yield> returns FunctionDeclaration
 	 *     NamespaceElement returns FunctionDeclaration
@@ -3984,6 +4039,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedNamespaceElement_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -3991,6 +4047,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedNamespaceElement returns FunctionDeclaration
 	 *
@@ -4006,6 +4063,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedNamespaceElement_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4013,6 +4071,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NamespaceElement<Yield> returns N4ClassDeclaration
 	 *     NamespaceElement returns N4ClassDeclaration
@@ -4042,6 +4101,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedNamespaceElement_ClassExtendsClause_ClassImplementsList_Members_N4ClassDeclaration_TypeParameters(ISerializationContext context, N4ClassDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4049,6 +4109,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedNamespaceElement returns N4ClassDeclaration
 	 *
@@ -4072,6 +4133,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedNamespaceElement_ClassExtendsClause_ClassImplementsList_Members_TypeParameters(ISerializationContext context, N4ClassDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4079,6 +4141,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NamespaceElement<Yield> returns N4InterfaceDeclaration
 	 *     NamespaceElement returns N4InterfaceDeclaration
@@ -4098,6 +4161,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalNode superInterfaceRefs+=ParameterizedTypeRefNominalNode*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedNamespaceElement_InterfaceExtendsList_Members_N4InterfaceDeclaration_TypeParameters(ISerializationContext context, N4InterfaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4105,6 +4169,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedNamespaceElement returns N4InterfaceDeclaration
 	 *
@@ -4118,6 +4183,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalNode superInterfaceRefs+=ParameterizedTypeRefNominalNode*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedNamespaceElement_InterfaceExtendsList_Members_TypeParameters(ISerializationContext context, N4InterfaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4125,6 +4191,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedNamespaceElement returns N4EnumDeclaration
 	 *
@@ -4136,6 +4203,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         literals+=N4EnumLiteral 
 	 *         literals+=N4EnumLiteral*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedNamespaceElement(ISerializationContext context, N4EnumDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4143,6 +4211,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NamespaceElement<Yield> returns N4EnumDeclaration
 	 *     NamespaceElement returns N4EnumDeclaration
@@ -4158,6 +4227,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedNamespaceElement_N4EnumDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4165,6 +4235,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NamespaceElement<Yield> returns N4TypeAliasDeclaration
 	 *     NamespaceElement returns N4TypeAliasDeclaration
@@ -4188,6 +4259,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? declaredTypeRefNode=TypeReferenceNode)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedNamespaceElement_N4TypeAliasDeclaration_TypeParameters(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4195,6 +4267,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedNamespaceElement returns N4TypeAliasDeclaration
 	 *
@@ -4206,6 +4279,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
 	 *         declaredTypeRefNode=TypeReferenceNode
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedNamespaceElement_TypeParameters(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4213,6 +4287,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyAssignment<Yield> returns PropertyMethodDeclaration
 	 *     PropertyAssignment returns PropertyMethodDeclaration
@@ -4238,6 +4313,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_AsyncNoTrailingLineBreak_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeParameters(ISerializationContext context, PropertyMethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4245,6 +4321,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedPropertyAssignment<Yield> returns PropertyGetterDeclaration
 	 *     AnnotatedPropertyAssignment returns PropertyGetterDeclaration
@@ -4257,6 +4334,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredTypeRefNode=TypeReferenceNode? 
 	 *         body=Block
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_ColonSepDeclaredTypeRef_GetterHeader(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4264,6 +4342,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyAssignment<Yield> returns PropertyGetterDeclaration
 	 *     PropertyAssignment returns PropertyGetterDeclaration
@@ -4276,6 +4355,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredTypeRefNode=TypeReferenceNode? 
 	 *         (body=Block | body=Block)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4283,6 +4363,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedPropertyAssignment<Yield> returns PropertyMethodDeclaration
 	 *     AnnotatedPropertyAssignment returns PropertyMethodDeclaration
@@ -4296,6 +4377,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_MethodParamsAndBody_StrictFormalParameters_TypeParameters(ISerializationContext context, PropertyMethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4303,6 +4385,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedPropertyAssignment<Yield> returns PropertyNameValuePair
 	 *     AnnotatedPropertyAssignment returns PropertyNameValuePair
@@ -4314,6 +4397,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         expression=AssignmentExpression
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment(ISerializationContext context, PropertyNameValuePair semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4321,6 +4405,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedPropertyAssignment<Yield> returns PropertyNameValuePairSingleName
 	 *     AnnotatedPropertyAssignment returns PropertyNameValuePairSingleName
@@ -4331,6 +4416,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredTypeRefNode=TypeReferenceWithModifiersNode? 
 	 *         expression=PropertyNameValuePairSingleNamePart
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment(ISerializationContext context, PropertyNameValuePairSingleName semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4338,6 +4424,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyAssignment<Yield> returns PropertyNameValuePairSingleName
 	 *     PropertyAssignment returns PropertyNameValuePairSingleName
@@ -4351,6 +4438,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (declaredTypeRefNode=TypeReferenceNode? expression=PropertyNameValuePairSingleNamePart)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_PropertyNameValuePairSingleName(ISerializationContext context, PropertyNameValuePairSingleName semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4358,6 +4446,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyAssignment<Yield> returns PropertyNameValuePair
 	 *     PropertyAssignment returns PropertyNameValuePair
@@ -4377,6 +4466,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             expression=AssignmentExpression
 	 *         )
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_PropertyNameValuePair(ISerializationContext context, PropertyNameValuePair semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4384,6 +4474,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedPropertyAssignment<Yield> returns PropertySetterDeclaration
 	 *     AnnotatedPropertyAssignment returns PropertySetterDeclaration
@@ -4396,6 +4487,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         fpar=FormalParameter 
 	 *         body=Block
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment(ISerializationContext context, PropertySetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4403,6 +4495,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyAssignment<Yield> returns PropertySetterDeclaration
 	 *     PropertyAssignment returns PropertySetterDeclaration
@@ -4418,6 +4511,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? fpar=FormalParameter body=Block)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_PropertySetterDeclaration(ISerializationContext context, PropertySetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4425,12 +4519,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedPropertyAssignment<Yield> returns PropertySpread
 	 *     AnnotatedPropertyAssignment returns PropertySpread
 	 *
 	 * Constraint:
 	 *     (annotationList=AnnotatedPropertyAssignment_PropertySpread_1_5_0 expression=AssignmentExpression)
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment(ISerializationContext context, PropertySpread semanticObject) {
 		if (errorAcceptor != null) {
@@ -4447,12 +4543,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyAssignment<Yield> returns PropertySpread
 	 *     PropertyAssignment returns PropertySpread
 	 *
 	 * Constraint:
 	 *     ((annotationList=AnnotatedPropertyAssignment_PropertySpread_1_5_0 expression=AssignmentExpression) | expression=AssignmentExpression)
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedPropertyAssignment_PropertySpread(ISerializationContext context, PropertySpread semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4460,6 +4558,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns FunctionDeclaration
 	 *
@@ -4474,6 +4573,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4481,6 +4581,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedScriptElement returns FunctionDeclaration
 	 *
@@ -4496,6 +4597,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4503,6 +4605,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns N4ClassDeclaration
 	 *
@@ -4531,6 +4634,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_ClassExtendsClause_ClassImplementsList_Members_N4ClassDeclaration_TypeParameters(ISerializationContext context, N4ClassDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4538,6 +4642,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedScriptElement returns N4ClassDeclaration
 	 *
@@ -4561,6 +4666,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_ClassExtendsClause_ClassImplementsList_Members_TypeParameters(ISerializationContext context, N4ClassDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4568,6 +4674,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedScriptElement returns ExportDeclaration
 	 *
@@ -4581,6 +4688,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[TModule|ModuleSpecifier]?)
 	 *         )?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_ExportClause_ExportDeclarationImpl_ExportFromClause(ISerializationContext context, ExportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4588,6 +4696,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns ExportDeclaration
 	 *
@@ -4601,6 +4710,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[TModule|ModuleSpecifier]?)
 	 *         )?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_ExportClause_ExportDeclaration_ExportDeclarationImpl_ExportFromClause(ISerializationContext context, ExportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4608,6 +4718,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedScriptElement returns ImportDeclaration
 	 *
@@ -4621,6 +4732,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         module=[TModule|ModuleSpecifier]
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_ImportClause_ImportDeclarationImpl_ImportSpecifiersExceptDefault(ISerializationContext context, ImportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4628,6 +4740,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns ImportDeclaration
 	 *
@@ -4641,6 +4754,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         module=[TModule|ModuleSpecifier]
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_ImportClause_ImportDeclaration_ImportDeclarationImpl_ImportSpecifiersExceptDefault(ISerializationContext context, ImportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4648,6 +4762,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns N4InterfaceDeclaration
 	 *
@@ -4666,6 +4781,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalNode superInterfaceRefs+=ParameterizedTypeRefNominalNode*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_InterfaceExtendsList_Members_N4InterfaceDeclaration_TypeParameters(ISerializationContext context, N4InterfaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4673,6 +4789,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedScriptElement returns N4InterfaceDeclaration
 	 *
@@ -4686,6 +4803,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalNode superInterfaceRefs+=ParameterizedTypeRefNominalNode*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_InterfaceExtendsList_Members_TypeParameters(ISerializationContext context, N4InterfaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4693,6 +4811,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedScriptElement returns N4EnumDeclaration
 	 *
@@ -4704,6 +4823,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         literals+=N4EnumLiteral 
 	 *         literals+=N4EnumLiteral*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement(ISerializationContext context, N4EnumDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4711,6 +4831,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns N4EnumDeclaration
 	 *
@@ -4725,6 +4846,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_N4EnumDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4732,6 +4854,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns N4TypeAliasDeclaration
 	 *
@@ -4754,6 +4877,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) | 
 	 *         (declaredModifiers+=N4ModifierWithoutConst* name=BindingIdentifier? declaredTypeRefNode=TypeReferenceNode)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_N4TypeAliasDeclaration_TypeParameters(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4761,6 +4885,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedScriptElement returns N4TypeAliasDeclaration
 	 *
@@ -4772,6 +4897,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
 	 *         declaredTypeRefNode=TypeReferenceNode
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AnnotatedScriptElement_TypeParameters(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4779,6 +4905,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedScriptElement.ExportDeclaration_1_0_0 returns AnnotationList
 	 *     AnnotatedScriptElement.ImportDeclaration_1_1_0 returns AnnotationList
@@ -4813,6 +4940,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (annotations+=AnnotationNoAtSign annotations+=Annotation*)
+	 * </pre>
 	 */
 	protected void sequence_AnnotationList(ISerializationContext context, AnnotationList semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4820,6 +4948,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     Annotation returns Annotation
 	 *     ScriptAnnotation returns Annotation
@@ -4827,6 +4956,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (name=AnnotationName (args+=AnnotationArgument args+=AnnotationArgument*)?)
+	 * </pre>
 	 */
 	protected void sequence_AnnotationNoAtSign(ISerializationContext context, Annotation semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4834,12 +4964,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     Argument<Yield> returns Argument
 	 *     Argument returns Argument
 	 *
 	 * Constraint:
 	 *     (spread?='...'? expression=AssignmentExpression)
+	 * </pre>
 	 */
 	protected void sequence_Argument(ISerializationContext context, Argument semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -4847,6 +4979,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression<Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression returns ParameterizedCallExpression
@@ -5312,6 +5445,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) 
 	 *         (arguments+=Argument arguments+=Argument*)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_Arguments_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedCallExpression(ISerializationContext context, ParameterizedCallExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -5319,6 +5453,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Yield> returns NewExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LeftHandSideExpression.Yield> returns NewExpression
@@ -5449,6 +5584,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (callee=MemberExpression (typeArgs+=TypeReferenceNode typeArgs+=TypeReferenceNode*)? withArgs?='(' (arguments+=Argument arguments+=Argument*)?)
+	 * </pre>
 	 */
 	protected void sequence_Arguments_ConcreteTypeArguments_MemberExpression_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, NewExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -5456,6 +5592,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression<Yield> returns NewExpression
 	 *     LeftHandSideExpression returns NewExpression
@@ -5961,6 +6098,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeArgs+=TypeReferenceNode typeArgs+=TypeReferenceNode*)? 
 	 *         (withArgs?='(' (arguments+=Argument arguments+=Argument*)?)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_Arguments_ConcreteTypeArguments_MemberExpression(ISerializationContext context, NewExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -5968,6 +6106,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns ParameterizedCallExpression
 	 *     PrimaryExpression returns ParameterizedCallExpression
@@ -6151,6 +6290,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         optionalChaining?='?.'? 
 	 *         (arguments+=Argument arguments+=Argument*)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_Arguments_ConcreteTypeArguments_ParameterizedCallExpression(ISerializationContext context, ParameterizedCallExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -6158,6 +6298,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns ImportCallExpression
 	 *     PrimaryExpression returns ImportCallExpression
@@ -6789,6 +6930,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (arguments+=Argument arguments+=Argument*)?
+	 * </pre>
 	 */
 	protected void sequence_Arguments(ISerializationContext context, ImportCallExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -6796,6 +6938,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Yield> returns ParameterizedCallExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
@@ -6970,6 +7113,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) 
 	 *         (arguments+=Argument arguments+=Argument*)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(ISerializationContext context, ParameterizedCallExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -6977,6 +7121,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BindingPattern<Yield> returns ArrayBindingPattern
 	 *     BindingPattern returns ArrayBindingPattern
@@ -6985,6 +7130,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (elements+=Elision* (elements+=BindingRestElement (elements+=Elision* elements+=BindingRestElement)* elements+=Elision*)?)
+	 * </pre>
 	 */
 	protected void sequence_ArrayBindingPattern(ISerializationContext context, ArrayBindingPattern semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -6992,12 +7138,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ArrayElement<Yield> returns ArrayElement
 	 *     ArrayElement returns ArrayElement
 	 *
 	 * Constraint:
 	 *     (spread?='...'? expression=AssignmentExpression)
+	 * </pre>
 	 */
 	protected void sequence_ArrayElement(ISerializationContext context, ArrayElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -7005,6 +7153,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns ArrayLiteral
 	 *     PrimaryExpression returns ArrayLiteral
@@ -7639,6 +7788,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         elements+=ArrayPadding* 
 	 *         (elements+=ArrayElement (elements+=ArrayPadding* elements+=ArrayElement)* (trailingComma?=',' elements+=ArrayPadding*)?)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ArrayLiteral(ISerializationContext context, ArrayLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -7646,11 +7796,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ArrayPadding returns ArrayPadding
 	 *
 	 * Constraint:
 	 *     {ArrayPadding}
+	 * </pre>
 	 */
 	protected void sequence_ArrayPadding(ISerializationContext context, ArrayPadding semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -7658,11 +7810,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ArrayTypeExpressionNode returns TypeReferenceNode
 	 *
 	 * Constraint:
 	 *     typeRefInAST=ArrayTypeExpression
+	 * </pre>
 	 */
 	protected void sequence_ArrayTypeExpressionNode(ISerializationContext context, TypeReferenceNode semanticObject) {
 		if (errorAcceptor != null) {
@@ -7676,6 +7830,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ArrowExpression<In,Yield> returns ArrowFunction
 	 *     ArrowExpression<In> returns ArrowFunction
@@ -7702,6 +7857,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ((hasBracesAroundBody?='{' body=BlockMinusBraces) | body=ExpressionDisguisedAsBlock)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ArrowExpression_ColonSepDeclaredReturnTypeRef_StrictFormalParameters(ISerializationContext context, ArrowFunction semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -7709,12 +7865,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AssignmentExpressionStatement<In> returns ExpressionStatement
 	 *     AssignmentExpressionStatement returns ExpressionStatement
 	 *
 	 * Constraint:
 	 *     expression=AssignmentExpression
+	 * </pre>
 	 */
 	protected void sequence_AssignmentExpressionStatement(ISerializationContext context, ExpressionStatement semanticObject) {
 		if (errorAcceptor != null) {
@@ -7728,6 +7886,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AssignmentExpression<In,Yield> returns AssignmentExpression
 	 *     AssignmentExpression<In> returns AssignmentExpression
@@ -7744,6 +7903,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (lhs=AssignmentExpression_AssignmentExpression_4_1_0_0_0 op=AssignmentOperator rhs=AssignmentExpression)
+	 * </pre>
 	 */
 	protected void sequence_AssignmentExpression(ISerializationContext context, AssignmentExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -7763,6 +7923,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AsyncFunctionExpression returns FunctionExpression
 	 *
@@ -7776,6 +7937,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AsyncFunctionExpression_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -7783,6 +7945,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     FunctionDeclaration<Yield> returns FunctionDeclaration
 	 *     FunctionDeclaration returns FunctionDeclaration
@@ -7800,6 +7963,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -7807,6 +7971,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4MethodDeclaration<Yield> returns N4MethodDeclaration
 	 *     N4MethodDeclaration returns N4MethodDeclaration
@@ -7821,6 +7986,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AsyncNoTrailingLineBreak_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -7828,6 +7994,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyMethodDeclaration<Yield> returns PropertyMethodDeclaration
 	 *     PropertyMethodDeclaration returns PropertyMethodDeclaration
@@ -7841,6 +8008,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_AsyncNoTrailingLineBreak_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeParameters(ISerializationContext context, PropertyMethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -7848,6 +8016,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AssignmentExpression<In,Yield> returns AwaitExpression
 	 *     AssignmentExpression<In> returns AwaitExpression
@@ -7868,6 +8037,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     expression=AssignmentExpression
+	 * </pre>
 	 */
 	protected void sequence_AwaitExpression(ISerializationContext context, AwaitExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -7881,6 +8051,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns BinaryIntLiteral
 	 *     PrimaryExpression returns BinaryIntLiteral
@@ -8513,6 +8684,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     value=BINARY_INT
+	 * </pre>
 	 */
 	protected void sequence_BinaryIntLiteral(ISerializationContext context, BinaryIntLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -8526,6 +8698,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     FormalParameter<Yield> returns FormalParameter
 	 *     FormalParameter returns FormalParameter
@@ -8535,6 +8708,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (bindingPattern=BindingPattern | (annotations+=Annotation* variadic?='...'? name=BindingIdentifier declaredTypeRefNode=TypeReferenceNode?)) 
 	 *         (hasInitializerAssignment?='=' initializer=AssignmentExpression?)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_BindingElementFragment_ColonSepDeclaredTypeRef_FormalParameter(ISerializationContext context, FormalParameter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -8542,12 +8716,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BindingElement<Yield> returns BindingElement
 	 *     BindingElement returns BindingElement
 	 *
 	 * Constraint:
 	 *     ((nestedPattern=BindingPattern expression=AssignmentExpression?) | varDecl=VariableDeclaration)
+	 * </pre>
 	 */
 	protected void sequence_BindingElementImpl(ISerializationContext context, BindingElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -8555,12 +8731,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BindingRestElement<Yield> returns BindingElement
 	 *     BindingRestElement returns BindingElement
 	 *
 	 * Constraint:
 	 *     (rest?='...'? ((nestedPattern=BindingPattern expression=AssignmentExpression?) | varDecl=VariableDeclaration))
+	 * </pre>
 	 */
 	protected void sequence_BindingElementImpl_BindingRestElement(ISerializationContext context, BindingElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -8568,12 +8746,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BindingIdentifierAsFormalParameter<Yield> returns FormalParameter
 	 *     BindingIdentifierAsFormalParameter returns FormalParameter
 	 *
 	 * Constraint:
 	 *     name=BindingIdentifier
+	 * </pre>
 	 */
 	protected void sequence_BindingIdentifierAsFormalParameter(ISerializationContext context, FormalParameter semanticObject) {
 		if (errorAcceptor != null) {
@@ -8587,6 +8767,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BindingIdentifierAsVariableDeclaration<In,Yield> returns VariableDeclaration
 	 *     BindingIdentifierAsVariableDeclaration<In> returns VariableDeclaration
@@ -8595,6 +8776,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     name=BindingIdentifier
+	 * </pre>
 	 */
 	protected void sequence_BindingIdentifierAsVariableDeclaration(ISerializationContext context, VariableDeclaration semanticObject) {
 		if (errorAcceptor != null) {
@@ -8608,6 +8790,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BindingProperty<Yield,AllowType> returns BindingProperty
 	 *     BindingProperty<Yield> returns BindingProperty
@@ -8616,6 +8799,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     ((declaredName=LiteralOrComputedPropertyName value=BindingElement) | value=SingleNameBinding)
+	 * </pre>
 	 */
 	protected void sequence_BindingProperty(ISerializationContext context, BindingProperty semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -8623,6 +8807,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BitwiseANDExpression<In,Yield> returns BinaryBitwiseExpression
 	 *     BitwiseANDExpression<In> returns BinaryBitwiseExpression
@@ -8659,6 +8844,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (lhs=BitwiseANDExpression_BinaryBitwiseExpression_1_0_0_0 op=BitwiseANDOperator rhs=EqualityExpression)
+	 * </pre>
 	 */
 	protected void sequence_BitwiseANDExpression(ISerializationContext context, BinaryBitwiseExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -8678,6 +8864,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BitwiseORExpression<In,Yield> returns BinaryBitwiseExpression
 	 *     BitwiseORExpression<In> returns BinaryBitwiseExpression
@@ -8805,6 +8992,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (lhs=BitwiseXORExpression_BinaryBitwiseExpression_1_0_0_0 op=BitwiseXOROperator rhs=BitwiseANDExpression) | 
 	 *         (lhs=BitwiseORExpression_BinaryBitwiseExpression_1_0_0_0 op=BitwiseOROperator rhs=BitwiseXORExpression)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_BitwiseANDExpression_BitwiseORExpression_BitwiseXORExpression(ISerializationContext context, BinaryBitwiseExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -8812,6 +9000,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BitwiseXORExpression<In,Yield> returns BinaryBitwiseExpression
 	 *     BitwiseXORExpression<In> returns BinaryBitwiseExpression
@@ -8848,6 +9037,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (lhs=BitwiseANDExpression_BinaryBitwiseExpression_1_0_0_0 op=BitwiseANDOperator rhs=EqualityExpression) | 
 	 *         (lhs=BitwiseXORExpression_BinaryBitwiseExpression_1_0_0_0 op=BitwiseXOROperator rhs=BitwiseANDExpression)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_BitwiseANDExpression_BitwiseXORExpression(ISerializationContext context, BinaryBitwiseExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -8855,12 +9045,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BlockMinusBraces<Yield> returns Block
 	 *     BlockMinusBraces returns Block
 	 *
 	 * Constraint:
 	 *     statements+=Statement*
+	 * </pre>
 	 */
 	protected void sequence_BlockMinusBraces(ISerializationContext context, Block semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -8868,6 +9060,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns Block
 	 *     Block<Yield> returns Block
@@ -8879,6 +9072,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     statements+=Statement*
+	 * </pre>
 	 */
 	protected void sequence_Block(ISerializationContext context, Block semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -8886,6 +9080,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns BooleanLiteral
 	 *     PrimaryExpression returns BooleanLiteral
@@ -9517,6 +9712,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     true?='true'?
+	 * </pre>
 	 */
 	protected void sequence_BooleanLiteral(ISerializationContext context, BooleanLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -9524,6 +9720,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns BreakStatement
 	 *     RootStatement<Yield> returns BreakStatement
@@ -9535,6 +9732,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     label=[LabelledStatement|BindingIdentifier]?
+	 * </pre>
 	 */
 	protected void sequence_BreakStatement(ISerializationContext context, BreakStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -9542,12 +9740,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     CaseClause<Yield> returns CaseClause
 	 *     CaseClause returns CaseClause
 	 *
 	 * Constraint:
 	 *     (expression=Expression statements+=Statement*)
+	 * </pre>
 	 */
 	protected void sequence_CaseClause(ISerializationContext context, CaseClause semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -9555,6 +9755,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     CastExpression<Yield> returns CastExpression
 	 *     CastExpression returns CastExpression
@@ -9930,6 +10131,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (expression=CastExpression_CastExpression_1_0_0_0 targetTypeRefNode=ArrayTypeExpressionNode)
+	 * </pre>
 	 */
 	protected void sequence_CastExpression(ISerializationContext context, CastExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -9946,12 +10148,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     CatchBlock<Yield> returns CatchBlock
 	 *     CatchBlock returns CatchBlock
 	 *
 	 * Constraint:
 	 *     (catchVariable=CatchVariable block=Block)
+	 * </pre>
 	 */
 	protected void sequence_CatchBlock(ISerializationContext context, CatchBlock semanticObject) {
 		if (errorAcceptor != null) {
@@ -9968,12 +10172,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     CatchVariable<Yield> returns CatchVariable
 	 *     CatchVariable returns CatchVariable
 	 *
 	 * Constraint:
 	 *     (bindingPattern=BindingPattern | (name=BindingIdentifier declaredTypeRefNode=TypeReferenceNode) | name=BindingIdentifier)
+	 * </pre>
 	 */
 	protected void sequence_CatchVariable_ColonSepDeclaredTypeRef(ISerializationContext context, CatchVariable semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -9981,6 +10187,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4ClassDeclaration<Yield> returns N4ClassDeclaration
 	 *     N4ClassDeclaration returns N4ClassDeclaration
@@ -10004,6 +10211,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ClassExtendsClause_ClassImplementsList_Members_N4ClassDeclaration_TypeParameters(ISerializationContext context, N4ClassDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10011,6 +10219,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4ClassExpression<Yield> returns N4ClassExpression
 	 *     N4ClassExpression returns N4ClassExpression
@@ -10031,6 +10240,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ClassExtendsClause_ClassImplementsList_Members_N4ClassExpression(ISerializationContext context, N4ClassExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10038,6 +10248,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     CoalesceExpression<In,Yield> returns CoalesceExpression
 	 *     CoalesceExpression<In> returns CoalesceExpression
@@ -10092,6 +10303,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (expression=CoalesceExpression_CoalesceExpression_1_0_0_0 defaultExpression=LogicalORExpression)
+	 * </pre>
 	 */
 	protected void sequence_CoalesceExpression(ISerializationContext context, CoalesceExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -10108,6 +10320,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     FunctionExpression returns FunctionExpression
 	 *
@@ -10120,6 +10333,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ColonSepDeclaredReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImplWithoutKeyword_StrictFormalParameters_TypeParameters(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10127,6 +10341,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4CallSignatureDeclaration<Yield> returns N4MethodDeclaration
 	 *     N4CallSignatureDeclaration returns N4MethodDeclaration
@@ -10138,6 +10353,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredReturnTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ColonSepDeclaredReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters_TypeParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10145,6 +10361,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ExportedVariableDeclarationOrBinding<Yield> returns ExportedVariableDeclaration
 	 *     ExportedVariableDeclarationOrBinding returns ExportedVariableDeclaration
@@ -10153,6 +10370,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (annotations+=Annotation* name=BindingIdentifier declaredTypeRefNode=TypeReferenceNode? expression=AssignmentExpression?)
+	 * </pre>
 	 */
 	protected void sequence_ColonSepDeclaredTypeRef_ExportedVariableDeclaration_VariableDeclarationImpl(ISerializationContext context, ExportedVariableDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10160,6 +10378,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4FieldDeclaration<Yield> returns N4FieldDeclaration
 	 *     N4FieldDeclaration returns N4FieldDeclaration
@@ -10172,6 +10391,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredTypeRefNode=TypeReferenceNode? 
 	 *         expression=Expression?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10179,6 +10399,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4GetterDeclaration<Yield> returns N4GetterDeclaration
 	 *     N4GetterDeclaration returns N4GetterDeclaration
@@ -10191,6 +10412,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredTypeRefNode=TypeReferenceNode? 
 	 *         body=Block?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10198,12 +10420,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyGetterDeclaration<Yield> returns PropertyGetterDeclaration
 	 *     PropertyGetterDeclaration returns PropertyGetterDeclaration
 	 *
 	 * Constraint:
 	 *     (declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRefNode=TypeReferenceNode? body=Block)
+	 * </pre>
 	 */
 	protected void sequence_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10211,6 +10435,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     VariableDeclarationOrBinding<In,Yield,OptionalInit> returns VariableDeclaration
 	 *     VariableDeclarationOrBinding<In,Yield> returns VariableDeclaration
@@ -10227,6 +10452,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (annotations+=Annotation* name=BindingIdentifier declaredTypeRefNode=TypeReferenceNode? expression=AssignmentExpression?)
+	 * </pre>
 	 */
 	protected void sequence_ColonSepDeclaredTypeRef_VariableDeclaration_VariableDeclarationImpl(ISerializationContext context, VariableDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10234,6 +10460,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSXElementNameExpression returns ParameterizedPropertyAccessExpression
 	 *     JSXElementNameExpression.ParameterizedPropertyAccessExpression_1_0 returns ParameterizedPropertyAccessExpression
@@ -10245,6 +10472,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeArgs+=TypeReferenceNode typeArgs+=TypeReferenceNode*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ConcreteTypeArguments_JSXElementNameExpression_ParameterizedPropertyAccessExpressionTail(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10252,6 +10480,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression<Yield> returns ParameterizedPropertyAccessExpression
 	 *     LeftHandSideExpression returns ParameterizedPropertyAccessExpression
@@ -10719,6 +10948,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeArgs+=TypeReferenceNode typeArgs+=TypeReferenceNode*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ConcreteTypeArguments_LeftHandSideExpression_MemberExpression_ParameterizedPropertyAccessExpressionTail(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10726,6 +10956,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Yield> returns ParameterizedPropertyAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -10899,6 +11130,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeArgs+=TypeReferenceNode typeArgs+=TypeReferenceNode*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -10906,6 +11138,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -11041,6 +11274,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeArgs+=TypeReferenceNode typeArgs+=TypeReferenceNode*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ConcreteTypeArguments_MemberExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -11048,6 +11282,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Yield> returns ParameterizedPropertyAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -11183,6 +11418,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeArgs+=TypeReferenceNode typeArgs+=TypeReferenceNode*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ConcreteTypeArguments_MemberExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -11190,6 +11426,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns ParameterizedPropertyAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
@@ -11242,6 +11479,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeArgs+=TypeReferenceNode typeArgs+=TypeReferenceNode*)? 
 	 *         property=[IdentifiableElement|IdentifierName]
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ConcreteTypeArguments_MemberExpression_ParameterizedPropertyAccessExpressionTail(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -11249,6 +11487,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ConditionalExpression<In,Yield> returns ConditionalExpression
 	 *     ConditionalExpression<In> returns ConditionalExpression
@@ -11276,6 +11515,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (expression=ConditionalExpression_ConditionalExpression_1_0_0_0 trueExpression=AssignmentExpression falseExpression=AssignmentExpression)
+	 * </pre>
 	 */
 	protected void sequence_ConditionalExpression(ISerializationContext context, ConditionalExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -11295,6 +11535,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns ContinueStatement
 	 *     RootStatement<Yield> returns ContinueStatement
@@ -11306,6 +11547,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     label=[LabelledStatement|BindingIdentifier]?
+	 * </pre>
 	 */
 	protected void sequence_ContinueStatement(ISerializationContext context, ContinueStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -11313,6 +11555,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns DebuggerStatement
 	 *     RootStatement<Yield> returns DebuggerStatement
@@ -11323,6 +11566,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     {DebuggerStatement}
+	 * </pre>
 	 */
 	protected void sequence_DebuggerStatement(ISerializationContext context, DebuggerStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -11330,12 +11574,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     DefaultClause<Yield> returns DefaultClause
 	 *     DefaultClause returns DefaultClause
 	 *
 	 * Constraint:
 	 *     statements+=Statement*
+	 * </pre>
 	 */
 	protected void sequence_DefaultClause(ISerializationContext context, DefaultClause semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -11343,11 +11589,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     DefaultImportSpecifier returns DefaultImportSpecifier
 	 *
 	 * Constraint:
 	 *     (importedElement=[TExportableElement|BindingIdentifier] declaredDynamic?='+'?)
+	 * </pre>
 	 */
 	protected void sequence_DefaultImportSpecifier(ISerializationContext context, DefaultImportSpecifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -11355,6 +11603,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns DoStatement
 	 *     RootStatement<Yield> returns DoStatement
@@ -11368,6 +11617,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (statement=Statement expression=Expression)
+	 * </pre>
 	 */
 	protected void sequence_DoStatement(ISerializationContext context, DoStatement semanticObject) {
 		if (errorAcceptor != null) {
@@ -11384,6 +11634,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns DoubleLiteral
 	 *     PrimaryExpression returns DoubleLiteral
@@ -12016,6 +12267,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     value=DOUBLE
+	 * </pre>
 	 */
 	protected void sequence_DoubleLiteral(ISerializationContext context, DoubleLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -12029,11 +12281,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     Elision returns BindingElement
 	 *
 	 * Constraint:
 	 *     {BindingElement}
+	 * </pre>
 	 */
 	protected void sequence_Elision(ISerializationContext context, BindingElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -12041,6 +12295,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns EmptyStatement
 	 *     RootStatement<Yield> returns EmptyStatement
@@ -12051,6 +12306,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     {EmptyStatement}
+	 * </pre>
 	 */
 	protected void sequence_EmptyStatement(ISerializationContext context, EmptyStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -12058,6 +12314,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     EqualityExpression<In,Yield> returns EqualityExpression
 	 *     EqualityExpression<In> returns EqualityExpression
@@ -12277,6 +12534,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (lhs=EqualityExpression_EqualityExpression_1_0_0_0 op=EqualityOperator rhs=RelationalExpression)
+	 * </pre>
 	 */
 	protected void sequence_EqualityExpression(ISerializationContext context, EqualityExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -12296,6 +12554,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NamespaceElement<Yield> returns ExportDeclaration
 	 *     NamespaceElement returns ExportDeclaration
@@ -12308,6 +12567,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
 	 *         (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[TModule|ModuleSpecifier]?)
 	 *     )?
+	 * </pre>
 	 */
 	protected void sequence_ExportClause_ExportDeclaration_ExportDeclarationImpl_ExportFromClause(ISerializationContext context, ExportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -12315,11 +12575,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ExportSpecifier returns ExportSpecifier
 	 *
 	 * Constraint:
 	 *     (element=IdentifierRef alias=IdentifierName?)
+	 * </pre>
 	 */
 	protected void sequence_ExportSpecifier(ISerializationContext context, ExportSpecifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -12327,6 +12589,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ExportedVariableDeclarationOrBinding<Yield> returns ExportedVariableBinding
 	 *     ExportedVariableDeclarationOrBinding returns ExportedVariableBinding
@@ -12335,6 +12598,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (pattern=BindingPattern expression=AssignmentExpression)
+	 * </pre>
 	 */
 	protected void sequence_ExportedVariableBinding(ISerializationContext context, ExportedVariableBinding semanticObject) {
 		if (errorAcceptor != null) {
@@ -12351,6 +12615,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NamespaceElement<Yield> returns ExportedVariableStatement
 	 *     NamespaceElement returns ExportedVariableStatement
@@ -12363,6 +12628,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         varDeclsOrBindings+=ExportedVariableDeclarationOrBinding 
 	 *         varDeclsOrBindings+=ExportedVariableDeclarationOrBinding*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ExportedVariableStatement(ISerializationContext context, ExportedVariableStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -12370,6 +12636,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedExpression.N4ClassExpression_1_0_0<Yield> returns ExpressionAnnotationList
 	 *     AnnotatedExpression.N4ClassExpression_1_0_0<PrimaryExpression.Yield> returns ExpressionAnnotationList
@@ -12463,6 +12730,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     annotations+=Annotation+
+	 * </pre>
 	 */
 	protected void sequence_ExpressionAnnotationList(ISerializationContext context, ExpressionAnnotationList semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -12470,12 +12738,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ExpressionDisguisedAsBlock<In> returns Block
 	 *     ExpressionDisguisedAsBlock returns Block
 	 *
 	 * Constraint:
 	 *     statements+=AssignmentExpressionStatement
+	 * </pre>
 	 */
 	protected void sequence_ExpressionDisguisedAsBlock(ISerializationContext context, Block semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -12483,6 +12753,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns ExpressionStatement
 	 *     RootStatement<Yield> returns ExpressionStatement
@@ -12494,6 +12765,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     expression=Expression
+	 * </pre>
 	 */
 	protected void sequence_ExpressionStatement(ISerializationContext context, ExpressionStatement semanticObject) {
 		if (errorAcceptor != null) {
@@ -12507,6 +12779,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     Expression<In,Yield> returns CommaExpression
 	 *     Expression<In> returns CommaExpression
@@ -12515,6 +12788,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (exprs+=Expression_CommaExpression_1_0 exprs+=AssignmentExpression exprs+=AssignmentExpression*)
+	 * </pre>
 	 */
 	protected void sequence_Expression(ISerializationContext context, CommaExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -12522,12 +12796,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     FinallyBlock<Yield> returns FinallyBlock
 	 *     FinallyBlock returns FinallyBlock
 	 *
 	 * Constraint:
 	 *     block=Block
+	 * </pre>
 	 */
 	protected void sequence_FinallyBlock(ISerializationContext context, FinallyBlock semanticObject) {
 		if (errorAcceptor != null) {
@@ -12541,6 +12817,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns ForStatement
 	 *     RootStatement<Yield> returns ForStatement
@@ -12579,6 +12856,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         ) 
 	 *         statement=Statement
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ForStatement(ISerializationContext context, ForStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -12586,6 +12864,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns HexIntLiteral
 	 *     PrimaryExpression returns HexIntLiteral
@@ -13218,6 +13497,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     value=HEX_INT
+	 * </pre>
 	 */
 	protected void sequence_HexIntLiteral(ISerializationContext context, HexIntLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -13231,6 +13511,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns IdentifierRef
 	 *     PrimaryExpression returns IdentifierRef
@@ -13868,6 +14149,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     id=[IdentifiableElement|BindingIdentifier]
+	 * </pre>
 	 */
 	protected void sequence_IdentifierRef(ISerializationContext context, IdentifierRef semanticObject) {
 		if (errorAcceptor != null) {
@@ -13881,6 +14163,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns IfStatement
 	 *     RootStatement<Yield> returns IfStatement
@@ -13892,6 +14175,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (expression=Expression ifStmt=Statement elseStmt=Statement?)
+	 * </pre>
 	 */
 	protected void sequence_IfStatement(ISerializationContext context, IfStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -13899,6 +14183,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ImportDeclaration returns ImportDeclaration
 	 *
@@ -13911,6 +14196,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         )? 
 	 *         module=[TModule|ModuleSpecifier]
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ImportClause_ImportDeclaration_ImportDeclarationImpl_ImportSpecifiersExceptDefault(ISerializationContext context, ImportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -13918,6 +14204,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Yield> returns IndexedAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<PostfixExpression.Yield> returns IndexedAccessExpression
@@ -14086,6 +14373,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (target=LeftHandSideExpression_IndexedAccessExpression_1_3_1_0 optionalChaining?='?.'? index=Expression)
+	 * </pre>
 	 */
 	protected void sequence_IndexedAccessExpressionTail_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(ISerializationContext context, IndexedAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -14093,6 +14381,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression<Yield> returns IndexedAccessExpression
 	 *     LeftHandSideExpression returns IndexedAccessExpression
@@ -14559,6 +14848,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         optionalChaining?='?.'? 
 	 *         index=Expression
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_IndexedAccessExpressionTail_LeftHandSideExpression_MemberExpression(ISerializationContext context, IndexedAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -14566,6 +14856,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns IndexedAccessExpression
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns IndexedAccessExpression
@@ -14617,6 +14908,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         optionalChaining?='?.'? 
 	 *         index=Expression
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_IndexedAccessExpressionTail_MemberExpression(ISerializationContext context, IndexedAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -14624,6 +14916,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Yield> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LeftHandSideExpression.Yield> returns IndexedAccessExpression
@@ -14754,6 +15047,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (target=MemberExpression_IndexedAccessExpression_1_3_3_0_0 optionalChaining?='?.'? index=Expression)
+	 * </pre>
 	 */
 	protected void sequence_IndexedAccessExpressionTail_MemberExpression_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, IndexedAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -14761,6 +15055,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Yield> returns IndexedAccessExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LeftHandSideExpression.Yield> returns IndexedAccessExpression
@@ -14891,6 +15186,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (target=MemberExpression_IndexedAccessExpression_2_1_0_0 optionalChaining?='?.'? index=Expression)
+	 * </pre>
 	 */
 	protected void sequence_IndexedAccessExpressionTail_MemberExpression_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(ISerializationContext context, IndexedAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -14898,6 +15194,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns IntLiteral
 	 *     PrimaryExpression returns IntLiteral
@@ -15530,6 +15827,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     value=INT
+	 * </pre>
 	 */
 	protected void sequence_IntLiteral(ISerializationContext context, IntLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -15543,6 +15841,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4InterfaceDeclaration<Yield> returns N4InterfaceDeclaration
 	 *     N4InterfaceDeclaration returns N4InterfaceDeclaration
@@ -15556,6 +15855,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominalNode superInterfaceRefs+=ParameterizedTypeRefNominalNode*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_InterfaceExtendsList_Members_N4InterfaceDeclaration_TypeParameters(ISerializationContext context, N4InterfaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -15563,11 +15863,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSXElementName returns JSXElementName
 	 *
 	 * Constraint:
 	 *     expression=JSXElementNameExpression
+	 * </pre>
 	 */
 	protected void sequence_JSXElementName(ISerializationContext context, JSXElementName semanticObject) {
 		if (errorAcceptor != null) {
@@ -15581,6 +15883,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns JSXElement
 	 *     PrimaryExpression returns JSXElement
@@ -16212,6 +16515,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* (jsxChildren+=JSXChild* jsxClosingName=JSXElementName)?)
+	 * </pre>
 	 */
 	protected void sequence_JSXElement(ISerializationContext context, JSXElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -16219,12 +16523,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSXChild returns JSXExpression
 	 *     JSXExpression returns JSXExpression
 	 *
 	 * Constraint:
 	 *     expression=AssignmentExpression
+	 * </pre>
 	 */
 	protected void sequence_JSXExpression(ISerializationContext context, JSXExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -16238,6 +16544,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns JSXFragment
 	 *     PrimaryExpression returns JSXFragment
@@ -16869,6 +17176,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     jsxChildren+=JSXChild*
+	 * </pre>
 	 */
 	protected void sequence_JSXFragment(ISerializationContext context, JSXFragment semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -16876,6 +17184,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSXAttribute returns JSXPropertyAttribute
 	 *     JSXPropertyAttribute returns JSXPropertyAttribute
@@ -16885,6 +17194,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         property=[IdentifiableElement|JSXIdentifier] 
 	 *         (jsxAttributeValue=StringLiteral | jsxAttributeValue=JSXElement | jsxAttributeValue=JSXFragment | jsxAttributeValue=AssignmentExpression)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_JSXPropertyAttribute(ISerializationContext context, JSXPropertyAttribute semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -16892,12 +17202,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSXAttribute returns JSXSpreadAttribute
 	 *     JSXSpreadAttribute returns JSXSpreadAttribute
 	 *
 	 * Constraint:
 	 *     expression=AssignmentExpression
+	 * </pre>
 	 */
 	protected void sequence_JSXSpreadAttribute(ISerializationContext context, JSXSpreadAttribute semanticObject) {
 		if (errorAcceptor != null) {
@@ -16911,6 +17223,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns LabelledStatement
 	 *     RootStatement<Yield> returns LabelledStatement
@@ -16922,6 +17235,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (name=BindingIdentifier statement=Statement)
+	 * </pre>
 	 */
 	protected void sequence_LabelledStatement(ISerializationContext context, LabelledStatement semanticObject) {
 		if (errorAcceptor != null) {
@@ -16938,6 +17252,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<Yield> returns TaggedTemplateString
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_3_0_0<PostfixExpression.Yield> returns TaggedTemplateString
@@ -17106,6 +17421,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (target=LeftHandSideExpression_TaggedTemplateString_1_3_3_0_0 optionalChaining?='?.'? template=TemplateLiteral)
+	 * </pre>
 	 */
 	protected void sequence_LeftHandSideExpression_IndexedAccessExpression_1_3_1_0_ParameterizedCallExpression_1_3_0_0_ParameterizedPropertyAccessExpression_1_3_2_0_TaggedTemplateString_1_3_3_0_0(ISerializationContext context, TaggedTemplateString semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -17113,6 +17429,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression<Yield> returns TaggedTemplateString
 	 *     LeftHandSideExpression returns TaggedTemplateString
@@ -17575,6 +17892,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (target=MemberExpression_TaggedTemplateString_1_3_3_2_0 optionalChaining?='?.'? template=TemplateLiteral) | 
 	 *         (target=MemberExpression_TaggedTemplateString_2_1_2_0 optionalChaining?='?.'? template=TemplateLiteral)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_LeftHandSideExpression_MemberExpression(ISerializationContext context, TaggedTemplateString semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -17582,6 +17900,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns LegacyOctalIntLiteral
 	 *     PrimaryExpression returns LegacyOctalIntLiteral
@@ -18214,6 +18533,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     value=LEGACY_OCTAL_INT
+	 * </pre>
 	 */
 	protected void sequence_LegacyOctalIntLiteral(ISerializationContext context, LegacyOctalIntLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -18227,11 +18547,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LetIdentifierRef returns IdentifierRef
 	 *
 	 * Constraint:
 	 *     id=[IdentifiableElement|LetAsIdentifier]
+	 * </pre>
 	 */
 	protected void sequence_LetIdentifierRef(ISerializationContext context, IdentifierRef semanticObject) {
 		if (errorAcceptor != null) {
@@ -18245,12 +18567,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotationArgument returns LiteralAnnotationArgument
 	 *     LiteralAnnotationArgument returns LiteralAnnotationArgument
 	 *
 	 * Constraint:
 	 *     literal=Literal
+	 * </pre>
 	 */
 	protected void sequence_LiteralAnnotationArgument(ISerializationContext context, LiteralAnnotationArgument semanticObject) {
 		if (errorAcceptor != null) {
@@ -18264,12 +18588,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LiteralOrComputedPropertyName<Yield> returns LiteralOrComputedPropertyName
 	 *     LiteralOrComputedPropertyName returns LiteralOrComputedPropertyName
 	 *
 	 * Constraint:
 	 *     (literalName=IdentifierName | literalName=STRING | literalName=NumericLiteralAsString | expression=AssignmentExpression)
+	 * </pre>
 	 */
 	protected void sequence_LiteralOrComputedPropertyName(ISerializationContext context, LiteralOrComputedPropertyName semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -18277,6 +18603,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LogicalANDExpression<In,Yield> returns BinaryLogicalExpression
 	 *     LogicalANDExpression<In> returns BinaryLogicalExpression
@@ -18304,6 +18631,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (lhs=LogicalANDExpression_BinaryLogicalExpression_1_0_0_0 op=LogicalANDOperator rhs=BitwiseORExpression)
+	 * </pre>
 	 */
 	protected void sequence_LogicalANDExpression(ISerializationContext context, BinaryLogicalExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -18323,6 +18651,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LogicalORExpression<In,Yield> returns BinaryLogicalExpression
 	 *     LogicalORExpression<In> returns BinaryLogicalExpression
@@ -18400,6 +18729,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (lhs=LogicalANDExpression_BinaryLogicalExpression_1_0_0_0 op=LogicalANDOperator rhs=BitwiseORExpression) | 
 	 *         (lhs=LogicalORExpression_BinaryLogicalExpression_1_0_0_0 op=LogicalOROperator rhs=LogicalANDExpression)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_LogicalANDExpression_LogicalORExpression(ISerializationContext context, BinaryLogicalExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -18407,6 +18737,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Yield> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LeftHandSideExpression.Yield> returns TaggedTemplateString
@@ -18537,6 +18868,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (target=MemberExpression_TaggedTemplateString_1_3_3_2_0 optionalChaining?='?.'? template=TemplateLiteral)
+	 * </pre>
 	 */
 	protected void sequence_MemberExpression_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, TaggedTemplateString semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -18544,6 +18876,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Yield> returns TaggedTemplateString
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LeftHandSideExpression.Yield> returns TaggedTemplateString
@@ -18674,6 +19007,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (target=MemberExpression_TaggedTemplateString_2_1_2_0 optionalChaining?='?.'? template=TemplateLiteral)
+	 * </pre>
 	 */
 	protected void sequence_MemberExpression_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(ISerializationContext context, TaggedTemplateString semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -18681,6 +19015,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression<Yield> returns NewTarget
 	 *     LeftHandSideExpression returns NewTarget
@@ -19182,6 +19517,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     {NewTarget}
+	 * </pre>
 	 */
 	protected void sequence_MemberExpression(ISerializationContext context, NewTarget semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19189,6 +19525,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns TaggedTemplateString
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns TaggedTemplateString
@@ -19239,6 +19576,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (target=MemberExpression_TaggedTemplateString_1_3_3_2_0 optionalChaining?='?.'? template=TemplateLiteral) | 
 	 *         (target=MemberExpression_TaggedTemplateString_2_1_2_0 optionalChaining?='?.'? template=TemplateLiteral)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_MemberExpression(ISerializationContext context, TaggedTemplateString semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19246,6 +19584,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     MultiplicativeExpression<Yield> returns MultiplicativeExpression
 	 *     MultiplicativeExpression returns MultiplicativeExpression
@@ -19617,6 +19956,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (lhs=MultiplicativeExpression_MultiplicativeExpression_1_0_0_0 op=MultiplicativeOperator rhs=UnaryExpression)
+	 * </pre>
 	 */
 	protected void sequence_MultiplicativeExpression(ISerializationContext context, MultiplicativeExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -19636,12 +19976,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4EnumDeclaration<Yield> returns N4EnumDeclaration
 	 *     N4EnumDeclaration returns N4EnumDeclaration
 	 *
 	 * Constraint:
 	 *     (declaredModifiers+=N4Modifier* name=BindingIdentifier? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
+	 * </pre>
 	 */
 	protected void sequence_N4EnumDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19649,11 +19991,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4EnumLiteral returns N4EnumLiteral
 	 *
 	 * Constraint:
 	 *     (name=IdentifierName valueExpression=AssignmentExpression?)
+	 * </pre>
 	 */
 	protected void sequence_N4EnumLiteral(ISerializationContext context, N4EnumLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19661,6 +20005,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4MemberAnnotationList returns N4MemberAnnotationList
 	 *     AnnotatedN4MemberDeclaration.N4GetterDeclaration_1_0_0_0_0<Yield> returns N4MemberAnnotationList
@@ -19681,6 +20026,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     annotations+=Annotation+
+	 * </pre>
 	 */
 	protected void sequence_N4MemberAnnotationList(ISerializationContext context, N4MemberAnnotationList semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19688,6 +20034,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns N4NamespaceDeclaration
 	 *     N4NamespaceDeclaration<Yield> returns N4NamespaceDeclaration
@@ -19698,6 +20045,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (declaredModifiers+=N4Modifier* name=BindingIdentifier ownedElementsRaw+=NamespaceElement*)
+	 * </pre>
 	 */
 	protected void sequence_N4NamespaceDeclaration(ISerializationContext context, N4NamespaceDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19705,12 +20053,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4SetterDeclaration<Yield> returns N4SetterDeclaration
 	 *     N4SetterDeclaration returns N4SetterDeclaration
 	 *
 	 * Constraint:
 	 *     (declaredModifiers+=N4Modifier* declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? fpar=FormalParameter body=Block?)
+	 * </pre>
 	 */
 	protected void sequence_N4SetterDeclaration(ISerializationContext context, N4SetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19718,6 +20068,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4TypeAliasDeclaration<Yield> returns N4TypeAliasDeclaration
 	 *     N4TypeAliasDeclaration returns N4TypeAliasDeclaration
@@ -19729,6 +20080,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (typeVars+=N4TypeVariable typeVars+=N4TypeVariable*)? 
 	 *         declaredTypeRefNode=TypeReferenceNode
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_N4TypeAliasDeclaration_TypeParameters(ISerializationContext context, N4TypeAliasDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19736,6 +20088,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     N4TypeVariable returns N4TypeVariable
 	 *
@@ -19746,6 +20099,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredUpperBoundNode=TypeReferenceNode? 
 	 *         (declaredOptional?='=' declaredDefaultArgumentNode=TypeReferenceNode?)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_N4TypeVariable(ISerializationContext context, N4TypeVariable semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19753,6 +20107,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NamedImportSpecifier returns NamedImportSpecifier
 	 *
@@ -19761,6 +20116,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (importedElement=[TExportableElement|BindingIdentifier] declaredDynamic?='+'?) | 
 	 *         (importedElement=[TExportableElement|IdentifierName] alias=BindingIdentifier declaredDynamic?='+'?)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_NamedImportSpecifier(ISerializationContext context, NamedImportSpecifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19768,11 +20124,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NamespaceImportSpecifier returns NamespaceImportSpecifier
 	 *
 	 * Constraint:
 	 *     (alias=BindingIdentifier declaredDynamic?='+'?)
+	 * </pre>
 	 */
 	protected void sequence_NamespaceImportSpecifier(ISerializationContext context, NamespaceImportSpecifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -19780,11 +20138,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NoSubstitutionTemplate returns TemplateSegment
 	 *
 	 * Constraint:
 	 *     value=NO_SUBSTITUTION_TEMPLATE_LITERAL
+	 * </pre>
 	 */
 	protected void sequence_NoSubstitutionTemplate(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
@@ -19798,6 +20158,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns NullLiteral
 	 *     PrimaryExpression returns NullLiteral
@@ -20429,6 +20790,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     {NullLiteral}
+	 * </pre>
 	 */
 	protected void sequence_NullLiteral(ISerializationContext context, NullLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -20436,6 +20798,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     BindingPattern<Yield> returns ObjectBindingPattern
 	 *     BindingPattern returns ObjectBindingPattern
@@ -20444,6 +20807,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (properties+=BindingProperty properties+=BindingProperty*)?
+	 * </pre>
 	 */
 	protected void sequence_ObjectBindingPattern(ISerializationContext context, ObjectBindingPattern semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -20451,6 +20815,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns ObjectLiteral
 	 *     PrimaryExpression returns ObjectLiteral
@@ -21082,6 +21447,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (propertyAssignments+=PropertyAssignment propertyAssignments+=PropertyAssignment*)?
+	 * </pre>
 	 */
 	protected void sequence_ObjectLiteral(ISerializationContext context, ObjectLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -21089,6 +21455,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns OctalIntLiteral
 	 *     PrimaryExpression returns OctalIntLiteral
@@ -21721,6 +22088,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     value=OCTAL_INT
+	 * </pre>
 	 */
 	protected void sequence_OctalIntLiteral(ISerializationContext context, OctalIntLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -21734,11 +22102,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ParameterizedTypeRefNominalNode returns TypeReferenceNode
 	 *
 	 * Constraint:
 	 *     typeRefInAST=ParameterizedTypeRefNominal
+	 * </pre>
 	 */
 	protected void sequence_ParameterizedTypeRefNominalNode(ISerializationContext context, TypeReferenceNode semanticObject) {
 		if (errorAcceptor != null) {
@@ -21752,6 +22122,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns ParenExpression
 	 *     PrimaryExpression returns ParenExpression
@@ -22383,6 +22754,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     expression=Expression
+	 * </pre>
 	 */
 	protected void sequence_ParenExpression(ISerializationContext context, ParenExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -22396,6 +22768,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PostfixExpression<Yield> returns PostfixExpression
 	 *     PostfixExpression returns PostfixExpression
@@ -22812,6 +23185,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (expression=PostfixExpression_PostfixExpression_1_0_0 op=PostfixOperator)
+	 * </pre>
 	 */
 	protected void sequence_PostfixExpression(ISerializationContext context, PostfixExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -22828,6 +23202,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AssignmentExpression<In,Yield> returns PromisifyExpression
 	 *     AssignmentExpression<In> returns PromisifyExpression
@@ -22848,6 +23223,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     expression=AssignmentExpression
+	 * </pre>
 	 */
 	protected void sequence_PromisifyExpression(ISerializationContext context, PromisifyExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -22861,6 +23237,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePair_1_0_0_0_0<Yield> returns PropertyAssignmentAnnotationList
 	 *     AnnotatedPropertyAssignment.PropertyNameValuePair_1_0_0_0_0<PropertyAssignment.Yield> returns PropertyAssignmentAnnotationList
@@ -22884,6 +23261,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     annotations+=Annotation+
+	 * </pre>
 	 */
 	protected void sequence_PropertyAssignmentAnnotationList(ISerializationContext context, PropertyAssignmentAnnotationList semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -22891,12 +23269,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyNameValuePairSingleNamePart<Yield> returns AssignmentExpression
 	 *     PropertyNameValuePairSingleNamePart returns AssignmentExpression
 	 *
 	 * Constraint:
 	 *     (lhs=PropertyNameValuePairSingleNamePart_AssignmentExpression_1_0 op=AssignmentOperatorOnlyAssign rhs=AssignmentExpression)
+	 * </pre>
 	 */
 	protected void sequence_PropertyNameValuePairSingleNamePart(ISerializationContext context, AssignmentExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -22916,12 +23296,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyNameValuePairSingleName<Yield> returns PropertyNameValuePairSingleName
 	 *     PropertyNameValuePairSingleName returns PropertyNameValuePairSingleName
 	 *
 	 * Constraint:
 	 *     (declaredTypeRefNode=TypeReferenceNode? expression=PropertyNameValuePairSingleNamePart)
+	 * </pre>
 	 */
 	protected void sequence_PropertyNameValuePairSingleName(ISerializationContext context, PropertyNameValuePairSingleName semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -22929,6 +23311,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertyNameValuePair<Yield> returns PropertyNameValuePair
 	 *     PropertyNameValuePair returns PropertyNameValuePair
@@ -22940,6 +23323,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredOptional?='?'? 
 	 *         expression=AssignmentExpression
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_PropertyNameValuePair(ISerializationContext context, PropertyNameValuePair semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -22947,12 +23331,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertySetterDeclaration<Yield> returns PropertySetterDeclaration
 	 *     PropertySetterDeclaration returns PropertySetterDeclaration
 	 *
 	 * Constraint:
 	 *     (declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? fpar=FormalParameter body=Block)
+	 * </pre>
 	 */
 	protected void sequence_PropertySetterDeclaration(ISerializationContext context, PropertySetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -22960,12 +23346,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PropertySpread<Yield> returns PropertySpread
 	 *     PropertySpread returns PropertySpread
 	 *
 	 * Constraint:
 	 *     expression=AssignmentExpression
+	 * </pre>
 	 */
 	protected void sequence_PropertySpread(ISerializationContext context, PropertySpread semanticObject) {
 		if (errorAcceptor != null) {
@@ -22979,6 +23367,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns RegularExpressionLiteral
 	 *     PrimaryExpression returns RegularExpressionLiteral
@@ -23610,6 +23999,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     value=REGEX_LITERAL
+	 * </pre>
 	 */
 	protected void sequence_RegularExpressionLiteral(ISerializationContext context, RegularExpressionLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -23623,6 +24013,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     RelationalExpression<In,Yield> returns RelationalExpression
 	 *     RelationalExpression<In> returns RelationalExpression
@@ -23880,6 +24271,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (lhs=RelationalExpression_RelationalExpression_1_0_0 op=RelationalOperator rhs=ShiftExpression)
+	 * </pre>
 	 */
 	protected void sequence_RelationalExpression(ISerializationContext context, RelationalExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -23899,6 +24291,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns ReturnStatement
 	 *     RootStatement<Yield> returns ReturnStatement
@@ -23910,6 +24303,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     expression=Expression?
+	 * </pre>
 	 */
 	protected void sequence_ReturnStatement(ISerializationContext context, ReturnStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -23917,6 +24311,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns ScientificIntLiteral
 	 *     PrimaryExpression returns ScientificIntLiteral
@@ -24549,6 +24944,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     value=SCIENTIFIC_INT
+	 * </pre>
 	 */
 	protected void sequence_ScientificIntLiteral(ISerializationContext context, ScientificIntLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -24562,11 +24958,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     Script returns Script
 	 *
 	 * Constraint:
 	 *     (hashbang=HASH_BANG? (annotations+=ScriptAnnotation | scriptElements+=ScriptElement)*)
+	 * </pre>
 	 */
 	protected void sequence_Script(ISerializationContext context, Script semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -24574,6 +24972,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ShiftExpression<Yield> returns ShiftExpression
 	 *     ShiftExpression returns ShiftExpression
@@ -24868,6 +25267,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (lhs=ShiftExpression_ShiftExpression_1_0_0 op=ShiftOperator rhs=AdditiveExpression)
+	 * </pre>
 	 */
 	protected void sequence_ShiftExpression(ISerializationContext context, ShiftExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -24887,6 +25287,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     SingleNameBinding<Yield,AllowType> returns BindingElement
 	 *     SingleNameBinding<Yield> returns BindingElement
@@ -24895,6 +25296,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     varDecl=VariableDeclaration
+	 * </pre>
 	 */
 	protected void sequence_SingleNameBinding(ISerializationContext context, BindingElement semanticObject) {
 		if (errorAcceptor != null) {
@@ -24908,6 +25310,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns StringLiteral
 	 *     PrimaryExpression returns StringLiteral
@@ -25539,6 +25942,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     value=STRING
+	 * </pre>
 	 */
 	protected void sequence_StringLiteral(ISerializationContext context, StringLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -25552,6 +25956,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns SuperLiteral
 	 *     PrimaryExpression returns SuperLiteral
@@ -26182,6 +26587,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     {SuperLiteral}
+	 * </pre>
 	 */
 	protected void sequence_SuperLiteral(ISerializationContext context, SuperLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -26189,6 +26595,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns SwitchStatement
 	 *     RootStatement<Yield> returns SwitchStatement
@@ -26200,6 +26607,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (expression=Expression cases+=CaseClause* (cases+=DefaultClause cases+=CaseClause*)?)
+	 * </pre>
 	 */
 	protected void sequence_SwitchStatement(ISerializationContext context, SwitchStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -26207,11 +26615,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TemplateHead returns TemplateSegment
 	 *
 	 * Constraint:
 	 *     value=TEMPLATE_HEAD
+	 * </pre>
 	 */
 	protected void sequence_TemplateHead(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
@@ -26225,6 +26635,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns TemplateLiteral
 	 *     PrimaryExpression returns TemplateLiteral
@@ -26859,6 +27270,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         segments+=NoSubstitutionTemplate | 
 	 *         (segments+=TemplateHead segments+=Expression? (segments+=TemplateMiddle segments+=Expression?)* segments+=TemplateTail)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_TemplateLiteral(ISerializationContext context, TemplateLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -26866,11 +27278,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TemplateMiddle returns TemplateSegment
 	 *
 	 * Constraint:
 	 *     value=TemplateMiddleLiteral
+	 * </pre>
 	 */
 	protected void sequence_TemplateMiddle(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
@@ -26884,11 +27298,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TemplateTail returns TemplateSegment
 	 *
 	 * Constraint:
 	 *     value=TemplateTailLiteral
+	 * </pre>
 	 */
 	protected void sequence_TemplateTail(ISerializationContext context, TemplateSegment semanticObject) {
 		if (errorAcceptor != null) {
@@ -26902,6 +27318,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns ThisLiteral
 	 *     PrimaryExpression returns ThisLiteral
@@ -27532,6 +27949,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     {ThisLiteral}
+	 * </pre>
 	 */
 	protected void sequence_ThisLiteral(ISerializationContext context, ThisLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -27539,6 +27957,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns ThrowStatement
 	 *     RootStatement<Yield> returns ThrowStatement
@@ -27550,6 +27969,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     expression=Expression
+	 * </pre>
 	 */
 	protected void sequence_ThrowStatement(ISerializationContext context, ThrowStatement semanticObject) {
 		if (errorAcceptor != null) {
@@ -27563,6 +27983,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns TryStatement
 	 *     RootStatement<Yield> returns TryStatement
@@ -27574,6 +27995,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (block=Block ((catch=CatchBlock finally=FinallyBlock?) | finally=FinallyBlock))
+	 * </pre>
 	 */
 	protected void sequence_TryStatement(ISerializationContext context, TryStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -27581,12 +28003,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AnnotationArgument returns TypeRefAnnotationArgument
 	 *     TypeRefAnnotationArgument returns TypeRefAnnotationArgument
 	 *
 	 * Constraint:
 	 *     typeRefNode=TypeReferenceNode
+	 * </pre>
 	 */
 	protected void sequence_TypeRefAnnotationArgument(ISerializationContext context, TypeRefAnnotationArgument semanticObject) {
 		if (errorAcceptor != null) {
@@ -27600,11 +28024,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeReferenceNode returns TypeReferenceNode
 	 *
 	 * Constraint:
 	 *     typeRefInAST=TypeRef
+	 * </pre>
 	 */
 	protected void sequence_TypeReferenceNode(ISerializationContext context, TypeReferenceNode semanticObject) {
 		if (errorAcceptor != null) {
@@ -27618,11 +28044,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeReferenceWithModifiersNode returns TypeReferenceNode
 	 *
 	 * Constraint:
 	 *     typeRefInAST=TypeRefWithModifiers
+	 * </pre>
 	 */
 	protected void sequence_TypeReferenceWithModifiersNode(ISerializationContext context, TypeReferenceNode semanticObject) {
 		if (errorAcceptor != null) {
@@ -27636,6 +28064,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     UnaryExpression<Yield> returns UnaryExpression
 	 *     UnaryExpression returns UnaryExpression
@@ -28009,6 +28438,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (op=UnaryOperator expression=UnaryExpression)
+	 * </pre>
 	 */
 	protected void sequence_UnaryExpression(ISerializationContext context, UnaryExpression semanticObject) {
 		if (errorAcceptor != null) {
@@ -28025,6 +28455,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     VariableDeclarationOrBinding<In,Yield> returns VariableBinding
 	 *     VariableDeclarationOrBinding<In> returns VariableBinding
@@ -28037,6 +28468,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (pattern=BindingPattern expression=AssignmentExpression)
+	 * </pre>
 	 */
 	protected void sequence_VariableBinding$OptionalInit$false$(ISerializationContext context, VariableBinding semanticObject) {
 		if (errorAcceptor != null) {
@@ -28053,6 +28485,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     VariableDeclarationOrBinding<In,Yield,OptionalInit> returns VariableBinding
 	 *     VariableDeclarationOrBinding<In,OptionalInit> returns VariableBinding
@@ -28065,6 +28498,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (pattern=BindingPattern expression=AssignmentExpression?)
+	 * </pre>
 	 */
 	protected void sequence_VariableBinding(ISerializationContext context, VariableBinding semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -28072,6 +28506,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     VariableDeclaration<In,Yield> returns VariableDeclaration
 	 *     VariableDeclaration<In> returns VariableDeclaration
@@ -28080,6 +28515,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (annotations+=Annotation* name=BindingIdentifier expression=AssignmentExpression?)
+	 * </pre>
 	 */
 	protected void sequence_VariableDeclaration$AllowType$false$_VariableDeclarationImpl(ISerializationContext context, VariableDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -28087,6 +28523,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns VariableStatement
 	 *     RootStatement<Yield> returns VariableStatement
@@ -28100,6 +28537,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (varStmtKeyword=VariableStatementKeyword varDeclsOrBindings+=VariableDeclarationOrBinding varDeclsOrBindings+=VariableDeclarationOrBinding*)
+	 * </pre>
 	 */
 	protected void sequence_VariableStatement(ISerializationContext context, VariableStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -28107,6 +28545,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns WhileStatement
 	 *     RootStatement<Yield> returns WhileStatement
@@ -28120,6 +28559,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (expression=Expression statement=Statement)
+	 * </pre>
 	 */
 	protected void sequence_WhileStatement(ISerializationContext context, WhileStatement semanticObject) {
 		if (errorAcceptor != null) {
@@ -28136,6 +28576,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ScriptElement returns WithStatement
 	 *     RootStatement<Yield> returns WithStatement
@@ -28147,6 +28588,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (expression=Expression statement=Statement)
+	 * </pre>
 	 */
 	protected void sequence_WithStatement(ISerializationContext context, WithStatement semanticObject) {
 		if (errorAcceptor != null) {
@@ -28163,6 +28605,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     AssignmentExpression<In,Yield> returns YieldExpression
 	 *     AssignmentExpression<Yield> returns YieldExpression
@@ -28177,6 +28620,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (many?='*'? expression=AssignmentExpression?)
+	 * </pre>
 	 */
 	protected void sequence_YieldExpression(ISerializationContext context, YieldExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
