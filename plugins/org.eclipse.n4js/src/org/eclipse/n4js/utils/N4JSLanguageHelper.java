@@ -123,8 +123,12 @@ public final class N4JSLanguageHelper {
 		N4JSProjectConfigSnapshot targetProject = workspaceAccess.findProjectContaining(resource);
 		if (targetProject != null && targetProject.getType() == ProjectType.DEFINITION) {
 			N4JSPackageName definedPackageName = targetProject.getDefinesPackage();
-			String definedProjectId = targetProject.getProjectIdForPackageName(definedPackageName.getRawName());
-			targetProject = workspaceAccess.findProjectByName(resource, definedProjectId);
+			if (definedPackageName != null) {
+				String definedProjectId = targetProject.getProjectIdForPackageName(definedPackageName.getRawName());
+				if (definedProjectId != null) {
+					targetProject = workspaceAccess.findProjectByName(resource, definedProjectId);
+				}
+			}
 		}
 		if (targetProject == null) {
 			return true;
