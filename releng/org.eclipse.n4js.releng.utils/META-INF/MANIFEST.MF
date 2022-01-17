@@ -11,7 +11,6 @@ Require-Bundle: org.eclipse.xtext.xtext.generator,
  org.eclipse.emf.mwe.core,
  com.google.guava
 Export-Package: de.itemis.xcore2java,
- org.eclipse.n4js.filechecker,
  org.eclipse.n4js.antlr,
  org.eclipse.n4js.antlr.compressor,
  org.eclipse.n4js.antlr.n4js,
