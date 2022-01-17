@@ -25,15 +25,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileCopier;
@@ -43,6 +46,8 @@ import org.junit.Assert;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Predicates;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 /**
  * Provides access to the projects located in the N4JS Git repository under top-level folder "n4js-libs". Assumes that
@@ -57,6 +62,8 @@ public class N4jsLibsAccess {
 	private static final String TEST_HELPERS_NAME = "testhelpers";
 	/** Name of the top-level folder containing the "n4js-libs" inside the N4JS Git repository. */
 	private static final String N4JS_LIBS_NAME = "n4js-libs";
+
+	private static final Logger LOGGER = Logger.getLogger(N4jsLibsAccess.class);
 
 	/**
 	 * Returns the absolute path to the location of the N4JS libraries (i.e. the npm packages located under
@@ -401,12 +408,49 @@ public class N4jsLibsAccess {
 		Path n4jsRuntimeSrcGen = n4jsRuntimeLink.resolve("src-gen");
 		String warning = "\n" +
 				"******************************************************************\n" +
-				"Maybe you forgot to run MWE2 workflow BuildN4jsLibs?\n" +
+				"Maybe you forgot to run MWE2 workflow 'BuildN4jsLibs.mwe2'?\n" +
 				"******************************************************************";
 		Assert.assertTrue("n4js-runtime does not exist in node_modules folder: " + n4jsRuntimeLink + warning,
 				Files.exists(n4jsRuntimeLink));
 		Assert.assertTrue("src-gen folder in n4js-runtime does not exist: " + n4jsRuntimeSrcGen + warning,
 				Files.isDirectory(n4jsRuntimeSrcGen));
+	}
+
+	/**
+	 * Asserts that the local verdaccio is reachable at {@link N4JSGlobals#VERDACCIO_URL} and that
+	 * <code>n4js-runtime@latest</code> resolves to version {@value N4JSGlobals#VERDACCIO_TEST_VERSION}.
+	 */
+	public static void assertVerdaccioIsRunning(long timeoutDuration, TimeUnit timeoutUnit) {
+		final CliTools cli = new CliTools();
+		cli.setInheritIO(false);
+		cli.setIgnoreFailure(true); // want to create a custom failure below
+		cli.setTimeout(timeoutDuration, timeoutUnit);
+		final ProcessResult viewResult = cli.yarnRun(
+				new File(".").getAbsoluteFile().toPath(),
+				"info", N4JSGlobals.N4JS_RUNTIME.getRawName(),
+				"--json",
+				"--registry", N4JSGlobals.VERDACCIO_URL);
+		if (viewResult.getExitCode() == 0 && viewResult.getException() == null) {
+			String stdout = viewResult.getStdOut();
+			JsonElement root = JsonParser.parseString(stdout);
+			String name = JsonUtils.getDeepAsString(root, "data", "name");
+			String latestVersion = JsonUtils.getDeepAsString(root, "data", "dist-tags", "latest");
+			if (name != null && name.equals(N4JSGlobals.N4JS_RUNTIME.getRawName())
+					&& latestVersion != null && latestVersion.equals(N4JSGlobals.VERDACCIO_TEST_VERSION)) {
+				return; // success!
+			}
+		}
+		final String msg = "verdaccio not running or version of " + N4JSGlobals.N4JS_RUNTIME.getRawName()
+				+ "@latest is not " + N4JSGlobals.VERDACCIO_TEST_VERSION + "\n"
+				+ "*********************************************************************************\n"
+				+ "For running this test locally, first start a local verdaccio server with:\n"
+				+ "$ mvn -DnoTests clean verify\n"
+				+ "  (OR in Eclipse: simply run MWE2 workflow 'BuildN4jsLibs.mwe2')\n"
+				+ "$ ./releng/utils/scripts/start-verdaccio.sh\n"
+				+ "(note: requires Java 11 and docker)\n"
+				+ "*********************************************************************************";
+		LOGGER.error(msg);
+		Assert.fail(msg);
 	}
 
 	/**

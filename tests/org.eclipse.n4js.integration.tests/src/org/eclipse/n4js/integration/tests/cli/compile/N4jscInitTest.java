@@ -22,14 +22,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.n4js.cli.N4jscTestOptions;
 import org.eclipse.n4js.cli.helper.AbstractCliCompileTest;
 import org.eclipse.n4js.cli.helper.CliCompileResult;
+import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
 import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,6 +43,12 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 	static final String CWD_NAME = "TestInit";
 
 	File cwd;
+
+	/** Ensure we get a helpful error message when running this test locally without first starting verdaccio. */
+	@BeforeClass
+	public static void assertVerdaccioIsRunning() {
+		N4jsLibsAccess.assertVerdaccioIsRunning(6, TimeUnit.SECONDS);
+	}
 
 	/** Set current working directory. */
 	@Before
