@@ -128,6 +128,10 @@ public enum PackageJsonProperties {
 			N4JS, GENERATOR),
 	/** Key of package.json property "generator"/"d.ts". */
 	GENERATOR_DTS("d.ts", "Turn on/off generation of d.ts files", JSONBooleanLiteral.class, false, N4JS, GENERATOR),
+	/** Key of package.json property "generator"/"cjsDefaultImports". */
+	GENERATOR_REWRITE_CJS_IMPORTS("rewriteCjsImports",
+			"Emit all imports from a CJS module as default imports with destructuring",
+			JSONBooleanLiteral.class, true, N4JS, GENERATOR),
 
 	;
 

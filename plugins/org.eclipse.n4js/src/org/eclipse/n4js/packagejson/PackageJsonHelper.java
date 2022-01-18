@@ -16,6 +16,7 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringO
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringsInArrayOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_REWRITE_CJS_IMPORTS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_DTS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_SOURCE_MAPS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
@@ -232,6 +233,11 @@ public class PackageJsonHelper {
 				target.setGeneratorEnabledDts(
 						asBooleanOrDefault(value, (Boolean) PackageJsonProperties.GENERATOR_DTS.defaultValue));
 				break;
+			case GENERATOR_REWRITE_CJS_IMPORTS:
+				target.setGeneratorEnabledRewriteCjsImports(
+						asBooleanOrDefault(value,
+								(Boolean) PackageJsonProperties.GENERATOR_REWRITE_CJS_IMPORTS.defaultValue));
+				break;
 			default:
 				break;
 			}
@@ -352,6 +358,9 @@ public class PackageJsonHelper {
 		}
 		if (target.isGeneratorEnabledDts() == null) {
 			target.setGeneratorEnabledDts((Boolean) GENERATOR_DTS.defaultValue);
+		}
+		if (target.isGeneratorEnabledRewriteCjsImports() == null) {
+			target.setGeneratorEnabledRewriteCjsImports((Boolean) GENERATOR_REWRITE_CJS_IMPORTS.defaultValue);
 		}
 		if (target.getOutputExtension() == null) {
 			if (valueOfTopLevelPropertyType != null && valueOfTopLevelPropertyType.trim().equals("module")) {

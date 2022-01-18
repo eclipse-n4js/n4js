@@ -63,6 +63,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final boolean yarnWorkspaceRoot;
 	private final boolean isGeneratorEnabledSourceMaps;
 	private final boolean isGeneratorEnabledDts;
+	private final boolean isGeneratorEnabledRewriteCjsImports;
 	private final ImmutableList<String> workspaces;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
@@ -75,7 +76,7 @@ public class ProjectDescription extends ImmutableDataClass {
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
 			boolean esm, boolean n4jsNature, boolean yarnWorkspaceRoot, boolean isGeneratorEnabledSourceMaps,
-			boolean isGeneratorEnabledDts, Iterable<String> workspaces) {
+			boolean isGeneratorEnabledDts, boolean isGeneratorEnabledRewriteCjsImports, Iterable<String> workspaces) {
 
 		this.location = location;
 		this.relatedRootlocation = relatedRootlocation;
@@ -105,6 +106,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
 		this.isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps;
 		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
+		this.isGeneratorEnabledRewriteCjsImports = isGeneratorEnabledRewriteCjsImports;
 		this.workspaces = ImmutableList.copyOf(workspaces);
 	}
 
@@ -137,6 +139,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.yarnWorkspaceRoot = template.yarnWorkspaceRoot;
 		this.isGeneratorEnabledSourceMaps = template.isGeneratorEnabledSourceMaps;
 		this.isGeneratorEnabledDts = template.isGeneratorEnabledDts;
+		this.isGeneratorEnabledRewriteCjsImports = template.isGeneratorEnabledRewriteCjsImports;
 		this.workspaces = template.workspaces;
 	}
 
@@ -174,6 +177,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setYarnWorkspaceRoot(yarnWorkspaceRoot);
 		builder.setGeneratorEnabledSourceMaps(isGeneratorEnabledSourceMaps);
 		builder.setGeneratorEnabledDts(isGeneratorEnabledDts);
+		builder.setGeneratorEnabledRewriteCjsImports(isGeneratorEnabledRewriteCjsImports);
 		builder.getWorkspaces().addAll(workspaces);
 		return builder;
 	}
@@ -339,6 +343,11 @@ public class ProjectDescription extends ImmutableDataClass {
 		return isGeneratorEnabledDts;
 	}
 
+	/** Returns true iff default imports should be emitted for all imports from CJS modules. */
+	public boolean isGeneratorEnabledRewriteCjsImports() {
+		return isGeneratorEnabledRewriteCjsImports;
+	}
+
 	/**
 	 * Value of top-level property "workspaces" in package.json, used by yarn to denote the contained projects.
 	 */
@@ -377,6 +386,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps,
 				isGeneratorEnabledDts,
+				isGeneratorEnabledRewriteCjsImports,
 				workspaces);
 	}
 
@@ -411,6 +421,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& yarnWorkspaceRoot == other.yarnWorkspaceRoot
 				&& isGeneratorEnabledSourceMaps == other.isGeneratorEnabledSourceMaps
 				&& isGeneratorEnabledDts == other.isGeneratorEnabledDts
+				&& isGeneratorEnabledRewriteCjsImports == other.isGeneratorEnabledRewriteCjsImports
 				&& Objects.equals(workspaces, other.workspaces);
 	}
 

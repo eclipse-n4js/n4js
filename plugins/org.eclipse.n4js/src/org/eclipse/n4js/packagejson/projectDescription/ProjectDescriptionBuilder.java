@@ -54,6 +54,7 @@ public class ProjectDescriptionBuilder {
 	private boolean yarnWorkspaceRoot;
 	private Boolean isGeneratorEnabledSourceMaps;
 	private Boolean isGeneratorEnabledDts;
+	private Boolean isGeneratorEnabledRewriteCjsImports;
 	private final List<String> workspaces = new ArrayList<>();
 
 	public ProjectDescriptionBuilder() {
@@ -64,13 +65,16 @@ public class ProjectDescriptionBuilder {
 		id = id == null ? computeProjectID() : id;
 		isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps == null ? false : isGeneratorEnabledSourceMaps;
 		isGeneratorEnabledDts = isGeneratorEnabledDts == null ? false : isGeneratorEnabledDts;
+		isGeneratorEnabledRewriteCjsImports = isGeneratorEnabledRewriteCjsImports == null ? false
+				: isGeneratorEnabledRewriteCjsImports;
 
 		return new ProjectDescription(location, relatedRootLocation, id,
 				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, outputExtension, sourceContainers, moduleFilters, testedProjects, definesPackage,
 				nestedNodeModulesFolder, esm, n4jsNature, yarnWorkspaceRoot,
-				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, workspaces);
+				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, isGeneratorEnabledRewriteCjsImports,
+				workspaces);
 	}
 
 	public String computeProjectID() {
@@ -350,6 +354,15 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setGeneratorEnabledDts(boolean isGeneratorEnabledDts) {
 		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
+		return this;
+	}
+
+	public Boolean isGeneratorEnabledRewriteCjsImports() {
+		return isGeneratorEnabledRewriteCjsImports;
+	}
+
+	public ProjectDescriptionBuilder setGeneratorEnabledRewriteCjsImports(boolean isGeneratorEnabledRewriteCjsImports) {
+		this.isGeneratorEnabledRewriteCjsImports = isGeneratorEnabledRewriteCjsImports;
 		return this;
 	}
 

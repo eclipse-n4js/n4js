@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
+import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
@@ -35,7 +36,8 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 /**
  * Since switching to node's native support for ES6 modules, we have to re-write all import declarations
- * that import from an old CommonJS module.
+ * that import from an old CommonJS module. Note that this behavior can be turned on/off in the package.json
+ * file, see {@link PackageJsonProperties#GENERATOR_CJS_DEFAULT_IMPORTS}.
  */
 @ExcludesAfter(SanitizeImportsTransformation) // CommonJsImportsTransformation must not run before SanitizeImportsTransformation
 @ExcludesBefore(ModuleWrappingTransformation) // CommonJsImportsTransformation must not run after ModuleWrappingTransformation
@@ -60,6 +62,10 @@ class CommonJsImportsTransformation extends Transformation {
 	}
 
 	override void transform() {
+		if (!state.project.projectDescription.generatorEnabledRewriteCjsImports) {
+			// rewriting of CJS imports is not enabled for the containing project
+			return;
+		}
 		if (!state.project.isESM) {
 			// only intended for N4JS projects with {@code "type": "module"} in the package.json
 			return;
