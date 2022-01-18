@@ -91,15 +91,15 @@ echo "==== STEP 1/8: Start Verdaccio"
 docker run -d -it --rm --name extension-publish-verdaccio -p 4873:4873 -v ${VERDACCIO_CONFIG_DIR}/config.yaml:/verdaccio/conf/config.yaml ${VERDACCIO_IMAGE}
 
 echo "Wait 1s"
-sleep 1s
+sleep 1
 echo "Wait 2s"
-sleep 1s
+sleep 1
 echo "Wait 3s"
-sleep 1s
+sleep 1
 echo "Wait 4s"
-sleep 1s
+sleep 1
 echo "Wait 5s"
-sleep 1s
+sleep 1
 
 
 
