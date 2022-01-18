@@ -137,9 +137,10 @@ class ModuleSpecifierTransformation extends Transformation {
 		}
 		val differingSegments = Arrays.copyOfRange(targetModulePath, i, targetModulePath.length);
 		val goUpCount = localModulePath.length - i;
+		val ext = getActualFileExtension(targetModule);
 		val result = (if (goUpCount > 0) "../".repeat(goUpCount) else "./")
 			+ Joiner.on("/").join(differingSegments + #[targetModuleName])
-			+ "." + getActualFileExtension(targetModule);
+			+ (if (ext !== null && !ext.empty) "." + ext else "");
 		return result;
 	}
 
@@ -177,8 +178,11 @@ class ModuleSpecifierTransformation extends Transformation {
 		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(targetModule);
 		sb.append(targetModuleSpecifier);
 
-		sb.append('.');
-		sb.append(getActualFileExtension(targetModule));
+		val ext = getActualFileExtension(targetModule);
+		if (ext !== null && !ext.empty) {
+			sb.append('.');
+			sb.append(ext);
+		}
 
 		return sb.toString();
 	}
