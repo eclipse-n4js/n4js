@@ -16,6 +16,7 @@ import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +24,13 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -135,6 +138,13 @@ public class ProjectImportEnablingScope implements IScope {
 	public IEObjectDescription getSingleElement(QualifiedName name) {
 		final List<IEObjectDescription> result = Lists.newArrayList(getElements(name));
 		int size = result.size();
+
+		// handle combination of .js / .cjs / .mjs files with same base name
+		if (size > 1) {
+			removeSuperfluousPlainJsFiles(result);
+			size = result.size();
+		}
+
 		if (size == 1) {
 			// main case
 			return result.get(0);
@@ -395,6 +405,55 @@ public class ProjectImportEnablingScope implements IScope {
 					impDecl.setModuleSpecifierForm(moduleSpecifierForm);
 				}, impDecl);
 			}
+		}
+	}
+
+	/**
+	 * If the given list contains one or more {@link IEObjectDescription}s representing a plain JS file (i.e. a file
+	 * with one of the extensions in {@link N4JSGlobals#ALL_JS_FILE_EXTENSIONS}), this method will retain only one of
+	 * those descriptions, favoring {@code .mjs} files over {@code .cjs} files over {@code .js} files, and remove all
+	 * others. Otherwise, the given list will remain unchanged.
+	 */
+	private void removeSuperfluousPlainJsFiles(List<IEObjectDescription> descs) {
+		int size = descs.size();
+		if (size < 2) {
+			return;
+		}
+		IEObjectDescription firstJS = null;
+		IEObjectDescription firstCJS = null;
+		IEObjectDescription firstMJS = null;
+		Iterator<IEObjectDescription> iter = descs.iterator();
+		while (iter.hasNext()) {
+			IEObjectDescription curr = iter.next();
+			if (curr.getEClass() != TypesPackage.Literals.TMODULE) {
+				// the special handling applies only to files, which are represented on the level of
+				// IEObjectDescriptions as TModules, so for everything else we can continue here:
+				continue;
+			}
+			String currExt = curr.getEObjectURI().fileExtension();
+			if (N4JSGlobals.JS_FILE_EXTENSION.equals(currExt)) {
+				if (firstJS == null) {
+					firstJS = curr;
+				}
+				iter.remove();
+			} else if (N4JSGlobals.CJS_FILE_EXTENSION.equals(currExt)) {
+				if (firstCJS == null) {
+					firstCJS = curr;
+				}
+				iter.remove();
+			} else if (N4JSGlobals.MJS_FILE_EXTENSION.equals(currExt)) {
+				if (firstMJS == null) {
+					firstMJS = curr;
+				}
+				iter.remove();
+			}
+		}
+		if (firstMJS != null) {
+			descs.add(firstMJS);
+		} else if (firstCJS != null) {
+			descs.add(firstCJS);
+		} else if (firstJS != null) {
+			descs.add(firstJS);
 		}
 	}
 }
