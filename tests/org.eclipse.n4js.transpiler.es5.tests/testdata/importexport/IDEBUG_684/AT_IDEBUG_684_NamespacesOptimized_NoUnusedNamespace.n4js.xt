@@ -34,8 +34,8 @@ console.log(S);
 
 
  /* XPECT output ---
-[class Error extends N4Object]
-[Module: null prototype] { C1: [class C1 extends N4Object] }
+[class Error extends N4Object2]
+[Module: null prototype] { C1: [class C1 extends N4Object2] }
 --- */
 
 import * as N from "importexport/IDEBUG_684/Err"

@@ -303,7 +303,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 				'''    (Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "OtherProject" on the file system.)'''
 			],
 			"MainProject/package.json" -> #[
-				'''    (Error, [15:3 - 15:22], Project does not exist with project ID: OtherProject.)'''
+				'''    (Error, [16:3 - 16:22], Project does not exist with project ID: OtherProject.)'''
 			],
 			"Main.n4js" -> #[
 				'''    (Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)''',
