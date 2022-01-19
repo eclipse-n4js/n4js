@@ -66,7 +66,7 @@ public class MemberCube {
 
 	private void addMembers(int source, List<TMember> members) {
 		for (TMember member : members) {
-			// ensureResolution(member);
+			ensureResolution(member);
 			NameStaticPair nsp = NameStaticPair.of(member);
 			MemberMatrix memberMatrix = memberMatrixesByName.get(nsp);
 			if (memberMatrix == null) {
