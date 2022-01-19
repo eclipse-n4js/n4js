@@ -92,6 +92,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
 		fd.setDeclaredTypeRefNode(trn);
 
+		addLocationInfo(fd, ctx);
 		result.getOwnedMembersRaw().add(fd);
 	}
 }

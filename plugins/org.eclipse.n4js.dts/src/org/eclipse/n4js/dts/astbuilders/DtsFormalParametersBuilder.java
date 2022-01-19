@@ -15,6 +15,8 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_parameterBlock;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_parameterList;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_parameterListTrailingComma;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -55,7 +57,13 @@ public class DtsFormalParametersBuilder
 	}
 
 	@Override
+	protected List<FormalParameter> getDefaultResult() {
+		return Collections.emptyList();
+	}
+
+	@Override
 	public void enterRequiredParameter(RequiredParameterContext ctx) {
+		result = new ArrayList<>();
 		buildBaseFormalParameter(ctx.identifierOrPattern(), ctx.colonSepTypeRef());
 	}
 

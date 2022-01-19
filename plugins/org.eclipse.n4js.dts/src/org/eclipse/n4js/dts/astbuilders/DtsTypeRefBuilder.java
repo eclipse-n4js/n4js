@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.TypingStrategy;
+import org.eclipse.xtext.XtextFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.BidiTreeIterable;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -214,7 +215,7 @@ public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, Typ
 
 		@Override
 		public EObject getGrammarElement() {
-			return null;
+			return XtextFactory.eINSTANCE.createKeyword();
 		}
 
 		@Override

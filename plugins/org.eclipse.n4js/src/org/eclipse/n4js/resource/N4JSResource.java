@@ -1157,7 +1157,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			final String targetFileExt = URIUtils.fileExtension(targetResourceUri);
 			if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(targetFileExt)
 					|| N4JSGlobals.N4JSD_FILE_EXTENSION.equals(targetFileExt)
-					|| N4JSGlobals.N4JSX_FILE_EXTENSION.equals(targetFileExt)) {
+					|| N4JSGlobals.N4JSX_FILE_EXTENSION.equals(targetFileExt)
+					|| N4JSGlobals.DTS_FILE_EXTENSION.equals(targetFileExt)) {
 
 				// proxy is pointing into an .n4js or .n4jsd file ...
 				// check if we can work with the TModule from the index or if it is mandatory to load from source

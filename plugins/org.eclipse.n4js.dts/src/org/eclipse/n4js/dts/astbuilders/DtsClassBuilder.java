@@ -69,6 +69,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 		if (ctx.propertyMemberBase() != null && ctx.propertyName() != null) {
 			// this is a property
 			N4FieldDeclaration fd = N4JSFactory.eINSTANCE.createN4FieldDeclaration();
+
 			LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
 			locpn.setLiteralName(ctx.propertyName().getText());
 			fd.setDeclaredName(locpn);
@@ -96,6 +97,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
 			fd.setDeclaredTypeRefNode(trn);
 
+			addLocationInfo(fd, ctx);
 			result.getOwnedMembersRaw().add(fd);
 		}
 	}

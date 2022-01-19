@@ -410,6 +410,9 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 
 	private Location computeLocation(EObject obj) {
 		ITextRegion region = locationInFileProvider.getSignificantTextRegion(obj);
+		if (region == null) {
+			return null;
+		}
 		int offset = region.getOffset();
 		int length = region.getLength();
 		Resource resource = obj.eResource();

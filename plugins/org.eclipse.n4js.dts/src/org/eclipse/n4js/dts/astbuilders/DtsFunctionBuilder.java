@@ -48,17 +48,17 @@ public class DtsFunctionBuilder extends AbstractDtsSubBuilder<FunctionDeclaratio
 
 	@Override
 	public void enterFunctionDeclaration(FunctionDeclarationContext ctx) {
-		FunctionDeclaration fd = N4JSFactory.eINSTANCE.createFunctionDeclaration();
-		fd.setName(ctx.identifierName().getText());
-		fd.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
+		result = N4JSFactory.eINSTANCE.createFunctionDeclaration();
+		result.setName(ctx.identifierName().getText());
+		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
-		fd.setGenerator(ctx.Multiply() != null);
+		result.setGenerator(ctx.Multiply() != null);
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
-		fd.setDeclaredReturnTypeRefNode(trn);
+		result.setDeclaredReturnTypeRefNode(trn);
 		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.callSignature().typeParameters());
-		fd.getTypeVars().addAll(typeVars);
+		result.getTypeVars().addAll(typeVars);
 		List<FormalParameter> fPars = formalParametersBuilder.consume(ctx.callSignature().parameterBlock());
-		fd.getFpars().addAll(fPars);
+		result.getFpars().addAll(fPars);
 	}
 
 }

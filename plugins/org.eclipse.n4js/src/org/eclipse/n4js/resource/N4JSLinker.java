@@ -374,12 +374,12 @@ public class N4JSLinker extends LazyLinker {
 
 	@Override
 	protected void clearReferences(EObject obj) {
-		super.clearReferences(obj);
 
 		if (Objects.equal(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(obj.eResource().getURI()))) {
 			return;
 		}
 
+		super.clearReferences(obj);
 		if (obj instanceof Script) {
 			((Script) obj).setFlaggedUsageMarkingFinished(false); // open transient flag for new used-resolutions
 		} else if (obj instanceof ImportDeclaration) {

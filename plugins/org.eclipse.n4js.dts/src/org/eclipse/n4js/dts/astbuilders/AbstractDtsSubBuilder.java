@@ -16,6 +16,8 @@ import java.util.Set;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.dts.ManualParseTreeWalker;
 import org.eclipse.n4js.dts.TypeScriptParserBaseListener;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -54,6 +56,11 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 
 		walker = new ManualParseTreeWalker(this, ctx, resource);
 		walker.start();
+
+		if (result instanceof EObject) {
+			addLocationInfo((EObject) result, ctx);
+		}
+
 		try {
 			return result;
 		} finally {
@@ -74,4 +81,8 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 		}
 	}
 
+	/**  */
+	protected void addLocationInfo(EObject obj, ParserRuleContext ctx) {
+		obj.eAdapters().add(new DtsParseTreeNodeInfo(ctx));
+	}
 }

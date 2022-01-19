@@ -31,8 +31,11 @@ public class URIUtils {
 
 	/** Fix {@link URI#fileExtension()} w.r.t. unsupported d.ts file extension that includes dots */
 	static public String fileExtension(org.eclipse.emf.common.util.URI uri) {
+		if (uri == null) {
+			return null;
+		}
 		String fileExtension = uri.fileExtension();
-		if (extensionPrefixes.containsKey(fileExtension)) {
+		if (fileExtension != null && extensionPrefixes.containsKey(fileExtension)) {
 			URI trimmedUri = uri.trimFileExtension();
 			String fileExtensionPrefix = trimmedUri.fileExtension();
 			if (extensionPrefixes.get(fileExtension).contains(fileExtensionPrefix)) {
@@ -44,9 +47,12 @@ public class URIUtils {
 
 	/** Fix {@link URI#trimFileExtension()} w.r.t. unsupported d.ts file extension that includes dots */
 	static public URI trimFileExtension(org.eclipse.emf.common.util.URI uri) {
+		if (uri == null) {
+			return null;
+		}
 		URI trimmedUri = uri.trimFileExtension();
 		String fileExtension = uri.fileExtension();
-		if (extensionPrefixes.containsKey(fileExtension)) {
+		if (fileExtension != null && extensionPrefixes.containsKey(fileExtension)) {
 			String fileExtensionPrefix = trimmedUri.fileExtension();
 			if (extensionPrefixes.get(fileExtension).contains(fileExtensionPrefix)) {
 				return trimmedUri.trimFileExtension();

@@ -88,6 +88,7 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 		if (requiredType == null)
 			return Collections.<EObject> emptyList();
 
+		final String uri = context.eResource().getURI().toFileString();
 		final String crossRefString = getCrossRefNodeAsString(context, ref, node);
 		if (crossRefString != null && !crossRefString.equals("")) {
 			final IScope scope = getScope(context, ref);
