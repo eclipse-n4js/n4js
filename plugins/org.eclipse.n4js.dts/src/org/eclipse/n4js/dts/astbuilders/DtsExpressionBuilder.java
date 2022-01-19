@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
-import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.SingleExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParameterContext;
 import org.eclipse.n4js.n4JS.Expression;
@@ -18,12 +17,18 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsExpressionBuilder extends AbstractDtsSubBuilder<SingleExpressionContext, Expression> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder();
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
+
+	/** Constructor */
+	public DtsExpressionBuilder(LazyLinkingResource resource) {
+		super(resource);
+	}
 
 	@Override
 	public void enterTypeParameter(TypeParameterContext ctx) {

@@ -13,28 +13,39 @@ package org.eclipse.n4js.dts.astbuilders;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeParameterList;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeParameters;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParameterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsTypeVariablesBuilder extends AbstractDtsSubBuilder<TypeParametersContext, List<N4TypeVariable>> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder();
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
+
+	/** Constructor */
+	public DtsTypeVariablesBuilder(LazyLinkingResource resource) {
+		super(resource);
+	}
 
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
 				RULE_typeParameters,
 				RULE_typeParameterList);
+	}
+
+	@Override
+	protected List<N4TypeVariable> getDefaultResult() {
+		return Collections.emptyList();
 	}
 
 	@Override

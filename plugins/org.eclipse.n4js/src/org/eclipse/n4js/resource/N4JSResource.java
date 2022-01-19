@@ -765,7 +765,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			ResourceType resourceType = ResourceType.getResourceType(getURI());
 			if (resourceType == ResourceType.DTS) {
 				try (Reader reader = createReader(inputStream);) {
-					IParseResult result = new DtsParser().parse(reader);
+					IParseResult result = new DtsParser().parse(reader, this);
 					updateInternalState(this.getParseResult(), result);
 				}
 			} else {
@@ -1393,6 +1393,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// makes sense remains to be reconsidered (see IDEBUG-257 and IDEBUG-233) ...
 		contents.get(0); // trigger demand load if necessary
 		return super.getLazyProxyInformation(idx);
+	}
+
+	@Override
+	public void clearLazyProxyInformation() {
+		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
+			return;
+		}
+		super.clearLazyProxyInformation();
 	}
 
 	/**

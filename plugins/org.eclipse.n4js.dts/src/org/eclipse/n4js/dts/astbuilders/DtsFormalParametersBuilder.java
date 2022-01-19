@@ -18,7 +18,6 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_parameterListTrailingCo
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.ColonSepTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierOrPatternContext;
 import org.eclipse.n4js.dts.TypeScriptParser.OptionalParameterContext;
@@ -30,6 +29,7 @@ import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
@@ -37,8 +37,13 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 public class DtsFormalParametersBuilder
 		extends AbstractDtsSubBuilder<ParameterBlockContext, List<FormalParameter>> {
 
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder();
-	private final DtsExpressionBuilder expressionBuilder = new DtsExpressionBuilder();
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
+	private final DtsExpressionBuilder expressionBuilder = new DtsExpressionBuilder(resource);
+
+	/** Constructor */
+	public DtsFormalParametersBuilder(LazyLinkingResource resource) {
+		super(resource);
+	}
 
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {

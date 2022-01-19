@@ -42,7 +42,6 @@ import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
-import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -51,6 +50,7 @@ import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.VariableStatement;
 
 /**
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
@@ -68,22 +68,31 @@ public class DtsScriptBuilder extends TypeScriptParserBaseListener {
 			RULE_typeMember,
 			RULE_typeMemberList);
 
-	private final ManualParseTreeWalker walker;
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder();
-	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder();
-	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder();
-	private final DtsNamespaceBuilder namespaceBuilder = new DtsNamespaceBuilder();
-	private final DtsClassBuilder classBuilder = new DtsClassBuilder();
-	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder();
-	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder();
-	private final DtsExpressionBuilder expressionBuilder = new DtsExpressionBuilder();
+	private final DtsTypeRefBuilder typeRefBuilder;
+	private final DtsTypeAliasBuilder typeAliasBuilder;
+	private final DtsFunctionBuilder functionBuilder;
+	private final DtsNamespaceBuilder namespaceBuilder;
+	private final DtsClassBuilder classBuilder;
+	private final DtsInterfaceBuilder interfaceBuilder;
+	private final DtsEnumBuilder enumBuilder;
+	private final DtsVariableBuilder variableBuilder;
+	private final DtsExpressionBuilder expressionBuilder;
 
+	private final ManualParseTreeWalker walker;
 	private Script script = null;
-	private final N4ClassifierDefinition currentClassifierDefinition = null;
 
 	/** Constructor */
 	public DtsScriptBuilder(ManualParseTreeWalker walker) {
 		this.walker = walker;
+		this.typeRefBuilder = new DtsTypeRefBuilder(walker.resource);
+		this.typeAliasBuilder = new DtsTypeAliasBuilder(walker.resource);
+		this.functionBuilder = new DtsFunctionBuilder(walker.resource);
+		this.namespaceBuilder = new DtsNamespaceBuilder(walker.resource);
+		this.classBuilder = new DtsClassBuilder(walker.resource);
+		this.interfaceBuilder = new DtsInterfaceBuilder(walker.resource);
+		this.enumBuilder = new DtsEnumBuilder(walker.resource);
+		this.variableBuilder = new DtsVariableBuilder(walker.resource);
+		this.expressionBuilder = new DtsExpressionBuilder(walker.resource);
 		walker.setParseTreeListener(this);
 	}
 
@@ -125,7 +134,8 @@ public class DtsScriptBuilder extends TypeScriptParserBaseListener {
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-
+		VariableStatement vs = variableBuilder.consumeInScript(ctx);
+		addToScript(vs);
 	}
 
 	@Override

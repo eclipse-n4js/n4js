@@ -53,7 +53,6 @@ import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
-import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -492,7 +491,7 @@ public final class AnnotationDefinition {
 	public final EClass[] targetsWithCustomError;
 	/**
 	 * JavaScript Variants in which this annotation applies (list of file extensions according to
-	 * {@link N4JSJavaScriptVariantHelper}). If empty, the annotation can be used everywhere
+	 * {@code N4JSJavaScriptVariantHelper}). If empty, the annotation can be used everywhere
 	 */
 	public final String[] javaScriptVariants;
 	/** Flag whether annotation is repeatable per element, false by default */

@@ -19,6 +19,7 @@ import org.antlr.v4.runtime.tree.RuleNode;
 import org.eclipse.n4js.dts.ManualParseTreeWalker;
 import org.eclipse.n4js.dts.TypeScriptParserBaseListener;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
@@ -26,27 +27,39 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode;
 public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 		extends TypeScriptParserBaseListener {
 
-	final Set<Integer> VISIT_CHILDREN_OF_RULES = getVisitChildrenOfRules();
-	final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder();
+	protected final LazyLinkingResource resource;
+	protected final Set<Integer> VISIT_CHILDREN_OF_RULES = getVisitChildrenOfRules();
 
-	ManualParseTreeWalker walker;
-	R result = null;
+	protected ManualParseTreeWalker walker;
+	protected R result = getDefaultResult();
+
+	/** Constructor */
+	public AbstractDtsSubBuilder(LazyLinkingResource resource) {
+		this.resource = resource;
+	}
 
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return Collections.emptySet();
 	}
 
+	protected R getDefaultResult() {
+		return null;
+	}
+
 	/** Consumes the given context and all its children. */
 	public R consume(T ctx) {
 		if (ctx == null) {
-			return null;
+			return result;
 		}
 
-		walker = new ManualParseTreeWalker(this, ctx);
+		walker = new ManualParseTreeWalker(this, ctx, resource);
 		walker.start();
-		R finalResult = result;
-		result = null;
-		return finalResult;
+		try {
+			return result;
+		} finally {
+			// reset for fail fast
+			result = getDefaultResult();
+		}
 	}
 
 	@Override

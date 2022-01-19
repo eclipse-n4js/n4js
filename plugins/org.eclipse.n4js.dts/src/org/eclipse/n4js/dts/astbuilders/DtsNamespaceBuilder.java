@@ -33,6 +33,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -43,16 +44,23 @@ import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
 public class DtsNamespaceBuilder extends AbstractDtsSubBuilder<NamespaceDeclarationContext, N4NamespaceDeclaration> {
-	private final DtsClassBuilder classBuilder = new DtsClassBuilder();
-	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder();
-	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder();
-	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder();
-	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder();
+	private final DtsClassBuilder classBuilder = new DtsClassBuilder(resource);
+	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(resource);
+	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(resource);
+	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(resource);
+	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(resource);
+	private final DtsVariableBuilder variableBuilder = new DtsVariableBuilder(resource);
+
+	/** Constructor */
+	public DtsNamespaceBuilder(LazyLinkingResource resource) {
+		super(resource);
+	}
 
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
@@ -81,6 +89,8 @@ public class DtsNamespaceBuilder extends AbstractDtsSubBuilder<NamespaceDeclarat
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
+		ExportedVariableStatement vs = variableBuilder.consumeInNamespace(ctx);
+		addAndHandleExported(ctx, vs);
 	}
 
 	@Override

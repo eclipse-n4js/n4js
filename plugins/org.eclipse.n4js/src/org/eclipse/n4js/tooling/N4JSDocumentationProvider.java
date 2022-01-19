@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
@@ -24,6 +25,7 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.documentation.impl.MultiLineCommentDocumentationProvider;
 import org.eclipse.xtext.nodemodel.BidiTreeIterator;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -76,6 +78,11 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 		// }
 		// }
 		if (astNode != null && !astNode.eIsProxy()) {
+			final String fileExt = URIUtils.fileExtension(astNode.eResource().getURI());
+			if (N4JSGlobals.DTS_FILE_EXTENSION.equals(fileExt)) {
+				// FIXME
+				return Collections.emptyList();
+			}
 			List<INode> nodes = super.getDocumentationNodes(astNode);
 			if (nodes.isEmpty() && astNode instanceof VariableDeclaration) {
 				TypeRef typeRef = ((VariableDeclaration) astNode).getDeclaredTypeRefInAST();

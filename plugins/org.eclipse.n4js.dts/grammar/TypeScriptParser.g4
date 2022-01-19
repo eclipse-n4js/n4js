@@ -416,8 +416,11 @@ exportFromBlock
     ;
 
 variableStatement
-    : bindingPattern colonSepTypeRef? initializer SemiColon?
-    | accessibilityModifier? varModifier? ReadOnly? variableDeclarationList SemiColon?
+    : accessibilityModifier? ReadOnly? varModifier (bindingPatternBlock | variableDeclarationList) SemiColon?
+    ;
+
+bindingPatternBlock
+    : bindingPattern colonSepTypeRef? initializer?
     ;
 
 variableDeclarationList
@@ -425,7 +428,7 @@ variableDeclarationList
     ;
 
 variableDeclaration
-    : ( identifierName| arrayLiteral | objectLiteral) colonSepTypeRef? singleExpression? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
+    : identifierName colonSepTypeRef? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
     ;
 
 emptyStatement
@@ -669,11 +672,16 @@ arrayLiteral
     ;
 
 elementList
-    : arrayElement (','+ arrayElement)*
+    : arrayElement (','+ arrayElement)* ','?
     ;
 
 arrayElement                      // ECMAScript 6: Spread Operator
-    : Ellipsis? (singleExpression | Identifier) ','?
+    : Ellipsis? bindingElement
+    ;
+
+bindingElement
+    : bindingPattern
+    | Identifier
     ;
 
 
@@ -702,13 +710,11 @@ objectLiteral
 
 // MODIFIED
 propertyAssignment
-    : propertyName (':' |'=') singleExpression                # PropertyExpressionAssignment
-    | '[' singleExpression ']' ':' singleExpression           # ComputedPropertyExpressionAssignment
-    | getAccessor                                             # PropertyGetter
-    | setAccessor                                             # PropertySetter
-    | generatorMethod                                         # MethodProperty
-    | identifierOrKeyWord                                     # PropertyShorthand
-    | restParameter                                           # RestParameterInObject
+    : propertyName (':' identifierOrKeyWord | bindingPattern)? ('=' singleExpression)?  # PropertyExpressionAssignment
+    | getAccessor                                                 # PropertyGetter
+    | setAccessor                                                 # PropertySetter
+    | generatorMethod                                             # MethodProperty
+    | restParameter                                               # RestParameterInObject
     ;
 
 getAccessor

@@ -24,13 +24,20 @@ import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsFunctionBuilder extends AbstractDtsSubBuilder<FunctionDeclarationContext, FunctionDeclaration> {
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder();
-	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder();
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
+	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(resource);
+	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(resource);
+
+	/** Constructor */
+	public DtsFunctionBuilder(LazyLinkingResource resource) {
+		super(resource);
+	}
 
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {

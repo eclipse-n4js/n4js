@@ -490,6 +490,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVariableStatement(TypeScriptParser.VariableStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#bindingPatternBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBindingPatternBlock(TypeScriptParser.BindingPatternBlockContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#variableDeclarationList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -850,6 +856,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArrayElement(TypeScriptParser.ArrayElementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#bindingElement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBindingElement(TypeScriptParser.BindingElementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#typeBody}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -881,13 +893,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPropertyExpressionAssignment(TypeScriptParser.PropertyExpressionAssignmentContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ComputedPropertyExpressionAssignment}
-	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitComputedPropertyExpressionAssignment(TypeScriptParser.ComputedPropertyExpressionAssignmentContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code PropertyGetter}
 	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
 	 * @param ctx the parse tree
@@ -908,13 +913,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMethodProperty(TypeScriptParser.MethodPropertyContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PropertyShorthand}
-	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPropertyShorthand(TypeScriptParser.PropertyShorthandContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code RestParameterInObject}
 	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.

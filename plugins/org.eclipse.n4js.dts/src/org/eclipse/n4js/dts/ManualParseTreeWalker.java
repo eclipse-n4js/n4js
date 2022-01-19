@@ -16,6 +16,7 @@ import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * This parse tree walker is a variant of the {@link ParseTreeWalker} with the difference that it will not visit all
@@ -24,19 +25,24 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
  * picking children and their information to create and initialize AST elements.
  */
 public class ManualParseTreeWalker {
-	private final ParserRuleContext startCtx;
+	public final LazyLinkingResource resource;
+	public final ParserRuleContext startCtx;
+	
 	private ParseTreeListener treeListener;
 	private ArrayList<ParserRuleContext> currentQueue;
 
 	/** Constructor. You must call {@link #setParseTreeListener(ParseTreeListener)}. */
-	public ManualParseTreeWalker(ParserRuleContext ctx) {
-		this(null, ctx);
+	public ManualParseTreeWalker(ParserRuleContext ctx, LazyLinkingResource resource) {
+		this(null, ctx, resource);
 	}
 
 	/** Constructor. */
-	public ManualParseTreeWalker(ParseTreeListener treeListener, ParserRuleContext startCtx) {
+	public ManualParseTreeWalker(ParseTreeListener treeListener, ParserRuleContext startCtx,
+			LazyLinkingResource resource) {
+
 		this.treeListener = treeListener;
 		this.startCtx = startCtx;
+		this.resource = resource;
 	}
 
 	/** Call this setter to initialize the listener. */

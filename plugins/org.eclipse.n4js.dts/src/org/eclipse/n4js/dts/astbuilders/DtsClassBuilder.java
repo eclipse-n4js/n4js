@@ -17,8 +17,11 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classTail;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberBaseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberDeclarationContext;
+import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
@@ -26,13 +29,20 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationContext, N4ClassDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder();
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder();
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
+	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(resource);
+
+	/** Constructor */
+	public DtsClassBuilder(LazyLinkingResource resource) {
+		super(resource);
+	}
 
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
@@ -63,6 +73,29 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 			locpn.setLiteralName(ctx.propertyName().getText());
 			fd.setDeclaredName(locpn);
 			fd.setDeclaredOptional(ctx.QuestionMark() != null);
+
+			if (ctx.propertyMemberBase() != null) {
+				PropertyMemberBaseContext pmb = ctx.propertyMemberBase();
+				if (pmb.Static() != null) {
+					if (pmb.ReadOnly() != null) {
+						fd.getDeclaredModifiers().add(N4Modifier.CONST);
+					} else {
+						fd.getDeclaredModifiers().add(N4Modifier.STATIC);
+					}
+				} else {
+					if (pmb.ReadOnly() != null) {
+						Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+						ann.setName(AnnotationDefinition.FINAL.name);
+						fd.getAnnotations().add(ann);
+					}
+				}
+			}
+
+			fd.setDeclaredOptional(ctx.QuestionMark() != null);
+
+			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
+			fd.setDeclaredTypeRefNode(trn);
+
 			result.getOwnedMembersRaw().add(fd);
 		}
 	}

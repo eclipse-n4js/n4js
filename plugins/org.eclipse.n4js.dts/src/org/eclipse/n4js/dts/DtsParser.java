@@ -31,6 +31,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.INode;
 
 /**
@@ -77,7 +78,7 @@ public class DtsParser {
 		}
 	}
 
-	public DtsParseResult parse(Reader reader) throws IOException {
+	public DtsParseResult parse(Reader reader, LazyLinkingResource resource) throws IOException {
 		CharStream fileContents = fromReader(reader);
 		long millis = System.currentTimeMillis();
 
@@ -107,7 +108,7 @@ public class DtsParser {
 		stats.time = System.currentTimeMillis() - millis;
 
 		// convert parse tree to AST
-		ManualParseTreeWalker walker = new ManualParseTreeWalker(stats.tree);
+		ManualParseTreeWalker walker = new ManualParseTreeWalker(stats.tree, resource);
 		DtsScriptBuilder astBuilder = new DtsScriptBuilder(walker);
 		walker.start();
 
