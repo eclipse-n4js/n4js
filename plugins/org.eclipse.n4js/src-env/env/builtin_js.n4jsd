@@ -160,6 +160,7 @@ export external public interface ~ImportAssertions {}
 
 export external public class Math {
 	public static get E(): number;
+	public static floor(x: number): number;
 }
 
 export external public class Date {
@@ -173,6 +174,9 @@ export external public class Date {
 	public toLocaleTimeString(...args: any+): any+; // overloading not supported
 	@Override
 	public valueOf(): number;
+	public getTime(): number;
+	public toISOString(): string;
+	public static now(): number;
 }
 
 export external public type DateConstructor = constructor{Date};
@@ -348,6 +352,10 @@ export external public class ArrayBuffer {
 	public constructor(byteLength: number);
 	public static isView(arg: any): boolean;
 }
+
+export external public type ArrayBufferConstructor = constructor{ArrayBuffer};
+
+export external public type ArrayBufferLike = any+;
 
 /**
  * See [ECMA6] Section 19.4.
@@ -672,3 +680,21 @@ export external public class Promise<out S, out F = any> extends Object {
 }
 
 export external public type PromiseConstructor = constructor{Promise};
+
+
+export external public interface ~ArrayBufferView {
+	/**
+	 * The ArrayBuffer instance referenced by the array.
+	 */
+	get buffer(): ArrayBufferLike;
+
+	/**
+	 * The length in bytes of the array.
+	 */
+	get byteLength(): number;
+
+	/**
+	 * The offset in bytes of the array.
+	 */
+	get byteOffset(): number;
+}

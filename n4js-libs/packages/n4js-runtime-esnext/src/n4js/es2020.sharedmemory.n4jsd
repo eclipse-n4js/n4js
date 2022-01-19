@@ -1,7 +1,0 @@
-// generated from https://github.com/microsoft/TypeScript/blob/5d0d7ae85d1ff52d3ef4cb6cac653f33f7e76724/src/lib/es2020.sharedmemory.d.ts
-// (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
-
-@@Global @@ProvidedByRuntime
-
-@Polyfill
-export external public class Atomics extends Atomics {}
