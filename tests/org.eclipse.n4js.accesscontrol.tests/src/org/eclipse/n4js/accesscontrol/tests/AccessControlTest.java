@@ -26,6 +26,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.csv.CSVData;
@@ -627,6 +629,7 @@ public class AccessControlTest {
 	/** Creates the {@link TestLspManager} instance used for compilation across test cases. */
 	@BeforeClass
 	public static void prepareCompiler() {
+		Logger.getRootLogger().setLevel(Level.ERROR);
 		testLspManager = new TestLspManager();
 		testLspManager.startAndWaitForLspServer(new File(FIXTURE_ROOT), Optional.absent(), false);
 	}
