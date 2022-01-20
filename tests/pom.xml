@@ -387,6 +387,49 @@ Contributors:
 									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
 								</systemProperties>
 							</configuration>
+							<executions>
+								<execution>
+									<!--
+									This configures the
+									execution of Tycho surefire tests, that should run tests
+									marked as performance tests, only test classes that matches
+									the name pattern "*SmokeTest.java" will be run by this
+									execution. The configuration of this execution is is the same
+									as for plug-in tests as these tests can be executed headlessly
+									as well. Only difference is that here the project plug-ins
+									have to specified as dependency.
+									-->
+									<id>TychoSurefireSmokeTest</id>
+									<!-- for submodules providing smoke-tests bing to phase integration-test -->
+									<phase />
+									<configuration>
+										<!-- 100 Minutes timeout (plus 5sec to simplify search for this timeout in log) -->
+										<forkedProcessTimeoutInSeconds>6005</forkedProcessTimeoutInSeconds>
+										<argLine>${encodingArgs} ${memoryArgs} ${ui.test.vmargs} ${coverageAgent} ${loggingArgs}</argLine>
+										<!-- different for mac/not mac -->
+										<useUIHarness>false</useUIHarness>
+										<useUIThread>false</useUIThread>
+										<dependencies>
+											<dependency>
+												<type>eclipse-feature</type>
+												<artifactId>org.eclipse.platform</artifactId>
+												<version>0.0.0</version>
+											</dependency>
+											<dependency>
+												<type>eclipse-feature</type>
+												<artifactId>org.eclipse.n4js.sdk</artifactId>
+												<version>0.0.0</version>
+											</dependency>
+										</dependencies>
+										<includes>
+											<include>**/*SmokeTest.java</include>
+										</includes>
+									</configuration>
+									<goals>
+										<goal>test</goal>
+									</goals>
+								</execution>
+							</executions>
 						</plugin>
 					</plugins>
 				</pluginManagement>
