@@ -735,8 +735,6 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	}
 
 	private List<Type> createCoreTypes() {
-		System.out.println("#createCoreTypes()");
-
 		final List<Type> result = new ArrayList<>();
 
 		// EcmaScript
