@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.accesscontrol.tests;
 
-import static org.eclipse.n4js.cli.N4jscTestOptions.COMPILE;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -27,22 +26,23 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.Diagnostic;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.cli.N4jscExitCode;
-import org.eclipse.n4js.cli.helper.CliCompileResult;
-import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.csv.CSVData;
 import org.eclipse.n4js.csv.CSVParser;
 import org.eclipse.n4js.csv.CSVRecord;
+import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
+import org.eclipse.n4js.ide.tests.helper.server.TestLspManager;
 import org.eclipse.n4js.tests.codegen.Classifier;
 import org.eclipse.n4js.tests.codegen.Member;
 import org.eclipse.n4js.tests.issues.IssueExpectations;
 import org.eclipse.n4js.utils.SimpleParserException;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.xtext.ide.server.issues.IssueToDiagnosticConverter;
 import org.eclipse.xtext.validation.Issue;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -586,7 +586,7 @@ public class AccessControlTest {
 
 			ScenarioGenerator generator = new ScenarioGenerator(specification, memberType);
 			generator.generateScenario(Paths.get(FIXTURE_ROOT, memberType.name()));
-			List<Issue> issues = new ArrayList<>(compile(memberType));
+			List<Issue> issues = new ArrayList<>(compile());
 			issues.removeIf(issue -> N4JSLanguageConstants.DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS
 					.contains(issue.getCode()));
 			IssueExpectations expectations = generator.createIssues();
@@ -622,42 +622,40 @@ public class AccessControlTest {
 		}
 	}
 
+	private static TestLspManager testLspManager = null;
+
+	/** Creates the {@link TestLspManager} instance used for compilation across test cases. */
+	@BeforeClass
+	public static void prepareCompiler() {
+		testLspManager = new TestLspManager();
+		testLspManager.startAndWaitForLspServer(new File(FIXTURE_ROOT), Optional.absent(), false);
+	}
+
+	/** Disposes of the {@link TestLspManager} instance. */
+	@AfterClass
+	public static void shutdownCompiler() {
+		testLspManager.shutdownLspServer();
+		testLspManager = null;
+	}
+
 	/**
 	 * Compiles the projects generated into the path at {@link #FIXTURE_ROOT}, which in this test case the projects
 	 * representing the currently tested scenario and returns the generated issues.
 	 *
 	 * @return the generated issues
 	 */
-	private static Collection<Issue> compile(MemberType memberType) {
-		File projectRoot = Paths.get(FIXTURE_ROOT, memberType.name()).toFile();
+	private static Collection<Issue> compile() {
+		IdeTestLanguageClient languageClient = testLspManager.getLanguageClient();
+		languageClient.clearIssues();
 
-		CliTools cliTools = new CliTools();
-		// cliTools.setIsMirrorSystemOut(true); // print directly to console
-		cliTools.setIgnoreFailure(true); // some test cases contain compile errors => custom failure checking required
-		cliTools.setEnvironmentVariable("NPM_TOKEN", "dummy");
-		CliCompileResult compileResult = new CliCompileResult();
-		cliTools.callN4jscInprocess(COMPILE(projectRoot), false, compileResult);
-
-		Exception compileException = compileResult.getException();
-		if (compileException != null) {
-			compileException.printStackTrace();
-			fail("exception during compilation: " + compileResult);
-		}
-		if (compileResult.getExitCode() != 0) {
-			if (compileResult.getExitCode() == N4jscExitCode.VALIDATION_ERRORS.getExitCodeValue()
-					&& compileResult.getErrMsgs().isEmpty()) {
-
-				fail("non-zero exit code from compilation: " + compileResult.getExitCode() + System.lineSeparator()
-						+ compileResult);
-			}
-		}
+		testLspManager.cleanBuildAndWait();
 
 		IssueToDiagnosticConverter converter = new IssueToDiagnosticConverter();
 		List<Issue> issues = new ArrayList<>();
-		for (Map.Entry<String, Diagnostic> uriDiagnostic : compileResult.getIssues().entries()) {
-			URI uri = URI.createURI(uriDiagnostic.getKey());
+		for (Map.Entry<FileURI, Diagnostic> uriDiagnostic : languageClient.getIssues().entries()) {
+			FileURI uri = uriDiagnostic.getKey();
 			Diagnostic diagnostic = uriDiagnostic.getValue();
-			issues.add(converter.toIssue(uri, diagnostic, Optional.absent()));
+			issues.add(converter.toIssue(uri.toURI(), diagnostic, Optional.absent()));
 		}
 
 		return issues;

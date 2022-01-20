@@ -28,7 +28,6 @@ import java.nio.file.attribute.BasicFileAttributeView;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -49,7 +48,6 @@ import java.util.stream.Stream;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.lsp4j.ApplyWorkspaceEditParams;
-import org.eclipse.lsp4j.ClientCapabilities;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
@@ -61,39 +59,30 @@ import org.eclipse.lsp4j.DidChangeWatchedFilesParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
-import org.eclipse.lsp4j.ExecuteCommandCapabilities;
-import org.eclipse.lsp4j.ExecuteCommandParams;
 import org.eclipse.lsp4j.FileChangeType;
 import org.eclipse.lsp4j.FileEvent;
-import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.LocationLink;
 import org.eclipse.lsp4j.MessageParams;
 import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
-import org.eclipse.lsp4j.RenameCapabilities;
 import org.eclipse.lsp4j.ResourceChange;
 import org.eclipse.lsp4j.ResourceOperation;
-import org.eclipse.lsp4j.TextDocumentClientCapabilities;
 import org.eclipse.lsp4j.TextDocumentContentChangeEvent;
 import org.eclipse.lsp4j.TextDocumentEdit;
 import org.eclipse.lsp4j.TextDocumentIdentifier;
 import org.eclipse.lsp4j.TextDocumentItem;
 import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.VersionedTextDocumentIdentifier;
-import org.eclipse.lsp4j.WorkspaceClientCapabilities;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.cli.N4jscFactory;
-import org.eclipse.n4js.cli.N4jscTestFactory;
 import org.eclipse.n4js.cli.helper.CliTools;
 import org.eclipse.n4js.cli.helper.N4jsLibsAccess;
 import org.eclipse.n4js.cli.helper.ProcessResult;
 import org.eclipse.n4js.cli.helper.SystemOutRedirecter;
-import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient;
 import org.eclipse.n4js.ide.tests.helper.client.IdeTestLanguageClient.IIdeTestLanguageClientListener;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager.NameAndExtension;
@@ -102,7 +91,6 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
-import org.eclipse.n4js.xtext.ide.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.xtext.ide.server.XDocument;
 import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
 import org.eclipse.n4js.xtext.ide.server.build.BuilderFrontend;
@@ -140,7 +128,6 @@ import com.google.common.collect.Multimaps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Sets.SetView;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Module;
 
 /**
@@ -232,13 +219,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	protected UriExtensions uriExtensions;
 	/** */
 	@Inject
-	protected XLanguageServerImpl languageServer;
-	/** */
-	@Inject
 	protected ConcurrentIndex concurrentIndex;
-	/** */
-	@Inject
-	protected IdeTestLanguageClient languageClient;
 	/** */
 	@Inject
 	protected LanguageInfo languageInfo;
@@ -248,6 +229,13 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Utility to create/delete the test workspace on disk */
 	protected final TestWorkspaceManager testWorkspaceManager = new TestWorkspaceManager(getProjectType());
+
+	protected final TestLspManager testLspManager = new TestLspManager();
+
+	/** */
+	protected XLanguageServerImpl languageServer;
+	/** */
+	protected IdeTestLanguageClient languageClient;
 
 	/** Tracks open files, their version and their, possibly unsaved, content. */
 	private final Map<FileURI, OpenFileInfo> openFiles = new HashMap<>();
@@ -392,15 +380,8 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Shuts down a running LSP server. Does not clean disk. */
 	protected void shutdownLspServer() {
-		if (languageServer == null) {
-			throw new IllegalStateException("trying to shut down LSP server, but it was never started");
-		}
-		// clear thread pools
-		languageServer.shutdown().join();
+		testLspManager.shutdownLspServer();
 		openFiles.clear();
-		languageClient.clearLogMessages();
-		languageClient.clearIssues();
-		N4jscTestFactory.unset();
 	}
 
 	/**
@@ -415,21 +396,12 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Same as {@link #startAndWaitForLspServer()}, but without waiting. */
 	protected void startLspServerWithoutWaiting() {
-		createInjector();
-		doStartLspServer(getRoot());
-	}
+		testLspManager.startLspServerWithoutWaiting(getRoot(), getOverridingModule(), enableProjectStatePersister());
+		testLspManager.getInjector().injectMembers(this);
+		languageServer = testLspManager.getLanguageServer();
+		languageClient = testLspManager.getLanguageClient();
 
-	/** Creates injector for N4JS */
-	protected Injector createInjector() {
-		N4jscTestFactory.set(true, getOverridingModule());
-		Injector injector = N4jscFactory.getOrCreateInjector();
-		injector.injectMembers(this);
-		if (enableProjectStatePersister()) {
-			ProjectStatePersisterConfig persisterConfig = injector.getInstance(ProjectStatePersisterConfig.class);
-			persisterConfig.setDeleteState(false);
-			persisterConfig.setWriteToDisk(true);
-		}
-		return injector;
+		languageClient.addListener(this);
 	}
 
 	/**
@@ -446,27 +418,6 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return Optional.absent();
 	}
 
-	/** Connects, initializes and waits for the initial build of the test project. */
-	protected void doStartLspServer(File root) {
-		ClientCapabilities capabilities = new ClientCapabilities();
-		WorkspaceClientCapabilities wcc = new WorkspaceClientCapabilities();
-		wcc.setExecuteCommand(new ExecuteCommandCapabilities());
-		capabilities.setWorkspace(wcc);
-		TextDocumentClientCapabilities tdcc = new TextDocumentClientCapabilities();
-		tdcc.setRename(new RenameCapabilities(true, false)); // activate 'prepareRename' requests
-		capabilities.setTextDocument(tdcc);
-		InitializeParams initParams = new InitializeParams();
-		initParams.setCapabilities(capabilities);
-		initParams.setRootUri(new FileURI(root).toString());
-
-		languageClient.addListener(this);
-
-		languageServer.connect(languageClient);
-		languageServer.initialize(initParams)
-				.join(); // according to LSP, we must to wait here before sending #initialized():
-		languageServer.initialized(null);
-	}
-
 	@Override
 	public boolean onServerRequest_applyEdit(ApplyWorkspaceEditParams params) {
 		changeFilesOnDiskWithoutNotification(params.getEdit());
@@ -475,22 +426,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Like {@link #cleanBuildWithoutWait()}, but {@link #joinServerRequests() waits} for LSP server to finish. */
 	protected void cleanBuildAndWait() {
-		// NOTE: the #join() in the next line is required; the #joinServerRequests() below is not sufficient!
-		cleanBuildWithoutWait().join();
-		joinServerRequests();
+		testLspManager.cleanBuildAndWait();
 	}
 
 	/** Cleans and rebuilds entire workspace without waiting for LSP server to finish. */
 	protected CompletableFuture<Object> cleanBuildWithoutWait() {
-		return executeCommand(N4JSCommandService.N4JS_REBUILD);
+		return testLspManager.cleanBuildWithoutWait();
 	}
 
 	/** Executes the command with the given ID and the given arguments. */
 	protected CompletableFuture<Object> executeCommand(String commandId, Object... args) {
-		Objects.requireNonNull(commandId);
-		Objects.requireNonNull(args);
-		ExecuteCommandParams params = new ExecuteCommandParams(commandId, Arrays.asList(args));
-		return languageServer.executeCommand(params);
+		return testLspManager.executeCommand(commandId, args);
 	}
 
 	/** Clears system output and error streams. */
@@ -1607,7 +1553,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 	/** Waits until the LSP server idles. */
 	protected void joinServerRequests() {
-		languageServer.joinServerRequests();
+		testLspManager.joinServerRequests();
 	}
 
 	/** */
