@@ -95,7 +95,7 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 
 	@Override
 	public void enterEveryRule(ParserRuleContext ctx) {
-		if (VISIT_CHILDREN_OF_RULES.contains(ctx.getRuleIndex())) {
+		if (visitChildrenRuleIDs.contains(ctx.getRuleIndex())) {
 			for (ParseTree pt : ctx.children) {
 				if (pt instanceof RuleNode) {
 					RuleNode rn = (RuleNode) pt;

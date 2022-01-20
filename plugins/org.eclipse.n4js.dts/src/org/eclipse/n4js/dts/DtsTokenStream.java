@@ -16,7 +16,7 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.TokenSource;
 
 /**
- *
+ * Overwritten to add methods for retrieving tokens from the channel {@link TypeScriptLexer#JSDocComment}
  */
 public class DtsTokenStream extends CommonTokenStream {
 
@@ -25,10 +25,12 @@ public class DtsTokenStream extends CommonTokenStream {
 		super(tokenSource);
 	}
 
-	public Token getPreviousJsDocToken(Token index) {
-		return getPreviousJsDocToken(index.getTokenIndex());
+	/** @return the nearest previous token in channel {@link TypeScriptLexer#JSDOC} from the given token */
+	public Token getPreviousJsDocToken(Token startToken) {
+		return getPreviousJsDocToken(startToken.getTokenIndex());
 	}
 
+	/** @return the nearest previous token in channel {@link TypeScriptLexer#JSDOC} from the given token index */
 	public Token getPreviousJsDocToken(int idx) {
 		sync(idx);
 		if (idx >= size()) {

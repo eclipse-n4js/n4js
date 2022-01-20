@@ -72,11 +72,13 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 				RULE_objectLiteral);
 	}
 
+	/** Call this method iff the parent of ctx is a script */
 	public VariableStatement consumeInScript(VariableStatementContext ctx) {
 		this.parentIsNamespace = false;
 		return consume(ctx);
 	}
 
+	/** Call this method iff the parent of ctx is a namespace */
 	public ExportedVariableStatement consumeInNamespace(VariableStatementContext ctx) {
 		this.parentIsNamespace = true;
 		return (ExportedVariableStatement) consume(ctx);

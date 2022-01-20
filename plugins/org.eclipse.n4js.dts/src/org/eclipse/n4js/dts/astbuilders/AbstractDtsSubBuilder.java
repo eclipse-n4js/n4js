@@ -30,11 +30,16 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 		extends TypeScriptParserBaseListener {
 
+	/** Token stream for access to other lexer channels */
 	protected final DtsTokenStream tokenStream;
+	/** Current resource */
 	protected final LazyLinkingResource resource;
-	protected final Set<Integer> VISIT_CHILDREN_OF_RULES = getVisitChildrenOfRules();
+	/** Rule IDs of parser rules to visit as default */
+	protected final Set<Integer> visitChildrenRuleIDs = getVisitChildrenOfRules();
 
+	/** walker */
 	protected ManualParseTreeWalker walker;
+	/** result value of {@link #consume(ParserRuleContext)} */
 	protected R result = getDefaultResult();
 
 	/** Constructor */
@@ -43,10 +48,12 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 		this.resource = resource;
 	}
 
+	/** Defines the subclass' rule ids of parser rules to visit as default */
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return Collections.emptySet();
 	}
 
+	/** Defines the subclass' default result */
 	protected R getDefaultResult() {
 		return null;
 	}
@@ -57,8 +64,9 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 			return result;
 		}
 
-		walker = new ManualParseTreeWalker(this, ctx, resource);
-		walker.start();
+		walker = new ManualParseTreeWalker(this, ctx);
+		walker.start(); // eventually this call causes 'result' to be set
+		walker = null; // reset for fail fast
 
 		if (result instanceof EObject) {
 			addLocationInfo((EObject) result, ctx);
@@ -74,7 +82,7 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 
 	@Override
 	public void enterEveryRule(ParserRuleContext ctx) {
-		if (VISIT_CHILDREN_OF_RULES.contains(ctx.getRuleIndex())) {
+		if (visitChildrenRuleIDs.contains(ctx.getRuleIndex())) {
 			for (ParseTree pt : ctx.children) {
 				if (pt instanceof RuleNode) {
 					RuleNode rn = (RuleNode) pt;

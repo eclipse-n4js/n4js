@@ -34,7 +34,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.INode;
 
 /**
- *
+ * Entry point to parse d.ts files
  */
 public class DtsParser {
 
@@ -77,6 +77,7 @@ public class DtsParser {
 		}
 	}
 
+	/** Parses d.ts files */
 	public DtsParseResult parse(Reader reader, LazyLinkingResource resource) throws IOException {
 		CharStream fileContents = fromReader(reader);
 		long millis = System.currentTimeMillis();

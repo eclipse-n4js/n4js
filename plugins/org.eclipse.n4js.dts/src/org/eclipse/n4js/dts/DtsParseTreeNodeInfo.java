@@ -21,7 +21,7 @@ import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.ITextRegionWithLineInformation;
 
 /**
- *
+ * Provides information from the parse tree and token stream.
  */
 public class DtsParseTreeNodeInfo implements Adapter, ITextRegionWithLineInformation {
 	final DtsTokenStream tokenStream;
@@ -35,10 +35,12 @@ public class DtsParseTreeNodeInfo implements Adapter, ITextRegionWithLineInforma
 		this.ctx = ctx;
 	}
 
+	/** @return true iff there exists jsdoc */
 	public boolean hasJsDoc() {
 		return getJsDoc() != null;
 	}
 
+	/** @return the jsdoc or null */
 	public String getJsDoc() {
 		Token jsDocToken = tokenStream.getPreviousJsDocToken(ctx.start);
 		if (jsDocToken == null) {
@@ -114,10 +116,12 @@ public class DtsParseTreeNodeInfo implements Adapter, ITextRegionWithLineInforma
 		return null;
 	}
 
+	/** @return the character position in the start line */
 	public int getCharacter() {
 		return ctx.start.getCharPositionInLine();
 	}
 
+	/** @return the character position in the end line */
 	public int getEndCharacter() {
 		return ctx.stop.getCharPositionInLine();
 	}
