@@ -14,9 +14,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
@@ -39,6 +41,23 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProvider {
 
 	private static final Logger logger = Logger.getLogger(N4JSDocumentationProvider.class);
+
+	@Override
+	protected String findComment(EObject obj) {
+		final String fileExt = URIUtils.fileExtension(obj.eResource().getURI());
+		if (N4JSGlobals.DTS_FILE_EXTENSION.equals(fileExt)) {
+			EObject astNode = N4JSASTUtils.getCorrespondingASTNode(obj);
+			for (Adapter adapter : astNode.eAdapters()) {
+				if (adapter instanceof DtsParseTreeNodeInfo) {
+					DtsParseTreeNodeInfo infoNode = (DtsParseTreeNodeInfo) adapter;
+					String jsDoc = infoNode.getJsDoc();
+					return jsDoc;
+				}
+			}
+			return null;
+		}
+		return super.findComment(obj);
+	}
 
 	/** Same as {@link #findComment(EObject)} but with parameter {@code enableSpecialASIFix} */
 	public String findComment(EObject o, boolean enableSpecialASIFix) {

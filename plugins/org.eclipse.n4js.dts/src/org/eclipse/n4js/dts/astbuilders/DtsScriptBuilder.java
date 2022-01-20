@@ -26,7 +26,7 @@ import java.util.Set;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
-import org.eclipse.n4js.dts.ManualParseTreeWalker;
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.ParserContextUtil;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
@@ -36,7 +36,6 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
-import org.eclipse.n4js.dts.TypeScriptParserBaseListener;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
@@ -51,58 +50,47 @@ import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.VariableStatement;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
-public class DtsScriptBuilder extends TypeScriptParserBaseListener {
-	final static Set<Integer> VISIT_CHILDREN_OF_RULES = java.util.Set.of(
-			RULE_statement,
-			RULE_statementList,
-			RULE_declareStatement,
-			RULE_declarationStatement,
-			RULE_exportStatement,
-			RULE_exportStatementTail,
-			RULE_classElementList,
-			RULE_classElement,
-			RULE_typeMember,
-			RULE_typeMemberList);
-
-	private final DtsTypeRefBuilder typeRefBuilder;
-	private final DtsTypeAliasBuilder typeAliasBuilder;
-	private final DtsFunctionBuilder functionBuilder;
-	private final DtsNamespaceBuilder namespaceBuilder;
-	private final DtsClassBuilder classBuilder;
-	private final DtsInterfaceBuilder interfaceBuilder;
-	private final DtsEnumBuilder enumBuilder;
-	private final DtsVariableBuilder variableBuilder;
-	private final DtsExpressionBuilder expressionBuilder;
-
-	private final ManualParseTreeWalker walker;
-	private Script script = null;
+public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Script> {
+	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
+	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
+	private final DtsNamespaceBuilder namespaceBuilder = new DtsNamespaceBuilder(tokenStream, resource);
+	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
+	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
+	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(tokenStream, resource);
+	private final DtsVariableBuilder variableBuilder = new DtsVariableBuilder(tokenStream, resource);
 
 	/** Constructor */
-	public DtsScriptBuilder(ManualParseTreeWalker walker) {
-		this.walker = walker;
-		this.typeRefBuilder = new DtsTypeRefBuilder(walker.resource);
-		this.typeAliasBuilder = new DtsTypeAliasBuilder(walker.resource);
-		this.functionBuilder = new DtsFunctionBuilder(walker.resource);
-		this.namespaceBuilder = new DtsNamespaceBuilder(walker.resource);
-		this.classBuilder = new DtsClassBuilder(walker.resource);
-		this.interfaceBuilder = new DtsInterfaceBuilder(walker.resource);
-		this.enumBuilder = new DtsEnumBuilder(walker.resource);
-		this.variableBuilder = new DtsVariableBuilder(walker.resource);
-		this.expressionBuilder = new DtsExpressionBuilder(walker.resource);
-		walker.setParseTreeListener(this);
+	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	/** @return the script that was created during visiting the parse tree */
 	public Script getScript() {
-		return script;
+		return result;
 	}
 
 	void addToScript(NamespaceElement elem) {
-		script.getScriptElements().add(elem);
+		result.getScriptElements().add(elem);
+	}
+
+	@Override
+	protected Set<Integer> getVisitChildrenOfRules() {
+		return java.util.Set.of(
+				RULE_statement,
+				RULE_statementList,
+				RULE_declareStatement,
+				RULE_declarationStatement,
+				RULE_exportStatement,
+				RULE_exportStatementTail,
+				RULE_classElementList,
+				RULE_classElement,
+				RULE_typeMember,
+				RULE_typeMemberList);
 	}
 
 	@Override
@@ -119,7 +107,7 @@ public class DtsScriptBuilder extends TypeScriptParserBaseListener {
 
 	@Override
 	public void enterProgram(ProgramContext ctx) {
-		script = N4JSFactory.eINSTANCE.createScript();
+		result = N4JSFactory.eINSTANCE.createScript();
 		if (ctx.statementList() != null) {
 			walker.enqueue(ctx.statementList().statement());
 		}

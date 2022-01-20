@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.SingleExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParameterContext;
 import org.eclipse.n4js.n4JS.Expression;
@@ -23,11 +24,11 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsExpressionBuilder extends AbstractDtsSubBuilder<SingleExpressionContext, Expression> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	/** Constructor */
-	public DtsExpressionBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsExpressionBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override

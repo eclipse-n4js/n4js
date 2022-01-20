@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ColonSepTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
@@ -53,8 +54,8 @@ import org.eclipse.xtext.util.ITextRegionWithLineInformation;
 public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, TypeReferenceNode<TypeRef>> {
 
 	/** Constructor */
-	public DtsTypeRefBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsTypeRefBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override

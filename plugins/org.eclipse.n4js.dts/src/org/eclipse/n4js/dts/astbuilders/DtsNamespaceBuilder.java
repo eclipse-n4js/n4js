@@ -24,6 +24,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMemberList;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.ParserContextUtil;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
@@ -50,16 +51,16 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
 public class DtsNamespaceBuilder extends AbstractDtsSubBuilder<NamespaceDeclarationContext, N4NamespaceDeclaration> {
-	private final DtsClassBuilder classBuilder = new DtsClassBuilder(resource);
-	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(resource);
-	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(resource);
-	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(resource);
-	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(resource);
-	private final DtsVariableBuilder variableBuilder = new DtsVariableBuilder(resource);
+	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
+	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
+	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(tokenStream, resource);
+	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
+	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
+	private final DtsVariableBuilder variableBuilder = new DtsVariableBuilder(tokenStream, resource);
 
 	/** Constructor */
-	public DtsNamespaceBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override

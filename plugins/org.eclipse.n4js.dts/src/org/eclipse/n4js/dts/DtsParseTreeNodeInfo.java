@@ -11,6 +11,7 @@
 package org.eclipse.n4js.dts;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -23,13 +24,31 @@ import org.eclipse.xtext.util.ITextRegionWithLineInformation;
  *
  */
 public class DtsParseTreeNodeInfo implements Adapter, ITextRegionWithLineInformation {
+	final DtsTokenStream tokenStream;
 	final ParserRuleContext ctx;
 
 	private EObject semanticElement;
 
 	/** Constructor */
-	public DtsParseTreeNodeInfo(ParserRuleContext ctx) {
+	public DtsParseTreeNodeInfo(DtsTokenStream tokenStream, ParserRuleContext ctx) {
+		this.tokenStream = tokenStream;
 		this.ctx = ctx;
+	}
+
+	public boolean hasJsDoc() {
+		return getJsDoc() != null;
+	}
+
+	public String getJsDoc() {
+		Token jsDocToken = tokenStream.getPreviousJsDocToken(ctx.start);
+		if (jsDocToken == null) {
+			return null;
+		}
+		String jsDoc = jsDocToken.getText();
+		if (jsDoc != null && jsDoc.startsWith("/***")) {
+			jsDoc = jsDoc.substring(3); // fix this pattern since this is supported in TS but not in N4JS
+		}
+		return jsDoc;
 	}
 
 	@Override

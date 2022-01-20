@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberBaseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberDeclarationContext;
@@ -36,12 +37,12 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationContext, N4ClassDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(resource);
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
+	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
 
 	/** Constructor */
-	public DtsClassBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsClassBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override

@@ -17,6 +17,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMemberList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceExtendsClauseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
@@ -37,12 +38,12 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarationContext, N4InterfaceDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(resource);
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
+	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
 
 	/** Constructor */
-	public DtsInterfaceBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsInterfaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override

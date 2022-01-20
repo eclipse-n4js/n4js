@@ -27,14 +27,14 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class ManualParseTreeWalker {
 	public final LazyLinkingResource resource;
 	public final ParserRuleContext startCtx;
-	
-	private ParseTreeListener treeListener;
+
+	private final ParseTreeListener treeListener;
 	private ArrayList<ParserRuleContext> currentQueue;
 
-	/** Constructor. You must call {@link #setParseTreeListener(ParseTreeListener)}. */
-	public ManualParseTreeWalker(ParserRuleContext ctx, LazyLinkingResource resource) {
-		this(null, ctx, resource);
-	}
+	// /** Constructor. You must call {@link #setParseTreeListener(ParseTreeListener)}. */
+	// public ManualParseTreeWalker(ParserRuleContext ctx, LazyLinkingResource resource) {
+	// this(null, ctx, resource);
+	// }
 
 	/** Constructor. */
 	public ManualParseTreeWalker(ParseTreeListener treeListener, ParserRuleContext startCtx,
@@ -45,12 +45,12 @@ public class ManualParseTreeWalker {
 		this.resource = resource;
 	}
 
-	/** Call this setter to initialize the listener. */
-	public void setParseTreeListener(ParseTreeListener treeListener) {
-		if (this.treeListener == null) {
-			this.treeListener = treeListener;
-		}
-	}
+	// /** Call this setter to initialize the listener. */
+	// public void setParseTreeListener(ParseTreeListener treeListener) {
+	// if (this.treeListener == null) {
+	// this.treeListener = treeListener;
+	// }
+	// }
 
 	/** Starts the walker. Be sure to have the {@link #treeListener} set. */
 	public void start() {

@@ -150,11 +150,9 @@ public class MainTypeScriptParserTest {
 	static void testFile() throws IOException {
 		ParseStats stats = parse(PARSE_SINGLE_FILE);
 
-		ManualParseTreeWalker walker = new ManualParseTreeWalker(stats.tree, null);
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(walker);
-		walker.start();
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(null, null);
+		Script script = astBuilder.consume(stats.tree);
 
-		Script script = astBuilder.getScript();
 		System.out.println("script created: " + (script != null));
 	}
 

@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParameterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -29,11 +30,11 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsTypeVariablesBuilder extends AbstractDtsSubBuilder<TypeParametersContext, List<N4TypeVariable>> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	/** Constructor */
-	public DtsTypeVariablesBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsTypeVariablesBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override

@@ -18,6 +18,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_variableDeclarationList
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.ParserContextUtil;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrayElementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrayLiteralContext;
@@ -53,13 +54,13 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementContext, VariableStatement> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	private boolean parentIsNamespace;
 
 	/** Constructor */
-	public DtsVariableBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsVariableBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override
@@ -128,7 +129,7 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 		TypeReferenceNode<TypeRef> typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
 		varDecl.setDeclaredTypeRefNode(typeRef);
 
-		varDecl.setExpression(new DtsExpressionBuilder(resource).consume(ctx.singleExpression()));
+		varDecl.setExpression(new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression()));
 
 		result.getVarDeclsOrBindings().add(varDecl);
 	}
@@ -137,7 +138,7 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 
 		/** Constructor */
 		public DtsBindingPatternBuilder() {
-			super(DtsVariableBuilder.this.resource);
+			super(DtsVariableBuilder.this.tokenStream, DtsVariableBuilder.this.resource);
 		}
 
 		@Override

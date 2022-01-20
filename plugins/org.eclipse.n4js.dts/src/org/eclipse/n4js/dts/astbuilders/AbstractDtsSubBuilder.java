@@ -18,6 +18,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.ManualParseTreeWalker;
 import org.eclipse.n4js.dts.TypeScriptParserBaseListener;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -29,6 +30,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 		extends TypeScriptParserBaseListener {
 
+	protected final DtsTokenStream tokenStream;
 	protected final LazyLinkingResource resource;
 	protected final Set<Integer> VISIT_CHILDREN_OF_RULES = getVisitChildrenOfRules();
 
@@ -36,7 +38,8 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 	protected R result = getDefaultResult();
 
 	/** Constructor */
-	public AbstractDtsSubBuilder(LazyLinkingResource resource) {
+	public AbstractDtsSubBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		this.tokenStream = tokenStream;
 		this.resource = resource;
 	}
 
@@ -83,6 +86,6 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 
 	/**  */
 	protected void addLocationInfo(EObject obj, ParserRuleContext ctx) {
-		obj.eAdapters().add(new DtsParseTreeNodeInfo(ctx));
+		obj.eAdapters().add(new DtsParseTreeNodeInfo(tokenStream, ctx));
 	}
 }

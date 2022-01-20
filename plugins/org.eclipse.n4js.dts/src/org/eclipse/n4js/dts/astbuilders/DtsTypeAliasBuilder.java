@@ -16,6 +16,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeParameters;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
@@ -29,12 +30,12 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsTypeAliasBuilder extends AbstractDtsSubBuilder<TypeAliasDeclarationContext, N4TypeAliasDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(resource);
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
+	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
 
 	/** Constructor */
-	public DtsTypeAliasBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsTypeAliasBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override

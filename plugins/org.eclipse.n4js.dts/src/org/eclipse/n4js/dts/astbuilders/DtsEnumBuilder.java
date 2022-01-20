@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.util.Set;
 
 import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.LiteralExpressionContext;
@@ -38,8 +39,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class DtsEnumBuilder extends AbstractDtsSubBuilder<EnumDeclarationContext, N4EnumDeclaration> {
 
 	/** Constructor */
-	public DtsEnumBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsEnumBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override

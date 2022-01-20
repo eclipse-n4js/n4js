@@ -16,6 +16,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeParameters;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
@@ -30,13 +31,14 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsFunctionBuilder extends AbstractDtsSubBuilder<FunctionDeclarationContext, FunctionDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(resource);
-	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(resource);
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
+	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
+	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
+			resource);
 
 	/** Constructor */
-	public DtsFunctionBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsFunctionBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override

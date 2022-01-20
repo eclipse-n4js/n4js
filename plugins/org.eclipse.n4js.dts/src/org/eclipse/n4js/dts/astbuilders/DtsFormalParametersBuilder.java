@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ColonSepTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierOrPatternContext;
 import org.eclipse.n4js.dts.TypeScriptParser.OptionalParameterContext;
@@ -39,12 +40,12 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class DtsFormalParametersBuilder
 		extends AbstractDtsSubBuilder<ParameterBlockContext, List<FormalParameter>> {
 
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(resource);
-	private final DtsExpressionBuilder expressionBuilder = new DtsExpressionBuilder(resource);
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
+	private final DtsExpressionBuilder expressionBuilder = new DtsExpressionBuilder(tokenStream, resource);
 
 	/** Constructor */
-	public DtsFormalParametersBuilder(LazyLinkingResource resource) {
-		super(resource);
+	public DtsFormalParametersBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		super(tokenStream, resource);
 	}
 
 	@Override

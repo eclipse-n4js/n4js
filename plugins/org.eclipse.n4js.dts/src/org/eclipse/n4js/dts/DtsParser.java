@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.DefaultErrorStrategy;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
@@ -83,7 +82,7 @@ public class DtsParser {
 		long millis = System.currentTimeMillis();
 
 		TypeScriptLexer lexer = new TypeScriptLexer(fileContents);
-		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		DtsTokenStream tokens = new DtsTokenStream(lexer);
 		TypeScriptParser parser = new TypeScriptParser(tokens);
 		ParseStats stats = new ParseStats();
 		parser.addErrorListener(stats);
@@ -108,11 +107,8 @@ public class DtsParser {
 		stats.time = System.currentTimeMillis() - millis;
 
 		// convert parse tree to AST
-		ManualParseTreeWalker walker = new ManualParseTreeWalker(stats.tree, resource);
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(walker);
-		walker.start();
-
-		Script root = astBuilder.getScript();
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
+		Script root = astBuilder.consume(stats.tree);
 		RootNode rootNode = new RootNode(stats.tree);
 		Iterable<? extends INode> syntaxErrors = stats.errors;
 
