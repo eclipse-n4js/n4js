@@ -34,6 +34,12 @@ import com.google.common.base.Optional;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
+/**
+ * NOTE: most tests should subclass {@link AbstractIdeTest} instead of using this class!
+ * <p>
+ * Manages a pair of instances of the LSP {@link XLanguageServerImpl server} and {@link IdeTestLanguageClient client}.
+ * This class is intended to me instantiated with <code>new</code>, not to be injected.
+ */
 public class TestLspManager {
 
 	private Injector injector;
@@ -42,14 +48,17 @@ public class TestLspManager {
 
 	private IdeTestLanguageClient languageClient;
 
+	/** Returns the injector used for the LSP server and client managed by this instance. */
 	public Injector getInjector() {
 		return injector;
 	}
 
+	/** Returns the language server. */
 	public XLanguageServerImpl getLanguageServer() {
 		return languageServer;
 	}
 
+	/** Returns the language client. */
 	public IdeTestLanguageClient getLanguageClient() {
 		return languageClient;
 	}

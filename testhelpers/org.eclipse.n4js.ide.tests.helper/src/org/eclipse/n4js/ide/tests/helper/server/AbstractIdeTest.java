@@ -230,6 +230,7 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Utility to create/delete the test workspace on disk */
 	protected final TestWorkspaceManager testWorkspaceManager = new TestWorkspaceManager(getProjectType());
 
+	/** Manages the LSP server and client used during testing. */
 	protected final TestLspManager testLspManager = new TestLspManager();
 
 	/** */
