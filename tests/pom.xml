@@ -33,15 +33,6 @@ Contributors:
 	</modules>
 
 	<properties>
-		<!-- jacoco (ECLEmma), code coverage -->
-		<jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
-
-		<ant-contrib.version>1.0b3</ant-contrib.version>
-		<ant-nodeps.version>1.8.1</ant-nodeps.version>
-
-		<!-- commands and command lines for code coverage, empty by default and
-			set by profiles -->
-
 		<!-- use "-Dlog4j.debug -Dorg.apache.logging.log4j.simplelog.StatusLogger.level=TRACE" to get debug messages from the logger -->
 		<loggingArgs>-Dlog4j.configuration="file:${basedir}/../../plugins/org.eclipse.n4js.utils.logging/log4j_tests.xml"</loggingArgs>
 
@@ -72,56 +63,6 @@ Contributors:
 				<configuration>
 					<skip>true</skip>
 				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>${maven-antrun-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
-				<!-- Comment above is to prevent a warning. Due to using variables this warning is obsolete
-					See: https://bugs.eclipse.org/bugs/show_bug.cgi?id=346725
-				-->
-				<executions>
-					<execution>
-						<id>antrun-setCoverageAgent</id>
-						<phase>process-test-classes</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<taskdef resource="net/sf/antcontrib/antcontrib.properties"
-									classpathref="maven.plugin.classpath" />
-								<if>
-									<isset property="coverageAgent"/>
-									<then>
-									</then>
-									<else>
-										<property name="coverageAgent" value=""/>
-									</else>
-								</if>
-							</target>
-							<exportAntProperties>true</exportAntProperties>
-						</configuration>
-					</execution>
-				</executions>
-				<dependencies>
-					<dependency>
-						<groupId>ant-contrib</groupId>
-						<artifactId>ant-contrib</artifactId>
-						<version>${ant-contrib.version}</version>
-						<exclusions>
-							<exclusion>
-								<groupId>ant</groupId>
-								<artifactId>ant</artifactId>
-							</exclusion>
-						</exclusions>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.ant</groupId>
-						<artifactId>ant-nodeps</artifactId>
-						<version>${ant-nodeps.version}</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 
@@ -436,81 +377,6 @@ Contributors:
 			</build>
 		</profile>
 
-		<!-- Code coverage -->
-		<profile>
-			<id>codeCoverage</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.jacoco</groupId>
-						<artifactId>jacoco-maven-plugin</artifactId>
-						<version>${jacoco-maven-plugin.version}</version>
-						<configuration>
-							<!-- TODO excludes: maybe exclude tests classes themselves from analysis -->
-							<excludes>
-								<exclude>**/src-gen/**/*.java</exclude>
-								<exclude>**/org/eclipse/**/*.java</exclude>
-								<exclude>**.antlr**</exclude>
-								<exclude>**.parseTree**</exclude>
-								<exclude>**Abstract*RuntimeModule.java</exclude>
-								<exclude>**/*SetupGenerated*.java</exclude>
-								<exclude>**/Abstract*Validator.java</exclude>
-								<exclude>**/Abstract*Validator.java</exclude>
-								<exclude>**/*GrammarAccess.java</exclude>
-								<exclude>**/Abstract*UiModule.java</exclude>
-								<exclude>**/Abstract*ProposalProvider.java</exclude>
-							</excludes>
-						</configuration>
-						<executions>
-							<execution>
-								<id>pre-unit-test</id>
-								<goals>
-									<goal>prepare-agent</goal>
-								</goals>
-								<configuration>
-									<append>true</append>
-									<destFile>${project.build.directory}/jacoco/jacoco-ut.exec</destFile>
-									<propertyName>coverageAgent</propertyName>
-								</configuration>
-							</execution>
-							<execution>
-								<id>pre-integration-test</id>
-								<goals>
-									<goal>prepare-agent-integration</goal>
-								</goals>
-								<configuration>
-									<it.destFile>${project.build.directory}/jacoco/jacoco-it.exec</it.destFile>
-									<propertyName>coverageAgent</propertyName>
-								</configuration>
-							</execution>
-							<execution>
-								<id>post-unit-test</id>
-								<goals>
-									<goal>report</goal>
-								</goals>
-								<configuration>
-									<dataFile>${project.build.directory}/jacoco/jacoco-ut.exec</dataFile>
-									<outputDirectory>${project.build.directory}/jacoco/jacoco-ut</outputDirectory>
-								</configuration>
-							</execution>
-							<execution>
-								<id>post-integration-test</id>
-								<goals>
-									<goal>report-integration</goal>
-								</goals>
-								<configuration>
-									<dataFile>${project.build.directory}/jacoco/jacoco-it.exec</dataFile>
-									<outputDirectory>${project.build.directory}/jacoco/jacoco-it</outputDirectory>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 	</profiles>
 
 	<dependencyManagement>
