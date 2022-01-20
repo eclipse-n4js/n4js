@@ -7,3 +7,48 @@
 export external public class Array<T> extends Array<T> {
 	public includes(searchElement: T, fromIndex: number = ): boolean;
 }
+
+@Polyfill
+export external public class Int8Array extends Int8Array {
+	public includes(searchElement: number, fromIndex: number = ): boolean;
+}
+
+@Polyfill
+export external public class Uint8Array extends Uint8Array {
+	public includes(searchElement: number, fromIndex: number = ): boolean;
+}
+
+@Polyfill
+export external public class Uint8ClampedArray extends Uint8ClampedArray {
+	public includes(searchElement: number, fromIndex: number = ): boolean;
+}
+
+@Polyfill
+export external public class Int16Array extends Int16Array {
+	public includes(searchElement: number, fromIndex: number = ): boolean;
+}
+
+@Polyfill
+export external public class Uint16Array extends Uint16Array {
+	public includes(searchElement: number, fromIndex: number = ): boolean;
+}
+
+@Polyfill
+export external public class Int32Array extends Int32Array {
+	public includes(searchElement: number, fromIndex: number = ): boolean;
+}
+
+@Polyfill
+export external public class Uint32Array extends Uint32Array {
+	public includes(searchElement: number, fromIndex: number = ): boolean;
+}
+
+@Polyfill
+export external public class Float32Array extends Float32Array {
+	public includes(searchElement: number, fromIndex: number = ): boolean;
+}
+
+@Polyfill
+export external public class Float64Array extends Float64Array {
+	public includes(searchElement: number, fromIndex: number = ): boolean;
+}

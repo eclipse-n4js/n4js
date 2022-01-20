@@ -2,3 +2,27 @@
 // (for license information of original file see https://github.com/microsoft/TypeScript/blob/main/LICENSE.txt)
 
 @@Global @@ProvidedByRuntime
+
+@Polyfill
+export external public interface ~DOMTokenList extends DOMTokenList {}
+
+@Polyfill
+export external public interface ~Headers extends Headers {}
+
+@Polyfill
+export external public interface ~NodeList extends NodeList {}
+
+@Polyfill
+export external public interface ~NodeListOf<TNode extends Node> extends NodeListOf<TNode> {}
+
+@Polyfill
+export external public interface ~HTMLCollectionBase extends HTMLCollectionBase {}
+
+@Polyfill
+export external public interface ~HTMLCollectionOf<T extends Element> extends HTMLCollectionOf<T> {}
+
+@Polyfill
+export external public interface ~FormData extends FormData {}
+
+@Polyfill
+export external public interface ~URLSearchParams extends URLSearchParams {}

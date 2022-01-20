@@ -26,7 +26,7 @@ export external public class TextEncoder {
      
      public get encoding(): string;
      
-     public encode(str: string): any+ /* Uint8Array */;
+     public encode(str: string): Uint8Array; 
 }
 
 export external public interface ~TextDecodeOptions {
