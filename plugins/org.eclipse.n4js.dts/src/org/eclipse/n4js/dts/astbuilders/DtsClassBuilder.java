@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
+import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -86,9 +87,11 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 					}
 				} else {
 					if (pmb.ReadOnly() != null) {
+						N4MemberAnnotationList annList = N4JSFactory.eINSTANCE.createN4MemberAnnotationList();
 						Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
 						ann.setName(AnnotationDefinition.FINAL.name);
-						fd.getAnnotations().add(ann);
+						annList.getAnnotations().add(ann);
+						fd.setAnnotationList(annList);
 					}
 				}
 			}

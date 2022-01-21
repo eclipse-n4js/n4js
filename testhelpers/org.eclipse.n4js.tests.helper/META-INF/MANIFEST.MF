@@ -21,7 +21,10 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.semver,
  org.eclipse.n4js.json,
  org.eclipse.n4js.json.model,
- org.eclipse.n4js.xtext
+ org.eclipse.n4js.xtext,
+ org.eclipse.egit.core;bundle-version="[5.7.0,5.8.0)",
+ com.jcraft.jsch;bundle-version="0.1.37",
+ org.eclipse.jgit;bundle-version="[5.7.0,5.8.0)"
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.analysis,
  org.eclipse.n4js.csv,
@@ -31,5 +34,6 @@ Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.tests.helper.documentprovider,
  org.eclipse.n4js.tests.issues,
  org.eclipse.n4js.tests.parser,
+ org.eclipse.n4js.tests.helper.git,
  org.eclipse.n4js.xpect.validation.suppression
 Automatic-Module-Name: org.eclipse.n4js.tests.helper

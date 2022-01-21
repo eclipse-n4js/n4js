@@ -13,6 +13,7 @@ package org.eclipse.n4js.dts.astbuilders;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeParameterList;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeParameters;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +48,11 @@ public class DtsTypeVariablesBuilder extends AbstractDtsSubBuilder<TypeParameter
 	@Override
 	protected List<N4TypeVariable> getDefaultResult() {
 		return Collections.emptyList();
+	}
+
+	@Override
+	public void enterTypeParameters(TypeParametersContext ctx) {
+		result = new ArrayList<>();
 	}
 
 	@Override

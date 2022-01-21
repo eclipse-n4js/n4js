@@ -63,8 +63,12 @@ public class DtsFormalParametersBuilder
 	}
 
 	@Override
-	public void enterRequiredParameter(RequiredParameterContext ctx) {
+	public void enterParameterBlock(ParameterBlockContext ctx) {
 		result = new ArrayList<>();
+	}
+
+	@Override
+	public void enterRequiredParameter(RequiredParameterContext ctx) {
 		buildBaseFormalParameter(ctx.identifierOrPattern(), ctx.colonSepTypeRef());
 	}
 
@@ -72,24 +76,31 @@ public class DtsFormalParametersBuilder
 	public void enterOptionalParameter(OptionalParameterContext ctx) {
 		FormalParameter fPar = buildBaseFormalParameter(ctx.identifierOrPattern(), ctx.colonSepTypeRef());
 
-		fPar.setHasInitializerAssignment(true);
-		Expression expr = expressionBuilder.consume(ctx.initializer().singleExpression());
-		fPar.setInitializer(expr);
+		if (fPar != null && ctx.initializer() != null) {
+			fPar.setHasInitializerAssignment(true);
+			Expression expr = expressionBuilder.consume(ctx.initializer().singleExpression());
+			fPar.setInitializer(expr);
+		}
 	}
 
 	@Override
 	public void enterRestParameter(RestParameterContext ctx) {
 		FormalParameter fPar = buildBaseFormalParameter(ctx.identifierOrPattern(), ctx.colonSepTypeRef());
 
-		fPar.setVariadic(true);
+		if (fPar != null) {
+			fPar.setVariadic(true);
+		}
 	}
 
 	private FormalParameter buildBaseFormalParameter(IdentifierOrPatternContext iop, ColonSepTypeRefContext cstr) {
-		FormalParameter fPar = N4JSFactory.eINSTANCE.createFormalParameter();
-		fPar.setName(iop.identifierName().getText()); // TODO: bindingPattern
-		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(cstr);
-		fPar.setDeclaredTypeRefNode(trn);
-		result.add(fPar);
-		return fPar;
+		if (iop.identifierName() != null) {
+			FormalParameter fPar = N4JSFactory.eINSTANCE.createFormalParameter();
+			fPar.setName(iop.identifierName().getText()); // TODO: bindingPattern
+			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(cstr);
+			fPar.setDeclaredTypeRefNode(trn);
+			result.add(fPar);
+			return fPar;
+		}
+		return null;
 	}
 }

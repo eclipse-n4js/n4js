@@ -82,7 +82,7 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 
 	@Override
 	public void enterEveryRule(ParserRuleContext ctx) {
-		if (visitChildrenRuleIDs.contains(ctx.getRuleIndex())) {
+		if (visitChildrenRuleIDs.contains(ctx.getRuleIndex()) && ctx.children != null) {
 			for (ParseTree pt : ctx.children) {
 				if (pt instanceof RuleNode) {
 					RuleNode rn = (RuleNode) pt;

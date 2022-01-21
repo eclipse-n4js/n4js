@@ -64,7 +64,6 @@ public class DtsParser {
 
 		@Override
 		public void reportContextSensitivity(Parser arg0, DFA arg1, int arg2, int arg3, int arg4, ATNConfigSet arg5) {
-
 			contextSensitivityCount++;
 		}
 

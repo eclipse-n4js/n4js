@@ -24,8 +24,6 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMemberList;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.RuleNode;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.ParserContextUtil;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
@@ -91,18 +89,6 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 				RULE_classElement,
 				RULE_typeMember,
 				RULE_typeMemberList);
-	}
-
-	@Override
-	public void enterEveryRule(ParserRuleContext ctx) {
-		if (visitChildrenRuleIDs.contains(ctx.getRuleIndex())) {
-			for (ParseTree pt : ctx.children) {
-				if (pt instanceof RuleNode) {
-					RuleNode rn = (RuleNode) pt;
-					walker.enqueue((ParserRuleContext) rn.getRuleContext());
-				}
-			}
-		}
 	}
 
 	@Override
