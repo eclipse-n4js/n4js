@@ -187,7 +187,6 @@ Contributors:
 						</systemProperties>
 						<excludes>
 							<exclude>**/*PerformanceTest.java</exclude>
-							<exclude>**/*SmokeTest.java</exclude>
 						</excludes>
 					</configuration>
 					<executions>
@@ -376,59 +375,6 @@ Contributors:
 				<module>org.eclipse.n4js.smoke.tests</module>
 
 			</modules>
-			<build>
-				<plugins>
-					<plugin>
-						<!-- smoke tests -->
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<version>${maven-surefire-plugin.version}</version>
-						<configuration>
-							<!-- argLine needs to be one line, if you auto-format line break will break tests -->
-							<argLine>${memoryArgs} ${encodingArgs} ${coverageAgent} ${loggingArgs}</argLine>
-							<testSourceDirectory>${project.basedir}/src</testSourceDirectory>
-							<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-							<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
-							<systemProperties>
-								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-							</systemProperties>
-							<includes>
-								<include>**/*SmokeTest.java</include>
-							</includes>
-							<excludes>
-								<exclude>**/*PerformanceTest.java</exclude>
-							</excludes>
-						</configuration>
-						<executions>
-							<execution>
-								<id>TychoSurefireSmokeTest</id>
-								<phase>integration-test</phase>
-								<goals>
-									<goal>test</goal>
-								</goals>
-								<configuration>
-	                                <runOrder>alphabetical</runOrder>
-									<systemProperties>
-										<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-										<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-									</systemProperties>
-									<additionalClasspathElements>
-										<additionalClasspathElement>${cu_org.eclipse.n4js.runner}</additionalClasspathElement>
-									</additionalClasspathElements>
-								</configuration>
-							</execution>
-						</executions>
-						<dependencies>
-							<dependency>
-								<groupId>org.apache.maven.surefire</groupId>
-								<artifactId>surefire-junit47</artifactId>
-								<version>${maven-surefire-plugin.version}</version>
-							</dependency>
-						</dependencies>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 
 		<!-- Code coverage -->
