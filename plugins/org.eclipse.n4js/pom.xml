@@ -30,23 +30,6 @@ Contributors:
 		<!-- fornax: -->
 		<mwe2descriptor>org.eclipse.n4js.GenerateN4JS</mwe2descriptor>
 	</properties>
-	
-	<dependencies>
-		<!--
-		Explicit dependencies to antlr additional to the Manifest.mf files are necessary because:
-		- we use antlr in version 3.2 due to Xtext
-		- we use antlr in version 4.7.2 for parsing d.ts files
-		- Eclipse Orbit provides both of these dependencies with the same artifact id
-		- Maven does not support having the same artifact in two different versions
-		- Maven installs the latest version of an artifact in case there are multiple versions
-		As a result, antlr in version 3.2 would be missing without explicit dependency.
-		-->
-		<dependency>
-		    <groupId>org.antlr</groupId>
-		    <artifactId>antlr-runtime</artifactId>
-		    <version>3.2</version>
-		</dependency>
-	</dependencies>
 
 	<build>
 		<plugins>
