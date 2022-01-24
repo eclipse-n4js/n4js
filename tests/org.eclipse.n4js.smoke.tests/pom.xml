@@ -37,10 +37,16 @@ Contributors:
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<!-- argLine needs to be one line, if you auto-format line break will break tests -->
-					<argLine>${memoryArgsSmokeTests} ${encodingArgs} ${coverageAgent} ${loggingArgs}</argLine>
-				</configuration>
+				<executions>
+					<execution>
+						<id>run-pojo-surefire-tests</id>
+						<configuration>
+							<!-- Replacing ${memoryArgs} by ${memoryArgsSmokeTests} in JVM command line arguments for smoke tests: -->
+							<!-- argLine needs to be one line, if you auto-format line break will break tests -->
+							<argLine>${memoryArgsSmokeTests} ${encodingArgs} ${coverageAgent} ${loggingArgs}</argLine>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
