@@ -8,12 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.regex.smoke.tests
+package org.eclipse.n4js.tests.parser.regex
 
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.analysis.SmokeTester
-import org.eclipse.n4js.regex.tests.AbstractRegexParserTest
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.runner.RunWith
@@ -22,7 +21,7 @@ import org.junit.runner.RunWith
  */
 @InjectWith(N4JSInjectorProvider)
 @RunWith(XtextRunner)
-class RegexInN4JSSmokeTest extends AbstractRegexParserTest {
+class RegexInN4JSSmokeTest extends RegexInN4JSParserTest {
 
 	@Inject extension SmokeTester
 
