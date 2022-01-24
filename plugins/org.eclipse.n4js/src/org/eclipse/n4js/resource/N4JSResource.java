@@ -1414,8 +1414,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
-	private void processSyntaxDiagnostic(INode error, Consumer<XtextSyntaxDiagnostic> acceptor) {
-		CompositeSyntaxErrorMessages.toDiagnostic(error.getSyntaxErrorMessage(), syntaxErrorMessage -> {
+	private void processSyntaxDiagnostic(INode errorNode, Consumer<XtextSyntaxDiagnostic> acceptor) {
+		CompositeSyntaxErrorMessages.toDiagnostic(errorNode.getSyntaxErrorMessage(), syntaxErrorMessage -> {
 			XtextSyntaxDiagnostic diagnostic = null;
 			if (isRangeBased(syntaxErrorMessage)) {
 				String[] issueData = syntaxErrorMessage.getIssueData();
@@ -1426,16 +1426,26 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					String message = syntaxErrorMessage.getMessage();
 					int offset = Integer.parseInt(data.substring(0, colon), 10);
 					int length = Integer.parseInt(data.substring(colon + 1), 10);
-					diagnostic = new XtextSyntaxDiagnosticWithRange(error, offset,
-							length, null) {
-						@Override
-						public int getLine() {
-							if (offset >= 0) {
-								return super.getLine();
-							}
-							return getNode().getTotalStartLine();
+					// sanitize offset/length
+					if (offset < 0) {
+						length -= Math.abs(offset);
+						if (length < 0) {
+							length = 1;
 						}
-
+						offset = 0;
+					}
+					int nodeOffset = errorNode.getTotalOffset();
+					int sourceLength = getParseResult().getRootNode().getTotalLength();
+					if (nodeOffset + offset + length > sourceLength) {
+						// will only ever be too long by one character, so it is enough to subtract 1 ...
+						if (length > 1) {
+							--length;
+						} else if (offset > 0) {
+							--offset;
+						}
+					}
+					// create diagnostic
+					diagnostic = new XtextSyntaxDiagnosticWithRange(errorNode, offset, length, null) {
 						@Override
 						public String getMessage() {
 							return message;
@@ -1451,7 +1461,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			if (diagnostic == null) {
 				String code = syntaxErrorMessage.getIssueCode();
 				String message = syntaxErrorMessage.getMessage();
-				diagnostic = new XtextSyntaxDiagnostic(error) {
+				diagnostic = new XtextSyntaxDiagnostic(errorNode) {
 					@Override
 					public String getCode() {
 						return code;
