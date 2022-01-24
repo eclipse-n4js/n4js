@@ -197,7 +197,7 @@ Contributors:
 							</goals>
 							<phase>test</phase>
 							<configuration>
-                                <runOrder>alphabetical</runOrder>
+								<runOrder>alphabetical</runOrder>
 								<systemProperties>
 									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
@@ -294,7 +294,7 @@ Contributors:
 			</properties>
 		</profile>
 		<!-- Profile workspace-to-userhome is automatically activated if the property WORKSPACE is not set.
-			 As a fall-back it sets it to ${user.home}  -->
+			 As a fall-back it sets it to ${user.home} -->
 		<profile>
 			<id>workspace-to-userhome</id>
 			<activation>
