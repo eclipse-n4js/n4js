@@ -38,7 +38,7 @@ import com.google.inject.Module;
  * NOTE: most tests should subclass {@link AbstractIdeTest} instead of using this class!
  * <p>
  * Manages a pair of instances of the LSP {@link XLanguageServerImpl server} and {@link IdeTestLanguageClient client}.
- * This class is intended to me instantiated with <code>new</code>, not to be injected.
+ * This class is intended to be instantiated with <code>new</code>, not to be injected.
  */
 public class TestLspManager {
 
