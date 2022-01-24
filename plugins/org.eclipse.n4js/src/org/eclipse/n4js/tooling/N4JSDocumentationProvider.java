@@ -18,7 +18,6 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
@@ -28,6 +27,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.resource.XITextRegionWithLineInformation;
 import org.eclipse.xtext.documentation.impl.MultiLineCommentDocumentationProvider;
 import org.eclipse.xtext.nodemodel.BidiTreeIterator;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -48,8 +48,8 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 		if (N4JSGlobals.DTS_FILE_EXTENSION.equals(fileExt)) {
 			EObject astNode = N4JSASTUtils.getCorrespondingASTNode(obj);
 			for (Adapter adapter : astNode.eAdapters()) {
-				if (adapter instanceof DtsParseTreeNodeInfo) {
-					DtsParseTreeNodeInfo infoNode = (DtsParseTreeNodeInfo) adapter;
+				if (adapter instanceof XITextRegionWithLineInformation) {
+					XITextRegionWithLineInformation infoNode = (XITextRegionWithLineInformation) adapter;
 					String jsDoc = infoNode.getJsDoc();
 					return jsDoc;
 				}

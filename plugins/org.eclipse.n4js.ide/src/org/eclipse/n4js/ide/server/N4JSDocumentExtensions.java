@@ -19,9 +19,9 @@ import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.resource.N4JSLocationInFileProvider;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.resource.XITextRegionWithLineInformation;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
 
 import com.google.inject.Inject;
@@ -40,8 +40,8 @@ public class N4JSDocumentExtensions extends DocumentExtensions {
 		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(uri))) {
 			obj = locationProvider.convertToSource(obj);
 			for (Adapter adapter : obj.eAdapters()) {
-				if (adapter instanceof DtsParseTreeNodeInfo) {
-					DtsParseTreeNodeInfo nodeInfo = (DtsParseTreeNodeInfo) adapter;
+				if (adapter instanceof XITextRegionWithLineInformation) {
+					XITextRegionWithLineInformation nodeInfo = (XITextRegionWithLineInformation) adapter;
 					Position start = new Position(nodeInfo.getLineNumber(), nodeInfo.getCharacter());
 					Position end = new Position(nodeInfo.getEndLineNumber(), nodeInfo.getEndCharacter());
 					Range range = new Range(start, end);

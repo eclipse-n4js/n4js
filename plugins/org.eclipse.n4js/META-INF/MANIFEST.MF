@@ -38,8 +38,7 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  com.fasterxml.jackson.core.jackson-core,
  com.fasterxml.jackson.core.jackson-databind,
  com.fasterxml.jackson.core.jackson-annotations,
- com.google.gson,
- org.eclipse.n4js.dts
+ com.google.gson
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.formatting2,

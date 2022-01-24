@@ -54,7 +54,6 @@ import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.dts.DtsParser;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -765,8 +764,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			ResourceType resourceType = ResourceType.getResourceType(getURI());
 			if (resourceType == ResourceType.DTS) {
 				try (Reader reader = createReader(inputStream);) {
-					IParseResult result = new DtsParser().parse(reader, this);
-					updateInternalState(this.getParseResult(), result);
+					// IParseResult result = new DtsParser().parse(reader, this);
+					// updateInternalState(this.getParseResult(), result);
 				}
 			} else {
 				super.doLoad(inputStream, options);

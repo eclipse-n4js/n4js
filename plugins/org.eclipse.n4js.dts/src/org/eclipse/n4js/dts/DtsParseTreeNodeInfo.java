@@ -16,6 +16,7 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.xtext.resource.XITextRegionWithLineInformation;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.ITextRegionWithLineInformation;
@@ -23,7 +24,7 @@ import org.eclipse.xtext.util.ITextRegionWithLineInformation;
 /**
  * Provides information from the parse tree and token stream.
  */
-public class DtsParseTreeNodeInfo implements Adapter, ITextRegionWithLineInformation {
+public class DtsParseTreeNodeInfo implements Adapter, XITextRegionWithLineInformation {
 	final DtsTokenStream tokenStream;
 	final ParserRuleContext ctx;
 
@@ -36,11 +37,13 @@ public class DtsParseTreeNodeInfo implements Adapter, ITextRegionWithLineInforma
 	}
 
 	/** @return true iff there exists jsdoc */
+	@Override
 	public boolean hasJsDoc() {
 		return getJsDoc() != null;
 	}
 
 	/** @return the jsdoc or null */
+	@Override
 	public String getJsDoc() {
 		Token jsDocToken = tokenStream.getPreviousJsDocToken(ctx.start);
 		if (jsDocToken == null) {
@@ -117,11 +120,13 @@ public class DtsParseTreeNodeInfo implements Adapter, ITextRegionWithLineInforma
 	}
 
 	/** @return the character position in the start line */
+	@Override
 	public int getCharacter() {
 		return ctx.start.getCharPositionInLine();
 	}
 
 	/** @return the character position in the end line */
+	@Override
 	public int getEndCharacter() {
 		return ctx.stop.getCharPositionInLine();
 	}
