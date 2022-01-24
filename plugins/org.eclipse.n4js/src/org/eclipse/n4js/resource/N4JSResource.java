@@ -89,6 +89,7 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.nodemodel.impl.RootNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -99,6 +100,7 @@ import org.eclipse.xtext.resource.XtextSyntaxDiagnostic;
 import org.eclipse.xtext.resource.XtextSyntaxDiagnosticWithRange;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IResourceScopeCache;
+import org.eclipse.xtext.util.LineAndColumn;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.util.Triple;
 
@@ -1426,26 +1428,28 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					String message = syntaxErrorMessage.getMessage();
 					int offset = Integer.parseInt(data.substring(0, colon), 10);
 					int length = Integer.parseInt(data.substring(colon + 1), 10);
-					// sanitize offset/length
-					if (offset < 0) {
-						length -= Math.abs(offset);
-						if (length < 0) {
-							length = 1;
-						}
-						offset = 0;
-					}
-					int nodeOffset = errorNode.getTotalOffset();
 					int sourceLength = getParseResult().getRootNode().getTotalLength();
-					if (nodeOffset + offset + length > sourceLength) {
-						// will only ever be too long by one character, so it is enough to subtract 1 ...
-						if (length > 1) {
-							--length;
-						} else if (offset > 0) {
-							--offset;
+					diagnostic = new XtextSyntaxDiagnosticWithRange(errorNode, offset,
+							length, null) {
+						@Override
+						public int getLine() {
+							if (offset >= 0) {
+								return super.getLine();
+							}
+							return getNode().getTotalStartLine();
 						}
-					}
-					// create diagnostic
-					diagnostic = new XtextSyntaxDiagnosticWithRange(errorNode, offset, length, null) {
+
+						@Override
+						public int getColumnEnd() {
+							INode node = getNode();
+							if (node != null) {
+								LineAndColumn lineAndColumn = NodeModelUtils.getLineAndColumn(node,
+										Math.min(getOffset() + getLength(), sourceLength));
+								return lineAndColumn.getColumn();
+							}
+							return 0;
+						}
+
 						@Override
 						public String getMessage() {
 							return message;
