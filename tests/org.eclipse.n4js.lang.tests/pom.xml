@@ -41,24 +41,4 @@ Contributors:
 		</plugins>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>execute-smoke-tests</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>tycho-surefire-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>TychoSurefireSmokeTest</id>
-								<phase>integration-test</phase>
-							</execution>
-						</executions>						
-					</plugin>
-				</plugins>
-			</build>
-		</profile>	
-	</profiles>
-
 </project>
