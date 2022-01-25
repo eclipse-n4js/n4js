@@ -88,7 +88,7 @@ Contributors:
 
 		<!-- some memory -->
 		<memoryArgs>-Xms256M -Xmx1324M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
-		<memoryArgsSmokeTests>-Xms512M -Xmx3072M -XX:+HeapDumpOnOutOfMemoryError</memoryArgsSmokeTests>
+		<memoryArgsSmokeTests>-Xms2048M -Xmx7168M -XX:+HeapDumpOnOutOfMemoryError</memoryArgsSmokeTests>
 		<encodingArgs>-Dfile.encoding=${file.encoding}</encodingArgs>
 
 		<!-- Test related dependency path tragets. -->
