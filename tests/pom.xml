@@ -40,7 +40,7 @@ Contributors:
 		<n4js-version>[0.0.1,0.1.0)</n4js-version>
 
 		<!--
-		Property defines behaviour of <tycho-surefire-plugin> plugin
+		Property defines behaviour of surefire plugin
 		Default behaviour would be that a module
 		configured with packaging eclipse-test-plugin would fail if
 		there are (in an execution) no tests executed. As there are
@@ -50,7 +50,7 @@ Contributors:
 
 		Each profile can override this setting.
 		-->
-		<tycho-surefire-plugin.failIfNoTests>false</tycho-surefire-plugin.failIfNoTests>
+		<surefire-plugin.failIfNoTests>false</surefire-plugin.failIfNoTests>
 	</properties>
 
 	<build>
@@ -70,41 +70,6 @@ Contributors:
 			<plugins>
 				<plugin>
 					<!--
-					There are different executions (configurations) defined, that are run one after the other (when they
-					are bound to the same Maven lifecycle phase).
-					Note that special sets of tests are triggered by proper maven profiles (indirectly by property set by profile)
-					-->
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-surefire-plugin</artifactId>
-					<version>${tycho-version}</version>
-					<configuration>
-						<systemProperties>
-							<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-							<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-						</systemProperties>
-						<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
-					</configuration>
-					<executions>
-						<execution>
-							<!--
-							This the configuration here is used to disable
-							the default execution of the Tycho surefire mojo, so that only
-							the executions are used that are explicitly specified here.
-							This is done by a "hack": the default execution is bound to a
-							non existing Maven lifecycle phase "none".
-							-->
-							<id>default-test</id>
-							<!-- can be seen in log: tycho-surefire-plugin:0.18.0:test
-								(default-test) -->
-							<phase>none</phase>
-							<goals>
-								<goal>test</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-				<plugin>
-					<!--
 					Is configured to ignore tests that follows the name patterns used in the Tycho surefire mojo.
 					So all tests that do not follow these patterns (but the common test class name
 					patterns of **/Test*.java **/*Test.java **/*TestCase.java) are expected to be 
@@ -121,7 +86,7 @@ Contributors:
 						<!-- XXX remote debug -->
 						<testSourceDirectory>${project.basedir}/src</testSourceDirectory>
 						<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-						<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
+						<failIfNoTests>${surefire-plugin.failIfNoTests}</failIfNoTests>
 						<systemProperties>
 							<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 							<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
@@ -166,30 +131,6 @@ Contributors:
 	</build>
 
 	<profiles>
-		<!-- Platform related profiles -->
-		<profile>
-			<id>macosx</id>
-			<activation>
-				<os>
-					<name>mac os x</name>
-					<family>mac</family>
-				</os>
-			</activation>
-			<properties>
-				<ui.test.vmargs>-XstartOnFirstThread</ui.test.vmargs>
-			</properties>
-		</profile>
-		<profile>
-			<id>other-os</id>
-			<activation>
-				<os>
-					<family>!mac</family>
-				</os>
-			</activation>
-			<properties>
-				<ui.test.vmargs/>
-			</properties>
-		</profile>
 		<!-- Profile workspace-to-userhome is automatically activated if the property WORKSPACE is not set.
 			 As a fall-back it sets it to ${user.home} -->
 		<profile>
