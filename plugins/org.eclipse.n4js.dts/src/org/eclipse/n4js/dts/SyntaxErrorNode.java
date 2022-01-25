@@ -19,6 +19,7 @@ import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.ITextRegionWithLineInformation;
+import org.eclipse.xtext.validation.IssueCodes;
 
 /**
  *
@@ -175,8 +176,7 @@ public class SyntaxErrorNode implements INode {
 
 	@Override
 	public SyntaxErrorMessage getSyntaxErrorMessage() {
-		// TODO Auto-generated method stub
-		return null;
+		return new SyntaxErrorMessage(msg, IssueCodes.COPY_JAVA_PROBLEMS);
 	}
 
 	@Override

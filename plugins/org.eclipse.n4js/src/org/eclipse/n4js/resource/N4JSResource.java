@@ -764,6 +764,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		} else {
 			ResourceType resourceType = ResourceType.getResourceType(getURI());
 			if (resourceType == ResourceType.DTS) {
+				setValidationDisabled(true);
 				try (Reader reader = createReader(inputStream);) {
 					IParseResult result = new DtsParser().parse(reader, this);
 					updateInternalState(this.getParseResult(), result);
