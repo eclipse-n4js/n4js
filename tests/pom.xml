@@ -161,54 +161,6 @@ Contributors:
 						</dependency>
 					</dependencies>
 				</plugin>
-				<plugin>
-					<!--
-					Is configured similarly to maven surefire plugin. A bit simpler config, as there are different defaults for this plugin.
-					Default includes: 
-						**/IT*.java 
-						**/*IT.java 
-						**/*ITCase.java
-					-->
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-failsafe-plugin</artifactId>
-					<version>${maven-failsafe-plugin.version}</version>
-					<executions>
-						<execution>
-							<goals>
-								<goal>integration-test</goal>
-								<goal>verify</goal>
-							</goals>
-							<configuration>
-								<systemProperties>
-									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-								</systemProperties>
-							</configuration>
-						</execution>
-
-					</executions>
-					<configuration>
-						<excludes>
-							<exclude>**/*InSuite.java</exclude>
-						</excludes>
-						<!-- argLine needs to be one line, if you atoformat line break will break tests -->
-						<argLine>${memoryArgs} ${encodingArgs} ${loggingArgs}</argLine>
-						<testSourceDirectory>${project.basedir}/src</testSourceDirectory>
-						<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
-						<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
-						<systemProperties>
-							<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-							<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-						</systemProperties>
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>org.apache.maven.surefire</groupId>
-							<artifactId>surefire-junit47</artifactId>
-							<version>${maven-surefire-plugin.version}</version>
-						</dependency>
-					</dependencies>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
