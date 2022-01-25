@@ -91,12 +91,12 @@ public class DtsParseTreeNodeInfo implements Adapter, XITextRegionWithLineInform
 
 	@Override
 	public int getLineNumber() {
-		return ctx.start.getLine() - 1; // we need 0-based line numbers
+		return ctx.start.getLine(); // we need 0-based line numbers
 	}
 
 	@Override
 	public int getEndLineNumber() {
-		return ctx.stop.getLine() - 1; // we need 0-based line numbers
+		return ctx.stop.getLine(); // we need 0-based line numbers
 	}
 
 	@Override

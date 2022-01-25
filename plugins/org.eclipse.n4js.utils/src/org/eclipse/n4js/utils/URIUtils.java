@@ -38,7 +38,7 @@ public class URIUtils {
 		if (fileExtension != null && extensionPrefixes.containsKey(fileExtension)) {
 			URI trimmedUri = uri.trimFileExtension();
 			String fileExtensionPrefix = trimmedUri.fileExtension();
-			if (extensionPrefixes.get(fileExtension).contains(fileExtensionPrefix)) {
+			if (fileExtensionPrefix != null && extensionPrefixes.get(fileExtension).contains(fileExtensionPrefix)) {
 				return fileExtensionPrefix + "." + fileExtension;
 			}
 		}
@@ -54,7 +54,7 @@ public class URIUtils {
 		String fileExtension = uri.fileExtension();
 		if (fileExtension != null && extensionPrefixes.containsKey(fileExtension)) {
 			String fileExtensionPrefix = trimmedUri.fileExtension();
-			if (extensionPrefixes.get(fileExtension).contains(fileExtensionPrefix)) {
+			if (fileExtensionPrefix != null && extensionPrefixes.get(fileExtension).contains(fileExtensionPrefix)) {
 				return trimmedUri.trimFileExtension();
 			}
 
