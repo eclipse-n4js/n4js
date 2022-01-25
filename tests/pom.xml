@@ -105,6 +105,17 @@ Contributors:
 						</dependency>
 					</dependencies>
 				</plugin>
+				<plugin>
+					<!-- suppress default execution of tycho surefire plugin -->
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<executions>
+						<execution>
+							<id>default-test</id>
+							<phase>none</phase>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
