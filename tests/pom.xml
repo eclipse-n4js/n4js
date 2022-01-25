@@ -79,6 +79,7 @@ Contributors:
 						</includes>
 						<excludes>
 							<exclude>**/*PerformanceTest.java</exclude>
+							<exclude>**/*InSuite.java</exclude>
 						</excludes>
 					</configuration>
 					<executions>

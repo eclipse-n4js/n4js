@@ -15,7 +15,7 @@ import org.eclipse.n4js.JSLibSingleTestConfig;
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.analysis.Analyser;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.tests.ecmatestsuite.ECMA6TestSuite;
+import org.eclipse.n4js.tests.ecmatestsuite.ECMA6TestInSuite;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.testing.InjectWith;
 
@@ -23,11 +23,10 @@ import org.eclipse.xtext.testing.InjectWith;
  *
  */
 @InjectWith(N4JSInjectorProvider.class)
-public class ECMA6TestSuiteForJSX extends ECMA6TestSuite {
+public class ECMA6TestInSuiteForJSX extends ECMA6TestInSuite {
 
 	@Override
 	protected Script doParse(String code, URI uri, XtextResourceSet resourceSet, Analyser analyser) throws Exception {
-
 		if (isStrictModeTestCase(code)) {
 			uri = uri.trimFileExtension().appendFileExtension("n4jsx");
 		} else {
@@ -44,7 +43,7 @@ public class ECMA6TestSuiteForJSX extends ECMA6TestSuite {
 	/**
 	 * Constructor
 	 */
-	public ECMA6TestSuiteForJSX(JSLibSingleTestConfig config) {
+	public ECMA6TestInSuiteForJSX(JSLibSingleTestConfig config) {
 		super(config);
 	}
 

@@ -30,7 +30,7 @@ import com.google.inject.Provider;
 
 /**
  */
-public abstract class AbstractECMATestSuiteBase extends AbstractJSLibTest {
+public abstract class AbstractECMATestInSuite extends AbstractJSLibTest {
 
 	/**
 	 * The logger to use.
@@ -54,7 +54,7 @@ public abstract class AbstractECMATestSuiteBase extends AbstractJSLibTest {
 	 * @param config
 	 *            the config to use
 	 */
-	protected AbstractECMATestSuiteBase(JSLibSingleTestConfig config) {
+	protected AbstractECMATestInSuite(JSLibSingleTestConfig config) {
 		super(config);
 	}
 

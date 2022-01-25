@@ -28,7 +28,7 @@ Contributors:
 		<plugins>
 		</plugins>
 	</build>
-	
+
 	<profiles>
 		<profile>
 			<!-- ECMA test262 regression suite -->
@@ -38,16 +38,11 @@ Contributors:
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-clean-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-surefire-plugin</artifactId>
-						<configuration>
-							<includes>
-								<include>**/*ECMATest*.java</include>
-								<include>**/*ECMAHighlightingTest*.java</include>
-							</includes>
-							<systemPropertyVariables>
-								<log4j.configuration>${loggingArgs}</log4j.configuration>
-							</systemPropertyVariables>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
