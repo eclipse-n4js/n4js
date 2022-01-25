@@ -36,20 +36,7 @@ Contributors:
 		<loggingArgs>-Dlog4j.configuration="file:${basedir}/../../plugins/org.eclipse.n4js.utils.logging/log4j_tests.xml"</loggingArgs>
 
 		<junit-version>4.13.1</junit-version>
-		<ts-version>[0.0.1,0.1.0)</ts-version>
-		<n4js-version>[0.0.1,0.1.0)</n4js-version>
 
-		<!--
-		Property defines behaviour of surefire plugin
-		Default behaviour would be that a module
-		configured with packaging eclipse-test-plugin would fail if
-		there are (in an execution) no tests executed. As there are
-		multiple executions defined that only applied when matching
-		certain name pattern, it is ok, when some executions find no
-		test classes. So this property is set to false here.
-
-		Each profile can override this setting.
-		-->
 		<surefire-plugin.failIfNoTests>false</surefire-plugin.failIfNoTests>
 	</properties>
 
@@ -69,12 +56,7 @@ Contributors:
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<!--
-					Is configured to ignore tests that follows the name patterns used in the Tycho surefire mojo.
-					So all tests that do not follow these patterns (but the common test class name
-					patterns of **/Test*.java **/*Test.java **/*TestCase.java) are expected to be 
-					runnable as pure JUnit tests and will be executed by this mojo.
-					-->
+					<!-- main test execution configuration -->
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${maven-surefire-plugin.version}</version>
