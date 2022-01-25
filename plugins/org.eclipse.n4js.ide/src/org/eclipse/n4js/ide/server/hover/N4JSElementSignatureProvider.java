@@ -68,49 +68,49 @@ public class N4JSElementSignatureProvider {
 		return o;
 	}
 
-	private String doGetLabel(EObject o, EObject ref) {
-		EObject tElem = N4JSASTUtils.getCorrespondingTypeModelElement(o);
-		return CustomHoverLabelUtil.getLabel(tElem);
-	}
+	private String doGetLabel(EObject obj, EObject ref) {
+		if (obj instanceof IdentifierRef) {
+			return getLabelFromTypeSystem((IdentifierRef) obj, obj);
 
-	private String doGetLabel(IdentifierRef ir, EObject ref) {
-		return getLabelFromTypeSystem(ir, ir);
-	}
+		} else if (obj instanceof TVariable) {
+			return getLabelFromTypeSystem((TVariable) obj, ref);
 
-	private String doGetLabel(TVariable tv, EObject ref) {
-		return getLabelFromTypeSystem(tv, ref);
-	}
+		} else if (obj instanceof ParameterizedPropertyAccessExpression) {
+			return getLabelFromTypeSystem((ParameterizedPropertyAccessExpression) obj, obj);
 
-	private String doGetLabel(ParameterizedPropertyAccessExpression ppae, EObject ref) {
-		return getLabelFromTypeSystem(ppae, ppae);
-	}
+		} else if (obj instanceof VariableDeclaration) {
+			if (obj instanceof ExportedVariableDeclaration) {
+				EObject tElem = N4JSASTUtils.getCorrespondingTypeModelElement(obj);
+				return CustomHoverLabelUtil.getLabel(tElem);
 
-	private String doGetLabel(VariableDeclaration vd, EObject ref) {
-		if (vd instanceof ExportedVariableDeclaration) {
-			return doGetLabel((EObject) vd, ref);
+			} else {
+				return getLabelFromTypeSystem((VariableDeclaration) obj, ref);
+
+			}
+
+		} else if (obj instanceof PropertyNameValuePair) {
+			return getLabelFromTypeSystem((PropertyNameValuePair) obj, ref);
+
+		} else if (obj instanceof FormalParameter) {
+			FormalParameter fp = (FormalParameter) obj;
+			String optinonalMarker = fp.isHasInitializerAssignment() ? "=…" : "";
+			return getLabelFromTypeSystem(fp, ref) + optinonalMarker;
+
+		} else if (obj instanceof FunctionExpression) {
+			return getLabelFromTypeSystem((FunctionExpression) obj, ref);
+
+		} else if (obj instanceof LiteralOrComputedPropertyName) {
+			if (obj.eContainer() instanceof TypableElement) {
+				return getLabelFromTypeSystem((TypableElement) obj.eContainer(), ref);
+
+			} else {
+				return ((LiteralOrComputedPropertyName) obj).getName();
+
+			}
+		} else {
+			EObject tElem = N4JSASTUtils.getCorrespondingTypeModelElement(obj);
+			return CustomHoverLabelUtil.getLabel(tElem);
 		}
-
-		return getLabelFromTypeSystem(vd, ref);
-	}
-
-	private String doGetLabel(PropertyNameValuePair nameValuePair, EObject ref) {
-		return getLabelFromTypeSystem(nameValuePair, ref);
-	}
-
-	private String doGetLabel(FormalParameter fp, EObject ref) {
-		String optinonalMarker = fp.isHasInitializerAssignment() ? "=…" : "";
-		return getLabelFromTypeSystem(fp, ref) + optinonalMarker;
-	}
-
-	private String doGetLabel(FunctionExpression fe, EObject ref) {
-		return getLabelFromTypeSystem(fe, ref);
-	}
-
-	private String doGetLabel(LiteralOrComputedPropertyName name, EObject ref) {
-		if (name.eContainer() instanceof TypableElement) {
-			return getLabelFromTypeSystem((TypableElement) name.eContainer(), ref);
-		}
-		return name.getName();
 	}
 
 	private String getLabelFromTypeSystem(TypableElement o, EObject ref) {
@@ -120,24 +120,16 @@ public class N4JSElementSignatureProvider {
 		TypableElement elem = ref instanceof TypableElement ? (TypableElement) ref : o;
 		TypeRef typeRef = ts.type(RuleEnvironmentExtensions.newRuleEnvironment(elem), elem);
 
-		String str = getName(o) + ": " + typeRef.getTypeRefAsStringWithAliasResolution();
-		return str;
-	}
+		String name = "";
+		if (o instanceof NamedElement) {
+			name = ((NamedElement) o).getName();
+		} else if (o instanceof IdentifiableElement) {
+			name = ((IdentifiableElement) o).getName();
+		} else if (o instanceof TVariable) {
+			name = ((TVariable) o).isConst() ? "const" : "var";
+		}
 
-	private String getName(EObject o) {
-		return "";
-	}
-
-	private String getName(NamedElement namedElement) {
-		return namedElement.getName();
-	}
-
-	private String getName(IdentifiableElement identifiableElement) {
-		return identifiableElement.getName();
-	}
-
-	private String getName(TVariable tVariable) {
-		String str = tVariable.isConst() ? "const" : "var";
+		String str = name + ": " + typeRef.getTypeRefAsStringWithAliasResolution();
 		return str;
 	}
 

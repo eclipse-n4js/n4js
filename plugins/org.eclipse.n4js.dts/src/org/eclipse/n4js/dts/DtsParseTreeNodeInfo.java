@@ -86,7 +86,7 @@ public class DtsParseTreeNodeInfo implements Adapter, XITextRegionWithLineInform
 
 	@Override
 	public int getLength() {
-		return ctx.stop.getStopIndex() - getOffset();
+		return Math.max(0, ctx.stop.getStopIndex() - getOffset());
 	}
 
 	@Override

@@ -35,7 +35,7 @@ import com.google.common.base.StandardSystemProperty;
 import com.google.common.base.Stopwatch;
 
 /**
- *
+ * Test for d.ts grammar
  */
 public class DtsParsesDefinitelyTypedTest {
 	static final String WORKSPACE_ENV = "WORKSPACE";
@@ -43,7 +43,7 @@ public class DtsParsesDefinitelyTypedTest {
 
 	/** Parse every d.ts-file in the definitely typed repository (except some) */
 	@Test
-	public void test() throws IOException {
+	public void parseDefinitelyTyped() throws IOException {
 
 		final String workspace = getSystemPropOrEnvironmentVar(WORKSPACE_ENV,
 				StandardSystemProperty.USER_HOME.value());
@@ -53,7 +53,7 @@ public class DtsParsesDefinitelyTypedTest {
 		hardReset("https://github.com/DefinitelyTyped/DefinitelyTyped.git", targetDir,
 				"master", true, true);
 
-		assertParseCounts(targetDir, 20000, 250, 0);
+		assertParseCounts(targetDir, 19500, 1500, 0);
 	}
 
 	/**
