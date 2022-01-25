@@ -126,6 +126,10 @@ Contributors:
 							<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 							<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
 						</systemProperties>
+						<includes>
+							<!-- replace surefire's default inclusion patterns by this simpler convention: -->
+							<include>**/*Test.java</include>
+						</includes>
 						<excludes>
 							<exclude>**/*PerformanceTest.java</exclude>
 						</excludes>
