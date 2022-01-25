@@ -140,6 +140,11 @@ Contributors:
 									<resource>plugin.properties</resource>
 								</transformer>
 							</transformers>
+							<artifactSet>
+								<excludes>
+									<exclude>*:*antlr4-4.7.2-complete*</exclude>
+								</excludes>
+							</artifactSet>
 							<filters>
 								<filter>
 									<artifact>*:*</artifact>
