@@ -24,11 +24,7 @@ Contributors:
 	</parent>
 
 	<modules>
-		<!-- most test modules are included below via profile "execute-basic-tests" (which is active by default) -->
-
-		<module>org.eclipse.n4js.tests.ecmatestsuite</module>
-		<module>org.eclipse.n4js.accesscontrol.tests</module>
-
+		<!-- test modules are included below via profiles "execute-basic-tests" (which is active by default), "execute-ecma-tests", etc. -->
 	</modules>
 
 	<properties>
@@ -175,14 +171,32 @@ Contributors:
 		</profile>
 
 		<profile>
+			<id>execute-accesscontrol-tests</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>org.eclipse.n4js.accesscontrol.tests</module>
+			</modules>
+		</profile>
+
+		<profile>
 			<id>execute-integration-tests</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<modules>
-
 				<module>org.eclipse.n4js.integration.tests</module>
+			</modules>
+		</profile>
 
+		<profile>
+			<id>execute-ecma-tests</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+				<module>org.eclipse.n4js.tests.ecmatestsuite</module>
 			</modules>
 		</profile>
 
@@ -192,9 +206,7 @@ Contributors:
 				<activeByDefault>false</activeByDefault>
 			</activation>
 			<modules>
-
 				<module>org.eclipse.n4js.smoke.tests</module>
-
 			</modules>
 		</profile>
 
