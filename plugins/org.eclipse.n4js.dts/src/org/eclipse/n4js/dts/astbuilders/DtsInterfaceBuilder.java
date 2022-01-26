@@ -20,12 +20,14 @@ import java.util.Set;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceExtendsClauseContext;
+import org.eclipse.n4js.dts.TypeScriptParser.MethodSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
-import org.eclipse.n4js.dts.TypeScriptParser.PropertySignaturContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
+import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -82,8 +84,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 	}
 
 	@Override
-	public void enterPropertySignatur(PropertySignaturContext ctx) {
-		// this is a property
+	public void enterPropertySignature(PropertySignatureContext ctx) {
 		N4FieldDeclaration fd = N4JSFactory.eINSTANCE.createN4FieldDeclaration();
 		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
 		locpn.setLiteralName(ctx.propertyName().getText());
@@ -92,6 +93,20 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
 		fd.setDeclaredTypeRefNode(trn);
+
+		addLocationInfo(fd, ctx);
+		result.getOwnedMembersRaw().add(fd);
+	}
+
+	@Override
+	public void enterMethodSignature(MethodSignatureContext ctx) {
+		N4MethodDeclaration fd = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
+		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+		locpn.setLiteralName(ctx.propertyName().getText());
+		fd.setDeclaredName(locpn);
+
+		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
+		fd.setDeclaredReturnTypeRefNode(trn);
 
 		addLocationInfo(fd, ctx);
 		result.getOwnedMembersRaw().add(fd);
