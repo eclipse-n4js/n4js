@@ -25,15 +25,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
+import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.io.FileCopier;
@@ -43,6 +46,8 @@ import org.junit.Assert;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Predicates;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 /**
  * Provides access to the projects located in the N4JS Git repository under top-level folder "n4js-libs". Assumes that
@@ -57,6 +62,8 @@ public class N4jsLibsAccess {
 	private static final String TEST_HELPERS_NAME = "testhelpers";
 	/** Name of the top-level folder containing the "n4js-libs" inside the N4JS Git repository. */
 	private static final String N4JS_LIBS_NAME = "n4js-libs";
+
+	private static final Logger LOGGER = Logger.getLogger(N4jsLibsAccess.class);
 
 	/**
 	 * Returns the absolute path to the location of the N4JS libraries (i.e. the npm packages located under
@@ -186,6 +193,40 @@ public class N4jsLibsAccess {
 	}
 
 	/**
+	 * Same as {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...)} but will install the
+	 * n4js-libs specified as (dev-)dependencies in the given package.json file. Will throw an exception if the given
+	 * package.json file has dependencies that are not n4js-libs packages.
+	 *
+	 * @param targetPath
+	 *            see {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...) here}.
+	 * @param includeDependencies
+	 *            see {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...) here}.
+	 * @param useSymbolicLinks
+	 *            see {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...) here}.
+	 * @param deleteOnExit
+	 *            see {@link #installN4jsLibs(Path, boolean, boolean, boolean, N4JSPackageName...) here}.
+	 * @param packageJsonFile
+	 *            the package.json file to scan for [dev]Dependencies.
+	 * @param includeDevDependencies
+	 *            whether also the devDependencies of the given package.json file should be installed.
+	 */
+	public static Map<N4JSPackageName, Path> installN4jsLibs(Path targetPath, boolean includeDependencies,
+			boolean useSymbolicLinks, boolean deleteOnExit, Path packageJsonFile, boolean includeDevDependencies)
+			throws IOException {
+		if (!packageJsonFile.getFileName().toString().equals(N4JSGlobals.PACKAGE_JSON)) {
+			throw new IllegalArgumentException("path does not denote a package.json file: " + packageJsonFile);
+		}
+		Path n4jsLibsLocation = findN4jsLibsLocation();
+		Map<N4JSPackageName, Path> toBeInstalled = new HashMap<>();
+		List<N4JSPackageName> deps = loadDepenencies(packageJsonFile.getParent(), includeDevDependencies);
+		for (N4JSPackageName projectName : deps) {
+			Path projectPath = findN4jsLib(n4jsLibsLocation, projectName, false);
+			toBeInstalled.put(projectName, projectPath);
+		}
+		return installN4jsLibs(targetPath, includeDependencies, useSymbolicLinks, deleteOnExit, toBeInstalled);
+	}
+
+	/**
 	 * Installs one or more N4JS libraries (i.e. the npm packages located under "n4js-libs/packages" in the N4JS Git
 	 * repository on the local file system) by copying or symbolically linking them from their location in the local
 	 * N4JS Git repository clone.
@@ -197,9 +238,10 @@ public class N4jsLibsAccess {
 	 * @param targetPath
 	 *            where to install.
 	 * @param includeDependencies
-	 *            if dependencies of the installed N4JS libraries should be installed, too. This includes both other
-	 *            N4JS libraries or third-party dependencies that reside under folder "n4js-libs/node_modules" and will
-	 *            be installed by MWE2 workflow BuildN4jsLibs in the early stages of the N4JS build.
+	 *            whether the transitive dependencies of the installed N4JS libraries should be installed, too. This may
+	 *            include both other N4JS libraries or third-party dependencies that reside under folder
+	 *            "n4js-libs/node_modules" and will be installed by MWE2 workflow BuildN4jsLibs in the early stages of
+	 *            the N4JS build.
 	 * @param useSymbolicLinks
 	 *            whether symbolic links should be used instead of copying the files.<br>
 	 *            WARNING: if your tests changes the installed packages, this will affect a global location that will
@@ -273,13 +315,13 @@ public class N4jsLibsAccess {
 	private static Set<N4JSPackageName> loadDepenencies(Path projectPath, boolean includeDevDependencies,
 			boolean excludeNestedProjects, boolean includeDepsOfNestedProjects) throws IOException {
 		Set<N4JSPackageName> result = new LinkedHashSet<>();
-		Map<N4JSPackageName, Path> nestedProjects = getNestedProjects(projectPath);
+		Map<N4JSPackageName, Path> nodeModuleProjects = getNodeModuleProjects(projectPath);
 		// add dependencies of project at 'projectPath'
 		List<N4JSPackageName> dependencyNames = loadDepenencies(projectPath, includeDevDependencies);
 		result.addAll(dependencyNames);
 		// add dependencies of nested projects (if requested)
 		if (includeDepsOfNestedProjects) {
-			for (Path nestedProjectPath : nestedProjects.values()) {
+			for (Path nestedProjectPath : nodeModuleProjects.values()) {
 				Set<N4JSPackageName> nestedDependencyNames = loadDepenencies(nestedProjectPath,
 						false, // never include devDependencies of nested projects!
 						excludeNestedProjects, includeDepsOfNestedProjects);
@@ -288,7 +330,7 @@ public class N4jsLibsAccess {
 		}
 		// remove nested projects (if requested)
 		if (excludeNestedProjects) {
-			result.removeAll(nestedProjects.keySet());
+			result.removeAll(nodeModuleProjects.keySet());
 		}
 		return result;
 	}
@@ -319,7 +361,7 @@ public class N4jsLibsAccess {
 	/**
 	 * Returns name/path of all projects nested inside the node_modules folder of the project at the given location.
 	 */
-	private static Map<N4JSPackageName, Path> getNestedProjects(Path projectPath) {
+	private static Map<N4JSPackageName, Path> getNodeModuleProjects(Path projectPath) {
 		Map<N4JSPackageName, Path> result = new HashMap<>();
 		Path nodeModulesPath = projectPath.resolve(N4JSGlobals.NODE_MODULES);
 		if (Files.exists(nodeModulesPath)) {
@@ -366,12 +408,49 @@ public class N4jsLibsAccess {
 		Path n4jsRuntimeSrcGen = n4jsRuntimeLink.resolve("src-gen");
 		String warning = "\n" +
 				"******************************************************************\n" +
-				"Maybe you forgot to run MWE2 workflow BuildN4jsLibs?\n" +
+				"Maybe you forgot to run MWE2 workflow 'BuildN4jsLibs.mwe2'?\n" +
 				"******************************************************************";
 		Assert.assertTrue("n4js-runtime does not exist in node_modules folder: " + n4jsRuntimeLink + warning,
 				Files.exists(n4jsRuntimeLink));
 		Assert.assertTrue("src-gen folder in n4js-runtime does not exist: " + n4jsRuntimeSrcGen + warning,
 				Files.isDirectory(n4jsRuntimeSrcGen));
+	}
+
+	/**
+	 * Asserts that the local verdaccio is reachable at {@link N4JSGlobals#VERDACCIO_URL} and that
+	 * <code>n4js-runtime@latest</code> resolves to version {@value N4JSGlobals#VERDACCIO_TEST_VERSION}.
+	 */
+	public static void assertVerdaccioIsRunning(long timeoutDuration, TimeUnit timeoutUnit) {
+		final CliTools cli = new CliTools();
+		cli.setInheritIO(false);
+		cli.setIgnoreFailure(true); // want to create a custom failure below
+		cli.setTimeout(timeoutDuration, timeoutUnit);
+		final ProcessResult viewResult = cli.yarnRun(
+				new File(".").getAbsoluteFile().toPath(),
+				"info", N4JSGlobals.N4JS_RUNTIME.getRawName(),
+				"--json",
+				"--registry", N4JSGlobals.VERDACCIO_URL);
+		if (viewResult.getExitCode() == 0 && viewResult.getException() == null) {
+			String stdout = viewResult.getStdOut();
+			JsonElement root = JsonParser.parseString(stdout);
+			String name = JsonUtils.getDeepAsString(root, "data", "name");
+			String latestVersion = JsonUtils.getDeepAsString(root, "data", "dist-tags", "latest");
+			if (name != null && name.equals(N4JSGlobals.N4JS_RUNTIME.getRawName())
+					&& latestVersion != null && latestVersion.equals(N4JSGlobals.VERDACCIO_TEST_VERSION)) {
+				return; // success!
+			}
+		}
+		final String msg = "verdaccio not running or version of " + N4JSGlobals.N4JS_RUNTIME.getRawName()
+				+ "@latest is not " + N4JSGlobals.VERDACCIO_TEST_VERSION + "\n"
+				+ "*********************************************************************************\n"
+				+ "For running this test locally, first start a local verdaccio server with:\n"
+				+ "$ mvn -DnoTests clean verify\n"
+				+ "  (OR in Eclipse: simply run MWE2 workflow 'BuildN4jsLibs.mwe2')\n"
+				+ "$ ./releng/utils/scripts/start-verdaccio.sh\n"
+				+ "(note: requires Java 11 and docker)\n"
+				+ "*********************************************************************************";
+		LOGGER.error(msg);
+		Assert.fail(msg);
 	}
 
 	/**

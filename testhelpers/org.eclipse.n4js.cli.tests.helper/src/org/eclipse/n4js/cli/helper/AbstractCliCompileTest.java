@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Map;
 
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.cli.N4jscMain;
 import org.eclipse.n4js.cli.N4jscOptions;
 import org.eclipse.n4js.utils.io.FileUtils;
@@ -24,6 +25,7 @@ import org.junit.Before;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
+import com.google.common.collect.ObjectArrays;
 
 /**
  * Subclass this class for test cases that compile n4js code and run js code
@@ -125,22 +127,23 @@ public class AbstractCliCompileTest extends AbstractCliTest<N4jscOptions> {
 
 	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
 	public ProcessResult npmInstall(Path workingDir, String... options) {
-		return cliTools.npmInstall(workingDir, options);
-	}
-
-	/** see {@link TestProcessExecuter#npmRun(Path, Map, String[])} */
-	public ProcessResult npmList(Path workingDir, String... options) {
-		return cliTools.npmList(workingDir, options);
+		return cliTools.npmInstall(workingDir, addVerdaccioRegistry(options));
 	}
 
 	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
 	public ProcessResult yarnInstall(Path workingDir, String... options) {
-		return cliTools.yarnInstall(workingDir, options);
+		return cliTools.yarnInstall(workingDir, addVerdaccioRegistry(options));
 	}
 
 	/** see {@link TestProcessExecuter#yarnRun(Path, Map, String[])} */
 	public ProcessResult yarnRun(Path workingDir, String... options) {
 		return cliTools.yarnRun(workingDir, options);
+	}
+
+	private static String[] addVerdaccioRegistry(String[] options) {
+		return ObjectArrays.concat(new String[] {
+				"--registry", N4JSGlobals.VERDACCIO_URL
+		}, options, String.class);
 	}
 
 	/**

@@ -55,19 +55,19 @@ public class JsonUtils {
 		return internalGet(JsonObject.class, Optional.of(JsonObject::new), true, root, propertyNames);
 	}
 
-	/** Same as {@link #getDeep(JsonElement, String...)}, but returns {@code null} if value isn't a boolean. */
+	/** Same as {@link #getDeep(JsonElement, String...)}, but returns {@code false} if value isn't a boolean. */
 	public static boolean getBooleanDeep(JsonElement root, String... propertyNames) {
 		JsonPrimitive result = internalGet(JsonPrimitive.class, Optional.absent(), false, root, propertyNames);
-		return result != null && result.isBoolean() ? result.getAsBoolean() : Boolean.FALSE;
+		return result != null && result.isBoolean() ? result.getAsBoolean() : false;
 	}
 
-	/** Same as {@link #getDeep(JsonElement, String...)}, but returns {@code null} if value isn't a Java int. */
+	/** Same as {@link #getDeep(JsonElement, String...)}, but returns {@code 0} if value isn't a Java int. */
 	public static int getIntDeep(JsonElement root, String... propertyNames) {
 		JsonPrimitive result = internalGet(JsonPrimitive.class, Optional.absent(), false, root, propertyNames);
 		return result != null && result.isNumber() ? result.getAsInt() : 0;
 	}
 
-	/** Same as {@link #getDeep(JsonElement, String...)}, but returns {@code null} if value isn't a JSON number. */
+	/** Same as {@link #getDeep(JsonElement, String...)}, but returns {@code 0} if value isn't a JSON number. */
 	public static Number getNumberDeep(JsonElement root, String... propertyNames) {
 		JsonPrimitive result = internalGet(JsonPrimitive.class, Optional.absent(), false, root, propertyNames);
 		return result != null && result.isNumber() ? result.getAsNumber() : BigInteger.ZERO;

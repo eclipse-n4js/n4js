@@ -91,15 +91,15 @@ echo "==== STEP 1/8: Start Verdaccio"
 docker run -d -it --rm --name extension-publish-verdaccio -p 4873:4873 -v ${VERDACCIO_CONFIG_DIR}/config.yaml:/verdaccio/conf/config.yaml ${VERDACCIO_IMAGE}
 
 echo "Wait 1s"
-sleep 1s
+sleep 1
 echo "Wait 2s"
-sleep 1s
+sleep 1
 echo "Wait 3s"
-sleep 1s
+sleep 1
 echo "Wait 4s"
-sleep 1s
+sleep 1
 echo "Wait 5s"
-sleep 1s
+sleep 1
 
 
 
@@ -133,13 +133,12 @@ echo "==="
 
 echo "==== STEP 4/8: Update versions inside package.json of extension"
 pushd ${EXTENSION_DIR}
-    npx json -I -f package.json -e "
-        this.version=\"$VERSION_EXTENSION\"
-        this.dependencies['n4js-cli']=\"$VERSION_LIBS\"
-        this.dependencies['n4js-runtime']=\"$VERSION_LIBS\"
-        this.dependencies['n4js-runtime-node']=\"$VERSION_LIBS\"
-        this.dependencies['n4js-runtime-es2015']=\"$VERSION_LIBS\"
-    "
+    npx json -I -f package.json -e "\
+        this.version=\"$VERSION_EXTENSION\";\
+        this.dependencies['n4js-cli']=\"$VERSION_LIBS\";\
+        this.dependencies['n4js-runtime']=\"$VERSION_LIBS\";\
+        this.dependencies['n4js-runtime-node']=\"$VERSION_LIBS\";\
+        this.dependencies['n4js-runtime-es2015']=\"$VERSION_LIBS\";"
 
     echo "==== STEP 5/8: Call npm install (use local verdaccio registry)"
     npm install --registry http://localhost:4873

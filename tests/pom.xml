@@ -354,6 +354,16 @@ Contributors:
 				<module>org.eclipse.n4js.ide.tests.helper.tests</module>
 				<module>org.eclipse.n4js.ui.tests</module> <!-- note the bad name: these are actually IDE tests -->
 
+			</modules>
+		</profile>
+
+		<profile>
+			<id>execute-integration-tests</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<modules>
+
 				<module>org.eclipse.n4js.integration.tests</module>
 
 			</modules>
