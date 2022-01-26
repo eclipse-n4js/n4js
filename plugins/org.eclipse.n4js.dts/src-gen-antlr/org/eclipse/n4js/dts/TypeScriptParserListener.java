@@ -398,15 +398,15 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitInferTypeRef(TypeScriptParser.InferTypeRefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#propertySignatur}.
+	 * Enter a parse tree produced by {@link TypeScriptParser#propertySignature}.
 	 * @param ctx the parse tree
 	 */
-	void enterPropertySignatur(TypeScriptParser.PropertySignaturContext ctx);
+	void enterPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#propertySignatur}.
+	 * Exit a parse tree produced by {@link TypeScriptParser#propertySignature}.
 	 * @param ctx the parse tree
 	 */
-	void exitPropertySignatur(TypeScriptParser.PropertySignaturContext ctx);
+	void exitPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#constructSignature}.
 	 * @param ctx the parse tree

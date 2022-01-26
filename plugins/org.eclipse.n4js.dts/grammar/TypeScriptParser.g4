@@ -214,7 +214,7 @@ inferTypeRef:
 ;
 
 
-propertySignatur
+propertySignature
     : ReadOnly? propertyName '?'? colonSepTypeRef? ('=>' typeRef)?
     ;
 
@@ -695,11 +695,11 @@ typeMemberList
     ;
 
 typeMember
-    : propertySignatur
-    | callSignature
-    | constructSignature
-    | indexSignature
+    : constructSignature
     | methodSignature ('=>' typeRef)?
+    | propertySignature
+    | callSignature
+    | indexSignature
     ;
 
 

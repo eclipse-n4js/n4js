@@ -484,13 +484,13 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPropertySignatur(TypeScriptParser.PropertySignaturContext ctx) { }
+	@Override public void enterPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPropertySignatur(TypeScriptParser.PropertySignaturContext ctx) { }
+	@Override public void exitPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

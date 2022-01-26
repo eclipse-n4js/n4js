@@ -290,7 +290,7 @@ public class TypeScriptParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPropertySignatur(TypeScriptParser.PropertySignaturContext ctx) { return visitChildren(ctx); }
+	@Override public T visitPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -245,11 +245,11 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInferTypeRef(TypeScriptParser.InferTypeRefContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#propertySignatur}.
+	 * Visit a parse tree produced by {@link TypeScriptParser#propertySignature}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPropertySignatur(TypeScriptParser.PropertySignaturContext ctx);
+	T visitPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#constructSignature}.
 	 * @param ctx the parse tree
