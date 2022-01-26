@@ -5,7 +5,12 @@ import {C, I, fn} from "TSModule";
 let i : ~I = C.fieldXY;
 i;
 
-let c : ~C = i.fooXY();
-c;
 
-fn(C.fieldXY);
+let c1 : ~C = i.methodXY();
+c1;
+let n : number = i.field;
+n;
+
+let c2 : ~C = fn(C.fieldXY);
+c2;
+

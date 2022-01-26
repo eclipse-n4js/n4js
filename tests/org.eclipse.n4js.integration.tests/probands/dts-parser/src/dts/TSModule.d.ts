@@ -4,7 +4,8 @@ export class C {
 }
 
 export interface I {
-    fooXY(): C;
+    field: number;
+    methodXY(): C;
 }
 
 export function fn(param : I) : C;
