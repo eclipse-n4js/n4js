@@ -24,7 +24,13 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 	
-	
+	<!--
+	The following changes deal with the situation that:
+	- we use antlr 3.2 for Xtext
+	- we use antlr 4.7.2 for parsing d.ts files
+	- we create a fat/uber jar (n4jsc.jar) where modules of both of the antlr versions collide
+	- FIXME: re-check!
+	-->
 	<build>
 		<plugins>
 			<plugin>
@@ -93,13 +99,13 @@ Contributors:
 						<configuration>
 								<artifactSet>
 										<includes>
-												<include>*:*antlr4-runtime-4.7.2*</include>
+												<include>${antlr4.relocate.artifact}</include>
 										</includes>
 								</artifactSet>
 								<relocations>
 								<relocation>
 									<pattern>org.antlr</pattern>
-									<shadedPattern>repacked.org.antrl</shadedPattern>
+									<shadedPattern>repacked.org.antlr4</shadedPattern>
 								</relocation>
 							</relocations>
 						</configuration>

@@ -86,8 +86,10 @@ Contributors:
 		<hlc.name>n4jsc</hlc.name>
 		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
 		<cli.fat.jar.classifier>jar-with-dependencies</cli.fat.jar.classifier>
+		<antlr4.relocate.artifact>*:*antlr4-runtime-4.7.2*</antlr4.relocate.artifact>
+		
 
-		<!-- some memory -->
+		<!-- some memtcafitra.4rltnory -->
 		<memoryArgs>-Xms256M -Xmx1324M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
 		<encodingArgs>-Dfile.encoding=${file.encoding}</encodingArgs>
 
