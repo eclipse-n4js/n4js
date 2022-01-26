@@ -93,7 +93,7 @@ Contributors:
 						<configuration>
 								<artifactSet>
 										<includes>
-												<include>*:*antlr4-4.7.2-complete*</include>
+												<include>*:*antlr4-runtime-4.7.2*</include>
 										</includes>
 								</artifactSet>
 								<relocations>

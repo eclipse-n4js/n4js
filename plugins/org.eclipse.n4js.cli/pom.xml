@@ -142,7 +142,7 @@ Contributors:
 							</transformers>
 							<artifactSet>
 								<excludes>
-									<exclude>*:*antlr4-4.7.2-complete*</exclude>
+									<exclude>*:*antlr4-runtime-4.7.2*</exclude>
 								</excludes>
 							</artifactSet>
 							<filters>
