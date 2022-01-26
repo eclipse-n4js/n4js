@@ -140,11 +140,13 @@ Contributors:
 									<resource>plugin.properties</resource>
 								</transformer>
 							</transformers>
+							<!--
 							<artifactSet>
 								<excludes>
 									<exclude>${antlr4.relocate.artifact}</exclude>
 								</excludes>
 							</artifactSet>
+							-->
 							<filters>
 								<filter>
 									<artifact>*:*</artifact>

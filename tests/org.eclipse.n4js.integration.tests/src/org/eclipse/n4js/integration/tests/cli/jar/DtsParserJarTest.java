@@ -37,7 +37,7 @@ public class DtsParserJarTest extends AbstractCliJarTest {
 
 	/** Compile a project that has n4js and d.ts files. */
 	@Test
-	public void testSingleFileCompile() {
+	public void testDTsAndN4jsFileCompile() {
 		File project = Path.of(TARGET, WORKSPACE_FOLDER).toAbsolutePath().toFile();
 
 		CliCompileResult cliResult = n4jsc(COMPILE(project), VALIDATION_ERRORS);
