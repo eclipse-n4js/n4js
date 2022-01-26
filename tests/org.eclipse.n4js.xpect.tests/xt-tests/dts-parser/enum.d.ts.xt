@@ -9,35 +9,11 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest 
-   
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
    END_SETUP
  */
 
-
-/* XPECT formattedLines 18 ---
-export public enum RoundingMode {
-
-	/\*
-	 * Round away from zero. Never decreases the magnitude of the calculated value.
-	 * Maps to BigNumber.ROUND_UP
-	 *\/
-	UP,
-
-	/\*
-	 * Round toward zero. Never increases the magnitude of the calculated value.
-	 * Maps to BigNumber.ROUND_DOWN
-	 *\/
-	DOWN,
-
-	/\**
-	 * Round toward negative infinity.
-	 * Maps to BigNumber.ROUND_FLOOR
-	 *\/
-	FLOOR
-}
---- */
-export public enum RoundingMode {
+export enum RoundingMode {
     /*
      * Round away from zero. Never decreases the magnitude of the calculated value.
      * Maps to BigNumber.ROUND_UP
@@ -55,14 +31,17 @@ export public enum RoundingMode {
      * Maps to BigNumber.ROUND_FLOOR
      */
     FLOOR
-    
 }
 
 
 
-/* XPECT formattedLines 1 ---
-enum EXnum {a, b, c}
+/* XPECT ast ---
+ Script: true
+  ExportDeclaration: false, false
+   N4EnumDeclaration: [external, public], RoundingMode
+    N4EnumLiteral: UP
+    N4EnumLiteral: DOWN
+    N4EnumLiteral: FLOOR
 --- */
-enum EXnum{a,b,c}
 
 

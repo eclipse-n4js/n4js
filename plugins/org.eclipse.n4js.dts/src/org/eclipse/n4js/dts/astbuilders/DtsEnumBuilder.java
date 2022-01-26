@@ -55,6 +55,8 @@ public class DtsEnumBuilder extends AbstractDtsSubBuilder<EnumDeclarationContext
 		result = N4JSFactory.eINSTANCE.createN4EnumDeclaration();
 		result.setName(ctx.Identifier().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
+
+		walker.enqueue(ctx.enumBody());
 	}
 
 	@Override

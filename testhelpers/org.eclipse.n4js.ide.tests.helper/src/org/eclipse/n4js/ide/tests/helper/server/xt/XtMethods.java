@@ -15,12 +15,14 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.newRul
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Deque;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -437,6 +439,48 @@ public class XtMethods {
 		if (base.equals(uri.trimFragment()))
 			return uri.fragment();
 		return uri.deresolve(base).toString();
+	}
+
+	/** Implementation for {@link XtIdeTest#ast(XtMethodData)} */
+	public String serializeAst(EObject root) {
+		StringBuilder sb = new StringBuilder();
+		serializeAst(root, sb, 1);
+		return sb.toString().trim();
+	}
+
+	private void serializeAst(EObject node, StringBuilder sb, int identLevel) {
+		String name = node.getClass().getSimpleName();
+		if (name.endsWith("Impl")) {
+			name = name.substring(0, name.length() - "Impl".length());
+		}
+		String props = "";
+		List<EStructuralFeature> structuralFeatures = new ArrayList<>(node.eClass().getEAllStructuralFeatures());
+		Collections.sort(structuralFeatures, Comparator.comparing(EStructuralFeature::getName));
+		for (EStructuralFeature feature : structuralFeatures) {
+			Object featureValue = node.eGet(feature);
+			if (featureValue != null) {
+				boolean serializeProp = false;
+				if (feature.isMany() && featureValue instanceof EList<?>) {
+					EList<?> list = (EList<?>) featureValue;
+					if (!list.isEmpty() && !(list.get(0) instanceof EObject)) {
+						serializeProp = true;
+					}
+				} else {
+					serializeProp = !(featureValue instanceof EObject);
+				}
+
+				if (serializeProp) {
+					props += props.isEmpty() ? ": " : ", ";
+					props += featureValue.toString();
+				}
+			}
+		}
+		String line = String.format("%1$" + identLevel + "s", "") + name + props + "\n";
+
+		sb.append(line);
+		for (EObject child : node.eContents()) {
+			serializeAst(child, sb, identLevel + 1);
+		}
 	}
 
 }

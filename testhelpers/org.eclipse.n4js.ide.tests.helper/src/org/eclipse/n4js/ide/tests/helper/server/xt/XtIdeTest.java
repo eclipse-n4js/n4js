@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.Location;
@@ -205,6 +206,9 @@ public class XtIdeTest extends AbstractIdeTest {
 			break;
 		}
 		// 2nd pass test methods
+		case "ast":
+			ast(testMethodData);
+			break;
 		case "accessModifier":
 			accessModifier(testMethodData);
 			break;
@@ -345,6 +349,20 @@ public class XtIdeTest extends AbstractIdeTest {
 	@Xpect // NOTE: This annotation is used only to enable validation and navigation of .xt files.
 	public void warnings(XtMethodData data) {
 		issueHelper.getWarnings(data);
+	}
+
+	/**
+	 * Checks the given input against the result of the auto code formatter running on this file
+	 *
+	 * <pre>
+	 * // Xpect ast --&gt; &ltSERIALIZED AST&gt
+	 * </pre>
+	 */
+	@Xpect
+	public void ast(XtMethodData data) {
+		EObject root = resource.getParseResult().getRootASTElement();
+		String ast = xtMethods.serializeAst(root);
+		assertEquals(data.expectation, ast);
 	}
 
 	/**
