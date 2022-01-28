@@ -10,16 +10,20 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
+import static org.eclipse.n4js.N4JSGlobals.DTS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -149,41 +153,9 @@ public class ProjectImportEnablingScope implements IScope {
 			descriptionsToProject.put(objDescr, n4jsdProject);
 		}
 
-		// Special case handling when we have a definition and a pure JS file in the scope.
-		// In such cases we return with the description that corresponds to the definition file.
-		if (size == 2) {
-			final IEObjectDescription first = result.get(0);
-			final IEObjectDescription second = result.get(1);
-			final String firstExtension = URIUtils.fileExtension(first.getEObjectURI());
-			final String secondExtension = URIUtils.fileExtension(second.getEObjectURI());
-			IEObjectDescription n4jsdObjDescr = null;
-			IEObjectDescription jsObjDescr = null;
-
-			if (JS_FILE_EXTENSION.equals(firstExtension) && N4JSD_FILE_EXTENSION.equals(secondExtension)) {
-				n4jsdObjDescr = second;
-				jsObjDescr = first;
-			} else if (N4JSD_FILE_EXTENSION.equals(firstExtension) && JS_FILE_EXTENSION.equals(secondExtension)) {
-				n4jsdObjDescr = first;
-				jsObjDescr = second;
-			}
-
-			if (n4jsdObjDescr != null && jsObjDescr != null) {
-				N4JSProjectConfigSnapshot n4jsdProject = descriptionsToProject.get(n4jsdObjDescr);
-				N4JSProjectConfigSnapshot jsProject = descriptionsToProject.get(jsObjDescr);
-
-				if (n4jsdProject != null && jsProject != null) {
-					if (Objects.equals(n4jsdProject.getPathAsFileURI(), jsProject.getPathAsFileURI())) {
-						// case: n4jsd and js file are inside the same project
-						return n4jsdObjDescr;
-
-					} else if (n4jsdProject.getType() == ProjectType.DEFINITION
-							&& Objects.equals(n4jsdProject.getDefinesPackage(),
-									new N4JSPackageName(jsProject.getName()))) {
-						// case: n4jsd and js file are inside an n4js-definition and a plain-js project
-						return n4jsdObjDescr;
-					}
-				}
-			}
+		IEObjectDescription overwritingModule = handleCollisions(result, descriptionsToProject);
+		if (overwritingModule != null) {
+			return overwritingModule;
 		}
 
 		// if no import declaration was given, we skip the advanced error reporting
@@ -235,6 +207,91 @@ public class ProjectImportEnablingScope implements IScope {
 				.eGet(N4JSPackage.eINSTANCE.getImportDeclaration_Module(), false);
 		return new IssueCodeBasedEObjectDescription(EObjectDescription.create("impDecl", originalProxy),
 				sbErrrorMessage.toString(), IssueCodes.IMP_UNRESOLVED);
+	}
+
+	/**
+	 * Special case handling when we have a definition and a pure JS file in the scope. In such cases we return with the
+	 * description that corresponds to the definition file.
+	 */
+	private IEObjectDescription handleCollisions(List<IEObjectDescription> result,
+			Map<IEObjectDescription, N4JSProjectConfigSnapshot> descriptionsToProject) {
+
+		Set<String> considerExtensions = Set.of(JS_FILE_EXTENSION, N4JSD_FILE_EXTENSION, DTS_FILE_EXTENSION);
+		Map<String, IEObjectDescription> descr4Ext = new HashMap<>();
+		Map<String, N4JSProjectConfigSnapshot> prj4Ext = new HashMap<>();
+		for (IEObjectDescription res : result) {
+			String ext = URIUtils.fileExtension(res.getEObjectURI());
+			if (!considerExtensions.contains(ext)) {
+				continue;
+			}
+
+			N4JSProjectConfigSnapshot prj = descriptionsToProject.get(res);
+
+			if (descr4Ext.containsKey(ext)) {
+				return null; // return null due to conflict
+			}
+			if (ext != null && prj != null) {
+				descr4Ext.put(ext, res);
+				prj4Ext.put(ext, prj);
+			}
+		}
+
+		if (descr4Ext.size() < 2) {
+			return null; // return null due to missing project information
+		}
+
+		if (!descr4Ext.containsKey(JS_FILE_EXTENSION)) {
+			return null; // return null due to missing implementation module
+		}
+		N4JSProjectConfigSnapshot jsProject = prj4Ext.remove(JS_FILE_EXTENSION);
+
+		Iterator<Entry<String, N4JSProjectConfigSnapshot>> iter = prj4Ext.entrySet().iterator();
+		while (iter.hasNext()) {
+			Entry<String, N4JSProjectConfigSnapshot> entry = iter.next();
+			String ext = entry.getKey();
+			N4JSProjectConfigSnapshot prj = entry.getValue();
+
+			if (!Objects.equals(jsProject.getPathAsFileURI(), prj.getPathAsFileURI())) {
+				// case both modules are in different projects: check here iff related
+				switch (ext) {
+				case N4JSD_FILE_EXTENSION:
+					if (prj.getType() != ProjectType.DEFINITION
+							|| !Objects.equals(prj.getDefinesPackage(), new N4JSPackageName(jsProject.getName()))) {
+						// case: n4jsd file is not inside a related n4js-definition project
+						return null; // return null due to conflict
+					}
+					break;
+				case DTS_FILE_EXTENSION:
+					if (prj.getType() != ProjectType.PLAINJS
+							|| !prj.getName().endsWith("/" + jsProject.getName())) {
+						// case: d.ts file is not inside a related @types definition project
+						return null; // return null due to conflict
+					}
+					break;
+				default:
+					// all fine
+				}
+			} else {
+				// case both modules are in same project: assume one being the definition of the other
+			}
+		}
+
+		if (prj4Ext.size() == 1) {
+			String dExt = prj4Ext.keySet().iterator().next();
+			return descr4Ext.get(dExt);
+
+		} else if (prj4Ext.size() == 2) {
+			if (descr4Ext.containsKey(N4JSD_FILE_EXTENSION)) {
+				// paranoia check - should always be true
+				return descr4Ext.get(N4JSD_FILE_EXTENSION);
+			}
+			if (descr4Ext.containsKey(DTS_FILE_EXTENSION)) {
+				// paranoia check - should always be true
+				return descr4Ext.get(DTS_FILE_EXTENSION);
+			}
+		}
+
+		return null;
 	}
 
 	@Override
