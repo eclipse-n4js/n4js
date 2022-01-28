@@ -86,6 +86,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 	@Override
 	public void enterPropertySignature(PropertySignatureContext ctx) {
 		N4FieldDeclaration fd = N4JSFactory.eINSTANCE.createN4FieldDeclaration();
+		fd.getDeclaredModifiers().add(N4Modifier.PUBLIC);
 		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
 		locpn.setLiteralName(ctx.propertyName().getText());
 		fd.setDeclaredName(locpn);
@@ -100,15 +101,16 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 
 	@Override
 	public void enterMethodSignature(MethodSignatureContext ctx) {
-		N4MethodDeclaration fd = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
+		N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
+		md.getDeclaredModifiers().add(N4Modifier.PUBLIC);
 		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
 		locpn.setLiteralName(ctx.propertyName().getText());
-		fd.setDeclaredName(locpn);
+		md.setDeclaredName(locpn);
 
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
-		fd.setDeclaredReturnTypeRefNode(trn);
+		md.setDeclaredReturnTypeRefNode(trn);
 
-		addLocationInfo(fd, ctx);
-		result.getOwnedMembersRaw().add(fd);
+		addLocationInfo(md, ctx);
+		result.getOwnedMembersRaw().add(md);
 	}
 }

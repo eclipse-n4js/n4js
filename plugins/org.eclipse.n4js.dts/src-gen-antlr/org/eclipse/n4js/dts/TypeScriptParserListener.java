@@ -1220,6 +1220,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitAbstractDeclaration(TypeScriptParser.AbstractDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#propertyMember}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertyMember(TypeScriptParser.PropertyMemberContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#propertyMember}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertyMember(TypeScriptParser.PropertyMemberContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#propertyMemberBase}.
 	 * @param ctx the parse tree
 	 */
@@ -1229,6 +1239,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPropertyMemberBase(TypeScriptParser.PropertyMemberBaseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#propertyOrMethod}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertyOrMethod(TypeScriptParser.PropertyOrMethodContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#propertyOrMethod}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertyOrMethod(TypeScriptParser.PropertyOrMethodContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#generatorMethod}.
 	 * @param ctx the parse tree

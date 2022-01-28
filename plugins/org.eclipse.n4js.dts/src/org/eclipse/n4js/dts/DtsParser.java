@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.DefaultErrorStrategy;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
@@ -86,6 +87,9 @@ public class DtsParser {
 		TypeScriptParser parser = new TypeScriptParser(tokens);
 		ParseStats stats = new ParseStats();
 		parser.addErrorListener(stats);
+		lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
+		parser.removeErrorListener(ConsoleErrorListener.INSTANCE);
+
 		stats.strategy = PredictionMode.SLL;
 
 		try {

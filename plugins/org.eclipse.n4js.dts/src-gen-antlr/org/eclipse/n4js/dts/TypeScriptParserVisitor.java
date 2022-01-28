@@ -736,11 +736,23 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAbstractDeclaration(TypeScriptParser.AbstractDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#propertyMember}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertyMember(TypeScriptParser.PropertyMemberContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#propertyMemberBase}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitPropertyMemberBase(TypeScriptParser.PropertyMemberBaseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#propertyOrMethod}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertyOrMethod(TypeScriptParser.PropertyOrMethodContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#generatorMethod}.
 	 * @param ctx the parse tree

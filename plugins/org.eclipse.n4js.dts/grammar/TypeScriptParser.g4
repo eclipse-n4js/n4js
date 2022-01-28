@@ -569,23 +569,31 @@ constructorDeclaration
 
 propertyMemberDeclaration
     : abstractDeclaration                                                                  
-    | propertyMemberBase
-        (
-          propertyName '?'? (
-              (colonSepTypeRef? initializer?)
-            | callSignature block?
-        )
-        | getAccessor
-        | setAccessor
-    )
+    | propertyMember
     ;
 
 abstractDeclaration
     : Abstract (Identifier callSignature | variableStatement) eos
     ;
 
+propertyMember
+    : propertyMemberBase
+    (
+          propertyOrMethod
+        | getAccessor
+        | setAccessor
+    )
+    ;
+
 propertyMemberBase
     : Async? accessibilityModifier? Static? ReadOnly?
+    ;
+
+propertyOrMethod
+    : propertyName '?'? (
+          (colonSepTypeRef? initializer?)
+        | (callSignature block?)
+    )
     ;
 
 generatorMethod

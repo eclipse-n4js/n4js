@@ -1444,6 +1444,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPropertyMember(TypeScriptParser.PropertyMemberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPropertyMember(TypeScriptParser.PropertyMemberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterPropertyMemberBase(TypeScriptParser.PropertyMemberBaseContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1451,6 +1463,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPropertyMemberBase(TypeScriptParser.PropertyMemberBaseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPropertyOrMethod(TypeScriptParser.PropertyOrMethodContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPropertyOrMethod(TypeScriptParser.PropertyOrMethodContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
