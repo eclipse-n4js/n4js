@@ -87,8 +87,9 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 							getMessageForIMP_DYNAMIC_IMPORT_N4JS(module.moduleSpecifier),
 							importSpecifier, IMP_DYNAMIC_IMPORT_N4JS);
 					} else if (jsVariantHelper.isExternalMode(module)) {
+						val variant = jsVariantHelper.getVariantName(module);
 						addIssue(
-							getMessageForIMP_DYNAMIC_IMPORT_N4JSD(module.moduleSpecifier),
+							getMessageForIMP_DYNAMIC_IMPORT_N4JSD(variant, module.moduleSpecifier),
 							importSpecifier, IMP_DYNAMIC_IMPORT_N4JSD);
 					}
 				} else {
