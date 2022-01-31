@@ -29,15 +29,20 @@ public class TokenSourceFactory {
 	@Inject
 	N4JSGrammarAccess grammarAccess;
 
+	/***/
 	public TokenSource toTokenSource(INode node, boolean filter) {
 		return new NodeModelTokenSource(node, tokenTypeMapper, grammarAccess, filter);
 	}
 
+	/***/
 	public TokenSource toTokenSource(INode node, int endOffset, boolean filter) {
 		return new NodeModelTokenSource(node, 0, endOffset, tokenTypeMapper, grammarAccess, filter);
 	}
 
-	public TokenSource toTokenSource(INode node, int startOffset, int endOffset, boolean filter) {
+	/***/
+	public TokenSource toTokenSource(INode node, int startOffset, int endOffset,
+			@SuppressWarnings("unused") boolean filter) {
+
 		return new NodeModelTokenSource(node, startOffset, endOffset, tokenTypeMapper, grammarAccess, true);
 	}
 }

@@ -78,7 +78,7 @@ class ScriptFactory {
 		if (scriptElement instanceof ExportDeclaration) {
 			ExportableElement expElem = ((ExportDeclaration) scriptElement).getExportedElement();
 			if (expElem instanceof ExportedVariableStatement) {
-				scriptElement = (ExportedVariableStatement) expElem;
+				scriptElement = expElem;
 			}
 		}
 		return scriptElement;
