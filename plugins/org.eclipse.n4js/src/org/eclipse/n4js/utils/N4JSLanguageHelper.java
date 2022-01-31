@@ -112,10 +112,7 @@ public final class N4JSLanguageHelper {
 				return false;
 			} else if (targetURILastSegment.endsWith("." + N4JSGlobals.N4JS_FILE_EXTENSION) // not for .n4jsd!!
 					|| targetURILastSegment.endsWith("." + N4JSGlobals.N4JSX_FILE_EXTENSION)) {
-				// since the N4JS transpiler uses ".js" as extension for output files (not ".mjs") we have to return
-				// 'true' here (in practice this should not matter much, because a validation enforces the use of
-				// "type":"module" in the package.json of N4JS projects and therefore the below call to
-				// targetProject.isEMS() would return 'true' anyway, leading to the same result)
+				// the N4JS transpiler always emits ES6 module code
 				return true;
 			}
 		}

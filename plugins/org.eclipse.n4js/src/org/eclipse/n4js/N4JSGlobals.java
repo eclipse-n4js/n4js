@@ -124,15 +124,21 @@ public final class N4JSGlobals {
 	public static final N4JSPackageName MANGELHAFT_CLI = new N4JSPackageName("n4js-mangelhaft-cli");
 
 	/**
+	 * All standard plain-JS file extensions (i.e. {@code .js}, {@code .cjs}, {@code .mjs}), *not* including
+	 * {@code .jsx}.
+	 * <p>
 	 * Unmodifiable list containing {@link #N4JS_FILE_EXTENSION}, {@link #N4JSD_FILE_EXTENSION},
 	 * {@link #N4JSX_FILE_EXTENSION}.
 	 */
+	// FIXME consider including .jsx here or excluding it from ALL_N4JS_FILE_EXTENSIONS!! (for consistency)
 	public static final Set<String> ALL_JS_FILE_EXTENSIONS = ImmutableSet.of(
 			JS_FILE_EXTENSION,
 			CJS_FILE_EXTENSION,
 			MJS_FILE_EXTENSION);
 
 	/**
+	 * All N4JS file extensions, including {@code .n4jsx}.
+	 * <p>
 	 * Unmodifiable list containing {@link #N4JS_FILE_EXTENSION}, {@link #N4JSD_FILE_EXTENSION},
 	 * {@link #N4JSX_FILE_EXTENSION}.
 	 */
@@ -142,18 +148,17 @@ public final class N4JSGlobals {
 			N4JSX_FILE_EXTENSION);
 
 	/**
+	 * All file extensions the N4JS tooling is interested in, including but not limited to the N4JS file extensions.
+	 * <p>
 	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
 	 * {@link #N4JS_FILE_EXTENSION},{@link #N4JSX_FILE_EXTENSION}, {@link #JS_FILE_EXTENSION},
 	 * {@link #CJS_FILE_EXTENSION}, {@link #MJS_FILE_EXTENSION}, {@link #JSX_FILE_EXTENSION}.
 	 */
-	public static final Set<String> ALL_N4_FILE_EXTENSIONS = ImmutableSet.of(
-			N4JS_FILE_EXTENSION,
-			N4JSD_FILE_EXTENSION,
-			N4JSX_FILE_EXTENSION,
-			JSX_FILE_EXTENSION,
-			JS_FILE_EXTENSION,
-			CJS_FILE_EXTENSION,
-			MJS_FILE_EXTENSION);
+	public static final Set<String> ALL_N4_FILE_EXTENSIONS = ImmutableSet.<String> builder()
+			.addAll(ALL_N4JS_FILE_EXTENSIONS)
+			.addAll(ALL_JS_FILE_EXTENSIONS)
+			.add(JSX_FILE_EXTENSION)
+			.build();
 
 	/**
 	 * Name of the N4JS Git repository, i.e. "n4js". Same as {@link UtilN4#N4JS_GIT_REPOSITORY_NAME}.
@@ -409,7 +414,7 @@ public final class N4JSGlobals {
 	}
 
 	/**
-	 * Tells whether the given string ends with one of the {@link #ALL_N4JS_FILE_EXTENSIONS N4JS files extensions}.
+	 * Tells whether the given string ends with one of the {@link #ALL_N4JS_FILE_EXTENSIONS N4JS file extensions}.
 	 */
 	public static boolean endsWithN4JSFileExtension(String fileName) {
 		if (fileName != null) {

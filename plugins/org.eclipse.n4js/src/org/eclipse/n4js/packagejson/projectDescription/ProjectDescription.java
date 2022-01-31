@@ -52,7 +52,6 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final String implementationId;
 	private final ImmutableList<ProjectReference> implementedProjects;
 	private final String outputPath;
-	private final String outputExtension;
 	private final ImmutableList<SourceContainerDescription> sourceContainers;
 	private final ImmutableList<ModuleFilter> moduleFilters;
 	private final ImmutableList<ProjectReference> testedProjects;
@@ -72,7 +71,7 @@ public class ProjectDescription extends ImmutableDataClass {
 			VersionNumber version, ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
-			Iterable<ProjectReference> implementedProjects, String outputPath, String outputExtension,
+			Iterable<ProjectReference> implementedProjects, String outputPath,
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
 			boolean esm, boolean n4jsNature, boolean yarnWorkspaceRoot, boolean isGeneratorEnabledSourceMaps,
@@ -95,7 +94,6 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.implementationId = implementationId;
 		this.implementedProjects = ImmutableList.copyOf(implementedProjects);
 		this.outputPath = outputPath;
-		this.outputExtension = outputExtension;
 		this.sourceContainers = ImmutableList.copyOf(sourceContainers);
 		this.moduleFilters = ImmutableList.copyOf(moduleFilters);
 		this.testedProjects = ImmutableList.copyOf(testedProjects);
@@ -128,7 +126,6 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.implementationId = template.implementationId;
 		this.implementedProjects = template.implementedProjects;
 		this.outputPath = template.outputPath;
-		this.outputExtension = template.outputExtension;
 		this.sourceContainers = template.sourceContainers;
 		this.moduleFilters = template.moduleFilters;
 		this.testedProjects = template.testedProjects;
@@ -166,7 +163,6 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setImplementationId(implementationId);
 		builder.getImplementedProjects().addAll(implementedProjects);
 		builder.setOutputPath(outputPath);
-		builder.setOutputExtension(outputExtension);
 		builder.getSourceContainers().addAll(sourceContainers);
 		builder.getModuleFilters().addAll(moduleFilters);
 		builder.getTestedProjects().addAll(testedProjects);
@@ -262,10 +258,6 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	public String getOutputPath() {
 		return outputPath;
-	}
-
-	public String getOutputExtension() {
-		return outputExtension;
 	}
 
 	public List<SourceContainerDescription> getSourceContainers() {
@@ -375,7 +367,6 @@ public class ProjectDescription extends ImmutableDataClass {
 				implementationId,
 				implementedProjects,
 				outputPath,
-				outputExtension,
 				sourceContainers,
 				moduleFilters,
 				testedProjects,
@@ -410,7 +401,6 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& Objects.equals(implementationId, other.implementationId)
 				&& Objects.equals(implementedProjects, other.implementedProjects)
 				&& Objects.equals(outputPath, other.outputPath)
-				&& Objects.equals(outputExtension, other.outputExtension)
 				&& Objects.equals(sourceContainers, other.sourceContainers)
 				&& Objects.equals(moduleFilters, other.moduleFilters)
 				&& Objects.equals(testedProjects, other.testedProjects)

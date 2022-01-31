@@ -104,9 +104,7 @@ public class N4JSTextDocumentFrontend extends TextDocumentFrontend {
 
 		URI uri = rtc.getURI();
 		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(rtc.getResource());
-		String extPerPackageJson = project != null ? project.getProjectDescription().getOutputExtension() : null;
-		String ext = extPerPackageJson != null ? extPerPackageJson : JS_FILE_EXTENSION;
-		String targetFileName = resourceNameComputer.generateFileDescriptor(rtc.getResource(), uri, ext);
+		String targetFileName = resourceNameComputer.generateFileDescriptor(rtc.getResource(), uri, JS_FILE_EXTENSION);
 		List<Location> locations = new ArrayList<>();
 		if (project != null && !Strings.isNullOrEmpty(targetFileName)) {
 			String outputPath = project.getOutputPath();

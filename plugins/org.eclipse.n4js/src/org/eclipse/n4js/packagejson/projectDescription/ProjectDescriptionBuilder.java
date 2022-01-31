@@ -43,7 +43,6 @@ public class ProjectDescriptionBuilder {
 	private String implementationId;
 	private final List<ProjectReference> implementedProjects = new ArrayList<>();
 	private String outputPath;
-	private String outputExtension;
 	private final List<SourceContainerDescription> sourceContainers = new ArrayList<>();
 	private final List<ModuleFilter> moduleFilters = new ArrayList<>();
 	private final List<ProjectReference> testedProjects = new ArrayList<>();
@@ -71,7 +70,7 @@ public class ProjectDescriptionBuilder {
 		return new ProjectDescription(location, relatedRootLocation, id,
 				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
-				outputPath, outputExtension, sourceContainers, moduleFilters, testedProjects, definesPackage,
+				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
 				nestedNodeModulesFolder, esm, n4jsNature, yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, isGeneratorEnabledRewriteCjsImports,
 				workspaces);
@@ -249,15 +248,6 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setOutputPath(String outputPath) {
 		this.outputPath = outputPath;
-		return this;
-	}
-
-	public String getOutputExtension() {
-		return outputExtension;
-	}
-
-	public ProjectDescriptionBuilder setOutputExtension(String outputExtension) {
-		this.outputExtension = outputExtension;
 		return this;
 	}
 

@@ -411,7 +411,7 @@ public class ProjectImportEnablingScope implements IScope {
 	/**
 	 * If the given list contains one or more {@link IEObjectDescription}s representing a plain JS file (i.e. a file
 	 * with one of the extensions in {@link N4JSGlobals#ALL_JS_FILE_EXTENSIONS}), this method will retain only one of
-	 * those descriptions, favoring {@code .mjs} files over {@code .cjs} files over {@code .js} files, and remove all
+	 * those descriptions, favoring {@code .mjs} files over {@code .cjs} files over {@code .js} files, and remove the
 	 * others. Otherwise, the given list will remain unchanged.
 	 */
 	private void removeSuperfluousPlainJsFiles(List<IEObjectDescription> descs) {

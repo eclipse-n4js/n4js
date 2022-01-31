@@ -16,13 +16,12 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringO
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringsInArrayOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_REWRITE_CJS_IMPORTS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_DTS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_REWRITE_CJS_IMPORTS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_SOURCE_MAPS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.OUTPUT_EXTENSION;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PACKAGES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PROJECT_TYPE;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VENDOR_ID;
@@ -102,9 +101,7 @@ public class PackageJsonHelper {
 		convertRootPairs(target, rootPairs);
 
 		String valueOfPropMain = asNonEmptyStringOrNull(getProperty((JSONObject) rootValue, MAIN.name).orElse(null));
-		String valueOfPropType = asNonEmptyStringOrNull(getProperty((JSONObject) rootValue, "type").orElse(null));
-		adjustProjectDescriptionAfterConversion(target, applyDefaultValues, defaultProjectName, valueOfPropMain,
-				valueOfPropType);
+		adjustProjectDescriptionAfterConversion(target, applyDefaultValues, defaultProjectName, valueOfPropMain);
 
 		return target;
 	}
@@ -125,6 +122,7 @@ public class PackageJsonHelper {
 				target.setVersion(asVersionNumberOrNull(value));
 				break;
 			case TYPE:
+				// legal values are 'commonjs' and 'module'
 				target.setESM("module".equals(asNonEmptyStringOrNull(value)));
 				break;
 			case DEPENDENCIES:
@@ -188,9 +186,6 @@ public class PackageJsonHelper {
 				break;
 			case OUTPUT:
 				target.setOutputPath(asNonEmptyStringOrNull(value));
-				break;
-			case OUTPUT_EXTENSION:
-				target.setOutputExtension(asNonEmptyStringOrNull(value));
 				break;
 			case SOURCES:
 				target.getSourceContainers().addAll(asSourceContainerDescriptionsOrEmpty(value));
@@ -275,14 +270,14 @@ public class PackageJsonHelper {
 	}
 
 	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target, boolean applyDefaultValues,
-			String defaultProjectName, String valueOfTopLevelPropertyMain, String valueOfTopLevelPropertyType) {
+			String defaultProjectName, String valueOfTopLevelPropertyMain) {
 
 		// store whether target has a declared mainModule *before* applying the default values
 		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;
 
 		// apply default values (if desired)
 		if (applyDefaultValues) {
-			applyDefaults(target, defaultProjectName, valueOfTopLevelPropertyType);
+			applyDefaults(target, defaultProjectName);
 		}
 
 		// sanitize and set value of top-level property "main"
@@ -328,8 +323,7 @@ public class PackageJsonHelper {
 	 * Apply default values to the given project description. This should be performed right after loading and
 	 * converting the project description from JSON.
 	 */
-	private void applyDefaults(ProjectDescriptionBuilder target, String defaultProjectName,
-			String valueOfTopLevelPropertyType) {
+	private void applyDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
 
 		if (!target.hasN4JSNature() || target.getType() == null) {
 			// for non-N4JS projects, and if the project type is unset, enforce the default project type, i.e.
@@ -361,13 +355,6 @@ public class PackageJsonHelper {
 		}
 		if (target.isGeneratorEnabledRewriteCjsImports() == null) {
 			target.setGeneratorEnabledRewriteCjsImports((Boolean) GENERATOR_REWRITE_CJS_IMPORTS.defaultValue);
-		}
-		if (target.getOutputExtension() == null) {
-			if (valueOfTopLevelPropertyType != null && valueOfTopLevelPropertyType.trim().equals("module")) {
-				target.setOutputExtension(N4JSGlobals.JS_FILE_EXTENSION);
-			} else {
-				target.setOutputExtension((String) OUTPUT_EXTENSION.defaultValue);
-			}
 		}
 
 		// if no source containers are defined (no matter what type),

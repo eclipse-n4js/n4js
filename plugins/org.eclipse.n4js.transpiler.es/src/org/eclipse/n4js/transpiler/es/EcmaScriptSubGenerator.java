@@ -195,16 +195,6 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 		return buffCode.toString();
 	}
 
-	@Override
-	protected String getCompiledFileExtension(Resource input) {
-		N4JSProjectConfigSnapshot pc = workspaceAccess.findProjectContaining(input);
-		String extPerPackageJson = pc != null ? pc.getProjectDescription().getOutputExtension() : null;
-		if (extPerPackageJson != null) {
-			return extPerPackageJson;
-		}
-		return super.getCompiledFileExtension(input);
-	}
-
 	/**
 	 * Makes the generated output file executable by adding the corresponding POSIX file permissions.
 	 */
@@ -235,7 +225,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 				Files.setPosixFilePermissions(outputFilePath, permsNew);
 			}
 		} catch (Exception e) {
-			LOGGER.error("unable to get/set POSIX permissions of output file \"" + outputFilePath + "\": "
+			LOGGER.warn("unable to get/set POSIX file permissions of output file \"" + outputFilePath + "\": "
 					+ e.getMessage());
 		}
 	}
