@@ -62,12 +62,12 @@ class CommonJsImportsTransformation extends Transformation {
 	}
 
 	override void transform() {
-		if (!state.project.projectDescription.generatorEnabledRewriteCjsImports) {
-			// rewriting of CJS imports is not enabled for the containing project
-			return;
-		}
 		if (!state.project.isESM) {
 			// only intended for N4JS projects with {@code "type": "module"} in the package.json
+			return;
+		}
+		if (!state.project.projectDescription.generatorEnabledRewriteCjsImports) {
+			// rewriting of CJS imports is not enabled for the containing project
 			return;
 		}
 
