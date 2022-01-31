@@ -131,12 +131,16 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 						}
 					}
 
-					if (eObjectDescription == null && invalidEOD != null) {
-						List<ScopeElementIssue> issues = scopeInfo.getIssues(invalidEOD);
-						for (ScopeElementIssue issue : issues) {
-							addIssue(context, node, issue);
+					if (invalidEOD != null) {
+						if (eObjectDescription == null) {
+							List<ScopeElementIssue> issues = scopeInfo.getIssues(invalidEOD);
+							for (ScopeElementIssue issue : issues) {
+								addIssue(context, node, issue);
+							}
+							eObjectDescription = invalidEOD;
+						} else {
+							markAsUsed(invalidEOD, context);
 						}
-						eObjectDescription = invalidEOD;
 					}
 				}
 			}
@@ -148,19 +152,23 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 					throw new AssertionError("Found an instance without resource and without URI");
 				}
 
-				// if supported, mark object description as used and record the origin import
-				if (eObjectDescription instanceof IUsageAwareEObjectDescription) {
-					IUsageAwareEObjectDescription eObjectDescriptionCasted = (IUsageAwareEObjectDescription) eObjectDescription;
-					eObjectDescriptionCasted.markAsUsed();
-					if (context instanceof IdentifierRef) {
-						eObjectDescriptionCasted.recordOrigin((IdentifierRef) context);
-					}
-				}
+				markAsUsed(eObjectDescription, context);
 
 				return Collections.singletonList(candidate);
 			}
 		}
 		return Collections.emptyList();
+	}
+
+	/** if supported, mark object description as used and record the origin import */
+	private void markAsUsed(IEObjectDescription eObjectDescription, EObject context) {
+		if (eObjectDescription instanceof IUsageAwareEObjectDescription) {
+			IUsageAwareEObjectDescription eObjectDescriptionCasted = (IUsageAwareEObjectDescription) eObjectDescription;
+			eObjectDescriptionCasted.markAsUsed();
+			if (context instanceof IdentifierRef) {
+				eObjectDescriptionCasted.recordOrigin((IdentifierRef) context);
+			}
+		}
 	}
 
 	/**

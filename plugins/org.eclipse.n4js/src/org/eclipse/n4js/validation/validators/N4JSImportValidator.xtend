@@ -258,7 +258,8 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def handleTypeCollisions(List<Pair<Pair<String, TModule>, List<ImportProvidedElement>>> duplicateslist,
 		Map<EObject, String> eObjectToIssueCode) {
-		duplicateslist.forEach [ duplicateEntry |
+			
+		for (duplicateEntry : duplicateslist) {
 			val entry = duplicateEntry.key
 			val entryName = entry.key
 			val entryModule = entry.value
@@ -276,7 +277,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 				firstImportSpecifier.isDefaultImport
 			};
 
-			imports.tail.forEach [ dupe |
+			for (dupe : imports.tail) {
 				val duplicateImportSpecifier = dupe.importSpecifier
 				if (firstImportIsDefault && duplicateImportSpecifier instanceof NamespaceImportSpecifier) {
 					addIssueDuplicate(firstImportSpecifier, entryName, entryModule, firstImportName, eObjectToIssueCode)
@@ -288,8 +289,8 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 				} else {
 					addIssueDuplicate(dupe.importSpecifier, entryName, entryModule, firstImportName, eObjectToIssueCode)
 				}
-			]
-		]
+			}
+		}
 	}
 
 	private def regUnresolvedImport(ParameterizedTypeRef ref, String name, Map<EObject, String> eObjectToIssueCode) {
