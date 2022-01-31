@@ -1,0 +1,11 @@
+{
+    "antlr4.generation": {
+        "mode": "external",
+        "language": "Java",
+        "outputDir": "../src-gen-antlr/org/eclipse/n4js/dts",
+        "package": "org.eclipse.n4js.dts",
+        "listeners": true,
+        "visitors": true,
+        "alternativeJar": "../lib/antlr4-4.7.2-complete.jar"
+    }
+}
