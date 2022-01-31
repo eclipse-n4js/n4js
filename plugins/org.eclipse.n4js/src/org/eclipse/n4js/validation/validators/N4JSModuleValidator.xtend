@@ -94,7 +94,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def void checkUniqueName(Script script) {
-		if (script.eResource.URI.fileExtension != N4JSGlobals.JS_FILE_EXTENSION) {
+		if (!N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(script.eResource.URI.fileExtension)) {
 			script.checkUniqueName(script.module);
 		}
 	}

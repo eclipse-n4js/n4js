@@ -38,7 +38,6 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -961,18 +960,10 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		final Stream<File> sourceFolders = getAllSourceContainerPaths().stream()
 				.map(sourcePath -> new File(absoluteProjectPath.toFile(), sourcePath));
 
-		// all file extension that represent a valid module
-		final List<String> moduleExtensions = Arrays.asList(
-				N4JSGlobals.N4JS_FILE_EXTENSION,
-				N4JSGlobals.N4JSX_FILE_EXTENSION,
-				N4JSGlobals.N4JSD_FILE_EXTENSION,
-				N4JSGlobals.JS_FILE_EXTENSION,
-				N4JSGlobals.JSX_FILE_EXTENSION);
-
 		// checks whether any of the declared sourceFolders contains a file at moduleSpecifier
-		// using any of the abovementioned file extensions
+		// using any of the aforementioned file extensions
 		return sourceFolders
-				.filter(sourceFolder -> moduleExtensions.stream() // check each file extension
+				.filter(sourceFolder -> N4JSGlobals.ALL_N4_FILE_EXTENSIONS.stream() // check each file extension
 						.filter(ext -> new File(sourceFolder, relativeModulePath + "." + ext).exists())
 						.findAny().isPresent())
 				.findAny().isPresent();
