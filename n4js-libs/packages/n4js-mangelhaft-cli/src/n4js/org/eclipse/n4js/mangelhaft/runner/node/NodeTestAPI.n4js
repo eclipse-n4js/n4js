@@ -58,6 +58,12 @@ export default public class NodeTestAPI {
 
             const execArgv = process.execArgv.slice();
 
+            if (options.nodeOptions) {
+                const optsAsArr = options.nodeOptions.split(/\s+/);
+                for (const opt of optsAsArr) {
+                    execArgv.push(opt);
+                }
+            }
             if (options.inspectBrk) {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);
             }
