@@ -121,7 +121,6 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				    $1
 				}$0 [[4, 2] .. [4, 2]]
 				[Property, Snippet] output (Output folder. Default is '.') -> "output": "$1"$0 [[4, 2] .. [4, 2]]
-				[Property, Snippet] outputExtension (File extension for output files. Default is 'mjs' or 'js' if '"type": "module"' is defined.) -> "outputExtension": "$1"$0 [[4, 2] .. [4, 2]]
 				[Property, Snippet] projectType (project type) -> "projectType": "$1"$0 [[4, 2] .. [4, 2]]
 				[Value, Snippet] providedRuntimeLibraries -> "providedRuntimeLibraries": [
 				    $1
