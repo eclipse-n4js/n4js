@@ -88,7 +88,6 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 		if (requiredType == null)
 			return Collections.<EObject> emptyList();
 
-		final String uri = context.eResource().getURI().toFileString();
 		final String crossRefString = getCrossRefNodeAsString(context, ref, node);
 		if (crossRefString != null && !crossRefString.equals("")) {
 			final IScope scope = getScope(context, ref);
@@ -121,21 +120,23 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 				if (!scopeInfo.isValid(eObjectDescription) && resource != null
 						&& !workspaceAccess.isNoValidate(resource, resource.getURI())) {
 
+					eObjectDescription = null;
+					IEObjectDescription invalidEOD = null;
 					Iterable<IEObjectDescription> elements = scopeInfo.getScope().getElements(qualifiedLinkName);
 					for (IEObjectDescription elem : elements) {
 						if (scopeInfo.isValid(elem)) {
 							eObjectDescription = elem;
+						} else {
+							invalidEOD = elem;
 						}
 					}
 
-					if (!scopeInfo.isValid(eObjectDescription)) {
-						List<ScopeElementIssue> issues = scopeInfo.getIssues(eObjectDescription);
+					if (eObjectDescription == null && invalidEOD != null) {
+						List<ScopeElementIssue> issues = scopeInfo.getIssues(invalidEOD);
 						for (ScopeElementIssue issue : issues) {
 							addIssue(context, node, issue);
 						}
-						if (issues.isEmpty()) {
-							eObjectDescription = null;
-						}
+						eObjectDescription = invalidEOD;
 					}
 				}
 			}

@@ -25,17 +25,17 @@ export class K {
 Script: true
   ExportDeclaration: false, false
    N4ClassDeclaration: [external, public], K, ?~
-    N4FieldDeclaration: false
+    N4FieldDeclaration: [public], false
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, field
-    N4FieldDeclaration: false
-     N4MemberAnnotationList
-      Annotation: Final
+    N4FieldDeclaration: [public], false
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, k
-    N4FieldDeclaration: false
+    N4MethodDeclaration: false, [public], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, method
 --- */
 

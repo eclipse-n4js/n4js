@@ -45,7 +45,7 @@ import * as N4JSDynamic+ from "Ch09_02_04__ImportStatements/N4JS2"
 
 // XPECT noerrors -->
 import * as N4JSDStatic from "Ch09_02_04__ImportStatements/N4JSD1"
-// XPECT warnings --> "N4JSD module Ch09_02_04__ImportStatements/N4JSD2 should not be imported dynamically." at "* as N4JSDDynamic+"
+// XPECT warnings --> "The n4jsd module Ch09_02_04__ImportStatements/N4JSD2 should not be imported dynamically." at "* as N4JSDDynamic+"
 import * as N4JSDDynamic+ from "Ch09_02_04__ImportStatements/N4JSD2"
 
 // XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'X'." at "X"

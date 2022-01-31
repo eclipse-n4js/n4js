@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.tooling.organizeImports.ImportProvidedElement
 import org.eclipse.n4js.tooling.organizeImports.ImportStateCalculator
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -48,6 +49,9 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
+
+	@Inject
+	protected XpectAwareFileExtensionCalculator fileExtensionCalculator;
 
 	/**
 	 * NEEEDED
@@ -87,7 +91,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 							getMessageForIMP_DYNAMIC_IMPORT_N4JS(module.moduleSpecifier),
 							importSpecifier, IMP_DYNAMIC_IMPORT_N4JS);
 					} else if (jsVariantHelper.isExternalMode(module)) {
-						val variant = jsVariantHelper.getVariantName(module);
+						val variant = fileExtensionCalculator.getXpectAwareFileExtension(module);
 						addIssue(
 							getMessageForIMP_DYNAMIC_IMPORT_N4JSD(variant, module.moduleSpecifier),
 							importSpecifier, IMP_DYNAMIC_IMPORT_N4JSD);
