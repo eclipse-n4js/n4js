@@ -24,6 +24,13 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<!--
+	The follong configuration will integrate the file lib/antlr4-runtime-4.7.2.jar
+	into the jar of this bundle. An alternative approach would be to upstream/install
+	the lib/antlr4-runtime-4.7.2.jar into the .m2 location during 'mvn clean install'.
+	One of these options is necessary to make the packages inside lib/antlr4-runtime-4.7.2.jar
+	available for other jars during testing.
+	-->
 	<build>
 		<plugins>
 			<plugin>
