@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.server.build;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.tooling.tester.TestCatalogSupplier;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
@@ -34,7 +36,9 @@ import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
+import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.inject.Inject;
@@ -110,6 +114,29 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 			return false;
 		}
 		return super.handleProjectAdditionRemovalSinceProjectStateWasComputed(result, projectState);
+	}
+
+	/** Overridden to exclude all ts files (yet still include d.ts files) */
+	@Override
+	protected Set<URI> scanForSourceFiles() {
+		Set<URI> result = new HashSet<>();
+		for (SourceFolderSnapshot srcFolder : getProjectConfig().getSourceFolders()) {
+			List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
+			for (URI srcFileUri : allSourceFileUris) {
+				if (!srcFileUri.hasTrailingPathSeparator()) {
+					IResourceServiceProvider rsp = resourceServiceProviders.getResourceServiceProvider(srcFileUri);
+					if (rsp != null) {
+						String fileExtension = URIUtils.fileExtension(srcFileUri);
+						if (N4JSGlobals.TS_FILE_EXTENSION.equals(fileExtension)) {
+							// ignore ts files (yet consider d.ts files)
+							continue;
+						}
+						result.add(srcFileUri);
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	/** Generates the test catalog for the project. */

@@ -31,6 +31,10 @@ public enum ResourceType {
 	N4JSX,
 	/** Raw file has extension <code>.n4jsd</code> or <code>.n4jsd.xt</code> */
 	N4JSD,
+	/** Raw file has extension <code>.ts</code> or <code>.ts.xt</code> */
+	TS,
+	/** Raw file has extension <code>.d.ts</code> or <code>.d.ts.xt</code> */
+	DTS,
 	/** Raw file has extension is <code>.xt</code> */
 	XT,
 
@@ -52,6 +56,8 @@ public enum ResourceType {
 	private final static String EXT_N4JS = N4JSGlobals.N4JS_FILE_EXTENSION;
 	private final static String EXT_N4JSX = N4JSGlobals.N4JSX_FILE_EXTENSION;
 	private final static String EXT_N4JSD = N4JSGlobals.N4JSD_FILE_EXTENSION;
+	private final static String EXT_TS = N4JSGlobals.TS_FILE_EXTENSION;
+	private final static String EXT_DTS = N4JSGlobals.DTS_FILE_EXTENSION;
 	private final static String EXT_XT = N4JSGlobals.XT_FILE_EXTENSION;
 
 	/**
@@ -119,7 +125,7 @@ public enum ResourceType {
 	 * not handle nested extension. Internal use only.
 	 */
 	private static ResourceType naiveGetResourceType(URI uri) {
-		String fileExtension = uri.fileExtension();
+		String fileExtension = URIUtils.fileExtension(uri);
 
 		if (Strings.isNullOrEmpty(fileExtension))
 			return UNKOWN;
@@ -135,6 +141,10 @@ public enum ResourceType {
 			return N4JSX;
 		case EXT_N4JSD:
 			return N4JSD;
+		case EXT_TS:
+			return TS;
+		case EXT_DTS:
+			return DTS;
 		case EXT_XT:
 			return XT;
 		default:

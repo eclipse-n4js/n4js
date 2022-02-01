@@ -214,7 +214,7 @@ inferTypeRef:
 ;
 
 
-propertySignatur
+propertySignature
     : ReadOnly? propertyName '?'? colonSepTypeRef? ('=>' typeRef)?
     ;
 
@@ -350,7 +350,6 @@ declarationStatement
     | interfaceDeclaration //ADDED
     | typeAliasDeclaration //ADDED
     | functionDeclaration
-    | generatorFunctionDeclaration
     | classDeclaration
     | enumDeclaration      //ADDED
     | variableStatement
@@ -417,8 +416,11 @@ exportFromBlock
     ;
 
 variableStatement
-    : bindingPattern colonSepTypeRef? initializer SemiColon?
-    | accessibilityModifier? varModifier? ReadOnly? variableDeclarationList SemiColon?
+    : accessibilityModifier? ReadOnly? varModifier (bindingPatternBlock | variableDeclarationList) SemiColon?
+    ;
+
+bindingPatternBlock
+    : bindingPattern colonSepTypeRef? initializer?
     ;
 
 variableDeclarationList
@@ -426,7 +428,7 @@ variableDeclarationList
     ;
 
 variableDeclaration
-    : ( identifierName| arrayLiteral | objectLiteral) colonSepTypeRef? singleExpression? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
+    : identifierName colonSepTypeRef? ('=' typeParameters? singleExpression)? // ECMAScript 6: Array & Object Matching
     ;
 
 emptyStatement
@@ -523,7 +525,7 @@ debuggerStatement
     ;
 
 functionDeclaration
-    : Function identifierName callSignature block? SemiColon?
+    : Function '*'? identifierName callSignature block? SemiColon?
     ;
 
 //Ovveride ECMA
@@ -567,30 +569,38 @@ constructorDeclaration
 
 propertyMemberDeclaration
     : abstractDeclaration                                                                  
-    | propertyMemberBase
-        (
-          propertyName '?'? (
-              (colonSepTypeRef? initializer?)
-            | callSignature block?
-        )
-        | getAccessor
-        | setAccessor
-    )
+    | propertyMember
     ;
 
 abstractDeclaration
     : Abstract (Identifier callSignature | variableStatement) eos
     ;
 
+propertyMember
+    : propertyMemberBase
+    (
+          propertyOrMethod
+        | getAccessor
+        | setAccessor
+    )
+    ;
+
 propertyMemberBase
     : Async? accessibilityModifier? Static? ReadOnly?
+    ;
+
+propertyOrMethod
+    : propertyName '?'? (
+          (colonSepTypeRef? initializer?)
+        | (callSignature block?)
+    )
     ;
 
 generatorMethod
     : '*'?  Identifier parameterBlock block
     ;
 
-generatorFunctionDeclaration
+generatorFunctionExpressionDeclaration
     : Function '*' Identifier? parameterBlock block
     ;
 
@@ -670,11 +680,16 @@ arrayLiteral
     ;
 
 elementList
-    : arrayElement (','+ arrayElement)*
+    : arrayElement (','+ arrayElement)* ','?
     ;
 
 arrayElement                      // ECMAScript 6: Spread Operator
-    : Ellipsis? (singleExpression | Identifier) ','?
+    : Ellipsis? bindingElement
+    ;
+
+bindingElement
+    : bindingPattern
+    | Identifier
     ;
 
 
@@ -688,11 +703,11 @@ typeMemberList
     ;
 
 typeMember
-    : propertySignatur
-    | callSignature
-    | constructSignature
-    | indexSignature
+    : constructSignature
     | methodSignature ('=>' typeRef)?
+    | propertySignature
+    | callSignature
+    | indexSignature
     ;
 
 
@@ -703,13 +718,11 @@ objectLiteral
 
 // MODIFIED
 propertyAssignment
-    : propertyName (':' |'=') singleExpression                # PropertyExpressionAssignment
-    | '[' singleExpression ']' ':' singleExpression           # ComputedPropertyExpressionAssignment
-    | getAccessor                                             # PropertyGetter
-    | setAccessor                                             # PropertySetter
-    | generatorMethod                                         # MethodProperty
-    | identifierOrKeyWord                                     # PropertyShorthand
-    | restParameter                                           # RestParameterInObject
+    : propertyName (':' identifierOrKeyWord | bindingPattern)? ('=' singleExpression)?  # PropertyExpressionAssignment
+    | getAccessor                                                 # PropertyGetter
+    | setAccessor                                                 # PropertySetter
+    | generatorMethod                                             # MethodProperty
+    | restParameter                                               # RestParameterInObject
     ;
 
 getAccessor
@@ -747,7 +760,7 @@ expressionSequence
     ;
 
 functionExpressionDeclaration
-    : Function Identifier? parameterBlock colonSepTypeRef? block
+    : Function '*'? Identifier? parameterBlock colonSepTypeRef? block
     ;
 
 singleExpression
@@ -784,7 +797,6 @@ singleExpression
     | singleExpression templateStringLiteral                                 # TemplateStringExpression  // ECMAScript 6
     | iteratorBlock                                                          # IteratorsExpression // ECMAScript 6
     | generatorBlock                                                         # GeneratorsExpression // ECMAScript 6
-    | generatorFunctionDeclaration                                           # GeneratorsFunctionExpression // ECMAScript 6
     | yieldStatement                                                         # YieldExpression // ECMAScript 6
     | This                                                                   # ThisExpression
     | identifierName                                                         # IdentifierExpression

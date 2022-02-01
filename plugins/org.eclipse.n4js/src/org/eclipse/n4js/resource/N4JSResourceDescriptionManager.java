@@ -23,6 +23,7 @@ import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.types.utils.TypeHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.resource.IWorkspaceAwareResourceDescriptionManager;
@@ -154,7 +155,7 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 		for (IResourceDescription.Delta delta : deltas) {
 
 			if (delta.haveEObjectDescriptionsChanged()
-					&& fileExtensionTypeHelper.isTypable(delta.getUri().fileExtension())) {
+					&& fileExtensionTypeHelper.isTypable(URIUtils.fileExtension(delta.getUri()))) {
 
 				if (null == namesImportedByCandidate) {
 					// note: this does not only contain the explicitly imported names, but indirectly

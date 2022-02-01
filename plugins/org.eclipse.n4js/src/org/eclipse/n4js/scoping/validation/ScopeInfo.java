@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
@@ -63,6 +64,9 @@ public class ScopeInfo implements IScope /* LEGACY SUPPORT */ {
 	/** Returns true iff the given {@link IEObjectDescription} is evaluated as valid by all validators */
 	public boolean isValid(IEObjectDescription objDescr) {
 		if (objDescr == null) {
+			return false;
+		}
+		if (objDescr instanceof IEObjectDescriptionWithError) {
 			return false;
 		}
 		for (IScopeValidator validator : validators) {

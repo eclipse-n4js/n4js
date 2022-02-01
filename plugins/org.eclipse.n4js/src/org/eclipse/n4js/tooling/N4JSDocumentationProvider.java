@@ -14,8 +14,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
@@ -24,6 +26,8 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.xtext.resource.XITextRegionWithLineInformation;
 import org.eclipse.xtext.documentation.impl.MultiLineCommentDocumentationProvider;
 import org.eclipse.xtext.nodemodel.BidiTreeIterator;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -37,6 +41,23 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProvider {
 
 	private static final Logger logger = Logger.getLogger(N4JSDocumentationProvider.class);
+
+	@Override
+	protected String findComment(EObject obj) {
+		final String fileExt = URIUtils.fileExtension(obj.eResource().getURI());
+		if (N4JSGlobals.DTS_FILE_EXTENSION.equals(fileExt)) {
+			EObject astNode = N4JSASTUtils.getCorrespondingASTNode(obj);
+			for (Adapter adapter : astNode.eAdapters()) {
+				if (adapter instanceof XITextRegionWithLineInformation) {
+					XITextRegionWithLineInformation infoNode = (XITextRegionWithLineInformation) adapter;
+					String jsDoc = infoNode.getJsDoc();
+					return jsDoc;
+				}
+			}
+			return null;
+		}
+		return super.findComment(obj);
+	}
 
 	/** Same as {@link #findComment(EObject)} but with parameter {@code enableSpecialASIFix} */
 	public String findComment(EObject o, boolean enableSpecialASIFix) {
@@ -76,6 +97,10 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 		// }
 		// }
 		if (astNode != null && !astNode.eIsProxy()) {
+			final String fileExt = URIUtils.fileExtension(astNode.eResource().getURI());
+			if (N4JSGlobals.DTS_FILE_EXTENSION.equals(fileExt)) {
+				return Collections.emptyList();
+			}
 			List<INode> nodes = super.getDocumentationNodes(astNode);
 			if (nodes.isEmpty() && astNode instanceof VariableDeclaration) {
 				TypeRef typeRef = ((VariableDeclaration) astNode).getDeclaredTypeRefInAST();

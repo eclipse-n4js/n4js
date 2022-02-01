@@ -120,20 +120,26 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 				if (!scopeInfo.isValid(eObjectDescription) && resource != null
 						&& !workspaceAccess.isNoValidate(resource, resource.getURI())) {
 
+					eObjectDescription = null;
+					IEObjectDescription invalidEOD = null;
 					Iterable<IEObjectDescription> elements = scopeInfo.getScope().getElements(qualifiedLinkName);
 					for (IEObjectDescription elem : elements) {
 						if (scopeInfo.isValid(elem)) {
 							eObjectDescription = elem;
+						} else {
+							invalidEOD = elem;
 						}
 					}
 
-					if (!scopeInfo.isValid(eObjectDescription)) {
-						List<ScopeElementIssue> issues = scopeInfo.getIssues(eObjectDescription);
-						for (ScopeElementIssue issue : issues) {
-							addIssue(context, node, issue);
-						}
-						if (issues.isEmpty()) {
-							eObjectDescription = null;
+					if (invalidEOD != null) {
+						if (eObjectDescription == null) {
+							List<ScopeElementIssue> issues = scopeInfo.getIssues(invalidEOD);
+							for (ScopeElementIssue issue : issues) {
+								addIssue(context, node, issue);
+							}
+							eObjectDescription = invalidEOD;
+						} else {
+							markAsUsed(invalidEOD, context);
 						}
 					}
 				}
@@ -146,19 +152,23 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 					throw new AssertionError("Found an instance without resource and without URI");
 				}
 
-				// if supported, mark object description as used and record the origin import
-				if (eObjectDescription instanceof IUsageAwareEObjectDescription) {
-					IUsageAwareEObjectDescription eObjectDescriptionCasted = (IUsageAwareEObjectDescription) eObjectDescription;
-					eObjectDescriptionCasted.markAsUsed();
-					if (context instanceof IdentifierRef) {
-						eObjectDescriptionCasted.recordOrigin((IdentifierRef) context);
-					}
-				}
+				markAsUsed(eObjectDescription, context);
 
 				return Collections.singletonList(candidate);
 			}
 		}
 		return Collections.emptyList();
+	}
+
+	/** if supported, mark object description as used and record the origin import */
+	private void markAsUsed(IEObjectDescription eObjectDescription, EObject context) {
+		if (eObjectDescription instanceof IUsageAwareEObjectDescription) {
+			IUsageAwareEObjectDescription eObjectDescriptionCasted = (IUsageAwareEObjectDescription) eObjectDescription;
+			eObjectDescriptionCasted.markAsUsed();
+			if (context instanceof IdentifierRef) {
+				eObjectDescriptionCasted.recordOrigin((IdentifierRef) context);
+			}
+		}
 	}
 
 	/**

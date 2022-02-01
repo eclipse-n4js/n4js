@@ -10,8 +10,10 @@
  */
 package org.eclipse.n4js.resource
 
+import java.util.Objects
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
@@ -25,9 +27,12 @@ import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TStructuralType
 import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.utils.URIUtils
+import org.eclipse.n4js.xtext.resource.XITextRegionWithLineInformation
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.DefaultLocationInFileProvider
 import org.eclipse.xtext.resource.ILocationInFileProviderExtension
+import org.eclipse.xtext.util.ITextRegion
 
 /**
  * A location in file provider that is aware of inferred types. The location
@@ -70,9 +75,22 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 	override getTextRegion(EObject object, ILocationInFileProviderExtension.RegionDescription query) {
 		return super.getTextRegion(convertToSource(object), query);
 	}
+	
+	override protected ITextRegion doGetTextRegion(EObject obj, /* @NonNull */ RegionDescription query) {
+		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(obj.eResource?.URI))) {
+			for (adapter : obj.eAdapters) {
+				if (adapter instanceof XITextRegionWithLineInformation) {
+					return toZeroBasedRegion(adapter);
+				}
+			}
+		} else {
+			return super.doGetTextRegion(obj, query);
+		}
+	}
+	
 
 	// TODO use N4JSASTUtils#getCorrespondingASTNode() instead, if possible
-	def private EObject convertToSource(EObject element) {
+	def public EObject convertToSource(EObject element) {
 		if (element === null || element.eIsProxy)
 			return null;
 		switch (element) {

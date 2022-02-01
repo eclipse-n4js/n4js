@@ -328,6 +328,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	}
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns ParameterizedTypeRef
 	 *     TypeRef.UnionTypeExpression_1_0 returns ParameterizedTypeRef
@@ -357,6 +358,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *             followedByQuestionMark?='?'?
 	 *         )
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ArrayNTypeExpression_ArrayTypeExpression_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -364,6 +366,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ArrayNTypeExpression returns ParameterizedTypeRef
 	 *
@@ -372,6 +375,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         arrayNTypeExpression?='[' 
 	 *         (declaredTypeArgs+=EmptyIterableTypeExpressionTail | (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*))
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ArrayNTypeExpression(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -379,6 +383,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRef
 	 *
@@ -394,6 +399,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *             (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?
 	 *         )
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ArrayNTypeExpression_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -401,6 +407,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ArrayTypeExpression.ParameterizedTypeRef_0_4_0_0 returns ParameterizedTypeRef
 	 *
@@ -409,6 +416,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (declaredTypeArgs+=WildcardOldNotationWithoutBound arrayTypeExpression?='[') | 
 	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_0_4_0_0 arrayTypeExpression?='[')
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ArrayTypeExpression_ParameterizedTypeRef_0_4_0_0(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -416,6 +424,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ArrayTypeExpression.ParameterizedTypeRef_1_6_0_0 returns ParameterizedTypeRef
 	 *
@@ -424,6 +433,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (declaredTypeArgs+=Wildcard arrayTypeExpression?='[') | 
 	 *         (declaredTypeArgs+=ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0 arrayTypeExpression?='[')
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ArrayTypeExpression_ParameterizedTypeRef_1_6_0_0(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -431,6 +441,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns FunctionTypeExpression
 	 *     TypeRef.UnionTypeExpression_1_0 returns FunctionTypeExpression
@@ -457,6 +468,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         ) | 
 	 *         returnTypeRef=PrimaryTypeExpression
 	 *     )?
+	 * </pre>
 	 */
 	protected void sequence_ArrowFunctionTypeExpression_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList_TypeRefWithModifiers(ISerializationContext context, FunctionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -464,11 +476,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ArrowFunctionTypeExpression returns FunctionTypeExpression
 	 *
 	 * Constraint:
 	 *     ((fpars+=TAnonymousFormalParameter fpars+=TAnonymousFormalParameter*)? returnTypeRef=PrimaryTypeExpression)
+	 * </pre>
 	 */
 	protected void sequence_ArrowFunctionTypeExpression_TAnonymousFormalParameterList(ISerializationContext context, FunctionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -476,6 +490,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns BooleanLiteralTypeRef
 	 *     TypeRef.UnionTypeExpression_1_0 returns BooleanLiteralTypeRef
@@ -490,6 +505,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (astValue='true' | astValue='false')
+	 * </pre>
 	 */
 	protected void sequence_BooleanLiteralTypeRef(ISerializationContext context, BooleanLiteralTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -497,6 +513,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithoutModifiers returns FunctionTypeExpression
 	 *     FunctionTypeExpressionOLD returns FunctionTypeExpression
@@ -508,6 +525,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (fpars+=TAnonymousFormalParameter fpars+=TAnonymousFormalParameter*)? 
 	 *         returnTypeRef=TypeRef?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList(ISerializationContext context, FunctionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -515,6 +533,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithModifiers returns FunctionTypeExpression
 	 *
@@ -526,6 +545,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         returnTypeRef=TypeRef? 
 	 *         followedByQuestionMark?='?'?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList_TypeRefWithModifiers(ISerializationContext context, FunctionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -533,6 +553,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TStructMember returns TStructMethod
 	 *     TStructMethod returns TStructMethod
@@ -544,6 +565,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (fpars+=TAnonymousFormalParameter fpars+=TAnonymousFormalParameter*)? 
 	 *         returnTypeRef=TypeRef?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod(ISerializationContext context, TStructMethod semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -551,6 +573,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TAnonymousFormalParameter returns TAnonymousFormalParameter
 	 *
@@ -560,6 +583,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         ((name=BindingIdentifier typeRef=TypeRef) | typeRef=TypeRef) 
 	 *         (hasInitializerAssignment?='=' astInitializer=TypeReferenceName?)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ColonSepTypeRef_DefaultFormalParameter_TAnonymousFormalParameter(ISerializationContext context, TAnonymousFormalParameter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -567,11 +591,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TFormalParameter returns TFormalParameter
 	 *
 	 * Constraint:
 	 *     (variadic?='...'? name=BindingIdentifier typeRef=TypeRef (hasInitializerAssignment?='=' astInitializer=TypeReferenceName?)?)
+	 * </pre>
 	 */
 	protected void sequence_ColonSepTypeRef_DefaultFormalParameter_TFormalParameter(ISerializationContext context, TFormalParameter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -579,12 +605,14 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TStructMember returns TStructField
 	 *     TStructField returns TStructField
 	 *
 	 * Constraint:
 	 *     (name=IdentifierName optional?='?'? typeRef=TypeRef?)
+	 * </pre>
 	 */
 	protected void sequence_ColonSepTypeRef_TStructField(ISerializationContext context, TStructField semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -592,12 +620,14 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TStructMember returns TStructGetter
 	 *     TStructGetter returns TStructGetter
 	 *
 	 * Constraint:
 	 *     (name=IdentifierName optional?='?'? typeRef=TypeRef?)
+	 * </pre>
 	 */
 	protected void sequence_ColonSepTypeRef_TStructGetter(ISerializationContext context, TStructGetter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -605,12 +635,14 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     EmptyIterableTypeExpressionTail returns Wildcard
 	 *     WildcardOldNotationWithoutBound returns Wildcard
 	 *
 	 * Constraint:
 	 *     {Wildcard}
+	 * </pre>
 	 */
 	protected void sequence_EmptyIterableTypeExpressionTail_WildcardOldNotationWithoutBound(ISerializationContext context, Wildcard semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -618,6 +650,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithoutModifiers returns IntersectionTypeExpression
 	 *     TypeRefFunctionTypeExpression returns IntersectionTypeExpression
@@ -625,6 +658,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (typeRefs+=TypeRef typeRefs+=TypeRef*)
+	 * </pre>
 	 */
 	protected void sequence_IntersectionTypeExpressionOLD(ISerializationContext context, IntersectionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -632,11 +666,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithModifiers returns IntersectionTypeExpression
 	 *
 	 * Constraint:
 	 *     (typeRefs+=TypeRef typeRefs+=TypeRef* followedByQuestionMark?='?'?)
+	 * </pre>
 	 */
 	protected void sequence_IntersectionTypeExpressionOLD_TypeRefWithModifiers(ISerializationContext context, IntersectionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -644,6 +680,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns IntersectionTypeExpression
 	 *     TypeRef.UnionTypeExpression_1_0 returns IntersectionTypeExpression
@@ -659,6 +696,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (typeRefs+=IntersectionTypeExpression_IntersectionTypeExpression_1_0 typeRefs+=ArrayTypeExpression+) | 
 	 *         (typeRefs+=TypeRef typeRefs+=TypeRef* followedByQuestionMark?='?'?)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_IntersectionTypeExpression_IntersectionTypeExpressionOLD_TypeRefWithModifiers(ISerializationContext context, IntersectionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -666,11 +704,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NamespaceLikeRef returns NamespaceLikeRef
 	 *
 	 * Constraint:
 	 *     declaredType=[Type|TypeReferenceName]
+	 * </pre>
 	 */
 	protected void sequence_NamespaceLikeRef(ISerializationContext context, NamespaceLikeRef semanticObject) {
 		if (errorAcceptor != null) {
@@ -684,6 +724,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns NumericLiteralTypeRef
 	 *     TypeRef.UnionTypeExpression_1_0 returns NumericLiteralTypeRef
@@ -709,6 +750,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *             astValue=SCIENTIFIC_INT
 	 *         )
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_NumericLiteralTypeRef(ISerializationContext context, NumericLiteralTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -716,6 +758,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns ParameterizedTypeRefStructural
 	 *     TypeRef.UnionTypeExpression_1_0 returns ParameterizedTypeRefStructural
@@ -737,6 +780,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         dynamic?='+'? 
 	 *         followedByQuestionMark?='?'?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -744,6 +788,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithoutModifiers returns ParameterizedTypeRefStructural
 	 *
@@ -756,6 +801,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         astStructuralMembers+=TStructMember* 
 	 *         dynamic?='+'?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -763,6 +809,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefFunctionTypeExpression returns ParameterizedTypeRefStructural
 	 *     ParameterizedTypeRef returns ParameterizedTypeRefStructural
@@ -776,6 +823,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember*
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRefStructural semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -783,6 +831,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns StringLiteralTypeRef
 	 *     TypeRef.UnionTypeExpression_1_0 returns StringLiteralTypeRef
@@ -797,6 +846,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     astValue=STRING
+	 * </pre>
 	 */
 	protected void sequence_StringLiteralTypeRef(ISerializationContext context, StringLiteralTypeRef semanticObject) {
 		if (errorAcceptor != null) {
@@ -810,12 +860,14 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     ThisTypeRef returns ThisTypeRefStructural
 	 *     ThisTypeRefStructural returns ThisTypeRefStructural
 	 *
 	 * Constraint:
 	 *     (definedTypingStrategy=TypingStrategyUseSiteOperator astStructuralMembers+=TStructMember*)
+	 * </pre>
 	 */
 	protected void sequence_TStructMemberList_ThisTypeRefStructural(ISerializationContext context, ThisTypeRefStructural semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -823,6 +875,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns ThisTypeRefStructural
 	 *     TypeRef.UnionTypeExpression_1_0 returns ThisTypeRefStructural
@@ -836,6 +889,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (definedTypingStrategy=TypingStrategyUseSiteOperator astStructuralMembers+=TStructMember* dynamic?='+'? followedByQuestionMark?='?'?)
+	 * </pre>
 	 */
 	protected void sequence_TStructMemberList_ThisTypeRefStructural_TypeRefWithModifiers_TypeRefWithoutModifiers(ISerializationContext context, ThisTypeRefStructural semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -843,11 +897,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithoutModifiers returns ThisTypeRefStructural
 	 *
 	 * Constraint:
 	 *     (definedTypingStrategy=TypingStrategyUseSiteOperator astStructuralMembers+=TStructMember* dynamic?='+'?)
+	 * </pre>
 	 */
 	protected void sequence_TStructMemberList_ThisTypeRefStructural_TypeRefWithoutModifiers(ISerializationContext context, ThisTypeRefStructural semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -855,12 +911,14 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TStructMember returns TStructSetter
 	 *     TStructSetter returns TStructSetter
 	 *
 	 * Constraint:
 	 *     (name=IdentifierName optional?='?'? fpar=TAnonymousFormalParameter)
+	 * </pre>
 	 */
 	protected void sequence_TStructSetter(ISerializationContext context, TStructSetter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -868,6 +926,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeArgInTypeTypeRef returns ThisTypeRefNominal
 	 *     ThisTypeRef returns ThisTypeRefNominal
@@ -875,6 +934,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     {ThisTypeRefNominal}
+	 * </pre>
 	 */
 	protected void sequence_ThisTypeRefNominal(ISerializationContext context, ThisTypeRefNominal semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -882,6 +942,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns ThisTypeRefNominal
 	 *     TypeRef.UnionTypeExpression_1_0 returns ThisTypeRefNominal
@@ -895,6 +956,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (dynamic?='+'? followedByQuestionMark?='?'?)
+	 * </pre>
 	 */
 	protected void sequence_ThisTypeRefNominal_TypeRefWithModifiers_TypeRefWithoutModifiers(ISerializationContext context, ThisTypeRefNominal semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -902,11 +964,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithoutModifiers returns ThisTypeRefNominal
 	 *
 	 * Constraint:
 	 *     dynamic?='+'?
+	 * </pre>
 	 */
 	protected void sequence_ThisTypeRefNominal_TypeRefWithoutModifiers(ISerializationContext context, ThisTypeRefNominal semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -914,6 +978,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithModifiers returns ParameterizedTypeRef
 	 *
@@ -925,6 +990,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         dynamic?='+'? 
 	 *         followedByQuestionMark?='?'?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -932,6 +998,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithoutModifiers returns ParameterizedTypeRef
 	 *
@@ -942,6 +1009,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)? 
 	 *         dynamic?='+'?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_TypeArguments_TypeRefWithoutModifiers_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -949,6 +1017,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeArgInTypeTypeRef returns ParameterizedTypeRef
 	 *     ParameterizedTypeRef returns ParameterizedTypeRef
@@ -960,6 +1029,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         declaredType=[Type|TypeReferenceName] 
 	 *         (declaredTypeArgs+=TypeArgument declaredTypeArgs+=TypeArgument*)?
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_TypeArguments_TypeReference(ISerializationContext context, ParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -967,6 +1037,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns TypeTypeRef
 	 *     TypeRef.UnionTypeExpression_1_0 returns TypeTypeRef
@@ -980,6 +1051,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (constructorRef?='constructor'? typeArg=TypeArgInTypeTypeRef followedByQuestionMark?='?'?)
+	 * </pre>
 	 */
 	protected void sequence_TypeRefWithModifiers_TypeTypeRef(ISerializationContext context, TypeTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -987,11 +1059,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithModifiers returns UnionTypeExpression
 	 *
 	 * Constraint:
 	 *     (typeRefs+=TypeRef typeRefs+=TypeRef* followedByQuestionMark?='?'?)
+	 * </pre>
 	 */
 	protected void sequence_TypeRefWithModifiers_UnionTypeExpressionOLD(ISerializationContext context, UnionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -999,6 +1073,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRef returns UnionTypeExpression
 	 *     TypeRef.UnionTypeExpression_1_0 returns UnionTypeExpression
@@ -1014,6 +1089,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (typeRefs+=TypeRef_UnionTypeExpression_1_0 typeRefs+=IntersectionTypeExpression+) | 
 	 *         (typeRefs+=TypeRef typeRefs+=TypeRef* followedByQuestionMark?='?'?)
 	 *     )
+	 * </pre>
 	 */
 	protected void sequence_TypeRef_TypeRefWithModifiers_UnionTypeExpressionOLD(ISerializationContext context, UnionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1021,6 +1097,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithoutModifiers returns TypeTypeRef
 	 *     TypeRefFunctionTypeExpression returns TypeTypeRef
@@ -1028,6 +1105,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (constructorRef?='constructor'? typeArg=TypeArgInTypeTypeRef)
+	 * </pre>
 	 */
 	protected void sequence_TypeTypeRef(ISerializationContext context, TypeTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1035,11 +1113,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeVariable returns TypeVariable
 	 *
 	 * Constraint:
 	 *     ((declaredCovariant?='out' | declaredContravariant?='in')? name=IDENTIFIER declaredUpperBound=TypeRef? defaultArgument=TypeRef?)
+	 * </pre>
 	 */
 	protected void sequence_TypeVariable(ISerializationContext context, TypeVariable semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1047,6 +1127,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeRefWithoutModifiers returns UnionTypeExpression
 	 *     TypeRefFunctionTypeExpression returns UnionTypeExpression
@@ -1054,6 +1135,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *
 	 * Constraint:
 	 *     (typeRefs+=TypeRef typeRefs+=TypeRef*)
+	 * </pre>
 	 */
 	protected void sequence_UnionTypeExpressionOLD(ISerializationContext context, UnionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1061,11 +1143,13 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     WildcardNewNotation returns Wildcard
 	 *
 	 * Constraint:
 	 *     ((usingInOutNotation?='out' declaredUpperBound=TypeRef) | (usingInOutNotation?='in' declaredLowerBound=TypeRef))
+	 * </pre>
 	 */
 	protected void sequence_WildcardNewNotation(ISerializationContext context, Wildcard semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1073,6 +1157,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeArgument returns Wildcard
 	 *     Wildcard returns Wildcard
@@ -1084,6 +1169,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *         (usingInOutNotation?='out' declaredUpperBound=TypeRef) | 
 	 *         (usingInOutNotation?='in' declaredLowerBound=TypeRef)
 	 *     )?
+	 * </pre>
 	 */
 	protected void sequence_WildcardNewNotation_WildcardOldNotation(ISerializationContext context, Wildcard semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -1091,12 +1177,14 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     TypeArgInTypeTypeRef returns Wildcard
 	 *     WildcardOldNotation returns Wildcard
 	 *
 	 * Constraint:
 	 *     (declaredUpperBound=TypeRef | declaredLowerBound=TypeRef)?
+	 * </pre>
 	 */
 	protected void sequence_WildcardOldNotation(ISerializationContext context, Wildcard semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

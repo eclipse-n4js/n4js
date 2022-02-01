@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
@@ -53,6 +54,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.dts.DtsParser;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -76,6 +78,8 @@ import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.RelinkTModuleHashMismatchException;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
+import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -706,7 +710,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (!optionClearFunctionBodies) {
 			return;
 		}
-		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, getURI().fileExtension())) {
+		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
 			return; // There are no function bodies in n4jsd files.
 		}
 		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(this);
@@ -758,7 +762,16 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			IParseResult result = new JSParseResult(inputStream);
 			updateInternalState(this.getParseResult(), result);
 		} else {
-			super.doLoad(inputStream, options);
+			ResourceType resourceType = ResourceType.getResourceType(getURI());
+			if (resourceType == ResourceType.DTS) {
+				setValidationDisabled(true);
+				try (Reader reader = createReader(inputStream);) {
+					IParseResult result = new DtsParser().parse(reader, this);
+					updateInternalState(this.getParseResult(), result);
+				}
+			} else {
+				super.doLoad(inputStream, options);
+			}
 		}
 	}
 
@@ -1142,10 +1155,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			// we have an ordinary EMF proxy (not one of Xtext's lazy linking proxies) ...
 			final ResourceSet resSet = getResourceSet();
 			final URI targetResourceUri = targetUri.trimFragment();
-			final String targetFileExt = targetResourceUri.fileExtension();
+			final String targetFileExt = URIUtils.fileExtension(targetResourceUri);
 			if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(targetFileExt)
 					|| N4JSGlobals.N4JSD_FILE_EXTENSION.equals(targetFileExt)
-					|| N4JSGlobals.N4JSX_FILE_EXTENSION.equals(targetFileExt)) {
+					|| N4JSGlobals.N4JSX_FILE_EXTENSION.equals(targetFileExt)
+					|| N4JSGlobals.DTS_FILE_EXTENSION.equals(targetFileExt)) {
 
 				// proxy is pointing into an .n4js or .n4jsd file ...
 				// check if we can work with the TModule from the index or if it is mandatory to load from source
@@ -1381,6 +1395,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// makes sense remains to be reconsidered (see IDEBUG-257 and IDEBUG-233) ...
 		contents.get(0); // trigger demand load if necessary
 		return super.getLazyProxyInformation(idx);
+	}
+
+	@Override
+	public void clearLazyProxyInformation() {
+		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
+			return;
+		}
+		super.clearLazyProxyInformation();
 	}
 
 	/**

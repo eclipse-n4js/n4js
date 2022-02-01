@@ -22,8 +22,9 @@ public class ParserContextUtil {
 
 	/** @return true iff the given rule is contained in an {@link TypeScriptParser#RULE_exportStatement} */
 	public static boolean isExported(ParserRuleContext ctx) {
-		findParentContext(ctx, TypeScriptParser.RULE_exportStatement, TypeScriptParser.RULE_statement);
-		return false;
+		ParserRuleContext exportedParentCtx = findParentContext(ctx, TypeScriptParser.RULE_exportStatement,
+				TypeScriptParser.RULE_statement);
+		return exportedParentCtx != null;
 	}
 
 	/**

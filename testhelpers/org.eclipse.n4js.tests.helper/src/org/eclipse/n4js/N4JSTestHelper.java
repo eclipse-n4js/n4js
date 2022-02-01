@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.eclipse.xtext.xbase.lib.Pair;
@@ -80,7 +81,7 @@ public class N4JSTestHelper {
 
 	private Script parseWithFileExtensionFromURI(CharSequence text, URI uriToUse, ResourceSet resourceSetToUse)
 			throws Exception {
-		final String fileExtensionToUse = uriToUse.fileExtension();
+		final String fileExtensionToUse = URIUtils.fileExtension(uriToUse);
 		if (fileExtensionToUse == null) {
 			throw new IllegalArgumentException("given URI does not have a file extension");
 		}

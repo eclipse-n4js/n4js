@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.tooling.organizeImports.ImportProvidedElement
 import org.eclipse.n4js.tooling.organizeImports.ImportStateCalculator
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -48,6 +49,9 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
+
+	@Inject
+	protected XpectAwareFileExtensionCalculator fileExtensionCalculator;
 
 	/**
 	 * NEEEDED
@@ -87,8 +91,9 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 							getMessageForIMP_DYNAMIC_IMPORT_N4JS(module.moduleSpecifier),
 							importSpecifier, IMP_DYNAMIC_IMPORT_N4JS);
 					} else if (jsVariantHelper.isExternalMode(module)) {
+						val variant = fileExtensionCalculator.getXpectAwareFileExtension(module);
 						addIssue(
-							getMessageForIMP_DYNAMIC_IMPORT_N4JSD(module.moduleSpecifier),
+							getMessageForIMP_DYNAMIC_IMPORT_N4JSD(variant, module.moduleSpecifier),
 							importSpecifier, IMP_DYNAMIC_IMPORT_N4JSD);
 					}
 				} else {
@@ -253,7 +258,8 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def handleTypeCollisions(List<Pair<Pair<String, TModule>, List<ImportProvidedElement>>> duplicateslist,
 		Map<EObject, String> eObjectToIssueCode) {
-		duplicateslist.forEach [ duplicateEntry |
+			
+		for (duplicateEntry : duplicateslist) {
 			val entry = duplicateEntry.key
 			val entryName = entry.key
 			val entryModule = entry.value
@@ -271,7 +277,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 				firstImportSpecifier.isDefaultImport
 			};
 
-			imports.tail.forEach [ dupe |
+			for (dupe : imports.tail) {
 				val duplicateImportSpecifier = dupe.importSpecifier
 				if (firstImportIsDefault && duplicateImportSpecifier instanceof NamespaceImportSpecifier) {
 					addIssueDuplicate(firstImportSpecifier, entryName, entryModule, firstImportName, eObjectToIssueCode)
@@ -283,8 +289,8 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 				} else {
 					addIssueDuplicate(dupe.importSpecifier, entryName, entryModule, firstImportName, eObjectToIssueCode)
 				}
-			]
-		]
+			}
+		}
 	}
 
 	private def regUnresolvedImport(ParameterizedTypeRef ref, String name, Map<EObject, String> eObjectToIssueCode) {

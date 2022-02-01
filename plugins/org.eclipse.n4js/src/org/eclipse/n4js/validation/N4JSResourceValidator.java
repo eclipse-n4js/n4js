@@ -77,13 +77,17 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		if (ws.isNoValidate(resource.getURI())) {
 			return Collections.emptyList();
 		}
-
 		if (resource instanceof N4JSResource) {
 			final N4JSResource resourceCasted = (N4JSResource) resource;
 
 			// QUICK EXIT #3: for "opaque" modules (e.g. js files)
 			// (pure performance tweak, because those resources have an empty AST anyway; see N4JSResource#doLoad())
 			if (resourceCasted.isOpaque()) {
+				return Collections.emptyList();
+			}
+
+			// QUICK EXIT #4: resources with disabled validation (e.g. d.ts files)
+			if (resourceCasted.isValidationDisabled()) {
 				return Collections.emptyList();
 			}
 

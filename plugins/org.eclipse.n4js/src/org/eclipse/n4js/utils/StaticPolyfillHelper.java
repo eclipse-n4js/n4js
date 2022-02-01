@@ -118,9 +118,8 @@ public final class StaticPolyfillHelper {
 			final QualifiedName qnFilled = qualifiedNameConverter.toQualifiedName(res.getModule().getQualifiedName());
 			final N4JSProjectConfigSnapshot project = projectResolver.resolveProject(res, res.getURI());
 			final QualifiedName fqn = qnFilled;
-			final Optional<String> fileExtension = Optional.of(res.getURI().fileExtension()); // see Req.155#4: "Both
-																								// extensions are
-																								// equal."
+			// see Req.155#4: "Both extensions are equal."
+			final Optional<String> fileExtension = Optional.of(URIUtils.fileExtension(res.getURI()));
 			final N4JSSourceFolderSnapshot filledSrcContainer = workspaceAccess.findSourceFolderContaining(res,
 					res.getURI());
 			for (N4JSSourceFolderSnapshot srcConti : project.getSourceFolders()) {

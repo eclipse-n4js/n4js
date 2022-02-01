@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+export enum RoundingMode {
+    UP,
+    DOWN,
+    FLOOR
+}
+
+
+export enum ColorN {
+    blue = 1,
+    green = 2,
+    yellow = 3
+}
+
+
+export enum ColorS {
+    blue = "myblue",
+    green = "mygreen",
+    yellow = "unexpectedyellow"
+}
+
+
+
+/* XPECT ast ---
+Script: true
+  ExportDeclaration: false, false
+   N4EnumDeclaration: [external, public], RoundingMode
+    N4EnumLiteral: UP
+    N4EnumLiteral: DOWN
+    N4EnumLiteral: FLOOR
+  ExportDeclaration: false, false
+   N4EnumDeclaration: [external, public], ColorN
+    N4EnumLiteral: blue
+     NumericLiteral: 1
+    N4EnumLiteral: green
+     NumericLiteral: 2
+    N4EnumLiteral: yellow
+     NumericLiteral: 3
+  ExportDeclaration: false, false
+   N4EnumDeclaration: [external, public], ColorS
+    N4EnumLiteral: blue
+     StringLiteral: "myblue"
+    N4EnumLiteral: green
+     StringLiteral: "mygreen"
+    N4EnumLiteral: yellow
+     StringLiteral: "unexpectedyellow"
+--- */
+
+

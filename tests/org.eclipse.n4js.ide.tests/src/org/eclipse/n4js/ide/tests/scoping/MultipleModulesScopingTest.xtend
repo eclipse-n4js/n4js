@@ -202,7 +202,7 @@ class MultipleModulesScopingTest extends AbstractIdeTest {
 			]
 		);
 		startAndWaitForLspServer();
-		assertIssues("Client" -> #["(Warning, [0:7 - 0:14], N4JSD module Module should not be imported dynamically.)"]);
+		assertIssues("Client" -> #["(Warning, [0:7 - 0:14], The n4jsd module Module should not be imported dynamically.)"]);
 	}
 
 }

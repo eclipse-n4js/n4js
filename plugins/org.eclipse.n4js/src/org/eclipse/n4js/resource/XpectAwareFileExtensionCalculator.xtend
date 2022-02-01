@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.impl.MinimalEObjectImpl
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.utils.URIUtils
 
 /**
  * This class provides methods for calculating file extensions. The calculation takes into account Xpect file extension
@@ -58,8 +59,8 @@ public class XpectAwareFileExtensionCalculator {
 	 * without the potential additional X!PECT file extension.
 	 */
 	def public String getFilenameWithoutXpectExtension(URI uri) {
-		if (uri.fileExtension != getXpectAwareFileExtension(uri)) {
-			return uri.trimFileExtension.lastSegment;
+		if (URIUtils.fileExtension(uri) != getXpectAwareFileExtension(uri)) {
+			return URIUtils.trimFileExtension(uri).lastSegment;
 		} else {
 			return uri.lastSegment;
 		}
@@ -84,10 +85,10 @@ public class XpectAwareFileExtensionCalculator {
 	}
 
 	def private String getXpectAwareFileExtensionOrEmpty(URI uri){
-		var ext = uri.fileExtension;
+		var ext = URIUtils.fileExtension(uri);
 		if(N4JSGlobals.XT_FILE_EXTENSION.equals(ext)){
 			//get nested file ext
-			ext = uri.trimFileExtension.fileExtension
+			ext = URIUtils.fileExtension(uri.trimFileExtension)
 		}
 		return Strings.nullToEmpty(ext)
 	}

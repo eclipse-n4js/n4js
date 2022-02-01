@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
@@ -35,6 +36,7 @@ import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
@@ -59,6 +61,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
+import com.google.common.base.Objects;
 import com.google.inject.Inject;
 
 /**
@@ -138,8 +141,9 @@ public class N4JSLinker extends LazyLinker {
 	 */
 	private void installProxies(N4JSResource resource, EObject obj, IDiagnosticProducer producer) {
 		ICompositeNode node = NodeModelUtils.getNode(obj);
-		if (node == null)
+		if (node == null) {
 			return;
+		}
 		installProxies(resource, obj, producer, node, false);
 	}
 
@@ -282,32 +286,7 @@ public class N4JSLinker extends LazyLinker {
 		try {
 			String tokenText = NodeModelUtils.getTokenText(node);
 			Object value = valueConverterService.toValue(tokenText, rule.getName(), node);
-			if (obj instanceof IdentifierRef && value instanceof String) {
-				((IdentifierRef) obj).setIdAsText((String) value);
-			} else if (obj instanceof ParameterizedTypeRef && value instanceof String) {
-				ParameterizedTypeRef ptr = (ParameterizedTypeRef) obj;
-				String valueStr = (String) value;
-				if (eRef == PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
-					ptr.setDeclaredTypeAsText(valueStr);
-				}
-				// Type typeProxy = (Type) proxy;
-				// typeProxy.setName(valueStr);
-
-			} else if (obj instanceof NamespaceLikeRef && value instanceof String) {
-				((NamespaceLikeRef) obj).setDeclaredTypeAsText((String) value);
-			} else if (obj instanceof LabelRef && value instanceof String) {
-				((LabelRef) obj).setLabelAsText((String) value);
-			} else if (obj instanceof ParameterizedPropertyAccessExpression && value instanceof String) {
-				((ParameterizedPropertyAccessExpression) obj).setPropertyAsText((String) value);
-			} else if (obj instanceof ImportDeclaration && value instanceof String) {
-				((ImportDeclaration) obj).setModuleSpecifierAsText((String) value);
-			} else if (obj instanceof NamedImportSpecifier && value instanceof String) {
-				((NamedImportSpecifier) obj).setImportedElementAsText((String) value);
-			} else if ((obj instanceof JSXPropertyAttribute) && (value instanceof String)) {
-				((JSXPropertyAttribute) obj).setPropertyAsText((String) value);
-			} else {
-				setOtherElementAsText(tokenText, obj, value);
-			}
+			setTokenText(obj, tokenText, value, eRef);
 		} catch (BadEscapementException e) {
 			diagnosticProducer.addDiagnostic(new DiagnosticMessage(e.getMessage(), e.getSeverity(), e.getIssueCode(),
 					Strings.EMPTY_ARRAY));
@@ -319,6 +298,38 @@ public class N4JSLinker extends LazyLinker {
 					vcwve.getIssueCode(), Strings.EMPTY_ARRAY));
 		}
 		return proxy;
+	}
+
+	private void setTokenText(EObject obj, String tokenText, Object value, EReference eRef) {
+		/*
+		 * as otherwise with 0 the EObjectDescription created for Script would be fetched
+		 */
+		if (obj instanceof IdentifierRef && value instanceof String) {
+			((IdentifierRef) obj).setIdAsText((String) value);
+		} else if (obj instanceof ParameterizedTypeRef && value instanceof String) {
+			ParameterizedTypeRef ptr = (ParameterizedTypeRef) obj;
+			String valueStr = (String) value;
+			if (eRef == PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
+				ptr.setDeclaredTypeAsText(valueStr);
+			}
+			// Type typeProxy = (Type) proxy;
+			// typeProxy.setName(valueStr);
+
+		} else if (obj instanceof NamespaceLikeRef && value instanceof String) {
+			((NamespaceLikeRef) obj).setDeclaredTypeAsText((String) value);
+		} else if (obj instanceof LabelRef && value instanceof String) {
+			((LabelRef) obj).setLabelAsText((String) value);
+		} else if (obj instanceof ParameterizedPropertyAccessExpression && value instanceof String) {
+			((ParameterizedPropertyAccessExpression) obj).setPropertyAsText((String) value);
+		} else if (obj instanceof ImportDeclaration && value instanceof String) {
+			((ImportDeclaration) obj).setModuleSpecifierAsText((String) value);
+		} else if (obj instanceof NamedImportSpecifier && value instanceof String) {
+			((NamedImportSpecifier) obj).setImportedElementAsText((String) value);
+		} else if ((obj instanceof JSXPropertyAttribute) && (value instanceof String)) {
+			((JSXPropertyAttribute) obj).setPropertyAsText((String) value);
+		} else {
+			setOtherElementAsText(tokenText, obj, value);
+		}
 	}
 
 	/**
@@ -338,6 +349,11 @@ public class N4JSLinker extends LazyLinker {
 
 	@Override
 	protected void clearReferences(EObject obj) {
+
+		if (Objects.equal(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(obj.eResource().getURI()))) {
+			return;
+		}
+
 		super.clearReferences(obj);
 		if (obj instanceof Script) {
 			((Script) obj).setFlaggedUsageMarkingFinished(false); // open transient flag for new used-resolutions

@@ -21,6 +21,7 @@ import org.eclipse.n4js.ide.editor.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ide.editor.contentassist.N4JSIdeContentProposalProvider;
 import org.eclipse.n4js.ide.server.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.ide.server.N4JSDebugService;
+import org.eclipse.n4js.ide.server.N4JSDocumentExtensions;
 import org.eclipse.n4js.ide.server.N4JSLanguageServer;
 import org.eclipse.n4js.ide.server.N4JSLanguageServerFrontend;
 import org.eclipse.n4js.ide.server.N4JSOutputConfigurationProvider;
@@ -87,6 +88,7 @@ import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalAcceptor;
 import org.eclipse.xtext.ide.editor.contentassist.IdeContentProposalProvider;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.IContentAssistParser;
+import org.eclipse.xtext.ide.server.DocumentExtensions;
 import org.eclipse.xtext.ide.server.ILanguageServerShutdownAndExitHandler;
 import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.ide.server.commands.ExecutableCommandRegistry;
@@ -306,5 +308,9 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends IHeadlessExtensionRegistrationHelper> bindIHeadlessExtensionRegistrationHelper() {
 		return HeadlessExtensionRegistrationHelper.class;
+	}
+
+	public Class<? extends DocumentExtensions> bindDocumentExtensions() {
+		return N4JSDocumentExtensions.class;
 	}
 }
