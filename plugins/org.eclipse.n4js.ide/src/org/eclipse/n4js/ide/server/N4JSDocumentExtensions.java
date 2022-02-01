@@ -42,8 +42,9 @@ public class N4JSDocumentExtensions extends DocumentExtensions {
 			for (Adapter adapter : obj.eAdapters()) {
 				if (adapter instanceof XITextRegionWithLineInformation) {
 					XITextRegionWithLineInformation nodeInfo = (XITextRegionWithLineInformation) adapter;
-					Position start = new Position(nodeInfo.getLineNumber(), nodeInfo.getCharacter());
-					Position end = new Position(nodeInfo.getEndLineNumber(), nodeInfo.getEndCharacter());
+					// convert to 0-based line numbers
+					Position start = new Position(nodeInfo.getLineNumber() - 1, nodeInfo.getCharacter());
+					Position end = new Position(nodeInfo.getEndLineNumber() - 1, nodeInfo.getEndCharacter());
 					Range range = new Range(start, end);
 					return new Location(uri.toString(), range);
 				}
