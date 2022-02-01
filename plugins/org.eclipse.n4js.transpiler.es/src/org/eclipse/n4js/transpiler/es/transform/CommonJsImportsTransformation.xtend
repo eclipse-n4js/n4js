@@ -26,7 +26,6 @@ import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
-import org.eclipse.n4js.transpiler.es.assistants.ModuleSpecifierAssistant
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
@@ -42,9 +41,6 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 @ExcludesAfter(SanitizeImportsTransformation) // CommonJsImportsTransformation must not run before SanitizeImportsTransformation
 @ExcludesBefore(ModuleWrappingTransformation) // CommonJsImportsTransformation must not run after ModuleWrappingTransformation
 class CommonJsImportsTransformation extends Transformation {
-
-	@Inject
-	private ModuleSpecifierAssistant moduleSpecifierAssistant;
 
 	@Inject
 	private N4JSLanguageHelper n4jsLanguageHelper;
@@ -171,18 +167,7 @@ class CommonJsImportsTransformation extends Transformation {
 	}
 
 	def private boolean requiresRewrite(TModule targetModule) {
-		if (targetModule.isN4jsdModule) {
-			val targetResource = targetModule.eResource;
-			if (targetResource !== null) {
-				val ext = moduleSpecifierAssistant.getActualFileExtensionForN4jsdFile(targetResource, targetModule);
-				if (ext == N4JSGlobals.CJS_FILE_EXTENSION) {
-					return true;
-				} else if (ext == N4JSGlobals.MJS_FILE_EXTENSION) {
-					return false;
-				}
-			}
-		}
-		return !n4jsLanguageHelper.isES6Module(targetModule.eResource);
+		return !n4jsLanguageHelper.isES6Module(targetModule);
 	}
 
 	def private String computeNameForIntermediateDefaultImport(TModule targetModule) {

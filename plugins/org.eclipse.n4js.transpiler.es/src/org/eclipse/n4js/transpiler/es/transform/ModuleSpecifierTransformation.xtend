@@ -14,13 +14,12 @@ import com.google.common.base.Joiner
 import com.google.inject.Inject
 import java.util.Arrays
 import java.util.Objects
-import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.transpiler.es.assistants.ModuleSpecifierAssistant
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
@@ -41,7 +40,7 @@ class ModuleSpecifierTransformation extends Transformation {
 	private ResourceNameComputer resourceNameComputer;
 
 	@Inject
-	private ModuleSpecifierAssistant moduleSpecifierAssistant;
+	private N4JSLanguageHelper n4jsLanguageHelper;
 
 	private String[] localModulePath = null; // will be set in #analyze()
 
@@ -188,20 +187,7 @@ class ModuleSpecifierTransformation extends Transformation {
 	}
 
 	def protected String getActualFileExtension(TModule targetModule) {
-		val targetResource = targetModule.eResource;
-		if (targetResource !== null) {
-			val ext = targetResource.URI?.fileExtension;
-
-			if (ext == N4JSGlobals.N4JSD_FILE_EXTENSION) {
-				// in case of .n4jsd files, we have to inspect the file being described by the .n4jsd file:
-				return moduleSpecifierAssistant.getActualFileExtensionForN4jsdFile(targetResource, targetModule);
-			}
-
-			if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext)) {
-				return ext;
-			}
-		}
-		return N4JSGlobals.JS_FILE_EXTENSION;
+		return n4jsLanguageHelper.getOutputFileExtension(targetModule);
 	}
 
 	def protected N4JSPackageName getActualProjectName(N4JSProjectConfigSnapshot project) {

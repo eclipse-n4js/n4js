@@ -13,6 +13,7 @@ package org.eclipse.n4js.utils;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -22,12 +23,21 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.ParserRule;
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
+import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -44,6 +54,12 @@ public final class N4JSLanguageHelper {
 
 	@Inject
 	private WorkspaceAccess workspaceAccess;
+
+	@Inject
+	private IQualifiedNameConverter qualifiedNameConverter;
+
+	@Inject
+	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	/**
 	 * Returns the reserved ECMAScript keywords which are defined in the grammar. The result is cached.
@@ -99,34 +115,58 @@ public final class N4JSLanguageHelper {
 	}
 
 	/**
-	 * Tells whether the given resource represents an ES6 module (otherwise, CommonJS is assumed).
+	 * Iff the given project is a {@link ProjectType#DEFINITION definition project}, this method returns the
+	 * {@link ProjectDescription#getDefinesPackage() defined project} as an {@link N4JSProjectConfigSnapshot}. Otherwise
+	 * the given project is returned.
 	 *
-	 * @see ProjectDescription#isESM()
+	 * @param returnNullOnError
+	 *            tells how to deal with error cases: <code>true</code> means <code>null</code> will be returned,
+	 *            <code>false</code> means the given project will be returned.
 	 */
-	public boolean isES6Module(Resource resource) {
-		String targetURILastSegment = resource.getURI() != null ? resource.getURI().lastSegment() : null;
-		if (targetURILastSegment != null) {
-			if (targetURILastSegment.endsWith("." + N4JSGlobals.MJS_FILE_EXTENSION)) {
-				return true;
-			} else if (targetURILastSegment.endsWith("." + N4JSGlobals.CJS_FILE_EXTENSION)) {
-				return false;
-			} else if (targetURILastSegment.endsWith("." + N4JSGlobals.N4JS_FILE_EXTENSION) // not for .n4jsd!!
-					|| targetURILastSegment.endsWith("." + N4JSGlobals.N4JSX_FILE_EXTENSION)) {
-				// the N4JS transpiler always emits ES6 module code
-				return true;
-			}
-		}
-
-		N4JSProjectConfigSnapshot targetProject = workspaceAccess.findProjectContaining(resource);
-		if (targetProject != null && targetProject.getType() == ProjectType.DEFINITION) {
-			N4JSPackageName definedPackageName = targetProject.getDefinesPackage();
+	public N4JSProjectConfigSnapshot replaceDefinitionProjectByDefinedProject(Notifier context,
+			N4JSProjectConfigSnapshot project, boolean returnNullOnError) {
+		if (project != null && project.getType() == ProjectType.DEFINITION) {
+			N4JSPackageName definedPackageName = project.getDefinesPackage();
 			if (definedPackageName != null) {
-				String definedProjectId = targetProject.getProjectIdForPackageName(definedPackageName.getRawName());
+				String definedProjectId = project.getProjectIdForPackageName(definedPackageName.getRawName());
 				if (definedProjectId != null) {
-					targetProject = workspaceAccess.findProjectByName(resource, definedProjectId);
+					N4JSProjectConfigSnapshot definedProject = workspaceAccess.findProjectByName(context,
+							definedProjectId);
+					if (definedProject != null) {
+						return definedProject;
+					}
 				}
 			}
+			if (returnNullOnError) {
+				return null;
+			}
 		}
+		return project;
+	}
+
+	/**
+	 * Tells whether the given module is an EcmaScript 2015 module, i.e. using {@code import} instead of
+	 * {@code require()}, etc.
+	 */
+	public boolean isES6Module(TModule module) {
+		// 1) decide based on the file extension of the target module
+		Resource resource = module.eResource();
+		URI uri = resource != null ? resource.getURI() : null;
+		String ext = uri != null ? uri.fileExtension() : null;
+		if (!module.isN4jsdModule() && N4JSGlobals.ALL_N4JS_FILE_EXTENSIONS.contains(ext)) {
+			return true; // the N4JS transpiler always emits ES6 module code
+		}
+		String extActual = getOutputFileExtension(module);
+		if (extActual == N4JSGlobals.CJS_FILE_EXTENSION) {
+			return false;
+		} else if (extActual == N4JSGlobals.MJS_FILE_EXTENSION) {
+			return true;
+		}
+		// (failed: file extension of target module does not tell whether it's commonjs or esm)
+
+		// 2) decide based on the nature of the target project
+		N4JSProjectConfigSnapshot targetProject = replaceDefinitionProjectByDefinedProject(resource,
+				workspaceAccess.findProjectContaining(resource), true);
 		if (targetProject == null) {
 			return true;
 		}
@@ -135,6 +175,110 @@ public final class N4JSLanguageHelper {
 			return true;
 		}
 
+		return false;
+	}
+
+	/**
+	 * Returns the file extension to be used in a module specifier when importing from the given module.
+	 * <p>
+	 * Notes:
+	 * <ul>
+	 * <li>will return an empty string in case of directory imports.
+	 * <li>does not support node's built-in modules (e.g. "fs").
+	 * </ul>
+	 */
+	public String getOutputFileExtension(TModule targetModule) {
+		Resource targetResource = targetModule.eResource();
+		if (targetModule.isN4jsdModule()) {
+			// in case of .n4jsd files it is more tricky:
+			return getActualFileExtensionForN4jsdFile(targetResource, targetModule);
+		}
+		URI uri = targetResource != null ? targetResource.getURI() : null;
+		String ext = uri != null ? uri.fileExtension() : null;
+		if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext)) {
+			return ext;
+		}
+		// We get here in two cases:
+		// - target file has extension .n4js: return .js because the N4JS transpiler always emits .js files.
+		// - or we have an error case: return .js as fall back.
+		return N4JSGlobals.JS_FILE_EXTENSION;
+	}
+
+	/**
+	 * In case of .n4jsd files, we have to find out the extension of the plain-JS file being described by the .n4jsd
+	 * file *and* provide special handling for directory imports.
+	 */
+	private String getActualFileExtensionForN4jsdFile(Resource targetResource, TModule targetModule) {
+		QualifiedName targetQN = qualifiedNameConverter.toQualifiedName(targetModule.getQualifiedName());
+		IResourceDescriptions index = resourceDescriptionsProvider.getResourceDescriptions(targetResource);
+		Iterable<IEObjectDescription> matchingTModules = index.getExportedObjects(TypesPackage.Literals.TMODULE,
+				targetQN, false);
+		boolean gotJS = false;
+		boolean gotCJS = false;
+		boolean gotMJS = false;
+		for (IEObjectDescription desc : matchingTModules) {
+			String ext = desc.getEObjectURI().fileExtension();
+			if (N4JSGlobals.JS_FILE_EXTENSION.equals(ext)) {
+				gotJS = true;
+			} else if (N4JSGlobals.CJS_FILE_EXTENSION.equals(ext)) {
+				gotCJS = true;
+			} else if (N4JSGlobals.MJS_FILE_EXTENSION.equals(ext)) {
+				gotMJS = true;
+			}
+			if (gotJS && gotCJS && gotMJS) {
+				break;
+			}
+		}
+		if (gotMJS) {
+			return N4JSGlobals.MJS_FILE_EXTENSION;
+		} else if (gotCJS) {
+			return N4JSGlobals.CJS_FILE_EXTENSION;
+		} else if (gotJS) {
+			return N4JSGlobals.JS_FILE_EXTENSION;
+		}
+
+		// no plain JS file found, check for "directory import"
+		if (isDirectoryWithPackageJson(index, targetResource, targetQN)) {
+			return ""; // no file extension for directory imports
+		}
+
+		// use .js as fall back
+		return N4JSGlobals.JS_FILE_EXTENSION;
+	}
+
+	private boolean isDirectoryWithPackageJson(IResourceDescriptions index, Resource targetResource,
+			QualifiedName targetQN) {
+
+		// NOTE: the following approach would be a more elegant implementation of this method, but would require a
+		// different computation of FQNs for package.json files in source folders (in N4JSQualifiedNameProvider):
+// @formatter:off
+//		Iterable<IEObjectDescription> matchingPackageJsonDesc = index.getExportedObjects(
+//				JSONPackage.Literals.JSON_DOCUMENT,
+//				targetQN.append(N4JSQualifiedNameProvider.PACKAGE_JSON_SEGMENT), false);
+//		if (matchingPackageJsonDesc.iterator().hasNext()) {
+//			return true;
+//		}
+// @formatter:on
+
+		N4JSProjectConfigSnapshot targetProject = replaceDefinitionProjectByDefinedProject(targetResource,
+				workspaceAccess.findProjectContaining(targetResource), true);
+		if (targetProject == null) {
+			return false;
+		}
+
+		int segCount = targetQN.getSegments().size();
+		String[] segments = new String[segCount + 1];
+		for (int i = 0; i < segCount; i++) {
+			segments[i] = targetQN.getSegments().get(i);
+		}
+		segments[segCount] = N4JSGlobals.PACKAGE_JSON;
+
+		for (N4JSSourceFolderSnapshot srcFolder : targetProject.getSourceFolders()) {
+			FileURI packageJsonURI = srcFolder.getPathAsFileURI().appendSegments(segments);
+			if (index.getResourceDescription(packageJsonURI.toURI()) != null) {
+				return true;
+			}
+		}
 		return false;
 	}
 }
