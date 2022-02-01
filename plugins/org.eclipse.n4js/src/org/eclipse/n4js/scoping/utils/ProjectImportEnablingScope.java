@@ -211,7 +211,15 @@ public class ProjectImportEnablingScope implements IScope {
 
 	/**
 	 * Special case handling when we have a definition and a pure JS file in the scope. In such cases we return with the
-	 * description that corresponds to the definition file.
+	 * description that corresponds to the definition file. Given several modules with the same name, there exists a
+	 * resolution only iff:
+	 * <ul>
+	 * <li/>There is a plain js module, and
+	 * <li/>An N4JSD module must be the corresponding definition module inside the corresponding definition project, and
+	 * <li/>An d.ts module must be the corresponding definition module inside the corresponding definition project
+	 * </ul>
+	 * In case both and N4JSD and a d.ts module exist, the n4jsd module is returned. Otherwise either the N4JSD or the
+	 * d.ts module is returned.
 	 */
 	private IEObjectDescription handleCollisions(List<IEObjectDescription> result,
 			Map<IEObjectDescription, N4JSProjectConfigSnapshot> descriptionsToProject) {
