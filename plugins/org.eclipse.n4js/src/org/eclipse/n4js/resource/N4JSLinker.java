@@ -142,31 +142,6 @@ public class N4JSLinker extends LazyLinker {
 	private void installProxies(N4JSResource resource, EObject obj, IDiagnosticProducer producer) {
 		ICompositeNode node = NodeModelUtils.getNode(obj);
 		if (node == null) {
-			if (Objects.equal(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(resource.getURI()))) {
-				EClass eClass = obj.eClass();
-				if (eClass.getEAllReferences().size() - eClass.getEAllContainments().size() == 0)
-					return;
-
-				for (EReference eRef : eClass.getEReferences()) {
-					if (eRef.isResolveProxies()) {
-
-						// EReference eRef = GrammarUtil.getReference(crossReference, eClass);
-						// URI uri = resource.getURI();
-						// EClass referenceType = findInstantiableCompatible(eRef.getEReferenceType());
-						// EObject proxy = EcoreUtil.create(referenceType);
-						// int fragmentNumber = resource.addLazyProxyInformation(obj, eRef, node);
-						// URI encodedLink = uri.appendFragment("|" + fragmentNumber);
-						// ((InternalEObject) proxy).eSetProxyURI(encodedLink);
-						// proxy.eSetDeliver(false);
-						// if (eRef.isMany()) {
-						// ((InternalEList<EObject>) obj.eGet(eRef, false)).addUnique(proxy);
-						// } else {
-						// obj.eSet(eRef, proxy);
-						// }
-					}
-				}
-
-			}
 			return;
 		}
 		installProxies(resource, obj, producer, node, false);

@@ -240,7 +240,6 @@ public class XLanguageServerImpl implements LanguageServer, WorkspaceService, Te
 		if (languagesRegistry.getProtocolToFactoryMap().containsKey(scheme)) {
 			return true;
 		}
-		// FIXME: need to call URIUtils.fileExtension()?
 		if ("file".equalsIgnoreCase(scheme)
 				&& languagesRegistry.getExtensionToFactoryMap().containsKey(uri.fileExtension())) {
 			return true;

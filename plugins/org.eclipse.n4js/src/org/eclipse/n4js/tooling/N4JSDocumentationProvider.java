@@ -99,7 +99,6 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 		if (astNode != null && !astNode.eIsProxy()) {
 			final String fileExt = URIUtils.fileExtension(astNode.eResource().getURI());
 			if (N4JSGlobals.DTS_FILE_EXTENSION.equals(fileExt)) {
-				// FIXME
 				return Collections.emptyList();
 			}
 			List<INode> nodes = super.getDocumentationNodes(astNode);
