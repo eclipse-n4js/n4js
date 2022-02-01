@@ -35,6 +35,11 @@ import org.eclipse.emf.ecore.resource.Resource;
  */
 public class URIUtils {
 
+	// FIXME replace with method from master after merging in master!
+	static public String fileExtension(org.eclipse.emf.common.util.URI uri) {
+		return uri != null ? uri.fileExtension() : null;
+	}
+
 	/** Workspace relative URI starts with this letter */
 	private static final String L = "L/";
 	/** Workspace relative URI starts with this letter */

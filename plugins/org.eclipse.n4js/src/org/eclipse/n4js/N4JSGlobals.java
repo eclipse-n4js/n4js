@@ -126,8 +126,8 @@ public final class N4JSGlobals {
 	/**
 	 * All standard plain-JS file extensions.
 	 * <p>
-	 * Unmodifiable list containing {@link #N4JS_FILE_EXTENSION}, {@link #N4JSD_FILE_EXTENSION},
-	 * {@link #N4JSX_FILE_EXTENSION}, and {@link #JSX_FILE_EXTENSION}.
+	 * Unmodifiable list containing {@link #JS_FILE_EXTENSION}, {@link #CJS_FILE_EXTENSION},
+	 * {@link #MJS_FILE_EXTENSION}, and {@link #JSX_FILE_EXTENSION}.
 	 */
 	public static final Set<String> ALL_JS_FILE_EXTENSIONS = ImmutableSet.of(
 			JS_FILE_EXTENSION,

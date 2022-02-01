@@ -93,11 +93,7 @@ public class N4jscTestLanguageClient extends N4jscLanguageClient {
 			generated = generated.trimSegments(1);
 		}
 
-		String fileName = generated.lastSegment();
-		if (!fileName.endsWith("." + N4JSGlobals.JS_FILE_EXTENSION)
-				&& !fileName.endsWith("." + N4JSGlobals.CJS_FILE_EXTENSION)
-				&& !fileName.endsWith("." + N4JSGlobals.MJS_FILE_EXTENSION)
-				&& !fileName.endsWith("." + N4JSGlobals.JSX_FILE_EXTENSION)) {
+		if (!N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(URIUtils.fileExtension(generated))) {
 			return;
 		}
 
