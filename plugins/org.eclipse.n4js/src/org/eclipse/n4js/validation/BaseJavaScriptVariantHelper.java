@@ -283,7 +283,7 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	 */
 	private String normalizeFileExtension(String fileExtension) {
 		if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(fileExtension)) {
-			// to avoid having to add entries for .cjs and .mjs, we normalize all plain-JS file extension to .js
+			// to avoid having to add entries for .jsx, .cjs, and .mjs, we normalize all plain-JS file extensions to .js
 			return N4JSGlobals.JS_FILE_EXTENSION;
 		}
 		return fileExtension;

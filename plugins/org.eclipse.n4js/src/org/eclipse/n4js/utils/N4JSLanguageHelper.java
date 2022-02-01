@@ -196,6 +196,10 @@ public final class N4JSLanguageHelper {
 		URI uri = targetResource != null ? targetResource.getURI() : null;
 		String ext = uri != null ? uri.fileExtension() : null;
 		if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext)) {
+			if (N4JSGlobals.JSX_FILE_EXTENSION.equals(ext)) {
+				// we assume .jsx files are transpiled to .js by other tools
+				return N4JSGlobals.JS_FILE_EXTENSION;
+			}
 			return ext;
 		}
 		// We get here in two cases:

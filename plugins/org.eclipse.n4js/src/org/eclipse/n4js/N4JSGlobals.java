@@ -124,20 +124,19 @@ public final class N4JSGlobals {
 	public static final N4JSPackageName MANGELHAFT_CLI = new N4JSPackageName("n4js-mangelhaft-cli");
 
 	/**
-	 * All standard plain-JS file extensions (i.e. {@code .js}, {@code .cjs}, {@code .mjs}), *not* including
-	 * {@code .jsx}.
+	 * All standard plain-JS file extensions.
 	 * <p>
 	 * Unmodifiable list containing {@link #N4JS_FILE_EXTENSION}, {@link #N4JSD_FILE_EXTENSION},
-	 * {@link #N4JSX_FILE_EXTENSION}.
+	 * {@link #N4JSX_FILE_EXTENSION}, and {@link #JSX_FILE_EXTENSION}.
 	 */
-	// FIXME consider including .jsx here or excluding it from ALL_N4JS_FILE_EXTENSIONS!! (for consistency)
 	public static final Set<String> ALL_JS_FILE_EXTENSIONS = ImmutableSet.of(
 			JS_FILE_EXTENSION,
 			CJS_FILE_EXTENSION,
-			MJS_FILE_EXTENSION);
+			MJS_FILE_EXTENSION,
+			JSX_FILE_EXTENSION);
 
 	/**
-	 * All N4JS file extensions, including {@code .n4jsx}.
+	 * All N4JS file extensions.
 	 * <p>
 	 * Unmodifiable list containing {@link #N4JS_FILE_EXTENSION}, {@link #N4JSD_FILE_EXTENSION},
 	 * {@link #N4JSX_FILE_EXTENSION}.
@@ -157,7 +156,6 @@ public final class N4JSGlobals {
 	public static final Set<String> ALL_N4_FILE_EXTENSIONS = ImmutableSet.<String> builder()
 			.addAll(ALL_N4JS_FILE_EXTENSIONS)
 			.addAll(ALL_JS_FILE_EXTENSIONS)
-			.add(JSX_FILE_EXTENSION)
 			.build();
 
 	/**

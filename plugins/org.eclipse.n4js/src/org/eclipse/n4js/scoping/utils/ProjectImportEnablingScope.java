@@ -431,7 +431,8 @@ public class ProjectImportEnablingScope implements IScope {
 				continue;
 			}
 			String currExt = curr.getEObjectURI().fileExtension();
-			if (N4JSGlobals.JS_FILE_EXTENSION.equals(currExt)) {
+			if (N4JSGlobals.JS_FILE_EXTENSION.equals(currExt)
+					|| N4JSGlobals.JSX_FILE_EXTENSION.equals(currExt)) {
 				if (firstJS == null) {
 					firstJS = curr;
 				}
