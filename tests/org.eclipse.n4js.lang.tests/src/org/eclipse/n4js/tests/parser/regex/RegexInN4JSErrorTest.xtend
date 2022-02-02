@@ -12,21 +12,31 @@ package org.eclipse.n4js.tests.parser.regex
 
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.analysis.SmokeTester
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.regex.tests.AbstractRegexErrorTest
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
+import org.junit.Test
 import org.junit.runner.RunWith
 
-/**
- */
-@InjectWith(N4JSInjectorProvider)
 @RunWith(XtextRunner)
-class RegexSmokeTest extends ParserTest {
+@InjectWith(N4JSInjectorProvider)
+class RegexInN4JSErrorTest extends AbstractRegexErrorTest {
 
-	@Inject extension SmokeTester
+	@Inject extension ParseHelper<Script>
 
-	override assertValid(CharSequence expression) {
-		expression.assertNoException
+	override assertInvalid(CharSequence expression) {
+		val parsed = expression.parse
+		val errors = parsed.eResource.errors
+		assertTrue(errors.toString, errors.isEmpty)
+	}
+
+	@Test
+	def void testSmoke_01() {
+		val parsed = '''/[^\/]+/\'''.parse
+		val errors = parsed.eResource.errors
+		assertFalse(errors.toString, errors.isEmpty)
 	}
 
 }

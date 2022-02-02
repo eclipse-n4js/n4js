@@ -8,26 +8,25 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.regex.tests
+package org.eclipse.n4js.tests.parser.regex
 
 import com.google.inject.Inject
-import org.eclipse.n4js.regex.RegularExpressionInjectorProvider
-import org.eclipse.n4js.regex.regularExpression.RegularExpressionLiteral
+import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.analysis.SmokeTester
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.runner.RunWith
 
+/**
+ */
+@InjectWith(N4JSInjectorProvider)
 @RunWith(XtextRunner)
-@InjectWith(RegularExpressionInjectorProvider)
-class ExampleTest extends AbstractExampleTests {
+class RegexInN4JSSmokeTest extends RegexInN4JSParserTest {
 
-	@Inject extension ParseHelper<RegularExpressionLiteral>
+	@Inject extension SmokeTester
 
 	override assertValid(CharSequence expression) {
-		val parsed = expression.parse
-		val errors = parsed.eResource.errors
-		assertTrue(errors.toString, errors.isEmpty)
+		expression.assertNoException
 	}
 
 }

@@ -93,6 +93,7 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.nodemodel.impl.RootNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -103,6 +104,7 @@ import org.eclipse.xtext.resource.XtextSyntaxDiagnostic;
 import org.eclipse.xtext.resource.XtextSyntaxDiagnosticWithRange;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IResourceScopeCache;
+import org.eclipse.xtext.util.LineAndColumn;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.util.Triple;
 
@@ -1436,8 +1438,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
-	private void processSyntaxDiagnostic(INode error, Consumer<XtextSyntaxDiagnostic> acceptor) {
-		CompositeSyntaxErrorMessages.toDiagnostic(error.getSyntaxErrorMessage(), syntaxErrorMessage -> {
+	private void processSyntaxDiagnostic(INode errorNode, Consumer<XtextSyntaxDiagnostic> acceptor) {
+		CompositeSyntaxErrorMessages.toDiagnostic(errorNode.getSyntaxErrorMessage(), syntaxErrorMessage -> {
 			XtextSyntaxDiagnostic diagnostic = null;
 			if (isRangeBased(syntaxErrorMessage)) {
 				String[] issueData = syntaxErrorMessage.getIssueData();
@@ -1448,7 +1450,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					String message = syntaxErrorMessage.getMessage();
 					int offset = Integer.parseInt(data.substring(0, colon), 10);
 					int length = Integer.parseInt(data.substring(colon + 1), 10);
-					diagnostic = new XtextSyntaxDiagnosticWithRange(error, offset,
+					int sourceLength = getParseResult().getRootNode().getTotalLength();
+					diagnostic = new XtextSyntaxDiagnosticWithRange(errorNode, offset,
 							length, null) {
 						@Override
 						public int getLine() {
@@ -1456,6 +1459,17 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 								return super.getLine();
 							}
 							return getNode().getTotalStartLine();
+						}
+
+						@Override
+						public int getColumnEnd() {
+							INode node = getNode();
+							if (node != null) {
+								LineAndColumn lineAndColumn = NodeModelUtils.getLineAndColumn(node,
+										Math.min(getOffset() + getLength(), sourceLength));
+								return lineAndColumn.getColumn();
+							}
+							return 0;
 						}
 
 						@Override
@@ -1473,7 +1487,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			if (diagnostic == null) {
 				String code = syntaxErrorMessage.getIssueCode();
 				String message = syntaxErrorMessage.getMessage();
-				diagnostic = new XtextSyntaxDiagnostic(error) {
+				diagnostic = new XtextSyntaxDiagnostic(errorNode) {
 					@Override
 					public String getCode() {
 						return code;

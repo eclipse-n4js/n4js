@@ -31,7 +31,7 @@ import org.junit.runners.Parameterized.Parameters;
  * </pre>
  */
 @RunWith(Parameterized.class)
-public class SpecTestInfoTestNameConventionPositiveTests {
+public class SpecTestInfoTestNameConventionPositiveTest {
 
 	/**
 	 * Returns test data.

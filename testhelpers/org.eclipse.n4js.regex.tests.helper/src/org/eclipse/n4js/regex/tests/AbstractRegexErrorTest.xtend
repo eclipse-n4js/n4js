@@ -13,8 +13,7 @@ package org.eclipse.n4js.regex.tests
 import org.junit.Assert
 import org.junit.Test
 
-
-abstract class AbstractErrorTests extends Assert {
+abstract class AbstractRegexErrorTest extends Assert {
 
 	def void assertInvalid(CharSequence expression)
 
