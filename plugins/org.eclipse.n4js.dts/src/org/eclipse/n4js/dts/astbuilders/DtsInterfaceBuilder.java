@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeBody;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMember;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMemberList;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceBody;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceMember;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceMemberList;
 
 import java.util.List;
 import java.util.Set;
@@ -51,9 +51,9 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
-				RULE_typeBody,
-				RULE_typeMemberList,
-				RULE_typeMember);
+				RULE_interfaceBody,
+				RULE_interfaceMemberList,
+				RULE_interfaceMember);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 			result.getSuperInterfaceRefs().add(typeRefNode);
 		}
 
-		walker.enqueue(ctx.typeBody());
+		walker.enqueue(ctx.interfaceBody());
 	}
 
 	@Override

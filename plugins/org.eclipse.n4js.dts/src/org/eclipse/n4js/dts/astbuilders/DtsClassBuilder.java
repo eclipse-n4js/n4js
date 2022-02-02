@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classElement;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classElementList;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classTail;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classBody;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classMember;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classMemberList;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_propertyMember;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_propertyMemberDeclaration;
 
@@ -60,9 +60,9 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
-				RULE_classTail,
-				RULE_classElementList,
-				RULE_classElement,
+				RULE_classBody,
+				RULE_classMemberList,
+				RULE_classMember,
 				RULE_propertyMemberDeclaration,
 				RULE_propertyMember);
 	}
@@ -76,7 +76,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
 
-		walker.enqueue(ctx.classTail());
+		walker.enqueue(ctx.classBody());
 	}
 
 	@Override
