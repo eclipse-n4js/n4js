@@ -8897,14 +8897,14 @@ public class TypeScriptParser extends TypeScriptParserBase {
 		public PropertyMemberBaseContext propertyMemberBase() {
 			return getRuleContext(PropertyMemberBaseContext.class,0);
 		}
-		public PropertyOrMethodContext propertyOrMethod() {
-			return getRuleContext(PropertyOrMethodContext.class,0);
-		}
 		public GetAccessorContext getAccessor() {
 			return getRuleContext(GetAccessorContext.class,0);
 		}
 		public SetAccessorContext setAccessor() {
 			return getRuleContext(SetAccessorContext.class,0);
+		}
+		public PropertyOrMethodContext propertyOrMethod() {
+			return getRuleContext(PropertyOrMethodContext.class,0);
 		}
 		public PropertyMemberContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -8939,19 +8939,19 @@ public class TypeScriptParser extends TypeScriptParserBase {
 			case 1:
 				{
 				setState(1284);
-				propertyOrMethod();
+				getAccessor();
 				}
 				break;
 			case 2:
 				{
 				setState(1285);
-				getAccessor();
+				setAccessor();
 				}
 				break;
 			case 3:
 				{
 				setState(1286);
-				setAccessor();
+				propertyOrMethod();
 				}
 				break;
 			}
@@ -15983,9 +15983,9 @@ public class TypeScriptParser extends TypeScriptParserBase {
 		"\u00db\3\2\2\2\u04fd\u0501\7|\2\2\u04fe\u04ff\7\u0083\2\2\u04ff\u0502"+
 		"\5\u00f0y\2\u0500\u0502\5\u0096L\2\u0501\u04fe\3\2\2\2\u0501\u0500\3\2"+
 		"\2\2\u0502\u0503\3\2\2\2\u0503\u0504\5\u0148\u00a5\2\u0504\u00dd\3\2\2"+
-		"\2\u0505\u0509\5\u00e0q\2\u0506\u050a\5\u00e2r\2\u0507\u050a\5\u0116\u008c"+
-		"\2\u0508\u050a\5\u0118\u008d\2\u0509\u0506\3\2\2\2\u0509\u0507\3\2\2\2"+
-		"\u0509\u0508\3\2\2\2\u050a\u00df\3\2\2\2\u050b\u050d\7^\2\2\u050c\u050b"+
+		"\2\u0505\u0509\5\u00e0q\2\u0506\u050a\5\u0116\u008c\2\u0507\u050a\5\u0118"+
+		"\u008d\2\u0508\u050a\5\u00e2r\2\u0509\u0506\3\2\2\2\u0509\u0507\3\2\2"+
+		"\2\u0509\u0508\3\2\2\2\u050a\u00df\3\2\2\2\u050b\u050d\7^\2\2\u050c\u050b"+
 		"\3\2\2\2\u050c\u050d\3\2\2\2\u050d\u050f\3\2\2\2\u050e\u0510\5\u0100\u0081"+
 		"\2\u050f\u050e\3\2\2\2\u050f\u0510\3\2\2\2\u0510\u0512\3\2\2\2\u0511\u0513"+
 		"\7m\2\2\u0512\u0511\3\2\2\2\u0512\u0513\3\2\2\2\u0513\u0515\3\2\2\2\u0514"+

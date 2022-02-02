@@ -346,12 +346,12 @@ declareStatement
 
 declarationStatement
     : moduleDeclaration
-    | namespaceDeclaration //ADDED
-    | interfaceDeclaration //ADDED
-    | typeAliasDeclaration //ADDED
+    | namespaceDeclaration
+    | interfaceDeclaration
+    | typeAliasDeclaration
     | functionDeclaration
     | classDeclaration
-    | enumDeclaration      //ADDED
+    | enumDeclaration
     | variableStatement
     ;
 
@@ -579,9 +579,9 @@ abstractDeclaration
 propertyMember
     : propertyMemberBase
     (
-          propertyOrMethod
-        | getAccessor
+          getAccessor
         | setAccessor
+        | propertyOrMethod
     )
     ;
 
@@ -730,7 +730,7 @@ getAccessor
     ;
 
 setAccessor
-    : setter '(' ( Identifier | bindingPattern) colonSepTypeRef? ')' block?
+    : setter '(' (Identifier | bindingPattern) colonSepTypeRef? ')' block?
     ;
 
 propertyName

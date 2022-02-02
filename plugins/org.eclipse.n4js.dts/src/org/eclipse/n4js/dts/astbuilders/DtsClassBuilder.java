@@ -30,13 +30,16 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertyOrMethodContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
+import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -142,14 +145,65 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 
 	@Override
 	public void enterGetAccessor(GetAccessorContext ctx) {
-		// TODO Auto-generated method stub
-		super.enterGetAccessor(ctx);
+		if (ctx.getter() == null || ctx.getter().propertyName() == null) {
+			return;
+		}
+
+		N4GetterDeclaration getter = N4JSFactory.eINSTANCE.createN4GetterDeclaration();
+
+		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+		locpn.setLiteralName(ctx.getter().propertyName().getText());
+		getter.setDeclaredName(locpn);
+
+		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
+		getter.setDeclaredTypeRefNode(trn);
+
+		PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
+		if (pmctx.propertyMemberBase() != null) {
+			PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
+			if (pmb.Static() != null) {
+				getter.getDeclaredModifiers().add(N4Modifier.STATIC);
+			}
+		}
+
+		getter.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		addLocationInfo(getter, ctx);
+		result.getOwnedMembersRaw().add(getter);
 	}
 
 	@Override
 	public void enterSetAccessor(SetAccessorContext ctx) {
-		// TODO Auto-generated method stub
-		super.enterSetAccessor(ctx);
+		if (ctx.setter() == null || ctx.setter().propertyName() == null) {
+			return;
+		}
+
+		N4SetterDeclaration setter = N4JSFactory.eINSTANCE.createN4SetterDeclaration();
+
+		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+		locpn.setLiteralName(ctx.setter().propertyName().getText());
+		setter.setDeclaredName(locpn);
+
+		FormalParameter fpar = N4JSFactory.eINSTANCE.createFormalParameter();
+		setter.setFpar(fpar);
+		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
+		fpar.setDeclaredTypeRefNode(trn);
+		if (ctx.Identifier() != null) {
+			fpar.setName(ctx.Identifier().getText());
+		} else if (ctx.bindingPattern() != null) {
+			fpar.setBindingPattern(new DtsBindingPatternBuilder(this).consume(ctx.bindingPattern()));
+		}
+
+		PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
+		if (pmctx.propertyMemberBase() != null) {
+			PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
+			if (pmb.Static() != null) {
+				setter.getDeclaredModifiers().add(N4Modifier.STATIC);
+			}
+		}
+
+		setter.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		addLocationInfo(setter, ctx);
+		result.getOwnedMembersRaw().add(setter);
 	}
 
 	@Override
