@@ -12,21 +12,21 @@ package org.eclipse.n4js.tests.parser.regex
 
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.n4JS.ExpressionStatement
+import org.eclipse.n4js.n4JS.RegularExpressionLiteral
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.regex.tests.AbstractParserTests
+import org.eclipse.n4js.regex.tests.AbstractRegexParserTest
+import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.junit.runner.RunWith
-import org.eclipse.n4js.n4JS.ExpressionStatement
-import org.eclipse.n4js.n4JS.RegularExpressionLiteral
 import org.junit.Test
-import org.eclipse.xtext.resource.XtextSyntaxDiagnostic
-import org.eclipse.n4js.validation.IssueCodes
+import org.junit.runner.RunWith
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
-class ParserTest extends AbstractParserTests {
+class RegexInN4JSParserTest extends AbstractRegexParserTest {
 
 	@Inject extension ParseHelper<Script>
 

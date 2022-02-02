@@ -22,7 +22,7 @@ import org.junit.runner.RunWith
 
 @RunWith(XtextRunner)
 @InjectWith(RegularExpressionInjectorProvider)
-class ErrorTest extends AbstractErrorTests {
+class RegexErrorTest extends AbstractRegexErrorTest {
 
 	@Inject extension ParseHelper<RegularExpressionLiteral>
 

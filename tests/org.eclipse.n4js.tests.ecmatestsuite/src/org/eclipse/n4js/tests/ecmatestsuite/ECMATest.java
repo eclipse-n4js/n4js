@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.tests.ecmatestsuite;
 
+import org.eclipse.n4js.n4jsx.ecmatestsuite.ECMA5TestInSuiteForJSX;
+import org.eclipse.n4js.n4jsx.ecmatestsuite.ECMA6TestInSuiteForJSX;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -17,10 +19,12 @@ import org.junit.runners.Suite.SuiteClasses;
 /**
  */
 @SuiteClasses({
-		ECMA5TestSuite.class,
-		ECMA6TestSuite.class
+		ECMA5TestInSuite.class,
+		ECMA6TestInSuite.class,
+		ECMA5TestInSuiteForJSX.class,
+		ECMA6TestInSuiteForJSX.class
 })
 @RunWith(Suite.class)
-public class ECMATestSuite {
+public class ECMATest {
 	// empty body
 }

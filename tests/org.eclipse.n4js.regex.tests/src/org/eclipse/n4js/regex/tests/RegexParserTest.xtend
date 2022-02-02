@@ -21,7 +21,7 @@ import org.junit.runner.RunWith
 
 @RunWith(XtextRunner)
 @InjectWith(RegularExpressionInjectorProvider)
-class ParserTest extends AbstractParserTests {
+class RegexParserTest extends AbstractRegexParserTest {
 
 	@Inject extension ParseHelper<RegularExpressionLiteral>
 
