@@ -1768,18 +1768,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterYieldStatement(TypeScriptParser.YieldStatementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitYieldStatement(TypeScriptParser.YieldStatementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterWithStatement(TypeScriptParser.WithStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1840,6 +1828,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterExpressionSequence(TypeScriptParser.ExpressionSequenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitExpressionSequence(TypeScriptParser.ExpressionSequenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTemplateStringExpression(TypeScriptParser.TemplateStringExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1864,30 +1864,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterGeneratorsExpression(TypeScriptParser.GeneratorsExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitGeneratorsExpression(TypeScriptParser.GeneratorsExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPreIncrementExpression(TypeScriptParser.PreIncrementExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPreIncrementExpression(TypeScriptParser.PreIncrementExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterObjectLiteralExpression(TypeScriptParser.ObjectLiteralExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1900,61 +1876,25 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterInExpression(TypeScriptParser.InExpressionContext ctx) { }
+	@Override public void enterUnaryExpression(TypeScriptParser.UnaryExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitInExpression(TypeScriptParser.InExpressionContext ctx) { }
+	@Override public void exitUnaryExpression(TypeScriptParser.UnaryExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterGenericTypes(TypeScriptParser.GenericTypesContext ctx) { }
+	@Override public void enterFunctionExpressionL(TypeScriptParser.FunctionExpressionLContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitGenericTypes(TypeScriptParser.GenericTypesContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterNotExpression(TypeScriptParser.NotExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitNotExpression(TypeScriptParser.NotExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPreDecreaseExpression(TypeScriptParser.PreDecreaseExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPreDecreaseExpression(TypeScriptParser.PreDecreaseExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterArgumentsExpression(TypeScriptParser.ArgumentsExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArgumentsExpression(TypeScriptParser.ArgumentsExpressionContext ctx) { }
+	@Override public void exitFunctionExpressionL(TypeScriptParser.FunctionExpressionLContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1972,6 +1912,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAwaitExpression(TypeScriptParser.AwaitExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAwaitExpression(TypeScriptParser.AwaitExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterLogicalExpression(TypeScriptParser.LogicalExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1979,42 +1931,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitLogicalExpression(TypeScriptParser.LogicalExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterFunctionExpression(TypeScriptParser.FunctionExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitFunctionExpression(TypeScriptParser.FunctionExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterUnaryMinusExpression(TypeScriptParser.UnaryMinusExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitUnaryMinusExpression(TypeScriptParser.UnaryMinusExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterBinaryExpression(TypeScriptParser.BinaryExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBinaryExpression(TypeScriptParser.BinaryExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2032,85 +1948,13 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPostDecreaseExpression(TypeScriptParser.PostDecreaseExpressionContext ctx) { }
+	@Override public void enterBinaryExpression(TypeScriptParser.BinaryExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPostDecreaseExpression(TypeScriptParser.PostDecreaseExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTypeofExpression(TypeScriptParser.TypeofExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeofExpression(TypeScriptParser.TypeofExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterInstanceofExpression(TypeScriptParser.InstanceofExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitInstanceofExpression(TypeScriptParser.InstanceofExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterUnaryPlusExpression(TypeScriptParser.UnaryPlusExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitUnaryPlusExpression(TypeScriptParser.UnaryPlusExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDeleteExpression(TypeScriptParser.DeleteExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDeleteExpression(TypeScriptParser.DeleteExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterArrowFunctionExpression(TypeScriptParser.ArrowFunctionExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArrowFunctionExpression(TypeScriptParser.ArrowFunctionExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterIteratorsExpression(TypeScriptParser.IteratorsExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIteratorsExpression(TypeScriptParser.IteratorsExpressionContext ctx) { }
+	@Override public void exitBinaryExpression(TypeScriptParser.BinaryExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2164,6 +2008,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCallExpression(TypeScriptParser.CallExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCallExpression(TypeScriptParser.CallExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterBitShiftExpression(TypeScriptParser.BitShiftExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -2188,13 +2044,13 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAdditiveExpression(TypeScriptParser.AdditiveExpressionContext ctx) { }
+	@Override public void enterCoalesceExpression(TypeScriptParser.CoalesceExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAdditiveExpression(TypeScriptParser.AdditiveExpressionContext ctx) { }
+	@Override public void exitCoalesceExpression(TypeScriptParser.CoalesceExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2212,13 +2068,25 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPostIncrementExpression(TypeScriptParser.PostIncrementExpressionContext ctx) { }
+	@Override public void enterAdditiveExpression(TypeScriptParser.AdditiveExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPostIncrementExpression(TypeScriptParser.PostIncrementExpressionContext ctx) { }
+	@Override public void exitAdditiveExpression(TypeScriptParser.AdditiveExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIndexedAccessExpression(TypeScriptParser.IndexedAccessExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIndexedAccessExpression(TypeScriptParser.IndexedAccessExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2231,30 +2099,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitYieldExpression(TypeScriptParser.YieldExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterBitNotExpression(TypeScriptParser.BitNotExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitBitNotExpression(TypeScriptParser.BitNotExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterNewExpression(TypeScriptParser.NewExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitNewExpression(TypeScriptParser.NewExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2284,37 +2128,25 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterMemberDotExpression(TypeScriptParser.MemberDotExpressionContext ctx) { }
+	@Override public void enterClassExpressionL(TypeScriptParser.ClassExpressionLContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitMemberDotExpression(TypeScriptParser.MemberDotExpressionContext ctx) { }
+	@Override public void exitClassExpressionL(TypeScriptParser.ClassExpressionLContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterClassExpression(TypeScriptParser.ClassExpressionContext ctx) { }
+	@Override public void enterNewExpressionL(TypeScriptParser.NewExpressionLContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitClassExpression(TypeScriptParser.ClassExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterMemberIndexExpression(TypeScriptParser.MemberIndexExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitMemberIndexExpression(TypeScriptParser.MemberIndexExpressionContext ctx) { }
+	@Override public void exitNewExpressionL(TypeScriptParser.NewExpressionLContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2332,49 +2164,133 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterAssignmentOperatorExpression(TypeScriptParser.AssignmentOperatorExpressionContext ctx) { }
+	@Override public void enterPropertyAccessExpression(TypeScriptParser.PropertyAccessExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitAssignmentOperatorExpression(TypeScriptParser.AssignmentOperatorExpressionContext ctx) { }
+	@Override public void exitPropertyAccessExpression(TypeScriptParser.PropertyAccessExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterVoidExpression(TypeScriptParser.VoidExpressionContext ctx) { }
+	@Override public void enterPostfixExpression(TypeScriptParser.PostfixExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitVoidExpression(TypeScriptParser.VoidExpressionContext ctx) { }
+	@Override public void exitPostfixExpression(TypeScriptParser.PostfixExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterExpressionSequence(TypeScriptParser.ExpressionSequenceContext ctx) { }
+	@Override public void enterArrowFunctionExpressionL(TypeScriptParser.ArrowFunctionExpressionLContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitExpressionSequence(TypeScriptParser.ExpressionSequenceContext ctx) { }
+	@Override public void exitArrowFunctionExpressionL(TypeScriptParser.ArrowFunctionExpressionLContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterFunctionExpressionDeclaration(TypeScriptParser.FunctionExpressionDeclarationContext ctx) { }
+	@Override public void enterFunctionExpression(TypeScriptParser.FunctionExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitFunctionExpressionDeclaration(TypeScriptParser.FunctionExpressionDeclarationContext ctx) { }
+	@Override public void exitFunctionExpression(TypeScriptParser.FunctionExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArrowFunctionExpression(TypeScriptParser.ArrowFunctionExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrowFunctionExpression(TypeScriptParser.ArrowFunctionExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterArrowFunctionBody(TypeScriptParser.ArrowFunctionBodyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrowFunctionBody(TypeScriptParser.ArrowFunctionBodyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterClassExpression(TypeScriptParser.ClassExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitClassExpression(TypeScriptParser.ClassExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAssignmentOperator(TypeScriptParser.AssignmentOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssignmentOperator(TypeScriptParser.AssignmentOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterRelationalOperator(TypeScriptParser.RelationalOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRelationalOperator(TypeScriptParser.RelationalOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterUnaryOperator(TypeScriptParser.UnaryOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnaryOperator(TypeScriptParser.UnaryOperatorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterNewExpression(TypeScriptParser.NewExpressionContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNewExpression(TypeScriptParser.NewExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2423,54 +2339,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitIteratorDefinition(TypeScriptParser.IteratorDefinitionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterArrowFunctionDeclaration(TypeScriptParser.ArrowFunctionDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArrowFunctionDeclaration(TypeScriptParser.ArrowFunctionDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterArrowFunctionParameters(TypeScriptParser.ArrowFunctionParametersContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArrowFunctionParameters(TypeScriptParser.ArrowFunctionParametersContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterArrowFunctionBody(TypeScriptParser.ArrowFunctionBodyContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitArrowFunctionBody(TypeScriptParser.ArrowFunctionBodyContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAssignmentOperator(TypeScriptParser.AssignmentOperatorContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAssignmentOperator(TypeScriptParser.AssignmentOperatorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

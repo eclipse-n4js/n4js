@@ -51,13 +51,11 @@ statement
     | decoratorList
     | exportStatement
     | declareStatement
-    | arrowFunctionDeclaration
     | ifStatement
     | iterationStatement
     | continueStatement
     | breakStatement
     | returnStatement
-    | yieldStatement
     | withStatement
     | labelledStatement
     | switchStatement
@@ -752,11 +750,6 @@ returnStatement
     ;
 
 
-yieldStatement
-    : Yield ({this.notLineTerminator()}? expressionSequence)? eos
-    ;
-
-
 withStatement
     : With '(' expressionSequence ')' statement
     ;
@@ -778,7 +771,12 @@ debuggerStatement
 
 
 expressionStatement
-    : {this.notOpenBraceAndNotFunction()}? expressionSequence SemiColon?
+    : {this.notOpenBraceAndNotFunction()}? expressionSequence eos
+    ;
+
+
+expressionSequence
+    : singleExpression (',' singleExpression)*
     ;
 
 
@@ -786,60 +784,93 @@ expressionStatement
 // Expressions
 
 singleExpression
-    : functionExpressionDeclaration                                          # FunctionExpression
-    | arrowFunctionDeclaration                                               # ArrowFunctionExpression
-    | Class Identifier? classBody                                            # ClassExpression
-    | singleExpression '[' expressionSequence ']'                            # MemberIndexExpression
-    | singleExpression '.' identifierName typeGeneric?                       # MemberDotExpression
-    | New singleExpression typeArguments? arguments?                         # NewExpression
-    | singleExpression arguments                                             # ArgumentsExpression
-    | singleExpression {this.notLineTerminator()}? '++'                      # PostIncrementExpression
-    | singleExpression {this.notLineTerminator()}? '--'                      # PostDecreaseExpression
-    | Delete singleExpression                                                # DeleteExpression
-    | Void singleExpression                                                  # VoidExpression
-    | Typeof singleExpression                                                # TypeofExpression
-    | '++' singleExpression                                                  # PreIncrementExpression
-    | '--' singleExpression                                                  # PreDecreaseExpression
-    | '+' singleExpression                                                   # UnaryPlusExpression
-    | '-' singleExpression                                                   # UnaryMinusExpression
-    | '~' singleExpression                                                   # BitNotExpression
-    | '!' singleExpression                                                   # NotExpression
-    | singleExpression ('*' | '/' | '%') singleExpression                    # MultiplicativeExpression
-    | singleExpression ('+' | '-') singleExpression                          # AdditiveExpression
-    | singleExpression ('<<' | '>''>' | '>''>''>') singleExpression          # BitShiftExpression
-    | singleExpression ('<' | '>' | '<=' | '>=') singleExpression            # RelationalExpression
-    | singleExpression Instanceof singleExpression                           # InstanceofExpression
-    | singleExpression In singleExpression                                   # InExpression
-    | singleExpression ('==' | '!=' | '===' | '!==') singleExpression        # EqualityExpression
-    | singleExpression ('&' | '^' | '|' ) singleExpression                   # BinaryExpression
-    | singleExpression ('&&' | '||' ) singleExpression                       # LogicalExpression
-    | singleExpression '?' singleExpression ':' singleExpression             # TernaryExpression
-    | singleExpression '=' singleExpression                                  # AssignmentExpression
-    | singleExpression assignmentOperator singleExpression                   # AssignmentOperatorExpression
-    | singleExpression templateStringLiteral                                 # TemplateStringExpression
-    | iteratorBlock                                                          # IteratorsExpression
-    | generatorBlock                                                         # GeneratorsExpression
-    | yieldStatement                                                         # YieldExpression
-    | This                                                                   # ThisExpression
-    | identifierName                                                         # IdentifierExpression
+    :
+      This                                                                   # ThisExpression
     | Super                                                                  # SuperExpression
     | literal                                                                # LiteralExpression
     | arrayLiteral                                                           # ArrayLiteralExpression
     | objectLiteral                                                          # ObjectLiteralExpression
+    | templateStringLiteral                                                  # TemplateStringExpression
+
+    | Yield ({this.notLineTerminator()}? expressionSequence)?                # YieldExpression
+    | Await singleExpression                                                 # AwaitExpression
+
+// respect precedence by order of sub-rules
+    | singleExpression assignmentOperator singleExpression                   # AssignmentExpression
+    | singleExpression '?' singleExpression ':' singleExpression             # TernaryExpression
+    | singleExpression '?''?' singleExpression                               # coalesceExpression
+    | singleExpression ('||' | '&&') singleExpression                        # LogicalExpression
+    | singleExpression ('&' | '^' | '|' ) singleExpression                   # BinaryExpression
+    | singleExpression ('==' | '!=' | '===' | '!==') singleExpression        # EqualityExpression
+    | singleExpression relationalOperator singleExpression                   # RelationalExpression
+    | singleExpression ('<<' | '>''>' | '>''>''>') singleExpression          # BitShiftExpression
+    | singleExpression ('+' | '-') singleExpression                          # AdditiveExpression
+    | singleExpression ('*' | '/' | '%') singleExpression                    # MultiplicativeExpression
+    | unaryOperator singleExpression                                         # UnaryExpression
+    | singleExpression As typeRef                                            # CastAsExpression
+    | singleExpression {this.notLineTerminator()}? ('++' | '--')             # PostfixExpression
+    | singleExpression '?''.'? '[' expressionSequence ']'                    # IndexedAccessExpression
+    | singleExpression '?''.'? identifierName typeArguments? arguments       # CallExpression
+    | singleExpression ('.' | '?''.') identifierName                         # PropertyAccessExpression
+    | newExpression                                                          # NewExpressionL
+
+    | functionExpression                                                     # FunctionExpressionL
+    | arrowFunctionExpression                                                # ArrowFunctionExpressionL
+    | classExpression                                                        # ClassExpressionL
+
+  // TODO:
+  //  | iteratorBlock                                                          # IteratorsExpression
+  //  | generatorBlock                                                         # GeneratorsExpression
+
+    | identifierName                                                         # IdentifierExpression
     | '(' expressionSequence ')'                                             # ParenthesizedExpression
-    | typeArguments expressionSequence?                                      # GenericTypes
-    | singleExpression As typeRef                                              # CastAsExpression
     ;
 
 
 
-expressionSequence
-    : singleExpression (',' singleExpression)*
-    ;
 
-functionExpressionDeclaration
+
+functionExpression
     : Function '*'? Identifier? parameterBlock colonSepTypeRef? block
     ;
+
+arrowFunctionExpression
+    : Async? parameterBlock colonSepTypeRef? '=>' arrowFunctionBody
+    ;
+
+arrowFunctionBody
+    : singleExpression
+    | block
+    ;
+
+classExpression
+    : Class Identifier? classBody
+    ;
+
+assignmentOperator
+    : '=' | '*=' | '/=' | '%=' | '+='
+    | '-' '=' /* must be split into two literals since jsx attribute names may end with a dash as in attr-="value" */ 
+    | '<<=' | '>' '>' '>'? '=' | '&=' | '^=' | '|='
+    ;
+
+relationalOperator
+    : Instanceof | In | '<' | '>' | '<=' | '>='
+    ;
+
+unaryOperator
+    : Delete | Void | Typeof | '++' | '--' | '+' | '-' | '~' | '!'
+    ;
+
+newExpression
+    : New (
+          Dot Target
+        | singleExpression typeArguments? arguments?
+    )
+    ;
+
+
+
+
 
 generatorBlock
     : '{' generatorDefinition (',' generatorDefinition)* ','? '}'
@@ -855,34 +886,6 @@ iteratorBlock
 
 iteratorDefinition
     : '[' singleExpression ']' parameterBlock block
-    ;
-
-arrowFunctionDeclaration
-    : Async? arrowFunctionParameters colonSepTypeRef? '=>' arrowFunctionBody
-    ;
-
-arrowFunctionParameters
-    : Identifier
-    | parameterBlock
-    ;
-
-arrowFunctionBody
-    : singleExpression
-    | block
-    ;
-
-assignmentOperator
-    : '*='
-    | '/='
-    | '%='
-    | '+='
-    | '-='
-    | '<<='
-    | '>>='
-    | '>>>='
-    | '&='
-    | '^='
-    | '|='
     ;
 
 literal
@@ -946,6 +949,7 @@ keywordAllowedInTypeReferences:
     | As
     | Asserts
     | Async
+    | Await
     | Break
     | Boolean
     | Case
@@ -996,6 +1000,7 @@ keywordAllowedInTypeReferences:
     | Super
     | Switch
     | Symbol
+    | Target
     | This
     | Throw
     | Try
