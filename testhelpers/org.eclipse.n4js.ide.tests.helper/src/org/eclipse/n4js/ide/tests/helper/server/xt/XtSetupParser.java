@@ -14,12 +14,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ide.tests.helper.server.TestWorkspaceManager;
+import org.eclipse.n4js.tests.codegen.Folder;
+import org.eclipse.n4js.tests.codegen.OtherFile;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.tests.codegen.Workspace;
 import org.eclipse.n4js.tests.codegen.WorkspaceBuilder;
@@ -31,11 +36,18 @@ import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 
 /**
  * Parses the configuration in the Xt setup section of an .xt file.
  */
 public class XtSetupParser {
+	public static final Collection<String> ALL_N4_MODULE_EXTENSIONS = new HashSet<>() {
+		{
+			addAll(N4JSGlobals.ALL_N4_FILE_EXTENSIONS);
+			add(N4JSGlobals.DTS_FILE_EXTENSION);
+		}
+	};
 
 	/** Keyword for activating {@link Project#isGenerateDts() .d.ts generation}. */
 	public static final String GENERATE_DTS = "GENERATE_DTS";
@@ -46,12 +58,22 @@ public class XtSetupParser {
 
 	static class TokenStream implements Iterator<String> {
 		final String[] tokens;
+		final String[] tokensComplete;
 		int cursor;
 
 		TokenStream(String setupWorkspace) {
 			String commentsRemoved = setupWorkspace.replaceAll("\\/\\/[^\\n]*", "");
 			this.tokens = commentsRemoved.trim().split("(?<=\\S)(?=\\{|\\})|(?<=\\{|\\})(?=\\S)|[=\\s]+");
 			this.cursor = 0;
+			this.tokensComplete = new String[this.tokens.length];
+			for (int i = 0, pos = 0; i < this.tokens.length; i++) {
+				int idx = setupWorkspace.indexOf(this.tokens[i], pos);
+				int endpos = (i + 1 == this.tokens.length)
+						? setupWorkspace.length()
+						: setupWorkspace.indexOf(this.tokens[i + 1], idx + this.tokens[i].length());
+				this.tokensComplete[i] = setupWorkspace.substring(pos, endpos);
+				pos = endpos;
+			}
 		}
 
 		@Override
@@ -67,6 +89,10 @@ public class XtSetupParser {
 
 		public String current() {
 			return tokens[cursor];
+		}
+
+		public String currentComplete() {
+			return tokensComplete[cursor];
 		}
 
 		public String lookLast() {
@@ -120,6 +146,7 @@ public class XtSetupParser {
 		String runner;
 		XtWorkspace workspace;
 		boolean generateDts = false;
+		final Map<String, String> files = new HashMap<>();
 		final Set<String> enabledIssues = new HashSet<>();
 		final Set<String> disabledIssues = new HashSet<>();
 	}
@@ -152,7 +179,12 @@ public class XtSetupParser {
 				tokens.expect("{");
 				result.workspace = parseWorkspace(tokens, xtFile, xtFileContent);
 				break;
+			case "File":
+				parseFile(tokens, result);
+				break;
 			case XtFileDataParser.XT_SETUP_END:
+				applyInlinedFileContents(result.workspace, result.files);
+				applyMissingPackageJson(result.workspace);
 				applyTopLevelGenerateDtsToAllProjects(result.workspace, result.generateDts);
 				return result;
 			default:
@@ -349,26 +381,22 @@ public class XtSetupParser {
 		String content = null;
 		if (isThis) {
 			content = xtFileContent;
-		} else {
-			Preconditions.checkState(fromFile != null,
-					ERROR + "Missing file name to load content from " + name + " in file " + xtFile.getPath());
-
+		} else if (fromFile != null && fromFile.toFile().isFile()) {
 			try {
 				content = Files.readString(fromFile);
 			} catch (IOException e) {
 				Preconditions.checkState(false,
 						ERROR + "Could not read: " + fromFile.toString() + " in file " + xtFile.getPath());
 			}
+		} else {
+			// content must be given in a 'File' section and is set later
 		}
-
-		Preconditions.checkState(content != null,
-				ERROR + "Missing content of file " + name + " in file " + xtFile.getPath());
 
 		String lastSegment = name.substring(name.lastIndexOf('/') + 1);
 		int idx = lastSegment.lastIndexOf('.');
 		String nameWithoutExtension = idx >= 0 ? name.substring(0, idx) : name;
 		String extension = idx >= 0 ? name.substring(idx + 1) : null;
-		boolean isModule = extension != null && N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
+		boolean isModule = extension != null && ALL_N4_MODULE_EXTENSIONS.contains(extension);
 		OtherFileBuilder fileBuilder;
 		if (isModule) {
 			fileBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);
@@ -379,6 +407,62 @@ public class XtSetupParser {
 		if (isThis) {
 			BuilderInfo bi = folderBuilder.getBuilderInfo();
 			bi.moduleNameOfXtFile = fileBuilder.getPath();
+		}
+	}
+
+	private static void parseFile(TokenStream tokens, XtSetupParseResult result) {
+		String fileName = tokens.expectNameInQuotes();
+		StringBuilder fileContent = new StringBuilder();
+		tokens.expect("{");
+		int openBlocks = 0;
+		while (openBlocks >= 0 && tokens.hasNext()) {
+			String token = tokens.current();
+			if ("{".equals(token)) {
+				openBlocks++;
+			} else if ("}".equals(token)) {
+				openBlocks--;
+			}
+			if (openBlocks >= 0) {
+				String tokenComplete = tokens.currentComplete();
+				fileContent.append(tokenComplete);
+			}
+
+			tokens.next();
+		}
+		result.files.put(fileName, fileContent.toString());
+	}
+
+	private static void applyInlinedFileContents(XtWorkspace workspace, Map<String, String> files) {
+		if (workspace == null) {
+			return; // nothing to do in this case
+		}
+		for (Project prj : workspace.getAllProjects()) {
+			for (Folder srcFolder : prj.getSourceFolders()) {
+				Iterable<OtherFile> allFiles = Iterables.concat(srcFolder.getModules(), srcFolder.getOtherFiles());
+				for (OtherFile file : allFiles) {
+					String mName = file.getNameWithExtension();
+					if (file.getContents() == null) {
+						if (files.containsKey(mName)) {
+							String contents = files.get(mName);
+							file.setContents(contents);
+						} else {
+							throw new IllegalStateException(ERROR + "File not found: " + mName);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private static void applyMissingPackageJson(XtWorkspace workspace) {
+		if (workspace == null) {
+			return; // nothing to do in this case
+		}
+		for (Project prj : workspace.getAllProjects()) {
+			if (prj.getProjectDescriptionContent() == null) {
+				// infer default settings
+
+			}
 		}
 	}
 

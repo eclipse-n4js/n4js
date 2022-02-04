@@ -33,6 +33,7 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtSetupParser.XtWorkspace;
 import org.eclipse.n4js.tests.codegen.Folder;
 import org.eclipse.n4js.tests.codegen.Module;
 import org.eclipse.n4js.tests.codegen.Project;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.UtilN4;
 
 import com.google.common.collect.AbstractIterator;
@@ -88,6 +89,7 @@ public class XtFileDataParser {
 
 	static XtWorkspace createDefaultWorkspace(String fileName, String xtFileContent,
 			XtSetupParseResult setupParseResult) {
+
 		String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 		String moduleName = fileName.substring(0, fileName.length() - 1 - extension.length());
 
@@ -98,6 +100,15 @@ public class XtFileDataParser {
 		Project project = new Project(DEFAULT_PROJECT_NAME, VENDOR, VENDOR_NAME);
 		project.addSourceFolder(srcFolder);
 		project.setGenerateDts(setupParseResult.generateDts);
+
+		for (String otherSrcFileName : setupParseResult.files.keySet()) {
+			String otherExt = URIUtils.fileExtension(URIUtils.toFileUri(otherSrcFileName));
+			String otherContent = setupParseResult.files.get(otherSrcFileName);
+			String otherModuleName = otherSrcFileName.substring(0, otherSrcFileName.length() - otherExt.length() - 1);
+			Module otherModule = new Module(otherModuleName, otherExt);
+			otherModule.setContents(otherContent);
+			srcFolder.addModule(otherModule);
+		}
 
 		XtWorkspace workspace = new XtWorkspace();
 		workspace.addProject(project);
