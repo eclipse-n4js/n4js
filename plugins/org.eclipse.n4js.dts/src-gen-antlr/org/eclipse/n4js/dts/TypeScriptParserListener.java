@@ -388,25 +388,15 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitInferTypeRef(TypeScriptParser.InferTypeRefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#propertySignature}.
+	 * Enter a parse tree produced by {@link TypeScriptParser#typeAliasDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
+	void enterTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#propertySignature}.
+	 * Exit a parse tree produced by {@link TypeScriptParser#typeAliasDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#constructSignature}.
-	 * @param ctx the parse tree
-	 */
-	void enterConstructSignature(TypeScriptParser.ConstructSignatureContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#constructSignature}.
-	 * @param ctx the parse tree
-	 */
-	void exitConstructSignature(TypeScriptParser.ConstructSignatureContext ctx);
+	void exitTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#typeParameters}.
 	 * @param ctx the parse tree
@@ -457,46 +447,6 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDefaultType(TypeScriptParser.DefaultTypeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#indexSignature}.
-	 * @param ctx the parse tree
-	 */
-	void enterIndexSignature(TypeScriptParser.IndexSignatureContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#indexSignature}.
-	 * @param ctx the parse tree
-	 */
-	void exitIndexSignature(TypeScriptParser.IndexSignatureContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#indexSignatureElement}.
-	 * @param ctx the parse tree
-	 */
-	void enterIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#indexSignatureElement}.
-	 * @param ctx the parse tree
-	 */
-	void exitIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#methodSignature}.
-	 * @param ctx the parse tree
-	 */
-	void enterMethodSignature(TypeScriptParser.MethodSignatureContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#methodSignature}.
-	 * @param ctx the parse tree
-	 */
-	void exitMethodSignature(TypeScriptParser.MethodSignatureContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#typeAliasDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#typeAliasDeclaration}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#moduleDeclaration}.
 	 * @param ctx the parse tree
@@ -637,6 +587,66 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitInterfaceMember(TypeScriptParser.InterfaceMemberContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#constructSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstructSignature(TypeScriptParser.ConstructSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#constructSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstructSignature(TypeScriptParser.ConstructSignatureContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#callSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterCallSignature(TypeScriptParser.CallSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#callSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitCallSignature(TypeScriptParser.CallSignatureContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#indexSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterIndexSignature(TypeScriptParser.IndexSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#indexSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitIndexSignature(TypeScriptParser.IndexSignatureContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#indexSignatureElement}.
+	 * @param ctx the parse tree
+	 */
+	void enterIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#indexSignatureElement}.
+	 * @param ctx the parse tree
+	 */
+	void exitIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#methodSignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterMethodSignature(TypeScriptParser.MethodSignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#methodSignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitMethodSignature(TypeScriptParser.MethodSignatureContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#propertySignature}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#propertySignature}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#enumDeclaration}.
 	 * @param ctx the parse tree
@@ -827,16 +837,6 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitInitializer(TypeScriptParser.InitializerContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#callSignature}.
-	 * @param ctx the parse tree
-	 */
-	void enterCallSignature(TypeScriptParser.CallSignatureContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#callSignature}.
-	 * @param ctx the parse tree
-	 */
-	void exitCallSignature(TypeScriptParser.CallSignatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#parameterBlock}.
 	 * @param ctx the parse tree

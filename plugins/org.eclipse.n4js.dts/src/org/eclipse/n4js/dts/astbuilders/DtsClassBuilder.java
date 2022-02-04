@@ -73,6 +73,10 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 		result.setName(ctx.identifierOrKeyWord().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
+		if (ctx.Abstract() != null) {
+			result.getDeclaredModifiers().add(N4Modifier.ABSTRACT);
+		}
+
 		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
 
@@ -85,12 +89,12 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 			return;
 		}
 
-		boolean isReadonly = false, isStatic = false;
+		boolean isReadonly = ctx.ReadOnly() != null;
+		boolean isStatic = false;
 		PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
 		if (pmctx.propertyMemberBase() != null) {
 			PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
 			isStatic = pmb.Static() != null;
-			isReadonly = pmb.ReadOnly() != null;
 		}
 
 		AnnotableN4MemberDeclaration memberDecl = null;
@@ -123,20 +127,18 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 
 		memberDecl.getDeclaredModifiers().add(N4Modifier.PUBLIC);
 		if (isStatic) {
-			if (isStatic) {
-				if (isReadonly) {
-					memberDecl.getDeclaredModifiers().add(N4Modifier.CONST);
-				} else {
-					memberDecl.getDeclaredModifiers().add(N4Modifier.STATIC);
-				}
+			if (isReadonly) {
+				memberDecl.getDeclaredModifiers().add(N4Modifier.CONST);
 			} else {
-				if (isReadonly) {
-					N4MemberAnnotationList annList = N4JSFactory.eINSTANCE.createN4MemberAnnotationList();
-					Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
-					ann.setName(AnnotationDefinition.FINAL.name);
-					annList.getAnnotations().add(ann);
-					memberDecl.setAnnotationList(annList);
-				}
+				memberDecl.getDeclaredModifiers().add(N4Modifier.STATIC);
+			}
+		} else {
+			if (isReadonly) {
+				N4MemberAnnotationList annList = N4JSFactory.eINSTANCE.createN4MemberAnnotationList();
+				Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+				ann.setName(AnnotationDefinition.FINAL.name);
+				annList.getAnnotations().add(ann);
+				memberDecl.setAnnotationList(annList);
 			}
 		}
 		addLocationInfo(memberDecl, ctx);
@@ -145,8 +147,25 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 
 	@Override
 	public void enterGetAccessor(GetAccessorContext ctx) {
+		N4GetterDeclaration getter = createGetAccessor(ctx, typeRefBuilder);
+		if (getter != null) {
+			addLocationInfo(getter, ctx);
+			result.getOwnedMembersRaw().add(getter);
+		}
+	}
+
+	@Override
+	public void enterSetAccessor(SetAccessorContext ctx) {
+		N4SetterDeclaration setter = createSetAccessor(ctx, this, typeRefBuilder);
+		if (setter != null) {
+			addLocationInfo(setter, ctx);
+			result.getOwnedMembersRaw().add(setter);
+		}
+	}
+
+	static public N4GetterDeclaration createGetAccessor(GetAccessorContext ctx, DtsTypeRefBuilder typeRefBuilder) {
 		if (ctx.getter() == null || ctx.getter().propertyName() == null) {
-			return;
+			return null;
 		}
 
 		N4GetterDeclaration getter = N4JSFactory.eINSTANCE.createN4GetterDeclaration();
@@ -158,23 +177,25 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
 		getter.setDeclaredTypeRefNode(trn);
 
-		PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
-		if (pmctx.propertyMemberBase() != null) {
-			PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
-			if (pmb.Static() != null) {
-				getter.getDeclaredModifiers().add(N4Modifier.STATIC);
+		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
+			PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
+			if (pmctx.propertyMemberBase() != null) {
+				PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
+				if (pmb.Static() != null) {
+					getter.getDeclaredModifiers().add(N4Modifier.STATIC);
+				}
 			}
 		}
 
 		getter.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		addLocationInfo(getter, ctx);
-		result.getOwnedMembersRaw().add(getter);
+		return getter;
 	}
 
-	@Override
-	public void enterSetAccessor(SetAccessorContext ctx) {
+	static public N4SetterDeclaration createSetAccessor(SetAccessorContext ctx, AbstractDtsSubBuilder<?, ?> subbuilder,
+			DtsTypeRefBuilder typeRefBuilder) {
+
 		if (ctx.setter() == null || ctx.setter().propertyName() == null) {
-			return;
+			return null;
 		}
 
 		N4SetterDeclaration setter = N4JSFactory.eINSTANCE.createN4SetterDeclaration();
@@ -190,20 +211,21 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 		if (ctx.Identifier() != null) {
 			fpar.setName(ctx.Identifier().getText());
 		} else if (ctx.bindingPattern() != null) {
-			fpar.setBindingPattern(new DtsBindingPatternBuilder(this).consume(ctx.bindingPattern()));
+			fpar.setBindingPattern(new DtsBindingPatternBuilder(subbuilder).consume(ctx.bindingPattern()));
 		}
 
-		PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
-		if (pmctx.propertyMemberBase() != null) {
-			PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
-			if (pmb.Static() != null) {
-				setter.getDeclaredModifiers().add(N4Modifier.STATIC);
+		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
+			PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
+			if (pmctx.propertyMemberBase() != null) {
+				PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
+				if (pmb.Static() != null) {
+					setter.getDeclaredModifiers().add(N4Modifier.STATIC);
+				}
 			}
 		}
 
 		setter.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		addLocationInfo(setter, ctx);
-		result.getOwnedMembersRaw().add(setter);
+		return setter;
 	}
 
 	@Override

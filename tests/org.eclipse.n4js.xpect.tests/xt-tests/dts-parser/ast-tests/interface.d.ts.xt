@@ -41,6 +41,8 @@ Script: true
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, optionalField
     N4FieldDeclaration: [public], false
+     N4MemberAnnotationList
+      Annotation: Final
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, readonlyField
@@ -52,16 +54,15 @@ Script: true
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, optionalMethod
-    N4FieldDeclaration: [public], false
-     LiteralOrComputedPropertyName: false, identifier, get
-    N4MethodDeclaration: false, [public], false
+    N4GetterDeclaration: [public], false
+     LiteralOrComputedPropertyName: false, identifier, getter
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
-     LiteralOrComputedPropertyName: false, identifier, getter
-    N4FieldDeclaration: [public], false
-     LiteralOrComputedPropertyName: false, identifier, set
-    N4MethodDeclaration: false, [public], false
+    N4SetterDeclaration: [public], false
      LiteralOrComputedPropertyName: false, identifier, setter
+     FormalParameter: false, v, false
+      TypeReferenceNode
+       ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
   N4InterfaceDeclaration: [external], ID, ?~
    N4FieldDeclaration: [public], false
     TypeReferenceNode

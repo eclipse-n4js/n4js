@@ -239,17 +239,11 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInferTypeRef(TypeScriptParser.InferTypeRefContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#propertySignature}.
+	 * Visit a parse tree produced by {@link TypeScriptParser#typeAliasDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#constructSignature}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitConstructSignature(TypeScriptParser.ConstructSignatureContext ctx);
+	T visitTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#typeParameters}.
 	 * @param ctx the parse tree
@@ -280,30 +274,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDefaultType(TypeScriptParser.DefaultTypeContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#indexSignature}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIndexSignature(TypeScriptParser.IndexSignatureContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#indexSignatureElement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#methodSignature}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitMethodSignature(TypeScriptParser.MethodSignatureContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#typeAliasDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#moduleDeclaration}.
 	 * @param ctx the parse tree
@@ -388,6 +358,42 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitInterfaceMember(TypeScriptParser.InterfaceMemberContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#constructSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstructSignature(TypeScriptParser.ConstructSignatureContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#callSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCallSignature(TypeScriptParser.CallSignatureContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#indexSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIndexSignature(TypeScriptParser.IndexSignatureContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#indexSignatureElement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#methodSignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMethodSignature(TypeScriptParser.MethodSignatureContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#propertySignature}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#enumDeclaration}.
 	 * @param ctx the parse tree
@@ -502,12 +508,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitInitializer(TypeScriptParser.InitializerContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#callSignature}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCallSignature(TypeScriptParser.CallSignatureContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#parameterBlock}.
 	 * @param ctx the parse tree

@@ -17,18 +17,25 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceMemberList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceExtendsClauseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.MethodSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
+import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
+import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
+import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
+import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -92,6 +99,14 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 		fd.setDeclaredName(locpn);
 		fd.setDeclaredOptional(ctx.QuestionMark() != null);
 
+		if (ctx.ReadOnly() != null) {
+			N4MemberAnnotationList annList = N4JSFactory.eINSTANCE.createN4MemberAnnotationList();
+			Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+			ann.setName(AnnotationDefinition.FINAL.name);
+			annList.getAnnotations().add(ann);
+			fd.setAnnotationList(annList);
+		}
+
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
 		fd.setDeclaredTypeRefNode(trn);
 
@@ -112,5 +127,23 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 
 		addLocationInfo(md, ctx);
 		result.getOwnedMembersRaw().add(md);
+	}
+
+	@Override
+	public void enterGetAccessor(GetAccessorContext ctx) {
+		N4GetterDeclaration getter = DtsClassBuilder.createGetAccessor(ctx, typeRefBuilder);
+		if (getter != null) {
+			addLocationInfo(getter, ctx);
+			result.getOwnedMembersRaw().add(getter);
+		}
+	}
+
+	@Override
+	public void enterSetAccessor(SetAccessorContext ctx) {
+		N4SetterDeclaration setter = DtsClassBuilder.createSetAccessor(ctx, this, typeRefBuilder);
+		if (setter != null) {
+			addLocationInfo(setter, ctx);
+			result.getOwnedMembersRaw().add(setter);
+		}
 	}
 }

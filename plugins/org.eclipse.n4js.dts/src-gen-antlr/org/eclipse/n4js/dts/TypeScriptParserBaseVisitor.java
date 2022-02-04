@@ -283,14 +283,7 @@ public class TypeScriptParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitConstructSignature(TypeScriptParser.ConstructSignatureContext ctx) { return visitChildren(ctx); }
+	@Override public T visitTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -326,34 +319,6 @@ public class TypeScriptParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitDefaultType(TypeScriptParser.DefaultTypeContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitIndexSignature(TypeScriptParser.IndexSignatureContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitMethodSignature(TypeScriptParser.MethodSignatureContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -452,6 +417,48 @@ public class TypeScriptParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitInterfaceMember(TypeScriptParser.InterfaceMemberContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitConstructSignature(TypeScriptParser.ConstructSignatureContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitCallSignature(TypeScriptParser.CallSignatureContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitIndexSignature(TypeScriptParser.IndexSignatureContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitMethodSignature(TypeScriptParser.MethodSignatureContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -585,13 +592,6 @@ public class TypeScriptParserBaseVisitor<T> extends AbstractParseTreeVisitor<T> 
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitInitializer(TypeScriptParser.InitializerContext ctx) { return visitChildren(ctx); }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	@Override public T visitCallSignature(TypeScriptParser.CallSignatureContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

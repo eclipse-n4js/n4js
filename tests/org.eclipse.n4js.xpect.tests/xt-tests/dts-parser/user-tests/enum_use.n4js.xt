@@ -48,3 +48,7 @@ import {RoundingMode, ColorN, ColorS} from "tslib";
 
 // XPECT noerrors -->
 let rm : RoundingMode = RoundingMode.UP;
+
+let str : string = ColorS.blue;
+
+let num : number = ColorN.blue;

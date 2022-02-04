@@ -235,13 +235,8 @@ inferTypeRef:
 	Infer typeReferenceName
 ;
 
-
-propertySignature
-    : ReadOnly? propertyName '?'? colonSepTypeRef? ('=>' typeRef)?
-    ;
-
-constructSignature
-    : 'new' typeParameters? parameterBlock colonSepTypeRef?
+typeAliasDeclaration
+    : TypeAlias identifierName typeParameters? '=' typeRef SemiColon?
     ;
 
 typeParameters
@@ -263,25 +258,6 @@ constraint
 defaultType
     : typeRef
     ;
-
-indexSignature
-    : ReadOnly? ('+'? 'readonly' | '-' 'readonly')? '[' indexSignatureElement ']' ('+'? '?' | '-' '?')? colonSepTypeRef
-    ;
-
-indexSignatureElement
-    : identifierName ':' (Number|String)
-    | Identifier In typeRef
-    ;
-
-
-methodSignature
-    : propertyName '?'? callSignature
-    ;
-
-typeAliasDeclaration
-    : TypeAlias identifierName typeParameters? '=' typeRef SemiColon?
-    ;
-
 
 
 // Module
@@ -353,9 +329,37 @@ interfaceMember
     : constructSignature
     | callSignature
     | indexSignature
+    | getAccessor
+    | setAccessor
     | methodSignature
     | propertySignature
     ;
+
+constructSignature
+    : 'new' typeParameters? parameterBlock colonSepTypeRef?
+    ;
+
+callSignature
+    : typeParameters? parameterBlock (':' (typePredicateWithOperatorTypeRef | typeRef))?
+    ;
+
+indexSignature
+    : ReadOnly? ('+'? 'readonly' | '-' 'readonly')? '[' indexSignatureElement ']' ('+'? '?' | '-' '?')? colonSepTypeRef
+    ;
+
+indexSignatureElement
+    : identifierName ':' (Number|String)
+    | Identifier In typeRef
+    ;
+
+methodSignature
+    : propertyName '?'? callSignature
+    ;
+
+propertySignature
+    : ReadOnly? propertyName '?'? colonSepTypeRef?
+    ;
+
 
 
 // Enum
@@ -441,11 +445,11 @@ propertyMember
     ;
 
 propertyMemberBase
-    : Async? accessibilityModifier? Static? ReadOnly?
+    : Async? accessibilityModifier? Static?
     ;
 
 propertyOrMethod
-    : propertyName '?'? (
+    : ReadOnly? propertyName '?'? (
           (colonSepTypeRef? initializer?)
         | (callSignature block?)
     )
@@ -455,9 +459,6 @@ initializer
     : '=' singleExpression
     ;
 
-callSignature
-    : typeParameters? parameterBlock (':' (typePredicateWithOperatorTypeRef | typeRef))?
-    ;
 
 parameterBlock:
     '(' parameterListTrailingComma? ')'

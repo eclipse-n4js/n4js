@@ -472,25 +472,13 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { }
+	@Override public void enterTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterConstructSignature(TypeScriptParser.ConstructSignatureContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitConstructSignature(TypeScriptParser.ConstructSignatureContext ctx) { }
+	@Override public void exitTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -551,54 +539,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDefaultType(TypeScriptParser.DefaultTypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterIndexSignature(TypeScriptParser.IndexSignatureContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIndexSignature(TypeScriptParser.IndexSignatureContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterMethodSignature(TypeScriptParser.MethodSignatureContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitMethodSignature(TypeScriptParser.MethodSignatureContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeAliasDeclaration(TypeScriptParser.TypeAliasDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -767,6 +707,78 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitInterfaceMember(TypeScriptParser.InterfaceMemberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConstructSignature(TypeScriptParser.ConstructSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConstructSignature(TypeScriptParser.ConstructSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCallSignature(TypeScriptParser.CallSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCallSignature(TypeScriptParser.CallSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIndexSignature(TypeScriptParser.IndexSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIndexSignature(TypeScriptParser.IndexSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitIndexSignatureElement(TypeScriptParser.IndexSignatureElementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMethodSignature(TypeScriptParser.MethodSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMethodSignature(TypeScriptParser.MethodSignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -995,18 +1007,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitInitializer(TypeScriptParser.InitializerContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterCallSignature(TypeScriptParser.CallSignatureContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitCallSignature(TypeScriptParser.CallSignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
