@@ -149,11 +149,11 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTypeName(TypeScriptParser.TypeNameContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#typeGeneric}.
+	 * Visit a parse tree produced by {@link TypeScriptParser#typeArguments}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTypeGeneric(TypeScriptParser.TypeGenericContext ctx);
+	T visitTypeArguments(TypeScriptParser.TypeArgumentsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#typeArgumentList}.
 	 * @param ctx the parse tree
@@ -166,12 +166,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTypeArgument(TypeScriptParser.TypeArgumentContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#typeArguments}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTypeArguments(TypeScriptParser.TypeArgumentsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#objectLiteralTypeRef}.
 	 * @param ctx the parse tree

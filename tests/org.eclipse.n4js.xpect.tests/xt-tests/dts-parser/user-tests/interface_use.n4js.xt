@@ -38,7 +38,7 @@ class CIE implements IE {
 	@Override
 	public optionalField?: number;
 
-	//@Final // FIXME: Check this
+	//@Final // "In interfaces, only methods may be declared final." (CLF_NO_FINAL_INTERFACE_MEMBER)
 	//@Override
 	//public readonlyField: number = 0;
 
@@ -72,9 +72,6 @@ ie.setter = "s";
  --- */
 IE.field;
 
-
-// XPECT errors --> "The final field readonlyField is read-only." at "readonlyField"
-ie.readonlyField = 0;
 
 
 /* XPECT errors ---

@@ -292,13 +292,13 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterTypeGeneric(TypeScriptParser.TypeGenericContext ctx) { }
+	@Override public void enterTypeArguments(TypeScriptParser.TypeArgumentsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitTypeGeneric(TypeScriptParser.TypeGenericContext ctx) { }
+	@Override public void exitTypeArguments(TypeScriptParser.TypeArgumentsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -323,18 +323,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTypeArgument(TypeScriptParser.TypeArgumentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTypeArguments(TypeScriptParser.TypeArgumentsContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeArguments(TypeScriptParser.TypeArgumentsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

@@ -17,7 +17,6 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceMemberList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
@@ -26,13 +25,11 @@ import org.eclipse.n4js.dts.TypeScriptParser.MethodSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
-import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
-import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
@@ -100,11 +97,8 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 		fd.setDeclaredOptional(ctx.QuestionMark() != null);
 
 		if (ctx.ReadOnly() != null) {
-			N4MemberAnnotationList annList = N4JSFactory.eINSTANCE.createN4MemberAnnotationList();
-			Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
-			ann.setName(AnnotationDefinition.FINAL.name);
-			annList.getAnnotations().add(ann);
-			fd.setAnnotationList(annList);
+			// "In interfaces, only methods may be declared final." (CLF_NO_FINAL_INTERFACE_MEMBER)
+			// consider to create a getter instead of a field
 		}
 
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());

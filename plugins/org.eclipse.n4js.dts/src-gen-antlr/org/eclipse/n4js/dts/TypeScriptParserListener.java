@@ -238,15 +238,15 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitTypeName(TypeScriptParser.TypeNameContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#typeGeneric}.
+	 * Enter a parse tree produced by {@link TypeScriptParser#typeArguments}.
 	 * @param ctx the parse tree
 	 */
-	void enterTypeGeneric(TypeScriptParser.TypeGenericContext ctx);
+	void enterTypeArguments(TypeScriptParser.TypeArgumentsContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#typeGeneric}.
+	 * Exit a parse tree produced by {@link TypeScriptParser#typeArguments}.
 	 * @param ctx the parse tree
 	 */
-	void exitTypeGeneric(TypeScriptParser.TypeGenericContext ctx);
+	void exitTypeArguments(TypeScriptParser.TypeArgumentsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#typeArgumentList}.
 	 * @param ctx the parse tree
@@ -267,16 +267,6 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTypeArgument(TypeScriptParser.TypeArgumentContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#typeArguments}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeArguments(TypeScriptParser.TypeArgumentsContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#typeArguments}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeArguments(TypeScriptParser.TypeArgumentsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#objectLiteralTypeRef}.
 	 * @param ctx the parse tree

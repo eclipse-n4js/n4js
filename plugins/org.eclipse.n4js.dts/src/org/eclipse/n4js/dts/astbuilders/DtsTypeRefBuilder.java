@@ -28,6 +28,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ColonSepTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -95,6 +97,17 @@ public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, Typ
 		URI encodedLink = resource.getURI().appendFragment("|" + fragmentNumber);
 		((InternalEObject) typeProxy).eSetProxyURI(encodedLink);
 		pTypeRef.setDeclaredType(typeProxy);
+
+		if (ctx.typeArguments() != null && ctx.typeArguments().typeArgumentList() != null) {
+			TypeArgumentListContext typeArgumentList = ctx.typeArguments().typeArgumentList();
+			for (TypeArgumentContext targ : typeArgumentList.typeArgument()) {
+				TypeReferenceNode<TypeRef> trn = new DtsTypeRefBuilder(tokenStream, resource).consume(targ.typeRef());
+				TypeRef typeArg = trn.getTypeRefInAST();
+				if (typeArg != null) {
+					pTypeRef.getDeclaredTypeArgs().add(typeArg);
+				}
+			}
+		}
 
 		result = N4JSFactory.eINSTANCE.createTypeReferenceNode();
 		result.setTypeRefInAST(pTypeRef);
