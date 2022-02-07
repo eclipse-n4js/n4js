@@ -170,15 +170,15 @@ typeRefWithModifiers:
 ;
 
 parameterizedTypeRef
-    : typeName typeGeneric?
+    : typeName typeArguments?
     ;
 
 typeName
     : typeReferenceName ('.' typeReferenceName)*
     ;
 
-typeGeneric
-    : '<' typeArgumentList ','? '>'
+typeArguments
+    : '<' (typeArgumentList ','?)? '>'
     ;
 
 typeArgumentList
@@ -187,10 +187,6 @@ typeArgumentList
 
 typeArgument
     : Infer? typeRef
-    ;
-
-typeArguments
-    : '<' typeArgumentList? '>'
     ;
 
 objectLiteralTypeRef:
