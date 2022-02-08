@@ -89,8 +89,8 @@ public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, Typ
 			TypeArgumentListContext typeArgumentList = ctx.typeArguments().typeArgumentList();
 			for (TypeArgumentContext targ : typeArgumentList.typeArgument()) {
 				TypeReferenceNode<TypeRef> trn = new DtsTypeRefBuilder(tokenStream, resource).consume(targ.typeRef());
-				TypeRef typeArg = trn.getTypeRefInAST();
-				if (typeArg != null) {
+				if (trn != null && trn.getTypeRefInAST() != null) {
+					TypeRef typeArg = trn.getTypeRefInAST();
 					pTypeRef.getDeclaredTypeArgs().add(typeArg);
 				}
 			}

@@ -71,6 +71,9 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 	}
 
 	void addToScript(ScriptElement elem) {
+		if (elem == null) {
+			return;
+		}
 		result.getScriptElements().add(elem);
 	}
 
