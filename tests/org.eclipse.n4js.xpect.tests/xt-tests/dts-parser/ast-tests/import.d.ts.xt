@@ -32,10 +32,11 @@ export const Cconst : C = new C();
 /* XPECT ast ---
 Script: true
   ImportDeclaration: true, tslib, PLAIN
-   NamedImportSpecifier: false, false, K, false
+   NamedImportSpecifier: false, true, K, true
    NamedImportSpecifier: false, true, C, false
   ExportedVariableStatement: [external, public], const
    ExportedVariableDeclaration: Kconst
+    IdentifierRef: K, false
   ExportedVariableStatement: [external, public], const
    ExportedVariableDeclaration: Cconst
     TypeReferenceNode
