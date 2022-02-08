@@ -14,6 +14,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_importStatement;
 
 import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportFromBlockContext;
@@ -28,6 +29,7 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesFactory;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -54,9 +56,12 @@ public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementConte
 		if (fromModule != null) {
 			result.setModuleSpecifierAsText(fromModule);
 
+			// trim extension
+			String moduleName = URIUtils.trimFileExtension(URI.createFileURI(fromModule)).toFileString();
+
 			TModule tModuleProxy = TypesFactory.eINSTANCE.createTModule();
 			EReference eRef = N4JSPackage.eINSTANCE.getImportDeclaration_Module();
-			ParserContextUtil.installProxy(resource, result, eRef, tModuleProxy, fromModule);
+			ParserContextUtil.installProxy(resource, result, eRef, tModuleProxy, moduleName);
 			result.setModule(tModuleProxy);
 		}
 
