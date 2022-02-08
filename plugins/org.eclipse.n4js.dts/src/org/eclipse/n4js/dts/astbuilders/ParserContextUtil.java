@@ -8,13 +8,19 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.dts;
+package org.eclipse.n4js.dts.astbuilders;
 
 import java.util.Collections;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.n4js.dts.TypeScriptParser;
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Utilities to retrieve information from the parse tree
@@ -74,5 +80,14 @@ public class ParserContextUtil {
 		}
 		String str = stringLiteral.getText();
 		return str.substring(1, str.length() - 1);
+	}
+
+	/** Installs proxy information that is later used for linking */
+	public static void installProxy(LazyLinkingResource resource, EObject container, EReference eRef, EObject proxy,
+			String crossRefStr) {
+
+		int fragmentNumber = resource.addLazyProxyInformation(container, eRef, new PseudoLeafNode(crossRefStr));
+		URI encodedLink = resource.getURI().appendFragment("|" + fragmentNumber);
+		((InternalEObject) proxy).eSetProxyURI(encodedLink);
 	}
 }

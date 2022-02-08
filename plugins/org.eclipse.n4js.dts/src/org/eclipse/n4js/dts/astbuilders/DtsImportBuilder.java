@@ -14,15 +14,11 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_importStatement;
 
 import java.util.Set;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.n4js.dts.DtsTokenStream;
-import org.eclipse.n4js.dts.ParserContextUtil;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportFromBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportedElementContext;
-import org.eclipse.n4js.dts.astbuilders.DtsTypeRefBuilder.PseudoLeafNode;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -38,7 +34,6 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementContext, ImportDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsImportBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -61,10 +56,7 @@ public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementConte
 
 			TModule tModuleProxy = TypesFactory.eINSTANCE.createTModule();
 			EReference eRef = N4JSPackage.eINSTANCE.getImportDeclaration_Module();
-			int fragmentNumber = resource.addLazyProxyInformation(result, eRef, new PseudoLeafNode(fromModule));
-			URI encodedLink = resource.getURI().appendFragment("|" + fragmentNumber);
-			((InternalEObject) tModuleProxy).eSetProxyURI(encodedLink);
-
+			ParserContextUtil.installProxy(resource, result, eRef, tModuleProxy, fromModule);
 			result.setModule(tModuleProxy);
 		}
 
@@ -89,10 +81,7 @@ public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementConte
 
 					TExportableElement tExpElemProxy = TypesFactory.eINSTANCE.createTExportableElement();
 					EReference eRef = N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement();
-					int fragmentNumber = resource.addLazyProxyInformation(nis, eRef, new PseudoLeafNode(ieName));
-					URI encodedLink = resource.getURI().appendFragment("|" + fragmentNumber);
-					((InternalEObject) tExpElemProxy).eSetProxyURI(encodedLink);
-
+					ParserContextUtil.installProxy(resource, nis, eRef, tExpElemProxy, ieName);
 					nis.setImportedElement(tExpElemProxy);
 
 					result.getImportSpecifiers().add(nis);

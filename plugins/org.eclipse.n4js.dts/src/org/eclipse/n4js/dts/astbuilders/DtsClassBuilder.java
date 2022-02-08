@@ -163,6 +163,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 		}
 	}
 
+	/** Builds a {@link N4GetterDeclaration} from a {@link GetAccessorContext} */
 	static public N4GetterDeclaration createGetAccessor(GetAccessorContext ctx, DtsTypeRefBuilder typeRefBuilder) {
 		if (ctx.getter() == null || ctx.getter().propertyName() == null) {
 			return null;
@@ -191,6 +192,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 		return getter;
 	}
 
+	/** Builds a {@link N4SetterDeclaration} from a {@link SetAccessorContext} */
 	static public N4SetterDeclaration createSetAccessor(SetAccessorContext ctx, AbstractDtsSubBuilder<?, ?> subbuilder,
 			DtsTypeRefBuilder typeRefBuilder) {
 
