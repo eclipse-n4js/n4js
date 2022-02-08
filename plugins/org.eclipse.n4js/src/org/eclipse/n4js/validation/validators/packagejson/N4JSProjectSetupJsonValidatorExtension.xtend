@@ -1207,7 +1207,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		N4JSProjectConfigSnapshot referencedProject, Set<String> allReferencedProjectNames) {
 
 		if (referencedProject.type === ProjectType.DEFINITION) {
-			val nameOfProjectDefinedByReferencedProject = referencedProject.definesPackage.toString;
+			val nameOfProjectDefinedByReferencedProject = referencedProject?.definesPackage?.toString;
 			if (nameOfProjectDefinedByReferencedProject !== null) {
 				if (!allReferencedProjectNames.contains(nameOfProjectDefinedByReferencedProject)) {
 					val msg = IssueCodes.getMessageForPKGJ_IMPL_PROJECT_IS_MISSING_FOR_TYPE_DEF(
