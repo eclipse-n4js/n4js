@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
  * Utilities to retrieve information from the parse tree
@@ -66,4 +67,12 @@ public class ParserContextUtil {
 		return null;
 	}
 
+	/** @return the quoted string. Null safe. */
+	public static String trimStringLiteral(TerminalNode stringLiteral) {
+		if (stringLiteral == null || stringLiteral.getText() == null || stringLiteral.getText().length() < 2) {
+			return "";
+		}
+		String str = stringLiteral.getText();
+		return str.substring(1, str.length() - 1);
+	}
 }

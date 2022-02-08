@@ -41,8 +41,6 @@ Script: true
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, optionalField
     N4FieldDeclaration: [public], false
-     N4MemberAnnotationList
-      Annotation: Final
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, readonlyField

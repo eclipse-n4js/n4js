@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+	File "tslib.d.ts" {
+		export const K : string;
+		
+		export class C {
+			field : number;
+		}
+	}
+   END_SETUP
+ */
+ 
+
+import {K, C} from "tslib"
+
+export const Kconst = K;
+export const Cconst : C = new C();
+
+
+
+
+/* XPECT ast ---
+Script: true
+  ImportDeclaration: true, tslib, PLAIN
+   NamedImportSpecifier: false, false, K, false
+   NamedImportSpecifier: false, true, C, false
+  ExportedVariableStatement: [external, public], const
+   ExportedVariableDeclaration: Kconst
+  ExportedVariableStatement: [external, public], const
+   ExportedVariableDeclaration: Cconst
+    TypeReferenceNode
+     ParameterizedTypeRef: OFF, false, false, C, ~, false, false
+--- */
+
+
