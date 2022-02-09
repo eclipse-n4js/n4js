@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.jsdoc.N4JSDocHelper;
 import org.eclipse.n4js.jsdoc.N4JSDocletParser;
 import org.eclipse.n4js.jsdoc.dom.ContentNode;
@@ -46,9 +47,10 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
-import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.EcoreUtil2;
 
@@ -137,8 +139,8 @@ public class N4JSDReader {
 
 		for (N4JSSourceFolderSnapshot container : srcContFilter) {
 			for (URI uri : container.getContents()) {
-				String ext = uri.fileExtension();
-				if ("n4js".equals(ext) || "n4jsd".equals(ext)) {
+				String ext = URIUtils.fileExtension(uri);
+				if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(ext) || N4JSGlobals.N4JSD_FILE_EXTENSION.equals(ext)) {
 					try {
 						Resource resource = resSet.getResource(uri, true);
 						if (resource != null) {
@@ -169,8 +171,8 @@ public class N4JSDReader {
 	}
 
 	/**
-	 * The method {@link TModule#getTypes()} returns also functions that are nested in functions. These are
-	 * filtered out in this method.
+	 * The method {@link TModule#getTypes()} returns also functions that are nested in functions. These are filtered out
+	 * in this method.
 	 *
 	 * @return real top level types
 	 */
@@ -236,8 +238,8 @@ public class N4JSDReader {
 		for (N4JSSourceFolderSnapshot container : srcCont) {
 			if (container.isTest()) {
 				for (URI uri : container.getContents()) {
-					String ext = uri.fileExtension();
-					if ("n4js".equals(ext)) {
+					String ext = URIUtils.fileExtension(uri);
+					if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(ext)) {
 						Resource resource = resSet.getResource(uri, true);
 						if (resource != null) {
 							Script script = (Script) (resource.getContents().isEmpty() ? null

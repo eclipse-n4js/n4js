@@ -159,7 +159,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		val ws = workspaceAccess.getWorkspaceConfig(input);
 
 		val autobuildEnabled = isActive(input)
-		val isXPECTMode = N4JSGlobals.XT_FILE_EXTENSION == input.URI.fileExtension.toLowerCase
+		val isXPECTMode = N4JSGlobals.XT_FILE_EXTENSION == URIUtils.fileExtension(input.URI).toLowerCase
 		val inputUri = input.URI
 
 		val boolean result = (autobuildEnabled
@@ -471,7 +471,7 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		// write
 		val decorated = scriptAsText.toString();
 		outCode.write(decorated);
-		val filename = resourceNameComputer.generateFileDescriptor(resource, resource.getURI().fileExtension());
+		val filename = resourceNameComputer.generateFileDescriptor(resource, URIUtils.fileExtension(resource.getURI()));
 		fsa.generateFile(filename, compilerID, outCode.toString());
 	}
 }

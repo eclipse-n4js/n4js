@@ -56,14 +56,12 @@ Contributors:
 		<codehaus-exec-maven-plugin.version>1.6.0</codehaus-exec-maven-plugin.version>
 		<fornax-oaw-m2-plugin.version>3.6.0</fornax-oaw-m2-plugin.version>
 		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
-		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
 		<maven-assembly-plugin.version>3.1.1</maven-assembly-plugin.version>
 		<maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
 		<maven-dependency-plugin.version>3.1.1</maven-dependency-plugin.version>
 		<maven-deploy-plugin.version>3.0.0-M1</maven-deploy-plugin.version>
 		<maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
-		<maven-failsafe-plugin.version>3.0.0-M3</maven-failsafe-plugin.version>
 		<maven-install-plugin.version>3.0.0-M1</maven-install-plugin.version>
 		<maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
 		<maven-javadoc-plugin.version>3.1.0</maven-javadoc-plugin.version>
@@ -86,9 +84,11 @@ Contributors:
 		<hlc.name>n4jsc</hlc.name>
 		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
 		<cli.fat.jar.classifier>jar-with-dependencies</cli.fat.jar.classifier>
+		
 
 		<!-- some memory -->
 		<memoryArgs>-Xms256M -Xmx1324M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
+		<memoryArgsSmokeTests>-Xms256M -Xmx1536M -XX:+HeapDumpOnOutOfMemoryError</memoryArgsSmokeTests>
 		<encodingArgs>-Dfile.encoding=${file.encoding}</encodingArgs>
 
 		<!-- Test related dependency path tragets. -->
@@ -206,23 +206,6 @@ Contributors:
 				</plugin>
 
 				<!-- APACHE MAVEN PLUGINS -->
-				<plugin>
-					<!--
-					This plugin can be used to execute additional logic
-					which cannot be done by existing Maven plugins but is available within ANT.
-					Currently this plugin is used inside the tests/pom.xml for setting the property
-					"coverageAgent" to an empty string when the Maven profile "codeCoverage" is
-					not activated and thus this property wouldn't exist when executing the Tycho
-					surefire plugin using this property in the argLine. As the code coverage plugin
-					JaCoCo sets the value of this property only when it doesn't exist yet we have to
-					use this work around as defining an empty property "coverageAgent" in Maven
-					would cause the JaCoCo plugin not to set the value of this property. As the
-					setting of this property is conditional we also have to add the ant-contrib plugin
-					that provides the possibility to work with if-else constructs within ANT.
-					-->
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-antrun-plugin</artifactId>
-				</plugin>
 				<plugin>
 					<!--
 					The clean plugin is here configured to

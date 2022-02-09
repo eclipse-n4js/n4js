@@ -484,13 +484,13 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterPropertySignatur(TypeScriptParser.PropertySignaturContext ctx) { }
+	@Override public void enterPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitPropertySignatur(TypeScriptParser.PropertySignaturContext ctx) { }
+	@Override public void exitPropertySignature(TypeScriptParser.PropertySignatureContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -964,6 +964,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterBindingPatternBlock(TypeScriptParser.BindingPatternBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBindingPatternBlock(TypeScriptParser.BindingPatternBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterVariableDeclarationList(TypeScriptParser.VariableDeclarationListContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1432,6 +1444,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPropertyMember(TypeScriptParser.PropertyMemberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPropertyMember(TypeScriptParser.PropertyMemberContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterPropertyMemberBase(TypeScriptParser.PropertyMemberBaseContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1439,6 +1463,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitPropertyMemberBase(TypeScriptParser.PropertyMemberBaseContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterPropertyOrMethod(TypeScriptParser.PropertyOrMethodContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPropertyOrMethod(TypeScriptParser.PropertyOrMethodContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1456,13 +1492,13 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterGeneratorFunctionDeclaration(TypeScriptParser.GeneratorFunctionDeclarationContext ctx) { }
+	@Override public void enterGeneratorFunctionExpressionDeclaration(TypeScriptParser.GeneratorFunctionExpressionDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitGeneratorFunctionDeclaration(TypeScriptParser.GeneratorFunctionDeclarationContext ctx) { }
+	@Override public void exitGeneratorFunctionExpressionDeclaration(TypeScriptParser.GeneratorFunctionExpressionDeclarationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -1672,6 +1708,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterBindingElement(TypeScriptParser.BindingElementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBindingElement(TypeScriptParser.BindingElementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTypeBody(TypeScriptParser.TypeBodyContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1732,18 +1780,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterComputedPropertyExpressionAssignment(TypeScriptParser.ComputedPropertyExpressionAssignmentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitComputedPropertyExpressionAssignment(TypeScriptParser.ComputedPropertyExpressionAssignmentContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterPropertyGetter(TypeScriptParser.PropertyGetterContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -1775,18 +1811,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMethodProperty(TypeScriptParser.MethodPropertyContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterPropertyShorthand(TypeScriptParser.PropertyShorthandContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitPropertyShorthand(TypeScriptParser.PropertyShorthandContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -2147,18 +2171,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitDeleteExpression(TypeScriptParser.DeleteExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterGeneratorsFunctionExpression(TypeScriptParser.GeneratorsFunctionExpressionContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitGeneratorsFunctionExpression(TypeScriptParser.GeneratorsFunctionExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

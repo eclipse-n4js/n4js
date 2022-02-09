@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.smoke.tests
 
+import com.google.common.base.Supplier
+import com.google.common.base.Suppliers
 import java.math.BigInteger
 import java.security.MessageDigest
 import java.security.NoSuchAlgorithmException
@@ -25,6 +27,20 @@ abstract class UniqueScenarioProcessor extends ScenarioProcessor {
 	private MessageDigest messageDigest;
 	private Set<BigInteger> seen;
 
+	/**
+	 * Used to ensure thread-safe initialization of Xtext infrastructure.
+	 * <p>
+	 * Before this tweak, the smoke tests sometimes ran into an {@link OutOfMemoryError} during the
+	 * parallel execution of {@code parseHelper.parse()} in the first N test cases, seemingly caused
+	 * by a race during Guice injector creation and/or Guice object tree creation and possibly other
+	 * parts of Xtext infrastructure initialization.
+	 */
+	private final Supplier<Void> initializer = Suppliers.memoize[
+		// invoked only once; process some dummy source code to trigger initialization of all components
+		doProcessFile("let x = 42;");
+		return null;
+	];
+
 	new() throws RuntimeException {
 		try {
 			messageDigest = MessageDigest.getInstance("MD5");
@@ -35,6 +51,7 @@ abstract class UniqueScenarioProcessor extends ScenarioProcessor {
 	}
 
 	override processFile(String data) throws Exception {
+		initializer.get(); // ensure initialization
 		val hash = (messageDigest.clone() as MessageDigest).digest(data.getBytes("UTF-8"));
 		if (seen.add(new BigInteger(hash))) {
 			doProcessFile(data)

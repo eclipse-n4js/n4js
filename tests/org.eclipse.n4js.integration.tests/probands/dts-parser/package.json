@@ -1,0 +1,28 @@
+{
+  "name": "dts-parser",
+  "version": "0.0.1",
+  "scripts": {
+    "n4jsc": "n4jsc",
+    "build": "n4jsc compile . --clean || true"
+  },
+  "dependencies": {
+    "n4js-runtime": "",
+    "n4js-runtime-es2015": ""
+  },
+  "devDependencies": {
+    "n4js-cli": ""
+  },
+  "n4js": {
+    "projectType": "library",
+    "output": "src-gen",
+    "sources": {
+      "source": [
+        "src/n4js",
+        "src/dts"
+      ]
+    },
+    "requiredRuntimeLibraries": [
+      "n4js-runtime-es2015"
+    ]
+  }
+}

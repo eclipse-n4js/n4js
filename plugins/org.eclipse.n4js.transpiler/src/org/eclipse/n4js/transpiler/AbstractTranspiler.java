@@ -25,6 +25,7 @@ import org.eclipse.n4js.transpiler.print.PrettyPrinter;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.ResourceNameComputer;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 
@@ -125,7 +126,7 @@ public abstract class AbstractTranspiler {
 			if (isExplicitSourceRef) {
 				//
 				String completeSpecifier = resourceNameComputer.getCompleteModuleSpecifier(eResource.getModule());
-				String fileExtension = eResource.getURI().fileExtension();
+				String fileExtension = URIUtils.fileExtension(eResource.getURI());
 				String specifierAsFile = fileExtension == null ? completeSpecifier
 						: completeSpecifier + "." + fileExtension;
 				return explicitNavigationToSrc.resolve(specifierAsFile).toString();

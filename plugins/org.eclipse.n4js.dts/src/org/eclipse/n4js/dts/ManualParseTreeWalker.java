@@ -25,25 +25,14 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
  */
 public class ManualParseTreeWalker {
 	private final ParserRuleContext startCtx;
-	private ParseTreeListener treeListener;
-	private ArrayList<ParserRuleContext> currentQueue;
+	private final ParseTreeListener treeListener;
 
-	/** Constructor. You must call {@link #setParseTreeListener(ParseTreeListener)}. */
-	public ManualParseTreeWalker(ParserRuleContext ctx) {
-		this(null, ctx);
-	}
+	private ArrayList<ParserRuleContext> currentQueue;
 
 	/** Constructor. */
 	public ManualParseTreeWalker(ParseTreeListener treeListener, ParserRuleContext startCtx) {
 		this.treeListener = treeListener;
 		this.startCtx = startCtx;
-	}
-
-	/** Call this setter to initialize the listener. */
-	public void setParseTreeListener(ParseTreeListener treeListener) {
-		if (this.treeListener == null) {
-			this.treeListener = treeListener;
-		}
 	}
 
 	/** Starts the walker. Be sure to have the {@link #treeListener} set. */

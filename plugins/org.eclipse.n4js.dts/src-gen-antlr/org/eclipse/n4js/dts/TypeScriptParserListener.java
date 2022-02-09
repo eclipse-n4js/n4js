@@ -398,15 +398,15 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitInferTypeRef(TypeScriptParser.InferTypeRefContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#propertySignatur}.
+	 * Enter a parse tree produced by {@link TypeScriptParser#propertySignature}.
 	 * @param ctx the parse tree
 	 */
-	void enterPropertySignatur(TypeScriptParser.PropertySignaturContext ctx);
+	void enterPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#propertySignatur}.
+	 * Exit a parse tree produced by {@link TypeScriptParser#propertySignature}.
 	 * @param ctx the parse tree
 	 */
-	void exitPropertySignatur(TypeScriptParser.PropertySignaturContext ctx);
+	void exitPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#constructSignature}.
 	 * @param ctx the parse tree
@@ -807,6 +807,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitVariableStatement(TypeScriptParser.VariableStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#bindingPatternBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterBindingPatternBlock(TypeScriptParser.BindingPatternBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#bindingPatternBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitBindingPatternBlock(TypeScriptParser.BindingPatternBlockContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#variableDeclarationList}.
 	 * @param ctx the parse tree
@@ -1210,6 +1220,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitAbstractDeclaration(TypeScriptParser.AbstractDeclarationContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#propertyMember}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertyMember(TypeScriptParser.PropertyMemberContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#propertyMember}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertyMember(TypeScriptParser.PropertyMemberContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#propertyMemberBase}.
 	 * @param ctx the parse tree
 	 */
@@ -1219,6 +1239,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitPropertyMemberBase(TypeScriptParser.PropertyMemberBaseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#propertyOrMethod}.
+	 * @param ctx the parse tree
+	 */
+	void enterPropertyOrMethod(TypeScriptParser.PropertyOrMethodContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#propertyOrMethod}.
+	 * @param ctx the parse tree
+	 */
+	void exitPropertyOrMethod(TypeScriptParser.PropertyOrMethodContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#generatorMethod}.
 	 * @param ctx the parse tree
@@ -1230,15 +1260,15 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitGeneratorMethod(TypeScriptParser.GeneratorMethodContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#generatorFunctionDeclaration}.
+	 * Enter a parse tree produced by {@link TypeScriptParser#generatorFunctionExpressionDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterGeneratorFunctionDeclaration(TypeScriptParser.GeneratorFunctionDeclarationContext ctx);
+	void enterGeneratorFunctionExpressionDeclaration(TypeScriptParser.GeneratorFunctionExpressionDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#generatorFunctionDeclaration}.
+	 * Exit a parse tree produced by {@link TypeScriptParser#generatorFunctionExpressionDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitGeneratorFunctionDeclaration(TypeScriptParser.GeneratorFunctionDeclarationContext ctx);
+	void exitGeneratorFunctionExpressionDeclaration(TypeScriptParser.GeneratorFunctionExpressionDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#generatorBlock}.
 	 * @param ctx the parse tree
@@ -1410,6 +1440,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitArrayElement(TypeScriptParser.ArrayElementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#bindingElement}.
+	 * @param ctx the parse tree
+	 */
+	void enterBindingElement(TypeScriptParser.BindingElementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#bindingElement}.
+	 * @param ctx the parse tree
+	 */
+	void exitBindingElement(TypeScriptParser.BindingElementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#typeBody}.
 	 * @param ctx the parse tree
 	 */
@@ -1462,18 +1502,6 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitPropertyExpressionAssignment(TypeScriptParser.PropertyExpressionAssignmentContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code ComputedPropertyExpressionAssignment}
-	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
-	 * @param ctx the parse tree
-	 */
-	void enterComputedPropertyExpressionAssignment(TypeScriptParser.ComputedPropertyExpressionAssignmentContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ComputedPropertyExpressionAssignment}
-	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
-	 * @param ctx the parse tree
-	 */
-	void exitComputedPropertyExpressionAssignment(TypeScriptParser.ComputedPropertyExpressionAssignmentContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code PropertyGetter}
 	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
 	 * @param ctx the parse tree
@@ -1509,18 +1537,6 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMethodProperty(TypeScriptParser.MethodPropertyContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code PropertyShorthand}
-	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
-	 * @param ctx the parse tree
-	 */
-	void enterPropertyShorthand(TypeScriptParser.PropertyShorthandContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code PropertyShorthand}
-	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
-	 * @param ctx the parse tree
-	 */
-	void exitPropertyShorthand(TypeScriptParser.PropertyShorthandContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code RestParameterInObject}
 	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
@@ -1865,18 +1881,6 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitDeleteExpression(TypeScriptParser.DeleteExpressionContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code GeneratorsFunctionExpression}
-	 * labeled alternative in {@link TypeScriptParser#singleExpression}.
-	 * @param ctx the parse tree
-	 */
-	void enterGeneratorsFunctionExpression(TypeScriptParser.GeneratorsFunctionExpressionContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code GeneratorsFunctionExpression}
-	 * labeled alternative in {@link TypeScriptParser#singleExpression}.
-	 * @param ctx the parse tree
-	 */
-	void exitGeneratorsFunctionExpression(TypeScriptParser.GeneratorsFunctionExpressionContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ArrowFunctionExpression}
 	 * labeled alternative in {@link TypeScriptParser#singleExpression}.

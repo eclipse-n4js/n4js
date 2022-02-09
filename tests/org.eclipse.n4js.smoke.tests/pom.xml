@@ -37,29 +37,18 @@ Contributors:
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>run-pojo-surefire-tests</id>
+						<configuration>
+							<!-- Replacing ${memoryArgs} by ${memoryArgsSmokeTests} in JVM command line arguments for smoke tests: -->
+							<!-- argLine needs to be one line, if you auto-format line break will break tests -->
+							<argLine>${memoryArgsSmokeTests} ${encodingArgs} ${loggingArgs}</argLine>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
-	
-	
-	<profiles>
-		<profile>
-			<id>execute-smoke-tests</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>tycho-surefire-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>TychoSurefireSmokeTest</id>
-								<phase>integration-test</phase>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>	
-	</profiles>
 
 </project>

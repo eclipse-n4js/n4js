@@ -39,6 +39,7 @@ import org.eclipse.n4js.resource.UserDataMapper;
 import org.eclipse.n4js.tests.codegen.YarnWorkspaceProject;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -67,7 +68,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		Iterable<IResourceDescription> descriptions = IterableExtensions.flatMap(concurrentIndex.entries(),
 				e -> e.getValue().getAllResourceDescriptions());
 		for (IResourceDescription description : descriptions) {
-			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(description.getURI().fileExtension())) {
+			if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(URIUtils.fileExtension(description.getURI()))) {
 				IEObjectDescription moduleDescription = IterableExtensions
 						.head(description.getExportedObjectsByType(TypesPackage.Literals.TMODULE));
 				Assert.assertNotNull(description.getURI().toString(), moduleDescription);

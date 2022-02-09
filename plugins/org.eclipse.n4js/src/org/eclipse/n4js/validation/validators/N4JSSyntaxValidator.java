@@ -313,6 +313,10 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 		EObject grammarElement;
 		int foundHits = 0;
 
+		if (node == null) {
+			return null;
+		}
+
 		for (BidiTreeIterator<INode> iter = node.getAsTreeIterable().iterator(); iter.hasNext();) {
 			INode child = iter.next();
 			EObject childSemElement = child.getSemanticElement();

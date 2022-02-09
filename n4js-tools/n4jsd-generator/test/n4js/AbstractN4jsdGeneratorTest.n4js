@@ -9,8 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import * as fs_lib from "fs";
-import * as path_lib from "path";
+import * as fs_lib from "n4js-runtime-node/fs";
+import * as path_lib from "n4js-runtime-node/path";
 import * as utils from "utils";
 import {runN4jsdGenerator} from "generator";
 import * as runtimeLibs from "runtimeLibs";

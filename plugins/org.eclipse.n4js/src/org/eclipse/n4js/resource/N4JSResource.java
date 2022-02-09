@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Reader;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Iterator;
@@ -53,6 +54,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceImpl;
 import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.dts.DtsParser;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -76,6 +78,8 @@ import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.RelinkTModuleHashMismatchException;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
+import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -89,6 +93,7 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.nodemodel.impl.RootNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -99,6 +104,7 @@ import org.eclipse.xtext.resource.XtextSyntaxDiagnostic;
 import org.eclipse.xtext.resource.XtextSyntaxDiagnosticWithRange;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IResourceScopeCache;
+import org.eclipse.xtext.util.LineAndColumn;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.util.Triple;
 
@@ -706,7 +712,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (!optionClearFunctionBodies) {
 			return;
 		}
-		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, getURI().fileExtension())) {
+		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
 			return; // There are no function bodies in n4jsd files.
 		}
 		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(this);
@@ -758,7 +764,16 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			IParseResult result = new JSParseResult(inputStream);
 			updateInternalState(this.getParseResult(), result);
 		} else {
-			super.doLoad(inputStream, options);
+			ResourceType resourceType = ResourceType.getResourceType(getURI());
+			if (resourceType == ResourceType.DTS) {
+				setValidationDisabled(true);
+				try (Reader reader = createReader(inputStream);) {
+					IParseResult result = new DtsParser().parse(reader, this);
+					updateInternalState(this.getParseResult(), result);
+				}
+			} else {
+				super.doLoad(inputStream, options);
+			}
 		}
 	}
 
@@ -1142,10 +1157,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			// we have an ordinary EMF proxy (not one of Xtext's lazy linking proxies) ...
 			final ResourceSet resSet = getResourceSet();
 			final URI targetResourceUri = targetUri.trimFragment();
-			final String targetFileExt = targetResourceUri.fileExtension();
+			final String targetFileExt = URIUtils.fileExtension(targetResourceUri);
 			if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(targetFileExt)
 					|| N4JSGlobals.N4JSD_FILE_EXTENSION.equals(targetFileExt)
-					|| N4JSGlobals.N4JSX_FILE_EXTENSION.equals(targetFileExt)) {
+					|| N4JSGlobals.N4JSX_FILE_EXTENSION.equals(targetFileExt)
+					|| N4JSGlobals.DTS_FILE_EXTENSION.equals(targetFileExt)) {
 
 				// proxy is pointing into an .n4js or .n4jsd file ...
 				// check if we can work with the TModule from the index or if it is mandatory to load from source
@@ -1383,6 +1399,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		return super.getLazyProxyInformation(idx);
 	}
 
+	@Override
+	public void clearLazyProxyInformation() {
+		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
+			return;
+		}
+		super.clearLazyProxyInformation();
+	}
+
 	/**
 	 * This is aware of warnings from the {@link N4JSStringValueConverter}.
 	 *
@@ -1414,8 +1438,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
-	private void processSyntaxDiagnostic(INode error, Consumer<XtextSyntaxDiagnostic> acceptor) {
-		CompositeSyntaxErrorMessages.toDiagnostic(error.getSyntaxErrorMessage(), syntaxErrorMessage -> {
+	private void processSyntaxDiagnostic(INode errorNode, Consumer<XtextSyntaxDiagnostic> acceptor) {
+		CompositeSyntaxErrorMessages.toDiagnostic(errorNode.getSyntaxErrorMessage(), syntaxErrorMessage -> {
 			XtextSyntaxDiagnostic diagnostic = null;
 			if (isRangeBased(syntaxErrorMessage)) {
 				String[] issueData = syntaxErrorMessage.getIssueData();
@@ -1426,7 +1450,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					String message = syntaxErrorMessage.getMessage();
 					int offset = Integer.parseInt(data.substring(0, colon), 10);
 					int length = Integer.parseInt(data.substring(colon + 1), 10);
-					diagnostic = new XtextSyntaxDiagnosticWithRange(error, offset,
+					int sourceLength = getParseResult().getRootNode().getTotalLength();
+					diagnostic = new XtextSyntaxDiagnosticWithRange(errorNode, offset,
 							length, null) {
 						@Override
 						public int getLine() {
@@ -1434,6 +1459,17 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 								return super.getLine();
 							}
 							return getNode().getTotalStartLine();
+						}
+
+						@Override
+						public int getColumnEnd() {
+							INode node = getNode();
+							if (node != null) {
+								LineAndColumn lineAndColumn = NodeModelUtils.getLineAndColumn(node,
+										Math.min(getOffset() + getLength(), sourceLength));
+								return lineAndColumn.getColumn();
+							}
+							return 0;
 						}
 
 						@Override
@@ -1451,7 +1487,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			if (diagnostic == null) {
 				String code = syntaxErrorMessage.getIssueCode();
 				String message = syntaxErrorMessage.getMessage();
-				diagnostic = new XtextSyntaxDiagnostic(error) {
+				diagnostic = new XtextSyntaxDiagnostic(errorNode) {
 					@Override
 					public String getCode() {
 						return code;

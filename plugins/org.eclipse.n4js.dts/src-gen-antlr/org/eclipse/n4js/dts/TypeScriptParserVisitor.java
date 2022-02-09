@@ -245,11 +245,11 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInferTypeRef(TypeScriptParser.InferTypeRefContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#propertySignatur}.
+	 * Visit a parse tree produced by {@link TypeScriptParser#propertySignature}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitPropertySignatur(TypeScriptParser.PropertySignaturContext ctx);
+	T visitPropertySignature(TypeScriptParser.PropertySignatureContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#constructSignature}.
 	 * @param ctx the parse tree
@@ -489,6 +489,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitVariableStatement(TypeScriptParser.VariableStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#bindingPatternBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBindingPatternBlock(TypeScriptParser.BindingPatternBlockContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#variableDeclarationList}.
 	 * @param ctx the parse tree
@@ -730,11 +736,23 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAbstractDeclaration(TypeScriptParser.AbstractDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#propertyMember}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertyMember(TypeScriptParser.PropertyMemberContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#propertyMemberBase}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitPropertyMemberBase(TypeScriptParser.PropertyMemberBaseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#propertyOrMethod}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPropertyOrMethod(TypeScriptParser.PropertyOrMethodContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#generatorMethod}.
 	 * @param ctx the parse tree
@@ -742,11 +760,11 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitGeneratorMethod(TypeScriptParser.GeneratorMethodContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#generatorFunctionDeclaration}.
+	 * Visit a parse tree produced by {@link TypeScriptParser#generatorFunctionExpressionDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitGeneratorFunctionDeclaration(TypeScriptParser.GeneratorFunctionDeclarationContext ctx);
+	T visitGeneratorFunctionExpressionDeclaration(TypeScriptParser.GeneratorFunctionExpressionDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#generatorBlock}.
 	 * @param ctx the parse tree
@@ -850,6 +868,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArrayElement(TypeScriptParser.ArrayElementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#bindingElement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBindingElement(TypeScriptParser.BindingElementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#typeBody}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -881,13 +905,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitPropertyExpressionAssignment(TypeScriptParser.PropertyExpressionAssignmentContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ComputedPropertyExpressionAssignment}
-	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitComputedPropertyExpressionAssignment(TypeScriptParser.ComputedPropertyExpressionAssignmentContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code PropertyGetter}
 	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
 	 * @param ctx the parse tree
@@ -908,13 +925,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitMethodProperty(TypeScriptParser.MethodPropertyContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code PropertyShorthand}
-	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitPropertyShorthand(TypeScriptParser.PropertyShorthandContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code RestParameterInObject}
 	 * labeled alternative in {@link TypeScriptParser#propertyAssignment}.
@@ -1117,13 +1127,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitDeleteExpression(TypeScriptParser.DeleteExpressionContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code GeneratorsFunctionExpression}
-	 * labeled alternative in {@link TypeScriptParser#singleExpression}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitGeneratorsFunctionExpression(TypeScriptParser.GeneratorsFunctionExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code ArrowFunctionExpression}
 	 * labeled alternative in {@link TypeScriptParser#singleExpression}.

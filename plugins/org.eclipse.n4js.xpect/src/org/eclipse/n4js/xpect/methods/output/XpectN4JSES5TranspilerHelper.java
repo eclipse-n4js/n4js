@@ -43,6 +43,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
@@ -132,7 +133,7 @@ public class XpectN4JSES5TranspilerHelper {
 
 		// replace n4jsd resource with provided js resource
 		for (final Resource dep : from(dependencies).filter(r -> !r.getURI().equals(resource.getURI()))) {
-			if ("n4jsd".equalsIgnoreCase(dep.getURI().fileExtension())) {
+			if (N4JSGlobals.N4JSD_FILE_EXTENSION.equalsIgnoreCase(URIUtils.fileExtension(dep.getURI()))) {
 				compileImplementationOfN4JSDFile(projectFolder, errorResult, dep, options, replaceQuotes);
 			} else if (xpectGenerator.isCompilable(dep, errorResult)) {
 				final Script script = (Script) dep.getContents().get(0);

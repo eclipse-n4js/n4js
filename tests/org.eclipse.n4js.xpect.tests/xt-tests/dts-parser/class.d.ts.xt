@@ -1,0 +1,99 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+export class KE {
+    field: number;
+    optionalField?: number;
+    static staticField: number;
+    static readonly staticReadonlyField: number;
+    readonly readonlyField: number;
+    method(): string;
+    optionalMethod?(): string;
+    static staticMethod(): string;
+    get getter() : string;
+    set setter(v: string);
+    static get staticGetter() : string;
+    static set staticSetter(v: string);
+}
+
+declare class KD {
+    field: number;
+}
+
+
+/* XPECT ast ---
+Script: true
+  ExportDeclaration: false, false
+   N4ClassDeclaration: [external, public], KE, ?~
+    N4FieldDeclaration: [public], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, field
+    N4FieldDeclaration: [public], true
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, optionalField
+    N4FieldDeclaration: [public, static], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, staticField
+    N4FieldDeclaration: [public, const], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, staticReadonlyField
+    N4FieldDeclaration: [public], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, readonlyField
+    N4MethodDeclaration: false, [public], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, method
+    N4MethodDeclaration: false, [public], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, optionalMethod
+    N4MethodDeclaration: false, [public, static], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, staticMethod
+    N4FieldDeclaration: [public], false
+     LiteralOrComputedPropertyName: false, identifier, get
+    N4MethodDeclaration: false, [public], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, getter
+    N4FieldDeclaration: [public], false
+     LiteralOrComputedPropertyName: false, identifier, set
+    N4MethodDeclaration: false, [public], false
+     LiteralOrComputedPropertyName: false, identifier, setter
+    N4FieldDeclaration: [public, static], false
+     LiteralOrComputedPropertyName: false, identifier, get
+    N4MethodDeclaration: false, [public], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, staticGetter
+    N4FieldDeclaration: [public, static], false
+     LiteralOrComputedPropertyName: false, identifier, set
+    N4MethodDeclaration: false, [public], false
+     LiteralOrComputedPropertyName: false, identifier, staticSetter
+  N4ClassDeclaration: [external], KD, ?~
+   N4FieldDeclaration: [public], false
+    TypeReferenceNode
+     ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
+    LiteralOrComputedPropertyName: false, identifier, field
+--- */
+
+

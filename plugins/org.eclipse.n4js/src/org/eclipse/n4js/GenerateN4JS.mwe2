@@ -76,7 +76,10 @@ Workflow {
 
 		language = XtextGeneratorLanguage {
 			name = "org.eclipse.n4js.N4JS"
-			fileExtensions = "n4js,n4jsx,js,cjs,mjs,jsx,n4jsd"
+			fileExtensions = "n4js,n4jsx,js,cjs,mjs,jsx,n4jsd,ts"
+			// note regarding d.ts:
+			// We would like to add only .d.ts (not .ts), but dots inside files extensions are not supported
+			// due to: org.eclipse.emf.common.util.URI.fileExtension() called in org.eclipse.emf.ecore.resource.impl.ResourceFactoryRegistryImpl.getFactory(...)
 
 			referencedResource = "platform:/resource/org.eclipse.emf.ecore.xcore.lib/model/XcoreLang.xcore"
 			referencedResource = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.ecore"
