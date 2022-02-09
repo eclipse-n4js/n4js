@@ -81,9 +81,9 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 			// TODO: missing modifier N4Modifier.EXTERNAL
 		}
 		VariableStatementKeyword keyword = VariableStatementKeyword.VAR;
-		if (ctx.varModifier().Const() != null) {
+		if (ctx.varModifier() != null && ctx.varModifier().Const() != null) {
 			keyword = VariableStatementKeyword.CONST;
-		} else if (ctx.varModifier().Let() != null) {
+		} else if (ctx.varModifier() != null && ctx.varModifier().Let() != null) {
 			keyword = VariableStatementKeyword.LET;
 		}
 		result.setVarStmtKeyword(keyword);
