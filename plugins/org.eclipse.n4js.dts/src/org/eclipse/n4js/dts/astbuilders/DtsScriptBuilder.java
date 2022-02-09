@@ -147,8 +147,8 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement id) {
 		boolean isExported = ParserContextUtil.isExported(ctx);
+		((ModifiableElement) id).getDeclaredModifiers().add(N4Modifier.PUBLIC);
 		if (isExported) {
-			((ModifiableElement) id).getDeclaredModifiers().add(N4Modifier.PUBLIC);
 			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
 			ed.setExportedElement(id);
 			addToScript(ed);
