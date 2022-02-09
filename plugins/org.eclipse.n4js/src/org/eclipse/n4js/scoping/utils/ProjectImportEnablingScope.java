@@ -268,7 +268,10 @@ public class ProjectImportEnablingScope implements IScope {
 		// we will always have only one of .js/.cjs/.mjs when reaching this point in the code:
 		N4JSProjectConfigSnapshot jsProject = null;
 		for (String jsFileExt : ALL_JS_FILE_EXTENSIONS) {
-			jsProject = prj4Ext.remove(jsFileExt);
+			N4JSProjectConfigSnapshot removed = prj4Ext.remove(jsFileExt);
+			if (removed != null) {
+				jsProject = removed;
+			}
 		}
 		if (jsProject == null) {
 			return null; // return null due to missing implementation module
