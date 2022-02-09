@@ -42,6 +42,7 @@ import com.google.common.collect.Iterables;
  * Parses the configuration in the Xt setup section of an .xt file.
  */
 public class XtSetupParser {
+	/** Add d.ts extension since modules will be created for d.ts files */
 	public static final Collection<String> ALL_N4_MODULE_EXTENSIONS = new HashSet<>() {
 		{
 			addAll(N4JSGlobals.ALL_N4_FILE_EXTENSIONS);
