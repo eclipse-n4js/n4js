@@ -10,21 +10,23 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.TypeScriptParser.IdentifierExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SingleExpressionContext;
-import org.eclipse.n4js.dts.TypeScriptParser.TypeParameterContext;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSFactory;
-import org.eclipse.n4js.n4JS.N4TypeVariable;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsExpressionBuilder extends AbstractDtsSubBuilder<SingleExpressionContext, Expression> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsExpressionBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -32,18 +34,20 @@ public class DtsExpressionBuilder extends AbstractDtsSubBuilder<SingleExpression
 	}
 
 	@Override
-	public void enterTypeParameter(TypeParameterContext ctx) {
-		N4TypeVariable typeVar = N4JSFactory.eINSTANCE.createN4TypeVariable();
-		typeVar.setName(ctx.identifierName().getText());
-		if (ctx.constraint() != null && ctx.constraint().typeRef() != null) {
-			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.constraint().typeRef());
-			typeVar.setDeclaredUpperBoundNode(trn);
+	public void enterIdentifierExpression(IdentifierExpressionContext ctx) {
+		if (ctx.identifierName() == null || ctx.identifierName().getText().isBlank()) {
+			return;
 		}
-		if (ctx.defaultType() != null && ctx.defaultType().typeRef() != null) {
-			typeVar.setDeclaredOptional(true);
-			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.defaultType().typeRef());
-			typeVar.setDeclaredDefaultArgumentNode(trn);
-		}
-	}
 
+		String idName = ctx.identifierName().getText();
+		IdentifierRef iRef = N4JSFactory.eINSTANCE.createIdentifierRef();
+		iRef.setIdAsText(idName);
+
+		IdentifiableElement ieProxy = TypesFactory.eINSTANCE.createIdentifiableElement();
+		EReference eRef = N4JSPackage.eINSTANCE.getIdentifierRef_Id();
+		ParserContextUtil.installProxy(resource, iRef, eRef, ieProxy, idName);
+
+		iRef.setId(ieProxy);
+		result = iRef;
+	}
 }

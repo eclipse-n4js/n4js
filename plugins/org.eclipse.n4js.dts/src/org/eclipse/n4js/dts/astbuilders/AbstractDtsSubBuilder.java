@@ -96,4 +96,5 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 	protected void addLocationInfo(EObject obj, ParserRuleContext ctx) {
 		obj.eAdapters().add(new DtsParseTreeNodeInfo(tokenStream, ctx));
 	}
+
 }

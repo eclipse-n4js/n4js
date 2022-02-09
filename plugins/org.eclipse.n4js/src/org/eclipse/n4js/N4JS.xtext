@@ -1014,7 +1014,7 @@ LogicalOROperator returns BinaryLogicalOperator: '||';
 /**
  * Coalesce Expressions as in https://tc39.es/proposal-nullish-coalescing
  * 
- * The structural assertions are implementes in the ASTStructureValidator
+ * The structural assertions are implements in the ASTStructureValidator
  */
 CoalesceExpression<In, Yield> returns Expression:
 	LogicalORExpression<In,Yield>

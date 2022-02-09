@@ -10,22 +10,17 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classElement;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classElementList;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_declarationStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_declareStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatementTail;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMember;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMemberList;
 
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.n4js.dts.DtsTokenStream;
-import org.eclipse.n4js.dts.ParserContextUtil;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
@@ -71,11 +66,7 @@ public class DtsNamespaceBuilder extends AbstractDtsSubBuilder<NamespaceDeclarat
 				RULE_declareStatement,
 				RULE_declarationStatement,
 				RULE_exportStatement,
-				RULE_exportStatementTail,
-				RULE_classElementList,
-				RULE_classElement,
-				RULE_typeMember,
-				RULE_typeMemberList);
+				RULE_exportStatementTail);
 	}
 
 	@Override

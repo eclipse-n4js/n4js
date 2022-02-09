@@ -23,6 +23,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.EnumMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.LiteralExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
@@ -71,7 +72,10 @@ public class DtsEnumBuilder extends AbstractDtsSubBuilder<EnumDeclarationContext
 		String name = definesAllStringValues ? AnnotationDefinition.STRING_BASED.name
 				: AnnotationDefinition.NUMBER_BASED.name;
 		valueBasedAnnotation.setName(name);
-		result.getAllAnnotations().add(valueBasedAnnotation);
+
+		AnnotationList annotations = N4JSFactory.eINSTANCE.createAnnotationList();
+		annotations.getAnnotations().add(valueBasedAnnotation);
+		result.setAnnotationList(annotations);
 	}
 
 	@Override
