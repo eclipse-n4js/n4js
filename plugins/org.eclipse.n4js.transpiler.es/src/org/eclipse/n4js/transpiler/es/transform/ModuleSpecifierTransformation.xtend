@@ -13,6 +13,7 @@ package org.eclipse.n4js.transpiler.es.transform
 import com.google.common.base.Joiner
 import com.google.inject.Inject
 import java.util.Arrays
+import java.util.Map
 import java.util.Objects
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm
@@ -43,6 +44,7 @@ class ModuleSpecifierTransformation extends Transformation {
 	private N4JSLanguageHelper n4jsLanguageHelper;
 
 	private String[] localModulePath = null; // will be set in #analyze()
+	private Map<String,String> definedModuleSpecifierRewrites = null; // will be set in #analyze()
 
 	override assertPreConditions() {
 		// true
@@ -57,6 +59,7 @@ class ModuleSpecifierTransformation extends Transformation {
 		val localModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(localModule);
 		val localModuleSpecifierSegments = localModuleSpecifier.split("/", -1);
 		localModulePath = Arrays.copyOf(localModuleSpecifierSegments, localModuleSpecifierSegments.length - 1);
+		definedModuleSpecifierRewrites = state.project.projectDescription.generatorRewriteModuleSpecifiers;
 	}
 
 	override transform() {
@@ -65,6 +68,13 @@ class ModuleSpecifierTransformation extends Transformation {
 	}
 
 	def private void transformImportDecl(ImportDeclaration importDeclIM) {
+		val definedRewrite = definedModuleSpecifierRewrites.get(importDeclIM.moduleSpecifierAsText);
+		if (definedRewrite !== null) {
+			// special case: a rewrite for this module specifier was defined in the package.json
+			importDeclIM.moduleSpecifierAsText = definedRewrite;
+			return;
+		}
+
 		val moduleSpecifier = computeModuleSpecifierForOutputCode(importDeclIM);
 		val moduleSpecifierNormalized = moduleSpecifier.replace("/./", "/");
 		importDeclIM.moduleSpecifierAsText = moduleSpecifierNormalized;

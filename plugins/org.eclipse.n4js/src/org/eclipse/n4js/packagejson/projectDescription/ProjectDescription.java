@@ -11,6 +11,7 @@
 package org.eclipse.n4js.packagejson.projectDescription;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -27,6 +28,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Basic information about a project, as read from the {@code package.json} file in the project's root folder.
@@ -62,6 +64,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final boolean yarnWorkspaceRoot;
 	private final boolean isGeneratorEnabledSourceMaps;
 	private final boolean isGeneratorEnabledDts;
+	private final ImmutableMap<String, String> generatorRewriteModuleSpecifiers;
 	private final boolean isGeneratorEnabledRewriteCjsImports;
 	private final ImmutableList<String> workspaces;
 
@@ -75,7 +78,8 @@ public class ProjectDescription extends ImmutableDataClass {
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
 			boolean esm, boolean n4jsNature, boolean yarnWorkspaceRoot, boolean isGeneratorEnabledSourceMaps,
-			boolean isGeneratorEnabledDts, boolean isGeneratorEnabledRewriteCjsImports, Iterable<String> workspaces) {
+			boolean isGeneratorEnabledDts, Map<String, String> generatorRewriteModuleSpecifiers,
+			boolean isGeneratorEnabledRewriteCjsImports, Iterable<String> workspaces) {
 
 		this.location = location;
 		this.relatedRootlocation = relatedRootlocation;
@@ -104,6 +108,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
 		this.isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps;
 		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
+		this.generatorRewriteModuleSpecifiers = ImmutableMap.copyOf(generatorRewriteModuleSpecifiers);
 		this.isGeneratorEnabledRewriteCjsImports = isGeneratorEnabledRewriteCjsImports;
 		this.workspaces = ImmutableList.copyOf(workspaces);
 	}
@@ -136,6 +141,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.yarnWorkspaceRoot = template.yarnWorkspaceRoot;
 		this.isGeneratorEnabledSourceMaps = template.isGeneratorEnabledSourceMaps;
 		this.isGeneratorEnabledDts = template.isGeneratorEnabledDts;
+		this.generatorRewriteModuleSpecifiers = template.generatorRewriteModuleSpecifiers;
 		this.isGeneratorEnabledRewriteCjsImports = template.isGeneratorEnabledRewriteCjsImports;
 		this.workspaces = template.workspaces;
 	}
@@ -173,6 +179,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setYarnWorkspaceRoot(yarnWorkspaceRoot);
 		builder.setGeneratorEnabledSourceMaps(isGeneratorEnabledSourceMaps);
 		builder.setGeneratorEnabledDts(isGeneratorEnabledDts);
+		builder.getGeneratorRewriteModuleSpecifiers().putAll(generatorRewriteModuleSpecifiers);
 		builder.setGeneratorEnabledRewriteCjsImports(isGeneratorEnabledRewriteCjsImports);
 		builder.getWorkspaces().addAll(workspaces);
 		return builder;
@@ -335,6 +342,11 @@ public class ProjectDescription extends ImmutableDataClass {
 		return isGeneratorEnabledDts;
 	}
 
+	/** Returns the module specifier mapping defined in the "n4js/generator" section of the package.json. */
+	public Map<String, String> getGeneratorRewriteModuleSpecifiers() {
+		return generatorRewriteModuleSpecifiers;
+	}
+
 	/** Returns true iff default imports should be emitted for all imports from CJS modules. */
 	public boolean isGeneratorEnabledRewriteCjsImports() {
 		return isGeneratorEnabledRewriteCjsImports;
@@ -377,6 +389,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps,
 				isGeneratorEnabledDts,
+				generatorRewriteModuleSpecifiers,
 				isGeneratorEnabledRewriteCjsImports,
 				workspaces);
 	}
@@ -411,6 +424,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& yarnWorkspaceRoot == other.yarnWorkspaceRoot
 				&& isGeneratorEnabledSourceMaps == other.isGeneratorEnabledSourceMaps
 				&& isGeneratorEnabledDts == other.isGeneratorEnabledDts
+				&& Objects.equals(generatorRewriteModuleSpecifiers, other.generatorRewriteModuleSpecifiers)
 				&& isGeneratorEnabledRewriteCjsImports == other.isGeneratorEnabledRewriteCjsImports
 				&& Objects.equals(workspaces, other.workspaces);
 	}

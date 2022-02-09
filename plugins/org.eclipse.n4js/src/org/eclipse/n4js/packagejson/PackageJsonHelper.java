@@ -228,6 +228,15 @@ public class PackageJsonHelper {
 				target.setGeneratorEnabledDts(
 						asBooleanOrDefault(value, (Boolean) PackageJsonProperties.GENERATOR_DTS.defaultValue));
 				break;
+			case GENERATOR_REWRITE_MODULE_SPECIFIERS:
+				for (NameValuePair nvp : asNameValuePairsOrEmpty(value)) {
+					String n = nvp.getName();
+					String v = asStringOrNull(nvp.getValue());
+					if (n != null && v != null) { // note: we allow empty strings
+						target.getGeneratorRewriteModuleSpecifiers().put(n, v);
+					}
+				}
+				break;
 			case GENERATOR_REWRITE_CJS_IMPORTS:
 				target.setGeneratorEnabledRewriteCjsImports(
 						asBooleanOrDefault(value,

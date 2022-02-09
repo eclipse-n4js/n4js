@@ -12,7 +12,9 @@ package org.eclipse.n4js.packagejson.projectDescription;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -53,6 +55,7 @@ public class ProjectDescriptionBuilder {
 	private boolean yarnWorkspaceRoot;
 	private Boolean isGeneratorEnabledSourceMaps;
 	private Boolean isGeneratorEnabledDts;
+	private final Map<String, String> generatorRewriteModuleSpecifiers = new HashMap<>();
 	private Boolean isGeneratorEnabledRewriteCjsImports;
 	private final List<String> workspaces = new ArrayList<>();
 
@@ -72,8 +75,8 @@ public class ProjectDescriptionBuilder {
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
 				nestedNodeModulesFolder, esm, n4jsNature, yarnWorkspaceRoot,
-				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, isGeneratorEnabledRewriteCjsImports,
-				workspaces);
+				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, generatorRewriteModuleSpecifiers,
+				isGeneratorEnabledRewriteCjsImports, workspaces);
 	}
 
 	public String computeProjectID() {
@@ -345,6 +348,10 @@ public class ProjectDescriptionBuilder {
 	public ProjectDescriptionBuilder setGeneratorEnabledDts(boolean isGeneratorEnabledDts) {
 		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
 		return this;
+	}
+
+	public Map<String, String> getGeneratorRewriteModuleSpecifiers() {
+		return this.generatorRewriteModuleSpecifiers;
 	}
 
 	public Boolean isGeneratorEnabledRewriteCjsImports() {

@@ -15,6 +15,7 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEFINES_PACKAGE
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXTENDED_RUNTIME_ENVIRONMENT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_REWRITE_MODULE_SPECIFIERS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTATION_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
@@ -644,6 +645,34 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		if (!checkIsArrayOfType(testedProjectsValues, JSONPackage.Literals.JSON_STRING_LITERAL,
 				"as list of tested projects", "as tested project reference")) {
 			return;
+		}
+	}
+
+	/**
+	 * Checks 'rewriteModuleSpecifiers'.
+	 */
+	@CheckProperty(property = GENERATOR_REWRITE_MODULE_SPECIFIERS)
+	public void checkRewriteModuleSpecifiers(JSONValue value) {
+		if (!checkIsType(value, JSONPackage.Literals.JSON_OBJECT,
+				"(map from module specifier in N4JS source code to specifier used in output code)")) {
+			return;
+		}
+		for (NameValuePair nvp : ((JSONObject) value).getNameValuePairs()) {
+			String n = nvp.getName();
+			JSONValue v = nvp.getValue();
+			if (n == null || v == null) {
+				continue; // syntax error
+			}
+			if (n.isEmpty()) {
+				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER("Source"), nvp,
+						IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER);
+			} else if (!(v instanceof JSONStringLiteral)) {
+				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE(), v,
+						IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE);
+			} else if (((JSONStringLiteral) v).getValue().isEmpty()) {
+				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER("Output code"), v,
+						IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER);
+			}
 		}
 	}
 
