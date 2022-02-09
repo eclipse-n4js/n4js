@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+	
+	File "tslib.d.ts" {
+		export interface IE<S, T> {
+		    field: S;
+		    method(): T;
+		}
+
+		export interface IO<S, T=string> {
+		    field: S;
+		    method(): T;
+		}
+		
+		export const KIO : IO<number>;
+	}
+	END_SETUP
+ */
+
+
+import {IE, IO, KIO} from "tslib";
+
+// XPECT noerrors -->
+ 
+class CIE implements IE<number, Object> {
+	@Override
+	public field: number;
+
+	@Override
+	public method(): Object {return null;}
+}
+
+const ie : IE<number, Object> = new CIE();
+let keField : number = ie.field;
+ie.field = 3;
+let keStr : Object = ie.method();
+
+
+function f(io : IO<number>) {
+	// XPECT type of 'f1' --> ~number
+	let f1 = io.field;
+	// XPECT type of 'f2' --> ~string
+	let f2 = io.method();
+}
+
+// XPECT type of 'KIO' --> IO<number>
+// XPECT type of 'r1' --> ~number
+let r1 = KIO.field;
+// XPECT type of 'r2' --> ~string
+let r2 = KIO.method();
+
+

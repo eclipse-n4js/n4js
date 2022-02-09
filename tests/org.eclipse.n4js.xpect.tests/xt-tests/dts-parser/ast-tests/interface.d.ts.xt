@@ -13,22 +13,17 @@
    END_SETUP
  */
 
-export class KE {
+export interface IE {
     field: number;
     optionalField?: number;
-    static staticField: number;
-    static readonly staticReadonlyField: number;
     readonly readonlyField: number;
     method(): string;
     optionalMethod?(): string;
-    static staticMethod(): string;
     get getter() : string;
     set setter(v: string);
-    static get staticGetter() : string;
-    static set staticSetter(v: string);
 }
 
-declare class KD {
+declare interface ID {
     field: number;
 }
 
@@ -36,7 +31,7 @@ declare class KD {
 /* XPECT ast ---
 Script: true
   ExportDeclaration: false, false
-   N4ClassDeclaration: [external, public], KE, ?~
+   N4InterfaceDeclaration: [external, public], IE, ?~
     N4FieldDeclaration: [public], false
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
@@ -45,14 +40,6 @@ Script: true
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, optionalField
-    N4FieldDeclaration: [public, static], false
-     TypeReferenceNode
-      ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
-     LiteralOrComputedPropertyName: false, identifier, staticField
-    N4FieldDeclaration: [public, const], false
-     TypeReferenceNode
-      ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
-     LiteralOrComputedPropertyName: false, identifier, staticReadonlyField
     N4FieldDeclaration: [public], false
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
@@ -65,31 +52,16 @@ Script: true
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
      LiteralOrComputedPropertyName: false, identifier, optionalMethod
-    N4MethodDeclaration: false, [public, static], false
-     TypeReferenceNode
-      ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
-     LiteralOrComputedPropertyName: false, identifier, staticMethod
-    N4FieldDeclaration: [public], false
-     LiteralOrComputedPropertyName: false, identifier, get
-    N4MethodDeclaration: false, [public], false
-     TypeReferenceNode
-      ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
+    N4GetterDeclaration: [public], false
      LiteralOrComputedPropertyName: false, identifier, getter
-    N4FieldDeclaration: [public], false
-     LiteralOrComputedPropertyName: false, identifier, set
-    N4MethodDeclaration: false, [public], false
-     LiteralOrComputedPropertyName: false, identifier, setter
-    N4FieldDeclaration: [public, static], false
-     LiteralOrComputedPropertyName: false, identifier, get
-    N4MethodDeclaration: false, [public], false
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
-     LiteralOrComputedPropertyName: false, identifier, staticGetter
-    N4FieldDeclaration: [public, static], false
-     LiteralOrComputedPropertyName: false, identifier, set
-    N4MethodDeclaration: false, [public], false
-     LiteralOrComputedPropertyName: false, identifier, staticSetter
-  N4ClassDeclaration: [external], KD, ?~
+    N4SetterDeclaration: [public], false
+     LiteralOrComputedPropertyName: false, identifier, setter
+     FormalParameter: false, v, false
+      TypeReferenceNode
+       ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
+  N4InterfaceDeclaration: [external, public], ID, ?~
    N4FieldDeclaration: [public], false
     TypeReferenceNode
      ParameterizedTypeRef: OFF, false, false, number, ?~, false, false

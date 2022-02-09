@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classElement;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classElementList;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classTail;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classBody;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classMember;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_classMemberList;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_propertyMember;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_propertyMemberDeclaration;
 
@@ -30,13 +30,16 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertyOrMethodContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
+import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -57,9 +60,9 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
-				RULE_classTail,
-				RULE_classElementList,
-				RULE_classElement,
+				RULE_classBody,
+				RULE_classMemberList,
+				RULE_classMember,
 				RULE_propertyMemberDeclaration,
 				RULE_propertyMember);
 	}
@@ -70,10 +73,14 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 		result.setName(ctx.identifierOrKeyWord().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
+		if (ctx.Abstract() != null) {
+			result.getDeclaredModifiers().add(N4Modifier.ABSTRACT);
+		}
+
 		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
 
-		walker.enqueue(ctx.classTail());
+		walker.enqueue(ctx.classBody());
 	}
 
 	@Override
@@ -82,12 +89,12 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 			return;
 		}
 
-		boolean isReadonly = false, isStatic = false;
+		boolean isReadonly = ctx.ReadOnly() != null;
+		boolean isStatic = false;
 		PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
 		if (pmctx.propertyMemberBase() != null) {
 			PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
 			isStatic = pmb.Static() != null;
-			isReadonly = pmb.ReadOnly() != null;
 		}
 
 		AnnotableN4MemberDeclaration memberDecl = null;
@@ -120,20 +127,18 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 
 		memberDecl.getDeclaredModifiers().add(N4Modifier.PUBLIC);
 		if (isStatic) {
-			if (isStatic) {
-				if (isReadonly) {
-					memberDecl.getDeclaredModifiers().add(N4Modifier.CONST);
-				} else {
-					memberDecl.getDeclaredModifiers().add(N4Modifier.STATIC);
-				}
+			if (isReadonly) {
+				memberDecl.getDeclaredModifiers().add(N4Modifier.CONST);
 			} else {
-				if (isReadonly) {
-					N4MemberAnnotationList annList = N4JSFactory.eINSTANCE.createN4MemberAnnotationList();
-					Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
-					ann.setName(AnnotationDefinition.FINAL.name);
-					annList.getAnnotations().add(ann);
-					memberDecl.setAnnotationList(annList);
-				}
+				memberDecl.getDeclaredModifiers().add(N4Modifier.STATIC);
+			}
+		} else {
+			if (isReadonly) {
+				N4MemberAnnotationList annList = N4JSFactory.eINSTANCE.createN4MemberAnnotationList();
+				Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+				ann.setName(AnnotationDefinition.FINAL.name);
+				annList.getAnnotations().add(ann);
+				memberDecl.setAnnotationList(annList);
 			}
 		}
 		addLocationInfo(memberDecl, ctx);
@@ -142,14 +147,87 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 
 	@Override
 	public void enterGetAccessor(GetAccessorContext ctx) {
-		// TODO Auto-generated method stub
-		super.enterGetAccessor(ctx);
+		N4GetterDeclaration getter = createGetAccessor(ctx, typeRefBuilder);
+		if (getter != null) {
+			addLocationInfo(getter, ctx);
+			result.getOwnedMembersRaw().add(getter);
+		}
 	}
 
 	@Override
 	public void enterSetAccessor(SetAccessorContext ctx) {
-		// TODO Auto-generated method stub
-		super.enterSetAccessor(ctx);
+		N4SetterDeclaration setter = createSetAccessor(ctx, this, typeRefBuilder);
+		if (setter != null) {
+			addLocationInfo(setter, ctx);
+			result.getOwnedMembersRaw().add(setter);
+		}
+	}
+
+	/** Builds a {@link N4GetterDeclaration} from a {@link GetAccessorContext} */
+	static public N4GetterDeclaration createGetAccessor(GetAccessorContext ctx, DtsTypeRefBuilder typeRefBuilder) {
+		if (ctx.getter() == null || ctx.getter().propertyName() == null) {
+			return null;
+		}
+
+		N4GetterDeclaration getter = N4JSFactory.eINSTANCE.createN4GetterDeclaration();
+
+		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+		locpn.setLiteralName(ctx.getter().propertyName().getText());
+		getter.setDeclaredName(locpn);
+
+		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
+		getter.setDeclaredTypeRefNode(trn);
+
+		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
+			PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
+			if (pmctx.propertyMemberBase() != null) {
+				PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
+				if (pmb.Static() != null) {
+					getter.getDeclaredModifiers().add(N4Modifier.STATIC);
+				}
+			}
+		}
+
+		getter.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		return getter;
+	}
+
+	/** Builds a {@link N4SetterDeclaration} from a {@link SetAccessorContext} */
+	static public N4SetterDeclaration createSetAccessor(SetAccessorContext ctx, AbstractDtsSubBuilder<?, ?> subbuilder,
+			DtsTypeRefBuilder typeRefBuilder) {
+
+		if (ctx.setter() == null || ctx.setter().propertyName() == null) {
+			return null;
+		}
+
+		N4SetterDeclaration setter = N4JSFactory.eINSTANCE.createN4SetterDeclaration();
+
+		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+		locpn.setLiteralName(ctx.setter().propertyName().getText());
+		setter.setDeclaredName(locpn);
+
+		FormalParameter fpar = N4JSFactory.eINSTANCE.createFormalParameter();
+		setter.setFpar(fpar);
+		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
+		fpar.setDeclaredTypeRefNode(trn);
+		if (ctx.Identifier() != null) {
+			fpar.setName(ctx.Identifier().getText());
+		} else if (ctx.bindingPattern() != null) {
+			fpar.setBindingPattern(new DtsBindingPatternBuilder(subbuilder).consume(ctx.bindingPattern()));
+		}
+
+		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
+			PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
+			if (pmctx.propertyMemberBase() != null) {
+				PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
+				if (pmb.Static() != null) {
+					setter.getDeclaredModifiers().add(N4Modifier.STATIC);
+				}
+			}
+		}
+
+		setter.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		return setter;
 	}
 
 	@Override

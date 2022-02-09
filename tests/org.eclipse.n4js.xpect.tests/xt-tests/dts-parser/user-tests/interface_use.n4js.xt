@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+	
+	File "tslib.d.ts" {
+		export interface IE {
+		    field: number;
+		    optionalField?: number;
+		    readonly readonlyField: number;
+		    method(): string;
+		    optionalMethod?(): string;
+		    get getter() : string;
+		    set setter(v: string);
+		}
+	}
+	END_SETUP
+ */
+
+
+import {IE} from "tslib";
+
+// XPECT noerrors -->
+ 
+class CIE implements IE {
+	@Override
+	public field: number;
+
+	@Override
+	public optionalField?: number;
+
+	//@Final // "In interfaces, only methods may be declared final." (CLF_NO_FINAL_INTERFACE_MEMBER)
+	//@Override
+	//public readonlyField: number = 0;
+
+	@Override
+	public method(): string {return null;}
+
+	@Override
+	public optionalMethod(): string {return null;}
+
+	@Override
+	public get getter() : string {return null;}
+
+	@Override
+	public set setter(v: string) {}
+}
+
+const ie : IE = new CIE;
+let keNum : number = ie.field;
+ie.field = 1;
+let keNumO : number = ie.optionalField;
+let keNumR : number = ie.readonlyField;
+let keStr : string = ie.method();
+let keStrO : string = ie.optionalMethod();
+let keGett : string = ie.getter;
+ie.setter = "s";
+
+
+/* XPECT errors ---
+ "IE cannot be used as a value." at "IE"
+ "The non-static member field cannot be accessed from a static context." at "field"
+ --- */
+IE.field;
+
+
+
+/* XPECT errors ---
+ "Cannot instantiate interface IE." at "IE"
+ "IE cannot be used as a value." at "IE"
+ --- */
+new IE();
+ 
+ 
+ 
+ 

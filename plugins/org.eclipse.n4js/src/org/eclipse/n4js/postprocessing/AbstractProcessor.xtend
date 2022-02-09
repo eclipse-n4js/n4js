@@ -142,7 +142,12 @@ package abstract class AbstractProcessor {
 		if (obj === null) {
 			"<null>"
 		} else if (obj instanceof IdentifierRef) {
-			"IdentifierRef \"" + NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(obj)) + "\""
+			val node = NodeModelUtils.findActualNodeFor(obj);
+			if (node === null) {
+				"<null>"
+			} else {
+				"IdentifierRef \"" + NodeModelUtils.getTokenText(node) + "\""
+			}
 		} else {
 			val name = obj.name;
 			if (name !== null) {

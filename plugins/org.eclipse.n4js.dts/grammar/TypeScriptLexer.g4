@@ -133,6 +133,7 @@ Keyof:                          'keyof';
 Case:                           'case';
 Else:                           'else';
 New:                            'new';
+Target:                         'target';
 Var:                            'var';
 Catch:                          'catch';
 Finally:                        'finally';
@@ -156,6 +157,7 @@ As:                             'as';
 From:                           'from';
 ReadOnly:                       'readonly';
 Async:                          'async';
+Await:                          'await';
 
 /// Future Reserved Words
 

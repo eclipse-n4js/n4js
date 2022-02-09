@@ -54,7 +54,7 @@ class OtherFile {
 	 * @return the name of this module
 	 */
 	public def String getName() {
-		return name
+		return name;
 	}
 
 	/**
@@ -64,7 +64,7 @@ class OtherFile {
 	 * @return the file extension of this module or <code>null</code>.
 	 */
 	public def String getExtension() {
-		return fExtension
+		return fExtension;
 	}
 
 	/** @return filename with extension (if any). */
@@ -81,6 +81,15 @@ class OtherFile {
 	public def OtherFile setContents(String contents) {
 		this.content = contents;
 		return this;
+	}
+
+	/**
+	 * Returns the contents of this module.
+	 * 
+	 * @return the contents of this module
+	 */
+	public def String getContents() {
+		return content;
 	}
 
 	/**

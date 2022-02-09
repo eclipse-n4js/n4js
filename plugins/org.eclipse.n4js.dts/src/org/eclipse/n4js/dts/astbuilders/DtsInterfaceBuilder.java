@@ -10,25 +10,29 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeBody;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMember;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeMemberList;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceBody;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceMember;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceMemberList;
 
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceExtendsClauseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.MethodSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
+import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
+import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -51,9 +55,9 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
-				RULE_typeBody,
-				RULE_typeMemberList,
-				RULE_typeMember);
+				RULE_interfaceBody,
+				RULE_interfaceMemberList,
+				RULE_interfaceMember);
 	}
 
 	@Override
@@ -80,7 +84,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 			result.getSuperInterfaceRefs().add(typeRefNode);
 		}
 
-		walker.enqueue(ctx.typeBody());
+		walker.enqueue(ctx.interfaceBody());
 	}
 
 	@Override
@@ -91,6 +95,11 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 		locpn.setLiteralName(ctx.propertyName().getText());
 		fd.setDeclaredName(locpn);
 		fd.setDeclaredOptional(ctx.QuestionMark() != null);
+
+		if (ctx.ReadOnly() != null) {
+			// "In interfaces, only methods may be declared final." (CLF_NO_FINAL_INTERFACE_MEMBER)
+			// consider to create a getter instead of a field
+		}
 
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
 		fd.setDeclaredTypeRefNode(trn);
@@ -112,5 +121,23 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 
 		addLocationInfo(md, ctx);
 		result.getOwnedMembersRaw().add(md);
+	}
+
+	@Override
+	public void enterGetAccessor(GetAccessorContext ctx) {
+		N4GetterDeclaration getter = DtsClassBuilder.createGetAccessor(ctx, typeRefBuilder);
+		if (getter != null) {
+			addLocationInfo(getter, ctx);
+			result.getOwnedMembersRaw().add(getter);
+		}
+	}
+
+	@Override
+	public void enterSetAccessor(SetAccessorContext ctx) {
+		N4SetterDeclaration setter = DtsClassBuilder.createSetAccessor(ctx, this, typeRefBuilder);
+		if (setter != null) {
+			addLocationInfo(setter, ctx);
+			result.getOwnedMembersRaw().add(setter);
+		}
 	}
 }

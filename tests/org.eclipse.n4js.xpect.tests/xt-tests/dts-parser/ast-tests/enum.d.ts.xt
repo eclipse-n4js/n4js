@@ -39,11 +39,15 @@ export enum ColorS {
 Script: true
   ExportDeclaration: false, false
    N4EnumDeclaration: [external, public], RoundingMode
+    AnnotationList
+     Annotation: NumberBased
     N4EnumLiteral: UP
     N4EnumLiteral: DOWN
     N4EnumLiteral: FLOOR
   ExportDeclaration: false, false
    N4EnumDeclaration: [external, public], ColorN
+    AnnotationList
+     Annotation: NumberBased
     N4EnumLiteral: blue
      NumericLiteral: 1
     N4EnumLiteral: green
@@ -52,6 +56,8 @@ Script: true
      NumericLiteral: 3
   ExportDeclaration: false, false
    N4EnumDeclaration: [external, public], ColorS
+    AnnotationList
+     Annotation: StringBased
     N4EnumLiteral: blue
      StringLiteral: "myblue"
     N4EnumLiteral: green

@@ -66,6 +66,15 @@ public class Folder {
 	}
 
 	/**
+	 * Returns a list of all non-modules of this folder.
+	 * 
+	 * @return list of all non-modules of this folder
+	 */
+	public def List<OtherFile> getOtherFiles() {
+		return files;
+	}
+
+	/**
 	 * Creates this source folder within the given parent directory, which must exist.
 	 * 
 	 * This method first creates a new folder within the given parent directory, and then
