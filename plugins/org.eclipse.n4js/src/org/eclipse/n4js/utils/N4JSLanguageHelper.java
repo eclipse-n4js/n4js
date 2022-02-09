@@ -27,6 +27,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
+import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshotForPackageJson;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
@@ -278,6 +279,9 @@ public final class N4JSLanguageHelper {
 		segments[segCount] = N4JSGlobals.PACKAGE_JSON;
 
 		for (N4JSSourceFolderSnapshot srcFolder : targetProject.getSourceFolders()) {
+			if (srcFolder instanceof N4JSSourceFolderSnapshotForPackageJson) {
+				continue;
+			}
 			FileURI packageJsonURI = srcFolder.getPathAsFileURI().appendSegments(segments);
 			if (index.getResourceDescription(packageJsonURI.toURI()) != null) {
 				return true;
