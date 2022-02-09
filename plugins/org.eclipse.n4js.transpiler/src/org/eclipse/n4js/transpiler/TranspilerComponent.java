@@ -544,4 +544,12 @@ public abstract class TranspilerComponent {
 		return getSymbolTableEntryForMember(RuleEnvironmentExtensions.functionType(state.G),
 				"call", false, false, true);
 	}
+
+	/**
+	 * Returns the symbol table entry for the interoperability property "__esModule" in default exported objects of
+	 * CommonJS modules.
+	 */
+	public SymbolTableEntry steFor_interopProperty_esModule() {
+		return getSymbolTableEntryInternal("__esModule", true);
+	}
 }

@@ -26,6 +26,7 @@ import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
+import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
@@ -81,6 +82,26 @@ class CommonJsImportsTransformation extends Transformation {
 		insertAfter(lastImportDecl, varStmnts);
 	}
 
+	/**
+	 * Will rewrite the following imports
+	 * <pre>
+	 * import defaultImport+ from "plainJsModule"
+	 * import {namedImport1+} from "plainJsModule"
+	 * import {namedImport2+} from "plainJsModule"
+	 * import * as NamespaceImport+ from "plainJsModule"
+	 * </pre>
+	 * to this output code:
+	 * <pre>
+	 * import $tempVar from './plainJsModule.cjs'
+	 *
+	 * const defaultImport = ($tempVar?.__esModule ? $tempVar.default : $tempVar);
+	 * const NamespaceImport = $tempVar;
+	 * const {
+	 *     namedImport1,
+	 *     namedImport2
+	 * } = $tempVar;
+	 * </pre>
+	 */
 	def private List<VariableStatement> transformImportDecl(TModule targetModule, List<ImportDeclaration> allImportDeclsForThisModule) {
 		if (allImportDeclsForThisModule.empty) {
 			return #[];
@@ -108,36 +129,72 @@ class CommonJsImportsTransformation extends Transformation {
 			}
 		}
 
-		val steName = computeNameForIntermediateDefaultImport(targetModule);
-		val ste = getSymbolTableEntryInternal(steName, true);
+		val tempVarName = computeNameForIntermediateDefaultImport(targetModule);
+		val tempVarSTE = getSymbolTableEntryInternal(tempVarName, true);
 
-		val bindingProps = <BindingProperty>newArrayList;
 		val varDecls = <VariableDeclaration>newArrayList;
+		val bindingProps = <BindingProperty>newArrayList;
 
-		for (importDecl : allImportDeclsForThisModule) {
+		createVarDeclsOrBindings(allImportDeclsForThisModule, tempVarSTE, varDecls, bindingProps);
+
+		val result = <VariableStatement>newArrayList;
+		for (varDecl : varDecls) {
+			result += _VariableStatement(VariableStatementKeyword.CONST, varDecl);
+		}
+		if (!bindingProps.empty) {
+			result += _VariableStatement(VariableStatementKeyword.CONST, _VariableBinding(bindingProps, _IdentRef(tempVarSTE)));
+		}
+
+		val firstImportDecl = allImportDeclsForThisModule.head;
+		removeAll(firstImportDecl.importSpecifiers);
+		firstImportDecl.importSpecifiers += N4JSFactory.eINSTANCE.createDefaultImportSpecifier() => [
+			importedElementAsText = tempVarSTE.name;
+			flaggedUsedInCode = true;
+			retainedAtRuntime = true;
+		];
+		removeAll(allImportDeclsForThisModule.drop(1));
+
+		return result;
+	}
+
+	def private void createVarDeclsOrBindings(List<ImportDeclaration> importDecls, SymbolTableEntry steTempVar,
+		List<VariableDeclaration> varDecls, List<BindingProperty> bindingProps) {
+
+		var steEsModule = null as SymbolTableEntry;
+		var steDefault = null as SymbolTableEntry;
+		for (importDecl : importDecls) {
 			for (importSpec : importDecl.importSpecifiers) {
 				switch (importSpec) {
 					NamedImportSpecifier: { // including DefaultImportSpecifier
 						val importedName = importSpec.importedElementAsText;
 						val localName = importSpec.alias ?: importedName;
-						bindingProps += N4JSFactory.eINSTANCE.createBindingProperty => [ newBindingProp |
-							val isDefaultImport = importSpec.isDefaultImport || importedName == "default";
-							if (isDefaultImport) {
-								newBindingProp.declaredName = _LiteralOrComputedPropertyName("default");
-							} else if (localName != importedName) {
-								newBindingProp.declaredName = _LiteralOrComputedPropertyName(importedName);
+						val isDefaultImport = importSpec.isDefaultImport || importedName == "default";
+						if (isDefaultImport) {
+							if (steEsModule === null) {
+								steEsModule = steFor_interopProperty_esModule();
 							}
-							newBindingProp.value = N4JSFactory.eINSTANCE.createBindingElement => [ newBindingElem |
-								newBindingElem.varDecl = _VariableDeclaration(localName);
-								if (isDefaultImport) {
-									newBindingElem.varDecl.expression = _IdentRef(ste);
+							if (steDefault === null) {
+								steDefault = getSymbolTableEntryInternal("default", true);
+							}
+							varDecls += _VariableDeclaration(localName, _Parenthesis(_ConditionalExpr(
+								_PropertyAccessExpr(steTempVar, steFor_interopProperty_esModule) => [ optionalChaining = true ],
+								_PropertyAccessExpr(steTempVar, steDefault),
+								_IdentRef(steTempVar)
+							)));
+						} else {
+							bindingProps += N4JSFactory.eINSTANCE.createBindingProperty => [ newBindingProp |
+								if (localName != importedName) {
+									newBindingProp.declaredName = _LiteralOrComputedPropertyName(importedName);
 								}
-							]
-						];
+								newBindingProp.value = N4JSFactory.eINSTANCE.createBindingElement => [ newBindingElem |
+									newBindingElem.varDecl = _VariableDeclaration(localName);
+								]
+							];
+						}
 					}
 					NamespaceImportSpecifier: {
 						val namespaceName = importSpec.alias;
-						varDecls += _VariableDeclaration(namespaceName, _IdentRef(ste));
+						varDecls += _VariableDeclaration(namespaceName, _IdentRef(steTempVar));
 					}
 					default: {
 						throw new IllegalStateException("unsupported subclass of ImportSpecifier: " + importSpec.eClass.name);
@@ -145,25 +202,6 @@ class CommonJsImportsTransformation extends Transformation {
 				}
 			}
 		}
-
-		val result = _VariableStatement(VariableStatementKeyword.CONST);
-		if (!varDecls.empty) {
-			result.varDeclsOrBindings += varDecls;
-		}
-		if (!bindingProps.empty) {
-			result.varDeclsOrBindings += _VariableBinding(bindingProps, _IdentRef(ste));
-		}
-
-		val firstImportDecl = allImportDeclsForThisModule.head;
-		removeAll(firstImportDecl.importSpecifiers);
-		firstImportDecl.importSpecifiers += N4JSFactory.eINSTANCE.createDefaultImportSpecifier() => [
-			importedElementAsText = ste.name;
-			flaggedUsedInCode = true;
-			retainedAtRuntime = true;
-		];
-		removeAll(allImportDeclsForThisModule.drop(1));
-
-		return #[ result ];
 	}
 
 	def private boolean requiresRewrite(TModule targetModule) {
