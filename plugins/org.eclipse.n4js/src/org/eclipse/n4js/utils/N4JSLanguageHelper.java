@@ -158,9 +158,9 @@ public final class N4JSLanguageHelper {
 			return true; // the N4JS transpiler always emits ES6 module code
 		}
 		String extActual = getOutputFileExtension(module);
-		if (extActual == N4JSGlobals.CJS_FILE_EXTENSION) {
+		if (N4JSGlobals.CJS_FILE_EXTENSION.equals(extActual)) {
 			return false;
-		} else if (extActual == N4JSGlobals.MJS_FILE_EXTENSION) {
+		} else if (N4JSGlobals.MJS_FILE_EXTENSION.equals(extActual)) {
 			return true;
 		}
 		// (failed: file extension of target module does not tell whether it's commonjs or esm)
