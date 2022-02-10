@@ -25,6 +25,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
@@ -33,7 +34,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.EcoreUtilN4;
-import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
@@ -192,10 +192,23 @@ public class ProjectImportEnablingScope implements IScope {
 			} else {
 				sbErrrorMessage.append("multiple matching modules found: ");
 
-				String matchingModules = Strings.join(", ",
-						e -> //
-						e.getValue().getPackageName() + "/" + e.getKey().getQualifiedName().toString(),
-						descriptionsToProject.entrySet());
+				String matchingModules = "";
+				for (IEObjectDescription descr : descriptionsToProject.keySet()) {
+					if (!matchingModules.isEmpty()) {
+						matchingModules += ", ";
+					}
+
+					if (descr.getEObjectOrProxy() != null && descr.getEObjectOrProxy().eResource() != null
+							&& descr.getEObjectOrProxy().eResource().getURI() != null) {
+
+						URI uri = descr.getEObjectOrProxy().eResource().getURI();
+						URI relUri = uri.deresolve(workspaceConfigSnapshot.getPath());
+						matchingModules += relUri.toFileString();
+					} else {
+						matchingModules += descriptionsToProject.get(descr).getPackageName() + "/"
+								+ descr.getQualifiedName().toString();
+					}
+				}
 
 				sbErrrorMessage.append(matchingModules);
 			}

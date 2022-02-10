@@ -139,7 +139,8 @@ public final class N4JSGlobals {
 			N4JSD_FILE_EXTENSION,
 			N4JSX_FILE_EXTENSION,
 			JSX_FILE_EXTENSION,
-			JS_FILE_EXTENSION)));
+			JS_FILE_EXTENSION,
+			DTS_FILE_EXTENSION)));
 
 	/**
 	 * Name of the N4JS Git repository, i.e. "n4js". Same as {@link UtilN4#N4JS_GIT_REPOSITORY_NAME}.
