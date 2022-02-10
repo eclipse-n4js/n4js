@@ -205,7 +205,7 @@ class CommonJsImportsTransformation extends Transformation {
 	}
 
 	def private boolean requiresRewrite(TModule targetModule) {
-		return !n4jsLanguageHelper.isES6Module(targetModule);
+		return !n4jsLanguageHelper.isES6Module(state.index, targetModule);
 	}
 
 	def private String computeNameForIntermediateDefaultImport(TModule targetModule) {

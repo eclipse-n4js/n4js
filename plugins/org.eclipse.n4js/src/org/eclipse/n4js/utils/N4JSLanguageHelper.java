@@ -38,7 +38,6 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -58,9 +57,6 @@ public final class N4JSLanguageHelper {
 
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
-
-	@Inject
-	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	/**
 	 * Returns the reserved ECMAScript keywords which are defined in the grammar. The result is cached.
@@ -148,8 +144,11 @@ public final class N4JSLanguageHelper {
 	/**
 	 * Tells whether the given module is an EcmaScript 2015 module, i.e. using {@code import} instead of
 	 * {@code require()}, etc.
+	 * <p>
+	 * <b>WARNING</b>: regarding {@code index} the same warning applies as given
+	 * {@link #getOutputFileExtension(IResourceDescriptions, TModule) here}.
 	 */
-	public boolean isES6Module(TModule module) {
+	public boolean isES6Module(IResourceDescriptions index, TModule module) {
 		// 1) decide based on the file extension of the target module
 		Resource resource = module.eResource();
 		URI uri = resource != null ? resource.getURI() : null;
@@ -157,7 +156,7 @@ public final class N4JSLanguageHelper {
 		if (!module.isN4jsdModule() && N4JSGlobals.ALL_N4JS_FILE_EXTENSIONS.contains(ext)) {
 			return true; // the N4JS transpiler always emits ES6 module code
 		}
-		String extActual = getOutputFileExtension(module);
+		String extActual = getOutputFileExtension(index, module);
 		if (N4JSGlobals.CJS_FILE_EXTENSION.equals(extActual)) {
 			return false;
 		} else if (N4JSGlobals.MJS_FILE_EXTENSION.equals(extActual)) {
@@ -187,13 +186,18 @@ public final class N4JSLanguageHelper {
 	 * <li>will return an empty string in case of directory imports.
 	 * <li>does not support node's built-in modules (e.g. "fs").
 	 * </ul>
+	 * <p>
+	 * <b>WARNING</b>: in case {@code module} represents an N4JSD file from a definition project, the given index must
+	 * include resource descriptions of the corresponding defined project; therefore, an index obtained by using the
+	 * given {@code module} as context will not suffice, because definition projects might not have a dependency to
+	 * their defined project!
 	 */
-	public String getOutputFileExtension(TModule targetModule) {
-		Resource targetResource = targetModule.eResource();
+	public String getOutputFileExtension(IResourceDescriptions index, TModule targetModule) {
 		if (targetModule.isN4jsdModule()) {
 			// in case of .n4jsd files it is more tricky:
-			return getActualFileExtensionForN4jsdFile(targetResource, targetModule);
+			return getActualFileExtensionForN4jsdFile(index, targetModule);
 		}
+		Resource targetResource = targetModule.eResource();
 		URI uri = targetResource != null ? targetResource.getURI() : null;
 		String ext = uri != null ? uri.fileExtension() : null;
 		if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext)) {
@@ -213,9 +217,8 @@ public final class N4JSLanguageHelper {
 	 * In case of .n4jsd files, we have to find out the extension of the plain-JS file being described by the .n4jsd
 	 * file *and* provide special handling for directory imports.
 	 */
-	private String getActualFileExtensionForN4jsdFile(Resource targetResource, TModule targetModule) {
+	private String getActualFileExtensionForN4jsdFile(IResourceDescriptions index, TModule targetModule) {
 		QualifiedName targetQN = qualifiedNameConverter.toQualifiedName(targetModule.getQualifiedName());
-		IResourceDescriptions index = resourceDescriptionsProvider.getResourceDescriptions(targetResource);
 		Iterable<IEObjectDescription> matchingTModules = index.getExportedObjects(TypesPackage.Literals.TMODULE,
 				targetQN, false);
 		boolean gotJS = false;
@@ -243,7 +246,7 @@ public final class N4JSLanguageHelper {
 		}
 
 		// no plain JS file found, check for "directory import"
-		if (isDirectoryWithPackageJson(index, targetResource, targetQN)) {
+		if (isDirectoryWithPackageJson(index, targetModule, targetQN)) {
 			return ""; // no file extension for directory imports
 		}
 
@@ -251,7 +254,7 @@ public final class N4JSLanguageHelper {
 		return N4JSGlobals.JS_FILE_EXTENSION;
 	}
 
-	private boolean isDirectoryWithPackageJson(IResourceDescriptions index, Resource targetResource,
+	private boolean isDirectoryWithPackageJson(IResourceDescriptions index, TModule targetModule,
 			QualifiedName targetQN) {
 
 		// NOTE: the following approach would be a more elegant implementation of this method, but would require a
@@ -265,8 +268,8 @@ public final class N4JSLanguageHelper {
 //		}
 // @formatter:on
 
-		N4JSProjectConfigSnapshot targetProject = replaceDefinitionProjectByDefinedProject(targetResource,
-				workspaceAccess.findProjectContaining(targetResource), true);
+		N4JSProjectConfigSnapshot targetProject = replaceDefinitionProjectByDefinedProject(targetModule,
+				workspaceAccess.findProjectContaining(targetModule), true);
 		if (targetProject == null) {
 			return false;
 		}

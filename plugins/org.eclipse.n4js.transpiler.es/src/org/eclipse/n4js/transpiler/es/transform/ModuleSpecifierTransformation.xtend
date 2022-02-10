@@ -197,7 +197,7 @@ class ModuleSpecifierTransformation extends Transformation {
 	}
 
 	def protected String getActualFileExtension(TModule targetModule) {
-		return n4jsLanguageHelper.getOutputFileExtension(targetModule);
+		return n4jsLanguageHelper.getOutputFileExtension(state.index, targetModule);
 	}
 
 	def protected N4JSPackageName getActualProjectName(N4JSProjectConfigSnapshot project) {
