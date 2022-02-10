@@ -665,6 +665,7 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 			}
 			if (n.isEmpty()) {
 				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER("Source"), nvp,
+						JSONPackage.eINSTANCE.getNameValuePair_Name(),
 						IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER);
 			} else if (!(v instanceof JSONStringLiteral)) {
 				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE(), v,
