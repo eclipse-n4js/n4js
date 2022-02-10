@@ -60,6 +60,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final String definesPackage;
 	private final boolean nestedNodeModulesFolder;
 	private final boolean esm;
+	private final boolean moduleProperty;
 	private final boolean n4jsNature;
 	private final boolean yarnWorkspaceRoot;
 	private final boolean isGeneratorEnabledSourceMaps;
@@ -77,9 +78,10 @@ public class ProjectDescription extends ImmutableDataClass {
 			Iterable<ProjectReference> implementedProjects, String outputPath,
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
-			boolean esm, boolean n4jsNature, boolean yarnWorkspaceRoot, boolean isGeneratorEnabledSourceMaps,
-			boolean isGeneratorEnabledDts, Map<String, String> generatorRewriteModuleSpecifiers,
-			boolean isGeneratorEnabledRewriteCjsImports, Iterable<String> workspaces) {
+			boolean esm, boolean moduleProperty, boolean n4jsNature, boolean yarnWorkspaceRoot,
+			boolean isGeneratorEnabledSourceMaps, boolean isGeneratorEnabledDts,
+			Map<String, String> generatorRewriteModuleSpecifiers, boolean isGeneratorEnabledRewriteCjsImports,
+			Iterable<String> workspaces) {
 
 		this.location = location;
 		this.relatedRootlocation = relatedRootlocation;
@@ -104,6 +106,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.definesPackage = definesPackage;
 		this.nestedNodeModulesFolder = nestedNodeModulesFolder;
 		this.esm = esm;
+		this.moduleProperty = moduleProperty;
 		this.n4jsNature = n4jsNature;
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
 		this.isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps;
@@ -137,6 +140,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.definesPackage = template.definesPackage;
 		this.nestedNodeModulesFolder = template.nestedNodeModulesFolder;
 		this.esm = template.esm;
+		this.moduleProperty = template.moduleProperty;
 		this.n4jsNature = template.n4jsNature;
 		this.yarnWorkspaceRoot = template.yarnWorkspaceRoot;
 		this.isGeneratorEnabledSourceMaps = template.isGeneratorEnabledSourceMaps;
@@ -175,6 +179,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setDefinesPackage(definesPackage);
 		builder.setNestedNodeModulesFolder(nestedNodeModulesFolder);
 		builder.setESM(esm);
+		builder.setModuleProperty(moduleProperty);
 		builder.setN4JSNature(n4jsNature);
 		builder.setYarnWorkspaceRoot(yarnWorkspaceRoot);
 		builder.setGeneratorEnabledSourceMaps(isGeneratorEnabledSourceMaps);
@@ -314,6 +319,13 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	/**
+	 * Tells whether this project's <code>package.json</code> has top-level property "module" defined.
+	 */
+	public boolean hasModuleProperty() {
+		return moduleProperty;
+	}
+
+	/**
 	 * Indicates whether the underlying project description explicitly configured the project to be an N4JS project
 	 * (e.g. includes n4js section).
 	 */
@@ -385,6 +397,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				definesPackage,
 				nestedNodeModulesFolder,
 				esm,
+				moduleProperty,
 				n4jsNature,
 				yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps,
@@ -420,6 +433,7 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& Objects.equals(definesPackage, other.definesPackage)
 				&& nestedNodeModulesFolder == other.nestedNodeModulesFolder
 				&& esm == other.esm
+				&& moduleProperty == other.moduleProperty
 				&& n4jsNature == other.n4jsNature
 				&& yarnWorkspaceRoot == other.yarnWorkspaceRoot
 				&& isGeneratorEnabledSourceMaps == other.isGeneratorEnabledSourceMaps

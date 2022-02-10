@@ -161,6 +161,11 @@ public final class N4JSLanguageHelper {
 			return false;
 		} else if (N4JSGlobals.MJS_FILE_EXTENSION.equals(extActual)) {
 			return true;
+		} else if (extActual.isEmpty()) {
+			// empty string means directory import
+			// -> we do not want to look into the package.json file and all its special properties used in case of
+			// directory imports, so we cannot know whether it is ESM or CJS
+			return true; // use 'true' as fall back
 		}
 		// (failed: file extension of target module does not tell whether it's commonjs or esm)
 
@@ -168,7 +173,7 @@ public final class N4JSLanguageHelper {
 		N4JSProjectConfigSnapshot targetProject = replaceDefinitionProjectByDefinedProject(resource,
 				workspaceAccess.findProjectContaining(resource), true);
 		if (targetProject == null) {
-			return true;
+			return true; // use 'true' as fall back
 		}
 
 		if (targetProject.isESM()) {

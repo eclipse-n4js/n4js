@@ -51,6 +51,7 @@ public class ProjectDescriptionBuilder {
 	private String definesPackage;
 	private boolean nestedNodeModulesFolder;
 	private boolean esm;
+	private boolean moduleProperty;
 	private boolean n4jsNature;
 	private boolean yarnWorkspaceRoot;
 	private Boolean isGeneratorEnabledSourceMaps;
@@ -74,7 +75,7 @@ public class ProjectDescriptionBuilder {
 				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
-				nestedNodeModulesFolder, esm, n4jsNature, yarnWorkspaceRoot,
+				nestedNodeModulesFolder, esm, moduleProperty, n4jsNature, yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, generatorRewriteModuleSpecifiers,
 				isGeneratorEnabledRewriteCjsImports, workspaces);
 	}
@@ -311,6 +312,15 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setESM(boolean esm) {
 		this.esm = esm;
+		return this;
+	}
+
+	public boolean hasModuleProperty() {
+		return moduleProperty;
+	}
+
+	public ProjectDescriptionBuilder setModuleProperty(boolean moduleProperty) {
+		this.moduleProperty = moduleProperty;
 		return this;
 	}
 

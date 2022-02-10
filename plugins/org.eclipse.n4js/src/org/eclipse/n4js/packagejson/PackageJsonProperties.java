@@ -23,10 +23,12 @@ import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.UtilN4;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 /**
@@ -50,6 +52,8 @@ public enum PackageJsonProperties {
 	DEV_DEPENDENCIES(UtilN4.PACKAGE_JSON__DEV_DEPENDENCIES, "Development dependencies of this npm", JSONObject.class),
 	/** Key of node's standard, top-level package.json property "main". Do not confuse with {@link #MAIN_MODULE}. */
 	MAIN("main", "Main module. Path is relative to package root"),
+	/** Key of top-level package.json property "module", used by webpack and other tools. */
+	MODULE("module", "Like \"main\", but provides a different file with esm code"),
 
 	// Yarn properties
 	/**
@@ -169,16 +173,18 @@ public enum PackageJsonProperties {
 		this.valueType = valueType;
 	}
 
-	static private Map<String, Map<Class<? extends JSONValue>, PackageJsonProperties>> nameToEnum = new HashMap<>();
+	static private Map<List<String>, Map<Class<? extends JSONValue>, PackageJsonProperties>> pathToEnum = new HashMap<>();
 
 	static {
 		for (PackageJsonProperties prop : PackageJsonProperties.values()) {
-			if (!nameToEnum.containsKey(prop.name)) {
-				nameToEnum.put(prop.name, new HashMap<>());
+			List<String> path = ImmutableList.copyOf(prop.getPathElements());
+			if (!pathToEnum.containsKey(path)) {
+				pathToEnum.put(path, new HashMap<>());
 			}
-			Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = nameToEnum.get(prop.name);
+			Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = pathToEnum.get(path);
 			if (typeMap.containsKey(prop.valueType)) {
-				throw new IllegalStateException("");
+				throw new IllegalStateException("found multiple properties for the same path and type: " + path + ", "
+						+ prop.valueType.getName());
 			}
 			typeMap.put(prop.valueType, prop);
 		}
@@ -189,7 +195,8 @@ public enum PackageJsonProperties {
 		if (nvPair.getName() == null || nvPair.getValue() == null) {
 			return null; // syntax error in JSON file
 		}
-		Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = nameToEnum.get(nvPair.getName());
+		List<String> path = JSONModelUtils.getPathToNameValuePairOrNull(nvPair);
+		Map<Class<? extends JSONValue>, PackageJsonProperties> typeMap = pathToEnum.get(path);
 		if (typeMap != null) {
 			Class<? extends JSONValue> valueClass = nvPair.getValue().getClass();
 			if (valueClass != null) {

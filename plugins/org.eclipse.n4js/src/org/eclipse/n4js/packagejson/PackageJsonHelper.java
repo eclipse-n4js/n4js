@@ -136,6 +136,10 @@ public class PackageJsonHelper {
 				// need to handle this value later after all source containers have been read
 				// (see method #adjustProjectDescriptionAfterConversion())
 				break;
+			case MODULE:
+				// we don't care about the actual value, just about the fact that property "module" is present
+				target.setModuleProperty(true);
+				break;
 			case N4JS:
 				// mark project with N4JS nature
 				target.setN4JSNature(true);

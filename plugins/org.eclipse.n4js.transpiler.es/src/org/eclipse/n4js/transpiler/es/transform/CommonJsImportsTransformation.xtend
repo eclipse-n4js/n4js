@@ -12,10 +12,12 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.common.collect.FluentIterable
 import com.google.inject.Inject
+import java.util.ArrayList
 import java.util.List
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4JS.BindingProperty
 import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm
 import org.eclipse.n4js.n4JS.N4JSFactory
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
@@ -31,6 +33,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.Strings
+import org.eclipse.n4js.workspace.WorkspaceAccess
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -45,6 +48,9 @@ class CommonJsImportsTransformation extends Transformation {
 
 	@Inject
 	private N4JSLanguageHelper n4jsLanguageHelper;
+
+	@Inject
+	private WorkspaceAccess workspaceAccess;
 
 	override void assertPreConditions() {
 		// true
@@ -110,9 +116,23 @@ class CommonJsImportsTransformation extends Transformation {
 			return #[];
 		}
 
+		val importDeclsToRewrite = new ArrayList(allImportDeclsForThisModule);
+		if (importDeclsToRewrite.exists[moduleSpecifierForm === ModuleSpecifierForm.PROJECT]) {
+			val targetProject = n4jsLanguageHelper.replaceDefinitionProjectByDefinedProject(state.resource,
+				workspaceAccess.findProjectContaining(targetModule), true);
+			if (targetProject !== null && targetProject.projectDescription.hasModuleProperty) {
+				// don't rewrite project imports in case the target project has a top-level property "module" in its package.json,
+				// because in that case project imports will be redirected to an esm-ready file:
+				importDeclsToRewrite.removeIf[moduleSpecifierForm === ModuleSpecifierForm.PROJECT];
+			}
+		}
+		if (importDeclsToRewrite.empty) {
+			return #[];
+		}
+
 		// special case with a simpler approach:
-		if (allImportDeclsForThisModule.size === 1 && allImportDeclsForThisModule.head.importSpecifiers.size === 1) {
-			val importSpec = allImportDeclsForThisModule.head.importSpecifiers.head;
+		if (importDeclsToRewrite.size === 1 && importDeclsToRewrite.head.importSpecifiers.size === 1) {
+			val importSpec = importDeclsToRewrite.head.importSpecifiers.head;
 			if (importSpec instanceof NamespaceImportSpecifier) {
 				// in this case we can simply replace the namespace import by a default import
 				val namespaceName = importSpec.alias;
@@ -135,7 +155,7 @@ class CommonJsImportsTransformation extends Transformation {
 		val varDecls = <VariableDeclaration>newArrayList;
 		val bindingProps = <BindingProperty>newArrayList;
 
-		createVarDeclsOrBindings(allImportDeclsForThisModule, tempVarSTE, varDecls, bindingProps);
+		createVarDeclsOrBindings(importDeclsToRewrite, tempVarSTE, varDecls, bindingProps);
 
 		val result = <VariableStatement>newArrayList;
 		for (varDecl : varDecls) {
@@ -145,14 +165,14 @@ class CommonJsImportsTransformation extends Transformation {
 			result += _VariableStatement(VariableStatementKeyword.CONST, _VariableBinding(bindingProps, _IdentRef(tempVarSTE)));
 		}
 
-		val firstImportDecl = allImportDeclsForThisModule.head;
+		val firstImportDecl = importDeclsToRewrite.head;
 		removeAll(firstImportDecl.importSpecifiers);
 		firstImportDecl.importSpecifiers += N4JSFactory.eINSTANCE.createDefaultImportSpecifier() => [
 			importedElementAsText = tempVarSTE.name;
 			flaggedUsedInCode = true;
 			retainedAtRuntime = true;
 		];
-		removeAll(allImportDeclsForThisModule.drop(1));
+		removeAll(importDeclsToRewrite.drop(1));
 
 		return result;
 	}
