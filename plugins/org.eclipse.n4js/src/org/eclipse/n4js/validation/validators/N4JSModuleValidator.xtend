@@ -13,6 +13,9 @@ package org.eclipse.n4js.validation.validators
 import com.google.common.base.Strings
 import com.google.inject.Inject
 import com.google.inject.Provider
+import java.util.ArrayList
+import java.util.Collections
+import java.util.Comparator
 import java.util.List
 import java.util.Set
 import java.util.regex.Pattern
@@ -232,6 +235,8 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 				}
 
 				if(filteredMutVisibleResourceURIs.isEmpty) return;
+				val sortedMutVisibleResourceURIs = new ArrayList(filteredMutVisibleResourceURIs);
+				Collections.sort(sortedMutVisibleResourceURIs, Comparator.comparing[toString]);
 				
 				// note: we know that the current TModule is never of a JS file since those are not validated
 				val curIsDef = Set.of(N4JSGlobals.N4JSD_FILE_EXTENSION, N4JSGlobals.DTS_FILE_EXTENSION).contains(URIUtils.fileExtension(resource.URI));
@@ -245,7 +250,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 					
 					val implModule = if (jsImplURIs.empty) null else jsImplURIs.get(0).deresolve(ws.path);
 					val implModuleStr = if (implModule === null) "unknown js module" else implModule.segmentsList.drop(1).join('/');
-					val filePathStr = filteredMutVisibleResourceURIs
+					val filePathStr = sortedMutVisibleResourceURIs
 						.filter[implModule != it]
 						.map[segmentsList.drop(1).join('/')].join("; ");
 					val message = IssueCodes.getMessageForCLF_DUP_DEF_MODULE(module.qualifiedName, implModuleStr, filePathStr);
@@ -253,7 +258,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 				} else {
 					// collision of implementation modules
 					// list all locations - give the user the possibility to check by himself.
-					val filePathStr = filteredMutVisibleResourceURIs.map[segmentsList.drop(1).join('/')].join("; ");
+					val filePathStr = sortedMutVisibleResourceURIs.map[segmentsList.drop(1).join('/')].join("; ");
 					val message = IssueCodes.getMessageForCLF_DUP_MODULE(module.qualifiedName, filePathStr);
 					addIssue(message, script, IssueCodes.CLF_DUP_MODULE);
 				}
