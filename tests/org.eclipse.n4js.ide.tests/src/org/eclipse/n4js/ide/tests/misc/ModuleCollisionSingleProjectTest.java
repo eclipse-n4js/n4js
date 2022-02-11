@@ -19,7 +19,7 @@ import org.junit.Test;
 /**
  * Test for package.json property n4js->generator->source-maps
  */
-public class ModuleCollisionTest extends AbstractIdeTest {
+public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 
 	/** */
 	@Test

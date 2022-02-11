@@ -28,6 +28,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -161,6 +162,12 @@ public class ProjectImportEnablingScope implements IScope {
 		// if no import declaration was given, we skip the advanced error reporting
 		if (!importDeclaration.isPresent()) {
 			return null;
+		}
+
+		// handle special defaults
+		IEObjectDescription defaultModule = handleDefaults(descriptionsToProject);
+		if (defaultModule != null) {
+			return defaultModule;
 		}
 
 		// handle error cases to help user fix the issue
@@ -310,6 +317,18 @@ public class ProjectImportEnablingScope implements IScope {
 			}
 		}
 
+		return null;
+	}
+
+	private IEObjectDescription handleDefaults(
+			Map<IEObjectDescription, N4JSProjectConfigSnapshot> descriptionsToProject) {
+
+		for (Map.Entry<IEObjectDescription, N4JSProjectConfigSnapshot> entry : descriptionsToProject.entrySet()) {
+			N4JSProjectConfigSnapshot prj = entry.getValue();
+			if (N4JSGlobals.N4JS_RUNTIME_NODE.toString().equals(prj.getPackageName())) {
+				return entry.getKey();
+			}
+		}
 		return null;
 	}
 
