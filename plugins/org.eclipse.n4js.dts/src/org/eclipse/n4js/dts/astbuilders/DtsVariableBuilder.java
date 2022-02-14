@@ -125,8 +125,8 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 		Expression expr = new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression());
 		varDecl.setExpression(expr);
 
-		// FIXME this should probably be moved to the types builder!
 		if (typeRef == null && expr == null) {
+			// the types builder would use 'any' in this case, but we want 'any+':
 			varDecl.setDeclaredTypeRefNode(createAnyPlusTypeRef());
 		}
 
