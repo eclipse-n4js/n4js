@@ -132,7 +132,7 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "generator"/"rewriteCjsImports". */
 	GENERATOR_REWRITE_CJS_IMPORTS("rewriteCjsImports",
 			"Emit all imports from a CJS module as default imports with destructuring",
-			JSONBooleanLiteral.class, true, N4JS, GENERATOR),
+			JSONBooleanLiteral.class, false, N4JS, GENERATOR),
 
 	;
 
