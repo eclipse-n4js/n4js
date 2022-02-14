@@ -17,6 +17,9 @@
 			"external": [
 				"js"
 			]
+		},
+		"generator": {
+			"rewriteCjsImports": true
 		}
 	}
 }
