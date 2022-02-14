@@ -89,17 +89,22 @@ class CommonJsImportsTransformation extends Transformation {
 	}
 
 	/**
-	 * Will rewrite the following imports
+	 * For those of the given imports that actually require rewriting, this method will change them in place *and* return one or more
+	 * variable statements that have to be inserted (by the client code) after all imports.
+	 * <p>
+	 * For example: this method will rewrite the following imports
 	 * <pre>
 	 * import defaultImport+ from "plainJsModule"
 	 * import {namedImport1+} from "plainJsModule"
 	 * import {namedImport2+} from "plainJsModule"
 	 * import * as NamespaceImport+ from "plainJsModule"
 	 * </pre>
-	 * to this output code:
+	 * to this import:
 	 * <pre>
 	 * import $tempVar from './plainJsModule.cjs'
-	 *
+	 * </pre>
+	 * and will return these variable statements:
+	 * <pre>
 	 * const defaultImport = ($tempVar?.__esModule ? $tempVar.default : $tempVar);
 	 * const NamespaceImport = $tempVar;
 	 * const {
