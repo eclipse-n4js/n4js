@@ -49,6 +49,7 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				    $1
 				}$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] main (Main module. Path is relative to package root) -> "main": "$1"$0 [[0, 1] .. [0, 1]]
+				[Property, Snippet] module (Like "main", but provides a different file with esm code) -> "module": "$1"$0 [[0, 1] .. [0, 1]]
 				[Class, Snippet] n4js (N4JS section) -> "n4js": {
 				    $1
 				}$0 [[0, 1] .. [0, 1]]
@@ -77,6 +78,7 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				[Class, Snippet] devDependencies (Development dependencies of this npm) -> "devDependencies": {
 				    $1
 				}$0 [[3, 1] .. [3, 1]]
+				[Property, Snippet] module (Like "main", but provides a different file with esm code) -> "module": "$1"$0 [[3, 1] .. [3, 1]]
 				[Class, Snippet] n4js (N4JS section) -> "n4js": {
 				    $1
 				}$0 [[3, 1] .. [3, 1]]

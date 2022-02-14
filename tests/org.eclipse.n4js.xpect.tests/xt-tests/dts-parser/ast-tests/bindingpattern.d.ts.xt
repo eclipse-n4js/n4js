@@ -22,6 +22,6 @@ export const K : {a:string, b:[b1:number, b2:number], c:{c1:string}};
 Script: true
   ExportedVariableStatement: [external, public], const
    ExportedVariableDeclaration: K
+    TypeReferenceNode
+     ParameterizedTypeRef: OFF, false, false, any, ?~, true, false
 --- */
-
-
