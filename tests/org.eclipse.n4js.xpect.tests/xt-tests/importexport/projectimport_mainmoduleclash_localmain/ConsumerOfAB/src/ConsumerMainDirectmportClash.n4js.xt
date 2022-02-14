@@ -39,7 +39,7 @@
 
 // three MainModules are found in projects ConsumerOfAB, A, and B
 // but unresolved reference is forced in scoping
-// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: ConsumerOfAB/Main, A/Main, B/Main." at ""Main""
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: yarn-test-project/packages/ConsumerOfAB/src/Main.n4js, yarn-test-project/packages/A/src/Main.n4js, yarn-test-project/packages/B/src/Main.n4js." at ""Main""
 import * as SpaceMain from "Main"
 
 console.log("\nA" + SpaceMain)
