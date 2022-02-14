@@ -292,7 +292,7 @@ public class ProjectImportEnablingScope implements IScope {
 					break;
 				case DTS_FILE_EXTENSION:
 					if (prj.getType() != ProjectType.PLAINJS
-							|| !prj.getName().endsWith("/" + jsProject.getName())) {
+							|| !prj.getName().endsWith("/" + jsProject.getPackageName())) {
 						// case: d.ts file is not inside a related @types definition project
 						return null; // return null due to conflict
 					}
