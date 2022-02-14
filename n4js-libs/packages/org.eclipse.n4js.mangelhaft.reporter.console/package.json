@@ -40,7 +40,9 @@
     "requiredRuntimeLibraries": [
       "n4js-runtime-v8",
       "n4js-runtime-es2015"
-    ]
+    ],
+    "generator": {
+      "rewriteCjsImports": true
+    }
   }
 }
-

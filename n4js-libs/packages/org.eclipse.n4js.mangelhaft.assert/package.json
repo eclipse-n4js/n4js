@@ -34,7 +34,10 @@
       "n4js-runtime-v8",
       "n4js-runtime-es2015",
       "n4js-runtime-node"
-    ]
+    ],
+    "generator": {
+      "rewriteCjsImports": true
+    }
   },
   "dependencies": {
     "n4js-runtime": "^0.1.0",

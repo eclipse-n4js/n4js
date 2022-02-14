@@ -35,7 +35,10 @@
       "n4js-runtime-v8",
       "n4js-runtime-es2015",
       "n4js-runtime-node"
-    ]
+    ],
+    "generator": {
+      "rewriteCjsImports": true
+    }
   },
   "dependencies": {
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
