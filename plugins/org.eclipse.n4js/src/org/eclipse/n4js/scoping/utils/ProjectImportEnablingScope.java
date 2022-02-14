@@ -14,6 +14,7 @@ import static org.eclipse.n4js.N4JSGlobals.DTS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -208,7 +209,9 @@ public class ProjectImportEnablingScope implements IScope {
 					if (descr.getEObjectURI() != null) {
 						URI uri = descr.getEObjectURI().trimFragment();
 						URI relUri = uri.deresolve(workspaceConfigSnapshot.getPath());
-						matchingModules += relUri.toFileString();
+						Path relPath = Path.of(relUri.toFileString());
+						relPath = relPath.subpath(1, relPath.getNameCount());
+						matchingModules += relPath.toString();
 					} else {
 						matchingModules += descriptionsToProject.get(descr).getPackageName() + "/"
 								+ descr.getQualifiedName().toString();
