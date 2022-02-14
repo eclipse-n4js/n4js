@@ -460,7 +460,19 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 
 	}
 
-	// FIXME: add collision test of n4js-runtime-node/util and local/util
+	/** */
+	@Test
+	public void testModuleNoCollisionsDefault2() {
+		test(Pair.of(CFG_NODE_MODULES + "n4js-runtime-node" + CFG_SRC + "util.n4jsd",
+				"export external public const K2;"),
+				Pair.of("Client",
+						"import {K3} from \"" + DEFAULT_PROJECT_NAME + "/util\";\n"
+								+ "K3;"),
+				Pair.of("util",
+						"export const K3 = 0;"));
+
+		assertNoErrors();
+	}
 
 	@SafeVarargs
 	final void test(Pair<String, String>... projectsModulesContents) {

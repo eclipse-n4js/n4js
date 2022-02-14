@@ -158,7 +158,25 @@ public class ModuleCollisionMultipleProjectsTest extends AbstractIdeTest {
 
 	/** */
 	@Test
-	public void testModulePrioritizeNode() {
+	public void testModulCollisionsLocal() {
+		test(Map.of("P1", Map.of(
+				"MyModule.n4js",
+				"export const K1 = 0;"),
+				"ClientP", Map.of(
+						"Client",
+						"import {K2} from \"ClientP/MyModule\";\n"
+								+ "K2;",
+						"MyModule",
+						"export const K2 = 0;",
+
+						CFG_DEPENDENCIES, "P1")));
+
+		assertNoErrors();
+	}
+
+	/** */
+	@Test
+	public void testModuleNoCollisionsDefault1() {
 		test(Map.of("P1", Map.of(
 				"util.n4js",
 				"export const K = 0;"),
@@ -175,7 +193,26 @@ public class ModuleCollisionMultipleProjectsTest extends AbstractIdeTest {
 		assertNoErrors();
 	}
 
-	// FIXME: add collision test of P1/MyModule and local/MyModule
+	/** */
+	@Test
+	public void testModuleNoCollisionsDefault2() {
+		test(Map.of("P1", Map.of(
+				"util.n4js",
+				"export const K1 = 0;"),
+				CFG_NODE_MODULES + "n4js-runtime-node", Map.of(
+						"util.n4jsd",
+						"export external public const K2;"),
+				"ClientP", Map.of(
+						"Client",
+						"import {K3} from \"ClientP/util\";\n"
+								+ "K3;",
+						"util",
+						"export const K3 = 0;",
+
+						CFG_DEPENDENCIES, "P1, n4js-runtime-node")));
+
+		assertNoErrors();
+	}
 
 	final void test(Map<String, ? extends Map<String, ? extends CharSequence>> projectsModulesContents) {
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(projectsModulesContents);

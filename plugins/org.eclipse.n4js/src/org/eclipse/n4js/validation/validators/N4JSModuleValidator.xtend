@@ -146,9 +146,14 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 		];
 
 		if (resourceURIs.size > 0) {
+			val ws = workspaceAccess.getWorkspaceConfig(resource);
+			val pr = ws.findProjectByNestedLocation(resource.URI);
 			val visibleResourceURIs = newHashSet;
 			lazyContainersList.get.forEach[ container |
-				visibleResourceURIs += resourceURIs.keySet.filter[ uri | container.hasResourceDescription(uri); ];
+				visibleResourceURIs += resourceURIs.keySet.filter[ uri |
+					container.hasResourceDescription(uri)
+					&& workspaceAccess.findProjectByNestedLocation(script, uri)?.name == pr?.name
+				];
 			];
 
 			if (visibleResourceURIs.size > 0) {
@@ -203,8 +208,6 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 					}
 				}
 
-				val ws = workspaceAccess.getWorkspaceConfig(resource);
-				val pr = ws.findProjectByPath(resource.URI);
 				var Set<URI>filteredMutVisibleResourceURIs = visibleResourceURIs.map[it.deresolve(ws.path)].toSet;
 
 				// non MainModules are follow normal visibility check
