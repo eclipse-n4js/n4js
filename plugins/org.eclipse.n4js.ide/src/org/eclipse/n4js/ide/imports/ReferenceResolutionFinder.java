@@ -154,13 +154,16 @@ public class ReferenceResolutionFinder {
 		Map<IEObjectDescription, N4JSProjectConfigSnapshot> projects = new HashMap<>();
 		Set<QualifiedName> candidateNames = needCollisionCheck ? new HashSet<>() : null;
 		Set<QualifiedName> collisioningModules = new HashSet<>();
-		collectAllElements(scope, filter, wc, candidates, projects, candidateNames, collisioningModules, acceptor);
+		collectAllElements(scope, wc, candidates, projects, candidateNames, collisioningModules, acceptor);
 
 		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
 			Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
 			for (IEObjectDescription candidate : candidates) {
 				if (!acceptor.canAcceptMoreProposals()) {
 					return;
+				}
+				if (!filter.apply(candidate)) {
+					continue;
 				}
 
 				final N4JSProjectConfigSnapshot candidateProject = projects.get(candidate);
@@ -191,7 +194,7 @@ public class ReferenceResolutionFinder {
 	 * @param acceptor
 	 *            no resolutions will be passed to the acceptor by this method, only used for cancellation handling.
 	 */
-	private void collectAllElements(IScope scope, Predicate<IEObjectDescription> filter, N4JSWorkspaceConfigSnapshot wc,
+	private void collectAllElements(IScope scope, N4JSWorkspaceConfigSnapshot wc,
 			List<IEObjectDescription> addHere, Map<IEObjectDescription, N4JSProjectConfigSnapshot> addHereProjects,
 			Set<QualifiedName> addHereNames, Set<QualifiedName> addHereCollisioningModules,
 			IResolutionAcceptor acceptor) {
@@ -207,9 +210,6 @@ public class ReferenceResolutionFinder {
 			while (acceptor.canAcceptMoreProposals() && iter.hasNext()) {
 				IEObjectDescription curr = iter.next();
 				if (!isRelevantDescription(curr)) {
-					continue;
-				}
-				if (!filter.apply(curr)) {
 					continue;
 				}
 
