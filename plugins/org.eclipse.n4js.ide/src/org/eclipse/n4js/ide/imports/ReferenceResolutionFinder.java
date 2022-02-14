@@ -153,7 +153,7 @@ public class ReferenceResolutionFinder {
 		List<IEObjectDescription> candidates = new ArrayList<>(512);
 		Map<IEObjectDescription, N4JSProjectConfigSnapshot> projects = new HashMap<>();
 		Set<QualifiedName> candidateNames = needCollisionCheck ? new HashSet<>() : null;
-		Set<QualifiedName> collisioningModules = needCollisionCheck ? new HashSet<>() : null;
+		Set<QualifiedName> collisioningModules = new HashSet<>();
 		collectAllElements(scope, filter, wc, candidates, projects, candidateNames, collisioningModules, acceptor);
 
 		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {

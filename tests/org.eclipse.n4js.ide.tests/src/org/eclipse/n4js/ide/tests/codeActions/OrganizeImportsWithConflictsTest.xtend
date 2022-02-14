@@ -25,10 +25,14 @@ class OrganizeImportsWithConflictsTest extends AbstractOrganizeImportsTest {
 	override List<Pair<String, List<Pair<String, String>>>> getDefaultTestWorkspace() {
 		return #[
 			"P1" -> #[
-				"CollisionModule.n4js" -> "export public const K1 = 0;"
+				"CM1.n4js" -> "export public const K1a = 0;",
+				"util/CM2.n4js" -> "export public const K2a = 0;",
+				"util/CM3.n4js" -> "export public const K3a = 0;"
 			],
 			"P2" -> #[
-				"CollisionModule.n4js" -> "export public const K2 = 0;"
+				"CM1.n4js" -> "export public const K1b = 0;",
+				"CM2.n4js" -> "export public const K2b = 0;",
+				"util/CM3.n4js" -> "export public const K3b = 0;"
 			],
 			"PClient" + TestWorkspaceManager.MODULE_SELECTOR -> #[
 				// test file will be added in this project
@@ -40,12 +44,36 @@ class OrganizeImportsWithConflictsTest extends AbstractOrganizeImportsTest {
 	@Test
 	def void testSimple() {
 		test('''
-			let l = K1;
+			let l = K1a;
 		''', #[
-			"(Error, [0:8 - 0:10], Couldn't resolve reference to IdentifiableElement 'K1'.)"
+			"(Error, [0:8 - 0:11], Couldn't resolve reference to IdentifiableElement 'K1a'.)"
 		], '''
-			import {K1} from "P1/CollisionModule";
-			let l = K1;
+			import {K1a} from "P1/CM1";
+			let l = K1a;
+		''')
+	}
+	
+	@Test
+	def void testDifferentFolders() {
+		test('''
+			let l = K2a;
+		''', #[
+			"(Error, [0:8 - 0:11], Couldn't resolve reference to IdentifiableElement 'K2a'.)"
+		], '''
+			import {K2a} from "util/CM2";
+			let l = K2a;
+		''')
+	}
+	
+	@Test
+	def void testSubfoders() {
+		test('''
+			let l = K3a;
+		''', #[
+			"(Error, [0:8 - 0:11], Couldn't resolve reference to IdentifiableElement 'K3a'.)"
+		], '''
+			import {K3a} from "P1/util/CM3";
+			let l = K3a;
 		''')
 	}
 }
