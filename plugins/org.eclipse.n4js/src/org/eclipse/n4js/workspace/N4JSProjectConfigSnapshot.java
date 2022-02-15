@@ -211,6 +211,11 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return projectDescription.getImplementationId();
 	}
 
+	/** See {@link ProjectDescription#isESM()}. */
+	public boolean isESM() {
+		return projectDescription.isESM();
+	}
+
 	/**
 	 * Returns this project's {@link ProjectDescription#getProjectDependencies() dependencies} and
 	 * {@link ProjectDescription#getImplementedProjects() implemented projects} (in this order).

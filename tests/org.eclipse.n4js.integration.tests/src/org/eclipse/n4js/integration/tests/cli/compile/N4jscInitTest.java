@@ -162,7 +162,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		npmInstall(cwd.toPath());
 		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
 		assertEquals(1, result.getTranspiledFilesCount());
-		ProcessResult resultNodejs = nodejsRunESM(cwd.toPath(), Path.of("."));
+		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("."));
 		assertEquals("Hello World", resultNodejs.getStdOut());
 	}
 
@@ -179,7 +179,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertTrue(resultBuild.getStdOut().contains("Errors: 0"));
 		assertTrue(resultBuild.getStdOut().contains("Generated: 4"));
 
-		ProcessResult resultNodejs = nodejsRunESM(cwd.toPath(), Path.of("."));
+		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("."));
 		assertEquals("Hello World", resultNodejs.getStdOut());
 
 		ProcessResult resultTest = npmRun(cwd.toPath(), "run", "test");
@@ -213,6 +213,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertEquals("{\n"
 				+ "  \"name\": \"TestInit\",\n"
 				+ "  \"version\": \"0.0.1\",\n"
+				+ "  \"type\": \"module\",\n"
 				+ "  \"main\": \"src-gen/index.js\",\n"
 				+ "  \"scripts\": {\n"
 				+ "    \"n4jsc\": \"n4jsc\",\n"
@@ -339,7 +340,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		yarnInstall(cwd.toPath());
 		CliCompileResult result = n4jsc(IMPLICIT_COMPILE(cwd).setWorkingDirectory(cwd.toPath()), SUCCESS);
 		assertEquals(1, result.getTranspiledFilesCount());
-		ProcessResult resultNodejs = nodejsRunESM(cwd.toPath(), Path.of("packages/my-project"));
+		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/my-project"));
 		assertEquals("Hello World", resultNodejs.getStdOut());
 	}
 
@@ -357,7 +358,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 		assertTrue(resultBuild.getStdOut().contains("Errors: 0"));
 		assertTrue(resultBuild.getStdOut().contains("Generated: 4"));
 
-		ProcessResult resultNodejs = nodejsRunESM(cwd.toPath(), Path.of("packages/my-project"));
+		ProcessResult resultNodejs = nodejsRun(cwd.toPath(), Path.of("packages/my-project"));
 		assertEquals("Hello World", resultNodejs.getStdOut());
 
 		ProcessResult resultTest = yarnRun(cwd.toPath(), "run", "test");
@@ -616,7 +617,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
 		assertEquals("{\n"
-				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"name\": \"testinit\",\n"
 				+ "  \"version\": \"1.0.0\",\n"
 				+ "  \"description\": \"\",\n"
 				+ "  \"main\": \"index.js\",\n"
@@ -634,7 +635,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		String packagejsonContentsExt = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
 		assertEquals("{\n"
-				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"name\": \"testinit\",\n"
 				+ "  \"version\": \"1.0.0\",\n"
 				+ "  \"description\": \"\",\n"
 				+ "  \"main\": \"index.js\",\n"
@@ -674,7 +675,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
 		assertEquals("{\n"
-				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"name\": \"testinit\",\n"
 				+ "  \"version\": \"1.0.0\",\n"
 				+ "  \"description\": \"\",\n"
 				+ "  \"main\": \"index.js\",\n"
@@ -698,7 +699,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		String packagejsonContentsExt = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
 		assertEquals("{\n"
-				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"name\": \"testinit\",\n"
 				+ "  \"version\": \"1.0.0\",\n"
 				+ "  \"description\": \"\",\n"
 				+ "  \"main\": \"index.js\",\n"

@@ -257,6 +257,7 @@ public class Project {
 			{
 				"name": "«projectName»",
 				"version": "«projectVersion»",
+				"type": "module",
 				«IF !scripts.empty»
 				"scripts": {
 					«FOR script : scripts.entrySet SEPARATOR ','»

@@ -1,6 +1,7 @@
 {
 	"name": "@myScope/Lib",
 	"version": "0.0.1",
+	"type": "module",
 	"main": "src-gen/D.js",
 	"n4js": {
 		"projectType": "library",

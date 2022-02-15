@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler
 
+import com.google.common.collect.Lists
 import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
@@ -285,6 +286,12 @@ class TranspilerStateOperations {
 
 	def public static void addArgument(TranspilerState state, ParameterizedCallExpression callExpr, int index, Expression newArgument) {
 		callExpr.arguments.add(index, _Argument(newArgument));
+	}
+
+	def public static void removeAll(TranspilerState state, Iterable<? extends EObject> elementsInIM) {
+		for (EObject elementInIM : Lists.newArrayList(elementsInIM)) {
+			remove(state, elementInIM);
+		}
 	}
 
 	def public static void remove(TranspilerState state, EObject elementInIM) {

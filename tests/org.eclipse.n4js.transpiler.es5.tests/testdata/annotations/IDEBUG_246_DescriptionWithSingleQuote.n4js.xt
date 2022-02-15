@@ -14,7 +14,7 @@
    END_SETUP */
 
 /* XPECT output ---
-[class A extends N4Object]
+[class A extends N4Object2]
 @ Description
   t1 <'>
   t2 true

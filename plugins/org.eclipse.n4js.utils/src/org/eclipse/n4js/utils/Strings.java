@@ -127,6 +127,30 @@ abstract public class Strings {
 		return Joiner.on(System.lineSeparator()).join(lines) + System.lineSeparator();
 	}
 
+	/** Converts the given string to an identifier. */
+	final static public String toIdentifier(String str, char replacement) {
+		if (replacement != 0
+				&& !(Character.isJavaIdentifierStart(replacement) && Character.isJavaIdentifierPart(replacement))) {
+			throw new IllegalArgumentException(
+					"the given replacement character must be a valid Java identifier start and part: " + replacement);
+		}
+		if (str == null || str.isEmpty()) {
+			return str;
+		}
+		StringBuilder sb = new StringBuilder(str.length());
+		for (int i = 0; i < str.length(); i++) {
+			char ch = str.charAt(i);
+			boolean isLegal = (i == 0 && Character.isJavaIdentifierStart(ch))
+					|| (i > 0 && Character.isJavaIdentifierPart(ch));
+			if (isLegal) {
+				sb.append(ch);
+			} else if (replacement != 0) {
+				sb.append(replacement);
+			}
+		}
+		return sb.toString();
+	}
+
 	/** Escapes all non-printable characters in the given string or replaces them by '?'. */
 	public static final String escapeNonPrintable(String str) {
 		StringBuilder result = new StringBuilder(str.length());

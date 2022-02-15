@@ -1,6 +1,7 @@
 {
 	"name": "Def",
 	"version": "0.0.1",
+	"type": "module",
 	"n4js": {
 		"projectType": "definition",
 		"definesPackage": "Impl",

@@ -40,14 +40,6 @@ public class TestProcessBuilder {
 		this.binariesLocatorHelper = binariesLocatorHelper;
 	}
 
-	/** @return a process: {@code node -r esm fileToRun} */
-	public ProcessBuilder nodejsRunESM(Path workingDirectory, Map<String, String> environment, Path fileToRun,
-			String[] options) {
-
-		final String[] cmd = createCommandNodejsRunESM(fileToRun, environment, options);
-		return createProcessBuilder(workingDirectory, cmd, environment);
-	}
-
 	/** @return a process: {@code node fileToRun} */
 	public ProcessBuilder nodejsRun(Path workingDirectory, Map<String, String> environment, Path fileToRun,
 			String[] options) {
@@ -89,23 +81,6 @@ public class TestProcessBuilder {
 		}
 
 		List<String> optionList = new ArrayList<>();
-		optionList.add(fileToRun.toString());
-		optionList.addAll(Arrays.asList(options));
-		String[] cmdOptions = optionList.toArray(String[]::new);
-
-		List<String> cmd = getCommands(output_env, binariesLocatorHelper.getNodeBinary(), cmdOptions);
-
-		return cmd.toArray(new String[0]);
-	}
-
-	private String[] createCommandNodejsRunESM(Path fileToRun, Map<String, String> output_env, String[] options) {
-		if (fileToRun == null) {
-			throw new IllegalArgumentException("run configuration does not specify a file to run");
-		}
-
-		List<String> optionList = new ArrayList<>();
-		optionList.add("-r");
-		optionList.add("esm");
 		optionList.add(fileToRun.toString());
 		optionList.addAll(Arrays.asList(options));
 		String[] cmdOptions = optionList.toArray(String[]::new);

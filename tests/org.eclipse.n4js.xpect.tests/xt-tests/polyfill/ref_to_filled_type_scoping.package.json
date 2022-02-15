@@ -1,6 +1,7 @@
 {
 	"name": "ref-to-filled-type-scoping",
 	"version": "0.0.1",
+	"type": "module",
 	"n4js": {
 		"projectType": "runtimelibrary",
 		"vendorId": "org.eclipse.n4js",

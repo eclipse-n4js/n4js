@@ -15,6 +15,7 @@ import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEFINES_PACKAGE
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.DEV_DEPENDENCIES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.EXTENDED_RUNTIME_ENVIRONMENT;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_REWRITE_MODULE_SPECIFIERS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTATION_ID;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.IMPLEMENTED_PROJECTS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
@@ -38,7 +39,6 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -649,6 +649,35 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 	}
 
 	/**
+	 * Checks 'rewriteModuleSpecifiers'.
+	 */
+	@CheckProperty(property = GENERATOR_REWRITE_MODULE_SPECIFIERS)
+	public void checkRewriteModuleSpecifiers(JSONValue value) {
+		if (!checkIsType(value, JSONPackage.Literals.JSON_OBJECT,
+				"(map from module specifier in N4JS source code to specifier used in output code)")) {
+			return;
+		}
+		for (NameValuePair nvp : ((JSONObject) value).getNameValuePairs()) {
+			String n = nvp.getName();
+			JSONValue v = nvp.getValue();
+			if (n == null || v == null) {
+				continue; // syntax error
+			}
+			if (n.isEmpty()) {
+				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER("Source"), nvp,
+						JSONPackage.eINSTANCE.getNameValuePair_Name(),
+						IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER);
+			} else if (!(v instanceof JSONStringLiteral)) {
+				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE(), v,
+						IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__INVALID_VALUE);
+			} else if (((JSONStringLiteral) v).getValue().isEmpty()) {
+				addIssue(IssueCodes.getMessageForPKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER("Output code"), v,
+						IssueCodes.PKGJ_REWRITE_MODULE_SPECIFIERS__EMPTY_SPECIFIER);
+			}
+		}
+	}
+
+	/**
 	 * Converts the given {@code relativePath} to an absolute URI by resolving it based on the location of
 	 * {@code resource}.
 	 */
@@ -961,18 +990,10 @@ public class PackageJsonValidatorExtension extends AbstractPackageJSONValidatorE
 		final Stream<File> sourceFolders = getAllSourceContainerPaths().stream()
 				.map(sourcePath -> new File(absoluteProjectPath.toFile(), sourcePath));
 
-		// all file extension that represent a valid module
-		final List<String> moduleExtensions = Arrays.asList(
-				N4JSGlobals.N4JS_FILE_EXTENSION,
-				N4JSGlobals.N4JSX_FILE_EXTENSION,
-				N4JSGlobals.N4JSD_FILE_EXTENSION,
-				N4JSGlobals.JS_FILE_EXTENSION,
-				N4JSGlobals.JSX_FILE_EXTENSION);
-
 		// checks whether any of the declared sourceFolders contains a file at moduleSpecifier
-		// using any of the abovementioned file extensions
+		// using any of the aforementioned file extensions
 		return sourceFolders
-				.filter(sourceFolder -> moduleExtensions.stream() // check each file extension
+				.filter(sourceFolder -> N4JSGlobals.ALL_N4_FILE_EXTENSIONS.stream() // check each file extension
 						.filter(ext -> new File(sourceFolder, relativeModulePath + "." + ext).exists())
 						.findAny().isPresent())
 				.findAny().isPresent();

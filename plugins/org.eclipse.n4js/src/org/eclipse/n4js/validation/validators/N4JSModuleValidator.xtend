@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.N4JSResourceValidator
@@ -40,7 +41,6 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.utils.URIUtils
 
 /**
  * Contains module-level validations, i.e. validations that need to be checked once per module / file.
@@ -95,7 +95,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def void checkUniqueName(Script script) {
-		if (URIUtils.fileExtension(script.eResource.URI) != N4JSGlobals.JS_FILE_EXTENSION) {
+		if (!N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(URIUtils.fileExtension(script.eResource.URI))) {
 			script.checkUniqueName(script.module);
 		}
 	}
@@ -139,7 +139,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 		val resourceURIs = descriptions.map[
 			EObjectURI.trimFragment
 		].filter[
-			it != EcoreUtil2.getPlatformResourceOrNormalizedURI(resource) && URIUtils.fileExtension(it) != N4JSGlobals.JS_FILE_EXTENSION
+			it != EcoreUtil2.getPlatformResourceOrNormalizedURI(resource) && !N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(URIUtils.fileExtension(it))
 		].toSet;
 
 		if (resourceURIs.size > 0) {

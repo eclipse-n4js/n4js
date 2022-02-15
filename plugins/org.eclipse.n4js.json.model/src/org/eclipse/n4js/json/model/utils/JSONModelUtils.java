@@ -18,6 +18,7 @@ import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -175,6 +176,26 @@ public class JSONModelUtils {
 			return contentCasted;
 		}
 		return null;
+	}
+
+	/**
+	 * Returns the path to the given {@link NameValuePair} in its containing JSON object tree or <code>null</code> in
+	 * case of syntax error.
+	 */
+	public static List<String> getPathToNameValuePairOrNull(NameValuePair nvp) {
+		List<String> path = new ArrayList<>();
+		EObject currNVP = nvp;
+		do {
+			String currName = ((NameValuePair) currNVP).getName();
+			if (currName == null) {
+				return null; // syntax error in JSON file
+			}
+			path.add(currName);
+			currNVP = currNVP.eContainer();
+			currNVP = currNVP instanceof JSONObject ? currNVP.eContainer() : null;
+		} while (currNVP instanceof NameValuePair);
+		Collections.reverse(path);
+		return path;
 	}
 
 	/**

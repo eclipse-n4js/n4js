@@ -55,12 +55,6 @@ public class TestProcessExecuter {
 		Process get() throws ExecutionException;
 	}
 
-	/** Runs node with the given {@code runFile} in the given {@code workingDir} and option {@code -r esm} */
-	public ProcessResult runNodejsESM(Path workingDir, Map<String, String> environment, Path runFile,
-			String... options) {
-		return joinProcess("node", () -> testProcessBuilder.nodejsRunESM(workingDir, environment, runFile, options));
-	}
-
 	/** Runs node with the given {@code runFile} in the given {@code workingDir} */
 	public ProcessResult runNodejs(Path workingDir, Map<String, String> environment, Path runFile, String... options) {
 		return joinProcess("node", () -> testProcessBuilder.nodejsRun(workingDir, environment, runFile, options));

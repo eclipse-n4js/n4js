@@ -1,6 +1,7 @@
 {
 	"name": "P1",
 	"version": "0.0.1",
+	"type": "module",
 	"dependencies": {
 		"react": "*"
 	},

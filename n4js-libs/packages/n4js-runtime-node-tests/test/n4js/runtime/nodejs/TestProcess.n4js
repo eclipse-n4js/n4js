@@ -137,11 +137,13 @@ export public class TestProcess extends AbstractVerifyRuntimeSupport {
         this.verifyMethod(_testSubject, "kill", true, null);
     }
 
+/* mainModule has been removed from node's process
     @Test
     public __process___22_mainModule(): void {
         let _testSubject = this.getTestSubject(process, 'process');
         this.verifyProperty(_testSubject, "mainModule", true);
     }
+*/
 
     @Test
     public __process___23_memoryUsage(): void {

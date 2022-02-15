@@ -1,6 +1,7 @@
 {
 	"name": "other-project",
 	"version": "17.0.0",
+	"type": "module",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "npm",

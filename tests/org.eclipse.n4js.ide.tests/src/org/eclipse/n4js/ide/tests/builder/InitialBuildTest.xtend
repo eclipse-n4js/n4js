@@ -219,7 +219,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 				"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
 			],
 			"ClientProject/" + PACKAGE_JSON -> #[
-				"(Error, [15:3 - 15:25], Project does not exist with project ID: ProviderProject.)"
+				"(Error, [16:3 - 16:25], Project does not exist with project ID: ProviderProject.)"
 			]
 		];
 		assertIssues(errorsWithProviderProjectMissing);

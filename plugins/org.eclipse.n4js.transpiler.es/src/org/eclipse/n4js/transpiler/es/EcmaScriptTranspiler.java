@@ -18,6 +18,7 @@ import org.eclipse.n4js.transpiler.es.transform.ArrowFunction_Part1_Transformati
 import org.eclipse.n4js.transpiler.es.transform.ArrowFunction_Part2_Transformation;
 import org.eclipse.n4js.transpiler.es.transform.BlockTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation;
+import org.eclipse.n4js.transpiler.es.transform.CommonJsImportsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.DependencyInjectionTransformation;
 import org.eclipse.n4js.transpiler.es.transform.DestructuringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.EnumAccessTransformation;
@@ -75,9 +76,11 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<SanitizeImportsTransformation> sanitizeImportsTransformation;
 	@Inject
-	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformation;
+	private Provider<CommonJsImportsTransformation> commonJsImportsTransformation;
 	@Inject
 	private Provider<ModuleWrappingTransformation> moduleWrappingTransformation;
+	@Inject
+	private Provider<ModuleSpecifierTransformation> moduleSpecifierTransformation;
 	@Inject
 	private Provider<BlockTransformation> blockTransformation;
 	@Inject
@@ -123,6 +126,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				simplifyTransformation.get(),
 				trimTransformation.get(),
 				sanitizeImportsTransformation.get(),
+				commonJsImportsTransformation.get(),
 				moduleSpecifierTransformation.get(),
 				moduleWrappingTransformation.get()
 		};

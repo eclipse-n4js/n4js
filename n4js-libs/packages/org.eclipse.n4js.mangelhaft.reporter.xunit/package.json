@@ -19,6 +19,7 @@
   "engines": {
     "node": ">= 5.0.0"
   },
+  "type": "module",
   "dependencies": {
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "xmlbuilder": "^10.0.0",
@@ -40,7 +41,9 @@
     "requiredRuntimeLibraries": [
       "n4js-runtime-node",
       "n4js-runtime-es2015"
-    ]
+    ],
+    "generator": {
+      "rewriteCjsImports": true
+    }
   }
 }
-

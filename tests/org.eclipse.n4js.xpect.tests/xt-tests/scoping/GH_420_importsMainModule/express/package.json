@@ -1,6 +1,7 @@
 {
 	"name": "express",
 	"version": "4.0.0-incomplete",
+	"type": "module",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "npm",

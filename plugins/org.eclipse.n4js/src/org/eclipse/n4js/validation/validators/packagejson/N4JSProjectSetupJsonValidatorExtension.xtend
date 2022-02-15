@@ -921,9 +921,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		}
 
 		def private boolean isN4JSFile(String fileSpecifier) {
-			return fileSpecifier.endsWith("." + N4JSGlobals.N4JS_FILE_EXTENSION) || 
-				fileSpecifier.endsWith("." + N4JSGlobals.N4JSX_FILE_EXTENSION) || 
-				fileSpecifier.endsWith("." + N4JSGlobals.N4JSD_FILE_EXTENSION);
+			return N4JSGlobals.endsWithN4JSFileExtension(fileSpecifier);
 		}
 	}
 

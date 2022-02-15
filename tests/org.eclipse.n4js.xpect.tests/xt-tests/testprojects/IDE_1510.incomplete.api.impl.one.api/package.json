@@ -1,6 +1,7 @@
 {
 	"name": "IDE_1510.incomplete.api.impl.one.api",
 	"version": "0.0.1",
+	"type": "module",
 	"n4js": {
 		"projectType": "library",
 		"vendorId": "org.eclipse.n4js",

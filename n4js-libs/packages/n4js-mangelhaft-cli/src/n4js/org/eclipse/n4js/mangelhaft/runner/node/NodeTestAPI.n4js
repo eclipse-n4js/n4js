@@ -17,6 +17,10 @@ import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {PACKAGE_JSON} from "org/eclipse/n4js/mangelhaft/util/npm";
 import * as child_process from "child_process";
 import * as lib_path from "path";
+import * as lib_url from "url";
+import * as __import_meta+ from "org/eclipse/n4js/mangelhaft/runner/node/__import_meta"
+
+const __dirname = lib_path.dirname(lib_url.fileURLToPath(__import_meta.url));
 
 const log = debug("n4js-mangelhaft:api");
 const rlog = debug("n4js-mangelhaft:test-run");
@@ -53,14 +57,12 @@ export default public class NodeTestAPI {
             rlog("modulePath:", modulePath);
 
             const execArgv = process.execArgv.slice();
-            const execArgvOptions = execArgv.join(" ");
-            const nodeOptions = process.env.NODE_OPTIONS || "";
-            const checkOption = (str: string, opt: string): boolean => str.endsWith(opt) || str.indexOf(`${opt} `) >= 0;
-            const hasOption = (opt: string): boolean => checkOption(execArgvOptions, opt) || checkOption(nodeOptions, opt);
-            
-            if (!["-r esm", "--require=esm", "--experimental-modules"].some(hasOption)) {
-                const esm = require.resolve("esm"); // use "own" esm version
-                execArgv.push("-r", esm);
+
+            if (options.nodeOptions) {
+                const optsAsArr = options.nodeOptions.split(/\s+/);
+                for (const opt of optsAsArr) {
+                    execArgv.push(opt);
+                }
             }
             if (options.inspectBrk) {
                 execArgv.push(`--inspect-brk=${options.inspectBrk}`);

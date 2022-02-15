@@ -1,6 +1,7 @@
 {
 	"name": "one.api.execution",
 	"version": "0.0.1",
+	"type": "module",
 	"dependencies": {
 		"one.api": "*"
 	},

@@ -111,14 +111,14 @@ log(def.def?.def.def.def.prop);
 log(def.undef?.def.def.def.prop);
 log(def.undef?.def.def.undef.prop); // must not throw exception (thanks to long short-circuiting) (*1*)
 logException(() =>
-	def.def?.def.def.undef.prop // should throw "Cannot read property 'prop' of undefined"
+	def.def?.def.def.undef.prop // should throw "Cannot read properties of undefined (reading 'prop')"
 );
 
 
 console.log('======== Grouping');
 
 // compare the following to case *1* above:
-logException(() => (def.undef?.def.def.undef).prop); // should throw "Cannot read property 'prop' of undefined"
+logException(() => (def.undef?.def.def.undef).prop); // should throw "Cannot read properties of undefined (reading 'prop')"
 
 
 console.log('======== Stacking');
@@ -163,7 +163,7 @@ undefined
 method invoked (call context: correct, args: [arg1, arg2])
 method invoked (call context: correct, args: [arg1, arg2])
 undefined
-EXCEPTION: Cannot read property 'method' of undefined
+EXCEPTION: Cannot read properties of undefined (reading 'method')
 [["value "," template"],"of"]
 undefined
 ======== Short-Circuiting
@@ -178,18 +178,18 @@ undefined
 property value
 undefined
 undefined
-EXCEPTION: Cannot read property 'prop' of undefined
+EXCEPTION: Cannot read properties of undefined (reading 'prop')
 ======== Grouping
-EXCEPTION: Cannot read property 'prop' of undefined
+EXCEPTION: Cannot read properties of undefined (reading 'prop')
 ======== Stacking
 property value
 undefined
 undefined
 undefined
-EXCEPTION: Cannot read property 'def' of undefined
-EXCEPTION: Cannot read property 'def' of undefined
-EXCEPTION: Cannot read property 'def' of undefined
-EXCEPTION: Cannot read property 'prop' of undefined
+EXCEPTION: Cannot read properties of undefined (reading 'def')
+EXCEPTION: Cannot read properties of undefined (reading 'def')
+EXCEPTION: Cannot read properties of undefined (reading 'def')
+EXCEPTION: Cannot read properties of undefined (reading 'prop')
 ======== Stacking with Call Context
 method invoked (call context: correct, args: [arg1, arg2])
 undefined

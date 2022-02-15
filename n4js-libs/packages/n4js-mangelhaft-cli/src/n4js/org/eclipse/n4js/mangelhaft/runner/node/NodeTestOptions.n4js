@@ -42,4 +42,12 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
      * Turn off mangelhaft console reporting.
      */
     public quiet: boolean;
+
+    /**
+     * Command line options passed to the node process spawned for test
+     * execution (as a single string; separate options with white-space).
+     * For example, if the tested project does not use node's native support
+     * for esm, you should pass in "-r esm" via this option.
+     */
+    public nodeOptions: string;
 }

@@ -26,7 +26,7 @@ import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos";
 import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 import {waitAndExitProcess} from "org/eclipse/n4js/mangelhaft/util/proc";
 import {findProjectDirectories} from "org/eclipse/n4js/mangelhaft/runner/node/ProjectDiscoverer";
-import * as cli_color_+ from "cli-color";
+import cli_color_+ from "cli-color";
 import * as lib_path from "path";
 import * as lib_fs from "fs";
 import * as lib_coverage+ from "istanbul-lib-coverage";
@@ -94,7 +94,7 @@ class NodeTestRunner  {
             testCatalog.testDescriptors = descriptors;
         }
         
-        this.consoleReporter.cliColor = cli_color_.default;
+        this.consoleReporter.cliColor = cli_color_;
         this.consoleReporter.setLogger(log);
 
         const reporters: ITestReporter[] = [this.consoleReporter];

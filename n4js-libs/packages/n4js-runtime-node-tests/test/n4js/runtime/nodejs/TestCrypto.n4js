@@ -9,15 +9,17 @@
  *   NumberFour AG - Initial API and implementation
  */
 import {AbstractVerifyRuntimeSupport} from "AbstractVerifyRuntimeSupport";
-import {createCipher, createCipheriv, createDecipher, createDecipheriv, createDiffieHellman, createECDH, createHash, createHmac, createSign, createVerify, getCiphers, getCurves, getDiffieHellman, getHashes, pbkdf2, pbkdf2Sync, privateDecrypt, privateEncrypt, publicDecrypt, publicEncrypt, randomBytes, setEngine} from "crypto";
+import {createCipheriv, createDecipheriv, createDiffieHellman, createECDH, createHash, createHmac, createSign, createVerify, getCiphers, getCurves, getDiffieHellman, getHashes, pbkdf2, pbkdf2Sync, privateDecrypt, privateEncrypt, publicDecrypt, publicEncrypt, randomBytes, setEngine} from "crypto";
 
 export public class TestCrypto extends AbstractVerifyRuntimeSupport {
 
+/* createCipher has been removed from node's crypto
     @Test
     public __createCipher___001_basic_function_exists(): void {
         let _testSubject = this.getTestSubject(createCipher, 'createCipher');
         this.verifyFunction(_testSubject as Function, null ,'createCipher');
     }
+*/
 
     @Test
     public __createCipheriv___001_basic_function_exists(): void {
@@ -25,11 +27,13 @@ export public class TestCrypto extends AbstractVerifyRuntimeSupport {
         this.verifyFunction(_testSubject as Function, null ,'createCipheriv');
     }
 
+/* createDecipher has been removed from node's crypto
     @Test
     public __createDecipher___001_basic_function_exists(): void {
         let _testSubject = this.getTestSubject(createDecipher, 'createDecipher');
         this.verifyFunction(_testSubject as Function, null ,'createDecipher');
     }
+*/
 
     @Test
     public __createDecipheriv___001_basic_function_exists(): void {

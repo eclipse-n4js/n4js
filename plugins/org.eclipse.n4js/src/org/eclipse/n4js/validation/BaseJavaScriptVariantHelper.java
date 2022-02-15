@@ -257,6 +257,7 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 		Objects.requireNonNull(fileExtension);
 		Objects.requireNonNull(feature);
 		Objects.requireNonNull(value);
+		fileExtension = normalizeFileExtension(fileExtension);
 		table.put(new FileExtensionValidationFeaturePair(fileExtension, feature), value);
 	}
 
@@ -265,6 +266,7 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	 *
 	 */
 	protected <T> T get(String fileExtension, ValidationFeature<T> feature) {
+		fileExtension = normalizeFileExtension(fileExtension);
 		T result = feature.get(table, fileExtension);
 		if (result != null) {
 			return result;
@@ -273,6 +275,18 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 			return next.get(fileExtension, feature);
 		}
 		return feature.getDefaultValue();
+	}
+
+	/**
+	 * Normalize the file extension before reading/writing to {@link #table} to allow for variants with more than one
+	 * file extension.
+	 */
+	private String normalizeFileExtension(String fileExtension) {
+		if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(fileExtension)) {
+			// to avoid having to add entries for .jsx, .cjs, and .mjs, we normalize all plain-JS file extensions to .js
+			return N4JSGlobals.JS_FILE_EXTENSION;
+		}
+		return fileExtension;
 	}
 
 	/**

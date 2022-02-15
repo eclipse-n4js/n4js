@@ -340,8 +340,8 @@ public class N4CliHelper {
 		// copy required n4js libraries to workspace / node_modules location
 		Path libsLocation;
 		if (createYarnWorkspace) {
-			// in case of a yarn workspace, we install the n4js-libs as siblings of the main project(s)
-			libsLocation = projectLocation;
+			// in case of a yarn workspace, we install the n4js-libs in the top-level node_modules folder
+			libsLocation = destinationLocation.resolve(N4JSGlobals.NODE_MODULES);
 		} else {
 			// otherwise, we install the n4js-libs in the main project's node_modules folder
 			// (note: we assume fixture contains only a single project (i.e. only a single sub folder))

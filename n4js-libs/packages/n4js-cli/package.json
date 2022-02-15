@@ -52,6 +52,9 @@
         "n4js-runtime-node",
         "n4js-runtime-es2015",
         "n4js-runtime-esnext"
-    ]
+    ],
+    "generator": {
+      "rewriteCjsImports": true
+    }
   }
 }

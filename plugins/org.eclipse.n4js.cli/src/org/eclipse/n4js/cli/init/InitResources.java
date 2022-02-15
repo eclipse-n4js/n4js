@@ -157,6 +157,7 @@ public class InitResources {
 		String name;
 		String version = "0.0.1";
 		String description;
+		String type = "module";
 		String main;
 		LinkedHashMap<String, String> scripts = new LinkedHashMap<>() {
 			{

@@ -1,6 +1,7 @@
 {
 	"name": "oneBased",
 	"version": "0.0.1",
+	"type": "module",
 	"n4js": {
 		"projectType": "validation",
 		"vendorId": "org.eclipse.n4js",
