@@ -25,9 +25,9 @@ import static org.junit.Assert.*
 // converted from SingleProjectPluginTest
 class SingleProjectIdeTest extends ConvertedIdeTest {
 
-	private FileURI src
-	private FileURI src2
-	private FileURI projectDescriptionFile
+	private FileURI src;
+	private FileURI src2; // this is not a source folder (defined in package.json), unless addSrc2ToSources is called
+	private FileURI projectDescriptionFile;
 
 	@Before
 	def void setUp2() {
@@ -205,13 +205,13 @@ cleanBuildAndWait();
 		createFile(src.appendSegment("C.js"), "var c = {}")
 		createFile(src.appendSegment("C.n4js"), "export public class C {}");
 		joinServerRequests();
-		assertNoIssues();
+		assertDuplicateModuleIssue(src.appendSegments("C.n4js"), DEFAULT_PROJECT_NAME, "src/C.js");
 	}
 
 	@Test
 	def void testJSIsNoDuplicate_04() throws Exception {
 		createFile(src.appendSegment("C.js"), "var c = {}")
-		createFile(src2.appendSegment("C.n4js"), "export public class C {}");
+		createFile(src2.appendSegment("C.n4js"), "export public class C {}"); // src2 is not a source folders
 		joinServerRequests();
 		assertNoIssues();
 	}

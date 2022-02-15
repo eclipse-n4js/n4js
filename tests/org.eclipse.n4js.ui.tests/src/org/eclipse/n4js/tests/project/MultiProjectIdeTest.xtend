@@ -231,9 +231,8 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		assertNoIssues();
 
 		addSecondProjectToDependencies();
-		Assert.assertEquals("unexpected number of issues", 1, getIssues().size);
-		assertDuplicateModuleIssue(getProjectRoot(PROJECT1_NAME).toFileURI.appendSegments("src", "C.n4js"), PROJECT2_NAME, "src/C.n4js");
-
+		assertNoIssues(); // no issues. 'Duplicate Module Issue' occurs only within same project
+		
 		removeDependency();
 		assertNoIssues();
 	}
@@ -256,8 +255,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		assertNoIssues();
 
 		addSecondProjectToDependencies();
-		Assert.assertEquals("unexpected number of issues", 1, getIssues().size);
-		assertDuplicateModuleIssue(getProjectRoot(PROJECT1_NAME).toFileURI.appendSegments("src", "C.n4js"), PROJECT2_NAME, "src/C.n4jsd");
+		assertNoIssues(); // no issues. 'Duplicate Module Issue' occurs only within same project
 
 		removeDependency();
 		assertNoIssues();
