@@ -617,7 +617,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
 		assertEquals("{\n"
-				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"name\": \"testinit\",\n"
 				+ "  \"version\": \"1.0.0\",\n"
 				+ "  \"description\": \"\",\n"
 				+ "  \"main\": \"index.js\",\n"
@@ -635,7 +635,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		String packagejsonContentsExt = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
 		assertEquals("{\n"
-				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"name\": \"testinit\",\n"
 				+ "  \"version\": \"1.0.0\",\n"
 				+ "  \"description\": \"\",\n"
 				+ "  \"main\": \"index.js\",\n"
@@ -675,7 +675,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		String packagejsonContents = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
 		assertEquals("{\n"
-				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"name\": \"testinit\",\n"
 				+ "  \"version\": \"1.0.0\",\n"
 				+ "  \"description\": \"\",\n"
 				+ "  \"main\": \"index.js\",\n"
@@ -699,7 +699,7 @@ public class N4jscInitTest extends AbstractCliCompileTest {
 
 		String packagejsonContentsExt = Files.readString(cwd.toPath().resolve(PACKAGE_JSON));
 		assertEquals("{\n"
-				+ "  \"name\": \"TestInit\",\n"
+				+ "  \"name\": \"testinit\",\n"
 				+ "  \"version\": \"1.0.0\",\n"
 				+ "  \"description\": \"\",\n"
 				+ "  \"main\": \"index.js\",\n"

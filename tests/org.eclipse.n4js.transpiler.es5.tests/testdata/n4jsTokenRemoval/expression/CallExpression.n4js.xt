@@ -27,7 +27,7 @@ try{
 }catch (te){
 	if(te instanceof TypeError){
 		var o = new Object (te);
-		if(o['message'] == "Cannot read property 'then' of null"){
+		if(o['message'] == "Cannot read properties of null (reading 'then')"){
 			console.log("compiler works as expected")
 		}
 	}
