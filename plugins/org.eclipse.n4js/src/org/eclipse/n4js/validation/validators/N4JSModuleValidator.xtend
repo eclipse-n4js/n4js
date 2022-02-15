@@ -189,11 +189,11 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 						var URI jsUri = null;
 						var URI nonJsUri = null;
 						var String nonJsExt = null;
-						if (ext1 == N4JSGlobals.JS_FILE_EXTENSION) {
+						if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext1)) {
 							jsUri = uri1;
 							nonJsUri = uri2;
 							nonJsExt = ext2;
-						} else if (ext2 == N4JSGlobals.JS_FILE_EXTENSION) {
+						} else if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext2)) {
 							jsUri = uri2;
 							nonJsUri = uri1;
 							nonJsExt = ext1;
@@ -243,11 +243,10 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 				
 				// note: we know that the current TModule is never of a JS file since those are not validated
 				val n4DefiExts = Set.of(N4JSGlobals.N4JSD_FILE_EXTENSION, N4JSGlobals.DTS_FILE_EXTENSION);
-				val jsImplExts = Set.of(N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
 				val n4ImplExts = Set.of(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
 				val curIsDef = n4DefiExts.contains(URIUtils.fileExtension(resource.URI));
 				val n4DefiURIs = resourceURIs.keySet.filter[n4DefiExts.contains(URIUtils.fileExtension(it))];
-				val jsImplURIs = resourceURIs.keySet.filter[jsImplExts.contains(URIUtils.fileExtension(it))];
+				val jsImplURIs = resourceURIs.keySet.filter[ N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(URIUtils.fileExtension(it))];
 				val n4ImplURIs = resourceURIs.keySet.filter[n4ImplExts.contains(URIUtils.fileExtension(it))];
 
 				if (n4ImplURIs.empty && jsImplURIs.size < 2 && curIsDef && n4DefiURIs.size > 0) {
