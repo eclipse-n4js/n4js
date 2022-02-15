@@ -130,7 +130,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 				Pair.of("test-project/package.json", List.of(
 						"(Error, [1:9 - 1:23], Project with source folder of type test should depend on org.eclipse.n4js.mangelhaft.)")),
 				Pair.of("src1/Client.n4js", List.of(
-						"(Error, [0:19 - 0:29], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/tst/MyModule.n4js, test-project/src1/MyModule.n4js, test-project/src2/MyModule.n4js.)")));
+						"(Error, [0:19 - 0:29], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/src1/MyModule.n4js, test-project/src2/MyModule.n4js, test-project/tst/MyModule.n4js.)")));
 
 	}
 
@@ -281,7 +281,7 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 				Pair.of("src1/MyModule.n4js", List.of(
 						"(Error, [0:0 - 2:1], A duplicate module MyModule is also defined in test-project/ext/MyModule.js.)")),
 				Pair.of("src1/Client.n4js", List.of(
-						"(Error, [0:19 - 0:29], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/src1/MyModule.n4js, test-project/ext/MyModule.js.)")));
+						"(Error, [0:19 - 0:29], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/ext/MyModule.js, test-project/src1/MyModule.n4js.)")));
 
 	}
 

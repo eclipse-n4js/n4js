@@ -17,6 +17,7 @@ import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -147,11 +148,14 @@ public class ProjectImportEnablingScope implements IScope {
 			return result.get(0);
 		}
 
-		// use linked map for determinism in error message
+		// use sorted entries and linked map for determinism in error message
+		Collections.sort(result,
+				Comparator.comparing(IEObjectDescription::getEObjectURI, Comparator.comparing(URI::toString)));
 		final Map<IEObjectDescription, N4JSProjectConfigSnapshot> descriptionsToProject = new LinkedHashMap<>();
+
 		for (IEObjectDescription objDescr : result) {
-			N4JSProjectConfigSnapshot n4jsdProject = workspaceConfigSnapshot
-					.findProjectContaining(objDescr.getEObjectURI());
+			URI uri = objDescr.getEObjectURI();
+			N4JSProjectConfigSnapshot n4jsdProject = workspaceConfigSnapshot.findProjectContaining(uri);
 			descriptionsToProject.put(objDescr, n4jsdProject);
 		}
 
