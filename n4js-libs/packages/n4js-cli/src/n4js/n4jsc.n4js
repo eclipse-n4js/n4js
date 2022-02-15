@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 /**
  * Copyright (c) 2016 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
@@ -10,7 +9,6 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-"use strict";
 
 import {runN4jscSync} from "n4js-cli";
 

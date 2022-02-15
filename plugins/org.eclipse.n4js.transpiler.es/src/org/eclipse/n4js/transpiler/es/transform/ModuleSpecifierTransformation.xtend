@@ -13,12 +13,14 @@ package org.eclipse.n4js.transpiler.es.transform
 import com.google.common.base.Joiner
 import com.google.inject.Inject
 import java.util.Arrays
+import java.util.Map
 import java.util.Objects
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
@@ -38,7 +40,11 @@ class ModuleSpecifierTransformation extends Transformation {
 	@Inject
 	private ResourceNameComputer resourceNameComputer;
 
+	@Inject
+	private N4JSLanguageHelper n4jsLanguageHelper;
+
 	private String[] localModulePath = null; // will be set in #analyze()
+	private Map<String,String> definedModuleSpecifierRewrites = null; // will be set in #analyze()
 
 	override assertPreConditions() {
 		// true
@@ -53,6 +59,7 @@ class ModuleSpecifierTransformation extends Transformation {
 		val localModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(localModule);
 		val localModuleSpecifierSegments = localModuleSpecifier.split("/", -1);
 		localModulePath = Arrays.copyOf(localModuleSpecifierSegments, localModuleSpecifierSegments.length - 1);
+		definedModuleSpecifierRewrites = state.project.projectDescription.generatorRewriteModuleSpecifiers;
 	}
 
 	override transform() {
@@ -61,6 +68,13 @@ class ModuleSpecifierTransformation extends Transformation {
 	}
 
 	def private void transformImportDecl(ImportDeclaration importDeclIM) {
+		val definedRewrite = definedModuleSpecifierRewrites.get(importDeclIM.moduleSpecifierAsText);
+		if (definedRewrite !== null) {
+			// special case: a rewrite for this module specifier was defined in the package.json
+			importDeclIM.moduleSpecifierAsText = definedRewrite;
+			return;
+		}
+
 		val moduleSpecifier = computeModuleSpecifierForOutputCode(importDeclIM);
 		val moduleSpecifierNormalized = moduleSpecifier.replace("/./", "/");
 		importDeclIM.moduleSpecifierAsText = moduleSpecifierNormalized;
@@ -79,6 +93,9 @@ class ModuleSpecifierTransformation extends Transformation {
 	 * <li>in N4JS, module specifiers do not contain the path to the output folder, whereas in plain
 	 * Javascript absolute module specifiers must always contain the full path from a project's root
 	 * folder to the module.
+	 * <li>in N4JS, module specifiers do not include file extensions; in Javascript executed with node's
+	 * native support for ES6 modules, file extensions are mandatory (note: this was not the case when
+	 * using "esm" for handling ES6 modules).
 	 * </ol>
 	 * Importing from a runtime library is an exception to the above: in this case we must never include
 	 * the runtime library's project name nor its path to the output folder in the module specifier.
@@ -90,9 +107,10 @@ class ModuleSpecifierTransformation extends Transformation {
 
 		if (targetProject.type === ProjectType.RUNTIME_LIBRARY) {
 			// SPECIAL CASE #1
-			// pointing to a module in a runtime library
+			// pointing to a module in a runtime library, such as importing a node built-in library:
+			// import * as path_lib from "path"
 			// --> always use plain module specifier
-			return targetModule.moduleSpecifier;
+			return targetModule.moduleSpecifier; // no file extension to add!
 		}
 
 		val importingFromModuleInSameProject = targetProject.pathAsFileURI == state.project.pathAsFileURI;
@@ -110,7 +128,7 @@ class ModuleSpecifierTransformation extends Transformation {
 			// SPECIAL CASE #3
 			// in case of project imports (a.k.a. bare imports) we simply use
 			// the target project's name as module specifier:
-			return getActualProjectName(targetProject).rawName;
+			return getActualProjectName(targetProject).rawName; // no file extension to add!
 		}
 
 		return createAbsoluteModuleSpecifier(targetProject, targetModule);
@@ -128,8 +146,10 @@ class ModuleSpecifierTransformation extends Transformation {
 		}
 		val differingSegments = Arrays.copyOfRange(targetModulePath, i, targetModulePath.length);
 		val goUpCount = localModulePath.length - i;
+		val ext = getActualFileExtension(targetModule);
 		val result = (if (goUpCount > 0) "../".repeat(goUpCount) else "./")
-			+ Joiner.on("/").join(differingSegments + #[targetModuleName]);
+			+ Joiner.on("/").join(differingSegments + #[targetModuleName])
+			+ (if (ext !== null && !ext.empty) "." + ext else "");
 		return result;
 	}
 
@@ -167,7 +187,17 @@ class ModuleSpecifierTransformation extends Transformation {
 		val targetModuleSpecifier = resourceNameComputer.getCompleteModuleSpecifier(targetModule);
 		sb.append(targetModuleSpecifier);
 
+		val ext = getActualFileExtension(targetModule);
+		if (ext !== null && !ext.empty) {
+			sb.append('.');
+			sb.append(ext);
+		}
+
 		return sb.toString();
+	}
+
+	def protected String getActualFileExtension(TModule targetModule) {
+		return n4jsLanguageHelper.getOutputFileExtension(state.index, targetModule);
 	}
 
 	def protected N4JSPackageName getActualProjectName(N4JSProjectConfigSnapshot project) {

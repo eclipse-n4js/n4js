@@ -40,7 +40,8 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractCliCompileTest {
 	@Before
 	public void setupWorkspace() throws IOException {
 		workspace = setupWorkspace(WSP_532, true,
-				N4JSGlobals.N4JS_RUNTIME, new N4JSPackageName("n4js-runtime-es2015"),
+				N4JSGlobals.N4JS_RUNTIME,
+				new N4JSPackageName("n4js-runtime-es2015"),
 				new N4JSPackageName("org.eclipse.n4js.mangelhaft"));
 	}
 

@@ -14,15 +14,21 @@
   "engines": {
     "node": ">= 8.0.0"
   },
-  "main": "./src-gen/index.js",
+  "main": "./index-bundled.js",
   "types": "./n4jsglobals.d.ts",
   "files": [
     "src",
-    "src-gen",
+    "src-gen/n4js/lang/N4Injector.js",
+    "index-bundled.js",
     "n4jsglobals.d.ts"
   ],
+  "scripts": {
+    "bundle": "./npm-bundle.sh"
+  },
+  "devDependencies": {
+    "esbuild": "0.14.3"
+  },
   "dependencies": {
-    "esm": "3.2.25",
     "n4js-runtime-es2015": "^0.1.0",
     "n4js-runtime-esnext": "^0.1.0"
   },

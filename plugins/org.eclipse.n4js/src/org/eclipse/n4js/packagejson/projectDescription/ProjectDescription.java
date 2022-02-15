@@ -11,6 +11,7 @@
 package org.eclipse.n4js.packagejson.projectDescription;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -27,6 +28,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * Basic information about a project, as read from the {@code package.json} file in the project's root folder.
@@ -57,10 +59,14 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final ImmutableList<ProjectReference> testedProjects;
 	private final String definesPackage;
 	private final boolean nestedNodeModulesFolder;
+	private final boolean esm;
+	private final boolean moduleProperty;
 	private final boolean n4jsNature;
 	private final boolean yarnWorkspaceRoot;
 	private final boolean isGeneratorEnabledSourceMaps;
 	private final boolean isGeneratorEnabledDts;
+	private final ImmutableMap<String, String> generatorRewriteModuleSpecifiers;
+	private final boolean isGeneratorEnabledRewriteCjsImports;
 	private final ImmutableList<String> workspaces;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
@@ -72,8 +78,10 @@ public class ProjectDescription extends ImmutableDataClass {
 			Iterable<ProjectReference> implementedProjects, String outputPath,
 			Iterable<SourceContainerDescription> sourceContainers, Iterable<ModuleFilter> moduleFilters,
 			Iterable<ProjectReference> testedProjects, String definesPackage, boolean nestedNodeModulesFolder,
-			boolean n4jsNature, boolean yarnWorkspaceRoot, boolean isGeneratorEnabledSourceMaps,
-			boolean isGeneratorEnabledDts, Iterable<String> workspaces) {
+			boolean esm, boolean moduleProperty, boolean n4jsNature, boolean yarnWorkspaceRoot,
+			boolean isGeneratorEnabledSourceMaps, boolean isGeneratorEnabledDts,
+			Map<String, String> generatorRewriteModuleSpecifiers, boolean isGeneratorEnabledRewriteCjsImports,
+			Iterable<String> workspaces) {
 
 		this.location = location;
 		this.relatedRootlocation = relatedRootlocation;
@@ -97,10 +105,14 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.testedProjects = ImmutableList.copyOf(testedProjects);
 		this.definesPackage = definesPackage;
 		this.nestedNodeModulesFolder = nestedNodeModulesFolder;
+		this.esm = esm;
+		this.moduleProperty = moduleProperty;
 		this.n4jsNature = n4jsNature;
 		this.yarnWorkspaceRoot = yarnWorkspaceRoot;
 		this.isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps;
 		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
+		this.generatorRewriteModuleSpecifiers = ImmutableMap.copyOf(generatorRewriteModuleSpecifiers);
+		this.isGeneratorEnabledRewriteCjsImports = isGeneratorEnabledRewriteCjsImports;
 		this.workspaces = ImmutableList.copyOf(workspaces);
 	}
 
@@ -127,10 +139,14 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.testedProjects = template.testedProjects;
 		this.definesPackage = template.definesPackage;
 		this.nestedNodeModulesFolder = template.nestedNodeModulesFolder;
+		this.esm = template.esm;
+		this.moduleProperty = template.moduleProperty;
 		this.n4jsNature = template.n4jsNature;
 		this.yarnWorkspaceRoot = template.yarnWorkspaceRoot;
 		this.isGeneratorEnabledSourceMaps = template.isGeneratorEnabledSourceMaps;
 		this.isGeneratorEnabledDts = template.isGeneratorEnabledDts;
+		this.generatorRewriteModuleSpecifiers = template.generatorRewriteModuleSpecifiers;
+		this.isGeneratorEnabledRewriteCjsImports = template.isGeneratorEnabledRewriteCjsImports;
 		this.workspaces = template.workspaces;
 	}
 
@@ -162,10 +178,14 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.getTestedProjects().addAll(testedProjects);
 		builder.setDefinesPackage(definesPackage);
 		builder.setNestedNodeModulesFolder(nestedNodeModulesFolder);
+		builder.setESM(esm);
+		builder.setModuleProperty(moduleProperty);
 		builder.setN4JSNature(n4jsNature);
 		builder.setYarnWorkspaceRoot(yarnWorkspaceRoot);
 		builder.setGeneratorEnabledSourceMaps(isGeneratorEnabledSourceMaps);
 		builder.setGeneratorEnabledDts(isGeneratorEnabledDts);
+		builder.getGeneratorRewriteModuleSpecifiers().putAll(generatorRewriteModuleSpecifiers);
+		builder.setGeneratorEnabledRewriteCjsImports(isGeneratorEnabledRewriteCjsImports);
 		builder.getWorkspaces().addAll(workspaces);
 		return builder;
 	}
@@ -281,6 +301,31 @@ public class ProjectDescription extends ImmutableDataClass {
 	}
 
 	/**
+	 * Tells whether this project is an "esm project", i.e. whether it is using node's native support for ES6 modules by
+	 * default.
+	 * <p>
+	 * This will be <code>true</code> iff <code>"type": "module"</code> is given in the project's
+	 * <code>package.json</code> file. This setting affects how node will treat files with an extension of ".js": if it
+	 * is <code>false</code>, they will be treated as CommonJS modules; if it is <code>true</code> they will be treated
+	 * as ES6 modules.
+	 * <p>
+	 * Note: files with an extension of ".cjs" / ".mjs" will <em>always</em> be treated as CommonJS / ES6 modules, no
+	 * matter how this setting is configured.
+	 *
+	 * @see <a href="https://nodejs.org/dist/latest/docs/api/packages.html#packages_type">Node.js Documentation</a>
+	 */
+	public boolean isESM() {
+		return esm;
+	}
+
+	/**
+	 * Tells whether this project's <code>package.json</code> has top-level property "module" defined.
+	 */
+	public boolean hasModuleProperty() {
+		return moduleProperty;
+	}
+
+	/**
 	 * Indicates whether the underlying project description explicitly configured the project to be an N4JS project
 	 * (e.g. includes n4js section).
 	 */
@@ -307,6 +352,16 @@ public class ProjectDescription extends ImmutableDataClass {
 	 */
 	public boolean isGeneratorEnabledDts() {
 		return isGeneratorEnabledDts;
+	}
+
+	/** Returns the module specifier mapping defined in the "n4js/generator" section of the package.json. */
+	public Map<String, String> getGeneratorRewriteModuleSpecifiers() {
+		return generatorRewriteModuleSpecifiers;
+	}
+
+	/** Returns true iff default imports should be emitted for all imports from CJS modules. */
+	public boolean isGeneratorEnabledRewriteCjsImports() {
+		return isGeneratorEnabledRewriteCjsImports;
 	}
 
 	/**
@@ -341,10 +396,14 @@ public class ProjectDescription extends ImmutableDataClass {
 				testedProjects,
 				definesPackage,
 				nestedNodeModulesFolder,
+				esm,
+				moduleProperty,
 				n4jsNature,
 				yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps,
 				isGeneratorEnabledDts,
+				generatorRewriteModuleSpecifiers,
+				isGeneratorEnabledRewriteCjsImports,
 				workspaces);
 	}
 
@@ -373,10 +432,14 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& Objects.equals(testedProjects, other.testedProjects)
 				&& Objects.equals(definesPackage, other.definesPackage)
 				&& nestedNodeModulesFolder == other.nestedNodeModulesFolder
+				&& esm == other.esm
+				&& moduleProperty == other.moduleProperty
 				&& n4jsNature == other.n4jsNature
 				&& yarnWorkspaceRoot == other.yarnWorkspaceRoot
 				&& isGeneratorEnabledSourceMaps == other.isGeneratorEnabledSourceMaps
 				&& isGeneratorEnabledDts == other.isGeneratorEnabledDts
+				&& Objects.equals(generatorRewriteModuleSpecifiers, other.generatorRewriteModuleSpecifiers)
+				&& isGeneratorEnabledRewriteCjsImports == other.isGeneratorEnabledRewriteCjsImports
 				&& Objects.equals(workspaces, other.workspaces);
 	}
 

@@ -1,6 +1,7 @@
 {
 	"name": "IDE_2051",
 	"version": "0.0.1",
+	"type": "module",
 	"dependencies": {
 		"IDE_2051_b": "*",
 		"IDE_2051_clash": "*"

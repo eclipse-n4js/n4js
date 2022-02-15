@@ -1,2 +1,7 @@
 /.project
 /.n4js.projectstate
+# We bundle the entire code from src-gen into index-bundled.js (also converting it to CommonJS)
+# and therefore do not need to ship folder 'src-gen':
+/src-gen
+# However, N4Injector will be imported directly, so we need this file at the expected location:
+!/src-gen/n4js/lang/N4Injector.js

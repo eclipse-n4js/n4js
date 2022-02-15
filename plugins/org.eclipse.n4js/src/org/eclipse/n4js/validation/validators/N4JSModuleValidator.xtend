@@ -98,7 +98,7 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def void checkUniqueName(Script script) {
-		if (URIUtils.fileExtension(script.eResource.URI) != N4JSGlobals.JS_FILE_EXTENSION) {
+		if (!N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(URIUtils.fileExtension(script.eResource.URI))) {
 			script.checkUniqueName(script.module);
 		}
 	}
@@ -139,8 +139,8 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	private def void checkUniqueInIndex(Script script, TModule module, Iterable<IEObjectDescription> descriptions, Provider<List<IContainer>> lazyContainersList) {
 		val resource = module.eResource;
 
-		val resourceURIs = descriptions.toMap[d|
-			d.EObjectURI.trimFragment
+		val resourceURIs = descriptions.toMap[
+			EObjectURI.trimFragment
 		].filter[uri, d|
 			uri != EcoreUtil2.getPlatformResourceOrNormalizedURI(resource)
 		];

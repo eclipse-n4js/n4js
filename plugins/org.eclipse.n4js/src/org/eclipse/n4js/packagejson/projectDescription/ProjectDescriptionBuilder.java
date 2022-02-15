@@ -12,7 +12,9 @@ package org.eclipse.n4js.packagejson.projectDescription;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
@@ -48,10 +50,14 @@ public class ProjectDescriptionBuilder {
 	private final List<ProjectReference> testedProjects = new ArrayList<>();
 	private String definesPackage;
 	private boolean nestedNodeModulesFolder;
+	private boolean esm;
+	private boolean moduleProperty;
 	private boolean n4jsNature;
 	private boolean yarnWorkspaceRoot;
 	private Boolean isGeneratorEnabledSourceMaps;
 	private Boolean isGeneratorEnabledDts;
+	private final Map<String, String> generatorRewriteModuleSpecifiers = new HashMap<>();
+	private Boolean isGeneratorEnabledRewriteCjsImports;
 	private final List<String> workspaces = new ArrayList<>();
 
 	public ProjectDescriptionBuilder() {
@@ -62,12 +68,16 @@ public class ProjectDescriptionBuilder {
 		id = id == null ? computeProjectID() : id;
 		isGeneratorEnabledSourceMaps = isGeneratorEnabledSourceMaps == null ? false : isGeneratorEnabledSourceMaps;
 		isGeneratorEnabledDts = isGeneratorEnabledDts == null ? false : isGeneratorEnabledDts;
+		isGeneratorEnabledRewriteCjsImports = isGeneratorEnabledRewriteCjsImports == null ? false
+				: isGeneratorEnabledRewriteCjsImports;
 
 		return new ProjectDescription(location, relatedRootLocation, id,
 				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
-				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage, nestedNodeModulesFolder,
-				n4jsNature, yarnWorkspaceRoot, isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, workspaces);
+				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
+				nestedNodeModulesFolder, esm, moduleProperty, n4jsNature, yarnWorkspaceRoot,
+				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, generatorRewriteModuleSpecifiers,
+				isGeneratorEnabledRewriteCjsImports, workspaces);
 	}
 
 	public String computeProjectID() {
@@ -296,6 +306,24 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
+	public boolean isESM() {
+		return esm;
+	}
+
+	public ProjectDescriptionBuilder setESM(boolean esm) {
+		this.esm = esm;
+		return this;
+	}
+
+	public boolean hasModuleProperty() {
+		return moduleProperty;
+	}
+
+	public ProjectDescriptionBuilder setModuleProperty(boolean moduleProperty) {
+		this.moduleProperty = moduleProperty;
+		return this;
+	}
+
 	public boolean hasN4JSNature() {
 		return n4jsNature;
 	}
@@ -329,6 +357,19 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setGeneratorEnabledDts(boolean isGeneratorEnabledDts) {
 		this.isGeneratorEnabledDts = isGeneratorEnabledDts;
+		return this;
+	}
+
+	public Map<String, String> getGeneratorRewriteModuleSpecifiers() {
+		return this.generatorRewriteModuleSpecifiers;
+	}
+
+	public Boolean isGeneratorEnabledRewriteCjsImports() {
+		return isGeneratorEnabledRewriteCjsImports;
+	}
+
+	public ProjectDescriptionBuilder setGeneratorEnabledRewriteCjsImports(boolean isGeneratorEnabledRewriteCjsImports) {
+		this.isGeneratorEnabledRewriteCjsImports = isGeneratorEnabledRewriteCjsImports;
 		return this;
 	}
 

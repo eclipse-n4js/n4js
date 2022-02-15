@@ -20,13 +20,13 @@ import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
-import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TModule;
@@ -37,6 +37,7 @@ import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -104,6 +105,12 @@ public class TranspilerState {
 	public final STECache steCache;
 
 	/**
+	 * The Xtext index as seen from the project containing the resource being transpiled (i.e. will only contain
+	 * resource descriptions of projects the containing project depends on).
+	 */
+	public final IResourceDescriptions index;
+
+	/**
 	 * The workspace access for finding containing projects, etc.
 	 */
 	public final WorkspaceAccess workspaceAccess;
@@ -127,7 +134,7 @@ public class TranspilerState {
 	 */
 	public TranspilerState(N4JSResource resource, N4JSProjectConfigSnapshot project, GeneratorOption[] options,
 			MemberCollector memberCollector, Script_IM im, STECache steCache, Tracer tracer, InformationRegistry info,
-			WorkspaceAccess workspaceAccess) {
+			IResourceDescriptions index, WorkspaceAccess workspaceAccess) {
 		this.resource = resource;
 		this.project = project;
 		this.options = options;
@@ -138,6 +145,7 @@ public class TranspilerState {
 		this.tracer = tracer;
 		this.info = info;
 		this.steCache = steCache;
+		this.index = index;
 		this.workspaceAccess = workspaceAccess;
 		// check
 		if (this.steCache.im != this.im)

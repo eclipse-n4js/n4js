@@ -10,14 +10,9 @@
  */
 package org.eclipse.n4js;
 
-import static com.google.common.collect.Sets.newLinkedHashSet;
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableCollection;
-
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -48,7 +43,7 @@ public final class N4JSGlobals {
 	 * </ul>
 	 * If it contains fewer than three version segments, all numbers for the remaining segments are deemed compatible.
 	 */
-	public static final String NODE_VERSION = "14.16";
+	public static final String NODE_VERSION = "16.14";
 
 	/** URL of the public npm registry. */
 	public static final String NPMJS_URL = "https://registry.npmjs.org/";
@@ -75,6 +70,16 @@ public final class N4JSGlobals {
 	 * Files extension of JS source files (<b>not</b> including the separator dot).
 	 */
 	public static final String JS_FILE_EXTENSION = "js";
+
+	/**
+	 * File extension of JS source files that contain ES6 modules (<b>not</b> including the separator dot).
+	 */
+	public static final String MJS_FILE_EXTENSION = "mjs";
+
+	/**
+	 * File extension of JS source files that contain CommonJS modules (<b>not</b> including the separator dot).
+	 */
+	public static final String CJS_FILE_EXTENSION = "cjs";
 
 	/**
 	 * Files extension of N4JS source files (<b>not</b> including the separator dot).
@@ -129,18 +134,41 @@ public final class N4JSGlobals {
 	public static final N4JSPackageName MANGELHAFT_CLI = new N4JSPackageName("n4js-mangelhaft-cli");
 
 	/**
-	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
-	 * {@link #N4JS_FILE_EXTENSION},{@link #N4JSX_FILE_EXTENSION}, {@link #JS_FILE_EXTENSION},
-	 * {@link #JSX_FILE_EXTENSION}.
+	 * All standard plain-JS file extensions.
+	 * <p>
+	 * Unmodifiable list containing {@link #JS_FILE_EXTENSION}, {@link #CJS_FILE_EXTENSION},
+	 * {@link #MJS_FILE_EXTENSION}, and {@link #JSX_FILE_EXTENSION}.
 	 */
-	// TODO TODO IDE-2493 multiple languages topic
-	public static final Collection<String> ALL_N4_FILE_EXTENSIONS = unmodifiableCollection(newLinkedHashSet(asList(
+	public static final Set<String> ALL_JS_FILE_EXTENSIONS = ImmutableSet.of(
+			JS_FILE_EXTENSION,
+			CJS_FILE_EXTENSION,
+			MJS_FILE_EXTENSION,
+			JSX_FILE_EXTENSION);
+
+	/**
+	 * All N4JS file extensions.
+	 * <p>
+	 * Unmodifiable list containing {@link #N4JS_FILE_EXTENSION}, {@link #N4JSD_FILE_EXTENSION},
+	 * {@link #N4JSX_FILE_EXTENSION}.
+	 */
+	public static final Set<String> ALL_N4JS_FILE_EXTENSIONS = ImmutableSet.of(
 			N4JS_FILE_EXTENSION,
 			N4JSD_FILE_EXTENSION,
-			N4JSX_FILE_EXTENSION,
-			JSX_FILE_EXTENSION,
-			JS_FILE_EXTENSION,
-			DTS_FILE_EXTENSION)));
+			N4JSX_FILE_EXTENSION);
+
+	/**
+	 * All file extensions the N4JS tooling is interested in, including but not limited to the N4JS file extensions.
+	 * <p>
+	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
+	 * {@link #N4JS_FILE_EXTENSION},{@link #N4JSX_FILE_EXTENSION}, {@link #JS_FILE_EXTENSION},
+	 * {@link #CJS_FILE_EXTENSION}, {@link #MJS_FILE_EXTENSION}, {@link #JSX_FILE_EXTENSION},
+	 * {@link #DTS_FILE_EXTENSION}.
+	 */
+	public static final Set<String> ALL_N4_FILE_EXTENSIONS = ImmutableSet.<String> builder()
+			.addAll(ALL_N4JS_FILE_EXTENSIONS)
+			.addAll(ALL_JS_FILE_EXTENSIONS)
+			.add(DTS_FILE_EXTENSION)
+			.build();
 
 	/**
 	 * Name of the N4JS Git repository, i.e. "n4js". Same as {@link UtilN4#N4JS_GIT_REPOSITORY_NAME}.
@@ -393,6 +421,20 @@ public final class N4JSGlobals {
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.
+	}
+
+	/**
+	 * Tells whether the given string ends with one of the {@link #ALL_N4JS_FILE_EXTENSIONS N4JS file extensions}.
+	 */
+	public static boolean endsWithN4JSFileExtension(String fileName) {
+		if (fileName != null) {
+			for (String ext : ALL_N4JS_FILE_EXTENSIONS) {
+				if (fileName.endsWith("." + ext)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	/** Tells whether the given node.js version string is compatible with {@link #NODE_VERSION}. */

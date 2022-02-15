@@ -1,6 +1,7 @@
 {
 	"name": "IDEBUG_51_ModuleSpecifier_a_a",
 	"version": "0.0.1",
+	"type": "module",
 	"dependencies": {
 		"IDEBUG_51_ModuleSpecifier_a.a": "*"
 	},

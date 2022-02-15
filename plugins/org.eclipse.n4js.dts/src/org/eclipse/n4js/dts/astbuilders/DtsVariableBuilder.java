@@ -18,12 +18,14 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_variableDeclarationList
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.BindingPatternBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.n4JS.BindingPattern;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -31,7 +33,12 @@ import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -81,9 +88,9 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 			// TODO: missing modifier N4Modifier.EXTERNAL
 		}
 		VariableStatementKeyword keyword = VariableStatementKeyword.VAR;
-		if (ctx.varModifier().Const() != null) {
+		if (ctx.varModifier() != null && ctx.varModifier().Const() != null) {
 			keyword = VariableStatementKeyword.CONST;
-		} else if (ctx.varModifier().Let() != null) {
+		} else if (ctx.varModifier() != null && ctx.varModifier().Let() != null) {
 			keyword = VariableStatementKeyword.LET;
 		}
 		result.setVarStmtKeyword(keyword);
@@ -115,8 +122,29 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 		TypeReferenceNode<TypeRef> typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
 		varDecl.setDeclaredTypeRefNode(typeRef);
 
-		varDecl.setExpression(new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression()));
+		Expression expr = new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression());
+		varDecl.setExpression(expr);
+
+		if (typeRef == null && expr == null) {
+			// the types builder would use 'any' in this case, but we want 'any+':
+			varDecl.setDeclaredTypeRefNode(createAnyPlusTypeRef());
+		}
 
 		result.getVarDeclsOrBindings().add(varDecl);
+	}
+
+	private TypeReferenceNode<TypeRef> createAnyPlusTypeRef() {
+		ParameterizedTypeRef ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
+		ptr.setDynamic(true);
+		ptr.setDeclaredTypeAsText("any");
+
+		Type typeProxy = TypesFactory.eINSTANCE.createType();
+		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
+		ParserContextUtil.installProxy(resource, ptr, eRef, typeProxy, ptr.getDeclaredTypeAsText());
+		ptr.setDeclaredType(typeProxy);
+
+		TypeReferenceNode<TypeRef> typeRefNode = N4JSFactory.eINSTANCE.createTypeReferenceNode();
+		typeRefNode.setTypeRefInAST(ptr);
+		return typeRefNode;
 	}
 }

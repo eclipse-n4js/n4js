@@ -21,7 +21,7 @@ import com.google.common.base.Strings;
  * This enum represents resource types for N4JS language (and its variants).
  */
 public enum ResourceType {
-	/** Raw file has extension <code>.js</code> or <code>.js.xt</code> */
+	/** Raw file has extension <code>.[c|m]js</code> or <code>.[c|m]js.xt</code> */
 	JS,
 	/** Raw file has extension <code>.jsx</code> or <code>.jsx.xt</code> */
 	JSX,
@@ -52,6 +52,8 @@ public enum ResourceType {
 	}
 
 	private final static String EXT_JS = N4JSGlobals.JS_FILE_EXTENSION;
+	private final static String EXT_CJS = N4JSGlobals.CJS_FILE_EXTENSION;
+	private final static String EXT_MJS = N4JSGlobals.MJS_FILE_EXTENSION;
 	private final static String EXT_JSX = N4JSGlobals.JSX_FILE_EXTENSION;
 	private final static String EXT_N4JS = N4JSGlobals.N4JS_FILE_EXTENSION;
 	private final static String EXT_N4JSX = N4JSGlobals.N4JSX_FILE_EXTENSION;
@@ -132,6 +134,8 @@ public enum ResourceType {
 
 		switch (fileExtension.toLowerCase()) {
 		case EXT_JS:
+		case EXT_CJS:
+		case EXT_MJS:
 			return JS;
 		case EXT_JSX:
 			return JSX;

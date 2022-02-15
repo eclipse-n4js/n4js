@@ -1,6 +1,7 @@
 {
 	"name": "IDEBUG-654",
 	"version": "0.0.1",
+	"type": "module",
 	"dependencies": {
 		"n4js-runtime": "*"
 	},
@@ -16,6 +17,9 @@
 			"external": [
 				"js"
 			]
+		},
+		"generator": {
+			"rewriteCjsImports": true
 		}
 	}
 }

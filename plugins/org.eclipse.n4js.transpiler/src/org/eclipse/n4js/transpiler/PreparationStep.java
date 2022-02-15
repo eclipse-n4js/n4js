@@ -67,6 +67,8 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.util.Arrays;
 import org.eclipse.xtext.util.LineAndColumn;
 
@@ -96,6 +98,9 @@ public class PreparationStep {
 	};
 
 	@Inject
+	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+
+	@Inject
 	private WorkspaceAccess workspaceAccess;
 
 	@Inject
@@ -116,9 +121,10 @@ public class PreparationStep {
 		final Tracer tracer = new Tracer();
 		final InformationRegistry info = new InformationRegistry();
 		final STECache steCache = createIM(script, tracer, info);
+		final IResourceDescriptions index = resourceDescriptionsProvider.getResourceDescriptions(resource);
 
 		return new TranspilerState(resource, project, options, memberCollector, steCache.im, steCache, tracer, info,
-				workspaceAccess);
+				index, workspaceAccess);
 	}
 
 	private STECache createIM(Script script, Tracer tracer, InformationRegistry info) {

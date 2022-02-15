@@ -168,13 +168,6 @@ public class CliTools {
 		this.timeoutUnit = unit;
 	}
 
-	/** see {@link TestProcessExecuter#runNodejsESM(Path, Map, Path, String[])} */
-	public ProcessResult nodejsRunESM(Path workingDir, Path runFile, String... options) {
-		return withoutCorruptingGlobalState(() -> {
-			return getExProcessExecuter().runNodejsESM(workingDir, environment, runFile, options);
-		});
-	}
-
 	/** see {@link TestProcessExecuter#runNodejs(Path, Map, Path, String[])} */
 	public ProcessResult nodejsRun(Path workingDir, Path runFile, String... options) {
 		return withoutCorruptingGlobalState(() -> {

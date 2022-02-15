@@ -138,7 +138,7 @@ class ImportsUnresolvedTest extends AbstractIdeTest {
 				"(Error, [0:16 - 0:30], Cannot resolve project import: no matching module found.)"
 			],
 			"OtherProject/" + PACKAGE_JSON -> #[
-				"(Error, [7:17 - 7:24], Main module specifier Other does not exist.)"
+				"(Error, [8:17 - 8:24], Main module specifier Other does not exist.)"
 			]
 		);
 	}

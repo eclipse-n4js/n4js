@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
+import static org.eclipse.n4js.N4JSGlobals.ALL_JS_FILE_EXTENSIONS;
 import static org.eclipse.n4js.N4JSGlobals.DTS_FILE_EXTENSION;
-import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 
 import java.nio.file.Path;
@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -49,6 +50,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 
 /**
@@ -143,6 +145,13 @@ public class ProjectImportEnablingScope implements IScope {
 	public IEObjectDescription getSingleElement(QualifiedName name) {
 		final List<IEObjectDescription> result = Lists.newArrayList(getElements(name));
 		int size = result.size();
+
+		// handle combination of .js / .cjs / .mjs files with same base name
+		if (size > 1) {
+			removeSuperfluousPlainJsFiles(result);
+			size = result.size();
+		}
+
 		if (size == 1) {
 			// main case
 			return result.get(0);
@@ -243,13 +252,17 @@ public class ProjectImportEnablingScope implements IScope {
 	 * <li/>An N4JSD module must be the corresponding definition module inside the corresponding definition project, and
 	 * <li/>An d.ts module must be the corresponding definition module inside the corresponding definition project
 	 * </ul>
-	 * In case both and N4JSD and a d.ts module exist, the n4jsd module is returned. Otherwise either the N4JSD or the
+	 * In case both an N4JSD and a d.ts module exist, the n4jsd module is returned. Otherwise either the N4JSD or the
 	 * d.ts module is returned.
 	 */
 	private IEObjectDescription handleCollisions(List<IEObjectDescription> result,
 			Map<IEObjectDescription, N4JSProjectConfigSnapshot> descriptionsToProject) {
 
-		Set<String> considerExtensions = Set.of(JS_FILE_EXTENSION, N4JSD_FILE_EXTENSION, DTS_FILE_EXTENSION);
+		Set<String> considerExtensions = ImmutableSet.<String> builder()
+				.addAll(ALL_JS_FILE_EXTENSIONS)
+				.add(N4JSD_FILE_EXTENSION)
+				.add(DTS_FILE_EXTENSION)
+				.build();
 		Map<String, IEObjectDescription> descr4Ext = new HashMap<>();
 		Map<String, N4JSProjectConfigSnapshot> prj4Ext = new HashMap<>();
 		for (IEObjectDescription res : result) {
@@ -273,10 +286,20 @@ public class ProjectImportEnablingScope implements IScope {
 			return null; // return null due to missing project information
 		}
 
-		if (!descr4Ext.containsKey(JS_FILE_EXTENSION)) {
+		// NOTE: the priority between .js/.cjs/.mjs we implement in the following loop based on the order in constant
+		// ALL_JS_FILE_EXTENSIONS does not have an effect in practice, because conflicts between .js/.cjs/.mjs files are
+		// resolved up front (see #removeSuperfluousPlainJsFiles() and its invocation in #getSingleElement()), meaning
+		// we will always have only one of .js/.cjs/.mjs when reaching this point in the code:
+		N4JSProjectConfigSnapshot jsProject = null;
+		for (String jsFileExt : ALL_JS_FILE_EXTENSIONS) {
+			N4JSProjectConfigSnapshot removed = prj4Ext.remove(jsFileExt);
+			if (removed != null) {
+				jsProject = removed;
+			}
+		}
+		if (jsProject == null) {
 			return null; // return null due to missing implementation module
 		}
-		N4JSProjectConfigSnapshot jsProject = prj4Ext.remove(JS_FILE_EXTENSION);
 
 		Iterator<Entry<String, N4JSProjectConfigSnapshot>> iter = prj4Ext.entrySet().iterator();
 		while (iter.hasNext()) {
@@ -496,6 +519,56 @@ public class ProjectImportEnablingScope implements IScope {
 					impDecl.setModuleSpecifierForm(moduleSpecifierForm);
 				}, impDecl);
 			}
+		}
+	}
+
+	/**
+	 * If the given list contains one or more {@link IEObjectDescription}s representing a plain JS file (i.e. a file
+	 * with one of the extensions in {@link N4JSGlobals#ALL_JS_FILE_EXTENSIONS}), this method will retain only one of
+	 * those descriptions, favoring {@code .mjs} files over {@code .cjs} files over {@code .js} files, and remove the
+	 * others. Otherwise, the given list will remain unchanged.
+	 */
+	private void removeSuperfluousPlainJsFiles(List<IEObjectDescription> descs) {
+		int size = descs.size();
+		if (size < 2) {
+			return;
+		}
+		IEObjectDescription firstJS = null;
+		IEObjectDescription firstCJS = null;
+		IEObjectDescription firstMJS = null;
+		Iterator<IEObjectDescription> iter = descs.iterator();
+		while (iter.hasNext()) {
+			IEObjectDescription curr = iter.next();
+			if (curr.getEClass() != TypesPackage.Literals.TMODULE) {
+				// the special handling applies only to files, which are represented on the level of
+				// IEObjectDescriptions as TModules, so for everything else we can continue here:
+				continue;
+			}
+			String currExt = curr.getEObjectURI().fileExtension();
+			if (N4JSGlobals.JS_FILE_EXTENSION.equals(currExt)
+					|| N4JSGlobals.JSX_FILE_EXTENSION.equals(currExt)) {
+				if (firstJS == null) {
+					firstJS = curr;
+				}
+				iter.remove();
+			} else if (N4JSGlobals.CJS_FILE_EXTENSION.equals(currExt)) {
+				if (firstCJS == null) {
+					firstCJS = curr;
+				}
+				iter.remove();
+			} else if (N4JSGlobals.MJS_FILE_EXTENSION.equals(currExt)) {
+				if (firstMJS == null) {
+					firstMJS = curr;
+				}
+				iter.remove();
+			}
+		}
+		if (firstMJS != null) {
+			descs.add(firstMJS);
+		} else if (firstCJS != null) {
+			descs.add(firstCJS);
+		} else if (firstJS != null) {
+			descs.add(firstJS);
 		}
 	}
 }

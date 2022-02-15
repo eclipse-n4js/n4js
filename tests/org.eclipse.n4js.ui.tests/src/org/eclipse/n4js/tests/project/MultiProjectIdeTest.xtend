@@ -132,7 +132,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 				"(Error, [1:16 - 1:17], Couldn't resolve reference to Type 'D'.)"
 			],
 			"multiProjectTest.first/package.json" -> #[
-				"(Error, [16:8 - 16:27], Project does not exist with project ID: thirdProject.)"
+				"(Error, [17:8 - 17:27], Project does not exist with project ID: thirdProject.)"
 			]
 			
 		);
@@ -200,7 +200,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertIssues(
 			"multiProjectTest.first/package.json" -> #[
-				"(Error, [15:3 - 15:33], Project does not exist with project ID: multiProjectTest.second.)"
+				"(Error, [16:3 - 16:33], Project does not exist with project ID: multiProjectTest.second.)"
 			],
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
@@ -277,7 +277,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertIssues(
 			PROJECT1_NAME + "/package.json" -> #[
-				"(Warning, [6:58 - 6:83], Project multiProjectTest.second of type library cannot be declared among the required runtime libraries.)"
+				"(Warning, [7:58 - 7:83], Project multiProjectTest.second of type library cannot be declared among the required runtime libraries.)"
 			]
 		);
 
@@ -286,7 +286,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertIssues(
 			PROJECT2_NAME + "/package.json" -> #[
-				"(Warning, [15:3 - 15:22], Project n4js-runtime of type runtime environment cannot be declared among the dependencies or devDependencies.)"
+				"(Warning, [16:3 - 16:22], Project n4js-runtime of type runtime environment cannot be declared among the dependencies or devDependencies.)"
 			]
 		);
 
@@ -295,7 +295,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertIssues(
 			PROJECT1_NAME + "/package.json" -> #[
-				"(Warning, [6:58 - 6:83], Project multiProjectTest.second of type library cannot be declared among the required runtime libraries.)"
+				"(Warning, [7:58 - 7:83], Project multiProjectTest.second of type library cannot be declared among the required runtime libraries.)"
 			]
 		);
 	}
@@ -318,7 +318,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertIssues(
 			PROJECT1_NAME + "/package.json" -> #[
-				"(Warning, [8:30 - 8:35], Source container path ext does not exist.)"
+				"(Warning, [9:30 - 9:35], Source container path ext does not exist.)"
 			]
 		);
 
@@ -341,7 +341,7 @@ cleanBuildAndWait();
 cleanBuildAndWait();
 		assertIssues(
 			PROJECT1_NAME + "/package.json" -> #[
-				"(Warning, [8:30 - 8:35], Source container path ext does not exist.)"
+				"(Warning, [9:30 - 9:35], Source container path ext does not exist.)"
 			]
 		);
 	}

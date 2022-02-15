@@ -19,6 +19,7 @@
   "engines": {
     "node": ">= 5.0.0"
   },
+  "type": "module",
   "n4js": {
     "projectType": "library",
     "vendorId": "org.eclipse.n4js",
@@ -34,7 +35,10 @@
       "n4js-runtime-es2015",
       "n4js-runtime-esnext",
       "n4js-runtime-node"
-    ]
+    ],
+    "generator": {
+      "rewriteCjsImports": true
+    }
   },
   "dependencies": {
     "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",

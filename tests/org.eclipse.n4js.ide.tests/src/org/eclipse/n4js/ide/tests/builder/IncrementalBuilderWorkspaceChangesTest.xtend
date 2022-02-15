@@ -54,7 +54,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
 		],
 		"MainProject/" + PACKAGE_JSON -> #[
-			"(Error, [15:3 - 15:22], Project does not exist with project ID: OtherProject.)"
+			"(Error, [16:3 - 16:22], Project does not exist with project ID: OtherProject.)"
 		]
 	];
 
@@ -303,7 +303,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 				'''    (Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "OtherProject" on the file system.)'''
 			],
 			"MainProject/package.json" -> #[
-				'''    (Error, [15:3 - 15:22], Project does not exist with project ID: OtherProject.)'''
+				'''    (Error, [16:3 - 16:22], Project does not exist with project ID: OtherProject.)'''
 			],
 			"Main.n4js" -> #[
 				'''    (Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)''',
@@ -459,7 +459,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			val tpnLength = 31 + targetProjectName.length;
 			val errorsBeforeSaving = originalErrors + #[
 				sourceProjectName + "/" + PACKAGE_JSON -> #[
-					"(Error, [15:24 - 15:" + tpnLength + "], Project does not exist with project ID: " + targetProjectName + ".)"
+					"(Error, [16:24 - 16:" + tpnLength + "], Project does not exist with project ID: " + targetProjectName + ".)"
 				]
 			];
 			assertIssues(errorsBeforeSaving); // changes in package.json not saved yet, so still the original errors + 1 error in the unsaved package.json editor

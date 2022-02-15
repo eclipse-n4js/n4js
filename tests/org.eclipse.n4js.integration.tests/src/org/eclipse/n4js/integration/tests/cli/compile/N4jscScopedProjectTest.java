@@ -68,10 +68,10 @@ public class N4jscScopedProjectTest extends AbstractCliCompileTest {
 		expectedString += "Hello from D in @myScope/Lib!\n";
 		expectedString += "Hello from D in Lib!";
 
-		ProcessResult nodejsResult1 = nodejsRunESM(workspace.toPath(), testFile1);
+		ProcessResult nodejsResult1 = nodejsRun(workspace.toPath(), testFile1);
 		assertEquals(nodejsResult1.toString(), expectedString, nodejsResult1.getStdOut());
 
-		ProcessResult nodejsResult2 = nodejsRunESM(workspace.toPath(), testFile2);
+		ProcessResult nodejsResult2 = nodejsRun(workspace.toPath(), testFile2);
 		assertEquals(nodejsResult2.toString(), expectedString, nodejsResult2.getStdOut());
 	}
 

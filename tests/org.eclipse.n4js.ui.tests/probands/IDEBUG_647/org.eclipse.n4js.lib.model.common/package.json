@@ -1,6 +1,7 @@
 {
   "name": "org.eclipse.n4js.lib.model.common",
   "version": "0.0.1",
+  "type": "module",
   "dependencies": {
     "n4js-runtime": "*"
   },

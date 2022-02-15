@@ -17,6 +17,7 @@ import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringOrNull;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asStringsInArrayOrEmpty;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.getProperty;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_DTS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_REWRITE_CJS_IMPORTS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.GENERATOR_SOURCE_MAPS;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN_MODULE;
@@ -99,9 +100,8 @@ public class PackageJsonHelper {
 		List<NameValuePair> rootPairs = ((JSONObject) rootValue).getNameValuePairs();
 		convertRootPairs(target, rootPairs);
 
-		JSONValue property = getProperty((JSONObject) rootValue, MAIN.name).orElse(null);
-		String propertyAsString = asNonEmptyStringOrNull(property);
-		adjustProjectDescriptionAfterConversion(target, applyDefaultValues, defaultProjectName, propertyAsString);
+		String valueOfPropMain = asNonEmptyStringOrNull(getProperty((JSONObject) rootValue, MAIN.name).orElse(null));
+		adjustProjectDescriptionAfterConversion(target, applyDefaultValues, defaultProjectName, valueOfPropMain);
 
 		return target;
 	}
@@ -121,6 +121,10 @@ public class PackageJsonHelper {
 			case VERSION:
 				target.setVersion(asVersionNumberOrNull(value));
 				break;
+			case TYPE:
+				// legal values are 'commonjs' and 'module'
+				target.setESM("module".equals(asNonEmptyStringOrNull(value)));
+				break;
 			case DEPENDENCIES:
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.RUNTIME);
 				break;
@@ -131,6 +135,10 @@ public class PackageJsonHelper {
 			case MAIN:
 				// need to handle this value later after all source containers have been read
 				// (see method #adjustProjectDescriptionAfterConversion())
+				break;
+			case MODULE:
+				// we don't care about the actual value, just about the fact that property "module" is present
+				target.setModuleProperty(true);
 				break;
 			case N4JS:
 				// mark project with N4JS nature
@@ -224,6 +232,20 @@ public class PackageJsonHelper {
 				target.setGeneratorEnabledDts(
 						asBooleanOrDefault(value, (Boolean) PackageJsonProperties.GENERATOR_DTS.defaultValue));
 				break;
+			case GENERATOR_REWRITE_MODULE_SPECIFIERS:
+				for (NameValuePair nvp : asNameValuePairsOrEmpty(value)) {
+					String n = nvp.getName();
+					String v = asStringOrNull(nvp.getValue());
+					if (n != null && v != null) { // note: we allow empty strings
+						target.getGeneratorRewriteModuleSpecifiers().put(n, v);
+					}
+				}
+				break;
+			case GENERATOR_REWRITE_CJS_IMPORTS:
+				target.setGeneratorEnabledRewriteCjsImports(
+						asBooleanOrDefault(value,
+								(Boolean) PackageJsonProperties.GENERATOR_REWRITE_CJS_IMPORTS.defaultValue));
+				break;
 			default:
 				break;
 			}
@@ -315,6 +337,7 @@ public class PackageJsonHelper {
 	 * converting the project description from JSON.
 	 */
 	private void applyDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
+
 		if (!target.hasN4JSNature() || target.getType() == null) {
 			// for non-N4JS projects, and if the project type is unset, enforce the default project type, i.e.
 			// project type 'PLAINJS':
@@ -342,6 +365,9 @@ public class PackageJsonHelper {
 		}
 		if (target.isGeneratorEnabledDts() == null) {
 			target.setGeneratorEnabledDts((Boolean) GENERATOR_DTS.defaultValue);
+		}
+		if (target.isGeneratorEnabledRewriteCjsImports() == null) {
+			target.setGeneratorEnabledRewriteCjsImports((Boolean) GENERATOR_REWRITE_CJS_IMPORTS.defaultValue);
 		}
 
 		// if no source containers are defined (no matter what type),

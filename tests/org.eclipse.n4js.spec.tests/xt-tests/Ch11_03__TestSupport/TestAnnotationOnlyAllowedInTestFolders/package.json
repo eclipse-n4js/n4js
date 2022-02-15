@@ -5,6 +5,7 @@
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.assert": "^0.1.0"
   },
+  "type": "module",
   "n4js": {
     "projectType": "test",
     "vendorId": "org.eclipse.n4js",

@@ -58,12 +58,12 @@ p.then(()=>{},(err)=>{console.log("ERR:", err)})
 
 async function testImportCalls() {
 	// note: need to use low-level Javascript module specifiers in import calls:
-	console.log((await import("./some/path/Other")).a);
-	console.log((await import("./some/path/Other")).b);
-	console.log((await import("Other/src-gen/some/path/Other1")).a);
-	console.log((await import("Other/src-gen/some/path/Other1")).b);
-	console.log((await import("Other/src-gen/some/path/Other2")).a);
-	console.log((await import("Other/src-gen/some/path/Other2")).b);
+	console.log((await import("./some/path/Other.js")).a);
+	console.log((await import("./some/path/Other.js")).b);
+	console.log((await import("Other/src-gen/some/path/Other1.js")).a);
+	console.log((await import("Other/src-gen/some/path/Other1.js")).b);
+	console.log((await import("Other/src-gen/some/path/Other2.js")).a);
+	console.log((await import("Other/src-gen/some/path/Other2.js")).b);
 }
 
 /* XPECT output ---
