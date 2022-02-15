@@ -364,6 +364,59 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 		return testWorkspaceManager.getPackageJsonFile(projectName);
 	}
 
+	/**
+	 * Same as {@link #getOutputFile(String, String)}, but for the {@link TestWorkspaceManager#DEFAULT_PROJECT_NAME
+	 * default project}.
+	 */
+	protected File getOutputFile(String moduleName) {
+		return getOutputFile(DEFAULT_PROJECT_NAME, moduleName);
+	}
+
+	/** Returns the output file of the given module located in the given project. */
+	protected File getOutputFile(String projectName, String moduleName) {
+		return new File(getOutputFolder(projectName), moduleName + ".js");
+	}
+
+	/**
+	 * Same as {@link #assertOutputFileExists(String, String)}, but for the
+	 * {@link TestWorkspaceManager#DEFAULT_PROJECT_NAME default project}.
+	 */
+	protected void assertOutputFileExists(String moduleName) {
+		assertOutputFileExists(DEFAULT_PROJECT_NAME, moduleName);
+	}
+
+	/** Asserts the output file of the given module located in the given project exists. */
+	protected void assertOutputFileExists(String projectName, String moduleName) {
+		File outputFile = getOutputFile(projectName, moduleName);
+		Assert.assertTrue(Files.isRegularFile(outputFile.toPath()));
+	}
+
+	/**
+	 * Same as {@link #getOutputFolder(String)}, but for the {@link TestWorkspaceManager#DEFAULT_PROJECT_NAME default
+	 * project}.
+	 */
+	protected File getOutputFolder() {
+		return getOutputFolder(DEFAULT_PROJECT_NAME);
+	}
+
+	/** Returns the output folder of the given project. */
+	protected File getOutputFolder(String projectName) {
+		return new File(getProjectRoot(projectName), N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT);
+	}
+
+	/**
+	 * Same as {@link #getProjectStateFile(String)}, but for the {@link TestWorkspaceManager#DEFAULT_PROJECT_NAME
+	 * default project}.
+	 */
+	protected File getProjectStateFile() {
+		return getProjectStateFile(DEFAULT_PROJECT_NAME);
+	}
+
+	/** Returns the {@link N4JSGlobals#N4JS_PROJECT_STATE project state file} of the given project. */
+	protected File getProjectStateFile(String projectName) {
+		return new File(getProjectRoot(projectName), N4JSGlobals.N4JS_PROJECT_STATE);
+	}
+
 	/** Overwrite this method to change the project type */
 	protected ProjectType getProjectType() {
 		return ProjectType.LIBRARY;

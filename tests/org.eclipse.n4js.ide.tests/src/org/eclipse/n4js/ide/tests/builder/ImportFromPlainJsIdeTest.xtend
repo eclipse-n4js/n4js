@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2021 NumberFour AG.
+ * Copyright (c) 2022 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,75 +10,130 @@
  */
 package org.eclipse.n4js.ide.tests.builder
 
+import java.nio.file.Files
+import java.util.List
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
+import org.junit.Assert
 import org.junit.Test
 
 /**
- * Tests for importing from a plain JS project located in the node_modules folder,
- * with or without type definitions. Also covers:
- * <ul>
- * <li>main modules and project imports,
- * <li>default imports/exports,
- * <li>implicit dependency to the N4JSD definition project
- *     (see {@link #testPlainJS_withImplicitDependencyToTypeDefs_baseCase()}).
- * </ul>
+ * Tests for importing from plain-JS modules.
+ * <p>
+ * This test class covers the base cases (including extensions ".cjs" and ".mjs");
+ * special cases are covered in separate test classes.
  */
 class ImportFromPlainJsIdeTest extends AbstractIdeTest {
 
 	@Test
-	def void testPlainJs_noTypeDefs_withoutMainModule() {
+	def void testInSourceFolder_extJS() {
+		doTestInSourceFolder("js");
+	}
+
+	@Test
+	def void testInSourceFolder_extCJS() {
+		doTestInSourceFolder("cjs");
+	}
+
+	@Test
+	def void testInSourceFolder_extMJS() {
+		doTestInSourceFolder("mjs");
+	}
+
+	def private void doTestInSourceFolder(String fileExtension) {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
+			"N4jsProject" -> #[
+				"someModule." + fileExtension -> '''
+					// content does not matter
+				''',
+				"N4jsModule" -> '''
+					import * as stuff+ from "someModule";
+					stuff.foo();
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+	}
+
+	@Test
+	def void testInExtFolder_extJS() {
+		doTestInExternalFolder("js")
+	}
+
+	@Test
+	def void testInExtFolder_extCJS() {
+		doTestInExternalFolder("cjs")
+	}
+
+	@Test
+	def void testInExtFolder_extMJS() {
+		doTestInExternalFolder("mjs")
+	}
+
+	def private void doTestInExternalFolder(String fileExtension) {
+		testWorkspaceManager.createTestOnDisk(
+			"N4jsProject" -> #[
+				"../src-ext/someModule." + fileExtension -> '''
+					// content does not matter
+				''',
+				"N4jsModule" -> '''
+					import * as stuff+ from "someModule";
+					stuff.foo();
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "N4jsProject",
+						"version": "0.0.1",
+						"n4js": {
+							"projectType": "library",
+							"vendorId": "org.eclipse.n4js",
+							"sources": {
+								"source": [
+									"src"
+								],
+								"external": [
+									"src-ext"
+								]
+							},
+							"output": "src-gen"
+						},
+						"dependencies": {
+							"n4js-runtime": "*"
+						}
+					}
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+	}
+
+	@Test
+	def void testInNodeModules_extJS() {
+		doTestInNodeModules("js");
+	}
+
+	@Test
+	def void testInNodeModules_extCJS() {
+		doTestInNodeModules("cjs");
+	}
+
+	@Test
+	def void testInNodeModules_extMJS() {
+		doTestInNodeModules("mjs");
+	}
+
+	def private void doTestInNodeModules(String fileExtension) {
+		testWorkspaceManager.createTestOnDisk(
+			CFG_NODE_MODULES + "somePackage" -> #[
+				"someModule." + fileExtension -> '''
 					// content does not matter
 				''',
 				CFG_SOURCE_FOLDER -> ".", // <- needed to have 'someModule.js' be placed in the project's root folder!
 				PACKAGE_JSON -> '''
 					{
-						"name": "npm_package",
+						"name": "somePackage",
 						"version": "0.0.1"
-					}
-				'''
-			],
-			"N4jsProject" -> #[
-				"N4jsModuleGood1" -> '''
-					import * as stuff+ from "someModule";
-					stuff.foo();
-				''',
-				"N4jsModuleGood2" -> '''
-					import * as stuff+ from "npm_package/someModule";
-					stuff.foo();
-				''',
-				"N4jsModuleBad" -> '''
-					import * as stuff+ from "npm_package"; // should fail, because npm_package does not have a main module
-					stuff.foo();
-				''',
-				CFG_DEPENDENCIES -> '''
-					npm_package
-				'''
-			]
-		);
-		startAndWaitForLspServer();
-		assertIssues(
-			"N4jsModuleBad" -> #[
-				"(Error, [0:24 - 0:37], Cannot resolve project import: no matching module found.)"
-			]
-		);
-	}
-
-	@Test
-	def void testPlainJs_noTypeDefs_withExplicitMainModule_includeJsExtension() {
-		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "npm_package",
-						"version": "0.0.1",
-						"main": "someModule.js"
 					}
 				'''
 			],
@@ -88,15 +143,11 @@ class ImportFromPlainJsIdeTest extends AbstractIdeTest {
 					stuff.foo();
 				''',
 				"N4jsModule2" -> '''
-					import * as stuff+ from "npm_package/someModule";
-					stuff.foo();
-				''',
-				"N4jsModule3" -> '''
-					import * as stuff+ from "npm_package";
+					import * as stuff+ from "somePackage/someModule";
 					stuff.foo();
 				''',
 				CFG_DEPENDENCIES -> '''
-					npm_package
+					somePackage
 				'''
 			]
 		);
@@ -105,358 +156,104 @@ class ImportFromPlainJsIdeTest extends AbstractIdeTest {
 	}
 
 	@Test
-	def void testPlainJs_noTypeDefs_withExplicitMainModule_omitJsExtension() {
+	def void testWithN4jsdFileSameProject_extJS() {
+		doTestWithN4jsdFileSameProject("js");
+	}
+
+	@Test
+	def void testWithN4jsdFileSameProject_extCJS() {
+		doTestWithN4jsdFileSameProject("cjs");
+	}
+
+	@Test
+	def void testWithN4jsdFileSameProject_extMJS() {
+		doTestWithN4jsdFileSameProject("mjs");
+	}
+
+	def private void doTestWithN4jsdFileSameProject(String fileExtension) {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "npm_package",
-						"version": "0.0.1",
-						"main": "someModule"«/* omitting the ".js" file extension here! */»
-					}
-				'''
-			],
 			"N4jsProject" -> #[
-				"N4jsModule1" -> '''
-					import * as stuff+ from "someModule";
-					stuff.foo();
-				''',
-				"N4jsModule2" -> '''
-					import * as stuff+ from "npm_package/someModule";
-					stuff.foo();
-				''',
-				"N4jsModule3" -> '''
-					import * as stuff+ from "npm_package";
-					stuff.foo();
-				''',
-				CFG_DEPENDENCIES -> '''
-					npm_package
-				'''
-			]
-		);
-		startAndWaitForLspServer();
-		assertNoIssues();
-	}
-
-	@Test
-	def void testPlainJs_noTypeDefs_withImplicitMainModule() {
-		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"index.js" -> '''
+				"../src-ext/someModule." + fileExtension -> '''
 					// content does not matter
 				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "npm_package",
-						"version": "0.0.1"
-					}
-				'''
-			],
-			"N4jsProject" -> #[
-				"N4jsModule1" -> '''
-					import * as stuff+ from "index";
-					stuff.foo();
-				''',
-				"N4jsModule2" -> '''
-					import * as stuff+ from "npm_package/index";
-					stuff.foo();
-				''',
-				"N4jsModule3" -> '''
-					import * as stuff+ from "npm_package";
-					stuff.foo();
-				''',
-				CFG_DEPENDENCIES -> '''
-					npm_package
-				'''
-			]
-		);
-		startAndWaitForLspServer();
-		assertNoIssues();
-	}
-
-	@Test
-	def void testPlainJs_withTypeDefs_withoutMainModule() {
-		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "npm_package",
-						"version": "0.0.1"
-					}
-				'''
-			],
-			CFG_NODE_MODULES + "@n4jsd/npm_package" -> #[
 				"someModule.n4jsd" -> '''
-					export external public function foo(): string;
+					export external function foo();
 				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "@n4jsd/npm_package",
-						"version": "0.0.1",
-						"n4js": {
-							"projectType": "definition",
-							"definesPackage": "npm_package",
-							"vendorId": "org.eclipse.n4js",
-							"sources": {
-								"source": [
-									"."
-								]
-							}
-						}
-					}
-				'''
-			],
-			"N4jsProject" -> #[
-				"N4jsModuleGood1" -> '''
+				"N4jsModule" -> '''
 					import * as stuff from "someModule";
-					let s: string = stuff.foo();
+					stuff.foo();
 				''',
-				"N4jsModuleGood2" -> '''
-					import * as stuff from "npm_package/someModule";
-					let s: string = stuff.foo();
-				''',
-				"N4jsModuleBad" -> '''
-					import * as stuff from "npm_package"; // should fail, because npm_package does not have a main module
-					let s: string = stuff.foo();
-				''',
-				CFG_DEPENDENCIES -> '''
-					@n4jsd/npm_package,
-					npm_package
-				'''
-			]
-		);
-		startAndWaitForLspServer();
-		assertIssues(
-			"N4jsModuleBad" -> #[
-				"(Error, [0:23 - 0:36], Cannot resolve project import: no matching module found.)",
-				"(Error, [1:22 - 1:25], Couldn't resolve reference to IdentifiableElement 'foo'.)"
-			]
-		);
-	}
-
-	@Test
-	def void testPlainJs_withTypeDefs_withExplicitMainModule_definedInN4jsSection() {
-		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".",
 				PACKAGE_JSON -> '''
 					{
-						"name": "npm_package",
-						"version": "0.0.1",
-						"main": "someModule.js"
-					}
-				'''
-			],
-			CFG_NODE_MODULES + "@n4jsd/npm_package" -> #[
-				"someModule.n4jsd" -> '''
-					export external public function foo(): string;
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "@n4jsd/npm_package",
+						"name": "N4jsProject",
 						"version": "0.0.1",
 						"n4js": {
-							"projectType": "definition",
-							"definesPackage": "npm_package",
+							"projectType": "library",
 							"vendorId": "org.eclipse.n4js",
 							"sources": {
 								"source": [
-									"."
+									"src"
+								],
+								"external": [
+									"src-ext"
 								]
 							},
-							"mainModule": "someModule"
+							"output": "src-gen"
+						},
+						"dependencies": {
+							"n4js-runtime": "*"
 						}
 					}
-				'''
-			],
-			"N4jsProject" -> #[
-				"N4jsModuleGood1" -> '''
-					import * as stuff from "someModule";
-					let s: string = stuff.foo();
-				''',
-				"N4jsModuleGood2" -> '''
-					import * as stuff from "npm_package/someModule";
-					let s: string = stuff.foo();
-				''',
-				"N4jsModuleBad" -> '''
-					import * as stuff from "npm_package";
-					let s: string = stuff.foo();
-				''',
-				CFG_DEPENDENCIES -> '''
-					@n4jsd/npm_package,
-					npm_package
 				'''
 			]
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
+
+		assertPlainJsFileExtensionInOutputFile(fileExtension, false);
 	}
 
 	@Test
-	def void testPlainJs_withTypeDefs_withExplicitMainModule_definedOnTopLevel_includeJsExtension() {
-		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "npm_package",
-						"version": "0.0.1",
-						"main": "someModule.js"
-					}
-				'''
-			],
-			CFG_NODE_MODULES + "@n4jsd/npm_package" -> #[
-				"someModule.n4jsd" -> '''
-					export external public function foo(): string;
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "@n4jsd/npm_package",
-						"version": "0.0.1",
-						"main": "someModule.js",
-						"n4js": {
-							"projectType": "definition",
-							"definesPackage": "npm_package",
-							"vendorId": "org.eclipse.n4js",
-							"sources": {
-								"source": [
-									"."
-								]
-							}
-						}
-					}
-				'''
-			],
-			"N4jsProject" -> #[
-				"N4jsModuleGood1" -> '''
-					import * as stuff from "someModule";
-					let s: string = stuff.foo();
-				''',
-				"N4jsModuleGood2" -> '''
-					import * as stuff from "npm_package/someModule";
-					let s: string = stuff.foo();
-				''',
-				"N4jsModuleBad" -> '''
-					import * as stuff from "npm_package";
-					let s: string = stuff.foo();
-				''',
-				CFG_DEPENDENCIES -> '''
-					@n4jsd/npm_package,
-					npm_package
-				'''
-			]
-		);
-		startAndWaitForLspServer();
-		assertNoIssues();
+	def void testWithN4jsdFileSeparateProjects_extJS() {
+		doTestWithN4jsdFileSeparateProjects("js");
 	}
 
 	@Test
-	def void testPlainJs_withTypeDefs_withExplicitMainModule_definedOnTopLevel_omitJsExtension() {
-		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "npm_package",
-						"version": "0.0.1",
-						"main": "someModule"«/* omitting the ".js" file extension here! */»
-					}
-				'''
-			],
-			CFG_NODE_MODULES + "@n4jsd/npm_package" -> #[
-				"someModule.n4jsd" -> '''
-					export external public function foo(): string;
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "@n4jsd/npm_package",
-						"version": "0.0.1",
-						"main": "someModule",«/* omitting the ".js" file extension here! */»
-						"n4js": {
-							"projectType": "definition",
-							"definesPackage": "npm_package",
-							"vendorId": "org.eclipse.n4js",
-							"sources": {
-								"source": [
-									"."
-								]
-							}
-						}
-					}
-				'''
-			],
-			"N4jsProject" -> #[
-				"N4jsModuleGood1" -> '''
-					import * as stuff from "someModule";
-					let s: string = stuff.foo();
-				''',
-				"N4jsModuleGood2" -> '''
-					import * as stuff from "npm_package/someModule";
-					let s: string = stuff.foo();
-				''',
-				"N4jsModuleBad" -> '''
-					import * as stuff from "npm_package";
-					let s: string = stuff.foo();
-				''',
-				CFG_DEPENDENCIES -> '''
-					@n4jsd/npm_package,
-					npm_package
-				'''
-			]
-		);
-		startAndWaitForLspServer();
-		assertNoIssues();
+	def void testWithN4jsdFileSeparateProjects_extCJS() {
+		doTestWithN4jsdFileSeparateProjects("cjs");
 	}
 
 	@Test
-	def void testPlainJs_withTypeDefs_defaultImportExport_withoutMainModule() {
+	def void testWithN4jsdFileSeparateProjects_extMJS() {
+		doTestWithN4jsdFileSeparateProjects("mjs");
+	}
+
+	def private void doTestWithN4jsdFileSeparateProjects(String fileExtension) {
 		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
+			CFG_NODE_MODULES + "somePackage" -> #[
+				"someModule." + fileExtension -> '''
 					// content does not matter
 				''',
-				CFG_SOURCE_FOLDER -> ".",
+				CFG_SOURCE_FOLDER -> ".", // <- needed to have 'someModule.js' be placed in the project's root folder!
 				PACKAGE_JSON -> '''
 					{
-						"name": "npm_package",
+						"name": "somePackage",
 						"version": "0.0.1"
 					}
 				'''
 			],
-			CFG_NODE_MODULES + "@n4jsd/npm_package" -> #[
+			CFG_NODE_MODULES + "@n4jsd/somePackage" -> #[
 				"someModule.n4jsd" -> '''
-					export default external public function foo(): string;
+					export external public function foo();
 				''',
 				CFG_SOURCE_FOLDER -> ".",
 				PACKAGE_JSON -> '''
 					{
-						"name": "@n4jsd/npm_package",
+						"name": "@n4jsd/somePackage",
 						"version": "0.0.1",
 						"n4js": {
 							"projectType": "definition",
-							"definesPackage": "npm_package",
+							"definesPackage": "somePackage",
 							"vendorId": "org.eclipse.n4js",
 							"sources": {
 								"source": [
@@ -468,259 +265,93 @@ class ImportFromPlainJsIdeTest extends AbstractIdeTest {
 				'''
 			],
 			"N4jsProject" -> #[
-				"N4jsModuleGood1" -> '''
-					import foo from "someModule";
-					let s: string = foo();
-				''',
-				"N4jsModuleGood2" -> '''
-					import foo from "npm_package/someModule";
-					let s: string = foo();
-				''',
-				"N4jsModuleBad" -> '''
-					import foo from "npm_package"; // should fail, because npm_package does not have a main module
-					let s: string = foo();
+				"N4jsModule" -> '''
+					import * as stuff from "someModule";
+					stuff.foo();
 				''',
 				CFG_DEPENDENCIES -> '''
-					@n4jsd/npm_package,
-					npm_package
-				'''
-			]
-		);
-		startAndWaitForLspServer();
-		assertIssues(
-			"N4jsModuleBad" -> #[
-				"(Error, [0:16 - 0:29], Cannot resolve project import: no matching module found.)",
-				"(Error, [1:16 - 1:19], Couldn't resolve reference to IdentifiableElement 'foo'.)"
-			]
-		);
-	}
-
-	@Test
-	def void testPlainJs_withTypeDefs_defaultImportExport_withExplicitMainModule() {
-		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "npm_package",
-						"version": "0.0.1",
-						"main": "someModule.js"
-					}
-				'''
-			],
-			CFG_NODE_MODULES + "@n4jsd/npm_package" -> #[
-				"someModule.n4jsd" -> '''
-					export default external public function foo(): string;
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "@n4jsd/npm_package",
-						"version": "0.0.1",
-						"n4js": {
-							"projectType": "definition",
-							"definesPackage": "npm_package",
-							"vendorId": "org.eclipse.n4js",
-							"sources": {
-								"source": [
-									"."
-								]
-							},
-							"mainModule": "someModule"
-						}
-					}
-				'''
-			],
-			"N4jsProject" -> #[
-				"N4jsModuleGood1" -> '''
-					import foo from "someModule";
-					let s: string = foo();
-				''',
-				"N4jsModuleGood2" -> '''
-					import foo from "npm_package/someModule";
-					let s: string = foo();
-				''',
-				"N4jsModuleBad" -> '''
-					import foo from "npm_package";
-					let s: string = foo();
-				''',
-				CFG_DEPENDENCIES -> '''
-					@n4jsd/npm_package,
-					npm_package
+					@n4jsd/somePackage,
+					somePackage
 				'''
 			]
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
+
+		assertPlainJsFileExtensionInOutputFile(fileExtension, true);
+	}
+
+	@Test
+	def void testFileExtensionConflict_jsVsCjs() {
+		doTestFileExtensionConflict(#["js", "cjs"], false, "cjs");
+	}
+
+	@Test
+	def void testFileExtensionConflict_jsVsMjs() {
+		doTestFileExtensionConflict(#["js", "mjs"], false, "mjs");
+	}
+
+	@Test
+	def void testFileExtensionConflict_cjsVsMjs() {
+		doTestFileExtensionConflict(#["cjs", "mjs"], false, "mjs");
+	}
+
+	@Test
+	def void testFileExtensionConflict_withN4jsd_jsVsCjs() {
+		doTestFileExtensionConflict(#["js", "cjs"], true, "cjs");
+	}
+
+	@Test
+	def void testFileExtensionConflict_withN4jsd_jsVsMjs() {
+		doTestFileExtensionConflict(#["js", "mjs"], true, "mjs");
+	}
+
+	@Test
+	def void testFileExtensionConflict_withN4jsd_cjsVsMjs() {
+		doTestFileExtensionConflict(#["cjs", "mjs"], true, "mjs");
+	}
+
+	def private void doTestFileExtensionConflict(String[] fileExtensionsOnDisk, boolean withN4jsd, String expectedFileExtensionInOutputCode) {
+		val List<Pair<String, ? extends CharSequence>> config = newArrayList();
+		config += fileExtensionsOnDisk.map[fileExt|
+			"someModule." + fileExt -> '''
+				// content does not matter
+			'''
+		];
+		if (withN4jsd) {
+			config += "someModule.n4jsd" -> '''
+				export external function foo();
+			''';
+		}
+		config += "N4jsModule" -> '''
+			import * as stuff«if (withN4jsd) "" else "+"» from "someModule";
+			stuff.foo();
+		''';
+		testWorkspaceManager.createTestOnDisk(
+			"N4jsProject" -> config
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		assertPlainJsFileExtensionInOutputFile(expectedFileExtensionInOutputCode, false);
 	}
 
 	/**
-	 * This tests the case of an implicit dependency from an N4JS project to an N4JSD definition project,
-	 * derived from a dependency from the N4JS project to a TypeScript definition project.
-	 * <p>
-	 * This is a use case common when working with N4JSD definition projects generated from TypeScript definitions.
+	 * Ensure the generated file contains the correct file extension for the .[c|m]js file being imported,
+	 * even though that file was hidden behind an .n4jsd file.
 	 */
-	@Test
-	def void testPlainJS_withImplicitDependencyToTypeDefs_baseCase() {
-		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".", // <- needed to have 'someModule.js' be placed in the project's root folder!
-				PACKAGE_JSON -> '''
-					{
-						"name": "npm_package",
-						"version": "0.0.1"
-					}
-				'''
-			],
-			CFG_NODE_MODULES + "@types/npm_package" -> #[
-				"someModule.d.ts" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "@types/npm_package",
-						"version": "0.0.1"
-					}
-				'''
-			],
-			// this is the project generated by the 'n4jsd-generator' tool from the above TypeScript definition project:
-			"@n4jsd/npm_package" -> #[
-				"someModule.n4jsd" -> '''
-					export external public function foo(): string;
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "@n4jsd/npm_package",
-						"version": "0.0.1",
-						"n4js": {
-							"projectType": "definition",
-							"definesPackage": "npm_package",
-							"vendorId": "org.eclipse.n4js",
-							"sources": {
-								"source": [
-									"."
-								]
-							}
-						}
-					}
-				'''
-			],
-			"N4jsProject" -> #[
-				"N4jsModuleGood1" -> '''
-					import * as stuff from "someModule";
-					let s: string = stuff.foo();
-				''',
-				"N4jsModuleGood2" -> '''
-					import * as stuff from "npm_package/someModule";
-					let s: string = stuff.foo();
-				''',
-				"N4jsModuleBad" -> '''
-					import * as stuff from "npm_package"; // should fail, because npm_package does not have a main module
-					let s: string = stuff.foo();
-				''',
-				// IMPORTANT: not explicitly defining a dependency to the generated "@n4jsd/npm_package"
-				// is the main point of this test:
-				CFG_DEPENDENCIES -> '''
-					@types/npm_package,
-					npm_package
-				'''
-			]
-		);
-		startAndWaitForLspServer();
-		assertIssues(
-			"N4jsModuleBad" -> #[
-				"(Error, [0:23 - 0:36], Cannot resolve project import: no matching module found.)",
-				"(Error, [1:22 - 1:25], Couldn't resolve reference to IdentifiableElement 'foo'.)"
-			]
-		);
-	}
-
-	/**
-	 * Same as {@link #testPlainJS_withImplicitDependencyToTypeDefs_baseCase()}, but ...
-	 * <ol>
-	 * <li>the plain JS module is the main module of its containing npm package, and
-	 * <li>it exports something with a default export.
-	 * </ol>
-	 */
-	@Test
-	def void testPlainJS_withImplicitDependencyToTypeDefs_withMainModuleAndDefaultImportExport() {
-		testWorkspaceManager.createTestOnDisk(
-			CFG_NODE_MODULES + "npm_package" -> #[
-				"someModule.js" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".", // <- needed to have 'someModule.js' be placed in the project's root folder!
-				PACKAGE_JSON -> '''
-					{
-						"name": "npm_package",
-						"version": "0.0.1",
-						"main": "someModule.js"
-					}
-				'''
-			],
-			CFG_NODE_MODULES + "@types/npm_package" -> #[
-				"someModule.d.ts" -> '''
-					// content does not matter
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "@types/npm_package",
-						"version": "0.0.1"
-					}
-				'''
-			],
-			"@n4jsd/npm_package" -> #[
-				"someModule.n4jsd" -> '''
-					export default external public function foo(): string;
-				''',
-				CFG_SOURCE_FOLDER -> ".",
-				PACKAGE_JSON -> '''
-					{
-						"name": "@n4jsd/npm_package",
-						"version": "0.0.1",
-						"n4js": {
-							"projectType": "definition",
-							"definesPackage": "npm_package",
-							"vendorId": "org.eclipse.n4js",
-							"sources": {
-								"source": [
-									"."
-								]
-							},
-							"mainModule": "someModule"
-						}
-					}
-				'''
-			],
-			"N4jsProject" -> #[
-				"N4jsModule1" -> '''
-					import foo from "someModule";
-					let s: string = foo();
-				''',
-				"N4jsModule2" -> '''
-					import foo from "npm_package/someModule";
-					let s: string = foo();
-				''',
-				"N4jsModule3" -> '''
-					import foo from "npm_package";
-					let s: string = foo();
-				''',
-				CFG_DEPENDENCIES -> '''
-					@types/npm_package,
-					npm_package
-				'''
-			]
-		);
-		startAndWaitForLspServer();
-		assertNoIssues();
+	def private void assertPlainJsFileExtensionInOutputFile(String expectedFileExtension, boolean isProjectImport) {
+		var String outputCode;
+		try {
+			outputCode = Files.readString(getOutputFile("N4jsProject", "N4jsModule").toPath);
+		} catch (Exception e) {
+			throw new AssertionError("exception while reading generated output file", e);
+		}
+		val substringToSearch = " from '" + (if (isProjectImport) "somePackage/" else "./") + "someModule." + expectedFileExtension + "'";
+		Assert.assertTrue("output file of module N4jsModule.n4js did not contain expected substring \"" + substringToSearch + "\":\n"
+			+ "========\n"
+			+ outputCode + "\n"
+			+ "========",
+			outputCode.contains(substringToSearch));
 	}
 }
