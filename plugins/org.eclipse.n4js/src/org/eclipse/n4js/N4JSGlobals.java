@@ -43,7 +43,7 @@ public final class N4JSGlobals {
 	 * </ul>
 	 * If it contains fewer than three version segments, all numbers for the remaining segments are deemed compatible.
 	 */
-	public static final String NODE_VERSION = "14.16";
+	public static final String NODE_VERSION = "16.14";
 
 	/** URL of the public npm registry. */
 	public static final String NPMJS_URL = "https://registry.npmjs.org/";
