@@ -222,7 +222,7 @@ public class ReferenceResolutionFinder {
 				if (addHereNames != null) {
 					addHereNames.add(curr.getName());
 				}
-				if (addHereCollisioningModules != null && curr.getEObjectURI() != null) {
+				if (curr.getEObjectURI() != null) {
 					QualifiedName candidateModuleQN = getQualifiedNameOfModule(curr);
 					if (candidateModuleQN != null) {
 						if (moduleQN2Prj.containsKey(candidateModuleQN)) {
