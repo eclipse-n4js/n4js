@@ -94,6 +94,8 @@ public class DtsParsesDefinitelyTypedTest {
 		Stopwatch sw = Stopwatch.createStarted();
 
 		for (Path file : files) {
+			System.out.println("  " + (fail + pass + error) + " " + file.toString());
+
 			try (BufferedReader buf = new BufferedReader(new InputStreamReader(new FileInputStream(file.toFile())))) {
 
 				N4JSResource resource = new N4JSResource();
