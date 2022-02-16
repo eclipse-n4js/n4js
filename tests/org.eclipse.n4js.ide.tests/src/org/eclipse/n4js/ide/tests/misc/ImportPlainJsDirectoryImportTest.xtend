@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.ide.tests.builder
+package org.eclipse.n4js.ide.tests.misc
 
 import java.nio.file.Files
 import java.nio.file.StandardOpenOption
