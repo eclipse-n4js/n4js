@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.tests.misc
 
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
-import org.junit.Assert
 import org.junit.Test
 
 /**
@@ -56,15 +55,6 @@ class RewriteModuleSpecifiersTest extends AbstractIdeTest {
 		);
 		startAndWaitForLspServer();
 		assertNoIssues();
-
-		val outputFileURI = getOutputFile(DEFAULT_PROJECT_NAME, "N4jsModule").toFileURI;
-		val outputCode = getContentOfFileOnDisk(outputFileURI);
-		val expectedImport = "import * as stuff from 'dummyModule.jsx'";
-		Assert.assertTrue(
-			"output code did not contain the expected import:\n"
-					+ "EXPECTED IMPORT: " + expectedImport + "\n"
-					+ "ACTUAL OUTPUT CODE:\n"
-					+ outputCode,
-			outputCode.contains(expectedImport));
+		assertOutputFileContains(DEFAULT_PROJECT_NAME, "N4jsModule", "import * as stuff from 'dummyModule.jsx'");
 	}
 }

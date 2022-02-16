@@ -388,7 +388,19 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	/** Asserts the output file of the given module located in the given project exists. */
 	protected void assertOutputFileExists(String projectName, String moduleName) {
 		File outputFile = getOutputFile(projectName, moduleName);
-		Assert.assertTrue(Files.isRegularFile(outputFile.toPath()));
+		Assert.assertTrue("output file does not exist: " + outputFile, Files.isRegularFile(outputFile.toPath()));
+	}
+
+	/** Asserts the output file of the given module located in the given project contains the given sub-string. */
+	protected void assertOutputFileContains(String projectName, String moduleName, CharSequence expectedSubString) {
+		FileURI outputFileURI = toFileURI(getOutputFile(projectName, moduleName));
+		String outputCode = getContentOfFileOnDisk(outputFileURI);
+		Assert.assertTrue(
+				"output code did not contain the expected sub-string:\n"
+						+ "EXPECTED SUB-STRING: " + expectedSubString + "\n"
+						+ "ACTUAL OUTPUT CODE:\n"
+						+ outputCode,
+				outputCode.contains(expectedSubString));
 	}
 
 	/**
