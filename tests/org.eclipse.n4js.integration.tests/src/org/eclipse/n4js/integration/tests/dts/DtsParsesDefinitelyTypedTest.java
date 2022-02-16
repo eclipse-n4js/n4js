@@ -108,8 +108,12 @@ public class DtsParsesDefinitelyTypedTest {
 					pass++;
 				}
 
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
+
+				if (e instanceof Error) {
+					throw e;
+				}
 
 				error++;
 			}
