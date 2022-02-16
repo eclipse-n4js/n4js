@@ -207,6 +207,7 @@ workspaces ::
   "member projects" of the yarn workspace.
 
 
+[[sec:N4JS-Properties]]
 === N4JS Properties
 
 In addition to the standard properties above, there is a single N4JS-specific
