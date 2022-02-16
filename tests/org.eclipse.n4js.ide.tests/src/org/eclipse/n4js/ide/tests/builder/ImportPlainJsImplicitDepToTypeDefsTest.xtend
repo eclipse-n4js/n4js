@@ -19,7 +19,7 @@ import org.junit.Test
  * This test class covers implicit dependencies to the N4JSD definition project
  * (see {@link #testPlainJS_withImplicitDependencyToTypeDefs_baseCase()}).
  */
-class ImportFromPlainJsImplDepToTypeDefsIdeTest extends AbstractIdeTest {
+class ImportPlainJsImplicitDepToTypeDefsTest extends AbstractIdeTest {
 
 	/**
 	 * This tests the case of an implicit dependency from an N4JS project to an N4JSD definition project,

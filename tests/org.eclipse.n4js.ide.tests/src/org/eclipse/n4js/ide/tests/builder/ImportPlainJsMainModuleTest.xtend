@@ -18,7 +18,7 @@ import org.junit.Test
  * <p>
  * This test class covers main modules and project imports. Also covers default imports/exports.
  */
-class ImportFromPlainJsMainModuleIdeTest extends AbstractIdeTest {
+class ImportPlainJsMainModuleTest extends AbstractIdeTest {
 
 	@Test
 	def void testPlainJs_noTypeDefs_withoutMainModule() {

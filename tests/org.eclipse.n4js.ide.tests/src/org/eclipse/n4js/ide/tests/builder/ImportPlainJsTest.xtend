@@ -22,7 +22,7 @@ import org.junit.Test
  * This test class covers the base cases (including extensions ".cjs" and ".mjs");
  * special cases are covered in separate test classes.
  */
-class ImportFromPlainJsIdeTest extends AbstractIdeTest {
+class ImportPlainJsTest extends AbstractIdeTest {
 
 	@Test
 	def void testInSourceFolder_extJS() {
