@@ -90,7 +90,7 @@ public abstract class ConvertedIdeTest extends AbstractIdeTest {
 		for (Diagnostic d : issuesInFile) {
 			String msg = d.getMessage();
 			boolean isDuplicateModuleIssue = msg.startsWith("A duplicate module C is also defined in ")
-					&& msg.endsWith("/" + duplicateProjectName + "/" + duplicateModulePathAndNameWithExt + ".");
+					&& msg.endsWith(duplicateProjectName + "/" + duplicateModulePathAndNameWithExt + ".");
 			if (isDuplicateModuleIssue) {
 				return; // success!
 			}
