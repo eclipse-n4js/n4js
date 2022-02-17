@@ -421,29 +421,42 @@ public class N4jsLibsAccess {
 	 * <code>n4js-runtime@latest</code> resolves to version {@value N4JSGlobals#VERDACCIO_TEST_VERSION}.
 	 */
 	public static void assertVerdaccioIsRunning(long timeoutDuration, TimeUnit timeoutUnit) {
+		assertVerdaccioIsRunning(timeoutDuration, timeoutUnit,
+				N4JSGlobals.N4JS_RUNTIME.getRawName(), N4JSGlobals.VERDACCIO_TEST_VERSION);
+	}
+
+	/**
+	 * Asserts that the local verdaccio is reachable at {@link N4JSGlobals#VERDACCIO_URL} and that the given package
+	 * name resolves to the given version.
+	 */
+	public static void assertVerdaccioIsRunning(long timeoutDuration, TimeUnit timeoutUnit, String checkPackageName,
+			String checkVersion) {
+
 		final CliTools cli = new CliTools();
 		cli.setInheritIO(false);
 		cli.setIgnoreFailure(true); // want to create a custom failure below
 		cli.setTimeout(timeoutDuration, timeoutUnit);
+
 		final ProcessResult viewResult = cli.yarnRun(
 				new File(".").getAbsoluteFile().toPath(),
-				"info", N4JSGlobals.N4JS_RUNTIME.getRawName(),
+				"info", checkPackageName,
 				"--json",
 				"--registry", N4JSGlobals.VERDACCIO_URL);
+
 		if (viewResult.getExitCode() == 0 && viewResult.getException() == null) {
 			String stdout = viewResult.getStdOut();
 			JsonElement root = JsonParser.parseString(stdout);
 			String name = JsonUtils.getDeepAsString(root, "data", "name");
 			String latestVersion = JsonUtils.getDeepAsString(root, "data", "dist-tags", "latest");
-			if (name != null && name.equals(N4JSGlobals.N4JS_RUNTIME.getRawName())
-					&& latestVersion != null && latestVersion.equals(N4JSGlobals.VERDACCIO_TEST_VERSION)) {
+			if (name != null && name.equals(checkPackageName)
+					&& (checkVersion == null || (latestVersion != null && latestVersion.equals(checkVersion)))) {
 				return; // success!
 			}
 		}
-		final String msg = "verdaccio not running or version of " + N4JSGlobals.N4JS_RUNTIME.getRawName()
-				+ "@latest is not " + N4JSGlobals.VERDACCIO_TEST_VERSION + "\n"
+		final String msg = "verdaccio not running or version of " + checkPackageName
+				+ "@latest is not " + (checkVersion == null ? "*" : checkVersion) + "\n"
 				+ "*********************************************************************************\n"
-				+ "For running this test locally, first start a local verdaccio server with:\n"
+				+ "For running this test locally, start a local verdaccio server with:\n"
 				+ "$ mvn -DnoTests clean verify\n"
 				+ "  (OR in Eclipse: simply run MWE2 workflow 'BuildN4jsLibs.mwe2')\n"
 				+ "$ ./releng/utils/scripts/start-verdaccio.sh\n"
