@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.N4ModuleDeclaration
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
@@ -74,6 +75,7 @@ public class N4JSTypesBuilder {
 
 	@Inject(optional=true) TypesFactory typesFactory = TypesFactory.eINSTANCE
 	@Inject extension N4JSTypesBuilderHelper
+	@Inject extension N4JSModuleDeclarationTypesBuilder
 	@Inject extension N4JSNamespaceDeclarationTypesBuilder
 	@Inject extension N4JSClassDeclarationTypesBuilder
 	@Inject extension N4JSInterfaceDeclarationTypesBuilder
@@ -278,7 +280,7 @@ public class N4JSTypesBuilder {
 			}
 		}
 	}
-	
+
 	static class RelinkIndices {
 		package var namespacesIdx = 0;
 		package var topLevelTypesIdx = 0;
@@ -313,6 +315,14 @@ public class N4JSTypesBuilder {
 	def protected dispatch int relinkType(NamespaceImportSpecifier nsImpSpec, AbstractNamespace target, boolean preLinkingPhase,
 		int idx) {
 		// already handled up-front in N4JSNamespaceImportTypesBuilder#relinkNamespaceTypes
+		return idx;
+	}
+
+	def protected dispatch int relinkType(N4ModuleDeclaration n4ModuleDecl, AbstractNamespace target, boolean preLinkingPhase,
+		int idx) {
+		if (n4ModuleDecl.relinkTNamespace(target, preLinkingPhase, idx)) {
+			return idx + 1;
+		}
 		return idx;
 	}
 
@@ -421,6 +431,10 @@ public class N4JSTypesBuilder {
 	def protected dispatch void createType(NamespaceImportSpecifier nsImpSpec, AbstractNamespace target,
 		boolean preLinkingPhase) {
 		// already handled up-front in #buildNamespacesTypesFromModuleImports()
+	}
+
+	def protected dispatch void createType(N4ModuleDeclaration n4ModuleDecl, AbstractNamespace target, boolean preLinkingPhase) {
+		n4ModuleDecl.createTNestedModule(target, preLinkingPhase)
 	}
 
 	def protected dispatch void createType(N4NamespaceDeclaration n4Namespace, AbstractNamespace target, boolean preLinkingPhase) {

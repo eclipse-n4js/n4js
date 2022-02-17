@@ -42,10 +42,7 @@ type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
 
-/**
- * The TModule is the representation of the script on the type level.
- */
-class TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElement {
+abstract class AbstractModule extends AbstractNamespace, SyntaxRelatedTElement {
 	/**
 	 * The module's simple name, i.e. the last segment of its qualified name.
 	 */
@@ -54,9 +51,15 @@ class TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElemen
 	 * The qualified name of the module, which is derived from the file path. Includes the module's
 	 * file name (without extension) and the names of all ancestor folders up to, excluding the
 	 * containing project's source folder. The containing project's name is also not included,
-	 * but can be retrieved via {@link #getProjectName()}.
+	 * but can be retrieved via {@link #getPackageName()}.
 	 */
 	String qualifiedName
+}
+
+/**
+ * The TModule is the representation of the script on the type level.
+ */
+class TModule extends AbstractModule, TAnnotableElement {
 	/**
 	 * The <em>package name</em> of the project containing this module, as defined at
 	 * {@link org.eclipse.n4js.packagejson.projectDescription.ProjectDescription#packageName}.
@@ -217,6 +220,9 @@ class TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElemen
 //	op TModule getContainingModule() {
 //		return this;
 //	}
+}
+
+class TNestedModule extends AbstractModule {
 }
 
 /*
@@ -816,12 +822,8 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 }
 
 abstract class AbstractNamespace {
-	// TODO jvp: what does that mean:
-	// TODO: make sure these are only top level types in the script
-	// (ß): currently these may also contain nested types since the traversal
-	// in the types builder processes the complete AST
 	/*
-	 * A list of all types declarations in the script on the top level.
+	 * A list of all types directly contained in this abstract namespace.
 	 * These include the exported classes, interfaces, function as well
 	 * as the types inferred from type defining elements that are not marked as exported.
 	 * This allows for better validation messages and diagnostics in later stages
@@ -829,19 +831,23 @@ abstract class AbstractNamespace {
 	 */
 	contains Type[] types
 	/*
-	 * A list of all top level variables in the script.
+	 * A list of all variables directly contained in this abstract namespace.
 	 * These include the exported variables as well as the internal variables.
 	 * Similar to #types, this allows for better validation messages and diagnostics.
 	 */
 	contains TVariable[] variables
 	/*
-	 * A list of all top level namespaces in the script.
+	 * A list of all child namespaces directly contained in this abstract namespace.
 	 * These include the exported namespaces as well as the internal namespaces.
 	 * Similar to #types, this allows for better validation messages and diagnostics.
 	 */
 	contains TNamespace[] namespaces
-	
-	/**
+	/*
+	 * A list of all nested modules directly contained in this abstract namespace.
+	 */
+	contains TNestedModule[] nestedModules
+
+	/*
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.
 	 */
@@ -853,7 +859,6 @@ abstract class AbstractNamespace {
 class TNamespace extends Type /* must be first to generate 'isExported' */,
 							AbstractNamespace, AccessibleTypeElement, SyntaxRelatedTElement, TNamespaceElement {
 	boolean external
-	
 }
 
 class TNamespaceElement {

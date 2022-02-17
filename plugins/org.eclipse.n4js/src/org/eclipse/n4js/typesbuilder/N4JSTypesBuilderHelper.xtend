@@ -196,8 +196,11 @@ package class N4JSTypesBuilderHelper {
 	 * boolean) relinking}, to ensure consistency of named elements between newly loaded AST and original TModule.
 	 */
 	def protected void ensureEqualName(NamedElement astNode, IdentifiableElement moduleElement) {
+		ensureEqualName(astNode, moduleElement.name);
+	}
+
+	def protected void ensureEqualName(NamedElement astNode, String nameInModule) {
 		val nameInAST = astNode.name;
-		val nameInModule = moduleElement.name;
 		if (nameInAST !== null) { // note: no check if no name available in AST (don't fiddle with computed property names, etc.)
 			if (!nameInAST.equals(nameInModule)) {
 				val msg = "inconsistency between newly loaded AST and to-be-linked TModule: "

@@ -85,7 +85,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAbstractNamespace()
 	 * @generated
 	 */
-	int ABSTRACT_NAMESPACE = 20;
+	int ABSTRACT_NAMESPACE = 22;
 
 	/**
 	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
@@ -115,13 +115,22 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE__NAMESPACES = 2;
 
 	/**
+	 * The feature id for the '<em><b>Nested Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE__NESTED_MODULES = 3;
+
+	/**
 	 * The number of structural features of the '<em>Abstract Namespace</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE_FEATURE_COUNT = 3;
+	int ABSTRACT_NAMESPACE_FEATURE_COUNT = 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -142,14 +151,14 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE_OPERATION_COUNT = 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TModuleImpl <em>TModule</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AbstractModuleImpl <em>Abstract Module</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.types.impl.TModuleImpl
-	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTModule()
+	 * @see org.eclipse.n4js.ts.types.impl.AbstractModuleImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAbstractModule()
 	 * @generated
 	 */
-	int TMODULE = 0;
+	int ABSTRACT_MODULE = 0;
 
 	/**
 	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
@@ -158,7 +167,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TYPES = ABSTRACT_NAMESPACE__TYPES;
+	int ABSTRACT_MODULE__TYPES = ABSTRACT_NAMESPACE__TYPES;
 
 	/**
 	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
@@ -167,7 +176,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__VARIABLES = ABSTRACT_NAMESPACE__VARIABLES;
+	int ABSTRACT_MODULE__VARIABLES = ABSTRACT_NAMESPACE__VARIABLES;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -176,7 +185,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__NAMESPACES = ABSTRACT_NAMESPACE__NAMESPACES;
+	int ABSTRACT_MODULE__NAMESPACES = ABSTRACT_NAMESPACE__NAMESPACES;
+
+	/**
+	 * The feature id for the '<em><b>Nested Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_MODULE__NESTED_MODULES = ABSTRACT_NAMESPACE__NESTED_MODULES;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -185,16 +203,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__AST_ELEMENT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__ANNOTATIONS = ABSTRACT_NAMESPACE_FEATURE_COUNT + 1;
+	int ABSTRACT_MODULE__AST_ELEMENT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Simple Name</b></em>' attribute.
@@ -203,7 +212,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__SIMPLE_NAME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 2;
+	int ABSTRACT_MODULE__SIMPLE_NAME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
@@ -212,196 +221,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__QUALIFIED_NAME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 3;
+	int ABSTRACT_MODULE__QUALIFIED_NAME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Package Name</b></em>' attribute.
+	 * The number of structural features of the '<em>Abstract Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__PACKAGE_NAME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Project ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__PROJECT_ID = ABSTRACT_NAMESPACE_FEATURE_COUNT + 5;
-
-	/**
-	 * The feature id for the '<em><b>Vendor ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__VENDOR_ID = ABSTRACT_NAMESPACE_FEATURE_COUNT + 6;
-
-	/**
-	 * The feature id for the '<em><b>N4jsd Module</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__N4JSD_MODULE = ABSTRACT_NAMESPACE_FEATURE_COUNT + 7;
-
-	/**
-	 * The feature id for the '<em><b>Static Polyfill Module</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__STATIC_POLYFILL_MODULE = ABSTRACT_NAMESPACE_FEATURE_COUNT + 8;
-
-	/**
-	 * The feature id for the '<em><b>Static Polyfill Aware</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__STATIC_POLYFILL_AWARE = ABSTRACT_NAMESPACE_FEATURE_COUNT + 9;
-
-	/**
-	 * The feature id for the '<em><b>Main Module</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__MAIN_MODULE = ABSTRACT_NAMESPACE_FEATURE_COUNT + 10;
-
-	/**
-	 * The feature id for the '<em><b>Pre Linking Phase</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__PRE_LINKING_PHASE = ABSTRACT_NAMESPACE_FEATURE_COUNT + 11;
-
-	/**
-	 * The feature id for the '<em><b>Reconciled</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__RECONCILED = ABSTRACT_NAMESPACE_FEATURE_COUNT + 12;
-
-	/**
-	 * The feature id for the '<em><b>Dependencies Runtime</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__DEPENDENCIES_RUNTIME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 13;
-
-	/**
-	 * The feature id for the '<em><b>Cyclic Modules Runtime</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__CYCLIC_MODULES_RUNTIME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 14;
-
-	/**
-	 * The feature id for the '<em><b>Cyclic Modules Loadtime For Inheritance</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__CYCLIC_MODULES_LOADTIME_FOR_INHERITANCE = ABSTRACT_NAMESPACE_FEATURE_COUNT + 15;
-
-	/**
-	 * The feature id for the '<em><b>Runtime Cyclic Loadtime Dependents</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS = ABSTRACT_NAMESPACE_FEATURE_COUNT + 16;
-
-	/**
-	 * The feature id for the '<em><b>Internal Types</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__INTERNAL_TYPES = ABSTRACT_NAMESPACE_FEATURE_COUNT + 17;
-
-	/**
-	 * The feature id for the '<em><b>Exposed Internal Types</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__EXPOSED_INTERNAL_TYPES = ABSTRACT_NAMESPACE_FEATURE_COUNT + 18;
-
-	/**
-	 * The feature id for the '<em><b>Internal Dynamic Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__INTERNAL_DYNAMIC_ELEMENTS = ABSTRACT_NAMESPACE_FEATURE_COUNT + 19;
-
-	/**
-	 * The feature id for the '<em><b>Ast MD5</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__AST_MD5 = ABSTRACT_NAMESPACE_FEATURE_COUNT + 20;
-
-	/**
-	 * The feature id for the '<em><b>Composed Member Caches</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__COMPOSED_MEMBER_CACHES = ABSTRACT_NAMESPACE_FEATURE_COUNT + 21;
-
-	/**
-	 * The feature id for the '<em><b>Temporary Types</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__TEMPORARY_TYPES = ABSTRACT_NAMESPACE_FEATURE_COUNT + 22;
-
-	/**
-	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__MODULE_SPECIFIER = ABSTRACT_NAMESPACE_FEATURE_COUNT + 23;
-
-	/**
-	 * The number of structural features of the '<em>TModule</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE_FEATURE_COUNT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 24;
+	int ABSTRACT_MODULE_FEATURE_COUNT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -410,7 +239,296 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE___GET_CONTAINING_MODULE = ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE;
+	int ABSTRACT_MODULE___GET_CONTAINING_MODULE = ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The number of operations of the '<em>Abstract Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_MODULE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TModuleImpl <em>TModule</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.TModuleImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTModule()
+	 * @generated
+	 */
+	int TMODULE = 1;
+
+	/**
+	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__TYPES = ABSTRACT_MODULE__TYPES;
+
+	/**
+	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__VARIABLES = ABSTRACT_MODULE__VARIABLES;
+
+	/**
+	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__NAMESPACES = ABSTRACT_MODULE__NAMESPACES;
+
+	/**
+	 * The feature id for the '<em><b>Nested Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__NESTED_MODULES = ABSTRACT_MODULE__NESTED_MODULES;
+
+	/**
+	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__AST_ELEMENT = ABSTRACT_MODULE__AST_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Simple Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__SIMPLE_NAME = ABSTRACT_MODULE__SIMPLE_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__QUALIFIED_NAME = ABSTRACT_MODULE__QUALIFIED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__ANNOTATIONS = ABSTRACT_MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Package Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__PACKAGE_NAME = ABSTRACT_MODULE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Project ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__PROJECT_ID = ABSTRACT_MODULE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Vendor ID</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__VENDOR_ID = ABSTRACT_MODULE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>N4jsd Module</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__N4JSD_MODULE = ABSTRACT_MODULE_FEATURE_COUNT + 4;
+
+	/**
+	 * The feature id for the '<em><b>Static Polyfill Module</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__STATIC_POLYFILL_MODULE = ABSTRACT_MODULE_FEATURE_COUNT + 5;
+
+	/**
+	 * The feature id for the '<em><b>Static Polyfill Aware</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__STATIC_POLYFILL_AWARE = ABSTRACT_MODULE_FEATURE_COUNT + 6;
+
+	/**
+	 * The feature id for the '<em><b>Main Module</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__MAIN_MODULE = ABSTRACT_MODULE_FEATURE_COUNT + 7;
+
+	/**
+	 * The feature id for the '<em><b>Pre Linking Phase</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__PRE_LINKING_PHASE = ABSTRACT_MODULE_FEATURE_COUNT + 8;
+
+	/**
+	 * The feature id for the '<em><b>Reconciled</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__RECONCILED = ABSTRACT_MODULE_FEATURE_COUNT + 9;
+
+	/**
+	 * The feature id for the '<em><b>Dependencies Runtime</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__DEPENDENCIES_RUNTIME = ABSTRACT_MODULE_FEATURE_COUNT + 10;
+
+	/**
+	 * The feature id for the '<em><b>Cyclic Modules Runtime</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__CYCLIC_MODULES_RUNTIME = ABSTRACT_MODULE_FEATURE_COUNT + 11;
+
+	/**
+	 * The feature id for the '<em><b>Cyclic Modules Loadtime For Inheritance</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__CYCLIC_MODULES_LOADTIME_FOR_INHERITANCE = ABSTRACT_MODULE_FEATURE_COUNT + 12;
+
+	/**
+	 * The feature id for the '<em><b>Runtime Cyclic Loadtime Dependents</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS = ABSTRACT_MODULE_FEATURE_COUNT + 13;
+
+	/**
+	 * The feature id for the '<em><b>Internal Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__INTERNAL_TYPES = ABSTRACT_MODULE_FEATURE_COUNT + 14;
+
+	/**
+	 * The feature id for the '<em><b>Exposed Internal Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__EXPOSED_INTERNAL_TYPES = ABSTRACT_MODULE_FEATURE_COUNT + 15;
+
+	/**
+	 * The feature id for the '<em><b>Internal Dynamic Elements</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__INTERNAL_DYNAMIC_ELEMENTS = ABSTRACT_MODULE_FEATURE_COUNT + 16;
+
+	/**
+	 * The feature id for the '<em><b>Ast MD5</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__AST_MD5 = ABSTRACT_MODULE_FEATURE_COUNT + 17;
+
+	/**
+	 * The feature id for the '<em><b>Composed Member Caches</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__COMPOSED_MEMBER_CACHES = ABSTRACT_MODULE_FEATURE_COUNT + 18;
+
+	/**
+	 * The feature id for the '<em><b>Temporary Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__TEMPORARY_TYPES = ABSTRACT_MODULE_FEATURE_COUNT + 19;
+
+	/**
+	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__MODULE_SPECIFIER = ABSTRACT_MODULE_FEATURE_COUNT + 20;
+
+	/**
+	 * The number of structural features of the '<em>TModule</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE_FEATURE_COUNT = ABSTRACT_MODULE_FEATURE_COUNT + 21;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___GET_CONTAINING_MODULE = ABSTRACT_MODULE___GET_CONTAINING_MODULE;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -419,7 +537,107 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 0;
+	int TMODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNestedModuleImpl <em>TNested Module</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.TNestedModuleImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNestedModule()
+	 * @generated
+	 */
+	int TNESTED_MODULE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE__TYPES = ABSTRACT_MODULE__TYPES;
+
+	/**
+	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE__VARIABLES = ABSTRACT_MODULE__VARIABLES;
+
+	/**
+	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE__NAMESPACES = ABSTRACT_MODULE__NAMESPACES;
+
+	/**
+	 * The feature id for the '<em><b>Nested Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE__NESTED_MODULES = ABSTRACT_MODULE__NESTED_MODULES;
+
+	/**
+	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE__AST_ELEMENT = ABSTRACT_MODULE__AST_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Simple Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE__SIMPLE_NAME = ABSTRACT_MODULE__SIMPLE_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE__QUALIFIED_NAME = ABSTRACT_MODULE__QUALIFIED_NAME;
+
+	/**
+	 * The number of structural features of the '<em>TNested Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE_FEATURE_COUNT = ABSTRACT_MODULE_FEATURE_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE___GET_CONTAINING_MODULE = ABSTRACT_MODULE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The number of operations of the '<em>TNested Module</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -429,7 +647,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getRuntimeDependency()
 	 * @generated
 	 */
-	int RUNTIME_DEPENDENCY = 1;
+	int RUNTIME_DEPENDENCY = 3;
 
 	/**
 	 * The feature id for the '<em><b>Target</b></em>' reference.
@@ -475,7 +693,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getComposedMemberCache()
 	 * @generated
 	 */
-	int COMPOSED_MEMBER_CACHE = 2;
+	int COMPOSED_MEMBER_CACHE = 4;
 
 	/**
 	 * The feature id for the '<em><b>Cached Composed Members</b></em>' containment reference list.
@@ -521,7 +739,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypableElement()
 	 * @generated
 	 */
-	int TYPABLE_ELEMENT = 3;
+	int TYPABLE_ELEMENT = 5;
 
 	/**
 	 * The number of structural features of the '<em>Typable Element</em>' class.
@@ -549,7 +767,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIdentifiableElement()
 	 * @generated
 	 */
-	int IDENTIFIABLE_ELEMENT = 4;
+	int IDENTIFIABLE_ELEMENT = 6;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -595,7 +813,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTExportableElement()
 	 * @generated
 	 */
-	int TEXPORTABLE_ELEMENT = 5;
+	int TEXPORTABLE_ELEMENT = 7;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -659,7 +877,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTDynamicElement()
 	 * @generated
 	 */
-	int TDYNAMIC_ELEMENT = 6;
+	int TDYNAMIC_ELEMENT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -732,7 +950,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotation()
 	 * @generated
 	 */
-	int TANNOTATION = 7;
+	int TANNOTATION = 9;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -796,7 +1014,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationArgument()
 	 * @generated
 	 */
-	int TANNOTATION_ARGUMENT = 8;
+	int TANNOTATION_ARGUMENT = 10;
 
 	/**
 	 * The number of structural features of the '<em>TAnnotation Argument</em>' class.
@@ -833,7 +1051,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationStringArgument()
 	 * @generated
 	 */
-	int TANNOTATION_STRING_ARGUMENT = 9;
+	int TANNOTATION_STRING_ARGUMENT = 11;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -879,7 +1097,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTTypedElement()
 	 * @generated
 	 */
-	int TTYPED_ELEMENT = 10;
+	int TTYPED_ELEMENT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -916,7 +1134,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationTypeRefArgument()
 	 * @generated
 	 */
-	int TANNOTATION_TYPE_REF_ARGUMENT = 11;
+	int TANNOTATION_TYPE_REF_ARGUMENT = 13;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -962,7 +1180,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotableElement()
 	 * @generated
 	 */
-	int TANNOTABLE_ELEMENT = 12;
+	int TANNOTABLE_ELEMENT = 14;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -999,7 +1217,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getType()
 	 * @generated
 	 */
-	int TYPE = 16;
+	int TYPE = 18;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1207,7 +1425,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeVariable()
 	 * @generated
 	 */
-	int TYPE_VARIABLE = 13;
+	int TYPE_VARIABLE = 15;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1478,7 +1696,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getInferenceVariable()
 	 * @generated
 	 */
-	int INFERENCE_VARIABLE = 14;
+	int INFERENCE_VARIABLE = 16;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1749,7 +1967,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getGenericType()
 	 * @generated
 	 */
-	int GENERIC_TYPE = 17;
+	int GENERIC_TYPE = 19;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1966,7 +2184,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFunction()
 	 * @generated
 	 */
-	int TFUNCTION = 15;
+	int TFUNCTION = 17;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2336,7 +2554,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAccessibleTypeElement()
 	 * @generated
 	 */
-	int ACCESSIBLE_TYPE_ELEMENT = 18;
+	int ACCESSIBLE_TYPE_ELEMENT = 20;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -2418,7 +2636,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getContainerType()
 	 * @generated
 	 */
-	int CONTAINER_TYPE = 19;
+	int CONTAINER_TYPE = 21;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2707,7 +2925,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNamespace()
 	 * @generated
 	 */
-	int TNAMESPACE = 21;
+	int TNAMESPACE = 23;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2764,13 +2982,22 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE__NAMESPACES = TYPE_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Nested Modules</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE__NESTED_MODULES = TYPE_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__DECLARED_TYPE_ACCESS_MODIFIER = TYPE_FEATURE_COUNT + 3;
+	int TNAMESPACE__DECLARED_TYPE_ACCESS_MODIFIER = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
@@ -2779,7 +3006,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__DECLARED_PROVIDED_BY_RUNTIME = TYPE_FEATURE_COUNT + 4;
+	int TNAMESPACE__DECLARED_PROVIDED_BY_RUNTIME = TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -2788,7 +3015,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__AST_ELEMENT = TYPE_FEATURE_COUNT + 5;
+	int TNAMESPACE__AST_ELEMENT = TYPE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -2797,7 +3024,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__EXTERNAL = TYPE_FEATURE_COUNT + 6;
+	int TNAMESPACE__EXTERNAL = TYPE_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>TNamespace</em>' class.
@@ -2806,7 +3033,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 7;
+	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -2987,7 +3214,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNamespaceElement()
 	 * @generated
 	 */
-	int TNAMESPACE_ELEMENT = 22;
+	int TNAMESPACE_ELEMENT = 24;
 
 	/**
 	 * The number of structural features of the '<em>TNamespace Element</em>' class.
@@ -3024,7 +3251,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleNamespaceVirtualType()
 	 * @generated
 	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE = 23;
+	int MODULE_NAMESPACE_VIRTUAL_TYPE = 25;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3259,7 +3486,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getPrimitiveType()
 	 * @generated
 	 */
-	int PRIMITIVE_TYPE = 24;
+	int PRIMITIVE_TYPE = 26;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3503,7 +3730,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getBuiltInType()
 	 * @generated
 	 */
-	int BUILT_IN_TYPE = 25;
+	int BUILT_IN_TYPE = 27;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3711,7 +3938,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAnyType()
 	 * @generated
 	 */
-	int ANY_TYPE = 26;
+	int ANY_TYPE = 28;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3919,7 +4146,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getUndefinedType()
 	 * @generated
 	 */
-	int UNDEFINED_TYPE = 27;
+	int UNDEFINED_TYPE = 29;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4127,7 +4354,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNullType()
 	 * @generated
 	 */
-	int NULL_TYPE = 28;
+	int NULL_TYPE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4335,7 +4562,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVoidType()
 	 * @generated
 	 */
-	int VOID_TYPE = 29;
+	int VOID_TYPE = 31;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4543,7 +4770,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructuralType()
 	 * @generated
 	 */
-	int TSTRUCTURAL_TYPE = 30;
+	int TSTRUCTURAL_TYPE = 32;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4841,7 +5068,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifier()
 	 * @generated
 	 */
-	int TCLASSIFIER = 31;
+	int TCLASSIFIER = 33;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5184,7 +5411,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getArrayLike()
 	 * @generated
 	 */
-	int ARRAY_LIKE = 32;
+	int ARRAY_LIKE = 34;
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -5230,7 +5457,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTN4Classifier()
 	 * @generated
 	 */
-	int TN4_CLASSIFIER = 33;
+	int TN4_CLASSIFIER = 35;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5645,7 +5872,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClass()
 	 * @generated
 	 */
-	int TCLASS = 34;
+	int TCLASS = 36;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6132,7 +6359,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTInterface()
 	 * @generated
 	 */
-	int TINTERFACE = 35;
+	int TINTERFACE = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6556,7 +6783,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMember()
 	 * @generated
 	 */
-	int TMEMBER = 36;
+	int TMEMBER = 38;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6836,7 +7063,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMemberWithAccessModifier()
 	 * @generated
 	 */
-	int TMEMBER_WITH_ACCESS_MODIFIER = 37;
+	int TMEMBER_WITH_ACCESS_MODIFIER = 39;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7143,7 +7370,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMember()
 	 * @generated
 	 */
-	int TSTRUCT_MEMBER = 38;
+	int TSTRUCT_MEMBER = 40;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7459,7 +7686,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMethod()
 	 * @generated
 	 */
-	int TMETHOD = 39;
+	int TMETHOD = 41;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8081,7 +8308,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMethod()
 	 * @generated
 	 */
-	int TSTRUCT_METHOD = 40;
+	int TSTRUCT_METHOD = 42;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8730,7 +8957,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFormalParameter()
 	 * @generated
 	 */
-	int TFORMAL_PARAMETER = 41;
+	int TFORMAL_PARAMETER = 43;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8875,7 +9102,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnonymousFormalParameter()
 	 * @generated
 	 */
-	int TANONYMOUS_FORMAL_PARAMETER = 42;
+	int TANONYMOUS_FORMAL_PARAMETER = 44;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9038,7 +9265,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTField()
 	 * @generated
 	 */
-	int TFIELD = 43;
+	int TFIELD = 45;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9390,7 +9617,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructField()
 	 * @generated
 	 */
-	int TSTRUCT_FIELD = 44;
+	int TSTRUCT_FIELD = 46;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9769,7 +9996,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getFieldAccessor()
 	 * @generated
 	 */
-	int FIELD_ACCESSOR = 45;
+	int FIELD_ACCESSOR = 47;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10112,7 +10339,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTGetter()
 	 * @generated
 	 */
-	int TGETTER = 46;
+	int TGETTER = 48;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10464,7 +10691,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructGetter()
 	 * @generated
 	 */
-	int TSTRUCT_GETTER = 47;
+	int TSTRUCT_GETTER = 49;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10843,7 +11070,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTSetter()
 	 * @generated
 	 */
-	int TSETTER = 48;
+	int TSETTER = 50;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11195,7 +11422,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructSetter()
 	 * @generated
 	 */
-	int TSTRUCT_SETTER = 49;
+	int TSTRUCT_SETTER = 51;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11574,7 +11801,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnum()
 	 * @generated
 	 */
-	int TENUM = 50;
+	int TENUM = 52;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11836,7 +12063,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getSyntaxRelatedTElement()
 	 * @generated
 	 */
-	int SYNTAX_RELATED_TELEMENT = 53;
+	int SYNTAX_RELATED_TELEMENT = 55;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -11873,7 +12100,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnumLiteral()
 	 * @generated
 	 */
-	int TENUM_LITERAL = 51;
+	int TENUM_LITERAL = 53;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -11946,7 +12173,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAlias()
 	 * @generated
 	 */
-	int TYPE_ALIAS = 52;
+	int TYPE_ALIAS = 54;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12208,7 +12435,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTConstableElement()
 	 * @generated
 	 */
-	int TCONSTABLE_ELEMENT = 54;
+	int TCONSTABLE_ELEMENT = 56;
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -12254,7 +12481,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
-	int TVARIABLE = 55;
+	int TVARIABLE = 57;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12453,7 +12680,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
-	int TYPING_STRATEGY = 56;
+	int TYPING_STRATEGY = 58;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -12463,7 +12690,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
-	int TYPE_ACCESS_MODIFIER = 57;
+	int TYPE_ACCESS_MODIFIER = 59;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -12473,7 +12700,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
-	int MEMBER_ACCESS_MODIFIER = 58;
+	int MEMBER_ACCESS_MODIFIER = 60;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -12483,7 +12710,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
-	int MEMBER_TYPE = 59;
+	int MEMBER_TYPE = 61;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -12493,7 +12720,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 62;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -12503,7 +12730,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 61;
+	int ITERABLE_OF_TCLASSIFIER = 63;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12513,7 +12740,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 62;
+	int VARIANCE = 64;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12523,7 +12750,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 63;
+	int NAME_AND_ACCESS = 65;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12533,7 +12760,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 64;
+	int MEMBER_LIST = 66;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12543,8 +12770,40 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 65;
+	int TCLASSIFIER_ITERABLE = 67;
 
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.AbstractModule <em>Abstract Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Abstract Module</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractModule
+	 * @generated
+	 */
+	EClass getAbstractModule();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.AbstractModule#getSimpleName <em>Simple Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Simple Name</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractModule#getSimpleName()
+	 * @see #getAbstractModule()
+	 * @generated
+	 */
+	EAttribute getAbstractModule_SimpleName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.AbstractModule#getQualifiedName <em>Qualified Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Qualified Name</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractModule#getQualifiedName()
+	 * @see #getAbstractModule()
+	 * @generated
+	 */
+	EAttribute getAbstractModule_QualifiedName();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TModule <em>TModule</em>}'.
@@ -12555,28 +12814,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getTModule();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Simple Name</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getSimpleName()
-	 * @see #getTModule()
-	 * @generated
-	 */
-	EAttribute getTModule_SimpleName();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Qualified Name</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getQualifiedName()
-	 * @see #getTModule()
-	 * @generated
-	 */
-	EAttribute getTModule_QualifiedName();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getPackageName <em>Package Name</em>}'.
@@ -12797,6 +13034,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTModule_ModuleSpecifier();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TNestedModule <em>TNested Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>TNested Module</em>'.
+	 * @see org.eclipse.n4js.ts.types.TNestedModule
+	 * @generated
+	 */
+	EClass getTNestedModule();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.RuntimeDependency <em>Runtime Dependency</em>}'.
@@ -13750,6 +13997,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getAbstractNamespace_Namespaces();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNestedModules <em>Nested Modules</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Nested Modules</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getNestedModules()
+	 * @see #getAbstractNamespace()
+	 * @generated
+	 */
+	EReference getAbstractNamespace_NestedModules();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getContainingModule() <em>Get Containing Module</em>}' operation.
@@ -15561,6 +15819,32 @@ public interface TypesPackage extends EPackage {
 	 */
 	interface Literals {
 		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.AbstractModuleImpl <em>Abstract Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.AbstractModuleImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAbstractModule()
+		 * @generated
+		 */
+		EClass ABSTRACT_MODULE = eINSTANCE.getAbstractModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Simple Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ABSTRACT_MODULE__SIMPLE_NAME = eINSTANCE.getAbstractModule_SimpleName();
+
+		/**
+		 * The meta object literal for the '<em><b>Qualified Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ABSTRACT_MODULE__QUALIFIED_NAME = eINSTANCE.getAbstractModule_QualifiedName();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TModuleImpl <em>TModule</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -15569,22 +15853,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TMODULE = eINSTANCE.getTModule();
-
-		/**
-		 * The meta object literal for the '<em><b>Simple Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TMODULE__SIMPLE_NAME = eINSTANCE.getTModule_SimpleName();
-
-		/**
-		 * The meta object literal for the '<em><b>Qualified Name</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute TMODULE__QUALIFIED_NAME = eINSTANCE.getTModule_QualifiedName();
 
 		/**
 		 * The meta object literal for the '<em><b>Package Name</b></em>' attribute feature.
@@ -15745,6 +16013,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMODULE__MODULE_SPECIFIER = eINSTANCE.getTModule_ModuleSpecifier();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TNestedModuleImpl <em>TNested Module</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.TNestedModuleImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNestedModule()
+		 * @generated
+		 */
+		EClass TNESTED_MODULE = eINSTANCE.getTNestedModule();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -16521,6 +16799,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ABSTRACT_NAMESPACE__NAMESPACES = eINSTANCE.getAbstractNamespace_Namespaces();
+
+		/**
+		 * The meta object literal for the '<em><b>Nested Modules</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ABSTRACT_NAMESPACE__NESTED_MODULES = eINSTANCE.getAbstractNamespace_NestedModules();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Containing Module</b></em>' operation.

@@ -10,13 +10,16 @@
  */
 package org.eclipse.n4js.typesbuilder
 
+import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TypesFactory
 
-public class N4JSNamespaceDeclarationTypesBuilder extends N4JSClassifierDeclarationTypesBuilder {
-	
+public class N4JSNamespaceDeclarationTypesBuilder {
+
+	@Inject protected extension N4JSTypesBuilderHelper
+
 	def package boolean relinkTNamespace(N4NamespaceDeclaration n4Namespace, AbstractNamespace target, boolean preLinkingPhase, int idx) {
 		if (n4Namespace.name === null) { // may be null due to syntax errors
 			return false;
@@ -24,11 +27,11 @@ public class N4JSNamespaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 
 		val TNamespace namespaceType = target.namespaces.get(idx)
 		ensureEqualName(n4Namespace, namespaceType);
-				
+
 		namespaceType.astElement = n4Namespace
 
 		n4Namespace.definedType = namespaceType
-		
+
 		return true;
 	}
 
@@ -39,7 +42,6 @@ public class N4JSNamespaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 
 		val namespaceType = createTNamespace(n4Namespace);
 		namespaceType.setTypeAccessModifier(n4Namespace)
-		
 
 		namespaceType.setProvidedByRuntime(n4Namespace, preLinkingPhase)
 

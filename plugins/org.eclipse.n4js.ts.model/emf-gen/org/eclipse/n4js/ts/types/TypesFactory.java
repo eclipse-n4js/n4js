@@ -39,6 +39,15 @@ public interface TypesFactory extends EFactory {
 	TModule createTModule();
 
 	/**
+	 * Returns a new object of class '<em>TNested Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>TNested Module</em>'.
+	 * @generated
+	 */
+	TNestedModule createTNestedModule();
+
+	/**
 	 * Returns a new object of class '<em>Runtime Dependency</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

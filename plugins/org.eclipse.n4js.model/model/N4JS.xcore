@@ -47,6 +47,7 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TNestedModule
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TStructGetter
@@ -2158,25 +2159,33 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	}
 }
 
+abstract class N4AbstractNamespaceDeclaration extends VariableEnvironmentElement, NamedElement {
 
-class N4NamespaceDeclaration extends N4TypeDefinition, VariableEnvironmentElement, ModifiableElement, ExportableElement, NamedElement {
 	String name
 	contains NamespaceElement[] ownedElementsRaw
-	
+}
+
+class N4ModuleDeclaration extends N4AbstractNamespaceDeclaration, ScriptElement {
+
+	refers transient TNestedModule definedModule
+}
+
+class N4NamespaceDeclaration extends N4AbstractNamespaceDeclaration, N4TypeDefinition, ModifiableElement, ExportableElement {
+
 	/**
 	 * Returns true if type is declared as external.
 	 */
 	op boolean isExternal() {
 		return isDeclaredExternal() || isDefaultExternal();
 	}
-	
+
 	/**
 	 * Namespaces do not have annotations
 	 */
 	op Annotation[] getAnnotations() {
 		emptyEList
 	}
-	
+
 	op boolean isHollow() {
 		val hollow = ownedElementsRaw.forall[isHollow];
 		return hollow

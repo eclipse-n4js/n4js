@@ -11,6 +11,7 @@
 package org.eclipse.n4js.dts.astbuilders;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -20,6 +21,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.n4js.dts.TypeScriptParser;
+import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -32,6 +36,20 @@ public class ParserContextUtil {
 		ParserRuleContext exportedParentCtx = findParentContext(ctx, TypeScriptParser.RULE_exportStatement,
 				TypeScriptParser.RULE_statement);
 		return exportedParentCtx != null;
+	}
+
+	/** @return the statements in the given block or an empty list if not available. */
+	public static List<StatementContext> getStatements(BlockContext block) {
+		if (block != null) {
+			StatementListContext statementList = block.statementList();
+			if (statementList != null) {
+				List<StatementContext> statement = statementList.statement();
+				if (statement != null) {
+					return statement;
+				}
+			}
+		}
+		return Collections.emptyList();
 	}
 
 	/**

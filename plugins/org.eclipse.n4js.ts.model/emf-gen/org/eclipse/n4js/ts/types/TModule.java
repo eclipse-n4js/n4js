@@ -26,8 +26,6 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getPackageName <em>Package Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getProjectID <em>Project ID</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVendorID <em>Vendor ID</em>}</li>
@@ -54,62 +52,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElement {
-	/**
-	 * Returns the value of the '<em><b>Simple Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * The module's simple name, i.e. the last segment of its qualified name.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Simple Name</em>' attribute.
-	 * @see #setSimpleName(String)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_SimpleName()
-	 * @model unique="false"
-	 * @generated
-	 */
-	String getSimpleName();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Simple Name</em>' attribute.
-	 * @see #getSimpleName()
-	 * @generated
-	 */
-	void setSimpleName(String value);
-
-	/**
-	 * Returns the value of the '<em><b>Qualified Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * The qualified name of the module, which is derived from the file path. Includes the module's
-	 * file name (without extension) and the names of all ancestor folders up to, excluding the
-	 * containing project's source folder. The containing project's name is also not included,
-	 * but can be retrieved via {@link #getProjectName()}.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Qualified Name</em>' attribute.
-	 * @see #setQualifiedName(String)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_QualifiedName()
-	 * @model unique="false"
-	 * @generated
-	 */
-	String getQualifiedName();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Qualified Name</em>' attribute.
-	 * @see #getQualifiedName()
-	 * @generated
-	 */
-	void setQualifiedName(String value);
-
+public interface TModule extends AbstractModule, TAnnotableElement {
 	/**
 	 * Returns the value of the '<em><b>Package Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->

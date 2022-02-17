@@ -24,60 +24,37 @@ import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
-import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
-import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
-import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
-import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
-import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
-import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
-import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
-import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
-import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.n4JS.ScriptElement;
-import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
- * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
+ * Base of builders for namespace and module declarations.
  */
-public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Script> {
-	private final DtsImportBuilder importBuilder = new DtsImportBuilder(tokenStream, resource);
-	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
-	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
-	private final DtsNamespaceBuilder namespaceBuilder = new DtsNamespaceBuilder(tokenStream, resource);
-	private final DtsModuleBuilder moduleBuilder = new DtsModuleBuilder(tokenStream, resource);
+public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext, R extends N4AbstractNamespaceDeclaration>
+		extends AbstractDtsSubBuilder<T, R> {
+
 	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
 	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
 	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(tokenStream, resource);
+	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
+	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
 	private final DtsVariableBuilder variableBuilder = new DtsVariableBuilder(tokenStream, resource);
 
 	/** Constructor */
-	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
-	}
-
-	/** @return the script that was created during visiting the parse tree */
-	public Script getScript() {
-		return result;
-	}
-
-	void addToScript(ScriptElement elem) {
-		if (elem == null) {
-			return;
-		}
-		result.getScriptElements().add(elem);
 	}
 
 	@Override
@@ -92,35 +69,9 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 	}
 
 	@Override
-	public void enterProgram(ProgramContext ctx) {
-		result = N4JSFactory.eINSTANCE.createScript();
-		if (ctx.statementList() != null) {
-			walker.enqueue(ctx.statementList().statement());
-		}
-	}
-
-	@Override
-	public void enterImportStatement(ImportStatementContext ctx) {
-		ImportDeclaration id = importBuilder.consume(ctx);
-		addToScript(id);
-	}
-
-	@Override
-	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
-		N4NamespaceDeclaration nd = namespaceBuilder.consume(ctx);
-		addAndHandleExported(ctx, nd);
-	}
-
-	@Override
-	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		N4ModuleDeclaration nd = moduleBuilder.consume(ctx);
-		addToScript(nd);
-	}
-
-	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-		VariableStatement vs = variableBuilder.consumeInScript(ctx);
-		addToScript(vs);
+		ExportedVariableStatement vs = variableBuilder.consumeInNamespace(ctx);
+		addAndHandleExported(ctx, vs);
 	}
 
 	@Override
@@ -136,12 +87,6 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 	}
 
 	@Override
-	public void enterEnumDeclaration(EnumDeclarationContext ctx) {
-		N4EnumDeclaration ed = enumBuilder.consume(ctx);
-		addAndHandleExported(ctx, ed);
-	}
-
-	@Override
 	public void enterTypeAliasDeclaration(TypeAliasDeclarationContext ctx) {
 		N4TypeAliasDeclaration tad = typeAliasBuilder.consume(ctx);
 		addAndHandleExported(ctx, tad);
@@ -153,15 +98,16 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 		addAndHandleExported(ctx, fd);
 	}
 
-	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement id) {
+	@Override
+	public void enterEnumDeclaration(EnumDeclarationContext ctx) {
+		N4EnumDeclaration ed = enumBuilder.consume(ctx);
+		addAndHandleExported(ctx, ed);
+	}
+
+	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
 		boolean isExported = ParserContextUtil.isExported(ctx);
-		((ModifiableElement) id).getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		if (isExported) {
-			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
-			ed.setExportedElement(id);
-			addToScript(ed);
-		} else {
-			addToScript(id);
-		}
+		N4Modifier accessibility = isExported ? N4Modifier.PUBLIC : N4Modifier.PRIVATE;
+		((ModifiableElement) elem).getDeclaredModifiers().add(accessibility);
+		result.getOwnedElementsRaw().add(elem);
 	}
 }
