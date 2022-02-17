@@ -1445,7 +1445,33 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 	 *            {@link #getIgnoredIssueCodes()} will be taken into consideration.
 	 */
 	protected void assertIssuesInFiles(Map<FileURI, List<String>> fileURIToExpectedIssues, boolean withIgnoredIssues) {
-		List<String> failureMessages = new ArrayList<>();
+		class Error implements Comparable<Error> {
+			final String expected;
+			final String actual;
+			final String relFilePath;
+
+			Error(String expected, String actual, String relFilePath) {
+				this.expected = expected;
+				this.actual = actual;
+				this.relFilePath = relFilePath;
+			}
+
+			@Override
+			public String toString() {
+				return "issues in file " + relFilePath + " do not meet expectation\n"
+						+ "EXPECTED:\n" + expected + "\n" + "ACTUAL:\n" + actual;
+			}
+
+			@Override
+			public int compareTo(Error err) {
+				if (err == null) {
+					return 0;
+				}
+				return toString().compareTo(err.toString());
+			}
+		}
+
+		List<Error> failureMessages = new ArrayList<>();
 		for (Entry<FileURI, List<String>> pair : fileURIToExpectedIssues.entrySet()) {
 			FileURI fileURI = pair.getKey();
 			List<String> expectedIssues = pair.getValue();
@@ -1458,16 +1484,17 @@ abstract public class AbstractIdeTest implements IIdeTestLanguageClientListener 
 
 			if (!Objects.equals(expectedIssuesAsSet, actualIssuesAsSet)) {
 				String indent = "    ";
+				String expected = issuesToSortedString(expectedIssuesAsSet, indent);
+				String actual = issuesToSortedString(actualIssuesAsSet, indent);
 				String fileRelPath = getRelativePathFromFileUri(fileURI);
-				failureMessages.add("issues in file " + fileRelPath + " do not meet expectation\n"
-						+ "EXPECTED:\n"
-						+ issuesToSortedString(expectedIssuesAsSet, indent) + "\n"
-						+ "ACTUAL:\n"
-						+ issuesToSortedString(actualIssuesAsSet, indent));
+				failureMessages.add(new Error(expected, actual, fileRelPath));
 			}
 		}
 		if (failureMessages.size() == 1) {
-			Assert.fail(failureMessages.get(0));
+			// make use of built-in compare view of JUnit
+			Error err = failureMessages.get(0);
+			Assert.assertEquals("issues in file " + err.relFilePath + " do not meet expectation\n", err.expected,
+					err.actual);
 		} else if (failureMessages.size() > 1) {
 			Collections.sort(failureMessages);
 			Assert.fail("issues in several files do not meet the expectation:\n"

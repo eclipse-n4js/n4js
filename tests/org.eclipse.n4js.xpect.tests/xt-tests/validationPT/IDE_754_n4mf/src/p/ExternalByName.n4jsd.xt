@@ -30,6 +30,7 @@
 	END_SETUP
  */
 
+// XPECT noerrors -->
 export external public class ExternalByName {
 	externalControl();
 }

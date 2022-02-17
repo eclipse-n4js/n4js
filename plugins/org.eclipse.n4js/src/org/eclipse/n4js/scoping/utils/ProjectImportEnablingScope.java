@@ -14,8 +14,10 @@ import static org.eclipse.n4js.N4JSGlobals.ALL_JS_FILE_EXTENSIONS;
 import static org.eclipse.n4js.N4JSGlobals.DTS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.N4JSD_FILE_EXTENSION;
 
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -25,6 +27,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
@@ -35,7 +38,6 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
-import org.eclipse.n4js.utils.Strings;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
@@ -155,11 +157,14 @@ public class ProjectImportEnablingScope implements IScope {
 			return result.get(0);
 		}
 
-		// use linked map for determinism in error message
+		// use sorted entries and linked map for determinism in error message
+		Collections.sort(result,
+				Comparator.comparing(IEObjectDescription::getEObjectURI, Comparator.comparing(URI::toString)));
 		final Map<IEObjectDescription, N4JSProjectConfigSnapshot> descriptionsToProject = new LinkedHashMap<>();
+
 		for (IEObjectDescription objDescr : result) {
-			N4JSProjectConfigSnapshot n4jsdProject = workspaceConfigSnapshot
-					.findProjectContaining(objDescr.getEObjectURI());
+			URI uri = objDescr.getEObjectURI();
+			N4JSProjectConfigSnapshot n4jsdProject = workspaceConfigSnapshot.findProjectContaining(uri);
 			descriptionsToProject.put(objDescr, n4jsdProject);
 		}
 
@@ -171,6 +176,12 @@ public class ProjectImportEnablingScope implements IScope {
 		// if no import declaration was given, we skip the advanced error reporting
 		if (!importDeclaration.isPresent()) {
 			return null;
+		}
+
+		// handle special defaults
+		IEObjectDescription defaultModule = handleDefaults(descriptionsToProject);
+		if (defaultModule != null) {
+			return defaultModule;
 		}
 
 		// handle error cases to help user fix the issue
@@ -202,10 +213,23 @@ public class ProjectImportEnablingScope implements IScope {
 			} else {
 				sbErrrorMessage.append("multiple matching modules found: ");
 
-				String matchingModules = Strings.join(", ",
-						e -> //
-						e.getValue().getPackageName() + "/" + e.getKey().getQualifiedName().toString(),
-						descriptionsToProject.entrySet());
+				String matchingModules = "";
+				for (IEObjectDescription descr : descriptionsToProject.keySet()) {
+					if (!matchingModules.isEmpty()) {
+						matchingModules += ", ";
+					}
+
+					if (descr.getEObjectURI() != null) {
+						URI uri = descr.getEObjectURI().trimFragment();
+						URI relUri = uri.deresolve(workspaceConfigSnapshot.getPath());
+						Path relPath = Path.of(relUri.toFileString());
+						relPath = relPath.subpath(1, relPath.getNameCount());
+						matchingModules += relPath.toString();
+					} else {
+						matchingModules += descriptionsToProject.get(descr).getPackageName() + "/"
+								+ descr.getQualifiedName().toString();
+					}
+				}
 
 				sbErrrorMessage.append(matchingModules);
 			}
@@ -295,7 +319,7 @@ public class ProjectImportEnablingScope implements IScope {
 					break;
 				case DTS_FILE_EXTENSION:
 					if (prj.getType() != ProjectType.PLAINJS
-							|| !prj.getName().endsWith("/" + jsProject.getName())) {
+							|| !prj.getName().endsWith("/" + jsProject.getPackageName())) {
 						// case: d.ts file is not inside a related @types definition project
 						return null; // return null due to conflict
 					}
@@ -323,6 +347,18 @@ public class ProjectImportEnablingScope implements IScope {
 			}
 		}
 
+		return null;
+	}
+
+	private IEObjectDescription handleDefaults(
+			Map<IEObjectDescription, N4JSProjectConfigSnapshot> descriptionsToProject) {
+
+		for (Map.Entry<IEObjectDescription, N4JSProjectConfigSnapshot> entry : descriptionsToProject.entrySet()) {
+			N4JSProjectConfigSnapshot prj = entry.getValue();
+			if (N4JSGlobals.N4JS_RUNTIME_NODE.toString().equals(prj.getPackageName())) {
+				return entry.getKey();
+			}
+		}
 		return null;
 	}
 

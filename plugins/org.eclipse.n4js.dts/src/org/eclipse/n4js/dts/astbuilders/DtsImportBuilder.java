@@ -14,6 +14,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_importStatement;
 
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
@@ -36,6 +37,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementContext, ImportDeclaration> {
+	private final static Logger LOG = Logger.getLogger(DtsImportBuilder.class);
 
 	/** Constructor */
 	public DtsImportBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -54,15 +56,25 @@ public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementConte
 		String fromModule = ParserContextUtil.trimStringLiteral(ctx.StringLiteral());
 		result.setImportFrom(fromModule != null);
 		if (fromModule != null) {
-			result.setModuleSpecifierAsText(fromModule);
+			URI fromModuleUri = null;
+			try {
+				fromModuleUri = URI.createFileURI(fromModule);
+			} catch (AssertionError ae) {
+				// happens sometimes
+				LOG.error("Could not create URI for module " + fromModule);
+			}
 
-			// trim extension
-			String moduleName = URIUtils.trimFileExtension(URI.createFileURI(fromModule)).toFileString();
+			if (fromModuleUri != null) {
+				result.setModuleSpecifierAsText(fromModule);
 
-			TModule tModuleProxy = TypesFactory.eINSTANCE.createTModule();
-			EReference eRef = N4JSPackage.eINSTANCE.getImportDeclaration_Module();
-			ParserContextUtil.installProxy(resource, result, eRef, tModuleProxy, moduleName);
-			result.setModule(tModuleProxy);
+				// trim extension
+				String moduleName = URIUtils.trimFileExtension(fromModuleUri).toFileString();
+
+				TModule tModuleProxy = TypesFactory.eINSTANCE.createTModule();
+				EReference eRef = N4JSPackage.eINSTANCE.getImportDeclaration_Module();
+				ParserContextUtil.installProxy(resource, result, eRef, tModuleProxy, moduleName);
+				result.setModule(tModuleProxy);
+			}
 		}
 
 		if (ctx.Multiply() != null) {
