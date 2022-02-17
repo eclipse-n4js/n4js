@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -42,14 +41,6 @@ import com.google.common.collect.Iterables;
  * Parses the configuration in the Xt setup section of an .xt file.
  */
 public class XtSetupParser {
-	/** Add d.ts extension since modules will be created for d.ts files */
-	public static final Collection<String> ALL_N4_MODULE_EXTENSIONS = new HashSet<>() {
-		{
-			addAll(N4JSGlobals.ALL_N4_FILE_EXTENSIONS);
-			add(N4JSGlobals.DTS_FILE_EXTENSION);
-		}
-	};
-
 	/** Keyword for activating {@link Project#isGenerateDts() .d.ts generation}. */
 	public static final String GENERATE_DTS = "GENERATE_DTS";
 	/** Keyword for adding a dependency to a project. Expects to be followed by a name in quotes. */
@@ -397,7 +388,7 @@ public class XtSetupParser {
 		int idx = lastSegment.lastIndexOf('.');
 		String nameWithoutExtension = idx >= 0 ? name.substring(0, idx) : name;
 		String extension = idx >= 0 ? name.substring(idx + 1) : null;
-		boolean isModule = extension != null && ALL_N4_MODULE_EXTENSIONS.contains(extension);
+		boolean isModule = extension != null && N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
 		OtherFileBuilder fileBuilder;
 		if (isModule) {
 			fileBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);

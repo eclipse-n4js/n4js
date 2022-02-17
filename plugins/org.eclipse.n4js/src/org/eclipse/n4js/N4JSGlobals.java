@@ -161,11 +161,13 @@ public final class N4JSGlobals {
 	 * <p>
 	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
 	 * {@link #N4JS_FILE_EXTENSION},{@link #N4JSX_FILE_EXTENSION}, {@link #JS_FILE_EXTENSION},
-	 * {@link #CJS_FILE_EXTENSION}, {@link #MJS_FILE_EXTENSION}, {@link #JSX_FILE_EXTENSION}.
+	 * {@link #CJS_FILE_EXTENSION}, {@link #MJS_FILE_EXTENSION}, {@link #JSX_FILE_EXTENSION},
+	 * {@link #DTS_FILE_EXTENSION}.
 	 */
 	public static final Set<String> ALL_N4_FILE_EXTENSIONS = ImmutableSet.<String> builder()
 			.addAll(ALL_N4JS_FILE_EXTENSIONS)
 			.addAll(ALL_JS_FILE_EXTENSIONS)
+			.add(DTS_FILE_EXTENSION)
 			.build();
 
 	/**

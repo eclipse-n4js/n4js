@@ -13,6 +13,9 @@ package org.eclipse.n4js.validation.validators
 import com.google.common.base.Strings
 import com.google.inject.Inject
 import com.google.inject.Provider
+import java.util.ArrayList
+import java.util.Collections
+import java.util.Comparator
 import java.util.List
 import java.util.Set
 import java.util.regex.Pattern
@@ -136,16 +139,21 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 	private def void checkUniqueInIndex(Script script, TModule module, Iterable<IEObjectDescription> descriptions, Provider<List<IContainer>> lazyContainersList) {
 		val resource = module.eResource;
 
-		val resourceURIs = descriptions.map[
+		val resourceURIs = descriptions.toMap[
 			EObjectURI.trimFragment
-		].filter[
-			it != EcoreUtil2.getPlatformResourceOrNormalizedURI(resource) && !N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(URIUtils.fileExtension(it))
-		].toSet;
+		].filter[uri, d|
+			uri != EcoreUtil2.getPlatformResourceOrNormalizedURI(resource)
+		];
 
 		if (resourceURIs.size > 0) {
+			val ws = workspaceAccess.getWorkspaceConfig(resource);
+			val pr = ws.findProjectByNestedLocation(resource.URI);
 			val visibleResourceURIs = newHashSet;
 			lazyContainersList.get.forEach[ container |
-				visibleResourceURIs += resourceURIs.filter[ uri | container.hasResourceDescription(uri); ];
+				visibleResourceURIs += resourceURIs.keySet.filter[ uri |
+					container.hasResourceDescription(uri)
+					&& workspaceAccess.findProjectByNestedLocation(script, uri)?.name == pr?.name
+				];
 			];
 
 			if (visibleResourceURIs.size > 0) {
@@ -168,14 +176,43 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 					// IDE-1735 in case of normal Polyfill this can't be mixed with static polyfills.
 					return;
 				}
+				
+				if (visibleResourceURIs.size == 1) {
+					val uri1 = resource.URI;
+					val uri2 = visibleResourceURIs.get(0);
+					val qName1 = module.qualifiedName
+					val qName2 = qualifiedNameConverter.toString(resourceURIs.get(uri2).name);
+					if (qName1 == qName2) {
+						val ext1 = URIUtils.fileExtension(uri1);
+						val ext2 = URIUtils.fileExtension(uri2);
+						
+						var URI jsUri = null;
+						var URI nonJsUri = null;
+						var String nonJsExt = null;
+						if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext1)) {
+							jsUri = uri1;
+							nonJsUri = uri2;
+							nonJsExt = ext2;
+						} else if (N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(ext2)) {
+							jsUri = uri2;
+							nonJsUri = uri1;
+							nonJsExt = ext1;
+						}
+						
+						if (jsUri !== null && nonJsUri !== null && nonJsExt !== null
+							&& (nonJsExt == N4JSGlobals.N4JSD_FILE_EXTENSION || nonJsExt == N4JSGlobals.DTS_FILE_EXTENSION)
+						) {
+							// it is allowed that a js module has an n4jsd or d.ts module with the same fqn
+							return;
+						}
+					}
+				}
 
-				var Set<URI>filteredMutVisibleResourceURIs = visibleResourceURIs;
+				var Set<URI>filteredMutVisibleResourceURIs = visibleResourceURIs.map[it.deresolve(ws.path)].toSet;
 
 				// non MainModules are follow normal visibility check
 				// but MainModules have checks relaxed:
 				if(module.isMainModule){
-					val ws = workspaceAccess.getWorkspaceConfig(resource);
-					val pr = ws.findProjectByPath(resource.URI);
 					if (pr === null) {
 						return;
 					}
@@ -201,11 +238,34 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 				}
 
 				if(filteredMutVisibleResourceURIs.isEmpty) return;
+				val sortedMutVisibleResourceURIs = new ArrayList(filteredMutVisibleResourceURIs);
+				Collections.sort(sortedMutVisibleResourceURIs, Comparator.comparing[toString]);
+				
+				// note: we know that the current TModule is never of a JS file since those are not validated
+				val n4DefiExts = Set.of(N4JSGlobals.N4JSD_FILE_EXTENSION, N4JSGlobals.DTS_FILE_EXTENSION);
+				val n4ImplExts = Set.of(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
+				val curIsDef = n4DefiExts.contains(URIUtils.fileExtension(resource.URI));
+				val n4DefiURIs = resourceURIs.keySet.filter[n4DefiExts.contains(URIUtils.fileExtension(it))];
+				val jsImplURIs = resourceURIs.keySet.filter[ N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(URIUtils.fileExtension(it))];
+				val n4ImplURIs = resourceURIs.keySet.filter[n4ImplExts.contains(URIUtils.fileExtension(it))];
 
-				// list all locations - give the user the possibility to check by himself.
-				val filePathStr = filteredMutVisibleResourceURIs.map[segmentsList.drop(1).join('/')].join("; ");
-				val message = IssueCodes.getMessageForCLF_DUP_MODULE(module.qualifiedName, filePathStr);
-				addIssue(message, script, IssueCodes.CLF_DUP_MODULE);
+				if (n4ImplURIs.empty && jsImplURIs.size < 2 && curIsDef && n4DefiURIs.size > 0) {
+					// collision of definition modules
+					
+					val implModule = if (jsImplURIs.empty) null else jsImplURIs.get(0).deresolve(ws.path);
+					val implModuleStr = if (implModule === null) "unknown js module" else implModule.segmentsList.drop(1).join('/');
+					val filePathStr = sortedMutVisibleResourceURIs
+						.filter[implModule != it]
+						.map[segmentsList.drop(1).join('/')].join("; ");
+					val message = IssueCodes.getMessageForCLF_DUP_DEF_MODULE(module.qualifiedName, implModuleStr, filePathStr);
+					addIssue(message, script, IssueCodes.CLF_DUP_DEF_MODULE);
+				} else {
+					// collision of implementation modules
+					// list all locations - give the user the possibility to check by himself.
+					val filePathStr = sortedMutVisibleResourceURIs.map[segmentsList.drop(1).join('/')].join("; ");
+					val message = IssueCodes.getMessageForCLF_DUP_MODULE(module.qualifiedName, filePathStr);
+					addIssue(message, script, IssueCodes.CLF_DUP_MODULE);
+				}
 			}
 		}
 	}

@@ -13,9 +13,11 @@ package org.eclipse.n4js.ide.imports;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -149,8 +151,10 @@ public class ReferenceResolutionFinder {
 		boolean needCollisionCheck = !isUnresolvedReference && !isPropertyAccess;
 
 		List<IEObjectDescription> candidates = new ArrayList<>(512);
+		Map<IEObjectDescription, N4JSProjectConfigSnapshot> projects = new HashMap<>();
 		Set<QualifiedName> candidateNames = needCollisionCheck ? new HashSet<>() : null;
-		collectAllElements(scope, candidates, candidateNames, acceptor);
+		Set<QualifiedName> collisioningModules = new HashSet<>();
+		collectAllElements(scope, wc, candidates, projects, candidateNames, collisioningModules, acceptor);
 
 		try (Measurement m = contentAssistDataCollectors.dcIterateAllElements().getMeasurement()) {
 			Set<URI> candidateURIs = new HashSet<>(); // note: shadowing for #getAllElements does not work
@@ -162,9 +166,7 @@ public class ReferenceResolutionFinder {
 					continue;
 				}
 
-				final N4JSProjectConfigSnapshot candidateProject = wc.findProjectContaining(candidate.getEObjectURI());
-				// note: must go on with resolution computation even if 'candidateProject' is 'null', because this will
-				// happen in some valid cases (e.g. built-in types)
+				final N4JSProjectConfigSnapshot candidateProject = projects.get(candidate);
 
 				final Optional<IScope> scopeForCollisionCheck = needCollisionCheck
 						? Optional.of(scope)
@@ -174,7 +176,7 @@ public class ReferenceResolutionFinder {
 						: Optional.absent();
 				final ReferenceResolution resolution = getResolution(reference.text, reference.parseTreeNode,
 						requireFullMatch, candidate, candidateProject, isPropertyAccess, scopeForCollisionCheck,
-						allElementsForCollisionCheck, conflictChecker);
+						allElementsForCollisionCheck, collisioningModules, conflictChecker);
 				if (resolution != null && candidateURIs.add(candidate.getEObjectURI())) {
 					acceptor.accept(resolution);
 				}
@@ -187,15 +189,22 @@ public class ReferenceResolutionFinder {
 	 *            elements will be added here.
 	 * @param addHereNames
 	 *            iff non-<code>null</code>, names of all elements will be added here.
+	 * @param addHereCollisioningModules
+	 *            iff non-<code>null</code>, module uris that clash (need project import) will be added here.
 	 * @param acceptor
 	 *            no resolutions will be passed to the acceptor by this method, only used for cancellation handling.
 	 */
-	private void collectAllElements(IScope scope, List<IEObjectDescription> addHere, Set<QualifiedName> addHereNames,
+	private void collectAllElements(IScope scope, N4JSWorkspaceConfigSnapshot wc,
+			List<IEObjectDescription> addHere, Map<IEObjectDescription, N4JSProjectConfigSnapshot> addHereProjects,
+			Set<QualifiedName> addHereNames, Set<QualifiedName> addHereCollisioningModules,
 			IResolutionAcceptor acceptor) {
+
 		try (Measurement m = contentAssistDataCollectors.dcGetAllElements().getMeasurement()) {
 			if (!acceptor.canAcceptMoreProposals()) {
 				return;
 			}
+			Map<QualifiedName, N4JSProjectConfigSnapshot> moduleQN2Prj = new HashMap<>();
+
 			Iterator<IEObjectDescription> iter = scope.getAllElements().iterator();
 			// note: checking #canAcceptMoreProposals() in next line is required to quickly react to cancellation
 			while (acceptor.canAcceptMoreProposals() && iter.hasNext()) {
@@ -203,9 +212,27 @@ public class ReferenceResolutionFinder {
 				if (!isRelevantDescription(curr)) {
 					continue;
 				}
+
 				addHere.add(curr);
+				N4JSProjectConfigSnapshot prj = wc.findProjectContaining(curr.getEObjectURI());
+				addHereProjects.put(curr, prj);
+				// note: must go on with resolution computation even if 'candidateProject' is 'null', because this will
+				// happen in some valid cases (e.g. built-in types)
+
 				if (addHereNames != null) {
 					addHereNames.add(curr.getName());
+				}
+				if (curr.getEObjectURI() != null) {
+					QualifiedName candidateModuleQN = getQualifiedNameOfModule(curr);
+					if (candidateModuleQN != null) {
+						if (moduleQN2Prj.containsKey(candidateModuleQN)) {
+							if (moduleQN2Prj.get(candidateModuleQN) != prj) {
+								addHereCollisioningModules.add(candidateModuleQN);
+							}
+						} else {
+							moduleQN2Prj.put(candidateModuleQN, prj);
+						}
+					}
 				}
 			}
 		}
@@ -235,17 +262,18 @@ public class ReferenceResolutionFinder {
 	 *            a scope that will be used for a collision check. If the reference being resolved is known to be an
 	 *            unresolved reference and <code>requireFullMatch</code> is set to <code>true</code>, then this
 	 *            collision check can safely be omitted.
+	 *
 	 * @return the resolution of <code>null</code> if the candidate is not a valid match for the reference.
 	 */
 	private ReferenceResolution getResolution(String text, INode parseTreeNode, boolean requireFullMatch,
 			IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull, boolean isPropertyAccess,
 			Optional<IScope> scopeForCollisionCheck, Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
-			Predicate<String> conflictChecker) {
+			Set<QualifiedName> collisioningModules, Predicate<String> conflictChecker) {
 
 		try (Measurement m1 = contentAssistDataCollectors.dcGetResolution().getMeasurement()) {
 			ReferenceResolutionCandidate rrc = new ReferenceResolutionCandidate(candidate, candidateProjectOrNull,
 					isPropertyAccess, scopeForCollisionCheck, allElementNamesForCollisionCheck,
-					text, requireFullMatch, parseTreeNode, conflictChecker);
+					collisioningModules, text, parseTreeNode, requireFullMatch, conflictChecker);
 
 			if (!rrc.isValid) {
 				return null;
@@ -383,9 +411,10 @@ public class ReferenceResolutionFinder {
 		final NameAndAlias addedImportNameAndAlias;
 
 		ReferenceResolutionCandidate(IEObjectDescription candidate, N4JSProjectConfigSnapshot candidateProjectOrNull,
-				boolean isPropertyAccess,
-				Optional<IScope> scopeForCollisionCheck, Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
-				String text, boolean requireFullMatch, INode parseTreeNode, Predicate<String> conflictChecker) {
+				boolean isPropertyAccess, Optional<IScope> scopeForCollisionCheck,
+				Optional<Set<QualifiedName>> allElementNamesForCollisionCheck,
+				Set<QualifiedName> collisioningModules, String text, INode parseTreeNode,
+				boolean requireFullMatch, Predicate<String> conflictChecker) {
 
 			try (Measurement m = contentAssistDataCollectors.dcCreateReferenceResolutionCandidate1().getMeasurement()) {
 				if (!isPropertyAccess && !requireFullMatch && !scopeForCollisionCheck.isPresent()) {
@@ -415,7 +444,7 @@ public class ReferenceResolutionFinder {
 				this.accessType = getAccessType();
 				this.aliasName = getAliasName();
 				this.namespaceName = getNamespaceName();
-				this.addedImportNameAndAlias = getImportChanges();
+				this.addedImportNameAndAlias = getImportChanges(collisioningModules);
 				this.isValid = isValid(text, requireFullMatch, conflictChecker);
 			}
 		}
@@ -650,7 +679,7 @@ public class ReferenceResolutionFinder {
 			return null;
 		}
 
-		private NameAndAlias getImportChanges() {
+		private NameAndAlias getImportChanges(Set<QualifiedName> collisioningModules) {
 			if (isPropertyAccess) {
 				return null;
 			}
@@ -663,7 +692,7 @@ public class ReferenceResolutionFinder {
 				return null;
 			}
 
-			QualifiedName importName = getImportName();
+			QualifiedName importName = getImportName(collisioningModules);
 
 			if (importName == null) {
 				return null;
@@ -699,10 +728,8 @@ public class ReferenceResolutionFinder {
 		}
 
 		/** Return fully qualified name (= module specifier + element name) of the element to be imported. */
-		private QualifiedName getImportName() {
-			QualifiedName candidateModuleQN = candidate.getQualifiedName().getSegmentCount() >= 2
-					? candidate.getQualifiedName().skipLast(1)
-					: null;
+		private QualifiedName getImportName(Set<QualifiedName> collisioningModules) {
+			QualifiedName candidateModuleQN = getQualifiedNameOfModule(candidate);
 			String candidateModuleQNStr = candidateModuleQN != null
 					? qualifiedNameConverter.toString(candidateModuleQN)
 					: null;
@@ -716,10 +743,12 @@ public class ReferenceResolutionFinder {
 				String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
 				candidateName = projectName.toQualifiedName().append(lastSegmentOfQFN);
 
-			} else if (candidateProjectOrNull != null
-					&& (projectType == ProjectType.PLAINJS || projectType == ProjectType.DEFINITION)) {
-				// use complete module specifier when importing from PLAINJS or DEFINITION project
-				// (i.e. prepend project name)
+			} else if (candidateProjectOrNull != null && (projectType == ProjectType.PLAINJS
+					|| projectType == ProjectType.DEFINITION
+					|| collisioningModules.contains(candidateModuleQN))) {
+				// use complete module specifier (i.e. prepend project name) when importing
+				// from PLAINJS or DEFINITION project
+				// OR when the imported module is clashing with another module that is equally named
 				N4JSPackageName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
 				candidateName = projectName.toQualifiedName().append(candidate.getQualifiedName());
 
@@ -745,6 +774,12 @@ public class ReferenceResolutionFinder {
 		public boolean isNamespace() {
 			return accessType == CandidateAccessType.namespace;
 		}
+	}
+
+	private static QualifiedName getQualifiedNameOfModule(IEObjectDescription descr) {
+		return descr.getQualifiedName().getSegmentCount() >= 2
+				? descr.getQualifiedName().skipLast(1)
+				: null;
 	}
 
 	/**

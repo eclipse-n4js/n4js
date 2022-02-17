@@ -47,7 +47,7 @@ class MultipleModulesScopingTest extends AbstractIdeTest {
 			]
 		);
 		startAndWaitForLspServer();
-		assertIssues("Client" -> #["(Error, [0:19 - 0:27], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: P1/Module, P2/Module.)"]);
+		assertIssues("Client" -> #["(Error, [0:19 - 0:27], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: yarn-test-project/packages/P1/src/Module.n4js, yarn-test-project/packages/P2/src/Module.n4js.)"]);
 	}
 
 	@Test
@@ -82,7 +82,7 @@ class MultipleModulesScopingTest extends AbstractIdeTest {
 			]
 		);
 		startAndWaitForLspServer();
-		assertIssues("Client" -> #["(Error, [0:19 - 0:27], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: P1/Module, PLAINJS/Module.)"]);
+		assertIssues("Client" -> #["(Error, [0:19 - 0:27], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: yarn-test-project/packages/P1/src/Module.n4jsd, yarn-test-project/packages/PLAINJS/Module.js.)"]);
 	}
 
 	@Test
@@ -122,7 +122,9 @@ class MultipleModulesScopingTest extends AbstractIdeTest {
 			]
 		);
 		startAndWaitForLspServer();
-		assertIssues("Client" -> #["(Error, [0:19 - 0:27], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/Module, test-project/Module.)"]);
+		assertIssues(
+			"Module" -> #["(Error, [0:0 - 0:19], A duplicate module Module is also defined in test-project/src-js/Module.js.)"],
+			"Client" -> #["(Error, [0:19 - 0:27], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/src-js/Module.js, test-project/src/Module.n4js.)"]);
 	}
 
 	@Test
