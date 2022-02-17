@@ -253,6 +253,8 @@ public class XStatefulIncrementalBuilder {
 			}
 		}
 
+		request.afterBuildFile(source);
+
 		IResourceDescription old = context.getOldIndex().getResourceDescription(source);
 		return manager.createDelta(old, copiedDescription);
 	}
