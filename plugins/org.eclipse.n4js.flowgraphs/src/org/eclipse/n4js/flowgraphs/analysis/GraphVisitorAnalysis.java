@@ -25,8 +25,8 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  * Contains algorithms that start {@link GraphVisitorInternal}s using the {@link GraphVisitorGuideInternal}.
  */
 public class GraphVisitorAnalysis {
-	final N4JSFlowAnalyser flowAnalyzer;
-	final FlowGraph cfg;
+	private final N4JSFlowAnalyser flowAnalyzer;
+	private final FlowGraph cfg;
 	private boolean forwardAnalysisDone = false;
 
 	/** Constructor */
