@@ -23,7 +23,7 @@ import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.n4js.cli.N4jscConsole;
 import org.eclipse.n4js.ide.client.AbstractN4JSLanguageClient;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildListener;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildRequestListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
 import org.eclipse.n4js.xtext.ide.server.issues.DiagnosticComparator;
 
@@ -36,7 +36,7 @@ import com.google.inject.Singleton;
  * Overrides the lsp {@link LanguageClient} callback when used as a CLI utility
  */
 @Singleton
-public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements AfterBuildListener {
+public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements AfterBuildRequestListener {
 
 	private Multimap<String, Diagnostic> diagnostics;
 	private long genCount = 0;
@@ -76,7 +76,7 @@ public class N4jscLanguageClient extends AbstractN4JSLanguageClient implements A
 	}
 
 	@Override
-	public synchronized void afterBuild(XBuildRequest request, XBuildResult result) {
+	public synchronized void afterBuildRequest(XBuildRequest request, XBuildResult result) {
 		// build is done, print all received diagnostics sorted by their file location
 		if (diagnostics != null) {
 			for (Map.Entry<String, Collection<Diagnostic>> entry : diagnostics.asMap().entrySet()) {

@@ -122,11 +122,6 @@ public class N4JSFlowAnalyser {
 		}
 	}
 
-	/** @return the underlying control flow graph */
-	public FlowGraph getControlFlowGraph() {
-		return cfg;
-	}
-
 	/** @return the {@link SymbolFactory} */
 	public SymbolFactory getSymbolFactory() {
 		return symbolFactory;
@@ -295,6 +290,10 @@ public class N4JSFlowAnalyser {
 
 	/** Resets all cached data of the CFG */
 	public void reset() {
+		if (cfg != null) {
+			cfg.reset();
+		}
+
 		symbolFactory = null;
 		cfg = null;
 		dpa = null;

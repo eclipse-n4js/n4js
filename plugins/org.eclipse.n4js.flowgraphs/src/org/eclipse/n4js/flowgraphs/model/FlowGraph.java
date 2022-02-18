@@ -27,7 +27,7 @@ import org.eclipse.n4js.n4JS.Script;
 public class FlowGraph {
 	final private Script script;
 	final private Set<ControlFlowElement> cfContainers;
-	final private Map<ControlFlowElement, ComplexNode> cnMap;
+	final private Map<ControlFlowElement, ComplexNode> cnMap; // this map can grow very large
 
 	/** Constructor. */
 	public FlowGraph(Script script, Set<ControlFlowElement> cfContainers,
@@ -46,11 +46,6 @@ public class FlowGraph {
 	/** @return the URI String of the script of this {@link FlowGraph} */
 	public String getScriptName() {
 		return script.eResource().getURI().toString();
-	}
-
-	/** @return all {@link ComplexNode}s of the script. */
-	public Map<ControlFlowElement, ComplexNode> getMap() {
-		return cnMap;
 	}
 
 	/** @return the {@link ComplexNode} for the given {@link ControlFlowElement} cfe. */
@@ -79,4 +74,9 @@ public class FlowGraph {
 		return containerList;
 	}
 
+	/** Call to free memory */
+	public void reset() {
+		cfContainers.clear();
+		cnMap.clear();
+	}
 }

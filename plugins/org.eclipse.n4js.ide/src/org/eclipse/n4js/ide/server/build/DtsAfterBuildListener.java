@@ -25,7 +25,7 @@ import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildListener;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildRequestListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
 
 import com.google.common.collect.ImmutableSet;
@@ -38,7 +38,7 @@ import com.google.gson.JsonElement;
  * <li/>a ts.config file in the project folder and that this file contains correct information.
  * </ul>
  */
-public class DtsAfterBuildListener implements AfterBuildListener {
+public class DtsAfterBuildListener implements AfterBuildRequestListener {
 	private final Logger LOGGER = Logger.getLogger(this.getClass());
 
 	final N4JSProjectConfigSnapshot projectConfig;
@@ -51,7 +51,7 @@ public class DtsAfterBuildListener implements AfterBuildListener {
 	}
 
 	@Override
-	public void afterBuild(XBuildRequest request, XBuildResult result) {
+	public void afterBuildRequest(XBuildRequest request, XBuildResult result) {
 		try {
 			if (request.canGenerate()) {
 				ensureTSConfig();

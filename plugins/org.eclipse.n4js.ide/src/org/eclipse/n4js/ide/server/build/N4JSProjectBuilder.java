@@ -20,9 +20,12 @@ import java.util.Set;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
+import org.eclipse.n4js.postprocessing.ASTFlowInfo;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.tooling.tester.TestCatalogSupplier;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.URIUtils;
@@ -94,8 +97,18 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 		ProjectDescription pd = getProjectConfig().getProjectDescription();
 		if (N4JSLanguageUtils.isDtsGenerationActive(pd)) {
-			request.addAfterBuildListener(new DtsAfterBuildListener(getProjectConfig()));
+			request.addAfterBuildRequestListener(new DtsAfterBuildListener(getProjectConfig()));
 		}
+
+		request.addAfterBuildFileListener((uri) -> {
+			Resource resource = getResource(uri);
+			if (resource instanceof N4JSResource) {
+				N4JSResource n4jsResource = (N4JSResource) resource;
+				ASTFlowInfo flowInfo = n4jsResource.getASTMetaInfoCache().getFlowInfo();
+				flowInfo.reset(); // release memory
+			}
+		});
+
 		return request;
 	}
 

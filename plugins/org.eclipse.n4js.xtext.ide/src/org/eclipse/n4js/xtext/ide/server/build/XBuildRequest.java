@@ -80,10 +80,16 @@ public class XBuildRequest {
 		void afterDelete(URI file);
 	}
 
+	/** Listener for the build done of a single file events */
+	public static interface AfterBuildFileListener {
+		/** Called after a file was built */
+		void afterBuildFile(URI file);
+	}
+
 	/** Listener for the entire build */
-	public static interface AfterBuildListener {
-		/** Called after the build was done, if (and only if) it completed normally */
-		void afterBuild(XBuildRequest request, XBuildResult result);
+	public static interface AfterBuildRequestListener {
+		/** Called after the build request was done, if (and only if) it completed normally */
+		void afterBuildRequest(XBuildRequest request, XBuildResult result);
 	}
 
 	private List<AfterValidateListener> afterValidateListeners;
@@ -94,7 +100,9 @@ public class XBuildRequest {
 
 	private List<AffectedListener> affectedListeners;
 
-	private List<AfterBuildListener> afterBuildListeners;
+	private List<AfterBuildFileListener> afterBuildFileListeners;
+
+	private List<AfterBuildRequestListener> afterBuildRequestListeners;
 
 	/** Create a new instance. Use {@link IBuildRequestFactory} instead! */
 	public XBuildRequest(String projectName) {
@@ -229,23 +237,44 @@ public class XBuildRequest {
 	}
 
 	/**
+	 * Attach an after build file listener to the requested build.
+	 */
+	public void addAfterBuildFileListener(AfterBuildFileListener listener) {
+		if (afterBuildFileListeners == null) {
+			afterBuildFileListeners = new ArrayList<>();
+		}
+		afterBuildFileListeners.add(Objects.requireNonNull(listener));
+	}
+
+	/**
+	 * Notify the request that a file was built with the given URI.
+	 */
+	public void afterBuildFile(URI uri) {
+		if (afterBuildFileListeners != null) {
+			for (AfterBuildFileListener listener : afterBuildFileListeners) {
+				listener.afterBuildFile(uri);
+			}
+		}
+	}
+
+	/**
 	 * Attach a build listener to the requested build.
 	 *
 	 * Attention: The most recently added build listener will be notified first. This allows to further modify the build
 	 * result while it is being passed along the listener chain.
 	 */
-	public void addAfterBuildListener(AfterBuildListener listener) {
-		if (afterBuildListeners == null) {
-			afterBuildListeners = new ArrayList<>();
+	public void addAfterBuildRequestListener(AfterBuildRequestListener listener) {
+		if (afterBuildRequestListeners == null) {
+			afterBuildRequestListeners = new ArrayList<>();
 		}
-		afterBuildListeners.add(0, Objects.requireNonNull(listener));
+		afterBuildRequestListeners.add(0, Objects.requireNonNull(listener));
 	}
 
 	/** Called after the build was done */
-	public void afterBuild(XBuildResult buildResult) {
-		if (afterBuildListeners != null) {
-			for (AfterBuildListener listener : afterBuildListeners) {
-				listener.afterBuild(this, buildResult);
+	public void afterBuildRequest(XBuildResult buildResult) {
+		if (afterBuildRequestListeners != null) {
+			for (AfterBuildRequestListener listener : afterBuildRequestListeners) {
+				listener.afterBuildRequest(this, buildResult);
 			}
 		}
 	}
