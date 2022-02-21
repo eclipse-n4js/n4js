@@ -12,8 +12,6 @@ package org.eclipse.n4js.dts.astbuilders;
 
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
-import org.eclipse.n4js.n4JS.N4JSFactory;
-import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
@@ -31,12 +29,8 @@ public class DtsNamespaceBuilder
 
 	@Override
 	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
-		result = N4JSFactory.eINSTANCE.createN4NamespaceDeclaration();
-		result.setName(ctx.namespaceName().getText());
 		boolean isExported = ParserContextUtil.isExported(ctx);
-		if (isExported) {
-			result.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		}
+		result = doCreateN4NamespaceDeclaration(ctx.namespaceName().getText(), isExported);
 		walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
 	}
 }

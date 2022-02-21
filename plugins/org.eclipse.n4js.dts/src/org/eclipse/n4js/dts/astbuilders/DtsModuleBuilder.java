@@ -10,11 +10,11 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleNameContext;
-import org.eclipse.n4js.n4JS.N4JSFactory;
-import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
+import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
@@ -22,7 +22,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link N4NamespaceDeclaration}s from {@link ModuleDeclarationContext} and all its children from
  * d.ts parse tree elements.
  */
-public class DtsModuleBuilder extends AbstractDtsNamespaceBuilder<ModuleDeclarationContext, N4ModuleDeclaration> {
+public class DtsModuleBuilder
+		extends AbstractDtsNamespaceBuilder<ModuleDeclarationContext, N4AbstractNamespaceDeclaration> {
 
 	/** Constructor. */
 	public DtsModuleBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -31,21 +32,22 @@ public class DtsModuleBuilder extends AbstractDtsNamespaceBuilder<ModuleDeclarat
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		result = N4JSFactory.eINSTANCE.createN4ModuleDeclaration();
-		String name = getModuleName(ctx.moduleName());
-		result.setName(name);
-		walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
-	}
-
-	// special: may be an Identifier or a StringLiteral
-	private static String getModuleName(ModuleNameContext ctx) {
-		if (ctx != null) {
-			if (ctx.Identifier() != null) {
-				return ctx.Identifier().getText();
-			} else if (ctx.StringLiteral() != null) {
-				return ParserContextUtil.trimStringLiteral(ctx.StringLiteral());
+		ModuleNameContext ctxName = ctx.moduleName();
+		if (ctxName != null) {
+			TerminalNode strLit = ctxName.StringLiteral();
+			if (strLit != null) {
+				// it is actually a module declaration
+				result = doCreateModuleDeclaration(ParserContextUtil.trimStringLiteral(strLit));
+				walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+			} else {
+				TerminalNode identifier = ctxName.Identifier();
+				if (identifier != null) {
+					// it is a legacy "module" that acts like a namespace
+					boolean isExported = ParserContextUtil.isExported(ctx);
+					result = doCreateN4NamespaceDeclaration(identifier.getText(), isExported);
+					walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+				}
 			}
 		}
-		return null;
 	}
 }

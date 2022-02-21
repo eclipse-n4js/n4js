@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
@@ -113,8 +114,14 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		N4ModuleDeclaration nd = moduleBuilder.consume(ctx);
-		addToScript(nd);
+		N4AbstractNamespaceDeclaration d = moduleBuilder.consume(ctx);
+		if (d instanceof N4ModuleDeclaration) {
+			N4ModuleDeclaration md = (N4ModuleDeclaration) d;
+			addToScript(md);
+		} else {
+			N4NamespaceDeclaration nd = (N4NamespaceDeclaration) d;
+			addAndHandleExported(ctx, nd);
+		}
 	}
 
 	@Override

@@ -35,7 +35,10 @@ import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
+import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
@@ -55,6 +58,23 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext, R
 	/** Constructor */
 	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
+	}
+
+	/** Creates a {@link N4ModuleDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
+	protected N4ModuleDeclaration doCreateModuleDeclaration(String name) {
+		N4ModuleDeclaration moduleDecl = N4JSFactory.eINSTANCE.createN4ModuleDeclaration();
+		moduleDecl.setName(name);
+		return moduleDecl;
+	}
+
+	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
+	protected N4NamespaceDeclaration doCreateN4NamespaceDeclaration(String name, boolean isExported) {
+		N4NamespaceDeclaration nsDecl = N4JSFactory.eINSTANCE.createN4NamespaceDeclaration();
+		nsDecl.setName(name);
+		if (isExported) {
+			nsDecl.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		}
+		return nsDecl;
 	}
 
 	@Override
