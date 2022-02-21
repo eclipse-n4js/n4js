@@ -280,7 +280,7 @@ public class XIndexer {
 		try {
 			this.compilerPhases.setIndexing(context.getResourceSet(), true);
 			List<IResourceDescription.Delta> result = new ArrayList<>();
-			List<Delta> deltas = context.executeClustered(changedURIs,
+			List<Delta> deltas = context.executeClustered(changedURIs, false,
 					loadResult -> addToIndex(loadResult, true, oldIndex, context));
 			for (IResourceDescription.Delta delta : deltas) {
 				if (delta != null) {

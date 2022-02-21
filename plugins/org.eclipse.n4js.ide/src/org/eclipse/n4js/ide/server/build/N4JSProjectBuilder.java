@@ -106,6 +106,9 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 				N4JSResource n4jsResource = (N4JSResource) resource;
 				ASTFlowInfo flowInfo = n4jsResource.getASTMetaInfoCache().getFlowInfo();
 				flowInfo.reset(); // release memory
+
+				n4jsResource.clearLazyProxyInformation();
+				n4jsResource.unloadAST();
 			}
 		});
 
