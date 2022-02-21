@@ -36,6 +36,7 @@ import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.xtext.AbstractElement;
@@ -410,6 +411,10 @@ public class N4JSLinker extends LazyLinker {
 	 */
 	@Override
 	protected EClass findInstantiableCompatible(EClass eType) {
+		// FIXME this is bad; #createProxy() above should be able to create proxies for abstract classes
+		if (eType == TypesPackage.Literals.ABSTRACT_MODULE) {
+			return TypesPackage.Literals.TMODULE;
+		}
 		if (!isInstantiatableSubType(eType, eType)) {
 			throw new IllegalStateException(String.valueOf(eType));
 			// TODO: check local Package
