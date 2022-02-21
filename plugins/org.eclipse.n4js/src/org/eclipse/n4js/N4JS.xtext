@@ -198,7 +198,7 @@ fragment ExportDeclarationImpl *:
 ;
 
 fragment ExportFromClause*:
-	'from' reexportedFrom=[types::TModule|ModuleSpecifier]
+	'from' reexportedFrom=[types::AbstractModule|ModuleSpecifier]
 ;
 
 fragment ExportClause*:
@@ -277,7 +277,7 @@ ImportDeclaration:
 fragment ImportDeclarationImpl*:
 	'import' (
 		ImportClause importFrom?='from'
-	)? module=[types::TModule|ModuleSpecifier] Semi
+	)? module=[types::AbstractModule|ModuleSpecifier] Semi
 ;
 
 fragment ImportClause returns ImportDeclaration:

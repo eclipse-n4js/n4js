@@ -9054,7 +9054,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getExportDeclaration_NamedExports(), this.getExportSpecifier(), null, "namedExports", null, 0, -1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExportDeclaration_WildcardExport(), theEcorePackage.getEBoolean(), "wildcardExport", null, 0, 1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExportDeclaration_DefaultExport(), theEcorePackage.getEBoolean(), "defaultExport", null, 0, 1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getExportDeclaration_ReexportedFrom(), theTypesPackage.getTModule(), null, "reexportedFrom", null, 0, 1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExportDeclaration_ReexportedFrom(), theTypesPackage.getAbstractModule(), null, "reexportedFrom", null, 0, 1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getExportDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -9081,7 +9081,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(importDeclarationEClass, ImportDeclaration.class, "ImportDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getImportDeclaration_ImportSpecifiers(), this.getImportSpecifier(), null, "importSpecifiers", null, 0, -1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportDeclaration_ImportFrom(), theEcorePackage.getEBoolean(), "importFrom", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getImportDeclaration_Module(), theTypesPackage.getTModule(), null, "module", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getImportDeclaration_Module(), theTypesPackage.getAbstractModule(), null, "module", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportDeclaration_ModuleSpecifierAsText(), theEcorePackage.getEString(), "moduleSpecifierAsText", null, 0, 1, ImportDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportDeclaration_ModuleSpecifierForm(), this.getModuleSpecifierForm(), "moduleSpecifierForm", null, 0, 1, ImportDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

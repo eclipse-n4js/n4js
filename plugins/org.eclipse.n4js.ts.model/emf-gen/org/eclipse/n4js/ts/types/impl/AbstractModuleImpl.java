@@ -33,6 +33,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractModuleImpl#getAstElement <em>Ast Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractModuleImpl#getSimpleName <em>Simple Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractModuleImpl#getQualifiedName <em>Qualified Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractModuleImpl#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
  * @generated
@@ -87,6 +88,16 @@ public abstract class AbstractModuleImpl extends AbstractNamespaceImpl implement
 	 * @ordered
 	 */
 	protected String qualifiedName = QUALIFIED_NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getModuleSpecifier() <em>Module Specifier</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModuleSpecifier()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String MODULE_SPECIFIER_EDEFAULT = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -199,6 +210,16 @@ public abstract class AbstractModuleImpl extends AbstractNamespaceImpl implement
 	 * @generated
 	 */
 	@Override
+	public String getModuleSpecifier() {
+		return this.getQualifiedName();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.ABSTRACT_MODULE__AST_ELEMENT:
@@ -208,6 +229,8 @@ public abstract class AbstractModuleImpl extends AbstractNamespaceImpl implement
 				return getSimpleName();
 			case TypesPackage.ABSTRACT_MODULE__QUALIFIED_NAME:
 				return getQualifiedName();
+			case TypesPackage.ABSTRACT_MODULE__MODULE_SPECIFIER:
+				return getModuleSpecifier();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -268,6 +291,8 @@ public abstract class AbstractModuleImpl extends AbstractNamespaceImpl implement
 				return SIMPLE_NAME_EDEFAULT == null ? simpleName != null : !SIMPLE_NAME_EDEFAULT.equals(simpleName);
 			case TypesPackage.ABSTRACT_MODULE__QUALIFIED_NAME:
 				return QUALIFIED_NAME_EDEFAULT == null ? qualifiedName != null : !QUALIFIED_NAME_EDEFAULT.equals(qualifiedName);
+			case TypesPackage.ABSTRACT_MODULE__MODULE_SPECIFIER:
+				return MODULE_SPECIFIER_EDEFAULT == null ? getModuleSpecifier() != null : !MODULE_SPECIFIER_EDEFAULT.equals(getModuleSpecifier());
 		}
 		return super.eIsSet(featureID);
 	}

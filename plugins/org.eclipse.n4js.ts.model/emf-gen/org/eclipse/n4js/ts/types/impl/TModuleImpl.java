@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -26,6 +28,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.RuntimeDependency;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
@@ -63,7 +66,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getTemporaryTypes <em>Temporary Types</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
  * @generated
@@ -368,16 +370,6 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 	 * @ordered
 	 */
 	protected EList<Type> temporaryTypes;
-
-	/**
-	 * The default value of the '{@link #getModuleSpecifier() <em>Module Specifier</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getModuleSpecifier()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final String MODULE_SPECIFIER_EDEFAULT = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -764,8 +756,8 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 	 * @generated
 	 */
 	@Override
-	public String getModuleSpecifier() {
-		return this.getQualifiedName();
+	public TModule getContainingModule() {
+		return this;
 	}
 
 	/**
@@ -842,8 +834,6 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 				return getComposedMemberCaches();
 			case TypesPackage.TMODULE__TEMPORARY_TYPES:
 				return getTemporaryTypes();
-			case TypesPackage.TMODULE__MODULE_SPECIFIER:
-				return getModuleSpecifier();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -1051,8 +1041,6 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 				return composedMemberCaches != null && !composedMemberCaches.isEmpty();
 			case TypesPackage.TMODULE__TEMPORARY_TYPES:
 				return temporaryTypes != null && !temporaryTypes.isEmpty();
-			case TypesPackage.TMODULE__MODULE_SPECIFIER:
-				return MODULE_SPECIFIER_EDEFAULT == null ? getModuleSpecifier() != null : !MODULE_SPECIFIER_EDEFAULT.equals(getModuleSpecifier());
 		}
 		return super.eIsSet(featureID);
 	}
@@ -1087,6 +1075,41 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == AbstractNamespace.class) {
+			switch (baseOperationID) {
+				case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE: return TypesPackage.TMODULE___GET_CONTAINING_MODULE;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == TAnnotableElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.TMODULE___GET_CONTAINING_MODULE:
+				return getContainingModule();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

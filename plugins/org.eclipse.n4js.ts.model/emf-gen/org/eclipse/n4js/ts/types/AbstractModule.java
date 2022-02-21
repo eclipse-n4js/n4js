@@ -22,6 +22,7 @@ package org.eclipse.n4js.ts.types;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractModule#getSimpleName <em>Simple Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractModule#getQualifiedName <em>Qualified Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.AbstractModule#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractModule()
@@ -83,5 +84,26 @@ public interface AbstractModule extends AbstractNamespace, SyntaxRelatedTElement
 	 * @generated
 	 */
 	void setQualifiedName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Module Specifier</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Returns this module's module specifier as it would appear, for example, in the string literal at the end of an
+	 * import statement.
+	 * <p>
+	 * Since we changed the delimiter for our internal qualified names from '.' to '/', this simply returns the same
+	 * value as {@link #getQualifiedName()}. However, this getter is retained for the time being to let client code
+	 * differentiate between internal use (qualified name, e.g. in the Xtext index) and Javascript context (module
+	 * specifier, e.g. in import statements).
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Module Specifier</em>' attribute.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractModule_ModuleSpecifier()
+	 * @model unique="false" transient="true" changeable="false" volatile="true" derived="true"
+	 * @generated
+	 */
+	String getModuleSpecifier();
 
 } // AbstractModule

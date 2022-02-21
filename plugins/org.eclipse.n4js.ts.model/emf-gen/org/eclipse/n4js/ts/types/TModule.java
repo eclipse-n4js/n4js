@@ -45,7 +45,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTemporaryTypes <em>Temporary Types</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule()
@@ -507,24 +506,16 @@ public interface TModule extends AbstractModule, TAnnotableElement {
 	EList<Type> getTemporaryTypes();
 
 	/**
-	 * Returns the value of the '<em><b>Module Specifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Returns this module's module specifier as it would appear, for example, in the string literal at the end of an
-	 * import statement.
-	 * <p>
-	 * Since we changed the delimiter for our internal qualified names from '.' to '/', this simply returns the same
-	 * value as {@link #getQualifiedName()}. However, this getter is retained for the time being to let client code
-	 * differentiate between internal use (qualified name, e.g. in the Xtext index) and Javascript context (module
-	 * specifier, e.g. in import statements).
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Module Specifier</em>' attribute.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ModuleSpecifier()
-	 * @model unique="false" transient="true" changeable="false" volatile="true" derived="true"
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	String getModuleSpecifier();
+	TModule getContainingModule();
 
 } // TModule

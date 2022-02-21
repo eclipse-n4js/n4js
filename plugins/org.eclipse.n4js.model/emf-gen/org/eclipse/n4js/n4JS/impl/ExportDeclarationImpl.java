@@ -36,7 +36,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 
-import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.AbstractModule;
 
 /**
  * <!-- begin-user-doc -->
@@ -135,7 +135,7 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 * @ordered
 	 */
-	protected TModule reexportedFrom;
+	protected AbstractModule reexportedFrom;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -311,10 +311,10 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
-	public TModule getReexportedFrom() {
+	public AbstractModule getReexportedFrom() {
 		if (reexportedFrom != null && reexportedFrom.eIsProxy()) {
 			InternalEObject oldReexportedFrom = (InternalEObject)reexportedFrom;
-			reexportedFrom = (TModule)eResolveProxy(oldReexportedFrom);
+			reexportedFrom = (AbstractModule)eResolveProxy(oldReexportedFrom);
 			if (reexportedFrom != oldReexportedFrom) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.EXPORT_DECLARATION__REEXPORTED_FROM, oldReexportedFrom, reexportedFrom));
@@ -328,7 +328,7 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TModule basicGetReexportedFrom() {
+	public AbstractModule basicGetReexportedFrom() {
 		return reexportedFrom;
 	}
 
@@ -338,8 +338,8 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
-	public void setReexportedFrom(TModule newReexportedFrom) {
-		TModule oldReexportedFrom = reexportedFrom;
+	public void setReexportedFrom(AbstractModule newReexportedFrom) {
+		AbstractModule oldReexportedFrom = reexportedFrom;
 		reexportedFrom = newReexportedFrom;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_DECLARATION__REEXPORTED_FROM, oldReexportedFrom, reexportedFrom));
@@ -452,7 +452,7 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				setDefaultExport((Boolean)newValue);
 				return;
 			case N4JSPackage.EXPORT_DECLARATION__REEXPORTED_FROM:
-				setReexportedFrom((TModule)newValue);
+				setReexportedFrom((AbstractModule)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -482,7 +482,7 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				setDefaultExport(DEFAULT_EXPORT_EDEFAULT);
 				return;
 			case N4JSPackage.EXPORT_DECLARATION__REEXPORTED_FROM:
-				setReexportedFrom((TModule)null);
+				setReexportedFrom((AbstractModule)null);
 				return;
 		}
 		super.eUnset(featureID);

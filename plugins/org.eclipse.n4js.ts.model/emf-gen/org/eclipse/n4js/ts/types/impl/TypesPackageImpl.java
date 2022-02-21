@@ -686,6 +686,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getAbstractModule_ModuleSpecifier() {
+		return (EAttribute)abstractModuleEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTModule() {
 		return tModuleEClass;
 	}
@@ -886,8 +896,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTModule_ModuleSpecifier() {
-		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(19);
+	public EOperation getTModule__GetContainingModule() {
+		return tModuleEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -3592,6 +3602,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		abstractModuleEClass = createEClass(ABSTRACT_MODULE);
 		createEAttribute(abstractModuleEClass, ABSTRACT_MODULE__SIMPLE_NAME);
 		createEAttribute(abstractModuleEClass, ABSTRACT_MODULE__QUALIFIED_NAME);
+		createEAttribute(abstractModuleEClass, ABSTRACT_MODULE__MODULE_SPECIFIER);
 
 		tModuleEClass = createEClass(TMODULE);
 		createEAttribute(tModuleEClass, TMODULE__PACKAGE_NAME);
@@ -3613,7 +3624,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(tModuleEClass, TMODULE__AST_MD5);
 		createEReference(tModuleEClass, TMODULE__COMPOSED_MEMBER_CACHES);
 		createEReference(tModuleEClass, TMODULE__TEMPORARY_TYPES);
-		createEAttribute(tModuleEClass, TMODULE__MODULE_SPECIFIER);
+		createEOperation(tModuleEClass, TMODULE___GET_CONTAINING_MODULE);
 
 		tNestedModuleEClass = createEClass(TNESTED_MODULE);
 
@@ -4083,6 +4094,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(abstractModuleEClass, AbstractModule.class, "AbstractModule", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getAbstractModule_SimpleName(), theEcorePackage.getEString(), "simpleName", null, 0, 1, AbstractModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAbstractModule_QualifiedName(), theEcorePackage.getEString(), "qualifiedName", null, 0, 1, AbstractModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getAbstractModule_ModuleSpecifier(), theEcorePackage.getEString(), "moduleSpecifier", null, 0, 1, AbstractModule.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
 		initEClass(tModuleEClass, TModule.class, "TModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTModule_PackageName(), theEcorePackage.getEString(), "packageName", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4104,7 +4116,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTModule_AstMD5(), theEcorePackage.getEString(), "astMD5", null, 0, 1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_ComposedMemberCaches(), this.getComposedMemberCache(), null, "composedMemberCaches", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_TemporaryTypes(), this.getType(), null, "temporaryTypes", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTModule_ModuleSpecifier(), theEcorePackage.getEString(), "moduleSpecifier", null, 0, 1, TModule.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getTModule__GetContainingModule(), this.getTModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tNestedModuleEClass, TNestedModule.class, "TNestedModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

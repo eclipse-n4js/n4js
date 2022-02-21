@@ -54,6 +54,18 @@ abstract class AbstractModule extends AbstractNamespace, SyntaxRelatedTElement {
 	 * but can be retrieved via {@link #getPackageName()}.
 	 */
 	String qualifiedName
+	/**
+	 * Returns this module's module specifier as it would appear, for example, in the string literal at the end of an
+	 * import statement.
+	 * <p>
+	 * Since we changed the delimiter for our internal qualified names from '.' to '/', this simply returns the same
+	 * value as {@link #getQualifiedName()}. However, this getter is retained for the time being to let client code
+	 * differentiate between internal use (qualified name, e.g. in the Xtext index) and Javascript context (module
+	 * specifier, e.g. in import statements).
+	 */
+	derived String moduleSpecifier get {
+		return qualifiedName
+	}
 }
 
 /**
@@ -201,25 +213,12 @@ class TModule extends AbstractModule, TAnnotableElement {
 	contains transient Type[] temporaryTypes
 
 	/**
-	 * Returns this module's module specifier as it would appear, for example, in the string literal at the end of an
-	 * import statement.
-	 * <p>
-	 * Since we changed the delimiter for our internal qualified names from '.' to '/', this simply returns the same
-	 * value as {@link #getQualifiedName()}. However, this getter is retained for the time being to let client code
-	 * differentiate between internal use (qualified name, e.g. in the Xtext index) and Javascript context (module
-	 * specifier, e.g. in import statements).
-	 */
-	derived String moduleSpecifier get {
-		return qualifiedName
-	}
-	
-	/**
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.
 	 */
-//	op TModule getContainingModule() {
-//		return this;
-//	}
+	op TModule getContainingModule() {
+		return this;
+	}
 }
 
 class TNestedModule extends AbstractModule {

@@ -224,13 +224,22 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_MODULE__QUALIFIED_NAME = ABSTRACT_NAMESPACE_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_MODULE__MODULE_SPECIFIER = ABSTRACT_NAMESPACE_FEATURE_COUNT + 3;
+
+	/**
 	 * The number of structural features of the '<em>Abstract Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_MODULE_FEATURE_COUNT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 3;
+	int ABSTRACT_MODULE_FEATURE_COUNT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -322,6 +331,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMODULE__QUALIFIED_NAME = ABSTRACT_MODULE__QUALIFIED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__MODULE_SPECIFIER = ABSTRACT_MODULE__MODULE_SPECIFIER;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -504,22 +522,13 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__TEMPORARY_TYPES = ABSTRACT_MODULE_FEATURE_COUNT + 19;
 
 	/**
-	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMODULE__MODULE_SPECIFIER = ABSTRACT_MODULE_FEATURE_COUNT + 20;
-
-	/**
 	 * The number of structural features of the '<em>TModule</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_FEATURE_COUNT = ABSTRACT_MODULE_FEATURE_COUNT + 21;
+	int TMODULE_FEATURE_COUNT = ABSTRACT_MODULE_FEATURE_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -528,7 +537,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE___GET_CONTAINING_MODULE = ABSTRACT_MODULE___GET_CONTAINING_MODULE;
+	int TMODULE___GET_CONTAINING_MODULE = ABSTRACT_MODULE_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -537,7 +546,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 0;
+	int TMODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNestedModuleImpl <em>TNested Module</em>}' class.
@@ -611,6 +620,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TNESTED_MODULE__QUALIFIED_NAME = ABSTRACT_MODULE__QUALIFIED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNESTED_MODULE__MODULE_SPECIFIER = ABSTRACT_MODULE__MODULE_SPECIFIER;
 
 	/**
 	 * The number of structural features of the '<em>TNested Module</em>' class.
@@ -12806,6 +12824,17 @@ public interface TypesPackage extends EPackage {
 	EAttribute getAbstractModule_QualifiedName();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.AbstractModule#getModuleSpecifier <em>Module Specifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Module Specifier</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractModule#getModuleSpecifier()
+	 * @see #getAbstractModule()
+	 * @generated
+	 */
+	EAttribute getAbstractModule_ModuleSpecifier();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TModule <em>TModule</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13025,15 +13054,14 @@ public interface TypesPackage extends EPackage {
 	EReference getTModule_TemporaryTypes();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getModuleSpecifier <em>Module Specifier</em>}'.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#getContainingModule() <em>Get Containing Module</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Module Specifier</em>'.
-	 * @see org.eclipse.n4js.ts.types.TModule#getModuleSpecifier()
-	 * @see #getTModule()
+	 * @return the meta object for the '<em>Get Containing Module</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TModule#getContainingModule()
 	 * @generated
 	 */
-	EAttribute getTModule_ModuleSpecifier();
+	EOperation getTModule__GetContainingModule();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TNestedModule <em>TNested Module</em>}'.
@@ -15845,6 +15873,14 @@ public interface TypesPackage extends EPackage {
 		EAttribute ABSTRACT_MODULE__QUALIFIED_NAME = eINSTANCE.getAbstractModule_QualifiedName();
 
 		/**
+		 * The meta object literal for the '<em><b>Module Specifier</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ABSTRACT_MODULE__MODULE_SPECIFIER = eINSTANCE.getAbstractModule_ModuleSpecifier();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TModuleImpl <em>TModule</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -16007,12 +16043,12 @@ public interface TypesPackage extends EPackage {
 		EReference TMODULE__TEMPORARY_TYPES = eINSTANCE.getTModule_TemporaryTypes();
 
 		/**
-		 * The meta object literal for the '<em><b>Module Specifier</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Get Containing Module</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TMODULE__MODULE_SPECIFIER = eINSTANCE.getTModule_ModuleSpecifier();
+		EOperation TMODULE___GET_CONTAINING_MODULE = eINSTANCE.getTModule__GetContainingModule();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TNestedModuleImpl <em>TNested Module</em>}' class.
