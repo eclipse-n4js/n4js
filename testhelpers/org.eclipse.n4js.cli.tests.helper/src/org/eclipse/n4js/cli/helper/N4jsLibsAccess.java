@@ -32,9 +32,6 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.json.JSON.JSONDocument;
-import org.eclipse.n4js.json.JSON.JSONObject;
-import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonProperties;
 import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.URIUtils;
@@ -44,9 +41,9 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.junit.Assert;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Predicates;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 /**
@@ -339,20 +336,20 @@ public class N4jsLibsAccess {
 			throws IOException {
 		List<N4JSPackageName> result = new ArrayList<>();
 		Path packageJsonPath = projectPath.resolve(N4JSGlobals.PACKAGE_JSON);
-		JSONDocument packageJsonDoc = JSONModelUtils.loadJSON(packageJsonPath, Charsets.UTF_8);
-		JSONObject dependenciesObj = (JSONObject) JSONModelUtils.getProperty(packageJsonDoc,
-				PackageJsonProperties.DEPENDENCIES.name).orElse(null);
-		if (dependenciesObj != null) {
-			result.addAll(dependenciesObj.getNameValuePairs().stream().map(nvp -> new N4JSPackageName(nvp.getName()))
+		JsonElement packageJsonRoot = JsonUtils.loadJson(packageJsonPath);
+		JsonObject depsObj = JsonUtils.getObjectDeep(packageJsonRoot, PackageJsonProperties.DEPENDENCIES.name);
+		if (depsObj != null) {
+			result.addAll(depsObj.entrySet().stream()
+					.map(entry -> new N4JSPackageName(entry.getKey()))
 					.collect(Collectors.toList()));
 		}
 		if (includeDevDependencies) {
-			JSONObject devDependenciesObj = (JSONObject) JSONModelUtils.getProperty(packageJsonDoc,
-					PackageJsonProperties.DEV_DEPENDENCIES.name).orElse(null);
-			if (devDependenciesObj != null) {
-				result.addAll(
-						devDependenciesObj.getNameValuePairs().stream().map(nvp -> new N4JSPackageName(nvp.getName()))
-								.collect(Collectors.toList()));
+			JsonObject devDepsObj = JsonUtils.getObjectDeep(packageJsonRoot,
+					PackageJsonProperties.DEV_DEPENDENCIES.name);
+			if (devDepsObj != null) {
+				result.addAll(devDepsObj.entrySet().stream()
+						.map(entry -> new N4JSPackageName(entry.getKey()))
+						.collect(Collectors.toList()));
 			}
 		}
 		return result;

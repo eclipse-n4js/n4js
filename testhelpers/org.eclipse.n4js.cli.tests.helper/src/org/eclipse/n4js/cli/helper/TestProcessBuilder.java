@@ -41,10 +41,9 @@ public class TestProcessBuilder {
 	}
 
 	/** @return a process: {@code node fileToRun} */
-	public ProcessBuilder nodejsRun(Path workingDirectory, Map<String, String> environment, Path fileToRun,
-			String[] options) {
-
-		final String[] cmd = createCommandNodejsRun(fileToRun, environment, options);
+	public ProcessBuilder nodejsRun(Path workingDirectory, Map<String, String> environment, String[] nodeOptions,
+			Path fileToRun, String[] options) {
+		final String[] cmd = createCommandNodejsRun(environment, nodeOptions, fileToRun, options);
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
@@ -75,12 +74,14 @@ public class TestProcessBuilder {
 		return createProcessBuilder(workingDirectory, cmd, environment);
 	}
 
-	private String[] createCommandNodejsRun(Path fileToRun, Map<String, String> output_env, String[] options) {
+	private String[] createCommandNodejsRun(Map<String, String> output_env, String[] nodeOptions, Path fileToRun,
+			String[] options) {
 		if (fileToRun == null) {
 			throw new IllegalArgumentException("run configuration does not specify a file to run");
 		}
 
 		List<String> optionList = new ArrayList<>();
+		optionList.addAll(Arrays.asList(nodeOptions));
 		optionList.add(fileToRun.toString());
 		optionList.addAll(Arrays.asList(options));
 		String[] cmdOptions = optionList.toArray(String[]::new);

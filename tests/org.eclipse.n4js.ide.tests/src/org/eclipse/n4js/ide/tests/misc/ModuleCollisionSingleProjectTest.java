@@ -474,6 +474,76 @@ public class ModuleCollisionSingleProjectTest extends AbstractIdeTest {
 		assertNoErrors();
 	}
 
+	/** */
+	@Test
+	public void testModuleNoCollisionCombinePlainJSExtensions() {
+		test(
+				Pair.of("MyModule.js", "// content does not matter"),
+				Pair.of("MyModule.cjs", "// content does not matter"),
+				Pair.of("MyModule.mjs", "// content does not matter"),
+				Pair.of("MyModule.n4jsd",
+						"export external const c: int;"));
+
+		// we do *not* want to see the following in MyModule.n4jsd:
+		// Error, [0:0 - 0:29], A duplicate module MyModule is also defined in test-project/src/MyModule.js;
+		// test-project/src/MyModule.cjs; test-project/src/MyModule.mjs.
+		assertNoIssues();
+	}
+
+	/** */
+	@Test
+	public void testModuleCollisionCombinePlainJSExtensionsTooManyPerExt() {
+		test(
+				Pair.of(CFG_SOURCE_FOLDER, ""), // manually define source folder in module names
+
+				Pair.of("src1/MyModule.js", "// content does not matter"),
+				Pair.of("src1/MyModule.cjs", "// content does not matter"),
+				Pair.of("src2/MyModule.cjs", "// content does not matter"),
+				Pair.of("src1/MyModule.n4jsd",
+						"export external const c: int;"),
+
+				Pair.of(PACKAGE_JSON,
+						"{\n"
+								+ "	\"name\": \"test-project\",\n"
+								+ "	\"version\": \"0.0.1\",\n"
+								+ "	\"dependencies\": {\n"
+								+ "        \"n4js-runtime\": \"*\"\n"
+								+ "	},"
+								+ "	\"n4js\": {\n"
+								+ "		\"projectType\": \"library\",\n"
+								+ "		\"vendorId\": \"org.eclipse.n4js\",\n"
+								+ "		\"vendorName\": \"Eclipse N4JS Project\",\n"
+								+ "		\"output\": \"src-gen\",\n"
+								+ "		\"sources\": {\n"
+								+ "			\"source\": [\n"
+								+ "				\"src1\",\n"
+								+ "				\"src2\"\n"
+								+ "			]\n"
+								+ "		}\n"
+								+ "	}\n"
+								+ "}")
+
+		);
+
+		assertIssues(
+				Pair.of("MyModule.n4jsd", List.of(
+						"(Error, [0:0 - 0:29], A duplicate module MyModule is also defined in test-project/src1/MyModule.cjs; test-project/src1/MyModule.js; test-project/src2/MyModule.cjs.)")));
+	}
+
+	/** */
+	@Test
+	public void testModuleCollisionCombineJSAndJSX() {
+		test(
+				Pair.of("MyModule.js", "// content does not matter"),
+				Pair.of("MyModule.jsx", "// content does not matter"),
+				Pair.of("MyModule.n4jsd",
+						"export external const c: int;"));
+
+		assertIssues(
+				Pair.of("MyModule.n4jsd", List.of(
+						"(Error, [0:0 - 0:29], A duplicate module MyModule is also defined in test-project/src/MyModule.js; test-project/src/MyModule.jsx.)")));
+	}
+
 	@SafeVarargs
 	final void test(Pair<String, String>... projectsModulesContents) {
 		testWorkspaceManager.createTestProjectOnDisk(projectsModulesContents);

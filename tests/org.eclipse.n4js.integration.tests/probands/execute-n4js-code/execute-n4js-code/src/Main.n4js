@@ -1,0 +1,43 @@
+/**
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { A, B } from "SomeModule"
+import { N4Injector } from "n4js/lang/N4Injector";
+
+
+
+// Due to how the bundling of "n4js-runtime" works (see script ".../n4js-runtime/npm-bundle.sh")
+// it is important that we test functionality from both N4BuiltInTypes.n4js and N4Injector.n4js.
+
+
+
+console.log("Test of the implementation of built-in types:");
+
+const type = N4Type.of(A);
+console.log("FQN of type A:", type.fqn);
+
+
+
+
+console.log("Test of dependency injection:")
+
+@Binder
+@Bind(A,B)
+class MyBindings {}
+
+@GenerateInjector
+@UseBinder(MyBindings)
+export class Root {
+    @Inject a: A;
+}
+
+var root = N4Injector.of(Root).create(Root);
+root.a.greet();

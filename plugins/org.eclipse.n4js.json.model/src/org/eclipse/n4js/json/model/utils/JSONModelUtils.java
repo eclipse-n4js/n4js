@@ -43,6 +43,7 @@ import org.eclipse.n4js.json.JSON.JSONPackage;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.json.JSON.JSONValue;
 import org.eclipse.n4js.json.JSON.NameValuePair;
+import org.eclipse.n4js.utils.JsonUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils.ParseResult;
@@ -50,6 +51,7 @@ import org.eclipse.xtext.resource.SaveOptions;
 import org.eclipse.xtext.serializer.ISerializer;
 
 import com.google.common.base.Strings;
+import com.google.gson.JsonParser;
 
 /**
  * Utility methods for more convenient access to elements of the {@link JSONPackage} model.
@@ -570,7 +572,10 @@ public class JSONModelUtils {
 
 	/**
 	 * Same as {@link #parseJSON(String)}, but reads the source from a file on disk at the given path.
+	 *
+	 * @deprecated because it relies on Xtext setup; use {@link JsonUtils#loadJson(Path)} instead.
 	 */
+	@Deprecated
 	public static JSONDocument loadJSON(Path path, Charset cs) throws IOException {
 		try (BufferedReader in = Files.newBufferedReader(path, cs)) {
 			ParseResult<JSONDocument> result = N4LanguageUtils.parseXtextLanguage(FILE_EXTENSION, null,
@@ -583,7 +588,11 @@ public class JSONModelUtils {
 	 * Parses the given string as a JSON document. Returns <code>null</code> in case of syntax errors. If more
 	 * fine-grained error handling is needed, use {@link N4LanguageUtils#parseXtextLanguage(String, Class, String)}
 	 * instead.
+	 *
+	 * @deprecated because it relies on Xtext setup; use {@link JsonParser#parse(String)} or methods from
+	 *             {@link JsonUtils} instead.
 	 */
+	@Deprecated
 	public static JSONDocument parseJSON(String jsonString) {
 		ParseResult<JSONDocument> result = N4LanguageUtils.parseXtextLanguage(FILE_EXTENSION, JSONDocument.class,
 				jsonString);

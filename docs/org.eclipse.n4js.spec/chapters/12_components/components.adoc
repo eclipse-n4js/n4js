@@ -207,6 +207,7 @@ workspaces ::
   "member projects" of the yarn workspace.
 
 
+[[sec:N4JS-Properties]]
 === N4JS Properties
 
 In addition to the standard properties above, there is a single N4JS-specific
@@ -345,6 +346,10 @@ generator::
   (object) Defines various properties of the n4js generator.
 source-maps:::
   (boolean) Iff false, no source maps will be emitted.
+rewriteModuleSpecifiers:::
+  (object) Each key/value pair of this object defines a mapping of a module specifier: the key is the module specifier as used in the N4JS source code by the programmer, and the value defines the module specifier the transpiler should emit to the output code.
+rewriteCjsImports:::
+  (boolean) Iff true, the N4JS transpiler will emit special interoperability code whenever an N4JS file imports something from a CommonJS module: named and namespace imports are changed to a default import with destructuring (as recommended by node.js).
 d.ts:::
   (boolean) Iff true, TypeScript d.ts files will be created for all n4js files.
 
@@ -352,16 +357,18 @@ d.ts:::
 All properties described above are optional. The following default values apply:
 
 |===
-| *Property*  | *Default Value*
-| name        | name of the folder containing the `package.json` file
-| version     | "0.0.1"
-| projectType | "plainjs"
-| vendorId    | "vendor.default"
-| mainModule  | "index"
-| output      | "."
-| sources     | a single source-container of type "source" with path "." (except for yarn workspace roots, see below)
-| source-maps | true
-| d.ts        | false
+| *Property*              | *Default Value*
+| name                    | name of the folder containing the `package.json` file
+| version                 | "0.0.1"
+| projectType             | "plainjs"
+| vendorId                | "vendor.default"
+| mainModule              | "index"
+| output                  | "."
+| sources                 | a single source-container of type "source" with path "." (except for yarn workspace roots, see below)
+| source-maps             | true
+| rewriteModuleSpecifiers | no mappings
+| rewriteCjsImports       | false
+| d.ts                    | false
 |===
 
 All other properties are undefined if not given in the `package.json` file. The default source folder of "." does not
