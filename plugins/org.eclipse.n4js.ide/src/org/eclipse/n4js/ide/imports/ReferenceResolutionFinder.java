@@ -33,8 +33,8 @@ import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
 import org.eclipse.n4js.scoping.members.WrongTypingStrategyDescription;
 import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
-import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
@@ -545,7 +545,7 @@ public class ReferenceResolutionFinder {
 			}
 
 			ModuleNamespaceVirtualType mnvt = (ModuleNamespaceVirtualType) eObject;
-			TModule module = mnvt.getModule();
+			AbstractModule module = mnvt.getModule();
 			if (module == null) {
 				return candidateViaScope;
 			}

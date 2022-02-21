@@ -21,7 +21,7 @@ class N4JSModuleDeclarationTypesBuilder {
 
 	@Inject protected extension N4JSTypesBuilderHelper
 
-	def package boolean relinkTNamespace(N4ModuleDeclaration n4ModuleDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
+	def package boolean relinkTNestedModule(N4ModuleDeclaration n4ModuleDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
 		if (n4ModuleDecl.name === null) { // may be null due to syntax errors
 			return false;
 		}
@@ -42,7 +42,7 @@ class N4JSModuleDeclarationTypesBuilder {
 
 		val module = TypesFactory::eINSTANCE.createTNestedModule();
 		val nameInAST = n4ModuleDecl.name; // may contain more than one segment
-		module.simpleName = nameInAST.substring(nameInAST.lastIndexOf(N4JSQualifiedNameConverter.DELIMITER));
+		module.simpleName = nameInAST.substring(nameInAST.lastIndexOf(N4JSQualifiedNameConverter.DELIMITER) + 1);
 		module.qualifiedName = nameInAST;
 
 		module.astElement = n4ModuleDecl;

@@ -874,7 +874,7 @@ class ModuleNamespaceVirtualType extends Type, SyntaxRelatedTElement {
 	/*
 	 * reference to module which give namespace represents
 	 */
-	refers TModule module
+	refers AbstractModule module
 
 	/**
 	 * If true, tmodule behaves like a dynamic type enabling access to plain js

@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.MethodDeclaration
+import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
@@ -320,7 +321,7 @@ public class N4JSTypesBuilder {
 
 	def protected dispatch int relinkType(N4ModuleDeclaration n4ModuleDecl, AbstractNamespace target, boolean preLinkingPhase,
 		int idx) {
-		if (n4ModuleDecl.relinkTNamespace(target, preLinkingPhase, idx)) {
+		if (n4ModuleDecl.relinkTNestedModule(target, preLinkingPhase, idx)) {
 			return idx + 1;
 		}
 		return idx;
@@ -405,9 +406,9 @@ public class N4JSTypesBuilder {
 	def private void buildTypes(EObject container, AbstractNamespace target, boolean preLinkingPhase) {
 		for (n : container.eContents) {
 			switch n {
-				N4NamespaceDeclaration: {
+				N4AbstractNamespaceDeclaration: {
 					n.createType(target, preLinkingPhase);
-					val namespaceType = n.definedType as TNamespace;
+					val AbstractNamespace namespaceType = if (n instanceof N4NamespaceDeclaration) n.definedType as TNamespace else (n as N4ModuleDeclaration).definedModule;
 					if (namespaceType !== null) {
 						// can be null in broken ASTs
 						buildTypes(n, namespaceType, preLinkingPhase);

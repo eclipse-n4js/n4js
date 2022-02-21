@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSLanguageConstants;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TConstableElement;
@@ -25,9 +24,11 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
+import org.eclipse.n4js.ts.types.TNestedModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
+import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -214,14 +215,17 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (eObject instanceof TModule) {
 			TModule module = (TModule) eObject;
 			internalCreateEObjectDescriptionForRoot(module, acceptor);
-			for (TNamespace namespace : module.getNamespaces()) {
-				internalCreateEObjectDescription(namespace, acceptor);
-			}
 			for (Type type : module.getTypes()) {
 				internalCreateEObjectDescription(type, acceptor);
 			}
 			for (TVariable variable : module.getVariables()) {
 				internalCreateEObjectDescription(variable, acceptor);
+			}
+			for (TNamespace namespace : module.getNamespaces()) {
+				internalCreateEObjectDescription(namespace, acceptor);
+			}
+			for (TNestedModule nestedModule : TypeModelUtils.getAllNestedModules(module)) {
+				internalCreateEObjectDescriptionForNestedModule(nestedModule, acceptor);
 			}
 		}
 		// export is only possible for top-level elements
@@ -341,6 +345,20 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		acceptor.accept(eod);
 	}
 
+	private void internalCreateEObjectDescriptionForNestedModule(final TNestedModule module,
+			IAcceptor<IEObjectDescription> acceptor) {
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(module);
+		if (qualifiedName == null) {
+			return; // syntax error, etc.
+		}
+
+		Map<String, String> userData = new HashMap<>();
+		addLocationUserData(userData, module);
+
+		IEObjectDescription eod = new EObjectDescription(qualifiedName, module, userData);
+		acceptor.accept(eod);
+	}
+
 	private Map<String, String> createModuleUserData(final TModule module) {
 		// TODO GH-230 consider disallowing serializing reconciled modules to index with fail-safe behavior:
 		// if (module.isPreLinkingPhase() || module.isReconciled()) {
@@ -401,7 +419,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		}
 	}
 
-	private void addLocationUserData(Map<String, String> userData, IdentifiableElement elem) {
+	private void addLocationUserData(Map<String, String> userData, EObject elem) {
 		Location location = computeLocation(elem);
 		if (location != null) {
 			userData.put(LOCATION_KEY, location.toString());

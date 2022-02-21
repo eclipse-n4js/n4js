@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.naming
 
+import com.google.common.base.Strings
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
@@ -36,6 +37,7 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TNamespace
+import org.eclipse.n4js.ts.types.TNestedModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
@@ -84,8 +86,12 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			Script:
 				module.fullyQualifiedName
 			TModule:
-				if (qualifiedName !== null) {
+				if (!Strings.isNullOrEmpty(qualifiedName)) {
 					fqnTModule(it)
+				}
+			TNestedModule:
+				if (!Strings.isNullOrEmpty(qualifiedName)) {
+					converter.toQualifiedName(qualifiedName)
 				}
 			N4TypeDeclaration:
 				if (name !== null) fqnTypeDeclaration(it)

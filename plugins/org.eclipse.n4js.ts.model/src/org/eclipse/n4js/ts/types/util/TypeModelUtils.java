@@ -11,18 +11,40 @@
 package org.eclipse.n4js.ts.types.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TNamespace;
+import org.eclipse.n4js.ts.types.TNestedModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
  * Utility methods related to the type models defined in Types.xcore and TypeRefs.xcore.
  */
 public class TypeModelUtils {
+
+	/**
+	 * Returns all {@link TNestedModule nested modules} that are directly or indirectly contained in the given
+	 * namespace.
+	 */
+	public static List<TNestedModule> getAllNestedModules(AbstractNamespace namespace) {
+		List<TNestedModule> result = new ArrayList<>();
+		collectAllNestedModules(namespace, result);
+		return result;
+	}
+
+	private static void collectAllNestedModules(AbstractNamespace namespace,
+			Collection<? super TNestedModule> addHere) {
+		for (TNamespace child : namespace.getNamespaces()) {
+			collectAllNestedModules(child, addHere);
+		}
+		addHere.addAll(namespace.getNestedModules());
+	}
 
 	/**
 	 * Tells if the given URI points to a {@link TModule#getComposedMemberCaches() cached composed member} in the
