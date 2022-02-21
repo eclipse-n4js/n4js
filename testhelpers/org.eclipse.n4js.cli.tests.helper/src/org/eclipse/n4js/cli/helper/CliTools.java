@@ -168,10 +168,15 @@ public class CliTools {
 		this.timeoutUnit = unit;
 	}
 
-	/** see {@link TestProcessExecuter#runNodejs(Path, Map, Path, String[])} */
+	/** see {@link TestProcessExecuter#runNodejs(Path, Map, String[], Path, String[])} */
 	public ProcessResult nodejsRun(Path workingDir, Path runFile, String... options) {
+		return nodejsRun(workingDir, new String[0], runFile, options);
+	}
+
+	/** see {@link TestProcessExecuter#runNodejs(Path, Map, String[], Path, String[])} */
+	public ProcessResult nodejsRun(Path workingDir, String[] nodeOptions, Path runFile, String... options) {
 		return withoutCorruptingGlobalState(() -> {
-			return getExProcessExecuter().runNodejs(workingDir, environment, runFile, options);
+			return getExProcessExecuter().runNodejs(workingDir, environment, nodeOptions, runFile, options);
 		});
 	}
 

@@ -55,7 +55,7 @@ public class XIncrementalBuilder {
 		builder.setRequest(request);
 
 		XBuildResult result = builder.launch();
-		request.afterBuild(result);
+		request.afterBuildRequest(result);
 		return result;
 	}
 }

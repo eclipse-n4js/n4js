@@ -30,7 +30,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  * Contains algorithms to reason about successor and predecessor relationships between two {@link ControlFlowElement}s.
  */
 public class SuccessorPredecessorAnalysis {
-	final FlowGraph cfg;
+	private final FlowGraph cfg;
 
 	/** Constructor */
 	public SuccessorPredecessorAnalysis(FlowGraph cfg) {

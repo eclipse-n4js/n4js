@@ -39,6 +39,7 @@ public class RepoRelativePathHolder {
 	@Inject
 	private UriExtensions uriExtensions;
 
+	// FIXME: Make sure that this map is cleared to avoid a memory leak with N4JSResources
 	private final Map<Resource, RepoRelativePath> modulesToRepoCache = new HashMap<>();
 
 	/**

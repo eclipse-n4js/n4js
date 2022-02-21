@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildListener;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildFileListener;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildRequestListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterGenerateListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
@@ -39,7 +40,9 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 	@Inject(optional = true)
 	private AfterDeleteListener afterDeleteListener;
 	@Inject(optional = true)
-	private AfterBuildListener afterBuildListener;
+	private AfterBuildFileListener afterBuildFileListener;
+	@Inject(optional = true)
+	private AfterBuildRequestListener afterBuildRequestListener;
 
 	/** Create the build request. */
 	protected XBuildRequest getBuildRequest(String projectID) {
@@ -53,8 +56,11 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 		if (afterGenerateListener != null) {
 			result.addAfterGenerateListener(afterGenerateListener);
 		}
-		if (afterBuildListener != null) {
-			result.addAfterBuildListener(afterBuildListener);
+		if (afterBuildFileListener != null) {
+			result.addAfterBuildFileListener(afterBuildFileListener);
+		}
+		if (afterBuildRequestListener != null) {
+			result.addAfterBuildRequestListener(afterBuildRequestListener);
 		}
 		return result;
 	}
@@ -113,14 +119,24 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 		this.afterDeleteListener = afterDeleteListener;
 	}
 
-	/** @return {@link AfterBuildListener} */
-	public AfterBuildListener getAfterBuildListener() {
-		return afterBuildListener;
+	/** @return {@link AfterBuildFileListener} */
+	public AfterBuildFileListener getAfterBuildFileListener() {
+		return afterBuildFileListener;
 	}
 
-	/** Set {@link #afterBuildListener} */
-	public void setAfterBuildListener(AfterBuildListener afterBuildListener) {
-		this.afterBuildListener = afterBuildListener;
+	/** Set {@link #afterBuildFileListener} */
+	public void setAfterBuildFileListener(AfterBuildFileListener afterBuildFileListener) {
+		this.afterBuildFileListener = afterBuildFileListener;
+	}
+
+	/** @return {@link AfterBuildRequestListener} */
+	public AfterBuildRequestListener getAfterBuildListener() {
+		return afterBuildRequestListener;
+	}
+
+	/** Set {@link #afterBuildRequestListener} */
+	public void setAfterBuildListener(AfterBuildRequestListener afterBuildRequestListener) {
+		this.afterBuildRequestListener = afterBuildRequestListener;
 	}
 
 }

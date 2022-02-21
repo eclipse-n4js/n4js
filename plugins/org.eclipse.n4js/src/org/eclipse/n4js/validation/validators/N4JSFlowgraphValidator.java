@@ -95,7 +95,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 
-		flowInfo.reset(); // release memory
+		// note that releasing memory is done in AfterBuildFileListener added in N4JSProjectBuilder#newBuildRequest
 	}
 
 	@Override

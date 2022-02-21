@@ -31,7 +31,7 @@ import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.xtext.ide.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.xtext.ide.server.ResourceChangeSet;
 import org.eclipse.n4js.xtext.ide.server.XIProjectDescriptionFactory;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildListener;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildRequestListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.xtext.ide.server.issues.PublishingIssueAcceptor;
@@ -190,7 +190,7 @@ public class ProjectBuilder {
 		}
 	}
 
-	class ProjectStateUpdater implements AfterValidateListener, AfterDeleteListener, AfterBuildListener {
+	class ProjectStateUpdater implements AfterValidateListener, AfterDeleteListener, AfterBuildRequestListener {
 		final Map<URI, ImmutableList<? extends Issue>> newValidationIssues = new HashMap<>();
 		final List<URI> deleted = new ArrayList<>();
 
@@ -205,14 +205,14 @@ public class ProjectBuilder {
 		}
 
 		@Override
-		public void afterBuild(XBuildRequest request, XBuildResult buildResult) {
+		public void afterBuildRequest(XBuildRequest request, XBuildResult buildResult) {
 			updateProjectState(buildResult, newValidationIssues, deleted);
 		}
 
 		public void attachTo(XBuildRequest request) {
 			request.addAfterValidateListener(this);
 			request.addAfterDeleteListener(this);
-			request.addAfterBuildListener(this);
+			request.addAfterBuildRequestListener(this);
 		}
 	}
 
@@ -248,8 +248,8 @@ public class ProjectBuilder {
 	protected IBuildRequestFactory createInitialBuildRequestFactory(IBuildRequestFactory base) {
 		ProjectStateUpdater updater = new ProjectStateUpdater() {
 			@Override
-			public void afterBuild(XBuildRequest req, XBuildResult buildResult) {
-				super.afterBuild(req, buildResult);
+			public void afterBuildRequest(XBuildRequest req, XBuildResult buildResult) {
+				super.afterBuildRequest(req, buildResult);
 
 				// now submit all validation issues, that have not been submitted yet
 				getValidationIssues().asMap().forEach((uri, issues) -> {

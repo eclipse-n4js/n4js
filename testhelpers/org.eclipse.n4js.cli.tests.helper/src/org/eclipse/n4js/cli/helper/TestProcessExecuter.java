@@ -56,8 +56,10 @@ public class TestProcessExecuter {
 	}
 
 	/** Runs node with the given {@code runFile} in the given {@code workingDir} */
-	public ProcessResult runNodejs(Path workingDir, Map<String, String> environment, Path runFile, String... options) {
-		return joinProcess("node", () -> testProcessBuilder.nodejsRun(workingDir, environment, runFile, options));
+	public ProcessResult runNodejs(Path workingDir, Map<String, String> environment, String[] nodeOptions, Path runFile,
+			String[] options) {
+		return joinProcess("node",
+				() -> testProcessBuilder.nodejsRun(workingDir, environment, nodeOptions, runFile, options));
 	}
 
 	/** Runs npm OPTIONS in the given {@code workingDir} */

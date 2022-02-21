@@ -11,6 +11,7 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.common.base.Strings
+import com.google.common.collect.ArrayListMultimap
 import com.google.inject.Inject
 import com.google.inject.Provider
 import java.util.ArrayList
@@ -249,9 +250,19 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 				val jsImplURIs = resourceURIs.keySet.filter[ N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(URIUtils.fileExtension(it))];
 				val n4ImplURIs = resourceURIs.keySet.filter[n4ImplExts.contains(URIUtils.fileExtension(it))];
 
+				if (curIsDef && n4DefiURIs.empty && n4ImplURIs.empty) {
+					val jsImplURIsPerExt = ArrayListMultimap.<String,URI>create();
+					jsImplURIs.forEach[jsImplURIsPerExt.put(replaceJSXByJS(URIUtils.fileExtension(it)), it)];
+					if (jsImplURIsPerExt.get(N4JSGlobals.JS_FILE_EXTENSION).size <= 1
+							&& jsImplURIsPerExt.get(N4JSGlobals.CJS_FILE_EXTENSION).size <= 1
+							&& jsImplURIsPerExt.get(N4JSGlobals.MJS_FILE_EXTENSION).size <= 1) {
+						// special case: it is legal to have an .n4jsd file with a combination of .js/.cjs/.mjs files (but at most one per plain-JS extension)
+						return;
+					}
+				}
+
 				if (n4ImplURIs.empty && jsImplURIs.size < 2 && curIsDef && n4DefiURIs.size > 0) {
 					// collision of definition modules
-					
 					val implModule = if (jsImplURIs.empty) null else jsImplURIs.get(0).deresolve(ws.path);
 					val implModuleStr = if (implModule === null) "unknown js module" else implModule.segmentsList.drop(1).join('/');
 					val filePathStr = sortedMutVisibleResourceURIs
@@ -305,5 +316,12 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 			end = matcher.end;
 		}
 		addIssue(message, script, start, end - start, issueCode);
+	}
+
+	private def static String replaceJSXByJS(String ext) {
+		if (ext == N4JSGlobals.JSX_FILE_EXTENSION) {
+			return N4JSGlobals.JS_FILE_EXTENSION;
+		}
+		return ext;
 	}
 }

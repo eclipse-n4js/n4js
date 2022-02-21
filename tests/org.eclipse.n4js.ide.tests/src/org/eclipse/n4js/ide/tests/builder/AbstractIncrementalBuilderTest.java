@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Arrays;
 
-import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest;
 import org.junit.Assert;
 
@@ -28,39 +26,6 @@ abstract class AbstractIncrementalBuilderTest extends AbstractIdeTest {
 	@Override
 	protected boolean enableProjectStatePersister() {
 		return true;
-	}
-
-	protected File getOutputFile(String moduleName) {
-		return getOutputFile(DEFAULT_PROJECT_NAME, moduleName);
-	}
-
-	protected File getOutputFile(String projectName, String moduleName) {
-		return new File(getOutputFolder(projectName), moduleName + ".js");
-	}
-
-	protected File getOutputFolder() {
-		return getOutputFolder(DEFAULT_PROJECT_NAME);
-	}
-
-	protected File getOutputFolder(String projectName) {
-		return new File(getProjectRoot(projectName), N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT);
-	}
-
-	protected File getProjectStateFile() {
-		return getProjectStateFile(DEFAULT_PROJECT_NAME);
-	}
-
-	protected File getProjectStateFile(String projectName) {
-		return new File(getProjectRoot(projectName), N4JSGlobals.N4JS_PROJECT_STATE);
-	}
-
-	protected void assertOutputFileExists(String moduleName) {
-		assertOutputFileExists(DEFAULT_PROJECT_NAME, moduleName);
-	}
-
-	protected void assertOutputFileExists(String projectName, String moduleName) {
-		File outputFile = getOutputFile(projectName, moduleName);
-		Assert.assertTrue(Files.isRegularFile(outputFile.toPath()));
 	}
 
 	protected FileSnapshot createSnapshotForOutputFile(String moduleName) {
