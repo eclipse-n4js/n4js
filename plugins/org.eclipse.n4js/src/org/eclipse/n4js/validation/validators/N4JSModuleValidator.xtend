@@ -246,13 +246,23 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 				val n4DefiExts = Set.of(N4JSGlobals.N4JSD_FILE_EXTENSION, N4JSGlobals.DTS_FILE_EXTENSION);
 				val n4ImplExts = Set.of(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
 				val curIsDef = n4DefiExts.contains(URIUtils.fileExtension(resource.URI));
-				val n4DefiURIs = resourceURIs.keySet.filter[n4DefiExts.contains(URIUtils.fileExtension(it))].toList;
-				val jsImplURIs = resourceURIs.keySet.filter[N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(URIUtils.fileExtension(it))].toList;
-				val n4ImplURIs = resourceURIs.keySet.filter[n4ImplExts.contains(URIUtils.fileExtension(it))].toList;
+				val n4DefiURIs = resourceURIs.keySet.filter[n4DefiExts.contains(URIUtils.fileExtension(it))];
+				val jsImplURIs = resourceURIs.keySet.filter[ N4JSGlobals.ALL_JS_FILE_EXTENSIONS.contains(URIUtils.fileExtension(it))];
+				val n4ImplURIs = resourceURIs.keySet.filter[n4ImplExts.contains(URIUtils.fileExtension(it))];
 
-				if (curIsDef && n4DefiURIs.size > 1) {
+				if (curIsDef && n4DefiURIs.empty && n4ImplURIs.empty) {
+					val jsImplURIsPerExt = ArrayListMultimap.<String,URI>create();
+					jsImplURIs.forEach[jsImplURIsPerExt.put(replaceJSXByJS(URIUtils.fileExtension(it)), it)];
+					if (jsImplURIsPerExt.get(N4JSGlobals.JS_FILE_EXTENSION).size <= 1
+							&& jsImplURIsPerExt.get(N4JSGlobals.CJS_FILE_EXTENSION).size <= 1
+							&& jsImplURIsPerExt.get(N4JSGlobals.MJS_FILE_EXTENSION).size <= 1) {
+						// special case: it is legal to have an .n4jsd file with a combination of .js/.cjs/.mjs files (but at most one per plain-JS extension)
+						return;
+					}
+				}
+
+				if (n4ImplURIs.empty && jsImplURIs.size < 2 && curIsDef && n4DefiURIs.size > 0) {
 					// collision of definition modules
-					// (report only the collision between the definition modules, even if there is also a collision among the implementation modules)
 					val implModule = if (jsImplURIs.empty) null else jsImplURIs.get(0).deresolve(ws.path);
 					val implModuleStr = if (implModule === null) "unknown js module" else implModule.segmentsList.drop(1).join('/');
 					val filePathStr = sortedMutVisibleResourceURIs
@@ -261,30 +271,11 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 					val message = IssueCodes.getMessageForCLF_DUP_DEF_MODULE(module.qualifiedName, implModuleStr, filePathStr);
 					addIssue(message, script, IssueCodes.CLF_DUP_DEF_MODULE);
 				} else {
-					// collision of implementation modules?
-					val collidingURIs = newArrayList;
-					if (!n4ImplURIs.empty && !jsImplURIs.empty) {
-						collidingURIs += jsImplURIs;
-						collidingURIs += n4ImplURIs;
-					} else {
-						val jsImplURIsPerExt = ArrayListMultimap.<String,URI>create();
-						jsImplURIs.forEach[jsImplURIsPerExt.put(URIUtils.fileExtension(it), it)];
-						for (ext : jsImplURIsPerExt.keys) {
-							val uris = jsImplURIsPerExt.get(ext);
-							if (uris.size > 1) {
-								collidingURIs += uris;
-							}
-						}
-						if (n4ImplURIs.size > 1) {
-							collidingURIs += n4ImplURIs;
-						}
-					}
-					if (collidingURIs.size > 1) {
-						// list all locations - give the user the possibility to check by himself.
-						val filePathStr = collidingURIs.map[segmentsList.drop(1).join('/')].join("; ");
-						val message = IssueCodes.getMessageForCLF_DUP_MODULE(module.qualifiedName, filePathStr);
-						addIssue(message, script, IssueCodes.CLF_DUP_MODULE);
-					}
+					// collision of implementation modules
+					// list all locations - give the user the possibility to check by himself.
+					val filePathStr = sortedMutVisibleResourceURIs.map[segmentsList.drop(1).join('/')].join("; ");
+					val message = IssueCodes.getMessageForCLF_DUP_MODULE(module.qualifiedName, filePathStr);
+					addIssue(message, script, IssueCodes.CLF_DUP_MODULE);
 				}
 			}
 		}
@@ -325,5 +316,12 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 			end = matcher.end;
 		}
 		addIssue(message, script, start, end - start, issueCode);
+	}
+
+	private def static String replaceJSXByJS(String ext) {
+		if (ext == N4JSGlobals.JSX_FILE_EXTENSION) {
+			return N4JSGlobals.JS_FILE_EXTENSION;
+		}
+		return ext;
 	}
 }
