@@ -78,10 +78,6 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 		result.getScriptElements().add(elem);
 	}
 
-	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
-		ParserContextUtil.addAndHandleExported(ctx, elem, result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS, false);
-	}
-
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
@@ -159,5 +155,9 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 	public void enterFunctionDeclaration(FunctionDeclarationContext ctx) {
 		FunctionDeclaration fd = functionBuilder.consume(ctx);
 		addAndHandleExported(ctx, fd);
+	}
+
+	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
+		ParserContextUtil.addAndHandleExported(ctx, elem, result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS, false);
 	}
 }
