@@ -36,6 +36,9 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  */
 public class ParserContextUtil {
 
+	/** Like {@code N4JSGlobals#NAMESPACE_ACCESS_DELIMITER}, but for .d.ts files. */
+	public static final String NAMESPACE_ACCESS_DELIMITER = ".";
+
 	/** @return true iff the given rule is contained in an {@link TypeScriptParser#RULE_exportStatement} */
 	public static boolean isExported(ParserRuleContext ctx) {
 		ParserRuleContext exportedParentCtx = findParentContext(ctx, TypeScriptParser.RULE_exportStatement,

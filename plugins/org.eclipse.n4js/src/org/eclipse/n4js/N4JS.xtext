@@ -79,7 +79,7 @@ N4NamespaceDeclaration <Yield> returns N4NamespaceDeclaration:
 ;
 
 
-NamespaceElement<Yield> returns NamespaceElement : 
+NamespaceElement<Yield> returns NamespaceElement:
 	AnnotatedNamespaceElement
 	| N4NamespaceDeclaration<Yield>
 	| N4ClassDeclaration<Yield>

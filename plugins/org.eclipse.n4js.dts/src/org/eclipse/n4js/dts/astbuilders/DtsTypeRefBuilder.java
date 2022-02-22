@@ -20,6 +20,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeRefWithModifiers;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_unionTypeExpression;
 
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
@@ -30,6 +31,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
@@ -74,7 +76,21 @@ public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, Typ
 	public void enterParameterizedTypeRef(ParameterizedTypeRefContext ctx) {
 		ParameterizedTypeRef pTypeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
 		String text = ctx.typeName().getText();
-		pTypeRef.setDeclaredTypeAsText(text);
+		String[] segs = text.split(Pattern.quote(ParserContextUtil.NAMESPACE_ACCESS_DELIMITER));
+		for (int i = 0; i < segs.length - 1; i++) {
+			String currSeg = segs[i];
+			NamespaceLikeRef nslRef = TypeRefsFactory.eINSTANCE.createNamespaceLikeRef();
+			nslRef.setDeclaredTypeAsText(currSeg);
+
+			Type nsProxy = TypesFactory.eINSTANCE.createType();
+			EReference eRef = TypeRefsPackage.eINSTANCE.getNamespaceLikeRef_DeclaredType();
+			ParserContextUtil.installProxy(resource, nslRef, eRef, nsProxy, currSeg);
+			nslRef.setDeclaredType(nsProxy);
+
+			pTypeRef.getAstNamespaceLikeRefs().add(nslRef);
+		}
+		String lastSeg = segs[segs.length - 1];
+		pTypeRef.setDeclaredTypeAsText(lastSeg);
 		pTypeRef.setDeclaredType(null);
 		if (!isPrimitive(pTypeRef)) {
 			pTypeRef.setDefinedTypingStrategy(TypingStrategy.STRUCTURAL);
@@ -82,7 +98,7 @@ public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, Typ
 
 		Type typeProxy = TypesFactory.eINSTANCE.createType();
 		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
-		ParserContextUtil.installProxy(resource, pTypeRef, eRef, typeProxy, text);
+		ParserContextUtil.installProxy(resource, pTypeRef, eRef, typeProxy, lastSeg);
 		pTypeRef.setDeclaredType(typeProxy);
 
 		if (ctx.typeArguments() != null && ctx.typeArguments().typeArgumentList() != null) {
