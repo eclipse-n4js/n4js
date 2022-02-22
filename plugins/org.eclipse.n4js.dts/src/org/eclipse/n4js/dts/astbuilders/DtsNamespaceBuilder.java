@@ -210,7 +210,7 @@ public class DtsNamespaceBuilder
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
 		ParserContextUtil.addAndHandleExported(ctx, elem, result,
-				N4JSPackage.Literals.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW);
+				N4JSPackage.Literals.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW, true);
 	}
 
 	/** Creates a {@link N4ModuleDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */

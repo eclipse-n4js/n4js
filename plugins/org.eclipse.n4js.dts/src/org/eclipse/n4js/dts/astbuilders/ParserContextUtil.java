@@ -11,11 +11,14 @@
 package org.eclipse.n4js.dts.astbuilders;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -27,6 +30,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
@@ -60,19 +64,38 @@ public class ParserContextUtil {
 		return Collections.emptyList();
 	}
 
+	public static void setAccessibility(ModifiableElement elem, N4Modifier accessibility) {
+		Objects.requireNonNull(accessibility);
+		EList<N4Modifier> modifiers = elem.getDeclaredModifiers();
+		Iterator<N4Modifier> iter = modifiers.iterator();
+		while (iter.hasNext()) {
+			if (N4JSASTUtils.ACCESSIBILITY_MODIFIERS.contains(iter.next())) {
+				iter.remove();
+			}
+		}
+		modifiers.add(accessibility);
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem, EObject addHere,
-			EReference eRef) {
+			EReference eRef, boolean makePrivateIfNotExported) {
 		EObject toAdd;
 		boolean isExported = ParserContextUtil.isExported(ctx);
 		if (isExported) {
 			if (elem instanceof ModifiableElement) {
-				((ModifiableElement) elem).getDeclaredModifiers().add(N4Modifier.PUBLIC);
+				setAccessibility((ModifiableElement) elem, N4Modifier.PUBLIC);
 			}
 
 			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
 			ed.setExportedElement(elem);
+
 			toAdd = ed;
 		} else {
+			if (makePrivateIfNotExported
+					&& elem instanceof ModifiableElement) {
+				setAccessibility((ModifiableElement) elem, N4Modifier.PRIVATE);
+			}
+
 			toAdd = elem;
 		}
 		((List) addHere.eGet(eRef)).add(toAdd);
