@@ -49,11 +49,18 @@ public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorage
 		if (pcs == null) {
 			return results;
 		}
-		String prjName = pcs.getName();
 
 		Set<LoadResult> noDeps = new LinkedHashSet<>();
 		Multimap<LoadResult, LoadResult> dependsOn = HashMultimap.create();
 		Multimap<LoadResult, LoadResult> dependsOnInverse = HashMultimap.create();
+		initDependencyMaps(results, pcs, noDeps, dependsOn, dependsOnInverse);
+
+		List<LoadResult> sortedResults = sortLoadResults(results, noDeps, dependsOn, dependsOnInverse);
+		return sortedResults;
+	}
+
+	private void initDependencyMaps(List<LoadResult> results, ProjectConfigSnapshot pcs, Set<LoadResult> noDeps,
+			Multimap<LoadResult, LoadResult> dependsOn, Multimap<LoadResult, LoadResult> dependsOnInverse) {
 
 		Map<String, LoadResult> moduleName2Result = new HashMap<>();
 		for (LoadResult result : results) {
@@ -66,6 +73,8 @@ public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorage
 			moduleName2Result.put(moduleName, result);
 			noDeps.add(result);
 		}
+
+		String prjName = pcs.getName();
 
 		for (LoadResult result : results) {
 			for (EObject eobj : result.resource.getContents()) {
@@ -100,29 +109,20 @@ public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorage
 				}
 			}
 		}
+	}
+
+	private List<LoadResult> sortLoadResults(List<LoadResult> results, Set<LoadResult> noDeps,
+			Multimap<LoadResult, LoadResult> dependsOn, Multimap<LoadResult, LoadResult> dependsOnInverse) {
 
 		List<LoadResult> sortedResults = new ArrayList<>(results.size());
 		while (sortedResults.size() < results.size()) {
 			if (noDeps.isEmpty()) {
-				int cycleSize = results.size() - sortedResults.size();
-				System.out.println("Module cycle of " + cycleSize + "modules in project " + pcs.getName());
-				// there exist dependency cycles. We need to start at one of their modules.
-				int minDepCount = Integer.MAX_VALUE;
-				LoadResult minDepResult = null;
-				for (LoadResult someResult : dependsOn.keySet()) {
-					int srDepCount = dependsOn.get(someResult).size();
-					if (srDepCount < minDepCount) {
-						minDepCount = srDepCount;
-						minDepResult = someResult;
-					}
-					if (minDepCount == 1) {
-						break;
-					}
-				}
-				noDeps.add(minDepResult);
-				Collection<LoadResult> dependencies = dependsOn.removeAll(minDepResult);
+				// there exist dependency cycles
+				LoadResult randomCyclicResult = dependsOn.entries().iterator().next().getKey();
+				noDeps.add(randomCyclicResult);
+				Collection<LoadResult> dependencies = dependsOn.removeAll(randomCyclicResult);
 				for (LoadResult dependency : dependencies) {
-					dependsOnInverse.remove(dependency, minDepResult);
+					dependsOnInverse.remove(dependency, randomCyclicResult);
 				}
 			}
 
@@ -139,7 +139,6 @@ public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorage
 				}
 			}
 		}
-
 		return sortedResults;
 	}
 
