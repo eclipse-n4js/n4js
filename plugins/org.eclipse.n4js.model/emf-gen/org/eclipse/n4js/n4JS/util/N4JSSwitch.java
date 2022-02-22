@@ -1564,9 +1564,10 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				N4ModuleDeclaration n4ModuleDeclaration = (N4ModuleDeclaration)theEObject;
 				T1 result = caseN4ModuleDeclaration(n4ModuleDeclaration);
 				if (result == null) result = caseN4AbstractNamespaceDeclaration(n4ModuleDeclaration);
-				if (result == null) result = caseScriptElement(n4ModuleDeclaration);
+				if (result == null) result = caseNamespaceElement(n4ModuleDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(n4ModuleDeclaration);
 				if (result == null) result = caseNamedElement(n4ModuleDeclaration);
+				if (result == null) result = caseScriptElement(n4ModuleDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

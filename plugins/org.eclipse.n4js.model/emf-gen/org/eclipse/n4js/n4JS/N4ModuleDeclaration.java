@@ -28,7 +28,7 @@ import org.eclipse.n4js.ts.types.TNestedModule;
  * @model
  * @generated
  */
-public interface N4ModuleDeclaration extends N4AbstractNamespaceDeclaration, ScriptElement {
+public interface N4ModuleDeclaration extends N4AbstractNamespaceDeclaration, NamespaceElement {
 	/**
 	 * Returns the value of the '<em><b>Defined Module</b></em>' reference.
 	 * <!-- begin-user-doc -->

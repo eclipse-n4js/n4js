@@ -2166,7 +2166,7 @@ abstract class N4AbstractNamespaceDeclaration extends VariableEnvironmentElement
 	contains NamespaceElement[] ownedElementsRaw
 }
 
-class N4ModuleDeclaration extends N4AbstractNamespaceDeclaration, ScriptElement {
+class N4ModuleDeclaration extends N4AbstractNamespaceDeclaration, NamespaceElement { // note: not an ExportableElement
 
 	refers transient TNestedModule definedModule
 }

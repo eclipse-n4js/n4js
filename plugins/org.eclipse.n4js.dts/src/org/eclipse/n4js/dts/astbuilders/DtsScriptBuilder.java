@@ -31,17 +31,15 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
-import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
-import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
@@ -58,7 +56,6 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
 	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
 	private final DtsNamespaceBuilder namespaceBuilder = new DtsNamespaceBuilder(tokenStream, resource);
-	private final DtsModuleBuilder moduleBuilder = new DtsModuleBuilder(tokenStream, resource);
 	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
 	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
 	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(tokenStream, resource);
@@ -74,11 +71,15 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 		return result;
 	}
 
-	void addToScript(ScriptElement elem) {
+	private void addToScript(ScriptElement elem) {
 		if (elem == null) {
 			return;
 		}
 		result.getScriptElements().add(elem);
+	}
+
+	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
+		ParserContextUtil.addAndHandleExported(ctx, elem, result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS);
 	}
 
 	@Override
@@ -114,7 +115,7 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		N4AbstractNamespaceDeclaration d = moduleBuilder.consume(ctx);
+		N4AbstractNamespaceDeclaration d = namespaceBuilder.consume(ctx);
 		if (d instanceof N4ModuleDeclaration) {
 			N4ModuleDeclaration md = (N4ModuleDeclaration) d;
 			addToScript(md);
@@ -158,18 +159,5 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 	public void enterFunctionDeclaration(FunctionDeclarationContext ctx) {
 		FunctionDeclaration fd = functionBuilder.consume(ctx);
 		addAndHandleExported(ctx, fd);
-	}
-
-	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement id) {
-		boolean isExported = ParserContextUtil.isExported(ctx);
-		if (isExported) {
-			((ModifiableElement) id).getDeclaredModifiers().add(N4Modifier.PUBLIC);
-
-			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
-			ed.setExportedElement(id);
-			addToScript(ed);
-		} else {
-			addToScript(id);
-		}
 	}
 }

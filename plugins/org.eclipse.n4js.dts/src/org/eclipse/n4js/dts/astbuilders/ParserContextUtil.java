@@ -24,6 +24,11 @@ import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.N4JSFactory;
+import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -50,6 +55,24 @@ public class ParserContextUtil {
 			}
 		}
 		return Collections.emptyList();
+	}
+
+	public static void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem, EObject addHere,
+			EReference eRef) {
+		EObject toAdd;
+		boolean isExported = ParserContextUtil.isExported(ctx);
+		if (isExported) {
+			if (elem instanceof ModifiableElement) {
+				((ModifiableElement) elem).getDeclaredModifiers().add(N4Modifier.PUBLIC);
+			}
+
+			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
+			ed.setExportedElement(elem);
+			toAdd = ed;
+		} else {
+			toAdd = elem;
+		}
+		((List) addHere.eGet(eRef)).add(toAdd);
 	}
 
 	/**

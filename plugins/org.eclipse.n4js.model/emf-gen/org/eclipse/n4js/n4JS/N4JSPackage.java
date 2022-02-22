@@ -12686,13 +12686,40 @@ public interface N4JSPackage extends EPackage {
 	int N4_MODULE_DECLARATION___GET_NAME = N4_ABSTRACT_NAMESPACE_DECLARATION___GET_NAME;
 
 	/**
+	 * The operation id for the '<em>Get Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MODULE_DECLARATION___GET_NAMESPACE = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Is In Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MODULE_DECLARATION___IS_IN_NAMESPACE = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Is Hollow</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MODULE_DECLARATION___IS_HOLLOW = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 2;
+
+	/**
 	 * The number of operations of the '<em>N4 Module Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MODULE_DECLARATION_OPERATION_COUNT = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 0;
+	int N4_MODULE_DECLARATION_OPERATION_COUNT = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4NamespaceDeclarationImpl <em>N4 Namespace Declaration</em>}' class.

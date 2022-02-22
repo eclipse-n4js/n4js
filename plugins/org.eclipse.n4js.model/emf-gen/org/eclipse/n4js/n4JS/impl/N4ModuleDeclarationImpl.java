@@ -10,15 +10,24 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
+import org.eclipse.n4js.n4JS.NamespaceElement;
+import org.eclipse.n4js.n4JS.ScriptElement;
 
 import org.eclipse.n4js.ts.types.TNestedModule;
 
@@ -111,6 +120,44 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 	 * @generated
 	 */
 	@Override
+	public N4NamespaceDeclaration getNamespace() {
+		EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			parent = ((ExportDeclaration)parent).eContainer();
+		}
+		if ((parent instanceof N4NamespaceDeclaration)) {
+			return ((N4NamespaceDeclaration)parent);
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isInNamespace() {
+		N4NamespaceDeclaration _namespace = this.getNamespace();
+		return (_namespace != null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case N4JSPackage.N4_MODULE_DECLARATION__DEFINED_MODULE:
@@ -162,6 +209,47 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 				return definedModule != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == ScriptElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == NamespaceElement.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.NAMESPACE_ELEMENT___GET_NAMESPACE: return N4JSPackage.N4_MODULE_DECLARATION___GET_NAMESPACE;
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_IN_NAMESPACE: return N4JSPackage.N4_MODULE_DECLARATION___IS_IN_NAMESPACE;
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_MODULE_DECLARATION___IS_HOLLOW;
+				default: return -1;
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.N4_MODULE_DECLARATION___GET_NAMESPACE:
+				return getNamespace();
+			case N4JSPackage.N4_MODULE_DECLARATION___IS_IN_NAMESPACE:
+				return isInNamespace();
+			case N4JSPackage.N4_MODULE_DECLARATION___IS_HOLLOW:
+				return isHollow();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //N4ModuleDeclarationImpl
