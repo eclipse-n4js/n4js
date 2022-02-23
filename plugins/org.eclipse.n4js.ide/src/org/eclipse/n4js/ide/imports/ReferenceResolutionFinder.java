@@ -377,11 +377,11 @@ public class ReferenceResolutionFinder {
 		if (N4JSLanguageUtils.isDefaultExport(qualifiedName)) {
 			String localName = optionalAlias != null ? optionalAlias
 					: N4JSLanguageUtils.lastSegmentOrDefaultHost(qualifiedName);
-			importDesc = ImportDescriptor.createDefaultImport(localName, moduleSpecifier, projectName, moduleName,
-					Integer.MAX_VALUE);
+			importDesc = ImportDescriptor.createDefaultImport(localName, moduleSpecifier, Optional.of(projectName),
+					moduleName, Integer.MAX_VALUE);
 		} else {
 			importDesc = ImportDescriptor.createNamedImport(qualifiedName.getLastSegment(), optionalAlias,
-					moduleSpecifier, projectName, moduleName, Integer.MAX_VALUE);
+					moduleSpecifier, Optional.of(projectName), moduleName, Integer.MAX_VALUE);
 		}
 
 		return importDesc;

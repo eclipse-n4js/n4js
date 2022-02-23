@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.N4JSLanguageConstants;
+import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TConstableElement;
@@ -28,7 +29,6 @@ import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
-import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -215,21 +215,33 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (eObject instanceof TModule) {
 			TModule module = (TModule) eObject;
 			internalCreateEObjectDescriptionForRoot(module, acceptor);
-			for (Type type : module.getTypes()) {
-				internalCreateEObjectDescription(type, acceptor);
-			}
-			for (TVariable variable : module.getVariables()) {
-				internalCreateEObjectDescription(variable, acceptor);
-			}
-			for (TNamespace namespace : module.getNamespaces()) {
-				internalCreateEObjectDescription(namespace, acceptor);
-			}
-			for (TDeclaredModule declModule : TypeModelUtils.getAllDeclaredModules(module)) {
-				internalCreateEObjectDescriptionForDeclaredModule(declModule, acceptor);
-			}
+			internalCreateEObjectDescriptionsForModuleContents(module, acceptor);
 		}
 		// export is only possible for top-level elements
 		return false;
+	}
+
+	private void internalCreateEObjectDescriptionsForModuleContents(AbstractModule module,
+			IAcceptor<IEObjectDescription> acceptor) {
+		for (Type type : module.getTypes()) {
+			internalCreateEObjectDescription(type, acceptor);
+		}
+		for (TVariable variable : module.getVariables()) {
+			internalCreateEObjectDescription(variable, acceptor);
+		}
+		for (TNamespace namespace : module.getNamespaces()) {
+			internalCreateEObjectDescription(namespace, acceptor);
+		}
+		boolean isRoot = module instanceof TModule;
+		if (isRoot) {
+			// declared modules nested inside other declared modules cannot be imported in TS, so we do not yet support
+			// this either and therefore the following is done only for TDeclaredModules directly contained in the root
+			// TModule:
+			for (TDeclaredModule declModule : module.getModules()) {
+				internalCreateEObjectDescriptionForDeclaredModule(declModule, acceptor);
+				internalCreateEObjectDescriptionsForModuleContents(declModule, acceptor);
+			}
+		}
 	}
 
 	/** @return the source code location of the element represented by the given {@link IEObjectDescription}. */

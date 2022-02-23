@@ -11,40 +11,18 @@
 package org.eclipse.n4js.ts.types.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.ts.types.AbstractNamespace;
-import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
  * Utility methods related to the type models defined in Types.xcore and TypeRefs.xcore.
  */
 public class TypeModelUtils {
-
-	/**
-	 * Returns all {@link TDeclaredModule declared modules} that are directly or indirectly contained in the given
-	 * namespace.
-	 */
-	public static List<TDeclaredModule> getAllDeclaredModules(AbstractNamespace namespace) {
-		List<TDeclaredModule> result = new ArrayList<>();
-		collectAllDeclaredModules(namespace, result);
-		return result;
-	}
-
-	private static void collectAllDeclaredModules(AbstractNamespace namespace,
-			Collection<? super TDeclaredModule> addHere) {
-		for (TNamespace child : namespace.getNamespaces()) {
-			collectAllDeclaredModules(child, addHere);
-		}
-		addHere.addAll(namespace.getModules());
-	}
 
 	/**
 	 * Tells if the given URI points to a {@link TModule#getComposedMemberCaches() cached composed member} in the
