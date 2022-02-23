@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getTypes <em>Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNamespaces <em>Namespaces</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNestedModules <em>Nested Modules</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getModules <em>Modules</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace()
@@ -88,19 +88,19 @@ public interface AbstractNamespace extends EObject {
 	EList<TNamespace> getNamespaces();
 
 	/**
-	 * Returns the value of the '<em><b>Nested Modules</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TNestedModule}.
+	 * Returns the value of the '<em><b>Modules</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TDeclaredModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * A list of all nested modules directly contained in this abstract namespace.
+	 * A list of all declared modules directly contained in this abstract namespace.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Nested Modules</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_NestedModules()
+	 * @return the value of the '<em>Modules</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_Modules()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TNestedModule> getNestedModules();
+	EList<TDeclaredModule> getModules();
 
 	/**
 	 * <!-- begin-user-doc -->

@@ -19,8 +19,8 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.ts.types.TDeclaredModule
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.TNestedModule
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceNameComputer
@@ -104,7 +104,7 @@ class ModuleSpecifierTransformation extends Transformation {
 	def private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
 		val targetModule = state.info.getImportedModule(importDeclIM);
 
-		if (targetModule instanceof TNestedModule) {
+		if (targetModule instanceof TDeclaredModule) {
 			// SPECIAL CASE #1a
 			// pointing to a module explicitly declared in a .d.ts file, such as a node built-in library:
 			// import * as path_lib from "path"

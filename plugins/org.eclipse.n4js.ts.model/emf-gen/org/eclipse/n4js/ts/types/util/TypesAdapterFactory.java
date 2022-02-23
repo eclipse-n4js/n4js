@@ -84,8 +84,8 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createTModuleAdapter();
 			}
 			@Override
-			public Adapter caseTNestedModule(TNestedModule object) {
-				return createTNestedModuleAdapter();
+			public Adapter caseTDeclaredModule(TDeclaredModule object) {
+				return createTDeclaredModuleAdapter();
 			}
 			@Override
 			public Adapter caseRuntimeDependency(RuntimeDependency object) {
@@ -356,16 +356,16 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TNestedModule <em>TNested Module</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TDeclaredModule <em>TDeclared Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.TNestedModule
+	 * @see org.eclipse.n4js.ts.types.TDeclaredModule
 	 * @generated
 	 */
-	public Adapter createTNestedModuleAdapter() {
+	public Adapter createTDeclaredModuleAdapter() {
 		return null;
 	}
 

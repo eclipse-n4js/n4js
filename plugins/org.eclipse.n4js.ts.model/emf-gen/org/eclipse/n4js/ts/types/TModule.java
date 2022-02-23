@@ -18,8 +18,10 @@ import org.eclipse.emf.common.util.EList;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * *
  * The TModule is the representation of the script on the type level.
+ * <p>
+ * Instances of this class are created for N4JS[D] / JS / DTS source code files (one per file), whereas instances
+ * of {@link TDeclaredModule} are created for module declarations inside .d.ts files (possibly many per .d.ts file).
  * <!-- end-model-doc -->
  *
  * <p>

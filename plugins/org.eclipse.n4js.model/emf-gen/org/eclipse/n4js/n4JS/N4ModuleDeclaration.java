@@ -10,12 +10,28 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import org.eclipse.n4js.ts.types.TNestedModule;
+import org.eclipse.n4js.ts.types.TDeclaredModule;
 
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>N4 Module Declaration</b></em>'.
  * <!-- end-user-doc -->
+ *
+ * <!-- begin-model-doc -->
+ * *
+ * This type of declaration is created only from .d.ts files and represents a module declaration such as
+ * <pre>
+ * // .d.ts
+ * declare module "my/declared/module" { ... }  // string literal as name
+ * </pre>
+ * Note that module declarations of the form
+ * <pre>
+ * // .d.ts
+ * declare module myLegacyModule { ... }  // identifier as name
+ * </pre>
+ * are actually an old syntax for namespaces; for them, the {@code DtsNamespaceBuilder} will create
+ * a {@link N4NamespaceDeclaration}, not a {@code N4ModuleDeclaration}.
+ * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
@@ -34,12 +50,12 @@ public interface N4ModuleDeclaration extends N4AbstractNamespaceDeclaration, Nam
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Defined Module</em>' reference.
-	 * @see #setDefinedModule(TNestedModule)
+	 * @see #setDefinedModule(TDeclaredModule)
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4ModuleDeclaration_DefinedModule()
 	 * @model transient="true"
 	 * @generated
 	 */
-	TNestedModule getDefinedModule();
+	TDeclaredModule getDefinedModule();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4ModuleDeclaration#getDefinedModule <em>Defined Module</em>}' reference.
@@ -49,6 +65,6 @@ public interface N4ModuleDeclaration extends N4AbstractNamespaceDeclaration, Nam
 	 * @see #getDefinedModule()
 	 * @generated
 	 */
-	void setDefinedModule(TNestedModule value);
+	void setDefinedModule(TDeclaredModule value);
 
 } // N4ModuleDeclaration

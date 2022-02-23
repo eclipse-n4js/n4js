@@ -30,8 +30,8 @@ import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.AbstractModule
+import org.eclipse.n4js.ts.types.TDeclaredModule
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.TNestedModule
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
 import org.eclipse.n4js.utils.Strings
@@ -115,7 +115,7 @@ class CommonJsImportsTransformation extends Transformation {
 		if (allImportDeclsForThisModule.empty) {
 			return #[];
 		}
-		if (targetModule instanceof TNestedModule) {
+		if (targetModule instanceof TDeclaredModule) {
 			return #[];
 		} else if (!(targetModule instanceof TModule)) {
 			throw new UnsupportedOperationException("unsupported subclass of AbstractModule: " + targetModule.getClass.simpleName);

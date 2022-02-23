@@ -12,23 +12,23 @@ package org.eclipse.n4js.ts.types.impl;
 
 import org.eclipse.emf.ecore.EClass;
 
-import org.eclipse.n4js.ts.types.TNestedModule;
+import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>TNested Module</b></em>'.
+ * An implementation of the model object '<em><b>TDeclared Module</b></em>'.
  * <!-- end-user-doc -->
  *
  * @generated
  */
-public class TNestedModuleImpl extends AbstractModuleImpl implements TNestedModule {
+public class TDeclaredModuleImpl extends AbstractModuleImpl implements TDeclaredModule {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected TNestedModuleImpl() {
+	protected TDeclaredModuleImpl() {
 		super();
 	}
 
@@ -39,7 +39,7 @@ public class TNestedModuleImpl extends AbstractModuleImpl implements TNestedModu
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return TypesPackage.Literals.TNESTED_MODULE;
+		return TypesPackage.Literals.TDECLARED_MODULE;
 	}
 
-} //TNestedModuleImpl
+} //TDeclaredModuleImpl

@@ -20,11 +20,11 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TConstableElement;
+import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
-import org.eclipse.n4js.ts.types.TNestedModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
@@ -224,8 +224,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			for (TNamespace namespace : module.getNamespaces()) {
 				internalCreateEObjectDescription(namespace, acceptor);
 			}
-			for (TNestedModule nestedModule : TypeModelUtils.getAllNestedModules(module)) {
-				internalCreateEObjectDescriptionForNestedModule(nestedModule, acceptor);
+			for (TDeclaredModule declModule : TypeModelUtils.getAllDeclaredModules(module)) {
+				internalCreateEObjectDescriptionForDeclaredModule(declModule, acceptor);
 			}
 		}
 		// export is only possible for top-level elements
@@ -345,7 +345,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		acceptor.accept(eod);
 	}
 
-	private void internalCreateEObjectDescriptionForNestedModule(final TNestedModule module,
+	private void internalCreateEObjectDescriptionForDeclaredModule(final TDeclaredModule module,
 			IAcceptor<IEObjectDescription> acceptor) {
 		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(module);
 		if (qualifiedName == null) {

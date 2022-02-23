@@ -25,9 +25,9 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.types.AbstractNamespace;
+import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
-import org.eclipse.n4js.ts.types.TNestedModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -47,7 +47,7 @@ import org.eclipse.xtext.EcoreUtil2;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getTypes <em>Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getNamespaces <em>Namespaces</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getNestedModules <em>Nested Modules</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getModules <em>Modules</em>}</li>
  * </ul>
  *
  * @generated
@@ -84,14 +84,14 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 	protected EList<TNamespace> namespaces;
 
 	/**
-	 * The cached value of the '{@link #getNestedModules() <em>Nested Modules</em>}' containment reference list.
+	 * The cached value of the '{@link #getModules() <em>Modules</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getNestedModules()
+	 * @see #getModules()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TNestedModule> nestedModules;
+	protected EList<TDeclaredModule> modules;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -157,11 +157,11 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 	 * @generated
 	 */
 	@Override
-	public EList<TNestedModule> getNestedModules() {
-		if (nestedModules == null) {
-			nestedModules = new EObjectContainmentEList<TNestedModule>(TNestedModule.class, this, TypesPackage.ABSTRACT_NAMESPACE__NESTED_MODULES);
+	public EList<TDeclaredModule> getModules() {
+		if (modules == null) {
+			modules = new EObjectContainmentEList<TDeclaredModule>(TDeclaredModule.class, this, TypesPackage.ABSTRACT_NAMESPACE__MODULES);
 		}
-		return nestedModules;
+		return modules;
 	}
 
 	/**
@@ -188,8 +188,8 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 				return ((InternalEList<?>)getVariables()).basicRemove(otherEnd, msgs);
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				return ((InternalEList<?>)getNamespaces()).basicRemove(otherEnd, msgs);
-			case TypesPackage.ABSTRACT_NAMESPACE__NESTED_MODULES:
-				return ((InternalEList<?>)getNestedModules()).basicRemove(otherEnd, msgs);
+			case TypesPackage.ABSTRACT_NAMESPACE__MODULES:
+				return ((InternalEList<?>)getModules()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -208,8 +208,8 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 				return getVariables();
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				return getNamespaces();
-			case TypesPackage.ABSTRACT_NAMESPACE__NESTED_MODULES:
-				return getNestedModules();
+			case TypesPackage.ABSTRACT_NAMESPACE__MODULES:
+				return getModules();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -235,9 +235,9 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 				getNamespaces().clear();
 				getNamespaces().addAll((Collection<? extends TNamespace>)newValue);
 				return;
-			case TypesPackage.ABSTRACT_NAMESPACE__NESTED_MODULES:
-				getNestedModules().clear();
-				getNestedModules().addAll((Collection<? extends TNestedModule>)newValue);
+			case TypesPackage.ABSTRACT_NAMESPACE__MODULES:
+				getModules().clear();
+				getModules().addAll((Collection<? extends TDeclaredModule>)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -260,8 +260,8 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				getNamespaces().clear();
 				return;
-			case TypesPackage.ABSTRACT_NAMESPACE__NESTED_MODULES:
-				getNestedModules().clear();
+			case TypesPackage.ABSTRACT_NAMESPACE__MODULES:
+				getModules().clear();
 				return;
 		}
 		super.eUnset(featureID);
@@ -281,8 +281,8 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 				return variables != null && !variables.isEmpty();
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				return namespaces != null && !namespaces.isEmpty();
-			case TypesPackage.ABSTRACT_NAMESPACE__NESTED_MODULES:
-				return nestedModules != null && !nestedModules.isEmpty();
+			case TypesPackage.ABSTRACT_NAMESPACE__MODULES:
+				return modules != null && !modules.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

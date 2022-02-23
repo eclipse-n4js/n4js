@@ -115,7 +115,7 @@ public class ImportHelper {
 			throw new IllegalArgumentException("must not create an ImportDescriptor for broken imports");
 		}
 
-		// FIXME probably we should use a targetProjectName of null/absent in case of nested modules!
+		// FIXME probably we should use a targetProjectName of null/absent in case of declared modules!
 		TModule module = importDecl.getModule().getContainingModule();
 		N4JSPackageName targetProjectName = new N4JSPackageName(module.getPackageName());
 		QualifiedName targetModule = qualifiedNameConverter.toQualifiedName(module.getQualifiedName());

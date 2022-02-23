@@ -115,13 +115,13 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE__NAMESPACES = 2;
 
 	/**
-	 * The feature id for the '<em><b>Nested Modules</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Modules</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE__NESTED_MODULES = 3;
+	int ABSTRACT_NAMESPACE__MODULES = 3;
 
 	/**
 	 * The number of structural features of the '<em>Abstract Namespace</em>' class.
@@ -188,13 +188,13 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_MODULE__NAMESPACES = ABSTRACT_NAMESPACE__NAMESPACES;
 
 	/**
-	 * The feature id for the '<em><b>Nested Modules</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Modules</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_MODULE__NESTED_MODULES = ABSTRACT_NAMESPACE__NESTED_MODULES;
+	int ABSTRACT_MODULE__MODULES = ABSTRACT_NAMESPACE__MODULES;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -297,13 +297,13 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__NAMESPACES = ABSTRACT_MODULE__NAMESPACES;
 
 	/**
-	 * The feature id for the '<em><b>Nested Modules</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Modules</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__NESTED_MODULES = ABSTRACT_MODULE__NESTED_MODULES;
+	int TMODULE__MODULES = ABSTRACT_MODULE__MODULES;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -549,14 +549,14 @@ public interface TypesPackage extends EPackage {
 	int TMODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNestedModuleImpl <em>TNested Module</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TDeclaredModuleImpl <em>TDeclared Module</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.types.impl.TNestedModuleImpl
-	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNestedModule()
+	 * @see org.eclipse.n4js.ts.types.impl.TDeclaredModuleImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTDeclaredModule()
 	 * @generated
 	 */
-	int TNESTED_MODULE = 2;
+	int TDECLARED_MODULE = 2;
 
 	/**
 	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
@@ -565,7 +565,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE__TYPES = ABSTRACT_MODULE__TYPES;
+	int TDECLARED_MODULE__TYPES = ABSTRACT_MODULE__TYPES;
 
 	/**
 	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
@@ -574,7 +574,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE__VARIABLES = ABSTRACT_MODULE__VARIABLES;
+	int TDECLARED_MODULE__VARIABLES = ABSTRACT_MODULE__VARIABLES;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -583,16 +583,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE__NAMESPACES = ABSTRACT_MODULE__NAMESPACES;
+	int TDECLARED_MODULE__NAMESPACES = ABSTRACT_MODULE__NAMESPACES;
 
 	/**
-	 * The feature id for the '<em><b>Nested Modules</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Modules</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE__NESTED_MODULES = ABSTRACT_MODULE__NESTED_MODULES;
+	int TDECLARED_MODULE__MODULES = ABSTRACT_MODULE__MODULES;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -601,7 +601,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE__AST_ELEMENT = ABSTRACT_MODULE__AST_ELEMENT;
+	int TDECLARED_MODULE__AST_ELEMENT = ABSTRACT_MODULE__AST_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Simple Name</b></em>' attribute.
@@ -610,7 +610,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE__SIMPLE_NAME = ABSTRACT_MODULE__SIMPLE_NAME;
+	int TDECLARED_MODULE__SIMPLE_NAME = ABSTRACT_MODULE__SIMPLE_NAME;
 
 	/**
 	 * The feature id for the '<em><b>Qualified Name</b></em>' attribute.
@@ -619,7 +619,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE__QUALIFIED_NAME = ABSTRACT_MODULE__QUALIFIED_NAME;
+	int TDECLARED_MODULE__QUALIFIED_NAME = ABSTRACT_MODULE__QUALIFIED_NAME;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
@@ -628,16 +628,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE__MODULE_SPECIFIER = ABSTRACT_MODULE__MODULE_SPECIFIER;
+	int TDECLARED_MODULE__MODULE_SPECIFIER = ABSTRACT_MODULE__MODULE_SPECIFIER;
 
 	/**
-	 * The number of structural features of the '<em>TNested Module</em>' class.
+	 * The number of structural features of the '<em>TDeclared Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE_FEATURE_COUNT = ABSTRACT_MODULE_FEATURE_COUNT + 0;
+	int TDECLARED_MODULE_FEATURE_COUNT = ABSTRACT_MODULE_FEATURE_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -646,16 +646,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE___GET_CONTAINING_MODULE = ABSTRACT_MODULE___GET_CONTAINING_MODULE;
+	int TDECLARED_MODULE___GET_CONTAINING_MODULE = ABSTRACT_MODULE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The number of operations of the '<em>TNested Module</em>' class.
+	 * The number of operations of the '<em>TDeclared Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNESTED_MODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 0;
+	int TDECLARED_MODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -3000,13 +3000,13 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE__NAMESPACES = TYPE_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Nested Modules</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Modules</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__NESTED_MODULES = TYPE_FEATURE_COUNT + 3;
+	int TNAMESPACE__MODULES = TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -13064,14 +13064,14 @@ public interface TypesPackage extends EPackage {
 	EOperation getTModule__GetContainingModule();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TNestedModule <em>TNested Module</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TDeclaredModule <em>TDeclared Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>TNested Module</em>'.
-	 * @see org.eclipse.n4js.ts.types.TNestedModule
+	 * @return the meta object for class '<em>TDeclared Module</em>'.
+	 * @see org.eclipse.n4js.ts.types.TDeclaredModule
 	 * @generated
 	 */
-	EClass getTNestedModule();
+	EClass getTDeclaredModule();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.RuntimeDependency <em>Runtime Dependency</em>}'.
@@ -14027,15 +14027,15 @@ public interface TypesPackage extends EPackage {
 	EReference getAbstractNamespace_Namespaces();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNestedModules <em>Nested Modules</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getModules <em>Modules</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Nested Modules</em>'.
-	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getNestedModules()
+	 * @return the meta object for the containment reference list '<em>Modules</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getModules()
 	 * @see #getAbstractNamespace()
 	 * @generated
 	 */
-	EReference getAbstractNamespace_NestedModules();
+	EReference getAbstractNamespace_Modules();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getContainingModule() <em>Get Containing Module</em>}' operation.
@@ -16051,14 +16051,14 @@ public interface TypesPackage extends EPackage {
 		EOperation TMODULE___GET_CONTAINING_MODULE = eINSTANCE.getTModule__GetContainingModule();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TNestedModuleImpl <em>TNested Module</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TDeclaredModuleImpl <em>TDeclared Module</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.types.impl.TNestedModuleImpl
-		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNestedModule()
+		 * @see org.eclipse.n4js.ts.types.impl.TDeclaredModuleImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTDeclaredModule()
 		 * @generated
 		 */
-		EClass TNESTED_MODULE = eINSTANCE.getTNestedModule();
+		EClass TDECLARED_MODULE = eINSTANCE.getTDeclaredModule();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -16837,12 +16837,12 @@ public interface TypesPackage extends EPackage {
 		EReference ABSTRACT_NAMESPACE__NAMESPACES = eINSTANCE.getAbstractNamespace_Namespaces();
 
 		/**
-		 * The meta object literal for the '<em><b>Nested Modules</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Modules</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ABSTRACT_NAMESPACE__NESTED_MODULES = eINSTANCE.getAbstractNamespace_NestedModules();
+		EReference ABSTRACT_NAMESPACE__MODULES = eINSTANCE.getAbstractNamespace_Modules();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Containing Module</b></em>' operation.

@@ -58,6 +58,7 @@ import org.eclipse.n4js.ts.types.TAnonymousFormalParameter;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TConstableElement;
+import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
@@ -74,7 +75,6 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TNamespaceElement;
-import org.eclipse.n4js.ts.types.TNestedModule;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructField;
 import org.eclipse.n4js.ts.types.TStructGetter;
@@ -123,7 +123,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass tNestedModuleEClass = null;
+	private EClass tDeclaredModuleEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -906,8 +906,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getTNestedModule() {
-		return tNestedModuleEClass;
+	public EClass getTDeclaredModule() {
+		return tDeclaredModuleEClass;
 	}
 
 	/**
@@ -1836,7 +1836,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getAbstractNamespace_NestedModules() {
+	public EReference getAbstractNamespace_Modules() {
 		return (EReference)abstractNamespaceEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -3626,7 +3626,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(tModuleEClass, TMODULE__TEMPORARY_TYPES);
 		createEOperation(tModuleEClass, TMODULE___GET_CONTAINING_MODULE);
 
-		tNestedModuleEClass = createEClass(TNESTED_MODULE);
+		tDeclaredModuleEClass = createEClass(TDECLARED_MODULE);
 
 		runtimeDependencyEClass = createEClass(RUNTIME_DEPENDENCY);
 		createEReference(runtimeDependencyEClass, RUNTIME_DEPENDENCY__TARGET);
@@ -3739,7 +3739,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__TYPES);
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__VARIABLES);
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__NAMESPACES);
-		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__NESTED_MODULES);
+		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__MODULES);
 		createEOperation(abstractNamespaceEClass, ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE);
 
 		tNamespaceEClass = createEClass(TNAMESPACE);
@@ -3993,7 +3993,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		abstractModuleEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		tModuleEClass.getESuperTypes().add(this.getAbstractModule());
 		tModuleEClass.getESuperTypes().add(this.getTAnnotableElement());
-		tNestedModuleEClass.getESuperTypes().add(this.getAbstractModule());
+		tDeclaredModuleEClass.getESuperTypes().add(this.getAbstractModule());
 		identifiableElementEClass.getESuperTypes().add(this.getTypableElement());
 		tExportableElementEClass.getESuperTypes().add(this.getIdentifiableElement());
 		tDynamicElementEClass.getESuperTypes().add(this.getTExportableElement());
@@ -4119,7 +4119,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getTModule__GetContainingModule(), this.getTModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(tNestedModuleEClass, TNestedModule.class, "TNestedModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(tDeclaredModuleEClass, TDeclaredModule.class, "TDeclaredModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(runtimeDependencyEClass, RuntimeDependency.class, "RuntimeDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRuntimeDependency_Target(), this.getTModule(), null, "target", null, 0, 1, RuntimeDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4295,7 +4295,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEReference(getAbstractNamespace_Types(), this.getType(), null, "types", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAbstractNamespace_Variables(), this.getTVariable(), null, "variables", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAbstractNamespace_Namespaces(), this.getTNamespace(), null, "namespaces", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAbstractNamespace_NestedModules(), this.getTNestedModule(), null, "nestedModules", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAbstractNamespace_Modules(), this.getTDeclaredModule(), null, "modules", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getAbstractNamespace__GetContainingModule(), this.getTModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

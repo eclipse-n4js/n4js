@@ -17,10 +17,10 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
+import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
-import org.eclipse.n4js.ts.types.TNestedModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -29,21 +29,21 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 public class TypeModelUtils {
 
 	/**
-	 * Returns all {@link TNestedModule nested modules} that are directly or indirectly contained in the given
+	 * Returns all {@link TDeclaredModule declared modules} that are directly or indirectly contained in the given
 	 * namespace.
 	 */
-	public static List<TNestedModule> getAllNestedModules(AbstractNamespace namespace) {
-		List<TNestedModule> result = new ArrayList<>();
-		collectAllNestedModules(namespace, result);
+	public static List<TDeclaredModule> getAllDeclaredModules(AbstractNamespace namespace) {
+		List<TDeclaredModule> result = new ArrayList<>();
+		collectAllDeclaredModules(namespace, result);
 		return result;
 	}
 
-	private static void collectAllNestedModules(AbstractNamespace namespace,
-			Collection<? super TNestedModule> addHere) {
+	private static void collectAllDeclaredModules(AbstractNamespace namespace,
+			Collection<? super TDeclaredModule> addHere) {
 		for (TNamespace child : namespace.getNamespaces()) {
-			collectAllNestedModules(child, addHere);
+			collectAllDeclaredModules(child, addHere);
 		}
-		addHere.addAll(namespace.getNestedModules());
+		addHere.addAll(namespace.getModules());
 	}
 
 	/**

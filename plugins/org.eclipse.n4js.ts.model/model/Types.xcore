@@ -68,8 +68,11 @@ abstract class AbstractModule extends AbstractNamespace, SyntaxRelatedTElement {
 	}
 }
 
-/**
+/*
  * The TModule is the representation of the script on the type level.
+ * <p>
+ * Instances of this class are created for N4JS[D] / JS / DTS source code files (one per file), whereas instances
+ * of {@link TDeclaredModule} are created for module declarations inside .d.ts files (possibly many per .d.ts file).
  */
 class TModule extends AbstractModule, TAnnotableElement {
 	/**
@@ -221,7 +224,22 @@ class TModule extends AbstractModule, TAnnotableElement {
 	}
 }
 
-class TNestedModule extends AbstractModule {
+/*
+ * This type of module is created only from .d.ts files and represents a module created from
+ * a module declaration such as
+ * <pre>
+ * // .d.ts
+ * declare module "my/declared/module" { ... }
+ * </pre>
+ * Note that module declarations of the form
+ * <pre>
+ * // .d.ts
+ * declare module myLegacyModule { ... }
+ * </pre>
+ * are actually an old syntax for namespaces and will thus be represented as a {@link TNamespace},
+ * not as a {@code TDeclaredModule}.
+ */
+class TDeclaredModule extends AbstractModule {
 }
 
 /*
@@ -842,9 +860,9 @@ abstract class AbstractNamespace {
 	 */
 	contains TNamespace[] namespaces
 	/*
-	 * A list of all nested modules directly contained in this abstract namespace.
+	 * A list of all declared modules directly contained in this abstract namespace.
 	 */
-	contains TNestedModule[] nestedModules
+	contains TDeclaredModule[] modules
 
 	/*
 	 * Convenience method, returns module this element is contained in, or

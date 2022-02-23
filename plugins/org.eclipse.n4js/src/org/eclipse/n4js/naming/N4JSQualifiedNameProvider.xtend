@@ -31,13 +31,13 @@ import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TDeclaredModule
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TNamespace
-import org.eclipse.n4js.ts.types.TNestedModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAlias
@@ -89,7 +89,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				if (!Strings.isNullOrEmpty(qualifiedName)) {
 					fqnTModule(it)
 				}
-			TNestedModule:
+			TDeclaredModule:
 				if (!Strings.isNullOrEmpty(qualifiedName)) {
 					converter.toQualifiedName(qualifiedName)
 				}

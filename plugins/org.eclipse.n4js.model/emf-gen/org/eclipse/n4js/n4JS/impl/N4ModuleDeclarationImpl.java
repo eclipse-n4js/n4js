@@ -29,7 +29,7 @@ import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.ScriptElement;
 
-import org.eclipse.n4js.ts.types.TNestedModule;
+import org.eclipse.n4js.ts.types.TDeclaredModule;
 
 /**
  * <!-- begin-user-doc -->
@@ -53,7 +53,7 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 	 * @generated
 	 * @ordered
 	 */
-	protected TNestedModule definedModule;
+	protected TDeclaredModule definedModule;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -80,10 +80,10 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 	 * @generated
 	 */
 	@Override
-	public TNestedModule getDefinedModule() {
+	public TDeclaredModule getDefinedModule() {
 		if (definedModule != null && definedModule.eIsProxy()) {
 			InternalEObject oldDefinedModule = (InternalEObject)definedModule;
-			definedModule = (TNestedModule)eResolveProxy(oldDefinedModule);
+			definedModule = (TDeclaredModule)eResolveProxy(oldDefinedModule);
 			if (definedModule != oldDefinedModule) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.N4_MODULE_DECLARATION__DEFINED_MODULE, oldDefinedModule, definedModule));
@@ -97,7 +97,7 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TNestedModule basicGetDefinedModule() {
+	public TDeclaredModule basicGetDefinedModule() {
 		return definedModule;
 	}
 
@@ -107,8 +107,8 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 	 * @generated
 	 */
 	@Override
-	public void setDefinedModule(TNestedModule newDefinedModule) {
-		TNestedModule oldDefinedModule = definedModule;
+	public void setDefinedModule(TDeclaredModule newDefinedModule) {
+		TDeclaredModule oldDefinedModule = definedModule;
 		definedModule = newDefinedModule;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_MODULE_DECLARATION__DEFINED_MODULE, oldDefinedModule, definedModule));
@@ -176,7 +176,7 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case N4JSPackage.N4_MODULE_DECLARATION__DEFINED_MODULE:
-				setDefinedModule((TNestedModule)newValue);
+				setDefinedModule((TDeclaredModule)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -191,7 +191,7 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case N4JSPackage.N4_MODULE_DECLARATION__DEFINED_MODULE:
-				setDefinedModule((TNestedModule)null);
+				setDefinedModule((TDeclaredModule)null);
 				return;
 		}
 		super.eUnset(featureID);

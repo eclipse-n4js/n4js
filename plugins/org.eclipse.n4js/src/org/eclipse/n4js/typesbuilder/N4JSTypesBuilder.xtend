@@ -321,7 +321,7 @@ public class N4JSTypesBuilder {
 
 	def protected dispatch int relinkType(N4ModuleDeclaration n4ModuleDecl, AbstractNamespace target, boolean preLinkingPhase,
 		int idx) {
-		if (n4ModuleDecl.relinkTNestedModule(target, preLinkingPhase, idx)) {
+		if (n4ModuleDecl.relinkTDeclaredModule(target, preLinkingPhase, idx)) {
 			return idx + 1;
 		}
 		return idx;
@@ -435,7 +435,7 @@ public class N4JSTypesBuilder {
 	}
 
 	def protected dispatch void createType(N4ModuleDeclaration n4ModuleDecl, AbstractNamespace target, boolean preLinkingPhase) {
-		n4ModuleDecl.createTNestedModule(target, preLinkingPhase)
+		n4ModuleDecl.createTDeclaredModule(target, preLinkingPhase)
 	}
 
 	def protected dispatch void createType(N4NamespaceDeclaration n4Namespace, AbstractNamespace target, boolean preLinkingPhase) {

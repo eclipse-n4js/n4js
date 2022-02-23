@@ -64,6 +64,7 @@ public class ParserContextUtil {
 		return Collections.emptyList();
 	}
 
+	/** Sets the given accessibility, avoiding duplicate modifiers. */
 	public static void setAccessibility(ModifiableElement elem, N4Modifier accessibility) {
 		Objects.requireNonNull(accessibility);
 		EList<N4Modifier> modifiers = elem.getDeclaredModifiers();
@@ -76,6 +77,10 @@ public class ParserContextUtil {
 		modifiers.add(accessibility);
 	}
 
+	/**
+	 * Adds 'elem' to object 'addHere', setting its accessibility and wrapping it in an {@link ExportDeclaration}, if
+	 * necessary.
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem, EObject addHere,
 			EReference eRef, boolean makePrivateIfNotExported) {

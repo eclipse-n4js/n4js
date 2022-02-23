@@ -44,10 +44,39 @@ import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
+import org.eclipse.n4js.ts.types.TDeclaredModule;
+import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder for namespace and module declarations.
+ * <p>
+ * Note that module declarations in .d.ts files may produce a {@code N4NamespaceDeclaration} instead of a
+ * {@code N4ModuleDeclaration}:
+ * <table border="1">
+ * <tr>
+ * <th>.d.ts source code</th>
+ * <th>AST Element Created</th>
+ * <th>TModule Element Created</th>
+ * </tr>
+ * <tr>
+ * <td>{@link NamespaceDeclarationContext}</td>
+ * <td>{@link N4NamespaceDeclaration}</td>
+ * <td>{@link TNamespace}</td>
+ * </tr>
+ * <tr>
+ * <td>{@link ModuleDeclarationContext}<br>
+ * with identifier as name</td>
+ * <td>{@link N4NamespaceDeclaration}</td>
+ * <td>{@link TNamespace}</td>
+ * </tr>
+ * <tr>
+ * <td>{@link ModuleDeclarationContext}<br>
+ * with string literal as name</td>
+ * <td>{@link N4ModuleDeclaration}</td>
+ * <td>{@link TDeclaredModule}</td>
+ * </tr>
+ * </table>
  */
 public class DtsNamespaceBuilder
 		// cannot use more specific type arguments, because:
