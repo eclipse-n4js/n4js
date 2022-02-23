@@ -419,7 +419,7 @@ public class N4JSTypesBuilder {
 				ExportedVariableStatement:
 					n.createType(target, preLinkingPhase)
 			}
-			if (!(n instanceof N4NamespaceDeclaration)) {
+			if (!(n instanceof N4AbstractNamespaceDeclaration)) {
 				buildTypes(n, target, preLinkingPhase)
 			}
 		}
