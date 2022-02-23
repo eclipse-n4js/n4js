@@ -14,7 +14,9 @@
 	File "other.d.ts" {
 
 		export module legacyModule {
-			export class Cls {}
+			export class Cls {
+				field: string;
+			}
 		}
 
 		export function foo(p: legacyModule.Cls): void;

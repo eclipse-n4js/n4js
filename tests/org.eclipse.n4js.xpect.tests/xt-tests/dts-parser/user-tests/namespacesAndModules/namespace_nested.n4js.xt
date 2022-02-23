@@ -15,7 +15,9 @@
 
 		export namespace N1 {
 			export namespace N2 {
-				export class Cls {}
+				export class Cls {
+					field: string;
+				}
 			}
 		}
 

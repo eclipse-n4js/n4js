@@ -14,11 +14,15 @@
 	File "other.d.ts" {
 
 		declare module "a/b/someModule1" {
-			export class Cls {}
+			export class Cls {
+				field: string;
+			}
 		}
 
 		declare module "a/b/someModule2" {
-			export class Cls {}
+			export class Cls {
+				field: number;
+			}
 		}
 	}
 

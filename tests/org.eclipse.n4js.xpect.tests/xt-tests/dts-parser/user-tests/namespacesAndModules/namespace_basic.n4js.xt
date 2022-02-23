@@ -14,7 +14,9 @@
 	File "other.d.ts" {
 
 		export namespace N {
-			export class Cls {}
+			export class Cls {
+				field: string;
+			}
 		}
 
 		export function foo(p: N.Cls): void;

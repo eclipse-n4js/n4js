@@ -15,7 +15,9 @@
 
 		export module legacyModule1 {
 			export module legacyModule2 {
-				export class Cls {}
+				export class Cls {
+					field: string;
+				}
 			}
 		}
 
