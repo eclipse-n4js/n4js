@@ -452,8 +452,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				ModuleAwareContentsList theContents = (ModuleAwareContentsList) getContents();
 				if (!theContents.isEmpty())
 					throw new IllegalStateException("There is already something in the contents list: " + theContents);
-				InternalEObject astProxy = (InternalEObject) N4JSFactory.eINSTANCE.createScript();
-				astProxy.eSetProxyURI(URI.createURI("#" + AST_PROXY_FRAGMENT));
+				InternalEObject astProxy = createAstProxy();
 				theContents.sneakyAdd(astProxy);
 				theContents.sneakyAdd(deserializedModule);
 				fullyInitialized = true;
@@ -971,8 +970,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (script != null && !script.eIsProxy()) {
 
 			// Create a proxy for the AST.
-			InternalEObject scriptProxy = (InternalEObject) EcoreUtil.create(script.eClass());
-			scriptProxy.eSetProxyURI(EcoreUtil.getURI(script));
+			InternalEObject scriptProxy = createAstProxy();
 
 			TModule module = null;
 			ModuleAwareContentsList theContents = (ModuleAwareContentsList) contents;
@@ -1002,6 +1000,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			this.setASTMetaInfoCache(null);
 			getCache().clear(this);
 		}
+	}
+
+	private InternalEObject createAstProxy() {
+		InternalEObject astProxy = (InternalEObject) N4JSFactory.eINSTANCE.createScript();
+		astProxy.eSetProxyURI(URI.createURI("#" + AST_PROXY_FRAGMENT));
+		return astProxy;
 	}
 
 	private void proxifyASTReferences(EObject object) {
