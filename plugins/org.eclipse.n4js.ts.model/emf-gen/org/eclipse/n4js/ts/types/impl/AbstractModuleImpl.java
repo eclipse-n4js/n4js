@@ -10,7 +10,11 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -220,6 +224,30 @@ public abstract class AbstractModuleImpl extends AbstractNamespaceImpl implement
 	 * @generated
 	 */
 	@Override
+	public boolean isStaticPolyfillModule() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isStaticPolyfillAware() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.ABSTRACT_MODULE__AST_ELEMENT:
@@ -327,6 +355,22 @@ public abstract class AbstractModuleImpl extends AbstractNamespaceImpl implement
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.ABSTRACT_MODULE___IS_STATIC_POLYFILL_MODULE:
+				return isStaticPolyfillModule();
+			case TypesPackage.ABSTRACT_MODULE___IS_STATIC_POLYFILL_AWARE:
+				return isStaticPolyfillAware();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

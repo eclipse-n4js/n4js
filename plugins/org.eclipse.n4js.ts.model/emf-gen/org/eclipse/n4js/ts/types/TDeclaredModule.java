@@ -38,4 +38,33 @@ package org.eclipse.n4js.ts.types;
  * @generated
  */
 public interface TDeclaredModule extends AbstractModule {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isStaticPolyfillModule();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isStaticPolyfillAware();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TDeclaredModule getContainingModule();
+
 } // TDeclaredModule

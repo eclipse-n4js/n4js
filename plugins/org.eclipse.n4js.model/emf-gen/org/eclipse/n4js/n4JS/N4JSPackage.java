@@ -1515,13 +1515,22 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE___GET_CONTAINING_MODULE = TYPED_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE___GET_CONTAINING_ROOT_MODULE = TYPED_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE___GET_NAME = TYPED_ELEMENT_OPERATION_COUNT + 1;
+	int VARIABLE___GET_NAME = TYPED_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -1530,7 +1539,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE___IS_CONST = TYPED_ELEMENT_OPERATION_COUNT + 2;
+	int VARIABLE___IS_CONST = TYPED_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Variable</em>' class.
@@ -1539,7 +1548,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_OPERATION_COUNT = TYPED_ELEMENT_OPERATION_COUNT + 3;
+	int VARIABLE_OPERATION_COUNT = TYPED_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.AnnotableExpressionImpl <em>Annotable Expression</em>}' class.
@@ -3456,6 +3465,15 @@ public interface N4JSPackage extends EPackage {
 	int LOCAL_ARGUMENTS_VARIABLE___GET_CONTAINING_MODULE = VARIABLE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LOCAL_ARGUMENTS_VARIABLE___GET_CONTAINING_ROOT_MODULE = VARIABLE___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3628,13 +3646,22 @@ public interface N4JSPackage extends EPackage {
 	int FORMAL_PARAMETER___GET_CONTAINING_MODULE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FORMAL_PARAMETER___GET_CONTAINING_ROOT_MODULE = ANNOTABLE_ELEMENT_OPERATION_COUNT + 6;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER___GET_NAME = ANNOTABLE_ELEMENT_OPERATION_COUNT + 6;
+	int FORMAL_PARAMETER___GET_NAME = ANNOTABLE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -3643,7 +3670,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER___IS_CONST = ANNOTABLE_ELEMENT_OPERATION_COUNT + 7;
+	int FORMAL_PARAMETER___IS_CONST = ANNOTABLE_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>Formal Parameter</em>' class.
@@ -3652,7 +3679,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FORMAL_PARAMETER_OPERATION_COUNT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 8;
+	int FORMAL_PARAMETER_OPERATION_COUNT = ANNOTABLE_ELEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.StatementImpl <em>Statement</em>}' class.
@@ -4492,13 +4519,22 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_DECLARATION___GET_CONTAINING_MODULE = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 7;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_DECLARATION___GET_CONTAINING_ROOT_MODULE = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 8;
+
+	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___GET_NAME = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 8;
+	int VARIABLE_DECLARATION___GET_NAME = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -4507,7 +4543,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___IS_CONST = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 10;
+	int VARIABLE_DECLARATION___IS_CONST = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 11;
 
 	/**
 	 * The number of operations of the '<em>Variable Declaration</em>' class.
@@ -4516,7 +4552,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 11;
+	int VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableDeclarationImpl <em>Exported Variable Declaration</em>}' class.
@@ -4653,6 +4689,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPORTED_VARIABLE_DECLARATION___GET_CONTAINING_MODULE = VARIABLE_DECLARATION___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_DECLARATION___GET_CONTAINING_ROOT_MODULE = VARIABLE_DECLARATION___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -5827,6 +5872,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int CATCH_VARIABLE___GET_CONTAINING_MODULE = VARIABLE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CATCH_VARIABLE___GET_CONTAINING_ROOT_MODULE = VARIABLE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -11579,6 +11633,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_TYPE_VARIABLE___GET_CONTAINING_MODULE = TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_VARIABLE___GET_CONTAINING_ROOT_MODULE = TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.

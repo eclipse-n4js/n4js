@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -409,7 +410,17 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	 * @generated
 	 */
 	@Override
-	public TModule getContainingModule() {
+	public AbstractModule getContainingModule() {
+		return EcoreUtil2.<AbstractModule>getContainerOfType(this, AbstractModule.class);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TModule getContainingRootModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}
 
@@ -641,6 +652,7 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 		if (baseClass == IdentifiableElement.class) {
 			switch (baseOperationID) {
 				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE: return TypesPackage.TNAMESPACE___GET_CONTAINING_MODULE;
+				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE: return TypesPackage.TNAMESPACE___GET_CONTAINING_ROOT_MODULE;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -654,6 +666,7 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 		if (baseClass == AbstractNamespace.class) {
 			switch (baseOperationID) {
 				case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE: return TypesPackage.TNAMESPACE___GET_CONTAINING_MODULE;
+				case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_ROOT_MODULE: return TypesPackage.TNAMESPACE___GET_CONTAINING_ROOT_MODULE;
 				default: return -1;
 			}
 		}
@@ -690,6 +703,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 				return getDefaultTypeAccessModifier();
 			case TypesPackage.TNAMESPACE___GET_CONTAINING_MODULE:
 				return getContainingModule();
+			case TypesPackage.TNAMESPACE___GET_CONTAINING_ROOT_MODULE:
+				return getContainingRootModule();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

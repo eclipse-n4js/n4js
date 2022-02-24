@@ -66,6 +66,9 @@ abstract class AbstractModule extends AbstractNamespace, SyntaxRelatedTElement {
 	derived String moduleSpecifier get {
 		return qualifiedName
 	}
+
+	op boolean isStaticPolyfillModule()
+	op boolean isStaticPolyfillAware()
 }
 
 /*
@@ -222,6 +225,13 @@ class TModule extends AbstractModule, TAnnotableElement {
 	op TModule getContainingModule() {
 		return this;
 	}
+	/**
+	 * Convenience method, returns the {@link TModule} this element is contained in, or
+	 * null if it is not contained in a TModule. Does not consider intermediate {@link TDeclaredModule}s!
+	 */
+	op TModule getContainingRootModule() {
+		return this;
+	}
 }
 
 /*
@@ -240,6 +250,21 @@ class TModule extends AbstractModule, TAnnotableElement {
  * not as a {@code TDeclaredModule}.
  */
 class TDeclaredModule extends AbstractModule {
+
+	op boolean isStaticPolyfillModule() {
+		return false; // never
+	}
+	op boolean isStaticPolyfillAware() {
+		return false; // never
+	}
+
+	/**
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 */
+	op TDeclaredModule getContainingModule() {
+		return this;
+	}
 }
 
 /*
@@ -307,8 +332,15 @@ class IdentifiableElement extends TypableElement {
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.
 	 */
-	op TModule getContainingModule() {
-		return EcoreUtil2.getContainerOfType(this,TModule);
+	op AbstractModule getContainingModule() {
+		return EcoreUtil2.getContainerOfType(this, AbstractModule);
+	}
+	/**
+	 * Convenience method, returns the {@link TModule} this element is contained in, or
+	 * null if it is not contained in a TModule. Does not consider {@link TDeclaredModule}s!
+	 */
+	op TModule getContainingRootModule() {
+		return EcoreUtil2.getContainerOfType(this, TModule);
 	}
 }
 
@@ -868,7 +900,14 @@ abstract class AbstractNamespace {
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.
 	 */
-	op TModule getContainingModule() {
+	op AbstractModule getContainingModule() {
+		return EcoreUtil2.getContainerOfType(this, AbstractModule);
+	}
+	/**
+	 * Convenience method, returns the {@link TModule} this element is contained in, or
+	 * null if it is not contained in a TModule. Does not consider {@link TDeclaredModule}s!
+	 */
+	op TModule getContainingRootModule() {
 		return EcoreUtil2.getContainerOfType(this, TModule);
 	}
 }

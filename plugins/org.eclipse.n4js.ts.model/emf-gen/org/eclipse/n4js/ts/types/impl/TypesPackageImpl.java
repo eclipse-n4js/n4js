@@ -696,6 +696,26 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getAbstractModule__IsStaticPolyfillModule() {
+		return abstractModuleEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getAbstractModule__IsStaticPolyfillAware() {
+		return abstractModuleEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTModule() {
 		return tModuleEClass;
 	}
@@ -906,8 +926,48 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getTModule__GetContainingRootModule() {
+		return tModuleEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTDeclaredModule() {
 		return tDeclaredModuleEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTDeclaredModule__IsStaticPolyfillModule() {
+		return tDeclaredModuleEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTDeclaredModule__IsStaticPolyfillAware() {
+		return tDeclaredModuleEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTDeclaredModule__GetContainingModule() {
+		return tDeclaredModuleEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -1008,6 +1068,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EOperation getIdentifiableElement__GetContainingModule() {
 		return identifiableElementEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getIdentifiableElement__GetContainingRootModule() {
+		return identifiableElementEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -1848,6 +1918,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	@Override
 	public EOperation getAbstractNamespace__GetContainingModule() {
 		return abstractNamespaceEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getAbstractNamespace__GetContainingRootModule() {
+		return abstractNamespaceEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -3603,6 +3683,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEAttribute(abstractModuleEClass, ABSTRACT_MODULE__SIMPLE_NAME);
 		createEAttribute(abstractModuleEClass, ABSTRACT_MODULE__QUALIFIED_NAME);
 		createEAttribute(abstractModuleEClass, ABSTRACT_MODULE__MODULE_SPECIFIER);
+		createEOperation(abstractModuleEClass, ABSTRACT_MODULE___IS_STATIC_POLYFILL_MODULE);
+		createEOperation(abstractModuleEClass, ABSTRACT_MODULE___IS_STATIC_POLYFILL_AWARE);
 
 		tModuleEClass = createEClass(TMODULE);
 		createEAttribute(tModuleEClass, TMODULE__PACKAGE_NAME);
@@ -3625,8 +3707,12 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(tModuleEClass, TMODULE__COMPOSED_MEMBER_CACHES);
 		createEReference(tModuleEClass, TMODULE__TEMPORARY_TYPES);
 		createEOperation(tModuleEClass, TMODULE___GET_CONTAINING_MODULE);
+		createEOperation(tModuleEClass, TMODULE___GET_CONTAINING_ROOT_MODULE);
 
 		tDeclaredModuleEClass = createEClass(TDECLARED_MODULE);
+		createEOperation(tDeclaredModuleEClass, TDECLARED_MODULE___IS_STATIC_POLYFILL_MODULE);
+		createEOperation(tDeclaredModuleEClass, TDECLARED_MODULE___IS_STATIC_POLYFILL_AWARE);
+		createEOperation(tDeclaredModuleEClass, TDECLARED_MODULE___GET_CONTAINING_MODULE);
 
 		runtimeDependencyEClass = createEClass(RUNTIME_DEPENDENCY);
 		createEReference(runtimeDependencyEClass, RUNTIME_DEPENDENCY__TARGET);
@@ -3641,6 +3727,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		identifiableElementEClass = createEClass(IDENTIFIABLE_ELEMENT);
 		createEAttribute(identifiableElementEClass, IDENTIFIABLE_ELEMENT__NAME);
 		createEOperation(identifiableElementEClass, IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE);
+		createEOperation(identifiableElementEClass, IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE);
 
 		tExportableElementEClass = createEClass(TEXPORTABLE_ELEMENT);
 		createEAttribute(tExportableElementEClass, TEXPORTABLE_ELEMENT__EXPORTED_NAME);
@@ -3741,6 +3828,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__NAMESPACES);
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__MODULES);
 		createEOperation(abstractNamespaceEClass, ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE);
+		createEOperation(abstractNamespaceEClass, ABSTRACT_NAMESPACE___GET_CONTAINING_ROOT_MODULE);
 
 		tNamespaceEClass = createEClass(TNAMESPACE);
 		createEAttribute(tNamespaceEClass, TNAMESPACE__EXTERNAL);
@@ -4096,6 +4184,10 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getAbstractModule_QualifiedName(), theEcorePackage.getEString(), "qualifiedName", null, 0, 1, AbstractModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getAbstractModule_ModuleSpecifier(), theEcorePackage.getEString(), "moduleSpecifier", null, 0, 1, AbstractModule.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
+		initEOperation(getAbstractModule__IsStaticPolyfillModule(), theEcorePackage.getEBoolean(), "isStaticPolyfillModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getAbstractModule__IsStaticPolyfillAware(), theEcorePackage.getEBoolean(), "isStaticPolyfillAware", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(tModuleEClass, TModule.class, "TModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTModule_PackageName(), theEcorePackage.getEString(), "packageName", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_ProjectID(), theEcorePackage.getEString(), "projectID", null, 0, 1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4119,7 +4211,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getTModule__GetContainingModule(), this.getTModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getTModule__GetContainingRootModule(), this.getTModule(), "getContainingRootModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(tDeclaredModuleEClass, TDeclaredModule.class, "TDeclaredModule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getTDeclaredModule__IsStaticPolyfillModule(), theEcorePackage.getEBoolean(), "isStaticPolyfillModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTDeclaredModule__IsStaticPolyfillAware(), theEcorePackage.getEBoolean(), "isStaticPolyfillAware", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTDeclaredModule__GetContainingModule(), this.getTDeclaredModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(runtimeDependencyEClass, RuntimeDependency.class, "RuntimeDependency", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getRuntimeDependency_Target(), this.getTModule(), null, "target", null, 0, 1, RuntimeDependency.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4134,7 +4234,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(identifiableElementEClass, IdentifiableElement.class, "IdentifiableElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getIdentifiableElement_Name(), theEcorePackage.getEString(), "name", null, 0, 1, IdentifiableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getIdentifiableElement__GetContainingModule(), this.getTModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getIdentifiableElement__GetContainingModule(), this.getAbstractModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getIdentifiableElement__GetContainingRootModule(), this.getTModule(), "getContainingRootModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tExportableElementEClass, TExportableElement.class, "TExportableElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTExportableElement_ExportedName(), theEcorePackage.getEString(), "exportedName", null, 0, 1, TExportableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -4297,7 +4399,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEReference(getAbstractNamespace_Namespaces(), this.getTNamespace(), null, "namespaces", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAbstractNamespace_Modules(), this.getTDeclaredModule(), null, "modules", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getAbstractNamespace__GetContainingModule(), this.getTModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getAbstractNamespace__GetContainingModule(), this.getAbstractModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getAbstractNamespace__GetContainingRootModule(), this.getTModule(), "getContainingRootModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tNamespaceEClass, TNamespace.class, "TNamespace", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTNamespace_External(), theEcorePackage.getEBoolean(), "external", null, 0, 1, TNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

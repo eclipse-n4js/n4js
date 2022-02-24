@@ -106,4 +106,20 @@ public interface AbstractModule extends AbstractNamespace, SyntaxRelatedTElement
 	 */
 	String getModuleSpecifier();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isStaticPolyfillModule();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isStaticPolyfillAware();
+
 } // AbstractModule

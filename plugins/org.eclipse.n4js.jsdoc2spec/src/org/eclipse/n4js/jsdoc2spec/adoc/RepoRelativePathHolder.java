@@ -16,9 +16,9 @@ import java.util.Map;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.jsdoc2spec.RepoRelativePath;
+import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
-import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.util.UriExtensions;
@@ -78,7 +78,7 @@ public class RepoRelativePathHolder {
 	 * polyfill module is found, this method retrieves the corresponding aware module and returns its resource.
 	 */
 	private Resource evadeStaticPolyfillResource(IdentifiableElement idElement) {
-		TModule module = idElement.getContainingModule();
+		AbstractModule module = idElement.getContainingModule();
 		if (module == null) // happens when executing tests
 			return null;
 

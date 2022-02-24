@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TModule;
@@ -170,7 +171,17 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 	 * @generated
 	 */
 	@Override
-	public TModule getContainingModule() {
+	public AbstractModule getContainingModule() {
+		return EcoreUtil2.<AbstractModule>getContainerOfType(this, AbstractModule.class);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TModule getContainingRootModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}
 
@@ -297,6 +308,8 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 		switch (operationID) {
 			case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE:
 				return getContainingModule();
+			case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_ROOT_MODULE:
+				return getContainingRootModule();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -142,13 +142,22 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE = 0;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE___GET_CONTAINING_ROOT_MODULE = 1;
+
+	/**
 	 * The number of operations of the '<em>Abstract Namespace</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE_OPERATION_COUNT = 1;
+	int ABSTRACT_NAMESPACE_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AbstractModuleImpl <em>Abstract Module</em>}' class.
@@ -251,13 +260,40 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_MODULE___GET_CONTAINING_MODULE = ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_MODULE___GET_CONTAINING_ROOT_MODULE = ABSTRACT_NAMESPACE___GET_CONTAINING_ROOT_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Static Polyfill Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_MODULE___IS_STATIC_POLYFILL_MODULE = ABSTRACT_NAMESPACE_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Is Static Polyfill Aware</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_MODULE___IS_STATIC_POLYFILL_AWARE = ABSTRACT_NAMESPACE_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>Abstract Module</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_MODULE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 0;
+	int ABSTRACT_MODULE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TModuleImpl <em>TModule</em>}' class.
@@ -531,6 +567,24 @@ public interface TypesPackage extends EPackage {
 	int TMODULE_FEATURE_COUNT = ABSTRACT_MODULE_FEATURE_COUNT + 20;
 
 	/**
+	 * The operation id for the '<em>Is Static Polyfill Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___IS_STATIC_POLYFILL_MODULE = ABSTRACT_MODULE___IS_STATIC_POLYFILL_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Static Polyfill Aware</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___IS_STATIC_POLYFILL_AWARE = ABSTRACT_MODULE___IS_STATIC_POLYFILL_AWARE;
+
+	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -540,13 +594,22 @@ public interface TypesPackage extends EPackage {
 	int TMODULE___GET_CONTAINING_MODULE = ABSTRACT_MODULE_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___GET_CONTAINING_ROOT_MODULE = ABSTRACT_MODULE_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>TModule</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 1;
+	int TMODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TDeclaredModuleImpl <em>TDeclared Module</em>}' class.
@@ -640,13 +703,40 @@ public interface TypesPackage extends EPackage {
 	int TDECLARED_MODULE_FEATURE_COUNT = ABSTRACT_MODULE_FEATURE_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TDECLARED_MODULE___GET_CONTAINING_ROOT_MODULE = ABSTRACT_MODULE___GET_CONTAINING_ROOT_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Static Polyfill Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TDECLARED_MODULE___IS_STATIC_POLYFILL_MODULE = ABSTRACT_MODULE_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Is Static Polyfill Aware</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TDECLARED_MODULE___IS_STATIC_POLYFILL_AWARE = ABSTRACT_MODULE_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TDECLARED_MODULE___GET_CONTAINING_MODULE = ABSTRACT_MODULE___GET_CONTAINING_MODULE;
+	int TDECLARED_MODULE___GET_CONTAINING_MODULE = ABSTRACT_MODULE_OPERATION_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>TDeclared Module</em>' class.
@@ -655,7 +745,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TDECLARED_MODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 0;
+	int TDECLARED_MODULE_OPERATION_COUNT = ABSTRACT_MODULE_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -815,13 +905,22 @@ public interface TypesPackage extends EPackage {
 	int IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE = TYPABLE_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE = TYPABLE_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>Identifiable Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int IDENTIFIABLE_ELEMENT_OPERATION_COUNT = TYPABLE_ELEMENT_OPERATION_COUNT + 1;
+	int IDENTIFIABLE_ELEMENT_OPERATION_COUNT = TYPABLE_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TExportableElementImpl <em>TExportable Element</em>}' class.
@@ -868,6 +967,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXPORTABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -941,6 +1049,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TDYNAMIC_ELEMENT___GET_CONTAINING_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TDYNAMIC_ELEMENT___GET_CONTAINING_ROOT_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -1283,6 +1400,15 @@ public interface TypesPackage extends EPackage {
 	int TYPE___GET_CONTAINING_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE___GET_CONTAINING_ROOT_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1525,6 +1651,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_VARIABLE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE___GET_CONTAINING_ROOT_MODULE = TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -1798,6 +1933,15 @@ public interface TypesPackage extends EPackage {
 	int INFERENCE_VARIABLE___GET_CONTAINING_MODULE = TYPE_VARIABLE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE___GET_CONTAINING_ROOT_MODULE = TYPE_VARIABLE___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2040,6 +2184,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERIC_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE___GET_CONTAINING_ROOT_MODULE = TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -2356,6 +2509,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFUNCTION___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___GET_CONTAINING_ROOT_MODULE = GENERIC_TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -2745,6 +2907,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int CONTAINER_TYPE___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE___GET_CONTAINING_ROOT_MODULE = GENERIC_TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -3180,13 +3351,22 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE___GET_CONTAINING_MODULE = TYPE_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_CONTAINING_ROOT_MODULE = TYPE_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 1;
+	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -3195,7 +3375,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 2;
+	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
@@ -3204,7 +3384,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 3;
+	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -3213,7 +3393,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_EXPORTED = TYPE_OPERATION_COUNT + 4;
+	int TNAMESPACE___IS_EXPORTED = TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>TNamespace</em>' class.
@@ -3222,7 +3402,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 5;
+	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceElementImpl <em>TNamespace Element</em>}' class.
@@ -3342,6 +3522,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_CONTAINING_ROOT_MODULE = TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -3588,6 +3777,15 @@ public interface TypesPackage extends EPackage {
 	int PRIMITIVE_TYPE___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE___GET_CONTAINING_ROOT_MODULE = GENERIC_TYPE___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3794,6 +3992,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int BUILT_IN_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE___GET_CONTAINING_ROOT_MODULE = TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -4004,6 +4211,15 @@ public interface TypesPackage extends EPackage {
 	int ANY_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE___GET_CONTAINING_ROOT_MODULE = BUILT_IN_TYPE___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4210,6 +4426,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNDEFINED_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE___GET_CONTAINING_ROOT_MODULE = BUILT_IN_TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -4420,6 +4645,15 @@ public interface TypesPackage extends EPackage {
 	int NULL_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE___GET_CONTAINING_ROOT_MODULE = BUILT_IN_TYPE___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4626,6 +4860,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int VOID_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE___GET_CONTAINING_ROOT_MODULE = BUILT_IN_TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -4888,6 +5131,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCTURAL_TYPE___GET_CONTAINING_MODULE = CONTAINER_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE___GET_CONTAINING_ROOT_MODULE = CONTAINER_TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -5195,6 +5447,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASSIFIER___GET_CONTAINING_MODULE = CONTAINER_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___GET_CONTAINING_ROOT_MODULE = CONTAINER_TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -5647,6 +5908,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___GET_CONTAINING_MODULE = TCLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___GET_CONTAINING_ROOT_MODULE = TCLASSIFIER___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -6127,6 +6397,15 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___GET_CONTAINING_ROOT_MODULE = TN4_CLASSIFIER___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6560,6 +6839,15 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___GET_CONTAINING_ROOT_MODULE = TN4_CLASSIFIER___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6903,6 +7191,15 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER___GET_CONTAINING_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER___GET_CONTAINING_ROOT_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7201,6 +7498,15 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER_WITH_ACCESS_MODIFIER___GET_CONTAINING_MODULE = TMEMBER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER___GET_CONTAINING_ROOT_MODULE = TMEMBER___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7497,6 +7803,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_MEMBER___GET_CONTAINING_MODULE = TMEMBER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER___GET_CONTAINING_ROOT_MODULE = TMEMBER___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -7948,6 +8263,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMETHOD___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___GET_CONTAINING_ROOT_MODULE = TFUNCTION___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -8581,6 +8905,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___GET_CONTAINING_MODULE = TMETHOD___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___GET_CONTAINING_ROOT_MODULE = TMETHOD___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9059,6 +9392,15 @@ public interface TypesPackage extends EPackage {
 	int TFORMAL_PARAMETER___GET_CONTAINING_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFORMAL_PARAMETER___GET_CONTAINING_ROOT_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Has AST Initializer</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9202,6 +9544,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TANONYMOUS_FORMAL_PARAMETER___GET_CONTAINING_MODULE = TFORMAL_PARAMETER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TANONYMOUS_FORMAL_PARAMETER___GET_CONTAINING_ROOT_MODULE = TFORMAL_PARAMETER___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Has AST Initializer</em>' operation.
@@ -9446,6 +9797,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFIELD___GET_CONTAINING_MODULE = TMEMBER_WITH_ACCESS_MODIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD___GET_CONTAINING_ROOT_MODULE = TMEMBER_WITH_ACCESS_MODIFIER___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -9809,6 +10169,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_FIELD___GET_CONTAINING_MODULE = TFIELD___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD___GET_CONTAINING_ROOT_MODULE = TFIELD___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10161,6 +10530,15 @@ public interface TypesPackage extends EPackage {
 	int FIELD_ACCESSOR___GET_CONTAINING_MODULE = TMEMBER_WITH_ACCESS_MODIFIER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR___GET_CONTAINING_ROOT_MODULE = TMEMBER_WITH_ACCESS_MODIFIER___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10511,6 +10889,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TGETTER___GET_CONTAINING_MODULE = FIELD_ACCESSOR___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER___GET_CONTAINING_ROOT_MODULE = FIELD_ACCESSOR___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -10872,6 +11259,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_GETTER___GET_CONTAINING_MODULE = TGETTER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER___GET_CONTAINING_ROOT_MODULE = TGETTER___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -11244,6 +11640,15 @@ public interface TypesPackage extends EPackage {
 	int TSETTER___GET_CONTAINING_MODULE = FIELD_ACCESSOR___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER___GET_CONTAINING_ROOT_MODULE = FIELD_ACCESSOR___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11605,6 +12010,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_SETTER___GET_CONTAINING_MODULE = TSETTER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER___GET_CONTAINING_ROOT_MODULE = TSETTER___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11912,6 +12326,15 @@ public interface TypesPackage extends EPackage {
 	int TENUM___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___GET_CONTAINING_ROOT_MODULE = TYPE___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12175,13 +12598,22 @@ public interface TypesPackage extends EPackage {
 	int TENUM_LITERAL___GET_CONTAINING_MODULE = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM_LITERAL___GET_CONTAINING_ROOT_MODULE = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>TEnum Literal</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM_LITERAL_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 1;
+	int TENUM_LITERAL_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TypeAliasImpl <em>Type Alias</em>}' class.
@@ -12282,6 +12714,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_ALIAS___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___GET_CONTAINING_ROOT_MODULE = GENERIC_TYPE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -12628,6 +13069,15 @@ public interface TypesPackage extends EPackage {
 	int TVARIABLE___GET_CONTAINING_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE___GET_CONTAINING_ROOT_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12833,6 +13283,26 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getAbstractModule_ModuleSpecifier();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractModule#isStaticPolyfillModule() <em>Is Static Polyfill Module</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Static Polyfill Module</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.AbstractModule#isStaticPolyfillModule()
+	 * @generated
+	 */
+	EOperation getAbstractModule__IsStaticPolyfillModule();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractModule#isStaticPolyfillAware() <em>Is Static Polyfill Aware</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Static Polyfill Aware</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.AbstractModule#isStaticPolyfillAware()
+	 * @generated
+	 */
+	EOperation getAbstractModule__IsStaticPolyfillAware();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TModule <em>TModule</em>}'.
@@ -13064,6 +13534,16 @@ public interface TypesPackage extends EPackage {
 	EOperation getTModule__GetContainingModule();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#getContainingRootModule() <em>Get Containing Root Module</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Containing Root Module</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TModule#getContainingRootModule()
+	 * @generated
+	 */
+	EOperation getTModule__GetContainingRootModule();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TDeclaredModule <em>TDeclared Module</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13072,6 +13552,36 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getTDeclaredModule();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TDeclaredModule#isStaticPolyfillModule() <em>Is Static Polyfill Module</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Static Polyfill Module</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TDeclaredModule#isStaticPolyfillModule()
+	 * @generated
+	 */
+	EOperation getTDeclaredModule__IsStaticPolyfillModule();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TDeclaredModule#isStaticPolyfillAware() <em>Is Static Polyfill Aware</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Static Polyfill Aware</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TDeclaredModule#isStaticPolyfillAware()
+	 * @generated
+	 */
+	EOperation getTDeclaredModule__IsStaticPolyfillAware();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TDeclaredModule#getContainingModule() <em>Get Containing Module</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Containing Module</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TDeclaredModule#getContainingModule()
+	 * @generated
+	 */
+	EOperation getTDeclaredModule__GetContainingModule();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.RuntimeDependency <em>Runtime Dependency</em>}'.
@@ -13177,6 +13687,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getIdentifiableElement__GetContainingModule();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.IdentifiableElement#getContainingRootModule() <em>Get Containing Root Module</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Containing Root Module</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.IdentifiableElement#getContainingRootModule()
+	 * @generated
+	 */
+	EOperation getIdentifiableElement__GetContainingRootModule();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TExportableElement <em>TExportable Element</em>}'.
@@ -14046,6 +14566,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getAbstractNamespace__GetContainingModule();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getContainingRootModule() <em>Get Containing Root Module</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Containing Root Module</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getContainingRootModule()
+	 * @generated
+	 */
+	EOperation getAbstractNamespace__GetContainingRootModule();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TNamespace <em>TNamespace</em>}'.
@@ -15881,6 +16411,22 @@ public interface TypesPackage extends EPackage {
 		EAttribute ABSTRACT_MODULE__MODULE_SPECIFIER = eINSTANCE.getAbstractModule_ModuleSpecifier();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Static Polyfill Module</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ABSTRACT_MODULE___IS_STATIC_POLYFILL_MODULE = eINSTANCE.getAbstractModule__IsStaticPolyfillModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Static Polyfill Aware</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ABSTRACT_MODULE___IS_STATIC_POLYFILL_AWARE = eINSTANCE.getAbstractModule__IsStaticPolyfillAware();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TModuleImpl <em>TModule</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -16051,6 +16597,14 @@ public interface TypesPackage extends EPackage {
 		EOperation TMODULE___GET_CONTAINING_MODULE = eINSTANCE.getTModule__GetContainingModule();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Containing Root Module</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TMODULE___GET_CONTAINING_ROOT_MODULE = eINSTANCE.getTModule__GetContainingRootModule();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TDeclaredModuleImpl <em>TDeclared Module</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -16059,6 +16613,30 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EClass TDECLARED_MODULE = eINSTANCE.getTDeclaredModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Static Polyfill Module</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TDECLARED_MODULE___IS_STATIC_POLYFILL_MODULE = eINSTANCE.getTDeclaredModule__IsStaticPolyfillModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Static Polyfill Aware</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TDECLARED_MODULE___IS_STATIC_POLYFILL_AWARE = eINSTANCE.getTDeclaredModule__IsStaticPolyfillAware();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Containing Module</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TDECLARED_MODULE___GET_CONTAINING_MODULE = eINSTANCE.getTDeclaredModule__GetContainingModule();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -16147,6 +16725,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE = eINSTANCE.getIdentifiableElement__GetContainingModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Containing Root Module</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE = eINSTANCE.getIdentifiableElement__GetContainingRootModule();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TExportableElementImpl <em>TExportable Element</em>}' class.
@@ -16851,6 +17437,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE = eINSTANCE.getAbstractNamespace__GetContainingModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Containing Root Module</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ABSTRACT_NAMESPACE___GET_CONTAINING_ROOT_MODULE = eINSTANCE.getAbstractNamespace__GetContainingRootModule();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl <em>TNamespace</em>}' class.

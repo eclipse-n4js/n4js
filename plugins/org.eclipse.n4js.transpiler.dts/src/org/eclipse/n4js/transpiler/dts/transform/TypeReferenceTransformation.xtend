@@ -514,9 +514,9 @@ class TypeReferenceTransformation extends Transformation {
 					return "IteratorReturnResult";
 				}
 				val containingModule = type.containingModule;
-				if (containingModule !== null
+				if (containingModule instanceof TModule
 						&& containingModule.simpleName == "IntlClasses"
-						&& containingModule.packageName == N4JSGlobals.N4JS_RUNTIME_ECMA402.rawName) {
+						&& (containingModule as TModule).packageName == N4JSGlobals.N4JS_RUNTIME_ECMA402.rawName) {
 					return "Intl." + type.name;
 				}
 				return type.name;

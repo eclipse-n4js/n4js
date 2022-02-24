@@ -766,6 +766,16 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 	 * @generated
 	 */
 	@Override
+	public TModule getContainingRootModule() {
+		return this;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TMODULE__ANNOTATIONS:
@@ -1087,6 +1097,7 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 		if (baseClass == AbstractNamespace.class) {
 			switch (baseOperationID) {
 				case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE: return TypesPackage.TMODULE___GET_CONTAINING_MODULE;
+				case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_ROOT_MODULE: return TypesPackage.TMODULE___GET_CONTAINING_ROOT_MODULE;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -1108,6 +1119,8 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 		switch (operationID) {
 			case TypesPackage.TMODULE___GET_CONTAINING_MODULE:
 				return getContainingModule();
+			case TypesPackage.TMODULE___GET_CONTAINING_ROOT_MODULE:
+				return getContainingRootModule();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

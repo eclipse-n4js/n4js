@@ -29,7 +29,6 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
-import org.eclipse.n4js.ts.types.AbstractModule
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TDeclaredModule
@@ -97,9 +96,9 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			N4TypeDeclaration:
 				if (name !== null) fqnTypeDeclaration(it)
 			FunctionDeclaration:
-				if (name !== null && it.eContainer instanceof ExportDeclaration) containingAbstractModule.fullyQualifiedName?.append(name)
+				if (name !== null && it.eContainer instanceof ExportDeclaration) containingScript.fullyQualifiedName?.append(name)
 			VariableDeclaration:
-				if (name !== null && it.eContainer instanceof ExportDeclaration) containingAbstractModule.fullyQualifiedName?.append(name)
+				if (name !== null && it.eContainer instanceof ExportDeclaration) containingScript.fullyQualifiedName?.append(name)
 			N4TypeVariable:
 				null
 			N4NamespaceDeclaration:
@@ -111,13 +110,13 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			TInterface:
 				if (name !== null) fqnType(it)
 			TEnum:
-				if (name !== null) containingAbstractModule.fullyQualifiedName?.append(exportedName ?: name)
+				if (name !== null) containingModule.fullyQualifiedName?.append(exportedName ?: name)
 			TypeAlias:
-				if (name !== null && it.exported) containingAbstractModule.fullyQualifiedName?.append(exportedName ?: name)
+				if (name !== null && it.exported) containingModule.fullyQualifiedName?.append(exportedName ?: name)
 			TFunction:
-				if (name !== null && it.exported) containingAbstractModule.fullyQualifiedName?.append(exportedName)
+				if (name !== null && it.exported) containingModule.fullyQualifiedName?.append(exportedName)
 			TVariable:
-				if (name !== null && it.exported) containingAbstractModule.fullyQualifiedName?.append(exportedName)
+				if (name !== null && it.exported) containingModule.fullyQualifiedName?.append(exportedName)
 			ExportDeclaration:
 				exportedElement?.getFullyQualifiedName
 			TypeVariable:
@@ -150,7 +149,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	}
 
 	private def QualifiedName fqnTypeDeclaration(N4TypeDeclaration typeDecl) {
-		var prefix = typeDecl.containingAbstractModule.fullyQualifiedName;
+		var prefix = typeDecl.containingScript.fullyQualifiedName;
 		if ( typeDecl.isNonStaticPolyfill || typeDecl.isStaticPolyfill )
 		{
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
@@ -160,7 +159,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	}
 	
 	private def QualifiedName fqnNamespaceDeclaration(N4NamespaceDeclaration typeDecl) {
-		var prefix = typeDecl.containingAbstractModule.fullyQualifiedName;
+		var prefix = typeDecl.containingScript.fullyQualifiedName;
 		var qn = QualifiedName.create(typeDecl.exportedName ?: typeDecl.name);
 		var EObject tmpTypeDecl = typeDecl;
 		while (tmpTypeDecl.eContainer instanceof N4NamespaceDeclaration) {
@@ -173,7 +172,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	}
 
 	private def QualifiedName fqnType(Type type) {
-		var prefix = type.containingAbstractModule.fullyQualifiedName;
+		var prefix = type.containingModule.fullyQualifiedName;
 		if (type.polyfill) {
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
@@ -208,7 +207,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		return null; // failed
 	}
 
-	private def AbstractModule getContainingAbstractModule(EObject eObj) {
-		return EcoreUtil2.getContainerOfType(eObj, AbstractModule);
+	private def Script getContainingScript(EObject astNode) {
+		return EcoreUtil2.getContainerOfType(astNode, Script);
 	}
 }

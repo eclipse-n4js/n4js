@@ -10,8 +10,14 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.n4js.ts.types.AbstractModule;
+import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -40,6 +46,77 @@ public class TDeclaredModuleImpl extends AbstractModuleImpl implements TDeclared
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.TDECLARED_MODULE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isStaticPolyfillModule() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isStaticPolyfillAware() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TDeclaredModule getContainingModule() {
+		return this;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == AbstractNamespace.class) {
+			switch (baseOperationID) {
+				case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE: return TypesPackage.TDECLARED_MODULE___GET_CONTAINING_MODULE;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == AbstractModule.class) {
+			switch (baseOperationID) {
+				case TypesPackage.ABSTRACT_MODULE___IS_STATIC_POLYFILL_MODULE: return TypesPackage.TDECLARED_MODULE___IS_STATIC_POLYFILL_MODULE;
+				case TypesPackage.ABSTRACT_MODULE___IS_STATIC_POLYFILL_AWARE: return TypesPackage.TDECLARED_MODULE___IS_STATIC_POLYFILL_AWARE;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.TDECLARED_MODULE___IS_STATIC_POLYFILL_MODULE:
+				return isStaticPolyfillModule();
+			case TypesPackage.TDECLARED_MODULE___IS_STATIC_POLYFILL_AWARE:
+				return isStaticPolyfillAware();
+			case TypesPackage.TDECLARED_MODULE___GET_CONTAINING_MODULE:
+				return getContainingModule();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //TDeclaredModuleImpl

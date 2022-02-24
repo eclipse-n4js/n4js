@@ -112,6 +112,19 @@ public interface AbstractNamespace extends EObject {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	TModule getContainingModule();
+	AbstractModule getContainingModule();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Convenience method, returns the {@link TModule} this element is contained in, or
+	 * null if it is not contained in a TModule. Does not consider {@link TDeclaredModule}s!
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TModule getContainingRootModule();
 
 } // AbstractNamespace
