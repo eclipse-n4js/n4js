@@ -291,9 +291,9 @@ public class N4JSTypesBuilder {
 	def private void relinkTypes(EObject container, AbstractNamespace target, boolean preLinkingPhase, RelinkIndices rlis) {
 		for (n : container.eContents) {
 			switch n {
-				N4NamespaceDeclaration: {
+				N4AbstractNamespaceDeclaration: {
 					rlis.namespacesIdx = n.relinkType(target, preLinkingPhase, rlis.namespacesIdx);
-					val namespaceType = n.definedType as TNamespace;
+					val AbstractNamespace namespaceType = if (n instanceof N4NamespaceDeclaration) n.definedType as TNamespace else (n as N4ModuleDeclaration).definedModule;
 					relinkTypes(n, namespaceType, preLinkingPhase, new RelinkIndices());
 				}
 				TypeDefiningElement: {
@@ -303,7 +303,7 @@ public class N4JSTypesBuilder {
 					rlis.variableIdx = n.relinkType(target, preLinkingPhase, rlis.variableIdx)
 				}
 			}
-			if (!(n instanceof N4NamespaceDeclaration)) {
+			if (!(n instanceof N4AbstractNamespaceDeclaration)) {
 				relinkTypes(n, target, preLinkingPhase, rlis)
 			}
 		}
