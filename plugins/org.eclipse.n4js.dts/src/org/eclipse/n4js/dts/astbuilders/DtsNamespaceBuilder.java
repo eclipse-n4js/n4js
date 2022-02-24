@@ -82,7 +82,7 @@ public class DtsNamespaceBuilder
 		// cannot use more specific type arguments, because:
 		// - 1st argument: need to accept NamespaceDeclarationContext and ModuleDeclarationContext
 		// - 2nd argument: will create N4NamespaceDeclaration or N4ModuleDeclaration
-		extends AbstractReentrantDtsSubBuilder<ParserRuleContext, N4AbstractNamespaceDeclaration> {
+		extends AbstractDtsSubBuilder<ParserRuleContext, N4AbstractNamespaceDeclaration> {
 
 	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
 	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
@@ -136,57 +136,55 @@ public class DtsNamespaceBuilder
 
 	@Override
 	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
-		boolean isExported = ParserContextUtil.isExported(ctx);
-		N4NamespaceDeclaration nd = doCreateN4NamespaceDeclaration(ctx.namespaceName().getText(), isExported);
-		pushResult(nd);
-		walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+		if (result == null) {
+			boolean isExported = ParserContextUtil.isExported(ctx);
+			result = doCreateN4NamespaceDeclaration(ctx.namespaceName().getText(), isExported);
+			walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+		} else {
+			N4NamespaceDeclaration nd = new DtsNamespaceBuilder(tokenStream, resource).consume(ctx);
+			addAndHandleExported(ctx, nd);
+		}
 	}
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		ModuleNameContext ctxName = ctx.moduleName();
-		if (ctxName != null) {
-			TerminalNode strLit = ctxName.StringLiteral();
-			if (strLit != null) {
-				// this module declaration actually declares a module
-				N4ModuleDeclaration md = doCreateModuleDeclaration(ParserContextUtil.trimStringLiteral(strLit));
-				pushResult(md);
-				walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
-			} else {
+		if (result == null) {
+			ModuleNameContext ctxName = ctx.moduleName();
+			if (ctxName != null) {
+				TerminalNode strLit = ctxName.StringLiteral();
 				TerminalNode identifier = ctxName.Identifier();
-				if (identifier != null) {
+				if (strLit != null) {
+					// this module declaration actually declares a module
+					result = doCreateModuleDeclaration(ParserContextUtil.trimStringLiteral(strLit));
+					walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+				} else if (identifier != null) {
 					// this module declaration declares a "legacy module" that acts like a namespace
 					boolean isExported = ParserContextUtil.isExported(ctx);
-					N4NamespaceDeclaration nd = doCreateN4NamespaceDeclaration(identifier.getText(), isExported);
-					pushResult(nd);
+					result = doCreateN4NamespaceDeclaration(identifier.getText(), isExported);
 					walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
 				}
 			}
-		}
-	}
-
-	@Override
-	public void exitNamespaceDeclaration(NamespaceDeclarationContext ctx) {
-		doExit(ctx);
-	}
-
-	@Override
-	public void exitModuleDeclaration(ModuleDeclarationContext ctx) {
-		doExit(ctx);
-	}
-
-	private void doExit(ParserRuleContext ctx) {
-		N4AbstractNamespaceDeclaration previousResult = popResult();
-		if (resultStack.isEmpty()) {
-			// we just popped the last, i.e. the root namespace/module off the stack, so the caller of #consume() is
-			// responsible for adding it to its parent (usually the Script)
-			// --> nothing to do here
 		} else {
-			// we just popped a nested namespace/module off the stack, i.e. the current 'result' is the parent of
-			// 'previousResult'
-			// --> we have to add 'previousResult' to 'result'
-			addAndHandleExported(ctx, previousResult);
+			N4AbstractNamespaceDeclaration md = new DtsNamespaceBuilder(tokenStream, resource).consume(ctx);
+			addAndHandleExported(ctx, md);
 		}
+	}
+
+	/** Creates a {@link N4ModuleDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
+	private N4ModuleDeclaration doCreateModuleDeclaration(String name) {
+		N4ModuleDeclaration moduleDecl = N4JSFactory.eINSTANCE.createN4ModuleDeclaration();
+		moduleDecl.setName(name);
+		return moduleDecl;
+	}
+
+	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
+	private N4NamespaceDeclaration doCreateN4NamespaceDeclaration(String name, boolean isExported) {
+		N4NamespaceDeclaration nsDecl = N4JSFactory.eINSTANCE.createN4NamespaceDeclaration();
+		nsDecl.setName(name);
+		if (isExported) {
+			nsDecl.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		}
+		return nsDecl;
 	}
 
 	@Override
@@ -227,35 +225,26 @@ public class DtsNamespaceBuilder
 
 	private void addAndHandleExported(ParserRuleContext ctx, N4AbstractNamespaceDeclaration decl) {
 		if (decl instanceof N4ModuleDeclaration) {
-			N4ModuleDeclaration md = (N4ModuleDeclaration) decl;
-			result.getOwnedElementsRaw().add(md);
+			addAndHandleExported(ctx, (N4ModuleDeclaration) decl);
 		} else if (decl instanceof N4NamespaceDeclaration) {
-			addAndHandleExported(ctx, (ExportableElement) decl);
+			addAndHandleExported(ctx, (N4NamespaceDeclaration) decl);
 		} else {
 			throw new UnsupportedOperationException(
 					"unsupported subclass of N4AbstractNamespaceDeclaration: " + decl.getClass().getSimpleName());
 		}
 	}
 
+	private void addAndHandleExported(@SuppressWarnings("unused") ParserRuleContext ctx, N4ModuleDeclaration decl) {
+		N4ModuleDeclaration md = decl;
+		result.getOwnedElementsRaw().add(md);
+	}
+
+	private void addAndHandleExported(ParserRuleContext ctx, N4NamespaceDeclaration decl) {
+		addAndHandleExported(ctx, (ExportableElement) decl);
+	}
+
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
 		ParserContextUtil.addAndHandleExported(ctx, elem, result,
 				N4JSPackage.Literals.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW, true);
-	}
-
-	/** Creates a {@link N4ModuleDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
-	private N4ModuleDeclaration doCreateModuleDeclaration(String name) {
-		N4ModuleDeclaration moduleDecl = N4JSFactory.eINSTANCE.createN4ModuleDeclaration();
-		moduleDecl.setName(name);
-		return moduleDecl;
-	}
-
-	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
-	private N4NamespaceDeclaration doCreateN4NamespaceDeclaration(String name, boolean isExported) {
-		N4NamespaceDeclaration nsDecl = N4JSFactory.eINSTANCE.createN4NamespaceDeclaration();
-		nsDecl.setName(name);
-		if (isExported) {
-			nsDecl.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		}
-		return nsDecl;
 	}
 }
