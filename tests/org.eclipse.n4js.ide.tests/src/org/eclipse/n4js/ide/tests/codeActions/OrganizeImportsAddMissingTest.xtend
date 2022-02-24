@@ -44,6 +44,30 @@ class OrganizeImportsAddMissingTest extends AbstractOrganizeImportsTest {
 	}
 
 	@Test
+	def void testAddImportFromDts() {
+		test('''
+			let x: Dts01;
+		''', #[
+			"(Error, [0:7 - 0:12], Couldn't resolve reference to Type 'Dts01'.)"
+		], '''
+			import {Dts01} from "Dts";
+			let x: Dts01;
+		''')
+	}
+
+	@Test
+	def void testAddImportFromDts_declaredModule() {
+		test('''
+			let x: DtsInDeclModule;
+		''', #[
+			"(Error, [0:7 - 0:22], Couldn't resolve reference to Type 'DtsInDeclModule'.)"
+		], '''
+			import {DtsInDeclModule} from "a/b/declModule";
+			let x: DtsInDeclModule;
+		''')
+	}
+
+	@Test
 	def void testDoNotAddMultipleImportsForSameElement() {
 		test('''
 			A01;
