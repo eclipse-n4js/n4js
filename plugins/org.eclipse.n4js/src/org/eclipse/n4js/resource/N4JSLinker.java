@@ -411,7 +411,6 @@ public class N4JSLinker extends LazyLinker {
 	 */
 	@Override
 	protected EClass findInstantiableCompatible(EClass eType) {
-		// FIXME this is bad; #createProxy() above should be able to create proxies for abstract classes
 		if (eType == TypesPackage.Literals.ABSTRACT_MODULE) {
 			return TypesPackage.Literals.TMODULE;
 		}

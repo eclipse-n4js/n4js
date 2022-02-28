@@ -31,6 +31,8 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
+import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsModuleBuilder;
+import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsNamespaceBuilder;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
@@ -56,6 +58,7 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
 	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
 	private final DtsNamespaceBuilder namespaceBuilder = new DtsNamespaceBuilder(tokenStream, resource);
+	private final DtsModuleBuilder moduleBuilder = new DtsModuleBuilder(tokenStream, resource);
 	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
 	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
 	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(tokenStream, resource);
@@ -111,7 +114,7 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		N4AbstractNamespaceDeclaration d = namespaceBuilder.consume(ctx);
+		N4AbstractNamespaceDeclaration d = moduleBuilder.consume(ctx);
 		if (d instanceof N4ModuleDeclaration) {
 			N4ModuleDeclaration md = (N4ModuleDeclaration) d;
 			addToScript(md);

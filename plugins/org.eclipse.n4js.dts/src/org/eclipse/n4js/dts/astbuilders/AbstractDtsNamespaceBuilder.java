@@ -49,7 +49,7 @@ import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
- * Builder for namespace and module declarations.
+ * Base class of the builders for namespace and module declarations.
  * <p>
  * Note that module declarations in .d.ts files may produce a {@code N4NamespaceDeclaration} instead of a
  * {@code N4ModuleDeclaration}:
@@ -78,11 +78,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * </tr>
  * </table>
  */
-public class DtsNamespaceBuilder
-		// cannot use more specific type arguments, because:
-		// - 1st argument: need to accept NamespaceDeclarationContext and ModuleDeclarationContext
-		// - 2nd argument: will create N4NamespaceDeclaration or N4ModuleDeclaration
-		extends AbstractDtsSubBuilder<ParserRuleContext, N4AbstractNamespaceDeclaration> {
+public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
+		extends AbstractDtsSubBuilder<T, N4AbstractNamespaceDeclaration> {
 
 	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
 	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
@@ -91,8 +88,35 @@ public class DtsNamespaceBuilder
 	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
 	private final DtsVariableBuilder variableBuilder = new DtsVariableBuilder(tokenStream, resource);
 
+	/** Builder for namespaces. */
+	public static class DtsNamespaceBuilder
+			extends AbstractDtsNamespaceBuilder<NamespaceDeclarationContext> {
+
+		/** Constructor */
+		public DtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+			super(tokenStream, resource);
+		}
+
+		@Override
+		public N4NamespaceDeclaration consume(NamespaceDeclarationContext ctx) {
+			return (N4NamespaceDeclaration) super.consume(ctx);
+		}
+	}
+
+	/** Builder for modules. */
+	public static class DtsModuleBuilder
+			// cannot use more specific type argument than N4AbstractNamespaceDeclaration, because we
+			// will create a N4NamespaceDeclaration or a N4ModuleDeclaration
+			extends AbstractDtsNamespaceBuilder<ModuleDeclarationContext> {
+
+		/** Constructor */
+		public DtsModuleBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+			super(tokenStream, resource);
+		}
+	}
+
 	/** Constructor */
-	public DtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
 	}
 
@@ -105,33 +129,6 @@ public class DtsNamespaceBuilder
 				RULE_declarationStatement,
 				RULE_exportStatement,
 				RULE_exportStatementTail);
-	}
-
-	/**
-	 * Overloads {@link #consume(ParserRuleContext)} to codify the rule that when a {@link NamespaceDeclarationContext}
-	 * is passed in, you will always get back a {@link N4NamespaceDeclaration} (never a {@link N4ModuleDeclaration}).
-	 */
-	public N4NamespaceDeclaration consume(NamespaceDeclarationContext ctx) {
-		return (N4NamespaceDeclaration) super.consume(ctx);
-	}
-
-	/**
-	 * Overloads {@link #consume(ParserRuleContext)} to codify the rule that when a {@link ModuleDeclarationContext} is
-	 * passed in, you might get back an {@link N4NamespaceDeclaration} or an {@link N4ModuleDeclaration}.
-	 */
-	public N4AbstractNamespaceDeclaration consume(ModuleDeclarationContext ctx) {
-		return super.consume(ctx);
-	}
-
-	@Override
-	public N4AbstractNamespaceDeclaration consume(ParserRuleContext ctx) {
-		if (!(ctx instanceof NamespaceDeclarationContext)
-				&& !(ctx instanceof ModuleDeclarationContext)) {
-			throw new IllegalArgumentException(
-					"may only be called with a namespace or module declaration context, but got: "
-							+ ctx.getClass().getSimpleName());
-		}
-		return super.consume(ctx);
 	}
 
 	@Override
@@ -165,7 +162,7 @@ public class DtsNamespaceBuilder
 				}
 			}
 		} else {
-			N4AbstractNamespaceDeclaration md = new DtsNamespaceBuilder(tokenStream, resource).consume(ctx);
+			N4AbstractNamespaceDeclaration md = new DtsModuleBuilder(tokenStream, resource).consume(ctx);
 			addAndHandleExported(ctx, md);
 		}
 	}
