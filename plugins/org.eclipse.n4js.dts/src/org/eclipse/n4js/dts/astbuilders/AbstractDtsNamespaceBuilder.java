@@ -105,8 +105,6 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 	/** Builder for modules. */
 	public static class DtsModuleBuilder
-			// cannot use more specific type argument than N4AbstractNamespaceDeclaration, because we
-			// will create a N4NamespaceDeclaration or a N4ModuleDeclaration
 			extends AbstractDtsNamespaceBuilder<ModuleDeclarationContext> {
 
 		/** Constructor */
