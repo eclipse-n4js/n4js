@@ -98,12 +98,20 @@ public abstract class AbstractOrganizeImportsTest extends AbstractStructuredIdeT
 						"export class C02 {}",
 						"export class C03 {}",
 						"export class C04 {}")),
-				Pair.of("Def", Strings.fromLines(
-						"export class Def01 {}",
-						"export class Def02 {}",
-						"export class Def03 {}",
-						"export class Def04 {}",
-						"export default class DefCls {}")),
+				Pair.of("Def.n4jsd", Strings.fromLines(
+						"export external class Def01 {}",
+						"export external class Def02 {}",
+						"export external class Def03 {}",
+						"export external class Def04 {}",
+						"export default external class DefCls {}")),
+				Pair.of("Dts.d.ts", Strings.fromLines(
+						"export class Dts01 {}",
+						"export class Dts02 {}",
+						"export class Dts03 {}",
+						"export class Dts04 {}",
+						"declare module \"a/b/declModule\" {",
+						"	export class DtsInDeclModule {}",
+						"}")),
 				Pair.of("PlainJS.js",
 						"// no content required"));
 	}

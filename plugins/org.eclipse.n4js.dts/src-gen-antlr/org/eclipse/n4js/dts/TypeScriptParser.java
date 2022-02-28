@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-temp/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -5224,7 +5224,9 @@ public class TypeScriptParser extends TypeScriptParserBase {
 
 	public static class EnumDeclarationContext extends ParserRuleContext {
 		public TerminalNode Enum() { return getToken(TypeScriptParser.Enum, 0); }
-		public TerminalNode Identifier() { return getToken(TypeScriptParser.Identifier, 0); }
+		public IdentifierOrKeyWordContext identifierOrKeyWord() {
+			return getRuleContext(IdentifierOrKeyWordContext.class,0);
+		}
 		public TerminalNode OpenBrace() { return getToken(TypeScriptParser.OpenBrace, 0); }
 		public TerminalNode CloseBrace() { return getToken(TypeScriptParser.CloseBrace, 0); }
 		public TerminalNode Const() { return getToken(TypeScriptParser.Const, 0); }
@@ -5271,7 +5273,7 @@ public class TypeScriptParser extends TypeScriptParserBase {
 			setState(866);
 			match(Enum);
 			setState(867);
-			match(Identifier);
+			identifierOrKeyWord();
 			setState(868);
 			match(OpenBrace);
 			setState(870);
@@ -15638,7 +15640,7 @@ public class TypeScriptParser extends TypeScriptParserBase {
 		"\7\20\2\2\u035c\u035b\3\2\2\2\u035c\u035d\3\2\2\2\u035d\u035f\3\2\2\2"+
 		"\u035e\u0360\5\16\b\2\u035f\u035e\3\2\2\2\u035f\u0360\3\2\2\2\u0360\177"+
 		"\3\2\2\2\u0361\u0363\7e\2\2\u0362\u0361\3\2\2\2\u0362\u0363\3\2\2\2\u0363"+
-		"\u0364\3\2\2\2\u0364\u0365\7b\2\2\u0365\u0366\7\u0085\2\2\u0366\u0368"+
+		"\u0364\3\2\2\2\u0364\u0365\7b\2\2\u0365\u0366\5\u0138\u009d\2\u0366\u0368"+
 		"\7\13\2\2\u0367\u0369\5\u0082B\2\u0368\u0367\3\2\2\2\u0368\u0369\3\2\2"+
 		"\2\u0369\u036a\3\2\2\2\u036a\u036c\7\f\2\2\u036b\u036d\7\r\2\2\u036c\u036b"+
 		"\3\2\2\2\u036c\u036d\3\2\2\2\u036d\u0081\3\2\2\2\u036e\u0370\5\u0084C"+

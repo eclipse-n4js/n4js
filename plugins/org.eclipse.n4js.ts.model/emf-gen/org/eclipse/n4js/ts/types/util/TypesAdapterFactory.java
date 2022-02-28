@@ -76,8 +76,16 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	protected TypesSwitch<Adapter> modelSwitch =
 		new TypesSwitch<Adapter>() {
 			@Override
+			public Adapter caseAbstractModule(AbstractModule object) {
+				return createAbstractModuleAdapter();
+			}
+			@Override
 			public Adapter caseTModule(TModule object) {
 				return createTModuleAdapter();
+			}
+			@Override
+			public Adapter caseTDeclaredModule(TDeclaredModule object) {
+				return createTDeclaredModuleAdapter();
 			}
 			@Override
 			public Adapter caseRuntimeDependency(RuntimeDependency object) {
@@ -320,6 +328,20 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 
 
 	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.AbstractModule <em>Abstract Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.AbstractModule
+	 * @generated
+	 */
+	public Adapter createAbstractModuleAdapter() {
+		return null;
+	}
+
+	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TModule <em>TModule</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -330,6 +352,20 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTModuleAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TDeclaredModule <em>TDeclared Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.TDeclaredModule
+	 * @generated
+	 */
+	public Adapter createTDeclaredModuleAdapter() {
 		return null;
 	}
 

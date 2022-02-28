@@ -74,12 +74,30 @@ public class TypesSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
+			case TypesPackage.ABSTRACT_MODULE: {
+				AbstractModule abstractModule = (AbstractModule)theEObject;
+				T result = caseAbstractModule(abstractModule);
+				if (result == null) result = caseAbstractNamespace(abstractModule);
+				if (result == null) result = caseSyntaxRelatedTElement(abstractModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypesPackage.TMODULE: {
 				TModule tModule = (TModule)theEObject;
 				T result = caseTModule(tModule);
+				if (result == null) result = caseAbstractModule(tModule);
+				if (result == null) result = caseTAnnotableElement(tModule);
 				if (result == null) result = caseAbstractNamespace(tModule);
 				if (result == null) result = caseSyntaxRelatedTElement(tModule);
-				if (result == null) result = caseTAnnotableElement(tModule);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypesPackage.TDECLARED_MODULE: {
+				TDeclaredModule tDeclaredModule = (TDeclaredModule)theEObject;
+				T result = caseTDeclaredModule(tDeclaredModule);
+				if (result == null) result = caseAbstractModule(tDeclaredModule);
+				if (result == null) result = caseAbstractNamespace(tDeclaredModule);
+				if (result == null) result = caseSyntaxRelatedTElement(tDeclaredModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -719,6 +737,21 @@ public class TypesSwitch<T> extends Switch<T> {
 	}
 
 	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Abstract Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Abstract Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseAbstractModule(AbstractModule object) {
+		return null;
+	}
+
+	/**
 	 * Returns the result of interpreting the object as an instance of '<em>TModule</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
@@ -730,6 +763,21 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTModule(TModule object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TDeclared Module</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TDeclared Module</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTDeclaredModule(TDeclaredModule object) {
 		return null;
 	}
 

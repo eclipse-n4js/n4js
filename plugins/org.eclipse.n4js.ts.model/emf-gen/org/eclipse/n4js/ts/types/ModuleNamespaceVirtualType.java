@@ -42,12 +42,12 @@ public interface ModuleNamespaceVirtualType extends Type, SyntaxRelatedTElement 
 	 * reference to module which give namespace represents
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Module</em>' reference.
-	 * @see #setModule(TModule)
+	 * @see #setModule(AbstractModule)
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getModuleNamespaceVirtualType_Module()
 	 * @model
 	 * @generated
 	 */
-	TModule getModule();
+	AbstractModule getModule();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType#getModule <em>Module</em>}' reference.
@@ -57,7 +57,7 @@ public interface ModuleNamespaceVirtualType extends Type, SyntaxRelatedTElement 
 	 * @see #getModule()
 	 * @generated
 	 */
-	void setModule(TModule value);
+	void setModule(AbstractModule value);
 
 	/**
 	 * Returns the value of the '<em><b>Declared Dynamic</b></em>' attribute.

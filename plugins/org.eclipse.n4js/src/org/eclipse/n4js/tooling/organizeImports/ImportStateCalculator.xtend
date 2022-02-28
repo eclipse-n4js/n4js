@@ -18,7 +18,7 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.AbstractModule
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
@@ -57,7 +57,7 @@ class ImportStateCalculator {
 
 		//refactor into specific types, those are essentially Maps holding elements in insertion order (keys and values)
 		val List<Pair<String, List<ImportProvidedElement>>> lN2IPE = newArrayList()
-		val List<Pair<TModule, List<ImportProvidedElement>>> lM2IPE = newArrayList()
+		val List<Pair<AbstractModule, List<ImportProvidedElement>>> lM2IPE = newArrayList()
 
 		//TODO refactor this, those composed collections should be encapsulated as specific types with proper get/set methods
 		for (ipe : importProvidedElements) {
@@ -108,7 +108,7 @@ class ImportStateCalculator {
 	/**
 	 * Registers conflicting or duplicate (based on imported elements) imports in the provided {@link RecordingImportState}
 	 */
-	private def registerUsedImportsDuplicatedImportedElements(RecordingImportState reg, List<Pair<TModule, List<ImportProvidedElement>>> module2imported) {
+	private def registerUsedImportsDuplicatedImportedElements(RecordingImportState reg, List<Pair<AbstractModule, List<ImportProvidedElement>>> module2imported) {
 		for (pair : module2imported) {
 			val fromMod = pair.value
 

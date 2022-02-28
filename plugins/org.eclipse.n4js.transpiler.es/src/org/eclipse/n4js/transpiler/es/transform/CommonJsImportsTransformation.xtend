@@ -29,6 +29,8 @@ import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.ts.types.AbstractModule
+import org.eclipse.n4js.ts.types.TDeclaredModule
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.ProjectDescriptionUtils
@@ -109,11 +111,17 @@ class CommonJsImportsTransformation extends Transformation {
 	 * } = $tempVar;
 	 * </pre>
 	 */
-	def private List<VariableStatement> transformImportDecl(TModule targetModule, List<ImportDeclaration> allImportDeclsForThisModule) {
+	def private List<VariableStatement> transformImportDecl(AbstractModule targetModule, List<ImportDeclaration> allImportDeclsForThisModule) {
 		if (allImportDeclsForThisModule.empty) {
 			return #[];
 		}
-		if (!requiresRewrite(targetModule)) {
+		if (targetModule instanceof TDeclaredModule) {
+			return #[];
+		} else if (!(targetModule instanceof TModule)) {
+			throw new UnsupportedOperationException("unsupported subclass of AbstractModule: " + targetModule.getClass.simpleName);
+		}
+		val targetTModule = targetModule as TModule;
+		if (!requiresRewrite(targetTModule)) {
 			return #[];
 		}
 
@@ -150,7 +158,7 @@ class CommonJsImportsTransformation extends Transformation {
 			}
 		}
 
-		val tempVarName = computeNameForIntermediateDefaultImport(targetModule);
+		val tempVarName = computeNameForIntermediateDefaultImport(targetTModule);
 		val tempVarSTE = getSymbolTableEntryInternal(tempVarName, true);
 
 		val varDecls = <VariableDeclaration>newArrayList;

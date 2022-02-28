@@ -37,7 +37,6 @@ import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
-import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
@@ -355,7 +354,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 									
 									if (!( // do not create issues for polyfills conflicting with imports, as they might fill them
 										dupeEO instanceof N4ClassifierDeclaration && baseEO instanceof ImportSpecifier &&
-										N4JSLanguageUtils.isNonStaticPolyfill(dupeEO as N4ClassDeclaration)
+										N4JSLanguageUtils.isNonStaticPolyfill(dupeEO as N4ClassifierDeclaration)
 										// TODO IDE-1735 does this check need to be activated for static polyfills?
 									)) {
 										addIssue(

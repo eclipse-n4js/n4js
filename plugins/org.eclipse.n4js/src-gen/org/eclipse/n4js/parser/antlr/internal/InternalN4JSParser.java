@@ -3289,7 +3289,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
             }
             if ( state.backtracking==0 ) {
-              					newCompositeNode(grammarAccess.getExportFromClauseAccess().getReexportedFromTModuleCrossReference_1_0());
+              					newCompositeNode(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleCrossReference_1_0());
             }
             pushFollow(FOLLOW_2);
             ruleModuleSpecifier();
@@ -4794,7 +4794,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
             }
             if ( state.backtracking==0 ) {
-              					newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getModuleTModuleCrossReference_2_0());
+              					newCompositeNode(grammarAccess.getImportDeclarationImplAccess().getModuleAbstractModuleCrossReference_2_0());
             }
             pushFollow(FOLLOW_24);
             ruleModuleSpecifier();

@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+declare module "parent" {
+	export class Cls1 {}
+	declare module "child" {
+		class Cls2 {}
+		declare module "grandChild" {
+			class Cls3 {}
+		}
+	}
+}
+
+// actual modules (i.e. module declarations with a string literal as name) will lead
+// to N4ModuleDeclarations on the .n4jsd-side:
+
+/* XPECT ast ---
+Script: true
+  N4ModuleDeclaration: parent
+   ExportDeclaration: false, false
+    N4ClassDeclaration: [external, public], Cls1, ?~
+   N4ModuleDeclaration: child
+    N4ClassDeclaration: [external, private], Cls2, ?~
+    N4ModuleDeclaration: grandChild
+     N4ClassDeclaration: [external, private], Cls3, ?~
+--- */

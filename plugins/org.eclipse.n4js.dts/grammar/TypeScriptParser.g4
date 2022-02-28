@@ -361,7 +361,7 @@ propertySignature
 // Enum
 
 enumDeclaration
-    : Const? Enum Identifier '{' enumBody? '}' SemiColon?
+    : Const? Enum identifierOrKeyWord '{' enumBody? '}' SemiColon?
     ;
 
 enumBody

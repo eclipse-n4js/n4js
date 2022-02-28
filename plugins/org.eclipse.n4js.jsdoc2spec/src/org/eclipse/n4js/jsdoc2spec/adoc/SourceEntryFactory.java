@@ -14,10 +14,10 @@ import java.io.File;
 
 import org.eclipse.n4js.jsdoc2spec.RepoRelativePath;
 import org.eclipse.n4js.jsdoc2spec.SpecTestInfo;
+import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TModule;
 
 /**
  * Builds {@link SourceEntry}s.
@@ -47,7 +47,7 @@ public class SourceEntryFactory {
 	 * Factory method used for any source element.
 	 */
 	static SourceEntry create(RepoRelativePathHolder rrph, RepoRelativePath rrpType, IdentifiableElement idElement) {
-		TModule containingModule = idElement.getContainingModule();
+		AbstractModule containingModule = idElement.getContainingModule();
 		if (containingModule == null)
 			return null;
 		String module = containingModule.getModuleSpecifier().toString();
@@ -165,7 +165,7 @@ public class SourceEntryFactory {
 		if (idElement == null) {
 			return false;
 		}
-		TModule containingModule = idElement.getContainingModule();
+		AbstractModule containingModule = idElement.getContainingModule();
 		if (containingModule == null) {
 			return false;
 		}

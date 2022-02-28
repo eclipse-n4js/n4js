@@ -117,7 +117,7 @@ class OrganizeImportsTest extends AbstractOrganizeImportsTest {
 			import {A01} from "A";
 			A01,C01;
 		''', #[
-			"(Error, [1:17 - 1:19], Couldn't resolve reference to TModule ''.)"
+			"(Error, [1:17 - 1:19], Couldn't resolve reference to AbstractModule ''.)"
 		], '''
 			import {A01} from "A";
 			import {C01} from "C";

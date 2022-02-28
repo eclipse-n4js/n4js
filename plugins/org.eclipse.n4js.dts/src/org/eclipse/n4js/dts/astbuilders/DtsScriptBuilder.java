@@ -26,20 +26,23 @@ import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
-import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsModuleBuilder;
+import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsNamespaceBuilder;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
-import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.Script;
@@ -55,6 +58,7 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
 	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
 	private final DtsNamespaceBuilder namespaceBuilder = new DtsNamespaceBuilder(tokenStream, resource);
+	private final DtsModuleBuilder moduleBuilder = new DtsModuleBuilder(tokenStream, resource);
 	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
 	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
 	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(tokenStream, resource);
@@ -70,7 +74,7 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 		return result;
 	}
 
-	void addToScript(ScriptElement elem) {
+	private void addToScript(ScriptElement elem) {
 		if (elem == null) {
 			return;
 		}
@@ -105,8 +109,19 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 	@Override
 	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
 		N4NamespaceDeclaration nd = namespaceBuilder.consume(ctx);
-		nd.setName(ctx.namespaceName().getText());
 		addAndHandleExported(ctx, nd);
+	}
+
+	@Override
+	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
+		N4AbstractNamespaceDeclaration d = moduleBuilder.consume(ctx);
+		if (d instanceof N4ModuleDeclaration) {
+			N4ModuleDeclaration md = (N4ModuleDeclaration) d;
+			addToScript(md);
+		} else {
+			N4NamespaceDeclaration nd = (N4NamespaceDeclaration) d;
+			addAndHandleExported(ctx, nd);
+		}
 	}
 
 	@Override
@@ -145,15 +160,7 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 		addAndHandleExported(ctx, fd);
 	}
 
-	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement id) {
-		boolean isExported = ParserContextUtil.isExported(ctx);
-		((ModifiableElement) id).getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		if (isExported) {
-			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
-			ed.setExportedElement(id);
-			addToScript(ed);
-		} else {
-			addToScript(id);
-		}
+	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
+		ParserContextUtil.addAndHandleExported(ctx, elem, result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS, false);
 	}
 }

@@ -986,6 +986,15 @@ public interface N4JSFactory extends EFactory {
 	N4TypeVariable createN4TypeVariable();
 
 	/**
+	 * Returns a new object of class '<em>N4 Module Declaration</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>N4 Module Declaration</em>'.
+	 * @generated
+	 */
+	N4ModuleDeclaration createN4ModuleDeclaration();
+
+	/**
 	 * Returns a new object of class '<em>N4 Namespace Declaration</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

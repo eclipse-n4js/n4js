@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -54,6 +55,13 @@ public abstract class N4JSASTUtils {
 
 	/** The reserved {@value} keyword. */
 	public static final String CONSTRUCTOR = "constructor";
+
+	/** All {@link N4Modifier}s denoting a certain level of accessibility, not taking into account {@code @Internal}. */
+	public static final Set<N4Modifier> ACCESSIBILITY_MODIFIERS = Set.of(
+			N4Modifier.PUBLIC,
+			N4Modifier.PROTECTED,
+			N4Modifier.PROJECT,
+			N4Modifier.PRIVATE);
 
 	/**
 	 * Tells if the given {@link EObject} represents a write access, e.g. left-hand side of an assignment.
