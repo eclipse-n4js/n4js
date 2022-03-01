@@ -23,8 +23,9 @@
 	END_SETUP
 */
 
-// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""someModule2""
-import * as M2 from "someModule2"
+// XPECT warnings --> "The import of Cls is unused." at "Cls"
+import { Cls } from "someModule2"
+
 // XPECT errors ---
 // "Import of someModule2 cannot be resolved." at "someModule2"
 // "Import of Cls cannot be resolved." at "Cls"

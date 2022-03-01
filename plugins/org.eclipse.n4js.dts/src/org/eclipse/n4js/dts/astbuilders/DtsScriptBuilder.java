@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_block;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_declarationStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_declareStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatement;
@@ -21,6 +22,7 @@ import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.ManualParseTreeWalker;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
@@ -36,13 +38,11 @@ import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsNamespace
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.Script;
@@ -89,7 +89,28 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 				RULE_declareStatement,
 				RULE_declarationStatement,
 				RULE_exportStatement,
-				RULE_exportStatementTail);
+				RULE_exportStatementTail,
+				RULE_block); // temp
+	}
+
+	public Script consumeDeclaredModule(ModuleDeclarationContext ctx) {
+		if (ctx == null) {
+			return null;
+		}
+		result = N4JSFactory.eINSTANCE.createScript();
+		addLocationInfo(result, ctx);
+
+		walker = new ManualParseTreeWalker(this, ctx.block());
+		// walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+		walker.start(); // eventually this call causes 'result' to be set
+		walker = null; // reset for fail fast
+
+		try {
+			return result;
+		} finally {
+			// reset for fail fast
+			resetResult();
+		}
 	}
 
 	@Override
@@ -114,13 +135,9 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		N4AbstractNamespaceDeclaration d = moduleBuilder.consume(ctx);
-		if (d instanceof N4ModuleDeclaration) {
-			N4ModuleDeclaration md = (N4ModuleDeclaration) d;
-			addToScript(md);
-		} else {
-			N4NamespaceDeclaration nd = (N4NamespaceDeclaration) d;
-			addAndHandleExported(ctx, nd);
+		N4NamespaceDeclaration d = moduleBuilder.consume(ctx);
+		if (d != null) {
+			addAndHandleExported(ctx, d);
 		}
 	}
 

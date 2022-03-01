@@ -10,7 +10,6 @@ package org.eclipse.n4js.xtext.ide.server.build;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -26,6 +25,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
@@ -79,9 +79,10 @@ public class XClusteringStorageAwareResourceLoader {
 		Set<URI> sourceLevelURIs = new HashSet<>();
 		List<LoadResult> resources = new ArrayList<>();
 		List<T> result = new ArrayList<>();
-		Iterator<URI> iter = uris.iterator();
-		while (iter.hasNext()) {
-			URI uri = iter.next();
+		ArrayList<URI> urisCopy = Lists.newArrayList(uris);
+
+		while (!urisCopy.isEmpty()) {
+			URI uri = urisCopy.remove(0);
 			XtextResourceSet resourceSet = context.getResourceSet();
 			if (!context.getClusteringPolicy().continueProcessing(resourceSet, uri, loadedURIsCount)) {
 				result.addAll(ListExtensions.map(resources, operation::apply));
@@ -100,16 +101,21 @@ public class XClusteringStorageAwareResourceLoader {
 				}
 				SourceLevelURIsAdapter.setSourceLevelUrisWithoutCopy(resourceSet, sourceLevelURIs);
 			}
-			resources.add(loadResource(resourceSet, uri));
+			resources.add(loadResource(resourceSet, uri, urisCopy));
 		}
 		result.addAll(ListExtensions.map(resources, operation::apply));
 		return result;
 	}
 
 	/** Actually loads a resource. */
-	protected LoadResult loadResource(ResourceSet resourceSet, URI uri) {
+	protected LoadResult loadResource(ResourceSet resourceSet, URI uri, List<URI> addNewUrisHere) {
 		try {
 			Resource resource = resourceSet.getResource(uri, true);
+			ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.remove(resource);
+			if (loadResultInfo != null) {
+				List<URI> newUris = loadResultInfo.getNewUris();
+				addNewUrisHere.addAll(newUris);
+			}
 			return new LoadResult(resource);
 		} catch (Throwable th) {
 			return new LoadResult(uri, th);
@@ -126,7 +132,7 @@ public class XClusteringStorageAwareResourceLoader {
 	}
 
 	/**
-	 * Remove all resoures from the resource set without delivering notifications.
+	 * Remove all resources from the resource set without delivering notifications.
 	 */
 	protected void clearResourceSet() {
 		XtextResourceSet resourceSet = context.getResourceSet();

@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
@@ -28,7 +29,9 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
@@ -79,44 +82,72 @@ public class DtsParser {
 
 	/** Parses d.ts files */
 	public DtsParseResult parse(Reader reader, LazyLinkingResource resource) throws IOException {
-		CharStream fileContents = fromReader(reader);
-		long millis = System.currentTimeMillis();
+		VirtualResourceAdapter adapter = VirtualResourceAdapter.remove(resource);
+		if (adapter == null) {
 
-		TypeScriptLexer lexer = new TypeScriptLexer(fileContents);
-		DtsTokenStream tokens = new DtsTokenStream(lexer);
-		TypeScriptParser parser = new TypeScriptParser(tokens);
-		ParseStats stats = new ParseStats();
-		parser.addErrorListener(stats);
-		lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
-		parser.removeErrorListener(ConsoleErrorListener.INSTANCE);
+			CharStream fileContents = fromReader(reader);
+			long millis = System.currentTimeMillis();
 
-		stats.strategy = PredictionMode.SLL;
+			TypeScriptLexer lexer = new TypeScriptLexer(fileContents);
+			DtsTokenStream tokens = new DtsTokenStream(lexer);
+			TypeScriptParser parser = new TypeScriptParser(tokens);
+			ParseStats stats = new ParseStats();
+			parser.addErrorListener(stats);
+			lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
+			parser.removeErrorListener(ConsoleErrorListener.INSTANCE);
 
-		try {
-			parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
-			// parser.setErrorHandler(new BailErrorStrategy()); // use BailErrorStrategy for fallback
-			stats.tree = parser.program();
-		} catch (Exception e) {
-			// fallback
+			stats.strategy = PredictionMode.SLL;
 
-			// parse with LL(*) to prevent false errors
-			parser.setErrorHandler(new DefaultErrorStrategy());
-			parser.getInterpreter().setPredictionMode(PredictionMode.LL_EXACT_AMBIG_DETECTION);
+			try {
+				parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
+				// parser.setErrorHandler(new BailErrorStrategy()); // use BailErrorStrategy for fallback
+				stats.tree = parser.program();
+			} catch (Exception e) {
+				// fallback
 
-			tokens.seek(0); // resets the token stream
-			stats.strategy = PredictionMode.LL_EXACT_AMBIG_DETECTION;
-			stats.tree = parser.program();
+				// parse with LL(*) to prevent false errors
+				parser.setErrorHandler(new DefaultErrorStrategy());
+				parser.getInterpreter().setPredictionMode(PredictionMode.LL_EXACT_AMBIG_DETECTION);
+
+				tokens.seek(0); // resets the token stream
+				stats.strategy = PredictionMode.LL_EXACT_AMBIG_DETECTION;
+				stats.tree = parser.program();
+			}
+
+			stats.time = System.currentTimeMillis() - millis;
+
+			// convert parse tree to AST
+			DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
+			Script root = astBuilder.consume(stats.tree);
+			RootNode rootNode = new RootNode(stats.tree);
+			Iterable<? extends INode> syntaxErrors = stats.errors;
+
+			return new DtsParseResult(root, rootNode, syntaxErrors);
+
+		} else {
+
+			ModuleDeclarationContext ctx = adapter.getModuleDeclarationContext();
+			DtsTokenStream tokens = adapter.getTokenStream();
+
+			ProgramContext prgCtx = new ProgramContext(null, 0) {
+				{
+					this.start = ctx.start;
+					this.stop = ctx.stop;
+				}
+
+				@Override
+				public StatementListContext statementList() {
+					return ctx.block().statementList();
+				}
+			};
+
+			// convert parse tree to AST
+			DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
+			Script root = astBuilder.consume(prgCtx);
+			RootNode rootNode = new RootNode(ctx);
+
+			return new DtsParseResult(root, rootNode, Collections.emptyList());
 		}
-
-		stats.time = System.currentTimeMillis() - millis;
-
-		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
-		Script root = astBuilder.consume(stats.tree);
-		RootNode rootNode = new RootNode(stats.tree);
-		Iterable<? extends INode> syntaxErrors = stats.errors;
-
-		return new DtsParseResult(root, rootNode, syntaxErrors);
 	}
 
 }

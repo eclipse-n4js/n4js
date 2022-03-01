@@ -21,7 +21,10 @@ import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.LoadResultInfoAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
@@ -31,22 +34,23 @@ import org.eclipse.n4js.dts.TypeScriptParser.ModuleNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
+import org.eclipse.n4js.dts.VirtualResourceAdapter;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
-import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
-import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
-import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TNamespace;
+import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
+
+import com.google.common.base.Objects;
 
 /**
  * Base class of the builders for namespace and module declarations.
@@ -73,13 +77,13 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * <tr>
  * <td>{@link ModuleDeclarationContext}<br>
  * with string literal as name</td>
- * <td>{@link N4ModuleDeclaration}</td>
- * <td>{@link TDeclaredModule}</td>
+ * <td>{@code N4ModuleDeclaration}</td>
+ * <td>{@code TDeclaredModule}</td>
  * </tr>
  * </table>
  */
 public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
-		extends AbstractDtsSubBuilder<T, N4AbstractNamespaceDeclaration> {
+		extends AbstractDtsSubBuilder<T, N4NamespaceDeclaration> {
 
 	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
 	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
@@ -99,7 +103,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 		@Override
 		public N4NamespaceDeclaration consume(NamespaceDeclarationContext ctx) {
-			return (N4NamespaceDeclaration) super.consume(ctx);
+			return super.consume(ctx);
 		}
 	}
 
@@ -150,8 +154,8 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				TerminalNode identifier = ctxName.Identifier();
 				if (strLit != null) {
 					// this module declaration actually declares a module
-					result = doCreateModuleDeclaration(ParserContextUtil.trimStringLiteral(strLit));
-					walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+					result = doCreateModuleDeclaration(ctx, ParserContextUtil.trimStringLiteral(strLit));
+					// walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
 				} else if (identifier != null) {
 					// this module declaration declares a "legacy module" that acts like a namespace
 					boolean isExported = ParserContextUtil.isExported(ctx);
@@ -160,16 +164,34 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				}
 			}
 		} else {
-			N4AbstractNamespaceDeclaration md = new DtsModuleBuilder(tokenStream, resource).consume(ctx);
-			addAndHandleExported(ctx, md);
+			N4NamespaceDeclaration md = new DtsModuleBuilder(tokenStream, resource).consume(ctx);
+			if (md != null) {
+				addAndHandleExported(ctx, md);
+			}
 		}
 	}
 
-	/** Creates a {@link N4ModuleDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
-	private N4ModuleDeclaration doCreateModuleDeclaration(String name) {
-		N4ModuleDeclaration moduleDecl = N4JSFactory.eINSTANCE.createN4ModuleDeclaration();
-		moduleDecl.setName(name);
-		return moduleDecl;
+	/** Creates null. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
+	private N4NamespaceDeclaration doCreateModuleDeclaration(ModuleDeclarationContext ctx, String name) {
+
+		URI srcFolder = resource.getURI();
+		while (srcFolder.segmentCount() > 1 && !Objects.equal(srcFolder.lastSegment(), "src")) {
+			srcFolder = srcFolder.trimSegments(1);
+		}
+		srcFolder = srcFolder.appendSegment("");
+
+		URI virtualUri = URI.createFileURI(name + ".d.ts").resolve(srcFolder);
+
+		Resource virtualResource = resource.getResourceSet().createResource(virtualUri);
+		VirtualResourceAdapter.install(virtualResource, tokenStream, ctx);
+
+		ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.get(resource);
+		if (loadResultInfo == null) {
+			loadResultInfo = LoadResultInfoAdapter.install(resource);
+		}
+		loadResultInfo.getNewUris().add(virtualUri);
+
+		return null;
 	}
 
 	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
@@ -218,28 +240,12 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		addAndHandleExported(ctx, ed);
 	}
 
-	private void addAndHandleExported(ParserRuleContext ctx, N4AbstractNamespaceDeclaration decl) {
-		if (decl instanceof N4ModuleDeclaration) {
-			addAndHandleExported(ctx, (N4ModuleDeclaration) decl);
-		} else if (decl instanceof N4NamespaceDeclaration) {
-			addAndHandleExported(ctx, (N4NamespaceDeclaration) decl);
-		} else {
-			throw new UnsupportedOperationException(
-					"unsupported subclass of N4AbstractNamespaceDeclaration: " + decl.getClass().getSimpleName());
-		}
-	}
-
-	private void addAndHandleExported(@SuppressWarnings("unused") ParserRuleContext ctx, N4ModuleDeclaration decl) {
-		N4ModuleDeclaration md = decl;
-		result.getOwnedElementsRaw().add(md);
-	}
-
 	private void addAndHandleExported(ParserRuleContext ctx, N4NamespaceDeclaration decl) {
 		addAndHandleExported(ctx, (ExportableElement) decl);
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
 		ParserContextUtil.addAndHandleExported(ctx, elem, result,
-				N4JSPackage.Literals.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW, true);
+				N4JSPackage.Literals.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW, true);
 	}
 }

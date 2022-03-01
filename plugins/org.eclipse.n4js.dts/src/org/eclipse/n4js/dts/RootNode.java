@@ -12,8 +12,8 @@ package org.eclipse.n4js.dts;
 
 import java.util.Collections;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.xtext.nodemodel.BidiIterable;
 import org.eclipse.xtext.nodemodel.BidiTreeIterable;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -27,10 +27,10 @@ import org.eclipse.xtext.util.ITextRegionWithLineInformation;
  *
  */
 public class RootNode implements ICompositeNode {
-	final ProgramContext program;
+	final ParserRuleContext program;
 
 	/** Constructor */
-	public RootNode(ProgramContext program) {
+	public RootNode(ParserRuleContext program) {
 		this.program = program;
 	}
 

@@ -55,6 +55,7 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.dts.DtsParser;
+import org.eclipse.n4js.dts.VirtualResourceAdapter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -621,7 +622,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	private void superLoad(Map<?, ?> options) throws IOException {
 		try {
-			super.load(options);
+			if (VirtualResourceAdapter.isInstalled(this)) {
+				doLoad(null, options);
+			} else {
+				super.load(options);
+			}
 		} catch (Throwable th) {
 			isLoadedWithFailure = true;
 			throw th;
@@ -767,10 +772,16 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			ResourceType resourceType = ResourceType.getResourceType(getURI());
 			if (resourceType == ResourceType.DTS) {
 				setValidationDisabled(true);
-				try (Reader reader = createReader(inputStream);) {
-					IParseResult result = new DtsParser().parse(reader, this);
-					updateInternalState(this.getParseResult(), result);
+				IParseResult result = null;
+				if (inputStream == null) {
+					// this happens in case of virtual resources
+					result = new DtsParser().parse(null, this);
+				} else {
+					try (Reader reader = createReader(inputStream);) {
+						result = new DtsParser().parse(reader, this);
+					}
 				}
+				updateInternalState(this.getParseResult(), result);
 			} else {
 				super.doLoad(inputStream, options);
 			}
