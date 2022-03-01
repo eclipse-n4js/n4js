@@ -32,12 +32,10 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.types.AbstractModule
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.TDeclaredModule
 import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
@@ -121,7 +119,7 @@ class ExportDeclaration extends AnnotableScriptElement, NamespaceElement {
 	contains ExportSpecifier[] namedExports
 	boolean wildcardExport
 	boolean defaultExport
-	refers AbstractModule reexportedFrom
+	refers TModule reexportedFrom
 	
 	
 	op boolean isHollow() {
@@ -200,7 +198,7 @@ abstract class ExportableElement extends NamespaceElement {
 class ImportDeclaration extends AnnotableScriptElement {
 	contains ImportSpecifier[] importSpecifiers
 	boolean importFrom
-	refers AbstractModule module
+	refers TModule module
 	transient String moduleSpecifierAsText
 	transient ModuleSpecifierForm moduleSpecifierForm
 
@@ -2160,47 +2158,25 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	}
 }
 
-abstract class N4AbstractNamespaceDeclaration extends VariableEnvironmentElement, NamedElement {
 
+class N4NamespaceDeclaration extends N4TypeDefinition, VariableEnvironmentElement, ModifiableElement, ExportableElement, NamedElement {
 	String name
 	contains NamespaceElement[] ownedElementsRaw
-}
-
-/**
- * This type of declaration is created only from .d.ts files and represents a module declaration such as
- * <pre>
- * // .d.ts
- * declare module "my/declared/module" { ... }  // string literal as name
- * </pre>
- * Note that module declarations of the form
- * <pre>
- * // .d.ts
- * declare module myLegacyModule { ... }  // identifier as name
- * </pre>
- * are actually an old syntax for namespaces; for them, the {@code DtsNamespaceBuilder} will create
- * a {@link N4NamespaceDeclaration}, not a {@code N4ModuleDeclaration}.
- */
-class N4ModuleDeclaration extends N4AbstractNamespaceDeclaration, NamespaceElement { // note: not an ExportableElement
-
-	refers transient TDeclaredModule definedModule
-}
-
-class N4NamespaceDeclaration extends N4AbstractNamespaceDeclaration, N4TypeDefinition, ModifiableElement, ExportableElement {
-
+	
 	/**
 	 * Returns true if type is declared as external.
 	 */
 	op boolean isExternal() {
 		return isDeclaredExternal() || isDefaultExternal();
 	}
-
+	
 	/**
 	 * Namespaces do not have annotations
 	 */
 	op Annotation[] getAnnotations() {
 		emptyEList
 	}
-
+	
 	op boolean isHollow() {
 		val hollow = ownedElementsRaw.forall[isHollow];
 		return hollow

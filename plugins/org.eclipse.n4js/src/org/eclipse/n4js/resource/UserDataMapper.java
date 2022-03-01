@@ -33,7 +33,6 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.RuntimeDependency;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -313,7 +312,7 @@ public final class UserDataMapper {
 		if (script != null && !script.eIsProxy()) {
 			for (ScriptElement elem : script.getScriptElements()) {
 				if (elem instanceof ImportDeclaration) {
-					final AbstractModule module = ((ImportDeclaration) elem).getModule();
+					final TModule module = ((ImportDeclaration) elem).getModule();
 					if (module != null && !module.eIsProxy()) {
 						final Resource targetRes = module.eResource();
 						if (targetRes != null) {

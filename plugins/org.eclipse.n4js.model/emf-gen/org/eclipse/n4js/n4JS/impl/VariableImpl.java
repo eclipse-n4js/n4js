@@ -24,7 +24,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.Variable;
 
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -124,17 +123,7 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 	 * @generated
 	 */
 	@Override
-	public AbstractModule getContainingModule() {
-		return EcoreUtil2.<AbstractModule>getContainerOfType(this, AbstractModule.class);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TModule getContainingRootModule() {
+	public TModule getContainingModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}
 
@@ -263,7 +252,6 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 		if (baseClass == IdentifiableElement.class) {
 			switch (baseOperationID) {
 				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE: return N4JSPackage.VARIABLE___GET_CONTAINING_MODULE;
-				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE: return N4JSPackage.VARIABLE___GET_CONTAINING_ROOT_MODULE;
 				default: return -1;
 			}
 		}
@@ -288,8 +276,6 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 				return isConst();
 			case N4JSPackage.VARIABLE___GET_CONTAINING_MODULE:
 				return getContainingModule();
-			case N4JSPackage.VARIABLE___GET_CONTAINING_ROOT_MODULE:
-				return getContainingRootModule();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

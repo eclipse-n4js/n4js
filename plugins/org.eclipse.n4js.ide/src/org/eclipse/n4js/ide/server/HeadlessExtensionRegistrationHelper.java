@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.server;
 
 import static org.eclipse.n4js.N4JSGlobals.CJS_FILE_EXTENSION;
-import static org.eclipse.n4js.N4JSGlobals.DTS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.JSX_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
 import static org.eclipse.n4js.N4JSGlobals.MJS_FILE_EXTENSION;
@@ -75,7 +74,7 @@ public class HeadlessExtensionRegistrationHelper implements IHeadlessExtensionRe
 		registerTranspilableFiles(N4JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION, JS_FILE_EXTENSION, CJS_FILE_EXTENSION,
 				MJS_FILE_EXTENSION, JSX_FILE_EXTENSION);
 		registerTypableFiles(N4JSD_FILE_EXTENSION, N4JS_FILE_EXTENSION, N4JSX_FILE_EXTENSION, JS_FILE_EXTENSION,
-				CJS_FILE_EXTENSION, MJS_FILE_EXTENSION, JSX_FILE_EXTENSION, DTS_FILE_EXTENSION);
+				CJS_FILE_EXTENSION, MJS_FILE_EXTENSION, JSX_FILE_EXTENSION);
 		registerRawFiles(JS_FILE_EXTENSION, CJS_FILE_EXTENSION, MJS_FILE_EXTENSION, JSX_FILE_EXTENSION);
 
 		// Register d.ts subgenerator

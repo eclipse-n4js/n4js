@@ -11,10 +11,10 @@
 package org.eclipse.n4js.jsdoc2spec;
 
 import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TModule;
 
 /**
  * Keys are used for caching maps.
@@ -73,7 +73,7 @@ public class KeyUtils {
 			return getSpecKeyPrefix(rrph, containingType);
 		}
 
-		AbstractModule module = element.getContainingModule();
+		TModule module = element.getContainingModule();
 		if (module == null) {
 			return "GLOBAL.";
 		} else {
@@ -110,7 +110,7 @@ public class KeyUtils {
 			return specKey;
 		}
 
-		AbstractModule module = element.getContainingModule();
+		TModule module = element.getContainingModule();
 		if (module == null) {
 			return "GLOBAL.";
 		} else {
@@ -127,7 +127,7 @@ public class KeyUtils {
 			String name = nameFromElement(rrph, tMember.getContainingType());
 			return name + "#" + element.getName();
 		}
-		AbstractModule module = element.getContainingModule();
+		TModule module = element.getContainingModule();
 		if (module == null) {
 
 			String name = "##global##." + element.getName();

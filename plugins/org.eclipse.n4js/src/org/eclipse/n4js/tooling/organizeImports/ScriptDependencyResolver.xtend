@@ -28,7 +28,6 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.types.AbstractModule
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClass
@@ -168,7 +167,7 @@ class ScriptDependencyResolver {
 	}
 
 	def private static boolean isNamespaceDependencyHandlingNeeded(
-		Map<NamespaceImportSpecifier, Boolean> usedNamespaceSpecifiers, AbstractModule targMod) {
+		Map<NamespaceImportSpecifier, Boolean> usedNamespaceSpecifiers, TModule targMod) {
 
 		return usedNamespaceSpecifiers.keySet.exists[is|(is.eContainer as ImportDeclaration).module === targMod]
 	}
@@ -179,7 +178,7 @@ class ScriptDependencyResolver {
 			val nis = nameToNamedImportSpecifiers.get(type.name)
 			val identifiableElement = nis.importedElement
 			new ScriptDependency(nis.alias ?: identifiableElement.name, identifiableElement.name, identifiableElement,
-				(identifiableElement.eContainer as AbstractModule))
+				(identifiableElement.eContainer as TModule))
 		} else if (isNamespaceDependencyHandlingNeeded(usedNamespaceSpecifiers, type.containingModule)) {
 			createDependencyOnNamespace(usedNamespaceSpecifiers, type.containingModule)
 		} else {
@@ -189,7 +188,7 @@ class ScriptDependencyResolver {
 	}
 
 	def private static ScriptDependency createDependencyOnNamespace(
-		Map<NamespaceImportSpecifier, Boolean> usedNamespaceSpecifiers, AbstractModule targMod) {
+		Map<NamespaceImportSpecifier, Boolean> usedNamespaceSpecifiers, TModule targMod) {
 		val is = usedNamespaceSpecifiers.keySet.findFirst [ is |
 			(is.eContainer as ImportDeclaration).module === targMod
 		]

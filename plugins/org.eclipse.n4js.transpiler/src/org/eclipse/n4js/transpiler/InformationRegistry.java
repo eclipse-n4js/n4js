@@ -29,13 +29,13 @@ import org.eclipse.n4js.transpiler.assistants.TypeAssistant;
 import org.eclipse.n4js.transpiler.utils.ConcreteMembersOrderedForTranspiler;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 
@@ -49,7 +49,7 @@ import com.google.common.collect.HashMultimap;
 public class InformationRegistry {
 
 	private final HashMultimap<Tag, EObject> hmTagged = HashMultimap.create();
-	private final Map<ImportDeclaration, AbstractModule> importedModules = new HashMap<>();
+	private final Map<ImportDeclaration, TModule> importedModules = new HashMap<>();
 	private final Map<TypeDefiningElement, Type> originalDefinedTypes = new HashMap<>();
 	private final Map<VariableDeclaration, TVariable> originalDefinedVariable = new HashMap<>();
 	private final Map<N4MemberDeclaration, TMember> originalDefinedMembers = new HashMap<>();
@@ -103,7 +103,7 @@ public class InformationRegistry {
 	 * For {@link ImportDeclaration}s that do not have an original AST node (i.e. that were created by some
 	 * transformation on-the-fly), this returns the imported module.
 	 */
-	public AbstractModule getImportedModule(ImportDeclaration importDeclInIM) {
+	public TModule getImportedModule(ImportDeclaration importDeclInIM) {
 		return getImportedModule(importDeclInIM, true);
 	}
 
@@ -111,7 +111,7 @@ public class InformationRegistry {
 	 * For {@link ImportDeclaration}s that do not have an original AST node (i.e. that were created by some
 	 * transformation on-the-fly), this returns the imported module.
 	 */
-	public AbstractModule getImportedModule(ImportDeclaration importDeclInIM, boolean assertIntermediateModel) {
+	public TModule getImportedModule(ImportDeclaration importDeclInIM, boolean assertIntermediateModel) {
 		if (assertIntermediateModel) {
 			TranspilerUtils.assertIntermediateModelElement(importDeclInIM);
 		}
@@ -124,17 +124,16 @@ public class InformationRegistry {
 	 * for import declarations that were created by some transformation on-the-fly, we expect the transformation that
 	 * creates such an import declaration to define the imported module via this method.
 	 */
-	public void setImportedModule(ImportDeclaration importDeclInIM, AbstractModule module) {
+	public void setImportedModule(ImportDeclaration importDeclInIM, TModule module) {
 		TranspilerUtils.assertIntermediateModelElement(importDeclInIM);
 		setImportedModule_internal(importDeclInIM, module);
 	}
 
 	/**
-	 * As {@link #setImportedModule(ImportDeclaration,AbstractModule)}, but does not assert that
-	 * <code>elementInIM</code> is actually contained in the intermediate model. Should only be called from
-	 * {@link PreparationStep}.
+	 * As {@link #setImportedModule(ImportDeclaration,TModule)}, but does not assert that <code>elementInIM</code> is
+	 * actually contained in the intermediate model. Should only be called from {@link PreparationStep}.
 	 */
-	public void setImportedModule_internal(ImportDeclaration importDeclInIM, AbstractModule module) {
+	public void setImportedModule_internal(ImportDeclaration importDeclInIM, TModule module) {
 		importedModules.put(importDeclInIM, module);
 	}
 

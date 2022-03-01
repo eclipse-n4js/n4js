@@ -50,7 +50,6 @@ import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -291,17 +290,7 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * @generated
 	 */
 	@Override
-	public AbstractModule getContainingModule() {
-		return EcoreUtil2.<AbstractModule>getContainerOfType(this, AbstractModule.class);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TModule getContainingRootModule() {
+	public TModule getContainingModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}
 
@@ -592,7 +581,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 		if (baseClass == IdentifiableElement.class) {
 			switch (baseOperationID) {
 				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE: return N4JSPackage.VARIABLE_DECLARATION___GET_CONTAINING_MODULE;
-				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE: return N4JSPackage.VARIABLE_DECLARATION___GET_CONTAINING_ROOT_MODULE;
 				default: return -1;
 			}
 		}
@@ -623,8 +611,6 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 				return isConst();
 			case N4JSPackage.VARIABLE_DECLARATION___GET_CONTAINING_MODULE:
 				return getContainingModule();
-			case N4JSPackage.VARIABLE_DECLARATION___GET_CONTAINING_ROOT_MODULE:
-				return getContainingRootModule();
 			case N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
 			case N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST:

@@ -125,7 +125,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionType.copyAnnotations(functionExpr, preLinkingPhase)
 
 		// set container
-		target.containingRootModule.internalTypes += functionType
+		target.containingModule.internalTypes += functionType
 	}
 
 	/**

@@ -141,11 +141,6 @@ class ImportSpecifiersUtil {
 		if (module === null || module.eIsProxy || module.qualifiedName.isNullOrEmpty)
 			return true
 
-		// check containing module of target module
-		val containingModule = module.containingModule;
-		if (containingModule === null || containingModule.eIsProxy || containingModule.qualifiedName.isNullOrEmpty)
-			return true
-
 		// check import specifier
 		if (spec instanceof NamedImportSpecifier && !spec.declaredDynamic) {
 			val nis = spec as NamedImportSpecifier;

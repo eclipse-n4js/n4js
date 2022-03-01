@@ -132,10 +132,8 @@ class RuntimeDependencyProcessor {
 		for (importDecl : importDecls) {
 			if (importDecl.retainedAtRuntime) { // note: will also be true for bare imports
 				val targetModule = importDecl.module;
-				if (targetModule instanceof TModule) { // ignore TDeclaredModules
-					if (isDifferentModuleInSameProject(targetModule, cache)) {
-						modulesReferencedAtRuntime += targetModule;
-					}
+				if (isDifferentModuleInSameProject(targetModule, cache)) {
+					modulesReferencedAtRuntime += targetModule;
 				}
 			}
 		}

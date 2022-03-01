@@ -669,14 +669,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createN4ClassDefinitionAdapter();
 			}
 			@Override
-			public Adapter caseN4AbstractNamespaceDeclaration(N4AbstractNamespaceDeclaration object) {
-				return createN4AbstractNamespaceDeclarationAdapter();
-			}
-			@Override
-			public Adapter caseN4ModuleDeclaration(N4ModuleDeclaration object) {
-				return createN4ModuleDeclarationAdapter();
-			}
-			@Override
 			public Adapter caseN4NamespaceDeclaration(N4NamespaceDeclaration object) {
 				return createN4NamespaceDeclarationAdapter();
 			}
@@ -2891,34 +2883,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createN4ClassDefinitionAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration <em>N4 Abstract Namespace Declaration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration
-	 * @generated
-	 */
-	public Adapter createN4AbstractNamespaceDeclarationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.N4ModuleDeclaration <em>N4 Module Declaration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.N4ModuleDeclaration
-	 * @generated
-	 */
-	public Adapter createN4ModuleDeclarationAdapter() {
 		return null;
 	}
 

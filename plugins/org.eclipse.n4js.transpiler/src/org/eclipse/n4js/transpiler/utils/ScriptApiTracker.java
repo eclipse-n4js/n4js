@@ -37,7 +37,6 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.tooling.compare.ProjectCompareHelper;
 import org.eclipse.n4js.tooling.compare.ProjectComparisonEntry;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
@@ -489,10 +488,10 @@ public class ScriptApiTracker {
 			// go over methods.
 			// Is the superInterface from the same Project ? If not it cannot be an API problem of this
 			// implementation.
-			AbstractModule superModule = pivot.getContainingModule();
+			TModule superModule = pivot.getContainingModule();
 
-			if (superModule instanceof TModule) { // not required for TDeclaredModule
-				ProjectComparisonEntry useCompareEntry = projectComparisonAdapter.getEntryFor((TModule) superModule);
+			if (superModule != null) {
+				ProjectComparisonEntry useCompareEntry = projectComparisonAdapter.getEntryFor(superModule);
 				if (useCompareEntry == null) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("No comparison found for pivot = " + pivot.getName());
@@ -511,7 +510,8 @@ public class ScriptApiTracker {
 						}
 					} // end if superInterfaceCompareEntry != null
 				}
-			} else if (superModule == null) {
+			} // end if null-check for module...
+			else {
 				if (logger.isDebugEnabled()) {
 					logger.debug("-#- could not get module for super-classifier: " + pivot.getName() + " of type "
 							+ pivot.getTypeAsString() + " providedByRuntime=" + pivot.isProvidedByRuntime());
