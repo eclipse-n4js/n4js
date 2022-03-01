@@ -137,7 +137,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	@Override
 	public List<Issue> validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
-		return n4jsCache.getOrElseUpdateIssues(this::doValidate, resource, mode, cancelIndicator);
+		return n4jsCache.getOrUpdateIssues(this::doValidate, resource, mode, cancelIndicator);
 	}
 
 	/**

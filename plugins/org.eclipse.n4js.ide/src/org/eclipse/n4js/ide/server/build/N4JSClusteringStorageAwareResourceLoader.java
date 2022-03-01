@@ -12,11 +12,9 @@ package org.eclipse.n4js.ide.server.build;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -62,7 +60,7 @@ public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorage
 	private void initDependencyMaps(List<LoadResult> results, ProjectConfigSnapshot pcs, Set<LoadResult> noDeps,
 			Multimap<LoadResult, LoadResult> dependsOn, Multimap<LoadResult, LoadResult> dependsOnInverse) {
 
-		Map<String, LoadResult> moduleName2Result = new HashMap<>();
+		Multimap<String, LoadResult> moduleName2Result = HashMultimap.create();
 		for (LoadResult result : results) {
 			URI uri = result.resource.getURI();
 			SourceFolderSnapshot srcFolder = pcs.findSourceFolderContaining(uri);
@@ -79,7 +77,9 @@ public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorage
 		for (LoadResult result : results) {
 			for (EObject eobj : result.resource.getContents()) {
 				if (eobj instanceof Script) {
-					for (EObject topLevelStmt : eobj.eContents()) {
+					Script script = (Script) eobj;
+
+					for (EObject topLevelStmt : script.getScriptElements()) {
 						if (topLevelStmt instanceof ImportDeclaration) {
 							ImportDeclaration impDecl = (ImportDeclaration) topLevelStmt;
 							String moduleSpecifier = impDecl.getModuleSpecifierAsText();
@@ -95,9 +95,10 @@ public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorage
 								}
 							}
 							if (hasInnerProjectDependency) {
-								LoadResult dependsOnResult = moduleName2Result.get(moduleSpecifier);
-								dependsOn.put(result, dependsOnResult);
-								dependsOnInverse.put(dependsOnResult, result);
+								for (LoadResult dependsOnResult : moduleName2Result.get(moduleSpecifier)) {
+									dependsOn.put(result, dependsOnResult);
+									dependsOnInverse.put(dependsOnResult, result);
+								}
 								noDeps.remove(result);
 							}
 						} else {
