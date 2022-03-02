@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "tslib.d.ts" {
+		export interface IfcCallSig {
+			(p: string): number;
+		}
+		export interface IfcConstructSig {
+			new(p: string): ClsInDts;
+		}
+		export class ClsInDts {}
+	}
+
+	END_SETUP
+ */
+
+import { IfcCallSig, IfcConstructSig } from "tslib"
+
+
+let ifcCallSig: IfcCallSig;
+
+// XPECT noerrors -->
+let x = ifcCallSig("hello");
+// XPECT type of 'x' --> number
+x;
+// XPECT errors --> "42 is not a subtype of string." at "42"
+ifcCallSig(42);
+// XPECT errors --> "Not a reference to a constructor: IfcCallSig." at "ifcCallSig"
+new ifcCallSig("hello");
+
+
+let ifcConstructSig: IfcConstructSig;
+
+// XPECT noerrors -->
+let y = new ifcConstructSig("hello");
+// XPECT type of 'y' --> ClsInDts
+y;
+// XPECT errors --> "42 is not a subtype of string." at "42"
+new ifcConstructSig(42);

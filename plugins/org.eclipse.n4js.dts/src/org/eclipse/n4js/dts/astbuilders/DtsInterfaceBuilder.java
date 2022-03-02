@@ -18,13 +18,19 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.TypeScriptParser.CallSignatureContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ConstructSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceExtendsClauseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.MethodSignatureContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ParameterBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
@@ -112,22 +118,61 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 	}
 
 	@Override
-	public void enterMethodSignature(MethodSignatureContext ctx) {
-		N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
-		md.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-		locpn.setLiteralName(ctx.propertyName().getText());
-		md.setDeclaredName(locpn);
+	public void enterCallSignature(CallSignatureContext ctx) {
+		N4MethodDeclaration md = createMethodDeclaration(null, ctx);
+		addLocationInfo(md, ctx);
+		result.getOwnedMembersRaw().add(md);
+	}
 
-		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.callSignature().typeParameters());
-		md.getTypeVars().addAll(typeVars);
-		List<FormalParameter> fPars = formalParametersBuilder.consume(ctx.callSignature().parameterBlock());
-		md.getFpars().addAll(fPars);
-		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
-		md.setDeclaredReturnTypeRefNode(trn);
+	@Override
+	public void enterConstructSignature(ConstructSignatureContext ctx) {
+		N4MethodDeclaration md = createMethodDeclaration(null, ctx.typeParameters(), ctx.parameterBlock(),
+				ctx.colonSepTypeRef().typeRef());
+		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+		locpn.setLiteralName("new");
+		md.setDeclaredName(locpn);
 
 		addLocationInfo(md, ctx);
 		result.getOwnedMembersRaw().add(md);
+	}
+
+	@Override
+	public void enterMethodSignature(MethodSignatureContext ctx) {
+		N4MethodDeclaration md = createMethodDeclaration(ctx.propertyName(), ctx.callSignature());
+		addLocationInfo(md, ctx);
+		result.getOwnedMembersRaw().add(md);
+	}
+
+	private N4MethodDeclaration createMethodDeclaration(PropertyNameContext name, CallSignatureContext callSignature) {
+		return createMethodDeclaration(name, callSignature.typeParameters(), callSignature.parameterBlock(),
+				callSignature.typeRef());
+	}
+
+	private N4MethodDeclaration createMethodDeclaration(PropertyNameContext name, TypeParametersContext typeParams,
+			ParameterBlockContext fpars, TypeRefContext returnTypeRef) {
+
+		N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
+		md.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		if (name != null) {
+			LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+			locpn.setLiteralName(name.getText());
+			md.setDeclaredName(locpn);
+		}
+
+		if (typeParams != null) {
+			List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(typeParams);
+			md.getTypeVars().addAll(typeVars);
+		}
+		if (fpars != null) {
+			List<FormalParameter> fPars = formalParametersBuilder.consume(fpars);
+			md.getFpars().addAll(fPars);
+		}
+		if (returnTypeRef != null) {
+			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(returnTypeRef);
+			md.setDeclaredReturnTypeRefNode(trn);
+		}
+
+		return md;
 	}
 
 	@Override
