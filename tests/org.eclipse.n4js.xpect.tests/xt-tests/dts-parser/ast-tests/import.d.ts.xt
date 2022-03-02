@@ -40,7 +40,7 @@ Script: true
   ExportedVariableStatement: [external, public], const
    ExportedVariableDeclaration: Cconst
     TypeReferenceNode
-     ParameterizedTypeRef: OFF, false, false, C, ~, false, false
+     ParameterizedTypeRef: OFF, false, false, C, ?~, false, false
 --- */
 
 

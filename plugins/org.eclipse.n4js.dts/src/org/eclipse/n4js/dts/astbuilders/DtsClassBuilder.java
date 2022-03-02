@@ -51,6 +51,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationContext, N4ClassDeclaration> {
 	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
+	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
+			resource);
 
 	/** Constructor */
 	public DtsClassBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -119,6 +121,10 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 			locpn.setLiteralName(ctx.propertyName().getText());
 			md.setDeclaredName(locpn);
 
+			List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.callSignature().typeParameters());
+			md.getTypeVars().addAll(typeVars);
+			List<FormalParameter> fPars = formalParametersBuilder.consume(ctx.callSignature().parameterBlock());
+			md.getFpars().addAll(fPars);
 			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
 			md.setDeclaredReturnTypeRefNode(trn);
 

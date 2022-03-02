@@ -25,6 +25,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.MethodSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
+import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
@@ -46,6 +47,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarationContext, N4InterfaceDeclaration> {
 	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
+	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
+			resource);
 
 	/** Constructor */
 	public DtsInterfaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -116,6 +119,10 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 		locpn.setLiteralName(ctx.propertyName().getText());
 		md.setDeclaredName(locpn);
 
+		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.callSignature().typeParameters());
+		md.getTypeVars().addAll(typeVars);
+		List<FormalParameter> fPars = formalParametersBuilder.consume(ctx.callSignature().parameterBlock());
+		md.getFpars().addAll(fPars);
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
 		md.setDeclaredReturnTypeRefNode(trn);
 

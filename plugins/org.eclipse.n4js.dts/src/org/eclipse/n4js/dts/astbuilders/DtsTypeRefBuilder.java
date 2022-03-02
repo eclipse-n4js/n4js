@@ -38,7 +38,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -92,9 +91,6 @@ public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, Typ
 		String lastSeg = segs[segs.length - 1];
 		pTypeRef.setDeclaredTypeAsText(lastSeg);
 		pTypeRef.setDeclaredType(null);
-		if (!isPrimitive(pTypeRef)) {
-			pTypeRef.setDefinedTypingStrategy(TypingStrategy.STRUCTURAL);
-		}
 
 		Type typeProxy = TypesFactory.eINSTANCE.createType();
 		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
@@ -114,15 +110,5 @@ public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, Typ
 
 		result = N4JSFactory.eINSTANCE.createTypeReferenceNode();
 		result.setTypeRefInAST(pTypeRef);
-	}
-
-	private boolean isPrimitive(ParameterizedTypeRef pTypeRef) {
-		switch (pTypeRef.getDeclaredTypeAsText()) {
-		case "number":
-		case "string":
-			return true;
-		default:
-			return false;
-		}
 	}
 }
