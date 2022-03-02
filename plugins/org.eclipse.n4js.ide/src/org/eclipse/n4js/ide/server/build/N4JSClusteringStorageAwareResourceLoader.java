@@ -21,6 +21,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildContext;
 import org.eclipse.n4js.xtext.ide.server.build.XClusteringStorageAwareResourceLoader;
@@ -33,10 +34,18 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
- *
+ * Overridden to support sorting of
+ * {@link org.eclipse.n4js.xtext.ide.server.build.XClusteringStorageAwareResourceLoader.LoadResult LoadResult}s.
  */
 public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorageAwareResourceLoader {
 
+	/**
+	 * The given list of load results is sorted by this method to improve the post processing of N4JS started by the
+	 * {@link N4JSPostProcessor}. During post processing, other dependency resources will be processed too in a
+	 * recursive fashion. However, by sorting load results beforehand here, that will not be necessary since
+	 * dependencies already have been processed. Note however that in case of dependency cycles, sorting cannot avoid
+	 * the recursive post processing of dependencies.
+	 */
 	@Override
 	protected List<LoadResult> sort(XBuildContext context, List<LoadResult> results) {
 		if (results.isEmpty()) {
