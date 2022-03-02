@@ -9,6 +9,7 @@ package org.eclipse.n4js.xtext.ide.server.build;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -111,10 +112,11 @@ public class XClusteringStorageAwareResourceLoader {
 	protected LoadResult loadResource(ResourceSet resourceSet, URI uri, List<URI> addNewUrisHere) {
 		try {
 			Resource resource = resourceSet.getResource(uri, true);
-			ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.remove(resource);
+			ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.get(resource);
 			if (loadResultInfo != null) {
-				List<URI> newUris = loadResultInfo.getNewUris();
-				addNewUrisHere.addAll(newUris);
+				Collection<URI> newUris = loadResultInfo.getNewUris();
+				addNewUrisHere.addAll(0, newUris);
+				loadResultInfo.ensure(resource);
 			}
 			return new LoadResult(resource);
 		} catch (Throwable th) {

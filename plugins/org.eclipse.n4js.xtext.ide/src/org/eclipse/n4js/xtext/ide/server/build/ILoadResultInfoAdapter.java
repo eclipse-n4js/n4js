@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.xtext.ide.server.build;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.URI;
@@ -40,5 +40,9 @@ public interface ILoadResultInfoAdapter extends Adapter {
 	}
 
 	/** */
-	public List<URI> getNewUris();
+	public Collection<URI> getNewUris();
+
+	/***/
+	public void ensure(Resource resource);
+
 }

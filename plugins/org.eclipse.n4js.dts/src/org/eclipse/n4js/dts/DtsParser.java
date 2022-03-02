@@ -82,7 +82,7 @@ public class DtsParser {
 
 	/** Parses d.ts files */
 	public DtsParseResult parse(Reader reader, LazyLinkingResource resource) throws IOException {
-		VirtualResourceAdapter adapter = VirtualResourceAdapter.remove(resource);
+		NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
 		if (adapter == null) {
 
 			CharStream fileContents = fromReader(reader);

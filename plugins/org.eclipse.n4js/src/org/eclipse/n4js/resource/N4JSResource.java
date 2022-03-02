@@ -55,7 +55,7 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.dts.DtsParser;
-import org.eclipse.n4js.dts.VirtualResourceAdapter;
+import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -622,7 +622,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	private void superLoad(Map<?, ?> options) throws IOException {
 		try {
-			if (VirtualResourceAdapter.isInstalled(this)) {
+			if (NestedResourceAdapter.isInstalled(this)) {
 				doLoad(null, options);
 			} else {
 				super.load(options);

@@ -10,8 +10,9 @@
  */
 package org.eclipse.n4js.dts;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -34,7 +35,7 @@ public class LoadResultInfoAdapter implements ILoadResultInfoAdapter {
 		return adapter;
 	}
 
-	final List<URI> newUris = new ArrayList<>();
+	final Map<URI, NestedResourceAdapter> nestedResources = new LinkedHashMap<>();
 
 	@Override
 	public void notifyChanged(Notification notification) {
@@ -60,9 +61,25 @@ public class LoadResultInfoAdapter implements ILoadResultInfoAdapter {
 		return false;
 	}
 
+	/**  */
+	public void addNestedResource(URI uri, NestedResourceAdapter nra) {
+		nestedResources.put(uri, nra);
+	}
+
 	@Override
-	public List<URI> getNewUris() {
-		return newUris;
+	public Collection<URI> getNewUris() {
+		return nestedResources.keySet();
+	}
+
+	@Override
+	public void ensure(Resource resource) {
+		for (URI uri : nestedResources.keySet()) {
+			Resource nestedResource = resource.getResourceSet().getResource(uri, false);
+			if (nestedResource == null) {
+				nestedResource = resource.getResourceSet().createResource(uri);
+			}
+			NestedResourceAdapter.install(nestedResource, nestedResources.get(uri));
+		}
 	}
 
 }

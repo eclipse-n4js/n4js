@@ -19,35 +19,33 @@ import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 /**
  *
  */
-public class VirtualResourceAdapter implements Adapter {
+public class NestedResourceAdapter implements Adapter {
 
 	public static boolean isInstalled(Resource resource) {
 		return get(resource) != null;
 	}
 
-	public static VirtualResourceAdapter get(Resource resource) {
+	public static NestedResourceAdapter get(Resource resource) {
 		for (Adapter adapter : resource.eAdapters()) {
-			if (adapter instanceof VirtualResourceAdapter) {
-				return (VirtualResourceAdapter) adapter;
+			if (adapter instanceof NestedResourceAdapter) {
+				return (NestedResourceAdapter) adapter;
 			}
 		}
 		return null;
 	}
 
-	public static VirtualResourceAdapter install(Resource resource, DtsTokenStream tokenStream,
-			ModuleDeclarationContext ctx) {
-
-		VirtualResourceAdapter adapter = get(resource);
-		if (adapter != null) {
+	public static NestedResourceAdapter install(Resource resource, NestedResourceAdapter nra) {
+		NestedResourceAdapter adapter = get(resource);
+		if (adapter == nra) {
 			return adapter;
 		}
-		adapter = new VirtualResourceAdapter(tokenStream, ctx);
-		resource.eAdapters().add(adapter);
-		return adapter;
+		resource.eAdapters().remove(adapter);
+		resource.eAdapters().add(nra);
+		return nra;
 	}
 
-	public static VirtualResourceAdapter remove(Resource resource) {
-		VirtualResourceAdapter adapter = get(resource);
+	public static NestedResourceAdapter remove(Resource resource) {
+		NestedResourceAdapter adapter = get(resource);
 		if (adapter != null) {
 			resource.eAdapters().remove(adapter);
 			return adapter;
@@ -58,7 +56,7 @@ public class VirtualResourceAdapter implements Adapter {
 	final DtsTokenStream tokenStream;
 	final ModuleDeclarationContext ctx;
 
-	public VirtualResourceAdapter(DtsTokenStream tokenStream, ModuleDeclarationContext ctx) {
+	public NestedResourceAdapter(DtsTokenStream tokenStream, ModuleDeclarationContext ctx) {
 		this.tokenStream = tokenStream;
 		this.ctx = ctx;
 	}

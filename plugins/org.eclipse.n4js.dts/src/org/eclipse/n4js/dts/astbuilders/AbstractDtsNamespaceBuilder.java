@@ -22,9 +22,9 @@ import java.util.Set;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.LoadResultInfoAdapter;
+import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
@@ -34,7 +34,6 @@ import org.eclipse.n4js.dts.TypeScriptParser.ModuleNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
-import org.eclipse.n4js.dts.VirtualResourceAdapter;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
@@ -182,14 +181,12 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 		URI virtualUri = URI.createFileURI(name + ".d.ts").resolve(srcFolder);
 
-		Resource virtualResource = resource.getResourceSet().createResource(virtualUri);
-		VirtualResourceAdapter.install(virtualResource, tokenStream, ctx);
-
-		ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.get(resource);
+		LoadResultInfoAdapter loadResultInfo = (LoadResultInfoAdapter) ILoadResultInfoAdapter.get(resource);
 		if (loadResultInfo == null) {
 			loadResultInfo = LoadResultInfoAdapter.install(resource);
 		}
-		loadResultInfo.getNewUris().add(virtualUri);
+		NestedResourceAdapter nra = new NestedResourceAdapter(tokenStream, ctx);
+		loadResultInfo.addNestedResource(virtualUri, nra);
 
 		return null;
 	}
