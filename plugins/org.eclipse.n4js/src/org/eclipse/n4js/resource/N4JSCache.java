@@ -40,6 +40,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class N4JSCache extends OnChangeEvictingCache {
 
+	static final String N4JS_AllIssues = "N4JS-AllIssues";
+
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
@@ -84,14 +86,40 @@ public class N4JSCache extends OnChangeEvictingCache {
 	 * Other threads besides those for outline view and transpiler could in principle access the cache. However that's a
 	 * situation that's pre-existent to the just described sharing between outline and transpiler.
 	 */
-	public List<Issue> getOrElseUpdateIssues(
+	public List<Issue> getOrUpdateIssues(
 			IResourceValidator resourceValidator,
 			Resource res,
 			CheckMode checkMode,
 			CancelIndicator monitor) {
 		try {
-			List<Issue> issues = get("N4JS-IDE-AllIssues" + checkMode, res,
+			List<Issue> issues = get(N4JS_AllIssues + checkMode, res,
 					new IssuesProvider(resourceValidator, res, checkMode, operationCanceledManager, monitor));
+			return issues;
+		} catch (OperationCanceledError oce) {
+			// observation: the cache remains unchanged, to avoid cache corruption.
+			return null;
+		} catch (OperationCanceledException oce) {
+			// observation: the cache remains unchanged, to avoid cache corruption.
+			return null;
+		}
+	}
+
+	/**
+	 * Triggers validation for the given resource even if validation results are cached already. The new result will
+	 * update the cache.
+	 *
+	 * @see #getOrUpdateIssues(IResourceValidator, Resource, CheckMode, CancelIndicator)
+	 */
+	public List<Issue> recreateIssues(
+			IResourceValidator resourceValidator,
+			Resource res,
+			CheckMode checkMode,
+			CancelIndicator monitor) {
+		try {
+			CacheAdapter adapter = getOrCreate(res);
+			List<Issue> issues = new IssuesProvider(resourceValidator, res, checkMode, operationCanceledManager,
+					monitor).get();
+			adapter.set(N4JS_AllIssues + checkMode, issues);
 			return issues;
 		} catch (OperationCanceledError oce) {
 			// observation: the cache remains unchanged, to avoid cache corruption.

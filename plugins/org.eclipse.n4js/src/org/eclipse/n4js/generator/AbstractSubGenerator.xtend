@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import java.io.StringWriter
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.util.List
 import org.eclipse.emf.common.EMFPlugin
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
@@ -207,6 +208,9 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 		if (resSPoly === null) {
 			return true;
 		}
+		// re-validation is necessary since the changes of the current resource (i.e. filled resource)
+		// can affect the filling resource in a way that validation errors will be removed or created.
+		cache.recreateIssues(resVal, resSPoly, CheckMode.ALL, monitor);
 		return hasNoErrors(resSPoly, monitor)
 	}
 
@@ -216,13 +220,14 @@ abstract class AbstractSubGenerator implements ISubGenerator, IGenerator2 {
 	 * If validation was canceled before finishing, don't assume absence of errors.
 	 */
 	private def boolean hasNoErrors(Resource input, CancelIndicator monitor) {
-		val issues = resVal.validate(input, CheckMode.ALL, monitor);
-		if (null === issues) {
+		val List<Issue> issues = cache.getOrUpdateIssues(resVal, input, CheckMode.ALL, monitor);
+		if (issues === null || input instanceof N4JSResource && !(input as N4JSResource).isFullyProcessed) {
 			// Cancellation occurred likely before all validations completed, thus can't assume absence of errors.
 			// Cancellation may result in exit via normal control-flow (this case) or via exceptional control-flow (see exception handler below)
-			warnDueToCancelation(input, null)
+			warnDueToCancelation(input, null);
 			return false;
 		}
+
 		val Iterable<Issue> errors = issues.filter[severity == ERROR];
 		if (errors.isEmpty()) {
 			return true

@@ -16,6 +16,8 @@ import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
+import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.Annotation
 import org.eclipse.n4js.n4JS.CatchBlock
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
@@ -45,6 +47,7 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
@@ -85,6 +88,8 @@ public class ASTProcessor extends AbstractProcessor {
 	private CompileTimeExpressionProcessor compileTimeExpressionProcessor;
 	@Inject
 	private RuntimeDependencyProcessor runtimeDependencyProcessor;
+	@Inject
+	private StaticPolyfillHelper staticPolyfillHelper
 
 	/**
 	 * Entry point for processing of the entire AST of the given resource.
@@ -414,6 +419,16 @@ public class ASTProcessor extends AbstractProcessor {
 				if (targetResource instanceof N4JSResource) {
 					// trigger post-processing of target resource
 					targetResource.performPostProcessing(G.cancelIndicator);
+				}
+			}
+		}
+		
+		if (node instanceof Annotation) {
+			if (node.name == AnnotationDefinition.STATIC_POLYFILL_AWARE.name) {
+				val resSPoly = staticPolyfillHelper.getStaticPolyfillResource(node.eResource);
+				if (resSPoly !== null) {
+					// trigger post-processing of poly filler
+					resSPoly.performPostProcessing(G.cancelIndicator);
 				}
 			}
 		}
