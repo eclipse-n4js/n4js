@@ -319,6 +319,58 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 	}
 
 	@Test
+	def void testChangeInDts() throws Exception {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"A.d.ts" -> '''
+				export const x: number;
+			''',
+			"B" -> '''
+				import {x} from "A";
+				const y: number = x;
+			'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		changeNonOpenedFile("A.d.ts", ': number' -> ': string');
+		joinServerRequests();
+		assertIssues("B" -> #[
+			'(Error, [1:18 - 1:19], string is not a subtype of number.)'
+		]);
+
+		changeNonOpenedFile("A.d.ts", ': string' -> ': number');
+		joinServerRequests();
+		assertNoIssues();
+	}
+
+	@Test
+	def void testChangeInDts_declaredModule() throws Exception {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"A.d.ts" -> '''
+				declare module "a/b/declModule" {
+					export const x: number;
+				}
+			''',
+			"B" -> '''
+				import {x} from "a/b/declModule";
+				const y: number = x;
+			'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		changeNonOpenedFile("A.d.ts", ': number' -> ': string');
+		joinServerRequests();
+		assertIssues("B" -> #[
+			'(Error, [1:18 - 1:19], string is not a subtype of number.)'
+		]);
+
+		changeNonOpenedFile("A.d.ts", ': string' -> ': number');
+		joinServerRequests();
+		assertNoIssues();
+	}
+
+	@Test
 	def void testChangeInPlainJS() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
 			"PlainJSModule.js" -> '''

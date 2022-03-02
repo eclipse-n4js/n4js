@@ -76,8 +76,13 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 			return result;
 		} finally {
 			// reset for fail fast
-			result = getDefaultResult();
+			resetResult();
 		}
+	}
+
+	/** Clear the result and set it back to the {@link #getDefaultResult() default}. */
+	protected void resetResult() {
+		result = getDefaultResult();
 	}
 
 	@Override

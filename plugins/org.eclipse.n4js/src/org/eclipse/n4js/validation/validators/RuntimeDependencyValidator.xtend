@@ -83,16 +83,18 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 
 		val modulesInHealedCycles = new HashSet<TModule>();
 		for (importDecl : importDecls) {
-			if (holdsNotAnIllegalImportWithinLoadtimeCycle(containingModule, importDecl)
-				&& holdsNotAnIllegalImportOfLTDTarget(containingModule, importDecl, modulesInHealedCycles)) {
+			val targetModule = importDecl.module;
+			if (targetModule instanceof TModule) { // only interested in top-level modules
+				if (holdsNotAnIllegalImportWithinLoadtimeCycle(containingModule, importDecl, targetModule)
+					&& holdsNotAnIllegalImportOfLTDTarget(containingModule, importDecl, targetModule, modulesInHealedCycles)) {
 
-				if (importDecl.retainedAtRuntime) {
-					// we have a valid import that will be retained at runtime
-					// --> it may contribute to healing later imports:
-					val targetModule = importDecl.module;
-					if (!targetModule.cyclicModulesRuntime.empty) {
-						modulesInHealedCycles += targetModule;
-						modulesInHealedCycles += targetModule.cyclicModulesRuntime;
+					if (importDecl.retainedAtRuntime) {
+						// we have a valid import that will be retained at runtime
+						// --> it may contribute to healing later imports:
+						if (!targetModule.cyclicModulesRuntime.empty) {
+							modulesInHealedCycles += targetModule;
+							modulesInHealedCycles += targetModule.cyclicModulesRuntime;
+						}
 					}
 				}
 			}
@@ -104,8 +106,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	 * <p>
 	 * This method will show an error on all imports that constitute the cycle.
 	 */
-	def private boolean holdsNotAnIllegalImportWithinLoadtimeCycle(TModule containingModule, ImportDeclaration importDecl) {
-		val targetModule = importDecl.module;
+	def private boolean holdsNotAnIllegalImportWithinLoadtimeCycle(TModule containingModule, ImportDeclaration importDecl, TModule targetModule) {
 		if (containingModule.cyclicModulesLoadtimeForInheritance.contains(targetModule)) {
 			val message = IssueCodes.getMessageForLTD_LOADTIME_DEPENDENCY_CYCLE() + "\n"
 				+ dependencyCycleToString(targetModule, true, INDENT);
@@ -118,12 +119,11 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	/**
 	 * Req. GH-1678, Constraints 2 and 3.
 	 */
-	def private boolean holdsNotAnIllegalImportOfLTDTarget(TModule containingModule, ImportDeclaration importDecl, Set<TModule> modulesInHealedCycles) {
+	def private boolean holdsNotAnIllegalImportOfLTDTarget(TModule containingModule, ImportDeclaration importDecl, TModule targetModule, Set<TModule> modulesInHealedCycles) {
 		if (!importDecl.isRetainedAtRuntime()) {
 			return true; // only interested in imports that are retained at runtime
 		}
 
-		val targetModule = importDecl.module;
 		if (!targetModule.isLTDTarget) {
 			return true; // only interested in imports of LTD targets
 		}

@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "other.d.ts" {
+
+		declare module "a/b/someModule1" {
+			export class Cls {
+				field: string;
+			}
+		}
+
+		declare module "a/b/someModule2" {
+			export class Cls {
+				field: number;
+			}
+		}
+	}
+
+	END_SETUP
+*/
+
+import "other"
+
+// XPECT noerrors -->
+import { Cls } from "a/b/someModule1"
+// XPECT noerrors -->
+import * as M2 from "a/b/someModule2"
+
+// XPECT noerrors -->
+let cls1: Cls = new Cls();
+// XPECT noerrors -->
+let cls2: M2.Cls = new M2.Cls();
+// XPECT errors --> "Cls is not a subtype of Cls." at "cls2"
+cls1 = cls2;

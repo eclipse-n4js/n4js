@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TModule;
@@ -200,7 +201,17 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 	 * @generated
 	 */
 	@Override
-	public TModule getContainingModule() {
+	public AbstractModule getContainingModule() {
+		return EcoreUtil2.<AbstractModule>getContainerOfType(this, AbstractModule.class);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TModule getContainingRootModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}
 
@@ -339,6 +350,7 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 		if (baseClass == IdentifiableElement.class) {
 			switch (baseOperationID) {
 				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE: return TypesPackage.TENUM_LITERAL___GET_CONTAINING_MODULE;
+				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE: return TypesPackage.TENUM_LITERAL___GET_CONTAINING_ROOT_MODULE;
 				default: return -1;
 			}
 		}
@@ -355,6 +367,8 @@ public class TEnumLiteralImpl extends SyntaxRelatedTElementImpl implements TEnum
 		switch (operationID) {
 			case TypesPackage.TENUM_LITERAL___GET_CONTAINING_MODULE:
 				return getContainingModule();
+			case TypesPackage.TENUM_LITERAL___GET_CONTAINING_ROOT_MODULE:
+				return getContainingRootModule();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

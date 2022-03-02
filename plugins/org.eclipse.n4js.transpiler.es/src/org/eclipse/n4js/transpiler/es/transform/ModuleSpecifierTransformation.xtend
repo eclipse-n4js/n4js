@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.ts.types.TDeclaredModule
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -103,10 +104,20 @@ class ModuleSpecifierTransformation extends Transformation {
 	def private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
 		val targetModule = state.info.getImportedModule(importDeclIM);
 
-		val targetProject = workspaceAccess.findProjectContaining(targetModule);
+		if (targetModule instanceof TDeclaredModule) {
+			// SPECIAL CASE #1a
+			// pointing to a module explicitly declared in a .d.ts file, such as a node built-in library:
+			// import * as path_lib from "path"
+			// --> always use plain module specifier
+			return targetModule.moduleSpecifier; // no file extension to add!
+		} else if (!(targetModule instanceof TModule)) {
+			throw new UnsupportedOperationException("unsupported subclass of AbstractModule: " + targetModule.getClass.simpleName);
+		}
+		val targetTModule = targetModule as TModule;
 
+		val targetProject = workspaceAccess.findProjectContaining(targetTModule);
 		if (targetProject.type === ProjectType.RUNTIME_LIBRARY) {
-			// SPECIAL CASE #1
+			// SPECIAL CASE #1b
 			// pointing to a module in a runtime library, such as importing a node built-in library:
 			// import * as path_lib from "path"
 			// --> always use plain module specifier
@@ -119,7 +130,7 @@ class ModuleSpecifierTransformation extends Transformation {
 			// module specifiers are always absolute in N4JS, but Javascript requires relative module
 			// specifiers when importing from a module within the same npm package
 			// --> need to create a relative module specifier here:
-			return createRelativeModuleSpecifier(targetModule);
+			return createRelativeModuleSpecifier(targetTModule);
 		}
 
 		val moduleSpecifierForm = importDeclIM.moduleSpecifierForm;
@@ -131,7 +142,7 @@ class ModuleSpecifierTransformation extends Transformation {
 			return getActualProjectName(targetProject).rawName; // no file extension to add!
 		}
 
-		return createAbsoluteModuleSpecifier(targetProject, targetModule);
+		return createAbsoluteModuleSpecifier(targetProject, targetTModule);
 	}
 
 	def private String createRelativeModuleSpecifier(TModule targetModule) {

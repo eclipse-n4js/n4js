@@ -23,7 +23,7 @@ export type AC = C<string>;
 
 /* XPECT ast ---
 Script: true
-  N4ClassDeclaration: [external, public], C, ?~
+  N4ClassDeclaration: [external], C, ?~
    N4FieldDeclaration: [public], false
     TypeReferenceNode
      ParameterizedTypeRef: OFF, false, false, T, ~, false, false
@@ -35,5 +35,3 @@ Script: true
      ParameterizedTypeRef: OFF, false, false, C, ~, false, false
       ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
 --- */
-
-

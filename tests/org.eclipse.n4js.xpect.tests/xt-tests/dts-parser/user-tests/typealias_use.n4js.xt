@@ -13,7 +13,7 @@
 	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
 	
 	File "tslib.d.ts" {
-		declare class C<T> {
+		export class C<T> {
 			field: T;
 		}
 

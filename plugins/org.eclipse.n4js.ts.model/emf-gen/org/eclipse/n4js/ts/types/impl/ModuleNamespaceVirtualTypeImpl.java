@@ -22,9 +22,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
-import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -62,7 +62,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * @generated
 	 * @ordered
 	 */
-	protected TModule module;
+	protected AbstractModule module;
 
 	/**
 	 * The default value of the '{@link #isDeclaredDynamic() <em>Declared Dynamic</em>}' attribute.
@@ -149,10 +149,10 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * @generated
 	 */
 	@Override
-	public TModule getModule() {
+	public AbstractModule getModule() {
 		if (module != null && module.eIsProxy()) {
 			InternalEObject oldModule = (InternalEObject)module;
-			module = (TModule)eResolveProxy(oldModule);
+			module = (AbstractModule)eResolveProxy(oldModule);
 			if (module != oldModule) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE__MODULE, oldModule, module));
@@ -166,7 +166,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TModule basicGetModule() {
+	public AbstractModule basicGetModule() {
 		return module;
 	}
 
@@ -176,8 +176,8 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 	 * @generated
 	 */
 	@Override
-	public void setModule(TModule newModule) {
-		TModule oldModule = module;
+	public void setModule(AbstractModule newModule) {
+		AbstractModule oldModule = module;
 		module = newModule;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE__MODULE, oldModule, module));
@@ -248,7 +248,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 				setAstElement((EObject)newValue);
 				return;
 			case TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE__MODULE:
-				setModule((TModule)newValue);
+				setModule((AbstractModule)newValue);
 				return;
 			case TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE__DECLARED_DYNAMIC:
 				setDeclaredDynamic((Boolean)newValue);
@@ -269,7 +269,7 @@ public class ModuleNamespaceVirtualTypeImpl extends TypeImpl implements ModuleNa
 				setAstElement((EObject)null);
 				return;
 			case TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE__MODULE:
-				setModule((TModule)null);
+				setModule((AbstractModule)null);
 				return;
 			case TypesPackage.MODULE_NAMESPACE_VIRTUAL_TYPE__DECLARED_DYNAMIC:
 				setDeclaredDynamic(DECLARED_DYNAMIC_EDEFAULT);

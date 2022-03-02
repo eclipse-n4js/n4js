@@ -1309,28 +1309,28 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Keyword cFromKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Assignment cReexportedFromAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final CrossReference cReexportedFromTModuleCrossReference_1_0 = (CrossReference)cReexportedFromAssignment_1.eContents().get(0);
-		private final RuleCall cReexportedFromTModuleModuleSpecifierParserRuleCall_1_0_1 = (RuleCall)cReexportedFromTModuleCrossReference_1_0.eContents().get(1);
+		private final CrossReference cReexportedFromAbstractModuleCrossReference_1_0 = (CrossReference)cReexportedFromAssignment_1.eContents().get(0);
+		private final RuleCall cReexportedFromAbstractModuleModuleSpecifierParserRuleCall_1_0_1 = (RuleCall)cReexportedFromAbstractModuleCrossReference_1_0.eContents().get(1);
 		
 		//fragment ExportFromClause*:
-		//    'from' reexportedFrom=[types::TModule|ModuleSpecifier]
+		//    'from' reexportedFrom=[types::AbstractModule|ModuleSpecifier]
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'from' reexportedFrom=[types::TModule|ModuleSpecifier]
+		//'from' reexportedFrom=[types::AbstractModule|ModuleSpecifier]
 		public Group getGroup() { return cGroup; }
 		
 		//'from'
 		public Keyword getFromKeyword_0() { return cFromKeyword_0; }
 		
-		//reexportedFrom=[types::TModule|ModuleSpecifier]
+		//reexportedFrom=[types::AbstractModule|ModuleSpecifier]
 		public Assignment getReexportedFromAssignment_1() { return cReexportedFromAssignment_1; }
 		
-		//[types::TModule|ModuleSpecifier]
-		public CrossReference getReexportedFromTModuleCrossReference_1_0() { return cReexportedFromTModuleCrossReference_1_0; }
+		//[types::AbstractModule|ModuleSpecifier]
+		public CrossReference getReexportedFromAbstractModuleCrossReference_1_0() { return cReexportedFromAbstractModuleCrossReference_1_0; }
 		
 		//ModuleSpecifier
-		public RuleCall getReexportedFromTModuleModuleSpecifierParserRuleCall_1_0_1() { return cReexportedFromTModuleModuleSpecifierParserRuleCall_1_0_1; }
+		public RuleCall getReexportedFromAbstractModuleModuleSpecifierParserRuleCall_1_0_1() { return cReexportedFromAbstractModuleModuleSpecifierParserRuleCall_1_0_1; }
 	}
 	public class ExportClauseElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportClause");
@@ -1979,20 +1979,20 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Assignment cImportFromAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final Keyword cImportFromFromKeyword_1_1_0 = (Keyword)cImportFromAssignment_1_1.eContents().get(0);
 		private final Assignment cModuleAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final CrossReference cModuleTModuleCrossReference_2_0 = (CrossReference)cModuleAssignment_2.eContents().get(0);
-		private final RuleCall cModuleTModuleModuleSpecifierParserRuleCall_2_0_1 = (RuleCall)cModuleTModuleCrossReference_2_0.eContents().get(1);
+		private final CrossReference cModuleAbstractModuleCrossReference_2_0 = (CrossReference)cModuleAssignment_2.eContents().get(0);
+		private final RuleCall cModuleAbstractModuleModuleSpecifierParserRuleCall_2_0_1 = (RuleCall)cModuleAbstractModuleCrossReference_2_0.eContents().get(1);
 		private final RuleCall cSemiParserRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
 		
 		//fragment ImportDeclarationImpl*:
 		//    'import' (
 		//        ImportClause importFrom?='from'
-		//    )? module=[types::TModule|ModuleSpecifier] Semi
+		//    )? module=[types::AbstractModule|ModuleSpecifier] Semi
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'import' (
 		//    ImportClause importFrom?='from'
-		//)? module=[types::TModule|ModuleSpecifier] Semi
+		//)? module=[types::AbstractModule|ModuleSpecifier] Semi
 		public Group getGroup() { return cGroup; }
 		
 		//'import'
@@ -2012,14 +2012,14 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'from'
 		public Keyword getImportFromFromKeyword_1_1_0() { return cImportFromFromKeyword_1_1_0; }
 		
-		//module=[types::TModule|ModuleSpecifier]
+		//module=[types::AbstractModule|ModuleSpecifier]
 		public Assignment getModuleAssignment_2() { return cModuleAssignment_2; }
 		
-		//[types::TModule|ModuleSpecifier]
-		public CrossReference getModuleTModuleCrossReference_2_0() { return cModuleTModuleCrossReference_2_0; }
+		//[types::AbstractModule|ModuleSpecifier]
+		public CrossReference getModuleAbstractModuleCrossReference_2_0() { return cModuleAbstractModuleCrossReference_2_0; }
 		
 		//ModuleSpecifier
-		public RuleCall getModuleTModuleModuleSpecifierParserRuleCall_2_0_1() { return cModuleTModuleModuleSpecifierParserRuleCall_2_0_1; }
+		public RuleCall getModuleAbstractModuleModuleSpecifierParserRuleCall_2_0_1() { return cModuleAbstractModuleModuleSpecifierParserRuleCall_2_0_1; }
 		
 		//Semi
 		public RuleCall getSemiParserRuleCall_3() { return cSemiParserRuleCall_3; }
@@ -7997,7 +7997,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		///**
 		// * Coalesce Expressions as in https://tc39.es/proposal-nullish-coalescing
 		// *
-		// * The structural assertions are implementes in the ASTStructureValidator
+		// * The structural assertions are implements in the ASTStructureValidator
 		// */
 		//CoalesceExpression<In, Yield> returns Expression:
 		//    LogicalORExpression<In,Yield>
@@ -12944,7 +12944,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//fragment ExportFromClause*:
-	//    'from' reexportedFrom=[types::TModule|ModuleSpecifier]
+	//    'from' reexportedFrom=[types::AbstractModule|ModuleSpecifier]
 	//;
 	public ExportFromClauseElements getExportFromClauseAccess() {
 		return pExportFromClause;
@@ -13065,7 +13065,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//fragment ImportDeclarationImpl*:
 	//    'import' (
 	//        ImportClause importFrom?='from'
-	//    )? module=[types::TModule|ModuleSpecifier] Semi
+	//    )? module=[types::AbstractModule|ModuleSpecifier] Semi
 	//;
 	public ImportDeclarationImplElements getImportDeclarationImplAccess() {
 		return pImportDeclarationImpl;
@@ -14654,7 +14654,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	///**
 	// * Coalesce Expressions as in https://tc39.es/proposal-nullish-coalescing
 	// *
-	// * The structural assertions are implementes in the ASTStructureValidator
+	// * The structural assertions are implements in the ASTStructureValidator
 	// */
 	//CoalesceExpression<In, Yield> returns Expression:
 	//    LogicalORExpression<In,Yield>

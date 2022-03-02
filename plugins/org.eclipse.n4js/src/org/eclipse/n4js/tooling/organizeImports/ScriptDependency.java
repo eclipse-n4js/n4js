@@ -11,8 +11,7 @@
 package org.eclipse.n4js.tooling.organizeImports;
 
 import org.eclipse.emf.ecore.EObject;
-
-import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.AbstractModule;
 
 /**
  * Holds information about (script) dependency.
@@ -37,7 +36,7 @@ public final class ScriptDependency {
 	/**
 	 * Module that exports dependency.
 	 */
-	public final TModule dependencyModule;
+	public final AbstractModule dependencyModule;
 
 	/**
 	 * Creates dependency descriptor
@@ -51,7 +50,7 @@ public final class ScriptDependency {
 	 * @param module
 	 *            from which referred {@link EObject} is imported
 	 */
-	public ScriptDependency(String localName, String actualName, EObject type, TModule module) {
+	public ScriptDependency(String localName, String actualName, EObject type, AbstractModule module) {
 		this.localName = localName;
 		this.actualName = actualName;
 		this.type = type;

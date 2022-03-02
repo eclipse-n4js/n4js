@@ -29,9 +29,11 @@ import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
+import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
@@ -128,7 +130,7 @@ public class MemberVisibilityChecker {
 	 * Returns the MemberVisibility of the <i>member</i> of the <i>receiverType</> in the given <i>context</i> When
 	 * checking for visibility of members to be overridden abstract members calculated as private are visible as well.
 	 */
-	public boolean isVisibleWhenOverriding(TModule contextModule, Type contextType, Type declaredReceiverType,
+	public boolean isVisibleWhenOverriding(AbstractModule contextModule, Type contextType, Type declaredReceiverType,
 			TMember member) {
 		if (member.getMemberAccessModifier() == MemberAccessModifier.PRIVATE) {
 			return isModuleVisible(contextModule, member);
@@ -139,7 +141,7 @@ public class MemberVisibilityChecker {
 	/**
 	 * Returns the MemberVisibility of the <i>member</i> of the <i>receiverType</> in the given <i>context</i>
 	 */
-	private MemberVisibility isVisible(TModule contextModule, Type contextType, Type declaredReceiverType,
+	private MemberVisibility isVisible(AbstractModule contextModule, Type contextType, Type declaredReceiverType,
 			TMember member, boolean supercall) {
 
 		int startIndex = member.getMemberAccessModifier().getValue();
@@ -237,7 +239,7 @@ public class MemberVisibilityChecker {
 		/*
 		 * Members of the same module are always visible
 		 */
-		if (contextModule == EcoreUtil2.getContainerOfType(candidate, TModule.class)) {
+		if (contextModule == candidate.getContainingModule()) {
 			return true;
 		}
 		return false;
@@ -251,12 +253,9 @@ public class MemberVisibilityChecker {
 	 *            not required for public visibility check, only context module and member are needed. Redeclared here
 	 *            to keep is*Visible methods similar.
 	 */
-	private boolean isPublicInternalVisible(Type contextType, TModule contextModule, Type declaredReceiverType,
+	private boolean isPublicInternalVisible(Type contextType, AbstractModule contextModule, Type declaredReceiverType,
 			TMember member) {
-		TModule receiverModule = EcoreUtil2.getContainerOfType(member, TModule.class);
-		// receiverModule == null indicates either a follow-up problem or a built-in type
-		return receiverModule == null || receiverModule == contextModule
-				|| Strings.equal(contextModule.getVendorID(), receiverModule.getVendorID());
+		return checkVendorEquality(contextModule, member);
 	}
 
 	/**
@@ -267,7 +266,7 @@ public class MemberVisibilityChecker {
 	 *            not required for public visibility check, only context module is needed. Redeclared here to keep
 	 *            is*Visible methods similar.
 	 */
-	private boolean isProtectedVisible(Type contextType, TModule contextModule, Type declaredReceiverType,
+	private boolean isProtectedVisible(Type contextType, AbstractModule contextModule, Type declaredReceiverType,
 			TMember member, boolean supercall) {
 		if (isProjectVisible(contextModule, member))
 			return true;
@@ -279,8 +278,8 @@ public class MemberVisibilityChecker {
 
 	/**
 	 * Unified internal check for visibility focusing on protected-stage only. Used in
-	 * {@link #isProtectedVisible(Type, TModule, Type, TMember, boolean)} and
-	 * {@link #isProtectedInternalVisible(Type, TModule, Type, TMember, boolean)}
+	 * {@link #isProtectedVisible(Type, AbstractModule, Type, TMember, boolean)} and
+	 * {@link #isProtectedInternalVisible(Type, AbstractModule, Type, TMember, boolean)}
 	 *
 	 * <p>
 	 * Preconditions:
@@ -301,7 +300,7 @@ public class MemberVisibilityChecker {
 	 * @param supercall
 	 *            true if super-keyword was used.
 	 */
-	private boolean isInternalCheckProtectedVisibile(Type contextType, TModule contextModule,
+	private boolean isInternalCheckProtectedVisibile(Type contextType, AbstractModule contextModule,
 			Type declaredReceiverType, TMember member, boolean supercall) {
 
 		// Protected means, that the context-type is a sub-type of the receiver-type
@@ -334,8 +333,9 @@ public class MemberVisibilityChecker {
 		return false;
 	}
 
-	private boolean isProtectedInternalVisible(Type contextType, TModule contextModule, Type declaredReceiverType,
-			TMember member, boolean supercall) {
+	private boolean isProtectedInternalVisible(Type contextType, AbstractModule contextModule,
+			Type declaredReceiverType, TMember member, boolean supercall) {
+
 		if (isProjectVisible(contextModule, member))
 			return true;
 		if (contextType == declaredReceiverType) {
@@ -350,24 +350,43 @@ public class MemberVisibilityChecker {
 		return false;
 	}
 
-	private boolean checkVendorEquality(TModule contextModule, TMember member) {
-		TModule memberModule = EcoreUtil2.getContainerOfType(member, TModule.class);
-		// receiverModule == null indicates either a follow-up problem or a builtin type
+	private boolean checkVendorEquality(AbstractModule contextModule, TMember member) {
+		if (contextModule instanceof TDeclaredModule) {
+			return false;
+		}
+		AbstractModule memberModule = member.getContainingModule();
+		if (memberModule instanceof TDeclaredModule) {
+			return false;
+		}
+		// receiverModule == null indicates either a follow-up problem or a built-in type
 		return memberModule == null || memberModule == contextModule
-				|| Strings.equal(contextModule.getVendorID(), memberModule.getVendorID());
+				|| Strings.equal(((TModule) contextModule).getVendorID(), ((TModule) memberModule).getVendorID());
 	}
 
-	private boolean isProjectVisible(TModule contextModule, TMember member) {
-		TModule memberModule = EcoreUtil2.getContainerOfType(member, TModule.class);
-		// receiverModule == null indicates either a follow-up problem or a builtin type
-		return memberModule == null || memberModule == contextModule
-				|| Strings.equal(memberModule.getProjectID(), contextModule.getProjectID())
-						&& Strings.equal(contextModule.getVendorID(), memberModule.getVendorID())
-				|| typeVisibilityChecker.isTestedProjectOf(contextModule, memberModule);
+	private boolean isProjectVisible(AbstractModule contextModule, TMember member) {
+		if (contextModule instanceof TDeclaredModule) {
+			return false; // declared modules do not actually belong to the project where they are contained
+		}
+		AbstractModule memberModule = member.getContainingModule();
+		if (memberModule instanceof TDeclaredModule) {
+			return false; // declared modules do not actually belong to the project where they are contained
+		}
+		// receiverModule == null indicates either a follow-up problem or a built-in type
+		return memberModule == null
+				|| memberModule == contextModule
+				|| Strings.equal(
+						((TModule) contextModule).getProjectID(),
+						((TModule) memberModule).getProjectID())
+						&& Strings.equal(
+								((TModule) contextModule).getVendorID(),
+								((TModule) memberModule).getVendorID())
+				|| typeVisibilityChecker.isTestedProjectOf(
+						(TModule) contextModule,
+						(TModule) memberModule);
 	}
 
-	private boolean isModuleVisible(TModule contextModule, TMember member) {
-		TModule memberModule = EcoreUtil2.getContainerOfType(member, TModule.class);
+	private boolean isModuleVisible(AbstractModule contextModule, TMember member) {
+		AbstractModule memberModule = member.getContainingModule();
 		// receiverModule == null indicates either a follow-up problem or a builtin type
 		return memberModule != null && memberModule == contextModule;
 	}

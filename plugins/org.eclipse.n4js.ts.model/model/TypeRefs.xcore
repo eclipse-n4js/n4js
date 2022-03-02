@@ -569,7 +569,7 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	 * ModuleNamespaceVirtualType? [TNamespace]* TEnum?
 	 */
 	contains NamespaceLikeRef[] astNamespaceLikeRefs
-	
+
 	op NamespaceLikeRef getPreviousSibling(NamespaceLikeRef nslRef) {
 		if (nslRef === null || nslRef.eContainer !== this) {
 			return null;

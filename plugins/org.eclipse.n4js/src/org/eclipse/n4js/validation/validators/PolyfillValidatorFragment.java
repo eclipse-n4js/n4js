@@ -68,6 +68,7 @@ import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
@@ -228,11 +229,11 @@ public class PolyfillValidatorFragment {
 	 * Constraint 155 (static polyfill layout), no. 4
 	 */
 	private boolean holdsSameJavascriptVariant(PolyfillValidationState state) {
-		final TModule fillerModule = state.polyType.getContainingModule();
-		final TModule filledModule = state.filledType.getContainingModule();
-		if (fillerModule != null && filledModule != null
-				&& fillerModule.isN4jsdModule() != filledModule.isN4jsdModule()) {
-			final String fileExt = fillerModule.isN4jsdModule() ? N4JSGlobals.N4JSD_FILE_EXTENSION
+		final AbstractModule fillerModule = state.polyType.getContainingModule();
+		final AbstractModule filledModule = state.filledType.getContainingModule();
+		if (fillerModule instanceof TModule && filledModule instanceof TModule
+				&& ((TModule) fillerModule).isN4jsdModule() != ((TModule) filledModule).isN4jsdModule()) {
+			final String fileExt = ((TModule) fillerModule).isN4jsdModule() ? N4JSGlobals.N4JSD_FILE_EXTENSION
 					: N4JSGlobals.N4JS_FILE_EXTENSION;
 			final String msg = getMessageForCLF_POLYFILL_STATIC_DIFFERENT_VARIANT(state.name, "." + fileExt);
 			addIssue(state, msg, CLF_POLYFILL_STATIC_DIFFERENT_VARIANT);
@@ -286,9 +287,9 @@ public class PolyfillValidatorFragment {
 			return false;
 		}
 		if (!isGlobalFilled) {
-			final TModule polyModule = state.polyType.getContainingModule();
-			final TModule filledModule = state.filledType.getContainingModule();
-			if (polyModule != null && filledModule != null) { // avoid consequential errors
+			final AbstractModule polyModule = state.polyType.getContainingModule();
+			final AbstractModule filledModule = state.filledType.getContainingModule();
+			if (polyModule instanceof TModule && filledModule instanceof TModule) { // avoid consequential errors
 				if (!polyModule.getModuleSpecifier().equals(filledModule.getModuleSpecifier())) { // (Polyfill Class)
 																									// 156.2
 					final String msg = getMessageForCLF_POLYFILL_DIFFERENT_MODULE_SPECIFIER(state.name,
@@ -483,7 +484,10 @@ public class PolyfillValidatorFragment {
 
 			for (TMember myMember : clashing.keySet()) {
 				// only interested in the module, so first is sufficient
-				clashProviders.put(myMember, clashing.get(myMember).get(0).getContainingModule());
+				AbstractModule module = clashing.get(myMember).get(0).getContainingModule();
+				if (module instanceof TModule) { // declared modules never contain polyfills
+					clashProviders.put(myMember, (TModule) module);
+				}
 			}
 
 		}

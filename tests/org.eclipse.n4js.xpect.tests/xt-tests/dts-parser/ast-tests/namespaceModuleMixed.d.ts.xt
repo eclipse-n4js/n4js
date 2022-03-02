@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+
+// tests for nesting namespaces/modules in namespaces/modules
+
+
+export namespace myNamespace {
+	declare module legacyModuleInNamespace {}
+	export module legacyModuleInNamespaceExported {}
+	declare module "actualModuleInNamespace" {}
+}
+
+export module myLegacyModule {
+	declare namespace namespaceInLegacyModule {}
+	export namespace namespaceInLegacyModuleExported {}
+	declare module "actualModuleInLegacyModule" {}
+}
+
+declare namespace "myActualModule" {
+	declare namespace namespaceInActualModule {}
+	export namespace namespaceInActualModuleExported {}
+	declare module legacyModuleInActualModule {}
+	export module legacyModuleInActualModuleExported {}
+}
+
+
+/* XPECT ast ---
+Script: true
+  ExportDeclaration: false, false
+   N4NamespaceDeclaration: [public], myNamespace
+    N4NamespaceDeclaration: [private], legacyModuleInNamespace
+    ExportDeclaration: false, false
+     N4NamespaceDeclaration: [public], legacyModuleInNamespaceExported
+    N4ModuleDeclaration: actualModuleInNamespace
+  ExportDeclaration: false, false
+   N4NamespaceDeclaration: [public], myLegacyModule
+    N4NamespaceDeclaration: [private], namespaceInLegacyModule
+    ExportDeclaration: false, false
+     N4NamespaceDeclaration: [public], namespaceInLegacyModuleExported
+    N4ModuleDeclaration: actualModuleInLegacyModule
+  N4NamespaceDeclaration: "myActualModule"
+   N4NamespaceDeclaration: [private], namespaceInActualModule
+   ExportDeclaration: false, false
+    N4NamespaceDeclaration: [public], namespaceInActualModuleExported
+   N4NamespaceDeclaration: [private], legacyModuleInActualModule
+   ExportDeclaration: false, false
+    N4NamespaceDeclaration: [public], legacyModuleInActualModuleExported
+--- */
