@@ -28,11 +28,4 @@ declare module "parent" {
 
 /* XPECT ast ---
 Script: true
-  N4ModuleDeclaration: parent
-   ExportDeclaration: false, false
-    N4ClassDeclaration: [external, public], Cls1, ?~
-   N4ModuleDeclaration: child
-    N4ClassDeclaration: [external, private], Cls2, ?~
-    N4ModuleDeclaration: grandChild
-     N4ClassDeclaration: [external, private], Cls3, ?~
 --- */
