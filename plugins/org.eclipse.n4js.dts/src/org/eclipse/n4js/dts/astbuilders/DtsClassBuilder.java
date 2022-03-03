@@ -31,7 +31,6 @@ import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.FormalParameter;
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
@@ -53,6 +52,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
 	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
 			resource);
+	private final DtsPropertyNameBuilder propertyNameBuilder = new DtsPropertyNameBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsClassBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -104,9 +104,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 			// this is a property
 			N4FieldDeclaration fd = N4JSFactory.eINSTANCE.createN4FieldDeclaration();
 
-			LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-			locpn.setLiteralName(ctx.propertyName().getText());
-			fd.setDeclaredName(locpn);
+			fd.setDeclaredName(propertyNameBuilder.consume(ctx.propertyName()));
 			fd.setDeclaredOptional(ctx.QuestionMark() != null);
 
 			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
@@ -117,9 +115,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 		} else {
 			// this is a method
 			N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
-			LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-			locpn.setLiteralName(ctx.propertyName().getText());
-			md.setDeclaredName(locpn);
+			md.setDeclaredName(propertyNameBuilder.consume(ctx.propertyName()));
 
 			List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.callSignature().typeParameters());
 			md.getTypeVars().addAll(typeVars);
@@ -153,7 +149,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 
 	@Override
 	public void enterGetAccessor(GetAccessorContext ctx) {
-		N4GetterDeclaration getter = createGetAccessor(ctx, typeRefBuilder);
+		N4GetterDeclaration getter = createGetAccessor(ctx, propertyNameBuilder, typeRefBuilder);
 		if (getter != null) {
 			addLocationInfo(getter, ctx);
 			result.getOwnedMembersRaw().add(getter);
@@ -162,7 +158,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 
 	@Override
 	public void enterSetAccessor(SetAccessorContext ctx) {
-		N4SetterDeclaration setter = createSetAccessor(ctx, this, typeRefBuilder);
+		N4SetterDeclaration setter = createSetAccessor(ctx, this, propertyNameBuilder, typeRefBuilder);
 		if (setter != null) {
 			addLocationInfo(setter, ctx);
 			result.getOwnedMembersRaw().add(setter);
@@ -170,16 +166,15 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 	}
 
 	/** Builds a {@link N4GetterDeclaration} from a {@link GetAccessorContext} */
-	static public N4GetterDeclaration createGetAccessor(GetAccessorContext ctx, DtsTypeRefBuilder typeRefBuilder) {
+	static public N4GetterDeclaration createGetAccessor(GetAccessorContext ctx,
+			DtsPropertyNameBuilder propertyNameBuilder, DtsTypeRefBuilder typeRefBuilder) {
+
 		if (ctx.getter() == null || ctx.getter().propertyName() == null) {
 			return null;
 		}
 
 		N4GetterDeclaration getter = N4JSFactory.eINSTANCE.createN4GetterDeclaration();
-
-		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-		locpn.setLiteralName(ctx.getter().propertyName().getText());
-		getter.setDeclaredName(locpn);
+		getter.setDeclaredName(propertyNameBuilder.consume(ctx.getter().propertyName()));
 
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
 		getter.setDeclaredTypeRefNode(trn);
@@ -200,17 +195,14 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 
 	/** Builds a {@link N4SetterDeclaration} from a {@link SetAccessorContext} */
 	static public N4SetterDeclaration createSetAccessor(SetAccessorContext ctx, AbstractDtsSubBuilder<?, ?> subbuilder,
-			DtsTypeRefBuilder typeRefBuilder) {
+			DtsPropertyNameBuilder propertyNameBuilder, DtsTypeRefBuilder typeRefBuilder) {
 
 		if (ctx.setter() == null || ctx.setter().propertyName() == null) {
 			return null;
 		}
 
 		N4SetterDeclaration setter = N4JSFactory.eINSTANCE.createN4SetterDeclaration();
-
-		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-		locpn.setLiteralName(ctx.setter().propertyName().getText());
-		setter.setDeclaredName(locpn);
+		setter.setDeclaredName(propertyNameBuilder.consume(ctx.setter().propertyName()));
 
 		FormalParameter fpar = N4JSFactory.eINSTANCE.createFormalParameter();
 		setter.setFpar(fpar);

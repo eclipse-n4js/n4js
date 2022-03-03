@@ -60,6 +60,14 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 
 	/** Consumes the given context and all its children. */
 	public R consume(T ctx) {
+		return doConsume(ctx);
+	}
+
+	/**
+	 * Actually consumes the given context. Subclasses may provide more consume methods, in addition to the default
+	 * method {@code #consume(T)}, by delegating here.
+	 */
+	protected R doConsume(ParserRuleContext ctx) {
 		if (ctx == null) {
 			return result;
 		}

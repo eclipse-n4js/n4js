@@ -30,12 +30,13 @@ import org.eclipse.n4js.n4JS.ArrayBindingPattern;
 import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.BindingPattern;
 import org.eclipse.n4js.n4JS.BindingProperty;
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 class DtsBindingPatternBuilder extends AbstractDtsSubBuilder<BindingPatternContext, BindingPattern> {
+
+	private final DtsPropertyNameBuilder propertyNameBuilder = new DtsPropertyNameBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsBindingPatternBuilder(AbstractDtsSubBuilder<?, ?> dtsBuilder) {
@@ -82,9 +83,7 @@ class DtsBindingPatternBuilder extends AbstractDtsSubBuilder<BindingPatternConte
 	public void enterPropertyExpressionAssignment(PropertyExpressionAssignmentContext ctx) {
 		BindingProperty bindingProp = N4JSFactory.eINSTANCE.createBindingProperty();
 		BindingElement bindingElem = N4JSFactory.eINSTANCE.createBindingElement();
-		LiteralOrComputedPropertyName name = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-		name.setLiteralName(ctx.propertyName().getText());
-		bindingProp.setDeclaredName(name);
+		bindingProp.setDeclaredName(propertyNameBuilder.consume(ctx.propertyName()));
 		bindingProp.setValue(bindingElem);
 
 		if (ctx.bindingPattern() != null) {

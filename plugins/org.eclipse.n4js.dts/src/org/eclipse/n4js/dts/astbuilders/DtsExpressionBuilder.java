@@ -13,6 +13,7 @@ package org.eclipse.n4js.dts.astbuilders;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierExpressionContext;
+import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SingleExpressionContext;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -33,21 +34,36 @@ public class DtsExpressionBuilder extends AbstractDtsSubBuilder<SingleExpression
 		super(tokenStream, resource);
 	}
 
+	/** Special use case of this builder. */
+	public IdentifierRef consume(IdentifierNameContext ctx) {
+		return (IdentifierRef) doConsume(ctx);
+	}
+
+	/** Special use case of this builder. */
+	public IdentifierRef consume(IdentifierExpressionContext ctx) {
+		return (IdentifierRef) doConsume(ctx);
+	}
+
 	@Override
 	public void enterIdentifierExpression(IdentifierExpressionContext ctx) {
-		if (ctx.identifierName() == null || ctx.identifierName().getText().isBlank()) {
+		walker.enqueue(ctx.identifierName());
+	}
+
+	@Override
+	public void enterIdentifierName(IdentifierNameContext ctx) {
+		String idAsText = ctx.getText();
+		if (idAsText.isBlank()) {
 			return;
 		}
 
-		String idName = ctx.identifierName().getText();
-		IdentifierRef iRef = N4JSFactory.eINSTANCE.createIdentifierRef();
-		iRef.setIdAsText(idName);
+		IdentifierRef idRef = N4JSFactory.eINSTANCE.createIdentifierRef();
+		idRef.setIdAsText(idAsText);
 
 		IdentifiableElement ieProxy = TypesFactory.eINSTANCE.createIdentifiableElement();
 		EReference eRef = N4JSPackage.eINSTANCE.getIdentifierRef_Id();
-		ParserContextUtil.installProxy(resource, iRef, eRef, ieProxy, idName);
+		ParserContextUtil.installProxy(resource, idRef, eRef, ieProxy, idAsText);
+		idRef.setId(ieProxy);
 
-		iRef.setId(ieProxy);
-		result = iRef;
+		result = idRef;
 	}
 }

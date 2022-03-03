@@ -71,6 +71,12 @@ public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, Typ
 		return consume(ctx.typeRef());
 	}
 
+	/** @return a wrapped {@link ParameterizedTypeRef}, created from the given context. */
+	@SuppressWarnings("unchecked")
+	public TypeReferenceNode<ParameterizedTypeRef> consume(ParameterizedTypeRefContext ctx) {
+		return (TypeReferenceNode<ParameterizedTypeRef>) ((Object) doConsume(ctx));
+	}
+
 	@Override
 	public void enterParameterizedTypeRef(ParameterizedTypeRefContext ctx) {
 		ParameterizedTypeRef pTypeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();

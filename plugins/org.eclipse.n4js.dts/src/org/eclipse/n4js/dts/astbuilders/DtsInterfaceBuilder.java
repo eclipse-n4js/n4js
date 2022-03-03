@@ -41,10 +41,10 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
+import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -55,6 +55,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
 	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
 			resource);
+	private final DtsPropertyNameBuilder propertyNameBuilder = new DtsPropertyNameBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsInterfaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -86,10 +87,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 			ParameterizedTypeRefContext extendsTypeRefCtx = extendsClause.classOrInterfaceTypeList()
 					.parameterizedTypeRef().get(0);
 
-			ParameterizedTypeRef pTypeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
-			pTypeRef.setDeclaredTypeAsText(extendsTypeRefCtx.typeName().getText());
-			TypeReferenceNode<ParameterizedTypeRef> typeRefNode = N4JSFactory.eINSTANCE.createTypeReferenceNode();
-			typeRefNode.setTypeRefInAST(pTypeRef);
+			TypeReferenceNode<ParameterizedTypeRef> typeRefNode = typeRefBuilder.consume(extendsTypeRefCtx);
 			result.getSuperInterfaceRefs().add(typeRefNode);
 		}
 
@@ -100,9 +98,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 	public void enterPropertySignature(PropertySignatureContext ctx) {
 		N4FieldDeclaration fd = N4JSFactory.eINSTANCE.createN4FieldDeclaration();
 		fd.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-		locpn.setLiteralName(ctx.propertyName().getText());
-		fd.setDeclaredName(locpn);
+		fd.setDeclaredName(propertyNameBuilder.consume(ctx.propertyName()));
 		fd.setDeclaredOptional(ctx.QuestionMark() != null);
 
 		if (ctx.ReadOnly() != null) {
@@ -129,6 +125,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 		N4MethodDeclaration md = createMethodDeclaration(null, ctx.typeParameters(), ctx.parameterBlock(),
 				ctx.colonSepTypeRef().typeRef());
 		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+		locpn.setKind(PropertyNameKind.IDENTIFIER);
 		locpn.setLiteralName("new");
 		md.setDeclaredName(locpn);
 
@@ -153,11 +150,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 
 		N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
 		md.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		if (name != null) {
-			LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-			locpn.setLiteralName(name.getText());
-			md.setDeclaredName(locpn);
-		}
+		md.setDeclaredName(propertyNameBuilder.consume(name));
 
 		if (typeParams != null) {
 			List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(typeParams);
@@ -177,7 +170,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 
 	@Override
 	public void enterGetAccessor(GetAccessorContext ctx) {
-		N4GetterDeclaration getter = DtsClassBuilder.createGetAccessor(ctx, typeRefBuilder);
+		N4GetterDeclaration getter = DtsClassBuilder.createGetAccessor(ctx, propertyNameBuilder, typeRefBuilder);
 		if (getter != null) {
 			addLocationInfo(getter, ctx);
 			result.getOwnedMembersRaw().add(getter);
@@ -186,7 +179,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 
 	@Override
 	public void enterSetAccessor(SetAccessorContext ctx) {
-		N4SetterDeclaration setter = DtsClassBuilder.createSetAccessor(ctx, this, typeRefBuilder);
+		N4SetterDeclaration setter = DtsClassBuilder.createSetAccessor(ctx, this, propertyNameBuilder, typeRefBuilder);
 		if (setter != null) {
 			addLocationInfo(setter, ctx);
 			result.getOwnedMembersRaw().add(setter);

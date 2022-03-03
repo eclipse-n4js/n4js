@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "tslib.d.ts" {
+		export interface Ifc extends Iterable<string> {
+			42(): string;
+			"hello world"(): string;
+			["computed world"](): string;
+			[Symbol.iterator](): Iterator<string>;
+		}
+	}
+
+	END_SETUP
+ */
+
+import { Ifc } from "tslib";
+
+let ifc: Ifc;
+
+// XPECT noerrors -->
+let v01 = ifc[42]();
+// XPECT noerrors -->
+let v02 = ifc["hello world"]();
+// XPECT noerrors -->
+let v03 = ifc["computed world"]();
+// XPECT noerrors -->
+let v04 = ifc[Symbol.iterator]();
+
+// XPECT type of 'v01' --> string
+v01;
+// XPECT type of 'v02' --> string
+v02;
+// XPECT type of 'v03' --> string
+v03;
+// XPECT type of 'v04' --> Iterator<string>
+v04;

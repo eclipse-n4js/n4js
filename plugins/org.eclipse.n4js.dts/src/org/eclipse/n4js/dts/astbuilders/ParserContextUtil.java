@@ -25,14 +25,22 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
+import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PropertyAccessExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.n4JS.StringLiteral;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -143,6 +151,43 @@ public class ParserContextUtil {
 			ctx = (ParserRuleContext) ctx.parent;
 		}
 		return null;
+	}
+
+	/**
+	 * Creates a property access expression, intended for cases when no {@link PropertyAccessExpressionContext} is
+	 * available (otherwise use {@link DtsExpressionBuilder}).
+	 */
+	public static ParameterizedPropertyAccessExpression createParameterizedPropertyAccessExpression(
+			LazyLinkingResource resource, Expression target, IdentifierNameContext propertyCtx) {
+		if (propertyCtx == null) {
+			return null;
+		}
+		String propertyAsText = propertyCtx.getText();
+		if (propertyAsText == null || propertyAsText.isBlank()) {
+			return null;
+		}
+		ParameterizedPropertyAccessExpression ppae = N4JSFactory.eINSTANCE
+				.createParameterizedPropertyAccessExpression();
+		ppae.setTarget(target);
+		ppae.setPropertyAsText(propertyAsText);
+
+		IdentifiableElement ieProxy = TypesFactory.eINSTANCE.createIdentifiableElement();
+		EReference eRef = N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property();
+		ParserContextUtil.installProxy(resource, ppae, eRef, ieProxy, propertyAsText);
+		ppae.setProperty(ieProxy);
+
+		return ppae;
+	}
+
+	/** @return the newly created string literal. Null safe. */
+	public static StringLiteral createStringLiteral(TerminalNode stringLiteral) {
+		if (stringLiteral == null) {
+			return null;
+		}
+		StringLiteral sl = N4JSFactory.eINSTANCE.createStringLiteral();
+		sl.setRawValue(stringLiteral.getText());
+		sl.setValue(trimStringLiteral(stringLiteral));
+		return sl;
 	}
 
 	/** @return the quoted string. Null safe. */
