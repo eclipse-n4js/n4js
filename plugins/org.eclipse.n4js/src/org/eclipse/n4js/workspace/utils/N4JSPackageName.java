@@ -128,6 +128,19 @@ public final class N4JSPackageName implements Comparable<N4JSPackageName> {
 		return name.startsWith(N4JSGlobals.N4JSD_SCOPE + "/");
 	}
 
+	/** Return true iff this project name has the scope {@code @types/}. */
+	public boolean isScopeTypes() {
+		return getRawName().startsWith(N4JSGlobals.TYPES_SCOPE + "/");
+	}
+
+	/** Return the current project name with the scope {@code @types/}. */
+	public N4JSPackageName toTypeScriptDefinition() {
+		if (isScopeTypes()) {
+			return this;
+		}
+		return new N4JSPackageName(N4JSGlobals.TYPES_SCOPE + " /" + getRawName());
+	}
+
 	@Override
 	public int compareTo(N4JSPackageName o) {
 		return name.compareTo(o.getRawName());

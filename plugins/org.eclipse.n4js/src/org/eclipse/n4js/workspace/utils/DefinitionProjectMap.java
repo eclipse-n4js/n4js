@@ -107,6 +107,10 @@ public class DefinitionProjectMap {
 		N4JSPackageName definedProjectName = pd.getDefinesPackage() != null
 				? new N4JSPackageName(pd.getDefinesPackage())
 				: null;
+		if (name.isScopeTypes()) {
+			type = ProjectType.DEFINITION;
+			definedProjectName = new N4JSPackageName(name.getPlainName());
+		}
 		addProject(name, type, definedProjectName);
 	}
 
