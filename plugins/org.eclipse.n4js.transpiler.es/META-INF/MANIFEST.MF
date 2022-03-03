@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.releng.utils,
  com.google.guava,
  com.google.gson,
- org.eclipse.n4js.smith
+ org.eclipse.n4js.smith,
+ org.eclipse.n4js.utils
 Export-Package: org.eclipse.n4js.transpiler.es,
  org.eclipse.n4js.transpiler.es.transform
 Automatic-Module-Name: org.eclipse.n4js.transpiler.es

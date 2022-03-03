@@ -53,7 +53,7 @@ public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementConte
 	@Override
 	public void enterImportFromBlock(ImportFromBlockContext ctx) {
 		result = N4JSFactory.eINSTANCE.createImportDeclaration();
-		String fromModule = ParserContextUtil.trimStringLiteral(ctx.StringLiteral());
+		String fromModule = ParserContextUtil.trimAndUnescapeStringLiteral(ctx.StringLiteral());
 		result.setImportFrom(fromModule != null);
 		if (fromModule != null) {
 			URI fromModuleUri = null;

@@ -150,7 +150,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				TerminalNode identifier = ctxName.Identifier();
 				if (strLit != null) {
 					// this module declaration actually declares a module
-					result = doCreateModuleDeclaration(ParserContextUtil.trimStringLiteral(strLit));
+					result = doCreateModuleDeclaration(ParserContextUtil.trimAndUnescapeStringLiteral(strLit));
 					walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
 				} else if (identifier != null) {
 					// this module declaration declares a "legacy module" that acts like a namespace

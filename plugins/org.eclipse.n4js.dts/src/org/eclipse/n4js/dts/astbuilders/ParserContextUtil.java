@@ -41,6 +41,8 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TypesFactory;
+import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
+import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -186,17 +188,21 @@ public class ParserContextUtil {
 		}
 		StringLiteral sl = N4JSFactory.eINSTANCE.createStringLiteral();
 		sl.setRawValue(stringLiteral.getText());
-		sl.setValue(trimStringLiteral(stringLiteral));
+		sl.setValue(trimAndUnescapeStringLiteral(stringLiteral));
 		return sl;
 	}
 
-	/** @return the quoted string. Null safe. */
-	public static String trimStringLiteral(TerminalNode stringLiteral) {
-		if (stringLiteral == null || stringLiteral.getText() == null || stringLiteral.getText().length() < 2) {
+	/** @return the unquoted and unescaped string. Null safe. */
+	public static String trimAndUnescapeStringLiteral(TerminalNode stringLiteral) {
+		String str = stringLiteral != null ? stringLiteral.getText() : null;
+		if (str == null || str.length() < 2) {
 			return "";
 		}
-		String str = stringLiteral.getText();
-		return str.substring(1, str.length() - 1);
+		// trim quotes
+		str = str.substring(1, str.length() - 1);
+		// resolve escape sequences
+		StringConverterResult converted = ValueConverterUtils.convertFromEscapedString(str, true, false, false, null);
+		return converted.getValue();
 	}
 
 	/** Installs proxy information that is later used for linking */

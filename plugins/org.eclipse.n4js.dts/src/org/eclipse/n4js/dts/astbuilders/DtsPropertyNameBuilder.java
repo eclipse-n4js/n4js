@@ -19,7 +19,6 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
-import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -50,7 +49,7 @@ public class DtsPropertyNameBuilder extends AbstractDtsSubBuilder<PropertyNameCo
 				result.setLiteralName(name.numericLiteral().getText());
 			} else if (name.StringLiteral() != null) {
 				result.setKind(PropertyNameKind.STRING);
-				result.setLiteralName(ParserContextUtil.trimStringLiteral(name.StringLiteral()));
+				result.setLiteralName(ParserContextUtil.trimAndUnescapeStringLiteral(name.StringLiteral()));
 			}
 		} else {
 			result.setKind(PropertyNameKind.COMPUTED);
@@ -61,10 +60,7 @@ public class DtsPropertyNameBuilder extends AbstractDtsSubBuilder<PropertyNameCo
 							identifierName.get(idx));
 				}
 			} else if (name.StringLiteral() != null) {
-				StringLiteral sl = N4JSFactory.eINSTANCE.createStringLiteral();
-				sl.setRawValue(name.StringLiteral().getText());
-				sl.setValue(ParserContextUtil.trimStringLiteral(name.StringLiteral()));
-				result.setExpression(sl);
+				result.setExpression(ParserContextUtil.createStringLiteral(name.StringLiteral()));
 			}
 		}
 	}

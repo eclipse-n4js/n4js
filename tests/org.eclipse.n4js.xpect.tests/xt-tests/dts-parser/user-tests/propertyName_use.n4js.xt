@@ -19,12 +19,26 @@
 			["computed world"](): string;
 			[Symbol.iterator](): Iterator<string>;
 		}
+		export class ExoticNames {
+			_field: string;
+			$1: string;
+			"&": string;
+			"+": string;
+			"\n": string;
+			"'": string;
+			'"': string;
+			"f&": string;
+			"f+": string;
+			"f\`": string;
+			"f'": string;
+			'f"': string;
+		}
 	}
 
 	END_SETUP
  */
 
-import { Ifc } from "tslib";
+import { Ifc, ExoticNames } from "tslib";
 
 let ifc: Ifc;
 
@@ -45,3 +59,32 @@ v02;
 v03;
 // XPECT type of 'v04' --> Iterator<string>
 v04;
+
+
+
+let exoticNames: ExoticNames;
+
+// XPECT type of 'v11' --> string
+let v11 = exoticNames._field;
+// XPECT type of 'v12' --> string
+let v12 = exoticNames.$1;
+// XPECT type of 'v13' --> string
+let v13 = exoticNames["&"];
+// XPECT type of 'v14' --> string
+let v14 = exoticNames["+"];
+// XPECT type of 'v15' --> string
+let v15 = exoticNames["\n"];
+// XPECT type of 'v16' --> string
+let v16 = exoticNames["'"];
+// XPECT type of 'v17' --> string
+let v17 = exoticNames['"'];
+// XPECT type of 'v18' --> string
+let v18 = exoticNames["f&"];
+// XPECT type of 'v19' --> string
+let v19 = exoticNames["f+"];
+// XPECT type of 'v20' --> string
+let v20 = exoticNames["f\`"];
+// XPECT type of 'v21' --> string
+let v21 = exoticNames["f'"];
+// XPECT type of 'v22' --> string
+let v22 = exoticNames['f"'];
