@@ -311,16 +311,10 @@ public class ProjectImportEnablingScope implements IScope {
 				// case both modules are in different projects: check here iff related
 				switch (ext) {
 				case N4JSD_FILE_EXTENSION:
+				case DTS_FILE_EXTENSION:
 					if (prj.getType() != ProjectType.DEFINITION
 							|| !Objects.equals(prj.getDefinesPackage(), new N4JSPackageName(jsProject.getName()))) {
 						// case: n4jsd file is not inside a related n4js-definition project
-						return null; // return null due to conflict
-					}
-					break;
-				case DTS_FILE_EXTENSION:
-					if (prj.getType() != ProjectType.PLAINJS
-							|| !prj.getName().endsWith("/" + jsProject.getPackageName())) {
-						// case: d.ts file is not inside a related @types definition project
 						return null; // return null due to conflict
 					}
 					break;
