@@ -12,6 +12,7 @@ package org.eclipse.n4js.dts.astbuilders;
 
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
@@ -24,7 +25,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link LiteralOrComputedPropertyName} from parse tree elements
  */
-public class DtsPropertyNameBuilder extends AbstractDtsSubBuilder<PropertyNameContext, LiteralOrComputedPropertyName> {
+public class DtsPropertyNameBuilder
+		extends AbstractDtsBuilderWithHelpers<PropertyNameContext, LiteralOrComputedPropertyName> {
 
 	private final DtsExpressionBuilder expressionBuilder = new DtsExpressionBuilder(tokenStream, resource);
 
@@ -43,7 +45,8 @@ public class DtsPropertyNameBuilder extends AbstractDtsSubBuilder<PropertyNameCo
 		if (name.OpenBracket() == null) {
 			if (identifierName != null && identifierName.size() == 1) {
 				result.setKind(PropertyNameKind.IDENTIFIER);
-				result.setLiteralName(identifierName.get(0).Identifier().getText());
+				TerminalNode id = identifierName.get(0).Identifier();
+				result.setLiteralName(id != null ? id.getText() : null);
 			} else if (name.numericLiteral() != null) {
 				result.setKind(PropertyNameKind.NUMBER);
 				result.setLiteralName(name.numericLiteral().getText());
@@ -56,8 +59,7 @@ public class DtsPropertyNameBuilder extends AbstractDtsSubBuilder<PropertyNameCo
 			if (identifierName != null && !identifierName.isEmpty()) {
 				Expression expr = expressionBuilder.consume(identifierName.get(0));
 				for (int idx = 1; idx < identifierName.size(); idx++) {
-					expr = ParserContextUtil.createParameterizedPropertyAccessExpression(resource, expr,
-							identifierName.get(idx));
+					expr = createParameterizedPropertyAccessExpression(expr, identifierName.get(idx));
 				}
 			} else if (name.StringLiteral() != null) {
 				result.setExpression(ParserContextUtil.createStringLiteral(name.StringLiteral()));

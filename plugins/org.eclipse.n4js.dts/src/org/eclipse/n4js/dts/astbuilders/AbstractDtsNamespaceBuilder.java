@@ -79,7 +79,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * </table>
  */
 public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
-		extends AbstractDtsSubBuilder<T, N4AbstractNamespaceDeclaration> {
+		extends AbstractDtsBuilder<T, N4AbstractNamespaceDeclaration> {
 
 	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
 	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
@@ -165,14 +165,14 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		}
 	}
 
-	/** Creates a {@link N4ModuleDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
+	/** Creates a {@link N4ModuleDeclaration}. The caller must assign it to {@link AbstractDtsBuilder#result}. */
 	private N4ModuleDeclaration doCreateModuleDeclaration(String name) {
 		N4ModuleDeclaration moduleDecl = N4JSFactory.eINSTANCE.createN4ModuleDeclaration();
 		moduleDecl.setName(name);
 		return moduleDecl;
 	}
 
-	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
+	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsBuilder#result}. */
 	private N4NamespaceDeclaration doCreateN4NamespaceDeclaration(String name, boolean isExported) {
 		N4NamespaceDeclaration nsDecl = N4JSFactory.eINSTANCE.createN4NamespaceDeclaration();
 		nsDecl.setName(name);

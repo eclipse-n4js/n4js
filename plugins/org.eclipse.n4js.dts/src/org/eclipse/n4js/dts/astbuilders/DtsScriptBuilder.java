@@ -53,7 +53,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
-public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Script> {
+public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script> {
 	private final DtsImportBuilder importBuilder = new DtsImportBuilder(tokenStream, resource);
 	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
 	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);

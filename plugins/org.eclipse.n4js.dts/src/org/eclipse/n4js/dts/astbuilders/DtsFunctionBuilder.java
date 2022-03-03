@@ -30,7 +30,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsFunctionBuilder extends AbstractDtsSubBuilder<FunctionDeclarationContext, FunctionDeclaration> {
+public class DtsFunctionBuilder extends AbstractDtsBuilderWithHelpers<FunctionDeclarationContext, FunctionDeclaration> {
 	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
 	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
@@ -56,7 +56,7 @@ public class DtsFunctionBuilder extends AbstractDtsSubBuilder<FunctionDeclaratio
 
 		result.setGenerator(ctx.Multiply() != null);
 		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
-		result.setDeclaredReturnTypeRefNode(trn);
+		result.setDeclaredReturnTypeRefNode(orAnyPlus(trn));
 		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.callSignature().typeParameters());
 		result.getTypeVars().addAll(typeVars);
 		List<FormalParameter> fPars = formalParametersBuilder.consume(ctx.callSignature().parameterBlock());

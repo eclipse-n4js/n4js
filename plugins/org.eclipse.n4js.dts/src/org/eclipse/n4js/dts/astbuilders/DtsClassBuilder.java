@@ -47,7 +47,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationContext, N4ClassDeclaration> {
+public class DtsClassBuilder extends AbstractDtsBuilderWithHelpers<ClassDeclarationContext, N4ClassDeclaration> {
 	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
 	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
@@ -108,7 +108,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 			fd.setDeclaredOptional(ctx.QuestionMark() != null);
 
 			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
-			fd.setDeclaredTypeRefNode(trn);
+			fd.setDeclaredTypeRefNode(orAnyPlus(trn));
 
 			memberDecl = fd;
 
@@ -194,7 +194,7 @@ public class DtsClassBuilder extends AbstractDtsSubBuilder<ClassDeclarationConte
 	}
 
 	/** Builds a {@link N4SetterDeclaration} from a {@link SetAccessorContext} */
-	static public N4SetterDeclaration createSetAccessor(SetAccessorContext ctx, AbstractDtsSubBuilder<?, ?> subbuilder,
+	static public N4SetterDeclaration createSetAccessor(SetAccessorContext ctx, AbstractDtsBuilder<?, ?> subbuilder,
 			DtsPropertyNameBuilder propertyNameBuilder, DtsTypeRefBuilder typeRefBuilder) {
 
 		if (ctx.setter() == null || ctx.setter().propertyName() == null) {

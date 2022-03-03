@@ -27,7 +27,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
+public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 		extends TypeScriptParserBaseListener {
 
 	/** Token stream for access to other lexer channels */
@@ -43,7 +43,7 @@ public class AbstractDtsSubBuilder<T extends ParserRuleContext, R>
 	protected R result = getDefaultResult();
 
 	/** Constructor */
-	public AbstractDtsSubBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+	public AbstractDtsBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		this.tokenStream = tokenStream;
 		this.resource = resource;
 	}

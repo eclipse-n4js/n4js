@@ -18,7 +18,6 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_variableDeclarationList
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.BindingPatternBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableDeclarationContext;
@@ -33,18 +32,13 @@ import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementContext, VariableStatement> {
+public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableStatementContext, VariableStatement> {
 	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	private boolean parentIsNamespace;
@@ -119,32 +113,17 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 				: N4JSFactory.eINSTANCE.createVariableDeclaration();
 		varDecl.setName(ctx.identifierName().getText());
 
-		TypeReferenceNode<TypeRef> typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
-		varDecl.setDeclaredTypeRefNode(typeRef);
-
-		Expression expr = new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression());
-		varDecl.setExpression(expr);
-
-		if (typeRef == null && expr == null) {
-			// the types builder would use 'any' in this case, but we want 'any+':
-			varDecl.setDeclaredTypeRefNode(createAnyPlusTypeRef());
+		if (ctx.singleExpression() != null && ctx.colonSepTypeRef() == null) {
+			// in .d.ts, the only the following initializers are allowed:
+			// const: only string literal, numeric literal, or literal enum reference,
+			// var/let: none at all.
+			Expression expr = new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression());
+			varDecl.setExpression(expr);
+		} else {
+			TypeReferenceNode<TypeRef> typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
+			varDecl.setDeclaredTypeRefNode(orAnyPlus(typeRef));
 		}
 
 		result.getVarDeclsOrBindings().add(varDecl);
-	}
-
-	private TypeReferenceNode<TypeRef> createAnyPlusTypeRef() {
-		ParameterizedTypeRef ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
-		ptr.setDynamic(true);
-		ptr.setDeclaredTypeAsText("any");
-
-		Type typeProxy = TypesFactory.eINSTANCE.createType();
-		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
-		ParserContextUtil.installProxy(resource, ptr, eRef, typeProxy, ptr.getDeclaredTypeAsText());
-		ptr.setDeclaredType(typeProxy);
-
-		TypeReferenceNode<TypeRef> typeRefNode = N4JSFactory.eINSTANCE.createTypeReferenceNode();
-		typeRefNode.setTypeRefInAST(ptr);
-		return typeRefNode;
 	}
 }

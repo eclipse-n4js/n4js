@@ -37,8 +37,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsFormalParametersBuilder
-		extends AbstractDtsSubBuilder<ParameterBlockContext, List<FormalParameter>> {
+public class DtsFormalParametersBuilder extends AbstractDtsBuilderWithHelpers<ParameterBlockContext, List<FormalParameter>> {
 
 	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 	private final DtsExpressionBuilder expressionBuilder = new DtsExpressionBuilder(tokenStream, resource);
@@ -97,7 +96,7 @@ public class DtsFormalParametersBuilder
 			FormalParameter fPar = N4JSFactory.eINSTANCE.createFormalParameter();
 			fPar.setName(iop.identifierName().getText()); // TODO: bindingPattern
 			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(cstr);
-			fPar.setDeclaredTypeRefNode(trn);
+			fPar.setDeclaredTypeRefNode(orAnyPlus(trn));
 			result.add(fPar);
 			return fPar;
 		}

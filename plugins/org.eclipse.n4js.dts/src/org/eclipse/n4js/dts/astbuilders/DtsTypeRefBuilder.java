@@ -29,7 +29,6 @@ import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
-import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -43,7 +42,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, TypeReferenceNode<TypeRef>> {
+public class DtsTypeRefBuilder extends AbstractDtsBuilder<TypeRefContext, TypeReferenceNode<TypeRef>> {
 
 	/** Constructor */
 	public DtsTypeRefBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -114,7 +113,6 @@ public class DtsTypeRefBuilder extends AbstractDtsSubBuilder<TypeRefContext, Typ
 			}
 		}
 
-		result = N4JSFactory.eINSTANCE.createTypeReferenceNode();
-		result.setTypeRefInAST(pTypeRef);
+		result = ParserContextUtil.wrapInTypeRefNode(pTypeRef);
 	}
 }

@@ -34,12 +34,12 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
-class DtsBindingPatternBuilder extends AbstractDtsSubBuilder<BindingPatternContext, BindingPattern> {
+class DtsBindingPatternBuilder extends AbstractDtsBuilder<BindingPatternContext, BindingPattern> {
 
 	private final DtsPropertyNameBuilder propertyNameBuilder = new DtsPropertyNameBuilder(tokenStream, resource);
 
 	/** Constructor */
-	public DtsBindingPatternBuilder(AbstractDtsSubBuilder<?, ?> dtsBuilder) {
+	public DtsBindingPatternBuilder(AbstractDtsBuilder<?, ?> dtsBuilder) {
 		super(dtsBuilder.tokenStream, dtsBuilder.resource);
 	}
 

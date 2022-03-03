@@ -37,7 +37,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsEnumBuilder extends AbstractDtsSubBuilder<EnumDeclarationContext, N4EnumDeclaration> {
+public class DtsEnumBuilder extends AbstractDtsBuilder<EnumDeclarationContext, N4EnumDeclaration> {
 
 	/** Constructor */
 	public DtsEnumBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {

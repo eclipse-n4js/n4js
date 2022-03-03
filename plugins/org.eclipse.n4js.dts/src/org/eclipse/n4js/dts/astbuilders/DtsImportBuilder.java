@@ -36,7 +36,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementContext, ImportDeclaration> {
+public class DtsImportBuilder extends AbstractDtsBuilder<ImportStatementContext, ImportDeclaration> {
 	private final static Logger LOG = Logger.getLogger(DtsImportBuilder.class);
 
 	/** Constructor */

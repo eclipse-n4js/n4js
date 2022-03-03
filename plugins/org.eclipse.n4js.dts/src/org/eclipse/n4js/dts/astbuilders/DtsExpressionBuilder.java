@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PropertyAccessExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SingleExpressionContext;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -27,7 +28,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsExpressionBuilder extends AbstractDtsSubBuilder<SingleExpressionContext, Expression> {
+public class DtsExpressionBuilder extends AbstractDtsBuilderWithHelpers<SingleExpressionContext, Expression> {
 
 	/** Constructor */
 	public DtsExpressionBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -65,5 +66,11 @@ public class DtsExpressionBuilder extends AbstractDtsSubBuilder<SingleExpression
 		idRef.setId(ieProxy);
 
 		result = idRef;
+	}
+
+	@Override
+	public void enterPropertyAccessExpression(PropertyAccessExpressionContext ctx) {
+		Expression targetExpr = new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression());
+		result = createParameterizedPropertyAccessExpression(targetExpr, ctx.identifierName());
 	}
 }

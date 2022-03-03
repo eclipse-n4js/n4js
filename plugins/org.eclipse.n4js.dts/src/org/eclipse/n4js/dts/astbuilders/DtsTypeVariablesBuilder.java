@@ -30,7 +30,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsTypeVariablesBuilder extends AbstractDtsSubBuilder<TypeParametersContext, List<N4TypeVariable>> {
+public class DtsTypeVariablesBuilder extends AbstractDtsBuilder<TypeParametersContext, List<N4TypeVariable>> {
 	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	/** Constructor */
