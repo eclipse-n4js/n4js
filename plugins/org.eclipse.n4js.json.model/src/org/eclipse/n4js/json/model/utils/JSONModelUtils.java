@@ -310,8 +310,8 @@ public class JSONModelUtils {
 			return setPath((JSONObject) pathValue, currentPath.subList(1, pathLength), fullPath, value);
 		} else {
 			// add new object name-value-pair for current property
-			final JSONObject nextObject = addProperty(object, currentProperty,
-					JSONFactory.eINSTANCE.createJSONObject());
+			final JSONObject nextObject = JSONFactory.eINSTANCE.createJSONObject();
+			addProperty(object, currentProperty, nextObject);
 			return setPath(nextObject, currentPath.subList(1, pathLength), fullPath, value);
 		}
 	}
@@ -363,14 +363,14 @@ public class JSONModelUtils {
 	 *
 	 * @returns The newly set value.
 	 */
-	public static <V extends JSONValue> V addProperty(JSONObject object, String name, V value) {
+	public static <V extends JSONValue> NameValuePair addProperty(JSONObject object, String name, V value) {
 		final NameValuePair nameValuePair = JSONFactory.eINSTANCE.createNameValuePair();
 		nameValuePair.setName(name);
 		nameValuePair.setValue(value);
 
 		object.getNameValuePairs().add(nameValuePair);
 
-		return value;
+		return nameValuePair;
 	}
 
 	/**
@@ -403,7 +403,9 @@ public class JSONModelUtils {
 	 * See {@link #addProperty(JSONObject, String, JSONValue)} and {@link #createStringLiteral(String)}
 	 */
 	public static JSONStringLiteral addProperty(JSONObject object, String name, String value) {
-		return addProperty(object, name, createStringLiteral(value));
+		JSONStringLiteral strLiteral = createStringLiteral(value);
+		addProperty(object, name, strLiteral);
+		return strLiteral;
 	}
 
 	/**
