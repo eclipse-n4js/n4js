@@ -160,7 +160,8 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject>
 		if (iop.identifierName() == null) {
 			return null;
 		}
-		T fPar = createFormalParameter(iop.identifierName().getText(), typeRefBuilder.consume(cstr));
+		String name = iop.identifierName().getText();
+		T fPar = createFormalParameter(name, typeRefBuilder.consume(cstr));
 		result.add(fPar);
 		return fPar;
 	}

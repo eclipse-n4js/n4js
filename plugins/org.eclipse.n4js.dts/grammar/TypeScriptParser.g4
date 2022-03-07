@@ -144,8 +144,11 @@ literalType
 arrowFunctionTypeExpression:
 	(
 		('abstract'? 'new')?
-		('<' typeVariable (',' typeVariable)* ','? '>')?
-		'(' anonymousFormalParameterListWithDeclaredThisType ')'
+        // FIXME discuss
+        typeParameters?
+		// ('<' typeVariable (',' typeVariable)* ','? '>')?
+        parameterBlock
+		// '(' anonymousFormalParameterListWithDeclaredThisType ')'
 		'=>'
 	) (typePredicateWithOperatorTypeRef | unionTypeExpression);
 
@@ -203,18 +206,19 @@ importTypeRef:
     Import '(' StringLiteral ')' ('.' parameterizedTypeRef)?
 ;
 
-anonymousFormalParameterListWithDeclaredThisType :
-	(('this' colonSepTypeRef | anonymousFormalParameter) (',' anonymousFormalParameter)* ','?)?
-;
-
-anonymousFormalParameter:
-	'...'? ((bindingIdentifier '?'? colonSepTypeRef) | typeRef)
-	defaultFormalParameter?
-;
-
-defaultFormalParameter:
-	'=' Identifier
-;
+// FIXME discuss
+// anonymousFormalParameterListWithDeclaredThisType :
+// 	(('this' colonSepTypeRef | anonymousFormalParameter) (',' anonymousFormalParameter)* ','?)?
+// ;
+// 
+// anonymousFormalParameter:
+// 	'...'? ((bindingIdentifier '?'? colonSepTypeRef) | typeRef)
+// 	defaultFormalParameter?
+// ;
+// 
+// defaultFormalParameter:
+// 	'=' Identifier
+// ;
 
 typePredicateWithOperatorTypeRef:
 	Asserts? (This | bindingIdentifier) Is unionTypeExpression

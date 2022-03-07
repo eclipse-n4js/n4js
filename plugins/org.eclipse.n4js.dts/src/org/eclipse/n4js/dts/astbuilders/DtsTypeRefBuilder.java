@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrayTypeExpressionContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ArrowFunctionTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.CallSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ColonSepTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ConditionalTypeRefContext;
@@ -47,6 +48,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.UnionTypeExpressionContext;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsTFormalParametersBuilder;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsTypeVariablesBuilder;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -73,8 +75,6 @@ import com.google.common.base.Strings;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefContext, TypeRef> {
-
-	private final DtsPropertyNameBuilder propertyNameBuilder = new DtsPropertyNameBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsTypeRefBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -176,13 +176,40 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 	@Override
 	public void enterPrimaryTypeExpression(PrimaryTypeExpressionContext ctx) {
-		if (ctx.typeRefWithModifiers() != null) {
+		if (ctx.literalType() != null) {
+			// FIXME
+		} else if (ctx.arrowFunctionTypeExpression() != null) {
+			enterArrowFunctionTypeExpression(ctx.arrowFunctionTypeExpression());
+		} else if (ctx.tupleTypeExpression() != null) {
+			// FIXME
+		} else if (ctx.queryTypeRef() != null) {
+			// FIXME
+		} else if (ctx.importTypeRef() != null) {
+			// FIXME
+		} else if (ctx.inferTypeRef() != null) {
+			// FIXME
+		} else if (ctx.typeRefWithModifiers() != null) {
 			enterTypeRefWithModifiers(ctx.typeRefWithModifiers());
 		} else if (ctx.OpenParen() != null && ctx.typeRef() != null) {
 			// parentheses
 			enterTypeRef(ctx.typeRef());
 		}
-		// FIXME
+	}
+
+	@Override
+	public void enterArrowFunctionTypeExpression(ArrowFunctionTypeExpressionContext ctx) {
+		if (ctx.parameterBlock() == null) {
+			return;
+		}
+		FunctionTypeExpression fte = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
+		fte.getTypeVars().addAll(newTypeVariablesBuilder().consume(ctx.typeParameters()));
+		fte.getFpars().addAll(newTFormalParametersBuilder().consume(ctx.parameterBlock()));
+		if (ctx.unionTypeExpression() != null) {
+			fte.setReturnTypeRef(orAnyPlus(newTypeRefBuilder().consume(ctx.unionTypeExpression())));
+		} else if (ctx.typePredicateWithOperatorTypeRef() != null) {
+			fte.setReturnTypeRef(createBooleanTypeRef());
+		}
+		result = fte;
 	}
 
 	@Override
@@ -191,8 +218,9 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			enterParameterizedTypeRef(ctx.parameterizedTypeRef());
 		} else if (ctx.objectLiteralTypeRef() != null) {
 			enterObjectLiteralTypeRef(ctx.objectLiteralTypeRef());
+		} else if (ctx.thisTypeRef() != null) {
+			// FIXME
 		}
-		// FIXME ctx.thisTypeRef()
 	}
 
 	@Override

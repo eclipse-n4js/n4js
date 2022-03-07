@@ -172,6 +172,11 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		return createAnyPlusTypeRef();
 	}
 
+	/** @return a new {@code boolean} type reference. */
+	protected final ParameterizedTypeRef createBooleanTypeRef() {
+		return createParameterizedTypeRef("boolean", false);
+	}
+
 	/** @return a new {@code any+} type reference. */
 	protected final ParameterizedTypeRef createAnyPlusTypeRef() {
 		return createParameterizedTypeRef("any", true);
