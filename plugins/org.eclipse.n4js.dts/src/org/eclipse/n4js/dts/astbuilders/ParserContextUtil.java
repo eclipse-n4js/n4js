@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -25,6 +27,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
+import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
@@ -151,6 +154,35 @@ public class ParserContextUtil {
 			ctx = (ParserRuleContext) ctx.parent;
 		}
 		return null;
+	}
+
+	public static BigDecimal parseNumericLiteral(NumericLiteralContext numLitCtx, boolean ignoreNegation) {
+		if (numLitCtx == null) {
+			return null;
+		}
+		String text = numLitCtx.getText().trim();
+		if (ignoreNegation) {
+			if (text.startsWith("-")) {
+				text = text.substring(1);
+			}
+		}
+		try {
+			if (numLitCtx.BinaryIntegerLiteral() != null) {
+				return new BigDecimal(new BigInteger(text.substring(2), 2));
+			} else if (numLitCtx.OctalIntegerLiteral() != null) {
+				return new BigDecimal(new BigInteger(text, 8));
+			} else if (numLitCtx.OctalIntegerLiteral2() != null) {
+				return new BigDecimal(new BigInteger(text.substring(2), 8));
+			} else if (numLitCtx.HexIntegerLiteral() != null) {
+				return new BigDecimal(new BigInteger(text.substring(2), 16));
+			} else if (numLitCtx.DecimalLiteral() != null) {
+				return new BigDecimal(text);
+			} else {
+				return null;
+			}
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 
 	/** @return the newly created string literal. Null safe. */

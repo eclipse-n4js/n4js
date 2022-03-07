@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +30,9 @@ import org.eclipse.n4js.dts.TypeScriptParser.GetterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceBodyContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IntersectionTypeExpressionContext;
+import org.eclipse.n4js.dts.TypeScriptParser.LiteralTypeContext;
 import org.eclipse.n4js.dts.TypeScriptParser.MethodSignatureContext;
+import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ObjectLiteralTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.OperatorTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterBlockContext;
@@ -50,11 +53,14 @@ import org.eclipse.n4js.dts.TypeScriptParser.UnionTypeExpressionContext;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsTFormalParametersBuilder;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsTypeVariablesBuilder;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
+import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
+import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -226,25 +232,48 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	@Override
 	public void enterPrimaryTypeExpression(PrimaryTypeExpressionContext ctx) {
 		if (ctx.literalType() != null) {
-			// FIXME
+			enterLiteralType(ctx.literalType());
 		} else if (ctx.arrowFunctionTypeExpression() != null) {
 			enterArrowFunctionTypeExpression(ctx.arrowFunctionTypeExpression());
 		} else if (ctx.tupleTypeExpression() != null) {
 			enterTupleTypeExpression(ctx.tupleTypeExpression());
 		} else if (ctx.queryTypeRef() != null) {
-			// FIXME
+			// TODO query type references
 			result = createAnyPlusTypeRef();
 		} else if (ctx.importTypeRef() != null) {
-			// FIXME
+			// TODO import type references
 			result = createAnyPlusTypeRef();
 		} else if (ctx.inferTypeRef() != null) {
-			// FIXME
+			// TODO infer type references
 			result = createAnyPlusTypeRef();
 		} else if (ctx.typeRefWithModifiers() != null) {
 			enterTypeRefWithModifiers(ctx.typeRefWithModifiers());
 		} else if (ctx.OpenParen() != null && ctx.typeRef() != null) {
 			// parentheses
 			enterTypeRef(ctx.typeRef());
+		}
+	}
+
+	@Override
+	public void enterLiteralType(LiteralTypeContext ctx) {
+		if (ctx.BooleanLiteral() != null) {
+			BooleanLiteralTypeRef tr = TypeRefsFactory.eINSTANCE.createBooleanLiteralTypeRef();
+			tr.setAstValue(ctx.BooleanLiteral().getText().toLowerCase());
+			result = tr;
+		} else if (ctx.numericLiteral() != null) {
+			NumericLiteralTypeRef tr = TypeRefsFactory.eINSTANCE.createNumericLiteralTypeRef();
+			NumericLiteralContext numLitCtx = ctx.numericLiteral();
+			tr.setAstNegated(numLitCtx.Minus() != null);
+			BigDecimal value = ParserContextUtil.parseNumericLiteral(numLitCtx, true);
+			if (value == null) {
+				return;
+			}
+			tr.setAstValue(value);
+			result = tr;
+		} else if (ctx.StringLiteral() != null) {
+			StringLiteralTypeRef tr = TypeRefsFactory.eINSTANCE.createStringLiteralTypeRef();
+			tr.setAstValue(ParserContextUtil.trimAndUnescapeStringLiteral(ctx.StringLiteral()));
+			result = tr;
 		}
 	}
 
