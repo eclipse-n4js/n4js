@@ -10,31 +10,31 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_arrayTypeExpression;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_conditionalTypeRef;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_intersectionTypeExpression;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_operatorTypeRef;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_primaryTypeExpression;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeRef;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeRefWithModifiers;
-import static org.eclipse.n4js.dts.TypeScriptParser.RULE_unionTypeExpression;
-
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.TypeScriptParser.ArrayTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ColonSepTypeRefContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ConditionalTypeRefContext;
+import org.eclipse.n4js.dts.TypeScriptParser.IntersectionTypeExpressionContext;
+import org.eclipse.n4js.dts.TypeScriptParser.OperatorTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PrimaryTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeRefWithModifiersContext;
+import org.eclipse.n4js.dts.TypeScriptParser.UnionTypeExpressionContext;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
@@ -52,14 +52,15 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilder<TypeRefContext, TypeRe
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
-				RULE_typeRef,
-				RULE_conditionalTypeRef,
-				RULE_unionTypeExpression,
-				RULE_intersectionTypeExpression,
-				RULE_operatorTypeRef,
-				RULE_arrayTypeExpression,
-				RULE_primaryTypeExpression,
-				RULE_typeRefWithModifiers);
+		// RULE_typeRef,
+		// RULE_conditionalTypeRef,
+		// RULE_unionTypeExpression,
+		// RULE_intersectionTypeExpression,
+		// RULE_operatorTypeRef,
+		// RULE_arrayTypeExpression,
+		// RULE_primaryTypeExpression,
+		// RULE_typeRefWithModifiers
+		);
 	}
 
 	/** @return a {@link TypeReferenceNode} from the given context. Consumes the given context and all its children. */
@@ -70,9 +71,103 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilder<TypeRefContext, TypeRe
 		return consume(ctx.typeRef());
 	}
 
+	public TypeRef consume(UnionTypeExpressionContext ctx) {
+		return doConsume(ctx);
+	}
+
+	public TypeRef consume(IntersectionTypeExpressionContext ctx) {
+		return doConsume(ctx);
+	}
+
+	public TypeRef consume(OperatorTypeRefContext ctx) {
+		return doConsume(ctx);
+	}
+
 	/** @return a wrapped {@link ParameterizedTypeRef}, created from the given context. */
 	public ParameterizedTypeRef consume(ParameterizedTypeRefContext ctx) {
 		return (ParameterizedTypeRef) doConsume(ctx);
+	}
+
+	@Override
+	public void enterTypeRef(TypeRefContext ctx) {
+		if (ctx.conditionalTypeRef() != null) {
+			enterConditionalTypeRef(ctx.conditionalTypeRef());
+		}
+	}
+
+	@Override
+	public void enterConditionalTypeRef(ConditionalTypeRefContext ctx) {
+		if (ctx.unionTypeExpression().size() == 1) {
+			enterUnionTypeExpression(ctx.unionTypeExpression(0));
+		}
+		// FIXME
+	}
+
+	@Override
+	public void enterUnionTypeExpression(UnionTypeExpressionContext ctx) {
+		int n = ctx.intersectionTypeExpression().size();
+		if (n == 1) {
+			enterIntersectionTypeExpression(ctx.intersectionTypeExpression(0));
+			return;
+		} else if (n >= 2) {
+			UnionTypeExpression ute = TypeRefsFactory.eINSTANCE.createUnionTypeExpression();
+			for (IntersectionTypeExpressionContext childCtx : ctx.intersectionTypeExpression()) {
+				TypeRef childTypeRef = new DtsTypeRefBuilder(tokenStream, resource).consume(childCtx);
+				if (childTypeRef != null) {
+					ute.getTypeRefs().add(childTypeRef);
+				}
+			}
+			result = ute;
+		}
+	}
+
+	@Override
+	public void enterIntersectionTypeExpression(IntersectionTypeExpressionContext ctx) {
+		int n = ctx.operatorTypeRef().size();
+		if (n == 1) {
+			enterOperatorTypeRef(ctx.operatorTypeRef(0));
+			return;
+		} else if (n >= 2) {
+			IntersectionTypeExpression ite = TypeRefsFactory.eINSTANCE.createIntersectionTypeExpression();
+			for (OperatorTypeRefContext childCtx : ctx.operatorTypeRef()) {
+				TypeRef childTypeRef = new DtsTypeRefBuilder(tokenStream, resource).consume(childCtx);
+				if (childTypeRef != null) {
+					ite.getTypeRefs().add(childTypeRef);
+				}
+			}
+			result = ite;
+		}
+	}
+
+	@Override
+	public void enterOperatorTypeRef(OperatorTypeRefContext ctx) {
+		enterArrayTypeExpression(ctx.arrayTypeExpression());
+		// FIXME
+	}
+
+	@Override
+	public void enterArrayTypeExpression(ArrayTypeExpressionContext ctx) {
+		enterPrimaryTypeExpression(ctx.primaryTypeExpression());
+		// FIXME
+	}
+
+	@Override
+	public void enterPrimaryTypeExpression(PrimaryTypeExpressionContext ctx) {
+		if (ctx.typeRefWithModifiers() != null) {
+			enterTypeRefWithModifiers(ctx.typeRefWithModifiers());
+		} else if (ctx.typeRef() != null) {
+			// parentheses
+			enterTypeRef(ctx.typeRef());
+		}
+		// FIXME
+	}
+
+	@Override
+	public void enterTypeRefWithModifiers(TypeRefWithModifiersContext ctx) {
+		if (ctx.parameterizedTypeRef() != null) {
+			enterParameterizedTypeRef(ctx.parameterizedTypeRef());
+		}
+		// FIXME
 	}
 
 	@Override
