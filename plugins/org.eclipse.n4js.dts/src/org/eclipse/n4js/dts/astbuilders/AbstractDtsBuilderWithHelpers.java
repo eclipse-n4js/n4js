@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import java.util.Collection;
+
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
@@ -31,6 +33,7 @@ import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -184,6 +187,13 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 
 	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type. */
 	protected final ParameterizedTypeRef createParameterizedTypeRef(String declTypeName, boolean dynamic) {
+		return createParameterizedTypeRef(declTypeName, null, dynamic);
+	}
+
+	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type and type arguments. */
+	protected final ParameterizedTypeRef createParameterizedTypeRef(String declTypeName,
+			Collection<? extends TypeArgument> typeArgs, boolean dynamic) {
+
 		ParameterizedTypeRef ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
 		ptr.setDynamic(dynamic);
 		ptr.setDeclaredTypeAsText(declTypeName);
@@ -192,6 +202,10 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
 		ParserContextUtil.installProxy(resource, ptr, eRef, typeProxy, ptr.getDeclaredTypeAsText());
 		ptr.setDeclaredType(typeProxy);
+
+		if (typeArgs != null) {
+			ptr.getDeclaredTypeArgs().addAll(typeArgs);
+		}
 
 		return ptr;
 	}

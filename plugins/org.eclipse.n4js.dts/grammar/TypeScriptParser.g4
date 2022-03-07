@@ -115,11 +115,14 @@ operatorTypeRef:
 typeOperator: Keyof | Unique | ReadOnly;
 
 arrayTypeExpression:
-	  ('?' '[' ']' ('[' ']')*)
-	| ('(' '?' ')' '[' ']' ('[' ']')*)
-	| primaryTypeExpression (
+    // FIXME discuss
+	//   ('?' '[' ']' ('[' ']')*)
+	// | ('(' '?' ')' '[' ']' ('[' ']')*)
+	// |
+    primaryTypeExpression (
 		  ('[' ']')
-		| ('[' typeRef ']')
+        // FIXME discuss
+		// | ('[' typeRef ']')
 	)*;
 
 primaryTypeExpression:

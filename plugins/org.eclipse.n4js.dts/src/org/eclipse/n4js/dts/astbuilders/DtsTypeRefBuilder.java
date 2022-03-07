@@ -215,7 +215,12 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	@Override
 	public void enterArrayTypeExpression(ArrayTypeExpressionContext ctx) {
 		enterPrimaryTypeExpression(ctx.primaryTypeExpression());
-		// FIXME
+		if (result != null) {
+			int dim = ctx.OpenBracket().size(); // dimension of the array
+			for (int i = 0; i < dim; i++) {
+				result = createParameterizedTypeRef("Array", Collections.singletonList(result), false);
+			}
+		}
 	}
 
 	@Override
