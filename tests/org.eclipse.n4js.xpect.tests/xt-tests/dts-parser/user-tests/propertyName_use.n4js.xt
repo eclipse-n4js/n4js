@@ -22,6 +22,7 @@
 		export class ExoticNames {
 			_field: string;
 			$1: string;
+			"": string;
 			"&": string;
 			"+": string;
 			"\n": string;
@@ -68,23 +69,26 @@ let exoticNames: ExoticNames;
 let v11 = exoticNames._field;
 // XPECT type of 'v12' --> string
 let v12 = exoticNames.$1;
-// XPECT type of 'v13' --> string
-let v13 = exoticNames["&"];
+// XPECT FIXME type of 'v13' --> string
+// XPECT FIXME noerrors --> "Member  not found." at "exoticNames[""]"
+let v13 = exoticNames[""];
 // XPECT type of 'v14' --> string
-let v14 = exoticNames["+"];
+let v14 = exoticNames["&"];
 // XPECT type of 'v15' --> string
-let v15 = exoticNames["\n"];
+let v15 = exoticNames["+"];
 // XPECT type of 'v16' --> string
-let v16 = exoticNames["'"];
+let v16 = exoticNames["\n"];
 // XPECT type of 'v17' --> string
-let v17 = exoticNames['"'];
+let v17 = exoticNames["'"];
 // XPECT type of 'v18' --> string
-let v18 = exoticNames["f&"];
+let v18 = exoticNames['"'];
 // XPECT type of 'v19' --> string
-let v19 = exoticNames["f+"];
+let v19 = exoticNames["f&"];
 // XPECT type of 'v20' --> string
-let v20 = exoticNames["f\`"];
+let v20 = exoticNames["f+"];
 // XPECT type of 'v21' --> string
-let v21 = exoticNames["f'"];
+let v21 = exoticNames["f\`"];
 // XPECT type of 'v22' --> string
-let v22 = exoticNames['f"'];
+let v22 = exoticNames["f'"];
+// XPECT type of 'v23' --> string
+let v23 = exoticNames['f"'];
