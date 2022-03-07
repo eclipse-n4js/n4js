@@ -39,6 +39,8 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetterContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TupleTypeArgumentContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TupleTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentsContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
@@ -84,6 +86,48 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return Collections.emptySet();
+	}
+
+	public List<TypeRef> consumeManyTypeRefs(Iterable<TypeRefContext> ctxs) {
+		@SuppressWarnings("hiding")
+		List<TypeRef> result = new ArrayList<>();
+		if (ctxs != null) {
+			for (TypeRefContext typeRefCtx : ctxs) {
+				TypeRef typeRef = doConsume(typeRefCtx);
+				if (typeRef != null) {
+					result.add(typeRef);
+				}
+			}
+		}
+		return result;
+	}
+
+	public List<TypeRef> consumeManyTypeArgs(Iterable<TypeArgumentContext> typeArgCtxs) {
+		@SuppressWarnings("hiding")
+		List<TypeRef> result = new ArrayList<>();
+		if (typeArgCtxs != null) {
+			for (TypeArgumentContext typeArgCtx : typeArgCtxs) {
+				TypeRef typeArg = doConsume(typeArgCtx.typeRef());
+				if (typeArg != null) {
+					result.add(typeArg);
+				}
+			}
+		}
+		return result;
+	}
+
+	public List<TypeRef> consumeManyTupleTypeArgs(Iterable<TupleTypeArgumentContext> typeArgCtxs) {
+		@SuppressWarnings("hiding")
+		List<TypeRef> result = new ArrayList<>();
+		if (typeArgCtxs != null) {
+			for (TupleTypeArgumentContext typeArgCtx : typeArgCtxs) {
+				TypeRef typeArg = doConsume(typeArgCtx.typeRef());
+				if (typeArg != null) {
+					result.add(typeArg);
+				}
+			}
+		}
+		return result;
 	}
 
 	/** @return a {@link TypeReferenceNode} from the given context. Consumes the given context and all its children. */
@@ -181,13 +225,16 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		} else if (ctx.arrowFunctionTypeExpression() != null) {
 			enterArrowFunctionTypeExpression(ctx.arrowFunctionTypeExpression());
 		} else if (ctx.tupleTypeExpression() != null) {
-			// FIXME
+			enterTupleTypeExpression(ctx.tupleTypeExpression());
 		} else if (ctx.queryTypeRef() != null) {
 			// FIXME
+			result = createAnyPlusTypeRef();
 		} else if (ctx.importTypeRef() != null) {
 			// FIXME
+			result = createAnyPlusTypeRef();
 		} else if (ctx.inferTypeRef() != null) {
 			// FIXME
+			result = createAnyPlusTypeRef();
 		} else if (ctx.typeRefWithModifiers() != null) {
 			enterTypeRefWithModifiers(ctx.typeRefWithModifiers());
 		} else if (ctx.OpenParen() != null && ctx.typeRef() != null) {
@@ -210,6 +257,18 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			fte.setReturnTypeRef(createBooleanTypeRef());
 		}
 		result = fte;
+	}
+
+	@Override
+	public void enterTupleTypeExpression(TupleTypeExpressionContext ctx) {
+		ParameterizedTypeRef ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
+		ptr.setArrayNTypeExpression(true);
+		if (!ctx.tupleTypeArgument().isEmpty()) {
+			ptr.getDeclaredTypeArgs().addAll(newTypeRefBuilder().consumeManyTupleTypeArgs(ctx.tupleTypeArgument()));
+		} else {
+			ptr.getDeclaredTypeArgs().add(TypeRefsFactory.eINSTANCE.createWildcard());
+		}
+		result = ptr;
 	}
 
 	@Override
@@ -283,14 +342,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		ParserContextUtil.installProxy(resource, ptr, eRef, typeProxy, lastSeg);
 		ptr.setDeclaredType(typeProxy);
 
-		if (typeArgs != null) {
-			for (TypeArgumentContext typeArgCtx : typeArgs) {
-				TypeRef typeArg = newTypeRefBuilder().consume(typeArgCtx.typeRef());
-				if (typeArg != null) {
-					ptr.getDeclaredTypeArgs().add(typeArg);
-				}
-			}
-		}
+		ptr.getDeclaredTypeArgs().addAll(newTypeRefBuilder().consumeManyTypeArgs(typeArgs));
 
 		return ptr;
 	}
