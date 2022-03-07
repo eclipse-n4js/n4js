@@ -27,6 +27,9 @@ import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentListContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentsContext;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ModifiableElement;
@@ -172,6 +175,20 @@ public class ParserContextUtil {
 		// resolve escape sequences
 		StringConverterResult converted = ValueConverterUtils.convertFromEscapedString(str, true, false, false, null);
 		return converted.getValue();
+	}
+
+	/** @return the type argument contexts of the given context. Null safe. */
+	public static List<TypeArgumentContext> getTypeArgsFromTypeArgCtx(TypeArgumentsContext typeArgsCtx) {
+		if (typeArgsCtx != null) {
+			TypeArgumentListContext typeArgList = typeArgsCtx.typeArgumentList();
+			if (typeArgList != null) {
+				List<TypeArgumentContext> typeArgument = typeArgList.typeArgument();
+				if (typeArgument != null && !typeArgument.isEmpty()) {
+					return typeArgument;
+				}
+			}
+		}
+		return Collections.emptyList();
 	}
 
 	/** @return a new {@link TypeReferenceNode} wrapping the given type reference. Null safe. */

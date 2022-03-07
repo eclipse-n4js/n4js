@@ -31,6 +31,8 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
+import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsFormalParametersBuilder;
+import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsN4TypeVariablesBuilder;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
@@ -50,12 +52,14 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsInterfaceBuilder extends AbstractDtsBuilder<InterfaceDeclarationContext, N4InterfaceDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
+public class DtsInterfaceBuilder
+		extends AbstractDtsBuilderWithHelpers<InterfaceDeclarationContext, N4InterfaceDeclaration> {
+
+	private final DtsN4TypeVariablesBuilder typeVariablesBuilder = new DtsN4TypeVariablesBuilder(tokenStream, resource);
 	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
 			resource);
 	private final DtsPropertyNameBuilder propertyNameBuilder = new DtsPropertyNameBuilder(tokenStream, resource);
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsInterfaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -141,6 +145,9 @@ public class DtsInterfaceBuilder extends AbstractDtsBuilder<InterfaceDeclaration
 	}
 
 	private N4MethodDeclaration createMethodDeclaration(PropertyNameContext name, CallSignatureContext callSignature) {
+		if (callSignature == null) {
+			return null;
+		}
 		return createMethodDeclaration(name, callSignature.typeParameters(), callSignature.parameterBlock(),
 				callSignature.typeRef());
 	}
@@ -170,7 +177,7 @@ public class DtsInterfaceBuilder extends AbstractDtsBuilder<InterfaceDeclaration
 
 	@Override
 	public void enterGetAccessor(GetAccessorContext ctx) {
-		N4GetterDeclaration getter = DtsClassBuilder.createGetAccessor(ctx, propertyNameBuilder, typeRefBuilder);
+		N4GetterDeclaration getter = createGetAccessor(ctx);
 		if (getter != null) {
 			addLocationInfo(getter, ctx);
 			result.getOwnedMembersRaw().add(getter);
@@ -179,7 +186,7 @@ public class DtsInterfaceBuilder extends AbstractDtsBuilder<InterfaceDeclaration
 
 	@Override
 	public void enterSetAccessor(SetAccessorContext ctx) {
-		N4SetterDeclaration setter = DtsClassBuilder.createSetAccessor(ctx, this, propertyNameBuilder, typeRefBuilder);
+		N4SetterDeclaration setter = createSetAccessor(ctx);
 		if (setter != null) {
 			addLocationInfo(setter, ctx);
 			result.getOwnedMembersRaw().add(setter);

@@ -28,6 +28,8 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberBaseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyOrMethodContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
+import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsFormalParametersBuilder;
+import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsN4TypeVariablesBuilder;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.FormalParameter;
@@ -47,12 +49,14 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsClassBuilder extends AbstractDtsBuilderWithHelpers<ClassDeclarationContext, N4ClassDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
+public class DtsClassBuilder
+		extends AbstractDtsBuilderWithHelpers<ClassDeclarationContext, N4ClassDeclaration> {
+
+	private final DtsN4TypeVariablesBuilder typeVariablesBuilder = new DtsN4TypeVariablesBuilder(tokenStream, resource);
 	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
 			resource);
 	private final DtsPropertyNameBuilder propertyNameBuilder = new DtsPropertyNameBuilder(tokenStream, resource);
+	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsClassBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -149,7 +153,7 @@ public class DtsClassBuilder extends AbstractDtsBuilderWithHelpers<ClassDeclarat
 
 	@Override
 	public void enterGetAccessor(GetAccessorContext ctx) {
-		N4GetterDeclaration getter = createGetAccessor(ctx, propertyNameBuilder, typeRefBuilder);
+		N4GetterDeclaration getter = createGetAccessor(ctx);
 		if (getter != null) {
 			addLocationInfo(getter, ctx);
 			result.getOwnedMembersRaw().add(getter);
@@ -158,74 +162,11 @@ public class DtsClassBuilder extends AbstractDtsBuilderWithHelpers<ClassDeclarat
 
 	@Override
 	public void enterSetAccessor(SetAccessorContext ctx) {
-		N4SetterDeclaration setter = createSetAccessor(ctx, this, propertyNameBuilder, typeRefBuilder);
+		N4SetterDeclaration setter = createSetAccessor(ctx);
 		if (setter != null) {
 			addLocationInfo(setter, ctx);
 			result.getOwnedMembersRaw().add(setter);
 		}
-	}
-
-	/** Builds a {@link N4GetterDeclaration} from a {@link GetAccessorContext} */
-	static public N4GetterDeclaration createGetAccessor(GetAccessorContext ctx,
-			DtsPropertyNameBuilder propertyNameBuilder, DtsTypeRefBuilder typeRefBuilder) {
-
-		if (ctx.getter() == null || ctx.getter().propertyName() == null) {
-			return null;
-		}
-
-		N4GetterDeclaration getter = N4JSFactory.eINSTANCE.createN4GetterDeclaration();
-		getter.setDeclaredName(propertyNameBuilder.consume(ctx.getter().propertyName()));
-
-		TypeRef typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
-		getter.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
-
-		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
-			PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
-			if (pmctx.propertyMemberBase() != null) {
-				PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
-				if (pmb.Static() != null) {
-					getter.getDeclaredModifiers().add(N4Modifier.STATIC);
-				}
-			}
-		}
-
-		getter.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		return getter;
-	}
-
-	/** Builds a {@link N4SetterDeclaration} from a {@link SetAccessorContext} */
-	static public N4SetterDeclaration createSetAccessor(SetAccessorContext ctx, AbstractDtsBuilder<?, ?> subbuilder,
-			DtsPropertyNameBuilder propertyNameBuilder, DtsTypeRefBuilder typeRefBuilder) {
-
-		if (ctx.setter() == null || ctx.setter().propertyName() == null) {
-			return null;
-		}
-
-		N4SetterDeclaration setter = N4JSFactory.eINSTANCE.createN4SetterDeclaration();
-		setter.setDeclaredName(propertyNameBuilder.consume(ctx.setter().propertyName()));
-
-		FormalParameter fpar = N4JSFactory.eINSTANCE.createFormalParameter();
-		setter.setFpar(fpar);
-		TypeRef typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
-		fpar.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
-		if (ctx.Identifier() != null) {
-			fpar.setName(ctx.Identifier().getText());
-		} else if (ctx.bindingPattern() != null) {
-			fpar.setBindingPattern(new DtsBindingPatternBuilder(subbuilder).consume(ctx.bindingPattern()));
-		}
-
-		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
-			PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
-			if (pmctx.propertyMemberBase() != null) {
-				PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
-				if (pmb.Static() != null) {
-					setter.getDeclaredModifiers().add(N4Modifier.STATIC);
-				}
-			}
-		}
-
-		setter.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		return setter;
 	}
 
 	@Override

@@ -13,11 +13,21 @@ package org.eclipse.n4js.dts.astbuilders;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyAccessExpressionContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberBaseContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
+import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.FormalParameter;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.N4GetterDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -40,6 +50,67 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 	/** Constructor */
 	public AbstractDtsBuilderWithHelpers(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
+	}
+
+	/** Builds a {@link N4GetterDeclaration} from a {@link GetAccessorContext} */
+	protected final N4GetterDeclaration createGetAccessor(GetAccessorContext ctx) {
+
+		if (ctx.getter() == null || ctx.getter().propertyName() == null) {
+			return null;
+		}
+
+		N4GetterDeclaration getter = N4JSFactory.eINSTANCE.createN4GetterDeclaration();
+		getter.setDeclaredName(new DtsPropertyNameBuilder(tokenStream, resource).consume(ctx.getter().propertyName()));
+
+		TypeRef typeRef = new DtsTypeRefBuilder(tokenStream, resource).consume(ctx.colonSepTypeRef());
+		getter.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
+
+		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
+			PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
+			if (pmctx.propertyMemberBase() != null) {
+				PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
+				if (pmb.Static() != null) {
+					getter.getDeclaredModifiers().add(N4Modifier.STATIC);
+				}
+			}
+		}
+
+		getter.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		return getter;
+	}
+
+	/** Builds a {@link N4SetterDeclaration} from a {@link SetAccessorContext} */
+	protected final N4SetterDeclaration createSetAccessor(SetAccessorContext ctx) {
+
+		if (ctx.setter() == null || ctx.setter().propertyName() == null) {
+			return null;
+		}
+
+		N4SetterDeclaration setter = N4JSFactory.eINSTANCE.createN4SetterDeclaration();
+		setter.setDeclaredName(new DtsPropertyNameBuilder(tokenStream, resource).consume(ctx.setter().propertyName()));
+
+		FormalParameter fpar = N4JSFactory.eINSTANCE.createFormalParameter();
+		setter.setFpar(fpar);
+		TypeRef typeRef = new DtsTypeRefBuilder(tokenStream, resource).consume(ctx.colonSepTypeRef());
+		fpar.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
+		if (ctx.Identifier() != null) {
+			fpar.setName(ctx.Identifier().getText());
+		} else if (ctx.bindingPattern() != null) {
+			fpar.setBindingPattern(new DtsBindingPatternBuilder(this).consume(ctx.bindingPattern()));
+		}
+
+		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
+			PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
+			if (pmctx.propertyMemberBase() != null) {
+				PropertyMemberBaseContext pmb = pmctx.propertyMemberBase();
+				if (pmb.Static() != null) {
+					setter.getDeclaredModifiers().add(N4Modifier.STATIC);
+				}
+			}
+		}
+
+		setter.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		return setter;
 	}
 
 	/**
@@ -66,6 +137,23 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		ppae.setProperty(ieProxy);
 
 		return ppae;
+	}
+
+	/**
+	 * In places where N4JS does not support all forms of property names (e.g. number/string literals, computed names),
+	 * this method should be used to obtain the simple name.
+	 * <p>
+	 * TODO implement all forms of property names everywhere
+	 */
+	protected final String getSimpleNameFromPropertyName(PropertyNameContext propNameCtx) {
+		if (propNameCtx != null) {
+			LiteralOrComputedPropertyName locpn = new DtsPropertyNameBuilder(tokenStream, resource)
+					.consume(propNameCtx);
+			if (locpn != null) {
+				return locpn.getName();
+			}
+		}
+		return null;
 	}
 
 	/** @return the given type reference, if non-<code>null</code>; otherwise a new {@code any+} type reference. */

@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
+import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsN4TypeVariablesBuilder;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
@@ -31,7 +32,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  */
 public class DtsTypeAliasBuilder extends AbstractDtsBuilder<TypeAliasDeclarationContext, N4TypeAliasDeclaration> {
 	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
+	private final DtsN4TypeVariablesBuilder typeVariablesBuilder = new DtsN4TypeVariablesBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsTypeAliasBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
