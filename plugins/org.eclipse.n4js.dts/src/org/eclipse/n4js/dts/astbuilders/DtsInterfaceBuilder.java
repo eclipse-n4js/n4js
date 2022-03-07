@@ -87,8 +87,8 @@ public class DtsInterfaceBuilder extends AbstractDtsBuilder<InterfaceDeclaration
 			ParameterizedTypeRefContext extendsTypeRefCtx = extendsClause.classOrInterfaceTypeList()
 					.parameterizedTypeRef().get(0);
 
-			TypeReferenceNode<ParameterizedTypeRef> typeRefNode = typeRefBuilder.consume(extendsTypeRefCtx);
-			result.getSuperInterfaceRefs().add(typeRefNode);
+			ParameterizedTypeRef typeRef = typeRefBuilder.consume(extendsTypeRefCtx);
+			result.getSuperInterfaceRefs().add(ParserContextUtil.wrapInTypeRefNode(typeRef));
 		}
 
 		walker.enqueue(ctx.interfaceBody());
@@ -106,8 +106,8 @@ public class DtsInterfaceBuilder extends AbstractDtsBuilder<InterfaceDeclaration
 			// consider to create a getter instead of a field
 		}
 
-		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
-		fd.setDeclaredTypeRefNode(trn);
+		TypeRef typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
+		fd.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
 
 		addLocationInfo(fd, ctx);
 		result.getOwnedMembersRaw().add(fd);
@@ -146,7 +146,7 @@ public class DtsInterfaceBuilder extends AbstractDtsBuilder<InterfaceDeclaration
 	}
 
 	private N4MethodDeclaration createMethodDeclaration(PropertyNameContext name, TypeParametersContext typeParams,
-			ParameterBlockContext fpars, TypeRefContext returnTypeRef) {
+			ParameterBlockContext fpars, TypeRefContext returnTypeRefCtx) {
 
 		N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
 		md.getDeclaredModifiers().add(N4Modifier.PUBLIC);
@@ -160,9 +160,9 @@ public class DtsInterfaceBuilder extends AbstractDtsBuilder<InterfaceDeclaration
 			List<FormalParameter> fPars = formalParametersBuilder.consume(fpars);
 			md.getFpars().addAll(fPars);
 		}
-		if (returnTypeRef != null) {
-			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(returnTypeRef);
-			md.setDeclaredReturnTypeRefNode(trn);
+		if (returnTypeRefCtx != null) {
+			TypeRef returnTypeRef = typeRefBuilder.consume(returnTypeRefCtx);
+			md.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(returnTypeRef));
 		}
 
 		return md;

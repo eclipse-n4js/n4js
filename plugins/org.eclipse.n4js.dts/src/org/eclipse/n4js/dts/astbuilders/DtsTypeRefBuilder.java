@@ -42,7 +42,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsTypeRefBuilder extends AbstractDtsBuilder<TypeRefContext, TypeReferenceNode<TypeRef>> {
+public class DtsTypeRefBuilder extends AbstractDtsBuilder<TypeRefContext, TypeRef> {
 
 	/** Constructor */
 	public DtsTypeRefBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -63,7 +63,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilder<TypeRefContext, TypeRe
 	}
 
 	/** @return a {@link TypeReferenceNode} from the given context. Consumes the given context and all its children. */
-	public TypeReferenceNode<TypeRef> consume(ColonSepTypeRefContext ctx) {
+	public TypeRef consume(ColonSepTypeRefContext ctx) {
 		if (ctx == null) {
 			return null;
 		}
@@ -71,9 +71,8 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilder<TypeRefContext, TypeRe
 	}
 
 	/** @return a wrapped {@link ParameterizedTypeRef}, created from the given context. */
-	@SuppressWarnings("unchecked")
-	public TypeReferenceNode<ParameterizedTypeRef> consume(ParameterizedTypeRefContext ctx) {
-		return (TypeReferenceNode<ParameterizedTypeRef>) ((Object) doConsume(ctx));
+	public ParameterizedTypeRef consume(ParameterizedTypeRefContext ctx) {
+		return (ParameterizedTypeRef) doConsume(ctx);
 	}
 
 	@Override
@@ -105,14 +104,13 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilder<TypeRefContext, TypeRe
 		if (ctx.typeArguments() != null && ctx.typeArguments().typeArgumentList() != null) {
 			TypeArgumentListContext typeArgumentList = ctx.typeArguments().typeArgumentList();
 			for (TypeArgumentContext targ : typeArgumentList.typeArgument()) {
-				TypeReferenceNode<TypeRef> trn = new DtsTypeRefBuilder(tokenStream, resource).consume(targ.typeRef());
-				if (trn != null && trn.getTypeRefInAST() != null) {
-					TypeRef typeArg = trn.getTypeRefInAST();
+				TypeRef typeArg = new DtsTypeRefBuilder(tokenStream, resource).consume(targ.typeRef());
+				if (typeArg != null) {
 					pTypeRef.getDeclaredTypeArgs().add(typeArg);
 				}
 			}
 		}
 
-		result = ParserContextUtil.wrapInTypeRefNode(pTypeRef);
+		result = pTypeRef;
 	}
 }

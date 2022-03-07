@@ -120,8 +120,8 @@ public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableSt
 			Expression expr = new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression());
 			varDecl.setExpression(expr);
 		} else {
-			TypeReferenceNode<TypeRef> typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
-			varDecl.setDeclaredTypeRefNode(orAnyPlus(typeRef));
+			TypeRef typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
+			varDecl.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
 		}
 
 		result.getVarDeclsOrBindings().add(varDecl);

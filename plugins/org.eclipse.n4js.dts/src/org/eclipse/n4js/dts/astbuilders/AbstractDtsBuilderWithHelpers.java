@@ -76,6 +76,14 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		return ParserContextUtil.wrapInTypeRefNode(createAnyPlusTypeRef());
 	}
 
+	/** @return the given type reference, if non-<code>null</code>; otherwise a new {@code any+} type reference. */
+	protected final TypeRef orAnyPlus(TypeRef typeRef) {
+		if (typeRef != null) {
+			return typeRef;
+		}
+		return createAnyPlusTypeRef();
+	}
+
 	/** @return a new {@code any+} type reference. */
 	protected final ParameterizedTypeRef createAnyPlusTypeRef() {
 		return createParameterizedTypeRef("any", true);

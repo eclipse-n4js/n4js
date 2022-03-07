@@ -107,8 +107,8 @@ public class DtsClassBuilder extends AbstractDtsBuilderWithHelpers<ClassDeclarat
 			fd.setDeclaredName(propertyNameBuilder.consume(ctx.propertyName()));
 			fd.setDeclaredOptional(ctx.QuestionMark() != null);
 
-			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
-			fd.setDeclaredTypeRefNode(orAnyPlus(trn));
+			TypeRef typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
+			fd.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
 
 			memberDecl = fd;
 
@@ -121,8 +121,8 @@ public class DtsClassBuilder extends AbstractDtsBuilderWithHelpers<ClassDeclarat
 			md.getTypeVars().addAll(typeVars);
 			List<FormalParameter> fPars = formalParametersBuilder.consume(ctx.callSignature().parameterBlock());
 			md.getFpars().addAll(fPars);
-			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
-			md.setDeclaredReturnTypeRefNode(trn);
+			TypeRef typeRef = typeRefBuilder.consume(ctx.callSignature().typeRef());
+			md.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
 
 			memberDecl = md;
 		}
@@ -176,8 +176,8 @@ public class DtsClassBuilder extends AbstractDtsBuilderWithHelpers<ClassDeclarat
 		N4GetterDeclaration getter = N4JSFactory.eINSTANCE.createN4GetterDeclaration();
 		getter.setDeclaredName(propertyNameBuilder.consume(ctx.getter().propertyName()));
 
-		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
-		getter.setDeclaredTypeRefNode(trn);
+		TypeRef typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
+		getter.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
 
 		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
 			PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
@@ -206,8 +206,8 @@ public class DtsClassBuilder extends AbstractDtsBuilderWithHelpers<ClassDeclarat
 
 		FormalParameter fpar = N4JSFactory.eINSTANCE.createFormalParameter();
 		setter.setFpar(fpar);
-		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
-		fpar.setDeclaredTypeRefNode(trn);
+		TypeRef typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
+		fpar.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
 		if (ctx.Identifier() != null) {
 			fpar.setName(ctx.Identifier().getText());
 		} else if (ctx.bindingPattern() != null) {

@@ -51,8 +51,8 @@ public class DtsTypeAliasBuilder extends AbstractDtsBuilder<TypeAliasDeclaration
 		result.setName(ctx.identifierName().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
-		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.typeRef());
-		result.setDeclaredTypeRefNode(trn);
+		TypeRef typeRef = typeRefBuilder.consume(ctx.typeRef());
+		result.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
 		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
 	}

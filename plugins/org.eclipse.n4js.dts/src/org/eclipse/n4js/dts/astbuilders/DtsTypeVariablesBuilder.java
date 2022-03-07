@@ -60,13 +60,13 @@ public class DtsTypeVariablesBuilder extends AbstractDtsBuilder<TypeParametersCo
 		N4TypeVariable typeVar = N4JSFactory.eINSTANCE.createN4TypeVariable();
 		typeVar.setName(ctx.identifierName().getText());
 		if (ctx.constraint() != null && ctx.constraint().typeRef() != null) {
-			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.constraint().typeRef());
-			typeVar.setDeclaredUpperBoundNode(trn);
+			TypeRef typeRef = typeRefBuilder.consume(ctx.constraint().typeRef());
+			typeVar.setDeclaredUpperBoundNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
 		}
 		if (ctx.defaultType() != null && ctx.defaultType().typeRef() != null) {
 			typeVar.setDeclaredOptional(true);
-			TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.defaultType().typeRef());
-			typeVar.setDeclaredDefaultArgumentNode(trn);
+			TypeRef typeRef = typeRefBuilder.consume(ctx.defaultType().typeRef());
+			typeVar.setDeclaredDefaultArgumentNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
 		}
 		result.add(typeVar);
 	}
