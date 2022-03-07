@@ -267,6 +267,10 @@ public final class N4JSGlobals {
 	 */
 	public static final String N4JSD_SCOPE = "@n4jsd";
 	/**
+	 * Name of the npm scope of TypeScript definition projects.
+	 */
+	public static final String TYPES_SCOPE = "@types";
+	/**
 	 * Name of the npm node_modules folder.
 	 */
 	public static final String NODE_MODULES = "node_modules";

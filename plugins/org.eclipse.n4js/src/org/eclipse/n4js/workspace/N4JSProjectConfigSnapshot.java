@@ -97,8 +97,20 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return external;
 	}
 
-	/** Returns the value of the {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} property. */
+	/**
+	 * Returns the value of the {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} property or the plain
+	 * package name iff this project is an {@code @types}-project.
+	 */
 	public N4JSPackageName getDefinesPackage() {
+		N4JSPackageName definesPackageRaw = getDefinesPackageRaw();
+		if (definesPackageRaw == null && getN4JSPackageName().isScopeTypes()) {
+			definesPackageRaw = new N4JSPackageName(getN4JSPackageName().getPlainName());
+		}
+		return definesPackageRaw;
+	}
+
+	/** Returns the value of the {@link PackageJsonProperties#DEFINES_PACKAGE "definesPackage"} property. */
+	public N4JSPackageName getDefinesPackageRaw() {
 		String definesPackage = projectDescription.getDefinesPackage();
 		return definesPackage != null ? new N4JSPackageName(definesPackage) : null;
 	}
@@ -176,8 +188,20 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return projectDescription.getPackageName();
 	}
 
-	/** Returns this project's {@link ProjectDescription#getType() type}. */
+	/**
+	 * Returns this project's {@link ProjectDescription#getType() type} or {@link ProjectType#DEFINITION} iff this
+	 * project is an {@code @types}-project.
+	 */
 	public ProjectType getType() {
+		ProjectType typeRaw = getTypeRaw();
+		if (typeRaw == ProjectType.PLAINJS && getN4JSPackageName().isScopeTypes()) {
+			return ProjectType.DEFINITION;
+		}
+		return typeRaw;
+	}
+
+	/** Returns this project's {@link ProjectDescription#getType() type}. */
+	public ProjectType getTypeRaw() {
 		return projectDescription.getType();
 	}
 
