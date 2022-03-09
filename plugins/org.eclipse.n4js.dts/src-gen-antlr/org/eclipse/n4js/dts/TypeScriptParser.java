@@ -1979,14 +1979,14 @@ public class TypeScriptParser extends TypeScriptParserBase {
 	}
 
 	public static class TypeRefWithModifiersContext extends ParserRuleContext {
+		public ThisTypeRefContext thisTypeRef() {
+			return getRuleContext(ThisTypeRefContext.class,0);
+		}
 		public ParameterizedTypeRefContext parameterizedTypeRef() {
 			return getRuleContext(ParameterizedTypeRefContext.class,0);
 		}
 		public ObjectLiteralTypeRefContext objectLiteralTypeRef() {
 			return getRuleContext(ObjectLiteralTypeRefContext.class,0);
-		}
-		public ThisTypeRefContext thisTypeRef() {
-			return getRuleContext(ThisTypeRefContext.class,0);
 		}
 		public TypeRefWithModifiersContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2018,21 +2018,21 @@ public class TypeScriptParser extends TypeScriptParserBase {
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(494);
-				parameterizedTypeRef();
+				thisTypeRef();
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(495);
-				objectLiteralTypeRef();
+				parameterizedTypeRef();
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
 				setState(496);
-				thisTypeRef();
+				objectLiteralTypeRef();
 				}
 				break;
 			}
@@ -15098,7 +15098,7 @@ public class TypeScriptParser extends TypeScriptParserBase {
 		"\t\2\u01e8\u01ea\7\20\2\2\u01e9\u01e8\3\2\2\2\u01e9\u01ea\3\2\2\2\u01ea"+
 		"\'\3\2\2\2\u01eb\u01ee\7\u0085\2\2\u01ec\u01ed\7c\2\2\u01ed\u01ef\5\20"+
 		"\t\2\u01ee\u01ec\3\2\2\2\u01ee\u01ef\3\2\2\2\u01ef)\3\2\2\2\u01f0\u01f4"+
-		"\5,\27\2\u01f1\u01f4\5\66\34\2\u01f2\u01f4\58\35\2\u01f3\u01f0\3\2\2\2"+
+		"\58\35\2\u01f1\u01f4\5,\27\2\u01f2\u01f4\5\66\34\2\u01f3\u01f0\3\2\2\2"+
 		"\u01f3\u01f1\3\2\2\2\u01f3\u01f2\3\2\2\2\u01f4+\3\2\2\2\u01f5\u01f7\5"+
 		".\30\2\u01f6\u01f8\5\60\31\2\u01f7\u01f6\3\2\2\2\u01f7\u01f8\3\2\2\2\u01f8"+
 		"-\3\2\2\2\u01f9\u01fe\5\u0138\u009d\2\u01fa\u01fb\7\23\2\2\u01fb\u01fd"+

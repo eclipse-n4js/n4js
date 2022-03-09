@@ -170,9 +170,10 @@ typeVariable:
 	Identifier (Extends typeRef)?;
 
 typeRefWithModifiers:
-	parameterizedTypeRef
+	// FIXME reordered
+    thisTypeRef
+	| parameterizedTypeRef
 	| objectLiteralTypeRef
-	| thisTypeRef
 ;
 
 parameterizedTypeRef

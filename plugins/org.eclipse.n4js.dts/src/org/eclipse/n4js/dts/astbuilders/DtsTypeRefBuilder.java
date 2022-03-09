@@ -42,6 +42,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetterContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ThisTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TupleTypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TupleTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
@@ -61,6 +62,7 @@ import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
+import org.eclipse.n4js.ts.typeRefs.ThisTypeRefNominal;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -307,12 +309,12 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 	@Override
 	public void enterTypeRefWithModifiers(TypeRefWithModifiersContext ctx) {
-		if (ctx.parameterizedTypeRef() != null) {
+		if (ctx.thisTypeRef() != null) {
+			enterThisTypeRef(ctx.thisTypeRef());
+		} else if (ctx.parameterizedTypeRef() != null) {
 			enterParameterizedTypeRef(ctx.parameterizedTypeRef());
 		} else if (ctx.objectLiteralTypeRef() != null) {
 			enterObjectLiteralTypeRef(ctx.objectLiteralTypeRef());
-		} else if (ctx.thisTypeRef() != null) {
-			// FIXME
 		}
 	}
 
@@ -331,6 +333,12 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		ptr.getAstStructuralMembers().addAll(createStructuralMembers(ctx.interfaceBody()));
 		addLocationInfo(ptr, ctx);
 		result = ptr;
+	}
+
+	@Override
+	public void enterThisTypeRef(ThisTypeRefContext ctx) {
+		ThisTypeRefNominal ttr = TypeRefsFactory.eINSTANCE.createThisTypeRefNominal();
+		result = ttr;
 	}
 
 	private ParameterizedTypeRef createParameterizedTypeRef(String declTypeName, TypeArgumentsContext typeArgsCtx,
