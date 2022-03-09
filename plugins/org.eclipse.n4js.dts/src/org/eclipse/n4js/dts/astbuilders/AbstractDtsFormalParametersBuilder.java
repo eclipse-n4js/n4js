@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ColonSepTypeRefContext;
@@ -29,10 +30,13 @@ import org.eclipse.n4js.dts.TypeScriptParser.OptionalParameterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.RequiredParameterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.RestParameterContext;
+import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.N4JSFactory;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
@@ -40,13 +44,14 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Abstract base class for builders creating formal parameters from parse tree elements.
  */
-public abstract class AbstractDtsFormalParametersBuilder<T extends EObject>
+public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE extends EObject>
 		extends AbstractDtsBuilderWithHelpers<ParameterBlockContext, List<T>> {
 
 	/**
 	 * Builds {@link FormalParameter}s.
 	 */
-	public static final class DtsFormalParametersBuilder extends AbstractDtsFormalParametersBuilder<FormalParameter> {
+	public static final class DtsFormalParametersBuilder
+			extends AbstractDtsFormalParametersBuilder<FormalParameter, AnnotableElement> {
 
 		/** Constructor */
 		public DtsFormalParametersBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -73,12 +78,18 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject>
 		protected void setVariadic(FormalParameter fPar) {
 			fPar.setVariadic(true);
 		}
+
+		@Override
+		protected void setDeclThisType(AnnotableElement annotableElem, TypeRef declThisTypeRef) {
+			ParserContextUtil.setDeclThisType(annotableElem, declThisTypeRef);
+		}
 	}
 
 	/**
 	 * Builds {@link TFormalParameter}s.
 	 */
-	public static final class DtsTFormalParametersBuilder extends AbstractDtsFormalParametersBuilder<TFormalParameter> {
+	public static final class DtsTFormalParametersBuilder
+			extends AbstractDtsFormalParametersBuilder<TFormalParameter, TAnnotableElement> {
 
 		/** Constructor */
 		public DtsTFormalParametersBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -103,6 +114,11 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject>
 		protected void setVariadic(TFormalParameter fPar) {
 			fPar.setVariadic(true);
 		}
+
+		@Override
+		protected void setDeclThisType(TAnnotableElement annotableElem, TypeRef declThisTypeRef) {
+			ParserContextUtil.setDeclThisType(annotableElem, declThisTypeRef);
+		}
 	}
 
 	/** Constructor */
@@ -117,6 +133,35 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject>
 				RULE_parameterListTrailingComma,
 				RULE_parameterList,
 				RULE_parameter);
+	}
+
+	/**
+	 * Same as {@link #consume(ParserRuleContext)}, but also adds an {@code @This()} annotation to 'elem' with the
+	 * declared this type, iff a "this" parameter is provided in 'ctx'.
+	 */
+	public List<T> consumeWithDeclThisType(ParameterBlockContext ctx, AE elem) {
+		if (ctx.This() != null && ctx.colonSepTypeRef() != null) {
+			TypeRef declThisTypeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
+			if (declThisTypeRef != null) {
+				setDeclThisType(elem, declThisTypeRef);
+			}
+		}
+		return consume(ctx);
+	}
+
+	/**
+	 * Same as {@link #consume(ParserRuleContext)}, but also sets the declared this type in the given function type
+	 * expression, iff a "this" parameter is provided in 'ctx'.
+	 */
+	public List<T> consumeWithDeclThisType(ParameterBlockContext ctx, FunctionTypeExpression fte) {
+		if (ctx.This() != null && ctx.colonSepTypeRef() != null) {
+			TypeRef declThisTypeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
+			if (declThisTypeRef != null) {
+				fte.setDeclaredThisType(declThisTypeRef);
+			}
+		}
+		return consume(ctx);
+
 	}
 
 	@Override
@@ -170,4 +215,7 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject>
 
 	/** Argument will never be <code>null</code>. */
 	protected abstract void setVariadic(T fPar);
+
+	/** Arguments will never be <code>null</code>. */
+	protected abstract void setDeclThisType(AE annotableElem, TypeRef declThisTypeRef);
 }

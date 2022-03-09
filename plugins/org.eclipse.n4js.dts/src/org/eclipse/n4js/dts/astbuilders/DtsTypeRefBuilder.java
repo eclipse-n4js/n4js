@@ -303,7 +303,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		}
 		FunctionTypeExpression fte = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
 		fte.getTypeVars().addAll(newTypeVariablesBuilder().consume(ctx.typeParameters()));
-		fte.getFpars().addAll(newTFormalParametersBuilder().consume(ctx.parameterBlock()));
+		fte.getFpars().addAll(newTFormalParametersBuilder().consumeWithDeclThisType(ctx.parameterBlock(), fte));
 		if (ctx.unionTypeExpression() != null) {
 			fte.setReturnTypeRef(orAnyPlus(newTypeRefBuilder().consume(ctx.unionTypeExpression())));
 		} else if (ctx.typePredicateWithOperatorTypeRef() != null) {
@@ -509,7 +509,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		TStructMethod m = TypesFactory.eINSTANCE.createTStructMethod();
 		setBasePropertiesOfTStructMember(m, name);
 		m.getTypeVars().addAll(newTypeVariablesBuilder().consume(typeParams));
-		m.getFpars().addAll(newTFormalParametersBuilder().consume(fpars));
+		m.getFpars().addAll(newTFormalParametersBuilder().consumeWithDeclThisType(fpars, m));
 		m.setReturnTypeRef(orAnyPlus(newTypeRefBuilder().consume(returnTypeRefCtx)));
 		return m;
 

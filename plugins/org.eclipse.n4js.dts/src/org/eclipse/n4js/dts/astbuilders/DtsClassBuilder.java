@@ -139,7 +139,8 @@ public class DtsClassBuilder
 
 			List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.callSignature().typeParameters());
 			md.getTypeVars().addAll(typeVars);
-			List<FormalParameter> fPars = newFormalParametersBuilder().consume(ctx.callSignature().parameterBlock());
+			List<FormalParameter> fPars = newFormalParametersBuilder().consumeWithDeclThisType(
+					ctx.callSignature().parameterBlock(), md);
 			md.getFpars().addAll(fPars);
 			TypeRef typeRef = newTypeRefBuilder().consume(ctx.callSignature().typeRef());
 			md.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));

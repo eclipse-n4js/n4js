@@ -444,7 +444,7 @@ initializer
 
 
 parameterBlock:
-    '(' parameterListTrailingComma? ')'
+    '(' (This colonSepTypeRef? ',')?  parameterListTrailingComma? ')'
     ;
 
 parameterListTrailingComma

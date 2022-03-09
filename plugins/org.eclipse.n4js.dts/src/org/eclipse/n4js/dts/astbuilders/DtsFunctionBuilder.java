@@ -55,7 +55,8 @@ public class DtsFunctionBuilder extends AbstractDtsBuilderWithHelpers<FunctionDe
 		result.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
 		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.callSignature().typeParameters());
 		result.getTypeVars().addAll(typeVars);
-		List<FormalParameter> fPars = newFormalParametersBuilder().consume(ctx.callSignature().parameterBlock());
+		List<FormalParameter> fPars = newFormalParametersBuilder().consumeWithDeclThisType(
+				ctx.callSignature().parameterBlock(), result);
 		result.getFpars().addAll(fPars);
 	}
 

@@ -156,7 +156,7 @@ public class DtsInterfaceBuilder
 			md.getTypeVars().addAll(typeVars);
 		}
 		if (fpars != null) {
-			List<FormalParameter> fPars = newFormalParametersBuilder().consume(fpars);
+			List<FormalParameter> fPars = newFormalParametersBuilder().consumeWithDeclThisType(fpars, md);
 			md.getFpars().addAll(fPars);
 		}
 		if (returnTypeRefCtx != null) {

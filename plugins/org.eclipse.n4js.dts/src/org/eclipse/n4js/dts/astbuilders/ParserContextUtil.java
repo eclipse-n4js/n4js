@@ -33,6 +33,8 @@ import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentsContext;
+import org.eclipse.n4js.n4JS.AnnotableElement;
+import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ModifiableElement;
@@ -40,8 +42,13 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.StringLiteral;
+import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TAnnotableElement;
+import org.eclipse.n4js.ts.types.TAnnotation;
+import org.eclipse.n4js.ts.types.TAnnotationTypeRefArgument;
+import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
@@ -86,6 +93,30 @@ public class ParserContextUtil {
 			}
 		}
 		modifiers.add(accessibility);
+	}
+
+	/** Sets the given element's "declared this type" by adding a {@code @This()} annotation. */
+	public static void setDeclThisType(AnnotableElement elem, TypeRef typeRef) {
+		EObject parent = elem.eContainer();
+		if (parent instanceof ExportDeclaration) {
+			elem = (ExportDeclaration) parent;
+		}
+		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+		ann.setName("This");
+		TypeRefAnnotationArgument arg = N4JSFactory.eINSTANCE.createTypeRefAnnotationArgument();
+		arg.setTypeRefNode(wrapInTypeRefNode(typeRef));
+		ann.getArgs().add(arg);
+		N4JSASTUtils.addAnnotation(elem, ann);
+	}
+
+	/** Sets the given element's "declared this type" by adding a {@code @This()} annotation. */
+	public static void setDeclThisType(TAnnotableElement elem, TypeRef typeRef) {
+		TAnnotation ann = TypesFactory.eINSTANCE.createTAnnotation();
+		ann.setName("This");
+		TAnnotationTypeRefArgument arg = TypesFactory.eINSTANCE.createTAnnotationTypeRefArgument();
+		arg.setTypeRef(typeRef);
+		ann.getArgs().add(arg);
+		elem.getAnnotations().add(ann);
 	}
 
 	/**
