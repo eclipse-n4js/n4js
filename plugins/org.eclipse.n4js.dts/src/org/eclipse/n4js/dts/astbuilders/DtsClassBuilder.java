@@ -23,7 +23,11 @@ import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.AbstractDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ClassExtendsClauseContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ClassHeritageContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ClassImplementsClauseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberBaseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyOrMethodContext;
@@ -43,6 +47,7 @@ import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
@@ -85,6 +90,25 @@ public class DtsClassBuilder
 
 		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
+
+		ClassHeritageContext heritage = ctx.classHeritage();
+		if (heritage != null) {
+			ClassExtendsClauseContext extendsClause = heritage.classExtendsClause();
+			if (extendsClause != null && extendsClause.parameterizedTypeRef() != null) {
+				ParameterizedTypeRef typeRef = typeRefBuilder.consume(extendsClause.parameterizedTypeRef());
+				result.setSuperClassRef(ParserContextUtil.wrapInTypeRefNode(typeRef));
+			}
+			ClassImplementsClauseContext implementsClause = heritage.classImplementsClause();
+			if (implementsClause != null && implementsClause.classOrInterfaceTypeList() != null
+					&& implementsClause.classOrInterfaceTypeList().parameterizedTypeRef() != null) {
+				// TODO classes implementing classes not supported in N4JS!
+				for (ParameterizedTypeRefContext extendsTypeRefCtx : implementsClause.classOrInterfaceTypeList()
+						.parameterizedTypeRef()) {
+					ParameterizedTypeRef typeRef = typeRefBuilder.consume(extendsTypeRefCtx);
+					result.getImplementedInterfaceRefs().add(ParserContextUtil.wrapInTypeRefNode(typeRef));
+				}
+			}
+		}
 
 		walker.enqueue(ctx.classBody());
 	}

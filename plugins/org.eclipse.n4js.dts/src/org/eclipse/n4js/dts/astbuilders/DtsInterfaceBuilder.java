@@ -87,12 +87,12 @@ public class DtsInterfaceBuilder
 		if (extendsClause != null && extendsClause.classOrInterfaceTypeList() != null
 				&& extendsClause.classOrInterfaceTypeList().parameterizedTypeRef() != null
 				&& !extendsClause.classOrInterfaceTypeList().parameterizedTypeRef().isEmpty()) {
-
-			ParameterizedTypeRefContext extendsTypeRefCtx = extendsClause.classOrInterfaceTypeList()
-					.parameterizedTypeRef().get(0);
-
-			ParameterizedTypeRef typeRef = typeRefBuilder.consume(extendsTypeRefCtx);
-			result.getSuperInterfaceRefs().add(ParserContextUtil.wrapInTypeRefNode(typeRef));
+			// TODO interfaces extending classes not supported in N4JS!
+			for (ParameterizedTypeRefContext extendsTypeRefCtx : extendsClause.classOrInterfaceTypeList()
+					.parameterizedTypeRef()) {
+				ParameterizedTypeRef typeRef = typeRefBuilder.consume(extendsTypeRefCtx);
+				result.getSuperInterfaceRefs().add(ParserContextUtil.wrapInTypeRefNode(typeRef));
+			}
 		}
 
 		walker.enqueue(ctx.interfaceBody());
