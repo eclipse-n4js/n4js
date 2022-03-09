@@ -93,8 +93,13 @@ public class ParserContextUtil {
 	 * necessary.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem, EObject addHere,
-			EReference eRef, boolean makePrivateIfNotExported) {
+	public static void addAndHandleExported(EObject addHere, EReference eRef, ParserRuleContext ctx,
+			ExportableElement elem, boolean makePrivateIfNotExported) {
+
+		if (ctx == null || elem == null) {
+			return;
+		}
+
 		EObject toAdd;
 		boolean isExported = ParserContextUtil.isExported(ctx);
 		if (isExported) {

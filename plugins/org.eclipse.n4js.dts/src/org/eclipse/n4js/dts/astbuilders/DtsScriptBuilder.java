@@ -150,6 +150,6 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
-		ParserContextUtil.addAndHandleExported(ctx, elem, result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS, false);
+		ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS, ctx, elem, false);
 	}
 }

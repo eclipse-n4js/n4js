@@ -232,7 +232,8 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
-		ParserContextUtil.addAndHandleExported(ctx, elem, result,
-				N4JSPackage.Literals.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW, true);
+		ParserContextUtil.addAndHandleExported(
+				result, N4JSPackage.Literals.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW,
+				ctx, elem, true);
 	}
 }
