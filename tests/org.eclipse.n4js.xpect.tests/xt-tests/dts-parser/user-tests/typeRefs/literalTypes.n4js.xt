@@ -19,6 +19,9 @@
 		export const c12: 42;
 		export const c13: -42;
 		export const c14: 0b101010;
+		export const c15: 052;
+		export const c16: 0o52;
+		export const c17: 0x2A;
 		export const c21: "";
 		export const c22: "hello";
 		export const c23: 'hello';
@@ -30,6 +33,9 @@
 		export function f12(p: 42): void;
 		export function f13(p: -42): void;
 		export function f14(p: 0b101010): void;
+		export function f15(p: 052): void;
+		export function f16(p: 0o52): void;
+		export function f17(p: 0x2A): void;
 		export function f21(p: ""): void;
 		export function f22(p: "hello"): void;
 		export function f23(p: 'hello'): void;
@@ -46,6 +52,9 @@ import { c11 } from "tslib";
 import { c12 } from "tslib";
 import { c13 } from "tslib";
 import { c14 } from "tslib";
+import { c15 } from "tslib";
+import { c16 } from "tslib";
+import { c17 } from "tslib";
 import { c21 } from "tslib";
 import { c22 } from "tslib";
 import { c23 } from "tslib";
@@ -57,6 +66,9 @@ import { f11 } from "tslib";
 import { f12 } from "tslib";
 import { f13 } from "tslib";
 import { f14 } from "tslib";
+import { f15 } from "tslib";
+import { f16 } from "tslib";
+import { f17 } from "tslib";
 import { f21 } from "tslib";
 import { f22 } from "tslib";
 import { f23 } from "tslib";
@@ -75,6 +87,12 @@ c13;
 // 0b101010
 // XPECT type of 'c14' --> 42
 c14;
+// XPECT type of 'c15' --> 42
+c15;
+// XPECT type of 'c16' --> 42
+c16;
+// XPECT type of 'c17' --> 42
+c17;
 // XPECT type of 'c21' --> ""
 c21;
 // XPECT type of 'c22' --> "hello"
@@ -90,12 +108,20 @@ let _c01: true = c01;
 let _c02: false = c02;
 // XPECT noerrors -->
 let _c11: 0 = c11;
+// XPECT errors --> "0 is not a subtype of 1." at "c11"
+let _c11_bad: 1 = c11;
 // XPECT noerrors -->
 let _c12: 42 = c12;
 // XPECT noerrors -->
 let _c13: -42 = c13;
 // XPECT noerrors -->
 let _c14: 0b101010 = c14;
+// XPECT errors --> "octal literals and octal escape sequences are not allowed in strict mode." at "052"
+let _c15: 052 = c15;
+// XPECT noerrors -->
+let _c16: 0o52 = c16;
+// XPECT noerrors -->
+let _c17: 0x2A = c17;
 // XPECT noerrors -->
 let _c21: "" = c21;
 // XPECT noerrors -->
@@ -104,6 +130,8 @@ let _c22: "hello" = c22;
 let _c23: 'hello' = c23;
 // XPECT noerrors -->
 let _c24: "hello\nworld" = c24;
+// XPECT errors --> ""hello\nworld" is not a subtype of "hello world"." at "c24"
+let _c24_bad: "hello world" = c24;
 
 // XPECT noerrors -->
 f01(_c01);
@@ -111,12 +139,20 @@ f01(_c01);
 f02(_c02);
 // XPECT noerrors -->
 f11(_c11);
+// XPECT errors --> "1 is not a subtype of 0." at "_c11_bad"
+f11(_c11_bad);
 // XPECT noerrors -->
 f12(_c12);
 // XPECT noerrors -->
 f13(_c13);
 // XPECT noerrors -->
 f14(_c14);
+// XPECT noerrors -->
+f15(_c15);
+// XPECT noerrors -->
+f16(_c16);
+// XPECT noerrors -->
+f17(_c17);
 // XPECT noerrors -->
 f21(_c21);
 // XPECT noerrors -->
@@ -125,3 +161,5 @@ f22(_c22);
 f23(_c23);
 // XPECT noerrors -->
 f24(_c24);
+// XPECT errors --> ""hello world" is not a subtype of "hello\nworld"." at "_c24_bad"
+f24(_c24_bad);
