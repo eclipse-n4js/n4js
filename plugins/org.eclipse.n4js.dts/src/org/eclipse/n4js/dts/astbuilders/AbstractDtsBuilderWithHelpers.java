@@ -63,9 +63,9 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		}
 
 		N4GetterDeclaration getter = N4JSFactory.eINSTANCE.createN4GetterDeclaration();
-		getter.setDeclaredName(new DtsPropertyNameBuilder(tokenStream, resource).consume(ctx.getter().propertyName()));
+		getter.setDeclaredName(newPropertyNameBuilder().consume(ctx.getter().propertyName()));
 
-		TypeRef typeRef = new DtsTypeRefBuilder(tokenStream, resource).consume(ctx.colonSepTypeRef());
+		TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
 		getter.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
 
 		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
@@ -90,16 +90,16 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		}
 
 		N4SetterDeclaration setter = N4JSFactory.eINSTANCE.createN4SetterDeclaration();
-		setter.setDeclaredName(new DtsPropertyNameBuilder(tokenStream, resource).consume(ctx.setter().propertyName()));
+		setter.setDeclaredName(newPropertyNameBuilder().consume(ctx.setter().propertyName()));
 
 		FormalParameter fpar = N4JSFactory.eINSTANCE.createFormalParameter();
 		setter.setFpar(fpar);
-		TypeRef typeRef = new DtsTypeRefBuilder(tokenStream, resource).consume(ctx.colonSepTypeRef());
+		TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
 		fpar.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
 		if (ctx.Identifier() != null) {
 			fpar.setName(ctx.Identifier().getText());
 		} else if (ctx.bindingPattern() != null) {
-			fpar.setBindingPattern(new DtsBindingPatternBuilder(this).consume(ctx.bindingPattern()));
+			fpar.setBindingPattern(newBindingPatternBuilder().consume(ctx.bindingPattern()));
 		}
 
 		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
@@ -150,8 +150,7 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 	 */
 	protected final String getSimpleNameFromPropertyName(PropertyNameContext propNameCtx) {
 		if (propNameCtx != null) {
-			LiteralOrComputedPropertyName locpn = new DtsPropertyNameBuilder(tokenStream, resource)
-					.consume(propNameCtx);
+			LiteralOrComputedPropertyName locpn = newPropertyNameBuilder().consume(propNameCtx);
 			if (locpn != null) {
 				return locpn.getName();
 			}

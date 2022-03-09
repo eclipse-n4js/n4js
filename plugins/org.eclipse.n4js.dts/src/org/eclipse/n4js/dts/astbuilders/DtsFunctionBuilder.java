@@ -18,8 +18,6 @@ import java.util.Set;
 
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsFormalParametersBuilder;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsN4TypeVariablesBuilder;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -33,10 +31,6 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsFunctionBuilder extends AbstractDtsBuilderWithHelpers<FunctionDeclarationContext, FunctionDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-	private final DtsN4TypeVariablesBuilder typeVariablesBuilder = new DtsN4TypeVariablesBuilder(tokenStream, resource);
-	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
-			resource);
 
 	/** Constructor */
 	public DtsFunctionBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -57,11 +51,11 @@ public class DtsFunctionBuilder extends AbstractDtsBuilderWithHelpers<FunctionDe
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
 		result.setGenerator(ctx.Multiply() != null);
-		TypeRef typeRef = typeRefBuilder.consume(ctx.callSignature().typeRef());
+		TypeRef typeRef = newTypeRefBuilder().consume(ctx.callSignature().typeRef());
 		result.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
-		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.callSignature().typeParameters());
+		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.callSignature().typeParameters());
 		result.getTypeVars().addAll(typeVars);
-		List<FormalParameter> fPars = formalParametersBuilder.consume(ctx.callSignature().parameterBlock());
+		List<FormalParameter> fPars = newFormalParametersBuilder().consume(ctx.callSignature().parameterBlock());
 		result.getFpars().addAll(fPars);
 	}
 

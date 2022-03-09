@@ -70,7 +70,7 @@ public class DtsExpressionBuilder extends AbstractDtsBuilderWithHelpers<SingleEx
 
 	@Override
 	public void enterPropertyAccessExpression(PropertyAccessExpressionContext ctx) {
-		Expression targetExpr = new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression());
+		Expression targetExpr = newExpressionBuilder().consume(ctx.singleExpression());
 		result = createParameterizedPropertyAccessExpression(targetExpr, ctx.identifierName());
 	}
 }

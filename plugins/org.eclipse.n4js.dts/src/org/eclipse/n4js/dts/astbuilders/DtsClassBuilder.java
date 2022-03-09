@@ -32,8 +32,6 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberBaseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyOrMethodContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsFormalParametersBuilder;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsN4TypeVariablesBuilder;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.FormalParameter;
@@ -56,12 +54,6 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  */
 public class DtsClassBuilder
 		extends AbstractDtsBuilderWithHelpers<ClassDeclarationContext, N4ClassDeclaration> {
-
-	private final DtsN4TypeVariablesBuilder typeVariablesBuilder = new DtsN4TypeVariablesBuilder(tokenStream, resource);
-	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
-			resource);
-	private final DtsPropertyNameBuilder propertyNameBuilder = new DtsPropertyNameBuilder(tokenStream, resource);
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsClassBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -88,14 +80,14 @@ public class DtsClassBuilder
 			result.getDeclaredModifiers().add(N4Modifier.ABSTRACT);
 		}
 
-		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
+		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
 
 		ClassHeritageContext heritage = ctx.classHeritage();
 		if (heritage != null) {
 			ClassExtendsClauseContext extendsClause = heritage.classExtendsClause();
 			if (extendsClause != null && extendsClause.parameterizedTypeRef() != null) {
-				ParameterizedTypeRef typeRef = typeRefBuilder.consume(extendsClause.parameterizedTypeRef());
+				ParameterizedTypeRef typeRef = newTypeRefBuilder().consume(extendsClause.parameterizedTypeRef());
 				result.setSuperClassRef(ParserContextUtil.wrapInTypeRefNode(typeRef));
 			}
 			ClassImplementsClauseContext implementsClause = heritage.classImplementsClause();
@@ -104,7 +96,7 @@ public class DtsClassBuilder
 				// TODO classes implementing classes not supported in N4JS!
 				for (ParameterizedTypeRefContext extendsTypeRefCtx : implementsClause.classOrInterfaceTypeList()
 						.parameterizedTypeRef()) {
-					ParameterizedTypeRef typeRef = typeRefBuilder.consume(extendsTypeRefCtx);
+					ParameterizedTypeRef typeRef = newTypeRefBuilder().consume(extendsTypeRefCtx);
 					result.getImplementedInterfaceRefs().add(ParserContextUtil.wrapInTypeRefNode(typeRef));
 				}
 			}
@@ -132,10 +124,10 @@ public class DtsClassBuilder
 			// this is a property
 			N4FieldDeclaration fd = N4JSFactory.eINSTANCE.createN4FieldDeclaration();
 
-			fd.setDeclaredName(propertyNameBuilder.consume(ctx.propertyName()));
+			fd.setDeclaredName(newPropertyNameBuilder().consume(ctx.propertyName()));
 			fd.setDeclaredOptional(ctx.QuestionMark() != null);
 
-			TypeRef typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
+			TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
 			fd.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
 
 			memberDecl = fd;
@@ -143,13 +135,13 @@ public class DtsClassBuilder
 		} else {
 			// this is a method
 			N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
-			md.setDeclaredName(propertyNameBuilder.consume(ctx.propertyName()));
+			md.setDeclaredName(newPropertyNameBuilder().consume(ctx.propertyName()));
 
-			List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.callSignature().typeParameters());
+			List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.callSignature().typeParameters());
 			md.getTypeVars().addAll(typeVars);
-			List<FormalParameter> fPars = formalParametersBuilder.consume(ctx.callSignature().parameterBlock());
+			List<FormalParameter> fPars = newFormalParametersBuilder().consume(ctx.callSignature().parameterBlock());
 			md.getFpars().addAll(fPars);
-			TypeRef typeRef = typeRefBuilder.consume(ctx.callSignature().typeRef());
+			TypeRef typeRef = newTypeRefBuilder().consume(ctx.callSignature().typeRef());
 			md.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
 
 			memberDecl = md;

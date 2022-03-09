@@ -31,8 +31,6 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsFormalParametersBuilder;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsN4TypeVariablesBuilder;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
@@ -55,12 +53,6 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class DtsInterfaceBuilder
 		extends AbstractDtsBuilderWithHelpers<InterfaceDeclarationContext, N4InterfaceDeclaration> {
 
-	private final DtsN4TypeVariablesBuilder typeVariablesBuilder = new DtsN4TypeVariablesBuilder(tokenStream, resource);
-	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
-			resource);
-	private final DtsPropertyNameBuilder propertyNameBuilder = new DtsPropertyNameBuilder(tokenStream, resource);
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-
 	/** Constructor */
 	public DtsInterfaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
@@ -80,7 +72,7 @@ public class DtsInterfaceBuilder
 		result.setName(ctx.identifierName().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
-		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
+		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
 
 		InterfaceExtendsClauseContext extendsClause = ctx.interfaceExtendsClause();
@@ -90,7 +82,7 @@ public class DtsInterfaceBuilder
 			// TODO interfaces extending classes not supported in N4JS!
 			for (ParameterizedTypeRefContext extendsTypeRefCtx : extendsClause.classOrInterfaceTypeList()
 					.parameterizedTypeRef()) {
-				ParameterizedTypeRef typeRef = typeRefBuilder.consume(extendsTypeRefCtx);
+				ParameterizedTypeRef typeRef = newTypeRefBuilder().consume(extendsTypeRefCtx);
 				result.getSuperInterfaceRefs().add(ParserContextUtil.wrapInTypeRefNode(typeRef));
 			}
 		}
@@ -102,7 +94,7 @@ public class DtsInterfaceBuilder
 	public void enterPropertySignature(PropertySignatureContext ctx) {
 		N4FieldDeclaration fd = N4JSFactory.eINSTANCE.createN4FieldDeclaration();
 		fd.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		fd.setDeclaredName(propertyNameBuilder.consume(ctx.propertyName()));
+		fd.setDeclaredName(newPropertyNameBuilder().consume(ctx.propertyName()));
 		fd.setDeclaredOptional(ctx.QuestionMark() != null);
 
 		if (ctx.ReadOnly() != null) {
@@ -110,7 +102,7 @@ public class DtsInterfaceBuilder
 			// consider to create a getter instead of a field
 		}
 
-		TypeRef typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
+		TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
 		fd.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
 
 		addLocationInfo(fd, ctx);
@@ -157,18 +149,18 @@ public class DtsInterfaceBuilder
 
 		N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
 		md.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		md.setDeclaredName(propertyNameBuilder.consume(name));
+		md.setDeclaredName(newPropertyNameBuilder().consume(name));
 
 		if (typeParams != null) {
-			List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(typeParams);
+			List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(typeParams);
 			md.getTypeVars().addAll(typeVars);
 		}
 		if (fpars != null) {
-			List<FormalParameter> fPars = formalParametersBuilder.consume(fpars);
+			List<FormalParameter> fPars = newFormalParametersBuilder().consume(fpars);
 			md.getFpars().addAll(fPars);
 		}
 		if (returnTypeRefCtx != null) {
-			TypeRef returnTypeRef = typeRefBuilder.consume(returnTypeRefCtx);
+			TypeRef returnTypeRef = newTypeRefBuilder().consume(returnTypeRefCtx);
 			md.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(returnTypeRef));
 		}
 

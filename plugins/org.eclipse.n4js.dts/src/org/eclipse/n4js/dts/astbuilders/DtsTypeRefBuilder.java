@@ -52,8 +52,6 @@ import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefWithModifiersContext;
 import org.eclipse.n4js.dts.TypeScriptParser.UnionTypeExpressionContext;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsTFormalParametersBuilder;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsTypeVariablesBuilder;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
@@ -524,17 +522,5 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			tMember.setName(name);
 		}
 		tMember.setDeclaredMemberAccessModifier(MemberAccessModifier.PUBLIC);
-	}
-
-	private DtsTypeVariablesBuilder newTypeVariablesBuilder() {
-		return new DtsTypeVariablesBuilder(tokenStream, resource);
-	}
-
-	private DtsTFormalParametersBuilder newTFormalParametersBuilder() {
-		return new DtsTFormalParametersBuilder(tokenStream, resource);
-	}
-
-	private DtsTypeRefBuilder newTypeRefBuilder() {
-		return new DtsTypeRefBuilder(tokenStream, resource);
 	}
 }

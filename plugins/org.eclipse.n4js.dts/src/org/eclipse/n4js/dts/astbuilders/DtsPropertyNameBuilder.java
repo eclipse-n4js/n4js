@@ -28,8 +28,6 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class DtsPropertyNameBuilder
 		extends AbstractDtsBuilderWithHelpers<PropertyNameContext, LiteralOrComputedPropertyName> {
 
-	private final DtsExpressionBuilder expressionBuilder = new DtsExpressionBuilder(tokenStream, resource);
-
 	/** Constructor */
 	public DtsPropertyNameBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
@@ -57,7 +55,7 @@ public class DtsPropertyNameBuilder
 		} else {
 			result.setKind(PropertyNameKind.COMPUTED);
 			if (identifierName != null && !identifierName.isEmpty()) {
-				Expression expr = expressionBuilder.consume(identifierName.get(0));
+				Expression expr = newExpressionBuilder().consume(identifierName.get(0));
 				for (int idx = 1; idx < identifierName.size(); idx++) {
 					expr = createParameterizedPropertyAccessExpression(expr, identifierName.get(idx));
 				}

@@ -39,7 +39,6 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableStatementContext, VariableStatement> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
 
 	private boolean parentIsNamespace;
 
@@ -99,7 +98,7 @@ public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableSt
 		VariableBinding varBinding = exported ? N4JSFactory.eINSTANCE.createExportedVariableBinding()
 				: N4JSFactory.eINSTANCE.createVariableBinding();
 
-		BindingPattern bindingPattern = new DtsBindingPatternBuilder(this).consume(ctx.bindingPattern());
+		BindingPattern bindingPattern = newBindingPatternBuilder().consume(ctx.bindingPattern());
 
 		varBinding.setPattern(bindingPattern);
 
@@ -117,10 +116,10 @@ public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableSt
 			// in .d.ts, the only the following initializers are allowed:
 			// const: only string literal, numeric literal, or literal enum reference,
 			// var/let: none at all.
-			Expression expr = new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression());
+			Expression expr = newExpressionBuilder().consume(ctx.singleExpression());
 			varDecl.setExpression(expr);
 		} else {
-			TypeRef typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
+			TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
 			varDecl.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
 		}
 

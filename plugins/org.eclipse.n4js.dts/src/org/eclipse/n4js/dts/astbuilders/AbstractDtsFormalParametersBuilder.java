@@ -43,14 +43,10 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public abstract class AbstractDtsFormalParametersBuilder<T extends EObject>
 		extends AbstractDtsBuilderWithHelpers<ParameterBlockContext, List<T>> {
 
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-
 	/**
 	 * Builds {@link FormalParameter}s.
 	 */
 	public static final class DtsFormalParametersBuilder extends AbstractDtsFormalParametersBuilder<FormalParameter> {
-
-		private final DtsExpressionBuilder expressionBuilder = new DtsExpressionBuilder(tokenStream, resource);
 
 		/** Constructor */
 		public DtsFormalParametersBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -69,7 +65,7 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject>
 		@Override
 		protected void setInitializer(FormalParameter fPar, InitializerContext initCtx) {
 			fPar.setHasInitializerAssignment(true);
-			Expression expr = expressionBuilder.consume(initCtx.singleExpression());
+			Expression expr = newExpressionBuilder().consume(initCtx.singleExpression());
 			fPar.setInitializer(expr);
 		}
 
@@ -161,7 +157,7 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject>
 			return null;
 		}
 		String name = iop.identifierName().getText();
-		T fPar = createFormalParameter(name, typeRefBuilder.consume(cstr));
+		T fPar = createFormalParameter(name, newTypeRefBuilder().consume(cstr));
 		result.add(fPar);
 		return fPar;
 	}

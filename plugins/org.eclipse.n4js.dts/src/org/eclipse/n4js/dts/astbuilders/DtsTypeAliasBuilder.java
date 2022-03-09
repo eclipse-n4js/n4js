@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsN4TypeVariablesBuilder;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
@@ -31,8 +30,6 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsTypeAliasBuilder extends AbstractDtsBuilder<TypeAliasDeclarationContext, N4TypeAliasDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-	private final DtsN4TypeVariablesBuilder typeVariablesBuilder = new DtsN4TypeVariablesBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsTypeAliasBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -52,9 +49,9 @@ public class DtsTypeAliasBuilder extends AbstractDtsBuilder<TypeAliasDeclaration
 		result.setName(ctx.identifierName().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
-		TypeRef typeRef = typeRefBuilder.consume(ctx.typeRef());
+		TypeRef typeRef = newTypeRefBuilder().consume(ctx.typeRef());
 		result.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
-		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
+		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
 	}
 

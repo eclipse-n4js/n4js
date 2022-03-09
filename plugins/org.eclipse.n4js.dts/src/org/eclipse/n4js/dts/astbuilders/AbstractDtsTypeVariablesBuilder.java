@@ -35,8 +35,6 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public abstract class AbstractDtsTypeVariablesBuilder<T extends EObject>
 		extends AbstractDtsBuilderWithHelpers<TypeParametersContext, List<T>> {
 
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-
 	/**
 	 * Builds {@link N4TypeVariable}s.
 	 */
@@ -120,13 +118,13 @@ public abstract class AbstractDtsTypeVariablesBuilder<T extends EObject>
 	public void enterTypeParameter(TypeParameterContext ctx) {
 		T typeVar = createTypeVariable(ctx.identifierName().getText());
 		if (ctx.constraint() != null && ctx.constraint().typeRef() != null) {
-			TypeRef typeRef = typeRefBuilder.consume(ctx.constraint().typeRef());
+			TypeRef typeRef = newTypeRefBuilder().consume(ctx.constraint().typeRef());
 			if (typeRef != null) {
 				setUpperBound(typeVar, typeRef);
 			}
 		}
 		if (ctx.defaultType() != null && ctx.defaultType().typeRef() != null) {
-			TypeRef typeRef = typeRefBuilder.consume(ctx.defaultType().typeRef());
+			TypeRef typeRef = newTypeRefBuilder().consume(ctx.defaultType().typeRef());
 			setDefaultArgument(typeVar, typeRef);
 		}
 		result.add(typeVar);

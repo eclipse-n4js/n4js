@@ -31,8 +31,6 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsModuleBuilder;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsNamespaceBuilder;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
@@ -54,15 +52,6 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
 public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script> {
-	private final DtsImportBuilder importBuilder = new DtsImportBuilder(tokenStream, resource);
-	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
-	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
-	private final DtsNamespaceBuilder namespaceBuilder = new DtsNamespaceBuilder(tokenStream, resource);
-	private final DtsModuleBuilder moduleBuilder = new DtsModuleBuilder(tokenStream, resource);
-	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
-	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
-	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(tokenStream, resource);
-	private final DtsVariableBuilder variableBuilder = new DtsVariableBuilder(tokenStream, resource);
 
 	/** Constructor */
 	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -102,19 +91,19 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void enterImportStatement(ImportStatementContext ctx) {
-		ImportDeclaration id = importBuilder.consume(ctx);
+		ImportDeclaration id = newImportBuilder().consume(ctx);
 		addToScript(id);
 	}
 
 	@Override
 	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
-		N4NamespaceDeclaration nd = namespaceBuilder.consume(ctx);
+		N4NamespaceDeclaration nd = newNamespaceBuilder().consume(ctx);
 		addAndHandleExported(ctx, nd);
 	}
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		N4AbstractNamespaceDeclaration d = moduleBuilder.consume(ctx);
+		N4AbstractNamespaceDeclaration d = newModuleBuilder().consume(ctx);
 		if (d instanceof N4ModuleDeclaration) {
 			N4ModuleDeclaration md = (N4ModuleDeclaration) d;
 			addToScript(md);
@@ -126,37 +115,37 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-		VariableStatement vs = variableBuilder.consumeInScript(ctx);
+		VariableStatement vs = newVariableBuilder().consumeInScript(ctx);
 		addToScript(vs);
 	}
 
 	@Override
 	public void enterInterfaceDeclaration(InterfaceDeclarationContext ctx) {
-		N4InterfaceDeclaration id = interfaceBuilder.consume(ctx);
+		N4InterfaceDeclaration id = newInterfaceBuilder().consume(ctx);
 		addAndHandleExported(ctx, id);
 	}
 
 	@Override
 	public void enterClassDeclaration(ClassDeclarationContext ctx) {
-		N4ClassDeclaration cd = classBuilder.consume(ctx);
+		N4ClassDeclaration cd = newClassBuilder().consume(ctx);
 		addAndHandleExported(ctx, cd);
 	}
 
 	@Override
 	public void enterEnumDeclaration(EnumDeclarationContext ctx) {
-		N4EnumDeclaration ed = enumBuilder.consume(ctx);
+		N4EnumDeclaration ed = newEnumBuilder().consume(ctx);
 		addAndHandleExported(ctx, ed);
 	}
 
 	@Override
 	public void enterTypeAliasDeclaration(TypeAliasDeclarationContext ctx) {
-		N4TypeAliasDeclaration tad = typeAliasBuilder.consume(ctx);
+		N4TypeAliasDeclaration tad = newTypeAliasBuilder().consume(ctx);
 		addAndHandleExported(ctx, tad);
 	}
 
 	@Override
 	public void enterFunctionDeclaration(FunctionDeclarationContext ctx) {
-		FunctionDeclaration fd = functionBuilder.consume(ctx);
+		FunctionDeclaration fd = newFunctionBuilder().consume(ctx);
 		addAndHandleExported(ctx, fd);
 	}
 

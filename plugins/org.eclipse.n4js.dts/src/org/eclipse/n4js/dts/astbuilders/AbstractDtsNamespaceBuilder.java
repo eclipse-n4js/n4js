@@ -81,13 +81,6 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		extends AbstractDtsBuilder<T, N4AbstractNamespaceDeclaration> {
 
-	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
-	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
-	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(tokenStream, resource);
-	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
-	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
-	private final DtsVariableBuilder variableBuilder = new DtsVariableBuilder(tokenStream, resource);
-
 	/** Builder for namespaces. */
 	public static class DtsNamespaceBuilder
 			extends AbstractDtsNamespaceBuilder<NamespaceDeclarationContext> {
@@ -136,7 +129,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			result = doCreateN4NamespaceDeclaration(ctx.namespaceName().getText(), isExported);
 			walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
 		} else {
-			N4NamespaceDeclaration nd = new DtsNamespaceBuilder(tokenStream, resource).consume(ctx);
+			N4NamespaceDeclaration nd = newNamespaceBuilder().consume(ctx);
 			addAndHandleExported(ctx, nd);
 		}
 	}
@@ -160,7 +153,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				}
 			}
 		} else {
-			N4AbstractNamespaceDeclaration md = new DtsModuleBuilder(tokenStream, resource).consume(ctx);
+			N4AbstractNamespaceDeclaration md = newModuleBuilder().consume(ctx);
 			addAndHandleExported(ctx, md);
 		}
 	}
@@ -184,37 +177,37 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-		ExportedVariableStatement vs = variableBuilder.consumeInNamespace(ctx);
+		ExportedVariableStatement vs = newVariableBuilder().consumeInNamespace(ctx);
 		addAndHandleExported(ctx, vs);
 	}
 
 	@Override
 	public void enterInterfaceDeclaration(InterfaceDeclarationContext ctx) {
-		N4InterfaceDeclaration id = interfaceBuilder.consume(ctx);
+		N4InterfaceDeclaration id = newInterfaceBuilder().consume(ctx);
 		addAndHandleExported(ctx, id);
 	}
 
 	@Override
 	public void enterClassDeclaration(ClassDeclarationContext ctx) {
-		N4ClassDeclaration cd = classBuilder.consume(ctx);
+		N4ClassDeclaration cd = newClassBuilder().consume(ctx);
 		addAndHandleExported(ctx, cd);
 	}
 
 	@Override
 	public void enterTypeAliasDeclaration(TypeAliasDeclarationContext ctx) {
-		N4TypeAliasDeclaration tad = typeAliasBuilder.consume(ctx);
+		N4TypeAliasDeclaration tad = newTypeAliasBuilder().consume(ctx);
 		addAndHandleExported(ctx, tad);
 	}
 
 	@Override
 	public void enterFunctionDeclaration(FunctionDeclarationContext ctx) {
-		FunctionDeclaration fd = functionBuilder.consume(ctx);
+		FunctionDeclaration fd = newFunctionBuilder().consume(ctx);
 		addAndHandleExported(ctx, fd);
 	}
 
 	@Override
 	public void enterEnumDeclaration(EnumDeclarationContext ctx) {
-		N4EnumDeclaration ed = enumBuilder.consume(ctx);
+		N4EnumDeclaration ed = newEnumBuilder().consume(ctx);
 		addAndHandleExported(ctx, ed);
 	}
 

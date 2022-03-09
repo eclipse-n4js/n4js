@@ -36,8 +36,6 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 class DtsBindingPatternBuilder extends AbstractDtsBuilder<BindingPatternContext, BindingPattern> {
 
-	private final DtsPropertyNameBuilder propertyNameBuilder = new DtsPropertyNameBuilder(tokenStream, resource);
-
 	/** Constructor */
 	public DtsBindingPatternBuilder(AbstractDtsBuilder<?, ?> dtsBuilder) {
 		super(dtsBuilder.tokenStream, dtsBuilder.resource);
@@ -73,7 +71,7 @@ class DtsBindingPatternBuilder extends AbstractDtsBuilder<BindingPatternContext,
 			bindingElem.setVarDecl(varDecl);
 		}
 		if (bindingElemCtx.bindingPattern() != null) {
-			BindingPattern nestedBP = new DtsBindingPatternBuilder(this).consume(bindingElemCtx.bindingPattern());
+			BindingPattern nestedBP = newBindingPatternBuilder().consume(bindingElemCtx.bindingPattern());
 			bindingElem.setNestedPattern(nestedBP);
 		}
 		((ArrayBindingPattern) result).getElements().add(bindingElem);
@@ -83,11 +81,11 @@ class DtsBindingPatternBuilder extends AbstractDtsBuilder<BindingPatternContext,
 	public void enterPropertyExpressionAssignment(PropertyExpressionAssignmentContext ctx) {
 		BindingProperty bindingProp = N4JSFactory.eINSTANCE.createBindingProperty();
 		BindingElement bindingElem = N4JSFactory.eINSTANCE.createBindingElement();
-		bindingProp.setDeclaredName(propertyNameBuilder.consume(ctx.propertyName()));
+		bindingProp.setDeclaredName(newPropertyNameBuilder().consume(ctx.propertyName()));
 		bindingProp.setValue(bindingElem);
 
 		if (ctx.bindingPattern() != null) {
-			BindingPattern bindingPattern = new DtsBindingPatternBuilder(this).consume(ctx.bindingPattern());
+			BindingPattern bindingPattern = newBindingPatternBuilder().consume(ctx.bindingPattern());
 			bindingElem.setNestedPattern(bindingPattern);
 		} else {
 			VariableDeclaration varDecl = N4JSFactory.eINSTANCE.createVariableDeclaration();
