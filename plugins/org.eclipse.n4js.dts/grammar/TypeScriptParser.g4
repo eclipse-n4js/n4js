@@ -115,15 +115,12 @@ operatorTypeRef:
 typeOperator: Keyof | Unique | ReadOnly;
 
 arrayTypeExpression:
-    // FIXME discuss
-	//   ('?' '[' ']' ('[' ']')*)
-	// | ('(' '?' ')' '[' ']' ('[' ']')*)
-	// |
-    primaryTypeExpression (
-		  ('[' ']')
-        // FIXME discuss
-		// | ('[' typeRef ']')
-	)*;
+	primaryTypeExpression arrayTypeExpressionSuffix*;
+
+arrayTypeExpressionSuffix
+	: '[' ']'
+	| '[' typeRef ']' // index access type
+	;
 
 primaryTypeExpression:
 	( literalType
@@ -147,11 +144,8 @@ literalType
 arrowFunctionTypeExpression:
 	(
 		('abstract'? 'new')?
-        // FIXME discuss
         typeParameters?
-		// ('<' typeVariable (',' typeVariable)* ','? '>')?
         parameterBlock
-		// '(' anonymousFormalParameterListWithDeclaredThisType ')'
 		'=>'
 	) (typePredicateWithOperatorTypeRef | unionTypeExpression);
 
@@ -170,7 +164,6 @@ typeVariable:
 	Identifier (Extends typeRef)?;
 
 typeRefWithModifiers:
-	// FIXME reordered
     thisTypeRef
 	| parameterizedTypeRef
 	| objectLiteralTypeRef
@@ -209,20 +202,6 @@ queryTypeRef:
 importTypeRef:
     Import '(' StringLiteral ')' ('.' parameterizedTypeRef)?
 ;
-
-// FIXME discuss
-// anonymousFormalParameterListWithDeclaredThisType :
-// 	(('this' colonSepTypeRef | anonymousFormalParameter) (',' anonymousFormalParameter)* ','?)?
-// ;
-// 
-// anonymousFormalParameter:
-// 	'...'? ((bindingIdentifier '?'? colonSepTypeRef) | typeRef)
-// 	defaultFormalParameter?
-// ;
-// 
-// defaultFormalParameter:
-// 	'=' Identifier
-// ;
 
 typePredicateWithOperatorTypeRef:
 	Asserts? (This | bindingIdentifier) Is unionTypeExpression

@@ -148,6 +148,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitArrayTypeExpression(TypeScriptParser.ArrayTypeExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#arrayTypeExpressionSuffix}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayTypeExpressionSuffix(TypeScriptParser.ArrayTypeExpressionSuffixContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#arrayTypeExpressionSuffix}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayTypeExpressionSuffix(TypeScriptParser.ArrayTypeExpressionSuffixContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#primaryTypeExpression}.
 	 * @param ctx the parse tree
 	 */

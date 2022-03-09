@@ -95,6 +95,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArrayTypeExpression(TypeScriptParser.ArrayTypeExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#arrayTypeExpressionSuffix}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayTypeExpressionSuffix(TypeScriptParser.ArrayTypeExpressionSuffixContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#primaryTypeExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

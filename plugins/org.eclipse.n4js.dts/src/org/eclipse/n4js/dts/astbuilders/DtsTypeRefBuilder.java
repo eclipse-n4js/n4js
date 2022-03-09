@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrayTypeExpressionContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ArrayTypeExpressionSuffixContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrowFunctionTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.CallSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ColonSepTypeRefContext;
@@ -236,9 +237,15 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	public void enterArrayTypeExpression(ArrayTypeExpressionContext ctx) {
 		enterPrimaryTypeExpression(ctx.primaryTypeExpression());
 		if (result != null) {
-			int dim = ctx.OpenBracket().size(); // dimension of the array
-			for (int i = 0; i < dim; i++) {
-				result = createParameterizedTypeRef("Array", Collections.singletonList(result), false);
+			for (ArrayTypeExpressionSuffixContext suffixCtx : ctx.arrayTypeExpressionSuffix()) {
+				if (suffixCtx.typeRef() != null) {
+					// special case: index access type
+					// TODO index access type references
+					result = createAnyPlusTypeRef();
+				} else {
+					// standard case: array type expression
+					result = createParameterizedTypeRef("Array", Collections.singletonList(result), false);
+				}
 			}
 		}
 	}

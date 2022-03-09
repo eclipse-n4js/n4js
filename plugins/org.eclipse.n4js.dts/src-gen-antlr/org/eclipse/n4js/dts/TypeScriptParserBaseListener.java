@@ -184,6 +184,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArrayTypeExpressionSuffix(TypeScriptParser.ArrayTypeExpressionSuffixContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayTypeExpressionSuffix(TypeScriptParser.ArrayTypeExpressionSuffixContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterPrimaryTypeExpression(TypeScriptParser.PrimaryTypeExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
