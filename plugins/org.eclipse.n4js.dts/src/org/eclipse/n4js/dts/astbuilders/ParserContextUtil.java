@@ -156,6 +156,7 @@ public class ParserContextUtil {
 		return null;
 	}
 
+	/** @return the actual value of the given numeric literal. */
 	public static BigDecimal parseNumericLiteral(NumericLiteralContext numLitCtx, boolean ignoreNegation) {
 		if (numLitCtx == null) {
 			return null;

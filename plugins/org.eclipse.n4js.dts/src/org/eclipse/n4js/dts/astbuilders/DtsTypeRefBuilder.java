@@ -96,6 +96,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		return Collections.emptySet();
 	}
 
+	/** Convenience method for consuming 0..* {@link TypeRefContext}s in one go. */
 	public List<TypeRef> consumeManyTypeRefs(Iterable<TypeRefContext> ctxs) {
 		@SuppressWarnings("hiding")
 		List<TypeRef> result = new ArrayList<>();
@@ -110,6 +111,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		return result;
 	}
 
+	/** Convenience method for consuming 0..* {@link TypeArgumentContext}s in one go. */
 	public List<TypeRef> consumeManyTypeArgs(Iterable<TypeArgumentContext> typeArgCtxs) {
 		@SuppressWarnings("hiding")
 		List<TypeRef> result = new ArrayList<>();
@@ -124,6 +126,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		return result;
 	}
 
+	/** Convenience method for consuming 0..* {@link TupleTypeArgumentContext}s in one go. */
 	public List<TypeRef> consumeManyTupleTypeArgs(Iterable<TupleTypeArgumentContext> typeArgCtxs) {
 		@SuppressWarnings("hiding")
 		List<TypeRef> result = new ArrayList<>();
@@ -138,7 +141,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		return result;
 	}
 
-	/** @return a {@link TypeReferenceNode} from the given context. Consumes the given context and all its children. */
+	/** @return a {@link TypeRef} from the given context. Consumes the given context and all its children. */
 	public TypeRef consume(ColonSepTypeRefContext ctx) {
 		if (ctx == null) {
 			return null;
@@ -146,14 +149,23 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		return consume(ctx.typeRef());
 	}
 
+	/**
+	 * @return a {@link TypeRef} from the given context. Consumes the given context and all its children. Will not
+	 *         always return a {@link UnionTypeExpression}!
+	 */
 	public TypeRef consume(UnionTypeExpressionContext ctx) {
 		return doConsume(ctx);
 	}
 
+	/**
+	 * @return a {@link TypeRef} from the given context. Consumes the given context and all its children. Will not
+	 *         always return an {@link IntersectionTypeExpression}!
+	 */
 	public TypeRef consume(IntersectionTypeExpressionContext ctx) {
 		return doConsume(ctx);
 	}
 
+	/** @return a {@link TypeRef} from the given context. Consumes the given context and all its children. */
 	public TypeRef consume(OperatorTypeRefContext ctx) {
 		return doConsume(ctx);
 	}
