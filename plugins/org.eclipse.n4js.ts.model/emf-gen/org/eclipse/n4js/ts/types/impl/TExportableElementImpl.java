@@ -10,11 +10,7 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
@@ -31,31 +27,31 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TExportableElementImpl#getExportedName <em>Exported Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TExportableElementImpl#isDirectlyExported <em>Directly Exported</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class TExportableElementImpl extends IdentifiableElementImpl implements TExportableElement {
 	/**
-	 * The default value of the '{@link #getExportedName() <em>Exported Name</em>}' attribute.
+	 * The default value of the '{@link #isDirectlyExported() <em>Directly Exported</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getExportedName()
+	 * @see #isDirectlyExported()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String EXPORTED_NAME_EDEFAULT = null;
+	protected static final boolean DIRECTLY_EXPORTED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #getExportedName() <em>Exported Name</em>}' attribute.
+	 * The cached value of the '{@link #isDirectlyExported() <em>Directly Exported</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getExportedName()
+	 * @see #isDirectlyExported()
 	 * @generated
 	 * @ordered
 	 */
-	protected String exportedName = EXPORTED_NAME_EDEFAULT;
+	protected boolean directlyExported = DIRECTLY_EXPORTED_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -82,8 +78,8 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	 * @generated
 	 */
 	@Override
-	public String getExportedName() {
-		return exportedName;
+	public boolean isDirectlyExported() {
+		return directlyExported;
 	}
 
 	/**
@@ -92,22 +88,11 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	 * @generated
 	 */
 	@Override
-	public void setExportedName(String newExportedName) {
-		String oldExportedName = exportedName;
-		exportedName = newExportedName;
+	public void setDirectlyExported(boolean newDirectlyExported) {
+		boolean oldDirectlyExported = directlyExported;
+		directlyExported = newDirectlyExported;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TEXPORTABLE_ELEMENT__EXPORTED_NAME, oldExportedName, exportedName));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isExported() {
-		String _exportedName = this.getExportedName();
-		return (_exportedName != null);
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED, oldDirectlyExported, directlyExported));
 	}
 
 	/**
@@ -118,8 +103,8 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypesPackage.TEXPORTABLE_ELEMENT__EXPORTED_NAME:
-				return getExportedName();
+			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED:
+				return isDirectlyExported();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -132,8 +117,8 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypesPackage.TEXPORTABLE_ELEMENT__EXPORTED_NAME:
-				setExportedName((String)newValue);
+			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED:
+				setDirectlyExported((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -147,8 +132,8 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TEXPORTABLE_ELEMENT__EXPORTED_NAME:
-				setExportedName(EXPORTED_NAME_EDEFAULT);
+			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED:
+				setDirectlyExported(DIRECTLY_EXPORTED_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -162,24 +147,10 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypesPackage.TEXPORTABLE_ELEMENT__EXPORTED_NAME:
-				return EXPORTED_NAME_EDEFAULT == null ? exportedName != null : !EXPORTED_NAME_EDEFAULT.equals(exportedName);
+			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED:
+				return directlyExported != DIRECTLY_EXPORTED_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case TypesPackage.TEXPORTABLE_ELEMENT___IS_EXPORTED:
-				return isExported();
-		}
-		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -192,8 +163,8 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (exportedName: ");
-		result.append(exportedName);
+		result.append(" (directlyExported: ");
+		result.append(directlyExported);
 		result.append(')');
 		return result.toString();
 	}

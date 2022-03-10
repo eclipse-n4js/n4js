@@ -376,7 +376,7 @@ public class TestDiscoveryHelper {
 	private void collectTestCasesAndSuitesForModule(N4JSWorkspaceConfigSnapshot ws, TModule module,
 			Map<String, TestSuite> suites) {
 		for (final TClass clazz : from(module.getTypes()).filter(TClass.class)
-				.filter(c -> !c.isAbstract() && c.isExported())) {
+				.filter(c -> !c.isAbstract() && c.isDirectlyExported())) {
 			Iterable<TMethod> testMethods = getAllTestMethodsOfClass(clazz);
 			if (testMethods.iterator().hasNext()) {
 				TestSuite testSuite = addOrCreateSuite(ws, clazz, suites);
@@ -492,7 +492,7 @@ public class TestDiscoveryHelper {
 
 	private static boolean isExportedTestClass(final IEObjectDescription objDesc) {
 		boolean isTestClass = N4JSResourceDescriptionStrategy.getTestClass(objDesc);
-		boolean isExported = N4JSResourceDescriptionStrategy.getExported(objDesc);
+		boolean isExported = N4JSResourceDescriptionStrategy.getDirectlyExported(objDesc);
 		return isTestClass && isExported;
 	}
 
@@ -511,7 +511,7 @@ public class TestDiscoveryHelper {
 		// Otherwise load class and all its inherited methods from supertypes as well.
 		final TClass clazz = loadTClass(resSet, objDesc);
 		// Exported and has at least one test method (including the ancestor types)
-		return null != clazz && clazz.isExported() && getAllTestMethodsOfClass(clazz).iterator().hasNext();
+		return null != clazz && clazz.isDirectlyExported() && getAllTestMethodsOfClass(clazz).iterator().hasNext();
 	}
 
 	private TClass loadTClass(final ResourceSet resSet, final IEObjectDescription objDesc) {

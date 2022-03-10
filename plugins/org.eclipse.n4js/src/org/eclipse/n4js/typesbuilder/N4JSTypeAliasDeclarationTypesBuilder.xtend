@@ -43,7 +43,6 @@ class N4JSTypeAliasDeclarationTypesBuilder {
 
 		val typeAlias = TypesFactory.eINSTANCE.createTypeAlias();
 		typeAlias.name = n4TypeAlias.name;
-		typeAlias.exportedName = n4TypeAlias.exportedName;
 
 		typeAlias.setTypeAccessModifier(n4TypeAlias);
 		typeAlias.addTypeParameters(n4TypeAlias, preLinkingPhase);
@@ -52,6 +51,12 @@ class N4JSTypeAliasDeclarationTypesBuilder {
 
 		if (!preLinkingPhase) {
 			typeAlias.typeRef = TypeUtils.copyWithProxies(n4TypeAlias.declaredTypeRefInAST);
+		}
+
+		val exportedName = n4TypeAlias.exportedName;
+		if (exportedName !== null) {
+			typeAlias.directlyExported = true;
+			target.addExportDefinition(exportedName, typeAlias);
 		}
 
 		typeAlias.astElement = n4TypeAlias;

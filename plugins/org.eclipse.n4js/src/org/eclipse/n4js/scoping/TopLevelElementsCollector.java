@@ -21,6 +21,7 @@ import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescripti
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
+import org.eclipse.n4js.ts.types.ExportDefinition;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
@@ -64,37 +65,34 @@ public class TopLevelElementsCollector {
 		List<IEObjectDescription> visible = new ArrayList<>();
 		List<IEObjectDescription> invisible = new ArrayList<>();
 
-		Iterable<Type> tltAndNamespaces = Iterables.concat(module.getTypes(), module.getNamespaces());
-		for (Type type : tltAndNamespaces) {
-			boolean include = includeHollows || !N4JSLanguageUtils.isHollowElement(type, variantHelper);
+		for (ExportDefinition exportDef : module.getExportDefinitions()) {
+			String exportedName = exportDef.getExportedName();
+			TExportableElement elem = exportDef.getExportedElement();
+			if (exportedName == null || elem == null || elem.eIsProxy()) {
+				continue;
+			}
+			boolean include = (includeHollows || !N4JSLanguageUtils.isHollowElement(elem, variantHelper))
+					&& (includeVariables || !(elem instanceof TVariable));
 			if (include) {
-				TypeVisibility typeVisiblity = typeVisibilityChecker.isVisible(contextResource, type);
-				if (typeVisiblity.visibility) {
-					visible.add(createObjectDescription(type));
+				TypeVisibility visibility = isVisible(contextResource, elem);
+				if (visibility.visibility) {
+					visible.add(createObjectDescription(exportedName, elem));
 				} else {
-					invisible.add(
-							new InvisibleTypeOrVariableDescription(createObjectDescription(type),
-									typeVisiblity.accessModifierSuggestion));
+					invisible.add(new InvisibleTypeOrVariableDescription(
+							createObjectDescription(exportedName, elem),
+							visibility.accessModifierSuggestion));
 				}
 			} else {
-				invisible.add(new HollowTypeOrValueDescription(createObjectDescription(type), "type"));
-			}
-		}
-
-		if (includeVariables) {
-			/*
-			 * Note this is handled differently (no InvisibleTypeOrVariableDescription are created when includeVariables
-			 * is false) compared to includeHollows because: ParameterizedTypeRef#declaredType is of type Type. Since
-			 * TVariable is no subtype of Type, it cannot be linked to that property 'declaredType'.
-			 */
-			for (TVariable var : module.getVariables()) {
-				TypeVisibility typeVisiblity = variableVisibilityChecker.isVisible(contextResource, var);
-				if (typeVisiblity.visibility) {
-					visible.add(createObjectDescription(var));
+				if (elem instanceof Type) {
+					invisible.add(new HollowTypeOrValueDescription(
+							createObjectDescription(exportedName, elem), "type"));
 				} else {
-					invisible.add(
-							new InvisibleTypeOrVariableDescription(createObjectDescription(var),
-									typeVisiblity.accessModifierSuggestion));
+					/*
+					 * Note this is handled differently (no HollowTypeOrValueDescription are created when
+					 * includeVariables is false) compared to includeHollows because: ParameterizedTypeRef#declaredType
+					 * is of type Type. Since TVariable is no subtype of Type, it cannot be linked to that property
+					 * 'declaredType'.
+					 */
 				}
 			}
 		}
@@ -102,17 +100,19 @@ public class TopLevelElementsCollector {
 		return Iterables.concat(visible, invisible);
 	}
 
-	/**
-	 * Helper methods to create an {@link IEObjectDescription} from a given {@link TExportableElement}.
-	 *
-	 * If available, the exported name is used otherwise the regular name is used as a fallback.
-	 */
-	private IEObjectDescription createObjectDescription(TExportableElement element) {
-		String exportedName = element.getExportedName();
-		if (null != exportedName) {
-			return N4JSEObjectDescription.create(exportedName, element);
-		} else {
-			return N4JSEObjectDescription.create(element.getName(), element);
+	private TypeVisibility isVisible(Resource contextResource, TExportableElement elem) {
+		if (elem instanceof Type) {
+			return typeVisibilityChecker.isVisible(contextResource, (Type) elem);
+		} else if (elem instanceof TVariable) {
+			return variableVisibilityChecker.isVisible(contextResource, (TVariable) elem);
 		}
+		return new TypeVisibility(false);
+	}
+
+	/**
+	 * Helper method to create an {@link IEObjectDescription} for a given {@link TExportableElement}.
+	 */
+	private IEObjectDescription createObjectDescription(String exportedName, TExportableElement element) {
+		return N4JSEObjectDescription.create(exportedName, element);
 	}
 }

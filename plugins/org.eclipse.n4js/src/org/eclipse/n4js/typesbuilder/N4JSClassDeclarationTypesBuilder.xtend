@@ -59,6 +59,11 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 		tclass.addGetters(n4Class, preLinkingPhase);
 		tclass.addSetters(n4Class, preLinkingPhase);
 
+		val exportedName = n4Class.exportedName;
+		if (exportedName !== null) {
+			tclass.directlyExported = true;
+			target.addExportDefinition(exportedName, tclass);
+		}
 
 		tclass.copyAnnotations(n4Class, preLinkingPhase);
 
@@ -99,7 +104,6 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 	def private createTClass(N4ClassDeclaration classDecl) {
 		val tclass = TypesFactory::eINSTANCE.createTClass();
 		tclass.name = classDecl.name;
-		tclass.exportedName = classDecl.exportedName;
 		tclass.external = classDecl.external;
 		tclass.declaredAbstract = classDecl.abstract;
 		tclass.declaredFinal = AnnotationDefinition.FINAL.hasAnnotation(classDecl);

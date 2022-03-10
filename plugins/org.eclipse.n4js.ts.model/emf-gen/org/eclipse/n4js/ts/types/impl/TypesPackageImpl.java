@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.types.ArrayLike;
 import org.eclipse.n4js.ts.types.BuiltInType;
 import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.ExportDefinition;
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.GenericType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -63,6 +64,7 @@ import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TExportingElement;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
@@ -152,6 +154,20 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass identifiableElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tExportingElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass exportDefinitionEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1086,6 +1102,66 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getTExportingElement() {
+		return tExportingElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTExportingElement_ExportDefinitions() {
+		return (EReference)tExportingElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EClass getExportDefinition() {
+		return exportDefinitionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getExportDefinition_DeclaredExportedName() {
+		return (EAttribute)exportDefinitionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getExportDefinition_ExportedElement() {
+		return (EReference)exportDefinitionEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getExportDefinition__GetExportedName() {
+		return exportDefinitionEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTExportableElement() {
 		return tExportableElementEClass;
 	}
@@ -1096,18 +1172,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTExportableElement_ExportedName() {
+	public EAttribute getTExportableElement_DirectlyExported() {
 		return (EAttribute)tExportableElementEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getTExportableElement__IsExported() {
-		return tExportableElementEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -1766,7 +1832,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getAccessibleTypeElement__IsExported() {
+	public EOperation getAccessibleTypeElement__IsDirectlyExported() {
 		return accessibleTypeElementEClass.getEOperations().get(3);
 	}
 
@@ -3729,9 +3795,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(identifiableElementEClass, IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE);
 		createEOperation(identifiableElementEClass, IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE);
 
+		tExportingElementEClass = createEClass(TEXPORTING_ELEMENT);
+		createEReference(tExportingElementEClass, TEXPORTING_ELEMENT__EXPORT_DEFINITIONS);
+
+		exportDefinitionEClass = createEClass(EXPORT_DEFINITION);
+		createEAttribute(exportDefinitionEClass, EXPORT_DEFINITION__DECLARED_EXPORTED_NAME);
+		createEReference(exportDefinitionEClass, EXPORT_DEFINITION__EXPORTED_ELEMENT);
+		createEOperation(exportDefinitionEClass, EXPORT_DEFINITION___GET_EXPORTED_NAME);
+
 		tExportableElementEClass = createEClass(TEXPORTABLE_ELEMENT);
-		createEAttribute(tExportableElementEClass, TEXPORTABLE_ELEMENT__EXPORTED_NAME);
-		createEOperation(tExportableElementEClass, TEXPORTABLE_ELEMENT___IS_EXPORTED);
+		createEAttribute(tExportableElementEClass, TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED);
 
 		tDynamicElementEClass = createEClass(TDYNAMIC_ELEMENT);
 
@@ -3810,7 +3883,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME);
 		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER);
 		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER);
-		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED);
+		createEOperation(accessibleTypeElementEClass, ACCESSIBLE_TYPE_ELEMENT___IS_DIRECTLY_EXPORTED);
 
 		containerTypeEClass = createEClass(CONTAINER_TYPE);
 		createEAttribute(containerTypeEClass, CONTAINER_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS);
@@ -4100,6 +4173,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		typeEClass.getESuperTypes().add(this.getTNamespaceElement());
 		genericTypeEClass.getESuperTypes().add(this.getType());
 		containerTypeEClass.getESuperTypes().add(this.getGenericType());
+		abstractNamespaceEClass.getESuperTypes().add(this.getTExportingElement());
 		tNamespaceEClass.getESuperTypes().add(this.getType());
 		tNamespaceEClass.getESuperTypes().add(this.getAbstractNamespace());
 		tNamespaceEClass.getESuperTypes().add(this.getAccessibleTypeElement());
@@ -4238,10 +4312,17 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getIdentifiableElement__GetContainingRootModule(), this.getTModule(), "getContainingRootModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(tExportableElementEClass, TExportableElement.class, "TExportableElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getTExportableElement_ExportedName(), theEcorePackage.getEString(), "exportedName", null, 0, 1, TExportableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(tExportingElementEClass, TExportingElement.class, "TExportingElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTExportingElement_ExportDefinitions(), this.getExportDefinition(), null, "exportDefinitions", null, 0, -1, TExportingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getTExportableElement__IsExported(), theEcorePackage.getEBoolean(), "isExported", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEClass(exportDefinitionEClass, ExportDefinition.class, "ExportDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getExportDefinition_DeclaredExportedName(), theEcorePackage.getEString(), "declaredExportedName", null, 0, 1, ExportDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getExportDefinition_ExportedElement(), this.getTExportableElement(), null, "exportedElement", null, 0, 1, ExportDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getExportDefinition__GetExportedName(), theEcorePackage.getEString(), "getExportedName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(tExportableElementEClass, TExportableElement.class, "TExportableElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTExportableElement_DirectlyExported(), theEcorePackage.getEBoolean(), "directlyExported", null, 0, 1, TExportableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(tDynamicElementEClass, TDynamicElement.class, "TDynamicElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -4357,7 +4438,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getAccessibleTypeElement__GetDefaultTypeAccessModifier(), this.getTypeAccessModifier(), "getDefaultTypeAccessModifier", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getAccessibleTypeElement__IsExported(), theEcorePackage.getEBoolean(), "isExported", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getAccessibleTypeElement__IsDirectlyExported(), theEcorePackage.getEBoolean(), "isDirectlyExported", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(containerTypeEClass, ContainerType.class, "ContainerType", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		g1 = createEGenericType(theEcorePackage.getEMap());

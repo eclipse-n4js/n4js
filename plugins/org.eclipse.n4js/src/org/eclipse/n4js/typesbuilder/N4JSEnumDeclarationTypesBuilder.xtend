@@ -70,6 +70,12 @@ public class N4JSEnumDeclarationTypesBuilder {
 
 		computeDefaultValues(enumType, n4Enum);
 
+		val exportedName = n4Enum.exportedName;
+		if (exportedName !== null) {
+			enumType.directlyExported = true;
+			target.addExportDefinition(exportedName, enumType);
+		}
+
 		enumType.astElement = n4Enum
 		n4Enum.definedType = enumType
 
@@ -81,7 +87,6 @@ public class N4JSEnumDeclarationTypesBuilder {
 	def private TEnum createTEnum(N4EnumDeclaration n4Enum) {
 		val enumType = TypesFactory::eINSTANCE.createTEnum();
 		enumType.name = n4Enum.name;
-		enumType.exportedName = n4Enum.exportedName;
 		enumType.external = n4Enum.external;
 		enumType
 	}

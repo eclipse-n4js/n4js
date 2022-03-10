@@ -106,7 +106,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 
 		val type = typeDefiningElement.definedType
 
-		if (type !== null && !type.exported && type.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal) {
+		if (type !== null && !type.directlyExported && type.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal) {
 			if (type instanceof SyntaxRelatedTElement) {
 				val astElem = type.astElement;
 				if (astElem !== null) {

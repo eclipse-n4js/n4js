@@ -15,7 +15,8 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.AbstractModule
+import org.eclipse.n4js.ts.types.ExportDefinition
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
@@ -47,7 +48,7 @@ class ImportSpecifiersUtil {
 	}
 
 	/** Map all exported elements from namespace target module to the import provided elements. */
-	private static def namespaceToProvidedElements(JavaScriptVariantHelper jsVariantHelper, NamespaceImportSpecifier specifier) {
+	private static def List<ImportProvidedElement> namespaceToProvidedElements(JavaScriptVariantHelper jsVariantHelper, NamespaceImportSpecifier specifier) {
 		val importedModule = specifier.importedModule;
 		if (importedModule === null)
 			return emptyList
@@ -57,16 +58,11 @@ class ImportSpecifiersUtil {
 		importProvidedElements.add(new ImportProvidedElement(specifier.alias,
 			computeNamespaceActualName(specifier), specifier, false));
 
-		val topNamespaces = importedModule.namespaces.filter[isExported].map[it as TExportableElement]
-		val topExportedTypes = importedModule.types.filter[isExported].map[it as TExportableElement]
-		val topExportedVars = importedModule.variables.filter[it.isExported].map[it as TExportableElement];
-		val topExported = topNamespaces + topExportedTypes + topExportedVars
-
-		topExported.forEach [ type |
+		for (exportDef : importedModule.exportDefinitions) {
 			importProvidedElements.add(
-				new ImportProvidedElement(specifier.importedElementName(type), type.exportedName,
-					specifier as ImportSpecifier, N4JSLanguageUtils.isHollowElement(type, jsVariantHelper)))
-		]
+				new ImportProvidedElement(specifier.importedElementName(exportDef), exportDef.exportedName,
+					specifier as ImportSpecifier, N4JSLanguageUtils.isHollowElement(exportDef.exportedElement, jsVariantHelper)))
+		}
 		return importProvidedElements
 	}
 
@@ -98,20 +94,20 @@ class ImportSpecifiersUtil {
 			return "<" + specifier.importedElementAsText + ">(proxy)"
 		}
 
-		return element.exportedName
+		return specifier.importedElementAsText;
 	}
 
 	/** returns locally used name of element imported via {@link NamedImportSpecifier} */
-	public static def usedName(NamedImportSpecifier it) {
+	public static def String usedName(NamedImportSpecifier it) {
 		if (alias === null) importedElementName else alias
 	}
 
 	/** returns locally used name of element imported via {@link NamespaceImportSpecifier} */
-	public static def importedElementName(NamespaceImportSpecifier is, TExportableElement element) {
-		is.alias + "." + element.exportedName
+	public static def String importedElementName(NamespaceImportSpecifier is, ExportDefinition exportDef) {
+		is.alias + "." + exportDef.exportedName
 	}
 
-	public static def importedModule(ImportSpecifier it) {
+	public static def AbstractModule importedModule(ImportSpecifier it) {
 		(eContainer as ImportDeclaration).module
 	}
 
@@ -122,7 +118,7 @@ class ImportSpecifiersUtil {
 	 * @param spec - the ImportSpecifier to investigate
 	 * @return true import looks broken
 	 * */
-	public static def isBrokenImport(ImportSpecifier spec) {
+	public static def boolean isBrokenImport(ImportSpecifier spec) {
 		return isBrokenImport(spec.eContainer as ImportDeclaration, spec);
 	}
 
@@ -130,11 +126,11 @@ class ImportSpecifiersUtil {
 	 * Returns true iff the target module of the given import declaration is invalid (null, proxy, no name).
 	 * Import specifiers are not checked.
 	 */
-	public static def isBrokenImport(ImportDeclaration decl) {
+	public static def boolean isBrokenImport(ImportDeclaration decl) {
 		return isBrokenImport(decl, null);
 	}
 
-	private static def isBrokenImport(ImportDeclaration decl, ImportSpecifier spec) {
+	private static def boolean isBrokenImport(ImportDeclaration decl, ImportSpecifier spec) {
 		val module = decl.module;
 
 		// check target module
@@ -157,8 +153,6 @@ class ImportSpecifiersUtil {
 			if (imported === null)
 				return true
 			if (imported.eIsProxy)
-				return true
-			if (imported.exportedName.isNullOrEmpty)
 				return true
 		}
 

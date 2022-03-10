@@ -188,8 +188,8 @@ public abstract class AccessibleTypeElementImpl extends ProxyResolvingEObjectImp
 			return ((TNamespace) _eContainer_1).getTypeAccessModifier();
 		}
 		else {
-			boolean _isExported = this.isExported();
-			if (_isExported) {
+			boolean _isDirectlyExported = this.isDirectlyExported();
+			if (_isDirectlyExported) {
 				return TypeAccessModifier.PROJECT;
 			}
 			else {
@@ -204,7 +204,7 @@ public abstract class AccessibleTypeElementImpl extends ProxyResolvingEObjectImp
 	 * @generated
 	 */
 	@Override
-	public boolean isExported() {
+	public boolean isDirectlyExported() {
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
@@ -292,8 +292,8 @@ public abstract class AccessibleTypeElementImpl extends ProxyResolvingEObjectImp
 				return getTypeAccessModifier();
 			case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER:
 				return getDefaultTypeAccessModifier();
-			case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED:
-				return isExported();
+			case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_DIRECTLY_EXPORTED:
+				return isDirectlyExported();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

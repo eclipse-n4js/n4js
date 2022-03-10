@@ -344,13 +344,32 @@ class IdentifiableElement extends TypableElement {
 	}
 }
 
+/*
+ * An element that may export one or more {@link TExportableElement}s.
+ */
+abstract class TExportingElement {
+
+	contains ExportDefinition[] exportDefinitions
+}
+
+class ExportDefinition {
+
+	String declaredExportedName
+
+	op String getExportedName() {
+		return declaredExportedName ?: exportedElement?.name;
+	}
+
+	/*
+	 * The element being exported under name {@link ExportDefinition#getExportedName() exportedName}.
+	 * This element need not be contained in this definition's parent {@link TExportingElement}.
+	 */
+	refers TExportableElement exportedElement
+}
+
 class TExportableElement extends IdentifiableElement {
 
-	String exportedName
-
-	op boolean isExported() {
-		exportedName!==null
-	}
+	boolean directlyExported
 }
 
 /*
@@ -781,7 +800,7 @@ abstract class AccessibleTypeElement {
 		}
 		return declaredTypeAccessModifier
 	}
-	
+
 	/**
 	 * Returns default type modifier. If this element is exported, 'project' otherwise 'private'.
 	 * Namespace elements inherit the default modifier from their parent namespace.
@@ -790,7 +809,7 @@ abstract class AccessibleTypeElement {
 		if (eContainer instanceof TNamespace) {
 			return (eContainer as TNamespace).getTypeAccessModifier;
 		} else {
-			if (exported) {
+			if (directlyExported) {
 				return TypeAccessModifier.PROJECT;
 			} else {
 				return TypeAccessModifier.PRIVATE;
@@ -798,7 +817,7 @@ abstract class AccessibleTypeElement {
 		}
 	}
 
-	op boolean isExported()
+	op boolean isDirectlyExported()
 
 }
 
@@ -870,7 +889,7 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 	}
 }
 
-abstract class AbstractNamespace {
+abstract class AbstractNamespace extends TExportingElement {
 	/*
 	 * A list of all types directly contained in this abstract namespace.
 	 * These include the exported classes, interfaces, function as well

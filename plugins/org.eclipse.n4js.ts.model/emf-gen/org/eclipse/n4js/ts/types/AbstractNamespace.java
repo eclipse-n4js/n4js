@@ -12,8 +12,6 @@ package org.eclipse.n4js.ts.types;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Abstract Namespace</b></em>'.
@@ -33,7 +31,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface AbstractNamespace extends EObject {
+public interface AbstractNamespace extends TExportingElement {
 	/**
 	 * Returns the value of the '<em><b>Types</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.Type}.

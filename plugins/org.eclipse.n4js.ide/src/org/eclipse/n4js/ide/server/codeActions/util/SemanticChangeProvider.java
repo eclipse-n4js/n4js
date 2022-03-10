@@ -98,7 +98,7 @@ public class SemanticChangeProvider {
 	 *            Optional export modifier
 	 */
 	TextEdit setAccessModifier(Document document, TypeDefiningElement element, N4Modifier modifier, boolean export) {
-		if (!element.getDefinedType().isExported() && export) {
+		if (!element.getDefinedType().isDirectlyExported() && export) {
 			return setAccessModifiers(document, (ModifiableElement) element, modifier, true);
 		}
 		if (element instanceof ModifiableElement) {

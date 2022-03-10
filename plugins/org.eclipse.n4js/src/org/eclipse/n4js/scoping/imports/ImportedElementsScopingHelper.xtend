@@ -136,17 +136,18 @@ class ImportedElementsScopingHelper {
 				// -> use the string 'localName' (but this is not the alias property!)
 				specifier.importedElementAsText
 			} else {
-				specifier.alias ?: importedElement.exportedName ?: importedElement.name
+				specifier.alias ?: specifier.importedElementAsText
 		};
 		return QualifiedName.create(importedName)
 	}
 
+// FIXME reconsider the following three methods!!!
 	private def QualifiedName createImportedQualifiedTypeName(Type type) {
 		return QualifiedName.create(getImportedName(type));
 	}
 
 	private def String getImportedName(Type type) {
-		return type.exportedName ?: type.name;
+		return type.name;
 	}
 
 	private def QualifiedName createImportedQualifiedTypeName(String namespace, Type type) {
@@ -302,7 +303,7 @@ class ImportedElementsScopingHelper {
 			// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 			for (importedVar : imp.module.variables) {
 				val varVisibility = variableVisibilityChecker.isVisible(contextResource, importedVar);
-				val varName = importedVar.exportedName
+				val varName = importedVar.name
 				val qn = QualifiedName.create(namespaceName, varName)
 				if (varVisibility.visibility) {
 					val originalName = QualifiedName.create(varName)

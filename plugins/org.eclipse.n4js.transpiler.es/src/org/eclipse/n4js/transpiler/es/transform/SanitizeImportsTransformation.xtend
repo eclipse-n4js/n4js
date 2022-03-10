@@ -99,8 +99,9 @@ class SanitizeImportsTransformation extends Transformation {
 				if( ste.importSpecifier === null ) {
 					val orig = ste.originalTarget;
 					// for an element to be globally available, there are two preconditions:
-					// (1) containing module must be annotated with @@Global (2) element must be exported
-					if(N4JSLanguageUtils.isExported(orig)) {
+					// (1) containing module must be annotated with @@Global (2) element must be directly exported
+// FIXME reconsider this use of directlyExported!
+					if(N4JSLanguageUtils.isDirectlyExported(orig)) {
 						val module = orig.containingModule;
 						if (module instanceof TModule) {
 							if (AnnotationDefinition.GLOBAL.hasAnnotation(module)) {

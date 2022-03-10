@@ -534,7 +534,8 @@ class TypeReferenceTransformation extends Transformation {
 		if (!isAvailable) {
 			// no, so try to import it!
 
-			if (type.exported && isFromSameProjectOrDirectDependency(type)) {
+// FIXME reconsider use of directlyExported!!!
+			if (type.directlyExported && isFromSameProjectOrDirectDependency(type)) {
 				// note: no need to check accessibility modifiers in addition to #isExported(), because on TypeScript-side we bump up the accessibility
 
 				val alias = hasNameConflict(ste, ste.name)? findConflictFreeName(ste) : null;

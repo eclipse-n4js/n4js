@@ -322,8 +322,8 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 			return ((TNamespace) _eContainer_1).getTypeAccessModifier();
 		}
 		else {
-			boolean _isExported = this.isExported();
-			if (_isExported) {
+			boolean _isDirectlyExported = this.isDirectlyExported();
+			if (_isDirectlyExported) {
 				return TypeAccessModifier.PROJECT;
 			}
 			else {
@@ -520,7 +520,7 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TYPE_ALIAS___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TYPE_ALIAS___GET_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER: return TypesPackage.TYPE_ALIAS___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
-				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED: return TypesPackage.TYPE_ALIAS___IS_EXPORTED;
+				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_DIRECTLY_EXPORTED: return TypesPackage.TYPE_ALIAS___IS_DIRECTLY_EXPORTED;
 				default: return -1;
 			}
 		}

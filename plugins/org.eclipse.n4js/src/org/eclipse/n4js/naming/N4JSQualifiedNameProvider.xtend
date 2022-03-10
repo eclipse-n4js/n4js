@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
+import org.eclipse.n4js.ts.types.ExportDefinition
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TDeclaredModule
@@ -48,6 +49,7 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 
+import static extension org.eclipse.n4js.scoping.utils.QualifiedNameUtils.replaceLastSegment
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
@@ -110,15 +112,23 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			TInterface:
 				if (name !== null) fqnType(it)
 			TEnum:
-				if (name !== null) containingModule.fullyQualifiedName?.append(exportedName ?: name)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TypeAlias:
-				if (name !== null && it.exported) containingModule.fullyQualifiedName?.append(exportedName ?: name)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TFunction:
-				if (name !== null && it.exported) containingModule.fullyQualifiedName?.append(exportedName)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TVariable:
-				if (name !== null && it.exported) containingModule.fullyQualifiedName?.append(exportedName)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			ExportDeclaration:
 				exportedElement?.getFullyQualifiedName
+			ExportDefinition: {
+				val declExpName = declaredExportedName;
+				if (declExpName !== null) {
+					exportedElement?.getFullyQualifiedName?.replaceLastSegment(declExpName)
+				} else {
+					exportedElement?.getFullyQualifiedName
+				}
+			}
 			TypeVariable:
 				null
 			Type:
@@ -176,7 +186,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		if (type.polyfill) {
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
-		val fqn = QualifiedNameUtils.append(prefix, type.exportedName ?: type.name);
+		val fqn = QualifiedNameUtils.append(prefix, type.name);
 		return fqn;
 	}
 

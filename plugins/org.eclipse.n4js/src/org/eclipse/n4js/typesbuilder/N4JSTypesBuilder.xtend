@@ -15,6 +15,9 @@ import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.InternalEObject
+import org.eclipse.n4js.n4JS.ExportDeclaration
+import org.eclipse.n4js.n4JS.ExportSpecifier
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -26,6 +29,7 @@ import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4ModuleDeclaration
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
@@ -42,6 +46,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.AbstractNamespace
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
@@ -418,6 +423,17 @@ public class N4JSTypesBuilder {
 					n.createType(target, preLinkingPhase)
 				ExportedVariableStatement:
 					n.createType(target, preLinkingPhase)
+				ExportDeclaration case n.exportedElement === null: {
+					for (ExportSpecifier exportSpec : n.namedExports) {
+						val idRef = exportSpec.element;
+						if (idRef !== null) {
+							val idProxy = idRef.eGet(N4JSPackage.eINSTANCE.identifierRef_Id, false) as IdentifiableElement;
+							val exportedElemProxy = TypesFactory.eINSTANCE.createTExportableElement();
+							(exportedElemProxy as InternalEObject).eSetProxyURI((idProxy as InternalEObject).eProxyURI());
+							target.addExportDefinition(exportSpec.alias, exportedElemProxy);
+						}
+					}
+				}
 			}
 			if (!(n instanceof N4AbstractNamespaceDeclaration)) {
 				buildTypes(n, target, preLinkingPhase)

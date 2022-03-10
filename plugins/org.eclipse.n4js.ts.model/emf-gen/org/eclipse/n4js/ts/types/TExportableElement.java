@@ -20,7 +20,7 @@ package org.eclipse.n4js.ts.types;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.TExportableElement#getExportedName <em>Exported Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExported <em>Directly Exported</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTExportableElement()
@@ -29,33 +29,25 @@ package org.eclipse.n4js.ts.types;
  */
 public interface TExportableElement extends IdentifiableElement {
 	/**
-	 * Returns the value of the '<em><b>Exported Name</b></em>' attribute.
+	 * Returns the value of the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Exported Name</em>' attribute.
-	 * @see #setExportedName(String)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTExportableElement_ExportedName()
+	 * @return the value of the '<em>Directly Exported</em>' attribute.
+	 * @see #setDirectlyExported(boolean)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTExportableElement_DirectlyExported()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getExportedName();
+	boolean isDirectlyExported();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TExportableElement#getExportedName <em>Exported Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExported <em>Directly Exported</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Exported Name</em>' attribute.
-	 * @see #getExportedName()
+	 * @param value the new value of the '<em>Directly Exported</em>' attribute.
+	 * @see #isDirectlyExported()
 	 * @generated
 	 */
-	void setExportedName(String value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	boolean isExported();
+	void setDirectlyExported(boolean value);
 
 } // TExportableElement

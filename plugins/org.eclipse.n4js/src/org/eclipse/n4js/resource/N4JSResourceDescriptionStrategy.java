@@ -16,16 +16,16 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.ts.types.AbstractModule;
+import org.eclipse.n4js.ts.types.ExportDefinition;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TConstableElement;
 import org.eclipse.n4js.ts.types.TDeclaredModule;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
@@ -177,12 +177,13 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	private static final boolean POLYFILL_DEFAULT = false;
 
 	/**
-	 * Additional user data for storing the {@link TClass#isExported() exported} property in the index. Used by test
-	 * discovery helper. If the class is not exported this key could be missing, in other words, a class is marked as
-	 * exported if this key has an associated value and the value {@link Boolean#parseBoolean(String)} is {@code true}.
+	 * Additional user data for storing the {@link TClassifier#isDirectlyExported() exported} property in the index.
+	 * Used by test discovery helper. If the class is not exported this key could be missing, in other words, a class is
+	 * marked as exported if this key has an associated value and the value {@link Boolean#parseBoolean(String)} is
+	 * {@code true}.
 	 */
-	private static final String EXPORTED_CLASS_KEY = "EXPORTED_CLASS";
-	private static final boolean EXPORTED_CLASS_DEFAULT = false;
+	private static final String DIRECTLY_EXPORTED_CLASSIFIER_KEY = "DIRECTLY_EXPORTED_CLASSIFIER";
+	private static final boolean DIRECTLY_EXPORTED_CLASSIFIER_DEFAULT = false;
 
 	/**
 	 * User data to store the {@link TClass#isStaticPolyfill() staticPolyfill} property of a {@link TClass} in the index
@@ -193,14 +194,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 */
 	private static final String STATIC_POLYFILL_KEY = "STATIC_POLYFILL";
 	private static final boolean STATIC_POLYFILL_DEFAULT = false;
-
-	/**
-	 * Additional user data for storing the {@link TClass#isExported() exported} property in the index. Used by test
-	 * discovery helper. If the class is not exported this key could be missing, in other words, a class is marked as
-	 * exported if this key has an associated value and the value {@link Boolean#parseBoolean(String)} is {@code true}.
-	 */
-	private static final String EXPORT_DEFAULT_KEY = "EXPORTED_DEFAULT";
-	private static final boolean EXPORT_DEFAULT_DEFAULT = false;
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
@@ -223,14 +216,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 
 	private void internalCreateEObjectDescriptionsForModuleContents(AbstractModule module,
 			IAcceptor<IEObjectDescription> acceptor) {
-		for (Type type : module.getTypes()) {
-			internalCreateEObjectDescription(type, acceptor);
-		}
-		for (TVariable variable : module.getVariables()) {
-			internalCreateEObjectDescription(variable, acceptor);
-		}
-		for (TNamespace namespace : module.getNamespaces()) {
-			internalCreateEObjectDescription(namespace, acceptor);
+		for (ExportDefinition exportDef : module.getExportDefinitions()) {
+			internalCreateEObjectDescription(exportDef, acceptor);
 		}
 		boolean isRoot = module instanceof TModule;
 		if (isRoot) {
@@ -289,11 +276,11 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		return Boolean.parseBoolean(userData);
 	}
 
-	/** @return the exported modifier of the given description. */
-	public static boolean getExported(IEObjectDescription description) {
-		String userData = description.getUserData(EXPORTED_CLASS_KEY);
+	/** @return the {@link TClassifier#isDirectlyExported() directlyExported} property of the given description. */
+	public static boolean getDirectlyExported(IEObjectDescription description) {
+		String userData = description.getUserData(DIRECTLY_EXPORTED_CLASSIFIER_KEY);
 		if (userData == null) {
-			return EXPORTED_CLASS_DEFAULT;
+			return DIRECTLY_EXPORTED_CLASSIFIER_DEFAULT;
 		}
 		return Boolean.parseBoolean(userData);
 	}
@@ -312,15 +299,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		String userData = description.getUserData(STATIC_POLYFILL_KEY);
 		if (userData == null) {
 			return STATIC_POLYFILL_DEFAULT;
-		}
-		return Boolean.parseBoolean(userData);
-	}
-
-	/** @return the export default modifier of the given description. Default return is public. */
-	public static boolean getExportDefault(IEObjectDescription description) {
-		String userData = description.getUserData(EXPORT_DEFAULT_KEY);
-		if (userData == null) {
-			return EXPORT_DEFAULT_DEFAULT;
 		}
 		return Boolean.parseBoolean(userData);
 	}
@@ -402,16 +380,32 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 
 	}
 
+	private void internalCreateEObjectDescription(ExportDefinition exportDef, IAcceptor<IEObjectDescription> acceptor) {
+		TExportableElement element = exportDef.getExportedElement();
+		if (element == null || element.eIsProxy()) {
+			return;
+		}
+		if (element instanceof Type) {
+			internalCreateEObjectDescription(exportDef, (Type) element, acceptor);
+		} else if (element instanceof TVariable) {
+			internalCreateEObjectDescription(exportDef, (TVariable) element, acceptor);
+		} else {
+			throw new UnsupportedOperationException(
+					"unsupported subclass of TExportableElement: " + element.eClass().getName());
+		}
+	}
+
 	/**
 	 * Create EObjectDescriptions for elements for which N4JSQualifiedNameProvider provides a FQN; elements with a FQN
 	 * of <code>null</code> will be ignored.
 	 */
-	private void internalCreateEObjectDescription(Type type, IAcceptor<IEObjectDescription> acceptor) {
-		final String exportedName = type.getExportedName();
-		final String typeName = exportedName != null ? exportedName : type.getName();
+	private void internalCreateEObjectDescription(ExportDefinition exportDef, Type type,
+			IAcceptor<IEObjectDescription> acceptor) {
+
+		final String typeName = type.getName();
 		if (typeName != null && typeName.length() != 0) {
-			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
-			if (qualifiedName != null) { // e.g. non-exported declared functions will return null for FQN
+			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(exportDef);
+			if (qualifiedName != null) {
 				Map<String, String> userData = new HashMap<>();
 				addLocationUserData(userData, type);
 				addAccessModifierUserData(userData, type.getTypeAccessModifier());
@@ -420,9 +414,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				if (type instanceof TClassifier) {
 					final TClassifier tClassifier = (TClassifier) type;
 					addClassifierUserData(userData, tClassifier);
-				}
-				if (N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(type.getExportedName())) {
-					userData.put(EXPORT_DEFAULT_KEY, Boolean.toString(true));
 				}
 
 				IEObjectDescription eod = N4JSEObjectDescription.create(qualifiedName, type, userData);
@@ -479,9 +470,11 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * Create EObjectDescriptions for variables for which N4JSQualifiedNameProvider provides a FQN; variables with a FQN
 	 * of <code>null</code> (currently all non-exported variables) will be ignored.
 	 */
-	private void internalCreateEObjectDescription(TVariable variable, IAcceptor<IEObjectDescription> acceptor) {
-		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(variable);
-		if (qualifiedName != null) { // e.g. non-exported variables will return null for FQN
+	private void internalCreateEObjectDescription(ExportDefinition exportDef, TVariable variable,
+			IAcceptor<IEObjectDescription> acceptor) {
+
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(exportDef);
+		if (qualifiedName != null) {
 			Map<String, String> userData = new HashMap<>();
 			addLocationUserData(userData, variable);
 			addAccessModifierUserData(userData, variable.getTypeAccessModifier());
@@ -502,8 +495,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * @returns An immutable user-data map
 	 */
 	private void addClassifierUserData(final Map<String, String> userData, TClassifier tClassifier) {
-		if (tClassifier.isExported() != EXPORTED_CLASS_DEFAULT) {
-			userData.put(EXPORTED_CLASS_KEY, Boolean.toString(tClassifier.isExported()));
+		if (tClassifier.isDirectlyExported() != DIRECTLY_EXPORTED_CLASSIFIER_DEFAULT) {
+			userData.put(DIRECTLY_EXPORTED_CLASSIFIER_KEY, Boolean.toString(tClassifier.isDirectlyExported()));
 		}
 		if (tClassifier.isAbstract() != ABSTRACT_DEFAULT) {
 			userData.put(ABSTRACT_KEY, Boolean.toString(tClassifier.isAbstract()));

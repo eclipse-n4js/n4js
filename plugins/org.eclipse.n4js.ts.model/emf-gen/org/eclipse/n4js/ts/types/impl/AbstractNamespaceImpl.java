@@ -33,8 +33,6 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
-
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -53,7 +51,7 @@ import org.eclipse.xtext.EcoreUtil2;
  *
  * @generated
  */
-public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl implements AbstractNamespace {
+public abstract class AbstractNamespaceImpl extends TExportingElementImpl implements AbstractNamespace {
 	/**
 	 * The cached value of the '{@link #getTypes() <em>Types</em>}' containment reference list.
 	 * <!-- begin-user-doc -->

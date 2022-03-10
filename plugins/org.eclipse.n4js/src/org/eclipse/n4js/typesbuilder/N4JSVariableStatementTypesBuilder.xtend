@@ -48,15 +48,15 @@ package class N4JSVariableStatementTypesBuilder {
 	}
 
 	def package void createVariableTypes(VariableStatement n4VariableStatement, AbstractNamespace target, boolean preLinkingPhase) {
-		val variables = n4VariableStatement.createVariables(preLinkingPhase)
+		val variables = n4VariableStatement.createVariables(target, preLinkingPhase)
 		target.variables += variables
 	}
 
-	def private Iterable<TVariable> createVariables(VariableStatement n4VariableStatement, boolean preLinkingPhase) {
-		n4VariableStatement.varDecl.filter(ExportedVariableDeclaration).map[createVariable(n4VariableStatement, preLinkingPhase)].filterNull
+	def private Iterable<TVariable> createVariables(VariableStatement n4VariableStatement, AbstractNamespace target, boolean preLinkingPhase) {
+		n4VariableStatement.varDecl.filter(ExportedVariableDeclaration).map[createVariable(n4VariableStatement, target, preLinkingPhase)].filterNull
 	}
 
-	def private TVariable createVariable(ExportedVariableDeclaration n4VariableDeclaration, VariableStatement n4VariableStatement, boolean preLinkingPhase) {
+	def private TVariable createVariable(ExportedVariableDeclaration n4VariableDeclaration, VariableStatement n4VariableStatement, AbstractNamespace target, boolean preLinkingPhase) {
 		if(n4VariableDeclaration.name === null) {
 			return null
 		}
@@ -67,11 +67,11 @@ package class N4JSVariableStatementTypesBuilder {
 		variable.objectLiteral = n4VariableDeclaration.expression instanceof ObjectLiteral;
 		variable.newExpression = n4VariableDeclaration.expression instanceof NewExpression;
 		if (n4VariableStatement instanceof ExportedVariableStatement) {
-			variable.exportedName = n4VariableStatement.exportedName
+			val exportedName = n4VariableStatement.exportedName
 														?: n4VariableDeclaration.name // FIXME temporary hack to work around broken inheritance structure in n4js.xcore!!!!
+			variable.directlyExported = true;
+			target.addExportDefinition(exportedName, variable);
 			variable.setTypeAccessModifier(n4VariableStatement)
-		} else {
-			variable.exportedName = null
 		}
 
 		variable.copyAnnotations(n4VariableDeclaration, preLinkingPhase)

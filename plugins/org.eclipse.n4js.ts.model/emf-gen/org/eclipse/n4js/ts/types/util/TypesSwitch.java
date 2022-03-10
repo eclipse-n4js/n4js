@@ -79,6 +79,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				T result = caseAbstractModule(abstractModule);
 				if (result == null) result = caseAbstractNamespace(abstractModule);
 				if (result == null) result = caseSyntaxRelatedTElement(abstractModule);
+				if (result == null) result = caseTExportingElement(abstractModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -89,6 +90,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTAnnotableElement(tModule);
 				if (result == null) result = caseAbstractNamespace(tModule);
 				if (result == null) result = caseSyntaxRelatedTElement(tModule);
+				if (result == null) result = caseTExportingElement(tModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -98,6 +100,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseAbstractModule(tDeclaredModule);
 				if (result == null) result = caseAbstractNamespace(tDeclaredModule);
 				if (result == null) result = caseSyntaxRelatedTElement(tDeclaredModule);
+				if (result == null) result = caseTExportingElement(tDeclaredModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -123,6 +126,18 @@ public class TypesSwitch<T> extends Switch<T> {
 				IdentifiableElement identifiableElement = (IdentifiableElement)theEObject;
 				T result = caseIdentifiableElement(identifiableElement);
 				if (result == null) result = caseTypableElement(identifiableElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypesPackage.TEXPORTING_ELEMENT: {
+				TExportingElement tExportingElement = (TExportingElement)theEObject;
+				T result = caseTExportingElement(tExportingElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypesPackage.EXPORT_DEFINITION: {
+				ExportDefinition exportDefinition = (ExportDefinition)theEObject;
+				T result = caseExportDefinition(exportDefinition);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -268,6 +283,7 @@ public class TypesSwitch<T> extends Switch<T> {
 			case TypesPackage.ABSTRACT_NAMESPACE: {
 				AbstractNamespace abstractNamespace = (AbstractNamespace)theEObject;
 				T result = caseAbstractNamespace(abstractNamespace);
+				if (result == null) result = caseTExportingElement(abstractNamespace);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -281,6 +297,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTExportableElement(tNamespace);
 				if (result == null) result = caseTAnnotableElement(tNamespace);
 				if (result == null) result = caseTNamespaceElement(tNamespace);
+				if (result == null) result = caseTExportingElement(tNamespace);
 				if (result == null) result = caseIdentifiableElement(tNamespace);
 				if (result == null) result = caseTypableElement(tNamespace);
 				if (result == null) result = defaultCase(theEObject);
@@ -838,6 +855,36 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseIdentifiableElement(IdentifiableElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TExporting Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TExporting Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTExportingElement(TExportingElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Export Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Export Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseExportDefinition(ExportDefinition object) {
 		return null;
 	}
 
