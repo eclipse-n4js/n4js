@@ -16,6 +16,7 @@ import java.util.Set;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
+import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.dts.DtsTokenStream;
@@ -113,6 +114,11 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 
 	/**  */
 	protected void addLocationInfo(EObject obj, ParserRuleContext ctx) {
+		for (Adapter adapter : obj.eAdapters()) {
+			if (adapter instanceof DtsParseTreeNodeInfo) {
+				return;
+			}
+		}
 		obj.eAdapters().add(new DtsParseTreeNodeInfo(tokenStream, ctx));
 	}
 

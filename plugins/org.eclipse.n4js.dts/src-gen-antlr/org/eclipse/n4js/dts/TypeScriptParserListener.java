@@ -1,4 +1,4 @@
-// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL1/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -227,6 +227,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTypeRefWithModifiers(TypeScriptParser.TypeRefWithModifiersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#parenthesizedTypeRef}.
+	 * @param ctx the parse tree
+	 */
+	void enterParenthesizedTypeRef(TypeScriptParser.ParenthesizedTypeRefContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#parenthesizedTypeRef}.
+	 * @param ctx the parse tree
+	 */
+	void exitParenthesizedTypeRef(TypeScriptParser.ParenthesizedTypeRefContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#parameterizedTypeRef}.
 	 * @param ctx the parse tree

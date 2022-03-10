@@ -10,6 +10,17 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_arrayTypeExpression;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_conditionalTypeRef;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_intersectionTypeExpression;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_literalType;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_operatorTypeRef;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_primaryTypeExpression;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeOperator;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeRef;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_typeRefWithModifiers;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_unionTypeExpression;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,40 +28,30 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrayTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrayTypeExpressionSuffixContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrowFunctionTypeExpressionContext;
-import org.eclipse.n4js.dts.TypeScriptParser.CallSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ColonSepTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ConditionalTypeRefContext;
-import org.eclipse.n4js.dts.TypeScriptParser.ConstructSignatureContext;
-import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
-import org.eclipse.n4js.dts.TypeScriptParser.GetterContext;
-import org.eclipse.n4js.dts.TypeScriptParser.InterfaceBodyContext;
-import org.eclipse.n4js.dts.TypeScriptParser.InterfaceMemberContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ImportTypeRefContext;
+import org.eclipse.n4js.dts.TypeScriptParser.InferTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IntersectionTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.LiteralTypeContext;
-import org.eclipse.n4js.dts.TypeScriptParser.MethodSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ObjectLiteralTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.OperatorTypeRefContext;
-import org.eclipse.n4js.dts.TypeScriptParser.ParameterBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
-import org.eclipse.n4js.dts.TypeScriptParser.PrimaryTypeExpressionContext;
-import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
-import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
-import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
-import org.eclipse.n4js.dts.TypeScriptParser.SetterContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ParenthesizedTypeRefContext;
+import org.eclipse.n4js.dts.TypeScriptParser.QueryTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ThisTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TupleTypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TupleTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentsContext;
-import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
-import org.eclipse.n4js.dts.TypeScriptParser.TypeRefWithModifiersContext;
 import org.eclipse.n4js.dts.TypeScriptParser.UnionTypeExpressionContext;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
@@ -66,19 +67,10 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
-import org.eclipse.n4js.ts.types.MemberAccessModifier;
-import org.eclipse.n4js.ts.types.TFormalParameter;
-import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
-import org.eclipse.n4js.ts.types.TStructField;
-import org.eclipse.n4js.ts.types.TStructGetter;
 import org.eclipse.n4js.ts.types.TStructMember;
-import org.eclipse.n4js.ts.types.TStructMethod;
-import org.eclipse.n4js.ts.types.TStructSetter;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
-
-import com.google.common.base.Strings;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
@@ -92,7 +84,17 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
-		return Collections.emptySet();
+		return java.util.Set.of(
+				RULE_typeRef,
+				RULE_conditionalTypeRef,
+				RULE_unionTypeExpression,
+				RULE_intersectionTypeExpression,
+				RULE_operatorTypeRef,
+				RULE_typeOperator,
+				RULE_arrayTypeExpression,
+				RULE_primaryTypeExpression,
+				RULE_literalType,
+				RULE_typeRefWithModifiers);
 	}
 
 	/** Convenience method for consuming 0..* {@link TypeRefContext}s in one go. */
@@ -175,27 +177,20 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	}
 
 	@Override
-	public void enterTypeRef(TypeRefContext ctx) {
-		if (ctx.conditionalTypeRef() != null) {
-			enterConditionalTypeRef(ctx.conditionalTypeRef());
-		}
+	public void exitEveryRule(ParserRuleContext ctx) {
+		super.exitEveryRule(ctx);
+		addLocationInfo(result, ctx);
 	}
 
 	@Override
-	public void enterConditionalTypeRef(ConditionalTypeRefContext ctx) {
-		if (ctx.unionTypeExpression().size() == 1) {
-			enterUnionTypeExpression(ctx.unionTypeExpression(0));
-		}
+	public void exitConditionalTypeRef(ConditionalTypeRefContext ctx) {
 		// FIXME
 	}
 
 	@Override
-	public void enterUnionTypeExpression(UnionTypeExpressionContext ctx) {
+	public void exitUnionTypeExpression(UnionTypeExpressionContext ctx) {
 		int n = ctx.intersectionTypeExpression().size();
-		if (n == 1) {
-			enterIntersectionTypeExpression(ctx.intersectionTypeExpression(0));
-			return;
-		} else if (n >= 2) {
+		if (result != null && n >= 2) {
 			UnionTypeExpression ute = TypeRefsFactory.eINSTANCE.createUnionTypeExpression();
 			for (IntersectionTypeExpressionContext childCtx : ctx.intersectionTypeExpression()) {
 				TypeRef childTypeRef = newTypeRefBuilder().consume(childCtx);
@@ -208,12 +203,9 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	}
 
 	@Override
-	public void enterIntersectionTypeExpression(IntersectionTypeExpressionContext ctx) {
+	public void exitIntersectionTypeExpression(IntersectionTypeExpressionContext ctx) {
 		int n = ctx.operatorTypeRef().size();
-		if (n == 1) {
-			enterOperatorTypeRef(ctx.operatorTypeRef(0));
-			return;
-		} else if (n >= 2) {
+		if (result != null && n >= 2) {
 			IntersectionTypeExpression ite = TypeRefsFactory.eINSTANCE.createIntersectionTypeExpression();
 			for (OperatorTypeRefContext childCtx : ctx.operatorTypeRef()) {
 				TypeRef childTypeRef = newTypeRefBuilder().consume(childCtx);
@@ -226,14 +218,12 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	}
 
 	@Override
-	public void enterOperatorTypeRef(OperatorTypeRefContext ctx) {
-		enterArrayTypeExpression(ctx.arrayTypeExpression());
+	public void exitOperatorTypeRef(OperatorTypeRefContext ctx) {
 		// FIXME
 	}
 
 	@Override
-	public void enterArrayTypeExpression(ArrayTypeExpressionContext ctx) {
-		enterPrimaryTypeExpression(ctx.primaryTypeExpression());
+	public void exitArrayTypeExpression(ArrayTypeExpressionContext ctx) {
 		if (result != null) {
 			for (ArrayTypeExpressionSuffixContext suffixCtx : ctx.arrayTypeExpressionSuffix()) {
 				if (suffixCtx.typeRef() != null) {
@@ -245,31 +235,6 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 					result = createParameterizedTypeRef("Array", Collections.singletonList(result), false);
 				}
 			}
-		}
-	}
-
-	@Override
-	public void enterPrimaryTypeExpression(PrimaryTypeExpressionContext ctx) {
-		if (ctx.literalType() != null) {
-			enterLiteralType(ctx.literalType());
-		} else if (ctx.arrowFunctionTypeExpression() != null) {
-			enterArrowFunctionTypeExpression(ctx.arrowFunctionTypeExpression());
-		} else if (ctx.tupleTypeExpression() != null) {
-			enterTupleTypeExpression(ctx.tupleTypeExpression());
-		} else if (ctx.queryTypeRef() != null) {
-			// TODO query type references
-			result = createAnyPlusTypeRef();
-		} else if (ctx.importTypeRef() != null) {
-			// TODO import type references
-			result = createAnyPlusTypeRef();
-		} else if (ctx.inferTypeRef() != null) {
-			// TODO infer type references
-			result = createAnyPlusTypeRef();
-		} else if (ctx.typeRefWithModifiers() != null) {
-			enterTypeRefWithModifiers(ctx.typeRefWithModifiers());
-		} else if (ctx.OpenParen() != null && ctx.typeRef() != null) {
-			// parentheses
-			enterTypeRef(ctx.typeRef());
 		}
 	}
 
@@ -325,21 +290,35 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	}
 
 	@Override
-	public void enterTypeRefWithModifiers(TypeRefWithModifiersContext ctx) {
-		if (ctx.thisTypeRef() != null) {
-			enterThisTypeRef(ctx.thisTypeRef());
-		} else if (ctx.parameterizedTypeRef() != null) {
-			enterParameterizedTypeRef(ctx.parameterizedTypeRef());
-		} else if (ctx.objectLiteralTypeRef() != null) {
-			enterObjectLiteralTypeRef(ctx.objectLiteralTypeRef());
-		}
+	public void enterQueryTypeRef(QueryTypeRefContext ctx) {
+		result = createAnyPlusTypeRef();
+	}
+
+	@Override
+	public void enterImportTypeRef(ImportTypeRefContext ctx) {
+		result = createAnyPlusTypeRef();
+	}
+
+	@Override
+	public void enterInferTypeRef(InferTypeRefContext ctx) {
+		result = createAnyPlusTypeRef();
+	}
+
+	@Override
+	public void enterParenthesizedTypeRef(ParenthesizedTypeRefContext ctx) {
+		walker.enqueue(ctx.typeRef());
+	}
+
+	@Override
+	public void enterThisTypeRef(ThisTypeRefContext ctx) {
+		ThisTypeRefNominal ttr = TypeRefsFactory.eINSTANCE.createThisTypeRefNominal();
+		result = ttr;
 	}
 
 	@Override
 	public void enterParameterizedTypeRef(ParameterizedTypeRefContext ctx) {
 		String declTypeName = ctx.typeName() != null ? ctx.typeName().getText() : null;
 		ParameterizedTypeRef ptr = createParameterizedTypeRef(declTypeName, ctx.typeArguments(), false);
-		addLocationInfo(ptr, ctx);
 		result = ptr;
 	}
 
@@ -347,15 +326,10 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 	public void enterObjectLiteralTypeRef(ObjectLiteralTypeRefContext ctx) {
 		ParameterizedTypeRefStructural ptr = (ParameterizedTypeRefStructural) createParameterizedTypeRef("Object",
 				(TypeArgumentsContext) null, true);
-		ptr.getAstStructuralMembers().addAll(createStructuralMembers(ctx.interfaceBody()));
-		addLocationInfo(ptr, ctx);
-		result = ptr;
-	}
 
-	@Override
-	public void enterThisTypeRef(ThisTypeRefContext ctx) {
-		ThisTypeRefNominal ttr = TypeRefsFactory.eINSTANCE.createThisTypeRefNominal();
-		result = ttr;
+		List<TStructMember> members = new DtsTStructBodyBuilder(tokenStream, resource).consume(ctx.interfaceBody());
+		ptr.getAstStructuralMembers().addAll(members);
+		result = ptr;
 	}
 
 	private ParameterizedTypeRef createParameterizedTypeRef(String declTypeName, TypeArgumentsContext typeArgsCtx,
@@ -406,121 +380,4 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		return ptr;
 	}
 
-	private List<TStructMember> createStructuralMembers(InterfaceBodyContext ifcBodyCtx) {
-		List<InterfaceMemberContext> members = ifcBodyCtx != null && ifcBodyCtx.interfaceMemberList() != null
-				? ifcBodyCtx.interfaceMemberList().interfaceMember()
-				: null;
-		return createStructuralMembers(members);
-
-	}
-
-	private List<TStructMember> createStructuralMembers(Iterable<InterfaceMemberContext> members) {
-		@SuppressWarnings("hiding")
-		List<TStructMember> result = new ArrayList<>();
-		if (members != null) {
-			for (InterfaceMemberContext memberCtx : members) {
-				TStructMember member = createStructuralMember(memberCtx);
-				if (member != null) {
-					addLocationInfo(member, memberCtx);
-					result.add(member);
-				}
-			}
-		}
-		return result;
-	}
-
-	private TStructMember createStructuralMember(InterfaceMemberContext ctx) {
-		if (ctx.callSignature() != null) {
-			return createCallSignature(ctx.callSignature());
-		} else if (ctx.constructSignature() != null) {
-			return createConstructSignature(ctx.constructSignature());
-		} else if (ctx.propertySignature() != null) {
-			return createTStructField(ctx.propertySignature());
-		} else if (ctx.getAccessor() != null) {
-			return createTStructGetter(ctx.getAccessor());
-		} else if (ctx.setAccessor() != null) {
-			return createTStructSetter(ctx.setAccessor());
-		} else if (ctx.methodSignature() != null) {
-			return createTStructMethod(ctx.methodSignature());
-		}
-		return null;
-	}
-
-	private TStructMethod createCallSignature(CallSignatureContext ctx) {
-		return createTStructMethod(null, ctx);
-	}
-
-	private TStructMethod createConstructSignature(ConstructSignatureContext ctx) {
-		TStructMethod m = createTStructMethod(null, ctx.typeParameters(), ctx.parameterBlock(),
-				ctx.colonSepTypeRef().typeRef());
-		m.setName("new");
-		return m;
-	}
-
-	private TStructField createTStructField(PropertySignatureContext ctx) {
-		TStructField f = TypesFactory.eINSTANCE.createTStructField();
-		setBasePropertiesOfTStructMember(f, ctx.propertyName());
-		f.setTypeRef(orAnyPlus(newTypeRefBuilder().consume(ctx.colonSepTypeRef())));
-		f.setOptional(ctx.QuestionMark() != null);
-		return f;
-	}
-
-	private TStructGetter createTStructGetter(GetAccessorContext ctx) {
-		GetterContext getterCtx = ctx.getter();
-		if (getterCtx == null) {
-			return null;
-		}
-		TStructGetter g = TypesFactory.eINSTANCE.createTStructGetter();
-		setBasePropertiesOfTStructMember(g, getterCtx.propertyName());
-		g.setTypeRef(orAnyPlus(newTypeRefBuilder().consume(ctx.colonSepTypeRef())));
-		return g;
-	}
-
-	private TStructSetter createTStructSetter(SetAccessorContext ctx) {
-		SetterContext setterCtx = ctx.setter();
-		if (setterCtx == null) {
-			return null;
-		}
-		TStructSetter g = TypesFactory.eINSTANCE.createTStructSetter();
-		setBasePropertiesOfTStructMember(g, setterCtx.propertyName());
-		TFormalParameter p = TypesFactory.eINSTANCE.createTFormalParameter();
-		String fparName = ctx.Identifier() != null ? ctx.Identifier().getText() : null;
-		p.setName(!Strings.isNullOrEmpty(fparName) ? fparName : "value");
-		p.setTypeRef(orAnyPlus(newTypeRefBuilder().consume(ctx.colonSepTypeRef())));
-		g.setFpar(p);
-		return g;
-	}
-
-	private TStructMethod createTStructMethod(MethodSignatureContext ctx) {
-		return createTStructMethod(ctx.propertyName(), ctx.callSignature());
-	}
-
-	private TStructMethod createTStructMethod(PropertyNameContext name, CallSignatureContext callSignature) {
-		if (callSignature == null) {
-			return null;
-		}
-		return createTStructMethod(name, callSignature.typeParameters(), callSignature.parameterBlock(),
-				callSignature.typeRef());
-	}
-
-	private TStructMethod createTStructMethod(PropertyNameContext name, TypeParametersContext typeParams,
-			ParameterBlockContext fpars, TypeRefContext returnTypeRefCtx) {
-
-		TStructMethod m = TypesFactory.eINSTANCE.createTStructMethod();
-		setBasePropertiesOfTStructMember(m, name);
-		m.getTypeVars().addAll(newTypeVariablesBuilder().consume(typeParams));
-		m.getFpars().addAll(newTFormalParametersBuilder().consumeWithDeclThisType(fpars, m));
-		m.setReturnTypeRef(orAnyPlus(newTypeRefBuilder().consume(returnTypeRefCtx)));
-		return m;
-
-	}
-
-	private void setBasePropertiesOfTStructMember(TMemberWithAccessModifier tMember, PropertyNameContext nameCtx) {
-		// TODO TStructMembers in N4JS do not yet support all forms of property names!
-		String name = getSimpleNameFromPropertyName(nameCtx);
-		if (name != null) {
-			tMember.setName(name);
-		}
-		tMember.setDeclaredMemberAccessModifier(MemberAccessModifier.PUBLIC);
-	}
 }
