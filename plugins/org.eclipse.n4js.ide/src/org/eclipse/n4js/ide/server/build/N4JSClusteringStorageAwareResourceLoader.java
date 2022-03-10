@@ -31,6 +31,7 @@ import org.eclipse.n4js.xtext.workspace.WorkspaceConfigAdapter;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
 
 /**
@@ -58,8 +59,8 @@ public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorage
 		}
 
 		Set<LoadResult> noDeps = new LinkedHashSet<>();
-		Multimap<LoadResult, LoadResult> dependsOn = HashMultimap.create();
-		Multimap<LoadResult, LoadResult> dependsOnInverse = HashMultimap.create();
+		Multimap<LoadResult, LoadResult> dependsOn = LinkedHashMultimap.create();
+		Multimap<LoadResult, LoadResult> dependsOnInverse = LinkedHashMultimap.create();
 		initDependencyMaps(results, pcs, noDeps, dependsOn, dependsOnInverse);
 
 		List<LoadResult> sortedResults = sortLoadResults(results, noDeps, dependsOn, dependsOnInverse);
