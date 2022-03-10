@@ -124,8 +124,7 @@ Example::
 ----
 
 
-[[sec:Headless_Compiler]]
-[.language-bash]
+[[sec:Executing_N4JS_Code]]
 == Executing N4JS Code
 
 The N4JS compiler generates ES modules (also known as "ESM code"). This means the generated code does not
@@ -142,4 +141,4 @@ Based on this, there are two main approaches for executing N4JS code in NodeJS:
 The first approach is recommended, but since Node imposes certain limitations regarding the use of legacy CommonJS
 code from native ESM code this might lead to problems when dealing with older Javascript libraries. In these
 cases, the interoperability code emitted by the N4JS transpiler when flag `rewriteCjsImports` is set to `true`
-in the project's package.json file, can help in some cases (see Section <<sec:N4JS-Properties>>).
+in the project's package.json file, can help in some cases (see Section <<sec:N4JS_Properties>>).
