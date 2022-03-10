@@ -15,6 +15,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceMember;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceMemberList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -62,6 +63,11 @@ public class DtsTStructBodyBuilder
 				RULE_interfaceBody,
 				RULE_interfaceMemberList,
 				RULE_interfaceMember);
+	}
+
+	@Override
+	protected List<TStructMember> getDefaultResult() {
+		return Collections.emptyList();
 	}
 
 	@Override

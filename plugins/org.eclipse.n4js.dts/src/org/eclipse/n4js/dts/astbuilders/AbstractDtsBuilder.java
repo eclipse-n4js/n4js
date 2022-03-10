@@ -114,6 +114,9 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 
 	/**  */
 	protected void addLocationInfo(EObject obj, ParserRuleContext ctx) {
+		if (obj == null) {
+			return;
+		}
 		for (Adapter adapter : obj.eAdapters()) {
 			if (adapter instanceof DtsParseTreeNodeInfo) {
 				return;
