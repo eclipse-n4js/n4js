@@ -93,45 +93,55 @@ statementList
 
 // Types References
 
-colonSepTypeRef:
-	':' typeRef
-;
+colonSepTypeRef
+    : ':' typeRef
+    ;
 
-typeRef: conditionalTypeRef;
+typeRef
+    : conditionalTypeRef
+    ;
 
-conditionalTypeRef:
-	unionTypeExpression ('extends' unionTypeExpression '?' conditionalTypeRef ':' conditionalTypeRef)?;
+conditionalTypeRef
+    : unionTypeExpression ('extends' unionTypeExpression '?' conditionalTypeRef ':' conditionalTypeRef)?
+    ;
 
-unionTypeExpression:
-	'|'? intersectionTypeExpression ('|' intersectionTypeExpression)*;
+unionTypeExpression
+    : '|'? intersectionTypeExpression ('|' intersectionTypeExpression)*
+    ;
 
-intersectionTypeExpression:
-	'&'? operatorTypeRef ('&' operatorTypeRef)*;
+intersectionTypeExpression
+    : '&'? operatorTypeRef ('&' operatorTypeRef)*
+    ;
 
-operatorTypeRef:
-	typeOperator? arrayTypeExpression
-	;
+operatorTypeRef
+    : typeOperator? arrayTypeExpression
+    ;
 
-typeOperator: Keyof | Unique | ReadOnly;
+typeOperator
+    : Keyof
+    | Unique
+    | ReadOnly
+    ;
 
-arrayTypeExpression:
-	primaryTypeExpression arrayTypeExpressionSuffix*;
+arrayTypeExpression
+    : primaryTypeExpression arrayTypeExpressionSuffix*
+    ;
 
 arrayTypeExpressionSuffix
-	: '[' ']'
-	| '[' typeRef ']' // index access type
-	;
+    : '[' ']'
+    | '[' typeRef ']' // index access type
+    ;
 
 primaryTypeExpression:
-	( literalType
-	| arrowFunctionTypeExpression
-	| tupleTypeExpression
-	| queryTypeRef
+    ( literalType
+    | arrowFunctionTypeExpression
+    | tupleTypeExpression
+    | queryTypeRef
     | importTypeRef
-	| inferTypeRef
-	| typeRefWithModifiers
-	| '(' typeRef ')'
-	);
+    | inferTypeRef
+    | typeRefWithModifiers
+    | parenthesizedTypeRef
+    );
 
 
 
@@ -141,33 +151,39 @@ literalType
     | numericLiteral
     ;
 
-arrowFunctionTypeExpression:
-	(
-		('abstract'? 'new')?
+arrowFunctionTypeExpression
+    : (
+        ('abstract'? 'new')?
         typeParameters?
         parameterBlock
-		'=>'
-	) (typePredicateWithOperatorTypeRef | unionTypeExpression);
+        '=>'
+    ) (typePredicateWithOperatorTypeRef | unionTypeExpression)
+    ;
 
-tupleTypeExpression:
-	'['
-	(
-		']'
-	|	tupleTypeArgument (',' tupleTypeArgument)* ','? ']'
-	);
+tupleTypeExpression
+    : '['
+    (
+        ']'
+    |   tupleTypeArgument (',' tupleTypeArgument)* ','? ']'
+    );
 
 tupleTypeArgument
     : '...'? Infer? (Identifier ':')? typeRef '?'?
     ;
 
-typeVariable:
-	Identifier (Extends typeRef)?;
+typeVariable
+    : Identifier (Extends typeRef)?
+    ;
 
-typeRefWithModifiers:
-    thisTypeRef
-	| parameterizedTypeRef
-	| objectLiteralTypeRef
-;
+typeRefWithModifiers
+    : thisTypeRef
+    | parameterizedTypeRef
+    | objectLiteralTypeRef
+    ;
+
+parenthesizedTypeRef
+    : '(' typeRef ')'
+    ;
 
 parameterizedTypeRef
     : typeName typeArguments?
@@ -189,29 +205,33 @@ typeArgument
     : Infer? typeRef
     ;
 
-objectLiteralTypeRef:
-    '{' interfaceBody? '}'
+objectLiteralTypeRef
+    : '{' interfaceBody? '}'
     ;
 
-thisTypeRef: This;
+thisTypeRef
+    : This
+    ;
 
-queryTypeRef:
-	'typeof' propertyAccessExpressionInTypeRef
+queryTypeRef
+    : 'typeof' propertyAccessExpressionInTypeRef
 ;
 
-importTypeRef:
-    Import '(' StringLiteral ')' ('.' parameterizedTypeRef)?
+importTypeRef
+    : Import '(' StringLiteral ')' ('.' parameterizedTypeRef)?
 ;
 
-typePredicateWithOperatorTypeRef:
-	Asserts? (This | bindingIdentifier) Is unionTypeExpression
+typePredicateWithOperatorTypeRef
+    : Asserts? (This | bindingIdentifier) Is unionTypeExpression
 ;
 
-bindingIdentifier: identifierName;
+bindingIdentifier
+    : identifierName
+    ;
 
 
-propertyAccessExpressionInTypeRef:
-	typeReferenceName ('.' typeReferenceName)* // e.g. Symbol.iterator or osConstants.priority (in node/constants.d.ts)
+propertyAccessExpressionInTypeRef
+    : typeReferenceName ('.' typeReferenceName)* // e.g. Symbol.iterator or osConstants.priority (in node/constants.d.ts)
 ;
 
 inferTypeRef:
@@ -849,8 +869,7 @@ newExpression
     : New (
           Dot Target
         | singleExpression typeArguments? arguments?
-    )
-    ;
+    );
 
 
 
