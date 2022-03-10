@@ -258,6 +258,10 @@ public class ProjectImportEnablingScope implements IScope {
 	private IEObjectDescription handleCollisions(List<IEObjectDescription> result,
 			Map<IEObjectDescription, N4JSProjectConfigSnapshot> descriptionsToProject) {
 
+		if (result.isEmpty()) {
+			return null;
+		}
+
 		Set<String> considerExtensions = ImmutableSet.<String> builder()
 				.addAll(ALL_JS_FILE_EXTENSIONS)
 				.add(N4JSD_FILE_EXTENSION)
