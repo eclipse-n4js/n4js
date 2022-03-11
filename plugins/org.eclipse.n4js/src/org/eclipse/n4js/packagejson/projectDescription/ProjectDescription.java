@@ -68,6 +68,9 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final ImmutableMap<String, String> generatorRewriteModuleSpecifiers;
 	private final boolean isGeneratorEnabledRewriteCjsImports;
 	private final ImmutableList<String> workspaces;
+	private final ImmutableList<String> tsFiles;
+	private final ImmutableList<String> tsInclude;
+	private final ImmutableList<String> tsExclude;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
 	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
@@ -81,7 +84,8 @@ public class ProjectDescription extends ImmutableDataClass {
 			boolean esm, boolean moduleProperty, boolean n4jsNature, boolean yarnWorkspaceRoot,
 			boolean isGeneratorEnabledSourceMaps, boolean isGeneratorEnabledDts,
 			Map<String, String> generatorRewriteModuleSpecifiers, boolean isGeneratorEnabledRewriteCjsImports,
-			Iterable<String> workspaces) {
+			Iterable<String> workspaces, Iterable<String> tsFiles, Iterable<String> tsInclude,
+			Iterable<String> tsExclude) {
 
 		this.location = location;
 		this.relatedRootlocation = relatedRootlocation;
@@ -114,6 +118,9 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.generatorRewriteModuleSpecifiers = ImmutableMap.copyOf(generatorRewriteModuleSpecifiers);
 		this.isGeneratorEnabledRewriteCjsImports = isGeneratorEnabledRewriteCjsImports;
 		this.workspaces = ImmutableList.copyOf(workspaces);
+		this.tsFiles = ImmutableList.copyOf(tsFiles);
+		this.tsInclude = ImmutableList.copyOf(tsInclude);
+		this.tsExclude = ImmutableList.copyOf(tsExclude);
 	}
 
 	public ProjectDescription(ProjectDescription template) {
@@ -148,6 +155,9 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.generatorRewriteModuleSpecifiers = template.generatorRewriteModuleSpecifiers;
 		this.isGeneratorEnabledRewriteCjsImports = template.isGeneratorEnabledRewriteCjsImports;
 		this.workspaces = template.workspaces;
+		this.tsFiles = template.tsFiles;
+		this.tsInclude = template.tsInclude;
+		this.tsExclude = template.tsExclude;
 	}
 
 	/** Builds a new {@link ProjectDescription project description}. */
@@ -187,6 +197,9 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.getGeneratorRewriteModuleSpecifiers().putAll(generatorRewriteModuleSpecifiers);
 		builder.setGeneratorEnabledRewriteCjsImports(isGeneratorEnabledRewriteCjsImports);
 		builder.getWorkspaces().addAll(workspaces);
+		builder.getTsFiles().addAll(tsFiles);
+		builder.getTsInclude().addAll(tsInclude);
+		builder.getTsExclude().addAll(tsExclude);
 		return builder;
 	}
 
@@ -371,6 +384,30 @@ public class ProjectDescription extends ImmutableDataClass {
 		return workspaces;
 	}
 
+	/**
+	 * Value of top-level property "files" in tsconfig.json, used by TypeScript to denote the entry modules of a
+	 * package.
+	 */
+	public List<String> getTsFiles() {
+		return tsFiles;
+	}
+
+	/**
+	 * Value of top-level property "include" in tsconfig.json, used by TypeScript to denote the set of modules of a
+	 * package.
+	 */
+	public List<String> getTsInclude() {
+		return tsInclude;
+	}
+
+	/**
+	 * Value of top-level property "exclude" in tsconfig.json, used by TypeScript to denote excluded modules of a
+	 * package.
+	 */
+	public List<String> getTsExclude() {
+		return tsExclude;
+	}
+
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
@@ -404,7 +441,10 @@ public class ProjectDescription extends ImmutableDataClass {
 				isGeneratorEnabledDts,
 				generatorRewriteModuleSpecifiers,
 				isGeneratorEnabledRewriteCjsImports,
-				workspaces);
+				workspaces,
+				tsFiles,
+				tsInclude,
+				tsExclude);
 	}
 
 	@Override
@@ -440,7 +480,10 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& isGeneratorEnabledDts == other.isGeneratorEnabledDts
 				&& Objects.equals(generatorRewriteModuleSpecifiers, other.generatorRewriteModuleSpecifiers)
 				&& isGeneratorEnabledRewriteCjsImports == other.isGeneratorEnabledRewriteCjsImports
-				&& Objects.equals(workspaces, other.workspaces);
+				&& Objects.equals(workspaces, other.workspaces)
+				&& Objects.equals(tsFiles, other.tsFiles)
+				&& Objects.equals(tsInclude, other.tsInclude)
+				&& Objects.equals(tsExclude, other.tsExclude);
 	}
 
 	@Override
@@ -500,6 +543,15 @@ public class ProjectDescription extends ImmutableDataClass {
 		}
 		if (!workspaces.isEmpty()) {
 			sb.append("    workspaces: [ " + Joiner.on(", ").join(workspaces) + " ]\n");
+		}
+		if (!tsFiles.isEmpty()) {
+			sb.append("    tsconfig-files: [ " + Joiner.on(", ").join(tsFiles) + " ]\n");
+		}
+		if (!workspaces.isEmpty()) {
+			sb.append("    tsconfig-include: [ " + Joiner.on(", ").join(tsInclude) + " ]\n");
+		}
+		if (!workspaces.isEmpty()) {
+			sb.append("    tsconfig-exclude: [ " + Joiner.on(", ").join(tsExclude) + " ]\n");
 		}
 	}
 }

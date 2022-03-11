@@ -14,11 +14,14 @@ import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSSourceFolderScanner;
 import org.eclipse.xtext.util.IFileSystemScanner;
+
+import com.google.common.collect.Iterables;
 
 /**
  * Wrapper around {@link SourceContainerDescription}.
@@ -72,7 +75,9 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 
 	@Override
 	public List<URI> getAllResources(IFileSystemScanner scanner) {
-		return N4JSSourceFolderScanner.findAllSourceFilesInFolder(getPath(), scanner);
+		ProjectDescription pd = getProject().getProjectDescription();
+		Iterable<String> globsInclude = Iterables.concat(pd.getTsFiles(), pd.getTsInclude());
+		return N4JSSourceFolderScanner.findAllSourceFilesInFolder(getPath(), scanner, globsInclude, pd.getTsExclude());
 	}
 
 }

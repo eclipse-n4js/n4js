@@ -28,6 +28,8 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference
 import org.eclipse.n4js.semver.model.SemverSerializer
 import org.eclipse.n4js.utils.ProjectDescriptionLoader
+import org.eclipse.n4js.workspace.locations.FileURI
+import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
@@ -38,7 +40,6 @@ import org.eclipse.xtext.resource.IResourceDescriptions
 import org.eclipse.xtext.util.IAcceptor
 
 import static extension com.google.common.base.Strings.nullToEmpty
-import org.eclipse.n4js.workspace.utils.SemanticDependencySupplier
 
 /**
  * {@link IJSONResourceDescriptionExtension} implementation that provides custom resource descriptions of
@@ -177,7 +178,7 @@ class PackageJsonResourceDescriptionExtension implements IJSONResourceDescriptio
 			LOGGER.error("creation of EObjectDescriptions failed: cannot derive project location from document");
 			return;
 		}
-		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(projectLocation, null, document);
+		val description = projectDescriptionLoader.loadProjectDescriptionAtLocation(new FileURI(projectLocation), null, document);
 		if(description === null) {
 			// this can happen when package.json files are opened that do not belong to a valid N4JS or PLAINJS project
 			// (maybe during manual creation of a new project); therefore we cannot log an error here:

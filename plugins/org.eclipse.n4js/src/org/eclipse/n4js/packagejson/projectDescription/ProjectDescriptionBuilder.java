@@ -60,6 +60,10 @@ public class ProjectDescriptionBuilder {
 	private Boolean isGeneratorEnabledRewriteCjsImports;
 	private final List<String> workspaces = new ArrayList<>();
 
+	private final List<String> tsFiles = new ArrayList<>();
+	private final List<String> tsInclude = new ArrayList<>();
+	private final List<String> tsExclude = new ArrayList<>();
+
 	public ProjectDescriptionBuilder() {
 	}
 
@@ -77,7 +81,7 @@ public class ProjectDescriptionBuilder {
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
 				nestedNodeModulesFolder, esm, moduleProperty, n4jsNature, yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, generatorRewriteModuleSpecifiers,
-				isGeneratorEnabledRewriteCjsImports, workspaces);
+				isGeneratorEnabledRewriteCjsImports, workspaces, tsFiles, tsInclude, tsExclude);
 	}
 
 	public String computeProjectID() {
@@ -379,6 +383,33 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder addWorkspace(String workspace) {
 		this.workspaces.add(workspace);
+		return this;
+	}
+
+	public List<String> getTsFiles() {
+		return tsFiles;
+	}
+
+	public ProjectDescriptionBuilder addTsFile(String tsFileElem) {
+		this.tsFiles.add(tsFileElem);
+		return this;
+	}
+
+	public List<String> getTsInclude() {
+		return tsInclude;
+	}
+
+	public ProjectDescriptionBuilder addTsInclude(String tsIncludeElem) {
+		this.tsInclude.add(tsIncludeElem);
+		return this;
+	}
+
+	public List<String> getTsExclude() {
+		return tsExclude;
+	}
+
+	public ProjectDescriptionBuilder addTsExclude(String tsExcludeElem) {
+		this.tsExclude.add(tsExcludeElem);
 		return this;
 	}
 }

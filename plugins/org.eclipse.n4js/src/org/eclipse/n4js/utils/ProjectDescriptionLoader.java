@@ -49,7 +49,7 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescriptionBuilder;
-import org.eclipse.n4js.workspace.locations.SafeURI;
+import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.LazyStringInputStream;
 import org.eclipse.xtext.util.Pair;
@@ -84,19 +84,19 @@ public class ProjectDescriptionLoader {
 	 * <p>
 	 * Returns {@code null} if the project description cannot be loaded successfully (e.g. missing package.json).
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(SafeURI<?> location, SafeURI<?> relatedRootLocation) {
+	public ProjectDescription loadProjectDescriptionAtLocation(FileURI location, FileURI relatedRootLocation) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON == null) {
 			return null;
 		}
 		URI relatedRootLocationUri = relatedRootLocation == null ? null : relatedRootLocation.toURI();
-		return loadProjectDescriptionAtLocation(location.toURI(), relatedRootLocationUri, packageJSON);
+		return loadProjectDescriptionAtLocation(location, relatedRootLocationUri, packageJSON);
 	}
 
 	/**
-	 * Same as {@link #loadPackageJSONAtLocation(SafeURI)}.
+	 * Same as {@link #loadPackageJSONAtLocation(FileURI)}.
 	 */
-	public ProjectDescription loadProjectDescriptionAtLocation(URI location, URI relatedRootLocation,
+	public ProjectDescription loadProjectDescriptionAtLocation(FileURI location, URI relatedRootLocation,
 			JSONDocument packageJSON) {
 
 		if (location == null) {
@@ -109,6 +109,7 @@ public class ProjectDescriptionLoader {
 				: null;
 		if (pdbFromPackageJSON != null) {
 			setInformationFromFileSystem(location, pdbFromPackageJSON);
+			setInformationFromTSConfig(location, pdbFromPackageJSON);
 			pdbFromPackageJSON.setLocation(location);
 			pdbFromPackageJSON.setRelatedRootLocation(relatedRootLocation);
 
@@ -123,7 +124,7 @@ public class ProjectDescriptionLoader {
 	 * Loads the project description of the N4JS project at the given {@code location} and returns the version string or
 	 * <code>null</code> if undefined or in case of error.
 	 */
-	public Pair<String, Boolean> loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(SafeURI<?> location) {
+	public Pair<String, Boolean> loadVersionAndN4JSNatureFromProjectDescriptionAtLocation(FileURI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		JSONValue versionValue = null;
 		boolean hasN4JSNature = false;
@@ -139,7 +140,7 @@ public class ProjectDescriptionLoader {
 	 * Loads the project description of the N4JS project at the given {@code location} and returns the value of the
 	 * "workspaces" property or <code>null</code> if undefined or in case of error.
 	 */
-	public List<String> loadWorkspacesFromProjectDescriptionAtLocation(SafeURI<?> location) {
+	public List<String> loadWorkspacesFromProjectDescriptionAtLocation(FileURI location) {
 		JSONDocument packageJSON = loadPackageJSONAtLocation(location);
 		if (packageJSON != null) {
 			JSONValue value = JSONModelUtils.getProperty(packageJSON, WORKSPACES_ARRAY.name).orElse(null);
@@ -171,7 +172,7 @@ public class ProjectDescriptionLoader {
 	 * then ".js" will be appended.
 	 * </ol>
 	 */
-	private void adjustMainPath(URI location, JSONDocument packageJSON) {
+	private void adjustMainPath(FileURI location, JSONDocument packageJSON) {
 		JSONValue content = packageJSON.getContent();
 		if (!(content instanceof JSONObject)) {
 			return;
@@ -204,7 +205,7 @@ public class ProjectDescriptionLoader {
 			mainSegments = windowsPattern.split(main);
 		}
 
-		URI locationWithMain = location.appendSegments(mainSegments);
+		URI locationWithMain = location.appendSegments(mainSegments).toURI();
 
 		if (!main.endsWith(".js") && isFile(URIConverter.INSTANCE, locationWithMain.appendFileExtension("js"))) {
 			main += ".js";
@@ -222,13 +223,51 @@ public class ProjectDescriptionLoader {
 	 * Store some ancillary information about the state of the file system at the location of the
 	 * <code>package.json</code> file in the given JSON document.
 	 */
-	private void setInformationFromFileSystem(URI location, ProjectDescriptionBuilder target) {
+	private void setInformationFromFileSystem(FileURI location, ProjectDescriptionBuilder target) {
 		boolean hasNestedNodeModulesFolder = exists(URIConverter.INSTANCE,
-				location.appendSegment(N4JSGlobals.NODE_MODULES));
+				location.appendSegment(N4JSGlobals.NODE_MODULES).toURI());
 		target.setNestedNodeModulesFolder(hasNestedNodeModulesFolder);
 	}
 
-	private JSONDocument loadPackageJSONAtLocation(SafeURI<?> location) {
+	/**
+	 * Store some information from {@code tsconfig.json} files iff existent in the project folders root.
+	 */
+	private void setInformationFromTSConfig(FileURI location, ProjectDescriptionBuilder target) {
+		Path path = location.appendSegment(N4JSGlobals.TS_CONFIG).toFileSystemPath();
+		if (!Files.isReadable(path)) {
+			path = location.appendSegment(N4JSGlobals.TS_CONFIG + "." + N4JSGlobals.XT_FILE_EXTENSION)
+					.toFileSystemPath();
+			if (!Files.isReadable(path)) {
+				return;
+			}
+		}
+		JSONDocument tsconfig = loadJSONAtLocation(path);
+		JSONValue content = tsconfig.getContent();
+		if (!(content instanceof JSONObject)) {
+			return;
+		}
+		JSONObject contentCasted = (JSONObject) content;
+		NameValuePair filesProperty = JSONModelUtils.getNameValuePair(contentCasted, "files").orElse(null);
+		if (filesProperty != null) {
+			for (String tsFile : JSONModelUtils.asStringsInArrayOrEmpty(filesProperty.getValue())) {
+				target.addTsFile(tsFile);
+			}
+		}
+		NameValuePair includeProperty = JSONModelUtils.getNameValuePair(contentCasted, "include").orElse(null);
+		if (includeProperty != null) {
+			for (String tsInclude : JSONModelUtils.asStringsInArrayOrEmpty(includeProperty.getValue())) {
+				target.addTsInclude(tsInclude);
+			}
+		}
+		NameValuePair excludeProperty = JSONModelUtils.getNameValuePair(contentCasted, "exclude").orElse(null);
+		if (excludeProperty != null) {
+			for (String tsExclude : JSONModelUtils.asStringsInArrayOrEmpty(excludeProperty.getValue())) {
+				target.addTsInclude(tsExclude);
+			}
+		}
+	}
+
+	private JSONDocument loadPackageJSONAtLocation(FileURI location) {
 		Path path = location.appendSegment(N4JSGlobals.PACKAGE_JSON).toFileSystemPath();
 		if (!Files.isReadable(path)) {
 			path = location.appendSegment(N4JSGlobals.PACKAGE_JSON + "." + N4JSGlobals.XT_FILE_EXTENSION)
@@ -237,6 +276,10 @@ public class ProjectDescriptionLoader {
 				return null;
 			}
 		}
+		return loadJSONAtLocation(path);
+	}
+
+	private JSONDocument loadJSONAtLocation(Path path) {
 		try {
 			String jsonString = Files.readString(path, StandardCharsets.UTF_8);
 			try {
@@ -245,8 +288,8 @@ public class ProjectDescriptionLoader {
 				doc.setContent(copy(jsonElement));
 				return doc;
 			} catch (JsonParseException e) {
-				JSONDocument packageJSON = loadXtextFileAtLocation(location, N4JSGlobals.PACKAGE_JSON, jsonString,
-						JSONDocument.class);
+				FileURI fileURI = new FileURI(path);
+				JSONDocument packageJSON = loadXtextFileAtLocation(fileURI, jsonString, JSONDocument.class);
 				return packageJSON;
 			}
 		} catch (IOException e) {
@@ -254,9 +297,8 @@ public class ProjectDescriptionLoader {
 		}
 	}
 
-	private <T extends EObject> T loadXtextFileAtLocation(SafeURI<?> location, String name, String content,
+	private <T extends EObject> T loadXtextFileAtLocation(FileURI fullLocation, String content,
 			Class<T> expectedTypeOfRoot) {
-		SafeURI<?> fullLocation = location.appendSegment(name);
 		try {
 			// check whether a file exists at the given URI
 			if (!fullLocation.exists()) {
