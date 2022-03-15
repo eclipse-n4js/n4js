@@ -76,7 +76,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.RUNTIME_DEPENDENCY: return createRuntimeDependency();
 			case TypesPackage.COMPOSED_MEMBER_CACHE: return createComposedMemberCache();
 			case TypesPackage.IDENTIFIABLE_ELEMENT: return createIdentifiableElement();
-			case TypesPackage.EXPORT_DEFINITION: return createExportDefinition();
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION: return createElementExportDefinition();
+			case TypesPackage.MODULE_EXPORT_DEFINITION: return createModuleExportDefinition();
 			case TypesPackage.TEXPORTABLE_ELEMENT: return createTExportableElement();
 			case TypesPackage.TDYNAMIC_ELEMENT: return createTDynamicElement();
 			case TypesPackage.TANNOTATION: return createTAnnotation();
@@ -246,9 +247,20 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	@Override
-	public ExportDefinition createExportDefinition() {
-		ExportDefinitionImpl exportDefinition = new ExportDefinitionImpl();
-		return exportDefinition;
+	public ElementExportDefinition createElementExportDefinition() {
+		ElementExportDefinitionImpl elementExportDefinition = new ElementExportDefinitionImpl();
+		return elementExportDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ModuleExportDefinition createModuleExportDefinition() {
+		ModuleExportDefinitionImpl moduleExportDefinition = new ModuleExportDefinitionImpl();
+		return moduleExportDefinition;
 	}
 
 	/**

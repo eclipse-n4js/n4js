@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.typesbuilder
 
+import com.google.inject.Inject
 import java.util.HashMap
 import java.util.Map
 import org.eclipse.n4js.n4JS.ImportDeclaration
@@ -27,7 +28,9 @@ import org.eclipse.n4js.ts.types.TypesFactory
  * {@link #createTypeModelElementsForImports(Script, TModule, boolean) here}.
  */
 class N4JSImportTypesBuilder {
-	
+
+	@Inject extension N4JSTypesBuilderHelper
+
 	/**
 	 * Relinks the elements created by {@link #createTypeModelElementsForImports(Script, TModule, boolean)}.
 	 * <p>
@@ -50,7 +53,7 @@ class N4JSImportTypesBuilder {
 						relinkNamespaceType(existingNamespaceType, namespaceImport, importedModule);
 					} else {
 						// otherwise re-create a new namespace import type and add it to the internal types of the module
-						target.internalTypes += createModuleNamespaceVirtualType(namespaceImport, importedModule);
+						target.addNewModuleNamespaceVirtualType(namespaceImport.alias, importedModule, namespaceImport.declaredDynamic, namespaceImport);
 					}
 					
 				} else {
@@ -87,7 +90,7 @@ class N4JSImportTypesBuilder {
 				if (namespaceImport !== null) {
 					val importedModule = importDecl.eGet(N4JSPackage.eINSTANCE.moduleRef_Module,
 						false) as TModule
-					target.internalTypes += createModuleNamespaceVirtualType(namespaceImport, importedModule);
+					target.addNewModuleNamespaceVirtualType(namespaceImport.alias, importedModule, namespaceImport.declaredDynamic, namespaceImport);
 				} else {
 					for (importSpec : importDecl.importSpecifiers) {
 						if (importSpec instanceof NamedImportSpecifier) { // includes DefaultImportSpecifier
@@ -101,21 +104,6 @@ class N4JSImportTypesBuilder {
 		}
 	}
 
-	private def ModuleNamespaceVirtualType createModuleNamespaceVirtualType(NamespaceImportSpecifier importSpecifier, 
-		TModule importedModule) {
-		//for NamespaceImportpecifiers there is only ImportSpecifier one in the ImportDeclaration
-		val type = TypesFactory.eINSTANCE.createModuleNamespaceVirtualType
-		type.name = importSpecifier.alias
-		/* don't resolve module proxy */
-		type.module = importedModule;
-		type.declaredDynamic = importSpecifier.declaredDynamic;
-		// link
-		type.astElement = importSpecifier;
-		importSpecifier.definedType = type;
-		
-		return type;
-	}
-	
 	private def TDynamicElement createDynamicElement(NamedImportSpecifier importSpecifier) {
 		val elem = TypesFactory.eINSTANCE.createTDynamicElement();
 		elem.name = getNameForDynamicElement(importSpecifier);

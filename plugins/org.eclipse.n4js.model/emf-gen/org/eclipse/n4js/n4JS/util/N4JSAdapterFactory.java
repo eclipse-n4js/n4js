@@ -101,8 +101,12 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createExportDeclarationAdapter();
 			}
 			@Override
-			public Adapter caseExportSpecifier(ExportSpecifier object) {
-				return createExportSpecifierAdapter();
+			public Adapter caseNamespaceExportSpecifier(NamespaceExportSpecifier object) {
+				return createNamespaceExportSpecifierAdapter();
+			}
+			@Override
+			public Adapter caseNamedExportSpecifier(NamedExportSpecifier object) {
+				return createNamedExportSpecifierAdapter();
 			}
 			@Override
 			public Adapter caseExportableElement(ExportableElement object) {
@@ -911,16 +915,30 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportSpecifier <em>Export Specifier</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.NamespaceExportSpecifier <em>Namespace Export Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.ExportSpecifier
+	 * @see org.eclipse.n4js.n4JS.NamespaceExportSpecifier
 	 * @generated
 	 */
-	public Adapter createExportSpecifierAdapter() {
+	public Adapter createNamespaceExportSpecifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.NamedExportSpecifier <em>Named Export Specifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.NamedExportSpecifier
+	 * @generated
+	 */
+	public Adapter createNamedExportSpecifierAdapter() {
 		return null;
 	}
 

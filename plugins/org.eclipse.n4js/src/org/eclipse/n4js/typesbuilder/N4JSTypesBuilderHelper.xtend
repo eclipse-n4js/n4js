@@ -28,19 +28,23 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.PropertyNameOwner
+import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
 import org.eclipse.n4js.postprocessing.ComputedNameProcessor
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.AbstractModule
 import org.eclipse.n4js.ts.types.AccessibleTypeElement
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -211,5 +215,19 @@ package class N4JSTypesBuilderHelper {
 				throw new IllegalStateException(msg);
 			}
 		}
+	}
+
+	def package ModuleNamespaceVirtualType addNewModuleNamespaceVirtualType(TModule target, String name, AbstractModule wrappedModule, boolean dynamic, TypeDefiningElement astNode) {
+		val type = TypesFactory.eINSTANCE.createModuleNamespaceVirtualType
+		type.name = name;
+		type.module = wrappedModule;
+		type.declaredDynamic = dynamic;
+
+		type.astElement = astNode;
+		astNode.definedType = type;
+
+		target.internalTypes += type;
+
+		return type;
 	}
 }

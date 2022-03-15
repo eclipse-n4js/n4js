@@ -29,7 +29,6 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ModuleRef;
@@ -39,7 +38,9 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4JSPackage.Literals;
 
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
+import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceElement;
+import org.eclipse.n4js.n4JS.NamespaceExportSpecifier;
 
 import org.eclipse.n4js.ts.types.AbstractModule;
 
@@ -56,8 +57,8 @@ import org.eclipse.n4js.ts.types.AbstractModule;
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getModuleSpecifierForm <em>Module Specifier Form</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getExportedElement <em>Exported Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getDefaultExportedExpression <em>Default Exported Expression</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getNamespaceExport <em>Namespace Export</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getNamedExports <em>Named Exports</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#isWildcardExport <em>Wildcard Export</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#isDefaultExport <em>Default Export</em>}</li>
  * </ul>
  *
@@ -135,6 +136,16 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	protected Expression defaultExportedExpression;
 
 	/**
+	 * The cached value of the '{@link #getNamespaceExport() <em>Namespace Export</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getNamespaceExport()
+	 * @generated
+	 * @ordered
+	 */
+	protected NamespaceExportSpecifier namespaceExport;
+
+	/**
 	 * The cached value of the '{@link #getNamedExports() <em>Named Exports</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -142,27 +153,7 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<ExportSpecifier> namedExports;
-
-	/**
-	 * The default value of the '{@link #isWildcardExport() <em>Wildcard Export</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isWildcardExport()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean WILDCARD_EXPORT_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isWildcardExport() <em>Wildcard Export</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isWildcardExport()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean wildcardExport = WILDCARD_EXPORT_EDEFAULT;
+	protected EList<NamedExportSpecifier> namedExports;
 
 	/**
 	 * The default value of the '{@link #isDefaultExport() <em>Default Export</em>}' attribute.
@@ -385,34 +376,56 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
-	public EList<ExportSpecifier> getNamedExports() {
+	public NamespaceExportSpecifier getNamespaceExport() {
+		return namespaceExport;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public NotificationChain basicSetNamespaceExport(NamespaceExportSpecifier newNamespaceExport, NotificationChain msgs) {
+		NamespaceExportSpecifier oldNamespaceExport = namespaceExport;
+		namespaceExport = newNamespaceExport;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_DECLARATION__NAMESPACE_EXPORT, oldNamespaceExport, newNamespaceExport);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setNamespaceExport(NamespaceExportSpecifier newNamespaceExport) {
+		if (newNamespaceExport != namespaceExport) {
+			NotificationChain msgs = null;
+			if (namespaceExport != null)
+				msgs = ((InternalEObject)namespaceExport).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.EXPORT_DECLARATION__NAMESPACE_EXPORT, null, msgs);
+			if (newNamespaceExport != null)
+				msgs = ((InternalEObject)newNamespaceExport).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.EXPORT_DECLARATION__NAMESPACE_EXPORT, null, msgs);
+			msgs = basicSetNamespaceExport(newNamespaceExport, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_DECLARATION__NAMESPACE_EXPORT, newNamespaceExport, newNamespaceExport));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<NamedExportSpecifier> getNamedExports() {
 		if (namedExports == null) {
-			namedExports = new EObjectContainmentEList<ExportSpecifier>(ExportSpecifier.class, this, N4JSPackage.EXPORT_DECLARATION__NAMED_EXPORTS);
+			namedExports = new EObjectContainmentEList<NamedExportSpecifier>(NamedExportSpecifier.class, this, N4JSPackage.EXPORT_DECLARATION__NAMED_EXPORTS);
 		}
 		return namedExports;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isWildcardExport() {
-		return wildcardExport;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setWildcardExport(boolean newWildcardExport) {
-		boolean oldWildcardExport = wildcardExport;
-		wildcardExport = newWildcardExport;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_DECLARATION__WILDCARD_EXPORT, oldWildcardExport, wildcardExport));
 	}
 
 	/**
@@ -509,6 +522,8 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return basicSetExportedElement(null, msgs);
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORTED_EXPRESSION:
 				return basicSetDefaultExportedExpression(null, msgs);
+			case N4JSPackage.EXPORT_DECLARATION__NAMESPACE_EXPORT:
+				return basicSetNamespaceExport(null, msgs);
 			case N4JSPackage.EXPORT_DECLARATION__NAMED_EXPORTS:
 				return ((InternalEList<?>)getNamedExports()).basicRemove(otherEnd, msgs);
 		}
@@ -534,10 +549,10 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return getExportedElement();
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORTED_EXPRESSION:
 				return getDefaultExportedExpression();
+			case N4JSPackage.EXPORT_DECLARATION__NAMESPACE_EXPORT:
+				return getNamespaceExport();
 			case N4JSPackage.EXPORT_DECLARATION__NAMED_EXPORTS:
 				return getNamedExports();
-			case N4JSPackage.EXPORT_DECLARATION__WILDCARD_EXPORT:
-				return isWildcardExport();
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORT:
 				return isDefaultExport();
 		}
@@ -568,12 +583,12 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORTED_EXPRESSION:
 				setDefaultExportedExpression((Expression)newValue);
 				return;
+			case N4JSPackage.EXPORT_DECLARATION__NAMESPACE_EXPORT:
+				setNamespaceExport((NamespaceExportSpecifier)newValue);
+				return;
 			case N4JSPackage.EXPORT_DECLARATION__NAMED_EXPORTS:
 				getNamedExports().clear();
-				getNamedExports().addAll((Collection<? extends ExportSpecifier>)newValue);
-				return;
-			case N4JSPackage.EXPORT_DECLARATION__WILDCARD_EXPORT:
-				setWildcardExport((Boolean)newValue);
+				getNamedExports().addAll((Collection<? extends NamedExportSpecifier>)newValue);
 				return;
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORT:
 				setDefaultExport((Boolean)newValue);
@@ -605,11 +620,11 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORTED_EXPRESSION:
 				setDefaultExportedExpression((Expression)null);
 				return;
+			case N4JSPackage.EXPORT_DECLARATION__NAMESPACE_EXPORT:
+				setNamespaceExport((NamespaceExportSpecifier)null);
+				return;
 			case N4JSPackage.EXPORT_DECLARATION__NAMED_EXPORTS:
 				getNamedExports().clear();
-				return;
-			case N4JSPackage.EXPORT_DECLARATION__WILDCARD_EXPORT:
-				setWildcardExport(WILDCARD_EXPORT_EDEFAULT);
 				return;
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORT:
 				setDefaultExport(DEFAULT_EXPORT_EDEFAULT);
@@ -636,10 +651,10 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return exportedElement != null;
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORTED_EXPRESSION:
 				return defaultExportedExpression != null;
+			case N4JSPackage.EXPORT_DECLARATION__NAMESPACE_EXPORT:
+				return namespaceExport != null;
 			case N4JSPackage.EXPORT_DECLARATION__NAMED_EXPORTS:
 				return namedExports != null && !namedExports.isEmpty();
-			case N4JSPackage.EXPORT_DECLARATION__WILDCARD_EXPORT:
-				return wildcardExport != WILDCARD_EXPORT_EDEFAULT;
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORT:
 				return defaultExport != DEFAULT_EXPORT_EDEFAULT;
 		}
@@ -752,8 +767,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 		result.append(moduleSpecifierAsText);
 		result.append(", moduleSpecifierForm: ");
 		result.append(moduleSpecifierForm);
-		result.append(", wildcardExport: ");
-		result.append(wildcardExport);
 		result.append(", defaultExport: ");
 		result.append(defaultExport);
 		result.append(')');

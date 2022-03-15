@@ -21,7 +21,6 @@ import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.ForStatement;
@@ -32,6 +31,7 @@ import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4ClassDefinition;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
+import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
@@ -120,7 +120,7 @@ public class FGUtils {
 		boolean containerIsFieldDeclaration = cfeContainer instanceof N4FieldDeclaration;
 		boolean containerIsAnnotationArgument = cfeContainer instanceof AnnotationArgument;
 		boolean containerIsLiteralOrComputedPropertyName = cfeContainer instanceof LiteralOrComputedPropertyName;
-		boolean containerIsExportSpecifier = cfeContainer instanceof ExportSpecifier;
+		boolean containerIsNamedExportSpecifier = cfeContainer instanceof NamedExportSpecifier;
 		boolean containerIsExportDeclaration = cfeContainer instanceof ExportDeclaration;
 		boolean containerIsN4ClassDefinition = cfeContainer instanceof N4ClassDefinition;
 
@@ -137,7 +137,7 @@ public class FGUtils {
 		isCFContainer |= isExpression && containerIsAnnotationArgument;
 		isCFContainer |= isExpression && containerIsLiteralOrComputedPropertyName && container2IsN4FieldDeclaration;
 		isCFContainer |= isExpression && containerIsN4ClassDefinition;
-		isCFContainer |= isExpression && containerIsExportSpecifier;
+		isCFContainer |= isExpression && containerIsNamedExportSpecifier;
 		isCFContainer |= isExpression && containerIsExportDeclaration;
 		return isCFContainer;
 	}

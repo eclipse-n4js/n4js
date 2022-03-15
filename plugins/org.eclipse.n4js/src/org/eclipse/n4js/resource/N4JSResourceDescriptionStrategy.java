@@ -17,7 +17,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.ts.types.AbstractModule;
+import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.ExportDefinition;
+import org.eclipse.n4js.ts.types.ModuleExportDefinition;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TConstableElement;
@@ -217,7 +219,11 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	private void internalCreateEObjectDescriptionsForModuleContents(AbstractModule module,
 			IAcceptor<IEObjectDescription> acceptor) {
 		for (ExportDefinition exportDef : module.getExportDefinitions()) {
-			internalCreateEObjectDescription(exportDef, acceptor);
+			if (exportDef instanceof ElementExportDefinition) {
+				internalCreateEObjectDescription((ElementExportDefinition) exportDef, acceptor);
+			} else if (exportDef instanceof ModuleExportDefinition) {
+				// FIXME
+			}
 		}
 		boolean isRoot = module instanceof TModule;
 		if (isRoot) {
@@ -380,7 +386,9 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 
 	}
 
-	private void internalCreateEObjectDescription(ExportDefinition exportDef, IAcceptor<IEObjectDescription> acceptor) {
+	private void internalCreateEObjectDescription(ElementExportDefinition exportDef,
+			IAcceptor<IEObjectDescription> acceptor) {
+
 		TExportableElement element = exportDef.getExportedElement();
 		if (element == null || element.eIsProxy()) {
 			return;

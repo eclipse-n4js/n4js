@@ -1191,12 +1191,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cExportKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Alternatives cAlternatives_1 = (Alternatives)cGroup.eContents().get(1);
 		private final Group cGroup_1_0 = (Group)cAlternatives_1.eContents().get(0);
-		private final Assignment cWildcardExportAssignment_1_0_0 = (Assignment)cGroup_1_0.eContents().get(0);
-		private final Keyword cWildcardExportAsteriskKeyword_1_0_0_0 = (Keyword)cWildcardExportAssignment_1_0_0.eContents().get(0);
+		private final RuleCall cNamespaceExportClauseParserRuleCall_1_0_0 = (RuleCall)cGroup_1_0.eContents().get(0);
 		private final RuleCall cExportFromClauseParserRuleCall_1_0_1 = (RuleCall)cGroup_1_0.eContents().get(1);
 		private final RuleCall cSemiParserRuleCall_1_0_2 = (RuleCall)cGroup_1_0.eContents().get(2);
 		private final Group cGroup_1_1 = (Group)cAlternatives_1.eContents().get(1);
-		private final RuleCall cExportClauseParserRuleCall_1_1_0 = (RuleCall)cGroup_1_1.eContents().get(0);
+		private final RuleCall cNamedExportClauseParserRuleCall_1_1_0 = (RuleCall)cGroup_1_1.eContents().get(0);
 		private final RuleCall cExportFromClauseParserRuleCall_1_1_1 = (RuleCall)cGroup_1_1.eContents().get(1);
 		private final RuleCall cSemiParserRuleCall_1_1_2 = (RuleCall)cGroup_1_1.eContents().get(2);
 		private final Assignment cExportedElementAssignment_1_2 = (Assignment)cAlternatives_1.eContents().get(2);
@@ -1212,10 +1211,10 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cDefaultExportedExpressionAssignmentExpressionParserRuleCall_1_3_1_1_0_0 = (RuleCall)cDefaultExportedExpressionAssignment_1_3_1_1_0.eContents().get(0);
 		private final RuleCall cSemiParserRuleCall_1_3_1_1_1 = (RuleCall)cGroup_1_3_1_1.eContents().get(1);
 		
-		//fragment ExportDeclarationImpl *:
+		//fragment ExportDeclarationImpl*:
 		//    'export' (
-		//        wildcardExport?='*' ExportFromClause Semi
-		//    |    ExportClause ->ExportFromClause? Semi
+		//        NamespaceExportClause ExportFromClause Semi
+		//    |    NamedExportClause ->ExportFromClause? Semi
 		//    |    exportedElement=ExportableElement
 		//    |    defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
 		//    )
@@ -1223,8 +1222,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'export' (
-		//    wildcardExport?='*' ExportFromClause Semi
-		//|    ExportClause ->ExportFromClause? Semi
+		//    NamespaceExportClause ExportFromClause Semi
+		//|    NamedExportClause ->ExportFromClause? Semi
 		//|    exportedElement=ExportableElement
 		//|    defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
 		//)
@@ -1234,21 +1233,18 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		public Keyword getExportKeyword_0() { return cExportKeyword_0; }
 		
 		//(
-		//       wildcardExport?='*' ExportFromClause Semi
-		//   |    ExportClause ->ExportFromClause? Semi
+		//       NamespaceExportClause ExportFromClause Semi
+		//   |    NamedExportClause ->ExportFromClause? Semi
 		//   |    exportedElement=ExportableElement
 		//   |    defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
 		//   )
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
-		//wildcardExport?='*' ExportFromClause Semi
+		//NamespaceExportClause ExportFromClause Semi
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
-		//wildcardExport?='*'
-		public Assignment getWildcardExportAssignment_1_0_0() { return cWildcardExportAssignment_1_0_0; }
-		
-		//'*'
-		public Keyword getWildcardExportAsteriskKeyword_1_0_0_0() { return cWildcardExportAsteriskKeyword_1_0_0_0; }
+		//NamespaceExportClause
+		public RuleCall getNamespaceExportClauseParserRuleCall_1_0_0() { return cNamespaceExportClauseParserRuleCall_1_0_0; }
 		
 		//ExportFromClause
 		public RuleCall getExportFromClauseParserRuleCall_1_0_1() { return cExportFromClauseParserRuleCall_1_0_1; }
@@ -1256,11 +1252,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//Semi
 		public RuleCall getSemiParserRuleCall_1_0_2() { return cSemiParserRuleCall_1_0_2; }
 		
-		//ExportClause ->ExportFromClause? Semi
+		//NamedExportClause ->ExportFromClause? Semi
 		public Group getGroup_1_1() { return cGroup_1_1; }
 		
-		//ExportClause
-		public RuleCall getExportClauseParserRuleCall_1_1_0() { return cExportClauseParserRuleCall_1_1_0; }
+		//NamedExportClause
+		public RuleCall getNamedExportClauseParserRuleCall_1_1_0() { return cNamedExportClauseParserRuleCall_1_1_0; }
 		
 		//->ExportFromClause?
 		public RuleCall getExportFromClauseParserRuleCall_1_1_1() { return cExportFromClauseParserRuleCall_1_1_1; }
@@ -1332,55 +1328,71 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//ModuleSpecifier
 		public RuleCall getModuleAbstractModuleModuleSpecifierParserRuleCall_1_0_1() { return cModuleAbstractModuleModuleSpecifierParserRuleCall_1_0_1; }
 	}
-	public class ExportClauseElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportClause");
+	public class NamespaceExportClauseElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NamespaceExportClause");
+		private final Assignment cNamespaceExportAssignment = (Assignment)rule.eContents().get(0);
+		private final RuleCall cNamespaceExportNamespaceExportSpecifierParserRuleCall_0 = (RuleCall)cNamespaceExportAssignment.eContents().get(0);
+		
+		//fragment NamespaceExportClause*:
+		//    namespaceExport=NamespaceExportSpecifier
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//namespaceExport=NamespaceExportSpecifier
+		public Assignment getNamespaceExportAssignment() { return cNamespaceExportAssignment; }
+		
+		//NamespaceExportSpecifier
+		public RuleCall getNamespaceExportNamespaceExportSpecifierParserRuleCall_0() { return cNamespaceExportNamespaceExportSpecifierParserRuleCall_0; }
+	}
+	public class NamedExportClauseElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NamedExportClause");
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_0 = (Keyword)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Assignment cNamedExportsAssignment_1_0 = (Assignment)cGroup_1.eContents().get(0);
-		private final RuleCall cNamedExportsExportSpecifierParserRuleCall_1_0_0 = (RuleCall)cNamedExportsAssignment_1_0.eContents().get(0);
+		private final RuleCall cNamedExportsNamedExportSpecifierParserRuleCall_1_0_0 = (RuleCall)cNamedExportsAssignment_1_0.eContents().get(0);
 		private final Group cGroup_1_1 = (Group)cGroup_1.eContents().get(1);
 		private final Keyword cCommaKeyword_1_1_0 = (Keyword)cGroup_1_1.eContents().get(0);
 		private final Assignment cNamedExportsAssignment_1_1_1 = (Assignment)cGroup_1_1.eContents().get(1);
-		private final RuleCall cNamedExportsExportSpecifierParserRuleCall_1_1_1_0 = (RuleCall)cNamedExportsAssignment_1_1_1.eContents().get(0);
+		private final RuleCall cNamedExportsNamedExportSpecifierParserRuleCall_1_1_1_0 = (RuleCall)cNamedExportsAssignment_1_1_1.eContents().get(0);
 		private final Keyword cCommaKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
 		private final Keyword cRightCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
 		
-		//fragment ExportClause*:
+		//fragment NamedExportClause*:
 		//    '{'
-		//        (namedExports+=ExportSpecifier (',' namedExports+=ExportSpecifier)* ','?)?
+		//        (namedExports+=NamedExportSpecifier (',' namedExports+=NamedExportSpecifier)* ','?)?
 		//    '}'
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'{'
-		//    (namedExports+=ExportSpecifier (',' namedExports+=ExportSpecifier)* ','?)?
+		//    (namedExports+=NamedExportSpecifier (',' namedExports+=NamedExportSpecifier)* ','?)?
 		//'}'
 		public Group getGroup() { return cGroup; }
 		
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_0() { return cLeftCurlyBracketKeyword_0; }
 		
-		//(namedExports+=ExportSpecifier (',' namedExports+=ExportSpecifier)* ','?)?
+		//(namedExports+=NamedExportSpecifier (',' namedExports+=NamedExportSpecifier)* ','?)?
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//namedExports+=ExportSpecifier
+		//namedExports+=NamedExportSpecifier
 		public Assignment getNamedExportsAssignment_1_0() { return cNamedExportsAssignment_1_0; }
 		
-		//ExportSpecifier
-		public RuleCall getNamedExportsExportSpecifierParserRuleCall_1_0_0() { return cNamedExportsExportSpecifierParserRuleCall_1_0_0; }
+		//NamedExportSpecifier
+		public RuleCall getNamedExportsNamedExportSpecifierParserRuleCall_1_0_0() { return cNamedExportsNamedExportSpecifierParserRuleCall_1_0_0; }
 		
-		//(',' namedExports+=ExportSpecifier)*
+		//(',' namedExports+=NamedExportSpecifier)*
 		public Group getGroup_1_1() { return cGroup_1_1; }
 		
 		//','
 		public Keyword getCommaKeyword_1_1_0() { return cCommaKeyword_1_1_0; }
 		
-		//namedExports+=ExportSpecifier
+		//namedExports+=NamedExportSpecifier
 		public Assignment getNamedExportsAssignment_1_1_1() { return cNamedExportsAssignment_1_1_1; }
 		
-		//ExportSpecifier
-		public RuleCall getNamedExportsExportSpecifierParserRuleCall_1_1_1_0() { return cNamedExportsExportSpecifierParserRuleCall_1_1_1_0; }
+		//NamedExportSpecifier
+		public RuleCall getNamedExportsNamedExportSpecifierParserRuleCall_1_1_1_0() { return cNamedExportsNamedExportSpecifierParserRuleCall_1_1_1_0; }
 		
 		//','?
 		public Keyword getCommaKeyword_1_2() { return cCommaKeyword_1_2; }
@@ -1388,8 +1400,44 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//'}'
 		public Keyword getRightCurlyBracketKeyword_2() { return cRightCurlyBracketKeyword_2; }
 	}
-	public class ExportSpecifierElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportSpecifier");
+	public class NamespaceExportSpecifierElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NamespaceExportSpecifier");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cNamespaceExportSpecifierAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cAsteriskKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
+		private final Keyword cAsKeyword_2_0 = (Keyword)cGroup_2.eContents().get(0);
+		private final Assignment cAliasAssignment_2_1 = (Assignment)cGroup_2.eContents().get(1);
+		private final RuleCall cAliasIdentifierNameParserRuleCall_2_1_0 = (RuleCall)cAliasAssignment_2_1.eContents().get(0);
+		
+		//NamespaceExportSpecifier:
+		//    {NamespaceExportSpecifier} '*' ('as' alias=IdentifierName)?
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//{NamespaceExportSpecifier} '*' ('as' alias=IdentifierName)?
+		public Group getGroup() { return cGroup; }
+		
+		//{NamespaceExportSpecifier}
+		public Action getNamespaceExportSpecifierAction_0() { return cNamespaceExportSpecifierAction_0; }
+		
+		//'*'
+		public Keyword getAsteriskKeyword_1() { return cAsteriskKeyword_1; }
+		
+		//('as' alias=IdentifierName)?
+		public Group getGroup_2() { return cGroup_2; }
+		
+		//'as'
+		public Keyword getAsKeyword_2_0() { return cAsKeyword_2_0; }
+		
+		//alias=IdentifierName
+		public Assignment getAliasAssignment_2_1() { return cAliasAssignment_2_1; }
+		
+		//IdentifierName
+		public RuleCall getAliasIdentifierNameParserRuleCall_2_1_0() { return cAliasIdentifierNameParserRuleCall_2_1_0; }
+	}
+	public class NamedExportSpecifierElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NamedExportSpecifier");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cElementAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final RuleCall cElementIdentifierRefParserRuleCall_0_0 = (RuleCall)cElementAssignment_0.eContents().get(0);
@@ -1398,7 +1446,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Assignment cAliasAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cAliasIdentifierNameParserRuleCall_1_1_0 = (RuleCall)cAliasAssignment_1_1.eContents().get(0);
 		
-		//ExportSpecifier:
+		//NamedExportSpecifier:
 		//    element=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
 		//;
 		@Override public ParserRule getRule() { return rule; }
@@ -12207,8 +12255,10 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	private final ExportDeclarationElements pExportDeclaration;
 	private final ExportDeclarationImplElements pExportDeclarationImpl;
 	private final ExportFromClauseElements pExportFromClause;
-	private final ExportClauseElements pExportClause;
-	private final ExportSpecifierElements pExportSpecifier;
+	private final NamespaceExportClauseElements pNamespaceExportClause;
+	private final NamedExportClauseElements pNamedExportClause;
+	private final NamespaceExportSpecifierElements pNamespaceExportSpecifier;
+	private final NamedExportSpecifierElements pNamedExportSpecifier;
 	private final ExportableElementElements pExportableElement;
 	private final AnnotatedExportableElementElements pAnnotatedExportableElement;
 	private final ImportDeclarationElements pImportDeclaration;
@@ -12465,8 +12515,10 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		this.pExportDeclaration = new ExportDeclarationElements();
 		this.pExportDeclarationImpl = new ExportDeclarationImplElements();
 		this.pExportFromClause = new ExportFromClauseElements();
-		this.pExportClause = new ExportClauseElements();
-		this.pExportSpecifier = new ExportSpecifierElements();
+		this.pNamespaceExportClause = new NamespaceExportClauseElements();
+		this.pNamedExportClause = new NamedExportClauseElements();
+		this.pNamespaceExportSpecifier = new NamespaceExportSpecifierElements();
+		this.pNamedExportSpecifier = new NamedExportSpecifierElements();
 		this.pExportableElement = new ExportableElementElements();
 		this.pAnnotatedExportableElement = new AnnotatedExportableElementElements();
 		this.pImportDeclaration = new ImportDeclarationElements();
@@ -12927,10 +12979,10 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getExportDeclarationAccess().getRule();
 	}
 	
-	//fragment ExportDeclarationImpl *:
+	//fragment ExportDeclarationImpl*:
 	//    'export' (
-	//        wildcardExport?='*' ExportFromClause Semi
-	//    |    ExportClause ->ExportFromClause? Semi
+	//        NamespaceExportClause ExportFromClause Semi
+	//    |    NamedExportClause ->ExportFromClause? Semi
 	//    |    exportedElement=ExportableElement
 	//    |    defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
 	//    )
@@ -12954,28 +13006,50 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getExportFromClauseAccess().getRule();
 	}
 	
-	//fragment ExportClause*:
+	//fragment NamespaceExportClause*:
+	//    namespaceExport=NamespaceExportSpecifier
+	//;
+	public NamespaceExportClauseElements getNamespaceExportClauseAccess() {
+		return pNamespaceExportClause;
+	}
+	
+	public ParserRule getNamespaceExportClauseRule() {
+		return getNamespaceExportClauseAccess().getRule();
+	}
+	
+	//fragment NamedExportClause*:
 	//    '{'
-	//        (namedExports+=ExportSpecifier (',' namedExports+=ExportSpecifier)* ','?)?
+	//        (namedExports+=NamedExportSpecifier (',' namedExports+=NamedExportSpecifier)* ','?)?
 	//    '}'
 	//;
-	public ExportClauseElements getExportClauseAccess() {
-		return pExportClause;
+	public NamedExportClauseElements getNamedExportClauseAccess() {
+		return pNamedExportClause;
 	}
 	
-	public ParserRule getExportClauseRule() {
-		return getExportClauseAccess().getRule();
+	public ParserRule getNamedExportClauseRule() {
+		return getNamedExportClauseAccess().getRule();
 	}
 	
-	//ExportSpecifier:
+	//NamespaceExportSpecifier:
+	//    {NamespaceExportSpecifier} '*' ('as' alias=IdentifierName)?
+	//;
+	public NamespaceExportSpecifierElements getNamespaceExportSpecifierAccess() {
+		return pNamespaceExportSpecifier;
+	}
+	
+	public ParserRule getNamespaceExportSpecifierRule() {
+		return getNamespaceExportSpecifierAccess().getRule();
+	}
+	
+	//NamedExportSpecifier:
 	//    element=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
 	//;
-	public ExportSpecifierElements getExportSpecifierAccess() {
-		return pExportSpecifier;
+	public NamedExportSpecifierElements getNamedExportSpecifierAccess() {
+		return pNamedExportSpecifier;
 	}
 	
-	public ParserRule getExportSpecifierRule() {
-		return getExportSpecifierAccess().getRule();
+	public ParserRule getNamedExportSpecifierRule() {
+		return getNamedExportSpecifierAccess().getRule();
 	}
 	
 	//ExportableElement:

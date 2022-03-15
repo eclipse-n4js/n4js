@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.AbstractModule
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
@@ -49,6 +50,7 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TStructGetter
@@ -62,8 +64,6 @@ import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.EcoreUtilN4
-import org.eclipse.n4js.ts.types.AbstractNamespace
-import org.eclipse.n4js.ts.types.TNamespace
 
 type IteratorOfExpression wraps Iterator<Expression>
 type IteratorOfYieldExpression wraps Iterator<YieldExpression>
@@ -120,8 +120,8 @@ abstract class ScriptElement {
 class ExportDeclaration extends AnnotableScriptElement, NamespaceElement, ModuleRef {
 	contains ExportableElement exportedElement
 	contains Expression defaultExportedExpression
-	contains ExportSpecifier[] namedExports
-	boolean wildcardExport
+	contains NamespaceExportSpecifier namespaceExport
+	contains NamedExportSpecifier[] namedExports
 	boolean defaultExport
 
 	op boolean isHollow() {
@@ -139,7 +139,11 @@ class ExportDeclaration extends AnnotableScriptElement, NamespaceElement, Module
 	}
 }
 
-class ExportSpecifier {
+class NamespaceExportSpecifier extends TypeDefiningElement {
+	String alias
+}
+
+class NamedExportSpecifier {
 	contains IdentifierRef element
 	String alias
 }

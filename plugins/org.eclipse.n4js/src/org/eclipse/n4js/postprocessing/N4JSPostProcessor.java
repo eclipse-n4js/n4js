@@ -19,8 +19,8 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource;
@@ -146,7 +146,7 @@ public class N4JSPostProcessor implements PostProcessor {
 		for (Iterator<EObject> iter = script.eAllContents(); iter.hasNext();) {
 			EObject eObject = iter.next();
 			if (eObject instanceof IdentifierRef) {
-				if (eObject.eContainer() instanceof ExportSpecifier) {
+				if (eObject.eContainer() instanceof NamedExportSpecifier) {
 					continue;
 				}
 				((IdentifierRef) eObject).getId(); // do resolve
@@ -177,28 +177,33 @@ public class N4JSPostProcessor implements PostProcessor {
 
 		// move internal types to exposedInternalTypes if referenced from types or variables
 		final List<EObject> stuffToScan = new ArrayList<>();
+		// FIXME must be adjusted for namespaces!
 		stuffToScan.addAll(module.getTypes());
 		stuffToScan.addAll(module.getVariables());
+		stuffToScan.addAll(module.getExportDefinitions());
 		for (EObject currRoot : stuffToScan) {
-			exposeTypesReferencedBy(currRoot);
+			exposeTypesReferencedBy(currRoot, true);
 		}
 	}
 
-	private static void exposeTypesReferencedBy(EObject root) {
-		final TreeIterator<EObject> i = root.eAllContents();
-		while (i.hasNext()) {
-			final EObject object = i.next();
-			for (EReference currRef : object.eClass().getEAllReferences()) {
-				if (!currRef.isContainment() && !currRef.isContainer()) {
-					final Object currTarget = object.eGet(currRef);
-					if (currTarget instanceof Collection<?>) {
-						for (Object currObj : (Collection<?>) currTarget) {
-							exposeType(currObj);
-						}
-					} else {
-						exposeType(currTarget);
+	private static void exposeTypesReferencedBy(EObject object, boolean includeChildren) {
+		for (EReference currRef : object.eClass().getEAllReferences()) {
+			if (!currRef.isContainment() && !currRef.isContainer()) {
+				final Object currTarget = object.eGet(currRef);
+				if (currTarget instanceof Collection<?>) {
+					for (Object currObj : (Collection<?>) currTarget) {
+						exposeType(currObj);
 					}
+				} else {
+					exposeType(currTarget);
 				}
+			}
+		}
+		if (includeChildren) {
+			final TreeIterator<EObject> i = object.eAllContents();
+			while (i.hasNext()) {
+				final EObject child = i.next();
+				exposeTypesReferencedBy(child, false);
 			}
 		}
 	}
@@ -230,7 +235,7 @@ public class N4JSPostProcessor implements PostProcessor {
 			// everything referenced by the type we just moved to 'exposedInternalTypes' has to be exposed as well
 			// (this is required, for example, if 'root' is a structural type, see:
 			// org.eclipse.n4js.xpect.ui.tests/testdata_ui/typesystem/structuralTypeRefWithMembersAcrossFiles/Main.n4js.xt)
-			exposeTypesReferencedBy(root);
+			exposeTypesReferencedBy(root, true);
 		}
 	}
 }

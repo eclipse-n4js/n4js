@@ -188,10 +188,10 @@ ExportDeclaration:
 	ExportDeclarationImpl
 ;
 
-fragment ExportDeclarationImpl *:
+fragment ExportDeclarationImpl*:
 	'export' (
-		wildcardExport?='*' ExportFromClause Semi
-	|	ExportClause ->ExportFromClause? Semi
+		NamespaceExportClause ExportFromClause Semi
+	|	NamedExportClause ->ExportFromClause? Semi
 	|	exportedElement=ExportableElement
 	|	defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
 	)
@@ -201,13 +201,21 @@ fragment ExportFromClause*:
 	'from' module=[types::AbstractModule|ModuleSpecifier]
 ;
 
-fragment ExportClause*:
+fragment NamespaceExportClause*:
+	namespaceExport=NamespaceExportSpecifier
+;
+
+fragment NamedExportClause*:
 	'{'
-		(namedExports+=ExportSpecifier (',' namedExports+=ExportSpecifier)* ','?)?
+		(namedExports+=NamedExportSpecifier (',' namedExports+=NamedExportSpecifier)* ','?)?
 	'}'
 ;
 
-ExportSpecifier:
+NamespaceExportSpecifier:
+	{NamespaceExportSpecifier} '*' ('as' alias=IdentifierName)?
+;
+
+NamedExportSpecifier:
 	element=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
 ;
 

@@ -35,7 +35,6 @@ import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
@@ -62,6 +61,7 @@ import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
+import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
@@ -177,7 +177,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		writeJsdoc(original);
 		processAnnotations(original.getAnnotations());
 		write("export ");
-		final List<ExportSpecifier> namedExports = original.getNamedExports();
+		final List<NamedExportSpecifier> namedExports = original.getNamedExports();
 		if (!namedExports.isEmpty()) {
 			write("{ ");
 			process(namedExports, ", ");
@@ -201,7 +201,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	}
 
 	@Override
-	public Boolean caseExportSpecifier(ExportSpecifier original) {
+	public Boolean caseNamedExportSpecifier(NamedExportSpecifier original) {
 		process(original.getElement());
 		final String alias = original.getAlias();
 		if (alias != null) {

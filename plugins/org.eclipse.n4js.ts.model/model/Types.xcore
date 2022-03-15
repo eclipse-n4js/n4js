@@ -352,8 +352,10 @@ abstract class TExportingElement {
 	contains ExportDefinition[] exportDefinitions
 }
 
-class ExportDefinition {
+interface ExportDefinition {}
 
+class ElementExportDefinition extends ExportDefinition {
+	
 	String declaredExportedName
 
 	op String getExportedName() {
@@ -365,6 +367,14 @@ class ExportDefinition {
 	 * This element need not be contained in this definition's parent {@link TExportingElement}.
 	 */
 	refers TExportableElement exportedElement
+}
+
+class ModuleExportDefinition extends ExportDefinition {
+
+	/*
+	 * The module being re-exported. All the module's elements will be re-exported individually under their name.
+	 */
+	refers AbstractModule exportedModule
 }
 
 class TExportableElement extends IdentifiableElement {

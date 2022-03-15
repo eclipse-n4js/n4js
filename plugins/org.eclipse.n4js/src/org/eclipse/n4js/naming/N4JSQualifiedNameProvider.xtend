@@ -29,7 +29,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
-import org.eclipse.n4js.ts.types.ExportDefinition
+import org.eclipse.n4js.ts.types.ElementExportDefinition
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TDeclaredModule
@@ -121,7 +121,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			ExportDeclaration:
 				exportedElement?.getFullyQualifiedName
-			ExportDefinition: {
+			ElementExportDefinition: {
 				val containingExportingElem = it.eContainer as TExportingElement;
 				val declExpName = it.declaredExportedName;
 				if (declExpName !== null) {

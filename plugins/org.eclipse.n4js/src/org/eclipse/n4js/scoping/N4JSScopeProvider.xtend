@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ExportDeclaration
-import org.eclipse.n4js.n4JS.ExportSpecifier
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportDeclaration
@@ -38,6 +37,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
+import org.eclipse.n4js.n4JS.NamedExportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
@@ -146,11 +146,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject ContainerTypesHelper containerTypesHelper;
 
-	@Inject TopLevelElementsCollector topLevelElementCollector
+	@Inject ExportedElementsCollector exportedElementCollector
 
 	@Inject ScopeSnapshotHelper scopeSnapshotHelper
 
-	
+
 	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
 	private boolean suppressCrossFileResolutionOfIdentifierRef = false;
 
@@ -169,7 +169,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		};
 		return tac;
 	}
-	
+
 
 	/**
 	 * Delegates to {@link N4JSImportedNamespaceAwareLocalScopeProvider#getScope(EObject, EReference)}, which in turn
@@ -409,7 +409,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * <pre>export { e1, e2 } from "importedModule"</pre>
 	 * See {@link #scope_ImportedElement(NamedImportSpecifier, EReference)}.
 	 */
-	protected def IScope scope_ImportedElement(ExportSpecifier specifier, EReference reference) {
+	protected def IScope scope_ImportedElement(NamedExportSpecifier specifier, EReference reference) {
 		val expDecl = EcoreUtil2.getContainerOfType(specifier, ExportDeclaration);
 		return scope_AllTopLevelElementsFromAbstractNamespace(expDecl.module, expDecl, true, true);
 	}
@@ -420,7 +420,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	private def IScope scope_IdentifierRef_id(IdentifierRef identifierRef, EReference ref) {
 		val parent = identifierRef.eContainer;
 		// handle re-exports
-		if (parent instanceof ExportSpecifier) {
+		if (parent instanceof NamedExportSpecifier) {
 			val grandParent = parent.eContainer;
 			if (grandParent instanceof ExportDeclaration) {
 				if (grandParent.isReexport()) {
@@ -549,7 +549,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		
 		// get regular top-level elements scope
-		val tlElems = topLevelElementCollector.getTopLevelElements(ns, context.eResource, includeHollows, includeVariables);
+		val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, includeHollows, includeVariables);
 		val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromModule", ns, IScope.NULLSCOPE, false, tlElems);
 		
 		return topLevelElementsScope;

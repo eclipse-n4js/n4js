@@ -122,7 +122,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAbstractNamespace()
 	 * @generated
 	 */
-	int ABSTRACT_NAMESPACE = 24;
+	int ABSTRACT_NAMESPACE = 26;
 
 	/**
 	 * The feature id for the '<em><b>Export Definitions</b></em>' containment reference list.
@@ -996,32 +996,14 @@ public interface TypesPackage extends EPackage {
 	int IDENTIFIABLE_ELEMENT_OPERATION_COUNT = TYPABLE_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl <em>Export Definition</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.ExportDefinition <em>Export Definition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl
+	 * @see org.eclipse.n4js.ts.types.ExportDefinition
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getExportDefinition()
 	 * @generated
 	 */
 	int EXPORT_DEFINITION = 8;
-
-	/**
-	 * The feature id for the '<em><b>Declared Exported Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPORT_DEFINITION__DECLARED_EXPORTED_NAME = 0;
-
-	/**
-	 * The feature id for the '<em><b>Exported Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPORT_DEFINITION__EXPORTED_ELEMENT = 1;
 
 	/**
 	 * The number of structural features of the '<em>Export Definition</em>' class.
@@ -1030,16 +1012,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DEFINITION_FEATURE_COUNT = 2;
-
-	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPORT_DEFINITION___GET_EXPORTED_NAME = 0;
+	int EXPORT_DEFINITION_FEATURE_COUNT = 0;
 
 	/**
 	 * The number of operations of the '<em>Export Definition</em>' class.
@@ -1048,7 +1021,99 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DEFINITION_OPERATION_COUNT = 1;
+	int EXPORT_DEFINITION_OPERATION_COUNT = 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl <em>Element Export Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getElementExportDefinition()
+	 * @generated
+	 */
+	int ELEMENT_EXPORT_DEFINITION = 9;
+
+	/**
+	 * The feature id for the '<em><b>Declared Exported Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION__DECLARED_EXPORTED_NAME = EXPORT_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Exported Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT = EXPORT_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of structural features of the '<em>Element Export Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION_FEATURE_COUNT = EXPORT_DEFINITION_FEATURE_COUNT + 2;
+
+	/**
+	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION___GET_EXPORTED_NAME = EXPORT_DEFINITION_OPERATION_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>Element Export Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION_OPERATION_COUNT = EXPORT_DEFINITION_OPERATION_COUNT + 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ModuleExportDefinitionImpl <em>Module Export Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.ModuleExportDefinitionImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleExportDefinition()
+	 * @generated
+	 */
+	int MODULE_EXPORT_DEFINITION = 10;
+
+	/**
+	 * The feature id for the '<em><b>Exported Module</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_EXPORT_DEFINITION__EXPORTED_MODULE = EXPORT_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Module Export Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_EXPORT_DEFINITION_FEATURE_COUNT = EXPORT_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Module Export Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_EXPORT_DEFINITION_OPERATION_COUNT = EXPORT_DEFINITION_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TExportableElementImpl <em>TExportable Element</em>}' class.
@@ -1058,7 +1123,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTExportableElement()
 	 * @generated
 	 */
-	int TEXPORTABLE_ELEMENT = 9;
+	int TEXPORTABLE_ELEMENT = 11;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1122,7 +1187,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTDynamicElement()
 	 * @generated
 	 */
-	int TDYNAMIC_ELEMENT = 10;
+	int TDYNAMIC_ELEMENT = 12;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1195,7 +1260,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotation()
 	 * @generated
 	 */
-	int TANNOTATION = 11;
+	int TANNOTATION = 13;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1259,7 +1324,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationArgument()
 	 * @generated
 	 */
-	int TANNOTATION_ARGUMENT = 12;
+	int TANNOTATION_ARGUMENT = 14;
 
 	/**
 	 * The number of structural features of the '<em>TAnnotation Argument</em>' class.
@@ -1296,7 +1361,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationStringArgument()
 	 * @generated
 	 */
-	int TANNOTATION_STRING_ARGUMENT = 13;
+	int TANNOTATION_STRING_ARGUMENT = 15;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1342,7 +1407,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTTypedElement()
 	 * @generated
 	 */
-	int TTYPED_ELEMENT = 14;
+	int TTYPED_ELEMENT = 16;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -1379,7 +1444,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationTypeRefArgument()
 	 * @generated
 	 */
-	int TANNOTATION_TYPE_REF_ARGUMENT = 15;
+	int TANNOTATION_TYPE_REF_ARGUMENT = 17;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -1425,7 +1490,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotableElement()
 	 * @generated
 	 */
-	int TANNOTABLE_ELEMENT = 16;
+	int TANNOTABLE_ELEMENT = 18;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1462,7 +1527,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getType()
 	 * @generated
 	 */
-	int TYPE = 20;
+	int TYPE = 22;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1670,7 +1735,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeVariable()
 	 * @generated
 	 */
-	int TYPE_VARIABLE = 17;
+	int TYPE_VARIABLE = 19;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1941,7 +2006,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getInferenceVariable()
 	 * @generated
 	 */
-	int INFERENCE_VARIABLE = 18;
+	int INFERENCE_VARIABLE = 20;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2212,7 +2277,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getGenericType()
 	 * @generated
 	 */
-	int GENERIC_TYPE = 21;
+	int GENERIC_TYPE = 23;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2429,7 +2494,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFunction()
 	 * @generated
 	 */
-	int TFUNCTION = 19;
+	int TFUNCTION = 21;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2808,7 +2873,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAccessibleTypeElement()
 	 * @generated
 	 */
-	int ACCESSIBLE_TYPE_ELEMENT = 22;
+	int ACCESSIBLE_TYPE_ELEMENT = 24;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -2890,7 +2955,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getContainerType()
 	 * @generated
 	 */
-	int CONTAINER_TYPE = 23;
+	int CONTAINER_TYPE = 25;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3179,7 +3244,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNamespace()
 	 * @generated
 	 */
-	int TNAMESPACE = 25;
+	int TNAMESPACE = 27;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3486,7 +3551,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNamespaceElement()
 	 * @generated
 	 */
-	int TNAMESPACE_ELEMENT = 26;
+	int TNAMESPACE_ELEMENT = 28;
 
 	/**
 	 * The number of structural features of the '<em>TNamespace Element</em>' class.
@@ -3523,7 +3588,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleNamespaceVirtualType()
 	 * @generated
 	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE = 27;
+	int MODULE_NAMESPACE_VIRTUAL_TYPE = 29;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3758,7 +3823,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getPrimitiveType()
 	 * @generated
 	 */
-	int PRIMITIVE_TYPE = 28;
+	int PRIMITIVE_TYPE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4002,7 +4067,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getBuiltInType()
 	 * @generated
 	 */
-	int BUILT_IN_TYPE = 29;
+	int BUILT_IN_TYPE = 31;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4210,7 +4275,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAnyType()
 	 * @generated
 	 */
-	int ANY_TYPE = 30;
+	int ANY_TYPE = 32;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4418,7 +4483,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getUndefinedType()
 	 * @generated
 	 */
-	int UNDEFINED_TYPE = 31;
+	int UNDEFINED_TYPE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4626,7 +4691,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNullType()
 	 * @generated
 	 */
-	int NULL_TYPE = 32;
+	int NULL_TYPE = 34;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4834,7 +4899,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVoidType()
 	 * @generated
 	 */
-	int VOID_TYPE = 33;
+	int VOID_TYPE = 35;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5042,7 +5107,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructuralType()
 	 * @generated
 	 */
-	int TSTRUCTURAL_TYPE = 34;
+	int TSTRUCTURAL_TYPE = 36;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5340,7 +5405,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifier()
 	 * @generated
 	 */
-	int TCLASSIFIER = 35;
+	int TCLASSIFIER = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5683,7 +5748,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getArrayLike()
 	 * @generated
 	 */
-	int ARRAY_LIKE = 36;
+	int ARRAY_LIKE = 38;
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -5729,7 +5794,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTN4Classifier()
 	 * @generated
 	 */
-	int TN4_CLASSIFIER = 37;
+	int TN4_CLASSIFIER = 39;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6153,7 +6218,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClass()
 	 * @generated
 	 */
-	int TCLASS = 38;
+	int TCLASS = 40;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6649,7 +6714,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTInterface()
 	 * @generated
 	 */
-	int TINTERFACE = 39;
+	int TINTERFACE = 41;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7082,7 +7147,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMember()
 	 * @generated
 	 */
-	int TMEMBER = 40;
+	int TMEMBER = 42;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7371,7 +7436,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMemberWithAccessModifier()
 	 * @generated
 	 */
-	int TMEMBER_WITH_ACCESS_MODIFIER = 41;
+	int TMEMBER_WITH_ACCESS_MODIFIER = 43;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7687,7 +7752,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMember()
 	 * @generated
 	 */
-	int TSTRUCT_MEMBER = 42;
+	int TSTRUCT_MEMBER = 44;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8012,7 +8077,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMethod()
 	 * @generated
 	 */
-	int TMETHOD = 43;
+	int TMETHOD = 45;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8643,7 +8708,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMethod()
 	 * @generated
 	 */
-	int TSTRUCT_METHOD = 44;
+	int TSTRUCT_METHOD = 46;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9301,7 +9366,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFormalParameter()
 	 * @generated
 	 */
-	int TFORMAL_PARAMETER = 45;
+	int TFORMAL_PARAMETER = 47;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9455,7 +9520,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnonymousFormalParameter()
 	 * @generated
 	 */
-	int TANONYMOUS_FORMAL_PARAMETER = 46;
+	int TANONYMOUS_FORMAL_PARAMETER = 48;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9627,7 +9692,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTField()
 	 * @generated
 	 */
-	int TFIELD = 47;
+	int TFIELD = 49;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9988,7 +10053,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructField()
 	 * @generated
 	 */
-	int TSTRUCT_FIELD = 48;
+	int TSTRUCT_FIELD = 50;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10376,7 +10441,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getFieldAccessor()
 	 * @generated
 	 */
-	int FIELD_ACCESSOR = 49;
+	int FIELD_ACCESSOR = 51;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10728,7 +10793,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTGetter()
 	 * @generated
 	 */
-	int TGETTER = 50;
+	int TGETTER = 52;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11089,7 +11154,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructGetter()
 	 * @generated
 	 */
-	int TSTRUCT_GETTER = 51;
+	int TSTRUCT_GETTER = 53;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11477,7 +11542,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTSetter()
 	 * @generated
 	 */
-	int TSETTER = 52;
+	int TSETTER = 54;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11838,7 +11903,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructSetter()
 	 * @generated
 	 */
-	int TSTRUCT_SETTER = 53;
+	int TSTRUCT_SETTER = 55;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12226,7 +12291,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnum()
 	 * @generated
 	 */
-	int TENUM = 54;
+	int TENUM = 56;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12497,7 +12562,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getSyntaxRelatedTElement()
 	 * @generated
 	 */
-	int SYNTAX_RELATED_TELEMENT = 57;
+	int SYNTAX_RELATED_TELEMENT = 59;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -12534,7 +12599,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnumLiteral()
 	 * @generated
 	 */
-	int TENUM_LITERAL = 55;
+	int TENUM_LITERAL = 57;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -12616,7 +12681,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAlias()
 	 * @generated
 	 */
-	int TYPE_ALIAS = 56;
+	int TYPE_ALIAS = 58;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12887,7 +12952,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTConstableElement()
 	 * @generated
 	 */
-	int TCONSTABLE_ELEMENT = 58;
+	int TCONSTABLE_ELEMENT = 60;
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -12933,7 +12998,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
-	int TVARIABLE = 59;
+	int TVARIABLE = 61;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -13141,7 +13206,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
-	int TYPING_STRATEGY = 60;
+	int TYPING_STRATEGY = 62;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -13151,7 +13216,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
-	int TYPE_ACCESS_MODIFIER = 61;
+	int TYPE_ACCESS_MODIFIER = 63;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -13161,7 +13226,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
-	int MEMBER_ACCESS_MODIFIER = 62;
+	int MEMBER_ACCESS_MODIFIER = 64;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -13171,7 +13236,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
-	int MEMBER_TYPE = 63;
+	int MEMBER_TYPE = 65;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -13181,7 +13246,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 64;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 66;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -13191,7 +13256,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 65;
+	int ITERABLE_OF_TCLASSIFIER = 67;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -13201,7 +13266,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 66;
+	int VARIANCE = 68;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -13211,7 +13276,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 67;
+	int NAME_AND_ACCESS = 69;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -13221,7 +13286,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 68;
+	int MEMBER_LIST = 70;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -13231,7 +13296,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 69;
+	int TCLASSIFIER_ITERABLE = 71;
 
 
 	/**
@@ -13723,36 +13788,67 @@ public interface TypesPackage extends EPackage {
 	EClass getExportDefinition();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.ExportDefinition#getDeclaredExportedName <em>Declared Exported Name</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ElementExportDefinition <em>Element Export Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Element Export Definition</em>'.
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition
+	 * @generated
+	 */
+	EClass getElementExportDefinition();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getDeclaredExportedName <em>Declared Exported Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Declared Exported Name</em>'.
-	 * @see org.eclipse.n4js.ts.types.ExportDefinition#getDeclaredExportedName()
-	 * @see #getExportDefinition()
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#getDeclaredExportedName()
+	 * @see #getElementExportDefinition()
 	 * @generated
 	 */
-	EAttribute getExportDefinition_DeclaredExportedName();
+	EAttribute getElementExportDefinition_DeclaredExportedName();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.ExportDefinition#getExportedElement <em>Exported Element</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedElement <em>Exported Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Exported Element</em>'.
-	 * @see org.eclipse.n4js.ts.types.ExportDefinition#getExportedElement()
-	 * @see #getExportDefinition()
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedElement()
+	 * @see #getElementExportDefinition()
 	 * @generated
 	 */
-	EReference getExportDefinition_ExportedElement();
+	EReference getElementExportDefinition_ExportedElement();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.ExportDefinition#getExportedName() <em>Get Exported Name</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedName() <em>Get Exported Name</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Get Exported Name</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.ExportDefinition#getExportedName()
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedName()
 	 * @generated
 	 */
-	EOperation getExportDefinition__GetExportedName();
+	EOperation getElementExportDefinition__GetExportedName();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ModuleExportDefinition <em>Module Export Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Module Export Definition</em>'.
+	 * @see org.eclipse.n4js.ts.types.ModuleExportDefinition
+	 * @generated
+	 */
+	EClass getModuleExportDefinition();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.ModuleExportDefinition#getExportedModule <em>Exported Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Exported Module</em>'.
+	 * @see org.eclipse.n4js.ts.types.ModuleExportDefinition#getExportedModule()
+	 * @see #getModuleExportDefinition()
+	 * @generated
+	 */
+	EReference getModuleExportDefinition_ExportedModule();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TExportableElement <em>TExportable Element</em>}'.
@@ -16799,14 +16895,24 @@ public interface TypesPackage extends EPackage {
 		EReference TEXPORTING_ELEMENT__EXPORT_DEFINITIONS = eINSTANCE.getTExportingElement_ExportDefinitions();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl <em>Export Definition</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.ExportDefinition <em>Export Definition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl
+		 * @see org.eclipse.n4js.ts.types.ExportDefinition
 		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getExportDefinition()
 		 * @generated
 		 */
 		EClass EXPORT_DEFINITION = eINSTANCE.getExportDefinition();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl <em>Element Export Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getElementExportDefinition()
+		 * @generated
+		 */
+		EClass ELEMENT_EXPORT_DEFINITION = eINSTANCE.getElementExportDefinition();
 
 		/**
 		 * The meta object literal for the '<em><b>Declared Exported Name</b></em>' attribute feature.
@@ -16814,7 +16920,7 @@ public interface TypesPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute EXPORT_DEFINITION__DECLARED_EXPORTED_NAME = eINSTANCE.getExportDefinition_DeclaredExportedName();
+		EAttribute ELEMENT_EXPORT_DEFINITION__DECLARED_EXPORTED_NAME = eINSTANCE.getElementExportDefinition_DeclaredExportedName();
 
 		/**
 		 * The meta object literal for the '<em><b>Exported Element</b></em>' reference feature.
@@ -16822,7 +16928,7 @@ public interface TypesPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference EXPORT_DEFINITION__EXPORTED_ELEMENT = eINSTANCE.getExportDefinition_ExportedElement();
+		EReference ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT = eINSTANCE.getElementExportDefinition_ExportedElement();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Exported Name</b></em>' operation.
@@ -16830,7 +16936,25 @@ public interface TypesPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation EXPORT_DEFINITION___GET_EXPORTED_NAME = eINSTANCE.getExportDefinition__GetExportedName();
+		EOperation ELEMENT_EXPORT_DEFINITION___GET_EXPORTED_NAME = eINSTANCE.getElementExportDefinition__GetExportedName();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ModuleExportDefinitionImpl <em>Module Export Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.ModuleExportDefinitionImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleExportDefinition()
+		 * @generated
+		 */
+		EClass MODULE_EXPORT_DEFINITION = eINSTANCE.getModuleExportDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Exported Module</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MODULE_EXPORT_DEFINITION__EXPORTED_MODULE = eINSTANCE.getModuleExportDefinition_ExportedModule();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TExportableElementImpl <em>TExportable Element</em>}' class.

@@ -466,11 +466,11 @@ ruleExportDeclaration:
 ruleExportDeclarationImpl:
 	'export'
 	(
-		'*'
+		ruleNamespaceExportClause
 		ruleExportFromClause
 		ruleSemi
 		    |
-		ruleExportClause
+		ruleNamedExportClause
 		(
 			('from')=>
 			ruleExportFromClause
@@ -498,22 +498,36 @@ ruleExportFromClause:
 	ruleModuleSpecifier
 ;
 
-// Rule ExportClause
-ruleExportClause:
+// Rule NamespaceExportClause
+ruleNamespaceExportClause:
+	ruleNamespaceExportSpecifier
+;
+
+// Rule NamedExportClause
+ruleNamedExportClause:
 	'{'
 	(
-		ruleExportSpecifier
+		ruleNamedExportSpecifier
 		(
 			','
-			ruleExportSpecifier
+			ruleNamedExportSpecifier
 		)*
 		','?
 	)?
 	'}'
 ;
 
-// Rule ExportSpecifier
-ruleExportSpecifier:
+// Rule NamespaceExportSpecifier
+ruleNamespaceExportSpecifier:
+	'*'
+	(
+		'as'
+		ruleIdentifierName
+	)?
+;
+
+// Rule NamedExportSpecifier
+ruleNamedExportSpecifier:
 	ruleIdentifierRef
 	(
 		'as'

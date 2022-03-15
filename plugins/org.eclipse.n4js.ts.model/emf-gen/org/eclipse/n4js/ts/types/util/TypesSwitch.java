@@ -141,6 +141,20 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION: {
+				ElementExportDefinition elementExportDefinition = (ElementExportDefinition)theEObject;
+				T result = caseElementExportDefinition(elementExportDefinition);
+				if (result == null) result = caseExportDefinition(elementExportDefinition);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case TypesPackage.MODULE_EXPORT_DEFINITION: {
+				ModuleExportDefinition moduleExportDefinition = (ModuleExportDefinition)theEObject;
+				T result = caseModuleExportDefinition(moduleExportDefinition);
+				if (result == null) result = caseExportDefinition(moduleExportDefinition);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypesPackage.TEXPORTABLE_ELEMENT: {
 				TExportableElement tExportableElement = (TExportableElement)theEObject;
 				T result = caseTExportableElement(tExportableElement);
@@ -885,6 +899,36 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseExportDefinition(ExportDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Element Export Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Element Export Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseElementExportDefinition(ElementExportDefinition object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Module Export Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Module Export Definition</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseModuleExportDefinition(ModuleExportDefinition object) {
 		return null;
 	}
 

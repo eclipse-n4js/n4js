@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.NamespaceExportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
@@ -102,6 +103,9 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		if (typeDefiningElement instanceof NamespaceImportSpecifier) {
 			return; // does not apply to NamespaceImportSpecifier and their defined type ModuleNamespaceVirtualType
+		}
+		if (typeDefiningElement instanceof NamespaceExportSpecifier) {
+			return; // does not apply to NamespaceExportSpecifier and their defined type ModuleNamespaceVirtualType
 		}
 
 		val type = typeDefiningElement.definedType

@@ -25,8 +25,8 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.resource.N4JSEObjectDescription
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.scoping.ExportedElementsCollector
 import org.eclipse.n4js.scoping.N4JSScopeProvider
-import org.eclipse.n4js.scoping.TopLevelElementsCollector
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
@@ -88,7 +88,7 @@ class ImportedElementsScopingHelper {
 	private ScopeSnapshotHelper scopesHelper;
 	
 	@Inject
-	private TopLevelElementsCollector topLevelElementCollector
+	private ExportedElementsCollector exportedElementsCollector
 
 
 
@@ -173,7 +173,7 @@ class ImportedElementsScopingHelper {
 			val module = imp?.module;
 			if (module !== null) {
 				
-				val topLevelElements = topLevelElementCollector.getTopLevelElements(module, contextResource, includeHollows, includeVariables);
+				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, includeHollows, includeVariables);
 				val tleScope = scopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", module, IScope.NULLSCOPE, false, topLevelElements)
 			
 				for (specifier : imp.importSpecifiers) {

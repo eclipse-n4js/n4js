@@ -117,9 +117,17 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4JSPackage.EXPORT_SPECIFIER: {
-				ExportSpecifier exportSpecifier = (ExportSpecifier)theEObject;
-				T1 result = caseExportSpecifier(exportSpecifier);
+			case N4JSPackage.NAMESPACE_EXPORT_SPECIFIER: {
+				NamespaceExportSpecifier namespaceExportSpecifier = (NamespaceExportSpecifier)theEObject;
+				T1 result = caseNamespaceExportSpecifier(namespaceExportSpecifier);
+				if (result == null) result = caseTypeDefiningElement(namespaceExportSpecifier);
+				if (result == null) result = caseTypableElement(namespaceExportSpecifier);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER: {
+				NamedExportSpecifier namedExportSpecifier = (NamedExportSpecifier)theEObject;
+				T1 result = caseNamedExportSpecifier(namedExportSpecifier);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -2058,17 +2066,32 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Export Specifier</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Namespace Export Specifier</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Export Specifier</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Namespace Export Specifier</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T1 caseExportSpecifier(ExportSpecifier object) {
+	public T1 caseNamespaceExportSpecifier(NamespaceExportSpecifier object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Named Export Specifier</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Named Export Specifier</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T1 caseNamedExportSpecifier(NamedExportSpecifier object) {
 		return null;
 	}
 

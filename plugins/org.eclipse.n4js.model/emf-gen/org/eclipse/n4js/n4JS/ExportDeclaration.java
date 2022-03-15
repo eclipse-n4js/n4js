@@ -23,8 +23,8 @@ import org.eclipse.emf.common.util.EList;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getExportedElement <em>Exported Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getDefaultExportedExpression <em>Default Exported Expression</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getNamespaceExport <em>Namespace Export</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getNamedExports <em>Named Exports</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#isWildcardExport <em>Wildcard Export</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#isDefaultExport <em>Default Export</em>}</li>
  * </ul>
  *
@@ -78,8 +78,30 @@ public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElem
 	void setDefaultExportedExpression(Expression value);
 
 	/**
+	 * Returns the value of the '<em><b>Namespace Export</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Namespace Export</em>' containment reference.
+	 * @see #setNamespaceExport(NamespaceExportSpecifier)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportDeclaration_NamespaceExport()
+	 * @model containment="true"
+	 * @generated
+	 */
+	NamespaceExportSpecifier getNamespaceExport();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ExportDeclaration#getNamespaceExport <em>Namespace Export</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Namespace Export</em>' containment reference.
+	 * @see #getNamespaceExport()
+	 * @generated
+	 */
+	void setNamespaceExport(NamespaceExportSpecifier value);
+
+	/**
 	 * Returns the value of the '<em><b>Named Exports</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4JS.ExportSpecifier}.
+	 * The list contents are of type {@link org.eclipse.n4js.n4JS.NamedExportSpecifier}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Named Exports</em>' containment reference list.
@@ -87,29 +109,7 @@ public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElem
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ExportSpecifier> getNamedExports();
-
-	/**
-	 * Returns the value of the '<em><b>Wildcard Export</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Wildcard Export</em>' attribute.
-	 * @see #setWildcardExport(boolean)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportDeclaration_WildcardExport()
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean isWildcardExport();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ExportDeclaration#isWildcardExport <em>Wildcard Export</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Wildcard Export</em>' attribute.
-	 * @see #isWildcardExport()
-	 * @generated
-	 */
-	void setWildcardExport(boolean value);
+	EList<NamedExportSpecifier> getNamedExports();
 
 	/**
 	 * Returns the value of the '<em><b>Default Export</b></em>' attribute.

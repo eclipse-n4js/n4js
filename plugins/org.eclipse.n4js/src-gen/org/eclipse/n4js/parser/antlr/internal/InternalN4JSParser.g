@@ -2154,20 +2154,17 @@ ruleExportDeclarationImpl[EObject in_current]  returns [EObject current=in_curre
 		}
 		(
 			(
-				(
-					(
-						lv_wildcardExport_1_0=Asterisk
-						{
-							newLeafNode(lv_wildcardExport_1_0, grammarAccess.getExportDeclarationImplAccess().getWildcardExportAsteriskKeyword_1_0_0_0());
-						}
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getExportDeclarationImplRule());
-							}
-							setWithLastConsumed($current, "wildcardExport", lv_wildcardExport_1_0 != null, "*");
-						}
-					)
-				)
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getExportDeclarationImplRule());
+					}
+					newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getNamespaceExportClauseParserRuleCall_1_0_0());
+				}
+				this_NamespaceExportClause_1=ruleNamespaceExportClause[$current]
+				{
+					$current = $this_NamespaceExportClause_1.current;
+					afterParserOrEnumRuleCall();
+				}
 				{
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getExportDeclarationImplRule());
@@ -2193,11 +2190,11 @@ ruleExportDeclarationImpl[EObject in_current]  returns [EObject current=in_curre
 					if ($current==null) {
 						$current = createModelElement(grammarAccess.getExportDeclarationImplRule());
 					}
-					newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getExportClauseParserRuleCall_1_1_0());
+					newCompositeNode(grammarAccess.getExportDeclarationImplAccess().getNamedExportClauseParserRuleCall_1_1_0());
 				}
-				this_ExportClause_4=ruleExportClause[$current]
+				this_NamedExportClause_4=ruleNamedExportClause[$current]
 				{
-					$current = $this_ExportClause_4.current;
+					$current = $this_NamedExportClause_4.current;
 					afterParserOrEnumRuleCall();
 				}
 				(
@@ -2348,8 +2345,38 @@ ruleExportFromClause[EObject in_current]  returns [EObject current=in_current]
 ;
 
 
-// Rule ExportClause
-ruleExportClause[EObject in_current]  returns [EObject current=in_current]
+// Rule NamespaceExportClause
+ruleNamespaceExportClause[EObject in_current]  returns [EObject current=in_current]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				newCompositeNode(grammarAccess.getNamespaceExportClauseAccess().getNamespaceExportNamespaceExportSpecifierParserRuleCall_0());
+			}
+			lv_namespaceExport_0_0=ruleNamespaceExportSpecifier
+			{
+				if ($current==null) {
+					$current = createModelElementForParent(grammarAccess.getNamespaceExportClauseRule());
+				}
+				set(
+					$current,
+					"namespaceExport",
+					lv_namespaceExport_0_0,
+					"org.eclipse.n4js.N4JS.NamespaceExportSpecifier");
+				afterParserOrEnumRuleCall();
+			}
+		)
+	)
+;
+
+
+// Rule NamedExportClause
+ruleNamedExportClause[EObject in_current]  returns [EObject current=in_current]
 @init {
 	enterRule();
 }
@@ -2359,24 +2386,24 @@ ruleExportClause[EObject in_current]  returns [EObject current=in_current]
 	(
 		otherlv_0=LeftCurlyBracket
 		{
-			newLeafNode(otherlv_0, grammarAccess.getExportClauseAccess().getLeftCurlyBracketKeyword_0());
+			newLeafNode(otherlv_0, grammarAccess.getNamedExportClauseAccess().getLeftCurlyBracketKeyword_0());
 		}
 		(
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getExportClauseAccess().getNamedExportsExportSpecifierParserRuleCall_1_0_0());
+						newCompositeNode(grammarAccess.getNamedExportClauseAccess().getNamedExportsNamedExportSpecifierParserRuleCall_1_0_0());
 					}
-					lv_namedExports_1_0=ruleExportSpecifier
+					lv_namedExports_1_0=ruleNamedExportSpecifier
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getExportClauseRule());
+							$current = createModelElementForParent(grammarAccess.getNamedExportClauseRule());
 						}
 						add(
 							$current,
 							"namedExports",
 							lv_namedExports_1_0,
-							"org.eclipse.n4js.N4JS.ExportSpecifier");
+							"org.eclipse.n4js.N4JS.NamedExportSpecifier");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -2384,23 +2411,23 @@ ruleExportClause[EObject in_current]  returns [EObject current=in_current]
 			(
 				otherlv_2=Comma
 				{
-					newLeafNode(otherlv_2, grammarAccess.getExportClauseAccess().getCommaKeyword_1_1_0());
+					newLeafNode(otherlv_2, grammarAccess.getNamedExportClauseAccess().getCommaKeyword_1_1_0());
 				}
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getExportClauseAccess().getNamedExportsExportSpecifierParserRuleCall_1_1_1_0());
+							newCompositeNode(grammarAccess.getNamedExportClauseAccess().getNamedExportsNamedExportSpecifierParserRuleCall_1_1_1_0());
 						}
-						lv_namedExports_3_0=ruleExportSpecifier
+						lv_namedExports_3_0=ruleNamedExportSpecifier
 						{
 							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getExportClauseRule());
+								$current = createModelElementForParent(grammarAccess.getNamedExportClauseRule());
 							}
 							add(
 								$current,
 								"namedExports",
 								lv_namedExports_3_0,
-								"org.eclipse.n4js.N4JS.ExportSpecifier");
+								"org.eclipse.n4js.N4JS.NamedExportSpecifier");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -2409,26 +2436,81 @@ ruleExportClause[EObject in_current]  returns [EObject current=in_current]
 			(
 				otherlv_4=Comma
 				{
-					newLeafNode(otherlv_4, grammarAccess.getExportClauseAccess().getCommaKeyword_1_2());
+					newLeafNode(otherlv_4, grammarAccess.getNamedExportClauseAccess().getCommaKeyword_1_2());
 				}
 			)?
 		)?
 		otherlv_5=RightCurlyBracket
 		{
-			newLeafNode(otherlv_5, grammarAccess.getExportClauseAccess().getRightCurlyBracketKeyword_2());
+			newLeafNode(otherlv_5, grammarAccess.getNamedExportClauseAccess().getRightCurlyBracketKeyword_2());
 		}
 	)
 ;
 
-// Entry rule entryRuleExportSpecifier
-entryRuleExportSpecifier returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getExportSpecifierRule()); }
-	iv_ruleExportSpecifier=ruleExportSpecifier
-	{ $current=$iv_ruleExportSpecifier.current; }
+// Entry rule entryRuleNamespaceExportSpecifier
+entryRuleNamespaceExportSpecifier returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getNamespaceExportSpecifierRule()); }
+	iv_ruleNamespaceExportSpecifier=ruleNamespaceExportSpecifier
+	{ $current=$iv_ruleNamespaceExportSpecifier.current; }
 	EOF;
 
-// Rule ExportSpecifier
-ruleExportSpecifier returns [EObject current=null]
+// Rule NamespaceExportSpecifier
+ruleNamespaceExportSpecifier returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				$current = forceCreateModelElement(
+					grammarAccess.getNamespaceExportSpecifierAccess().getNamespaceExportSpecifierAction_0(),
+					$current);
+			}
+		)
+		otherlv_1=Asterisk
+		{
+			newLeafNode(otherlv_1, grammarAccess.getNamespaceExportSpecifierAccess().getAsteriskKeyword_1());
+		}
+		(
+			otherlv_2=As
+			{
+				newLeafNode(otherlv_2, grammarAccess.getNamespaceExportSpecifierAccess().getAsKeyword_2_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getNamespaceExportSpecifierAccess().getAliasIdentifierNameParserRuleCall_2_1_0());
+					}
+					lv_alias_3_0=ruleIdentifierName
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getNamespaceExportSpecifierRule());
+						}
+						set(
+							$current,
+							"alias",
+							lv_alias_3_0,
+							"org.eclipse.n4js.TypeExpressions.IdentifierName");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)?
+	)
+;
+
+// Entry rule entryRuleNamedExportSpecifier
+entryRuleNamedExportSpecifier returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getNamedExportSpecifierRule()); }
+	iv_ruleNamedExportSpecifier=ruleNamedExportSpecifier
+	{ $current=$iv_ruleNamedExportSpecifier.current; }
+	EOF;
+
+// Rule NamedExportSpecifier
+ruleNamedExportSpecifier returns [EObject current=null]
 @init {
 	enterRule();
 }
@@ -2439,12 +2521,12 @@ ruleExportSpecifier returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getNamedExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0());
 				}
 				lv_element_0_0=ruleIdentifierRef
 				{
 					if ($current==null) {
-						$current = createModelElementForParent(grammarAccess.getExportSpecifierRule());
+						$current = createModelElementForParent(grammarAccess.getNamedExportSpecifierRule());
 					}
 					set(
 						$current,
@@ -2458,17 +2540,17 @@ ruleExportSpecifier returns [EObject current=null]
 		(
 			otherlv_1=As
 			{
-				newLeafNode(otherlv_1, grammarAccess.getExportSpecifierAccess().getAsKeyword_1_0());
+				newLeafNode(otherlv_1, grammarAccess.getNamedExportSpecifierAccess().getAsKeyword_1_0());
 			}
 			(
 				(
 					{
-						newCompositeNode(grammarAccess.getExportSpecifierAccess().getAliasIdentifierNameParserRuleCall_1_1_0());
+						newCompositeNode(grammarAccess.getNamedExportSpecifierAccess().getAliasIdentifierNameParserRuleCall_1_1_0());
 					}
 					lv_alias_2_0=ruleIdentifierName
 					{
 						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getExportSpecifierRule());
+							$current = createModelElementForParent(grammarAccess.getNamedExportSpecifierRule());
 						}
 						set(
 							$current,

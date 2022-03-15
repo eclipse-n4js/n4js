@@ -75,13 +75,22 @@ public interface TypesFactory extends EFactory {
 	IdentifiableElement createIdentifiableElement();
 
 	/**
-	 * Returns a new object of class '<em>Export Definition</em>'.
+	 * Returns a new object of class '<em>Element Export Definition</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Export Definition</em>'.
+	 * @return a new object of class '<em>Element Export Definition</em>'.
 	 * @generated
 	 */
-	ExportDefinition createExportDefinition();
+	ElementExportDefinition createElementExportDefinition();
+
+	/**
+	 * Returns a new object of class '<em>Module Export Definition</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Module Export Definition</em>'.
+	 * @generated
+	 */
+	ModuleExportDefinition createModuleExportDefinition();
 
 	/**
 	 * Returns a new object of class '<em>TExportable Element</em>'.

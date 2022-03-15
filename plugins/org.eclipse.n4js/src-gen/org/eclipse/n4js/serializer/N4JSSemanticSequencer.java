@@ -50,7 +50,6 @@ import org.eclipse.n4js.n4JS.DoubleLiteral;
 import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.ExportedVariableBinding;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
@@ -93,7 +92,9 @@ import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
+import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4JS.NamespaceExportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.NewTarget;
@@ -366,22 +367,19 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.EXPORT_DECLARATION:
 				if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
-					sequence_AnnotatedScriptElement_ExportClause_ExportDeclarationImpl_ExportFromClause(context, (ExportDeclaration) semanticObject); 
+					sequence_AnnotatedScriptElement_ExportDeclarationImpl_ExportFromClause_NamedExportClause_NamespaceExportClause(context, (ExportDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getScriptElementRule()) {
-					sequence_AnnotatedScriptElement_ExportClause_ExportDeclaration_ExportDeclarationImpl_ExportFromClause(context, (ExportDeclaration) semanticObject); 
+					sequence_AnnotatedScriptElement_ExportDeclaration_ExportDeclarationImpl_ExportFromClause_NamedExportClause_NamespaceExportClause(context, (ExportDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getNamespaceElementRule()
 						|| rule == grammarAccess.getExportDeclarationRule()) {
-					sequence_ExportClause_ExportDeclaration_ExportDeclarationImpl_ExportFromClause(context, (ExportDeclaration) semanticObject); 
+					sequence_ExportDeclaration_ExportDeclarationImpl_ExportFromClause_NamedExportClause_NamespaceExportClause(context, (ExportDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
-			case N4JSPackage.EXPORT_SPECIFIER:
-				sequence_ExportSpecifier(context, (ExportSpecifier) semanticObject); 
-				return; 
 			case N4JSPackage.EXPORTED_VARIABLE_BINDING:
 				sequence_ExportedVariableBinding(context, (ExportedVariableBinding) semanticObject); 
 				return; 
@@ -952,8 +950,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 			case N4JSPackage.N4_TYPE_VARIABLE:
 				sequence_N4TypeVariable(context, (N4TypeVariable) semanticObject); 
 				return; 
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER:
+				sequence_NamedExportSpecifier(context, (NamedExportSpecifier) semanticObject); 
+				return; 
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER:
 				sequence_NamedImportSpecifier(context, (NamedImportSpecifier) semanticObject); 
+				return; 
+			case N4JSPackage.NAMESPACE_EXPORT_SPECIFIER:
+				sequence_NamespaceExportSpecifier(context, (NamespaceExportSpecifier) semanticObject); 
 				return; 
 			case N4JSPackage.NAMESPACE_IMPORT_SPECIFIER:
 				sequence_NamespaceImportSpecifier(context, (NamespaceImportSpecifier) semanticObject); 
@@ -4682,15 +4686,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedScriptElement_ExportDeclaration_1_0_0 
 	 *         (
-	 *             (wildcardExport?='*'? module=[AbstractModule|ModuleSpecifier]?) | 
 	 *             exportedElement=ExportableElement | 
 	 *             (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
-	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* module=[AbstractModule|ModuleSpecifier]?)
+	 *             (namespaceExport=NamespaceExportSpecifier? module=[AbstractModule|ModuleSpecifier]?) | 
+	 *             (namedExports+=NamedExportSpecifier namedExports+=NamedExportSpecifier* module=[AbstractModule|ModuleSpecifier]?)
 	 *         )?
 	 *     )
 	 * </pre>
 	 */
-	protected void sequence_AnnotatedScriptElement_ExportClause_ExportDeclarationImpl_ExportFromClause(ISerializationContext context, ExportDeclaration semanticObject) {
+	protected void sequence_AnnotatedScriptElement_ExportDeclarationImpl_ExportFromClause_NamedExportClause_NamespaceExportClause(ISerializationContext context, ExportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -4704,15 +4708,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedScriptElement_ExportDeclaration_1_0_0? 
 	 *         (
-	 *             (wildcardExport?='*'? module=[AbstractModule|ModuleSpecifier]?) | 
 	 *             exportedElement=ExportableElement | 
 	 *             (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
-	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* module=[AbstractModule|ModuleSpecifier]?)
+	 *             (namespaceExport=NamespaceExportSpecifier? module=[AbstractModule|ModuleSpecifier]?) | 
+	 *             (namedExports+=NamedExportSpecifier namedExports+=NamedExportSpecifier* module=[AbstractModule|ModuleSpecifier]?)
 	 *         )?
 	 *     )
 	 * </pre>
 	 */
-	protected void sequence_AnnotatedScriptElement_ExportClause_ExportDeclaration_ExportDeclarationImpl_ExportFromClause(ISerializationContext context, ExportDeclaration semanticObject) {
+	protected void sequence_AnnotatedScriptElement_ExportDeclaration_ExportDeclarationImpl_ExportFromClause_NamedExportClause_NamespaceExportClause(ISerializationContext context, ExportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -12562,28 +12566,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         (wildcardExport?='*'? module=[AbstractModule|ModuleSpecifier]?) | 
 	 *         exportedElement=ExportableElement | 
 	 *         (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
-	 *         (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* module=[AbstractModule|ModuleSpecifier]?)
+	 *         (namespaceExport=NamespaceExportSpecifier? module=[AbstractModule|ModuleSpecifier]?) | 
+	 *         (namedExports+=NamedExportSpecifier namedExports+=NamedExportSpecifier* module=[AbstractModule|ModuleSpecifier]?)
 	 *     )?
 	 * </pre>
 	 */
-	protected void sequence_ExportClause_ExportDeclaration_ExportDeclarationImpl_ExportFromClause(ISerializationContext context, ExportDeclaration semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
-	 *     ExportSpecifier returns ExportSpecifier
-	 *
-	 * Constraint:
-	 *     (element=IdentifierRef alias=IdentifierName?)
-	 * </pre>
-	 */
-	protected void sequence_ExportSpecifier(ISerializationContext context, ExportSpecifier semanticObject) {
+	protected void sequence_ExportDeclaration_ExportDeclarationImpl_ExportFromClause_NamedExportClause_NamespaceExportClause(ISerializationContext context, ExportDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -20109,6 +20099,20 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     NamedExportSpecifier returns NamedExportSpecifier
+	 *
+	 * Constraint:
+	 *     (element=IdentifierRef alias=IdentifierName?)
+	 * </pre>
+	 */
+	protected void sequence_NamedExportSpecifier(ISerializationContext context, NamedExportSpecifier semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     NamedImportSpecifier returns NamedImportSpecifier
 	 *
 	 * Constraint:
@@ -20119,6 +20123,20 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * </pre>
 	 */
 	protected void sequence_NamedImportSpecifier(ISerializationContext context, NamedImportSpecifier semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
+	 *     NamespaceExportSpecifier returns NamespaceExportSpecifier
+	 *
+	 * Constraint:
+	 *     alias=IdentifierName?
+	 * </pre>
+	 */
+	protected void sequence_NamespaceExportSpecifier(ISerializationContext context, NamespaceExportSpecifier semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

@@ -16,7 +16,8 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.ts.types.AbstractModule
-import org.eclipse.n4js.ts.types.ExportDefinition
+import org.eclipse.n4js.ts.types.ElementExportDefinition
+import org.eclipse.n4js.ts.types.ModuleExportDefinition
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
@@ -59,9 +60,13 @@ class ImportSpecifiersUtil {
 			computeNamespaceActualName(specifier), specifier, false));
 
 		for (exportDef : importedModule.exportDefinitions) {
-			importProvidedElements.add(
-				new ImportProvidedElement(specifier.importedElementName(exportDef), exportDef.exportedName,
-					specifier as ImportSpecifier, N4JSLanguageUtils.isHollowElement(exportDef.exportedElement, jsVariantHelper)))
+			if (exportDef instanceof ElementExportDefinition) {
+				importProvidedElements.add(
+					new ImportProvidedElement(specifier.importedElementName(exportDef), exportDef.exportedName,
+						specifier as ImportSpecifier, N4JSLanguageUtils.isHollowElement(exportDef.exportedElement, jsVariantHelper)))
+			} else if (exportDef instanceof ModuleExportDefinition) {
+				// FIXME
+			}
 		}
 		return importProvidedElements
 	}
@@ -103,7 +108,7 @@ class ImportSpecifiersUtil {
 	}
 
 	/** returns locally used name of element imported via {@link NamespaceImportSpecifier} */
-	public static def String importedElementName(NamespaceImportSpecifier is, ExportDefinition exportDef) {
+	public static def String importedElementName(NamespaceImportSpecifier is, ElementExportDefinition exportDef) {
 		is.alias + "." + exportDef.exportedName
 	}
 
