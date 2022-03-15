@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.n4js.ts.types.AbstractModule;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Export Declaration</b></em>'.
@@ -28,14 +26,13 @@ import org.eclipse.n4js.ts.types.AbstractModule;
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getNamedExports <em>Named Exports</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#isWildcardExport <em>Wildcard Export</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#isDefaultExport <em>Default Export</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getReexportedFrom <em>Reexported From</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportDeclaration()
  * @model
  * @generated
  */
-public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElement {
+public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElement, ModuleRef {
 	/**
 	 * Returns the value of the '<em><b>Exported Element</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -137,33 +134,25 @@ public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElem
 	void setDefaultExport(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Reexported From</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Reexported From</em>' reference.
-	 * @see #setReexportedFrom(AbstractModule)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportDeclaration_ReexportedFrom()
-	 * @model
-	 * @generated
-	 */
-	AbstractModule getReexportedFrom();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ExportDeclaration#getReexportedFrom <em>Reexported From</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Reexported From</em>' reference.
-	 * @see #getReexportedFrom()
-	 * @generated
-	 */
-	void setReexportedFrom(AbstractModule value);
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	boolean isHollow();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Tells whether this is a "re-export", i.e. something like:
+	 * <pre>export { Cls } from "a/b/module";</pre>
+	 * <b>not</b> something like:
+	 * <pre>export { Cls };</pre>
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isReexport();
 
 } // ExportDeclaration

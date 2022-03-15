@@ -115,17 +115,25 @@ abstract class ScriptElement {
 // ****************************************************************************************************
 // Export and Import
 // ****************************************************************************************************
-class ExportDeclaration extends AnnotableScriptElement, NamespaceElement {
+class ExportDeclaration extends AnnotableScriptElement, NamespaceElement, ModuleRef {
 	contains ExportableElement exportedElement
 	contains Expression defaultExportedExpression
 	contains ExportSpecifier[] namedExports
 	boolean wildcardExport
 	boolean defaultExport
-	refers AbstractModule reexportedFrom
-	
-	
+
 	op boolean isHollow() {
 		return exportedElement.isHollow();
+	}
+
+	/*
+	 * Tells whether this is a "re-export", i.e. something like:
+	 * <pre>export { Cls } from "a/b/module";</pre>
+	 * <b>not</b> something like:
+	 * <pre>export { Cls };</pre>
+	 */
+	op boolean isReexport() {
+		return isReferringToOtherModule();
 	}
 }
 
@@ -158,6 +166,7 @@ abstract class ExportableElement extends NamespaceElement {
 	op boolean isExportedAsDefault() {
 		return isDeclaredExported() && (eContainer as ExportDeclaration).isDefaultExport;
 	}
+	// FIXME clean up
 	op String getExportedName() {
 		if (isExported) {
 			if (isDeclaredExported()) {
@@ -197,12 +206,25 @@ abstract class ExportableElement extends NamespaceElement {
 	}
 }
 
-class ImportDeclaration extends AnnotableScriptElement {
-	contains ImportSpecifier[] importSpecifiers
-	boolean importFrom
+/*
+ * Abstract base for elements that may refer to another module, i.e. {@link ImportDeclaration}s (always)
+ * and {@link ExportDeclaration}s (in case of re-exports).
+ */
+abstract class ModuleRef {
+
 	refers AbstractModule module
 	transient String moduleSpecifierAsText
 	transient ModuleSpecifierForm moduleSpecifierForm
+
+	/* Tells whether this {@link ModuleRef} is actually referring to another model, without triggering proxy resolution. */
+	op boolean isReferringToOtherModule() {
+		return eGet(N4JSPackage.Literals.MODULE_REF__MODULE, false) !== null;
+	}
+}
+
+class ImportDeclaration extends AnnotableScriptElement, ModuleRef {
+	contains ImportSpecifier[] importSpecifiers
+	boolean importFrom
 
 	/*
 	 * Tells if this import is a so-called "bare import" of the form:

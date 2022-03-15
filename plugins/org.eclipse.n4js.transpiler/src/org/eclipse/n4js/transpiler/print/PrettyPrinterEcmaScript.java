@@ -106,7 +106,7 @@ import com.google.common.base.Strings;
 
 	@Override
 	public Boolean caseExportDeclaration(ExportDeclaration original) {
-		if (original.getReexportedFrom() != null) {
+		if (original.getModule() != null) {
 			throwUnsupportedSyntax();
 		}
 		processAnnotations(original.getAnnotations());

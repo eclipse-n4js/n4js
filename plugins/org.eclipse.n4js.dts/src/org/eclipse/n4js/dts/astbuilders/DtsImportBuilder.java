@@ -71,7 +71,7 @@ public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementConte
 				String moduleName = URIUtils.trimFileExtension(fromModuleUri).toFileString();
 
 				TModule tModuleProxy = TypesFactory.eINSTANCE.createTModule();
-				EReference eRef = N4JSPackage.eINSTANCE.getImportDeclaration_Module();
+				EReference eRef = N4JSPackage.eINSTANCE.getModuleRef_Module();
 				ParserContextUtil.installProxy(resource, result, eRef, tModuleProxy, moduleName);
 				result.setModule(tModuleProxy);
 			}

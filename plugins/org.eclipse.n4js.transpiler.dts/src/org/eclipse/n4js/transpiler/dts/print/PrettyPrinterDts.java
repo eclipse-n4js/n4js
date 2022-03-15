@@ -171,7 +171,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseExportDeclaration(ExportDeclaration original) {
-		if (original.getReexportedFrom() != null) {
+		if (original.getModule() != null) {
 			throwUnsupportedSyntax();
 		}
 		writeJsdoc(original);

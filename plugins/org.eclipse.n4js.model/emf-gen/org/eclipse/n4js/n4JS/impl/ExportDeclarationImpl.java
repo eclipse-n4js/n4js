@@ -32,7 +32,12 @@ import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ModuleRef;
+import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+
+import org.eclipse.n4js.n4JS.N4JSPackage.Literals;
+
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.NamespaceElement;
 
@@ -46,17 +51,69 @@ import org.eclipse.n4js.ts.types.AbstractModule;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getModule <em>Module</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getModuleSpecifierAsText <em>Module Specifier As Text</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getModuleSpecifierForm <em>Module Specifier Form</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getExportedElement <em>Exported Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getDefaultExportedExpression <em>Default Exported Expression</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getNamedExports <em>Named Exports</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#isWildcardExport <em>Wildcard Export</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#isDefaultExport <em>Default Export</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportDeclarationImpl#getReexportedFrom <em>Reexported From</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements ExportDeclaration {
+	/**
+	 * The cached value of the '{@link #getModule() <em>Module</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModule()
+	 * @generated
+	 * @ordered
+	 */
+	protected AbstractModule module;
+
+	/**
+	 * The default value of the '{@link #getModuleSpecifierAsText() <em>Module Specifier As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModuleSpecifierAsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String MODULE_SPECIFIER_AS_TEXT_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getModuleSpecifierAsText() <em>Module Specifier As Text</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModuleSpecifierAsText()
+	 * @generated
+	 * @ordered
+	 */
+	protected String moduleSpecifierAsText = MODULE_SPECIFIER_AS_TEXT_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #getModuleSpecifierForm() <em>Module Specifier Form</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModuleSpecifierForm()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final ModuleSpecifierForm MODULE_SPECIFIER_FORM_EDEFAULT = ModuleSpecifierForm.UNKNOWN;
+
+	/**
+	 * The cached value of the '{@link #getModuleSpecifierForm() <em>Module Specifier Form</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getModuleSpecifierForm()
+	 * @generated
+	 * @ordered
+	 */
+	protected ModuleSpecifierForm moduleSpecifierForm = MODULE_SPECIFIER_FORM_EDEFAULT;
+
 	/**
 	 * The cached value of the '{@link #getExportedElement() <em>Exported Element</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -128,16 +185,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	protected boolean defaultExport = DEFAULT_EXPORT_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getReexportedFrom() <em>Reexported From</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getReexportedFrom()
-	 * @generated
-	 * @ordered
-	 */
-	protected AbstractModule reexportedFrom;
-
-	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -154,6 +201,92 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.EXPORT_DECLARATION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public AbstractModule getModule() {
+		if (module != null && module.eIsProxy()) {
+			InternalEObject oldModule = (InternalEObject)module;
+			module = (AbstractModule)eResolveProxy(oldModule);
+			if (module != oldModule) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.EXPORT_DECLARATION__MODULE, oldModule, module));
+			}
+		}
+		return module;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public AbstractModule basicGetModule() {
+		return module;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setModule(AbstractModule newModule) {
+		AbstractModule oldModule = module;
+		module = newModule;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_DECLARATION__MODULE, oldModule, module));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getModuleSpecifierAsText() {
+		return moduleSpecifierAsText;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setModuleSpecifierAsText(String newModuleSpecifierAsText) {
+		String oldModuleSpecifierAsText = moduleSpecifierAsText;
+		moduleSpecifierAsText = newModuleSpecifierAsText;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT, oldModuleSpecifierAsText, moduleSpecifierAsText));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ModuleSpecifierForm getModuleSpecifierForm() {
+		return moduleSpecifierForm;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setModuleSpecifierForm(ModuleSpecifierForm newModuleSpecifierForm) {
+		ModuleSpecifierForm oldModuleSpecifierForm = moduleSpecifierForm;
+		moduleSpecifierForm = newModuleSpecifierForm == null ? MODULE_SPECIFIER_FORM_EDEFAULT : newModuleSpecifierForm;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_FORM, oldModuleSpecifierForm, moduleSpecifierForm));
 	}
 
 	/**
@@ -311,48 +444,29 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
-	public AbstractModule getReexportedFrom() {
-		if (reexportedFrom != null && reexportedFrom.eIsProxy()) {
-			InternalEObject oldReexportedFrom = (InternalEObject)reexportedFrom;
-			reexportedFrom = (AbstractModule)eResolveProxy(oldReexportedFrom);
-			if (reexportedFrom != oldReexportedFrom) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.EXPORT_DECLARATION__REEXPORTED_FROM, oldReexportedFrom, reexportedFrom));
-			}
-		}
-		return reexportedFrom;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public AbstractModule basicGetReexportedFrom() {
-		return reexportedFrom;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setReexportedFrom(AbstractModule newReexportedFrom) {
-		AbstractModule oldReexportedFrom = reexportedFrom;
-		reexportedFrom = newReexportedFrom;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_DECLARATION__REEXPORTED_FROM, oldReexportedFrom, reexportedFrom));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public boolean isHollow() {
 		return this.getExportedElement().isHollow();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isReexport() {
+		return this.isReferringToOtherModule();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isReferringToOtherModule() {
+		Object _eGet = this.eGet(Literals.MODULE_REF__MODULE, false);
+		return (_eGet != null);
 	}
 
 	/**
@@ -409,6 +523,13 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.EXPORT_DECLARATION__MODULE:
+				if (resolve) return getModule();
+				return basicGetModule();
+			case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
+				return getModuleSpecifierAsText();
+			case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_FORM:
+				return getModuleSpecifierForm();
 			case N4JSPackage.EXPORT_DECLARATION__EXPORTED_ELEMENT:
 				return getExportedElement();
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORTED_EXPRESSION:
@@ -419,9 +540,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return isWildcardExport();
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORT:
 				return isDefaultExport();
-			case N4JSPackage.EXPORT_DECLARATION__REEXPORTED_FROM:
-				if (resolve) return getReexportedFrom();
-				return basicGetReexportedFrom();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -435,6 +553,15 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.EXPORT_DECLARATION__MODULE:
+				setModule((AbstractModule)newValue);
+				return;
+			case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
+				setModuleSpecifierAsText((String)newValue);
+				return;
+			case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_FORM:
+				setModuleSpecifierForm((ModuleSpecifierForm)newValue);
+				return;
 			case N4JSPackage.EXPORT_DECLARATION__EXPORTED_ELEMENT:
 				setExportedElement((ExportableElement)newValue);
 				return;
@@ -451,9 +578,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORT:
 				setDefaultExport((Boolean)newValue);
 				return;
-			case N4JSPackage.EXPORT_DECLARATION__REEXPORTED_FROM:
-				setReexportedFrom((AbstractModule)newValue);
-				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -466,6 +590,15 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.EXPORT_DECLARATION__MODULE:
+				setModule((AbstractModule)null);
+				return;
+			case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
+				setModuleSpecifierAsText(MODULE_SPECIFIER_AS_TEXT_EDEFAULT);
+				return;
+			case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_FORM:
+				setModuleSpecifierForm(MODULE_SPECIFIER_FORM_EDEFAULT);
+				return;
 			case N4JSPackage.EXPORT_DECLARATION__EXPORTED_ELEMENT:
 				setExportedElement((ExportableElement)null);
 				return;
@@ -481,9 +614,6 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORT:
 				setDefaultExport(DEFAULT_EXPORT_EDEFAULT);
 				return;
-			case N4JSPackage.EXPORT_DECLARATION__REEXPORTED_FROM:
-				setReexportedFrom((AbstractModule)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -496,6 +626,12 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.EXPORT_DECLARATION__MODULE:
+				return module != null;
+			case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
+				return MODULE_SPECIFIER_AS_TEXT_EDEFAULT == null ? moduleSpecifierAsText != null : !MODULE_SPECIFIER_AS_TEXT_EDEFAULT.equals(moduleSpecifierAsText);
+			case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_FORM:
+				return moduleSpecifierForm != MODULE_SPECIFIER_FORM_EDEFAULT;
 			case N4JSPackage.EXPORT_DECLARATION__EXPORTED_ELEMENT:
 				return exportedElement != null;
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORTED_EXPRESSION:
@@ -506,10 +642,54 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return wildcardExport != WILDCARD_EXPORT_EDEFAULT;
 			case N4JSPackage.EXPORT_DECLARATION__DEFAULT_EXPORT:
 				return defaultExport != DEFAULT_EXPORT_EDEFAULT;
-			case N4JSPackage.EXPORT_DECLARATION__REEXPORTED_FROM:
-				return reexportedFrom != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == NamespaceElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == ModuleRef.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.EXPORT_DECLARATION__MODULE: return N4JSPackage.MODULE_REF__MODULE;
+				case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT: return N4JSPackage.MODULE_REF__MODULE_SPECIFIER_AS_TEXT;
+				case N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_FORM: return N4JSPackage.MODULE_REF__MODULE_SPECIFIER_FORM;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == NamespaceElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == ModuleRef.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.MODULE_REF__MODULE: return N4JSPackage.EXPORT_DECLARATION__MODULE;
+				case N4JSPackage.MODULE_REF__MODULE_SPECIFIER_AS_TEXT: return N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT;
+				case N4JSPackage.MODULE_REF__MODULE_SPECIFIER_FORM: return N4JSPackage.EXPORT_DECLARATION__MODULE_SPECIFIER_FORM;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 	/**
@@ -527,6 +707,12 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				default: return -1;
 			}
 		}
+		if (baseClass == ModuleRef.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.MODULE_REF___IS_REFERRING_TO_OTHER_MODULE: return N4JSPackage.EXPORT_DECLARATION___IS_REFERRING_TO_OTHER_MODULE;
+				default: return -1;
+			}
+		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
@@ -540,6 +726,10 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 		switch (operationID) {
 			case N4JSPackage.EXPORT_DECLARATION___IS_HOLLOW:
 				return isHollow();
+			case N4JSPackage.EXPORT_DECLARATION___IS_REEXPORT:
+				return isReexport();
+			case N4JSPackage.EXPORT_DECLARATION___IS_REFERRING_TO_OTHER_MODULE:
+				return isReferringToOtherModule();
 			case N4JSPackage.EXPORT_DECLARATION___GET_NAMESPACE:
 				return getNamespace();
 			case N4JSPackage.EXPORT_DECLARATION___IS_IN_NAMESPACE:
@@ -558,7 +748,11 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (wildcardExport: ");
+		result.append(" (moduleSpecifierAsText: ");
+		result.append(moduleSpecifierAsText);
+		result.append(", moduleSpecifierForm: ");
+		result.append(moduleSpecifierForm);
+		result.append(", wildcardExport: ");
 		result.append(wildcardExport);
 		result.append(", defaultExport: ");
 		result.append(defaultExport);

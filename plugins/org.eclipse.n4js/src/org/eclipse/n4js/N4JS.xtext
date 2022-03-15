@@ -198,7 +198,7 @@ fragment ExportDeclarationImpl *:
 ;
 
 fragment ExportFromClause*:
-	'from' reexportedFrom=[types::AbstractModule|ModuleSpecifier]
+	'from' module=[types::AbstractModule|ModuleSpecifier]
 ;
 
 fragment ExportClause*:

@@ -252,7 +252,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cExportedVariableStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
 		private final RuleCall cExportDeclarationParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
 		
-		//NamespaceElement<Yield> returns NamespaceElement :
+		//NamespaceElement<Yield> returns NamespaceElement:
 		//    AnnotatedNamespaceElement
 		//    | N4NamespaceDeclaration<Yield>
 		//    | N4ClassDeclaration<Yield>
@@ -1308,29 +1308,29 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportFromClause");
 		private final Group cGroup = (Group)rule.eContents().get(0);
 		private final Keyword cFromKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cReexportedFromAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final CrossReference cReexportedFromAbstractModuleCrossReference_1_0 = (CrossReference)cReexportedFromAssignment_1.eContents().get(0);
-		private final RuleCall cReexportedFromAbstractModuleModuleSpecifierParserRuleCall_1_0_1 = (RuleCall)cReexportedFromAbstractModuleCrossReference_1_0.eContents().get(1);
+		private final Assignment cModuleAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final CrossReference cModuleAbstractModuleCrossReference_1_0 = (CrossReference)cModuleAssignment_1.eContents().get(0);
+		private final RuleCall cModuleAbstractModuleModuleSpecifierParserRuleCall_1_0_1 = (RuleCall)cModuleAbstractModuleCrossReference_1_0.eContents().get(1);
 		
 		//fragment ExportFromClause*:
-		//    'from' reexportedFrom=[types::AbstractModule|ModuleSpecifier]
+		//    'from' module=[types::AbstractModule|ModuleSpecifier]
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'from' reexportedFrom=[types::AbstractModule|ModuleSpecifier]
+		//'from' module=[types::AbstractModule|ModuleSpecifier]
 		public Group getGroup() { return cGroup; }
 		
 		//'from'
 		public Keyword getFromKeyword_0() { return cFromKeyword_0; }
 		
-		//reexportedFrom=[types::AbstractModule|ModuleSpecifier]
-		public Assignment getReexportedFromAssignment_1() { return cReexportedFromAssignment_1; }
+		//module=[types::AbstractModule|ModuleSpecifier]
+		public Assignment getModuleAssignment_1() { return cModuleAssignment_1; }
 		
 		//[types::AbstractModule|ModuleSpecifier]
-		public CrossReference getReexportedFromAbstractModuleCrossReference_1_0() { return cReexportedFromAbstractModuleCrossReference_1_0; }
+		public CrossReference getModuleAbstractModuleCrossReference_1_0() { return cModuleAbstractModuleCrossReference_1_0; }
 		
 		//ModuleSpecifier
-		public RuleCall getReexportedFromAbstractModuleModuleSpecifierParserRuleCall_1_0_1() { return cReexportedFromAbstractModuleModuleSpecifierParserRuleCall_1_0_1; }
+		public RuleCall getModuleAbstractModuleModuleSpecifierParserRuleCall_1_0_1() { return cModuleAbstractModuleModuleSpecifierParserRuleCall_1_0_1; }
 	}
 	public class ExportClauseElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ExportClause");
@@ -12792,7 +12792,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getN4NamespaceDeclarationAccess().getRule();
 	}
 	
-	//NamespaceElement<Yield> returns NamespaceElement :
+	//NamespaceElement<Yield> returns NamespaceElement:
 	//    AnnotatedNamespaceElement
 	//    | N4NamespaceDeclaration<Yield>
 	//    | N4ClassDeclaration<Yield>
@@ -12944,7 +12944,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//fragment ExportFromClause*:
-	//    'from' reexportedFrom=[types::AbstractModule|ModuleSpecifier]
+	//    'from' module=[types::AbstractModule|ModuleSpecifier]
 	//;
 	public ExportFromClauseElements getExportFromClauseAccess() {
 		return pExportFromClause;

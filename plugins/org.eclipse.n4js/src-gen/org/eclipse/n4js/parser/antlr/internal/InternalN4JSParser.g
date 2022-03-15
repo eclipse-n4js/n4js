@@ -2336,7 +2336,7 @@ ruleExportFromClause[EObject in_current]  returns [EObject current=in_current]
 					}
 				}
 				{
-					newCompositeNode(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleCrossReference_1_0());
+					newCompositeNode(grammarAccess.getExportFromClauseAccess().getModuleAbstractModuleCrossReference_1_0());
 				}
 				ruleModuleSpecifier
 				{

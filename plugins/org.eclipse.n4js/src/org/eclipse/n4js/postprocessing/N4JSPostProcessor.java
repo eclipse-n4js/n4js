@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -145,6 +146,9 @@ public class N4JSPostProcessor implements PostProcessor {
 		for (Iterator<EObject> iter = script.eAllContents(); iter.hasNext();) {
 			EObject eObject = iter.next();
 			if (eObject instanceof IdentifierRef) {
+				if (eObject.eContainer() instanceof ExportSpecifier) {
+					continue;
+				}
 				((IdentifierRef) eObject).getId(); // do resolve
 			}
 		}

@@ -4682,10 +4682,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedScriptElement_ExportDeclaration_1_0_0 
 	 *         (
-	 *             (wildcardExport?='*'? reexportedFrom=[AbstractModule|ModuleSpecifier]?) | 
+	 *             (wildcardExport?='*'? module=[AbstractModule|ModuleSpecifier]?) | 
 	 *             exportedElement=ExportableElement | 
 	 *             (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
-	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[AbstractModule|ModuleSpecifier]?)
+	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* module=[AbstractModule|ModuleSpecifier]?)
 	 *         )?
 	 *     )
 	 * </pre>
@@ -4704,10 +4704,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedScriptElement_ExportDeclaration_1_0_0? 
 	 *         (
-	 *             (wildcardExport?='*'? reexportedFrom=[AbstractModule|ModuleSpecifier]?) | 
+	 *             (wildcardExport?='*'? module=[AbstractModule|ModuleSpecifier]?) | 
 	 *             exportedElement=ExportableElement | 
 	 *             (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
-	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[AbstractModule|ModuleSpecifier]?)
+	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* module=[AbstractModule|ModuleSpecifier]?)
 	 *         )?
 	 *     )
 	 * </pre>
@@ -12562,10 +12562,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         (wildcardExport?='*'? reexportedFrom=[AbstractModule|ModuleSpecifier]?) | 
+	 *         (wildcardExport?='*'? module=[AbstractModule|ModuleSpecifier]?) | 
 	 *         exportedElement=ExportableElement | 
 	 *         (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
-	 *         (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[AbstractModule|ModuleSpecifier]?)
+	 *         (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* module=[AbstractModule|ModuleSpecifier]?)
 	 *     )?
 	 * </pre>
 	 */

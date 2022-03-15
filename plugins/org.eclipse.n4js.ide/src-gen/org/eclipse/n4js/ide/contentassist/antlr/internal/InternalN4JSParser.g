@@ -19290,9 +19290,9 @@ rule__ExportFromClause__Group__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getExportFromClauseAccess().getReexportedFromAssignment_1()); }
-	(rule__ExportFromClause__ReexportedFromAssignment_1)
-	{ after(grammarAccess.getExportFromClauseAccess().getReexportedFromAssignment_1()); }
+	{ before(grammarAccess.getExportFromClauseAccess().getModuleAssignment_1()); }
+	(rule__ExportFromClause__ModuleAssignment_1)
+	{ after(grammarAccess.getExportFromClauseAccess().getModuleAssignment_1()); }
 )
 ;
 finally {
@@ -81992,19 +81992,19 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__ExportFromClause__ReexportedFromAssignment_1
+rule__ExportFromClause__ModuleAssignment_1
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleCrossReference_1_0()); }
+		{ before(grammarAccess.getExportFromClauseAccess().getModuleAbstractModuleCrossReference_1_0()); }
 		(
-			{ before(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleModuleSpecifierParserRuleCall_1_0_1()); }
+			{ before(grammarAccess.getExportFromClauseAccess().getModuleAbstractModuleModuleSpecifierParserRuleCall_1_0_1()); }
 			ruleModuleSpecifier
-			{ after(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleModuleSpecifierParserRuleCall_1_0_1()); }
+			{ after(grammarAccess.getExportFromClauseAccess().getModuleAbstractModuleModuleSpecifierParserRuleCall_1_0_1()); }
 		)
-		{ after(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleCrossReference_1_0()); }
+		{ after(grammarAccess.getExportFromClauseAccess().getModuleAbstractModuleCrossReference_1_0()); }
 	)
 ;
 finally {

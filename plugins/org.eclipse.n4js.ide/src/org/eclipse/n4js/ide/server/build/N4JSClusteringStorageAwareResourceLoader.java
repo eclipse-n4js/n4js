@@ -19,7 +19,7 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
 import org.eclipse.n4js.utils.URIUtils;
@@ -89,9 +89,16 @@ public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorage
 					Script script = (Script) eobj;
 
 					for (EObject topLevelStmt : script.getScriptElements()) {
-						if (topLevelStmt instanceof ImportDeclaration) {
-							ImportDeclaration impDecl = (ImportDeclaration) topLevelStmt;
-							String moduleSpecifier = impDecl.getModuleSpecifierAsText();
+						if (topLevelStmt instanceof ModuleRef) {
+							ModuleRef impExpDecl = (ModuleRef) topLevelStmt;
+							if (!impExpDecl.isReferringToOtherModule()) {
+								continue;
+							}
+
+							String moduleSpecifier = impExpDecl.getModuleSpecifierAsText();
+							if (moduleSpecifier == null) {
+								continue;
+							}
 
 							boolean hasInnerProjectDependency = false;
 							if (moduleName2Result.containsKey(moduleSpecifier)) {

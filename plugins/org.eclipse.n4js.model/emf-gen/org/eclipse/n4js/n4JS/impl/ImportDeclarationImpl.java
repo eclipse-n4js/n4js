@@ -29,8 +29,11 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+
+import org.eclipse.n4js.n4JS.N4JSPackage.Literals;
 
 import org.eclipse.n4js.ts.types.AbstractModule;
 
@@ -46,46 +49,16 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getImportSpecifiers <em>Import Specifiers</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#isImportFrom <em>Import From</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModule <em>Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModuleSpecifierAsText <em>Module Specifier As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getModuleSpecifierForm <em>Module Specifier Form</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#getImportSpecifiers <em>Import Specifiers</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl#isImportFrom <em>Import From</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements ImportDeclaration {
-	/**
-	 * The cached value of the '{@link #getImportSpecifiers() <em>Import Specifiers</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getImportSpecifiers()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<ImportSpecifier> importSpecifiers;
-
-	/**
-	 * The default value of the '{@link #isImportFrom() <em>Import From</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isImportFrom()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean IMPORT_FROM_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isImportFrom() <em>Import From</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isImportFrom()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean importFrom = IMPORT_FROM_EDEFAULT;
-
 	/**
 	 * The cached value of the '{@link #getModule() <em>Module</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -137,6 +110,36 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	protected ModuleSpecifierForm moduleSpecifierForm = MODULE_SPECIFIER_FORM_EDEFAULT;
 
 	/**
+	 * The cached value of the '{@link #getImportSpecifiers() <em>Import Specifiers</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getImportSpecifiers()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ImportSpecifier> importSpecifiers;
+
+	/**
+	 * The default value of the '{@link #isImportFrom() <em>Import From</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isImportFrom()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean IMPORT_FROM_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isImportFrom() <em>Import From</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isImportFrom()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean importFrom = IMPORT_FROM_EDEFAULT;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -153,42 +156,6 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.IMPORT_DECLARATION;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EList<ImportSpecifier> getImportSpecifiers() {
-		if (importSpecifiers == null) {
-			importSpecifiers = new EObjectContainmentEList<ImportSpecifier>(ImportSpecifier.class, this, N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS);
-		}
-		return importSpecifiers;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isImportFrom() {
-		return importFrom;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setImportFrom(boolean newImportFrom) {
-		boolean oldImportFrom = importFrom;
-		importFrom = newImportFrom;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM, oldImportFrom, importFrom));
 	}
 
 	/**
@@ -283,6 +250,42 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
+	public EList<ImportSpecifier> getImportSpecifiers() {
+		if (importSpecifiers == null) {
+			importSpecifiers = new EObjectContainmentEList<ImportSpecifier>(ImportSpecifier.class, this, N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS);
+		}
+		return importSpecifiers;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isImportFrom() {
+		return importFrom;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setImportFrom(boolean newImportFrom) {
+		boolean oldImportFrom = importFrom;
+		importFrom = newImportFrom;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM, oldImportFrom, importFrom));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isBare() {
 		return this.getImportSpecifiers().isEmpty();
 	}
@@ -307,6 +310,17 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
+	public boolean isReferringToOtherModule() {
+		Object _eGet = this.eGet(Literals.MODULE_REF__MODULE, false);
+		return (_eGet != null);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
@@ -323,10 +337,6 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
-				return getImportSpecifiers();
-			case N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM:
-				return isImportFrom();
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				if (resolve) return getModule();
 				return basicGetModule();
@@ -334,6 +344,10 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return getModuleSpecifierAsText();
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
 				return getModuleSpecifierForm();
+			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
+				return getImportSpecifiers();
+			case N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM:
+				return isImportFrom();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -347,13 +361,6 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
-				getImportSpecifiers().clear();
-				getImportSpecifiers().addAll((Collection<? extends ImportSpecifier>)newValue);
-				return;
-			case N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM:
-				setImportFrom((Boolean)newValue);
-				return;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				setModule((AbstractModule)newValue);
 				return;
@@ -362,6 +369,13 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
 				setModuleSpecifierForm((ModuleSpecifierForm)newValue);
+				return;
+			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
+				getImportSpecifiers().clear();
+				getImportSpecifiers().addAll((Collection<? extends ImportSpecifier>)newValue);
+				return;
+			case N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM:
+				setImportFrom((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -375,12 +389,6 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
-				getImportSpecifiers().clear();
-				return;
-			case N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM:
-				setImportFrom(IMPORT_FROM_EDEFAULT);
-				return;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				setModule((AbstractModule)null);
 				return;
@@ -389,6 +397,12 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
 				setModuleSpecifierForm(MODULE_SPECIFIER_FORM_EDEFAULT);
+				return;
+			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
+				getImportSpecifiers().clear();
+				return;
+			case N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM:
+				setImportFrom(IMPORT_FROM_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -402,18 +416,70 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
-				return importSpecifiers != null && !importSpecifiers.isEmpty();
-			case N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM:
-				return importFrom != IMPORT_FROM_EDEFAULT;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
 				return module != null;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
 				return MODULE_SPECIFIER_AS_TEXT_EDEFAULT == null ? moduleSpecifierAsText != null : !MODULE_SPECIFIER_AS_TEXT_EDEFAULT.equals(moduleSpecifierAsText);
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM:
 				return moduleSpecifierForm != MODULE_SPECIFIER_FORM_EDEFAULT;
+			case N4JSPackage.IMPORT_DECLARATION__IMPORT_SPECIFIERS:
+				return importSpecifiers != null && !importSpecifiers.isEmpty();
+			case N4JSPackage.IMPORT_DECLARATION__IMPORT_FROM:
+				return importFrom != IMPORT_FROM_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == ModuleRef.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.IMPORT_DECLARATION__MODULE: return N4JSPackage.MODULE_REF__MODULE;
+				case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT: return N4JSPackage.MODULE_REF__MODULE_SPECIFIER_AS_TEXT;
+				case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM: return N4JSPackage.MODULE_REF__MODULE_SPECIFIER_FORM;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == ModuleRef.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.MODULE_REF__MODULE: return N4JSPackage.IMPORT_DECLARATION__MODULE;
+				case N4JSPackage.MODULE_REF__MODULE_SPECIFIER_AS_TEXT: return N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT;
+				case N4JSPackage.MODULE_REF__MODULE_SPECIFIER_FORM: return N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_FORM;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == ModuleRef.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.MODULE_REF___IS_REFERRING_TO_OTHER_MODULE: return N4JSPackage.IMPORT_DECLARATION___IS_REFERRING_TO_OTHER_MODULE;
+				default: return -1;
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
 	/**
@@ -428,6 +494,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return isBare();
 			case N4JSPackage.IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME:
 				return isRetainedAtRuntime();
+			case N4JSPackage.IMPORT_DECLARATION___IS_REFERRING_TO_OTHER_MODULE:
+				return isReferringToOtherModule();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
@@ -442,12 +510,12 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (importFrom: ");
-		result.append(importFrom);
-		result.append(", moduleSpecifierAsText: ");
+		result.append(" (moduleSpecifierAsText: ");
 		result.append(moduleSpecifierAsText);
 		result.append(", moduleSpecifierForm: ");
 		result.append(moduleSpecifierForm);
+		result.append(", importFrom: ");
+		result.append(importFrom);
 		result.append(')');
 		return result.toString();
 	}

@@ -110,7 +110,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 		if (containingModule.cyclicModulesLoadtimeForInheritance.contains(targetModule)) {
 			val message = IssueCodes.getMessageForLTD_LOADTIME_DEPENDENCY_CYCLE() + "\n"
 				+ dependencyCycleToString(targetModule, true, INDENT);
-			addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CYCLE);
+			addIssue(message, importDecl, N4JSPackage.eINSTANCE.moduleRef_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CYCLE);
 			return false;
 		}
 		return true;
@@ -148,7 +148,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 					val message = IssueCodes.getMessageForLTD_LOADTIME_DEPENDENCY_CONFLICT(targetModule.simpleName, otherLTDSources) + "\n"
 						+ "Containing runtime dependency cycle cluster:\n"
 						+ dependencyCycleToString(targetModule, false, INDENT);
-					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CONFLICT);
+					addIssue(message, importDecl, N4JSPackage.eINSTANCE.moduleRef_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CONFLICT);
 					return false;
 				} else {
 					// ERROR: importing an LTD target from outside the dependency cycle cluster (Req. GH-1678, Constraint 3)
@@ -156,7 +156,7 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 					val message = IssueCodes.getMessageForLTD_IMPORT_OF_LOADTIME_DEPENDENCY_TARGET(targetModule.simpleName, healingModulesStr) + "\n"
 						+ "Containing runtime dependency cycle cluster:\n"
 						+ dependencyCycleToString(targetModule, false, INDENT);
-					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_IMPORT_OF_LOADTIME_DEPENDENCY_TARGET);
+					addIssue(message, importDecl, N4JSPackage.eINSTANCE.moduleRef_Module, IssueCodes.LTD_IMPORT_OF_LOADTIME_DEPENDENCY_TARGET);
 					return true; // because we assume a healing import will be added by transpiler, this import can be treated as healing in calling method
 				}
 			}

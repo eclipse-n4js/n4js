@@ -42,7 +42,7 @@ class N4JSImportTypesBuilder {
 			for (importDecl : script.scriptElements.filter(ImportDeclaration).toList) {
 				val namespaceImport = getNamespaceImportSpecifier(importDecl)
 				if(namespaceImport !== null) {
-					val importedModule = importDecl.eGet(N4JSPackage.eINSTANCE.importDeclaration_Module, false) as TModule
+					val importedModule = importDecl.eGet(N4JSPackage.eINSTANCE.moduleRef_Module, false) as TModule
 					val existingNamespaceType = namespaceTypesByName.get(namespaceImport.alias);
 					
 					if (existingNamespaceType !== null) {
@@ -85,7 +85,7 @@ class N4JSImportTypesBuilder {
 			for (importDecl : script.scriptElements.filter(ImportDeclaration).toList) {
 				val namespaceImport = getNamespaceImportSpecifier(importDecl)
 				if (namespaceImport !== null) {
-					val importedModule = importDecl.eGet(N4JSPackage.eINSTANCE.importDeclaration_Module,
+					val importedModule = importDecl.eGet(N4JSPackage.eINSTANCE.moduleRef_Module,
 						false) as TModule
 					target.internalTypes += createModuleNamespaceVirtualType(namespaceImport, importedModule);
 				} else {

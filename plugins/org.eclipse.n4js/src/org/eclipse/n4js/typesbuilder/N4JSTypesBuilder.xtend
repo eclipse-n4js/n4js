@@ -430,7 +430,12 @@ public class N4JSTypesBuilder {
 							val idProxy = idRef.eGet(N4JSPackage.eINSTANCE.identifierRef_Id, false) as IdentifiableElement;
 							val exportedElemProxy = TypesFactory.eINSTANCE.createTExportableElement();
 							(exportedElemProxy as InternalEObject).eSetProxyURI((idProxy as InternalEObject).eProxyURI());
-							target.addExportDefinition(exportSpec.alias, exportedElemProxy);
+							var declExpName = exportSpec.alias;
+							if (declExpName === null && n.moduleSpecifierAsText !== null) {
+								// in case of re-exports, break the dependency on the other file by providing the exported name explicitly:
+								declExpName = idRef.idAsText;
+							}
+							target.addExportDefinition(declExpName, exportedElemProxy);
 						}
 					}
 				}

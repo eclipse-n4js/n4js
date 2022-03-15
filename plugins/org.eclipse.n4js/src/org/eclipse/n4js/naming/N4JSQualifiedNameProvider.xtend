@@ -34,6 +34,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TDeclaredModule
 import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TExportingElement
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
@@ -49,7 +50,6 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 
-import static extension org.eclipse.n4js.scoping.utils.QualifiedNameUtils.replaceLastSegment
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
@@ -122,11 +122,15 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			ExportDeclaration:
 				exportedElement?.getFullyQualifiedName
 			ExportDefinition: {
-				val declExpName = declaredExportedName;
+				val containingExportingElem = it.eContainer as TExportingElement;
+				val declExpName = it.declaredExportedName;
 				if (declExpName !== null) {
-					exportedElement?.getFullyQualifiedName?.replaceLastSegment(declExpName)
+					containingExportingElem.fullyQualifiedName?.append(declExpName)
 				} else {
-					exportedElement?.getFullyQualifiedName
+					val expElemName = it.exportedElement?.name;
+					if (expElemName !== null) {
+						containingExportingElem.fullyQualifiedName?.append(expElemName)
+					}
 				}
 			}
 			TypeVariable:

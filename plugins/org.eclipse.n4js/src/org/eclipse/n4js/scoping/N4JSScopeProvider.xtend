@@ -19,6 +19,8 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.Argument
+import org.eclipse.n4js.n4JS.ExportDeclaration
+import org.eclipse.n4js.n4JS.ExportSpecifier
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportDeclaration
@@ -27,6 +29,7 @@ import org.eclipse.n4js.n4JS.JSXElementName
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.LabelledStatement
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
+import org.eclipse.n4js.n4JS.ModuleRef
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldAccessor
@@ -258,6 +261,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		switch (context) {
 			ImportDeclaration						: return scope_ImportedModule(context, reference)
 			NamedImportSpecifier					: return scope_ImportedElement(context, reference)
+			ExportDeclaration						: return scope_ImportedModule(context, reference)
 			IdentifierRef							: return scope_IdentifierRef_id(context, reference)
 			ParameterizedPropertyAccessExpression	: return scope_PropertyAccessExpression_property(context, reference)
 			N4FieldAccessor							: {
@@ -273,7 +277,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		if (scope === IScope.NULLSCOPE) {
 			// used for type references in JSDoc (see JSDocCompletionProposalComputer):
-			if (reference == N4JSPackage.Literals.IMPORT_DECLARATION__MODULE) {
+			if (reference == N4JSPackage.Literals.MODULE_REF__MODULE) {
 				return scope_ImportedAndCurrentModule(context, reference);
 			}
 
@@ -353,23 +357,21 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	/**
 	 * E.g. in
 	 * <pre>import { e1,e2 } from "a/b/importedModule"</pre> bind "a/b/importedModule" to module with qualified name "a.b.importedModule"
-	 *
-	 * @param importDeclaration usually of type ImportDeclaratoin in case of N4JS bindings, but maybe used in JSDoc as well
 	 */
-	private def IScope scope_ImportedModule(ImportDeclaration importDeclaration, EReference reference) {
+	private def IScope scope_ImportedModule(ModuleRef importOrExportDecl, EReference reference) {
 
-		val resource = importDeclaration.eResource as N4JSResource;
-		val projectImportEnabledScope = scope_ImportedModule(resource, Optional.of(importDeclaration));
+		val resource = importOrExportDecl.eResource as N4JSResource;
+		val projectImportEnabledScope = scope_ImportedModule(resource, Optional.of(importOrExportDecl));
 
 		// filter out clashing module name (can be main module with the same name but in different project)
 		return new FilteringScope(projectImportEnabledScope, [
-			if (it === null) false else !descriptionsHelper.isDescriptionOfModuleWith(resource, it, importDeclaration);
+			if (it === null) false else !descriptionsHelper.isDescriptionOfModuleWith(resource, it, importOrExportDecl);
 		]);
 	}
 
-	private def IScope scope_ImportedModule(N4JSResource resource, Optional<ImportDeclaration> importDeclaration) {
+	private def IScope scope_ImportedModule(N4JSResource resource, Optional<ModuleRef> importOrExportDecl) {
 
-		val reference = N4JSPackage.eINSTANCE.importDeclaration_Module;
+		val reference = N4JSPackage.eINSTANCE.moduleRef_Module;
 
 		val initialScope = scope_ImportedAndCurrentModule(resource.script, reference);
 
@@ -378,7 +380,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			resourceDescriptions, reference.EReferenceType);
 
 		val ws = workspaceAccess.getWorkspaceConfig(resource);
-		val projectImportEnabledScope = ProjectImportEnablingScope.create(ws, resource, importDeclaration,
+		val projectImportEnabledScope = ProjectImportEnablingScope.create(ws, resource, importOrExportDecl,
 			initialScope, delegateMainModuleAwareScope);
 
 		return projectImportEnabledScope;
@@ -392,30 +394,48 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	/**
-	 *
 	 * E.g. in
 	 * <pre>import { e1,e2 } from "importedModule"</pre>
 	 * bind e1 or e2 by retrieving all (not only exported, see below!) top level elements of
 	 * importedModule (variables, types; functions are types!). All elements enables better error handling and quick fixes, as links are not broken.
 	 */
 	protected def IScope scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
-		val declaration = EcoreUtil2.getContainerOfType(specifier, ImportDeclaration);
-		return scope_AllTopLevelElementsFromAbstractNamespace(declaration.module, declaration, true, true);
+		val impDecl = EcoreUtil2.getContainerOfType(specifier, ImportDeclaration);
+		return scope_AllTopLevelElementsFromAbstractNamespace(impDecl.module, impDecl, true, true);
+	}
+
+	/**
+	 * E.g. in
+	 * <pre>export { e1, e2 } from "importedModule"</pre>
+	 * See {@link #scope_ImportedElement(NamedImportSpecifier, EReference)}.
+	 */
+	protected def IScope scope_ImportedElement(ExportSpecifier specifier, EReference reference) {
+		val expDecl = EcoreUtil2.getContainerOfType(specifier, ExportDeclaration);
+		return scope_AllTopLevelElementsFromAbstractNamespace(expDecl.module, expDecl, true, true);
 	}
 
 	/**
 	 * Called from getScope(), binds an identifier reference.
 	 */
 	private def IScope scope_IdentifierRef_id(IdentifierRef identifierRef, EReference ref) {
+		val parent = identifierRef.eContainer;
+		// handle re-exports
+		if (parent instanceof ExportSpecifier) {
+			val grandParent = parent.eContainer;
+			if (grandParent instanceof ExportDeclaration) {
+				if (grandParent.isReexport()) {
+					return scope_ImportedElement(parent, ref);
+				}
+			}
+		}
 		val VariableEnvironmentElement vee = ancestor(identifierRef, VariableEnvironmentElement);
 		if (vee === null) {
 			return IScope.NULLSCOPE;
 		}
 		val scope = getLexicalEnvironmentScope(vee, identifierRef, ref);
 		// Handle constructor visibility
-		if (identifierRef.eContainer instanceof NewExpression) {
-			val newExpr = identifierRef.eContainer as NewExpression
-			return scope.addValidator(new VisibilityAwareCtorScopeValidator(checker, containerTypesHelper, newExpr));
+		if (parent instanceof NewExpression) {
+			return scope.addValidator(new VisibilityAwareCtorScopeValidator(checker, containerTypesHelper, parent));
 		}
 		return scope;
 	}

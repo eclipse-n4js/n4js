@@ -31,7 +31,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
@@ -87,7 +87,7 @@ import com.google.common.collect.Lists;
 public class ProjectImportEnablingScope implements IScope {
 	private final N4JSWorkspaceConfigSnapshot workspaceConfigSnapshot;
 	private final N4JSProjectConfigSnapshot contextProject;
-	private final Optional<ImportDeclaration> importDeclaration;
+	private final Optional<ModuleRef> importOrExportDecl;
 	private final IScope parent;
 	private final IScope delegate;
 	// private final N4JSModel n4jsModel;
@@ -98,19 +98,19 @@ public class ProjectImportEnablingScope implements IScope {
 	 * To support tests that use multiple projects without properly setting up IN4JSCore, we simply return 'parent' in
 	 * such cases; however, project imports will not be available in such tests.
 	 *
-	 * @param importDecl
-	 *            if an import declaration is provided, imported error reporting will be activated (i.e. an
+	 * @param importOrExportDecl
+	 *            if an import/export declaration is provided, corresponding error reporting will be activated (i.e. an
 	 *            {@link IEObjectDescriptionWithError} will be returned instead of <code>null</code> in case of
 	 *            unresolvable references).
 	 */
 	public static IScope create(N4JSWorkspaceConfigSnapshot ws, Resource resource,
-			Optional<ImportDeclaration> importDecl,
+			Optional<ModuleRef> importOrExportDecl,
 			IScope parent, IScope delegate) {
 
-		if (ws == null || resource == null || importDecl == null || parent == null) {
+		if (ws == null || resource == null || importOrExportDecl == null || parent == null) {
 			throw new IllegalArgumentException("none of the arguments may be null");
 		}
-		if (importDecl.isPresent() && importDecl.get().eResource() != resource) {
+		if (importOrExportDecl.isPresent() && importOrExportDecl.get().eResource() != resource) {
 			throw new IllegalArgumentException("given import declaration must be contained in the given resource");
 		}
 		final N4JSProjectConfigSnapshot contextProject = ws.findProjectContaining(resource.getURI());
@@ -120,7 +120,7 @@ public class ProjectImportEnablingScope implements IScope {
 			// without properly setting up the IN4JSCore; to not break those tests, we return 'parent' here
 			return parent;
 		}
-		return new ProjectImportEnablingScope(ws, contextProject, importDecl, parent, delegate);
+		return new ProjectImportEnablingScope(ws, contextProject, importOrExportDecl, parent, delegate);
 	}
 
 	/**
@@ -129,15 +129,15 @@ public class ProjectImportEnablingScope implements IScope {
 	 *            the project containing the import declaration (not the project containing the module to import from)!
 	 */
 	private ProjectImportEnablingScope(N4JSWorkspaceConfigSnapshot ws, N4JSProjectConfigSnapshot contextProject,
-			Optional<ImportDeclaration> importDecl, IScope parent, IScope delegate) {
+			Optional<ModuleRef> importOrExportDecl, IScope parent, IScope delegate) {
 
-		if (ws == null || contextProject == null || importDecl == null || parent == null) {
+		if (ws == null || contextProject == null || importOrExportDecl == null || parent == null) {
 			throw new IllegalArgumentException("none of the arguments may be null");
 		}
 		this.workspaceConfigSnapshot = ws;
 		this.contextProject = contextProject;
 		this.parent = parent;
-		this.importDeclaration = importDecl;
+		this.importOrExportDecl = importOrExportDecl;
 		this.delegate = delegate;
 	}
 
@@ -174,7 +174,7 @@ public class ProjectImportEnablingScope implements IScope {
 		}
 
 		// if no import declaration was given, we skip the advanced error reporting
-		if (!importDeclaration.isPresent()) {
+		if (!importOrExportDecl.isPresent()) {
 			return null;
 		}
 
@@ -237,8 +237,8 @@ public class ProjectImportEnablingScope implements IScope {
 
 		sbErrrorMessage.append('.');
 
-		final EObject originalProxy = (EObject) this.importDeclaration.get()
-				.eGet(N4JSPackage.eINSTANCE.getImportDeclaration_Module(), false);
+		final EObject originalProxy = (EObject) this.importOrExportDecl.get()
+				.eGet(N4JSPackage.eINSTANCE.getModuleRef_Module(), false);
 		return new IssueCodeBasedEObjectDescription(EObjectDescription.create("impDecl", originalProxy),
 				sbErrrorMessage.toString(), IssueCodes.IMP_UNRESOLVED);
 	}
@@ -508,16 +508,16 @@ public class ProjectImportEnablingScope implements IScope {
 	}
 
 	/**
-	 * Stores the given module specifier form in the AST iff 1) {@link #importDeclaration} is present and 2) it was not
+	 * Stores the given module specifier form in the AST iff 1) {@link #importOrExportDecl} is present and 2) it was not
 	 * set already; otherwise invoking this method has no effect.
 	 */
 	private void storeModuleSpecifierFormInAST(ModuleSpecifierForm moduleSpecifierForm) {
-		if (importDeclaration.isPresent()) {
-			ImportDeclaration impDecl = importDeclaration.get();
-			if (impDecl.getModuleSpecifierForm() == ModuleSpecifierForm.UNKNOWN) {
+		if (importOrExportDecl.isPresent()) {
+			ModuleRef impExpDecl = importOrExportDecl.get();
+			if (impExpDecl.getModuleSpecifierForm() == ModuleSpecifierForm.UNKNOWN) {
 				EcoreUtilN4.doWithDeliver(false, () -> {
-					impDecl.setModuleSpecifierForm(moduleSpecifierForm);
-				}, impDecl);
+					impExpDecl.setModuleSpecifierForm(moduleSpecifierForm);
+				}, impExpDecl);
 			}
 		}
 	}

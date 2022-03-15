@@ -125,6 +125,7 @@ import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.MultiplicativeOperator;
@@ -283,6 +284,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass exportableElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass moduleRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1874,8 +1882,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getExportDeclaration_ReexportedFrom() {
-		return (EReference)exportDeclarationEClass.getEStructuralFeatures().get(5);
+	public EOperation getExportDeclaration__IsHollow() {
+		return exportDeclarationEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -1884,8 +1892,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getExportDeclaration__IsHollow() {
-		return exportDeclarationEClass.getEOperations().get(0);
+	public EOperation getExportDeclaration__IsReexport() {
+		return exportDeclarationEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -2004,6 +2012,56 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EClass getModuleRef() {
+		return moduleRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getModuleRef_Module() {
+		return (EReference)moduleRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getModuleRef_ModuleSpecifierAsText() {
+		return (EAttribute)moduleRefEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getModuleRef_ModuleSpecifierForm() {
+		return (EAttribute)moduleRefEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getModuleRef__IsReferringToOtherModule() {
+		return moduleRefEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getImportDeclaration() {
 		return importDeclarationEClass;
 	}
@@ -2026,36 +2084,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EAttribute getImportDeclaration_ImportFrom() {
 		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getImportDeclaration_Module() {
-		return (EReference)importDeclarationEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getImportDeclaration_ModuleSpecifierAsText() {
-		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getImportDeclaration_ModuleSpecifierForm() {
-		return (EAttribute)importDeclarationEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -7947,8 +7975,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(exportDeclarationEClass, EXPORT_DECLARATION__NAMED_EXPORTS);
 		createEAttribute(exportDeclarationEClass, EXPORT_DECLARATION__WILDCARD_EXPORT);
 		createEAttribute(exportDeclarationEClass, EXPORT_DECLARATION__DEFAULT_EXPORT);
-		createEReference(exportDeclarationEClass, EXPORT_DECLARATION__REEXPORTED_FROM);
 		createEOperation(exportDeclarationEClass, EXPORT_DECLARATION___IS_HOLLOW);
+		createEOperation(exportDeclarationEClass, EXPORT_DECLARATION___IS_REEXPORT);
 
 		exportSpecifierEClass = createEClass(EXPORT_SPECIFIER);
 		createEReference(exportSpecifierEClass, EXPORT_SPECIFIER__ELEMENT);
@@ -7963,12 +7991,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(exportableElementEClass, EXPORTABLE_ELEMENT___IS_TOPLEVEL);
 		createEOperation(exportableElementEClass, EXPORTABLE_ELEMENT___IS_HOLLOW);
 
+		moduleRefEClass = createEClass(MODULE_REF);
+		createEReference(moduleRefEClass, MODULE_REF__MODULE);
+		createEAttribute(moduleRefEClass, MODULE_REF__MODULE_SPECIFIER_AS_TEXT);
+		createEAttribute(moduleRefEClass, MODULE_REF__MODULE_SPECIFIER_FORM);
+		createEOperation(moduleRefEClass, MODULE_REF___IS_REFERRING_TO_OTHER_MODULE);
+
 		importDeclarationEClass = createEClass(IMPORT_DECLARATION);
 		createEReference(importDeclarationEClass, IMPORT_DECLARATION__IMPORT_SPECIFIERS);
 		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__IMPORT_FROM);
-		createEReference(importDeclarationEClass, IMPORT_DECLARATION__MODULE);
-		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT);
-		createEAttribute(importDeclarationEClass, IMPORT_DECLARATION__MODULE_SPECIFIER_FORM);
 		createEOperation(importDeclarationEClass, IMPORT_DECLARATION___IS_BARE);
 		createEOperation(importDeclarationEClass, IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME);
 
@@ -8774,8 +8805,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		scriptEClass.getESuperTypes().add(this.getControlFlowElement());
 		exportDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		exportDeclarationEClass.getESuperTypes().add(this.getNamespaceElement());
+		exportDeclarationEClass.getESuperTypes().add(this.getModuleRef());
 		exportableElementEClass.getESuperTypes().add(this.getNamespaceElement());
 		importDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
+		importDeclarationEClass.getESuperTypes().add(this.getModuleRef());
 		namedImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());
 		defaultImportSpecifierEClass.getESuperTypes().add(this.getNamedImportSpecifier());
 		namespaceImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());
@@ -9054,9 +9087,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getExportDeclaration_NamedExports(), this.getExportSpecifier(), null, "namedExports", null, 0, -1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExportDeclaration_WildcardExport(), theEcorePackage.getEBoolean(), "wildcardExport", null, 0, 1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getExportDeclaration_DefaultExport(), theEcorePackage.getEBoolean(), "defaultExport", null, 0, 1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getExportDeclaration_ReexportedFrom(), theTypesPackage.getAbstractModule(), null, "reexportedFrom", null, 0, 1, ExportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getExportDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getExportDeclaration__IsReexport(), theEcorePackage.getEBoolean(), "isReexport", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(exportSpecifierEClass, ExportSpecifier.class, "ExportSpecifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getExportSpecifier_Element(), this.getIdentifierRef(), null, "element", null, 0, 1, ExportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -9078,12 +9112,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getExportableElement__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEClass(moduleRefEClass, ModuleRef.class, "ModuleRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getModuleRef_Module(), theTypesPackage.getAbstractModule(), null, "module", null, 0, 1, ModuleRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModuleRef_ModuleSpecifierAsText(), theEcorePackage.getEString(), "moduleSpecifierAsText", null, 0, 1, ModuleRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getModuleRef_ModuleSpecifierForm(), this.getModuleSpecifierForm(), "moduleSpecifierForm", null, 0, 1, ModuleRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getModuleRef__IsReferringToOtherModule(), theEcorePackage.getEBoolean(), "isReferringToOtherModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(importDeclarationEClass, ImportDeclaration.class, "ImportDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getImportDeclaration_ImportSpecifiers(), this.getImportSpecifier(), null, "importSpecifiers", null, 0, -1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getImportDeclaration_ImportFrom(), theEcorePackage.getEBoolean(), "importFrom", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getImportDeclaration_Module(), theTypesPackage.getAbstractModule(), null, "module", null, 0, 1, ImportDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getImportDeclaration_ModuleSpecifierAsText(), theEcorePackage.getEString(), "moduleSpecifierAsText", null, 0, 1, ImportDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getImportDeclaration_ModuleSpecifierForm(), this.getModuleSpecifierForm(), "moduleSpecifierForm", null, 0, 1, ImportDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getImportDeclaration__IsBare(), theEcorePackage.getEBoolean(), "isBare", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

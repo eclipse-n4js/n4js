@@ -20,10 +20,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.IdentifierRef;
-import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.LabelRef;
+import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
@@ -322,8 +322,8 @@ public class N4JSLinker extends LazyLinker {
 			((LabelRef) obj).setLabelAsText((String) value);
 		} else if (obj instanceof ParameterizedPropertyAccessExpression && value instanceof String) {
 			((ParameterizedPropertyAccessExpression) obj).setPropertyAsText((String) value);
-		} else if (obj instanceof ImportDeclaration && value instanceof String) {
-			((ImportDeclaration) obj).setModuleSpecifierAsText((String) value);
+		} else if (obj instanceof ModuleRef && value instanceof String) {
+			((ModuleRef) obj).setModuleSpecifierAsText((String) value);
 		} else if (obj instanceof NamedImportSpecifier && value instanceof String) {
 			((NamedImportSpecifier) obj).setImportedElementAsText((String) value);
 		} else if ((obj instanceof JSXPropertyAttribute) && (value instanceof String)) {
@@ -358,8 +358,8 @@ public class N4JSLinker extends LazyLinker {
 		super.clearReferences(obj);
 		if (obj instanceof Script) {
 			((Script) obj).setFlaggedUsageMarkingFinished(false); // open transient flag for new used-resolutions
-		} else if (obj instanceof ImportDeclaration) {
-			((ImportDeclaration) obj).setModuleSpecifierAsText(null);
+		} else if (obj instanceof ModuleRef) {
+			((ModuleRef) obj).setModuleSpecifierAsText(null);
 		} else if (obj instanceof ImportSpecifier) {
 			ImportSpecifier specifier = (ImportSpecifier) obj;
 			specifier.setFlaggedUsedInCode(false); // clear transient

@@ -3289,7 +3289,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
             }
             if ( state.backtracking==0 ) {
-              					newCompositeNode(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleCrossReference_1_0());
+              					newCompositeNode(grammarAccess.getExportFromClauseAccess().getModuleAbstractModuleCrossReference_1_0());
             }
             pushFollow(FOLLOW_2);
             ruleModuleSpecifier();

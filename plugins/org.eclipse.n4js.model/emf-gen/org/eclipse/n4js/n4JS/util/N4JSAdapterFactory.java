@@ -109,6 +109,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createExportableElementAdapter();
 			}
 			@Override
+			public Adapter caseModuleRef(ModuleRef object) {
+				return createModuleRefAdapter();
+			}
+			@Override
 			public Adapter caseImportDeclaration(ImportDeclaration object) {
 				return createImportDeclarationAdapter();
 			}
@@ -931,6 +935,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createExportableElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ModuleRef <em>Module Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.ModuleRef
+	 * @generated
+	 */
+	public Adapter createModuleRefAdapter() {
 		return null;
 	}
 
