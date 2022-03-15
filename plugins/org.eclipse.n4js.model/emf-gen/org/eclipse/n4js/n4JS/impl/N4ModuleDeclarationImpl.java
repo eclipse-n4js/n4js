@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
@@ -112,6 +113,16 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 		definedModule = newDefinedModule;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_MODULE_DECLARATION__DEFINED_MODULE, oldDefinedModule, definedModule));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TDeclaredModule getDefinedNamespace() {
+		return this.getDefinedModule();
 	}
 
 	/**
@@ -218,6 +229,12 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == N4AbstractNamespaceDeclaration.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE: return N4JSPackage.N4_MODULE_DECLARATION___GET_DEFINED_NAMESPACE;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == ScriptElement.class) {
 			switch (baseOperationID) {
 				default: return -1;
@@ -242,6 +259,8 @@ public class N4ModuleDeclarationImpl extends N4AbstractNamespaceDeclarationImpl 
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.N4_MODULE_DECLARATION___GET_DEFINED_NAMESPACE:
+				return getDefinedNamespace();
 			case N4JSPackage.N4_MODULE_DECLARATION___GET_NAMESPACE:
 				return getNamespace();
 			case N4JSPackage.N4_MODULE_DECLARATION___IS_IN_NAMESPACE:

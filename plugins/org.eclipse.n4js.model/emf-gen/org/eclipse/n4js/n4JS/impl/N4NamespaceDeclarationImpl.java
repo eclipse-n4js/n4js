@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
@@ -47,6 +48,7 @@ import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 
@@ -195,6 +197,17 @@ public class N4NamespaceDeclarationImpl extends N4AbstractNamespaceDeclarationIm
 		};
 		final boolean hollow = IterableExtensions.<NamespaceElement>forall(this.getOwnedElementsRaw(), _function);
 		return hollow;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TNamespace getDefinedNamespace() {
+		Type _definedType = this.getDefinedType();
+		return ((TNamespace) _definedType);
 	}
 
 	/**
@@ -549,6 +562,12 @@ public class N4NamespaceDeclarationImpl extends N4AbstractNamespaceDeclarationIm
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == N4AbstractNamespaceDeclaration.class) {
+			switch (baseOperationID) {
+				case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
 		if (baseClass == AnnotableElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ANNOTATIONS: return N4JSPackage.N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS;
@@ -621,6 +640,8 @@ public class N4NamespaceDeclarationImpl extends N4AbstractNamespaceDeclarationIm
 				return getAnnotations();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_HOLLOW:
 				return isHollow();
+			case N4JSPackage.N4_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE:
+				return getDefinedNamespace();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.N4_NAMESPACE_DECLARATION___IS_DECLARED_EXPORTED:

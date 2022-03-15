@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.n4js.ts.types.TNamespace;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>N4 Namespace Declaration</b></em>'.
@@ -54,5 +56,13 @@ public interface N4NamespaceDeclaration extends N4AbstractNamespaceDeclaration, 
 	 * @generated
 	 */
 	boolean isHollow();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TNamespace getDefinedNamespace();
 
 } // N4NamespaceDeclaration

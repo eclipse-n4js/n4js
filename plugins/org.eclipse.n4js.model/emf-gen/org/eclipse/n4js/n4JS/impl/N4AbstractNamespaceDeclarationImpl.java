@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -28,6 +30,8 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamespaceElement;
+
+import org.eclipse.n4js.ts.types.AbstractNamespace;
 
 /**
  * <!-- begin-user-doc -->
@@ -135,6 +139,18 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 	 * @generated
 	 */
 	@Override
+	public AbstractNamespace getDefinedNamespace() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW:
@@ -211,6 +227,20 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 				return ownedElementsRaw != null && !ownedElementsRaw.isEmpty();
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE:
+				return getDefinedNamespace();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**

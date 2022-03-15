@@ -29,7 +29,6 @@ public class N4JSNamespaceDeclarationTypesBuilder {
 		ensureEqualName(n4Namespace, namespaceType);
 
 		namespaceType.astElement = n4Namespace
-
 		n4Namespace.definedType = namespaceType
 
 		return true;
@@ -44,12 +43,6 @@ public class N4JSNamespaceDeclarationTypesBuilder {
 		namespaceType.setTypeAccessModifier(n4Namespace)
 
 		namespaceType.setProvidedByRuntime(n4Namespace, preLinkingPhase)
-
-		val exportedName = n4Namespace.exportedName;
-		if (exportedName !== null) {
-			namespaceType.directlyExported = true;
-			target.addExportDefinition(exportedName, namespaceType);
-		}
 
 		namespaceType.astElement = n4Namespace
 		n4Namespace.definedType = namespaceType

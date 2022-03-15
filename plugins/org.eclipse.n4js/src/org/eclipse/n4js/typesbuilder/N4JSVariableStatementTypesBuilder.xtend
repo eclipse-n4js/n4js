@@ -26,6 +26,8 @@ package class N4JSVariableStatementTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 
+	@Inject N4JSExportDefinitionTypesBuilder exportDefinitionTypesBuilder;
+
 	def package int relinkVariableTypes(VariableStatement n4VariableStatement, AbstractNamespace target, boolean preLinkingPhase, int start) {
 		return n4VariableStatement.varDecl.filter(ExportedVariableDeclaration).fold(start) [ idx, decl |
 			if (decl.relinkVariableType(target, idx)) {
@@ -69,8 +71,7 @@ package class N4JSVariableStatementTypesBuilder {
 		if (n4VariableStatement instanceof ExportedVariableStatement) {
 			val exportedName = n4VariableStatement.exportedName
 														?: n4VariableDeclaration.name // FIXME temporary hack to work around broken inheritance structure in n4js.xcore!!!!
-			variable.directlyExported = true;
-			target.addExportDefinition(exportedName, variable);
+			exportDefinitionTypesBuilder.createExportDefinitionForDirectlyExportedElement(variable, exportedName, target, preLinkingPhase);
 			variable.setTypeAccessModifier(n4VariableStatement)
 		}
 

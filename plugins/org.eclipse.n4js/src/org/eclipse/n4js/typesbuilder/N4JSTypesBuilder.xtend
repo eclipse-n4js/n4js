@@ -15,9 +15,7 @@ import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.n4js.n4JS.ExportDeclaration
-import org.eclipse.n4js.n4JS.ExportSpecifier
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -29,7 +27,6 @@ import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
-import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4ModuleDeclaration
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
@@ -46,11 +43,9 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.AbstractNamespace
-import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesFactory
@@ -92,6 +87,7 @@ public class N4JSTypesBuilder {
 	@Inject extension N4JSVariableStatementTypesBuilder
 	@Inject extension N4JSTypesFromTypeRefBuilder
 	@Inject extension N4JSImportTypesBuilder
+	@Inject extension N4JSExportDefinitionTypesBuilder
 
 	@Inject extension ModuleNameComputer
 	@Inject private WorkspaceAccess workspaceAccess
@@ -298,8 +294,6 @@ public class N4JSTypesBuilder {
 			switch n {
 				N4AbstractNamespaceDeclaration: {
 					rlis.namespacesIdx = n.relinkType(target, preLinkingPhase, rlis.namespacesIdx);
-					val AbstractNamespace namespaceType = if (n instanceof N4NamespaceDeclaration) n.definedType as TNamespace else (n as N4ModuleDeclaration).definedModule;
-					relinkTypes(n, namespaceType, preLinkingPhase, new RelinkIndices());
 				}
 				TypeDefiningElement: {
 					rlis.topLevelTypesIdx = n.relinkType(target, preLinkingPhase, rlis.topLevelTypesIdx);
@@ -308,7 +302,10 @@ public class N4JSTypesBuilder {
 					rlis.variableIdx = n.relinkType(target, preLinkingPhase, rlis.variableIdx)
 				}
 			}
-			if (!(n instanceof N4AbstractNamespaceDeclaration)) {
+			if (n instanceof N4AbstractNamespaceDeclaration) {
+				val AbstractNamespace namespaceType = n.definedNamespace;
+				relinkTypes(n, namespaceType, preLinkingPhase, new RelinkIndices());
+			} else {
 				relinkTypes(n, target, preLinkingPhase, rlis)
 			}
 		}
@@ -410,38 +407,27 @@ public class N4JSTypesBuilder {
 
 	def private void buildTypes(EObject container, AbstractNamespace target, boolean preLinkingPhase) {
 		for (n : container.eContents) {
+			// build type for n (if applicable)
 			switch n {
-				N4AbstractNamespaceDeclaration: {
-					n.createType(target, preLinkingPhase);
-					val AbstractNamespace namespaceType = if (n instanceof N4NamespaceDeclaration) n.definedType as TNamespace else (n as N4ModuleDeclaration).definedModule;
-					if (namespaceType !== null) {
-						// can be null in broken ASTs
-						buildTypes(n, namespaceType, preLinkingPhase);
-					}
-				}
+				N4AbstractNamespaceDeclaration:
+					n.createType(target, preLinkingPhase)
 				TypeDefiningElement:
 					n.createType(target, preLinkingPhase)
 				ExportedVariableStatement:
 					n.createType(target, preLinkingPhase)
-				ExportDeclaration case n.exportedElement === null: {
-					for (ExportSpecifier exportSpec : n.namedExports) {
-						val idRef = exportSpec.element;
-						if (idRef !== null) {
-							val idProxy = idRef.eGet(N4JSPackage.eINSTANCE.identifierRef_Id, false) as IdentifiableElement;
-							val exportedElemProxy = TypesFactory.eINSTANCE.createTExportableElement();
-							(exportedElemProxy as InternalEObject).eSetProxyURI((idProxy as InternalEObject).eProxyURI());
-							var declExpName = exportSpec.alias;
-							if (declExpName === null && n.moduleSpecifierAsText !== null) {
-								// in case of re-exports, break the dependency on the other file by providing the exported name explicitly:
-								declExpName = idRef.idAsText;
-							}
-							target.addExportDefinition(declExpName, exportedElemProxy);
-						}
-					}
-				}
 			}
-			if (!(n instanceof N4AbstractNamespaceDeclaration)) {
-				buildTypes(n, target, preLinkingPhase)
+			// build types for child nodes
+			val nextTarget = if (n instanceof N4AbstractNamespaceDeclaration) n.definedNamespace else target;
+			if (nextTarget !== null) { // can be null in broken ASTs
+				buildTypes(n, nextTarget, preLinkingPhase);
+			}
+			// handle exports
+			if (n instanceof ExportDeclaration) {
+				n.createType(target, preLinkingPhase);
+			} else if (n instanceof ExportableElement) {
+				if (!n.isDeclaredExported && n.isExportedByNamespace) {
+					n.createExportDefinitionForDirectlyExportedElement(target, preLinkingPhase);
+				}
 			}
 		}
 	}
@@ -450,8 +436,7 @@ public class N4JSTypesBuilder {
 		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: " + other?.eClass.name);
 	}
 
-	def protected dispatch void createType(NamespaceImportSpecifier nsImpSpec, AbstractNamespace target,
-		boolean preLinkingPhase) {
+	def protected dispatch void createType(NamespaceImportSpecifier nsImpSpec, AbstractNamespace target, boolean preLinkingPhase) {
 		// already handled up-front in #buildNamespacesTypesFromModuleImports()
 	}
 
@@ -471,8 +456,7 @@ public class N4JSTypesBuilder {
 		n4Class.createTClass(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(N4InterfaceDeclaration n4Interface, AbstractNamespace target,
-		boolean preLinkingPhase) {
+	def protected dispatch void createType(N4InterfaceDeclaration n4Interface, AbstractNamespace target, boolean preLinkingPhase) {
 		n4Interface.createTInterface(target, preLinkingPhase)
 	}
 
@@ -492,8 +476,7 @@ public class N4JSTypesBuilder {
 		// methods are handled in their containing class/interface -> ignore them here
 	}
 
-	def protected dispatch void createType(FunctionDeclaration n4FunctionDecl, AbstractNamespace target,
-		boolean preLinkingPhase) {
+	def protected dispatch void createType(FunctionDeclaration n4FunctionDecl, AbstractNamespace target, boolean preLinkingPhase) {
 		n4FunctionDecl.createTFunction(target, preLinkingPhase)
 	}
 
@@ -502,8 +485,11 @@ public class N4JSTypesBuilder {
 		n4FunctionExpr.createTFunction(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(ExportedVariableStatement n4VariableStatement, AbstractNamespace target,
-		boolean preLinkingPhase) {
+	def protected dispatch void createType(ExportedVariableStatement n4VariableStatement, AbstractNamespace target, boolean preLinkingPhase) {
 		n4VariableStatement.createVariableTypes(target, preLinkingPhase)
+	}
+
+	def protected dispatch void createType(ExportDeclaration n4ExportDeclaration, AbstractNamespace target, boolean preLinkingPhase) {
+		n4ExportDeclaration.createExportDefinition(target, preLinkingPhase)
 	}
 }

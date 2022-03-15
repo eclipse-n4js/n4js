@@ -70,12 +70,6 @@ public class N4JSEnumDeclarationTypesBuilder {
 
 		computeDefaultValues(enumType, n4Enum);
 
-		val exportedName = n4Enum.exportedName;
-		if (exportedName !== null) {
-			enumType.directlyExported = true;
-			target.addExportDefinition(exportedName, enumType);
-		}
-
 		enumType.astElement = n4Enum
 		n4Enum.definedType = enumType
 

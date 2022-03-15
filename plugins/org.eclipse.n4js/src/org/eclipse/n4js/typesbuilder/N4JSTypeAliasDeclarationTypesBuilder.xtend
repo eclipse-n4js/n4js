@@ -53,12 +53,6 @@ class N4JSTypeAliasDeclarationTypesBuilder {
 			typeAlias.typeRef = TypeUtils.copyWithProxies(n4TypeAlias.declaredTypeRefInAST);
 		}
 
-		val exportedName = n4TypeAlias.exportedName;
-		if (exportedName !== null) {
-			typeAlias.directlyExported = true;
-			target.addExportDefinition(exportedName, typeAlias);
-		}
-
 		typeAlias.astElement = n4TypeAlias;
 		n4TypeAlias.definedType = typeAlias;
 

@@ -59,17 +59,10 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 		tclass.addGetters(n4Class, preLinkingPhase);
 		tclass.addSetters(n4Class, preLinkingPhase);
 
-		val exportedName = n4Class.exportedName;
-		if (exportedName !== null) {
-			tclass.directlyExported = true;
-			target.addExportDefinition(exportedName, tclass);
-		}
-
 		tclass.copyAnnotations(n4Class, preLinkingPhase);
 
 		// + set "bindings" (derived refs from ast to types and vice versa)
 		tclass.astElement = n4Class;
-
 		n4Class.definedType = tclass;
 
 		target.types += tclass;
@@ -95,7 +88,6 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 
 		// + set "bindings" (derived refs from ast to types and vice versa)
 		tclass.astElement = n4Class;
-
 		n4Class.definedType = tclass;
 
 		target.containingRootModule.internalTypes += tclass;

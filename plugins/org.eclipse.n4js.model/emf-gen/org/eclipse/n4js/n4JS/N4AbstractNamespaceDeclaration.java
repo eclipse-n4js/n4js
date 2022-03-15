@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.n4js.ts.types.AbstractNamespace;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>N4 Abstract Namespace Declaration</b></em>'.
@@ -63,5 +65,13 @@ public interface N4AbstractNamespaceDeclaration extends VariableEnvironmentEleme
 	 * @generated
 	 */
 	EList<NamespaceElement> getOwnedElementsRaw();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	AbstractNamespace getDefinedNamespace();
 
 } // N4AbstractNamespaceDeclaration

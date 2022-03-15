@@ -12785,13 +12785,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_ABSTRACT_NAMESPACE_DECLARATION___GET_NAME = VARIABLE_ENVIRONMENT_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Defined Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ABSTRACT_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE = VARIABLE_ENVIRONMENT_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>N4 Abstract Namespace Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT = VARIABLE_ENVIRONMENT_ELEMENT_OPERATION_COUNT + 1;
+	int N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT = VARIABLE_ENVIRONMENT_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ModuleDeclarationImpl <em>N4 Module Declaration</em>}' class.
@@ -12885,13 +12894,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_MODULE_DECLARATION___IS_HOLLOW = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Get Defined Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MODULE_DECLARATION___GET_DEFINED_NAMESPACE = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 3;
+
+	/**
 	 * The number of operations of the '<em>N4 Module Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MODULE_DECLARATION_OPERATION_COUNT = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 3;
+	int N4_MODULE_DECLARATION_OPERATION_COUNT = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4NamespaceDeclarationImpl <em>N4 Namespace Declaration</em>}' class.
@@ -13093,13 +13111,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_NAMESPACE_DECLARATION___IS_HOLLOW = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 17;
 
 	/**
+	 * The operation id for the '<em>Get Defined Namespace</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 18;
+
+	/**
 	 * The number of operations of the '<em>N4 Namespace Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 18;
+	int N4_NAMESPACE_DECLARATION_OPERATION_COUNT = N4_ABSTRACT_NAMESPACE_DECLARATION_OPERATION_COUNT + 19;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassDeclarationImpl <em>N4 Class Declaration</em>}' class.
@@ -23076,6 +23103,16 @@ public interface N4JSPackage extends EPackage {
 	EReference getN4AbstractNamespaceDeclaration_OwnedElementsRaw();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration#getDefinedNamespace() <em>Get Defined Namespace</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Defined Namespace</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration#getDefinedNamespace()
+	 * @generated
+	 */
+	EOperation getN4AbstractNamespaceDeclaration__GetDefinedNamespace();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4ModuleDeclaration <em>N4 Module Declaration</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -23095,6 +23132,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getN4ModuleDeclaration_DefinedModule();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4ModuleDeclaration#getDefinedNamespace() <em>Get Defined Namespace</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Defined Namespace</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4ModuleDeclaration#getDefinedNamespace()
+	 * @generated
+	 */
+	EOperation getN4ModuleDeclaration__GetDefinedNamespace();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4NamespaceDeclaration <em>N4 Namespace Declaration</em>}'.
@@ -23135,6 +23182,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getN4NamespaceDeclaration__IsHollow();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4NamespaceDeclaration#getDefinedNamespace() <em>Get Defined Namespace</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Defined Namespace</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4NamespaceDeclaration#getDefinedNamespace()
+	 * @generated
+	 */
+	EOperation getN4NamespaceDeclaration__GetDefinedNamespace();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.NamespaceElement <em>Namespace Element</em>}'.
@@ -28666,6 +28723,14 @@ public interface N4JSPackage extends EPackage {
 		EReference N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW = eINSTANCE.getN4AbstractNamespaceDeclaration_OwnedElementsRaw();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Defined Namespace</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_ABSTRACT_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE = eINSTANCE.getN4AbstractNamespaceDeclaration__GetDefinedNamespace();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4ModuleDeclarationImpl <em>N4 Module Declaration</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -28682,6 +28747,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference N4_MODULE_DECLARATION__DEFINED_MODULE = eINSTANCE.getN4ModuleDeclaration_DefinedModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Defined Namespace</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_MODULE_DECLARATION___GET_DEFINED_NAMESPACE = eINSTANCE.getN4ModuleDeclaration__GetDefinedNamespace();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4NamespaceDeclarationImpl <em>N4 Namespace Declaration</em>}' class.
@@ -28716,6 +28789,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation N4_NAMESPACE_DECLARATION___IS_HOLLOW = eINSTANCE.getN4NamespaceDeclaration__IsHollow();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Defined Namespace</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE = eINSTANCE.getN4NamespaceDeclaration__GetDefinedNamespace();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.NamespaceElementImpl <em>Namespace Element</em>}' class.

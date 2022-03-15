@@ -34,14 +34,11 @@ import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.AccessibleTypeElement
-import org.eclipse.n4js.ts.types.ExportDefinition
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.n4js.ts.types.TExportableElement
-import org.eclipse.n4js.ts.types.TExportingElement
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TypeAccessModifier
@@ -203,7 +200,7 @@ package class N4JSTypesBuilderHelper {
 	}
 
 	def protected void ensureEqualName(NamedElement astNode, String nameInModule) {
-		val nameInAST = astNode.name;
+		val nameInAST = astNode?.name;
 		if (nameInAST !== null) { // note: no check if no name available in AST (don't fiddle with computed property names, etc.)
 			if (!nameInAST.equals(nameInModule)) {
 				val msg = "inconsistency between newly loaded AST and to-be-linked TModule: "
@@ -214,17 +211,5 @@ package class N4JSTypesBuilderHelper {
 				throw new IllegalStateException(msg);
 			}
 		}
-	}
-
-	/**
-	 * Creates a new {@link ExportDefinition} for the given exported element and adds the export definition to the given context.
-	 */
-	def package void addExportDefinition(TExportingElement context, String declaredExportedName, TExportableElement exportedElement) {
-		val expDef = TypesFactory.eINSTANCE.createExportDefinition();
-		if (declaredExportedName !== null && declaredExportedName != exportedElement.name) {
-			expDef.declaredExportedName = declaredExportedName;
-		}
-		expDef.exportedElement = exportedElement;
-		context.exportDefinitions += expDef;
 	}
 }

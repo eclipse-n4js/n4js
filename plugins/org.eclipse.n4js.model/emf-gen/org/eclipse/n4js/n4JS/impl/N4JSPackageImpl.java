@@ -6602,6 +6602,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getN4AbstractNamespaceDeclaration__GetDefinedNamespace() {
+		return n4AbstractNamespaceDeclarationEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getN4ModuleDeclaration() {
 		return n4ModuleDeclarationEClass;
 	}
@@ -6614,6 +6624,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EReference getN4ModuleDeclaration_DefinedModule() {
 		return (EReference)n4ModuleDeclarationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4ModuleDeclaration__GetDefinedNamespace() {
+		return n4ModuleDeclarationEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -6654,6 +6674,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EOperation getN4NamespaceDeclaration__IsHollow() {
 		return n4NamespaceDeclarationEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getN4NamespaceDeclaration__GetDefinedNamespace() {
+		return n4NamespaceDeclarationEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -8591,14 +8621,17 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4AbstractNamespaceDeclarationEClass = createEClass(N4_ABSTRACT_NAMESPACE_DECLARATION);
 		createEAttribute(n4AbstractNamespaceDeclarationEClass, N4_ABSTRACT_NAMESPACE_DECLARATION__NAME);
 		createEReference(n4AbstractNamespaceDeclarationEClass, N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW);
+		createEOperation(n4AbstractNamespaceDeclarationEClass, N4_ABSTRACT_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE);
 
 		n4ModuleDeclarationEClass = createEClass(N4_MODULE_DECLARATION);
 		createEReference(n4ModuleDeclarationEClass, N4_MODULE_DECLARATION__DEFINED_MODULE);
+		createEOperation(n4ModuleDeclarationEClass, N4_MODULE_DECLARATION___GET_DEFINED_NAMESPACE);
 
 		n4NamespaceDeclarationEClass = createEClass(N4_NAMESPACE_DECLARATION);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___IS_EXTERNAL);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___IS_HOLLOW);
+		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE);
 
 		namespaceElementEClass = createEClass(NAMESPACE_ELEMENT);
 		createEOperation(namespaceElementEClass, NAMESPACE_ELEMENT___GET_NAMESPACE);
@@ -9890,8 +9923,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getN4AbstractNamespaceDeclaration_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4AbstractNamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getN4AbstractNamespaceDeclaration_OwnedElementsRaw(), this.getNamespaceElement(), null, "ownedElementsRaw", null, 0, -1, N4AbstractNamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
+		initEOperation(getN4AbstractNamespaceDeclaration__GetDefinedNamespace(), theTypesPackage.getAbstractNamespace(), "getDefinedNamespace", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(n4ModuleDeclarationEClass, N4ModuleDeclaration.class, "N4ModuleDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getN4ModuleDeclaration_DefinedModule(), theTypesPackage.getTDeclaredModule(), null, "definedModule", null, 0, 1, N4ModuleDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getN4ModuleDeclaration__GetDefinedNamespace(), theTypesPackage.getTDeclaredModule(), "getDefinedNamespace", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4NamespaceDeclarationEClass, N4NamespaceDeclaration.class, "N4NamespaceDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -9900,6 +9937,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getN4NamespaceDeclaration__GetAnnotations(), this.getAnnotation(), "getAnnotations", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getN4NamespaceDeclaration__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4NamespaceDeclaration__GetDefinedNamespace(), theTypesPackage.getTNamespace(), "getDefinedNamespace", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(namespaceElementEClass, NamespaceElement.class, "NamespaceElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

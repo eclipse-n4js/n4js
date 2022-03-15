@@ -67,4 +67,12 @@ public interface N4ModuleDeclaration extends N4AbstractNamespaceDeclaration, Nam
 	 */
 	void setDefinedModule(TDeclaredModule value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TDeclaredModule getDefinedNamespace();
+
 } // N4ModuleDeclaration
