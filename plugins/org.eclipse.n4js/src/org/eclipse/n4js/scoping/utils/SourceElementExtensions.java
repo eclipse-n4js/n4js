@@ -225,9 +225,12 @@ public class SourceElementExtensions {
 				return true;
 			}
 
+			// NOTE #1:
 			// this special case is required (in addition to case for IdentifiableElement below), to make sure
-			// the TModule element is added to 'addHere', not the AST node (as is done for non-exported or
-			// non-top-level variables)
+			// the TModule element is added to 'addHere', not the AST node (as is done for non-top-level variables)
+			// NOTE #2:
+			// by not requiring 'feature.isExported()' here, we here take the decision to also bind proxies to
+			// non-exported top-level variables to the TModule element, not the AST node.
 			collectVisibleVariable(feature, validIEs);
 			allContents.prune();
 			return true;

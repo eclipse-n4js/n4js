@@ -804,7 +804,9 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseVariableStatement(VariableStatement original) {
-		writeIf("declare ", !(original instanceof ExportableVariableStatement));
+		boolean exported = original instanceof ExportableVariableStatement
+				&& ((ExportableVariableStatement)original).isExported();
+		writeIf("declare ", !exported);
 		write(keyword(original.getVarStmtKeyword()));
 		write(' ');
 		process(original.getVarDeclsOrBindings(), ", ");
@@ -821,8 +823,8 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseExportableVariableStatement(ExportableVariableStatement original) {
-		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
-		// emitted there; so, no need to emit "export" in this method!
+		// note: if an ExportableVariableStatement is actually exported, it is a child of an ExportDeclaration and the
+		// "export" keyword is emitted there; so, no need to emit "export" in this method!
 		if (original.isExportedAsDefault()) {
 			EList<VariableDeclarationOrBinding> declsOrBindings = original.getVarDeclsOrBindings();
 			// the default export does only support a single element. Hence, only the first entry is used.

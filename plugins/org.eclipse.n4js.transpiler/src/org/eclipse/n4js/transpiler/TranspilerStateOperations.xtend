@@ -21,7 +21,6 @@ import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.EmptyStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
-import org.eclipse.n4js.n4JS.ExportableVariableStatement
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
@@ -301,24 +300,6 @@ class TranspilerStateOperations {
 			// note: this update of the symbol table is incomplete; elementInIM may be the root of an entire subtree
 			// of the IM, so we would have to iterate over all successors
 		}
-	}
-
-	/**
-	 * Removes the export-container (ExportDeclaration) by creating a new VariableStatement {@code varStmt}, moving all content from {@code exVarStmnt}
-	 * into it and replacing the ExportDeclaration with the newly created {@code varStmt}
-	 * @return newly created {@code varStmt} (already part of the intermediate model).
-	 */
-	def public static VariableStatement removeExport(TranspilerState state, ExportableVariableStatement exVarStmnt) {
-
-		if(!TranspilerUtils.isIntermediateModelElement(exVarStmnt)) {
-			throw new IllegalArgumentException("not an element in the intermediate model: " + exVarStmnt);
-		}
-
-		val exportDecl = exVarStmnt.eContainer as ExportDeclaration
-
-		state.replaceWithoutRewire(exportDecl,exVarStmnt);
-
-		return exVarStmnt
 	}
 
 

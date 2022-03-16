@@ -184,7 +184,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-		ExportableVariableStatement vs = variableBuilder.consumeInNamespace(ctx);
+		ExportableVariableStatement vs = variableBuilder.consume(ctx);
 		addAndHandleExported(ctx, vs);
 	}
 

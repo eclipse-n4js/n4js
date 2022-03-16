@@ -24,14 +24,13 @@ import org.eclipse.n4js.dts.TypeScriptParser.BindingPatternBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.n4JS.BindingPattern;
+import org.eclipse.n4js.n4JS.ExportableVariableBinding;
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration;
 import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
-import org.eclipse.n4js.n4JS.VariableBinding;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
-import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -44,10 +43,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementContext, VariableStatement> {
+public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementContext, ExportableVariableStatement> {
 	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-
-	private boolean parentIsNamespace;
 
 	/** Constructor */
 	public DtsVariableBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -63,30 +60,14 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 				RULE_objectLiteral);
 	}
 
-	/** Call this method iff the parent of ctx is a script */
-	public VariableStatement consumeInScript(VariableStatementContext ctx) {
-		this.parentIsNamespace = false;
-		return consume(ctx);
-	}
-
-	/** Call this method iff the parent of ctx is a namespace */
-	public ExportableVariableStatement consumeInNamespace(VariableStatementContext ctx) {
-		this.parentIsNamespace = true;
-		return (ExportableVariableStatement) consume(ctx);
-	}
-
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-		boolean exported = ParserContextUtil.isExported(ctx);
-		if (exported || parentIsNamespace) {
-			result = N4JSFactory.eINSTANCE.createExportableVariableStatement();
-			EList<N4Modifier> declaredModifiers = ((ExportableVariableStatement) result).getDeclaredModifiers();
-			declaredModifiers.add(N4Modifier.EXTERNAL);
-			declaredModifiers.add(N4Modifier.PUBLIC);
-		} else {
-			result = N4JSFactory.eINSTANCE.createVariableStatement();
-			// TODO: missing modifier N4Modifier.EXTERNAL
-		}
+		// always creating an ExportableVariableStatement, because in .d.ts we are always on script-level or in a
+		// namespace (never in function/method bodies, etc.)
+		result = N4JSFactory.eINSTANCE.createExportableVariableStatement();
+		EList<N4Modifier> declaredModifiers = result.getDeclaredModifiers();
+		declaredModifiers.add(N4Modifier.EXTERNAL);
+		declaredModifiers.add(N4Modifier.PUBLIC);
 		VariableStatementKeyword keyword = VariableStatementKeyword.VAR;
 		if (ctx.varModifier() != null && ctx.varModifier().Const() != null) {
 			keyword = VariableStatementKeyword.CONST;
@@ -101,9 +82,7 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 
 	@Override
 	public void enterBindingPatternBlock(BindingPatternBlockContext ctx) {
-		boolean exported = ParserContextUtil.isExported(ctx);
-		VariableBinding varBinding = exported ? N4JSFactory.eINSTANCE.createExportableVariableBinding()
-				: N4JSFactory.eINSTANCE.createVariableBinding();
+		ExportableVariableBinding varBinding = N4JSFactory.eINSTANCE.createExportableVariableBinding();
 
 		BindingPattern bindingPattern = new DtsBindingPatternBuilder(this).consume(ctx.bindingPattern());
 
@@ -114,9 +93,7 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 
 	@Override
 	public void enterVariableDeclaration(VariableDeclarationContext ctx) {
-		boolean exported = ParserContextUtil.isExported(ctx);
-		VariableDeclaration varDecl = exported ? N4JSFactory.eINSTANCE.createExportableVariableDeclaration()
-				: N4JSFactory.eINSTANCE.createVariableDeclaration();
+		ExportableVariableDeclaration varDecl = N4JSFactory.eINSTANCE.createExportableVariableDeclaration();
 		varDecl.setName(ctx.identifierName().getText());
 
 		TypeReferenceNode<TypeRef> typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());

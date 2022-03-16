@@ -533,7 +533,9 @@ public class ASTProcessor extends AbstractProcessor {
 		if (targetNode instanceof VariableDeclaration) {
 			// don't save references to exported variable declarations
 			if (targetNode instanceof ExportableVariableDeclaration) {
-				return;
+				if (targetNode.exported) {
+					return;
+				}
 			}
 
 			cache.storeLocalVariableReference(targetNode, sourceNode);

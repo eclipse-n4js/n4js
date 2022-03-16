@@ -421,8 +421,8 @@ import com.google.common.base.Strings;
 
 	@Override
 	public Boolean caseExportableVariableStatement(ExportableVariableStatement original) {
-		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
-		// emitted there; so, no need to emit "export" in this method!
+		// note: if an ExportableVariableStatement is actually exported, it is a child of an ExportDeclaration and the
+		// "export" keyword is emitted there; so, no need to emit "export" in this method!
 		if (!original.getDeclaredModifiers().isEmpty()) {
 			processModifiers(original.getDeclaredModifiers());
 			write(' ');

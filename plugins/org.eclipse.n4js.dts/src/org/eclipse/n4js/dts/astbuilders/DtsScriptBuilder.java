@@ -34,6 +34,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsModuleBuilder;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsNamespaceBuilder;
 import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
@@ -47,7 +48,6 @@ import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
-import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -126,7 +126,7 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-		VariableStatement vs = variableBuilder.consumeInScript(ctx);
+		ExportableVariableStatement vs = variableBuilder.consume(ctx);
 		addToScript(vs);
 	}
 

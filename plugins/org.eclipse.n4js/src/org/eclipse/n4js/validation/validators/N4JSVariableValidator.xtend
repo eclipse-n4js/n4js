@@ -57,7 +57,9 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def void checkUnusedVariables(VariableDeclaration varDecl) {
 		if (varDecl instanceof ExportableVariableDeclaration) {
-			return;
+			if (varDecl.exported) {
+				return;
+			}
 		}
 
 		if (ASTMetaInfoUtils.getLocalVariableReferences(varDecl).empty) {
@@ -80,7 +82,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 		val targetForReferencesToVarDecl = if(varDecl instanceof ExportableVariableDeclaration) {
 			varDecl.definedVariable // references to ExportedVariableDeclarations point to the TVariable in the TModule
 		} else {
-			varDecl // references to local variables point directly to the VariableDeclaration
+			varDecl // references to non-top-level variables point directly to the VariableDeclaration
 		};
 		if(astNode instanceof IdentifierRef) {
 			if(astNode.id===targetForReferencesToVarDecl) {
