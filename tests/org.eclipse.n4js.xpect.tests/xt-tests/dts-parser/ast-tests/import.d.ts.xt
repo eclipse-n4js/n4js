@@ -13,8 +13,8 @@
 	File "tslib.d.ts" {
 		export const K : string;
 		
-		export class C {
-			field : number;
+		export enum C {
+			R, G, B
 		}
 	}
    END_SETUP
@@ -24,8 +24,8 @@
 import {K, C} from "tslib"
 
 export const Kconst = K;
-export const Cconst : C = new C();
-
+export const Cconst1 : C = C.R;
+export const Cconst2 = C.R;
 
 
 
@@ -38,9 +38,11 @@ Script: true
    ExportedVariableDeclaration: Kconst
     IdentifierRef: K, false
   ExportedVariableStatement: [external, public], const
-   ExportedVariableDeclaration: Cconst
+   ExportedVariableDeclaration: Cconst1
     TypeReferenceNode
-     ParameterizedTypeRef: OFF, false, false, C, ~, false, false
+     ParameterizedTypeRef: OFF, false, false, C, ?~, false, false
+  ExportedVariableStatement: [external, public], const
+   ExportedVariableDeclaration: Cconst2
+    ParameterizedPropertyAccessExpression: false, R
+     IdentifierRef: C, false
 --- */
-
-

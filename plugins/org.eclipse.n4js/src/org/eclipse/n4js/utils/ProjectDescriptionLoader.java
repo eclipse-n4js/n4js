@@ -13,6 +13,7 @@ package org.eclipse.n4js.utils;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
+import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PACKAGES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.WORKSPACES_ARRAY;
@@ -164,6 +165,7 @@ public class ProjectDescriptionLoader {
 	 * Adjust the path value of the "main" property of the given package.json document as follows (in-place change of
 	 * the given JSON document):
 	 * <ol>
+	 * <li>if this is a {@code @types}-project, then continue with the value of {@code types}-property.
 	 * <li>if the path points to a folder, then "/index.js" will be appended,
 	 * <li>if neither a folder nor a file exist at the location the path points to and the path does not end in ".js",
 	 * then ".js" will be appended.
@@ -171,10 +173,22 @@ public class ProjectDescriptionLoader {
 	 */
 	private void adjustMainPath(URI location, JSONDocument packageJSON) {
 		JSONValue content = packageJSON.getContent();
-		if (!(content instanceof JSONObject))
+		if (!(content instanceof JSONObject)) {
 			return;
+		}
 		JSONObject contentCasted = (JSONObject) content;
+		NameValuePair nameProperty = JSONModelUtils.getNameValuePair(contentCasted, NAME.name).orElse(null);
+		String prjName = nameProperty == null ? null : asNonEmptyStringOrNull(nameProperty.getValue());
+		boolean isTypeScriptDefinitionProject = prjName != null && prjName.startsWith(N4JSGlobals.TYPES_SCOPE + "/");
 		NameValuePair mainProperty = JSONModelUtils.getNameValuePair(contentCasted, MAIN.name).orElse(null);
+		if (isTypeScriptDefinitionProject) {
+			NameValuePair typesProperty = JSONModelUtils.getNameValuePair(contentCasted, "types").orElse(null);
+			if (typesProperty != null) {
+				JSONStringLiteral mainValue = JSONFactory.eINSTANCE.createJSONStringLiteral();
+				mainValue.setValue(asNonEmptyStringOrNull(typesProperty.getValue()));
+				mainProperty = JSONModelUtils.addProperty(contentCasted, MAIN.name, mainValue);
+			}
+		}
 		if (mainProperty == null) {
 			return;
 		}

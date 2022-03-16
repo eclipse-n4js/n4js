@@ -1,4 +1,4 @@
-// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-temp/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL1/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -184,6 +184,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArrayTypeExpressionSuffix(TypeScriptParser.ArrayTypeExpressionSuffixContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArrayTypeExpressionSuffix(TypeScriptParser.ArrayTypeExpressionSuffixContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterPrimaryTypeExpression(TypeScriptParser.PrimaryTypeExpressionContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -263,6 +275,18 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTypeRefWithModifiers(TypeScriptParser.TypeRefWithModifiersContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterParenthesizedTypeRef(TypeScriptParser.ParenthesizedTypeRefContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitParenthesizedTypeRef(TypeScriptParser.ParenthesizedTypeRefContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -371,42 +395,6 @@ public class TypeScriptParserBaseListener implements TypeScriptParserListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitImportTypeRef(TypeScriptParser.ImportTypeRefContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAnonymousFormalParameterListWithDeclaredThisType(TypeScriptParser.AnonymousFormalParameterListWithDeclaredThisTypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAnonymousFormalParameterListWithDeclaredThisType(TypeScriptParser.AnonymousFormalParameterListWithDeclaredThisTypeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterAnonymousFormalParameter(TypeScriptParser.AnonymousFormalParameterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitAnonymousFormalParameter(TypeScriptParser.AnonymousFormalParameterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterDefaultFormalParameter(TypeScriptParser.DefaultFormalParameterContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDefaultFormalParameter(TypeScriptParser.DefaultFormalParameterContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

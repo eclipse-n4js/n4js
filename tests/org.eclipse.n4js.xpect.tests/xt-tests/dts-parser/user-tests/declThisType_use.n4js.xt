@@ -1,0 +1,46 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "tslib.d.ts" {
+		export interface I {
+			methodInI(p: string): number;
+		}
+		export class C {
+			method(this: C & I, p: string): void
+		}
+		export class D extends C {
+		}
+		export class E extends C implements I {
+			methodInI(p: string): number;
+		}
+		export function foo(this: C & I, p: string): void;
+		export const bar: (this: C & I, p: string)=>void;
+	}
+
+	END_SETUP
+ */
+
+import { C, D, E, foo, bar } from "tslib"
+
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.method: C is not a subtype of intersection{C,I}." at "method"
+new C().method("hello");
+// XPECT errors --> "Target of property access not a subtype of the declared @This type of method C.method: D is not a subtype of intersection{C,I}." at "method"
+new D().method("hello");
+// XPECT noerrors -->
+new E().method("hello");
+
+// XPECT type of 'foo' --> {@This(intersection{C,I}) function(string):void}
+foo;
+// XPECT type of 'bar' --> {@This(intersection{C,I}) function(string):void}
+bar;

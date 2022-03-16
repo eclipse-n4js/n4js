@@ -17,7 +17,8 @@
 		    field: number;
 		    optionalField?: number;
 		    readonly readonlyField: number;
-		    method(): string;
+		    method(p: number): string;
+		    genMethod<T>(p: T): T;
 		    optionalMethod?(): string;
 		    get getter() : string;
 		    set setter(v: string);
@@ -43,7 +44,10 @@ class CIE implements IE {
 	//public readonlyField: number = 0;
 
 	@Override
-	public method(): string {return null;}
+	public method(p: number): string {return null;}
+
+	@Override
+	public <T> genMethod(p: T): T {return null;}
 
 	@Override
 	public optionalMethod(): string {return null;}
@@ -60,7 +64,8 @@ let keNum : number = ie.field;
 ie.field = 1;
 let keNumO : number = ie.optionalField;
 let keNumR : number = ie.readonlyField;
-let keStr : string = ie.method();
+let keStr : string = ie.method(42);
+let keStrG : string = ie.genMethod("hello");
 let keStrO : string = ie.optionalMethod();
 let keGett : string = ie.getter;
 ie.setter = "s";
@@ -79,7 +84,3 @@ IE.field;
  "IE cannot be used as a value." at "IE"
  --- */
 new IE();
- 
- 
- 
- 

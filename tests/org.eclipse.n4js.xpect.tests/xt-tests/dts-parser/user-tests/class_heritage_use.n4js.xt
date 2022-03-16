@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+	
+	File "tslib.d.ts" {
+		export class ClsA {
+		    field: string;
+		    get getter() : string;
+		    set setter(v: string);
+		    method(p: string): number;
+		}
+		
+		export class ClsB extends ClsA {}
+	}
+	END_SETUP
+ */
+
+
+import { ClsB } from "tslib";
+
+let b: ClsB;
+
+// XPECT type of 'v01' --> string
+let v01 = b.field;
+// XPECT type of 'v02' --> string
+let v02 = b.getter;
+// XPECT errors --> "42 is not a subtype of string." at "42"
+b.setter = 42;
+// XPECT type of 'v03' --> number
+let v03 = b.method("hello");

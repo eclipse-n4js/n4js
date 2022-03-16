@@ -1,4 +1,4 @@
-// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-temp/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL1/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -95,6 +95,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitArrayTypeExpression(TypeScriptParser.ArrayTypeExpressionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#arrayTypeExpressionSuffix}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayTypeExpressionSuffix(TypeScriptParser.ArrayTypeExpressionSuffixContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#primaryTypeExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -136,6 +142,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTypeRefWithModifiers(TypeScriptParser.TypeRefWithModifiersContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#parenthesizedTypeRef}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParenthesizedTypeRef(TypeScriptParser.ParenthesizedTypeRefContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#parameterizedTypeRef}.
 	 * @param ctx the parse tree
@@ -190,24 +202,6 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitImportTypeRef(TypeScriptParser.ImportTypeRefContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#anonymousFormalParameterListWithDeclaredThisType}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAnonymousFormalParameterListWithDeclaredThisType(TypeScriptParser.AnonymousFormalParameterListWithDeclaredThisTypeContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#anonymousFormalParameter}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAnonymousFormalParameter(TypeScriptParser.AnonymousFormalParameterContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#defaultFormalParameter}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDefaultFormalParameter(TypeScriptParser.DefaultFormalParameterContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#typePredicateWithOperatorTypeRef}.
 	 * @param ctx the parse tree

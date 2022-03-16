@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "tslib.d.ts" {
+		export class ClsA {
+			get getter(): this;
+			method(): this;
+		}
+		export class ClsB extends ClsA {}
+	}
+
+	END_SETUP
+ */
+
+import { ClsA, ClsB } from "tslib";
+
+let a = new ClsA();
+let b = new ClsB();
+
+// XPECT type of 'v01' --> this[ClsA]
+let v01 = a.getter;
+// XPECT type of 'v02' --> ClsA
+let v02 = a.method();
+
+// XPECT type of 'v11' --> this[ClsB]
+let v11 = b.getter;
+// XPECT type of 'v12' --> ClsB
+let v12 = b.method();
+
+// NOTE: it is odd that "this[...]" appears only in case of the getter, not the method;
+// but this behavior is the same when defining ClsA and ClsB in an N4JSD file, so not
+// an issue of the .d.ts support.

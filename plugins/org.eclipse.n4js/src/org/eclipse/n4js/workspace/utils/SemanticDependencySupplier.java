@@ -15,8 +15,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -59,9 +61,9 @@ public class SemanticDependencySupplier {
 		for (ProjectDependency dependency : dependencies) {
 			N4JSPackageName dependencyName = dependency.getN4JSProjectName();
 			existingDependencies.add(dependencyName.getRawName());
-			N4JSPackageName definitionProjectName = definitionProjects.getDefinitionProject(dependencyName);
-			if (definitionProjectName != null) {
-				implicitDependencies.add(definitionProjectName.getRawName());
+			Collection<N4JSPackageName> defPrjDeps = definitionProjects.getDefinitionProjects(dependencyName);
+			for (N4JSPackageName prjName : defPrjDeps) {
+				implicitDependencies.add(prjName.getRawName());
 			}
 
 			boolean isDefinitionProject = definitionProjects.isDefinitionProject(dependencyName);
@@ -80,15 +82,28 @@ public class SemanticDependencySupplier {
 
 		List<ProjectDependency> result = new ArrayList<>(
 				implicitDependencies.size() + moveToTop.size() + keepAtPosition.size());
-		result.addAll(moveToTop);
+
 		for (String implicitDependencyString : implicitDependencies) {
 			ProjectDependency implicitDependency = new ProjectDependency(
 					implicitDependencyString,
 					DependencyType.IMPLICIT,
 					"",
 					SemverUtils.createEmptyVersionRequirement());
-			result.add(implicitDependency);
+			moveToTop.add(implicitDependency);
 		}
+
+		// move @n4jsd definitions before @types definitions
+		List<ProjectDependency> typesDefDeps = new ArrayList<>();
+		for (Iterator<ProjectDependency> iter = moveToTop.iterator(); iter.hasNext();) {
+			ProjectDependency topDep = iter.next();
+			if (Objects.equals(N4JSGlobals.TYPES_SCOPE, topDep.getN4JSProjectName().getScopeName())) {
+				iter.remove();
+				typesDefDeps.add(topDep);
+			}
+		}
+
+		result.addAll(moveToTop);
+		result.addAll(typesDefDeps);
 		result.addAll(keepAtPosition);
 		return result;
 	}
