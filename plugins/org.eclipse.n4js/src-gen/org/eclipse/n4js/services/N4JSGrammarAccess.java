@@ -3244,6 +3244,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//// ****************************************************************************************************
 		//// [ECM11] A.4 Statements (p. 222)
 		//// ****************************************************************************************************
+		///* A statement that may appear on script level. */
 		//RootStatement <Yield> returns Statement:
 		//    Block<Yield>
 		//    // Function declarations are modeled as statements to support legacy JS parsing
@@ -3281,6 +3282,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cVariableStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cBaseStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		
+		///* A statement that may appear inside blocks and below other statements (e.g. below an IfStatement). */
 		//Statement <Yield>:
 		//    AnnotatedFunctionDeclaration<Yield,Default=false>
 		//    | Block<Yield>
@@ -13513,6 +13515,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//// ****************************************************************************************************
 	//// [ECM11] A.4 Statements (p. 222)
 	//// ****************************************************************************************************
+	///* A statement that may appear on script level. */
 	//RootStatement <Yield> returns Statement:
 	//    Block<Yield>
 	//    // Function declarations are modeled as statements to support legacy JS parsing
@@ -13528,6 +13531,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getRootStatementAccess().getRule();
 	}
 	
+	///* A statement that may appear inside blocks and below other statements (e.g. below an IfStatement). */
 	//Statement <Yield>:
 	//    AnnotatedFunctionDeclaration<Yield,Default=false>
 	//    | Block<Yield>

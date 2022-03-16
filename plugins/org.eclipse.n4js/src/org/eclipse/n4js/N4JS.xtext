@@ -436,6 +436,8 @@ Block <Yield>: => ({Block} '{') statements+=Statement<Yield>* '}';
 // ****************************************************************************************************
 // [ECM11] A.4 Statements (p. 222)
 // ****************************************************************************************************
+
+/* A statement that may appear on script level. */
 RootStatement <Yield> returns Statement:
 	Block<Yield>
 	// Function declarations are modeled as statements to support legacy JS parsing
@@ -444,6 +446,7 @@ RootStatement <Yield> returns Statement:
 	| BaseStatement<Yield>
 ;
 
+/* A statement that may appear inside blocks and below other statements (e.g. below an IfStatement). */
 Statement <Yield>:
 	AnnotatedFunctionDeclaration<Yield,Default=false>
 	| Block<Yield>
