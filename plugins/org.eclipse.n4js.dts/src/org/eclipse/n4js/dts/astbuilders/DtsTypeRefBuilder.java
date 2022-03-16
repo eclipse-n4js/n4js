@@ -184,7 +184,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 	@Override
 	public void exitConditionalTypeRef(ConditionalTypeRefContext ctx) {
-		// FIXME
+		// TODO conditional type references in .d.ts
 	}
 
 	@Override
@@ -219,7 +219,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 	@Override
 	public void exitOperatorTypeRef(OperatorTypeRefContext ctx) {
-		// FIXME
+		// TODO operator type references in .d.ts
 	}
 
 	@Override
@@ -228,7 +228,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			for (ArrayTypeExpressionSuffixContext suffixCtx : ctx.arrayTypeExpressionSuffix()) {
 				if (suffixCtx.typeRef() != null) {
 					// special case: index access type
-					// TODO index access type references
+					// TODO index access type references in .d.ts
 					result = createAnyPlusTypeRef();
 				} else {
 					// standard case: array type expression
