@@ -977,6 +977,12 @@ class ExportableVariableDeclaration extends VariableDeclaration {
 	 */
 	refers transient TVariable definedVariable
 
+	// Variables are a tricky case of ExportableElement, because each variable is represented by two AST nodes:
+	// 1) the variable statement must inherit from ExportableElement because it will be the node directly contained in an ExportDeclaration,
+	// 2) the variable declaration holds the name of the exportable element.
+	// Due to this split, #getExportedName() will return incorrect results when invoked on the variable statement
+	// and we provide the following two operations as a work-around:
+
 	op boolean isExported() {
 		val parent = this.eContainer;
 		if (parent instanceof ExportableVariableStatement) {
