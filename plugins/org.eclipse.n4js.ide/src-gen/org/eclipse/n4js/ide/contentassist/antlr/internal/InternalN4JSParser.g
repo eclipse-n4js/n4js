@@ -1790,52 +1790,6 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-// Entry rule entryRuleBaseStatement
-entryRuleBaseStatement
-:
-{ before(grammarAccess.getBaseStatementRule()); }
-	 ruleBaseStatement
-{ after(grammarAccess.getBaseStatementRule()); } 
-	 EOF 
-;
-
-// Rule BaseStatement
-ruleBaseStatement 
-	@init {
-		int stackSize = keepStackSize();
-	}
-	:
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getAlternatives(), 0
-		); }
-		(rule__BaseStatement__Alternatives)
-		{ after(grammarAccess.getBaseStatementAccess().getAlternatives(), 0
-		); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-// Rule BaseStatement
-norm1_BaseStatement 
-	@init {
-		int stackSize = keepStackSize();
-	}
-	:
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getAlternatives(), 1
-		); }
-		(norm1_BaseStatement__Alternatives)
-		{ after(grammarAccess.getBaseStatementAccess().getAlternatives(), 1
-		); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
 
 // Rule VariableStatement
 norm1_VariableStatement 
@@ -11645,9 +11599,81 @@ rule__RootStatement__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getRootStatementAccess().getBaseStatementParserRuleCall_3()); }
-		ruleBaseStatement
-		{ after(grammarAccess.getRootStatementAccess().getBaseStatementParserRuleCall_3()); }
+		{ before(grammarAccess.getRootStatementAccess().getEmptyStatementParserRuleCall_3()); }
+		ruleEmptyStatement
+		{ after(grammarAccess.getRootStatementAccess().getEmptyStatementParserRuleCall_3()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getLabelledStatementParserRuleCall_4()); }
+		(ruleLabelledStatement)
+		{ after(grammarAccess.getRootStatementAccess().getLabelledStatementParserRuleCall_4()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getExpressionStatementParserRuleCall_5()); }
+		ruleExpressionStatement
+		{ after(grammarAccess.getRootStatementAccess().getExpressionStatementParserRuleCall_5()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getIfStatementParserRuleCall_6()); }
+		ruleIfStatement
+		{ after(grammarAccess.getRootStatementAccess().getIfStatementParserRuleCall_6()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getIterationStatementParserRuleCall_7()); }
+		ruleIterationStatement
+		{ after(grammarAccess.getRootStatementAccess().getIterationStatementParserRuleCall_7()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getContinueStatementParserRuleCall_8()); }
+		ruleContinueStatement
+		{ after(grammarAccess.getRootStatementAccess().getContinueStatementParserRuleCall_8()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getBreakStatementParserRuleCall_9()); }
+		ruleBreakStatement
+		{ after(grammarAccess.getRootStatementAccess().getBreakStatementParserRuleCall_9()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getReturnStatementParserRuleCall_10()); }
+		ruleReturnStatement
+		{ after(grammarAccess.getRootStatementAccess().getReturnStatementParserRuleCall_10()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getWithStatementParserRuleCall_11()); }
+		ruleWithStatement
+		{ after(grammarAccess.getRootStatementAccess().getWithStatementParserRuleCall_11()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getSwitchStatementParserRuleCall_12()); }
+		ruleSwitchStatement
+		{ after(grammarAccess.getRootStatementAccess().getSwitchStatementParserRuleCall_12()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getThrowStatementParserRuleCall_13()); }
+		ruleThrowStatement
+		{ after(grammarAccess.getRootStatementAccess().getThrowStatementParserRuleCall_13()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getTryStatementParserRuleCall_14()); }
+		ruleTryStatement
+		{ after(grammarAccess.getRootStatementAccess().getTryStatementParserRuleCall_14()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getRootStatementAccess().getDebuggerStatementParserRuleCall_15()); }
+		ruleDebuggerStatement
+		{ after(grammarAccess.getRootStatementAccess().getDebuggerStatementParserRuleCall_15()); }
 	)
 ;
 finally {
@@ -11684,9 +11710,81 @@ rule__Statement__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getStatementAccess().getBaseStatementParserRuleCall_4()); }
-		ruleBaseStatement
-		{ after(grammarAccess.getStatementAccess().getBaseStatementParserRuleCall_4()); }
+		{ before(grammarAccess.getStatementAccess().getEmptyStatementParserRuleCall_4()); }
+		ruleEmptyStatement
+		{ after(grammarAccess.getStatementAccess().getEmptyStatementParserRuleCall_4()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getLabelledStatementParserRuleCall_5()); }
+		(ruleLabelledStatement)
+		{ after(grammarAccess.getStatementAccess().getLabelledStatementParserRuleCall_5()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getExpressionStatementParserRuleCall_6()); }
+		ruleExpressionStatement
+		{ after(grammarAccess.getStatementAccess().getExpressionStatementParserRuleCall_6()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getIfStatementParserRuleCall_7()); }
+		ruleIfStatement
+		{ after(grammarAccess.getStatementAccess().getIfStatementParserRuleCall_7()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getIterationStatementParserRuleCall_8()); }
+		ruleIterationStatement
+		{ after(grammarAccess.getStatementAccess().getIterationStatementParserRuleCall_8()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getContinueStatementParserRuleCall_9()); }
+		ruleContinueStatement
+		{ after(grammarAccess.getStatementAccess().getContinueStatementParserRuleCall_9()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getBreakStatementParserRuleCall_10()); }
+		ruleBreakStatement
+		{ after(grammarAccess.getStatementAccess().getBreakStatementParserRuleCall_10()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getReturnStatementParserRuleCall_11()); }
+		ruleReturnStatement
+		{ after(grammarAccess.getStatementAccess().getReturnStatementParserRuleCall_11()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getWithStatementParserRuleCall_12()); }
+		ruleWithStatement
+		{ after(grammarAccess.getStatementAccess().getWithStatementParserRuleCall_12()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getSwitchStatementParserRuleCall_13()); }
+		ruleSwitchStatement
+		{ after(grammarAccess.getStatementAccess().getSwitchStatementParserRuleCall_13()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getThrowStatementParserRuleCall_14()); }
+		ruleThrowStatement
+		{ after(grammarAccess.getStatementAccess().getThrowStatementParserRuleCall_14()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getTryStatementParserRuleCall_15()); }
+		ruleTryStatement
+		{ after(grammarAccess.getStatementAccess().getTryStatementParserRuleCall_15()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getStatementAccess().getDebuggerStatementParserRuleCall_16()); }
+		ruleDebuggerStatement
+		{ after(grammarAccess.getStatementAccess().getDebuggerStatementParserRuleCall_16()); }
 	)
 ;
 finally {
@@ -11723,183 +11821,81 @@ norm1_Statement__Alternatives
 	)
 	|
 	(
-		{ before(grammarAccess.getStatementAccess().getBaseStatementParserRuleCall_4()); }
-		norm1_BaseStatement
-		{ after(grammarAccess.getStatementAccess().getBaseStatementParserRuleCall_4()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__BaseStatement__Alternatives
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getEmptyStatementParserRuleCall_0()); }
+		{ before(grammarAccess.getStatementAccess().getEmptyStatementParserRuleCall_4()); }
 		ruleEmptyStatement
-		{ after(grammarAccess.getBaseStatementAccess().getEmptyStatementParserRuleCall_0()); }
+		{ after(grammarAccess.getStatementAccess().getEmptyStatementParserRuleCall_4()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getLabelledStatementParserRuleCall_1()); }
-		(ruleLabelledStatement)
-		{ after(grammarAccess.getBaseStatementAccess().getLabelledStatementParserRuleCall_1()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getExpressionStatementParserRuleCall_2()); }
-		ruleExpressionStatement
-		{ after(grammarAccess.getBaseStatementAccess().getExpressionStatementParserRuleCall_2()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getIfStatementParserRuleCall_3()); }
-		ruleIfStatement
-		{ after(grammarAccess.getBaseStatementAccess().getIfStatementParserRuleCall_3()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getIterationStatementParserRuleCall_4()); }
-		ruleIterationStatement
-		{ after(grammarAccess.getBaseStatementAccess().getIterationStatementParserRuleCall_4()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getContinueStatementParserRuleCall_5()); }
-		ruleContinueStatement
-		{ after(grammarAccess.getBaseStatementAccess().getContinueStatementParserRuleCall_5()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getBreakStatementParserRuleCall_6()); }
-		ruleBreakStatement
-		{ after(grammarAccess.getBaseStatementAccess().getBreakStatementParserRuleCall_6()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getReturnStatementParserRuleCall_7()); }
-		ruleReturnStatement
-		{ after(grammarAccess.getBaseStatementAccess().getReturnStatementParserRuleCall_7()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getWithStatementParserRuleCall_8()); }
-		ruleWithStatement
-		{ after(grammarAccess.getBaseStatementAccess().getWithStatementParserRuleCall_8()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getSwitchStatementParserRuleCall_9()); }
-		ruleSwitchStatement
-		{ after(grammarAccess.getBaseStatementAccess().getSwitchStatementParserRuleCall_9()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getThrowStatementParserRuleCall_10()); }
-		ruleThrowStatement
-		{ after(grammarAccess.getBaseStatementAccess().getThrowStatementParserRuleCall_10()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getTryStatementParserRuleCall_11()); }
-		ruleTryStatement
-		{ after(grammarAccess.getBaseStatementAccess().getTryStatementParserRuleCall_11()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getDebuggerStatementParserRuleCall_12()); }
-		ruleDebuggerStatement
-		{ after(grammarAccess.getBaseStatementAccess().getDebuggerStatementParserRuleCall_12()); }
-	)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-norm1_BaseStatement__Alternatives
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getEmptyStatementParserRuleCall_0()); }
-		ruleEmptyStatement
-		{ after(grammarAccess.getBaseStatementAccess().getEmptyStatementParserRuleCall_0()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getBaseStatementAccess().getLabelledStatementParserRuleCall_1()); }
+		{ before(grammarAccess.getStatementAccess().getLabelledStatementParserRuleCall_5()); }
 		(norm1_LabelledStatement)
-		{ after(grammarAccess.getBaseStatementAccess().getLabelledStatementParserRuleCall_1()); }
+		{ after(grammarAccess.getStatementAccess().getLabelledStatementParserRuleCall_5()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getExpressionStatementParserRuleCall_2()); }
+		{ before(grammarAccess.getStatementAccess().getExpressionStatementParserRuleCall_6()); }
 		norm1_ExpressionStatement
-		{ after(grammarAccess.getBaseStatementAccess().getExpressionStatementParserRuleCall_2()); }
+		{ after(grammarAccess.getStatementAccess().getExpressionStatementParserRuleCall_6()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getIfStatementParserRuleCall_3()); }
+		{ before(grammarAccess.getStatementAccess().getIfStatementParserRuleCall_7()); }
 		norm1_IfStatement
-		{ after(grammarAccess.getBaseStatementAccess().getIfStatementParserRuleCall_3()); }
+		{ after(grammarAccess.getStatementAccess().getIfStatementParserRuleCall_7()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getIterationStatementParserRuleCall_4()); }
+		{ before(grammarAccess.getStatementAccess().getIterationStatementParserRuleCall_8()); }
 		norm1_IterationStatement
-		{ after(grammarAccess.getBaseStatementAccess().getIterationStatementParserRuleCall_4()); }
+		{ after(grammarAccess.getStatementAccess().getIterationStatementParserRuleCall_8()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getContinueStatementParserRuleCall_5()); }
+		{ before(grammarAccess.getStatementAccess().getContinueStatementParserRuleCall_9()); }
 		norm1_ContinueStatement
-		{ after(grammarAccess.getBaseStatementAccess().getContinueStatementParserRuleCall_5()); }
+		{ after(grammarAccess.getStatementAccess().getContinueStatementParserRuleCall_9()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getBreakStatementParserRuleCall_6()); }
+		{ before(grammarAccess.getStatementAccess().getBreakStatementParserRuleCall_10()); }
 		norm1_BreakStatement
-		{ after(grammarAccess.getBaseStatementAccess().getBreakStatementParserRuleCall_6()); }
+		{ after(grammarAccess.getStatementAccess().getBreakStatementParserRuleCall_10()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getReturnStatementParserRuleCall_7()); }
+		{ before(grammarAccess.getStatementAccess().getReturnStatementParserRuleCall_11()); }
 		norm1_ReturnStatement
-		{ after(grammarAccess.getBaseStatementAccess().getReturnStatementParserRuleCall_7()); }
+		{ after(grammarAccess.getStatementAccess().getReturnStatementParserRuleCall_11()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getWithStatementParserRuleCall_8()); }
+		{ before(grammarAccess.getStatementAccess().getWithStatementParserRuleCall_12()); }
 		norm1_WithStatement
-		{ after(grammarAccess.getBaseStatementAccess().getWithStatementParserRuleCall_8()); }
+		{ after(grammarAccess.getStatementAccess().getWithStatementParserRuleCall_12()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getSwitchStatementParserRuleCall_9()); }
+		{ before(grammarAccess.getStatementAccess().getSwitchStatementParserRuleCall_13()); }
 		norm1_SwitchStatement
-		{ after(grammarAccess.getBaseStatementAccess().getSwitchStatementParserRuleCall_9()); }
+		{ after(grammarAccess.getStatementAccess().getSwitchStatementParserRuleCall_13()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getThrowStatementParserRuleCall_10()); }
+		{ before(grammarAccess.getStatementAccess().getThrowStatementParserRuleCall_14()); }
 		norm1_ThrowStatement
-		{ after(grammarAccess.getBaseStatementAccess().getThrowStatementParserRuleCall_10()); }
+		{ after(grammarAccess.getStatementAccess().getThrowStatementParserRuleCall_14()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getTryStatementParserRuleCall_11()); }
+		{ before(grammarAccess.getStatementAccess().getTryStatementParserRuleCall_15()); }
 		norm1_TryStatement
-		{ after(grammarAccess.getBaseStatementAccess().getTryStatementParserRuleCall_11()); }
+		{ after(grammarAccess.getStatementAccess().getTryStatementParserRuleCall_15()); }
 	)
 	|
 	(
-		{ before(grammarAccess.getBaseStatementAccess().getDebuggerStatementParserRuleCall_12()); }
+		{ before(grammarAccess.getStatementAccess().getDebuggerStatementParserRuleCall_16()); }
 		ruleDebuggerStatement
-		{ after(grammarAccess.getBaseStatementAccess().getDebuggerStatementParserRuleCall_12()); }
+		{ after(grammarAccess.getStatementAccess().getDebuggerStatementParserRuleCall_16()); }
 	)
 ;
 finally {

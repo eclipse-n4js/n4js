@@ -437,13 +437,28 @@ Block <Yield>: => ({Block} '{') statements+=Statement<Yield>* '}';
 // [ECM11] A.4 Statements (p. 222)
 // ****************************************************************************************************
 
+// FIXME avoid the redundancy in the following two rules
+
 /* A statement that may appear on script level. */
 RootStatement <Yield> returns Statement:
 	Block<Yield>
 	// Function declarations are modeled as statements to support legacy JS parsing
 	| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
 	| ExportableVariableStatement
-	| BaseStatement<Yield>
+	| EmptyStatement
+	| LabelledStatement<Yield>
+	| ExpressionStatement<Yield>
+	| IfStatement<Yield>
+	| IterationStatement<Yield>
+	| ContinueStatement<Yield>
+	| BreakStatement<Yield>
+	// forbidden on the top-level but we allow it to provide better feedback.
+	| ReturnStatement<Yield>
+	| WithStatement<Yield>
+	| SwitchStatement<Yield>
+	| ThrowStatement<Yield>
+	| TryStatement<Yield>
+	| DebuggerStatement
 ;
 
 /* A statement that may appear inside blocks and below other statements (e.g. below an IfStatement). */
@@ -453,18 +468,13 @@ Statement <Yield>:
 	// Function declarations are modeled as statements to support legacy JS parsing
 	| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
 	| VariableStatement<In=true,Yield>
-	| BaseStatement<Yield>
-;
-
-BaseStatement <Yield> returns Statement:
-	EmptyStatement
+	| EmptyStatement
 	| LabelledStatement<Yield>
 	| ExpressionStatement<Yield>
 	| IfStatement<Yield>
 	| IterationStatement<Yield>
 	| ContinueStatement<Yield>
 	| BreakStatement<Yield>
-	// forbidden on the top-level but we allow it to provide better feedback.
 	| ReturnStatement<Yield>
 	| WithStatement<Yield>
 	| SwitchStatement<Yield>

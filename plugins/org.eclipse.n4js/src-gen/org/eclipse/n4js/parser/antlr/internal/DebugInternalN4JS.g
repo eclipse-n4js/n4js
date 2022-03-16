@@ -1525,7 +1525,36 @@ ruleRootStatement:
 			ruleExportableVariableStatement
 		)
 		    |
-		ruleBaseStatement
+		ruleEmptyStatement
+		    |
+		(
+			(ruleBindingIdentifier
+			':'
+			)=>
+			ruleLabelledStatement
+		)
+		    |
+		ruleExpressionStatement
+		    |
+		ruleIfStatement
+		    |
+		ruleIterationStatement
+		    |
+		ruleContinueStatement
+		    |
+		ruleBreakStatement
+		    |
+		ruleReturnStatement
+		    |
+		ruleWithStatement
+		    |
+		ruleSwitchStatement
+		    |
+		ruleThrowStatement
+		    |
+		ruleTryStatement
+		    |
+		ruleDebuggerStatement
 	)
 ;
 
@@ -1566,7 +1595,36 @@ ruleStatement:
 			norm1_VariableStatement
 		)
 		    |
-		ruleBaseStatement
+		ruleEmptyStatement
+		    |
+		(
+			(ruleBindingIdentifier
+			':'
+			)=>
+			ruleLabelledStatement
+		)
+		    |
+		ruleExpressionStatement
+		    |
+		ruleIfStatement
+		    |
+		ruleIterationStatement
+		    |
+		ruleContinueStatement
+		    |
+		ruleBreakStatement
+		    |
+		ruleReturnStatement
+		    |
+		ruleWithStatement
+		    |
+		ruleSwitchStatement
+		    |
+		ruleThrowStatement
+		    |
+		ruleTryStatement
+		    |
+		ruleDebuggerStatement
 	)
 ;
 
@@ -1607,49 +1665,6 @@ norm1_Statement:
 			norm3_VariableStatement
 		)
 		    |
-		norm1_BaseStatement
-	)
-;
-
-// Rule BaseStatement
-ruleBaseStatement:
-	(
-		ruleEmptyStatement
-		    |
-		(
-			(ruleBindingIdentifier
-			':'
-			)=>
-			ruleLabelledStatement
-		)
-		    |
-		ruleExpressionStatement
-		    |
-		ruleIfStatement
-		    |
-		ruleIterationStatement
-		    |
-		ruleContinueStatement
-		    |
-		ruleBreakStatement
-		    |
-		ruleReturnStatement
-		    |
-		ruleWithStatement
-		    |
-		ruleSwitchStatement
-		    |
-		ruleThrowStatement
-		    |
-		ruleTryStatement
-		    |
-		ruleDebuggerStatement
-	)
-;
-
-// Rule BaseStatement
-norm1_BaseStatement:
-	(
 		ruleEmptyStatement
 		    |
 		(

@@ -3239,102 +3239,31 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cBlockParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cFunctionDeclarationParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cExportableVariableStatementParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cBaseStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cEmptyStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cLabelledStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cExpressionStatementParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cIfStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cIterationStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cContinueStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cBreakStatementParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cReturnStatementParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
+		private final RuleCall cWithStatementParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
+		private final RuleCall cSwitchStatementParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
+		private final RuleCall cThrowStatementParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
+		private final RuleCall cTryStatementParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
+		private final RuleCall cDebuggerStatementParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
 		
 		//// ****************************************************************************************************
 		//// [ECM11] A.4 Statements (p. 222)
 		//// ****************************************************************************************************
+		//// FIXME avoid the redundancy in the following two rules
 		///* A statement that may appear on script level. */
 		//RootStatement <Yield> returns Statement:
 		//    Block<Yield>
 		//    // Function declarations are modeled as statements to support legacy JS parsing
 		//    | FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
 		//    | ExportableVariableStatement
-		//    | BaseStatement<Yield>
-		//;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//Block<Yield>
-		//// Function declarations are modeled as statements to support legacy JS parsing
-		//| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
-		//| ExportableVariableStatement
-		//| BaseStatement<Yield>
-		public Alternatives getAlternatives() { return cAlternatives; }
-		
-		//Block<Yield>
-		public RuleCall getBlockParserRuleCall_0() { return cBlockParserRuleCall_0; }
-		
-		//FunctionDeclaration<Yield>
-		public RuleCall getFunctionDeclarationParserRuleCall_1() { return cFunctionDeclarationParserRuleCall_1; }
-		
-		//ExportableVariableStatement
-		public RuleCall getExportableVariableStatementParserRuleCall_2() { return cExportableVariableStatementParserRuleCall_2; }
-		
-		//BaseStatement<Yield>
-		public RuleCall getBaseStatementParserRuleCall_3() { return cBaseStatementParserRuleCall_3; }
-	}
-	public class StatementElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.Statement");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cAnnotatedFunctionDeclarationParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cBlockParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cFunctionDeclarationParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cVariableStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cBaseStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		
-		///* A statement that may appear inside blocks and below other statements (e.g. below an IfStatement). */
-		//Statement <Yield>:
-		//    AnnotatedFunctionDeclaration<Yield,Default=false>
-		//    | Block<Yield>
-		//    // Function declarations are modeled as statements to support legacy JS parsing
-		//    | FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
-		//    | VariableStatement<In=true,Yield>
-		//    | BaseStatement<Yield>
-		//;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//AnnotatedFunctionDeclaration<Yield,Default=false>
-		//| Block<Yield>
-		//// Function declarations are modeled as statements to support legacy JS parsing
-		//| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
-		//| VariableStatement<In=true,Yield>
-		//| BaseStatement<Yield>
-		public Alternatives getAlternatives() { return cAlternatives; }
-		
-		//AnnotatedFunctionDeclaration<Yield,Default=false>
-		public RuleCall getAnnotatedFunctionDeclarationParserRuleCall_0() { return cAnnotatedFunctionDeclarationParserRuleCall_0; }
-		
-		//Block<Yield>
-		public RuleCall getBlockParserRuleCall_1() { return cBlockParserRuleCall_1; }
-		
-		//FunctionDeclaration<Yield>
-		public RuleCall getFunctionDeclarationParserRuleCall_2() { return cFunctionDeclarationParserRuleCall_2; }
-		
-		//VariableStatement<In=true,Yield>
-		public RuleCall getVariableStatementParserRuleCall_3() { return cVariableStatementParserRuleCall_3; }
-		
-		//BaseStatement<Yield>
-		public RuleCall getBaseStatementParserRuleCall_4() { return cBaseStatementParserRuleCall_4; }
-	}
-	public class BaseStatementElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.BaseStatement");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
-		private final RuleCall cEmptyStatementParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
-		private final RuleCall cLabelledStatementParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cExpressionStatementParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cIfStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cIterationStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cContinueStatementParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cBreakStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cReturnStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
-		private final RuleCall cWithStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
-		private final RuleCall cSwitchStatementParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
-		private final RuleCall cThrowStatementParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
-		private final RuleCall cTryStatementParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
-		private final RuleCall cDebuggerStatementParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
-		
-		//BaseStatement <Yield> returns Statement:
-		//    EmptyStatement
+		//    | EmptyStatement
 		//    | LabelledStatement<Yield>
 		//    | ExpressionStatement<Yield>
 		//    | IfStatement<Yield>
@@ -3351,7 +3280,11 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//EmptyStatement
+		//Block<Yield>
+		//// Function declarations are modeled as statements to support legacy JS parsing
+		//| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
+		//| ExportableVariableStatement
+		//| EmptyStatement
 		//| LabelledStatement<Yield>
 		//| ExpressionStatement<Yield>
 		//| IfStatement<Yield>
@@ -3367,44 +3300,168 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//| DebuggerStatement
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
+		//Block<Yield>
+		public RuleCall getBlockParserRuleCall_0() { return cBlockParserRuleCall_0; }
+		
+		//FunctionDeclaration<Yield>
+		public RuleCall getFunctionDeclarationParserRuleCall_1() { return cFunctionDeclarationParserRuleCall_1; }
+		
+		//ExportableVariableStatement
+		public RuleCall getExportableVariableStatementParserRuleCall_2() { return cExportableVariableStatementParserRuleCall_2; }
+		
 		//EmptyStatement
-		public RuleCall getEmptyStatementParserRuleCall_0() { return cEmptyStatementParserRuleCall_0; }
+		public RuleCall getEmptyStatementParserRuleCall_3() { return cEmptyStatementParserRuleCall_3; }
 		
 		//LabelledStatement<Yield>
-		public RuleCall getLabelledStatementParserRuleCall_1() { return cLabelledStatementParserRuleCall_1; }
+		public RuleCall getLabelledStatementParserRuleCall_4() { return cLabelledStatementParserRuleCall_4; }
 		
 		//ExpressionStatement<Yield>
-		public RuleCall getExpressionStatementParserRuleCall_2() { return cExpressionStatementParserRuleCall_2; }
+		public RuleCall getExpressionStatementParserRuleCall_5() { return cExpressionStatementParserRuleCall_5; }
 		
 		//IfStatement<Yield>
-		public RuleCall getIfStatementParserRuleCall_3() { return cIfStatementParserRuleCall_3; }
+		public RuleCall getIfStatementParserRuleCall_6() { return cIfStatementParserRuleCall_6; }
 		
 		//IterationStatement<Yield>
-		public RuleCall getIterationStatementParserRuleCall_4() { return cIterationStatementParserRuleCall_4; }
+		public RuleCall getIterationStatementParserRuleCall_7() { return cIterationStatementParserRuleCall_7; }
 		
 		//ContinueStatement<Yield>
-		public RuleCall getContinueStatementParserRuleCall_5() { return cContinueStatementParserRuleCall_5; }
+		public RuleCall getContinueStatementParserRuleCall_8() { return cContinueStatementParserRuleCall_8; }
 		
 		//BreakStatement<Yield>
-		public RuleCall getBreakStatementParserRuleCall_6() { return cBreakStatementParserRuleCall_6; }
+		public RuleCall getBreakStatementParserRuleCall_9() { return cBreakStatementParserRuleCall_9; }
 		
 		//ReturnStatement<Yield>
-		public RuleCall getReturnStatementParserRuleCall_7() { return cReturnStatementParserRuleCall_7; }
+		public RuleCall getReturnStatementParserRuleCall_10() { return cReturnStatementParserRuleCall_10; }
 		
 		//WithStatement<Yield>
-		public RuleCall getWithStatementParserRuleCall_8() { return cWithStatementParserRuleCall_8; }
+		public RuleCall getWithStatementParserRuleCall_11() { return cWithStatementParserRuleCall_11; }
 		
 		//SwitchStatement<Yield>
-		public RuleCall getSwitchStatementParserRuleCall_9() { return cSwitchStatementParserRuleCall_9; }
+		public RuleCall getSwitchStatementParserRuleCall_12() { return cSwitchStatementParserRuleCall_12; }
 		
 		//ThrowStatement<Yield>
-		public RuleCall getThrowStatementParserRuleCall_10() { return cThrowStatementParserRuleCall_10; }
+		public RuleCall getThrowStatementParserRuleCall_13() { return cThrowStatementParserRuleCall_13; }
 		
 		//TryStatement<Yield>
-		public RuleCall getTryStatementParserRuleCall_11() { return cTryStatementParserRuleCall_11; }
+		public RuleCall getTryStatementParserRuleCall_14() { return cTryStatementParserRuleCall_14; }
 		
 		//DebuggerStatement
-		public RuleCall getDebuggerStatementParserRuleCall_12() { return cDebuggerStatementParserRuleCall_12; }
+		public RuleCall getDebuggerStatementParserRuleCall_15() { return cDebuggerStatementParserRuleCall_15; }
+	}
+	public class StatementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.Statement");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cAnnotatedFunctionDeclarationParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cBlockParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		private final RuleCall cFunctionDeclarationParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cVariableStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cEmptyStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cLabelledStatementParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cExpressionStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cIfStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cIterationStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cContinueStatementParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cBreakStatementParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
+		private final RuleCall cReturnStatementParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
+		private final RuleCall cWithStatementParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
+		private final RuleCall cSwitchStatementParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
+		private final RuleCall cThrowStatementParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
+		private final RuleCall cTryStatementParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
+		private final RuleCall cDebuggerStatementParserRuleCall_16 = (RuleCall)cAlternatives.eContents().get(16);
+		
+		///* A statement that may appear inside blocks and below other statements (e.g. below an IfStatement). */
+		//Statement <Yield>:
+		//    AnnotatedFunctionDeclaration<Yield,Default=false>
+		//    | Block<Yield>
+		//    // Function declarations are modeled as statements to support legacy JS parsing
+		//    | FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
+		//    | VariableStatement<In=true,Yield>
+		//    | EmptyStatement
+		//    | LabelledStatement<Yield>
+		//    | ExpressionStatement<Yield>
+		//    | IfStatement<Yield>
+		//    | IterationStatement<Yield>
+		//    | ContinueStatement<Yield>
+		//    | BreakStatement<Yield>
+		//    | ReturnStatement<Yield>
+		//    | WithStatement<Yield>
+		//    | SwitchStatement<Yield>
+		//    | ThrowStatement<Yield>
+		//    | TryStatement<Yield>
+		//    | DebuggerStatement
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//AnnotatedFunctionDeclaration<Yield,Default=false>
+		//| Block<Yield>
+		//// Function declarations are modeled as statements to support legacy JS parsing
+		//| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
+		//| VariableStatement<In=true,Yield>
+		//| EmptyStatement
+		//| LabelledStatement<Yield>
+		//| ExpressionStatement<Yield>
+		//| IfStatement<Yield>
+		//| IterationStatement<Yield>
+		//| ContinueStatement<Yield>
+		//| BreakStatement<Yield>
+		//| ReturnStatement<Yield>
+		//| WithStatement<Yield>
+		//| SwitchStatement<Yield>
+		//| ThrowStatement<Yield>
+		//| TryStatement<Yield>
+		//| DebuggerStatement
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//AnnotatedFunctionDeclaration<Yield,Default=false>
+		public RuleCall getAnnotatedFunctionDeclarationParserRuleCall_0() { return cAnnotatedFunctionDeclarationParserRuleCall_0; }
+		
+		//Block<Yield>
+		public RuleCall getBlockParserRuleCall_1() { return cBlockParserRuleCall_1; }
+		
+		//FunctionDeclaration<Yield>
+		public RuleCall getFunctionDeclarationParserRuleCall_2() { return cFunctionDeclarationParserRuleCall_2; }
+		
+		//VariableStatement<In=true,Yield>
+		public RuleCall getVariableStatementParserRuleCall_3() { return cVariableStatementParserRuleCall_3; }
+		
+		//EmptyStatement
+		public RuleCall getEmptyStatementParserRuleCall_4() { return cEmptyStatementParserRuleCall_4; }
+		
+		//LabelledStatement<Yield>
+		public RuleCall getLabelledStatementParserRuleCall_5() { return cLabelledStatementParserRuleCall_5; }
+		
+		//ExpressionStatement<Yield>
+		public RuleCall getExpressionStatementParserRuleCall_6() { return cExpressionStatementParserRuleCall_6; }
+		
+		//IfStatement<Yield>
+		public RuleCall getIfStatementParserRuleCall_7() { return cIfStatementParserRuleCall_7; }
+		
+		//IterationStatement<Yield>
+		public RuleCall getIterationStatementParserRuleCall_8() { return cIterationStatementParserRuleCall_8; }
+		
+		//ContinueStatement<Yield>
+		public RuleCall getContinueStatementParserRuleCall_9() { return cContinueStatementParserRuleCall_9; }
+		
+		//BreakStatement<Yield>
+		public RuleCall getBreakStatementParserRuleCall_10() { return cBreakStatementParserRuleCall_10; }
+		
+		//ReturnStatement<Yield>
+		public RuleCall getReturnStatementParserRuleCall_11() { return cReturnStatementParserRuleCall_11; }
+		
+		//WithStatement<Yield>
+		public RuleCall getWithStatementParserRuleCall_12() { return cWithStatementParserRuleCall_12; }
+		
+		//SwitchStatement<Yield>
+		public RuleCall getSwitchStatementParserRuleCall_13() { return cSwitchStatementParserRuleCall_13; }
+		
+		//ThrowStatement<Yield>
+		public RuleCall getThrowStatementParserRuleCall_14() { return cThrowStatementParserRuleCall_14; }
+		
+		//TryStatement<Yield>
+		public RuleCall getTryStatementParserRuleCall_15() { return cTryStatementParserRuleCall_15; }
+		
+		//DebuggerStatement
+		public RuleCall getDebuggerStatementParserRuleCall_16() { return cDebuggerStatementParserRuleCall_16; }
 	}
 	public class VariableStatementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VariableStatement");
@@ -12342,7 +12399,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	private final BlockElements pBlock;
 	private final RootStatementElements pRootStatement;
 	private final StatementElements pStatement;
-	private final BaseStatementElements pBaseStatement;
 	private final VariableStatementKeywordElements eVariableStatementKeyword;
 	private final VariableStatementElements pVariableStatement;
 	private final ExportableVariableStatementElements pExportableVariableStatement;
@@ -12602,7 +12658,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		this.pBlock = new BlockElements();
 		this.pRootStatement = new RootStatementElements();
 		this.pStatement = new StatementElements();
-		this.pBaseStatement = new BaseStatementElements();
 		this.eVariableStatementKeyword = new VariableStatementKeywordElements();
 		this.pVariableStatement = new VariableStatementElements();
 		this.pExportableVariableStatement = new ExportableVariableStatementElements();
@@ -13515,13 +13570,27 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//// ****************************************************************************************************
 	//// [ECM11] A.4 Statements (p. 222)
 	//// ****************************************************************************************************
+	//// FIXME avoid the redundancy in the following two rules
 	///* A statement that may appear on script level. */
 	//RootStatement <Yield> returns Statement:
 	//    Block<Yield>
 	//    // Function declarations are modeled as statements to support legacy JS parsing
 	//    | FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
 	//    | ExportableVariableStatement
-	//    | BaseStatement<Yield>
+	//    | EmptyStatement
+	//    | LabelledStatement<Yield>
+	//    | ExpressionStatement<Yield>
+	//    | IfStatement<Yield>
+	//    | IterationStatement<Yield>
+	//    | ContinueStatement<Yield>
+	//    | BreakStatement<Yield>
+	//    // forbidden on the top-level but we allow it to provide better feedback.
+	//    | ReturnStatement<Yield>
+	//    | WithStatement<Yield>
+	//    | SwitchStatement<Yield>
+	//    | ThrowStatement<Yield>
+	//    | TryStatement<Yield>
+	//    | DebuggerStatement
 	//;
 	public RootStatementElements getRootStatementAccess() {
 		return pRootStatement;
@@ -13538,25 +13607,13 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    // Function declarations are modeled as statements to support legacy JS parsing
 	//    | FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
 	//    | VariableStatement<In=true,Yield>
-	//    | BaseStatement<Yield>
-	//;
-	public StatementElements getStatementAccess() {
-		return pStatement;
-	}
-	
-	public ParserRule getStatementRule() {
-		return getStatementAccess().getRule();
-	}
-	
-	//BaseStatement <Yield> returns Statement:
-	//    EmptyStatement
+	//    | EmptyStatement
 	//    | LabelledStatement<Yield>
 	//    | ExpressionStatement<Yield>
 	//    | IfStatement<Yield>
 	//    | IterationStatement<Yield>
 	//    | ContinueStatement<Yield>
 	//    | BreakStatement<Yield>
-	//    // forbidden on the top-level but we allow it to provide better feedback.
 	//    | ReturnStatement<Yield>
 	//    | WithStatement<Yield>
 	//    | SwitchStatement<Yield>
@@ -13564,12 +13621,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | TryStatement<Yield>
 	//    | DebuggerStatement
 	//;
-	public BaseStatementElements getBaseStatementAccess() {
-		return pBaseStatement;
+	public StatementElements getStatementAccess() {
+		return pStatement;
 	}
 	
-	public ParserRule getBaseStatementRule() {
-		return getBaseStatementAccess().getRule();
+	public ParserRule getStatementRule() {
+		return getStatementAccess().getRule();
 	}
 	
 	//enum VariableStatementKeyword:

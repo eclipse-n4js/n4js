@@ -420,7 +420,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				else if (rule == grammarAccess.getScriptElementRule()
 						|| rule == grammarAccess.getRootStatementRule()
 						|| rule == grammarAccess.getStatementRule()
-						|| rule == grammarAccess.getBaseStatementRule()
 						|| rule == grammarAccess.getExpressionStatementRule()) {
 					sequence_ExpressionStatement(context, (ExpressionStatement) semanticObject); 
 					return; 
@@ -9734,8 +9733,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns BreakStatement
 	 *     Statement<Yield> returns BreakStatement
 	 *     Statement returns BreakStatement
-	 *     BaseStatement<Yield> returns BreakStatement
-	 *     BaseStatement returns BreakStatement
 	 *     BreakStatement<Yield> returns BreakStatement
 	 *     BreakStatement returns BreakStatement
 	 *
@@ -11551,8 +11548,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns ContinueStatement
 	 *     Statement<Yield> returns ContinueStatement
 	 *     Statement returns ContinueStatement
-	 *     BaseStatement<Yield> returns ContinueStatement
-	 *     BaseStatement returns ContinueStatement
 	 *     ContinueStatement<Yield> returns ContinueStatement
 	 *     ContinueStatement returns ContinueStatement
 	 *
@@ -11573,8 +11568,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns DebuggerStatement
 	 *     Statement<Yield> returns DebuggerStatement
 	 *     Statement returns DebuggerStatement
-	 *     BaseStatement<Yield> returns DebuggerStatement
-	 *     BaseStatement returns DebuggerStatement
 	 *     DebuggerStatement returns DebuggerStatement
 	 *
 	 * Constraint:
@@ -11623,8 +11616,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns DoStatement
 	 *     Statement<Yield> returns DoStatement
 	 *     Statement returns DoStatement
-	 *     BaseStatement<Yield> returns DoStatement
-	 *     BaseStatement returns DoStatement
 	 *     IterationStatement<Yield> returns DoStatement
 	 *     IterationStatement returns DoStatement
 	 *     DoStatement<Yield> returns DoStatement
@@ -12317,8 +12308,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns EmptyStatement
 	 *     Statement<Yield> returns EmptyStatement
 	 *     Statement returns EmptyStatement
-	 *     BaseStatement<Yield> returns EmptyStatement
-	 *     BaseStatement returns EmptyStatement
 	 *     EmptyStatement returns EmptyStatement
 	 *
 	 * Constraint:
@@ -12798,8 +12787,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns ExpressionStatement
 	 *     Statement<Yield> returns ExpressionStatement
 	 *     Statement returns ExpressionStatement
-	 *     BaseStatement<Yield> returns ExpressionStatement
-	 *     BaseStatement returns ExpressionStatement
 	 *     ExpressionStatement<Yield> returns ExpressionStatement
 	 *     ExpressionStatement returns ExpressionStatement
 	 *
@@ -12864,8 +12851,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns ForStatement
 	 *     Statement<Yield> returns ForStatement
 	 *     Statement returns ForStatement
-	 *     BaseStatement<Yield> returns ForStatement
-	 *     BaseStatement returns ForStatement
 	 *     IterationStatement<Yield> returns ForStatement
 	 *     IterationStatement returns ForStatement
 	 *     ForStatement<Yield> returns ForStatement
@@ -14212,8 +14197,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns IfStatement
 	 *     Statement<Yield> returns IfStatement
 	 *     Statement returns IfStatement
-	 *     BaseStatement<Yield> returns IfStatement
-	 *     BaseStatement returns IfStatement
 	 *     IfStatement<Yield> returns IfStatement
 	 *     IfStatement returns IfStatement
 	 *
@@ -17274,8 +17257,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns LabelledStatement
 	 *     Statement<Yield> returns LabelledStatement
 	 *     Statement returns LabelledStatement
-	 *     BaseStatement<Yield> returns LabelledStatement
-	 *     BaseStatement returns LabelledStatement
 	 *     LabelledStatement<Yield> returns LabelledStatement
 	 *     LabelledStatement returns LabelledStatement
 	 *
@@ -24344,8 +24325,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns ReturnStatement
 	 *     Statement<Yield> returns ReturnStatement
 	 *     Statement returns ReturnStatement
-	 *     BaseStatement<Yield> returns ReturnStatement
-	 *     BaseStatement returns ReturnStatement
 	 *     ReturnStatement<Yield> returns ReturnStatement
 	 *     ReturnStatement returns ReturnStatement
 	 *
@@ -26650,8 +26629,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns SwitchStatement
 	 *     Statement<Yield> returns SwitchStatement
 	 *     Statement returns SwitchStatement
-	 *     BaseStatement<Yield> returns SwitchStatement
-	 *     BaseStatement returns SwitchStatement
 	 *     SwitchStatement<Yield> returns SwitchStatement
 	 *     SwitchStatement returns SwitchStatement
 	 *
@@ -28014,8 +27991,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns ThrowStatement
 	 *     Statement<Yield> returns ThrowStatement
 	 *     Statement returns ThrowStatement
-	 *     BaseStatement<Yield> returns ThrowStatement
-	 *     BaseStatement returns ThrowStatement
 	 *     ThrowStatement<Yield> returns ThrowStatement
 	 *     ThrowStatement returns ThrowStatement
 	 *
@@ -28042,8 +28017,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns TryStatement
 	 *     Statement<Yield> returns TryStatement
 	 *     Statement returns TryStatement
-	 *     BaseStatement<Yield> returns TryStatement
-	 *     BaseStatement returns TryStatement
 	 *     TryStatement<Yield> returns TryStatement
 	 *     TryStatement returns TryStatement
 	 *
@@ -28603,8 +28576,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns WhileStatement
 	 *     Statement<Yield> returns WhileStatement
 	 *     Statement returns WhileStatement
-	 *     BaseStatement<Yield> returns WhileStatement
-	 *     BaseStatement returns WhileStatement
 	 *     IterationStatement<Yield> returns WhileStatement
 	 *     IterationStatement returns WhileStatement
 	 *     WhileStatement<Yield> returns WhileStatement
@@ -28636,8 +28607,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     RootStatement returns WithStatement
 	 *     Statement<Yield> returns WithStatement
 	 *     Statement returns WithStatement
-	 *     BaseStatement<Yield> returns WithStatement
-	 *     BaseStatement returns WithStatement
 	 *     WithStatement<Yield> returns WithStatement
 	 *     WithStatement returns WithStatement
 	 *
