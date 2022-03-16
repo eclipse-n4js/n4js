@@ -13,7 +13,7 @@ package org.eclipse.n4js.postprocessing
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.TypeReferenceNode
@@ -87,7 +87,7 @@ package class TypeRefProcessor extends AbstractProcessor {
 				astNode.structuralType
 			FunctionTypeExpression:
 				astNode.declaredType
-			ExportedVariableDeclaration:
+			ExportableVariableDeclaration:
 				astNode.definedVariable
 		};
 		if (defType !== null) {

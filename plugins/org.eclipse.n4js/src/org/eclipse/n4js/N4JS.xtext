@@ -87,7 +87,7 @@ NamespaceElement<Yield> returns NamespaceElement:
 	| N4EnumDeclaration<Yield>
 	| N4TypeAliasDeclaration<Yield>
 	| FunctionDeclaration<Yield>
-	| ExportedVariableStatement
+	| ExportableVariableStatementWithModifier
 	| ExportDeclaration
 ;
 
@@ -219,7 +219,7 @@ ExportableElement:
 	| N4EnumDeclaration<Yield=false>
 	| N4TypeAliasDeclaration<Yield=false>
 	| FunctionDeclaration<Yield=false>
-	| ExportedVariableStatement
+	| ExportableVariableStatementWithModifier
 ;
 
 /**
@@ -234,10 +234,10 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 		{FunctionDeclaration.annotationList=current}
 		(declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
 		FunctionImpl<Yield, Yield, Expression=false>
-	|	{ExportedVariableStatement.annotationList=current}
+	|	{ExportableVariableStatement.annotationList=current}
 		(declaredModifiers+=N4Modifier)*
 		varStmtKeyword=VariableStatementKeyword
-		varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> ( ',' varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> )* Semi
+		varDeclsOrBindings+=ExportableVariableDeclarationOrBinding<Yield> ( ',' varDeclsOrBindings+=ExportableVariableDeclarationOrBinding<Yield> )* Semi
 	|	(
 			(
 				{N4ClassDeclaration.annotationList=current}
@@ -440,8 +440,21 @@ RootStatement <Yield> returns Statement:
 	Block<Yield>
 	// Function declarations are modeled as statements to support legacy JS parsing
 	| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
+	| ExportableVariableStatement
+	| BaseStatement<Yield>
+;
+
+Statement <Yield>:
+	AnnotatedFunctionDeclaration<Yield,Default=false>
+	| Block<Yield>
+	// Function declarations are modeled as statements to support legacy JS parsing
+	| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
 	| VariableStatement<In=true,Yield>
-	| EmptyStatement
+	| BaseStatement<Yield>
+;
+
+BaseStatement <Yield> returns Statement:
+	EmptyStatement
 	| LabelledStatement<Yield>
 	| ExpressionStatement<Yield>
 	| IfStatement<Yield>
@@ -457,11 +470,6 @@ RootStatement <Yield> returns Statement:
 	| DebuggerStatement
 ;
 
-Statement <Yield>:
-	AnnotatedFunctionDeclaration<Yield,Default=false>
-	| RootStatement<Yield>
-;
-
 enum VariableStatementKeyword:
 	var='var' | const='const' | let='let'
 ;
@@ -473,11 +481,17 @@ VariableStatement <In, Yield>:
 	varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>)* Semi
 ;
 
-ExportedVariableStatement returns ExportedVariableStatement:
-	{ExportedVariableStatement}
+ExportableVariableStatement:
+	=>({ExportableVariableStatement}
+		varStmtKeyword=VariableStatementKeyword
+	)
+	varDeclsOrBindings+=ExportableVariableDeclarationOrBinding<Yield=false> (',' varDeclsOrBindings+=ExportableVariableDeclarationOrBinding<Yield=false>)* Semi
+;
+
+ExportableVariableStatementWithModifier returns ExportableVariableStatement:
 	(declaredModifiers+=N4Modifier)*
 	varStmtKeyword=VariableStatementKeyword
-	varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield=false> (',' varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield=false>)* Semi
+	varDeclsOrBindings+=ExportableVariableDeclarationOrBinding<Yield=false> (',' varDeclsOrBindings+=ExportableVariableDeclarationOrBinding<Yield=false>)* Semi
 ;
 
 VariableDeclarationOrBinding <In, Yield, OptionalInit>:
@@ -514,20 +528,20 @@ fragment VariableDeclarationImpl <In, Yield, AllowType>*:
 	)
 ;
 
-ExportedVariableDeclarationOrBinding <Yield> returns VariableDeclarationOrBinding:
-		ExportedVariableBinding<Yield>
-	| 	ExportedVariableDeclaration<Yield>
+ExportableVariableDeclarationOrBinding <Yield> returns VariableDeclarationOrBinding:
+		ExportableVariableBinding<Yield>
+	| 	ExportableVariableDeclaration<Yield>
 ;
 
-ExportedVariableBinding <Yield>:
+ExportableVariableBinding <Yield>:
 	=> pattern=BindingPattern<Yield> '=' expression=AssignmentExpression<In=true,Yield>
 ;
 
 /**
  * The created AST element has an additional reference to the inferred TVariable
  */
-ExportedVariableDeclaration <Yield>:
-	{ExportedVariableDeclaration} VariableDeclarationImpl<In=true,Yield,AllowType=true>
+ExportableVariableDeclaration <Yield>:
+	{ExportableVariableDeclaration} VariableDeclarationImpl<In=true,Yield,AllowType=true>
 ;
 
 	// Defined with Action in statement: Block: {Block}  '{' (statements+=Statement)* '}';

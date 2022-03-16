@@ -13,15 +13,15 @@ package org.eclipse.n4js.n4JS;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Exported Variable Statement</b></em>'.
+ * A representation of the model object '<em><b>Exportable Variable Statement</b></em>'.
  * <!-- end-user-doc -->
  *
  *
- * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportedVariableStatement()
+ * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportableVariableStatement()
  * @model
  * @generated
  */
-public interface ExportedVariableStatement extends VariableStatement, ExportableElement, AnnotableScriptElement, ModifiableElement {
+public interface ExportableVariableStatement extends VariableStatement, ExportableElement, AnnotableScriptElement, ModifiableElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -34,4 +34,4 @@ public interface ExportedVariableStatement extends VariableStatement, Exportable
 	 */
 	boolean isExternal();
 
-} // ExportedVariableStatement
+} // ExportableVariableStatement

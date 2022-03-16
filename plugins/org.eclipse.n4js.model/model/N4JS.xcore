@@ -925,7 +925,7 @@ abstract class VariableDeclarationContainer {
 class VariableStatement extends Statement, VariableDeclarationContainer, NamespaceElement {
 }
 
-class ExportedVariableStatement extends VariableStatement, ExportableElement, AnnotableScriptElement, ModifiableElement {
+class ExportableVariableStatement extends VariableStatement, ExportableElement, AnnotableScriptElement, ModifiableElement {
 	/**
 	 * Returns true if type is declared as external.
 	 */
@@ -952,7 +952,7 @@ class VariableBinding extends VariableDeclarationOrBinding {
 	contains Expression expression
 }
 
-class ExportedVariableBinding extends VariableBinding {
+class ExportableVariableBinding extends VariableBinding {
 	/*
 	 * Link to variable information stored in the Xtext index.
 	 */
@@ -971,11 +971,29 @@ class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement
 	}
 }
 
-class ExportedVariableDeclaration extends VariableDeclaration {
+class ExportableVariableDeclaration extends VariableDeclaration {
 	/*
 	 * Link to variable information stored in the Xtext index.
 	 */
 	refers transient TVariable definedVariable
+
+	op boolean isExported() {
+		val parent = this.eContainer;
+		if (parent instanceof ExportableVariableStatement) {
+			return parent.exported;
+		}
+		return false;
+	}
+
+	op String getExportedName() {
+		val parent = this.eContainer;
+		if (parent instanceof ExportableVariableStatement) {
+			if (parent.exported) {
+				return parent.exportedName ?: this.name;
+			}
+		}
+		return null;
+	}
 }
 
 class EmptyStatement extends Statement {

@@ -19,7 +19,7 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ArrowFunction;
 import org.eclipse.n4js.n4JS.Block;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionExpression;
@@ -220,7 +220,7 @@ public class SourceElementExtensions {
 		}
 
 		@Override
-		public Boolean caseExportedVariableDeclaration(ExportedVariableDeclaration feature) {
+		public Boolean caseExportableVariableDeclaration(ExportableVariableDeclaration feature) {
 			if (feature.getName() == null) {
 				return true;
 			}
@@ -309,7 +309,7 @@ public class SourceElementExtensions {
 		collectVisibleIdentifiableElement(element, addHere, e -> e.getDefinedType());
 	}
 
-	static private void collectVisibleVariable(ExportedVariableDeclaration element,
+	static private void collectVisibleVariable(ExportableVariableDeclaration element,
 			List<? super IdentifiableElement> addHere) {
 
 		collectVisibleIdentifiableElement(element, addHere, e -> e.getDefinedVariable());

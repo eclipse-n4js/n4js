@@ -91,11 +91,11 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.BLOCK: return createBlock();
 			case N4JSPackage.STATEMENT: return createStatement();
 			case N4JSPackage.VARIABLE_STATEMENT: return createVariableStatement();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT: return createExportedVariableStatement();
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT: return createExportableVariableStatement();
 			case N4JSPackage.VARIABLE_BINDING: return createVariableBinding();
-			case N4JSPackage.EXPORTED_VARIABLE_BINDING: return createExportedVariableBinding();
+			case N4JSPackage.EXPORTABLE_VARIABLE_BINDING: return createExportableVariableBinding();
 			case N4JSPackage.VARIABLE_DECLARATION: return createVariableDeclaration();
-			case N4JSPackage.EXPORTED_VARIABLE_DECLARATION: return createExportedVariableDeclaration();
+			case N4JSPackage.EXPORTABLE_VARIABLE_DECLARATION: return createExportableVariableDeclaration();
 			case N4JSPackage.EMPTY_STATEMENT: return createEmptyStatement();
 			case N4JSPackage.EXPRESSION_STATEMENT: return createExpressionStatement();
 			case N4JSPackage.IF_STATEMENT: return createIfStatement();
@@ -545,9 +545,9 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@Override
-	public ExportedVariableStatement createExportedVariableStatement() {
-		ExportedVariableStatementImpl exportedVariableStatement = new ExportedVariableStatementImpl();
-		return exportedVariableStatement;
+	public ExportableVariableStatement createExportableVariableStatement() {
+		ExportableVariableStatementImpl exportableVariableStatement = new ExportableVariableStatementImpl();
+		return exportableVariableStatement;
 	}
 
 	/**
@@ -567,9 +567,9 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@Override
-	public ExportedVariableBinding createExportedVariableBinding() {
-		ExportedVariableBindingImpl exportedVariableBinding = new ExportedVariableBindingImpl();
-		return exportedVariableBinding;
+	public ExportableVariableBinding createExportableVariableBinding() {
+		ExportableVariableBindingImpl exportableVariableBinding = new ExportableVariableBindingImpl();
+		return exportableVariableBinding;
 	}
 
 	/**
@@ -589,9 +589,9 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@Override
-	public ExportedVariableDeclaration createExportedVariableDeclaration() {
-		ExportedVariableDeclarationImpl exportedVariableDeclaration = new ExportedVariableDeclarationImpl();
-		return exportedVariableDeclaration;
+	public ExportableVariableDeclaration createExportableVariableDeclaration() {
+		ExportableVariableDeclarationImpl exportableVariableDeclaration = new ExportableVariableDeclarationImpl();
+		return exportableVariableDeclaration;
 	}
 
 	/**

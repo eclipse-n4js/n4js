@@ -301,14 +301,16 @@ class ImportedElementsScopingHelper {
 			// add vars to namespace
 			// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 			for (importedVar : imp.module.variables) {
-				val varVisibility = variableVisibilityChecker.isVisible(contextResource, importedVar);
 				val varName = importedVar.exportedName
-				val qn = QualifiedName.create(namespaceName, varName)
-				if (varVisibility.visibility) {
-					val originalName = QualifiedName.create(varName)
-					if (!invalidImports.containsElement(originalName)) {
-						importedVar.handleNamespacedAccess(originalName, qn, invalidImports, originatorMap,
-							specifier)
+				if (varName !== null) {
+					val varVisibility = variableVisibilityChecker.isVisible(contextResource, importedVar);
+					if (varVisibility.visibility) {
+						val originalName = QualifiedName.create(varName)
+						if (!invalidImports.containsElement(originalName)) {
+							val qn = QualifiedName.create(namespaceName, varName)
+							importedVar.handleNamespacedAccess(originalName, qn, invalidImports, originatorMap,
+								specifier)
+						}
 					}
 				}
 			}

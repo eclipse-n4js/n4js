@@ -47,7 +47,7 @@ public class ModifierUtils {
 					|| isNamespaceDeclaration(astNodeType)
 					|| isN4MemberDeclaration(astNodeType)
 					|| isFunctionDeclaration(astNodeType)
-					|| isExportedVariableStatement(astNodeType);
+					|| isExportableVariableStatement(astNodeType);
 		case PRIVATE:
 			if (isN4MemberDeclaration(astNodeType)) {
 				return true;
@@ -56,7 +56,7 @@ public class ModifierUtils {
 					(isN4TypeDeclaration(astNodeType)
 							|| isNamespaceDeclaration(astNodeType)
 							|| isFunctionDeclaration(astNodeType)
-							|| isExportedVariableStatement(astNodeType))) {
+							|| isExportableVariableStatement(astNodeType))) {
 
 				return true;
 			}
@@ -67,7 +67,7 @@ public class ModifierUtils {
 			return isN4TypeDeclaration(astNodeType)
 					|| isNamespaceDeclaration(astNodeType)
 					|| isFunctionDeclaration(astNodeType)
-					|| isExportedVariableStatement(astNodeType);
+					|| isExportableVariableStatement(astNodeType);
 		case ABSTRACT:
 			return isN4ClassDeclaration(astNodeType)
 					|| isN4MethodDeclaration(astNodeType)
@@ -107,12 +107,12 @@ public class ModifierUtils {
 			if (elem instanceof NamespaceElement && ((NamespaceElement) elem).isInNamespace()) {
 				// TODO: remove later the previous condition
 
-				if (isExportedVariableStatement(astNodeType)) {
-					ExportedVariableStatement evs = (ExportedVariableStatement) elem;
+				if (isExportableVariableStatement(astNodeType)) {
+					ExportableVariableStatement evs = (ExportableVariableStatement) elem;
 					if (!evs.getVarDeclsOrBindings().isEmpty()
-							&& isExportedVariableDeclaration(evs.getVarDeclsOrBindings().get(0).eClass())) {
+							&& isExportableVariableDeclaration(evs.getVarDeclsOrBindings().get(0).eClass())) {
 
-						ExportedVariableDeclaration evd = (ExportedVariableDeclaration) evs.getVarDeclsOrBindings()
+						ExportableVariableDeclaration evd = (ExportableVariableDeclaration) evs.getVarDeclsOrBindings()
 								.get(0);
 						if (evd.getDefinedVariable() != null) {
 							TVariable tVar = evd.getDefinedVariable();
@@ -239,12 +239,12 @@ public class ModifierUtils {
 		return N4JSPackage.eINSTANCE.getFunctionDeclaration().isSuperTypeOf(astNodeType);
 	}
 
-	private static final boolean isExportedVariableStatement(EClass astNodeType) {
-		return N4JSPackage.eINSTANCE.getExportedVariableStatement().isSuperTypeOf(astNodeType);
+	private static final boolean isExportableVariableStatement(EClass astNodeType) {
+		return N4JSPackage.eINSTANCE.getExportableVariableStatement().isSuperTypeOf(astNodeType);
 	}
 
-	private static final boolean isExportedVariableDeclaration(EClass astNodeType) {
-		return N4JSPackage.eINSTANCE.getExportedVariableDeclaration().isSuperTypeOf(astNodeType);
+	private static final boolean isExportableVariableDeclaration(EClass astNodeType) {
+		return N4JSPackage.eINSTANCE.getExportableVariableDeclaration().isSuperTypeOf(astNodeType);
 	}
 
 	private static final boolean isN4ClassDeclaration(EClass astNodeType) {

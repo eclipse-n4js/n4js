@@ -4001,14 +4001,14 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_STATEMENT_OPERATION_COUNT = STATEMENT_OPERATION_COUNT + 5;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableStatementImpl <em>Exported Variable Statement</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportableVariableStatementImpl <em>Exportable Variable Statement</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.ExportedVariableStatementImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportedVariableStatement()
+	 * @see org.eclipse.n4js.n4JS.impl.ExportableVariableStatementImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportableVariableStatement()
 	 * @generated
 	 */
-	int EXPORTED_VARIABLE_STATEMENT = 41;
+	int EXPORTABLE_VARIABLE_STATEMENT = 41;
 
 	/**
 	 * The feature id for the '<em><b>Var Decls Or Bindings</b></em>' containment reference list.
@@ -4017,7 +4017,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT__VAR_DECLS_OR_BINDINGS = VARIABLE_STATEMENT__VAR_DECLS_OR_BINDINGS;
+	int EXPORTABLE_VARIABLE_STATEMENT__VAR_DECLS_OR_BINDINGS = VARIABLE_STATEMENT__VAR_DECLS_OR_BINDINGS;
 
 	/**
 	 * The feature id for the '<em><b>Var Stmt Keyword</b></em>' attribute.
@@ -4026,7 +4026,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT__VAR_STMT_KEYWORD = VARIABLE_STATEMENT__VAR_STMT_KEYWORD;
+	int EXPORTABLE_VARIABLE_STATEMENT__VAR_STMT_KEYWORD = VARIABLE_STATEMENT__VAR_STMT_KEYWORD;
 
 	/**
 	 * The feature id for the '<em><b>Annotation List</b></em>' containment reference.
@@ -4035,7 +4035,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST = VARIABLE_STATEMENT_FEATURE_COUNT + 0;
+	int EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST = VARIABLE_STATEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
@@ -4044,16 +4044,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT__DECLARED_MODIFIERS = VARIABLE_STATEMENT_FEATURE_COUNT + 1;
+	int EXPORTABLE_VARIABLE_STATEMENT__DECLARED_MODIFIERS = VARIABLE_STATEMENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the '<em>Exported Variable Statement</em>' class.
+	 * The number of structural features of the '<em>Exportable Variable Statement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT_FEATURE_COUNT = VARIABLE_STATEMENT_FEATURE_COUNT + 2;
+	int EXPORTABLE_VARIABLE_STATEMENT_FEATURE_COUNT = VARIABLE_STATEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Var Decl</em>' operation.
@@ -4062,7 +4062,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_VAR_DECL = VARIABLE_STATEMENT___GET_VAR_DECL;
+	int EXPORTABLE_VARIABLE_STATEMENT___GET_VAR_DECL = VARIABLE_STATEMENT___GET_VAR_DECL;
 
 	/**
 	 * The operation id for the '<em>Is Block Scoped</em>' operation.
@@ -4071,7 +4071,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_BLOCK_SCOPED = VARIABLE_STATEMENT___IS_BLOCK_SCOPED;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_BLOCK_SCOPED = VARIABLE_STATEMENT___IS_BLOCK_SCOPED;
 
 	/**
 	 * The operation id for the '<em>Get Namespace</em>' operation.
@@ -4080,7 +4080,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_NAMESPACE = VARIABLE_STATEMENT___GET_NAMESPACE;
+	int EXPORTABLE_VARIABLE_STATEMENT___GET_NAMESPACE = VARIABLE_STATEMENT___GET_NAMESPACE;
 
 	/**
 	 * The operation id for the '<em>Is In Namespace</em>' operation.
@@ -4089,7 +4089,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_IN_NAMESPACE = VARIABLE_STATEMENT___IS_IN_NAMESPACE;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_IN_NAMESPACE = VARIABLE_STATEMENT___IS_IN_NAMESPACE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -4098,7 +4098,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED = VARIABLE_STATEMENT_OPERATION_COUNT + 0;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_EXPORTED = VARIABLE_STATEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -4107,7 +4107,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_DECLARED_EXPORTED = VARIABLE_STATEMENT_OPERATION_COUNT + 1;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_DECLARED_EXPORTED = VARIABLE_STATEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Exported By Namespace</em>' operation.
@@ -4116,7 +4116,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_BY_NAMESPACE = VARIABLE_STATEMENT_OPERATION_COUNT + 2;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_EXPORTED_BY_NAMESPACE = VARIABLE_STATEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Exported As Default</em>' operation.
@@ -4125,7 +4125,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT = VARIABLE_STATEMENT_OPERATION_COUNT + 3;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT = VARIABLE_STATEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -4134,7 +4134,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_EXPORTED_NAME = VARIABLE_STATEMENT_OPERATION_COUNT + 4;
+	int EXPORTABLE_VARIABLE_STATEMENT___GET_EXPORTED_NAME = VARIABLE_STATEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -4143,7 +4143,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_TOPLEVEL = VARIABLE_STATEMENT_OPERATION_COUNT + 5;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_TOPLEVEL = VARIABLE_STATEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4152,7 +4152,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW = VARIABLE_STATEMENT_OPERATION_COUNT + 6;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_HOLLOW = VARIABLE_STATEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -4161,7 +4161,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 8;
+	int EXPORTABLE_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -4170,7 +4170,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 9;
+	int EXPORTABLE_VARIABLE_STATEMENT___GET_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Declared External</em>' operation.
@@ -4179,7 +4179,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_DECLARED_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 10;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_DECLARED_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Default External</em>' operation.
@@ -4188,7 +4188,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_DEFAULT_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 11;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_DEFAULT_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -4197,16 +4197,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 12;
+	int EXPORTABLE_VARIABLE_STATEMENT___IS_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 12;
 
 	/**
-	 * The number of operations of the '<em>Exported Variable Statement</em>' class.
+	 * The number of operations of the '<em>Exportable Variable Statement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT_OPERATION_COUNT = VARIABLE_STATEMENT_OPERATION_COUNT + 13;
+	int EXPORTABLE_VARIABLE_STATEMENT_OPERATION_COUNT = VARIABLE_STATEMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationOrBindingImpl <em>Variable Declaration Or Binding</em>}' class.
@@ -4319,14 +4319,14 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_BINDING_OPERATION_COUNT = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableBindingImpl <em>Exported Variable Binding</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportableVariableBindingImpl <em>Exportable Variable Binding</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.ExportedVariableBindingImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportedVariableBinding()
+	 * @see org.eclipse.n4js.n4JS.impl.ExportableVariableBindingImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportableVariableBinding()
 	 * @generated
 	 */
-	int EXPORTED_VARIABLE_BINDING = 44;
+	int EXPORTABLE_VARIABLE_BINDING = 44;
 
 	/**
 	 * The feature id for the '<em><b>Pattern</b></em>' containment reference.
@@ -4335,7 +4335,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_BINDING__PATTERN = VARIABLE_BINDING__PATTERN;
+	int EXPORTABLE_VARIABLE_BINDING__PATTERN = VARIABLE_BINDING__PATTERN;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -4344,7 +4344,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_BINDING__EXPRESSION = VARIABLE_BINDING__EXPRESSION;
+	int EXPORTABLE_VARIABLE_BINDING__EXPRESSION = VARIABLE_BINDING__EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Defined Variable</b></em>' reference.
@@ -4353,16 +4353,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_BINDING__DEFINED_VARIABLE = VARIABLE_BINDING_FEATURE_COUNT + 0;
+	int EXPORTABLE_VARIABLE_BINDING__DEFINED_VARIABLE = VARIABLE_BINDING_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Exported Variable Binding</em>' class.
+	 * The number of structural features of the '<em>Exportable Variable Binding</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_BINDING_FEATURE_COUNT = VARIABLE_BINDING_FEATURE_COUNT + 1;
+	int EXPORTABLE_VARIABLE_BINDING_FEATURE_COUNT = VARIABLE_BINDING_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get All Variable Declarations</em>' operation.
@@ -4371,7 +4371,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_BINDING___GET_ALL_VARIABLE_DECLARATIONS = VARIABLE_BINDING___GET_ALL_VARIABLE_DECLARATIONS;
+	int EXPORTABLE_VARIABLE_BINDING___GET_ALL_VARIABLE_DECLARATIONS = VARIABLE_BINDING___GET_ALL_VARIABLE_DECLARATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Expression</em>' operation.
@@ -4380,16 +4380,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_BINDING___GET_EXPRESSION = VARIABLE_BINDING___GET_EXPRESSION;
+	int EXPORTABLE_VARIABLE_BINDING___GET_EXPRESSION = VARIABLE_BINDING___GET_EXPRESSION;
 
 	/**
-	 * The number of operations of the '<em>Exported Variable Binding</em>' class.
+	 * The number of operations of the '<em>Exportable Variable Binding</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_BINDING_OPERATION_COUNT = VARIABLE_BINDING_OPERATION_COUNT + 0;
+	int EXPORTABLE_VARIABLE_BINDING_OPERATION_COUNT = VARIABLE_BINDING_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationImpl <em>Variable Declaration</em>}' class.
@@ -4555,14 +4555,14 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 12;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableDeclarationImpl <em>Exported Variable Declaration</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportableVariableDeclarationImpl <em>Exportable Variable Declaration</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.ExportedVariableDeclarationImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportedVariableDeclaration()
+	 * @see org.eclipse.n4js.n4JS.impl.ExportableVariableDeclarationImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportableVariableDeclaration()
 	 * @generated
 	 */
-	int EXPORTED_VARIABLE_DECLARATION = 46;
+	int EXPORTABLE_VARIABLE_DECLARATION = 46;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Ref Node</b></em>' containment reference.
@@ -4571,7 +4571,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE = VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE;
+	int EXPORTABLE_VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE = VARIABLE_DECLARATION__DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4580,7 +4580,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION__NAME = VARIABLE_DECLARATION__NAME;
+	int EXPORTABLE_VARIABLE_DECLARATION__NAME = VARIABLE_DECLARATION__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -4589,7 +4589,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION__ANNOTATIONS = VARIABLE_DECLARATION__ANNOTATIONS;
+	int EXPORTABLE_VARIABLE_DECLARATION__ANNOTATIONS = VARIABLE_DECLARATION__ANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -4598,7 +4598,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION__EXPRESSION = VARIABLE_DECLARATION__EXPRESSION;
+	int EXPORTABLE_VARIABLE_DECLARATION__EXPRESSION = VARIABLE_DECLARATION__EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Defined Variable</b></em>' reference.
@@ -4607,16 +4607,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE = VARIABLE_DECLARATION_FEATURE_COUNT + 0;
+	int EXPORTABLE_VARIABLE_DECLARATION__DEFINED_VARIABLE = VARIABLE_DECLARATION_FEATURE_COUNT + 0;
 
 	/**
-	 * The number of structural features of the '<em>Exported Variable Declaration</em>' class.
+	 * The number of structural features of the '<em>Exportable Variable Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION_FEATURE_COUNT = VARIABLE_DECLARATION_FEATURE_COUNT + 1;
+	int EXPORTABLE_VARIABLE_DECLARATION_FEATURE_COUNT = VARIABLE_DECLARATION_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get All Variable Declarations</em>' operation.
@@ -4625,7 +4625,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_ALL_VARIABLE_DECLARATIONS = VARIABLE_DECLARATION___GET_ALL_VARIABLE_DECLARATIONS;
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_ALL_VARIABLE_DECLARATIONS = VARIABLE_DECLARATION___GET_ALL_VARIABLE_DECLARATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Expression</em>' operation.
@@ -4634,7 +4634,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_EXPRESSION = VARIABLE_DECLARATION___GET_EXPRESSION;
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_EXPRESSION = VARIABLE_DECLARATION___GET_EXPRESSION;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -4643,7 +4643,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_ANNOTATIONS = VARIABLE_DECLARATION___GET_ANNOTATIONS;
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_ANNOTATIONS = VARIABLE_DECLARATION___GET_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -4652,7 +4652,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS = VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS;
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS = VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
@@ -4661,7 +4661,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_NODE = VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_NODE = VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -4670,7 +4670,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF = VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF;
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF = VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -4679,7 +4679,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -4688,7 +4688,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_CONTAINING_MODULE = VARIABLE_DECLARATION___GET_CONTAINING_MODULE;
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_CONTAINING_MODULE = VARIABLE_DECLARATION___GET_CONTAINING_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
@@ -4697,7 +4697,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_CONTAINING_ROOT_MODULE = VARIABLE_DECLARATION___GET_CONTAINING_ROOT_MODULE;
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_CONTAINING_ROOT_MODULE = VARIABLE_DECLARATION___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -4706,7 +4706,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___GET_NAME = VARIABLE_DECLARATION___GET_NAME;
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_NAME = VARIABLE_DECLARATION___GET_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -4715,16 +4715,34 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION___IS_CONST = VARIABLE_DECLARATION___IS_CONST;
+	int EXPORTABLE_VARIABLE_DECLARATION___IS_CONST = VARIABLE_DECLARATION___IS_CONST;
 
 	/**
-	 * The number of operations of the '<em>Exported Variable Declaration</em>' class.
+	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OPERATION_COUNT + 0;
+	int EXPORTABLE_VARIABLE_DECLARATION___IS_EXPORTED = VARIABLE_DECLARATION_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTABLE_VARIABLE_DECLARATION___GET_EXPORTED_NAME = VARIABLE_DECLARATION_OPERATION_COUNT + 1;
+
+	/**
+	 * The number of operations of the '<em>Exportable Variable Declaration</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTABLE_VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.EmptyStatementImpl <em>Empty Statement</em>}' class.
@@ -19580,24 +19598,24 @@ public interface N4JSPackage extends EPackage {
 	EClass getVariableStatement();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ExportedVariableStatement <em>Exported Variable Statement</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ExportableVariableStatement <em>Exportable Variable Statement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Exported Variable Statement</em>'.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableStatement
+	 * @return the meta object for class '<em>Exportable Variable Statement</em>'.
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableStatement
 	 * @generated
 	 */
-	EClass getExportedVariableStatement();
+	EClass getExportableVariableStatement();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportedVariableStatement#isExternal() <em>Is External</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableVariableStatement#isExternal() <em>Is External</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Is External</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableStatement#isExternal()
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableStatement#isExternal()
 	 * @generated
 	 */
-	EOperation getExportedVariableStatement__IsExternal();
+	EOperation getExportableVariableStatement__IsExternal();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.VariableDeclarationOrBinding <em>Variable Declaration Or Binding</em>}'.
@@ -19662,25 +19680,25 @@ public interface N4JSPackage extends EPackage {
 	EReference getVariableBinding_Expression();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ExportedVariableBinding <em>Exported Variable Binding</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ExportableVariableBinding <em>Exportable Variable Binding</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Exported Variable Binding</em>'.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableBinding
+	 * @return the meta object for class '<em>Exportable Variable Binding</em>'.
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableBinding
 	 * @generated
 	 */
-	EClass getExportedVariableBinding();
+	EClass getExportableVariableBinding();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.ExportedVariableBinding#getDefinedVariable <em>Defined Variable</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.ExportableVariableBinding#getDefinedVariable <em>Defined Variable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Defined Variable</em>'.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableBinding#getDefinedVariable()
-	 * @see #getExportedVariableBinding()
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableBinding#getDefinedVariable()
+	 * @see #getExportableVariableBinding()
 	 * @generated
 	 */
-	EReference getExportedVariableBinding_DefinedVariable();
+	EReference getExportableVariableBinding_DefinedVariable();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.VariableDeclaration <em>Variable Declaration</em>}'.
@@ -19725,25 +19743,45 @@ public interface N4JSPackage extends EPackage {
 	EOperation getVariableDeclaration__IsConst();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ExportedVariableDeclaration <em>Exported Variable Declaration</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ExportableVariableDeclaration <em>Exportable Variable Declaration</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Exported Variable Declaration</em>'.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableDeclaration
+	 * @return the meta object for class '<em>Exportable Variable Declaration</em>'.
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableDeclaration
 	 * @generated
 	 */
-	EClass getExportedVariableDeclaration();
+	EClass getExportableVariableDeclaration();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.ExportedVariableDeclaration#getDefinedVariable <em>Defined Variable</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.ExportableVariableDeclaration#getDefinedVariable <em>Defined Variable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Defined Variable</em>'.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableDeclaration#getDefinedVariable()
-	 * @see #getExportedVariableDeclaration()
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableDeclaration#getDefinedVariable()
+	 * @see #getExportableVariableDeclaration()
 	 * @generated
 	 */
-	EReference getExportedVariableDeclaration_DefinedVariable();
+	EReference getExportableVariableDeclaration_DefinedVariable();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableVariableDeclaration#isExported() <em>Is Exported</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Exported</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableDeclaration#isExported()
+	 * @generated
+	 */
+	EOperation getExportableVariableDeclaration__IsExported();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableVariableDeclaration#getExportedName() <em>Get Exported Name</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Exported Name</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableDeclaration#getExportedName()
+	 * @generated
+	 */
+	EOperation getExportableVariableDeclaration__GetExportedName();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.EmptyStatement <em>Empty Statement</em>}'.
@@ -25722,14 +25760,14 @@ public interface N4JSPackage extends EPackage {
 		EClass VARIABLE_STATEMENT = eINSTANCE.getVariableStatement();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableStatementImpl <em>Exported Variable Statement</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ExportableVariableStatementImpl <em>Exportable Variable Statement</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4JS.impl.ExportedVariableStatementImpl
-		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportedVariableStatement()
+		 * @see org.eclipse.n4js.n4JS.impl.ExportableVariableStatementImpl
+		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportableVariableStatement()
 		 * @generated
 		 */
-		EClass EXPORTED_VARIABLE_STATEMENT = eINSTANCE.getExportedVariableStatement();
+		EClass EXPORTABLE_VARIABLE_STATEMENT = eINSTANCE.getExportableVariableStatement();
 
 		/**
 		 * The meta object literal for the '<em><b>Is External</b></em>' operation.
@@ -25737,7 +25775,7 @@ public interface N4JSPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL = eINSTANCE.getExportedVariableStatement__IsExternal();
+		EOperation EXPORTABLE_VARIABLE_STATEMENT___IS_EXTERNAL = eINSTANCE.getExportableVariableStatement__IsExternal();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationOrBindingImpl <em>Variable Declaration Or Binding</em>}' class.
@@ -25792,14 +25830,14 @@ public interface N4JSPackage extends EPackage {
 		EReference VARIABLE_BINDING__EXPRESSION = eINSTANCE.getVariableBinding_Expression();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableBindingImpl <em>Exported Variable Binding</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ExportableVariableBindingImpl <em>Exportable Variable Binding</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4JS.impl.ExportedVariableBindingImpl
-		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportedVariableBinding()
+		 * @see org.eclipse.n4js.n4JS.impl.ExportableVariableBindingImpl
+		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportableVariableBinding()
 		 * @generated
 		 */
-		EClass EXPORTED_VARIABLE_BINDING = eINSTANCE.getExportedVariableBinding();
+		EClass EXPORTABLE_VARIABLE_BINDING = eINSTANCE.getExportableVariableBinding();
 
 		/**
 		 * The meta object literal for the '<em><b>Defined Variable</b></em>' reference feature.
@@ -25807,7 +25845,7 @@ public interface N4JSPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference EXPORTED_VARIABLE_BINDING__DEFINED_VARIABLE = eINSTANCE.getExportedVariableBinding_DefinedVariable();
+		EReference EXPORTABLE_VARIABLE_BINDING__DEFINED_VARIABLE = eINSTANCE.getExportableVariableBinding_DefinedVariable();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationImpl <em>Variable Declaration</em>}' class.
@@ -25844,14 +25882,14 @@ public interface N4JSPackage extends EPackage {
 		EOperation VARIABLE_DECLARATION___IS_CONST = eINSTANCE.getVariableDeclaration__IsConst();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableDeclarationImpl <em>Exported Variable Declaration</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ExportableVariableDeclarationImpl <em>Exportable Variable Declaration</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4JS.impl.ExportedVariableDeclarationImpl
-		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportedVariableDeclaration()
+		 * @see org.eclipse.n4js.n4JS.impl.ExportableVariableDeclarationImpl
+		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getExportableVariableDeclaration()
 		 * @generated
 		 */
-		EClass EXPORTED_VARIABLE_DECLARATION = eINSTANCE.getExportedVariableDeclaration();
+		EClass EXPORTABLE_VARIABLE_DECLARATION = eINSTANCE.getExportableVariableDeclaration();
 
 		/**
 		 * The meta object literal for the '<em><b>Defined Variable</b></em>' reference feature.
@@ -25859,7 +25897,23 @@ public interface N4JSPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE = eINSTANCE.getExportedVariableDeclaration_DefinedVariable();
+		EReference EXPORTABLE_VARIABLE_DECLARATION__DEFINED_VARIABLE = eINSTANCE.getExportableVariableDeclaration_DefinedVariable();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Exported</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPORTABLE_VARIABLE_DECLARATION___IS_EXPORTED = eINSTANCE.getExportableVariableDeclaration__IsExported();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Exported Name</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPORTABLE_VARIABLE_DECLARATION___GET_EXPORTED_NAME = eINSTANCE.getExportableVariableDeclaration__GetExportedName();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.EmptyStatementImpl <em>Empty Statement</em>}' class.

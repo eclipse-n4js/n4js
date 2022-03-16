@@ -217,7 +217,7 @@ ruleNamespaceElement:
 			ruleFunctionDeclaration
 		)
 		    |
-		ruleExportedVariableStatement
+		ruleExportableVariableStatementWithModifier
 		    |
 		ruleExportDeclaration
 	)
@@ -301,7 +301,7 @@ norm1_NamespaceElement:
 			norm1_FunctionDeclaration
 		)
 		    |
-		ruleExportedVariableStatement
+		ruleExportableVariableStatementWithModifier
 		    |
 		ruleExportDeclaration
 	)
@@ -599,7 +599,7 @@ ruleExportableElement:
 			ruleFunctionDeclaration
 		)
 		    |
-		ruleExportedVariableStatement
+		ruleExportableVariableStatementWithModifier
 	)
 ;
 
@@ -626,10 +626,10 @@ ruleAnnotatedExportableElement:
 		ruleN4Modifier
 		*
 		ruleVariableStatementKeyword
-		ruleExportedVariableDeclarationOrBinding
+		ruleExportableVariableDeclarationOrBinding
 		(
 			','
-			ruleExportedVariableDeclarationOrBinding
+			ruleExportableVariableDeclarationOrBinding
 		)*
 		ruleSemi
 		    |
@@ -1522,9 +1522,98 @@ ruleRootStatement:
 		(
 			(ruleVariableStatementKeyword
 			)=>
+			ruleExportableVariableStatement
+		)
+		    |
+		ruleBaseStatement
+	)
+;
+
+// Rule Statement
+ruleStatement:
+	(
+		(
+			('@'
+			(
+				'This'
+				    |
+				'target'
+				    |
+				RULE_IDENTIFIER
+			)
+			)=>
+			ruleAnnotatedFunctionDeclaration
+		)
+		    |
+		(
+			('{'
+			)=>
+			ruleBlock
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			ruleAsyncNoTrailingLineBreak
+			'function'
+			)=>
+			ruleFunctionDeclaration
+		)
+		    |
+		(
+			(ruleVariableStatementKeyword
+			)=>
 			norm1_VariableStatement
 		)
 		    |
+		ruleBaseStatement
+	)
+;
+
+// Rule Statement
+norm1_Statement:
+	(
+		(
+			('@'
+			(
+				'This'
+				    |
+				'target'
+				    |
+				RULE_IDENTIFIER
+			)
+			)=>
+			norm1_AnnotatedFunctionDeclaration
+		)
+		    |
+		(
+			('{'
+			)=>
+			norm1_Block
+		)
+		    |
+		(
+			(ruleN4Modifier
+			*
+			ruleAsyncNoTrailingLineBreak
+			'function'
+			)=>
+			norm1_FunctionDeclaration
+		)
+		    |
+		(
+			(ruleVariableStatementKeyword
+			)=>
+			norm3_VariableStatement
+		)
+		    |
+		norm1_BaseStatement
+	)
+;
+
+// Rule BaseStatement
+ruleBaseStatement:
+	(
 		ruleEmptyStatement
 		    |
 		(
@@ -1558,30 +1647,9 @@ ruleRootStatement:
 	)
 ;
 
-// Rule RootStatement
-norm1_RootStatement:
+// Rule BaseStatement
+norm1_BaseStatement:
 	(
-		(
-			('{'
-			)=>
-			norm1_Block
-		)
-		    |
-		(
-			(ruleN4Modifier
-			*
-			ruleAsyncNoTrailingLineBreak
-			'function'
-			)=>
-			norm1_FunctionDeclaration
-		)
-		    |
-		(
-			(ruleVariableStatementKeyword
-			)=>
-			norm3_VariableStatement
-		)
-		    |
 		ruleEmptyStatement
 		    |
 		(
@@ -1615,46 +1683,6 @@ norm1_RootStatement:
 	)
 ;
 
-// Rule Statement
-ruleStatement:
-	(
-		(
-			('@'
-			(
-				'This'
-				    |
-				'target'
-				    |
-				RULE_IDENTIFIER
-			)
-			)=>
-			ruleAnnotatedFunctionDeclaration
-		)
-		    |
-		ruleRootStatement
-	)
-;
-
-// Rule Statement
-norm1_Statement:
-	(
-		(
-			('@'
-			(
-				'This'
-				    |
-				'target'
-				    |
-				RULE_IDENTIFIER
-			)
-			)=>
-			norm1_AnnotatedFunctionDeclaration
-		)
-		    |
-		norm1_RootStatement
-	)
-;
-
 // Rule VariableStatement
 norm1_VariableStatement:
 	(
@@ -1685,15 +1713,30 @@ norm3_VariableStatement:
 	ruleSemi
 ;
 
-// Rule ExportedVariableStatement
-ruleExportedVariableStatement:
+// Rule ExportableVariableStatement
+ruleExportableVariableStatement:
+	(
+		(ruleVariableStatementKeyword
+		)=>
+		ruleVariableStatementKeyword
+	)
+	ruleExportableVariableDeclarationOrBinding
+	(
+		','
+		ruleExportableVariableDeclarationOrBinding
+	)*
+	ruleSemi
+;
+
+// Rule ExportableVariableStatementWithModifier
+ruleExportableVariableStatementWithModifier:
 	ruleN4Modifier
 	*
 	ruleVariableStatementKeyword
-	ruleExportedVariableDeclarationOrBinding
+	ruleExportableVariableDeclarationOrBinding
 	(
 		','
-		ruleExportedVariableDeclarationOrBinding
+		ruleExportableVariableDeclarationOrBinding
 	)*
 	ruleSemi
 ;
@@ -2030,34 +2073,34 @@ norm7_VariableDeclarationImpl:
 	)?
 ;
 
-// Rule ExportedVariableDeclarationOrBinding
-ruleExportedVariableDeclarationOrBinding:
+// Rule ExportableVariableDeclarationOrBinding
+ruleExportableVariableDeclarationOrBinding:
 	(
 		(
 			(ruleBindingPattern
 			)=>
-			ruleExportedVariableBinding
+			ruleExportableVariableBinding
 		)
 		    |
-		ruleExportedVariableDeclaration
+		ruleExportableVariableDeclaration
 	)
 ;
 
-// Rule ExportedVariableDeclarationOrBinding
-norm1_ExportedVariableDeclarationOrBinding:
+// Rule ExportableVariableDeclarationOrBinding
+norm1_ExportableVariableDeclarationOrBinding:
 	(
 		(
 			(norm1_BindingPattern
 			)=>
-			norm1_ExportedVariableBinding
+			norm1_ExportableVariableBinding
 		)
 		    |
-		norm1_ExportedVariableDeclaration
+		norm1_ExportableVariableDeclaration
 	)
 ;
 
-// Rule ExportedVariableBinding
-ruleExportedVariableBinding:
+// Rule ExportableVariableBinding
+ruleExportableVariableBinding:
 	(
 		(ruleBindingPattern
 		)=>
@@ -2067,8 +2110,8 @@ ruleExportedVariableBinding:
 	norm1_AssignmentExpression
 ;
 
-// Rule ExportedVariableBinding
-norm1_ExportedVariableBinding:
+// Rule ExportableVariableBinding
+norm1_ExportableVariableBinding:
 	(
 		(norm1_BindingPattern
 		)=>
@@ -2078,13 +2121,13 @@ norm1_ExportedVariableBinding:
 	norm3_AssignmentExpression
 ;
 
-// Rule ExportedVariableDeclaration
-ruleExportedVariableDeclaration:
+// Rule ExportableVariableDeclaration
+ruleExportableVariableDeclaration:
 	norm5_VariableDeclarationImpl
 ;
 
-// Rule ExportedVariableDeclaration
-norm1_ExportedVariableDeclaration:
+// Rule ExportableVariableDeclaration
+norm1_ExportableVariableDeclaration:
 	norm7_VariableDeclarationImpl
 ;
 

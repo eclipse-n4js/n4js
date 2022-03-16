@@ -11,7 +11,7 @@
 package org.eclipse.n4js.ide.server.hover;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -79,7 +79,7 @@ public class N4JSElementSignatureProvider {
 			return getLabelFromTypeSystem((ParameterizedPropertyAccessExpression) obj, obj);
 
 		} else if (obj instanceof VariableDeclaration) {
-			if (obj instanceof ExportedVariableDeclaration) {
+			if (obj instanceof ExportableVariableDeclaration) {
 				EObject tElem = N4JSASTUtils.getCorrespondingTypeModelElement(obj);
 				return CustomHoverLabelUtil.getLabel(tElem);
 

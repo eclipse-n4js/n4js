@@ -38,7 +38,7 @@ import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
@@ -52,19 +52,19 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Exported Variable Statement</b></em>'.
+ * An implementation of the model object '<em><b>Exportable Variable Statement</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportedVariableStatementImpl#getAnnotationList <em>Annotation List</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportedVariableStatementImpl#getDeclaredModifiers <em>Declared Modifiers</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportableVariableStatementImpl#getAnnotationList <em>Annotation List</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportableVariableStatementImpl#getDeclaredModifiers <em>Declared Modifiers</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ExportedVariableStatementImpl extends VariableStatementImpl implements ExportedVariableStatement {
+public class ExportableVariableStatementImpl extends VariableStatementImpl implements ExportableVariableStatement {
 	/**
 	 * The cached value of the '{@link #getAnnotationList() <em>Annotation List</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -90,7 +90,7 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ExportedVariableStatementImpl() {
+	protected ExportableVariableStatementImpl() {
 		super();
 	}
 
@@ -101,7 +101,7 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return N4JSPackage.Literals.EXPORTED_VARIABLE_STATEMENT;
+		return N4JSPackage.Literals.EXPORTABLE_VARIABLE_STATEMENT;
 	}
 
 	/**
@@ -123,7 +123,7 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 		AnnotationList oldAnnotationList = annotationList;
 		annotationList = newAnnotationList;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST, oldAnnotationList, newAnnotationList);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST, oldAnnotationList, newAnnotationList);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -139,14 +139,14 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 		if (newAnnotationList != annotationList) {
 			NotificationChain msgs = null;
 			if (annotationList != null)
-				msgs = ((InternalEObject)annotationList).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST, null, msgs);
+				msgs = ((InternalEObject)annotationList).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST, null, msgs);
 			if (newAnnotationList != null)
-				msgs = ((InternalEObject)newAnnotationList).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST, null, msgs);
+				msgs = ((InternalEObject)newAnnotationList).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST, null, msgs);
 			msgs = basicSetAnnotationList(newAnnotationList, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST, newAnnotationList, newAnnotationList));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST, newAnnotationList, newAnnotationList));
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	@Override
 	public EList<N4Modifier> getDeclaredModifiers() {
 		if (declaredModifiers == null) {
-			declaredModifiers = new EDataTypeEList<N4Modifier>(N4Modifier.class, this, N4JSPackage.EXPORTED_VARIABLE_STATEMENT__DECLARED_MODIFIERS);
+			declaredModifiers = new EDataTypeEList<N4Modifier>(N4Modifier.class, this, N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__DECLARED_MODIFIERS);
 		}
 		return declaredModifiers;
 	}
@@ -354,7 +354,7 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST:
 				return basicSetAnnotationList(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
@@ -368,9 +368,9 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST:
 				return getAnnotationList();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__DECLARED_MODIFIERS:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__DECLARED_MODIFIERS:
 				return getDeclaredModifiers();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -385,10 +385,10 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST:
 				setAnnotationList((AnnotationList)newValue);
 				return;
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__DECLARED_MODIFIERS:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__DECLARED_MODIFIERS:
 				getDeclaredModifiers().clear();
 				getDeclaredModifiers().addAll((Collection<? extends N4Modifier>)newValue);
 				return;
@@ -404,10 +404,10 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST:
 				setAnnotationList((AnnotationList)null);
 				return;
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__DECLARED_MODIFIERS:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__DECLARED_MODIFIERS:
 				getDeclaredModifiers().clear();
 				return;
 		}
@@ -422,9 +422,9 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST:
 				return annotationList != null;
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__DECLARED_MODIFIERS:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__DECLARED_MODIFIERS:
 				return declaredModifiers != null && !declaredModifiers.isEmpty();
 		}
 		return super.eIsSet(featureID);
@@ -449,13 +449,13 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 		}
 		if (baseClass == AnnotableScriptElement.class) {
 			switch (derivedFeatureID) {
-				case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST: return N4JSPackage.ANNOTABLE_SCRIPT_ELEMENT__ANNOTATION_LIST;
+				case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST: return N4JSPackage.ANNOTABLE_SCRIPT_ELEMENT__ANNOTATION_LIST;
 				default: return -1;
 			}
 		}
 		if (baseClass == ModifiableElement.class) {
 			switch (derivedFeatureID) {
-				case N4JSPackage.EXPORTED_VARIABLE_STATEMENT__DECLARED_MODIFIERS: return N4JSPackage.MODIFIABLE_ELEMENT__DECLARED_MODIFIERS;
+				case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__DECLARED_MODIFIERS: return N4JSPackage.MODIFIABLE_ELEMENT__DECLARED_MODIFIERS;
 				default: return -1;
 			}
 		}
@@ -481,13 +481,13 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 		}
 		if (baseClass == AnnotableScriptElement.class) {
 			switch (baseFeatureID) {
-				case N4JSPackage.ANNOTABLE_SCRIPT_ELEMENT__ANNOTATION_LIST: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT__ANNOTATION_LIST;
+				case N4JSPackage.ANNOTABLE_SCRIPT_ELEMENT__ANNOTATION_LIST: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__ANNOTATION_LIST;
 				default: return -1;
 			}
 		}
 		if (baseClass == ModifiableElement.class) {
 			switch (baseFeatureID) {
-				case N4JSPackage.MODIFIABLE_ELEMENT__DECLARED_MODIFIERS: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT__DECLARED_MODIFIERS;
+				case N4JSPackage.MODIFIABLE_ELEMENT__DECLARED_MODIFIERS: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT__DECLARED_MODIFIERS;
 				default: return -1;
 			}
 		}
@@ -503,45 +503,45 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == NamespaceElement.class) {
 			switch (baseOperationID) {
-				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW;
+				case N4JSPackage.NAMESPACE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_HOLLOW;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == VariableStatement.class) {
 			switch (baseOperationID) {
-				case N4JSPackage.VARIABLE_STATEMENT___IS_HOLLOW: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW;
+				case N4JSPackage.VARIABLE_STATEMENT___IS_HOLLOW: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_HOLLOW;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
 		if (baseClass == ExportableElement.class) {
 			switch (baseOperationID) {
-				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED;
-				case N4JSPackage.EXPORTABLE_ELEMENT___IS_DECLARED_EXPORTED: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_DECLARED_EXPORTED;
-				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_BY_NAMESPACE: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_BY_NAMESPACE;
-				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT;
-				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_EXPORTED_NAME;
-				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_TOPLEVEL;
-				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_EXPORTED;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_DECLARED_EXPORTED: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_DECLARED_EXPORTED;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_BY_NAMESPACE: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_EXPORTED_BY_NAMESPACE;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT;
+				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___GET_EXPORTED_NAME;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_TOPLEVEL;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_HOLLOW;
 				default: return -1;
 			}
 		}
 		if (baseClass == AnnotableElement.class) {
 			switch (baseOperationID) {
-				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ANNOTATIONS: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS;
-				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS;
+				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ANNOTATIONS: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___GET_ANNOTATIONS;
+				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS;
 				default: return -1;
 			}
 		}
 		if (baseClass == AnnotableScriptElement.class) {
 			switch (baseOperationID) {
-				case N4JSPackage.ANNOTABLE_SCRIPT_ELEMENT___GET_ANNOTATIONS: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS;
+				case N4JSPackage.ANNOTABLE_SCRIPT_ELEMENT___GET_ANNOTATIONS: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___GET_ANNOTATIONS;
 				default: return -1;
 			}
 		}
 		if (baseClass == ModifiableElement.class) {
 			switch (baseOperationID) {
-				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_DECLARED_EXTERNAL;
-				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_DEFAULT_EXTERNAL;
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_DECLARED_EXTERNAL;
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_DEFAULT_EXTERNAL;
 				default: return -1;
 			}
 		}
@@ -556,29 +556,29 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_EXTERNAL:
 				return isExternal();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_DECLARED_EXTERNAL:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_DECLARED_EXTERNAL:
 				return isDeclaredExternal();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_DEFAULT_EXTERNAL:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_DEFAULT_EXTERNAL:
 				return isDefaultExternal();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___GET_ANNOTATIONS:
 				return getAnnotations();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS:
 				return getAllAnnotations();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_EXPORTED:
 				return isExported();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_DECLARED_EXPORTED:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_DECLARED_EXPORTED:
 				return isDeclaredExported();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_BY_NAMESPACE:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_EXPORTED_BY_NAMESPACE:
 				return isExportedByNamespace();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT:
 				return isExportedAsDefault();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_EXPORTED_NAME:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___GET_EXPORTED_NAME:
 				return getExportedName();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_TOPLEVEL:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_TOPLEVEL:
 				return isToplevel();
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_HOLLOW:
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT___IS_HOLLOW:
 				return isHollow();
 		}
 		return super.eInvoke(operationID, arguments);
@@ -600,4 +600,4 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 		return result.toString();
 	}
 
-} //ExportedVariableStatementImpl
+} //ExportableVariableStatementImpl

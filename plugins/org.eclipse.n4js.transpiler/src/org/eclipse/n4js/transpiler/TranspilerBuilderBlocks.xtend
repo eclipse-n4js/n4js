@@ -36,7 +36,7 @@ import org.eclipse.n4js.n4JS.EqualityExpression
 import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
+import org.eclipse.n4js.n4JS.ExportableVariableStatement
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
@@ -137,13 +137,13 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
-	public static def VariableStatement _VariableStatement(boolean exported, VariableDeclaration... varDecls) {
-		return _VariableStatement(exported, VariableStatementKeyword.VAR, varDecls);
+	public static def VariableStatement _VariableStatement(boolean exportable, VariableDeclaration... varDecls) {
+		return _VariableStatement(exportable, VariableStatementKeyword.VAR, varDecls);
 	}
 
-	public static def VariableStatement _VariableStatement(boolean exported, VariableStatementKeyword keyword, VariableDeclaration... varDecls) {
-		if(exported) {
-			return _ExportedVariableStatement(keyword, varDecls);
+	public static def VariableStatement _VariableStatement(boolean exportable, VariableStatementKeyword keyword, VariableDeclaration... varDecls) {
+		if(exportable) {
+			return _ExportableVariableStatement(keyword, varDecls);
 		} else {
 			return _VariableStatement(keyword, varDecls);
 		}
@@ -159,8 +159,8 @@ public class TranspilerBuilderBlocks
 		return result;
 	}
 
-	public static def ExportedVariableStatement _ExportedVariableStatement(VariableStatementKeyword keyword, VariableDeclarationOrBinding... varDecls) {
-		val result = N4JSFactory.eINSTANCE.createExportedVariableStatement;
+	public static def ExportableVariableStatement _ExportableVariableStatement(VariableStatementKeyword keyword, VariableDeclarationOrBinding... varDecls) {
+		val result = N4JSFactory.eINSTANCE.createExportableVariableStatement;
 		result.varStmtKeyword = keyword;
 		result.varDeclsOrBindings += varDecls.filterNull;
 		return result;

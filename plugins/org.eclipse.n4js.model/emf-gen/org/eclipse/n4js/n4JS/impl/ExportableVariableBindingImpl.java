@@ -17,25 +17,25 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportableVariableBinding;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 
 import org.eclipse.n4js.ts.types.TVariable;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Exported Variable Declaration</b></em>'.
+ * An implementation of the model object '<em><b>Exportable Variable Binding</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportedVariableDeclarationImpl#getDefinedVariable <em>Defined Variable</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportableVariableBindingImpl#getDefinedVariable <em>Defined Variable</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ExportedVariableDeclarationImpl extends VariableDeclarationImpl implements ExportedVariableDeclaration {
+public class ExportableVariableBindingImpl extends VariableBindingImpl implements ExportableVariableBinding {
 	/**
 	 * The cached value of the '{@link #getDefinedVariable() <em>Defined Variable</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -51,7 +51,7 @@ public class ExportedVariableDeclarationImpl extends VariableDeclarationImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ExportedVariableDeclarationImpl() {
+	protected ExportableVariableBindingImpl() {
 		super();
 	}
 
@@ -62,7 +62,7 @@ public class ExportedVariableDeclarationImpl extends VariableDeclarationImpl imp
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return N4JSPackage.Literals.EXPORTED_VARIABLE_DECLARATION;
+		return N4JSPackage.Literals.EXPORTABLE_VARIABLE_BINDING;
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class ExportedVariableDeclarationImpl extends VariableDeclarationImpl imp
 			definedVariable = (TVariable)eResolveProxy(oldDefinedVariable);
 			if (definedVariable != oldDefinedVariable) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.EXPORTABLE_VARIABLE_BINDING__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
 			}
 		}
 		return definedVariable;
@@ -102,7 +102,7 @@ public class ExportedVariableDeclarationImpl extends VariableDeclarationImpl imp
 		TVariable oldDefinedVariable = definedVariable;
 		definedVariable = newDefinedVariable;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORTABLE_VARIABLE_BINDING__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
 	}
 
 	/**
@@ -113,7 +113,7 @@ public class ExportedVariableDeclarationImpl extends VariableDeclarationImpl imp
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE:
+			case N4JSPackage.EXPORTABLE_VARIABLE_BINDING__DEFINED_VARIABLE:
 				if (resolve) return getDefinedVariable();
 				return basicGetDefinedVariable();
 		}
@@ -128,7 +128,7 @@ public class ExportedVariableDeclarationImpl extends VariableDeclarationImpl imp
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE:
+			case N4JSPackage.EXPORTABLE_VARIABLE_BINDING__DEFINED_VARIABLE:
 				setDefinedVariable((TVariable)newValue);
 				return;
 		}
@@ -143,7 +143,7 @@ public class ExportedVariableDeclarationImpl extends VariableDeclarationImpl imp
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE:
+			case N4JSPackage.EXPORTABLE_VARIABLE_BINDING__DEFINED_VARIABLE:
 				setDefinedVariable((TVariable)null);
 				return;
 		}
@@ -158,10 +158,10 @@ public class ExportedVariableDeclarationImpl extends VariableDeclarationImpl imp
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE:
+			case N4JSPackage.EXPORTABLE_VARIABLE_BINDING__DEFINED_VARIABLE:
 				return definedVariable != null;
 		}
 		return super.eIsSet(featureID);
 	}
 
-} //ExportedVariableDeclarationImpl
+} //ExportableVariableBindingImpl

@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Annotation
 import org.eclipse.n4js.n4JS.CatchBlock
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.FormalParameter
@@ -532,7 +532,7 @@ public class ASTProcessor extends AbstractProcessor {
 		}
 		if (targetNode instanceof VariableDeclaration) {
 			// don't save references to exported variable declarations
-			if (targetNode instanceof ExportedVariableDeclaration) {
+			if (targetNode instanceof ExportableVariableDeclaration) {
 				return;
 			}
 

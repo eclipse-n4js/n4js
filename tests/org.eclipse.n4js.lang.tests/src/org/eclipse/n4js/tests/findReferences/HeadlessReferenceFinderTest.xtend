@@ -16,8 +16,8 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.ExportDeclaration
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration
+import org.eclipse.n4js.n4JS.ExportableVariableStatement
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -95,8 +95,8 @@ class HeadlessReferenceFinderTest extends Assert {
 		val references = a.findReferencesTo
 		assertEquals(1, references.size)
 		val set = references.map[ resourceSet.getEObject(sourceEObjectUri, false) ].toSet
-		val varStmt = (scriptB.scriptElements.last as ExportDeclaration).exportedElement as ExportedVariableStatement
-		val varDecl = varStmt.varDecl.head as ExportedVariableDeclaration
+		val varStmt = (scriptB.scriptElements.last as ExportDeclaration).exportedElement as ExportableVariableStatement
+		val varDecl = varStmt.varDecl.head as ExportableVariableDeclaration
 		val typeRef = varDecl.declaredTypeRefInAST
 		assertTrue(set.contains(typeRef))
 	}

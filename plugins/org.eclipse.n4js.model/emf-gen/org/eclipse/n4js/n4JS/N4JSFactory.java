@@ -221,13 +221,13 @@ public interface N4JSFactory extends EFactory {
 	VariableStatement createVariableStatement();
 
 	/**
-	 * Returns a new object of class '<em>Exported Variable Statement</em>'.
+	 * Returns a new object of class '<em>Exportable Variable Statement</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Exported Variable Statement</em>'.
+	 * @return a new object of class '<em>Exportable Variable Statement</em>'.
 	 * @generated
 	 */
-	ExportedVariableStatement createExportedVariableStatement();
+	ExportableVariableStatement createExportableVariableStatement();
 
 	/**
 	 * Returns a new object of class '<em>Variable Binding</em>'.
@@ -239,13 +239,13 @@ public interface N4JSFactory extends EFactory {
 	VariableBinding createVariableBinding();
 
 	/**
-	 * Returns a new object of class '<em>Exported Variable Binding</em>'.
+	 * Returns a new object of class '<em>Exportable Variable Binding</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Exported Variable Binding</em>'.
+	 * @return a new object of class '<em>Exportable Variable Binding</em>'.
 	 * @generated
 	 */
-	ExportedVariableBinding createExportedVariableBinding();
+	ExportableVariableBinding createExportableVariableBinding();
 
 	/**
 	 * Returns a new object of class '<em>Variable Declaration</em>'.
@@ -257,13 +257,13 @@ public interface N4JSFactory extends EFactory {
 	VariableDeclaration createVariableDeclaration();
 
 	/**
-	 * Returns a new object of class '<em>Exported Variable Declaration</em>'.
+	 * Returns a new object of class '<em>Exportable Variable Declaration</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Exported Variable Declaration</em>'.
+	 * @return a new object of class '<em>Exportable Variable Declaration</em>'.
 	 * @generated
 	 */
-	ExportedVariableDeclaration createExportedVariableDeclaration();
+	ExportableVariableDeclaration createExportableVariableDeclaration();
 
 	/**
 	 * Returns a new object of class '<em>Empty Statement</em>'.

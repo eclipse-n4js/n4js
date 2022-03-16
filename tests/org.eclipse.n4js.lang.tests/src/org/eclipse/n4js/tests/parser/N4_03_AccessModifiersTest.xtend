@@ -10,8 +10,9 @@
  */
 package org.eclipse.n4js.tests.parser
 
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ExportDeclaration
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
+import org.eclipse.n4js.n4JS.ExportableVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
@@ -21,7 +22,6 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TypeAccessModifier
-import org.eclipse.emf.ecore.EObject
 import org.junit.Test
 
 class N4_03_AccessModifiersTest extends AbstractParserTest {
@@ -131,7 +131,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		'''.parse
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
-		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportedVariableStatement
+		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportableVariableStatement
 		assertTrue(varStatement.declaredModifiers.contains(N4Modifier.PUBLIC))
 	}
 
@@ -142,7 +142,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		'''.parse
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
-		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportedVariableStatement
+		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportableVariableStatement
 		assertTrue(varStatement.declaredModifiers.contains(N4Modifier.PROJECT))
 	}
 
@@ -153,7 +153,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		'''.parseESSuccessfully
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
-		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportedVariableStatement
+		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportableVariableStatement
 		assertTrue(varStatement.declaredModifiers.contains(N4Modifier.PUBLIC))
 	}
 
@@ -164,7 +164,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		'''.parseESSuccessfully
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
-		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportedVariableStatement
+		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportableVariableStatement
 		assertTrue(varStatement.declaredModifiers.contains(N4Modifier.PROJECT))
 	}
 
@@ -175,7 +175,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		'''.parse
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
-		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportedVariableStatement
+		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportableVariableStatement
 		assertTrue(varStatement.declaredModifiers.contains(N4Modifier.PUBLIC))
 	}
 
@@ -186,7 +186,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		'''.parse
 
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
-		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportedVariableStatement
+		val varStatement = (script.scriptElements.head as ExportDeclaration).exportedElement as ExportableVariableStatement
 		assertTrue(varStatement.declaredModifiers.contains(N4Modifier.PROJECT))
 	}
 

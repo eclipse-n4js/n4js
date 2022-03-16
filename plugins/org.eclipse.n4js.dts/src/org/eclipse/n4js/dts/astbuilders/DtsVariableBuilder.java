@@ -24,7 +24,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.BindingPatternBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.n4JS.BindingPattern;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
@@ -70,17 +70,17 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 	}
 
 	/** Call this method iff the parent of ctx is a namespace */
-	public ExportedVariableStatement consumeInNamespace(VariableStatementContext ctx) {
+	public ExportableVariableStatement consumeInNamespace(VariableStatementContext ctx) {
 		this.parentIsNamespace = true;
-		return (ExportedVariableStatement) consume(ctx);
+		return (ExportableVariableStatement) consume(ctx);
 	}
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
 		boolean exported = ParserContextUtil.isExported(ctx);
 		if (exported || parentIsNamespace) {
-			result = N4JSFactory.eINSTANCE.createExportedVariableStatement();
-			EList<N4Modifier> declaredModifiers = ((ExportedVariableStatement) result).getDeclaredModifiers();
+			result = N4JSFactory.eINSTANCE.createExportableVariableStatement();
+			EList<N4Modifier> declaredModifiers = ((ExportableVariableStatement) result).getDeclaredModifiers();
 			declaredModifiers.add(N4Modifier.EXTERNAL);
 			declaredModifiers.add(N4Modifier.PUBLIC);
 		} else {
@@ -102,7 +102,7 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 	@Override
 	public void enterBindingPatternBlock(BindingPatternBlockContext ctx) {
 		boolean exported = ParserContextUtil.isExported(ctx);
-		VariableBinding varBinding = exported ? N4JSFactory.eINSTANCE.createExportedVariableBinding()
+		VariableBinding varBinding = exported ? N4JSFactory.eINSTANCE.createExportableVariableBinding()
 				: N4JSFactory.eINSTANCE.createVariableBinding();
 
 		BindingPattern bindingPattern = new DtsBindingPatternBuilder(this).consume(ctx.bindingPattern());
@@ -115,7 +115,7 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 	@Override
 	public void enterVariableDeclaration(VariableDeclarationContext ctx) {
 		boolean exported = ParserContextUtil.isExported(ctx);
-		VariableDeclaration varDecl = exported ? N4JSFactory.eINSTANCE.createExportedVariableDeclaration()
+		VariableDeclaration varDecl = exported ? N4JSFactory.eINSTANCE.createExportableVariableDeclaration()
 				: N4JSFactory.eINSTANCE.createVariableDeclaration();
 		varDecl.setName(ctx.identifierName().getText());
 

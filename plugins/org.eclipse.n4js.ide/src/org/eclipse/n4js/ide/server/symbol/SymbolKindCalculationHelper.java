@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.server.symbol;
 
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.n4js.n4JS.BooleanLiteral;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
@@ -74,7 +74,7 @@ public class SymbolKindCalculationHelper {
 		if (obj instanceof N4TypeVariable) {
 			return SymbolKind.TypeParameter;
 		}
-		if (obj instanceof ExportedVariableStatement) {
+		if (obj instanceof ExportableVariableStatement) {
 			return SymbolKind.Variable;
 		}
 		if (obj instanceof NamedElement) {

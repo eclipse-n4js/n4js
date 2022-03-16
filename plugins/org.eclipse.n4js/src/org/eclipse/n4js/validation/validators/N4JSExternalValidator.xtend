@@ -19,7 +19,7 @@ import org.eclipse.n4js.n4JS.AnnotationList
 import org.eclipse.n4js.n4JS.EmptyStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
+import org.eclipse.n4js.n4JS.ExportableVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -30,6 +30,7 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -54,7 +55,6 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
-import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 
 /**
  */
@@ -196,7 +196,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	 * No assignment in n4jsd.
 	 */
 	@Check
-	def checkExternalVariableStatementAssigments(ExportedVariableStatement variableStatement) {
+	def checkExternalVariableStatementAssigments(ExportableVariableStatement variableStatement) {
 
 		if (variableStatement.external &&
 			!jsVariantHelper.isExternalMode(variableStatement)) {

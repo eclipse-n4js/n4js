@@ -474,8 +474,8 @@ public abstract class N4JSASTUtils {
 			return ((PropertyAssignment) obj).getDefinedMember();
 		} else if (obj instanceof FormalParameter) {
 			return ((FormalParameter) obj).getDefinedTypeElement();
-		} else if (obj instanceof ExportedVariableDeclaration) {
-			return ((ExportedVariableDeclaration) obj).getDefinedVariable();
+		} else if (obj instanceof ExportableVariableDeclaration) {
+			return ((ExportableVariableDeclaration) obj).getDefinedVariable();
 		}
 		// no type model element found
 		return null;

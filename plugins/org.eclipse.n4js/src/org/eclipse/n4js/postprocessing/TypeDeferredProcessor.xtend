@@ -13,7 +13,7 @@ package org.eclipse.n4js.postprocessing
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -101,7 +101,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 	def void handleDeferredTypeRefs_postChildren(RuleEnvironment G, EObject astNode, ASTMetaInfoCache cache) {
 		// DeferredTypeRefs related to poly expressions should not be handled here (poly computer responsible for this!)
 		switch (astNode) {
-			ExportedVariableDeclaration: {
+			ExportableVariableDeclaration: {
 				val tVariable = astNode.definedVariable;
 				setTypeRef(astNode, tVariable, false, G, cache);
 			}

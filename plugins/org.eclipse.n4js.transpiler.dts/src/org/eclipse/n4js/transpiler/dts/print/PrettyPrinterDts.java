@@ -37,8 +37,8 @@ import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
@@ -804,7 +804,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseVariableStatement(VariableStatement original) {
-		writeIf("declare ", !(original instanceof ExportedVariableStatement));
+		writeIf("declare ", !(original instanceof ExportableVariableStatement));
 		write(keyword(original.getVarStmtKeyword()));
 		write(' ');
 		process(original.getVarDeclsOrBindings(), ", ");
@@ -820,7 +820,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	}
 
 	@Override
-	public Boolean caseExportedVariableStatement(ExportedVariableStatement original) {
+	public Boolean caseExportableVariableStatement(ExportableVariableStatement original) {
 		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
 		// emitted there; so, no need to emit "export" in this method!
 		if (original.isExportedAsDefault()) {
@@ -843,9 +843,9 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		} else {
 			if (((NamespaceElement) original).isInNamespace()) {
 				if (!original.getVarDecl().isEmpty()
-						&& original.getVarDecl().get(0) instanceof ExportedVariableDeclaration) {
+						&& original.getVarDecl().get(0) instanceof ExportableVariableDeclaration) {
 
-					ExportedVariableDeclaration evd = (ExportedVariableDeclaration) original.getVarDecl().get(0);
+					ExportableVariableDeclaration evd = (ExportableVariableDeclaration) original.getVarDecl().get(0);
 					TVariable tVariable = state.info.getOriginalDefinedVariable(evd);
 					if (tVariable != null && tVariable.getTypeAccessModifier() != TypeAccessModifier.PRIVATE) {
 						write("export ");
@@ -872,7 +872,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	}
 
 	@Override
-	public Boolean caseExportedVariableDeclaration(ExportedVariableDeclaration original) {
+	public Boolean caseExportableVariableDeclaration(ExportableVariableDeclaration original) {
 		caseVariableDeclaration(original);
 		return DONE;
 	}

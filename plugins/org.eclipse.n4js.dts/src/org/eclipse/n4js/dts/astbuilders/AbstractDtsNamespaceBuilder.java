@@ -32,7 +32,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -184,7 +184,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-		ExportedVariableStatement vs = variableBuilder.consumeInNamespace(ctx);
+		ExportableVariableStatement vs = variableBuilder.consumeInNamespace(ctx);
 		addAndHandleExported(ctx, vs);
 	}
 

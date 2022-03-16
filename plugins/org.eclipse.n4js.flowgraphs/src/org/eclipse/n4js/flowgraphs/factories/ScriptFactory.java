@@ -21,7 +21,7 @@ import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
@@ -77,7 +77,7 @@ class ScriptFactory {
 		ScriptElement scriptElement = scriptElems.get(i);
 		if (scriptElement instanceof ExportDeclaration) {
 			ExportableElement expElem = ((ExportDeclaration) scriptElement).getExportedElement();
-			if (expElem instanceof ExportedVariableStatement) {
+			if (expElem instanceof ExportableVariableStatement) {
 				scriptElement = expElem;
 			}
 		}

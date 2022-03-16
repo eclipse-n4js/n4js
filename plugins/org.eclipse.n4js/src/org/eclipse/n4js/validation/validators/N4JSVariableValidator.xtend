@@ -12,7 +12,7 @@ package org.eclipse.n4js.validation.validators
 
 import java.util.List
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4ClassExpression
@@ -56,7 +56,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkUnusedVariables(VariableDeclaration varDecl) {
-		if (varDecl instanceof ExportedVariableDeclaration) {
+		if (varDecl instanceof ExportableVariableDeclaration) {
 			return;
 		}
 
@@ -77,7 +77,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 			return result;  // add nothing
 
 		// standard cases:
-		val targetForReferencesToVarDecl = if(varDecl instanceof ExportedVariableDeclaration) {
+		val targetForReferencesToVarDecl = if(varDecl instanceof ExportableVariableDeclaration) {
 			varDecl.definedVariable // references to ExportedVariableDeclarations point to the TVariable in the TModule
 		} else {
 			varDecl // references to local variables point directly to the VariableDeclaration

@@ -20,8 +20,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
@@ -109,9 +109,10 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 				}
 			}
 			if (nodes.isEmpty()) {
-				if (astNode instanceof ExportedVariableDeclaration
-						&& astNode.eContainer() instanceof ExportedVariableStatement) {
-					EList<VariableDeclaration> decls = ((ExportedVariableStatement) astNode.eContainer()).getVarDecl();
+				if (astNode instanceof ExportableVariableDeclaration
+						&& astNode.eContainer() instanceof ExportableVariableStatement) {
+					EList<VariableDeclaration> decls = ((ExportableVariableStatement) astNode.eContainer())
+							.getVarDecl();
 					if (decls.size() == 1) {
 						return getDocumentationNodes(astNode.eContainer());
 					}

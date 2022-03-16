@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
@@ -191,7 +191,7 @@ public class InformationRegistry {
 	 * Returns the original TVariable element, i.e. defined variable, of the given variable declaration in the
 	 * intermediate model.
 	 */
-	public TVariable getOriginalDefinedVariable(ExportedVariableDeclaration elementInIM) {
+	public TVariable getOriginalDefinedVariable(ExportableVariableDeclaration elementInIM) {
 		TranspilerUtils.assertIntermediateModelElement(elementInIM);
 		return originalDefinedVariable.get(elementInIM);
 	}
@@ -199,17 +199,17 @@ public class InformationRegistry {
 	/**
 	 * Sets the <em>original defined variable</em> of the given variable declaration in the intermediate model.
 	 */
-	public void setOriginalDefinedVariable(ExportedVariableDeclaration elementInIM, TVariable originalDefinedType) {
+	public void setOriginalDefinedVariable(ExportableVariableDeclaration elementInIM, TVariable originalDefinedType) {
 		TranspilerUtils.assertIntermediateModelElement(elementInIM);
 		setOriginalDefinedVariable_internal(elementInIM, originalDefinedType);
 	}
 
 	/**
-	 * As {@link #setOriginalDefinedVariable(ExportedVariableDeclaration, TVariable)}, but does not assert that
+	 * As {@link #setOriginalDefinedVariable(ExportableVariableDeclaration, TVariable)}, but does not assert that
 	 * <code>elementInIM</code> is actually contained in the intermediate model. Should only be called from
 	 * {@link PreparationStep}.
 	 */
-	public void setOriginalDefinedVariable_internal(ExportedVariableDeclaration elementInIM,
+	public void setOriginalDefinedVariable_internal(ExportableVariableDeclaration elementInIM,
 			TVariable originalDefinedType) {
 		originalDefinedVariable.put(elementInIM, originalDefinedType);
 	}

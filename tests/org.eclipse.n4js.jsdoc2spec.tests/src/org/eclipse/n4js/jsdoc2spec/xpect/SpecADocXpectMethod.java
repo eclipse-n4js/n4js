@@ -19,8 +19,8 @@ import org.eclipse.n4js.jsdoc2spec.adoc.ADocFactory;
 import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
 import org.eclipse.n4js.jsdoc2spec.adoc.SpecIdentifiableElementSection;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -83,20 +83,20 @@ public class SpecADocXpectMethod {
 		if (eobj instanceof ExportDeclaration) {
 			eobj = ((ExportDeclaration) eobj).getExportedElement();
 		}
-		if (eobj instanceof ExportedVariableStatement) {
-			EList<VariableDeclaration> decls = ((ExportedVariableStatement) eobj).getVarDecl();
+		if (eobj instanceof ExportableVariableStatement) {
+			EList<VariableDeclaration> decls = ((ExportableVariableStatement) eobj).getVarDecl();
 			if (decls.size() != 1) {
 				throw new IllegalStateException("JSDoc for var statements required exactly one declaration.");
 			}
 			return decls.get(0);
 		}
 		/** For variables using the new type notation and spec comment after export modifier */
-		if (eobj instanceof ExportedVariableDeclaration) {
-			return (ExportedVariableDeclaration) eobj;
+		if (eobj instanceof ExportableVariableDeclaration) {
+			return (ExportableVariableDeclaration) eobj;
 		}
 		/** For variables using the old type notation and spec comment after export modifier */
-		if (eobj instanceof TypeRef && eobj.eContainer() instanceof ExportedVariableDeclaration) {
-			return (ExportedVariableDeclaration) eobj.eContainer();
+		if (eobj instanceof TypeRef && eobj.eContainer() instanceof ExportableVariableDeclaration) {
+			return (ExportableVariableDeclaration) eobj.eContainer();
 		}
 		if (eobj instanceof TypeDefiningElement) {
 			return ((TypeDefiningElement) eobj).getDefinedType();

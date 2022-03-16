@@ -32,7 +32,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
@@ -119,8 +119,8 @@ public class XtMethods {
 				VariableStatement variableStatement = EcoreUtil2.getContainerOfType(context, VariableStatement.class);
 				if (variableStatement != null) {
 					context = variableStatement.getVarDecl().get(0);
-					if (context instanceof ExportedVariableDeclaration) {
-						actual = ((ExportedVariableDeclaration) context).getDefinedVariable().getTypeAccessModifier()
+					if (context instanceof ExportableVariableDeclaration) {
+						actual = ((ExportableVariableDeclaration) context).getDefinedVariable().getTypeAccessModifier()
 								.getName();
 					} else if (context instanceof VariableDeclaration) {
 						actual = "private";

@@ -245,8 +245,8 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createVariableStatementAdapter();
 			}
 			@Override
-			public Adapter caseExportedVariableStatement(ExportedVariableStatement object) {
-				return createExportedVariableStatementAdapter();
+			public Adapter caseExportableVariableStatement(ExportableVariableStatement object) {
+				return createExportableVariableStatementAdapter();
 			}
 			@Override
 			public Adapter caseVariableDeclarationOrBinding(VariableDeclarationOrBinding object) {
@@ -257,16 +257,16 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createVariableBindingAdapter();
 			}
 			@Override
-			public Adapter caseExportedVariableBinding(ExportedVariableBinding object) {
-				return createExportedVariableBindingAdapter();
+			public Adapter caseExportableVariableBinding(ExportableVariableBinding object) {
+				return createExportableVariableBindingAdapter();
 			}
 			@Override
 			public Adapter caseVariableDeclaration(VariableDeclaration object) {
 				return createVariableDeclarationAdapter();
 			}
 			@Override
-			public Adapter caseExportedVariableDeclaration(ExportedVariableDeclaration object) {
-				return createExportedVariableDeclarationAdapter();
+			public Adapter caseExportableVariableDeclaration(ExportableVariableDeclaration object) {
+				return createExportableVariableDeclarationAdapter();
 			}
 			@Override
 			public Adapter caseEmptyStatement(EmptyStatement object) {
@@ -1411,16 +1411,16 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportedVariableStatement <em>Exported Variable Statement</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportableVariableStatement <em>Exportable Variable Statement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableStatement
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableStatement
 	 * @generated
 	 */
-	public Adapter createExportedVariableStatementAdapter() {
+	public Adapter createExportableVariableStatementAdapter() {
 		return null;
 	}
 
@@ -1453,16 +1453,16 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportedVariableBinding <em>Exported Variable Binding</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportableVariableBinding <em>Exportable Variable Binding</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableBinding
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableBinding
 	 * @generated
 	 */
-	public Adapter createExportedVariableBindingAdapter() {
+	public Adapter createExportableVariableBindingAdapter() {
 		return null;
 	}
 
@@ -1481,16 +1481,16 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportedVariableDeclaration <em>Exported Variable Declaration</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportableVariableDeclaration <em>Exportable Variable Declaration</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableDeclaration
+	 * @see org.eclipse.n4js.n4JS.ExportableVariableDeclaration
 	 * @generated
 	 */
-	public Adapter createExportedVariableDeclarationAdapter() {
+	public Adapter createExportableVariableDeclarationAdapter() {
 		return null;
 	}
 

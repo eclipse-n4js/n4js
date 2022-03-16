@@ -451,19 +451,19 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT: {
-				ExportedVariableStatement exportedVariableStatement = (ExportedVariableStatement)theEObject;
-				T1 result = caseExportedVariableStatement(exportedVariableStatement);
-				if (result == null) result = caseVariableStatement(exportedVariableStatement);
-				if (result == null) result = caseExportableElement(exportedVariableStatement);
-				if (result == null) result = caseAnnotableScriptElement(exportedVariableStatement);
-				if (result == null) result = caseModifiableElement(exportedVariableStatement);
-				if (result == null) result = caseStatement(exportedVariableStatement);
-				if (result == null) result = caseVariableDeclarationContainer(exportedVariableStatement);
-				if (result == null) result = caseNamespaceElement(exportedVariableStatement);
-				if (result == null) result = caseAnnotableElement(exportedVariableStatement);
-				if (result == null) result = caseScriptElement(exportedVariableStatement);
-				if (result == null) result = caseControlFlowElement(exportedVariableStatement);
+			case N4JSPackage.EXPORTABLE_VARIABLE_STATEMENT: {
+				ExportableVariableStatement exportableVariableStatement = (ExportableVariableStatement)theEObject;
+				T1 result = caseExportableVariableStatement(exportableVariableStatement);
+				if (result == null) result = caseVariableStatement(exportableVariableStatement);
+				if (result == null) result = caseExportableElement(exportableVariableStatement);
+				if (result == null) result = caseAnnotableScriptElement(exportableVariableStatement);
+				if (result == null) result = caseModifiableElement(exportableVariableStatement);
+				if (result == null) result = caseStatement(exportableVariableStatement);
+				if (result == null) result = caseVariableDeclarationContainer(exportableVariableStatement);
+				if (result == null) result = caseNamespaceElement(exportableVariableStatement);
+				if (result == null) result = caseAnnotableElement(exportableVariableStatement);
+				if (result == null) result = caseScriptElement(exportableVariableStatement);
+				if (result == null) result = caseControlFlowElement(exportableVariableStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -482,12 +482,12 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4JSPackage.EXPORTED_VARIABLE_BINDING: {
-				ExportedVariableBinding exportedVariableBinding = (ExportedVariableBinding)theEObject;
-				T1 result = caseExportedVariableBinding(exportedVariableBinding);
-				if (result == null) result = caseVariableBinding(exportedVariableBinding);
-				if (result == null) result = caseVariableDeclarationOrBinding(exportedVariableBinding);
-				if (result == null) result = caseControlFlowElement(exportedVariableBinding);
+			case N4JSPackage.EXPORTABLE_VARIABLE_BINDING: {
+				ExportableVariableBinding exportableVariableBinding = (ExportableVariableBinding)theEObject;
+				T1 result = caseExportableVariableBinding(exportableVariableBinding);
+				if (result == null) result = caseVariableBinding(exportableVariableBinding);
+				if (result == null) result = caseVariableDeclarationOrBinding(exportableVariableBinding);
+				if (result == null) result = caseControlFlowElement(exportableVariableBinding);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -506,19 +506,19 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4JSPackage.EXPORTED_VARIABLE_DECLARATION: {
-				ExportedVariableDeclaration exportedVariableDeclaration = (ExportedVariableDeclaration)theEObject;
-				T1 result = caseExportedVariableDeclaration(exportedVariableDeclaration);
-				if (result == null) result = caseVariableDeclaration(exportedVariableDeclaration);
-				if (result == null) result = caseVariableDeclarationOrBinding(exportedVariableDeclaration);
-				if (result == null) result = caseAnnotableElement(exportedVariableDeclaration);
-				if (result == null) result = caseVariable(exportedVariableDeclaration);
-				if (result == null) result = caseControlFlowElement(exportedVariableDeclaration);
-				if (result == null) result = caseTypedElement(exportedVariableDeclaration);
-				if (result == null) result = caseIdentifiableElement(exportedVariableDeclaration);
-				if (result == null) result = caseNamedElement(exportedVariableDeclaration);
-				if (result == null) result = caseTypeProvidingElement(exportedVariableDeclaration);
-				if (result == null) result = caseTypableElement(exportedVariableDeclaration);
+			case N4JSPackage.EXPORTABLE_VARIABLE_DECLARATION: {
+				ExportableVariableDeclaration exportableVariableDeclaration = (ExportableVariableDeclaration)theEObject;
+				T1 result = caseExportableVariableDeclaration(exportableVariableDeclaration);
+				if (result == null) result = caseVariableDeclaration(exportableVariableDeclaration);
+				if (result == null) result = caseVariableDeclarationOrBinding(exportableVariableDeclaration);
+				if (result == null) result = caseAnnotableElement(exportableVariableDeclaration);
+				if (result == null) result = caseVariable(exportableVariableDeclaration);
+				if (result == null) result = caseControlFlowElement(exportableVariableDeclaration);
+				if (result == null) result = caseTypedElement(exportableVariableDeclaration);
+				if (result == null) result = caseIdentifiableElement(exportableVariableDeclaration);
+				if (result == null) result = caseNamedElement(exportableVariableDeclaration);
+				if (result == null) result = caseTypeProvidingElement(exportableVariableDeclaration);
+				if (result == null) result = caseTypableElement(exportableVariableDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -2590,17 +2590,17 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Exported Variable Statement</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Exportable Variable Statement</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Exported Variable Statement</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Exportable Variable Statement</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T1 caseExportedVariableStatement(ExportedVariableStatement object) {
+	public T1 caseExportableVariableStatement(ExportableVariableStatement object) {
 		return null;
 	}
 
@@ -2635,17 +2635,17 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Exported Variable Binding</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Exportable Variable Binding</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Exported Variable Binding</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Exportable Variable Binding</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T1 caseExportedVariableBinding(ExportedVariableBinding object) {
+	public T1 caseExportableVariableBinding(ExportableVariableBinding object) {
 		return null;
 	}
 
@@ -2665,17 +2665,17 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Exported Variable Declaration</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Exportable Variable Declaration</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Exported Variable Declaration</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Exportable Variable Declaration</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public T1 caseExportedVariableDeclaration(ExportedVariableDeclaration object) {
+	public T1 caseExportableVariableDeclaration(ExportableVariableDeclaration object) {
 		return null;
 	}
 

@@ -16,7 +16,7 @@ import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ExportableElement
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
+import org.eclipse.n4js.n4JS.ExportableVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.MethodDeclaration
@@ -299,7 +299,7 @@ public class N4JSTypesBuilder {
 				TypeDefiningElement: {
 					rlis.topLevelTypesIdx = n.relinkType(target, preLinkingPhase, rlis.topLevelTypesIdx);
 				}
-				ExportedVariableStatement: {
+				ExportableVariableStatement: {
 					rlis.variableIdx = n.relinkType(target, preLinkingPhase, rlis.variableIdx)
 				}
 			}
@@ -398,7 +398,7 @@ public class N4JSTypesBuilder {
 		return idx;
 	}
 
-	def protected dispatch int relinkType(ExportedVariableStatement n4VariableStatement, AbstractNamespace target,
+	def protected dispatch int relinkType(ExportableVariableStatement n4VariableStatement, AbstractNamespace target,
 		boolean preLinkingPhase, int idx) {
 		return n4VariableStatement.relinkVariableTypes(target, preLinkingPhase, idx)
 	}
@@ -416,7 +416,7 @@ public class N4JSTypesBuilder {
 				}
 				TypeDefiningElement:
 					n.createType(target, preLinkingPhase)
-				ExportedVariableStatement:
+				ExportableVariableStatement:
 					n.createType(target, preLinkingPhase)
 			}
 			if (!(n instanceof N4AbstractNamespaceDeclaration)) {
@@ -481,7 +481,7 @@ public class N4JSTypesBuilder {
 		n4FunctionExpr.createTFunction(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(ExportedVariableStatement n4VariableStatement, AbstractNamespace target,
+	def protected dispatch void createType(ExportableVariableStatement n4VariableStatement, AbstractNamespace target,
 		boolean preLinkingPhase) {
 		n4VariableStatement.createVariableTypes(target, preLinkingPhase)
 	}

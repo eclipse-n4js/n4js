@@ -12,8 +12,8 @@ package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration
+import org.eclipse.n4js.n4JS.ExportableVariableStatement
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.VariableStatement
@@ -27,7 +27,7 @@ package class N4JSVariableStatementTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package int relinkVariableTypes(VariableStatement n4VariableStatement, AbstractNamespace target, boolean preLinkingPhase, int start) {
-		return n4VariableStatement.varDecl.filter(ExportedVariableDeclaration).fold(start) [ idx, decl |
+		return n4VariableStatement.varDecl.filter(ExportableVariableDeclaration).fold(start) [ idx, decl |
 			if (decl.relinkVariableType(target, idx)) {
 				return idx + 1;
 			}
@@ -35,7 +35,7 @@ package class N4JSVariableStatementTypesBuilder {
 		];
 	}
 
-	def private boolean relinkVariableType(ExportedVariableDeclaration n4VariableDeclaration, AbstractNamespace target, int idx) {
+	def private boolean relinkVariableType(ExportableVariableDeclaration n4VariableDeclaration, AbstractNamespace target, int idx) {
 		if(n4VariableDeclaration.name === null) {
 			return false
 		}
@@ -53,10 +53,10 @@ package class N4JSVariableStatementTypesBuilder {
 	}
 
 	def private Iterable<TVariable> createVariables(VariableStatement n4VariableStatement, boolean preLinkingPhase) {
-		n4VariableStatement.varDecl.filter(ExportedVariableDeclaration).map[createVariable(n4VariableStatement, preLinkingPhase)].filterNull
+		n4VariableStatement.varDecl.filter(ExportableVariableDeclaration).map[createVariable(n4VariableStatement, preLinkingPhase)].filterNull
 	}
 
-	def private TVariable createVariable(ExportedVariableDeclaration n4VariableDeclaration, VariableStatement n4VariableStatement, boolean preLinkingPhase) {
+	def private TVariable createVariable(ExportableVariableDeclaration n4VariableDeclaration, VariableStatement n4VariableStatement, boolean preLinkingPhase) {
 		if(n4VariableDeclaration.name === null) {
 			return null
 		}
@@ -66,12 +66,9 @@ package class N4JSVariableStatementTypesBuilder {
 		variable.const = n4VariableDeclaration.const;
 		variable.objectLiteral = n4VariableDeclaration.expression instanceof ObjectLiteral;
 		variable.newExpression = n4VariableDeclaration.expression instanceof NewExpression;
-		if (n4VariableStatement instanceof ExportedVariableStatement) {
-			variable.exportedName = n4VariableStatement.exportedName
-														?: n4VariableDeclaration.name // FIXME temporary hack to work around broken inheritance structure in n4js.xcore!!!!
+		variable.exportedName = n4VariableDeclaration.exportedName
+		if (n4VariableStatement instanceof ExportableVariableStatement) {
 			variable.setTypeAccessModifier(n4VariableStatement)
-		} else {
-			variable.exportedName = null
 		}
 
 		variable.copyAnnotations(n4VariableDeclaration, preLinkingPhase)
@@ -86,7 +83,7 @@ package class N4JSVariableStatementTypesBuilder {
 		return variable
 	}
 
-	def private void setVariableType(TVariable variable, ExportedVariableDeclaration n4VariableDeclaration, boolean preLinkingPhase) {
+	def private void setVariableType(TVariable variable, ExportableVariableDeclaration n4VariableDeclaration, boolean preLinkingPhase) {
 		if(n4VariableDeclaration.declaredTypeRefInAST!==null) {
 			if (!preLinkingPhase)
 			// 	type of field was declared explicitly

@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.typesystem
 
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
@@ -46,7 +46,7 @@ class TypeAliasResolutionTest extends AbstractTypesystemTest {
 			export let x: S;
 		'''.parseAndValidateSuccessfully;
 
-		val varDecl = script.eAllContents.filter(ExportedVariableDeclaration).head;
+		val varDecl = script.eAllContents.filter(ExportableVariableDeclaration).head;
 		assertResolutionBothSides("S <=> string", varDecl.declaredTypeRefNode, varDecl.definedVariable.typeRef);
 	}	
 

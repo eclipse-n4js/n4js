@@ -17,7 +17,7 @@ import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.ModifiableElement
@@ -151,7 +151,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 		if (annotation !== null) {
 			val typeAccessModifier = switch (it : exportableElement) {
 				VariableStatement:
-					it.varDecl.filter(ExportedVariableDeclaration).head?.definedVariable?.typeAccessModifier
+					it.varDecl.filter(ExportableVariableDeclaration).head?.definedVariable?.typeAccessModifier
 				FunctionDeclaration:
 					definedType?.typeAccessModifier
 				TypeDefiningElement:

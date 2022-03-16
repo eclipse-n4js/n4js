@@ -24,7 +24,7 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.ModifierUtils;
@@ -379,7 +379,7 @@ public class SemanticChangeProvider {
 				offset = astNodeForKeyword(element, elementKeywordProvider.keyword(element)).getOffset();
 			}
 
-			if (element instanceof ExportedVariableStatement) {
+			if (element instanceof ExportableVariableStatement) {
 				INode exportKeyword = astNodeForKeyword(element.eContainer(), N4JSLanguageConstants.EXPORT_KEYWORD);
 				offset = exportKeyword.getOffset() + exportKeyword.getLength() + 1;
 			}

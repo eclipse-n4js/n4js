@@ -420,7 +420,7 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
-	public Boolean caseExportedVariableStatement(ExportedVariableStatement original) {
+	public Boolean caseExportableVariableStatement(ExportableVariableStatement original) {
 		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
 		// emitted there; so, no need to emit "export" in this method!
 		if (!original.getDeclaredModifiers().isEmpty()) {
@@ -457,7 +457,7 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
-	public Boolean caseExportedVariableDeclaration(ExportedVariableDeclaration original) {
+	public Boolean caseExportableVariableDeclaration(ExportableVariableDeclaration original) {
 		caseVariableDeclaration(original);
 		return DONE;
 	}
@@ -473,7 +473,7 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
-	public Boolean caseExportedVariableBinding(ExportedVariableBinding original) {
+	public Boolean caseExportableVariableBinding(ExportableVariableBinding original) {
 		caseVariableBinding(original);
 		return DONE;
 	}

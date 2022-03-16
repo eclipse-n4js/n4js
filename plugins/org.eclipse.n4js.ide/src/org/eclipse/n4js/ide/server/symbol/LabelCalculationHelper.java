@@ -12,7 +12,7 @@ package org.eclipse.n4js.ide.server.symbol;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
+import org.eclipse.n4js.n4JS.ExportableVariableStatement;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
@@ -81,9 +81,9 @@ public class LabelCalculationHelper {
 			N4SetterDeclaration setterDeclaration = (N4SetterDeclaration) obj;
 			return getSymbolLabel(setterDeclaration.getDefinedSetter());
 		}
-		if (obj instanceof ExportedVariableStatement) {
+		if (obj instanceof ExportableVariableStatement) {
 			// comma separated list of all contained variable names
-			ExportedVariableStatement exportedVariableStatement = (ExportedVariableStatement) obj;
+			ExportableVariableStatement exportedVariableStatement = (ExportableVariableStatement) obj;
 			String text = IterableExtensions.join(exportedVariableStatement.getVarDecl(), ", ", vd -> vd.getName());
 			return text;
 		}

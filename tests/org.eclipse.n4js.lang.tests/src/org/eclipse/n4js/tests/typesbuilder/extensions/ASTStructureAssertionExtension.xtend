@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -219,7 +219,7 @@ class ASTStructureAssertionExtension {
 		n4Variable
 	}
 
-	def dispatch assertDefinedVariable(String phase, ExportedVariableDeclaration variableDeclaration, Resource resource,
+	def dispatch assertDefinedVariable(String phase, ExportableVariableDeclaration variableDeclaration, Resource resource,
 		Class<?> expressionType) {
 		val tVariable = variableDeclaration.definedVariable
 		assertEquals(phase + ": expected name", variableDeclaration.name, tVariable.name)

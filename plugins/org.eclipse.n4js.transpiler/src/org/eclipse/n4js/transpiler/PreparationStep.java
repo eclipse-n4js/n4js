@@ -22,7 +22,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.generator.UnresolvedProxyInSubGeneratorException;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
+import org.eclipse.n4js.n4JS.ExportableVariableDeclaration;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
@@ -216,9 +216,9 @@ public class PreparationStep {
 						((TypeDefiningElement) eObject).getDefinedType());
 			}
 
-			if (copy instanceof ExportedVariableDeclaration) {
-				info.setOriginalDefinedVariable_internal((ExportedVariableDeclaration) copy,
-						((ExportedVariableDeclaration) eObject).getDefinedVariable());
+			if (copy instanceof ExportableVariableDeclaration) {
+				info.setOriginalDefinedVariable_internal((ExportableVariableDeclaration) copy,
+						((ExportableVariableDeclaration) eObject).getDefinedVariable());
 			}
 
 			if (copy instanceof Script_IM) {
@@ -302,7 +302,8 @@ public class PreparationStep {
 			while (iter2.hasNext()) {
 				final EObject obj = iter2.next();
 				if (obj instanceof Variable) { // note: this also includes FormalParameters and CatchVariables
-					final boolean isExported = obj instanceof ExportedVariableDeclaration;
+					final boolean isExported = obj instanceof ExportableVariableDeclaration
+							&& ((ExportableVariableDeclaration) obj).isExported();
 					if (!isExported) {
 						// don't do this for exported variable declarations, because we already have a SymbolTableEntry
 						// pointing to the TVariable. Calling #getSymbolTableEntry() again with the declaration instead
