@@ -43,6 +43,7 @@ import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
@@ -518,18 +519,23 @@ public class ASTProcessor extends AbstractProcessor {
 		}
 	}
 
-	def private recordReferencesToLocalVariables(EReference reference, EObject sourceNode, EObject targetNode,
+	def private recordReferencesToLocalVariables(EReference reference, EObject sourceNode, EObject targetObj,
 		ASTMetaInfoCache cache) {
 
 		// If targetNode is still a proxy its resolution failed,
 		// therefore it should be skipped.
-		if (targetNode.eIsProxy) {
+		if (targetObj.eIsProxy) {
 			return;
 		}
 		// skip non-local references
-		if (sourceNode.eResource !== targetNode.eResource) {
+		if (sourceNode.eResource !== targetObj.eResource) {
 			return;
 		}
+		val targetNode = if (targetObj instanceof TVariable) {
+			targetObj.astElement // safe because we just made sure we are in the same resource
+		} else {
+			targetObj
+		};
 		if (targetNode instanceof VariableDeclaration) {
 			// don't save references to exported variable declarations
 			if (targetNode instanceof ExportableVariableDeclaration) {
