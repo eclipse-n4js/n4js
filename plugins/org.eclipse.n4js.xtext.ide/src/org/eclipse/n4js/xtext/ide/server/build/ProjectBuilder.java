@@ -437,20 +437,19 @@ public class ProjectBuilder {
 			List<IResourceDescription.Delta> externalDeltas,
 			CancelIndicator cancelIndicator) {
 
-		XBuildRequest request = buildRequestFactory.getBuildRequest(workspaceManager.getWorkspaceConfig(),
-				projectConfig, changedFiles, deletedFiles, externalDeltas);
-
 		ImmutableProjectState currentProjectState = this.projectStateSnapshot.get();
 
 		ResourceDescriptionsData indexCopy = currentProjectState.internalGetResourceDescriptions().copy();
 		XSource2GeneratedMapping fileMappingsCopy = currentProjectState.getFileMappings().copy();
-
-		request.setIndex(indexCopy);
-		request.setFileMappings(fileMappingsCopy);
 		updateResourceSetIndex(indexCopy);
-		request.setResourceSet(resourceSet);
+
+		XBuildRequest request = buildRequestFactory.createBuildRequest(
+				workspaceManager.getWorkspaceConfig(), projectConfig,
+				changedFiles, deletedFiles, externalDeltas,
+				indexCopy, resourceSet, fileMappingsCopy,
+				true, true);
+
 		request.setCancelIndicator(cancelIndicator);
-		request.setBaseDir(getBaseDir());
 
 		return request;
 	}

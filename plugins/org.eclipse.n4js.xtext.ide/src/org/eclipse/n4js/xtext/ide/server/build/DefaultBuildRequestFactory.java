@@ -10,14 +10,15 @@
  */
 package org.eclipse.n4js.xtext.ide.server.build;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
-import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
 import com.google.inject.Singleton;
 
@@ -27,33 +28,51 @@ import com.google.inject.Singleton;
 @Singleton
 public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 
-	/** Create the build request. */
-	protected XBuildRequest getBuildRequest(String projectID) {
-		XBuildRequest result = new XBuildRequest(projectID);
-		return result;
+	@Override
+	public XBuildRequest createEmptyBuildRequest(WorkspaceConfigSnapshot workspaceConfig,
+			ProjectConfigSnapshot projectConfig) {
+
+		return createBuildRequest(workspaceConfig, projectConfig,
+				Collections.emptySet(), Collections.emptySet(), Collections.emptyList(),
+				null, null, null, true, false);
 	}
 
+	/** Create the build request. */
 	@Override
-	public XBuildRequest getBuildRequest(WorkspaceConfigSnapshot workspaceConfig, ProjectConfigSnapshot projectConfig,
-			Set<URI> changedFiles, Set<URI> deletedFiles, List<Delta> externalDeltas) {
+	public XBuildRequest createBuildRequest(
+			WorkspaceConfigSnapshot workspaceConfig,
+			ProjectConfigSnapshot projectConfig,
+			Collection<URI> dirtyFiles,
+			Collection<URI> deletedFiles,
+			Collection<IResourceDescription.Delta> externalDeltas,
+			ResourceDescriptionsData index,
+			WorkspaceAwareResourceSet resourceSet,
+			XSource2GeneratedMapping fileMappings,
+			boolean doValidate,
+			boolean writeStorageResources) {
 
 		String projectID = projectConfig.getName();
-		XBuildRequest result = getBuildRequest(projectID);
-
-		result.setIndexOnly(projectConfig.indexOnly());
-		result.setGeneratorEnabled(projectConfig.isGeneratorEnabled());
-
 		if (workspaceConfig.isInDependencyCycle(projectID)) {
-			changedFiles = new HashSet<>(changedFiles);
-			changedFiles.retainAll(projectConfig.getProjectDescriptionUris());
+			// remove all resources (except for the project description) from the build
+			// since cycles are not supported
+			dirtyFiles = new HashSet<>(dirtyFiles);
+			dirtyFiles.retainAll(projectConfig.getProjectDescriptionUris());
 			deletedFiles = new HashSet<>(deletedFiles);
 			deletedFiles.retainAll(projectConfig.getProjectDescriptionUris());
 		}
-		result.setDirtyFiles(changedFiles);
-		result.setDeletedFiles(deletedFiles);
-		result.setExternalDeltas(externalDeltas);
 
-		return result;
+		XBuildRequest request = new XBuildRequest(projectID, projectConfig.getPath(),
+				dirtyFiles, deletedFiles, externalDeltas,
+				index, resourceSet, fileMappings,
+				projectConfig.isGeneratorEnabled(), doValidate, projectConfig.indexOnly(), writeStorageResources);
+
+		onPostCreate(request);
+		return request;
+	}
+
+	@Override
+	public void onPostCreate(XBuildRequest request) {
+		// overwrite me
 	}
 
 }

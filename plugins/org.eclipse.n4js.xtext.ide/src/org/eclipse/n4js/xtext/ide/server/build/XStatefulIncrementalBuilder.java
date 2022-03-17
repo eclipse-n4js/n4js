@@ -93,7 +93,8 @@ public class XStatefulIncrementalBuilder {
 
 		try {
 			// @SuppressWarnings("hiding")
-			// this.request = initializeBuildRequest(this.request, context);
+			XBuildRequest oldRequest = this.request;
+			this.request = initializeBuildRequest(this.request, context);
 
 			XSource2GeneratedMapping newSource2GeneratedMapping = request.getFileMappings();
 

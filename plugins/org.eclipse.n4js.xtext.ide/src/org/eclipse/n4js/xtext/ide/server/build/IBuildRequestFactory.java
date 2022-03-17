@@ -10,19 +10,21 @@
  */
 package org.eclipse.n4js.xtext.ide.server.build;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Collection;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
 /**
  * Factory to create instances of {@link XBuildRequest}s
  */
 public interface IBuildRequestFactory {
+
+	XBuildRequest createEmptyBuildRequest(WorkspaceConfigSnapshot workspaceConfig, ProjectConfigSnapshot projectConfig);
 
 	/**
 	 * Create the build request for the given sets of files and deltas.
@@ -31,7 +33,7 @@ public interface IBuildRequestFactory {
 	 *            workspace configuration snapshot containing the project
 	 * @param projectConfig
 	 *            project configuration snapshot containing the {@link URI}s and {@link Delta}s
-	 * @param changedFiles
+	 * @param dirtyFiles
 	 *            set of changed files
 	 * @param deletedFiles
 	 *            set of deleted files
@@ -39,11 +41,17 @@ public interface IBuildRequestFactory {
 	 *            set of external deltas
 	 * @return the build request used during the build process.
 	 */
-	XBuildRequest getBuildRequest(
+	XBuildRequest createBuildRequest(
 			WorkspaceConfigSnapshot workspaceConfig,
 			ProjectConfigSnapshot projectConfig,
-			Set<URI> changedFiles,
-			Set<URI> deletedFiles,
-			List<IResourceDescription.Delta> externalDeltas);
+			Collection<URI> dirtyFiles,
+			Collection<URI> deletedFiles,
+			Collection<IResourceDescription.Delta> externalDeltas,
+			ResourceDescriptionsData index,
+			WorkspaceAwareResourceSet resourceSet,
+			XSource2GeneratedMapping fileMappings,
+			boolean doValidate,
+			boolean writeStorageResources);
 
+	void onPostCreate(XBuildRequest request);
 }

@@ -33,8 +33,7 @@ public class N4jscBuildRequestFactory extends DefaultBuildRequestFactory {
 
 	/** Create the build request. */
 	@Override
-	protected XBuildRequest getBuildRequest(String projectID) {
-		XBuildRequest result = super.getBuildRequest(projectID);
+	public void onPostCreate(XBuildRequest result) {
 		if (afterDeleteListener != null) {
 			result.addAfterDeleteListener(afterDeleteListener);
 		}
@@ -50,7 +49,6 @@ public class N4jscBuildRequestFactory extends DefaultBuildRequestFactory {
 		if (afterBuildRequestListener != null) {
 			result.addAfterBuildRequestListener(afterBuildRequestListener);
 		}
-		return result;
 	}
 
 	/** @return {@link AfterValidateListener} */

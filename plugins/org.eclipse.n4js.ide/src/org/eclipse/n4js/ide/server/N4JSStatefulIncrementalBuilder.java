@@ -34,15 +34,15 @@ import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.WorkspaceAwareResourceSet;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildContext;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
+import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
 import org.eclipse.n4js.xtext.ide.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.IFileSystemScanner;
+import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -56,44 +56,76 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 
 	static class AdjustedBuildRequest extends XBuildRequest {
 		final XBuildRequest delegate;
-		final ImmutableCollection<URI> dirtyFiles;
-		final ImmutableCollection<URI> deletedFiles;
-
-		AdjustedBuildRequest(XBuildRequest delegate) {
-			this(delegate, null, null);
-		}
 
 		AdjustedBuildRequest(XBuildRequest delegate, Collection<URI> dirtyFiles, Collection<URI> deletedFiles) {
-			super(delegate.getProjectName());
+
+			super(delegate.getProjectName(), delegate.getBaseDir(), dirtyFiles, deletedFiles,
+					delegate.getExternalDeltas(), delegate.getIndex(),
+					delegate.getResourceSet(), delegate.getFileMappings(),
+					delegate.isGeneratorEnabled(), delegate.isValidatorEnabled(), delegate.isIndexOnly(),
+					delegate.isWriteStorageResources());
+
 			this.delegate = delegate;
-			this.dirtyFiles = dirtyFiles == null ? null : ImmutableList.copyOf(dirtyFiles);
-			this.deletedFiles = deletedFiles == null ? null : ImmutableList.copyOf(deletedFiles);
 		}
 
 		@Override
-		public Collection<URI> getDirtyFiles() {
-			if (dirtyFiles == null) {
-				return super.getDirtyFiles();
-			}
-			return this.dirtyFiles;
+		public void addAfterValidateListener(AfterValidateListener listener) {
+			delegate.addAfterValidateListener(listener);
 		}
 
 		@Override
-		public void setDirtyFiles(Collection<URI> dirtyFiles) {
-			throw new IllegalStateException("no!");
+		public void afterValidate(URI source, List<? extends Issue> issues) {
+			delegate.afterValidate(source, issues);
 		}
 
 		@Override
-		public Collection<URI> getDeletedFiles() {
-			if (deletedFiles == null) {
-				return super.getDeletedFiles();
-			}
-			return this.deletedFiles;
+		public void addAfterGenerateListener(AfterGenerateListener listener) {
+			delegate.addAfterGenerateListener(listener);
 		}
 
 		@Override
-		public void setDeletedFiles(Collection<URI> deletedFiles) {
-			throw new IllegalStateException("no!");
+		public void afterGenerate(URI source, URI generated) {
+			delegate.afterGenerate(source, generated);
+		}
+
+		@Override
+		public void addAfterDeleteListener(AfterDeleteListener listener) {
+			delegate.addAfterDeleteListener(listener);
+		}
+
+		@Override
+		public void afterDelete(URI file) {
+			delegate.afterDelete(file);
+		}
+
+		@Override
+		public void addAffectedListener(AffectedListener listener) {
+			delegate.addAffectedListener(listener);
+		}
+
+		@Override
+		public void afterDetectedAsAffected(URI uri) {
+			delegate.afterDetectedAsAffected(uri);
+		}
+
+		@Override
+		public void addAfterBuildFileListener(AfterBuildFileListener listener) {
+			delegate.addAfterBuildFileListener(listener);
+		}
+
+		@Override
+		public void afterBuildFile(URI uri) {
+			delegate.afterBuildFile(uri);
+		}
+
+		@Override
+		public void addAfterBuildRequestListener(AfterBuildRequestListener listener) {
+			delegate.addAfterBuildRequestListener(listener);
+		}
+
+		@Override
+		public void afterBuildRequest(XBuildResult buildResult) {
+			delegate.afterBuildRequest(buildResult);
 		}
 	}
 
@@ -158,7 +190,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			// this is a normal initial build
 
 			WorkspaceAwareResourceSet resourceSet = initialRequest.getResourceSet();
-			List<URI> allUris = Lists.newArrayList(projectConfig.getAllContents());
+			Collection<URI> allUris = initialRequest.getDirtyFiles();
 			Set<URI> noDeps = new LinkedHashSet<>();
 			Multimap<URI, URI> dependsOn = LinkedHashMultimap.create();
 			Multimap<URI, URI> dependsOnInverse = LinkedHashMultimap.create();

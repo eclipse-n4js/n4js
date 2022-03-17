@@ -61,25 +61,16 @@ import com.google.inject.Inject;
 @SuppressWarnings({ "hiding" })
 public class XWorkspaceBuilder {
 
-	private static class AffectedResourcesRecordingFactory implements IBuildRequestFactory {
-		private final IBuildRequestFactory delegate;
+	private static class AffectedResourcesRecordingFactory extends DefaultBuildRequestFactory {
 		private final Set<URI> affected;
 
-		private AffectedResourcesRecordingFactory(IBuildRequestFactory delegate) {
-			this.delegate = delegate;
+		private AffectedResourcesRecordingFactory() {
 			this.affected = new HashSet<>();
 		}
 
 		@Override
-		public XBuildRequest getBuildRequest(WorkspaceConfigSnapshot workspaceConfig,
-				ProjectConfigSnapshot projectConfig, Set<URI> changedFiles, Set<URI> deletedFiles,
-				List<Delta> externalDeltas) {
-
-			XBuildRequest result = delegate.getBuildRequest(workspaceConfig, projectConfig, changedFiles, deletedFiles,
-					externalDeltas);
-
+		public void onPostCreate(XBuildRequest result) {
 			result.addAffectedListener(affected::add);
-			return result;
 		}
 
 		/**
@@ -253,9 +244,8 @@ public class XWorkspaceBuilder {
 		return cancelIndicator -> {
 			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
 
-				XBuildRequest buildRequest = buildRequestFactory.getBuildRequest(workspaceManager.getWorkspaceConfig(),
-						projectBuilder.getProjectConfig(), Collections.emptySet(), Collections.emptySet(),
-						Collections.emptyList());
+				XBuildRequest buildRequest = buildRequestFactory.createEmptyBuildRequest(
+						workspaceManager.getWorkspaceConfig(), projectBuilder.getProjectConfig());
 
 				projectBuilder.doClean(buildRequest, CancelIndicator.NullImpl);
 			}
@@ -445,8 +435,7 @@ public class XWorkspaceBuilder {
 				Set<URI> projectDeleted = project2deleted.getOrDefault(projectName, Collections.emptySet());
 
 				XBuildResult projectResult;
-				AffectedResourcesRecordingFactory recordingFactory = new AffectedResourcesRecordingFactory(
-						buildRequestFactory);
+				AffectedResourcesRecordingFactory recordingFactory = new AffectedResourcesRecordingFactory();
 				try {
 					projectResult = projectBuilder.doIncrementalBuild(
 							recordingFactory,

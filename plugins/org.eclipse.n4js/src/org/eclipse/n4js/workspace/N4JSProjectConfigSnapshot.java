@@ -49,6 +49,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * Extends Xtext's default {@link ProjectConfigSnapshot} by some additional attributes (e.g. project type).
@@ -283,8 +284,9 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return result.build();
 	}
 
-	public Iterable<URI> getAllContents() {
-		return IterableExtensions.flatMap(getSourceFolders(), N4JSSourceFolderSnapshot::getContents);
+	public Set<URI> getAllContents() {
+		return Sets.newLinkedHashSet(
+				IterableExtensions.flatMap(getSourceFolders(), N4JSSourceFolderSnapshot::getContents));
 	}
 
 	/**
@@ -301,7 +303,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		if (pd.getType() != ProjectType.PLAINJS) {
 			return false;
 		}
-		if (!pd.getN4JSProjectName().isScopeTypes()) {
+		if (pd.getN4JSProjectName() != null && !pd.getN4JSProjectName().isScopeTypes()) {
 			return false;
 		}
 		return true;
