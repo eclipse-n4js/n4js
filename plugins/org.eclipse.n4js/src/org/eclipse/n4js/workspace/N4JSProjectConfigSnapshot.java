@@ -10,9 +10,17 @@
  */
 package org.eclipse.n4js.workspace;
 
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
@@ -30,7 +38,9 @@ import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriExtensions;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -38,6 +48,7 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 /**
  * Extends Xtext's default {@link ProjectConfigSnapshot} by some additional attributes (e.g. project type).
@@ -270,5 +281,96 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			}
 		}
 		return result.build();
+	}
+
+	public Iterable<URI> getAllContents() {
+		return IterableExtensions.flatMap(getSourceFolders(), N4JSSourceFolderSnapshot::getContents);
+	}
+
+	/**
+	 * Returns {@code true} iff this is a plain js project in scope '@types'.
+	 * <p>
+	 * If {@code true}, the builder will build only the closure of all included files started from those files defined
+	 * in the tsconfig.json properties {@code files}, {@code include} and in the package.json properties {@code main},
+	 * {@code type}. As a consequence, there might be files in the source folders of this project that remain unbuilt.
+	 * <p>
+	 * If {@code false}, the builder will build all files included in the source folders.
+	 */
+	public boolean hasTsConfigBuildSemantic() {
+		ProjectDescription pd = getProjectDescription();
+		if (pd.getType() != ProjectType.PLAINJS) {
+			return false;
+		}
+		if (!pd.getN4JSProjectName().isScopeTypes()) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * If {@link #hasTsConfigBuildSemantic()} is {@code true}, this method returns a set of all {@link URI}s declared in
+	 * the tsconfig.json properties {@code files}, {@code include} and in the package.json properties {@code main},
+	 * {@code type}. Otherwise an empty set is returned.
+	 */
+	@SuppressWarnings("resource") // due to call to FileSystems.getDefault()
+	public Set<URI> computeStartUris(IFileSystemScanner fileSystemScanner) {
+		if (hasTsConfigBuildSemantic()) {
+			FileSystem fs = FileSystems.getDefault();
+			ProjectDescription pd = getProjectDescription();
+
+			List<Path> files = new ArrayList<>();
+			List<String> globsToInclude = new ArrayList<>();
+			List<String> globsToExclude = new ArrayList<>();
+
+			files.add(Path.of(pd.getMainModule()));
+			files.addAll(Lists.transform(pd.getTsFiles(), Path::of));
+			globsToInclude.addAll(pd.getTsInclude());
+			globsToExclude.addAll(pd.getTsExclude());
+
+			List<PathMatcher> pmInclude = new ArrayList<>();
+			List<PathMatcher> pmExclude = new ArrayList<>();
+			for (String glob : globsToInclude) {
+				PathMatcher pathMatcher = fs.getPathMatcher("glob:" + glob);
+				pmInclude.add(pathMatcher);
+			}
+			for (String glob : globsToExclude) {
+				PathMatcher pathMatcher = fs.getPathMatcher("glob:" + glob);
+				pmExclude.add(pathMatcher);
+			}
+
+			Set<URI> startUris = new LinkedHashSet<>();
+			LOOP_ALL: for (URI someUri : getAllContents()) {
+				Path somePath = Path.of(someUri.deresolve(getPath()).toFileString());
+				for (Path file : files) {
+					if (Objects.equals(file, somePath)) {
+						startUris.add(someUri);
+						continue LOOP_ALL;
+					}
+				}
+
+				boolean isIncluded = false;
+				LOOP_INCLUDED: for (PathMatcher pm : pmInclude) {
+					if (pm.matches(somePath)) {
+						isIncluded = true;
+						break LOOP_INCLUDED;
+					}
+				}
+				if (isIncluded) {
+					LOOP_EXCLUDED: for (PathMatcher pm : pmExclude) {
+						if (pm.matches(somePath)) {
+							isIncluded = false;
+							break LOOP_EXCLUDED;
+						}
+					}
+
+					if (isIncluded) {
+						startUris.add(someUri);
+					}
+				}
+			}
+			return startUris;
+		} else {
+			return Collections.emptySet();
+		}
 	}
 }

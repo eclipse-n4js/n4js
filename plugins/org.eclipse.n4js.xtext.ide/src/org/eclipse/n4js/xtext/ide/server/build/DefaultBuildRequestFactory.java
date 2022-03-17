@@ -15,53 +15,21 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildFileListener;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildRequestListener;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterDeleteListener;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterGenerateListener;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
  *
  */
-// TODO this should not be a stateful singleton
 @Singleton
 public class DefaultBuildRequestFactory implements IBuildRequestFactory {
-	@Inject(optional = true)
-	private AfterValidateListener afterValidateListener;
-	@Inject(optional = true)
-	private AfterGenerateListener afterGenerateListener;
-	@Inject(optional = true)
-	private AfterDeleteListener afterDeleteListener;
-	@Inject(optional = true)
-	private AfterBuildFileListener afterBuildFileListener;
-	@Inject(optional = true)
-	private AfterBuildRequestListener afterBuildRequestListener;
 
 	/** Create the build request. */
 	protected XBuildRequest getBuildRequest(String projectID) {
 		XBuildRequest result = new XBuildRequest(projectID);
-		if (afterDeleteListener != null) {
-			result.addAfterDeleteListener(afterDeleteListener);
-		}
-		if (afterValidateListener != null) {
-			result.addAfterValidateListener(afterValidateListener);
-		}
-		if (afterGenerateListener != null) {
-			result.addAfterGenerateListener(afterGenerateListener);
-		}
-		if (afterBuildFileListener != null) {
-			result.addAfterBuildFileListener(afterBuildFileListener);
-		}
-		if (afterBuildRequestListener != null) {
-			result.addAfterBuildRequestListener(afterBuildRequestListener);
-		}
 		return result;
 	}
 
@@ -83,60 +51,9 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 		}
 		result.setDirtyFiles(changedFiles);
 		result.setDeletedFiles(deletedFiles);
-
 		result.setExternalDeltas(externalDeltas);
 
 		return result;
-	}
-
-	/** @return {@link AfterValidateListener} */
-	public AfterValidateListener getAfterValidateListener() {
-		return afterValidateListener;
-	}
-
-	/** Set {@link #afterValidateListener} */
-	public void setAfterValidateListener(AfterValidateListener afterValidateListener) {
-		this.afterValidateListener = afterValidateListener;
-	}
-
-	/** @return {@link AfterGenerateListener} */
-	public AfterGenerateListener getAfterGenerateListener() {
-		return afterGenerateListener;
-	}
-
-	/** Set {@link #afterGenerateListener} */
-	public void setAfterGenerateListener(AfterGenerateListener afterGenerateListener) {
-		this.afterGenerateListener = afterGenerateListener;
-	}
-
-	/** @return {@link AfterDeleteListener} */
-	public AfterDeleteListener getAfterDeleteListener() {
-		return afterDeleteListener;
-	}
-
-	/** Set {@link #afterDeleteListener} */
-	public void setAfterDeleteListener(AfterDeleteListener afterDeleteListener) {
-		this.afterDeleteListener = afterDeleteListener;
-	}
-
-	/** @return {@link AfterBuildFileListener} */
-	public AfterBuildFileListener getAfterBuildFileListener() {
-		return afterBuildFileListener;
-	}
-
-	/** Set {@link #afterBuildFileListener} */
-	public void setAfterBuildFileListener(AfterBuildFileListener afterBuildFileListener) {
-		this.afterBuildFileListener = afterBuildFileListener;
-	}
-
-	/** @return {@link AfterBuildRequestListener} */
-	public AfterBuildRequestListener getAfterBuildListener() {
-		return afterBuildRequestListener;
-	}
-
-	/** Set {@link #afterBuildRequestListener} */
-	public void setAfterBuildListener(AfterBuildRequestListener afterBuildRequestListener) {
-		this.afterBuildRequestListener = afterBuildRequestListener;
 	}
 
 }

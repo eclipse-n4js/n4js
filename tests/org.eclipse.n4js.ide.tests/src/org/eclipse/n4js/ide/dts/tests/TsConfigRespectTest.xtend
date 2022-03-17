@@ -17,40 +17,67 @@ import org.eclipse.n4js.N4JSGlobals
 
 /**
  */
-class N4jscDtsTest extends AbstractIdeTest {
+class TsConfigRespectTest extends AbstractIdeTest {
 
 	private static val testData = #[
-			"SomeModule" -> '''
-				export public class SomeClass {
-				}
-			''',
-			PACKAGE_JSON -> '''
-				{
-					"name": "«DEFAULT_PROJECT_NAME»",
-					"version": "0.0.1",
-					"dependencies": {
-						"n4js-runtime": "*"
-					},
-					"n4js": {
-						"projectType": "library",
-						"output": "src-gen",
-						"sources": {
-							"source": [
-								"src"
-							]
-						},
-						"generator": {
-							"d.ts": true
-						}
+			NODE_MODULES + "@types/mypackage" -> #[
+				"index.d.ts" -> '''
+					export class MyClass {
 					}
-				}
-			'''
+				''',
+				"v2/index.d.ts" -> '''
+					export class MyClass2 {
+					}
+				''',
+				"tsconfig.json" -> '''
+					{
+					    "files": ["index.d.ts"],
+					    "exclude": ["node_modules"]
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "@types/mypackage",
+						"version": "0.0.1"
+					}
+				'''
+			],
+			NODE_MODULES + "mypackage" -> #[
+				"index.js" -> '''
+					export class MyClassJS {
+					}
+				''',
+				"v2/index.js" -> '''
+					export class MyClass2JS {
+					}
+				''',
+				"tsconfig.json" -> '''
+					{
+					    "files": ["index.d.ts"],
+					    "exclude": ["node_modules"]
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "mypackage",
+						"version": "0.0.1"
+					}
+				'''
+			],
+			"client" -> #[
+				"module" -> '''
+					import { MyClass } from "mypackage";
+				''',
+				CFG_DEPENDENCIES -> '''
+					mypackage, @types/mypackage
+				'''
+			]
 		];
 
 
 	@Test
 	def void testCreateTSConfigFile() {
-		testWorkspaceManager.createTestProjectOnDisk(testData);
+		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
 		startAndWaitForLspServer();
 		assertNoIssues();
 

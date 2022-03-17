@@ -69,12 +69,10 @@ import org.eclipse.n4js.xtext.ide.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.ProjectStatePersister;
 import org.eclipse.n4js.xtext.ide.server.build.WorkspaceAwareResourceSet;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.xtext.ide.server.build.XClusteringStorageAwareResourceLoader;
 import org.eclipse.n4js.xtext.ide.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 import org.eclipse.n4js.xtext.ide.server.contentassist.XContentAssistService;
-import org.eclipse.n4js.xtext.ide.server.issues.WorkspaceValidateListener;
 import org.eclipse.n4js.xtext.ide.server.util.IHeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.xtext.ide.server.util.XOperationCanceledManager;
@@ -306,10 +304,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends OperationCanceledManager> bindOperationCanceledManager() {
 		return XOperationCanceledManager.class;
-	}
-
-	public Class<? extends AfterValidateListener> bindAfterValidateListener() {
-		return WorkspaceValidateListener.class;
 	}
 
 	public Class<? extends IHeadlessExtensionRegistrationHelper> bindIHeadlessExtensionRegistrationHelper() {

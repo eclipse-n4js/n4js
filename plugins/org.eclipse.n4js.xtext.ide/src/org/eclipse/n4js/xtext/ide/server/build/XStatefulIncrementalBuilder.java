@@ -92,6 +92,9 @@ public class XStatefulIncrementalBuilder {
 		List<IResourceDescription.Delta> allProcessedDeltas = new ArrayList<>();
 
 		try {
+			// @SuppressWarnings("hiding")
+			// this.request = initializeBuildRequest(this.request, context);
+
 			XSource2GeneratedMapping newSource2GeneratedMapping = request.getFileMappings();
 
 			Set<URI> unloaded = new HashSet<>();
@@ -164,6 +167,11 @@ public class XStatefulIncrementalBuilder {
 		}
 
 		return new XBuildResult(request.getIndex(), request.getFileMappings(), allProcessedDeltas);
+	}
+
+	/**  */
+	protected XBuildRequest initializeBuildRequest(XBuildRequest initialRequest, XBuildContext context) {
+		return initialRequest;
 	}
 
 	private void addIfNotYetPresent(List<Delta> addHere, List<Delta> toBeAdded) {

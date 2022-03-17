@@ -49,6 +49,7 @@ import org.eclipse.n4js.json.model.utils.JSONModelUtils;
 import org.eclipse.n4js.packagejson.PackageJsonHelper;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescriptionBuilder;
+import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.LazyStringInputStream;
@@ -233,6 +234,14 @@ public class ProjectDescriptionLoader {
 	 * Store some information from {@code tsconfig.json} files iff existent in the project folders root.
 	 */
 	private void setInformationFromTSConfig(FileURI location, ProjectDescriptionBuilder target) {
+		ProjectType type = target.getType();
+		if (type != ProjectType.PLAINJS && type != ProjectType.DEFINITION) {
+			// Note that n4js projects also create/modify tsconfig.json files iff they generate d.ts files
+			// from n4js sources. These generated tsconfig files state the 'srg-gen' folder as an 'includes'
+			// glob.
+			return;
+		}
+
 		Path path = location.appendSegment(N4JSGlobals.TS_CONFIG).toFileSystemPath();
 		if (!Files.isReadable(path)) {
 			path = location.appendSegment(N4JSGlobals.TS_CONFIG + "." + N4JSGlobals.XT_FILE_EXTENSION)

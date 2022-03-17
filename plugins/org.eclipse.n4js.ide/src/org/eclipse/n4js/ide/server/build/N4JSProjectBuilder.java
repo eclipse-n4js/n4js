@@ -62,10 +62,10 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 	@Override
 	protected XBuildResult doBuild(IBuildRequestFactory buildRequestFactory, Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<Delta> externalDeltas, CancelIndicator cancelIndicator) {
+			List<Delta> externalDeltas, ProjectStateUpdater projectStateUpdater, CancelIndicator cancelIndicator) {
 
 		XBuildResult buildResult = super.doBuild(buildRequestFactory, dirtyFiles, deletedFiles, externalDeltas,
-				cancelIndicator);
+				projectStateUpdater, cancelIndicator);
 
 		writeTestCatalog();
 

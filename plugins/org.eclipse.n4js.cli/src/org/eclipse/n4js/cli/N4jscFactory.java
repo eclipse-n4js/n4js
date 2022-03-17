@@ -77,7 +77,7 @@ public class N4jscFactory {
 	}
 
 	Optional<Class<? extends Module>> internalGetOverridingModule() {
-		return Optional.absent();
+		return Optional.of(N4jscModule.class);
 	}
 
 	XLanguageServerImpl internalGetLanguageServer() {
