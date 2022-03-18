@@ -303,10 +303,10 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		if (pd.getType() != ProjectType.PLAINJS) {
 			return false;
 		}
-		if (pd.getN4JSProjectName() != null && !pd.getN4JSProjectName().isScopeTypes()) {
-			return false;
+		if (pd.getN4JSProjectName() != null && pd.getN4JSProjectName().isScopeTypes()) {
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	/**
