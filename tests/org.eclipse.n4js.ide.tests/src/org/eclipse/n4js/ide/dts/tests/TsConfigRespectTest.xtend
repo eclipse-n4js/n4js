@@ -15,7 +15,16 @@ import org.junit.Test
 import static org.junit.Assert.assertEquals
 import org.eclipse.n4js.N4JSGlobals
 
+// Tests:
+//  - closure build
+//    - direct/indirect/non-included
+//    - properties: tsconfig#files, tsconfig#include, tsconfig#include+exclude, package.json#main, package.json#types
+//    - import from client by project/direct import
+//  - normal build
+
+// remove obsolete sorting in loader
 /**
+ * 
  */
 class TsConfigRespectTest extends AbstractIdeTest {
 
@@ -31,8 +40,7 @@ class TsConfigRespectTest extends AbstractIdeTest {
 				''',
 				"tsconfig.json" -> '''
 					{
-					    "files": ["index.d.ts"],
-					    "exclude": ["node_modules"]
+					    "files": ["index.d.ts"]
 					}
 				''',
 				PACKAGE_JSON -> '''

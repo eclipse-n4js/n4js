@@ -149,7 +149,7 @@ public class XStatefulIncrementalBuilder {
 					remainingURIs.remove(uri);
 				}
 
-				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt, true,
+				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
 						(loadResult) -> buildClustered(loadResult, newSource2GeneratedMapping, result));
 				newDeltas.addAll(deltasBuilt);
 

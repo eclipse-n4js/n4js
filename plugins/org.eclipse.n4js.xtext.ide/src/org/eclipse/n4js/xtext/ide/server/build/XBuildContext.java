@@ -58,10 +58,8 @@ public class XBuildContext {
 	/**
 	 * Run the given logic on all uris with clustering enabled.
 	 */
-	public <T> List<T> executeClustered(Iterable<URI> uri, boolean sorted,
-			Function1<? super LoadResult, ? extends T> operation) {
-
-		return this.loader.executeClustered(this, Iterables.filter(uri, this::canHandle), sorted, operation);
+	public <T> List<T> executeClustered(Iterable<URI> uri, Function1<? super LoadResult, ? extends T> operation) {
+		return this.loader.executeClustered(this, Iterables.filter(uri, this::canHandle), operation);
 	}
 
 	/**

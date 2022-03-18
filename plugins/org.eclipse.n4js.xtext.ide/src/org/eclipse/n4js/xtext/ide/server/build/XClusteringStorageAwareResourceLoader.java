@@ -66,7 +66,7 @@ public class XClusteringStorageAwareResourceLoader {
 	/**
 	 * Execute the given operation in a clustered fashion.
 	 */
-	public <T> List<T> executeClustered(XBuildContext context, Iterable<URI> uris, boolean sorted,
+	public <T> List<T> executeClustered(XBuildContext context, Iterable<URI> uris,
 			Function1<? super LoadResult, ? extends T> operation) {
 
 		int loadedURIsCount = 0;
@@ -95,9 +95,6 @@ public class XClusteringStorageAwareResourceLoader {
 				SourceLevelURIsAdapter.setSourceLevelUrisWithoutCopy(resourceSet, sourceLevelURIs);
 			}
 			resources.add(loadResource(resourceSet, uri));
-		}
-		if (sorted) {
-			resources = sort(context, resources);
 		}
 		result.addAll(ListExtensions.map(resources, operation::apply));
 		return result;
@@ -134,10 +131,5 @@ public class XClusteringStorageAwareResourceLoader {
 		} finally {
 			resourceSet.eSetDeliver(wasDeliver);
 		}
-	}
-
-	/** Sort the given list of load results depending on their dependencies. */
-	protected List<LoadResult> sort(@SuppressWarnings("unused") XBuildContext context, List<LoadResult> resources) {
-		return resources;
 	}
 }
