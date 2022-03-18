@@ -10,13 +10,14 @@
  */
 package org.eclipse.n4js.cli;
 
+import java.util.List;
+
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.ide.N4JSIdeSetup;
 import org.eclipse.n4js.xtext.ide.server.XLanguageServerImpl;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 import org.eclipse.xtext.testing.GlobalRegistries;
 
-import com.google.common.base.Optional;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 
@@ -68,16 +69,16 @@ public class N4jscFactory {
 		if (injector == null) {
 			injector = new N4JSIdeSetup() {
 				@Override
-				protected Optional<Class<? extends Module>> getOverridingModule() {
-					return internalGetOverridingModule();
+				protected List<Class<? extends Module>> getOverridingModules() {
+					return internalGetOverridingModules();
 				}
 			}.createInjectorAndDoEMFRegistration();
 		}
 		return injector;
 	}
 
-	Optional<Class<? extends Module>> internalGetOverridingModule() {
-		return Optional.of(N4jscModule.class);
+	List<Class<? extends Module>> internalGetOverridingModules() {
+		return List.of(N4jscModule.class);
 	}
 
 	XLanguageServerImpl internalGetLanguageServer() {

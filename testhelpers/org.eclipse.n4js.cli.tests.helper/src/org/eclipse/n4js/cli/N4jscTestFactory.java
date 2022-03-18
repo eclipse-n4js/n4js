@@ -10,12 +10,15 @@
  */
 package org.eclipse.n4js.cli;
 
+import java.util.List;
+
 import org.eclipse.n4js.cli.compiler.N4jscLanguageClient;
 import org.eclipse.n4js.cli.helper.N4jscTestLanguageClient;
 import org.eclipse.xtext.testing.GlobalRegistries;
 import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Lists;
 import com.google.inject.Module;
 
 /**
@@ -78,11 +81,11 @@ public class N4jscTestFactory extends N4jscFactory {
 	}
 
 	final private boolean isEnabledBackend;
-	final private Optional<Class<? extends Module>> overridingModule;
+	final private Optional<Class<? extends Module>> overridingTestModule;
 
-	N4jscTestFactory(boolean isEnabledBackend, Optional<Class<? extends Module>> overridingModule) {
+	N4jscTestFactory(boolean isEnabledBackend, Optional<Class<? extends Module>> overridingTestModule) {
 		this.isEnabledBackend = isEnabledBackend;
-		this.overridingModule = overridingModule;
+		this.overridingTestModule = overridingTestModule;
 	}
 
 	/** Thrown when the backend is called. */
@@ -140,8 +143,16 @@ public class N4jscTestFactory extends N4jscFactory {
 	}
 
 	@Override
-	Optional<Class<? extends Module>> internalGetOverridingModule() {
-		return overridingModule;
+	List<Class<? extends Module>> internalGetOverridingModules() {
+		if (overridingTestModule.isPresent()) {
+			List<Class<? extends Module>> allOverridingModules = Lists
+					.newArrayList(super.internalGetOverridingModules());
+
+			allOverridingModules.add(overridingTestModule.get());
+			return allOverridingModules;
+		} else {
+			return super.internalGetOverridingModules();
+		}
 	}
 
 	@Override
