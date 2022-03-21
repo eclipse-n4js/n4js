@@ -56,7 +56,7 @@ public class N4JSEObjectAtOffsetHelper extends EObjectAtOffsetHelper {
 			// returns the containing function declaration, but we prefer the formal parameter
 			result = findBetterMatch(result, offset,
 					N4JSASTUtils.getFormalParameters((FunctionOrFieldAccessor) result),
-					TypesPackage.eINSTANCE.getIdentifiableElement_Name());
+					N4JSPackage.eINSTANCE.getVariable_Name());
 		}
 		if (result instanceof GenericDeclaration) {
 			// special case: when the cursor is located at the end of a type parameter, the default implementation
