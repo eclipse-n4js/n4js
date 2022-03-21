@@ -92,8 +92,6 @@ public class XStatefulIncrementalBuilder {
 		List<IResourceDescription.Delta> allProcessedDeltas = new ArrayList<>();
 
 		try {
-			// @SuppressWarnings("hiding")
-			XBuildRequest oldRequest = this.request;
 			this.request = initializeBuildRequest(this.request, context);
 
 			XSource2GeneratedMapping newSource2GeneratedMapping = request.getFileMappings();

@@ -22,14 +22,13 @@ import org.eclipse.n4js.N4JSGlobals
 //    - import from client by project/direct import
 //  - normal build
 
-// remove obsolete sorting in loader
 /**
  * 
  */
 class TsConfigRespectTest extends AbstractIdeTest {
 
 	private static val testData = #[
-			NODE_MODULES + "@types/mypackage" -> #[
+			CFG_NODE_MODULES + "@types/mypackage" -> #[
 				"index.d.ts" -> '''
 					export class MyClass {
 					}
@@ -38,9 +37,9 @@ class TsConfigRespectTest extends AbstractIdeTest {
 					export class MyClass2 {
 					}
 				''',
-				"tsconfig.json" -> '''
+				"/tsconfig.json" -> '''
 					{
-					    "files": ["index.d.ts"]
+					    "files": ["src/index.d.ts"]
 					}
 				''',
 				PACKAGE_JSON -> '''
@@ -50,7 +49,7 @@ class TsConfigRespectTest extends AbstractIdeTest {
 					}
 				'''
 			],
-			NODE_MODULES + "mypackage" -> #[
+			CFG_NODE_MODULES + "mypackage" -> #[
 				"index.js" -> '''
 					export class MyClassJS {
 					}
@@ -59,16 +58,11 @@ class TsConfigRespectTest extends AbstractIdeTest {
 					export class MyClass2JS {
 					}
 				''',
-				"tsconfig.json" -> '''
-					{
-					    "files": ["index.d.ts"],
-					    "exclude": ["node_modules"]
-					}
-				''',
 				PACKAGE_JSON -> '''
 					{
 						"name": "mypackage",
-						"version": "0.0.1"
+						"version": "0.0.1",
+						"main": "src/index.js"
 					}
 				'''
 			],
@@ -90,21 +84,6 @@ class TsConfigRespectTest extends AbstractIdeTest {
 		assertNoIssues();
 
 		shutdownLspServer();
-		
-		val tsconfigUri = getFileURIFromModuleName(N4JSGlobals.TS_CONFIG);
-		val contents = getContentOfFileOnDisk(tsconfigUri);
-		assertEquals('''
-		{
-		    "include": ["src-gen/**/*.ts"],
-		    "exclude": ["node_modules"],
-		    "compilerOptions": {
-		        "target": "es5",
-		        "lib": ["es2019", "es2020"],
-		        "module": "commonjs",
-		        "noImplicitAny": false
-		    }
-		}
-		'''.toString, contents);
 	}
 
 }

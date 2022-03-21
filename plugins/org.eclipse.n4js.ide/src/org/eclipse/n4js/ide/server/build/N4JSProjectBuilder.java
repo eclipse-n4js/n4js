@@ -136,23 +136,33 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	@Override
 	protected Set<URI> scanForSourceFiles() {
 		Set<URI> result = new HashSet<>();
-		for (SourceFolderSnapshot srcFolder : getProjectConfig().getSourceFolders()) {
-			List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
-			for (URI srcFileUri : allSourceFileUris) {
-				if (!srcFileUri.hasTrailingPathSeparator()) {
-					IResourceServiceProvider rsp = resourceServiceProviders.getResourceServiceProvider(srcFileUri);
-					if (rsp != null) {
-						String fileExtension = URIUtils.fileExtension(srcFileUri);
-						if (N4JSGlobals.TS_FILE_EXTENSION.equals(fileExtension)) {
-							// ignore ts files (yet consider d.ts files)
-							continue;
-						}
-						result.add(srcFileUri);
-					}
+		N4JSProjectConfigSnapshot prjConfig = getProjectConfig();
+		if (prjConfig.hasTsConfigBuildSemantic()) {
+			for (URI startUri : prjConfig.computeStartUris(fileSystemScanner)) {
+				addToResults(result, startUri);
+			}
+		} else {
+			for (SourceFolderSnapshot srcFolder : prjConfig.getSourceFolders()) {
+				List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
+				for (URI srcFileUri : allSourceFileUris) {
+					addToResults(result, srcFileUri);
 				}
 			}
 		}
 		return result;
+	}
+
+	private void addToResults(Set<URI> result, URI srcFileUri) {
+		if (!srcFileUri.hasTrailingPathSeparator()) {
+			IResourceServiceProvider rsp = resourceServiceProviders.getResourceServiceProvider(srcFileUri);
+			if (rsp != null) {
+				String fileExtension = URIUtils.fileExtension(srcFileUri);
+				if (N4JSGlobals.TS_FILE_EXTENSION.equals(fileExtension)) {
+					return;
+				}
+				result.add(srcFileUri);
+			}
+		}
 	}
 
 	/** Generates the test catalog for the project. */

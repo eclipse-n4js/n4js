@@ -16,6 +16,8 @@ import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.utils.URIUtils;
@@ -38,23 +40,26 @@ public class FileSystemScanner implements IFileSystemScanner {
 	@Override
 	public void scan(URI root, IAcceptor<URI> acceptor) {
 		File rootFile = URIUtils.toFile(root);
-		if (rootFile.isDirectory()) {
-			try {
-				Path rootPath = rootFile.toPath();
-				if (acceptor instanceof FileVisitingAcceptor) {
-					Files.walkFileTree(rootPath, Collections.singleton(FileVisitOption.FOLLOW_LINKS), Integer.MAX_VALUE,
-							(FileVisitingAcceptor) acceptor);
-				} else {
-					Files.walk(rootPath, FileVisitOption.FOLLOW_LINKS).forEach(p -> {
-						File file = p.toFile();
-						if (!file.isDirectory()) {
-							acceptor.accept(new FileURI(p.toFile()).toURI());
-						}
-					});
+		if (!rootFile.isDirectory()) {
+			return;
+		}
+		try {
+			Path rootPath = rootFile.toPath();
+			if (acceptor instanceof FileVisitingAcceptor) {
+				Set<FileVisitOption> options = Collections.singleton(FileVisitOption.FOLLOW_LINKS);
+				Files.walkFileTree(rootPath, options, Integer.MAX_VALUE, (FileVisitingAcceptor) acceptor);
+			} else {
+				Iterator<Path> pathIter = Files.walk(rootPath, FileVisitOption.FOLLOW_LINKS).iterator();
+				while (pathIter.hasNext()) {
+					Path p = pathIter.next();
+					File file = p.toFile();
+					if (!file.isDirectory()) {
+						acceptor.accept(new FileURI(p.toFile()).toURI());
+					}
 				}
-			} catch (IOException e) {
-				throw new RuntimeIOException(e);
 			}
+		} catch (IOException e) {
+			throw new RuntimeIOException(e);
 		}
 	}
 }
