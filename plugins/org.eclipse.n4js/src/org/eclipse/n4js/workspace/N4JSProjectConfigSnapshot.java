@@ -284,9 +284,9 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return result.build();
 	}
 
-	public Set<URI> getAllContents() {
+	public Set<URI> getAllContents(IFileSystemScanner scanner) {
 		return Sets.newLinkedHashSet(
-				IterableExtensions.flatMap(getSourceFolders(), N4JSSourceFolderSnapshot::getContents));
+				IterableExtensions.flatMap(getSourceFolders(), (srcFolder) -> srcFolder.getAllResources(scanner)));
 	}
 
 	/**
@@ -341,7 +341,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			}
 
 			Set<URI> startUris = new LinkedHashSet<>();
-			LOOP_ALL: for (URI someUri : getAllContents()) {
+			LOOP_ALL: for (URI someUri : getAllContents(fileSystemScanner)) {
 				Path somePath = Path.of(someUri.deresolve(getPath()).toFileString());
 				for (Path file : files) {
 					if (Objects.equals(file, somePath)) {

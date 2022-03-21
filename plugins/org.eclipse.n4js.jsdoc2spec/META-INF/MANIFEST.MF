@@ -7,6 +7,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.ts.model,
  org.eclipse.n4js.jsdoc,
+ org.eclipse.n4js.xtext,
  org.eclipse.jgit,
  org.eclipse.core.runtime,
  org.apache.log4j

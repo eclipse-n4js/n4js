@@ -11,8 +11,10 @@
 package org.eclipse.n4js.workspace;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xtext.util.IFileSystemScanner;
 
 /**
  * An {@link N4JSSourceFolderSnapshot} that only contains a single <code>package.json</code> file.
@@ -39,8 +41,8 @@ public class N4JSSourceFolderSnapshotForPackageJson extends N4JSSourceFolderSnap
 	}
 
 	@Override
-	public Iterable<URI> getContents() {
-		return Collections.singleton(packageJsonURI);
+	public List<URI> getAllResources(IFileSystemScanner scanner) {
+		return Collections.singletonList(packageJsonURI);
 	}
 
 	@Override

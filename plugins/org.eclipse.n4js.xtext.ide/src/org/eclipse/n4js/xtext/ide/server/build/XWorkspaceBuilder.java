@@ -29,7 +29,6 @@ import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.BuildOrderIterator;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
@@ -88,9 +87,6 @@ public class XWorkspaceBuilder {
 
 	@Inject
 	private LspLogger lspLogger;
-
-	@Inject
-	private SourceFolderScanner sourceFolderScanner;
 
 	@Inject
 	private IFileSystemScanner scanner;
@@ -370,7 +366,7 @@ public class XWorkspaceBuilder {
 	private List<URI> scanAddedSourceFoldersForNewSourceFiles(WorkspaceChanges changes, IFileSystemScanner scanner) {
 		List<URI> added = new ArrayList<>();
 		for (SourceFolderSnapshot sourceFolder : changes.getAllAddedSourceFolders()) {
-			List<URI> sourceFilesOnDisk = sourceFolderScanner.findAllSourceFiles(sourceFolder, scanner);
+			List<URI> sourceFilesOnDisk = sourceFolder.getAllResources(scanner);
 			added.addAll(sourceFilesOnDisk);
 		}
 		return added;

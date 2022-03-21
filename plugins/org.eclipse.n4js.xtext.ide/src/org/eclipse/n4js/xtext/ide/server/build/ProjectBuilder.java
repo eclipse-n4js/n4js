@@ -38,7 +38,6 @@ import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterDeleteListener
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.xtext.ide.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
@@ -85,9 +84,9 @@ public class ProjectBuilder {
 	@Inject
 	protected Provider<WorkspaceAwareResourceSet> resourceSetProvider;
 
-	/** Scans the file system for source files contained in a {@link SourceFolderSnapshot source folder}. */
-	@Inject
-	protected SourceFolderScanner sourceFolderScanner;
+	// /** Scans the file system for source files contained in a {@link SourceFolderSnapshot source folder}. */
+	// @Inject
+	// protected SourceFolderScanner sourceFolderScanner;
 
 	/** Scans the file system. */
 	@Inject
@@ -654,7 +653,7 @@ public class ProjectBuilder {
 	protected Set<URI> scanForSourceFiles() {
 		Set<URI> result = new HashSet<>();
 		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
-			List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
+			List<URI> allSourceFileUris = srcFolder.getAllResources(fileSystemScanner);
 			for (URI srcFileUri : allSourceFileUris) {
 				if (!srcFileUri.hasTrailingPathSeparator()) {
 					IResourceServiceProvider rsp = resourceServiceProviders.getResourceServiceProvider(srcFileUri);

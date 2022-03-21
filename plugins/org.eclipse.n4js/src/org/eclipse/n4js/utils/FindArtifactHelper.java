@@ -19,6 +19,7 @@ import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.util.IFileSystemScanner;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -57,12 +58,13 @@ public final class FindArtifactHelper {
 	/**
 	 * If the receiving source folder actually contains a file for the given fully qualified name and file extension on
 	 * disk, this method will return a URI for this file of the same format as the URIs returned by method
-	 * {@link N4JSSourceFolderSnapshot#getContents()}. Otherwise, this method returns <code>null</code>.
+	 * {@link N4JSSourceFolderSnapshot#getAllResources(IFileSystemScanner)}. Otherwise, this method returns
+	 * <code>null</code>.
 	 * <p>
 	 * The file extension may but need not contain a leading '.'.
 	 * <p>
 	 * Implementations are expected to be optimized for fast look-up (in particular, they should avoid iterating over
-	 * all URIs returned by method {@link N4JSSourceFolderSnapshot#getContents()}).
+	 * all URIs returned by method {@link N4JSSourceFolderSnapshot#getAllResources( IFileSystemScanner)}).
 	 */
 	public FileURI findArtifact(N4JSSourceFolderSnapshot sourceFolder, QualifiedName name,
 			Optional<String> fileExtension) {

@@ -143,7 +143,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 			}
 		} else {
 			for (SourceFolderSnapshot srcFolder : prjConfig.getSourceFolders()) {
-				List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
+				List<URI> allSourceFileUris = srcFolder.getAllResources(fileSystemScanner);
 				for (URI srcFileUri : allSourceFileUris) {
 					addToResults(result, srcFileUri);
 				}

@@ -57,12 +57,12 @@ import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.FindArtifactHelper;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.util.IFileSystemScanner;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -81,6 +81,8 @@ public class ProjectCompareHelper {
 	private ContainerTypesHelper containerTypesHelper;
 	@Inject
 	private N4JSTypeSystem typeSystem;
+	@Inject
+	private IFileSystemScanner scanner;
 
 	private static Logger logger = Logger.getLogger(ProjectCompareHelper.class);
 
@@ -150,24 +152,22 @@ public class ProjectCompareHelper {
 
 		final ProjectComparisonEntry entry = new ProjectComparisonEntry(root, api, impls);
 
-		for (N4JSSourceFolderSnapshot currSrcFolder : api.getSourceFolders()) {
-			for (URI uri : currSrcFolder.getContents()) {
-				final String uriStr = uri.toString();
-				if (uriStr.endsWith("." + N4JSGlobals.N4JS_FILE_EXTENSION)
-						|| uriStr.endsWith("." + N4JSGlobals.N4JSD_FILE_EXTENSION)) {
-					final IResourceDescription resDesc = index.getResourceDescription(uri);
-					final TModule moduleApi = getModuleFrom(resourceSet, resDesc);
-					if (moduleApi != null) {
-						final TModule[] moduleImpls = new TModule[impls.length];
-						for (int idx = 0; idx < impls.length; idx++) {
-							final N4JSProjectConfigSnapshot projectImpl = impls[idx];
-							if (projectImpl != null)
-								moduleImpls[idx] = findImplementation(moduleApi, projectImpl, resourceSet, index);
-							else
-								moduleImpls[idx] = null;
-						}
-						createEntries(entry, -1, moduleApi, moduleImpls, false);
+		for (URI uri : api.getAllContents(scanner)) {
+			final String uriStr = uri.toString();
+			if (uriStr.endsWith("." + N4JSGlobals.N4JS_FILE_EXTENSION)
+					|| uriStr.endsWith("." + N4JSGlobals.N4JSD_FILE_EXTENSION)) {
+				final IResourceDescription resDesc = index.getResourceDescription(uri);
+				final TModule moduleApi = getModuleFrom(resourceSet, resDesc);
+				if (moduleApi != null) {
+					final TModule[] moduleImpls = new TModule[impls.length];
+					for (int idx = 0; idx < impls.length; idx++) {
+						final N4JSProjectConfigSnapshot projectImpl = impls[idx];
+						if (projectImpl != null)
+							moduleImpls[idx] = findImplementation(moduleApi, projectImpl, resourceSet, index);
+						else
+							moduleImpls[idx] = null;
 					}
+					createEntries(entry, -1, moduleApi, moduleImpls, false);
 				}
 			}
 		}

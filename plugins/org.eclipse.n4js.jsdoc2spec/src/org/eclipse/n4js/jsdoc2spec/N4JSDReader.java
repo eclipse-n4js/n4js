@@ -53,10 +53,10 @@ import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.util.IFileSystemScanner;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 
 /**
@@ -77,6 +77,9 @@ public class N4JSDReader {
 
 	@Inject
 	RepoRelativePathHolder rrph;
+
+	@Inject
+	IFileSystemScanner scanner;
 
 	IJSDoc2SpecIssueAcceptor issueAcceptor = IJSDoc2SpecIssueAcceptor.NULL_ACCEPTOR;
 
@@ -126,47 +129,46 @@ public class N4JSDReader {
 			SubMonitorMsg monitor) throws InterruptedException {
 
 		ImmutableSet<? extends N4JSSourceFolderSnapshot> srcCont = project.getSourceFolders();
-		List<N4JSSourceFolderSnapshot> srcContFilter = new LinkedList<>();
 
+		List<URI> testSources = new LinkedList<>();
 		int count = 0;
 		for (N4JSSourceFolderSnapshot container : srcCont) {
 			if (container.isSource() || container.isTest()) {
-				count += Iterables.size(container.getContents());
-				srcContFilter.add(container);
+				List<URI> sources = container.getAllResources(scanner);
+				testSources.addAll(sources);
+				count += sources.size();
 			}
 		}
 		SubMonitorMsg sub = monitor.convert(count);
 
-		for (N4JSSourceFolderSnapshot container : srcContFilter) {
-			for (URI uri : container.getContents()) {
-				String ext = URIUtils.fileExtension(uri);
-				if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(ext) || N4JSGlobals.N4JSD_FILE_EXTENSION.equals(ext)) {
-					try {
-						Resource resource = resSet.getResource(uri, true);
-						if (resource != null) {
-							Script script = (Script) (resource.getContents().isEmpty() ? null
-									: resource.getContents().get(0));
-							if (script == null) {
-								// throw new IllegalStateException("Error parsing " + uri);
-								continue;
-							}
-							N4JSResource.postProcess(resource);
-							for (Type type : getRealTopLevelTypes(script)) {
-								specInfosByName.createTypeSpecInfo(type, rrph);
-							}
-							for (TVariable tvar : script.getModule().getVariables()) {
-								specInfosByName.createTVarSpecInfo(tvar, rrph);
-							}
+		for (URI uri : testSources) {
+			String ext = URIUtils.fileExtension(uri);
+			if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(ext) || N4JSGlobals.N4JSD_FILE_EXTENSION.equals(ext)) {
+				try {
+					Resource resource = resSet.getResource(uri, true);
+					if (resource != null) {
+						Script script = (Script) (resource.getContents().isEmpty() ? null
+								: resource.getContents().get(0));
+						if (script == null) {
+							// throw new IllegalStateException("Error parsing " + uri);
+							continue;
 						}
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						String msg = "Error processing " + uri + ": " + ex.getMessage();
-						throw new IllegalArgumentException(msg, ex);
+						N4JSResource.postProcess(resource);
+						for (Type type : getRealTopLevelTypes(script)) {
+							specInfosByName.createTypeSpecInfo(type, rrph);
+						}
+						for (TVariable tvar : script.getModule().getVariables()) {
+							specInfosByName.createTVarSpecInfo(tvar, rrph);
+						}
 					}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					String msg = "Error processing " + uri + ": " + ex.getMessage();
+					throw new IllegalArgumentException(msg, ex);
 				}
-				sub.worked(1);
-				sub.checkCanceled();
 			}
+			sub.worked(1);
+			sub.checkCanceled();
 		}
 	}
 
@@ -224,40 +226,40 @@ public class N4JSDReader {
 
 		List<Type> testTypes = new ArrayList<>();
 		ImmutableSet<? extends N4JSSourceFolderSnapshot> srcCont = project.getSourceFolders();
+		List<URI> testSources = new LinkedList<>();
 
 		// count container
 		int count = 0;
 		for (N4JSSourceFolderSnapshot container : srcCont) {
 			if (container.isTest()) {
-				count += Iterables.size(container.getContents());
+				List<URI> sources = container.getAllResources(scanner);
+				testSources.addAll(sources);
+				count += sources.size();
 			}
 		}
 		SubMonitorMsg sub = monitor.convert(count);
 
 		// scan for types
-		for (N4JSSourceFolderSnapshot container : srcCont) {
-			if (container.isTest()) {
-				for (URI uri : container.getContents()) {
-					String ext = URIUtils.fileExtension(uri);
-					if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(ext)) {
-						Resource resource = resSet.getResource(uri, true);
-						if (resource != null) {
-							Script script = (Script) (resource.getContents().isEmpty() ? null
-									: resource.getContents().get(0));
+		for (URI uri : testSources) {
+			String ext = URIUtils.fileExtension(uri);
+			if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(ext)) {
+				Resource resource = resSet.getResource(uri, true);
+				if (resource != null) {
+					Script script = (Script) (resource.getContents().isEmpty()
+							? null
+							: resource.getContents().get(0));
 
-							if (script == null) {
-								throw new IllegalStateException("Error parsing " + uri);
-							}
-							N4JSResource.postProcess(resource);
-							for (Type type : getRealTopLevelTypes(script)) {
-								testTypes.add(type);
-							}
-						}
+					if (script == null) {
+						throw new IllegalStateException("Error parsing " + uri);
 					}
-					sub.worked(1);
-					sub.checkCanceled();
+					N4JSResource.postProcess(resource);
+					for (Type type : getRealTopLevelTypes(script)) {
+						testTypes.add(type);
+					}
 				}
 			}
+			sub.worked(1);
+			sub.checkCanceled();
 		}
 		return testTypes;
 	}

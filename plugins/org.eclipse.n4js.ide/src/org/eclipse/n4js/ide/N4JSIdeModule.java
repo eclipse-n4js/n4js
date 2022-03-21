@@ -50,7 +50,6 @@ import org.eclipse.n4js.ide.server.util.ConfiguredWorkspaceAwareResourceSetProvi
 import org.eclipse.n4js.ide.server.util.N4JSServerIncidentLogger;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.utils.FileSystemScanner;
-import org.eclipse.n4js.workspace.utils.N4JSSourceFolderScanner;
 import org.eclipse.n4js.xtext.ide.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.xtext.ide.server.DebugService;
 import org.eclipse.n4js.xtext.ide.server.LanguageServerFrontend;
@@ -77,7 +76,6 @@ import org.eclipse.n4js.xtext.ide.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
-import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
@@ -210,9 +208,9 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSConfigSnapshotFactory.class;
 	}
 
-	public Class<? extends SourceFolderScanner> bindSourceFolderScanner() {
-		return N4JSSourceFolderScanner.class;
-	}
+	// public Class<? extends SourceFolderScanner> bindSourceFolderScanner() {
+	// return N4JSSourceFolderScanner.class;
+	// }
 
 	public Class<? extends IDiagnosticConverter> bindIDiagnosticConverter() {
 		return EmfDiagnosticToLSPIssueConverter.class;

@@ -164,7 +164,8 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			// adjust the build request: compute file closure and adjust the set of changed/deleted uris
 
 			Multimap<URI, URI> dependsOn = LinkedHashMultimap.create();
-			initDependencyMaps(initialRequest.getResourceSet(), projectConfig, projectConfig.getAllContents(),
+			initDependencyMaps(initialRequest.getResourceSet(), projectConfig,
+					projectConfig.getAllContents(fileSystemScanner),
 					new LinkedHashSet<>(), dependsOn, LinkedHashMultimap.create());
 			Collection<URI> startUris = projectConfig.computeStartUris(fileSystemScanner);
 			startUris.addAll(initialRequest.getDirtyFiles());
@@ -220,12 +221,14 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 				resourcesMap.put(uri, resource);
 
 				SourceFolderSnapshot srcFolder = pcs.findSourceFolderContaining(uri);
-				URI srcFolderUri = srcFolder.getPath();
-				URI relUri = uri.deresolve(srcFolderUri);
+				if (srcFolder != null) {
+					URI srcFolderUri = srcFolder.getPath();
+					URI relUri = uri.deresolve(srcFolderUri);
 
-				String moduleName = URIUtils.trimFileExtension(relUri).toFileString();
-				moduleName2Result.put(moduleName, uri);
-				noDeps.add(uri);
+					String moduleName = URIUtils.trimFileExtension(relUri).toFileString();
+					moduleName2Result.put(moduleName, uri);
+					noDeps.add(uri);
+				}
 			}
 		}
 
@@ -284,6 +287,10 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 		List<URI> sortedResults = new ArrayList<>(allUris.size());
 		while (sortedResults.size() < allUris.size()) {
 			if (noDeps.isEmpty()) {
+				if (dependsOn.isEmpty()) {
+					// the resources of some URIs could not be created
+					break;
+				}
 				// there exist dependency cycles
 				URI randomCyclicResult = dependsOn.entries().iterator().next().getKey();
 				noDeps.add(randomCyclicResult);
