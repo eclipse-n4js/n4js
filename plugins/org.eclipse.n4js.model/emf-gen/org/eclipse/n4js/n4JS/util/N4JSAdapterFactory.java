@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.*;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TAbstractVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 
 /**
@@ -153,7 +154,7 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createThisArgProviderAdapter();
 			}
 			@Override
-			public Adapter caseVariable(Variable object) {
+			public <T extends TAbstractVariable> Adapter caseVariable(Variable<T> object) {
 				return createVariableAdapter();
 			}
 			@Override
@@ -221,10 +222,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createArrowFunctionAdapter();
 			}
 			@Override
-			public Adapter caseLocalArgumentsVariable(LocalArgumentsVariable object) {
-				return createLocalArgumentsVariableAdapter();
-			}
-			@Override
 			public Adapter caseFormalParameter(FormalParameter object) {
 				return createFormalParameterAdapter();
 			}
@@ -245,10 +242,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createVariableStatementAdapter();
 			}
 			@Override
-			public Adapter caseExportedVariableStatement(ExportedVariableStatement object) {
-				return createExportedVariableStatementAdapter();
-			}
-			@Override
 			public Adapter caseVariableDeclarationOrBinding(VariableDeclarationOrBinding object) {
 				return createVariableDeclarationOrBindingAdapter();
 			}
@@ -257,16 +250,8 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createVariableBindingAdapter();
 			}
 			@Override
-			public Adapter caseExportedVariableBinding(ExportedVariableBinding object) {
-				return createExportedVariableBindingAdapter();
-			}
-			@Override
 			public Adapter caseVariableDeclaration(VariableDeclaration object) {
 				return createVariableDeclarationAdapter();
-			}
-			@Override
-			public Adapter caseExportedVariableDeclaration(ExportedVariableDeclaration object) {
-				return createExportedVariableDeclarationAdapter();
 			}
 			@Override
 			public Adapter caseEmptyStatement(EmptyStatement object) {
@@ -1327,20 +1312,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.LocalArgumentsVariable <em>Local Arguments Variable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.LocalArgumentsVariable
-	 * @generated
-	 */
-	public Adapter createLocalArgumentsVariableAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.FormalParameter <em>Formal Parameter</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1411,20 +1382,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportedVariableStatement <em>Exported Variable Statement</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableStatement
-	 * @generated
-	 */
-	public Adapter createExportedVariableStatementAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.VariableDeclarationOrBinding <em>Variable Declaration Or Binding</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1453,20 +1410,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportedVariableBinding <em>Exported Variable Binding</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableBinding
-	 * @generated
-	 */
-	public Adapter createExportedVariableBindingAdapter() {
-		return null;
-	}
-
-	/**
 	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.VariableDeclaration <em>Variable Declaration</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
@@ -1477,20 +1420,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createVariableDeclarationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportedVariableDeclaration <em>Exported Variable Declaration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.ExportedVariableDeclaration
-	 * @generated
-	 */
-	public Adapter createExportedVariableDeclarationAdapter() {
 		return null;
 	}
 

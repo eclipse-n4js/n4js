@@ -87,7 +87,7 @@ NamespaceElement<Yield> returns NamespaceElement:
 	| N4EnumDeclaration<Yield>
 	| N4TypeAliasDeclaration<Yield>
 	| FunctionDeclaration<Yield>
-	| ExportedVariableStatement
+	| VariableStatementWithModifier<Yield>
 	| ExportDeclaration
 ;
 
@@ -219,7 +219,7 @@ ExportableElement:
 	| N4EnumDeclaration<Yield=false>
 	| N4TypeAliasDeclaration<Yield=false>
 	| FunctionDeclaration<Yield=false>
-	| ExportedVariableStatement
+	| VariableStatementWithModifier<Yield=false>
 ;
 
 /**
@@ -234,10 +234,10 @@ AnnotatedExportableElement <Yield> returns ExportableElement:
 		{FunctionDeclaration.annotationList=current}
 		(declaredModifiers+=N4Modifier)* AsyncNoTrailingLineBreak
 		FunctionImpl<Yield, Yield, Expression=false>
-	|	{ExportedVariableStatement.annotationList=current}
+	|	{VariableStatement.annotationList=current}
 		(declaredModifiers+=N4Modifier)*
 		varStmtKeyword=VariableStatementKeyword
-		varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> ( ',' varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield> )* Semi
+		varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,OptionalInit=false> ( ',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,OptionalInit=false> )* Semi
 	|	(
 			(
 				{N4ClassDeclaration.annotationList=current}
@@ -473,11 +473,11 @@ VariableStatement <In, Yield>:
 	varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>)* Semi
 ;
 
-ExportedVariableStatement returns ExportedVariableStatement:
-	{ExportedVariableStatement}
+VariableStatementWithModifier <Yield> returns VariableStatement:
+	{VariableStatement}
 	(declaredModifiers+=N4Modifier)*
 	varStmtKeyword=VariableStatementKeyword
-	varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield=false> (',' varDeclsOrBindings+=ExportedVariableDeclarationOrBinding<Yield=false>)* Semi
+	varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
 ;
 
 VariableDeclarationOrBinding <In, Yield, OptionalInit>:
@@ -514,21 +514,6 @@ fragment VariableDeclarationImpl <In, Yield, AllowType>*:
 	)
 ;
 
-ExportedVariableDeclarationOrBinding <Yield> returns VariableDeclarationOrBinding:
-		ExportedVariableBinding<Yield>
-	| 	ExportedVariableDeclaration<Yield>
-;
-
-ExportedVariableBinding <Yield>:
-	=> pattern=BindingPattern<Yield> '=' expression=AssignmentExpression<In=true,Yield>
-;
-
-/**
- * The created AST element has an additional reference to the inferred TVariable
- */
-ExportedVariableDeclaration <Yield>:
-	{ExportedVariableDeclaration} VariableDeclarationImpl<In=true,Yield,AllowType=true>
-;
 
 	// Defined with Action in statement: Block: {Block}  '{' (statements+=Statement)* '}';
 EmptyStatement:	{EmptyStatement} ';';

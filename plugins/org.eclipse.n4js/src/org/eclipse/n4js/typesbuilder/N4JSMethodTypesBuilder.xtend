@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMethod
@@ -35,6 +36,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuilder {
 
 	@Inject extension N4JSTypeVariableTypesBuilder
+	@Inject extension N4JSVariableStatementTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase, int idx) {
@@ -67,7 +69,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	 * @param methodDecl declaration for which the TMethod is created, must not be linked to a TMethod yet (i.e. its defined type must be null).
 	 * @param preLinkingPhase
 	 */
-	def package TMethod createMethod(N4MethodDeclaration methodDecl, boolean preLinkingPhase) {
+	def package TMethod createMethod(N4MethodDeclaration methodDecl, AbstractNamespace target, boolean preLinkingPhase) {
 		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
 		if (methodDefinedType !== null && !methodDefinedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
@@ -95,6 +97,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		methodType.lacksThisOrSuperUsage = hasNonNullBody(methodDecl.body) && !containsThisOrSuperUsage(methodDecl.body)
 
 		val builtInTypeScope = BuiltInTypeScope.get(methodDecl.eResource.resourceSet)
+		methodDecl.createImplicitArgumentsVariable(target, builtInTypeScope, preLinkingPhase);
 
 		methodType.setMemberAccessModifier(methodDecl)
 		methodType.addTypeParameters(methodDecl, preLinkingPhase)

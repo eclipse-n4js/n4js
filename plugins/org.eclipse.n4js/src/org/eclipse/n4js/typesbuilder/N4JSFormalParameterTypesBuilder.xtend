@@ -20,6 +20,7 @@ import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.types.utils.TypeUtils
 
 package class N4JSFormalParameterTypesBuilder {
+
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean relinkFormalParameter(FormalParameter astFormalParameter, TFunction functionType, boolean preLinkingPhase, int idx) {
@@ -27,7 +28,7 @@ package class N4JSFormalParameterTypesBuilder {
 		ensureEqualName(astFormalParameter, formalParameterType);
 
 		formalParameterType.astElement = astFormalParameter;
-		astFormalParameter.definedTypeElement = formalParameterType;
+		astFormalParameter.definedVariable = formalParameterType;
 
 		return true;
 	}
@@ -56,7 +57,7 @@ package class N4JSFormalParameterTypesBuilder {
 		copyAnnotations(formalParameterType, astFormalParameter, preLinkingPhase)
 
 		formalParameterType.astElement = astFormalParameter;
-		astFormalParameter.definedTypeElement = formalParameterType;
+		astFormalParameter.definedVariable = formalParameterType;
 
 		return formalParameterType;
 	}

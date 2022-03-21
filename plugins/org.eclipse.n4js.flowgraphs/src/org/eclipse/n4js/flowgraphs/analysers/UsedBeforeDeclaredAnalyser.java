@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.analysis.FastFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -32,8 +31,8 @@ public class UsedBeforeDeclaredAnalyser extends FastFlowVisitor {
 		final List<IdentifierRef> idRefs = new LinkedList<>();
 
 		CVLocationDataEntry(ControlFlowElement cfe) {
-			this.cfe = cfe instanceof ExportedVariableDeclaration
-					? ((ExportedVariableDeclaration) cfe).getDefinedVariable()
+			this.cfe = cfe instanceof VariableDeclaration
+					? ((VariableDeclaration) cfe).getDefinedVariable()
 					: cfe;
 		}
 

@@ -30,7 +30,6 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.PrimitiveType
-import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -222,7 +221,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 					var tsMsg = result.failureMessage.trimPrefix('failed: ').trimSuffix('.');
 					val msg = getMessageForDESTRUCT_TYPE_ERROR_VAR(varName, elemDesc, tsMsg);
 					if(node.varDecl!==null) {
-						addIssue(msg, node.varDecl, TypesPackage.eINSTANCE.identifiableElement_Name, DESTRUCT_TYPE_ERROR_VAR)
+						addIssue(msg, node.varDecl, N4JSPackage.eINSTANCE.variable_Name, DESTRUCT_TYPE_ERROR_VAR)
 					} else {
 						addIssue(msg, node.varRef, DESTRUCT_TYPE_ERROR_VAR);
 					}

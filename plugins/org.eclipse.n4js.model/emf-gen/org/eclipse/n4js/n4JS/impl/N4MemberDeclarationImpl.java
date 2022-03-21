@@ -283,6 +283,16 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	 * @generated
 	 */
 	@Override
+	public boolean isExternal() {
+		return (this.isDeclaredExternal() || this.isDefaultExternal());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isDeclaredExternal() {
 		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
 	}
@@ -480,6 +490,7 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == ModifiableElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_EXTERNAL: return N4JSPackage.N4_MEMBER_DECLARATION___IS_EXTERNAL;
 				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL;
 				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL;
 				default: return -1;
@@ -529,6 +540,8 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 				return isConstructSignature();
 			case N4JSPackage.N4_MEMBER_DECLARATION___GET_NAME:
 				return getName();
+			case N4JSPackage.N4_MEMBER_DECLARATION___IS_EXTERNAL:
+				return isExternal();
 			case N4JSPackage.N4_MEMBER_DECLARATION___IS_DECLARED_EXTERNAL:
 				return isDeclaredExternal();
 			case N4JSPackage.N4_MEMBER_DECLARATION___IS_DEFAULT_EXTERNAL:

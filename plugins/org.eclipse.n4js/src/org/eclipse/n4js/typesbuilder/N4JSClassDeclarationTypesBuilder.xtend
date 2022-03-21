@@ -54,10 +54,10 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 
 		// members
 		tclass.addFields(n4Class, preLinkingPhase);
-		tclass.addMethods(n4Class, preLinkingPhase);
+		tclass.addMethods(n4Class, target, preLinkingPhase);
 
-		tclass.addGetters(n4Class, preLinkingPhase);
-		tclass.addSetters(n4Class, preLinkingPhase);
+		tclass.addGetters(n4Class, target, preLinkingPhase);
+		tclass.addSetters(n4Class, target, preLinkingPhase);
 
 
 		tclass.copyAnnotations(n4Class, preLinkingPhase);
@@ -81,10 +81,10 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 
 		// members
 		tclass.addFields(n4Class, preLinkingPhase);
-		tclass.addMethods(n4Class, preLinkingPhase);
+		tclass.addMethods(n4Class, target, preLinkingPhase);
 
-		tclass.addGetters(n4Class, preLinkingPhase);
-		tclass.addSetters(n4Class, preLinkingPhase);
+		tclass.addGetters(n4Class, target, preLinkingPhase);
+		tclass.addSetters(n4Class, target, preLinkingPhase);
 
 		tclass.copyAnnotations(n4Class, preLinkingPhase);
 

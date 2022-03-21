@@ -548,10 +548,11 @@ public class TypesSwitch<T> extends Switch<T> {
 			case TypesPackage.TFORMAL_PARAMETER: {
 				TFormalParameter tFormalParameter = (TFormalParameter)theEObject;
 				T result = caseTFormalParameter(tFormalParameter);
+				if (result == null) result = caseTAbstractVariable(tFormalParameter);
 				if (result == null) result = caseIdentifiableElement(tFormalParameter);
+				if (result == null) result = caseTTypedElement(tFormalParameter);
 				if (result == null) result = caseTAnnotableElement(tFormalParameter);
 				if (result == null) result = caseSyntaxRelatedTElement(tFormalParameter);
-				if (result == null) result = caseTTypedElement(tFormalParameter);
 				if (result == null) result = caseTypableElement(tFormalParameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -560,10 +561,11 @@ public class TypesSwitch<T> extends Switch<T> {
 				TAnonymousFormalParameter tAnonymousFormalParameter = (TAnonymousFormalParameter)theEObject;
 				T result = caseTAnonymousFormalParameter(tAnonymousFormalParameter);
 				if (result == null) result = caseTFormalParameter(tAnonymousFormalParameter);
+				if (result == null) result = caseTAbstractVariable(tAnonymousFormalParameter);
 				if (result == null) result = caseIdentifiableElement(tAnonymousFormalParameter);
+				if (result == null) result = caseTTypedElement(tAnonymousFormalParameter);
 				if (result == null) result = caseTAnnotableElement(tAnonymousFormalParameter);
 				if (result == null) result = caseSyntaxRelatedTElement(tAnonymousFormalParameter);
-				if (result == null) result = caseTTypedElement(tAnonymousFormalParameter);
 				if (result == null) result = caseTypableElement(tAnonymousFormalParameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -717,17 +719,29 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypesPackage.TABSTRACT_VARIABLE: {
+				TAbstractVariable tAbstractVariable = (TAbstractVariable)theEObject;
+				T result = caseTAbstractVariable(tAbstractVariable);
+				if (result == null) result = caseIdentifiableElement(tAbstractVariable);
+				if (result == null) result = caseTTypedElement(tAbstractVariable);
+				if (result == null) result = caseTAnnotableElement(tAbstractVariable);
+				if (result == null) result = caseSyntaxRelatedTElement(tAbstractVariable);
+				if (result == null) result = caseTypableElement(tAbstractVariable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypesPackage.TVARIABLE: {
 				TVariable tVariable = (TVariable)theEObject;
 				T result = caseTVariable(tVariable);
+				if (result == null) result = caseTAbstractVariable(tVariable);
+				if (result == null) result = caseAccessibleTypeElement(tVariable);
 				if (result == null) result = caseTExportableElement(tVariable);
 				if (result == null) result = caseTConstableElement(tVariable);
-				if (result == null) result = caseSyntaxRelatedTElement(tVariable);
-				if (result == null) result = caseTAnnotableElement(tVariable);
-				if (result == null) result = caseAccessibleTypeElement(tVariable);
-				if (result == null) result = caseTTypedElement(tVariable);
 				if (result == null) result = caseTNamespaceElement(tVariable);
 				if (result == null) result = caseIdentifiableElement(tVariable);
+				if (result == null) result = caseTTypedElement(tVariable);
+				if (result == null) result = caseTAnnotableElement(tVariable);
+				if (result == null) result = caseSyntaxRelatedTElement(tVariable);
 				if (result == null) result = caseTypableElement(tVariable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -1588,6 +1602,21 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTConstableElement(TConstableElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TAbstract Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TAbstract Variable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTAbstractVariable(TAbstractVariable object) {
 		return null;
 	}
 

@@ -96,21 +96,21 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
-	 * Returns the containing variable environment scope for the given identifiable element, depending on whether the
-	 * element is block scoped (i.e. variables declared with let, const) or not.
+	 * Returns the containing variable environment scope for the given variable, depending on whether it is block scoped
+	 * (i.e. variables declared with let, const) or not.
 	 *
-	 * @param elemInAST
+	 * @param variableInAST
 	 *            an AST node of a subtype of {@link IdentifiableElement} that may appear in the AST, e.g.
 	 *            {@link Variable}, {@link TypeVariable}, {@link TStructMember}.
 	 */
-	public static VariableEnvironmentElement getScope(IdentifiableElement elemInAST) {
-		return getScope(elemInAST, isBlockScoped(elemInAST));
+	public static VariableEnvironmentElement getScope(Variable<?> variableInAST) {
+		return getScope(variableInAST, isBlockScoped(variableInAST));
 	}
 
 	/**
-	 * Same as {@link #getScope(IdentifiableElement)}, but takes any kind of AST node. Flag <code>isBlockScoped</code>
-	 * can be used to determine whether the scope for "block scoped" elements should be returned (i.e. let, const) or
-	 * the scope for ordinarily scoped elements (e.g. var).
+	 * Same as {@link #getScope(Variable)}, but takes any kind of AST node. Flag <code>isBlockScoped</code> can be used
+	 * to determine whether the scope for "block scoped" elements should be returned (i.e. let, const) or the scope for
+	 * ordinarily scoped elements (e.g. var).
 	 */
 	public static VariableEnvironmentElement getScope(EObject astNode, boolean isBlockScoped) {
 		VariableEnvironmentElement scope = EcoreUtil2.getContainerOfType(astNode, VariableEnvironmentElement.class);
@@ -151,7 +151,7 @@ public abstract class N4JSASTUtils {
 	 *            an AST node of a subtype of {@link IdentifiableElement} that may appear in the AST, e.g.
 	 *            {@link Variable}, {@link TypeVariable}, {@link TStructMember}.
 	 */
-	public static boolean isBlockScoped(IdentifiableElement elemInAST) {
+	public static boolean isBlockScoped(Variable<?> elemInAST) {
 		if (elemInAST instanceof VariableDeclaration) {
 			final VariableDeclarationContainer parent = getVariableDeclarationContainer(
 					(VariableDeclaration) elemInAST);
@@ -472,10 +472,8 @@ public abstract class N4JSASTUtils {
 			return ((N4TypeVariable) obj).getDefinedTypeVariable();
 		} else if (obj instanceof PropertyAssignment) {
 			return ((PropertyAssignment) obj).getDefinedMember();
-		} else if (obj instanceof FormalParameter) {
-			return ((FormalParameter) obj).getDefinedTypeElement();
-		} else if (obj instanceof ExportedVariableDeclaration) {
-			return ((ExportedVariableDeclaration) obj).getDefinedVariable();
+		} else if (obj instanceof Variable) {
+			return ((Variable<?>) obj).getDefinedVariable();
 		}
 		// no type model element found
 		return null;

@@ -35,6 +35,7 @@ import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -60,6 +61,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getCyclicModulesRuntime <em>Cyclic Modules Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getCyclicModulesLoadtimeForInheritance <em>Cyclic Modules Loadtime For Inheritance</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getRuntimeCyclicLoadtimeDependents <em>Runtime Cyclic Loadtime Dependents</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getLocalVariables <em>Local Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalDynamicElements <em>Internal Dynamic Elements</em>}</li>
@@ -300,6 +302,16 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 	 * @ordered
 	 */
 	protected EList<TModule> runtimeCyclicLoadtimeDependents;
+
+	/**
+	 * The cached value of the '{@link #getLocalVariables() <em>Local Variables</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLocalVariables()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TVariable> localVariables;
 
 	/**
 	 * The cached value of the '{@link #getInternalTypes() <em>Internal Types</em>}' containment reference list.
@@ -668,6 +680,19 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 	 * @generated
 	 */
 	@Override
+	public EList<TVariable> getLocalVariables() {
+		if (localVariables == null) {
+			localVariables = new EObjectContainmentEList<TVariable>(TVariable.class, this, TypesPackage.TMODULE__LOCAL_VARIABLES);
+		}
+		return localVariables;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<Type> getInternalTypes() {
 		if (internalTypes == null) {
 			internalTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__INTERNAL_TYPES);
@@ -782,6 +807,8 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 				return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__DEPENDENCIES_RUNTIME:
 				return ((InternalEList<?>)getDependenciesRuntime()).basicRemove(otherEnd, msgs);
+			case TypesPackage.TMODULE__LOCAL_VARIABLES:
+				return ((InternalEList<?>)getLocalVariables()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
 				return ((InternalEList<?>)getInternalTypes()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
@@ -832,6 +859,8 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 				return getCyclicModulesLoadtimeForInheritance();
 			case TypesPackage.TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS:
 				return getRuntimeCyclicLoadtimeDependents();
+			case TypesPackage.TMODULE__LOCAL_VARIABLES:
+				return getLocalVariables();
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
 				return getInternalTypes();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
@@ -903,6 +932,10 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 			case TypesPackage.TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS:
 				getRuntimeCyclicLoadtimeDependents().clear();
 				getRuntimeCyclicLoadtimeDependents().addAll((Collection<? extends TModule>)newValue);
+				return;
+			case TypesPackage.TMODULE__LOCAL_VARIABLES:
+				getLocalVariables().clear();
+				getLocalVariables().addAll((Collection<? extends TVariable>)newValue);
 				return;
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
 				getInternalTypes().clear();
@@ -981,6 +1014,9 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 			case TypesPackage.TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS:
 				getRuntimeCyclicLoadtimeDependents().clear();
 				return;
+			case TypesPackage.TMODULE__LOCAL_VARIABLES:
+				getLocalVariables().clear();
+				return;
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
 				getInternalTypes().clear();
 				return;
@@ -1039,6 +1075,8 @@ public class TModuleImpl extends AbstractModuleImpl implements TModule {
 				return cyclicModulesLoadtimeForInheritance != null && !cyclicModulesLoadtimeForInheritance.isEmpty();
 			case TypesPackage.TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS:
 				return runtimeCyclicLoadtimeDependents != null && !runtimeCyclicLoadtimeDependents.isEmpty();
+			case TypesPackage.TMODULE__LOCAL_VARIABLES:
+				return localVariables != null && !localVariables.isEmpty();
 			case TypesPackage.TMODULE__INTERNAL_TYPES:
 				return internalTypes != null && !internalTypes.isEmpty();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:

@@ -28,7 +28,6 @@ import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.ConditionalExpression
 import org.eclipse.n4js.n4JS.DestructureUtils
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -66,6 +65,7 @@ import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
+import org.eclipse.n4js.n4JS.Variable
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
@@ -489,7 +489,7 @@ public class N4JSLanguageUtils {
 	}
 
 	def static boolean isTypeModelElementDefiningASTNode(EObject astNode) {
-		astNode instanceof ExportedVariableDeclaration
+		astNode instanceof VariableDeclaration
 		|| astNode instanceof TypeDefiningElement
 		|| (astNode instanceof N4MemberDeclaration && !(astNode instanceof N4MemberAnnotationList))
 		|| (astNode instanceof PropertyAssignment && !(astNode instanceof PropertyAssignmentAnnotationList))
@@ -501,12 +501,11 @@ public class N4JSLanguageUtils {
 
 	def static EObject getDefinedTypeModelElement(EObject astNode) {
 		switch(astNode) {
-			ExportedVariableDeclaration: astNode.definedVariable
+			Variable<?>: astNode.definedVariable
 			PropertyMethodDeclaration: astNode.definedMember
 			TypeDefiningElement: astNode.definedType
 			N4MemberDeclaration case !(astNode instanceof N4MemberAnnotationList): astNode.definedTypeElement
 			PropertyAssignment case !(astNode instanceof PropertyAssignmentAnnotationList): astNode.definedMember
-			FormalParameter: astNode.definedTypeElement
 			TStructMember case astNode.isASTNode: astNode.definedMember // note: a TStructMember may be an AST node or types model element!
 			N4EnumLiteral: astNode.definedLiteral
 			N4TypeVariable: astNode.definedTypeVariable
@@ -543,7 +542,7 @@ public class N4JSLanguageUtils {
 	 */
 	def static boolean isExported(IdentifiableElement elem) {
 		return switch(elem) {
-			ExportedVariableDeclaration: true
+			VariableDeclaration: true
 			TVariable: elem.exported
 			Type: elem.exported
 			default: false
@@ -1014,7 +1013,7 @@ public class N4JSLanguageUtils {
 		}
 		// cases of expressions that may or may not be a compile-time expression:
 		val parent = expr.eContainer;
-		return parent instanceof ExportedVariableDeclaration
+		return parent instanceof VariableDeclaration
 			|| parent instanceof N4FieldDeclaration;
 	}
 

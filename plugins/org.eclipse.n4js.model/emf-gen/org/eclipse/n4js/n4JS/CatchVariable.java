@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import org.eclipse.n4js.ts.types.TVariable;
 
 /**
  * <!-- begin-user-doc -->
@@ -27,7 +28,7 @@ package org.eclipse.n4js.n4JS;
  * @model
  * @generated
  */
-public interface CatchVariable extends Variable {
+public interface CatchVariable extends Variable<TVariable> {
 	/**
 	 * Returns the value of the '<em><b>Binding Pattern</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

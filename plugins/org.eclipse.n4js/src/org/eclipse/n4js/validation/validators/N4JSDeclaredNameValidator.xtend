@@ -36,7 +36,6 @@ import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
@@ -297,10 +296,6 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 							{
 
 								if (baseEO instanceof N4ClassExpression || dupeEO instanceof N4ClassExpression) {
-									return;
-								}
-
-								if (baseEO instanceof LocalArgumentsVariable || dupeEO instanceof LocalArgumentsVariable) {
 									return;
 								}
 
@@ -590,7 +585,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 			Script: 
 				namedEOs += scope.scriptElements.filter(ImportDeclaration).flatMap[importSpecifiers].toList
 			FunctionOrFieldAccessor:
-				namedEOs += scope.localArgumentsVariable
+				namedEOs += scope.implicitArgumentsVariable
 		}
 
 		// add all elements from the scope as computed by ordinary scoping:
@@ -691,6 +686,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (eo instanceof FunctionDeclaration) {
 			return N4JSPackage.Literals.FUNCTION_DECLARATION__NAME;
+		}
+
+		if (eo instanceof Variable) {
+			return N4JSPackage.Literals.VARIABLE__NAME;
 		}
 
 		if (eo instanceof NamedImportSpecifier) {

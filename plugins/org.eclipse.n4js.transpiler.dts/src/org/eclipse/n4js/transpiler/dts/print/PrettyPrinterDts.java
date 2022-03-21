@@ -37,8 +37,6 @@ import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
@@ -46,7 +44,6 @@ import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
@@ -751,12 +748,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 	}
 
 	@Override
-	public Boolean caseLocalArgumentsVariable(LocalArgumentsVariable original) {
-		// ignore
-		return DONE;
-	}
-
-	@Override
 	public Boolean caseFormalParameter(FormalParameter original) {
 		processAnnotations(original.getAnnotations(), false);
 		if (original.isVariadic()) {
@@ -804,25 +795,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseVariableStatement(VariableStatement original) {
-		writeIf("declare ", !(original instanceof ExportedVariableStatement));
-		write(keyword(original.getVarStmtKeyword()));
-		write(' ');
-		process(original.getVarDeclsOrBindings(), ", ");
-		// alternative to previous line would be:
-		// out.indent();
-		// process(original.getVarDeclsOrBindings(), () -> {
-		// write(',');
-		// newLine();
-		// });
-		// out.undent();
-		write(';');
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseExportedVariableStatement(ExportedVariableStatement original) {
-		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
-		// emitted there; so, no need to emit "export" in this method!
 		if (original.isExportedAsDefault()) {
 			EList<VariableDeclarationOrBinding> declsOrBindings = original.getVarDeclsOrBindings();
 			// the default export does only support a single element. Hence, only the first entry is used.
@@ -838,23 +810,37 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 			newLine();
 
 			write("declare ");
-			caseVariableStatement(original);
 
-		} else {
+		} else if (original.isExported()) {
 			if (((NamespaceElement) original).isInNamespace()) {
-				if (!original.getVarDecl().isEmpty()
-						&& original.getVarDecl().get(0) instanceof ExportedVariableDeclaration) {
+				if (!original.getVarDecl().isEmpty()) {
 
-					ExportedVariableDeclaration evd = (ExportedVariableDeclaration) original.getVarDecl().get(0);
+					VariableDeclaration evd = original.getVarDecl().get(0);
 					TVariable tVariable = state.info.getOriginalDefinedVariable(evd);
 					if (tVariable != null && tVariable.getTypeAccessModifier() != TypeAccessModifier.PRIVATE) {
 						write("export ");
 					}
 				}
 			}
+
 			processTopLevelElementModifiers(original.getDeclaredModifiers());
-			caseVariableStatement(original);
+
+		} else {
+			// not exported
+			write("declare ");
 		}
+
+		write(keyword(original.getVarStmtKeyword()));
+		write(' ');
+		process(original.getVarDeclsOrBindings(), ", ");
+		// alternative to previous line would be:
+		// out.indent();
+		// process(original.getVarDeclsOrBindings(), () -> {
+		// write(',');
+		// newLine();
+		// });
+		// out.undent();
+		write(';');
 		return DONE;
 	}
 
@@ -869,12 +855,6 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		default:
 			throw new UnsupportedOperationException("unsupported variable statement keyword");
 		}
-	}
-
-	@Override
-	public Boolean caseExportedVariableDeclaration(ExportedVariableDeclaration original) {
-		caseVariableDeclaration(original);
-		return DONE;
 	}
 
 	@Override

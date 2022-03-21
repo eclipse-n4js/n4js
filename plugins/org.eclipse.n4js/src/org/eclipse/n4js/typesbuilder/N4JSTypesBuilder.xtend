@@ -16,7 +16,6 @@ import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ExportableElement
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.MethodDeclaration
@@ -32,7 +31,9 @@ import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.TryStatement
 import org.eclipse.n4js.n4JS.TypeDefiningElement
+import org.eclipse.n4js.n4JS.VariableDeclarationContainer
 import org.eclipse.n4js.naming.ModuleNameComputer
 import org.eclipse.n4js.naming.SpecifierConverter
 import org.eclipse.n4js.resource.N4JSResource
@@ -299,7 +300,10 @@ public class N4JSTypesBuilder {
 				TypeDefiningElement: {
 					rlis.topLevelTypesIdx = n.relinkType(target, preLinkingPhase, rlis.topLevelTypesIdx);
 				}
-				ExportedVariableStatement: {
+				VariableDeclarationContainer: {
+					rlis.variableIdx = n.relinkType(target, preLinkingPhase, rlis.variableIdx)
+				}
+				TryStatement: {
 					rlis.variableIdx = n.relinkType(target, preLinkingPhase, rlis.variableIdx)
 				}
 			}
@@ -398,10 +402,15 @@ public class N4JSTypesBuilder {
 		return idx;
 	}
 
-	def protected dispatch int relinkType(ExportedVariableStatement n4VariableStatement, AbstractNamespace target,
-		boolean preLinkingPhase, int idx) {
-		return n4VariableStatement.relinkVariableTypes(target, preLinkingPhase, idx)
+	def protected dispatch int relinkType(VariableDeclarationContainer n4VarDeclContainer, AbstractNamespace target, boolean preLinkingPhase, int idx) {
+		return n4VarDeclContainer.relinkVariableTypes(target, preLinkingPhase, idx)
 	}
+
+	def protected dispatch int relinkType(TryStatement tryStmnt, AbstractNamespace target, boolean preLinkingPhase, int idx) {
+		return tryStmnt.relinkVariableTypes(target, preLinkingPhase, idx)
+	}
+
+
 
 	def private void buildTypes(EObject container, AbstractNamespace target, boolean preLinkingPhase) {
 		for (n : container.eContents) {
@@ -416,7 +425,9 @@ public class N4JSTypesBuilder {
 				}
 				TypeDefiningElement:
 					n.createType(target, preLinkingPhase)
-				ExportedVariableStatement:
+				VariableDeclarationContainer: // VariableStatement and ForStatement
+					n.createType(target, preLinkingPhase)
+				TryStatement:
 					n.createType(target, preLinkingPhase)
 			}
 			if (!(n instanceof N4AbstractNamespaceDeclaration)) {
@@ -481,8 +492,11 @@ public class N4JSTypesBuilder {
 		n4FunctionExpr.createTFunction(target, preLinkingPhase)
 	}
 
-	def protected dispatch void createType(ExportedVariableStatement n4VariableStatement, AbstractNamespace target,
-		boolean preLinkingPhase) {
-		n4VariableStatement.createVariableTypes(target, preLinkingPhase)
+	def protected dispatch void createType(VariableDeclarationContainer n4VarDeclContainer, AbstractNamespace target, boolean preLinkingPhase) {
+		n4VarDeclContainer.createVariableTypes(target, preLinkingPhase)
+	}
+
+	def protected dispatch void createType(TryStatement tryStmnt, AbstractNamespace target, boolean preLinkingPhase) {
+		tryStmnt.createVariableTypes(target, preLinkingPhase)
 	}
 }

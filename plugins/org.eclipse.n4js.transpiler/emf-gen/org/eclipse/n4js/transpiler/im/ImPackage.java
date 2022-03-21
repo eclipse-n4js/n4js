@@ -1263,6 +1263,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_MEMBER___GET_ALL_ANNOTATIONS = N4JSPackage.N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_MEMBER___IS_EXTERNAL = N4JSPackage.N4_MEMBER_DECLARATION___IS_EXTERNAL;
+
+	/**
 	 * The operation id for the '<em>Is Declared External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1408,13 +1417,13 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_GETTER_DECLARATION__BODY = N4JSPackage.N4_GETTER_DECLARATION__BODY;
 
 	/**
-	 * The feature id for the '<em><b>lok</b></em>' containment reference.
+	 * The feature id for the '<em><b>Implicit Arguments Variable</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELEGATING_GETTER_DECLARATION__LOK = N4JSPackage.N4_GETTER_DECLARATION__LOK;
+	int DELEGATING_GETTER_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE = N4JSPackage.N4_GETTER_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE;
 
 	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
@@ -1543,15 +1552,6 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_GETTER_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = N4JSPackage.N4_GETTER_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS;
 
 	/**
-	 * The operation id for the '<em>Get Local Arguments Variable</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_GETTER_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE = N4JSPackage.N4_GETTER_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE;
-
-	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1640,6 +1640,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_GETTER_DECLARATION___GET_DEFINED_ACCESSOR = N4JSPackage.N4_GETTER_DECLARATION___GET_DEFINED_ACCESSOR;
+
+	/**
+	 * The operation id for the '<em>Is External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_GETTER_DECLARATION___IS_EXTERNAL = N4JSPackage.N4_GETTER_DECLARATION___IS_EXTERNAL;
 
 	/**
 	 * The operation id for the '<em>Is Declared External</em>' operation.
@@ -1796,13 +1805,13 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_SETTER_DECLARATION__BODY = N4JSPackage.N4_SETTER_DECLARATION__BODY;
 
 	/**
-	 * The feature id for the '<em><b>lok</b></em>' containment reference.
+	 * The feature id for the '<em><b>Implicit Arguments Variable</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELEGATING_SETTER_DECLARATION__LOK = N4JSPackage.N4_SETTER_DECLARATION__LOK;
+	int DELEGATING_SETTER_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE = N4JSPackage.N4_SETTER_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE;
 
 	/**
 	 * The feature id for the '<em><b>Declared Name</b></em>' containment reference.
@@ -1931,15 +1940,6 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_SETTER_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = N4JSPackage.N4_SETTER_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS;
 
 	/**
-	 * The operation id for the '<em>Get Local Arguments Variable</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_SETTER_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE = N4JSPackage.N4_SETTER_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE;
-
-	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2028,6 +2028,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST = N4JSPackage.N4_SETTER_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST;
+
+	/**
+	 * The operation id for the '<em>Is External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_SETTER_DECLARATION___IS_EXTERNAL = N4JSPackage.N4_SETTER_DECLARATION___IS_EXTERNAL;
 
 	/**
 	 * The operation id for the '<em>Is Declared External</em>' operation.
@@ -2211,13 +2220,13 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION__BODY = N4JSPackage.N4_METHOD_DECLARATION__BODY;
 
 	/**
-	 * The feature id for the '<em><b>lok</b></em>' containment reference.
+	 * The feature id for the '<em><b>Implicit Arguments Variable</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DELEGATING_METHOD_DECLARATION__LOK = N4JSPackage.N4_METHOD_DECLARATION__LOK;
+	int DELEGATING_METHOD_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE = N4JSPackage.N4_METHOD_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE;
 
 	/**
 	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
@@ -2337,6 +2346,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION___GET_ALL_ANNOTATIONS = N4JSPackage.N4_METHOD_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Is External</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION___IS_EXTERNAL = N4JSPackage.N4_METHOD_DECLARATION___IS_EXTERNAL;
+
+	/**
 	 * The operation id for the '<em>Is Declared External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2407,15 +2425,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = N4JSPackage.N4_METHOD_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS;
-
-	/**
-	 * The operation id for the '<em>Get Local Arguments Variable</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_METHOD_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE = N4JSPackage.N4_METHOD_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE;
 
 	/**
 	 * The operation id for the '<em>Get Defined Function Or Accessor</em>' operation.

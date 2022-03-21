@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.tests.n4JS.extensions
 
-import java.util.List
 import javax.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression
 import org.eclipse.n4js.n4JS.Block
@@ -18,6 +17,7 @@ import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IfStatement
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
+import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -27,7 +27,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.scoping.utils.SourceElementExtensions
 
 /**
  */
@@ -62,6 +61,7 @@ class SourceElementExtensionsTest {
 		assertEquals("fun2, y, arguments", fun2.toVisibleElementNameList)
 	}
 
+	@Test
 	def testCollectVisibleIdentifiableElements_Var_vs_Let() {
 		val script = '''
 			var v0;
@@ -82,10 +82,10 @@ class SourceElementExtensionsTest {
 	}
 
 	def private toVisibleElementNameList(VariableEnvironmentElement element) {
-		collectVisibleIdentifiableElements(element).toNameList
+		(collectVisibleIdentifiableElements(element) + collectLocalArguments(element)).toNameList
 	}
 
-	def private toNameList(List<IdentifiableElement> visibleElements) {
+	def private toNameList(Iterable<IdentifiableElement> visibleElements) {
 		visibleElements.map[name].join(", ")
 	}
 }

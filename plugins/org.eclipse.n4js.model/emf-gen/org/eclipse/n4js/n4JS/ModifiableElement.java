@@ -56,6 +56,14 @@ public interface ModifiableElement extends EObject {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
+	boolean isExternal();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
 	boolean isDeclaredExternal();
 
 	/**

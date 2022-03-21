@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.json.validation.JSONIssueCodes;
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 
@@ -151,7 +150,7 @@ public abstract class N4JSLanguageConstants {
 			"static",
 			"yield");
 
-	/** Name of the {@link LocalArgumentsVariable}. */
+	/** Name of the implicit "arguments" variable in functions/methods. */
 	public static final String LOCAL_ARGUMENTS_VARIABLE_NAME = "arguments";
 
 	/** Name of built-in function 'eval'. */

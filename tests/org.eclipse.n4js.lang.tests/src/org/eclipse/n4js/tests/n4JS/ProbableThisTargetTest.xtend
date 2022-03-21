@@ -11,11 +11,13 @@
 package org.eclipse.n4js.tests.n4JS
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.ThisTarget
-import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -24,11 +26,10 @@ import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.junit.Assert.*
-import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
-import org.eclipse.emf.ecore.EObject
-import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
 import static org.eclipse.n4js.validation.validators.UnsupportedFeatureValidator.*
+import static org.junit.Assert.*
+
+import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
 
 /**
  * Tests for computing probable this target.
@@ -50,7 +51,7 @@ class ProbableThisTargetTest {
 			script.validate;
 		}
 
-		var EObject targetElement = EcoreUtil2.eAllOfType(script, IdentifiableElement).filter[name=="target"].head;
+		var EObject targetElement = EcoreUtil2.eAllOfType(script, VariableDeclaration).filter[name=="target"].head;
 		if (targetElement===null) {
 			targetElement = EcoreUtil2.eAllOfType(script, N4ClassifierDeclaration).filter[name=="target"].head;
 		}

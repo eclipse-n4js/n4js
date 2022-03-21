@@ -47,7 +47,6 @@ import org.eclipse.n4js.n4JS.IterationStatement
 import org.eclipse.n4js.n4JS.LabelRef
 import org.eclipse.n4js.n4JS.LabelledStatement
 import org.eclipse.n4js.n4JS.LegacyOctalIntLiteral
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.MethodDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
@@ -786,18 +785,17 @@ class ASTStructureValidator {
 	}
 
 	def private dispatch void validateASTStructure(
-		Variable model,
+		Variable<?> model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
 		Constraints constraints
 	) {
 		val name = model.name
 		if (name !== null) {
-			if (name == LOCAL_ARGUMENTS_VARIABLE_NAME && !(model instanceof LocalArgumentsVariable)) {
-				val isLocalArgsVar = model instanceof LocalArgumentsVariable;
+			if (name == LOCAL_ARGUMENTS_VARIABLE_NAME) {
 				val isFparInN4jsd = constraints.isExternal // here: isExternal <==> file extension is ".n4jsd"
 						&& (model instanceof FormalParameter);
-				if (!isLocalArgsVar && !isFparInN4jsd) {
+				if (!isFparInN4jsd) {
 					issueArgumentsError(model, name, constraints.isStrict, producer)
 				}
 			} else {
@@ -1016,7 +1014,7 @@ class ASTStructureValidator {
 									IssueCodes.AST_VAR_DECL_IN_FOR_INVALID_INIT))
 						}
 					} else if (model.varStmtKeyword === VariableStatementKeyword.LET && varDecl.name == 'let') {
-						val nodes = NodeModelUtils.findNodesForFeature(varDecl, TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME)
+						val nodes = NodeModelUtils.findNodesForFeature(varDecl, N4JSPackage.Literals.VARIABLE__NAME)
 						val target = nodes.head ?: NodeModelUtils.findActualNodeFor(varDecl)
 						producer.node = target
 						if(target !== null) {
@@ -1103,7 +1101,7 @@ class ASTStructureValidator {
 		}
 
 		_validateASTStructure(
-			model as Variable,
+			model as Variable<?>,
 			producer,
 			validLabels,
 			constraints.allowYieldExpression(allowYieldInInit)
@@ -1700,13 +1698,13 @@ class ASTStructureValidator {
 		Constraints constraints
 	) {
 		if (model.expression === null && constraints.isVarInitializerRequired && !constraints.external) {
-			val nodes = NodeModelUtils.findNodesForFeature(model, TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME);
+			val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.VARIABLE__NAME);
 			producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(model)
 			producer.addDiagnostic(
 				new DiagnosticMessage(IssueCodes.getMessageForAST_CONST_HAS_NO_INITIALIZER(model.getName()),
 					IssueCodes.getDefaultSeverity(IssueCodes.AST_CONST_HAS_NO_INITIALIZER), IssueCodes.AST_CONST_HAS_NO_INITIALIZER))
 		}
-		_validateASTStructure(model as Variable, producer, validLabels, constraints.allowVarWithoutInitializer(true))
+		_validateASTStructure(model as Variable<?>, producer, validLabels, constraints.allowVarWithoutInitializer(true))
 	}
 
 	def private dispatch void validateASTStructure(

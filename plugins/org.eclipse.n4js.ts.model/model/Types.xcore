@@ -152,6 +152,12 @@ class TModule extends AbstractModule, TAnnotableElement {
 	refers TModule[] runtimeCyclicLoadtimeDependents
 
 	/*
+	 * Non-exported variables. This contains the non-exported variables for the entire TModule, i.e. also those
+	 * declared inside functions, methods, namespaces, and declared modules.
+	 */
+	contains transient TVariable[] localVariables
+
+	/*
 	 * Internal types may be populated incrementally by the type checker. Typically these
 	 * are types derived from nested structures of the AST.
 	 * <p>
@@ -1465,7 +1471,7 @@ class TMethod extends TFunction, TMemberWithAccessModifier {
 class TStructMethod extends TMethod, TStructMember {
 }
 
-class TFormalParameter extends IdentifiableElement, TAnnotableElement, SyntaxRelatedTElement, TTypedElement {
+class TFormalParameter extends TAbstractVariable {
 	boolean variadic
 	/*
 	 * If and only if the TFormalParameter is used as an AST node, this property holds the initializer
@@ -1777,12 +1783,14 @@ abstract class TConstableElement {
 	String compileTimeValue
 }
 
+abstract class TAbstractVariable extends IdentifiableElement, TTypedElement, TAnnotableElement, SyntaxRelatedTElement {
+}
+
 /*
- * Used for storing information about exported variables in the Xtext index, similar
- * to Types (such as TClass, TInterface, TFunction). It references the variable declaration of the
- * export declaration (via SyntaxRelatedTElement's astElement).
+ * Created for all subclasses of {@code AbstractVariable} (in N4JS.xcore), esp. {@code VariableDeclaration},
+ * except {@code FormalParameter} (in N4JS.xcore).
  */
-class TVariable extends TExportableElement, TConstableElement, SyntaxRelatedTElement, TAnnotableElement, AccessibleTypeElement, TTypedElement, TNamespaceElement {
+class TVariable extends TAbstractVariable, AccessibleTypeElement, TExportableElement, TConstableElement, TNamespaceElement {
 	boolean external
 	boolean objectLiteral
 	boolean newExpression

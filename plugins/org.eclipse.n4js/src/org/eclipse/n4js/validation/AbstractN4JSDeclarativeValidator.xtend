@@ -30,6 +30,7 @@ import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.IfStatement
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4JSMetaModelUtils
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
@@ -41,6 +42,7 @@ import org.eclipse.n4js.n4JS.SwitchStatement
 import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.TryStatement
 import org.eclipse.n4js.n4JS.TypeReferenceNode
+import org.eclipse.n4js.n4JS.Variable
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.WhileStatement
 import org.eclipse.n4js.n4JS.WithStatement
@@ -517,6 +519,8 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 			} else if (eo instanceof VariableStatement) {
 				val varDecl = eo.varDecl.head
 				findNameFeature(varDecl)
+			} else if (eo instanceof Variable<?>) {
+				eo -> N4JSPackage.Literals.VARIABLE__NAME
 			} else {
 				null
 			}

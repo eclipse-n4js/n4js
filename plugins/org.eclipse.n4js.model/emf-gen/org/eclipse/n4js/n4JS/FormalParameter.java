@@ -25,7 +25,6 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#isVariadic <em>Variadic</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#getDefinedTypeElement <em>Defined Type Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#isHasInitializerAssignment <em>Has Initializer Assignment</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#getInitializer <em>Initializer</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FormalParameter#getBindingPattern <em>Binding Pattern</em>}</li>
@@ -35,7 +34,7 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
  * @model
  * @generated
  */
-public interface FormalParameter extends AnnotableElement, Variable {
+public interface FormalParameter extends AnnotableElement, Variable<TFormalParameter> {
 	/**
 	 * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.Annotation}.
@@ -69,28 +68,6 @@ public interface FormalParameter extends AnnotableElement, Variable {
 	 * @generated
 	 */
 	void setVariadic(boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Defined Type Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Defined Type Element</em>' reference.
-	 * @see #setDefinedTypeElement(TFormalParameter)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFormalParameter_DefinedTypeElement()
-	 * @model transient="true"
-	 * @generated
-	 */
-	TFormalParameter getDefinedTypeElement();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FormalParameter#getDefinedTypeElement <em>Defined Type Element</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Defined Type Element</em>' reference.
-	 * @see #getDefinedTypeElement()
-	 * @generated
-	 */
-	void setDefinedTypeElement(TFormalParameter value);
 
 	/**
 	 * Returns the value of the '<em><b>Has Initializer Assignment</b></em>' attribute.

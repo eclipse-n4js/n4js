@@ -17,7 +17,6 @@ import java.util.stream.Stream
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtend.lib.annotations.Data
 
 /**
@@ -120,7 +119,7 @@ public class DestructNode {
 				BindingProperty case astElement.declaredName !== null:
 					astElement -> N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName
 				BindingProperty case astElement.value?.varDecl?.name !== null:
-					astElement.value.varDecl -> TypesPackage.eINSTANCE.identifiableElement_Name
+					astElement.value.varDecl -> N4JSPackage.eINSTANCE.variable_Name
 				PropertyNameOwner:
 					astElement -> N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName
 				default:

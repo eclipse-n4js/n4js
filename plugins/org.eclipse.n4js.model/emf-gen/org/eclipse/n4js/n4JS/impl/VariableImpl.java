@@ -17,20 +17,14 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.Variable;
 
-import org.eclipse.n4js.ts.types.AbstractModule;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TypableElement;
-import org.eclipse.n4js.ts.types.TypesPackage;
-
-import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.n4js.ts.types.TAbstractVariable;
 
 /**
  * <!-- begin-user-doc -->
@@ -41,11 +35,12 @@ import org.eclipse.xtext.EcoreUtil2;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableImpl#getDefinedVariable <em>Defined Variable</em>}</li>
  * </ul>
  *
  * @generated
  */
-public abstract class VariableImpl extends TypedElementImpl implements Variable {
+public abstract class VariableImpl<T extends TAbstractVariable> extends TypedElementImpl implements Variable<T> {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -65,6 +60,16 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 	 * @ordered
 	 */
 	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getDefinedVariable() <em>Defined Variable</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDefinedVariable()
+	 * @generated
+	 * @ordered
+	 */
+	protected T definedVariable;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -113,29 +118,50 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public T getDefinedVariable() {
+		if (definedVariable != null && definedVariable.eIsProxy()) {
+			InternalEObject oldDefinedVariable = (InternalEObject)definedVariable;
+			definedVariable = (T)eResolveProxy(oldDefinedVariable);
+			if (definedVariable != oldDefinedVariable) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.VARIABLE__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
+			}
+		}
+		return definedVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public T basicGetDefinedVariable() {
+		return definedVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDefinedVariable(T newDefinedVariable) {
+		T oldDefinedVariable = definedVariable;
+		definedVariable = newDefinedVariable;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.VARIABLE__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public boolean isConst() {
 		return false;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public AbstractModule getContainingModule() {
-		return EcoreUtil2.<AbstractModule>getContainerOfType(this, AbstractModule.class);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TModule getContainingRootModule() {
-		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}
 
 	/**
@@ -148,6 +174,9 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 		switch (featureID) {
 			case N4JSPackage.VARIABLE__NAME:
 				return getName();
+			case N4JSPackage.VARIABLE__DEFINED_VARIABLE:
+				if (resolve) return getDefinedVariable();
+				return basicGetDefinedVariable();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -157,11 +186,15 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case N4JSPackage.VARIABLE__NAME:
 				setName((String)newValue);
+				return;
+			case N4JSPackage.VARIABLE__DEFINED_VARIABLE:
+				setDefinedVariable((T)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -178,6 +211,9 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 			case N4JSPackage.VARIABLE__NAME:
 				setName(NAME_EDEFAULT);
 				return;
+			case N4JSPackage.VARIABLE__DEFINED_VARIABLE:
+				setDefinedVariable((T)null);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -192,88 +228,10 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 		switch (featureID) {
 			case N4JSPackage.VARIABLE__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case N4JSPackage.VARIABLE__DEFINED_VARIABLE:
+				return definedVariable != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == TypableElement.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == IdentifiableElement.class) {
-			switch (derivedFeatureID) {
-				case N4JSPackage.VARIABLE__NAME: return TypesPackage.IDENTIFIABLE_ELEMENT__NAME;
-				default: return -1;
-			}
-		}
-		if (baseClass == NamedElement.class) {
-			switch (derivedFeatureID) {
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == TypableElement.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == IdentifiableElement.class) {
-			switch (baseFeatureID) {
-				case TypesPackage.IDENTIFIABLE_ELEMENT__NAME: return N4JSPackage.VARIABLE__NAME;
-				default: return -1;
-			}
-		}
-		if (baseClass == NamedElement.class) {
-			switch (baseFeatureID) {
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == TypableElement.class) {
-			switch (baseOperationID) {
-				default: return -1;
-			}
-		}
-		if (baseClass == IdentifiableElement.class) {
-			switch (baseOperationID) {
-				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE: return N4JSPackage.VARIABLE___GET_CONTAINING_MODULE;
-				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE: return N4JSPackage.VARIABLE___GET_CONTAINING_ROOT_MODULE;
-				default: return -1;
-			}
-		}
-		if (baseClass == NamedElement.class) {
-			switch (baseOperationID) {
-				case N4JSPackage.NAMED_ELEMENT___GET_NAME: return N4JSPackage.VARIABLE___GET_NAME;
-				default: return -1;
-			}
-		}
-		return super.eDerivedOperationID(baseOperationID, baseClass);
 	}
 
 	/**
@@ -286,10 +244,6 @@ public abstract class VariableImpl extends TypedElementImpl implements Variable 
 		switch (operationID) {
 			case N4JSPackage.VARIABLE___IS_CONST:
 				return isConst();
-			case N4JSPackage.VARIABLE___GET_CONTAINING_MODULE:
-				return getContainingModule();
-			case N4JSPackage.VARIABLE___GET_CONTAINING_ROOT_MODULE:
-				return getContainingRootModule();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -22,6 +22,8 @@ import org.eclipse.n4js.n4JS.BindingPattern;
 import org.eclipse.n4js.n4JS.CatchVariable;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 
+import org.eclipse.n4js.ts.types.TVariable;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Catch Variable</b></em>'.
@@ -35,7 +37,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
  *
  * @generated
  */
-public class CatchVariableImpl extends VariableImpl implements CatchVariable {
+public class CatchVariableImpl extends VariableImpl<TVariable> implements CatchVariable {
 	/**
 	 * The cached value of the '{@link #getBindingPattern() <em>Binding Pattern</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -63,6 +65,17 @@ public class CatchVariableImpl extends VariableImpl implements CatchVariable {
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.CATCH_VARIABLE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * This is specialized for the more specific type known in this context.
+	 * @generated
+	 */
+	@Override
+	public void setDefinedVariable(TVariable newDefinedVariable) {
+		super.setDefinedVariable(newDefinedVariable);
 	}
 
 	/**

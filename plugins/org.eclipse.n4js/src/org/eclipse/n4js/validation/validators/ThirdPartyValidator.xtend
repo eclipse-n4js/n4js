@@ -11,9 +11,9 @@
 package org.eclipse.n4js.validation.validators
 
 import org.eclipse.n4js.n4JS.FunctionExpression
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
-import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -53,7 +53,7 @@ class ThirdPartyValidator extends AbstractN4JSDeclarativeValidator {
 						for (varDecl : stmnt.varDecl) {
 							if (varDecl.name == funName) {
 								addIssue(messageForTHIRD_PARTY_BABEL_LET_CONST_IN_FUN_EXPR,
-									varDecl, TypesPackage.eINSTANCE.identifiableElement_Name,
+									varDecl, N4JSPackage.eINSTANCE.variable_Name,
 									THIRD_PARTY_BABEL_LET_CONST_IN_FUN_EXPR);
 							}
 						}

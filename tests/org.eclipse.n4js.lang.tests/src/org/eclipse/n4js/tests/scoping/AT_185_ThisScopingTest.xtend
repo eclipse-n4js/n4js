@@ -110,7 +110,7 @@ class AT_185_ThisScopingTest {
 		val clazz = script.scriptElements.last as N4ClassDeclaration
 		val m = clazz.ownedMembers.last as N4MethodDeclaration
 		val globalA = (m.body.statements.head as ExpressionStatement).expression as IdentifierRef
-		assertSame((script.scriptElements.head as VariableStatement).varDecl.head, globalA.id)
+		assertSame((script.scriptElements.head as VariableStatement).varDecl.head.definedVariable, globalA.id)
 		val thisA = (m.body.statements.last as ExpressionStatement).expression as ParameterizedPropertyAccessExpression
 		assertSame(clazz.ownedMembers.head as N4FieldDeclaration, (thisA.property as TField).astElement)
 	}

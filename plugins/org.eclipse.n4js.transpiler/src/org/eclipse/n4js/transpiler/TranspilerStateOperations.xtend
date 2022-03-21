@@ -21,7 +21,6 @@ import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.EmptyStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FormalParameter
@@ -235,7 +234,7 @@ class TranspilerStateOperations {
 			return tempVarStmnt;
 		}
 		// need to create a new temporary variable statement
-		val tempVarStmntNew = _VariableStatement(false, VariableStatementKeyword.LET);
+		val tempVarStmntNew = _VariableStatement(VariableStatementKeyword.LET);
 		state.temporaryVariableStatements.put(context, tempVarStmntNew);
 		if (context instanceof FunctionOrFieldAccessor) {
 			// add to body of function/accessor
@@ -308,7 +307,7 @@ class TranspilerStateOperations {
 	 * into it and replacing the ExportDeclaration with the newly created {@code varStmt}
 	 * @return newly created {@code varStmt} (already part of the intermediate model).
 	 */
-	def public static VariableStatement removeExport(TranspilerState state, ExportedVariableStatement exVarStmnt) {
+	def public static void removeExport(TranspilerState state, VariableStatement exVarStmnt) {
 
 		if(!TranspilerUtils.isIntermediateModelElement(exVarStmnt)) {
 			throw new IllegalArgumentException("not an element in the intermediate model: " + exVarStmnt);
@@ -316,15 +315,7 @@ class TranspilerStateOperations {
 
 		val exportDecl = exVarStmnt.eContainer as ExportDeclaration
 
-		// convert to VariableStatement:
-		val varStmnt = TranspilerBuilderBlocks._VariableStatement() => [
-			varDeclsOrBindings += exVarStmnt.varDeclsOrBindings
-			varStmtKeyword = exVarStmnt.varStmtKeyword
-		];
-
-		state.replaceWithoutRewire(exportDecl,varStmnt);
-
-		return varStmnt
+		state.replaceWithoutRewire(exportDecl,exVarStmnt);
 	}
 
 
@@ -342,8 +333,7 @@ class TranspilerStateOperations {
 	 * newly created [Exported]VariableStatement.
 	 */
 	def public static void replace(TranspilerState state, N4InterfaceDeclaration ifcDecl, VariableDeclaration varDecl) {
-		val isExported = ifcDecl.eContainer instanceof ExportDeclaration;
-		val varStmnt = _VariableStatement(isExported, VariableStatementKeyword.CONST, varDecl);
+		val varStmnt = _VariableStatement(VariableStatementKeyword.CONST, varDecl);
 		state.replaceWithoutRewire(ifcDecl, varStmnt);
 		state.rewireSymbolTable(ifcDecl, varDecl);
 	}
@@ -354,14 +344,13 @@ class TranspilerStateOperations {
 	}
 
 	def public static void replace(TranspilerState state, FunctionDeclaration funDecl, VariableDeclaration varDecl) {
-		val isExported = funDecl.eContainer instanceof ExportDeclaration;
-		val varStmnt = _VariableStatement(isExported, varDecl);
+		val varStmnt = _VariableStatement(varDecl);
 		state.replaceWithoutRewire(funDecl, varStmnt);
 		state.rewireSymbolTable(funDecl,varDecl);
 		// need to rewire the local arguments variable, to enable renaming:
 		val varValue = varDecl.expression;
 		if(varValue instanceof FunctionExpression) {
-			state.rewireSymbolTable(funDecl.localArgumentsVariable, varValue.localArgumentsVariable);
+			state.rewireSymbolTable(funDecl.implicitArgumentsVariable, varValue.implicitArgumentsVariable);
 		} else {
 			throw new IllegalArgumentException(
 				"when replacing a function declaration by a variable declaration, " +

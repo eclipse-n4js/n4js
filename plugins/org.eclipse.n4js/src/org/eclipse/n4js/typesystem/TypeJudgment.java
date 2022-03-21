@@ -16,7 +16,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.GUARD_VARIABLE_DECLARATION;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.anyTypeRefDynamic;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.argumentsTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.booleanType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.booleanTypeRef;
@@ -86,7 +85,6 @@ import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.JSXElement;
 import org.eclipse.n4js.n4JS.JSXFragment;
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassExpression;
@@ -507,7 +505,7 @@ import com.google.inject.Inject;
 					T = typeSystemHelper.bindAndSubstituteThisTypeRef(G, fparTypeRefInAST, fparTypeRef);
 				} else {
 					// note: it's a bit cleaner to return the type from the TModule, if one was already determined
-					final TFormalParameter definedElem = fpar.getDefinedTypeElement();
+					final TFormalParameter definedElem = fpar.getDefinedVariable();
 					final TypeRef definedElemTypeRef = definedElem != null ? definedElem.getTypeRef() : null;
 					if (definedElemTypeRef != null) {
 						T = definedElemTypeRef;
@@ -1405,11 +1403,6 @@ import com.google.inject.Inject;
 			} else { // e.g. N4JS
 				return anyTypeRef(G);
 			}
-		}
-
-		@Override
-		public TypeRef caseLocalArgumentsVariable(LocalArgumentsVariable lArgumentsVar) {
-			return argumentsTypeRef(G);
 		}
 
 		@Override

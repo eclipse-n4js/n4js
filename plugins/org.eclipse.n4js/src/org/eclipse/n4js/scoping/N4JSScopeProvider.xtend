@@ -502,7 +502,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		result.add(sourceElementExtensions.collectVisibleIdentifiableElements(vee));
 
-		// arguments must be in own outer scope in order to enable shadowing of inner variables named "arguments"
+		// implicit variable "arguments" must be in own outer scope in order to enable shadowing of inner variables named "arguments"
 		result.add(sourceElementExtensions.collectLocalArguments(vee));
 
 		val parent = ancestor(vee, VariableEnvironmentElement);

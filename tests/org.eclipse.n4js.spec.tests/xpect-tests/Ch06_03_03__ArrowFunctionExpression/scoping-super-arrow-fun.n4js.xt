@@ -26,7 +26,7 @@ class C extends B {
   m() : number { return 1 }
 
   m2() : any {
-      return y => // XPECT linkedPathname at 'y'      --> C/m2/y
+      return y => // XPECT linkedPathname at 'y'      --> y
                   y +
                   // found during IDE-1852: XPECT FIXME noerrors
                   // XPECT linkedPathname at 'm()' --> B/m

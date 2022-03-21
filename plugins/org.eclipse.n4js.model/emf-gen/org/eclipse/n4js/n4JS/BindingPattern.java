@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,4 +23,12 @@ package org.eclipse.n4js.n4JS;
  * @generated
  */
 public interface BindingPattern extends ControlFlowElement {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	EList<VariableDeclaration> getAllVariableDeclarations();
+
 } // BindingPattern

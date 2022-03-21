@@ -176,15 +176,6 @@ public interface N4JSFactory extends EFactory {
 	ArrowFunction createArrowFunction();
 
 	/**
-	 * Returns a new object of class '<em>Local Arguments Variable</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Local Arguments Variable</em>'.
-	 * @generated
-	 */
-	LocalArgumentsVariable createLocalArgumentsVariable();
-
-	/**
 	 * Returns a new object of class '<em>Formal Parameter</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -221,15 +212,6 @@ public interface N4JSFactory extends EFactory {
 	VariableStatement createVariableStatement();
 
 	/**
-	 * Returns a new object of class '<em>Exported Variable Statement</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Exported Variable Statement</em>'.
-	 * @generated
-	 */
-	ExportedVariableStatement createExportedVariableStatement();
-
-	/**
 	 * Returns a new object of class '<em>Variable Binding</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -239,15 +221,6 @@ public interface N4JSFactory extends EFactory {
 	VariableBinding createVariableBinding();
 
 	/**
-	 * Returns a new object of class '<em>Exported Variable Binding</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Exported Variable Binding</em>'.
-	 * @generated
-	 */
-	ExportedVariableBinding createExportedVariableBinding();
-
-	/**
 	 * Returns a new object of class '<em>Variable Declaration</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -255,15 +228,6 @@ public interface N4JSFactory extends EFactory {
 	 * @generated
 	 */
 	VariableDeclaration createVariableDeclaration();
-
-	/**
-	 * Returns a new object of class '<em>Exported Variable Declaration</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Exported Variable Declaration</em>'.
-	 * @generated
-	 */
-	ExportedVariableDeclaration createExportedVariableDeclaration();
 
 	/**
 	 * Returns a new object of class '<em>Empty Statement</em>'.

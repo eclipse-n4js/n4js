@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.server.symbol;
 
 import org.eclipse.lsp4j.SymbolKind;
 import org.eclipse.n4js.n4JS.BooleanLiteral;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
@@ -25,6 +24,7 @@ import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.ObjectLiteral;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.StringLiteral;
+import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -74,7 +74,7 @@ public class SymbolKindCalculationHelper {
 		if (obj instanceof N4TypeVariable) {
 			return SymbolKind.TypeParameter;
 		}
-		if (obj instanceof ExportedVariableStatement) {
+		if (obj instanceof VariableStatement) {
 			return SymbolKind.Variable;
 		}
 		if (obj instanceof NamedElement) {

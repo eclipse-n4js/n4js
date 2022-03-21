@@ -90,6 +90,7 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMethod;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -155,7 +156,7 @@ import com.google.inject.Inject;
 				// Other than in expectedTypeOfRightSideInVariableDeclaration,
 				// here we need to return the typeRef of the TModule, since it
 				// might have been inferred by the PolyProcessor.
-				final TFormalParameter tFpar = fpar.getDefinedTypeElement();
+				final TFormalParameter tFpar = fpar.getDefinedVariable();
 				final TypeRef tFparTypeRef = tFpar != null ? tFpar.getTypeRef() : null;
 				if (tFparTypeRef != null) {
 					return tFparTypeRef;
@@ -696,15 +697,16 @@ import com.google.inject.Inject;
 							!forStmnt.getVarDecl().isEmpty()
 									? forStmnt.getVarDecl().get(0) // syntax does not allow more than 1 varDecl here
 									: null;
-					final VariableDeclaration varDeclOutside = // case: var x; for(x of myList) {}
+					final TVariable varDeclOutside = // case: var x; for(x of myList) {}
 							forStmnt.getInitExpr() instanceof IdentifierRef
-									&& ((IdentifierRef) forStmnt.getInitExpr()).getId() instanceof VariableDeclaration
-											? (VariableDeclaration) ((IdentifierRef) forStmnt.getInitExpr()).getId()
+									&& ((IdentifierRef) forStmnt.getInitExpr()).getId() instanceof TVariable
+											? (TVariable) ((IdentifierRef) forStmnt.getInitExpr()).getId()
 											: null;
 					if ((varDeclInFor != null && varDeclInFor.getDeclaredTypeRefNode() != null)
 							|| varDeclOutside != null) {
-						final VariableDeclaration varDecl = varDeclOutside != null ? varDeclOutside : varDeclInFor;
-						final TypeRef varTypeRef = ts.type(G, varDecl);
+						final TypeRef varTypeRef = varDeclOutside != null
+								? ts.type(G, varDeclOutside)
+								: ts.type(G, varDeclInFor);
 						if (varTypeRef == null) {
 							return unknown();
 						}

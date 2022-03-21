@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
@@ -58,11 +59,11 @@ public class UsedBeforeDeclaredAnalyserFastVersion extends GraphVisitor {
 			IdentifiableElement id = SymbolFactory.getId(ir);
 			if (id instanceof TVariable) {
 				TVariable tvar = (TVariable) id;
-				id = (VariableDeclaration) tvar.getAstElement();
-			}
-			Set<IdentifierRef> refs = checkLists.get(id);
-			if (refs != null) {
-				refs.add(ir);
+				EObject astNode = tvar.getAstElement();
+				Set<IdentifierRef> refs = checkLists.get(astNode);
+				if (refs != null) {
+					refs.add(ir);
+				}
 			}
 		}
 	}

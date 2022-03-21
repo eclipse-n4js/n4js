@@ -504,13 +504,22 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS = ABSTRACT_MODULE_FEATURE_COUNT + 13;
 
 	/**
+	 * The feature id for the '<em><b>Local Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__LOCAL_VARIABLES = ABSTRACT_MODULE_FEATURE_COUNT + 14;
+
+	/**
 	 * The feature id for the '<em><b>Internal Types</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__INTERNAL_TYPES = ABSTRACT_MODULE_FEATURE_COUNT + 14;
+	int TMODULE__INTERNAL_TYPES = ABSTRACT_MODULE_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Exposed Internal Types</b></em>' containment reference list.
@@ -519,7 +528,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__EXPOSED_INTERNAL_TYPES = ABSTRACT_MODULE_FEATURE_COUNT + 15;
+	int TMODULE__EXPOSED_INTERNAL_TYPES = ABSTRACT_MODULE_FEATURE_COUNT + 16;
 
 	/**
 	 * The feature id for the '<em><b>Internal Dynamic Elements</b></em>' containment reference list.
@@ -528,7 +537,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__INTERNAL_DYNAMIC_ELEMENTS = ABSTRACT_MODULE_FEATURE_COUNT + 16;
+	int TMODULE__INTERNAL_DYNAMIC_ELEMENTS = ABSTRACT_MODULE_FEATURE_COUNT + 17;
 
 	/**
 	 * The feature id for the '<em><b>Ast MD5</b></em>' attribute.
@@ -537,7 +546,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__AST_MD5 = ABSTRACT_MODULE_FEATURE_COUNT + 17;
+	int TMODULE__AST_MD5 = ABSTRACT_MODULE_FEATURE_COUNT + 18;
 
 	/**
 	 * The feature id for the '<em><b>Composed Member Caches</b></em>' containment reference list.
@@ -546,7 +555,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__COMPOSED_MEMBER_CACHES = ABSTRACT_MODULE_FEATURE_COUNT + 18;
+	int TMODULE__COMPOSED_MEMBER_CACHES = ABSTRACT_MODULE_FEATURE_COUNT + 19;
 
 	/**
 	 * The feature id for the '<em><b>Temporary Types</b></em>' containment reference list.
@@ -555,7 +564,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TEMPORARY_TYPES = ABSTRACT_MODULE_FEATURE_COUNT + 19;
+	int TMODULE__TEMPORARY_TYPES = ABSTRACT_MODULE_FEATURE_COUNT + 20;
 
 	/**
 	 * The number of structural features of the '<em>TModule</em>' class.
@@ -564,7 +573,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_FEATURE_COUNT = ABSTRACT_MODULE_FEATURE_COUNT + 20;
+	int TMODULE_FEATURE_COUNT = ABSTRACT_MODULE_FEATURE_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill Module</em>' operation.
@@ -9301,6 +9310,88 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD_OPERATION_COUNT = TMETHOD_OPERATION_COUNT + 5;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TAbstractVariableImpl <em>TAbstract Variable</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.TAbstractVariableImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAbstractVariable()
+	 * @generated
+	 */
+	int TABSTRACT_VARIABLE = 57;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE__NAME = IDENTIFIABLE_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE__TYPE_REF = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE__ANNOTATIONS = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE__AST_ELEMENT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>TAbstract Variable</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE___GET_CONTAINING_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE___GET_CONTAINING_ROOT_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE;
+
+	/**
+	 * The number of operations of the '<em>TAbstract Variable</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TFormalParameterImpl <em>TFormal Parameter</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9317,25 +9408,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER__NAME = IDENTIFIABLE_ELEMENT__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFORMAL_PARAMETER__ANNOTATIONS = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFORMAL_PARAMETER__AST_ELEMENT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 1;
+	int TFORMAL_PARAMETER__NAME = TABSTRACT_VARIABLE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -9344,7 +9417,25 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER__TYPE_REF = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 2;
+	int TFORMAL_PARAMETER__TYPE_REF = TABSTRACT_VARIABLE__TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFORMAL_PARAMETER__ANNOTATIONS = TABSTRACT_VARIABLE__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFORMAL_PARAMETER__AST_ELEMENT = TABSTRACT_VARIABLE__AST_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Variadic</b></em>' attribute.
@@ -9353,7 +9444,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER__VARIADIC = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
+	int TFORMAL_PARAMETER__VARIADIC = TABSTRACT_VARIABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Ast Initializer</b></em>' attribute.
@@ -9362,7 +9453,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER__AST_INITIALIZER = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 4;
+	int TFORMAL_PARAMETER__AST_INITIALIZER = TABSTRACT_VARIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Has Initializer Assignment</b></em>' attribute.
@@ -9371,7 +9462,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
+	int TFORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT = TABSTRACT_VARIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>TFormal Parameter</em>' class.
@@ -9380,7 +9471,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 6;
+	int TFORMAL_PARAMETER_FEATURE_COUNT = TABSTRACT_VARIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -9389,7 +9480,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___GET_CONTAINING_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
+	int TFORMAL_PARAMETER___GET_CONTAINING_MODULE = TABSTRACT_VARIABLE___GET_CONTAINING_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
@@ -9398,7 +9489,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___GET_CONTAINING_ROOT_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE;
+	int TFORMAL_PARAMETER___GET_CONTAINING_ROOT_MODULE = TABSTRACT_VARIABLE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Has AST Initializer</em>' operation.
@@ -9407,7 +9498,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___HAS_AST_INITIALIZER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
+	int TFORMAL_PARAMETER___HAS_AST_INITIALIZER = TABSTRACT_VARIABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -9416,7 +9507,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___IS_OPTIONAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
+	int TFORMAL_PARAMETER___IS_OPTIONAL = TABSTRACT_VARIABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Variadic Or Optional</em>' operation.
@@ -9425,7 +9516,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___IS_VARIADIC_OR_OPTIONAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
+	int TFORMAL_PARAMETER___IS_VARIADIC_OR_OPTIONAL = TABSTRACT_VARIABLE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Formal Parameter As Types String</em>' operation.
@@ -9434,7 +9525,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___GET_FORMAL_PARAMETER_AS_TYPES_STRING = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TFORMAL_PARAMETER___GET_FORMAL_PARAMETER_AS_TYPES_STRING = TABSTRACT_VARIABLE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Formal Parameter As String</em>' operation.
@@ -9443,7 +9534,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___GET_FORMAL_PARAMETER_AS_STRING = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TFORMAL_PARAMETER___GET_FORMAL_PARAMETER_AS_STRING = TABSTRACT_VARIABLE_OPERATION_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>TFormal Parameter</em>' class.
@@ -9452,7 +9543,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 5;
+	int TFORMAL_PARAMETER_OPERATION_COUNT = TABSTRACT_VARIABLE_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TAnonymousFormalParameterImpl <em>TAnonymous Formal Parameter</em>}' class.
@@ -9474,6 +9565,15 @@ public interface TypesPackage extends EPackage {
 	int TANONYMOUS_FORMAL_PARAMETER__NAME = TFORMAL_PARAMETER__NAME;
 
 	/**
+	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TANONYMOUS_FORMAL_PARAMETER__TYPE_REF = TFORMAL_PARAMETER__TYPE_REF;
+
+	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9490,15 +9590,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TANONYMOUS_FORMAL_PARAMETER__AST_ELEMENT = TFORMAL_PARAMETER__AST_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TANONYMOUS_FORMAL_PARAMETER__TYPE_REF = TFORMAL_PARAMETER__TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Variadic</b></em>' attribute.
@@ -12940,7 +13031,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
-	int TVARIABLE = 57;
+	int TVARIABLE = 58;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12949,70 +13040,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__NAME = TEXPORTABLE_ELEMENT__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__EXPORTED_NAME = TEXPORTABLE_ELEMENT__EXPORTED_NAME;
-
-	/**
-	 * The feature id for the '<em><b>Const</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__CONST = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Compile Time Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__COMPILE_TIME_VALUE = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__AST_ELEMENT = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__ANNOTATIONS = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__DECLARED_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__DECLARED_PROVIDED_BY_RUNTIME = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 5;
+	int TVARIABLE__NAME = TABSTRACT_VARIABLE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -13021,7 +13049,70 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__TYPE_REF = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 6;
+	int TVARIABLE__TYPE_REF = TABSTRACT_VARIABLE__TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__ANNOTATIONS = TABSTRACT_VARIABLE__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__AST_ELEMENT = TABSTRACT_VARIABLE__AST_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__DECLARED_TYPE_ACCESS_MODIFIER = TABSTRACT_VARIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__DECLARED_PROVIDED_BY_RUNTIME = TABSTRACT_VARIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__EXPORTED_NAME = TABSTRACT_VARIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Const</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__CONST = TABSTRACT_VARIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Compile Time Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__COMPILE_TIME_VALUE = TABSTRACT_VARIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -13030,7 +13121,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__EXTERNAL = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 7;
+	int TVARIABLE__EXTERNAL = TABSTRACT_VARIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Object Literal</b></em>' attribute.
@@ -13039,7 +13130,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__OBJECT_LITERAL = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 8;
+	int TVARIABLE__OBJECT_LITERAL = TABSTRACT_VARIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>New Expression</b></em>' attribute.
@@ -13048,7 +13139,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__NEW_EXPRESSION = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 9;
+	int TVARIABLE__NEW_EXPRESSION = TABSTRACT_VARIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>TVariable</em>' class.
@@ -13057,7 +13148,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE_FEATURE_COUNT = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 10;
+	int TVARIABLE_FEATURE_COUNT = TABSTRACT_VARIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -13066,7 +13157,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_CONTAINING_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE;
+	int TVARIABLE___GET_CONTAINING_MODULE = TABSTRACT_VARIABLE___GET_CONTAINING_MODULE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Root Module</em>' operation.
@@ -13075,7 +13166,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_CONTAINING_ROOT_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE;
+	int TVARIABLE___GET_CONTAINING_ROOT_MODULE = TABSTRACT_VARIABLE___GET_CONTAINING_ROOT_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -13084,7 +13175,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_PROVIDED_BY_RUNTIME = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 0;
+	int TVARIABLE___IS_PROVIDED_BY_RUNTIME = TABSTRACT_VARIABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -13093,7 +13184,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 1;
+	int TVARIABLE___GET_TYPE_ACCESS_MODIFIER = TABSTRACT_VARIABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
@@ -13102,7 +13193,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
+	int TVARIABLE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TABSTRACT_VARIABLE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -13111,7 +13202,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_EXPORTED = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TVARIABLE___IS_EXPORTED = TABSTRACT_VARIABLE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -13120,7 +13211,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_HOLLOW = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TVARIABLE___IS_HOLLOW = TABSTRACT_VARIABLE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Variable As String</em>' operation.
@@ -13129,7 +13220,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_VARIABLE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
+	int TVARIABLE___GET_VARIABLE_AS_STRING = TABSTRACT_VARIABLE_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>TVariable</em>' class.
@@ -13138,7 +13229,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
+	int TVARIABLE_OPERATION_COUNT = TABSTRACT_VARIABLE_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypingStrategy <em>Typing Strategy</em>}' enum.
@@ -13148,7 +13239,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
-	int TYPING_STRATEGY = 58;
+	int TYPING_STRATEGY = 59;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -13158,7 +13249,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
-	int TYPE_ACCESS_MODIFIER = 59;
+	int TYPE_ACCESS_MODIFIER = 60;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -13168,7 +13259,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
-	int MEMBER_ACCESS_MODIFIER = 60;
+	int MEMBER_ACCESS_MODIFIER = 61;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -13178,7 +13269,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
-	int MEMBER_TYPE = 61;
+	int MEMBER_TYPE = 62;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -13188,7 +13279,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 62;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 63;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -13198,7 +13289,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 63;
+	int ITERABLE_OF_TCLASSIFIER = 64;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -13208,7 +13299,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 64;
+	int VARIANCE = 65;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -13218,7 +13309,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 65;
+	int NAME_AND_ACCESS = 66;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -13228,7 +13319,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 66;
+	int MEMBER_LIST = 67;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -13238,7 +13329,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 67;
+	int TCLASSIFIER_ITERABLE = 68;
 
 
 	/**
@@ -13456,6 +13547,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTModule_RuntimeCyclicLoadtimeDependents();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getLocalVariables <em>Local Variables</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Local Variables</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getLocalVariables()
+	 * @see #getTModule()
+	 * @generated
+	 */
+	EReference getTModule_LocalVariables();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}'.
@@ -16195,6 +16297,16 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTConstableElement_CompileTimeValue();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TAbstractVariable <em>TAbstract Variable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>TAbstract Variable</em>'.
+	 * @see org.eclipse.n4js.ts.types.TAbstractVariable
+	 * @generated
+	 */
+	EClass getTAbstractVariable();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TVariable <em>TVariable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16539,6 +16651,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS = eINSTANCE.getTModule_RuntimeCyclicLoadtimeDependents();
+
+		/**
+		 * The meta object literal for the '<em><b>Local Variables</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TMODULE__LOCAL_VARIABLES = eINSTANCE.getTModule_LocalVariables();
 
 		/**
 		 * The meta object literal for the '<em><b>Internal Types</b></em>' containment reference list feature.
@@ -18769,6 +18889,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TCONSTABLE_ELEMENT__COMPILE_TIME_VALUE = eINSTANCE.getTConstableElement_CompileTimeValue();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TAbstractVariableImpl <em>TAbstract Variable</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.TAbstractVariableImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAbstractVariable()
+		 * @generated
+		 */
+		EClass TABSTRACT_VARIABLE = eINSTANCE.getTAbstractVariable();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TVariableImpl <em>TVariable</em>}' class.

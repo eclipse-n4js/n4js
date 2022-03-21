@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.common.util.EList;
 
+import org.eclipse.n4js.ts.types.TVariable;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Variable Declaration</b></em>'.
@@ -29,7 +31,7 @@ import org.eclipse.emf.common.util.EList;
  * @model
  * @generated
  */
-public interface VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable {
+public interface VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable<TVariable> {
 	/**
 	 * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.Annotation}.
@@ -75,5 +77,21 @@ public interface VariableDeclaration extends VariableDeclarationOrBinding, Annot
 	 * @generated
 	 */
 	boolean isConst();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isExported();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getExportedName();
 
 } // VariableDeclaration
