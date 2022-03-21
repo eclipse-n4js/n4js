@@ -194,7 +194,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			Set<URI> noDeps = new LinkedHashSet<>();
 			Multimap<URI, URI> dependsOn = LinkedHashMultimap.create();
 			Multimap<URI, URI> dependsOnInverse = LinkedHashMultimap.create();
-			initDependencyMaps(resourceSet, projectConfig, allUris, noDeps, dependsOn, dependsOnInverse);
+			allUris = initDependencyMaps(resourceSet, projectConfig, allUris, noDeps, dependsOn, dependsOnInverse);
 			List<URI> sortedUris = sortAllUris(noDeps, allUris, dependsOn, dependsOnInverse);
 			return new AdjustedBuildRequest(initialRequest, sortedUris, null);
 
@@ -204,7 +204,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 		}
 	}
 
-	private void initDependencyMaps(WorkspaceAwareResourceSet resourceSet, N4JSProjectConfigSnapshot pcs,
+	private Set<URI> initDependencyMaps(WorkspaceAwareResourceSet resourceSet, N4JSProjectConfigSnapshot pcs,
 			Iterable<URI> allUris, Set<URI> noDeps, Multimap<URI, URI> dependsOn, Multimap<URI, URI> dependsOnInverse) {
 
 		Map<URI, Resource> resourcesMap = new HashMap<>();
@@ -268,6 +268,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 				}
 			}
 		}
+		return resourcesMap.keySet();
 	}
 
 	/**
