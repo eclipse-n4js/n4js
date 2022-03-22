@@ -12,6 +12,7 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
+import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.TypeVariable;
 
 /**
@@ -36,7 +37,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * @model
  * @generated
  */
-public interface N4TypeVariable extends NamedElement {
+public interface N4TypeVariable extends TypableElement, NamedElement {
 	/**
 	 * Returns the value of the '<em><b>Defined Type Variable</b></em>' reference.
 	 * <!-- begin-user-doc -->

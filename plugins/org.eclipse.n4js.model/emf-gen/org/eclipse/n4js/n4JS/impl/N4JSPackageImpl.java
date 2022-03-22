@@ -8907,6 +8907,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		commaExpressionEClass.getESuperTypes().add(this.getExpression());
 		typeDefiningElementEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		genericDeclarationEClass.getESuperTypes().add(this.getTypeDefiningElement());
+		n4TypeVariableEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		n4TypeVariableEClass.getESuperTypes().add(this.getNamedElement());
 		n4TypeDefinitionEClass.getESuperTypes().add(this.getAnnotableElement());
 		n4TypeDefinitionEClass.getESuperTypes().add(this.getTypeDefiningElement());
