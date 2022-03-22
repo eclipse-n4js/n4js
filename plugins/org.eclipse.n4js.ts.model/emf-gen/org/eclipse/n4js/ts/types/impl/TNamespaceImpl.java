@@ -43,6 +43,8 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
+import org.eclipse.n4js.ts.types.TypesPackage.Literals;
+
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -354,6 +356,21 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 		external = newExternal;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TNAMESPACE__EXTERNAL, oldExternal, external));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EObject getAstElementNoResolve() {
+		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+		final EObject astElem = ((EObject) _eGet);
+		if (((astElem != null) && (!astElem.eIsProxy()))) {
+			return astElem;
+		}
+		return null;
 	}
 
 	/**
@@ -681,6 +698,7 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 		}
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseOperationID) {
+				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.TNAMESPACE___GET_AST_ELEMENT_NO_RESOLVE;
 				default: return -1;
 			}
 		}
@@ -695,6 +713,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypesPackage.TNAMESPACE___GET_AST_ELEMENT_NO_RESOLVE:
+				return getAstElementNoResolve();
 			case TypesPackage.TNAMESPACE___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TNAMESPACE___GET_TYPE_ACCESS_MODIFIER:

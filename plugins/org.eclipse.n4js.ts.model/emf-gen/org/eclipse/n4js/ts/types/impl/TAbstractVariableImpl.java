@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -34,6 +36,8 @@ import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.TypesPackage;
+
+import org.eclipse.n4js.ts.types.TypesPackage.Literals;
 
 /**
  * <!-- begin-user-doc -->
@@ -204,6 +208,21 @@ public abstract class TAbstractVariableImpl extends IdentifiableElementImpl impl
 	 * @generated
 	 */
 	@Override
+	public EObject getAstElementNoResolve() {
+		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+		final EObject astElem = ((EObject) _eGet);
+		if (((astElem != null) && (!astElem.eIsProxy()))) {
+			return astElem;
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TABSTRACT_VARIABLE__TYPE_REF:
@@ -349,6 +368,46 @@ public abstract class TAbstractVariableImpl extends IdentifiableElementImpl impl
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == TTypedElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == TAnnotableElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == SyntaxRelatedTElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.TABSTRACT_VARIABLE___GET_AST_ELEMENT_NO_RESOLVE;
+				default: return -1;
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.TABSTRACT_VARIABLE___GET_AST_ELEMENT_NO_RESOLVE:
+				return getAstElementNoResolve();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //TAbstractVariableImpl

@@ -1762,6 +1762,14 @@ class TypeAlias extends GenericType, AccessibleTypeElement, TTypedElement, Synta
  */
 abstract class SyntaxRelatedTElement {
 	refers EObject astElement
+
+	op EObject getAstElementNoResolve() {
+		val astElem = this.eGet(TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false) as EObject;
+		if (astElem !== null && !astElem.eIsProxy) {
+			return astElem;
+		}
+		return null;
+	}
 }
 
 /*

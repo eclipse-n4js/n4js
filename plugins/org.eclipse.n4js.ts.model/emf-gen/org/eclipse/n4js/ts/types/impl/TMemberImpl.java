@@ -40,6 +40,8 @@ import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
+import org.eclipse.n4js.ts.types.TypesPackage.Literals;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>TMember</b></em>'.
@@ -597,6 +599,21 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * @generated
 	 */
 	@Override
+	public EObject getAstElementNoResolve() {
+		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+		final EObject astElem = ((EObject) _eGet);
+		if (((astElem != null) && (!astElem.eIsProxy()))) {
+			return astElem;
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.TMEMBER__ANNOTATIONS:
@@ -787,6 +804,27 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * @generated
 	 */
 	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == TAnnotableElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == SyntaxRelatedTElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.TMEMBER___GET_AST_ELEMENT_NO_RESOLVE;
+				default: return -1;
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case TypesPackage.TMEMBER___GET_CONTAINING_TYPE:
@@ -825,6 +863,8 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 				return isConst();
 			case TypesPackage.TMEMBER___IS_POLYFILLED:
 				return isPolyfilled();
+			case TypesPackage.TMEMBER___GET_AST_ELEMENT_NO_RESOLVE:
+				return getAstElementNoResolve();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

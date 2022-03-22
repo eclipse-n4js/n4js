@@ -26,6 +26,8 @@ import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
+import org.eclipse.n4js.ts.types.TypesPackage.Literals;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Abstract Module</b></em>'.
@@ -248,6 +250,21 @@ public abstract class AbstractModuleImpl extends AbstractNamespaceImpl implement
 	 * @generated
 	 */
 	@Override
+	public EObject getAstElementNoResolve() {
+		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+		final EObject astElem = ((EObject) _eGet);
+		if (((astElem != null) && (!astElem.eIsProxy()))) {
+			return astElem;
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.ABSTRACT_MODULE__AST_ELEMENT:
@@ -363,12 +380,30 @@ public abstract class AbstractModuleImpl extends AbstractNamespaceImpl implement
 	 * @generated
 	 */
 	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == SyntaxRelatedTElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.ABSTRACT_MODULE___GET_AST_ELEMENT_NO_RESOLVE;
+				default: return -1;
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case TypesPackage.ABSTRACT_MODULE___IS_STATIC_POLYFILL_MODULE:
 				return isStaticPolyfillModule();
 			case TypesPackage.ABSTRACT_MODULE___IS_STATIC_POLYFILL_AWARE:
 				return isStaticPolyfillAware();
+			case TypesPackage.ABSTRACT_MODULE___GET_AST_ELEMENT_NO_RESOLVE:
+				return getAstElementNoResolve();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

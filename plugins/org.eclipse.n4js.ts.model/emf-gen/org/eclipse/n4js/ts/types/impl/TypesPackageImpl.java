@@ -3494,6 +3494,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getSyntaxRelatedTElement__GetAstElementNoResolve() {
+		return syntaxRelatedTElementEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getTConstableElement() {
 		return tConstableElementEClass;
 	}
@@ -4045,6 +4055,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		syntaxRelatedTElementEClass = createEClass(SYNTAX_RELATED_TELEMENT);
 		createEReference(syntaxRelatedTElementEClass, SYNTAX_RELATED_TELEMENT__AST_ELEMENT);
+		createEOperation(syntaxRelatedTElementEClass, SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE);
 
 		tConstableElementEClass = createEClass(TCONSTABLE_ELEMENT);
 		createEAttribute(tConstableElementEClass, TCONSTABLE_ELEMENT__CONST);
@@ -4700,6 +4711,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEClass(syntaxRelatedTElementEClass, SyntaxRelatedTElement.class, "SyntaxRelatedTElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getSyntaxRelatedTElement_AstElement(), theEcorePackage.getEObject(), null, "astElement", null, 0, 1, SyntaxRelatedTElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getSyntaxRelatedTElement__GetAstElementNoResolve(), theEcorePackage.getEObject(), "getAstElementNoResolve", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tConstableElementEClass, TConstableElement.class, "TConstableElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTConstableElement_Const(), theEcorePackage.getEBoolean(), "const", null, 0, 1, TConstableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

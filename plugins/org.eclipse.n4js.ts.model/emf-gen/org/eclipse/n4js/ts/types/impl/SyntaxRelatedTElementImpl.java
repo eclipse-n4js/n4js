@@ -10,7 +10,11 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -20,6 +24,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TypesPackage;
+
+import org.eclipse.n4js.ts.types.TypesPackage.Literals;
 
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
@@ -112,6 +118,21 @@ public abstract class SyntaxRelatedTElementImpl extends ProxyResolvingEObjectImp
 	 * @generated
 	 */
 	@Override
+	public EObject getAstElementNoResolve() {
+		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+		final EObject astElem = ((EObject) _eGet);
+		if (((astElem != null) && (!astElem.eIsProxy()))) {
+			return astElem;
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.SYNTAX_RELATED_TELEMENT__AST_ELEMENT:
@@ -163,6 +184,20 @@ public abstract class SyntaxRelatedTElementImpl extends ProxyResolvingEObjectImp
 				return astElement != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE:
+				return getAstElementNoResolve();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //SyntaxRelatedTElementImpl

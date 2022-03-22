@@ -57,4 +57,12 @@ public interface SyntaxRelatedTElement extends EObject {
 	 */
 	void setAstElement(EObject value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	EObject getAstElementNoResolve();
+
 } // SyntaxRelatedTElement
