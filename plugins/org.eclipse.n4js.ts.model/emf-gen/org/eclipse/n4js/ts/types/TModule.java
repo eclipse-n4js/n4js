@@ -41,7 +41,6 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesRuntime <em>Cyclic Modules Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getCyclicModulesLoadtimeForInheritance <em>Cyclic Modules Loadtime For Inheritance</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getRuntimeCyclicLoadtimeDependents <em>Runtime Cyclic Loadtime Dependents</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.TModule#getLocalVariables <em>Local Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalDynamicElements <em>Internal Dynamic Elements</em>}</li>
@@ -368,22 +367,6 @@ public interface TModule extends AbstractModule, TAnnotableElement {
 	EList<TModule> getRuntimeCyclicLoadtimeDependents();
 
 	/**
-	 * Returns the value of the '<em><b>Local Variables</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TVariable}.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Non-exported variables. This contains the non-exported variables for the entire TModule, i.e. also those
-	 * declared inside functions, methods, namespaces, and declared modules.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Local Variables</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_LocalVariables()
-	 * @model containment="true" transient="true"
-	 * @generated
-	 */
-	EList<TVariable> getLocalVariables();
-
-	/**
 	 * Returns the value of the '<em><b>Internal Types</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.Type}.
 	 * <!-- begin-user-doc -->
@@ -549,5 +532,13 @@ public interface TModule extends AbstractModule, TAnnotableElement {
 	 * @generated
 	 */
 	TModule getContainingRootModule();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void clearTransientElements();
 
 } // TModule

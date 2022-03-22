@@ -3352,16 +3352,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getVariableBinding_DefinedVariable() {
-		return (EReference)variableBindingEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getVariableDeclaration() {
 		return variableDeclarationEClass;
 	}
@@ -8083,7 +8073,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		variableBindingEClass = createEClass(VARIABLE_BINDING);
 		createEReference(variableBindingEClass, VARIABLE_BINDING__PATTERN);
 		createEReference(variableBindingEClass, VARIABLE_BINDING__EXPRESSION);
-		createEReference(variableBindingEClass, VARIABLE_BINDING__DEFINED_VARIABLE);
 
 		variableDeclarationEClass = createEClass(VARIABLE_DECLARATION);
 		createEReference(variableDeclarationEClass, VARIABLE_DECLARATION__ANNOTATIONS);
@@ -9280,7 +9269,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(variableBindingEClass, VariableBinding.class, "VariableBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVariableBinding_Pattern(), this.getBindingPattern(), null, "pattern", null, 0, 1, VariableBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVariableBinding_Expression(), this.getExpression(), null, "expression", null, 0, 1, VariableBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getVariableBinding_DefinedVariable(), theTypesPackage.getTVariable(), null, "definedVariable", null, 0, 1, VariableBinding.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(variableDeclarationEClass, VariableDeclaration.class, "VariableDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVariableDeclaration_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, VariableDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

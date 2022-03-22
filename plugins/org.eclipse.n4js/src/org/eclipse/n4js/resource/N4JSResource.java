@@ -906,6 +906,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// Discard the parse result (node model).
 		setParseResult(null);
 
+		// Discard TModule elements in transient containment references.
+		discardTransientTModuleElements();
+
 		// Clear errors and warnings.
 		getErrors().clear();
 		getWarnings().clear();
@@ -1000,6 +1003,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			this.setASTMetaInfoCache(null);
 			getCache().clear(this);
 		}
+	}
+
+	private void discardTransientTModuleElements() {
+		TModule module = getModule();
+		if (module == null || module.eIsProxy()) {
+			return;
+		}
+		module.clearTransientElements();
 	}
 
 	private InternalEObject createAstProxy() {

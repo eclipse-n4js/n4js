@@ -931,12 +931,6 @@ abstract class VariableDeclarationOrBinding extends ControlFlowElement {
 class VariableBinding extends VariableDeclarationOrBinding {
 	contains BindingPattern pattern
 	contains Expression expression
-
-	/*
-	 * Link to variable information stored in the Xtext index.
-	 */
-// FIXME still required?
-	refers transient TVariable definedVariable
 }
 
 class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, AbstractVariable<TVariable>  {

@@ -152,13 +152,6 @@ class TModule extends AbstractModule, TAnnotableElement {
 	refers TModule[] runtimeCyclicLoadtimeDependents
 
 	/*
-	 * Non-exported variables. This contains the non-exported variables for the entire TModule, i.e. also those
-	 * declared inside functions, methods, namespaces, and declared modules.
-	 */
-// FIXME consider moving this to AbstractNamespace
-	contains transient TVariable[] localVariables
-
-	/*
 	 * Internal types may be populated incrementally by the type checker. Typically these
 	 * are types derived from nested structures of the AST.
 	 * <p>
@@ -238,6 +231,15 @@ class TModule extends AbstractModule, TAnnotableElement {
 	 */
 	op TModule getContainingRootModule() {
 		return this;
+	}
+
+	op void clearTransientElements() {
+		internalTypes.clear();
+		internalDynamicElements.clear();
+		composedMemberCaches.clear();
+		temporaryTypes.clear();
+
+		super.clearTransientElements();
 	}
 }
 
@@ -887,11 +889,16 @@ abstract class AbstractNamespace {
 	 */
 	contains Type[] types
 	/*
-	 * A list of all exported variables directly contained in this abstract namespace.
-	 * Non-exported variables are contained in the transient property {@link TModule#localVariables localVariables}
-	 * of the {@link #getContainingRootModule() containing root module}.
+	 * A list of all exported variables of this namespace.
+	 * Exported variables are always directly contained in the namespace.
 	 */
 	contains TVariable[] exportedVariables
+	/*
+	 * A list of all non-exported variables of this namespace.
+	 * These variables may be directly contained in the namespace OR may be declared inside functions,
+	 * methods, etc. contained in the namespace.
+	 */
+	contains transient TVariable[] localVariables
 	/*
 	 * A list of all child namespaces directly contained in this abstract namespace.
 	 * These include the exported namespaces as well as the internal namespaces.
@@ -916,6 +923,14 @@ abstract class AbstractNamespace {
 	 */
 	op TModule getContainingRootModule() {
 		return EcoreUtil2.getContainerOfType(this, TModule);
+	}
+
+	op void clearTransientElements() {
+		localVariables.clear();
+		// continue with contained AbstractNamespaces:
+		for (child : (namespaces + modules)) {
+			child.clearTransientElements();
+		}
 	}
 }
 

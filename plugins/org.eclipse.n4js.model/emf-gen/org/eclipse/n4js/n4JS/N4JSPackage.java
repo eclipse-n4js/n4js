@@ -4002,22 +4002,13 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_BINDING__EXPRESSION = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Defined Variable</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VARIABLE_BINDING__DEFINED_VARIABLE = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 2;
-
-	/**
 	 * The number of structural features of the '<em>Variable Binding</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_BINDING_FEATURE_COUNT = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 3;
+	int VARIABLE_BINDING_FEATURE_COUNT = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get All Variable Declarations</em>' operation.
@@ -19106,17 +19097,6 @@ public interface N4JSPackage extends EPackage {
 	EReference getVariableBinding_Expression();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.VariableBinding#getDefinedVariable <em>Defined Variable</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Defined Variable</em>'.
-	 * @see org.eclipse.n4js.n4JS.VariableBinding#getDefinedVariable()
-	 * @see #getVariableBinding()
-	 * @generated
-	 */
-	EReference getVariableBinding_DefinedVariable();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.VariableDeclaration <em>Variable Declaration</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -25218,14 +25198,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference VARIABLE_BINDING__EXPRESSION = eINSTANCE.getVariableBinding_Expression();
-
-		/**
-		 * The meta object literal for the '<em><b>Defined Variable</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VARIABLE_BINDING__DEFINED_VARIABLE = eINSTANCE.getVariableBinding_DefinedVariable();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationImpl <em>Variable Declaration</em>}' class.

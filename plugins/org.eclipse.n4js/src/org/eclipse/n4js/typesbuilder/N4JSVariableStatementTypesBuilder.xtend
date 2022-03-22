@@ -48,7 +48,7 @@ package class N4JSVariableStatementTypesBuilder {
 			return relinkVariableTypes(bindingPattern.allVariableDeclarations, target, preLinkingPhase, start);
 		} else {
 			val tVariable = createVariable(catchVariable, preLinkingPhase);
-			target.containingRootModule.localVariables += tVariable;
+			target.localVariables += tVariable;
 			return start;
 		}
 	}
@@ -69,7 +69,7 @@ package class N4JSVariableStatementTypesBuilder {
 		if (!n4VariableDeclaration.exported) {
 			// local variables are not serialized, so we have to re-create them during re-linking
 			val tVariable = createVariable(n4VariableDeclaration, preLinkingPhase);
-			target.containingRootModule.localVariables += tVariable;
+			target.localVariables += tVariable;
 			return false;
 		}
 
@@ -82,7 +82,7 @@ package class N4JSVariableStatementTypesBuilder {
 
 	def package void createVariableTypes(VariableDeclarationContainer n4VarDeclContainer, AbstractNamespace target, boolean preLinkingPhase) {
 		val expVars = target.exportedVariables;
-		val locVars = target.containingRootModule.localVariables;
+		val locVars = target.localVariables;
 
 		val isExported = if (n4VarDeclContainer instanceof VariableStatement) n4VarDeclContainer.exported else false;
 
@@ -101,7 +101,7 @@ package class N4JSVariableStatementTypesBuilder {
 	}
 
 	def package void createVariableTypes(TryStatement tryStmnt, AbstractNamespace target, boolean preLinkingPhase) {
-		val locVars = target.containingRootModule.localVariables;
+		val locVars = target.localVariables;
 
 		val catchVariable = tryStmnt.^catch?.catchVariable;
 		if (catchVariable === null) {
@@ -194,7 +194,7 @@ package class N4JSVariableStatementTypesBuilder {
 		funOrAccDecl.implicitArgumentsVariable = formalParameterType;
 		formalParameterType.astElement = funOrAccDecl;
 
-		target.containingRootModule.localVariables += formalParameterType;
+		target.localVariables += formalParameterType;
 
 		return formalParameterType;
 	}

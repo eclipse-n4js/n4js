@@ -23,8 +23,6 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.VariableBinding;
 
-import org.eclipse.n4js.ts.types.TVariable;
-
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Variable Binding</b></em>'.
@@ -35,7 +33,6 @@ import org.eclipse.n4js.ts.types.TVariable;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableBindingImpl#getPattern <em>Pattern</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableBindingImpl#getExpression <em>Expression</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableBindingImpl#getDefinedVariable <em>Defined Variable</em>}</li>
  * </ul>
  *
  * @generated
@@ -60,16 +57,6 @@ public class VariableBindingImpl extends VariableDeclarationOrBindingImpl implem
 	 * @ordered
 	 */
 	protected Expression expression;
-
-	/**
-	 * The cached value of the '{@link #getDefinedVariable() <em>Defined Variable</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDefinedVariable()
-	 * @generated
-	 * @ordered
-	 */
-	protected TVariable definedVariable;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -186,46 +173,6 @@ public class VariableBindingImpl extends VariableDeclarationOrBindingImpl implem
 	 * @generated
 	 */
 	@Override
-	public TVariable getDefinedVariable() {
-		if (definedVariable != null && definedVariable.eIsProxy()) {
-			InternalEObject oldDefinedVariable = (InternalEObject)definedVariable;
-			definedVariable = (TVariable)eResolveProxy(oldDefinedVariable);
-			if (definedVariable != oldDefinedVariable) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.VARIABLE_BINDING__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
-			}
-		}
-		return definedVariable;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public TVariable basicGetDefinedVariable() {
-		return definedVariable;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDefinedVariable(TVariable newDefinedVariable) {
-		TVariable oldDefinedVariable = definedVariable;
-		definedVariable = newDefinedVariable;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.VARIABLE_BINDING__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.VARIABLE_BINDING__PATTERN:
@@ -248,9 +195,6 @@ public class VariableBindingImpl extends VariableDeclarationOrBindingImpl implem
 				return getPattern();
 			case N4JSPackage.VARIABLE_BINDING__EXPRESSION:
 				return getExpression();
-			case N4JSPackage.VARIABLE_BINDING__DEFINED_VARIABLE:
-				if (resolve) return getDefinedVariable();
-				return basicGetDefinedVariable();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -268,9 +212,6 @@ public class VariableBindingImpl extends VariableDeclarationOrBindingImpl implem
 				return;
 			case N4JSPackage.VARIABLE_BINDING__EXPRESSION:
 				setExpression((Expression)newValue);
-				return;
-			case N4JSPackage.VARIABLE_BINDING__DEFINED_VARIABLE:
-				setDefinedVariable((TVariable)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -290,9 +231,6 @@ public class VariableBindingImpl extends VariableDeclarationOrBindingImpl implem
 			case N4JSPackage.VARIABLE_BINDING__EXPRESSION:
 				setExpression((Expression)null);
 				return;
-			case N4JSPackage.VARIABLE_BINDING__DEFINED_VARIABLE:
-				setDefinedVariable((TVariable)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -309,8 +247,6 @@ public class VariableBindingImpl extends VariableDeclarationOrBindingImpl implem
 				return pattern != null;
 			case N4JSPackage.VARIABLE_BINDING__EXPRESSION:
 				return expression != null;
-			case N4JSPackage.VARIABLE_BINDING__DEFINED_VARIABLE:
-				return definedVariable != null;
 		}
 		return super.eIsSet(featureID);
 	}
