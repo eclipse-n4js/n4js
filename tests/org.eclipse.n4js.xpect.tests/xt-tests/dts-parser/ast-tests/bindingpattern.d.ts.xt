@@ -20,8 +20,8 @@ export const K : {a:string, b:[b1:number, b2:number], c:{c1:string}};
 
 /* XPECT ast ---
 Script: true
-  ExportedVariableStatement: [external, public], const
-   ExportedVariableDeclaration: K
+  VariableStatement: [external, public], const
+   VariableDeclaration: K
     TypeReferenceNode
      ParameterizedTypeRefStructural: OFF, false, false, Object, ?~, false, false
       TStructField: false, false, false, public, false, false, false, false, false, a, false
