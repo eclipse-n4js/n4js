@@ -506,9 +506,12 @@ public class ASTProcessor extends AbstractProcessor {
 		}
 	}
 
-	def private recordReferencesToLocalVariables(EReference reference, EObject sourceNode, EObject target,
-		ASTMetaInfoCache cache) {
+	def private recordReferencesToLocalVariables(EReference reference, EObject sourceNode, EObject target, ASTMetaInfoCache cache) {
 
+		// skip reference Variable#definedVariable (it does not constitute a usage of the variable)
+		if (reference === N4JSPackage.Literals.VARIABLE__DEFINED_VARIABLE) {
+			return;
+		}
 		// If target is still a proxy its resolution failed, therefore it should be skipped.
 		if (target.eIsProxy) {
 			return;
