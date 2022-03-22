@@ -97,13 +97,13 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE__TYPES = 0;
 
 	/**
-	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Exported Variables</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE__VARIABLES = 1;
+	int ABSTRACT_NAMESPACE__EXPORTED_VARIABLES = 1;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -179,13 +179,13 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_MODULE__TYPES = ABSTRACT_NAMESPACE__TYPES;
 
 	/**
-	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Exported Variables</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_MODULE__VARIABLES = ABSTRACT_NAMESPACE__VARIABLES;
+	int ABSTRACT_MODULE__EXPORTED_VARIABLES = ABSTRACT_NAMESPACE__EXPORTED_VARIABLES;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -324,13 +324,13 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__TYPES = ABSTRACT_MODULE__TYPES;
 
 	/**
-	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Exported Variables</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__VARIABLES = ABSTRACT_MODULE__VARIABLES;
+	int TMODULE__EXPORTED_VARIABLES = ABSTRACT_MODULE__EXPORTED_VARIABLES;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -658,13 +658,13 @@ public interface TypesPackage extends EPackage {
 	int TDECLARED_MODULE__TYPES = ABSTRACT_MODULE__TYPES;
 
 	/**
-	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Exported Variables</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TDECLARED_MODULE__VARIABLES = ABSTRACT_MODULE__VARIABLES;
+	int TDECLARED_MODULE__EXPORTED_VARIABLES = ABSTRACT_MODULE__EXPORTED_VARIABLES;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -3207,13 +3207,13 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE__TYPES = TYPE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Exported Variables</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__VARIABLES = TYPE_FEATURE_COUNT + 1;
+	int TNAMESPACE__EXPORTED_VARIABLES = TYPE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -14915,15 +14915,15 @@ public interface TypesPackage extends EPackage {
 	EReference getAbstractNamespace_Types();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getVariables <em>Variables</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExportedVariables <em>Exported Variables</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Variables</em>'.
-	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getVariables()
+	 * @return the meta object for the containment reference list '<em>Exported Variables</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getExportedVariables()
 	 * @see #getAbstractNamespace()
 	 * @generated
 	 */
-	EReference getAbstractNamespace_Variables();
+	EReference getAbstractNamespace_ExportedVariables();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNamespaces <em>Namespaces</em>}'.
@@ -17825,12 +17825,12 @@ public interface TypesPackage extends EPackage {
 		EReference ABSTRACT_NAMESPACE__TYPES = eINSTANCE.getAbstractNamespace_Types();
 
 		/**
-		 * The meta object literal for the '<em><b>Variables</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Exported Variables</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ABSTRACT_NAMESPACE__VARIABLES = eINSTANCE.getAbstractNamespace_Variables();
+		EReference ABSTRACT_NAMESPACE__EXPORTED_VARIABLES = eINSTANCE.getAbstractNamespace_ExportedVariables();
 
 		/**
 		 * The meta object literal for the '<em><b>Namespaces</b></em>' containment reference list feature.

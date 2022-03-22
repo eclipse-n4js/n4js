@@ -73,7 +73,7 @@ package class N4JSVariableStatementTypesBuilder {
 			return false;
 		}
 
-		val variable = target.variables.get(idx);
+		val variable = target.exportedVariables.get(idx);
 		ensureEqualName(n4VariableDeclaration, variable);
 		variable.astElement = n4VariableDeclaration
 		n4VariableDeclaration.definedVariable = variable;
@@ -81,7 +81,7 @@ package class N4JSVariableStatementTypesBuilder {
 	}
 
 	def package void createVariableTypes(VariableDeclarationContainer n4VarDeclContainer, AbstractNamespace target, boolean preLinkingPhase) {
-		val expVars = target.variables;
+		val expVars = target.exportedVariables;
 		val locVars = target.containingRootModule.localVariables;
 
 		val isExported = if (n4VarDeclContainer instanceof VariableStatement) n4VarDeclContainer.exported else false;

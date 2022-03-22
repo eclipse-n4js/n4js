@@ -886,11 +886,11 @@ abstract class AbstractNamespace {
 	 */
 	contains Type[] types
 	/*
-	 * A list of all variables directly contained in this abstract namespace.
-	 * These include the exported variables as well as the internal variables.
-	 * Similar to #types, this allows for better validation messages and diagnostics.
+	 * A list of all exported variables directly contained in this abstract namespace.
+	 * Non-exported variables are contained in the transient property {@link TModule#localVariables localVariables}
+	 * of the {@link #getContainingRootModule() containing root module}.
 	 */
-	contains TVariable[] variables
+	contains TVariable[] exportedVariables
 	/*
 	 * A list of all child namespaces directly contained in this abstract namespace.
 	 * These include the exported namespaces as well as the internal namespaces.

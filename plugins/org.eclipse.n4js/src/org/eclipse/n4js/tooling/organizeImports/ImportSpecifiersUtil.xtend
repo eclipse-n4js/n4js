@@ -59,7 +59,7 @@ class ImportSpecifiersUtil {
 
 		val topNamespaces = importedModule.namespaces.filter[isExported].map[it as TExportableElement]
 		val topExportedTypes = importedModule.types.filter[isExported].map[it as TExportableElement]
-		val topExportedVars = importedModule.variables.filter[it.isExported].map[it as TExportableElement];
+		val topExportedVars = importedModule.exportedVariables.filter[it.isExported].map[it as TExportableElement];
 		val topExported = topNamespaces + topExportedTypes + topExportedVars
 
 		topExported.forEach [ type |

@@ -226,7 +226,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		for (Type type : module.getTypes()) {
 			internalCreateEObjectDescription(type, acceptor);
 		}
-		for (TVariable variable : module.getVariables()) {
+		for (TVariable variable : module.getExportedVariables()) {
 			internalCreateEObjectDescription(variable, acceptor);
 		}
 		for (TNamespace namespace : module.getNamespaces()) {

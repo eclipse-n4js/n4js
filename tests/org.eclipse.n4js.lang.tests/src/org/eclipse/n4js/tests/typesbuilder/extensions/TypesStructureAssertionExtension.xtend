@@ -245,7 +245,7 @@ public class TypesStructureAssertionExtension {
 	}
 
 	def assertTVariable(String phase, Resource newN4jsResource, int variablesIndex, String name, boolean const) {
-		val variables = (newN4jsResource.contents.get(1) as TModule).variables
+		val variables = (newN4jsResource.contents.get(1) as TModule).exportedVariables
 		assertTrue(phase + ": Should have a variable at the index", variables.size > variablesIndex)
 		val tVariable = variables.get(variablesIndex)
 		assertEquals(phase + ": Should be named", name, tVariable.name)

@@ -1904,7 +1904,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getAbstractNamespace_Variables() {
+	public EReference getAbstractNamespace_ExportedVariables() {
 		return (EReference)abstractNamespaceEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -3863,7 +3863,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		abstractNamespaceEClass = createEClass(ABSTRACT_NAMESPACE);
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__TYPES);
-		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__VARIABLES);
+		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__EXPORTED_VARIABLES);
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__NAMESPACES);
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__MODULES);
 		createEOperation(abstractNamespaceEClass, ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE);
@@ -4437,7 +4437,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEClass(abstractNamespaceEClass, AbstractNamespace.class, "AbstractNamespace", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAbstractNamespace_Types(), this.getType(), null, "types", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getAbstractNamespace_Variables(), this.getTVariable(), null, "variables", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAbstractNamespace_ExportedVariables(), this.getTVariable(), null, "exportedVariables", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAbstractNamespace_Namespaces(), this.getTNamespace(), null, "namespaces", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAbstractNamespace_Modules(), this.getTDeclaredModule(), null, "modules", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
