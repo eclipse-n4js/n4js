@@ -14,14 +14,14 @@
 export function foo() { // /1/@types.0
     foo;
 
-	// XPECT scopeWithPosition at foo --> b - 20, foo - T14, ...
+	// XPECT scopeWithPosition at foo --> b - T20, foo - T14, ...
     foo();
 
     var b = function foo2() { // foo2 - /1/@internalTypes.2
 
 		/* XPECT scopeWithPosition at foo2 ---
-			b - 20,
-			c - 36,
+			b - T20,
+			c - T36,
 			foo - T14,
 			foo2 - T20,
 			...
@@ -38,9 +38,9 @@ export function foo() { // /1/@types.0
 
 				/*
 				XPECT scopeWithPosition at foo2 ---
-					b - 20,
-					c - 36,
-					d - 37,
+					b - T20,
+					c - T36,
+					d - T37,
 					foo - T36,
 					foo2 - T37,
 					...

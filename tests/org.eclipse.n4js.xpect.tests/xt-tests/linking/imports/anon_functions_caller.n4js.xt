@@ -29,6 +29,6 @@
  */
 
 import * as N from "linking/imports/anon_functions_callee"
-// XPECT linkedFragment at 'N.<|>a();' --> anon_functions_callee.n4js#/1/@variables.0
+// XPECT linkedFragment at 'N.<|>a();' --> anon_functions_callee.n4js#/1/@exportedVariables.0
 // XPECT linkedName at 'N.<|>a();' --> linking.imports.anon_functions_callee.a
 N.a();
