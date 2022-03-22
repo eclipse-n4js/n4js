@@ -21,7 +21,6 @@ import org.eclipse.n4js.n4JS.*;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
-import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TAbstractVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 
@@ -796,10 +795,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseTypableElement(TypableElement object) {
 				return createTypableElementAdapter();
-			}
-			@Override
-			public Adapter caseIdentifiableElement(IdentifiableElement object) {
-				return createIdentifiableElementAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -3324,20 +3319,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTypableElementAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.IdentifiableElement <em>Identifiable Element</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.types.IdentifiableElement
-	 * @generated
-	 */
-	public Adapter createIdentifiableElementAdapter() {
 		return null;
 	}
 

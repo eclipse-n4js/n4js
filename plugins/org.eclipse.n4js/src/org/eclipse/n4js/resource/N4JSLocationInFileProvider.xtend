@@ -99,12 +99,11 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 				if(parentAST instanceof GenericDeclaration || parentAST instanceof TStructMethod || parentAST instanceof FunctionTypeExpression) {
 					val typeVarName = element.name;
 					if(typeVarName!==null && typeVarName.trim.length>0) {
-						val typeVars = switch parentAST {
-							GenericDeclaration: 	parentAST.typeVars
-							TStructMethod:			parentAST.typeVars
-							FunctionTypeExpression:	parentAST.ownedTypeVars
+						val correspondingTypeVarInAST = switch parentAST {
+							GenericDeclaration: 	parentAST.typeVars.findFirst[name==typeVarName]
+							TStructMethod:			parentAST.typeVars.findFirst[name==typeVarName]
+							FunctionTypeExpression:	parentAST.ownedTypeVars.findFirst[name==typeVarName]
 						};
-						val correspondingTypeVarInAST = typeVars.findFirst[name==typeVarName];
 						if(correspondingTypeVarInAST!==null)
 							return correspondingTypeVarInAST;
 					}

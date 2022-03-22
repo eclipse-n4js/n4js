@@ -23,7 +23,6 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.ts.types.TFormalParameter;
-import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
@@ -63,7 +62,7 @@ public class N4JSEObjectAtOffsetHelper extends EObjectAtOffsetHelper {
 			// returns the containing classifier declaration, but we prefer the type parameter
 			result = findBetterMatch(result, offset,
 					((GenericDeclaration) result).getTypeVars(),
-					TypesPackage.eINSTANCE.getIdentifiableElement_Name());
+					N4JSPackage.eINSTANCE.getN4TypeVariable_Name());
 		}
 
 		EObject type = N4JSASTUtils.getCorrespondingTypeModelElement(result);

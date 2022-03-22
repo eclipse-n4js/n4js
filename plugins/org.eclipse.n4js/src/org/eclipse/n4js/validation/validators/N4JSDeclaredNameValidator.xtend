@@ -42,6 +42,7 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDefinition
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
@@ -690,6 +691,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (eo instanceof Variable) {
 			return N4JSPackage.Literals.VARIABLE__NAME;
+		}
+
+		if (eo instanceof N4TypeVariable) {
+			return N4JSPackage.Literals.N4_TYPE_VARIABLE__NAME;
 		}
 
 		if (eo instanceof NamedImportSpecifier) {

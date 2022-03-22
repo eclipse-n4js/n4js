@@ -19,7 +19,6 @@ import org.eclipse.n4js.n4JS.*;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
-import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TAbstractVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 
@@ -1427,9 +1426,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 			case N4JSPackage.N4_TYPE_VARIABLE: {
 				N4TypeVariable n4TypeVariable = (N4TypeVariable)theEObject;
 				T1 result = caseN4TypeVariable(n4TypeVariable);
-				if (result == null) result = caseIdentifiableElement(n4TypeVariable);
 				if (result == null) result = caseNamedElement(n4TypeVariable);
-				if (result == null) result = caseTypableElement(n4TypeVariable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -4604,21 +4601,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseTypableElement(TypableElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Identifiable Element</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Identifiable Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseIdentifiableElement(IdentifiableElement object) {
 		return null;
 	}
 

@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -498,17 +499,43 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
+	 * Returns the name of the given {@link N4TypeVariable} or {@link TypeVariable}; throws exception if other type is
+	 * passed in.
+	 */
+	public static String getNameOfTypeVarInAST(EObject typeVarInAST) {
+		if (typeVarInAST instanceof N4TypeVariable) {
+			return ((N4TypeVariable) typeVarInAST).getName();
+		} else if (typeVarInAST instanceof TypeVariable) {
+			return ((TypeVariable) typeVarInAST).getName();
+		}
+		throw new IllegalArgumentException("type variable in AST must be a N4TypeVariable or TypeVariable");
+	}
+
+	/**
+	 * Returns the {@link EAttribute name feature} of the given {@link N4TypeVariable} or {@link TypeVariable}; throws
+	 * exception if other type is passed in.
+	 */
+	public static EAttribute getNameFeatureOfTypeVarInAST(EObject typeVarInAST) {
+		if (typeVarInAST instanceof N4TypeVariable) {
+			return N4JSPackage.Literals.N4_TYPE_VARIABLE__NAME;
+		} else if (typeVarInAST instanceof TypeVariable) {
+			return TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME;
+		}
+		throw new IllegalArgumentException("type variable in AST must be a N4TypeVariable or TypeVariable");
+	}
+
+	/**
 	 * If the given type variable is located in the TModule, then this method returns its corresponding type variable in
 	 * the AST or <code>null</code> if it is not available or not found. Usually returns a {@link N4TypeVariable}, but
 	 * in some cases also a {@link TypeVariable} may be returned.
 	 */
-	public static IdentifiableElement getCorrespondingTypeVariableInAST(TypeVariable tv) {
+	public static EObject getCorrespondingTypeVariableInAST(TypeVariable tv) {
 		EObject containerInTModule = tv.eContainer();
 		if (containerInTModule instanceof Type) {
 			List<TypeVariable> typeVarsInTModule = ((Type) containerInTModule).getTypeVars();
 			if (!typeVarsInTModule.isEmpty()) {
 				EObject containerInAST = getCorrespondingASTNode(containerInTModule);
-				List<? extends IdentifiableElement> typeVarsInAST = null;
+				List<? extends EObject> typeVarsInAST = null;
 				if (containerInAST instanceof GenericDeclaration) {
 					typeVarsInAST = ((GenericDeclaration) containerInAST).getTypeVars();
 				} else if (containerInAST instanceof TStructMethod) {
