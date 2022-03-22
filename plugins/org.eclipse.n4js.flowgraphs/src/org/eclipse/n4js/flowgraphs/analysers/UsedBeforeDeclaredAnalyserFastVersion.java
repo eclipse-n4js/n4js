@@ -59,10 +59,12 @@ public class UsedBeforeDeclaredAnalyserFastVersion extends GraphVisitor {
 			IdentifiableElement id = SymbolFactory.getId(ir);
 			if (id instanceof TVariable) {
 				TVariable tvar = (TVariable) id;
-				EObject astNode = tvar.getAstElement();
-				Set<IdentifierRef> refs = checkLists.get(astNode);
-				if (refs != null) {
-					refs.add(ir);
+				EObject astNode = tvar.getAstElementNoResolve();
+				if (astNode != null) {
+					Set<IdentifierRef> refs = checkLists.get(astNode);
+					if (refs != null) {
+						refs.add(ir);
+					}
 				}
 			}
 		}

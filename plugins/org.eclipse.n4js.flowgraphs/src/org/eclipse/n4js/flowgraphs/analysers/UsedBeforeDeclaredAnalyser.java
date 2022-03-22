@@ -13,12 +13,14 @@ package org.eclipse.n4js.flowgraphs.analysers;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analysis.FastFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.symbols.SymbolFactory;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TVariable;
 
 /**
  * Analysis to detect uses of {@link IdentifierRef}s that are located in the control flow before their corresponding
@@ -66,9 +68,14 @@ public class UsedBeforeDeclaredAnalyser extends FastFlowVisitor {
 		} else if (cfe instanceof IdentifierRef) {
 			IdentifierRef ir = (IdentifierRef) cfe;
 			IdentifiableElement id = SymbolFactory.getId(ir);
-			CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(id);
-			if (userData != null) {
-				userData.idRefs.add(ir);
+			if (id instanceof TVariable) {
+				EObject varDecl = ((TVariable) id).getAstElementNoResolve();
+				if (varDecl != null) {
+					CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(id);
+					if (userData != null) {
+						userData.idRefs.add(ir);
+					}
+				}
 			}
 		}
 

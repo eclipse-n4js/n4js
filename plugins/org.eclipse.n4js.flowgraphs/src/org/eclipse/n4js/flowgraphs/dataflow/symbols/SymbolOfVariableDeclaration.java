@@ -38,4 +38,8 @@ public class SymbolOfVariableDeclaration extends Symbol {
 		return vd;
 	}
 
+	@Override
+	protected Object createSymbolKey() {
+		return vd.getDefinedVariable();
+	}
 }
