@@ -15,42 +15,46 @@ import org.eclipse.n4js.ts.types.TypableElement;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Variable</b></em>'.
+ * A representation of the model object '<em><b>Abstract Variable</b></em>'.
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- *  Abstract super type of declared variables (VariableDeclaration), formal parameters (FormalParameter),
- * and variables declared in catch clause (CatchVariable). Variables may be used on the left-hand side
- * of assignments. Note that variables are also named (NamedElement) and typed (TypedElement).
+ *  Abstract super type of
+ * <ul>
+ * <li>declared variables ({@link VariableDeclaration}),
+ * <li>formal parameters ({@link FormalParameter}),
+ * <li>variables declared in catch clause ({@link CatchVariable}).
+ * </ul>
+ * but *not* of {@link N4TypeVariable}.
  * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.Variable#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.Variable#getDefinedVariable <em>Defined Variable</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.AbstractVariable#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.AbstractVariable#getDefinedVariable <em>Defined Variable</em>}</li>
  * </ul>
  *
- * @see org.eclipse.n4js.n4JS.N4JSPackage#getVariable()
+ * @see org.eclipse.n4js.n4JS.N4JSPackage#getAbstractVariable()
  * @model abstract="true"
  * @generated
  */
-public interface Variable<T extends TAbstractVariable> extends TypedElement, TypableElement, NamedElement {
+public interface AbstractVariable<T extends TAbstractVariable> extends TypedElement, TypableElement, NamedElement {
 	/**
 	 * Returns the value of the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Name</em>' attribute.
 	 * @see #setName(String)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getVariable_Name()
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getAbstractVariable_Name()
 	 * @model unique="false"
 	 * @generated
 	 */
 	String getName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.Variable#getName <em>Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.AbstractVariable#getName <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Name</em>' attribute.
@@ -65,14 +69,14 @@ public interface Variable<T extends TAbstractVariable> extends TypedElement, Typ
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Defined Variable</em>' reference.
 	 * @see #setDefinedVariable(TAbstractVariable)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getVariable_DefinedVariable()
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getAbstractVariable_DefinedVariable()
 	 * @model transient="true"
 	 * @generated
 	 */
 	T getDefinedVariable();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.Variable#getDefinedVariable <em>Defined Variable</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.AbstractVariable#getDefinedVariable <em>Defined Variable</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @param value the new value of the '<em>Defined Variable</em>' reference.
@@ -93,4 +97,4 @@ public interface Variable<T extends TAbstractVariable> extends TypedElement, Typ
 	 */
 	boolean isConst();
 
-} // Variable
+} // AbstractVariable

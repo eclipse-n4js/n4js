@@ -34,7 +34,7 @@ import org.eclipse.n4js.ts.types.TFormalParameter;
  * @model
  * @generated
  */
-public interface FormalParameter extends AnnotableElement, Variable<TFormalParameter> {
+public interface FormalParameter extends AnnotableElement, AbstractVariable<TFormalParameter> {
 	/**
 	 * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.Annotation}.

@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.AbstractAnnotationList;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.AbstractCatchBlock;
 import org.eclipse.n4js.n4JS.AbstractIntLiteral;
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.AdditiveOperator;
 import org.eclipse.n4js.n4JS.AnnotableElement;
@@ -208,7 +209,6 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
 import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
-import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableDeclarationContainer;
@@ -362,7 +362,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass variableEClass = null;
+	private EClass abstractVariableEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2362,8 +2362,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getVariable() {
-		return variableEClass;
+	public EClass getAbstractVariable() {
+		return abstractVariableEClass;
 	}
 
 	/**
@@ -2372,8 +2372,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getVariable_Name() {
-		return (EAttribute)variableEClass.getEStructuralFeatures().get(0);
+	public EAttribute getAbstractVariable_Name() {
+		return (EAttribute)abstractVariableEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -2382,8 +2382,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getVariable_DefinedVariable() {
-		return (EReference)variableEClass.getEStructuralFeatures().get(1);
+	public EReference getAbstractVariable_DefinedVariable() {
+		return (EReference)abstractVariableEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -2392,8 +2392,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getVariable__IsConst() {
-		return variableEClass.getEOperations().get(0);
+	public EOperation getAbstractVariable__IsConst() {
+		return abstractVariableEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -7961,10 +7961,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		thisArgProviderEClass = createEClass(THIS_ARG_PROVIDER);
 
-		variableEClass = createEClass(VARIABLE);
-		createEAttribute(variableEClass, VARIABLE__NAME);
-		createEReference(variableEClass, VARIABLE__DEFINED_VARIABLE);
-		createEOperation(variableEClass, VARIABLE___IS_CONST);
+		abstractVariableEClass = createEClass(ABSTRACT_VARIABLE);
+		createEAttribute(abstractVariableEClass, ABSTRACT_VARIABLE__NAME);
+		createEReference(abstractVariableEClass, ABSTRACT_VARIABLE__DEFINED_VARIABLE);
+		createEOperation(abstractVariableEClass, ABSTRACT_VARIABLE___IS_CONST);
 
 		annotableElementEClass = createEClass(ANNOTABLE_ELEMENT);
 		createEOperation(annotableElementEClass, ANNOTABLE_ELEMENT___GET_ANNOTATIONS);
@@ -8705,13 +8705,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		// Create type parameters
 		ETypeParameter typeReferenceNodeEClass_T = addETypeParameter(typeReferenceNodeEClass, "T");
-		ETypeParameter variableEClass_T = addETypeParameter(variableEClass, "T");
+		ETypeParameter abstractVariableEClass_T = addETypeParameter(abstractVariableEClass, "T");
 
 		// Set bounds for type parameters
 		EGenericType g1 = createEGenericType(theTypeRefsPackage.getTypeRef());
 		typeReferenceNodeEClass_T.getEBounds().add(g1);
 		g1 = createEGenericType(theTypesPackage.getTAbstractVariable());
-		variableEClass_T.getEBounds().add(g1);
+		abstractVariableEClass_T.getEBounds().add(g1);
 
 		// Add supertypes to classes
 		scriptEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
@@ -8726,9 +8726,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		namespaceImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());
 		namespaceImportSpecifierEClass.getESuperTypes().add(this.getTypeDefiningElement());
 		typedElementEClass.getESuperTypes().add(this.getTypeProvidingElement());
-		variableEClass.getESuperTypes().add(this.getTypedElement());
-		variableEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
-		variableEClass.getESuperTypes().add(this.getNamedElement());
+		abstractVariableEClass.getESuperTypes().add(this.getTypedElement());
+		abstractVariableEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
+		abstractVariableEClass.getESuperTypes().add(this.getNamedElement());
 		annotableScriptElementEClass.getESuperTypes().add(this.getAnnotableElement());
 		annotableScriptElementEClass.getESuperTypes().add(this.getScriptElement());
 		annotableExpressionEClass.getESuperTypes().add(this.getAnnotableElement());
@@ -8764,7 +8764,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		arrowFunctionEClass.getESuperTypes().add(this.getFunctionExpression());
 		g1 = createEGenericType(this.getAnnotableElement());
 		formalParameterEClass.getEGenericSuperTypes().add(g1);
-		g1 = createEGenericType(this.getVariable());
+		g1 = createEGenericType(this.getAbstractVariable());
 		EGenericType g2 = createEGenericType(theTypesPackage.getTFormalParameter());
 		g1.getETypeArguments().add(g2);
 		formalParameterEClass.getEGenericSuperTypes().add(g1);
@@ -8784,7 +8784,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		variableDeclarationEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getAnnotableElement());
 		variableDeclarationEClass.getEGenericSuperTypes().add(g1);
-		g1 = createEGenericType(this.getVariable());
+		g1 = createEGenericType(this.getAbstractVariable());
 		g2 = createEGenericType(theTypesPackage.getTVariable());
 		g1.getETypeArguments().add(g2);
 		variableDeclarationEClass.getEGenericSuperTypes().add(g1);
@@ -8815,7 +8815,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		tryStatementEClass.getESuperTypes().add(this.getStatement());
 		catchBlockEClass.getESuperTypes().add(this.getAbstractCatchBlock());
 		catchBlockEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
-		g1 = createEGenericType(this.getVariable());
+		g1 = createEGenericType(this.getAbstractVariable());
 		g2 = createEGenericType(theTypesPackage.getTVariable());
 		g1.getETypeArguments().add(g2);
 		catchVariableEClass.getEGenericSuperTypes().add(g1);
@@ -9100,12 +9100,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(thisArgProviderEClass, ThisArgProvider.class, "ThisArgProvider", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(variableEClass, Variable.class, "Variable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getVariable_Name(), theEcorePackage.getEString(), "name", null, 0, 1, Variable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		g1 = createEGenericType(variableEClass_T);
-		initEReference(getVariable_DefinedVariable(), g1, null, "definedVariable", null, 0, 1, Variable.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(abstractVariableEClass, AbstractVariable.class, "AbstractVariable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAbstractVariable_Name(), theEcorePackage.getEString(), "name", null, 0, 1, AbstractVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(abstractVariableEClass_T);
+		initEReference(getAbstractVariable_DefinedVariable(), g1, null, "definedVariable", null, 0, 1, AbstractVariable.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getVariable__IsConst(), theEcorePackage.getEBoolean(), "isConst", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getAbstractVariable__IsConst(), theEcorePackage.getEBoolean(), "isConst", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(annotableElementEClass, AnnotableElement.class, "AnnotableElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

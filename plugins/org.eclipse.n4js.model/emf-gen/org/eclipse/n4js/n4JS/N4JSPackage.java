@@ -1442,14 +1442,14 @@ public interface N4JSPackage extends EPackage {
 	int THIS_ARG_PROVIDER_OPERATION_COUNT = 0;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.VariableImpl <em>Variable</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.AbstractVariableImpl <em>Abstract Variable</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.VariableImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVariable()
+	 * @see org.eclipse.n4js.n4JS.impl.AbstractVariableImpl
+	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAbstractVariable()
 	 * @generated
 	 */
-	int VARIABLE = 18;
+	int ABSTRACT_VARIABLE = 18;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Ref Node</b></em>' containment reference.
@@ -1458,7 +1458,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__DECLARED_TYPE_REF_NODE = TYPED_ELEMENT__DECLARED_TYPE_REF_NODE;
+	int ABSTRACT_VARIABLE__DECLARED_TYPE_REF_NODE = TYPED_ELEMENT__DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1467,7 +1467,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__NAME = TYPED_ELEMENT_FEATURE_COUNT + 0;
+	int ABSTRACT_VARIABLE__NAME = TYPED_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Defined Variable</b></em>' reference.
@@ -1476,16 +1476,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE__DEFINED_VARIABLE = TYPED_ELEMENT_FEATURE_COUNT + 1;
+	int ABSTRACT_VARIABLE__DEFINED_VARIABLE = TYPED_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
-	 * The number of structural features of the '<em>Variable</em>' class.
+	 * The number of structural features of the '<em>Abstract Variable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_FEATURE_COUNT = TYPED_ELEMENT_FEATURE_COUNT + 2;
+	int ABSTRACT_VARIABLE_FEATURE_COUNT = TYPED_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
@@ -1494,7 +1494,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE___GET_DECLARED_TYPE_REF_NODE = TYPED_ELEMENT___GET_DECLARED_TYPE_REF_NODE;
+	int ABSTRACT_VARIABLE___GET_DECLARED_TYPE_REF_NODE = TYPED_ELEMENT___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -1503,7 +1503,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE___GET_DECLARED_TYPE_REF = TYPED_ELEMENT___GET_DECLARED_TYPE_REF;
+	int ABSTRACT_VARIABLE___GET_DECLARED_TYPE_REF = TYPED_ELEMENT___GET_DECLARED_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -1512,7 +1512,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE___GET_DECLARED_TYPE_REF_IN_AST = TYPED_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST;
+	int ABSTRACT_VARIABLE___GET_DECLARED_TYPE_REF_IN_AST = TYPED_ELEMENT___GET_DECLARED_TYPE_REF_IN_AST;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -1521,7 +1521,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE___GET_NAME = TYPED_ELEMENT_OPERATION_COUNT + 0;
+	int ABSTRACT_VARIABLE___GET_NAME = TYPED_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -1530,16 +1530,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE___IS_CONST = TYPED_ELEMENT_OPERATION_COUNT + 1;
+	int ABSTRACT_VARIABLE___IS_CONST = TYPED_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
-	 * The number of operations of the '<em>Variable</em>' class.
+	 * The number of operations of the '<em>Abstract Variable</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_OPERATION_COUNT = TYPED_ELEMENT_OPERATION_COUNT + 2;
+	int ABSTRACT_VARIABLE_OPERATION_COUNT = TYPED_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.AnnotableExpressionImpl <em>Annotable Expression</em>}' class.
@@ -5300,7 +5300,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE__DECLARED_TYPE_REF_NODE = VARIABLE__DECLARED_TYPE_REF_NODE;
+	int CATCH_VARIABLE__DECLARED_TYPE_REF_NODE = ABSTRACT_VARIABLE__DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5309,7 +5309,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE__NAME = VARIABLE__NAME;
+	int CATCH_VARIABLE__NAME = ABSTRACT_VARIABLE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Defined Variable</b></em>' reference.
@@ -5318,7 +5318,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE__DEFINED_VARIABLE = VARIABLE__DEFINED_VARIABLE;
+	int CATCH_VARIABLE__DEFINED_VARIABLE = ABSTRACT_VARIABLE__DEFINED_VARIABLE;
 
 	/**
 	 * The feature id for the '<em><b>Binding Pattern</b></em>' containment reference.
@@ -5327,7 +5327,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE__BINDING_PATTERN = VARIABLE_FEATURE_COUNT + 0;
+	int CATCH_VARIABLE__BINDING_PATTERN = ABSTRACT_VARIABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Catch Variable</em>' class.
@@ -5336,7 +5336,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE_FEATURE_COUNT = VARIABLE_FEATURE_COUNT + 1;
+	int CATCH_VARIABLE_FEATURE_COUNT = ABSTRACT_VARIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref Node</em>' operation.
@@ -5345,7 +5345,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE___GET_DECLARED_TYPE_REF_NODE = VARIABLE___GET_DECLARED_TYPE_REF_NODE;
+	int CATCH_VARIABLE___GET_DECLARED_TYPE_REF_NODE = ABSTRACT_VARIABLE___GET_DECLARED_TYPE_REF_NODE;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -5354,7 +5354,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE___GET_DECLARED_TYPE_REF = VARIABLE___GET_DECLARED_TYPE_REF;
+	int CATCH_VARIABLE___GET_DECLARED_TYPE_REF = ABSTRACT_VARIABLE___GET_DECLARED_TYPE_REF;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref In AST</em>' operation.
@@ -5363,7 +5363,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE___GET_DECLARED_TYPE_REF_IN_AST = VARIABLE___GET_DECLARED_TYPE_REF_IN_AST;
+	int CATCH_VARIABLE___GET_DECLARED_TYPE_REF_IN_AST = ABSTRACT_VARIABLE___GET_DECLARED_TYPE_REF_IN_AST;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -5372,7 +5372,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE___GET_NAME = VARIABLE___GET_NAME;
+	int CATCH_VARIABLE___GET_NAME = ABSTRACT_VARIABLE___GET_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -5381,7 +5381,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE___IS_CONST = VARIABLE___IS_CONST;
+	int CATCH_VARIABLE___IS_CONST = ABSTRACT_VARIABLE___IS_CONST;
 
 	/**
 	 * The number of operations of the '<em>Catch Variable</em>' class.
@@ -5390,7 +5390,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CATCH_VARIABLE_OPERATION_COUNT = VARIABLE_OPERATION_COUNT + 0;
+	int CATCH_VARIABLE_OPERATION_COUNT = ABSTRACT_VARIABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.FinallyBlockImpl <em>Finally Block</em>}' class.
@@ -18087,46 +18087,46 @@ public interface N4JSPackage extends EPackage {
 	EClass getThisArgProvider();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.Variable <em>Variable</em>}'.
+	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.AbstractVariable <em>Abstract Variable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Variable</em>'.
-	 * @see org.eclipse.n4js.n4JS.Variable
+	 * @return the meta object for class '<em>Abstract Variable</em>'.
+	 * @see org.eclipse.n4js.n4JS.AbstractVariable
 	 * @generated
 	 */
-	EClass getVariable();
+	EClass getAbstractVariable();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.Variable#getName <em>Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.AbstractVariable#getName <em>Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the attribute '<em>Name</em>'.
-	 * @see org.eclipse.n4js.n4JS.Variable#getName()
-	 * @see #getVariable()
+	 * @see org.eclipse.n4js.n4JS.AbstractVariable#getName()
+	 * @see #getAbstractVariable()
 	 * @generated
 	 */
-	EAttribute getVariable_Name();
+	EAttribute getAbstractVariable_Name();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.Variable#getDefinedVariable <em>Defined Variable</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.n4JS.AbstractVariable#getDefinedVariable <em>Defined Variable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the reference '<em>Defined Variable</em>'.
-	 * @see org.eclipse.n4js.n4JS.Variable#getDefinedVariable()
-	 * @see #getVariable()
+	 * @see org.eclipse.n4js.n4JS.AbstractVariable#getDefinedVariable()
+	 * @see #getAbstractVariable()
 	 * @generated
 	 */
-	EReference getVariable_DefinedVariable();
+	EReference getAbstractVariable_DefinedVariable();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.Variable#isConst() <em>Is Const</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.AbstractVariable#isConst() <em>Is Const</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the meta object for the '<em>Is Const</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.Variable#isConst()
+	 * @see org.eclipse.n4js.n4JS.AbstractVariable#isConst()
 	 * @generated
 	 */
-	EOperation getVariable__IsConst();
+	EOperation getAbstractVariable__IsConst();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.AnnotableElement <em>Annotable Element</em>}'.
@@ -24380,14 +24380,14 @@ public interface N4JSPackage extends EPackage {
 		EClass THIS_ARG_PROVIDER = eINSTANCE.getThisArgProvider();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.VariableImpl <em>Variable</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.AbstractVariableImpl <em>Abstract Variable</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4JS.impl.VariableImpl
-		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVariable()
+		 * @see org.eclipse.n4js.n4JS.impl.AbstractVariableImpl
+		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAbstractVariable()
 		 * @generated
 		 */
-		EClass VARIABLE = eINSTANCE.getVariable();
+		EClass ABSTRACT_VARIABLE = eINSTANCE.getAbstractVariable();
 
 		/**
 		 * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
@@ -24395,7 +24395,7 @@ public interface N4JSPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute VARIABLE__NAME = eINSTANCE.getVariable_Name();
+		EAttribute ABSTRACT_VARIABLE__NAME = eINSTANCE.getAbstractVariable_Name();
 
 		/**
 		 * The meta object literal for the '<em><b>Defined Variable</b></em>' reference feature.
@@ -24403,7 +24403,7 @@ public interface N4JSPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference VARIABLE__DEFINED_VARIABLE = eINSTANCE.getVariable_DefinedVariable();
+		EReference ABSTRACT_VARIABLE__DEFINED_VARIABLE = eINSTANCE.getAbstractVariable_DefinedVariable();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Const</b></em>' operation.
@@ -24411,7 +24411,7 @@ public interface N4JSPackage extends EPackage {
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation VARIABLE___IS_CONST = eINSTANCE.getVariable__IsConst();
+		EOperation ABSTRACT_VARIABLE___IS_CONST = eINSTANCE.getAbstractVariable__IsConst();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.AnnotableElementImpl <em>Annotable Element</em>}' class.

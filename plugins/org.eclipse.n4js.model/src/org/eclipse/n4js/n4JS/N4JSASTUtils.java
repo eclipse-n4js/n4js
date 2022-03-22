@@ -102,16 +102,16 @@ public abstract class N4JSASTUtils {
 	 *
 	 * @param variableInAST
 	 *            an AST node of a subtype of {@link IdentifiableElement} that may appear in the AST, e.g.
-	 *            {@link Variable}, {@link TypeVariable}, {@link TStructMember}.
+	 *            {@link AbstractVariable}, {@link TypeVariable}, {@link TStructMember}.
 	 */
-	public static VariableEnvironmentElement getScope(Variable<?> variableInAST) {
+	public static VariableEnvironmentElement getScope(AbstractVariable<?> variableInAST) {
 		return getScope(variableInAST, isBlockScoped(variableInAST));
 	}
 
 	/**
-	 * Same as {@link #getScope(Variable)}, but takes any kind of AST node. Flag <code>isBlockScoped</code> can be used
-	 * to determine whether the scope for "block scoped" elements should be returned (i.e. let, const) or the scope for
-	 * ordinarily scoped elements (e.g. var).
+	 * Same as {@link #getScope(AbstractVariable)}, but takes any kind of AST node. Flag <code>isBlockScoped</code> can
+	 * be used to determine whether the scope for "block scoped" elements should be returned (i.e. let, const) or the
+	 * scope for ordinarily scoped elements (e.g. var).
 	 */
 	public static VariableEnvironmentElement getScope(EObject astNode, boolean isBlockScoped) {
 		VariableEnvironmentElement scope = EcoreUtil2.getContainerOfType(astNode, VariableEnvironmentElement.class);
@@ -150,9 +150,9 @@ public abstract class N4JSASTUtils {
 	 *
 	 * @param elemInAST
 	 *            an AST node of a subtype of {@link IdentifiableElement} that may appear in the AST, e.g.
-	 *            {@link Variable}, {@link TypeVariable}, {@link TStructMember}.
+	 *            {@link AbstractVariable}, {@link TypeVariable}, {@link TStructMember}.
 	 */
-	public static boolean isBlockScoped(Variable<?> elemInAST) {
+	public static boolean isBlockScoped(AbstractVariable<?> elemInAST) {
 		if (elemInAST instanceof VariableDeclaration) {
 			final VariableDeclarationContainer parent = getVariableDeclarationContainer(
 					(VariableDeclaration) elemInAST);
@@ -473,8 +473,8 @@ public abstract class N4JSASTUtils {
 			return ((N4TypeVariable) obj).getDefinedTypeVariable();
 		} else if (obj instanceof PropertyAssignment) {
 			return ((PropertyAssignment) obj).getDefinedMember();
-		} else if (obj instanceof Variable) {
-			return ((Variable<?>) obj).getDefinedVariable();
+		} else if (obj instanceof AbstractVariable) {
+			return ((AbstractVariable<?>) obj).getDefinedVariable();
 		}
 		// no type model element found
 		return null;

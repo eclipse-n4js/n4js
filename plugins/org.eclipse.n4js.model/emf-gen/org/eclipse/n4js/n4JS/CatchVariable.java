@@ -28,7 +28,7 @@ import org.eclipse.n4js.ts.types.TVariable;
  * @model
  * @generated
  */
-public interface CatchVariable extends Variable<TVariable> {
+public interface CatchVariable extends AbstractVariable<TVariable> {
 	/**
 	 * Returns the value of the '<em><b>Binding Pattern</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

@@ -21,26 +21,26 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.Variable;
 
 import org.eclipse.n4js.ts.types.TAbstractVariable;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Variable</b></em>'.
+ * An implementation of the model object '<em><b>Abstract Variable</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.VariableImpl#getDefinedVariable <em>Defined Variable</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.AbstractVariableImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.AbstractVariableImpl#getDefinedVariable <em>Defined Variable</em>}</li>
  * </ul>
  *
  * @generated
  */
-public abstract class VariableImpl<T extends TAbstractVariable> extends TypedElementImpl implements Variable<T> {
+public abstract class AbstractVariableImpl<T extends TAbstractVariable> extends TypedElementImpl implements AbstractVariable<T> {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -76,7 +76,7 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected VariableImpl() {
+	protected AbstractVariableImpl() {
 		super();
 	}
 
@@ -87,7 +87,7 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return N4JSPackage.Literals.VARIABLE;
+		return N4JSPackage.Literals.ABSTRACT_VARIABLE;
 	}
 
 	/**
@@ -110,7 +110,7 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.VARIABLE__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.ABSTRACT_VARIABLE__NAME, oldName, name));
 	}
 
 	/**
@@ -126,7 +126,7 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 			definedVariable = (T)eResolveProxy(oldDefinedVariable);
 			if (definedVariable != oldDefinedVariable) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.VARIABLE__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
 			}
 		}
 		return definedVariable;
@@ -151,7 +151,7 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 		T oldDefinedVariable = definedVariable;
 		definedVariable = newDefinedVariable;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.VARIABLE__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
 	}
 
 	/**
@@ -172,9 +172,9 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.VARIABLE__NAME:
+			case N4JSPackage.ABSTRACT_VARIABLE__NAME:
 				return getName();
-			case N4JSPackage.VARIABLE__DEFINED_VARIABLE:
+			case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE:
 				if (resolve) return getDefinedVariable();
 				return basicGetDefinedVariable();
 		}
@@ -190,10 +190,10 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.VARIABLE__NAME:
+			case N4JSPackage.ABSTRACT_VARIABLE__NAME:
 				setName((String)newValue);
 				return;
-			case N4JSPackage.VARIABLE__DEFINED_VARIABLE:
+			case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE:
 				setDefinedVariable((T)newValue);
 				return;
 		}
@@ -208,10 +208,10 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.VARIABLE__NAME:
+			case N4JSPackage.ABSTRACT_VARIABLE__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case N4JSPackage.VARIABLE__DEFINED_VARIABLE:
+			case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE:
 				setDefinedVariable((T)null);
 				return;
 		}
@@ -226,9 +226,9 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.VARIABLE__NAME:
+			case N4JSPackage.ABSTRACT_VARIABLE__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case N4JSPackage.VARIABLE__DEFINED_VARIABLE:
+			case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE:
 				return definedVariable != null;
 		}
 		return super.eIsSet(featureID);
@@ -242,7 +242,7 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case N4JSPackage.VARIABLE___IS_CONST:
+			case N4JSPackage.ABSTRACT_VARIABLE___IS_CONST:
 				return isConst();
 		}
 		return super.eInvoke(operationID, arguments);
@@ -264,4 +264,4 @@ public abstract class VariableImpl<T extends TAbstractVariable> extends TypedEle
 		return result.toString();
 	}
 
-} //VariableImpl
+} //AbstractVariableImpl

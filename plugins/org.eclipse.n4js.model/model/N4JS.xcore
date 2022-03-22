@@ -398,12 +398,15 @@ abstract class ThisTarget {
 abstract class ThisArgProvider {
 }
 
-/* Abstract super type of declared variables (VariableDeclaration), formal parameters (FormalParameter),
- * and variables declared in catch clause (CatchVariable). Variables may be used on the left-hand side
- * of assignments. Note that variables are also named (NamedElement) and typed (TypedElement).
+/* Abstract super type of
+ * <ul>
+ * <li>declared variables ({@link VariableDeclaration}),
+ * <li>formal parameters ({@link FormalParameter}),
+ * <li>variables declared in catch clause ({@link CatchVariable}).
+ * </ul>
+ * but *not* of {@link N4TypeVariable}.
  */
-// FIXME rename to AbstractVariable
-abstract class Variable<T extends TAbstractVariable> extends TypedElement, TypableElement, NamedElement {
+abstract class AbstractVariable<T extends TAbstractVariable> extends TypedElement, TypableElement, NamedElement {
 
 	String name
 
@@ -781,7 +784,7 @@ class ArrowFunction extends FunctionExpression {
 
 }
 
-class FormalParameter extends AnnotableElement, Variable<TFormalParameter> {
+class FormalParameter extends AnnotableElement, AbstractVariable<TFormalParameter> {
 	contains Annotation[] annotations
 	boolean variadic
 	/* A formal parameter with a default value in a function 'foo' can look like this:
@@ -936,7 +939,7 @@ class VariableBinding extends VariableDeclarationOrBinding {
 	refers transient TVariable definedVariable
 }
 
-class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable<TVariable>  {
+class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, AbstractVariable<TVariable>  {
 	contains Annotation[] annotations
 	contains Expression expression
 	/**
@@ -1113,7 +1116,7 @@ class CatchBlock extends AbstractCatchBlock, VariableEnvironmentElement {
 	contains CatchVariable catchVariable
 }
 
-class CatchVariable extends Variable<TVariable> {
+class CatchVariable extends AbstractVariable<TVariable> {
 	contains BindingPattern bindingPattern
 }
 

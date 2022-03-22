@@ -37,7 +37,7 @@ import org.eclipse.n4js.ts.types.TVariable;
  *
  * @generated
  */
-public class CatchVariableImpl extends VariableImpl<TVariable> implements CatchVariable {
+public class CatchVariableImpl extends AbstractVariableImpl<TVariable> implements CatchVariable {
 	/**
 	 * The cached value of the '{@link #getBindingPattern() <em>Binding Pattern</em>}' containment reference.
 	 * <!-- begin-user-doc -->

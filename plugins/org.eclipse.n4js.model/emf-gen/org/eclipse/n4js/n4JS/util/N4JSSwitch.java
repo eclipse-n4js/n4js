@@ -206,13 +206,13 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4JSPackage.VARIABLE: {
-				Variable<?> variable = (Variable<?>)theEObject;
-				T1 result = caseVariable(variable);
-				if (result == null) result = caseTypedElement(variable);
-				if (result == null) result = caseTypableElement(variable);
-				if (result == null) result = caseNamedElement(variable);
-				if (result == null) result = caseTypeProvidingElement(variable);
+			case N4JSPackage.ABSTRACT_VARIABLE: {
+				AbstractVariable<?> abstractVariable = (AbstractVariable<?>)theEObject;
+				T1 result = caseAbstractVariable(abstractVariable);
+				if (result == null) result = caseTypedElement(abstractVariable);
+				if (result == null) result = caseTypableElement(abstractVariable);
+				if (result == null) result = caseNamedElement(abstractVariable);
+				if (result == null) result = caseTypeProvidingElement(abstractVariable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -394,7 +394,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				FormalParameter formalParameter = (FormalParameter)theEObject;
 				T1 result = caseFormalParameter(formalParameter);
 				if (result == null) result = caseAnnotableElement(formalParameter);
-				if (result == null) result = caseVariable(formalParameter);
+				if (result == null) result = caseAbstractVariable(formalParameter);
 				if (result == null) result = caseTypedElement(formalParameter);
 				if (result == null) result = caseTypableElement(formalParameter);
 				if (result == null) result = caseNamedElement(formalParameter);
@@ -461,7 +461,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				T1 result = caseVariableDeclaration(variableDeclaration);
 				if (result == null) result = caseVariableDeclarationOrBinding(variableDeclaration);
 				if (result == null) result = caseAnnotableElement(variableDeclaration);
-				if (result == null) result = caseVariable(variableDeclaration);
+				if (result == null) result = caseAbstractVariable(variableDeclaration);
 				if (result == null) result = caseControlFlowElement(variableDeclaration);
 				if (result == null) result = caseTypedElement(variableDeclaration);
 				if (result == null) result = caseTypableElement(variableDeclaration);
@@ -661,7 +661,7 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 			case N4JSPackage.CATCH_VARIABLE: {
 				CatchVariable catchVariable = (CatchVariable)theEObject;
 				T1 result = caseCatchVariable(catchVariable);
-				if (result == null) result = caseVariable(catchVariable);
+				if (result == null) result = caseAbstractVariable(catchVariable);
 				if (result == null) result = caseTypedElement(catchVariable);
 				if (result == null) result = caseTypableElement(catchVariable);
 				if (result == null) result = caseNamedElement(catchVariable);
@@ -2190,17 +2190,17 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 	}
 
 	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Variable</em>'.
+	 * Returns the result of interpreting the object as an instance of '<em>Abstract Variable</em>'.
 	 * <!-- begin-user-doc -->
 	 * This implementation returns null;
 	 * returning a non-null result will terminate the switch.
 	 * <!-- end-user-doc -->
 	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Variable</em>'.
+	 * @return the result of interpreting the object as an instance of '<em>Abstract Variable</em>'.
 	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
 	 * @generated
 	 */
-	public <T extends TAbstractVariable> T1 caseVariable(Variable<T> object) {
+	public <T extends TAbstractVariable> T1 caseAbstractVariable(AbstractVariable<T> object) {
 		return null;
 	}
 

@@ -17,8 +17,8 @@ import static org.eclipse.n4js.N4JSLanguageConstants.CONSTRUCTOR;
 import static org.eclipse.n4js.N4JSLanguageConstants.DISCOURAGED_CHARACTERS;
 import static org.eclipse.n4js.N4JSLanguageConstants.FUTURE_RESERVED_WORDS;
 import static org.eclipse.n4js.N4JSLanguageConstants.GETTER_SETTER;
+import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.ABSTRACT_VARIABLE__NAME;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME;
-import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.VARIABLE__NAME;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_NAME_CONFLICTS_WITH_CONSTRUCTOR;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_NAME_DIFFERS_TYPE;
@@ -38,6 +38,7 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_NAME_RESER
 
 import java.util.Collection;
 
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4JSMetaModelUtils;
@@ -45,7 +46,6 @@ import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.NamedElement;
-import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
@@ -163,7 +163,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 				&& holdsNameMayNotBeConfusedWith(n4Member, "future reserved word", FUTURE_RESERVED_WORDS) //
 				&& holdsNameMayNotBeConfusedWith(n4Member, "boolean literal", BOOLEAN_LITERALS) //
 				&& //
-				(!(n4Member instanceof Variable) // avoid redundant checks
+				(!(n4Member instanceof AbstractVariable) // avoid redundant checks
 						&& holdsDoesNotStartWithUpperCaseLetter(n4Member) //
 						&& holdsNoTypeNameOrNameEqualsType(n4Member) //
 						&& holdsDoesNotContainDiscouragedCharacter(n4Member) //
@@ -261,7 +261,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * Constraints 4.3
 	 */
 	@Check
-	public void checkVariable(Variable<?> variable) {
+	public void checkVariable(AbstractVariable<?> variable) {
 		if (isNotChecked(variable)) {
 			return;
 		}
@@ -276,30 +276,30 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	private boolean holdsDoesNotEqualWithConstructor(final Variable<?> variable) {
+	private boolean holdsDoesNotEqualWithConstructor(final AbstractVariable<?> variable) {
 		if (CONSTRUCTOR.equals(getVariableName(variable))) {
 			final String message = getMessageForCLF_NAME_CONFLICTS_WITH_CONSTRUCTOR();
-			addIssue(message, variable, VARIABLE__NAME, CLF_NAME_CONFLICTS_WITH_CONSTRUCTOR);
+			addIssue(message, variable, ABSTRACT_VARIABLE__NAME, CLF_NAME_CONFLICTS_WITH_CONSTRUCTOR);
 			return false;
 		}
 		return true;
 	}
 
-	private boolean holdsDoesNotStartWithDollarSign(final Variable<?> variable) {
+	private boolean holdsDoesNotStartWithDollarSign(final AbstractVariable<?> variable) {
 		// name may be null (invalid file), we do not need an NPE here
 		if (getVariableName(variable).startsWith("$")) {
 			final String message = getMessageForCLF_NAME_DOLLAR();
-			addIssue(message, variable, VARIABLE__NAME, CLF_NAME_DOLLAR);
+			addIssue(message, variable, ABSTRACT_VARIABLE__NAME, CLF_NAME_DOLLAR);
 			return false;
 		}
 		return true;
 	}
 
-	private String getVariableName(final Variable<?> variable) {
+	private String getVariableName(final AbstractVariable<?> variable) {
 		return com.google.common.base.Strings.nullToEmpty(variable.getName());
 	}
 
-	private boolean isNotChecked(Variable<?> variable) {
+	private boolean isNotChecked(AbstractVariable<?> variable) {
 		if (Strings.isEmpty(variable.getName())) {
 			return true; // invalid AST
 		}
@@ -309,7 +309,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 		return false;
 	}
 
-	private boolean holdsStartWithLowercaseLetter(Variable<?> variable) {
+	private boolean holdsStartWithLowercaseLetter(AbstractVariable<?> variable) {
 
 		if (variable.isConst()) {
 			return true;
@@ -321,7 +321,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 			addIssue(
 					Strings.toFirstUpper(msg),
 					variable,
-					VARIABLE__NAME,
+					ABSTRACT_VARIABLE__NAME,
 					CLF_NAME_DOES_NOT_START_LOWERCASE);
 			return false;
 		}
@@ -361,7 +361,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
-	private boolean holdsDoesNotContainDiscouragedCharacter(final Variable<?> variable) {
+	private boolean holdsDoesNotContainDiscouragedCharacter(final AbstractVariable<?> variable) {
 
 		for (final String discouragedCharacter : DISCOURAGED_CHARACTERS.keySet()) {
 			final String declarationName = getVariableName(variable);
@@ -370,7 +370,7 @@ public class N4JSNameValidator extends AbstractN4JSDeclarativeValidator {
 				final String message = getMessageForCLF_NAME_CONTAINS_DISCOURAGED_CHARACTER(discouragedCharacterLabel);
 				addIssue(message,
 						variable,
-						VARIABLE__NAME,
+						ABSTRACT_VARIABLE__NAME,
 						CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER);
 				return false;
 			}

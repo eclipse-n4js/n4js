@@ -53,7 +53,7 @@ class ThirdPartyValidator extends AbstractN4JSDeclarativeValidator {
 						for (varDecl : stmnt.varDecl) {
 							if (varDecl.name == funName) {
 								addIssue(messageForTHIRD_PARTY_BABEL_LET_CONST_IN_FUN_EXPR,
-									varDecl, N4JSPackage.eINSTANCE.variable_Name,
+									varDecl, N4JSPackage.eINSTANCE.abstractVariable_Name,
 									THIRD_PARTY_BABEL_LET_CONST_IN_FUN_EXPR);
 							}
 						}

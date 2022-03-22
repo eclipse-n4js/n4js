@@ -221,7 +221,7 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 					var tsMsg = result.failureMessage.trimPrefix('failed: ').trimSuffix('.');
 					val msg = getMessageForDESTRUCT_TYPE_ERROR_VAR(varName, elemDesc, tsMsg);
 					if(node.varDecl!==null) {
-						addIssue(msg, node.varDecl, N4JSPackage.eINSTANCE.variable_Name, DESTRUCT_TYPE_ERROR_VAR)
+						addIssue(msg, node.varDecl, N4JSPackage.eINSTANCE.abstractVariable_Name, DESTRUCT_TYPE_ERROR_VAR)
 					} else {
 						addIssue(msg, node.varRef, DESTRUCT_TYPE_ERROR_VAR);
 					}

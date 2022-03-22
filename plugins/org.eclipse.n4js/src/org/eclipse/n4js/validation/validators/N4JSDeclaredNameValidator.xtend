@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.AbstractVariable
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.CatchVariable
@@ -53,7 +54,6 @@ import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.TypeDefiningElement
-import org.eclipse.n4js.n4JS.Variable
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
@@ -379,7 +379,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	}
 	
 	def private boolean isVariable(EObject eo) {
-		return eo instanceof Variable
+		return eo instanceof AbstractVariable
 			|| (eo instanceof NamedImportSpecifier && (eo as NamedImportSpecifier).importedElement instanceof TVariable);
 	}
 	
@@ -631,7 +631,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	def private String getDeclaredName(EObject eo) {
 
 		if (eo instanceof FunctionDeclaration || eo instanceof FunctionExpression || eo instanceof N4TypeDefinition ||
-			eo instanceof Variable) {
+			eo instanceof AbstractVariable) {
 			return eo.findName
 		}
 
@@ -689,8 +689,8 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 			return N4JSPackage.Literals.FUNCTION_DECLARATION__NAME;
 		}
 
-		if (eo instanceof Variable) {
-			return N4JSPackage.Literals.VARIABLE__NAME;
+		if (eo instanceof AbstractVariable) {
+			return N4JSPackage.Literals.ABSTRACT_VARIABLE__NAME;
 		}
 
 		if (eo instanceof N4TypeVariable) {

@@ -18,10 +18,10 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.IEObjectCoveringRegion;
 import org.eclipse.n4js.jsdoc2spec.adoc.ADocFactory;
 import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
 import org.eclipse.n4js.jsdoc2spec.adoc.SpecIdentifiableElementSection;
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
-import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -97,8 +97,8 @@ public class SpecADocXpectMethod {
 		if (eobj instanceof TypeDefiningElement) {
 			return ((TypeDefiningElement) eobj).getDefinedType();
 		}
-		if (eobj instanceof Variable) {
-			return ((Variable<?>) eobj).getDefinedVariable();
+		if (eobj instanceof AbstractVariable) {
+			return ((AbstractVariable<?>) eobj).getDefinedVariable();
 		}
 		if (eobj instanceof N4TypeVariable) {
 			return ((N4TypeVariable) eobj).getDefinedTypeVariable();

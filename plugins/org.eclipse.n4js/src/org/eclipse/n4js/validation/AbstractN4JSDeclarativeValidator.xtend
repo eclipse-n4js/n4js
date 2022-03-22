@@ -17,6 +17,7 @@ import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.n4JS.AbstractVariable
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
@@ -43,7 +44,6 @@ import org.eclipse.n4js.n4JS.SwitchStatement
 import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.TryStatement
 import org.eclipse.n4js.n4JS.TypeReferenceNode
-import org.eclipse.n4js.n4JS.Variable
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.WhileStatement
 import org.eclipse.n4js.n4JS.WithStatement
@@ -523,8 +523,8 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 			} else if (eo instanceof VariableStatement) {
 				val varDecl = eo.varDecl.head
 				findNameFeature(varDecl)
-			} else if (eo instanceof Variable<?>) {
-				eo -> N4JSPackage.Literals.VARIABLE__NAME
+			} else if (eo instanceof AbstractVariable<?>) {
+				eo -> N4JSPackage.Literals.ABSTRACT_VARIABLE__NAME
 			} else if (eo instanceof N4TypeVariable) {
 				eo -> N4JSPackage.Literals.N4_TYPE_VARIABLE__NAME
 			} else {

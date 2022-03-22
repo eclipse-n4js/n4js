@@ -719,7 +719,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 				addIssue(
 					getMessageForDI_NOT_INJECTABLE(fpar.typeRef.typeRefAsString, '''at «fpar.name»'''),
 					fpar.astElement,
-					N4JSPackage.eINSTANCE.variable_Name,
+					N4JSPackage.eINSTANCE.abstractVariable_Name,
 					DI_NOT_INJECTABLE
 				);
 			];
@@ -793,7 +793,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		}
 		if (isVariadicOrOptional) {
 			addIssue(getMessageForDI_VARARGS_NOT_INJECTABLE(), astElement,
-				N4JSPackage.eINSTANCE.variable_Name, DI_VARARGS_NOT_INJECTABLE
+				N4JSPackage.eINSTANCE.abstractVariable_Name, DI_VARARGS_NOT_INJECTABLE
 			);
 			return false;
 		}

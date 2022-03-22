@@ -23,6 +23,7 @@ import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.common.unicode.CharTypes
 import org.eclipse.n4js.compileTime.CompileTimeValue
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
+import org.eclipse.n4js.n4JS.AbstractVariable
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
@@ -65,7 +66,6 @@ import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
-import org.eclipse.n4js.n4JS.Variable
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
@@ -501,7 +501,7 @@ public class N4JSLanguageUtils {
 
 	def static EObject getDefinedTypeModelElement(EObject astNode) {
 		switch(astNode) {
-			Variable<?>: astNode.definedVariable
+			AbstractVariable<?>: astNode.definedVariable
 			PropertyMethodDeclaration: astNode.definedMember
 			TypeDefiningElement: astNode.definedType
 			N4MemberDeclaration case !(astNode instanceof N4MemberAnnotationList): astNode.definedTypeElement

@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.BindingPattern;
 import org.eclipse.n4js.n4JS.Expression;
@@ -36,7 +37,6 @@ import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
-import org.eclipse.n4js.n4JS.Variable;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
@@ -669,10 +669,10 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 				default: return -1;
 			}
 		}
-		if (baseClass == Variable.class) {
+		if (baseClass == AbstractVariable.class) {
 			switch (derivedFeatureID) {
-				case N4JSPackage.FORMAL_PARAMETER__NAME: return N4JSPackage.VARIABLE__NAME;
-				case N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE: return N4JSPackage.VARIABLE__DEFINED_VARIABLE;
+				case N4JSPackage.FORMAL_PARAMETER__NAME: return N4JSPackage.ABSTRACT_VARIABLE__NAME;
+				case N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE: return N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE;
 				default: return -1;
 			}
 		}
@@ -707,10 +707,10 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 				default: return -1;
 			}
 		}
-		if (baseClass == Variable.class) {
+		if (baseClass == AbstractVariable.class) {
 			switch (baseFeatureID) {
-				case N4JSPackage.VARIABLE__NAME: return N4JSPackage.FORMAL_PARAMETER__NAME;
-				case N4JSPackage.VARIABLE__DEFINED_VARIABLE: return N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE;
+				case N4JSPackage.ABSTRACT_VARIABLE__NAME: return N4JSPackage.FORMAL_PARAMETER__NAME;
+				case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE: return N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE;
 				default: return -1;
 			}
 		}
@@ -750,9 +750,9 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 				default: return -1;
 			}
 		}
-		if (baseClass == Variable.class) {
+		if (baseClass == AbstractVariable.class) {
 			switch (baseOperationID) {
-				case N4JSPackage.VARIABLE___IS_CONST: return N4JSPackage.FORMAL_PARAMETER___IS_CONST;
+				case N4JSPackage.ABSTRACT_VARIABLE___IS_CONST: return N4JSPackage.FORMAL_PARAMETER___IS_CONST;
 				default: return -1;
 			}
 		}

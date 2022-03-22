@@ -33,6 +33,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
@@ -43,7 +44,6 @@ import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
-import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableDeclarationContainer;
 import org.eclipse.n4js.n4JS.VariableStatement;
@@ -571,10 +571,10 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 				default: return -1;
 			}
 		}
-		if (baseClass == Variable.class) {
+		if (baseClass == AbstractVariable.class) {
 			switch (derivedFeatureID) {
-				case N4JSPackage.VARIABLE_DECLARATION__NAME: return N4JSPackage.VARIABLE__NAME;
-				case N4JSPackage.VARIABLE_DECLARATION__DEFINED_VARIABLE: return N4JSPackage.VARIABLE__DEFINED_VARIABLE;
+				case N4JSPackage.VARIABLE_DECLARATION__NAME: return N4JSPackage.ABSTRACT_VARIABLE__NAME;
+				case N4JSPackage.VARIABLE_DECLARATION__DEFINED_VARIABLE: return N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE;
 				default: return -1;
 			}
 		}
@@ -614,10 +614,10 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 				default: return -1;
 			}
 		}
-		if (baseClass == Variable.class) {
+		if (baseClass == AbstractVariable.class) {
 			switch (baseFeatureID) {
-				case N4JSPackage.VARIABLE__NAME: return N4JSPackage.VARIABLE_DECLARATION__NAME;
-				case N4JSPackage.VARIABLE__DEFINED_VARIABLE: return N4JSPackage.VARIABLE_DECLARATION__DEFINED_VARIABLE;
+				case N4JSPackage.ABSTRACT_VARIABLE__NAME: return N4JSPackage.VARIABLE_DECLARATION__NAME;
+				case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE: return N4JSPackage.VARIABLE_DECLARATION__DEFINED_VARIABLE;
 				default: return -1;
 			}
 		}
@@ -664,9 +664,9 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 				default: return -1;
 			}
 		}
-		if (baseClass == Variable.class) {
+		if (baseClass == AbstractVariable.class) {
 			switch (baseOperationID) {
-				case N4JSPackage.VARIABLE___IS_CONST: return N4JSPackage.VARIABLE_DECLARATION___IS_CONST;
+				case N4JSPackage.ABSTRACT_VARIABLE___IS_CONST: return N4JSPackage.VARIABLE_DECLARATION___IS_CONST;
 				default: return -1;
 			}
 		}

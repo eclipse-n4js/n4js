@@ -17,6 +17,7 @@ import java.util.function.Function;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.ArrowFunction;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.CatchVariable;
@@ -33,7 +34,6 @@ import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
-import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -228,7 +228,7 @@ public class SourceElementExtensions {
 		}
 
 		@Override
-		public <T extends TAbstractVariable> Boolean caseVariable(Variable<T> feature) {
+		public <T extends TAbstractVariable> Boolean caseAbstractVariable(AbstractVariable<T> feature) {
 			if (feature instanceof CatchVariable
 					&& ((CatchVariable) feature).getBindingPattern() != null) {
 				// in this case the AST node 'feature' of type CatchVariable merely serves as a container for the
@@ -304,7 +304,7 @@ public class SourceElementExtensions {
 		collectVisibleIdentifiableElement(element, addHere, e -> e.getDefinedType());
 	}
 
-	static private void collectVisibleVariable(Variable<?> element, List<? super IdentifiableElement> addHere) {
+	static private void collectVisibleVariable(AbstractVariable<?> element, List<? super IdentifiableElement> addHere) {
 		collectVisibleIdentifiableElement(element, addHere, e -> e.getDefinedVariable());
 	}
 
@@ -324,7 +324,7 @@ public class SourceElementExtensions {
 		}
 	}
 
-	static private boolean belongsToScope(Variable<?> elem, VariableEnvironmentElement scope) {
+	static private boolean belongsToScope(AbstractVariable<?> elem, VariableEnvironmentElement scope) {
 		return N4JSASTUtils.getScope(elem) == scope;
 	}
 }

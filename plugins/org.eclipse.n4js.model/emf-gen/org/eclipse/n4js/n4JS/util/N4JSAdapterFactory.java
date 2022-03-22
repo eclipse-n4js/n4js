@@ -153,8 +153,8 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createThisArgProviderAdapter();
 			}
 			@Override
-			public <T extends TAbstractVariable> Adapter caseVariable(Variable<T> object) {
-				return createVariableAdapter();
+			public <T extends TAbstractVariable> Adapter caseAbstractVariable(AbstractVariable<T> object) {
+				return createAbstractVariableAdapter();
 			}
 			@Override
 			public Adapter caseAnnotableElement(AnnotableElement object) {
@@ -1069,16 +1069,16 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.Variable <em>Variable</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.AbstractVariable <em>Abstract Variable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.Variable
+	 * @see org.eclipse.n4js.n4JS.AbstractVariable
 	 * @generated
 	 */
-	public Adapter createVariableAdapter() {
+	public Adapter createAbstractVariableAdapter() {
 		return null;
 	}
 

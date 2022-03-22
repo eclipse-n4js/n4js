@@ -540,7 +540,7 @@ class N4JSScopingTest {
 		val Set<QualifiedName> allElements = scope.allElements.filter [
 			name.segmentCount == 1 // ignore fully qualified names produced by global scope provider used for export
 			&& (
-			N4JSPackage.Literals.VARIABLE.isSuperTypeOf(EClass)
+			N4JSPackage.Literals.ABSTRACT_VARIABLE.isSuperTypeOf(EClass)
 				|| TypesPackage.Literals.TVARIABLE.isSuperTypeOf(EClass)
 				|| TypesPackage.Literals.TMEMBER.isSuperTypeOf(EClass)
 				|| TypesPackage.Literals.TFUNCTION.isSuperTypeOf(EClass))

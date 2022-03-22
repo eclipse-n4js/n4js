@@ -119,7 +119,7 @@ public class DestructNode {
 				BindingProperty case astElement.declaredName !== null:
 					astElement -> N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName
 				BindingProperty case astElement.value?.varDecl?.name !== null:
-					astElement.value.varDecl -> N4JSPackage.eINSTANCE.variable_Name
+					astElement.value.varDecl -> N4JSPackage.eINSTANCE.abstractVariable_Name
 				PropertyNameOwner:
 					astElement -> N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName
 				default:

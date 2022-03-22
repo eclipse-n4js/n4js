@@ -31,7 +31,7 @@ import org.eclipse.n4js.ts.types.TVariable;
  * @model
  * @generated
  */
-public interface VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable<TVariable> {
+public interface VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, AbstractVariable<TVariable> {
 	/**
 	 * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.Annotation}.
