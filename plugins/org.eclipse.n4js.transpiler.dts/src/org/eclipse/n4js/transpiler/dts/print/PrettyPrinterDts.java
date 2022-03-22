@@ -827,7 +827,9 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 		} else {
 			// not exported
-			write("declare ");
+			if (!((NamespaceElement) original).isInNamespace()) {
+				write("declare ");
+			}
 		}
 
 		write(keyword(original.getVarStmtKeyword()));
