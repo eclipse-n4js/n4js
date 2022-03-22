@@ -43,7 +43,7 @@ class BlockTransformation extends Transformation {
 	/** capture arguments-variable to be accessible in re-written arrow-functions  */
 	private def void transformArguments(FunctionOrFieldAccessor funcOrAccess ) {
 
-		val argsVar = funcOrAccess.implicitArgumentsVariable
+		val argsVar = state.tracer.getOriginalASTNodeOfSameType(funcOrAccess, false)?.implicitArgumentsVariable
 		if(argsVar === null) {
 			return;
 		}
