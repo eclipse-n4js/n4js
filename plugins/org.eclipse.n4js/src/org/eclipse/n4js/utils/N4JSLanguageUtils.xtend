@@ -1127,14 +1127,10 @@ public class N4JSLanguageUtils {
 
 		if (expr instanceof IdentifierRef) {
 			val idElem = expr.getId();
-			if (idElem instanceof VariableDeclaration) {
-				// Case 1: non-exported const, e.g. const ol = {}
+			if (idElem instanceof TVariable) {
 				if (idElem.isConst()) {
-					return idElem.expression instanceof ObjectLiteral;
+					return idElem.objectLiteral;
 				}
-			} else if (idElem instanceof TVariable) {
-				// Case 2: exported const, e.g. exported const ol = {}
-				return idElem.objectLiteral;
 			}
 		}
 
@@ -1167,14 +1163,10 @@ public class N4JSLanguageUtils {
 
 		if (expr instanceof IdentifierRef) {
 			val idElem = expr.getId();
-			if (idElem instanceof VariableDeclaration) {
-				// Case 1: non-exported const, e.g. const ol = new A()
+			if (idElem instanceof TVariable) {
 				if (idElem.isConst()) {
-					return idElem.expression instanceof NewExpression;
+					return idElem.newExpression;
 				}
-			} else if (idElem instanceof TVariable) {
-				// Case 2: exported const, e.g. exported const ol = new A()
-				return idElem.newExpression;
 			}
 		}
 
