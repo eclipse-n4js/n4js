@@ -12,6 +12,7 @@ package org.eclipse.n4js.flowgraphs.dataflow.symbols;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
+import org.eclipse.n4js.ts.types.TVariable;
 
 /**
  * Creates {@link Symbol}s depending on the given AST element
@@ -40,6 +41,10 @@ public class SymbolOfVariableDeclaration extends Symbol {
 
 	@Override
 	protected Object createSymbolKey() {
-		return vd.getDefinedVariable();
+		TVariable defVar = vd.getDefinedVariable();
+		if (defVar != null) {
+			return defVar;
+		}
+		return vd; // broken AST, unsupported language features, etc.
 	}
 }
