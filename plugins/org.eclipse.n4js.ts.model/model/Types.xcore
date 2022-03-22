@@ -155,6 +155,7 @@ class TModule extends AbstractModule, TAnnotableElement {
 	 * Non-exported variables. This contains the non-exported variables for the entire TModule, i.e. also those
 	 * declared inside functions, methods, namespaces, and declared modules.
 	 */
+// FIXME consider moving this to AbstractNamespace
 	contains transient TVariable[] localVariables
 
 	/*
