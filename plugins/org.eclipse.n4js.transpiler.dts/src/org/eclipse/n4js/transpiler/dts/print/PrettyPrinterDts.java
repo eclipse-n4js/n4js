@@ -79,7 +79,6 @@ import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.tooling.N4JSDocumentationProvider;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.Script_IM;
@@ -93,6 +92,7 @@ import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
+import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.base.Optional;

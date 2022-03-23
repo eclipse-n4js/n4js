@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -25,14 +27,30 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
+import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentListContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentsContext;
+import org.eclipse.n4js.n4JS.AnnotableElement;
+import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.StringLiteral;
+import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TAnnotableElement;
+import org.eclipse.n4js.ts.types.TAnnotation;
+import org.eclipse.n4js.ts.types.TAnnotationTypeRefArgument;
+import org.eclipse.n4js.ts.types.TypesFactory;
+import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
+import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -77,13 +95,42 @@ public class ParserContextUtil {
 		modifiers.add(accessibility);
 	}
 
+	/** Sets the given element's "declared this type" by adding a {@code @This()} annotation. */
+	public static void setDeclThisType(AnnotableElement elem, TypeRef typeRef) {
+		EObject parent = elem.eContainer();
+		if (parent instanceof ExportDeclaration) {
+			elem = (ExportDeclaration) parent;
+		}
+		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+		ann.setName("This");
+		TypeRefAnnotationArgument arg = N4JSFactory.eINSTANCE.createTypeRefAnnotationArgument();
+		arg.setTypeRefNode(wrapInTypeRefNode(typeRef));
+		ann.getArgs().add(arg);
+		N4JSASTUtils.addAnnotation(elem, ann);
+	}
+
+	/** Sets the given element's "declared this type" by adding a {@code @This()} annotation. */
+	public static void setDeclThisType(TAnnotableElement elem, TypeRef typeRef) {
+		TAnnotation ann = TypesFactory.eINSTANCE.createTAnnotation();
+		ann.setName("This");
+		TAnnotationTypeRefArgument arg = TypesFactory.eINSTANCE.createTAnnotationTypeRefArgument();
+		arg.setTypeRef(typeRef);
+		ann.getArgs().add(arg);
+		elem.getAnnotations().add(ann);
+	}
+
 	/**
 	 * Adds 'elem' to object 'addHere', setting its accessibility and wrapping it in an {@link ExportDeclaration}, if
 	 * necessary.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem, EObject addHere,
-			EReference eRef, boolean makePrivateIfNotExported) {
+	public static void addAndHandleExported(EObject addHere, EReference eRef, ParserRuleContext ctx,
+			ExportableElement elem, boolean makePrivateIfNotExported) {
+
+		if (ctx == null || elem == null) {
+			return;
+		}
+
 		EObject toAdd;
 		boolean isExported = ParserContextUtil.isExported(ctx);
 		if (isExported) {
@@ -145,13 +192,82 @@ public class ParserContextUtil {
 		return null;
 	}
 
-	/** @return the quoted string. Null safe. */
-	public static String trimStringLiteral(TerminalNode stringLiteral) {
-		if (stringLiteral == null || stringLiteral.getText() == null || stringLiteral.getText().length() < 2) {
+	/** @return the actual value of the given numeric literal. */
+	public static BigDecimal parseNumericLiteral(NumericLiteralContext numLitCtx, boolean ignoreNegation) {
+		if (numLitCtx == null) {
+			return null;
+		}
+		String text = numLitCtx.getText().trim();
+		if (ignoreNegation) {
+			if (text.startsWith("-")) {
+				text = text.substring(1);
+			}
+		}
+		try {
+			if (numLitCtx.BinaryIntegerLiteral() != null) {
+				return new BigDecimal(new BigInteger(text.substring(2), 2));
+			} else if (numLitCtx.OctalIntegerLiteral() != null) {
+				return new BigDecimal(new BigInteger(text, 8));
+			} else if (numLitCtx.OctalIntegerLiteral2() != null) {
+				return new BigDecimal(new BigInteger(text.substring(2), 8));
+			} else if (numLitCtx.HexIntegerLiteral() != null) {
+				return new BigDecimal(new BigInteger(text.substring(2), 16));
+			} else if (numLitCtx.DecimalLiteral() != null) {
+				return new BigDecimal(text);
+			} else {
+				return null;
+			}
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	/** @return the newly created string literal. Null safe. */
+	public static StringLiteral createStringLiteral(TerminalNode stringLiteral) {
+		if (stringLiteral == null) {
+			return null;
+		}
+		StringLiteral sl = N4JSFactory.eINSTANCE.createStringLiteral();
+		sl.setRawValue(stringLiteral.getText());
+		sl.setValue(trimAndUnescapeStringLiteral(stringLiteral));
+		return sl;
+	}
+
+	/** @return the unquoted and unescaped string. Null safe. */
+	public static String trimAndUnescapeStringLiteral(TerminalNode stringLiteral) {
+		String str = stringLiteral != null ? stringLiteral.getText() : null;
+		if (str == null || str.length() < 2) {
 			return "";
 		}
-		String str = stringLiteral.getText();
-		return str.substring(1, str.length() - 1);
+		// trim quotes
+		str = str.substring(1, str.length() - 1);
+		// resolve escape sequences
+		StringConverterResult converted = ValueConverterUtils.convertFromEscapedString(str, true, false, false, null);
+		return converted.getValue();
+	}
+
+	/** @return the type argument contexts of the given context. Null safe. */
+	public static List<TypeArgumentContext> getTypeArgsFromTypeArgCtx(TypeArgumentsContext typeArgsCtx) {
+		if (typeArgsCtx != null) {
+			TypeArgumentListContext typeArgList = typeArgsCtx.typeArgumentList();
+			if (typeArgList != null) {
+				List<TypeArgumentContext> typeArgument = typeArgList.typeArgument();
+				if (typeArgument != null && !typeArgument.isEmpty()) {
+					return typeArgument;
+				}
+			}
+		}
+		return Collections.emptyList();
+	}
+
+	/** @return a new {@link TypeReferenceNode} wrapping the given type reference. Null safe. */
+	public static <T extends TypeRef> TypeReferenceNode<T> wrapInTypeRefNode(T typeRef) {
+		if (typeRef == null) {
+			return null;
+		}
+		TypeReferenceNode<T> result = N4JSFactory.eINSTANCE.createTypeReferenceNode();
+		result.setTypeRefInAST(typeRef);
+		return result;
 	}
 
 	/** Installs proxy information that is later used for linking */

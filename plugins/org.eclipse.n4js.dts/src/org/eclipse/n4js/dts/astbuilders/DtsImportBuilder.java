@@ -36,7 +36,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementContext, ImportDeclaration> {
+public class DtsImportBuilder extends AbstractDtsBuilder<ImportStatementContext, ImportDeclaration> {
 	private final static Logger LOG = Logger.getLogger(DtsImportBuilder.class);
 
 	/** Constructor */
@@ -53,7 +53,7 @@ public class DtsImportBuilder extends AbstractDtsSubBuilder<ImportStatementConte
 	@Override
 	public void enterImportFromBlock(ImportFromBlockContext ctx) {
 		result = N4JSFactory.eINSTANCE.createImportDeclaration();
-		String fromModule = ParserContextUtil.trimStringLiteral(ctx.StringLiteral());
+		String fromModule = ParserContextUtil.trimAndUnescapeStringLiteral(ctx.StringLiteral());
 		result.setImportFrom(fromModule != null);
 		if (fromModule != null) {
 			URI fromModuleUri = null;

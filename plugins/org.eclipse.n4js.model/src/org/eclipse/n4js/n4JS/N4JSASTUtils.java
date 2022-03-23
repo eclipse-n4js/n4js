@@ -631,4 +631,29 @@ public abstract class N4JSASTUtils {
 		}
 		return Hashing.murmur3_128(SEED).hashString(source, Charsets.UTF_8).toString();
 	}
+
+	/** Adds the given annotation to the given element. */
+	public static void addAnnotation(AnnotableElement elem, Annotation ann) {
+		if (elem instanceof AnnotableScriptElement) {
+			AnnotableScriptElement elemCasted = (AnnotableScriptElement) elem;
+			if (elemCasted.getAnnotationList() == null) {
+				elemCasted.setAnnotationList(N4JSFactory.eINSTANCE.createAnnotationList());
+			}
+			elemCasted.getAnnotationList().getAnnotations().add(ann);
+		} else if (elem instanceof AnnotablePropertyAssignment) {
+			AnnotablePropertyAssignment elemCasted = (AnnotablePropertyAssignment) elem;
+			if (elemCasted.getAnnotationList() == null) {
+				elemCasted.setAnnotationList(N4JSFactory.eINSTANCE.createPropertyAssignmentAnnotationList());
+			}
+			elemCasted.getAnnotationList().getAnnotations().add(ann);
+		} else if (elem instanceof AnnotableN4MemberDeclaration) {
+			AnnotableN4MemberDeclaration elemCasted = (AnnotableN4MemberDeclaration) elem;
+			if (elemCasted.getAnnotationList() == null) {
+				elemCasted.setAnnotationList(N4JSFactory.eINSTANCE.createN4MemberAnnotationList());
+			}
+			elemCasted.getAnnotationList().getAnnotations().add(ann);
+		} else {
+			elem.getAnnotations().add(ann);
+		}
+	}
 }

@@ -23,5 +23,15 @@ Script: true
   ExportedVariableStatement: [external, public], const
    ExportedVariableDeclaration: K
     TypeReferenceNode
-     ParameterizedTypeRef: OFF, false, false, any, ?~, true, false
+     ParameterizedTypeRefStructural: OFF, false, false, Object, ?~, false, false
+      TStructField: false, false, false, public, false, false, false, false, false, a, false
+       ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
+      TStructField: false, false, false, public, false, false, false, false, false, b, false
+       ParameterizedTypeRef: OFF, true, false, ?~, false, false
+        ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
+        ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
+      TStructField: false, false, false, public, false, false, false, false, false, c, false
+       ParameterizedTypeRefStructural: OFF, false, false, Object, ?~, false, false
+        TStructField: false, false, false, public, false, false, false, false, false, c1, false
+         ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
 --- */

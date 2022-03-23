@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.workspace.utils;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -68,26 +69,27 @@ public class DefinitionProjectMap {
 	}
 
 	/**
-	 * Returns the name of the definition project that defines the project with the given name or <code>null</code> if
-	 * no such definition project exists.
+	 * Returns the names of the definition projects that define the project with the given name or <code>null</code> if
+	 * no such definition projects exist.
 	 * <p>
-	 * If several such definition projects exist, this method will choose one of them in a way that is consistently
-	 * reproducible.
+	 * If several such definition projects exist, this method will choose one of them for each scope name and if several
+	 * per scope exist, limit them in a way that is consistently reproducible.
 	 */
-	public N4JSPackageName getDefinitionProject(N4JSPackageName nameOfDefinedProject) {
-		N4JSPackageName result = null;
-		for (N4JSPackageName p : getDefinitionProjects(nameOfDefinedProject)) {
+	public Collection<N4JSPackageName> getDefinitionProjects(N4JSPackageName nameOfDefinedProject) {
+		Map<String, N4JSPackageName> defProjects = new HashMap<>();
+		for (N4JSPackageName p : getAllDefinitionProjects(nameOfDefinedProject)) {
+			N4JSPackageName result = defProjects.get(p.getScopeName());
 			if (result == null || result.getRawName().compareTo(p.getRawName()) > 0) {
-				result = p;
+				defProjects.put(p.getScopeName(), p);
 			}
 		}
-		return result;
+		return defProjects.values();
 	}
 
 	/**
 	 * Returns the names of all definition projects that define the project with the given name.
 	 */
-	public Set<N4JSPackageName> getDefinitionProjects(N4JSPackageName nameOfDefinedProject) {
+	public Set<N4JSPackageName> getAllDefinitionProjects(N4JSPackageName nameOfDefinedProject) {
 		return defined2DefinitionProjects.get(nameOfDefinedProject);
 	}
 
@@ -107,6 +109,10 @@ public class DefinitionProjectMap {
 		N4JSPackageName definedProjectName = pd.getDefinesPackage() != null
 				? new N4JSPackageName(pd.getDefinesPackage())
 				: null;
+		if (name.isScopeTypes()) {
+			type = ProjectType.DEFINITION;
+			definedProjectName = new N4JSPackageName(name.getPlainName());
+		}
 		addProject(name, type, definedProjectName);
 	}
 

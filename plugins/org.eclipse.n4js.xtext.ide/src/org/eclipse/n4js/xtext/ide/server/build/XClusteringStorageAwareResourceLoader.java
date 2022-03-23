@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -26,14 +27,13 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 
 import com.google.common.base.Throwables;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
  */
 @SuppressWarnings("restriction")
 public class XClusteringStorageAwareResourceLoader {
-	private final XBuildContext context;
 
 	/** The result of loading an EMF resource. */
 	public static class LoadResult {
@@ -66,33 +66,31 @@ public class XClusteringStorageAwareResourceLoader {
 	}
 
 	/**
-	 * Constructor
-	 */
-	public XClusteringStorageAwareResourceLoader(XBuildContext context) {
-		this.context = context;
-	}
-
-	/**
 	 * Execute the given operation in a clustered fashion.
 	 */
-	public <T> List<T> executeClustered(Iterable<URI> uris, Function1<? super LoadResult, ? extends T> operation) {
+	public <T> List<T> executeClustered(XBuildContext context, Iterable<URI> uris, boolean sorted,
+			Function1<? super LoadResult, ? extends T> operation) {
+
 		int loadedURIsCount = 0;
 		Set<URI> sourceLevelURIs = new HashSet<>();
 		List<LoadResult> resources = new ArrayList<>();
 		List<T> result = new ArrayList<>();
-		ArrayList<URI> urisCopy = Lists.newArrayList(uris);
+		Set<URI> urisCopy = Sets.newLinkedHashSet(uris);
+		Set<URI> urisDone = new HashSet<>();
 
 		while (!urisCopy.isEmpty()) {
-			URI uri = urisCopy.remove(0);
+			Iterator<URI> iterator = urisCopy.iterator();
+			URI uri = iterator.next();
+			iterator.remove();
 			XtextResourceSet resourceSet = context.getResourceSet();
 			if (!context.getClusteringPolicy().continueProcessing(resourceSet, uri, loadedURIsCount)) {
 				result.addAll(ListExtensions.map(resources, operation::apply));
-				this.clearResourceSet();
+				this.clearResourceSet(context);
 				resources.clear();
 				loadedURIsCount = 0;
 			}
 			loadedURIsCount++;
-			if (this.isSource(uri)) {
+			if (this.isSource(context, uri)) {
 				sourceLevelURIs.add(uri);
 				Resource existingResource = resourceSet.getResource(uri, false);
 				if (existingResource instanceof StorageAwareResource) {
@@ -102,20 +100,29 @@ public class XClusteringStorageAwareResourceLoader {
 				}
 				SourceLevelURIsAdapter.setSourceLevelUrisWithoutCopy(resourceSet, sourceLevelURIs);
 			}
-			resources.add(loadResource(resourceSet, uri, urisCopy));
+			resources.add(loadResource(resourceSet, uri, urisCopy, urisDone));
+			urisDone.add(uri);
+		}
+		if (sorted) {
+			resources = sort(context, resources);
 		}
 		result.addAll(ListExtensions.map(resources, operation::apply));
 		return result;
 	}
 
 	/** Actually loads a resource. */
-	protected LoadResult loadResource(ResourceSet resourceSet, URI uri, List<URI> addNewUrisHere) {
+	protected LoadResult loadResource(ResourceSet resourceSet, URI uri, Set<URI> addNewUrisHere, Set<URI> urisDone) {
 		try {
 			Resource resource = resourceSet.getResource(uri, true);
 			ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.get(resource);
 			if (loadResultInfo != null) {
 				Collection<URI> newUris = loadResultInfo.getNewUris();
-				addNewUrisHere.addAll(0, newUris);
+				for (Iterator<URI> iter = newUris.iterator(); iter.hasNext();) {
+					if (urisDone.contains(iter.next())) {
+						iter.remove();
+					}
+				}
+				addNewUrisHere.addAll(newUris);
 				loadResultInfo.ensure(resource);
 			}
 			return new LoadResult(resource);
@@ -127,7 +134,7 @@ public class XClusteringStorageAwareResourceLoader {
 	/**
 	 * Return true if the given uri must be loaded from source.
 	 */
-	protected boolean isSource(URI uri) {
+	protected boolean isSource(XBuildContext context, URI uri) {
 		IResourceServiceProvider provider = context.getResourceServiceProvider(uri);
 		return (provider instanceof IResourceServiceProviderExtension
 				&& ((IResourceServiceProviderExtension) provider).isSource(uri));
@@ -136,7 +143,7 @@ public class XClusteringStorageAwareResourceLoader {
 	/**
 	 * Remove all resources from the resource set without delivering notifications.
 	 */
-	protected void clearResourceSet() {
+	protected void clearResourceSet(XBuildContext context) {
 		XtextResourceSet resourceSet = context.getResourceSet();
 		boolean wasDeliver = resourceSet.eDeliver();
 		try {
@@ -147,4 +154,8 @@ public class XClusteringStorageAwareResourceLoader {
 		}
 	}
 
+	/** Sort the given list of load results depending on their dependencies. */
+	protected List<LoadResult> sort(@SuppressWarnings("unused") XBuildContext context, List<LoadResult> resources) {
+		return resources;
+	}
 }

@@ -29,9 +29,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsTypeAliasBuilder extends AbstractDtsSubBuilder<TypeAliasDeclarationContext, N4TypeAliasDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
+public class DtsTypeAliasBuilder extends AbstractDtsBuilder<TypeAliasDeclarationContext, N4TypeAliasDeclaration> {
 
 	/** Constructor */
 	public DtsTypeAliasBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -51,9 +49,9 @@ public class DtsTypeAliasBuilder extends AbstractDtsSubBuilder<TypeAliasDeclarat
 		result.setName(ctx.identifierName().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
-		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.typeRef());
-		result.setDeclaredTypeRefNode(trn);
-		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
+		TypeRef typeRef = newTypeRefBuilder().consume(ctx.typeRef());
+		result.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
+		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
 	}
 

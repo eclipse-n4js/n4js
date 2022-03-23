@@ -28,7 +28,10 @@ public class XIncrementalBuilder {
 	protected IResourceServiceProvider.Registry languagesRegistry;
 
 	@Inject
-	private Provider<XStatefulIncrementalBuilder> provider;
+	private Provider<XStatefulIncrementalBuilder> builderProvider;
+
+	@Inject
+	private Provider<XClusteringStorageAwareResourceLoader> loaderProvider;
 
 	/**
 	 * Run the build without clustering.
@@ -48,9 +51,9 @@ public class XIncrementalBuilder {
 		ResourceDescriptionsData indexCopy = request.getIndex().copy();
 		XtextResourceSet resourceSet = request.getResourceSet();
 		XBuildContext context = new XBuildContext(languagesRegistry::getResourceServiceProvider,
-				resourceSet, indexCopy, clusteringPolicy, request.getCancelIndicator());
+				resourceSet, indexCopy, clusteringPolicy, request.getCancelIndicator(), loaderProvider.get());
 
-		XStatefulIncrementalBuilder builder = provider.get();
+		XStatefulIncrementalBuilder builder = builderProvider.get();
 		builder.setContext(context);
 		builder.setRequest(request);
 

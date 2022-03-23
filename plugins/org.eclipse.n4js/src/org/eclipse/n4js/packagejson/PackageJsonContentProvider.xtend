@@ -133,8 +133,8 @@ package class PackageJsonContentProvider {
 
 		// add sources section
 		if (!sourceContainers.empty) {
-			val JSONObject sourcesSection = JSONModelUtils.addProperty(n4jsRoot, SOURCES.name,
-				JSONFactory.eINSTANCE.createJSONObject());
+			val JSONObject sourcesSection = JSONFactory.eINSTANCE.createJSONObject();
+			JSONModelUtils.addProperty(n4jsRoot, SOURCES.name, sourcesSection);
 	
 			// add sources sub-sections
 			sourceContainers.entrySet
@@ -144,9 +144,9 @@ package class PackageJsonContentProvider {
 				.groupBy[ e | e.key ]
 				// add source container sub-section for each specified source container type 
 				.forEach[containerType, paths| 
-					val JSONArray typeSectionArray = JSONModelUtils.addProperty(sourcesSection,
-						PackageJsonUtils.getSourceContainerTypeStringRepresentation(containerType),
-						JSONFactory.eINSTANCE.createJSONArray());
+					val JSONArray typeSectionArray = JSONFactory.eINSTANCE.createJSONArray();
+					JSONModelUtils.addProperty(sourcesSection,
+						PackageJsonUtils.getSourceContainerTypeStringRepresentation(containerType), typeSectionArray);
 					val pathLiterals = paths.map[pathEntry | JSONModelUtils.createStringLiteral(pathEntry.value) ];
 					typeSectionArray.getElements().addAll(pathLiterals);
 				];

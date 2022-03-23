@@ -36,7 +36,7 @@ public class XBuildContext {
 
 	private final CancelIndicator cancelIndicator;
 
-	private XClusteringStorageAwareResourceLoader loader;
+	private final XClusteringStorageAwareResourceLoader loader;
 
 	/**
 	 * Constructor.
@@ -44,23 +44,24 @@ public class XBuildContext {
 	public XBuildContext(
 			Function1<? super URI, ? extends IResourceServiceProvider> resourceServiceProviderProvider,
 			XtextResourceSet resourceSet, ResourceDescriptionsData oldIndex,
-			IResourceClusteringPolicy clusteringPolicy, CancelIndicator cancelIndicator) {
+			IResourceClusteringPolicy clusteringPolicy, CancelIndicator cancelIndicator,
+			XClusteringStorageAwareResourceLoader loader) {
 
 		this.resourceServiceProviderProvider = resourceServiceProviderProvider;
 		this.resourceSet = resourceSet;
 		this.oldIndex = oldIndex;
 		this.clusteringPolicy = clusteringPolicy;
 		this.cancelIndicator = cancelIndicator;
+		this.loader = loader;
 	}
 
 	/**
 	 * Run the given logic on all uris with clustering enabled.
 	 */
-	public <T> List<T> executeClustered(Iterable<URI> uri, Function1<? super LoadResult, ? extends T> operation) {
-		if (this.loader == null) {
-			this.loader = new XClusteringStorageAwareResourceLoader(this);
-		}
-		return this.loader.executeClustered(Iterables.filter(uri, this::canHandle), operation);
+	public <T> List<T> executeClustered(Iterable<URI> uri, boolean sorted,
+			Function1<? super LoadResult, ? extends T> operation) {
+
+		return this.loader.executeClustered(this, Iterables.filter(uri, this::canHandle), sorted, operation);
 	}
 
 	/**

@@ -18,13 +18,20 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.TypeScriptParser.CallSignatureContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ConstructSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceExtendsClauseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.MethodSignatureContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ParameterBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
+import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
+import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
+import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
@@ -34,18 +41,17 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
+import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarationContext, N4InterfaceDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
+public class DtsInterfaceBuilder
+		extends AbstractDtsBuilderWithHelpers<InterfaceDeclarationContext, N4InterfaceDeclaration> {
 
 	/** Constructor */
 	public DtsInterfaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -66,22 +72,19 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 		result.setName(ctx.identifierName().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
-		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.typeParameters());
+		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
 
 		InterfaceExtendsClauseContext extendsClause = ctx.interfaceExtendsClause();
 		if (extendsClause != null && extendsClause.classOrInterfaceTypeList() != null
 				&& extendsClause.classOrInterfaceTypeList().parameterizedTypeRef() != null
 				&& !extendsClause.classOrInterfaceTypeList().parameterizedTypeRef().isEmpty()) {
-
-			ParameterizedTypeRefContext extendsTypeRefCtx = extendsClause.classOrInterfaceTypeList()
-					.parameterizedTypeRef().get(0);
-
-			ParameterizedTypeRef pTypeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
-			pTypeRef.setDeclaredTypeAsText(extendsTypeRefCtx.typeName().getText());
-			TypeReferenceNode<ParameterizedTypeRef> typeRefNode = N4JSFactory.eINSTANCE.createTypeReferenceNode();
-			typeRefNode.setTypeRefInAST(pTypeRef);
-			result.getSuperInterfaceRefs().add(typeRefNode);
+			// TODO interfaces extending classes not supported in N4JS!
+			for (ParameterizedTypeRefContext extendsTypeRefCtx : extendsClause.classOrInterfaceTypeList()
+					.parameterizedTypeRef()) {
+				ParameterizedTypeRef typeRef = newTypeRefBuilder().consume(extendsTypeRefCtx);
+				result.getSuperInterfaceRefs().add(ParserContextUtil.wrapInTypeRefNode(typeRef));
+			}
 		}
 
 		walker.enqueue(ctx.interfaceBody());
@@ -91,9 +94,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 	public void enterPropertySignature(PropertySignatureContext ctx) {
 		N4FieldDeclaration fd = N4JSFactory.eINSTANCE.createN4FieldDeclaration();
 		fd.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-		locpn.setLiteralName(ctx.propertyName().getText());
-		fd.setDeclaredName(locpn);
+		fd.setDeclaredName(newPropertyNameBuilder().consume(ctx.propertyName()));
 		fd.setDeclaredOptional(ctx.QuestionMark() != null);
 
 		if (ctx.ReadOnly() != null) {
@@ -101,31 +102,74 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 			// consider to create a getter instead of a field
 		}
 
-		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.colonSepTypeRef());
-		fd.setDeclaredTypeRefNode(trn);
+		TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
+		fd.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
 
 		addLocationInfo(fd, ctx);
 		result.getOwnedMembersRaw().add(fd);
 	}
 
 	@Override
-	public void enterMethodSignature(MethodSignatureContext ctx) {
-		N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
-		md.getDeclaredModifiers().add(N4Modifier.PUBLIC);
-		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-		locpn.setLiteralName(ctx.propertyName().getText());
-		md.setDeclaredName(locpn);
+	public void enterCallSignature(CallSignatureContext ctx) {
+		N4MethodDeclaration md = createMethodDeclaration(null, ctx);
+		addLocationInfo(md, ctx);
+		result.getOwnedMembersRaw().add(md);
+	}
 
-		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
-		md.setDeclaredReturnTypeRefNode(trn);
+	@Override
+	public void enterConstructSignature(ConstructSignatureContext ctx) {
+		N4MethodDeclaration md = createMethodDeclaration(null, ctx.typeParameters(), ctx.parameterBlock(),
+				ctx.colonSepTypeRef().typeRef());
+		LiteralOrComputedPropertyName locpn = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+		locpn.setKind(PropertyNameKind.IDENTIFIER);
+		locpn.setLiteralName("new");
+		md.setDeclaredName(locpn);
 
 		addLocationInfo(md, ctx);
 		result.getOwnedMembersRaw().add(md);
 	}
 
 	@Override
+	public void enterMethodSignature(MethodSignatureContext ctx) {
+		N4MethodDeclaration md = createMethodDeclaration(ctx.propertyName(), ctx.callSignature());
+		addLocationInfo(md, ctx);
+		result.getOwnedMembersRaw().add(md);
+	}
+
+	private N4MethodDeclaration createMethodDeclaration(PropertyNameContext name, CallSignatureContext callSignature) {
+		if (callSignature == null) {
+			return null;
+		}
+		return createMethodDeclaration(name, callSignature.typeParameters(), callSignature.parameterBlock(),
+				callSignature.typeRef());
+	}
+
+	private N4MethodDeclaration createMethodDeclaration(PropertyNameContext name, TypeParametersContext typeParams,
+			ParameterBlockContext fpars, TypeRefContext returnTypeRefCtx) {
+
+		N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
+		md.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		md.setDeclaredName(newPropertyNameBuilder().consume(name));
+
+		if (typeParams != null) {
+			List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(typeParams);
+			md.getTypeVars().addAll(typeVars);
+		}
+		if (fpars != null) {
+			List<FormalParameter> fPars = newFormalParametersBuilder().consumeWithDeclThisType(fpars, md);
+			md.getFpars().addAll(fPars);
+		}
+		if (returnTypeRefCtx != null) {
+			TypeRef returnTypeRef = newTypeRefBuilder().consume(returnTypeRefCtx);
+			md.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(returnTypeRef));
+		}
+
+		return md;
+	}
+
+	@Override
 	public void enterGetAccessor(GetAccessorContext ctx) {
-		N4GetterDeclaration getter = DtsClassBuilder.createGetAccessor(ctx, typeRefBuilder);
+		N4GetterDeclaration getter = createGetAccessor(ctx);
 		if (getter != null) {
 			addLocationInfo(getter, ctx);
 			result.getOwnedMembersRaw().add(getter);
@@ -134,7 +178,7 @@ public class DtsInterfaceBuilder extends AbstractDtsSubBuilder<InterfaceDeclarat
 
 	@Override
 	public void enterSetAccessor(SetAccessorContext ctx) {
-		N4SetterDeclaration setter = DtsClassBuilder.createSetAccessor(ctx, this, typeRefBuilder);
+		N4SetterDeclaration setter = createSetAccessor(ctx);
 		if (setter != null) {
 			addLocationInfo(setter, ctx);
 			result.getOwnedMembersRaw().add(setter);

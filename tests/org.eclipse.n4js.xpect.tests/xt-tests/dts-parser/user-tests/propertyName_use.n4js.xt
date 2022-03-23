@@ -1,0 +1,94 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "tslib.d.ts" {
+		export interface Ifc extends Iterable<string> {
+			42(): string;
+			"hello world"(): string;
+			["computed world"](): string;
+			[Symbol.iterator](): Iterator<string>;
+		}
+		export class ExoticNames {
+			_field: string;
+			$1: string;
+			"": string;
+			"&": string;
+			"+": string;
+			"\n": string;
+			"'": string;
+			'"': string;
+			"f&": string;
+			"f+": string;
+			"f\`": string;
+			"f'": string;
+			'f"': string;
+		}
+	}
+
+	END_SETUP
+ */
+
+import { Ifc, ExoticNames } from "tslib";
+
+let ifc: Ifc;
+
+// XPECT noerrors -->
+let v01 = ifc[42]();
+// XPECT noerrors -->
+let v02 = ifc["hello world"]();
+// XPECT noerrors -->
+let v03 = ifc["computed world"]();
+// XPECT noerrors -->
+let v04 = ifc[Symbol.iterator]();
+
+// XPECT type of 'v01' --> string
+v01;
+// XPECT type of 'v02' --> string
+v02;
+// XPECT type of 'v03' --> string
+v03;
+// XPECT type of 'v04' --> Iterator<string>
+v04;
+
+
+
+let exoticNames: ExoticNames;
+
+// XPECT type of 'v11' --> string
+let v11 = exoticNames._field;
+// XPECT type of 'v12' --> string
+let v12 = exoticNames.$1;
+// XPECT FIXME type of 'v13' --> string
+// XPECT FIXME noerrors --> "Member  not found." at "exoticNames[""]"
+let v13 = exoticNames[""];
+// XPECT type of 'v14' --> string
+let v14 = exoticNames["&"];
+// XPECT type of 'v15' --> string
+let v15 = exoticNames["+"];
+// XPECT type of 'v16' --> string
+let v16 = exoticNames["\n"];
+// XPECT type of 'v17' --> string
+let v17 = exoticNames["'"];
+// XPECT type of 'v18' --> string
+let v18 = exoticNames['"'];
+// XPECT type of 'v19' --> string
+let v19 = exoticNames["f&"];
+// XPECT type of 'v20' --> string
+let v20 = exoticNames["f+"];
+// XPECT type of 'v21' --> string
+let v21 = exoticNames["f\`"];
+// XPECT type of 'v22' --> string
+let v22 = exoticNames["f'"];
+// XPECT type of 'v23' --> string
+let v23 = exoticNames['f"'];

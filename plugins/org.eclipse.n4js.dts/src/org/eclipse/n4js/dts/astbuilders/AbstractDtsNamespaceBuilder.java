@@ -82,14 +82,7 @@ import com.google.common.base.Objects;
  * </table>
  */
 public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
-		extends AbstractDtsSubBuilder<T, N4NamespaceDeclaration> {
-
-	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
-	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
-	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(tokenStream, resource);
-	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
-	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
-	private final DtsVariableBuilder variableBuilder = new DtsVariableBuilder(tokenStream, resource);
+		extends AbstractDtsBuilder<T, N4NamespaceDeclaration> {
 
 	/** Builder for namespaces. */
 	public static class DtsNamespaceBuilder
@@ -139,7 +132,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			result = doCreateN4NamespaceDeclaration(ctx.namespaceName().getText(), isExported);
 			walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
 		} else {
-			N4NamespaceDeclaration nd = new DtsNamespaceBuilder(tokenStream, resource).consume(ctx);
+			N4NamespaceDeclaration nd = newNamespaceBuilder().consume(ctx);
 			addAndHandleExported(ctx, nd);
 		}
 	}
@@ -153,8 +146,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				TerminalNode identifier = ctxName.Identifier();
 				if (strLit != null) {
 					// this module declaration actually declares a module
-					result = doCreateModuleDeclaration(ctx, ParserContextUtil.trimStringLiteral(strLit));
-					// walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+					result = doCreateModuleDeclaration(ctx, ParserContextUtil.trimAndUnescapeStringLiteral(strLit));
 				} else if (identifier != null) {
 					// this module declaration declares a "legacy module" that acts like a namespace
 					boolean isExported = ParserContextUtil.isExported(ctx);
@@ -163,14 +155,14 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				}
 			}
 		} else {
-			N4NamespaceDeclaration md = new DtsModuleBuilder(tokenStream, resource).consume(ctx);
+			N4NamespaceDeclaration md = newModuleBuilder().consume(ctx);
 			if (md != null) {
 				addAndHandleExported(ctx, md);
 			}
 		}
 	}
 
-	/** Creates null. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
+	/** Triggers the creation of a nested/virtual resource. */
 	private N4NamespaceDeclaration doCreateModuleDeclaration(ModuleDeclarationContext ctx, String name) {
 
 		URI srcFolder = resource.getURI();
@@ -191,7 +183,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		return null;
 	}
 
-	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsSubBuilder#result}. */
+	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsBuilder#result}. */
 	private N4NamespaceDeclaration doCreateN4NamespaceDeclaration(String name, boolean isExported) {
 		N4NamespaceDeclaration nsDecl = N4JSFactory.eINSTANCE.createN4NamespaceDeclaration();
 		nsDecl.setName(name);
@@ -203,37 +195,37 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-		ExportedVariableStatement vs = variableBuilder.consumeInNamespace(ctx);
+		ExportedVariableStatement vs = newVariableBuilder().consumeInNamespace(ctx);
 		addAndHandleExported(ctx, vs);
 	}
 
 	@Override
 	public void enterInterfaceDeclaration(InterfaceDeclarationContext ctx) {
-		N4InterfaceDeclaration id = interfaceBuilder.consume(ctx);
+		N4InterfaceDeclaration id = newInterfaceBuilder().consume(ctx);
 		addAndHandleExported(ctx, id);
 	}
 
 	@Override
 	public void enterClassDeclaration(ClassDeclarationContext ctx) {
-		N4ClassDeclaration cd = classBuilder.consume(ctx);
+		N4ClassDeclaration cd = newClassBuilder().consume(ctx);
 		addAndHandleExported(ctx, cd);
 	}
 
 	@Override
 	public void enterTypeAliasDeclaration(TypeAliasDeclarationContext ctx) {
-		N4TypeAliasDeclaration tad = typeAliasBuilder.consume(ctx);
+		N4TypeAliasDeclaration tad = newTypeAliasBuilder().consume(ctx);
 		addAndHandleExported(ctx, tad);
 	}
 
 	@Override
 	public void enterFunctionDeclaration(FunctionDeclarationContext ctx) {
-		FunctionDeclaration fd = functionBuilder.consume(ctx);
+		FunctionDeclaration fd = newFunctionBuilder().consume(ctx);
 		addAndHandleExported(ctx, fd);
 	}
 
 	@Override
 	public void enterEnumDeclaration(EnumDeclarationContext ctx) {
-		N4EnumDeclaration ed = enumBuilder.consume(ctx);
+		N4EnumDeclaration ed = newEnumBuilder().consume(ctx);
 		addAndHandleExported(ctx, ed);
 	}
 
@@ -242,7 +234,8 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
-		ParserContextUtil.addAndHandleExported(ctx, elem, result,
-				N4JSPackage.Literals.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW, true);
+		ParserContextUtil.addAndHandleExported(
+				result, N4JSPackage.Literals.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW,
+				ctx, elem, true);
 	}
 }

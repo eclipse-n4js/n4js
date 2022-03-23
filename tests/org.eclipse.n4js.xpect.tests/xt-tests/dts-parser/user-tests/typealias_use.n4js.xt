@@ -27,6 +27,6 @@ import {AC} from "tslib";
 
 
 function f(ac : AC) {
-	// XPECT type of 'x' --> ~string
+	// XPECT type of 'x' --> string
 	let x = ac.field;
 }

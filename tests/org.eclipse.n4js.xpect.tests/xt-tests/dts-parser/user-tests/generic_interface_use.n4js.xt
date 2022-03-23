@@ -48,16 +48,14 @@ let keStr : Object = ie.method();
 
 
 function f(io : IO<number>) {
-	// XPECT type of 'f1' --> ~number
+	// XPECT type of 'f1' --> number
 	let f1 = io.field;
-	// XPECT type of 'f2' --> ~string
+	// XPECT type of 'f2' --> string
 	let f2 = io.method();
 }
 
 // XPECT type of 'KIO' --> IO<number>
-// XPECT type of 'r1' --> ~number
+// XPECT type of 'r1' --> number
 let r1 = KIO.field;
-// XPECT type of 'r2' --> ~string
+// XPECT type of 'r2' --> string
 let r2 = KIO.method();
-
-
