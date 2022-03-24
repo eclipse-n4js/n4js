@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.dts;
 
+import org.antlr.v4.runtime.RuleContext;
+import org.antlr.v4.runtime.TokenStream;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
@@ -17,14 +19,17 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 
 /**
- *
+ * This adapter holds the {@link TokenStream} and {@link RuleContext} the belong to the nested resource this adapter is
+ * installed on.
  */
 public class NestedResourceAdapter implements Adapter {
 
+	/** Returns true iff a {@link NestedResourceAdapter} is installed on the given resource. */
 	public static boolean isInstalled(Resource resource) {
 		return get(resource) != null;
 	}
 
+	/** Returns the {@link NestedResourceAdapter} that is installed on the given resource. */
 	public static NestedResourceAdapter get(Resource resource) {
 		for (Adapter adapter : resource.eAdapters()) {
 			if (adapter instanceof NestedResourceAdapter) {
@@ -34,16 +39,16 @@ public class NestedResourceAdapter implements Adapter {
 		return null;
 	}
 
-	public static NestedResourceAdapter install(Resource resource, NestedResourceAdapter nra) {
+	/** Update the {@link NestedResourceAdapter} on the given resource */
+	public static void update(Resource resource, NestedResourceAdapter nra) {
 		NestedResourceAdapter adapter = get(resource);
-		if (adapter == nra) {
-			return adapter;
+		if (adapter != nra) {
+			resource.eAdapters().remove(adapter);
+			resource.eAdapters().add(nra);
 		}
-		resource.eAdapters().remove(adapter);
-		resource.eAdapters().add(nra);
-		return nra;
 	}
 
+	/** Returns the {@link NestedResourceAdapter} that is installed on the given resource or null. */
 	public static NestedResourceAdapter remove(Resource resource) {
 		NestedResourceAdapter adapter = get(resource);
 		if (adapter != null) {
@@ -56,6 +61,7 @@ public class NestedResourceAdapter implements Adapter {
 	final DtsTokenStream tokenStream;
 	final ModuleDeclarationContext ctx;
 
+	/** Constructor */
 	public NestedResourceAdapter(DtsTokenStream tokenStream, ModuleDeclarationContext ctx) {
 		this.tokenStream = tokenStream;
 		this.ctx = ctx;
@@ -63,34 +69,28 @@ public class NestedResourceAdapter implements Adapter {
 
 	@Override
 	public void notifyChanged(Notification notification) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public Notifier getTarget() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setTarget(Notifier newTarget) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public boolean isAdapterForType(Object type) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	/**  */
+	/** Returns the {@link ModuleDeclarationContext} that belongs to the resource this adapter is installed on. */
 	public ModuleDeclarationContext getModuleDeclarationContext() {
 		return ctx;
 	}
 
-	/** 	 */
+	/** Returns the token stream that belongs to the resource this adapter is installed on. */
 	public DtsTokenStream getTokenStream() {
 		return tokenStream;
 	}

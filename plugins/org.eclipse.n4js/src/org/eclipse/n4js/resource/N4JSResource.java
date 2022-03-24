@@ -278,8 +278,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private boolean removingAdapters;
 
 	/**
-	 * Default is {@code true}
+	 * True iff performance tweak should be applied, default is {@code true}.
 	 *
+	 * @see #clearUnnecessaryFunctionBodies(EObject)
 	 * @see #OPTION_CLEAR_FUNCTION_BODIES
 	 */
 	private boolean optionClearFunctionBodies = true;
@@ -1402,11 +1403,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 *
 	 * @param object
 	 *            the EObject to check
-	 * @return true, if the given object is a proxy and its fragment starts with {@link N4JSResource#AST_PROXY_FRAGMENT}
-	 *         .
+	 * @return true iff the given object is a proxy and its fragment starts with {@link N4JSResource#AST_PROXY_FRAGMENT}
 	 */
 	protected boolean isASTProxy(EObject object) {
 		if (object.eIsProxy()) {

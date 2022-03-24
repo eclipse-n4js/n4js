@@ -21,11 +21,15 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 
 /**
- *
+ * This adapter holds information about nested resources that need to be created and loaded when loading this resource.
  */
 public class LoadResultInfoAdapter implements ILoadResultInfoAdapter {
 
-	public static LoadResultInfoAdapter install(Resource resource) {
+	/**
+	 * Returns an already installed {@link LoadResultInfoAdapter} or the newly installed {@link LoadResultInfoAdapter}
+	 * on the given resource.
+	 */
+	public static LoadResultInfoAdapter getOrInstall(Resource resource) {
 		LoadResultInfoAdapter adapter = (LoadResultInfoAdapter) ILoadResultInfoAdapter.get(resource);
 		if (adapter != null) {
 			return adapter;
@@ -39,29 +43,23 @@ public class LoadResultInfoAdapter implements ILoadResultInfoAdapter {
 
 	@Override
 	public void notifyChanged(Notification notification) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public Notifier getTarget() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void setTarget(Notifier newTarget) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public boolean isAdapterForType(Object type) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
-	/**  */
+	/** Adds the given {@link NestedResourceAdapter} to this adapter */
 	public void addNestedResource(URI uri, NestedResourceAdapter nra) {
 		nestedResources.put(uri, nra);
 	}
@@ -72,13 +70,13 @@ public class LoadResultInfoAdapter implements ILoadResultInfoAdapter {
 	}
 
 	@Override
-	public void ensure(Resource resource) {
+	public void ensureNestedResourcesExist(Resource resource) {
 		for (URI uri : nestedResources.keySet()) {
 			Resource nestedResource = resource.getResourceSet().getResource(uri, false);
 			if (nestedResource == null) {
 				nestedResource = resource.getResourceSet().createResource(uri);
 			}
-			NestedResourceAdapter.install(nestedResource, nestedResources.get(uri));
+			NestedResourceAdapter.update(nestedResource, nestedResources.get(uri));
 		}
 	}
 

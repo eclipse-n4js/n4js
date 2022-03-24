@@ -123,7 +123,7 @@ public class XClusteringStorageAwareResourceLoader {
 					}
 				}
 				addNewUrisHere.addAll(newUris);
-				loadResultInfo.ensure(resource);
+				loadResultInfo.ensureNestedResourcesExist(resource);
 			}
 			return new LoadResult(resource);
 		} catch (Throwable th) {

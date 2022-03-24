@@ -15,12 +15,14 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 
 /**
- *
+ * This adapter holds information about nested resources that need to be created and loaded when loading this resource.
  */
 public interface ILoadResultInfoAdapter extends Adapter {
 
+	/** Returns the {@link ILoadResultInfoAdapter} that is installed on the given resource. */
 	public static ILoadResultInfoAdapter get(Resource resource) {
 		for (Adapter adapter : resource.eAdapters()) {
 			if (adapter instanceof ILoadResultInfoAdapter) {
@@ -30,6 +32,7 @@ public interface ILoadResultInfoAdapter extends Adapter {
 		return null;
 	}
 
+	/** Returns the {@link ILoadResultInfoAdapter} that is installed on the given resource or null. */
 	public static ILoadResultInfoAdapter remove(Resource resource) {
 		ILoadResultInfoAdapter adapter = get(resource);
 		if (adapter != null) {
@@ -39,10 +42,12 @@ public interface ILoadResultInfoAdapter extends Adapter {
 		return adapter;
 	}
 
-	/** */
+	/** Returns all virtual {@link URI}s of nested resources */
 	public Collection<URI> getNewUris();
 
-	/***/
-	public void ensure(Resource resource);
+	/**
+	 * The {@link ResourceSet} of the given resource is checked that all nested resources of the given resource exist.
+	 */
+	public void ensureNestedResourcesExist(Resource resource);
 
 }
