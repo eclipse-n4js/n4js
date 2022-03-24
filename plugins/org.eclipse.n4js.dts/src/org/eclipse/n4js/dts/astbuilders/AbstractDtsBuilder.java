@@ -17,6 +17,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
 import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.dts.DtsTokenStream;
@@ -157,8 +158,8 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 	}
 
 	/***/
-	protected final DtsModuleBuilder newModuleBuilder() {
-		return new DtsModuleBuilder(tokenStream, resource);
+	protected final DtsModuleBuilder newModuleBuilder(URI srcFolder) {
+		return new DtsModuleBuilder(tokenStream, resource, srcFolder);
 	}
 
 	/***/

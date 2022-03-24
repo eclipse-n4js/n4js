@@ -29,6 +29,7 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
@@ -81,16 +82,16 @@ public class DtsParser {
 	}
 
 	/** Parses d.ts files */
-	public DtsParseResult parse(Reader reader, LazyLinkingResource resource) throws IOException {
+	public DtsParseResult parse(Reader reader, LazyLinkingResource resource, URI srcFolder) throws IOException {
 		NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
 		if (adapter == null) {
-			return parseScript(reader, resource);
+			return parseScript(reader, resource, srcFolder);
 		} else {
 			return parseNestedScript(resource, adapter);
 		}
 	}
 
-	private DtsParseResult parseScript(Reader reader, LazyLinkingResource resource) throws IOException {
+	private DtsParseResult parseScript(Reader reader, LazyLinkingResource resource, URI srcFolder) throws IOException {
 		CharStream fileContents = fromReader(reader);
 		long millis = System.currentTimeMillis();
 
@@ -123,7 +124,7 @@ public class DtsParser {
 		stats.time = System.currentTimeMillis() - millis;
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource, srcFolder);
 		Script root = astBuilder.consume(stats.tree);
 		RootNode rootNode = new RootNode(stats.tree);
 		Iterable<? extends INode> syntaxErrors = stats.errors;
@@ -148,7 +149,7 @@ public class DtsParser {
 		};
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource, null);
 		Script root = astBuilder.consume(prgCtx);
 		RootNode rootNode = new RootNode(ctx);
 

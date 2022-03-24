@@ -786,10 +786,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				IParseResult result = null;
 				if (inputStream == null) {
 					// this happens in case of virtual resources
-					result = new DtsParser().parse(null, this);
+					result = new DtsParser().parse(null, this, null);
 				} else {
+					URI srcFolder = workspaceAccess.findSourceFolderContaining(resourceSet, uri).getPath();
 					try (Reader reader = createReader(inputStream);) {
-						result = new DtsParser().parse(reader, this);
+						result = new DtsParser().parse(reader, this, srcFolder);
 					}
 				}
 				updateInternalState(this.getParseResult(), result);

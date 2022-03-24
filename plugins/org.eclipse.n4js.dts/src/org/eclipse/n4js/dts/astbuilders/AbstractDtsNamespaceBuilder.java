@@ -51,8 +51,6 @@ import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
-import com.google.common.base.Objects;
-
 /**
  * Base class of the builders for namespace and module declarations.
  * <p>
@@ -92,7 +90,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 		/** Constructor */
 		public DtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+			super(tokenStream, resource, null);
 		}
 
 		@Override
@@ -106,14 +104,17 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			extends AbstractDtsNamespaceBuilder<ModuleDeclarationContext> {
 
 		/** Constructor */
-		public DtsModuleBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+		public DtsModuleBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
+			super(tokenStream, resource, srcFolder);
 		}
 	}
 
+	private final URI srcFolder;
+
 	/** Constructor */
-	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
 		super(tokenStream, resource);
+		this.srcFolder = srcFolder;
 	}
 
 	@Override
@@ -164,7 +165,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				}
 			}
 		} else {
-			N4NamespaceDeclaration md = newModuleBuilder().consume(ctx);
+			N4NamespaceDeclaration md = newModuleBuilder(srcFolder).consume(ctx);
 			if (md != null) {
 				addAndHandleExported(ctx, md);
 			}
@@ -173,11 +174,6 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 	/** Triggers the creation of a nested/virtual resource. */
 	private void createNestedModule(ModuleDeclarationContext ctx, String name) {
-		URI srcFolder = resource.getURI();
-		while (srcFolder.segmentCount() > 1 && !Objects.equal(srcFolder.lastSegment(), "src")) {
-			srcFolder = srcFolder.trimSegments(1);
-		}
-		srcFolder = srcFolder.appendSegment("");
 		URI virtualUri = URI.createFileURI(name + ".d.ts").resolve(srcFolder);
 
 		LoadResultInfoAdapter loadResultInfo = (LoadResultInfoAdapter) ILoadResultInfoAdapter.get(resource);

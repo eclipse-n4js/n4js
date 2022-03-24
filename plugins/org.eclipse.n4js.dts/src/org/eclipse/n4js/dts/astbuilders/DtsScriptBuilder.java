@@ -21,6 +21,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
@@ -51,10 +52,12 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
 public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script> {
+	private final URI srcFolder;
 
 	/** Constructor */
-	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
 		super(tokenStream, resource);
+		this.srcFolder = srcFolder;
 	}
 
 	/** @return the script that was created during visiting the parse tree */
@@ -103,7 +106,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		N4NamespaceDeclaration d = newModuleBuilder().consume(ctx);
+		N4NamespaceDeclaration d = newModuleBuilder(srcFolder).consume(ctx);
 		if (d != null) {
 			addAndHandleExported(ctx, d);
 		}
