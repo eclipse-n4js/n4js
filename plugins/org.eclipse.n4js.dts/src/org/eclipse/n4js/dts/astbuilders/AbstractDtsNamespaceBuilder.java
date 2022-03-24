@@ -14,6 +14,8 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_declarationStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_declareStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatementTail;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_moduleDeclaration;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_namespaceDeclaration;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 
@@ -146,7 +148,14 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				TerminalNode identifier = ctxName.Identifier();
 				if (strLit != null) {
 					// this module declaration actually declares a module
-					result = doCreateModuleDeclaration(ctx, ParserContextUtil.trimAndUnescapeStringLiteral(strLit));
+
+					if (!ParserContextUtil.hasParentContexts(ctx,
+							new int[] { RULE_namespaceDeclaration, RULE_moduleDeclaration })) {
+
+						// nested modules inside namespaces or nested modules are unsupported by TypeScript
+						createNestedModule(ctx, ParserContextUtil.trimAndUnescapeStringLiteral(strLit));
+					}
+					result = null;
 				} else if (identifier != null) {
 					// this module declaration declares a "legacy module" that acts like a namespace
 					boolean isExported = ParserContextUtil.isExported(ctx);
@@ -163,14 +172,12 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 	}
 
 	/** Triggers the creation of a nested/virtual resource. */
-	private N4NamespaceDeclaration doCreateModuleDeclaration(ModuleDeclarationContext ctx, String name) {
-
+	private void createNestedModule(ModuleDeclarationContext ctx, String name) {
 		URI srcFolder = resource.getURI();
 		while (srcFolder.segmentCount() > 1 && !Objects.equal(srcFolder.lastSegment(), "src")) {
 			srcFolder = srcFolder.trimSegments(1);
 		}
 		srcFolder = srcFolder.appendSegment("");
-
 		URI virtualUri = URI.createFileURI(name + ".d.ts").resolve(srcFolder);
 
 		LoadResultInfoAdapter loadResultInfo = (LoadResultInfoAdapter) ILoadResultInfoAdapter.get(resource);
@@ -179,8 +186,6 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		}
 		NestedResourceAdapter nra = new NestedResourceAdapter(tokenStream, ctx);
 		loadResultInfo.addNestedResource(virtualUri, nra);
-
-		return null;
 	}
 
 	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsBuilder#result}. */

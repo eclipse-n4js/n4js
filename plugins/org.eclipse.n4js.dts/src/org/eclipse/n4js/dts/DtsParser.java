@@ -84,70 +84,75 @@ public class DtsParser {
 	public DtsParseResult parse(Reader reader, LazyLinkingResource resource) throws IOException {
 		NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
 		if (adapter == null) {
+			return parseScript(reader, resource);
+		} else {
+			return parseNestedScript(resource, adapter);
+		}
+	}
 
-			CharStream fileContents = fromReader(reader);
-			long millis = System.currentTimeMillis();
+	private DtsParseResult parseScript(Reader reader, LazyLinkingResource resource) throws IOException {
+		CharStream fileContents = fromReader(reader);
+		long millis = System.currentTimeMillis();
 
-			TypeScriptLexer lexer = new TypeScriptLexer(fileContents);
-			DtsTokenStream tokens = new DtsTokenStream(lexer);
-			TypeScriptParser parser = new TypeScriptParser(tokens);
-			ParseStats stats = new ParseStats();
-			parser.addErrorListener(stats);
-			lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
-			parser.removeErrorListener(ConsoleErrorListener.INSTANCE);
+		TypeScriptLexer lexer = new TypeScriptLexer(fileContents);
+		DtsTokenStream tokens = new DtsTokenStream(lexer);
+		TypeScriptParser parser = new TypeScriptParser(tokens);
+		ParseStats stats = new ParseStats();
+		parser.addErrorListener(stats);
+		lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
+		parser.removeErrorListener(ConsoleErrorListener.INSTANCE);
 
-			stats.strategy = PredictionMode.SLL;
+		stats.strategy = PredictionMode.SLL;
 
-			try {
-				parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
-				// parser.setErrorHandler(new BailErrorStrategy()); // use BailErrorStrategy for fallback
-				stats.tree = parser.program();
-			} catch (Exception e) {
-				// fallback
+		try {
+			parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
+			// parser.setErrorHandler(new BailErrorStrategy()); // use BailErrorStrategy for fallback
+			stats.tree = parser.program();
+		} catch (Exception e) {
+			// fallback
 
-				// parse with LL(*) to prevent false errors
-				parser.setErrorHandler(new DefaultErrorStrategy());
-				parser.getInterpreter().setPredictionMode(PredictionMode.LL_EXACT_AMBIG_DETECTION);
+			// parse with LL(*) to prevent false errors
+			parser.setErrorHandler(new DefaultErrorStrategy());
+			parser.getInterpreter().setPredictionMode(PredictionMode.LL_EXACT_AMBIG_DETECTION);
 
-				tokens.seek(0); // resets the token stream
-				stats.strategy = PredictionMode.LL_EXACT_AMBIG_DETECTION;
-				stats.tree = parser.program();
+			tokens.seek(0); // resets the token stream
+			stats.strategy = PredictionMode.LL_EXACT_AMBIG_DETECTION;
+			stats.tree = parser.program();
+		}
+
+		stats.time = System.currentTimeMillis() - millis;
+
+		// convert parse tree to AST
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
+		Script root = astBuilder.consume(stats.tree);
+		RootNode rootNode = new RootNode(stats.tree);
+		Iterable<? extends INode> syntaxErrors = stats.errors;
+
+		return new DtsParseResult(root, rootNode, syntaxErrors);
+	}
+
+	private DtsParseResult parseNestedScript(LazyLinkingResource resource, NestedResourceAdapter adapter) {
+		ModuleDeclarationContext ctx = adapter.getModuleDeclarationContext();
+		DtsTokenStream tokens = adapter.getTokenStream();
+
+		ProgramContext prgCtx = new ProgramContext(null, 0) {
+			{
+				this.start = ctx.start;
+				this.stop = ctx.stop;
 			}
 
-			stats.time = System.currentTimeMillis() - millis;
+			@Override
+			public StatementListContext statementList() {
+				return ctx.block().statementList();
+			}
+		};
 
-			// convert parse tree to AST
-			DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
-			Script root = astBuilder.consume(stats.tree);
-			RootNode rootNode = new RootNode(stats.tree);
-			Iterable<? extends INode> syntaxErrors = stats.errors;
+		// convert parse tree to AST
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
+		Script root = astBuilder.consume(prgCtx);
+		RootNode rootNode = new RootNode(ctx);
 
-			return new DtsParseResult(root, rootNode, syntaxErrors);
-
-		} else {
-
-			ModuleDeclarationContext ctx = adapter.getModuleDeclarationContext();
-			DtsTokenStream tokens = adapter.getTokenStream();
-
-			ProgramContext prgCtx = new ProgramContext(null, 0) {
-				{
-					this.start = ctx.start;
-					this.stop = ctx.stop;
-				}
-
-				@Override
-				public StatementListContext statementList() {
-					return ctx.block().statementList();
-				}
-			};
-
-			// convert parse tree to AST
-			DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
-			Script root = astBuilder.consume(prgCtx);
-			RootNode rootNode = new RootNode(ctx);
-
-			return new DtsParseResult(root, rootNode, Collections.emptyList());
-		}
+		return new DtsParseResult(root, rootNode, Collections.emptyList());
 	}
 
 }

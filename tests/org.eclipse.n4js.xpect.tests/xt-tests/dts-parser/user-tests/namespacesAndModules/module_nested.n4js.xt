@@ -14,6 +14,7 @@
 	File "other.d.ts" {
 
 		declare module "someModule1" {
+			// nesting modules inside namespaces or modules is unsupported by TypeScript
 			module "someModule2" {
 				export class Cls {}
 			}
@@ -23,7 +24,7 @@
 	END_SETUP
 */
 
-// XPECT warnings --> "The import of Cls is unused." at "Cls"
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at "\"someModule2\""
 import { Cls } from "someModule2"
 
 // XPECT errors ---

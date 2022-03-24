@@ -13,6 +13,7 @@ package org.eclipse.n4js.dts.astbuilders;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -52,6 +53,8 @@ import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
+
+import com.google.common.primitives.Ints;
 
 /**
  * Utilities to retrieve information from the parse tree
@@ -190,6 +193,40 @@ public class ParserContextUtil {
 			ctx = (ParserRuleContext) ctx.parent;
 		}
 		return null;
+	}
+
+	/**
+	 * @return true iff from the given context the given parent can be reached before reaching the root or one of the
+	 *         given excluded parents.
+	 */
+	public static boolean hasParentContext(ParserRuleContext ctx, int parentContextId,
+			Integer... stopAtIds) {
+		return hasParentContexts(ctx, new int[] { parentContextId }, stopAtIds);
+	}
+
+	/**
+	 * @return true iff from the given context one of the given parents can be reached before reaching the root or one
+	 *         of the given excluded parents.
+	 */
+	public static boolean hasParentContexts(ParserRuleContext ctx, int[] parentContextIds,
+			Integer... stopAtIds) {
+
+		Set<Integer> stopAtIdsSet = stopAtIds == null ? Collections.emptySet() : Set.of(stopAtIds);
+		Set<Integer> parentIdsSet = parentContextIds == null
+				? Collections.emptySet()
+				: new HashSet<>(Ints.asList(parentContextIds));
+
+		ctx = (ParserRuleContext) ctx.parent;
+		while (ctx != null) {
+			if (parentIdsSet.contains(ctx.getRuleIndex())) {
+				return true;
+			}
+			if (stopAtIdsSet.contains(ctx.getRuleIndex())) {
+				break;
+			}
+			ctx = (ParserRuleContext) ctx.parent;
+		}
+		return false;
 	}
 
 	/** @return the actual value of the given numeric literal. */

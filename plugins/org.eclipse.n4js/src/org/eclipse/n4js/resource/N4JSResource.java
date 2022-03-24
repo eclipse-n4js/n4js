@@ -499,6 +499,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		return script != null && module != null && isASTProxy(script) && !module.eIsProxy();
 	}
 
+	/** Returns true iff this resource is nested/virtual */
+	public boolean isNested() {
+		return NestedResourceAdapter.isInstalled(this);
+	}
+
 	/**
 	 * If this resource was loaded from description and some code want to access the parse result, load it on demand.
 	 */
@@ -621,7 +626,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	private void superLoad(Map<?, ?> options) throws IOException {
 		try {
-			if (NestedResourceAdapter.isInstalled(this)) {
+			if (isNested()) {
 				try {
 					isLoading = true;
 					doLoad(null, options);

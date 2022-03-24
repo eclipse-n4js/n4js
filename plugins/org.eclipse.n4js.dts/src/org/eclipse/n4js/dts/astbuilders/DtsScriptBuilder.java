@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.n4js.dts.DtsTokenStream;
-import org.eclipse.n4js.dts.ManualParseTreeWalker;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
@@ -80,26 +79,6 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 				RULE_exportStatement,
 				RULE_exportStatementTail,
 				RULE_block); // temp
-	}
-
-	public Script consumeDeclaredModule(ModuleDeclarationContext ctx) {
-		if (ctx == null) {
-			return null;
-		}
-		result = N4JSFactory.eINSTANCE.createScript();
-		addLocationInfo(result, ctx);
-
-		walker = new ManualParseTreeWalker(this, ctx.block());
-		// walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
-		walker.start(); // eventually this call causes 'result' to be set
-		walker = null; // reset for fail fast
-
-		try {
-			return result;
-		} finally {
-			// reset for fail fast
-			resetResult();
-		}
 	}
 
 	@Override
