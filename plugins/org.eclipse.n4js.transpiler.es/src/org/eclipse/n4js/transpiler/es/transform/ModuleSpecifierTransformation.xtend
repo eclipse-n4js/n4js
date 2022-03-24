@@ -26,6 +26,7 @@ import org.eclipse.n4js.utils.ResourceNameComputer
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.workspace.utils.N4JSPackageName
+import org.eclipse.n4js.resource.N4JSResource
 
 /**
  * Converts the module specifiers of import statements from N4JS to ES6.
@@ -105,8 +106,16 @@ class ModuleSpecifierTransformation extends Transformation {
 
 		val targetProject = workspaceAccess.findProjectContaining(targetModule);
 
+		if ((targetModule.eResource as N4JSResource).isNested) {
+			// SPECIAL CASE #1a
+			// pointing to a module explicitly declared in a .d.ts file, such as a node built-in library:
+			// import * as path_lib from "path"
+			// --> always use plain module specifier
+			return targetModule.moduleSpecifier; // no file extension to add!
+		}
+
 		if (targetProject.type === ProjectType.RUNTIME_LIBRARY) {
-			// SPECIAL CASE #1
+			// SPECIAL CASE #1b
 			// pointing to a module in a runtime library, such as importing a node built-in library:
 			// import * as path_lib from "path"
 			// --> always use plain module specifier
