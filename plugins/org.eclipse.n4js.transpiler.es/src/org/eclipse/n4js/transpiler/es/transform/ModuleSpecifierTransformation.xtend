@@ -104,8 +104,6 @@ class ModuleSpecifierTransformation extends Transformation {
 	def private String computeModuleSpecifierForOutputCode(ImportDeclaration importDeclIM) {
 		val targetModule = state.info.getImportedModule(importDeclIM);
 
-		val targetProject = workspaceAccess.findProjectContaining(targetModule);
-
 		if ((targetModule.eResource as N4JSResource).isNested) {
 			// SPECIAL CASE #1a
 			// pointing to a module explicitly declared in a .d.ts file, such as a node built-in library:
@@ -113,6 +111,8 @@ class ModuleSpecifierTransformation extends Transformation {
 			// --> always use plain module specifier
 			return targetModule.moduleSpecifier; // no file extension to add!
 		}
+
+		val targetProject = workspaceAccess.findProjectContaining(targetModule);
 
 		if (targetProject.type === ProjectType.RUNTIME_LIBRARY) {
 			// SPECIAL CASE #1b
