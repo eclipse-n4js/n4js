@@ -18,6 +18,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 
 /**
@@ -71,10 +72,15 @@ public class LoadResultInfoAdapter implements ILoadResultInfoAdapter {
 
 	@Override
 	public void ensureNestedResourcesExist(Resource resource) {
+		ResourceSet resourceSet = resource.getResourceSet();
+		if (resourceSet == null) {
+			// happens during testing
+			return;
+		}
 		for (URI uri : nestedResources.keySet()) {
-			Resource nestedResource = resource.getResourceSet().getResource(uri, false);
+			Resource nestedResource = resourceSet.getResource(uri, false);
 			if (nestedResource == null) {
-				nestedResource = resource.getResourceSet().createResource(uri);
+				nestedResource = resourceSet.createResource(uri);
 			}
 			NestedResourceAdapter.update(nestedResource, nestedResources.get(uri));
 		}
