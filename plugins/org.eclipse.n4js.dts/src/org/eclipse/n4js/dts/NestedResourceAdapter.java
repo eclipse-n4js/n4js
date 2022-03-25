@@ -15,6 +15,7 @@ import org.antlr.v4.runtime.TokenStream;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 
@@ -58,11 +59,13 @@ public class NestedResourceAdapter implements Adapter {
 		return adapter;
 	}
 
+	final URI hostUri;
 	final DtsTokenStream tokenStream;
 	final ModuleDeclarationContext ctx;
 
 	/** Constructor */
-	public NestedResourceAdapter(DtsTokenStream tokenStream, ModuleDeclarationContext ctx) {
+	public NestedResourceAdapter(URI hostUri, DtsTokenStream tokenStream, ModuleDeclarationContext ctx) {
+		this.hostUri = hostUri;
 		this.tokenStream = tokenStream;
 		this.ctx = ctx;
 	}
@@ -83,6 +86,11 @@ public class NestedResourceAdapter implements Adapter {
 	@Override
 	public boolean isAdapterForType(Object type) {
 		return false;
+	}
+
+	/** Returns the host that nests the resource this adapter is installed on. */
+	public URI getHostUri() {
+		return hostUri;
 	}
 
 	/** Returns the {@link ModuleDeclarationContext} that belongs to the resource this adapter is installed on. */

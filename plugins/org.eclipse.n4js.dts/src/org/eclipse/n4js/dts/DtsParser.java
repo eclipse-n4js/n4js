@@ -35,6 +35,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.INode;
 
@@ -128,6 +129,11 @@ public class DtsParser {
 		Script root = astBuilder.consume(stats.tree);
 		RootNode rootNode = new RootNode(stats.tree);
 		Iterable<? extends INode> syntaxErrors = stats.errors;
+
+		ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.get(resource);
+		if (loadResultInfo != null) {
+			loadResultInfo.ensureNestedResourcesExist(resource);
+		}
 
 		return new DtsParseResult(root, rootNode, syntaxErrors);
 	}

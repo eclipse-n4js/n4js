@@ -180,7 +180,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		if (loadResultInfo == null) {
 			loadResultInfo = LoadResultInfoAdapter.getOrInstall(resource);
 		}
-		NestedResourceAdapter nra = new NestedResourceAdapter(tokenStream, ctx);
+		NestedResourceAdapter nra = new NestedResourceAdapter(resource.getURI(), tokenStream, ctx);
 		loadResultInfo.addNestedResource(virtualUri, nra);
 	}
 

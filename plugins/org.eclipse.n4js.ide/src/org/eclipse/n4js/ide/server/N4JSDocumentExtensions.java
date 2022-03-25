@@ -15,11 +15,13 @@ import java.util.Objects;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.resource.N4JSLocationInFileProvider;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.resource.XITextRegionWithLineInformation;
 import org.eclipse.xtext.ide.server.DocumentExtensions;
@@ -36,7 +38,11 @@ public class N4JSDocumentExtensions extends DocumentExtensions {
 
 	@Override
 	public Location newLocation(EObject obj) {
-		URI uri = obj.eResource().getURI();
+		Resource resource = obj.eResource();
+		URI uri = resource.getURI();
+		if (resource instanceof N4JSResource && ((N4JSResource) resource).isNested()) {
+			uri = ((N4JSResource) resource).getHostUri();
+		}
 		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(uri))) {
 			obj = locationProvider.convertToSource(obj);
 			for (Adapter adapter : obj.eAdapters()) {
