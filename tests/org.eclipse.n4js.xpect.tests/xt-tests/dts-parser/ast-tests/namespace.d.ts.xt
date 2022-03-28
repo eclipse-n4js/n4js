@@ -26,11 +26,11 @@ export namespace parent {
 
 /* XPECT ast ---
 Script: true
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    N4NamespaceDeclaration: [public], parent
-    ExportDeclaration: false, false
+    ExportDeclaration: false, UNKNOWN
      N4ClassDeclaration: [external, public], Cls1, ?~
-    ExportDeclaration: false, false
+    ExportDeclaration: false, UNKNOWN
      N4NamespaceDeclaration: [public], child
       N4ClassDeclaration: [external, private], Cls2, ?~
       N4NamespaceDeclaration: [private], grandChild

@@ -34,16 +34,16 @@ Script: true
   ImportDeclaration: true, tslib, PLAIN
    NamedImportSpecifier: false, true, K, true
    NamedImportSpecifier: false, true, C, false
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    VariableStatement: [external, public], const
     VariableDeclaration: Kconst
      IdentifierRef: K, false
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    VariableStatement: [external, public], const
     VariableDeclaration: Cconst1
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, C, ?~, false, false
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    VariableStatement: [external, public], const
     VariableDeclaration: Cconst2
      ParameterizedPropertyAccessExpression: false, R

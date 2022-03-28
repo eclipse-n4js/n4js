@@ -29,7 +29,7 @@ Script: true
      ParameterizedTypeRef: OFF, false, false, T, ?~, false, false
     LiteralOrComputedPropertyName: false, identifier, field
    N4TypeVariable: false, false, false, T
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    N4TypeAliasDeclaration: [external, public], AC
     TypeReferenceNode
      ParameterizedTypeRef: OFF, false, false, C, ?~, false, false

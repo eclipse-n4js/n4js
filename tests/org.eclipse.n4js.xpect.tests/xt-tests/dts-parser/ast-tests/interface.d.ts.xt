@@ -30,7 +30,7 @@ declare interface ID {
 
 /* XPECT ast ---
 Script: true
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    N4InterfaceDeclaration: [external, public], IE, ?~
     N4FieldDeclaration: [public], false
      TypeReferenceNode

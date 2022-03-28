@@ -37,14 +37,14 @@ export enum ColorS {
 
 /* XPECT ast ---
 Script: true
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    N4EnumDeclaration: [external, public], RoundingMode
     AnnotationList
      Annotation: NumberBased
     N4EnumLiteral: UP
     N4EnumLiteral: DOWN
     N4EnumLiteral: FLOOR
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    N4EnumDeclaration: [external, public], ColorN
     AnnotationList
      Annotation: NumberBased
@@ -54,7 +54,7 @@ Script: true
      NumericLiteral: 2
     N4EnumLiteral: yellow
      NumericLiteral: 3
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    N4EnumDeclaration: [external, public], ColorS
     AnnotationList
      Annotation: StringBased

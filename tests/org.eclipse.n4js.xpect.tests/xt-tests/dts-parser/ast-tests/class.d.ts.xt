@@ -35,7 +35,7 @@ declare class KD {
 
 /* XPECT ast ---
 Script: true
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    N4ClassDeclaration: [external, public], KE, ?~
     N4FieldDeclaration: [public], false
      TypeReferenceNode

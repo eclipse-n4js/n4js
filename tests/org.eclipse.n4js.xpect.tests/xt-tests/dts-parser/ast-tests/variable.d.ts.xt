@@ -23,17 +23,17 @@ export var V : Object;
 
 /* XPECT ast ---
 Script: true
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    VariableStatement: [external, public], const
     VariableDeclaration: K
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    VariableStatement: [external, public], let
     VariableDeclaration: L
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    VariableStatement: [external, public], var
     VariableDeclaration: V
      TypeReferenceNode
