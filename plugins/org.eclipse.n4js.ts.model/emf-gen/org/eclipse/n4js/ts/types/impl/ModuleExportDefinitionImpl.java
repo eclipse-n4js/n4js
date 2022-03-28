@@ -17,8 +17,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.ModuleExportDefinition;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
@@ -45,7 +45,7 @@ public class ModuleExportDefinitionImpl extends ProxyResolvingEObjectImpl implem
 	 * @generated
 	 * @ordered
 	 */
-	protected AbstractModule exportedModule;
+	protected TModule exportedModule;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -72,10 +72,10 @@ public class ModuleExportDefinitionImpl extends ProxyResolvingEObjectImpl implem
 	 * @generated
 	 */
 	@Override
-	public AbstractModule getExportedModule() {
+	public TModule getExportedModule() {
 		if (exportedModule != null && exportedModule.eIsProxy()) {
 			InternalEObject oldExportedModule = (InternalEObject)exportedModule;
-			exportedModule = (AbstractModule)eResolveProxy(oldExportedModule);
+			exportedModule = (TModule)eResolveProxy(oldExportedModule);
 			if (exportedModule != oldExportedModule) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypesPackage.MODULE_EXPORT_DEFINITION__EXPORTED_MODULE, oldExportedModule, exportedModule));
@@ -89,7 +89,7 @@ public class ModuleExportDefinitionImpl extends ProxyResolvingEObjectImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AbstractModule basicGetExportedModule() {
+	public TModule basicGetExportedModule() {
 		return exportedModule;
 	}
 
@@ -99,8 +99,8 @@ public class ModuleExportDefinitionImpl extends ProxyResolvingEObjectImpl implem
 	 * @generated
 	 */
 	@Override
-	public void setExportedModule(AbstractModule newExportedModule) {
-		AbstractModule oldExportedModule = exportedModule;
+	public void setExportedModule(TModule newExportedModule) {
+		TModule oldExportedModule = exportedModule;
 		exportedModule = newExportedModule;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.MODULE_EXPORT_DEFINITION__EXPORTED_MODULE, oldExportedModule, exportedModule));
@@ -130,7 +130,7 @@ public class ModuleExportDefinitionImpl extends ProxyResolvingEObjectImpl implem
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
 			case TypesPackage.MODULE_EXPORT_DEFINITION__EXPORTED_MODULE:
-				setExportedModule((AbstractModule)newValue);
+				setExportedModule((TModule)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -145,7 +145,7 @@ public class ModuleExportDefinitionImpl extends ProxyResolvingEObjectImpl implem
 	public void eUnset(int featureID) {
 		switch (featureID) {
 			case TypesPackage.MODULE_EXPORT_DEFINITION__EXPORTED_MODULE:
-				setExportedModule((AbstractModule)null);
+				setExportedModule((TModule)null);
 				return;
 		}
 		super.eUnset(featureID);

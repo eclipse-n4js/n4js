@@ -10,22 +10,13 @@
  */
 package org.eclipse.n4js.types.utils;
 
-import com.google.common.collect.Iterators
-import java.util.Collections
-import java.util.HashSet
-import java.util.Iterator
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
-import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
-import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
-import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.ThisArgProvider
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.ThisTarget
@@ -55,90 +46,8 @@ public class LambdaUtils {
 		}
 	}
 
-	/**
-	 * All references occurring in <code>body</code> that target the given {@link LocalArgumentsVariable}.
-	 *
-	 * For better speed early pruning is performed (ie, without delving into functions, unless arrow functions,
-	 * or into a declaration that introduces a this context, ie without delving into any {@link ThisTarget} in general).
-	 */
-	public static def Iterator<? extends IdentifierRef> argumentsOccurrences(Block body, LocalArgumentsVariable target) {
-		if (target === null) {
-			return emptyList.iterator
-		}
-		return EcoreUtilN4.getAllContentsFiltered(body, [!introducesThisContext(it)]).filter(IdentifierRef).filter[it.id === target]
-	}
-
-	/**
-	 * TODO For now, usages of 'arguments' inside an arrow function are resolved to the {@link LocalArgumentsVariable}
-	 * owned by that arrow function. In fact, they should be resolved (together with similar usages in
-	 * nested arrow functions, without delving into this-introducing contexts) to whatever 'arguments' is in effect.
-	 * This method is used to patch up that resolution.
-	 * <p>
-	 * In detail, this method collects usages of 'arguments', walking down nested arrow-functions,
-	 * stopping at arguments-introducing functions (ie, non-arrow ones). The result contains
-	 * uses that point to different {@link LocalArgumentsVariable} instances. That's intended.
-	 * For the purposes of alpha-renaming, all those uses denote the same arguments-capture,
-	 * and thus will all be rewritten to the same identifier (a fresh name) in the xpiler's output.
-	 */
-	def static Iterator<? extends IdentifierRef> allArgumentsUsages(FunctionOrFieldAccessor argumentsBindingConstruct) {
-		var Iterator<? extends IdentifierRef> result = argumentsOccurrences(argumentsBindingConstruct.body, argumentsBindingConstruct._lok)
-		for (nestedResult : directlyEnclosedLambdas(argumentsBindingConstruct.body).map(it|allArgumentsUsages(it))) {
-			result = Iterators.concat(result, nestedResult)
-		}
-		if (result.isEmpty) {
-			return Collections.emptyIterator()
-		} else {
-			return result
-		}
-	}
-
-	/**
-	 * All {@link SuperLiteral}s occurring in <code>body</code> delving all the way.
-	 */
-	public static def superLiterals(Block body) {
-		body.eAllContents.filter(SuperLiteral)
-	}
-
-	/**
-	 * All arrow functions directly enclosed in <code>body</code> ie, without delving into functions, not even into arrow functions,
-	 * or into a declaration that introduces a this context, ie without delving into any {@link ThisTarget} in general).
-	 */
-	public static def directlyEnclosedLambdas(Block body) {
-		// TODO this is inefficient but I don't remember an Ecore utility to speed things up
-		val result = new HashSet<FunctionExpression>()
-		val candidates = allLambdas(body).toSet
-		result.addAll(candidates)
-		for (candidate : candidates) {
-			val isCandidateItselfNested = result.exists[candidate !== it && candidate.isEnclosedBy(it)]
-			if (isCandidateItselfNested) {
-				result.remove(candidate)
-			}
-		}
-		return result.toList
-	}
-
-	/**
-	 * All arrow functions, be they directly or transitively enclosed in <code>body</code>. The search doesn't delve into non-arrow functions,
-	 * same goes for declarations that introduce a this context, ie without delving into any {@link ThisTarget} in general).
-	 */
-	public static def allLambdas(Block body) {
-		return EcoreUtilN4.getAllContentsFiltered(body, [!introducesThisContext(it)]).filter(ArrowFunction)
-	}
-
-	public static def isEnclosedBy(EObject inner, EObject outer) {
-		return EcoreUtil.isAncestor(outer, inner)
-	}
-
 	public static def boolean isLambda(EObject funDef) {
 		funDef instanceof ArrowFunction
-	}
-
-	public static def isSingleExprImplicitReturn(FunctionOrFieldAccessor funDef) {
-		if (isLambda(funDef)) {
-			(funDef as ArrowFunction).isSingleExprImplicitReturn
-		} else {
-			false
-		}
 	}
 
 	/**

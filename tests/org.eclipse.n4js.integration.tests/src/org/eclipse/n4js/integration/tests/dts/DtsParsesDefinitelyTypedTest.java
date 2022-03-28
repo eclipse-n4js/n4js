@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.DtsParseResult;
 import org.eclipse.n4js.dts.DtsParser;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -97,8 +98,9 @@ public class DtsParsesDefinitelyTypedTest {
 			try (BufferedReader buf = new BufferedReader(new InputStreamReader(new FileInputStream(file.toFile())))) {
 
 				N4JSResource resource = new N4JSResource();
-				resource.setURI(new FileURI(file).toURI());
-				DtsParseResult parseResult = new DtsParser().parse(buf, resource);
+				URI fileUri = new FileURI(file).toURI();
+				resource.setURI(fileUri);
+				DtsParseResult parseResult = new DtsParser().parse(buf, resource, fileUri);
 
 				if (parseResult.hasSyntaxErrors()) {
 					fail++;

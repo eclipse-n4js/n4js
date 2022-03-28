@@ -179,7 +179,7 @@ public class N4JSPostProcessor implements PostProcessor {
 		final List<EObject> stuffToScan = new ArrayList<>();
 		// FIXME must be adjusted for namespaces!
 		stuffToScan.addAll(module.getTypes());
-		stuffToScan.addAll(module.getVariables());
+		stuffToScan.addAll(module.getExportedVariables());
 		stuffToScan.addAll(module.getExportDefinitions());
 		for (EObject currRoot : stuffToScan) {
 			exposeTypesReferencedBy(currRoot, true);

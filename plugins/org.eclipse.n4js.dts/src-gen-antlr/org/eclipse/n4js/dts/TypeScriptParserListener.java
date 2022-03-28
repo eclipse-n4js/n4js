@@ -1,4 +1,4 @@
-// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-temp/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL1/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -148,6 +148,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitArrayTypeExpression(TypeScriptParser.ArrayTypeExpressionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#arrayTypeExpressionSuffix}.
+	 * @param ctx the parse tree
+	 */
+	void enterArrayTypeExpressionSuffix(TypeScriptParser.ArrayTypeExpressionSuffixContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#arrayTypeExpressionSuffix}.
+	 * @param ctx the parse tree
+	 */
+	void exitArrayTypeExpressionSuffix(TypeScriptParser.ArrayTypeExpressionSuffixContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#primaryTypeExpression}.
 	 * @param ctx the parse tree
 	 */
@@ -217,6 +227,16 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTypeRefWithModifiers(TypeScriptParser.TypeRefWithModifiersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link TypeScriptParser#parenthesizedTypeRef}.
+	 * @param ctx the parse tree
+	 */
+	void enterParenthesizedTypeRef(TypeScriptParser.ParenthesizedTypeRefContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link TypeScriptParser#parenthesizedTypeRef}.
+	 * @param ctx the parse tree
+	 */
+	void exitParenthesizedTypeRef(TypeScriptParser.ParenthesizedTypeRefContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#parameterizedTypeRef}.
 	 * @param ctx the parse tree
@@ -307,36 +327,6 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitImportTypeRef(TypeScriptParser.ImportTypeRefContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#anonymousFormalParameterListWithDeclaredThisType}.
-	 * @param ctx the parse tree
-	 */
-	void enterAnonymousFormalParameterListWithDeclaredThisType(TypeScriptParser.AnonymousFormalParameterListWithDeclaredThisTypeContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#anonymousFormalParameterListWithDeclaredThisType}.
-	 * @param ctx the parse tree
-	 */
-	void exitAnonymousFormalParameterListWithDeclaredThisType(TypeScriptParser.AnonymousFormalParameterListWithDeclaredThisTypeContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#anonymousFormalParameter}.
-	 * @param ctx the parse tree
-	 */
-	void enterAnonymousFormalParameter(TypeScriptParser.AnonymousFormalParameterContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#anonymousFormalParameter}.
-	 * @param ctx the parse tree
-	 */
-	void exitAnonymousFormalParameter(TypeScriptParser.AnonymousFormalParameterContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#defaultFormalParameter}.
-	 * @param ctx the parse tree
-	 */
-	void enterDefaultFormalParameter(TypeScriptParser.DefaultFormalParameterContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#defaultFormalParameter}.
-	 * @param ctx the parse tree
-	 */
-	void exitDefaultFormalParameter(TypeScriptParser.DefaultFormalParameterContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#typePredicateWithOperatorTypeRef}.
 	 * @param ctx the parse tree

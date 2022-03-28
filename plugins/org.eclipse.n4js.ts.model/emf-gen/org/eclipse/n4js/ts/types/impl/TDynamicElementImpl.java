@@ -10,7 +10,11 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -21,6 +25,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TDynamicElement;
 import org.eclipse.n4js.ts.types.TypesPackage;
+
+import org.eclipse.n4js.ts.types.TypesPackage.Literals;
 
 /**
  * <!-- begin-user-doc -->
@@ -103,6 +109,21 @@ public class TDynamicElementImpl extends TExportableElementImpl implements TDyna
 		astElement = newAstElement;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TDYNAMIC_ELEMENT__AST_ELEMENT, oldAstElement, astElement));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EObject getAstElementNoResolve() {
+		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+		final EObject astElem = ((EObject) _eGet);
+		if (((astElem != null) && (!astElem.eIsProxy()))) {
+			return astElem;
+		}
+		return null;
 	}
 
 	/**
@@ -194,6 +215,36 @@ public class TDynamicElementImpl extends TExportableElementImpl implements TDyna
 			}
 		}
 		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
+		if (baseClass == SyntaxRelatedTElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.TDYNAMIC_ELEMENT___GET_AST_ELEMENT_NO_RESOLVE;
+				default: return -1;
+			}
+		}
+		return super.eDerivedOperationID(baseOperationID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.TDYNAMIC_ELEMENT___GET_AST_ELEMENT_NO_RESOLVE:
+				return getAstElementNoResolve();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //TDynamicElementImpl

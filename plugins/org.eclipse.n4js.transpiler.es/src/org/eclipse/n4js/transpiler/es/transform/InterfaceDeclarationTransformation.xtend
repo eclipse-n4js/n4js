@@ -253,7 +253,6 @@ class InterfaceDeclarationTransformation extends Transformation {
 				throw new IllegalArgumentException("not a getter, setter, or method declaration")
 		};
 		result.declaredName = (memberDecl as PropertyNameOwner).declaredName; // reuse existing name
-		result._lok = (memberDecl as FunctionOrFieldAccessor)._lok; // reuse existing LocalArgumentsVariable (if existent)
 		result.body = (memberDecl as FunctionOrFieldAccessor).body; // reuse existing body
 		if (!memberDecl.annotations.isEmpty) {
 			result.annotationList = _PropertyAssignmentAnnotationList( memberDecl.annotations ) // reuse existing annotations

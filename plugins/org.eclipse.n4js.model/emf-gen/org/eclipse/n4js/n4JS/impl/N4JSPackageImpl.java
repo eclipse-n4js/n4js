@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.AbstractAnnotationList;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.AbstractCatchBlock;
 import org.eclipse.n4js.n4JS.AbstractIntLiteral;
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.AdditiveOperator;
 import org.eclipse.n4js.n4JS.AnnotableElement;
@@ -78,9 +79,6 @@ import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.EqualityOperator;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableBinding;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
@@ -120,7 +118,6 @@ import org.eclipse.n4js.n4JS.LegacyOctalIntLiteral;
 import org.eclipse.n4js.n4JS.Literal;
 import org.eclipse.n4js.n4JS.LiteralAnnotationArgument;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
@@ -128,7 +125,6 @@ import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.MultiplicativeOperator;
-import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDefinition;
 import org.eclipse.n4js.n4JS.N4ClassExpression;
@@ -146,7 +142,6 @@ import org.eclipse.n4js.n4JS.N4MemberAnnotationList;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
-import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
@@ -214,7 +209,6 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
 import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
-import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableDeclarationContainer;
@@ -382,7 +376,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass variableEClass = null;
+	private EClass abstractVariableEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -501,13 +495,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass localArgumentsVariableEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass formalParameterEClass = null;
 
 	/**
@@ -543,13 +530,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass exportedVariableStatementEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass variableDeclarationOrBindingEClass = null;
 
 	/**
@@ -564,21 +544,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	private EClass exportedVariableBindingEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	private EClass variableDeclarationEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass exportedVariableDeclarationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1279,20 +1245,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass n4ClassDefinitionEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass n4AbstractNamespaceDeclarationEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass n4ModuleDeclarationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -2450,8 +2402,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getVariable() {
-		return variableEClass;
+	public EClass getAbstractVariable() {
+		return abstractVariableEClass;
 	}
 
 	/**
@@ -2460,8 +2412,28 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getVariable__IsConst() {
-		return variableEClass.getEOperations().get(0);
+	public EAttribute getAbstractVariable_Name() {
+		return (EAttribute)abstractVariableEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAbstractVariable_DefinedVariable() {
+		return (EReference)abstractVariableEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getAbstractVariable__IsConst() {
+		return abstractVariableEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -2760,7 +2732,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionOrFieldAccessor__lok() {
+	public EReference getFunctionOrFieldAccessor_ImplicitArgumentsVariable() {
 		return (EReference)functionOrFieldAccessorEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -2780,7 +2752,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getFunctionOrFieldAccessor__GetLocalArgumentsVariable() {
+	public EOperation getFunctionOrFieldAccessor__IsReturnValueOptional() {
 		return functionOrFieldAccessorEClass.getEOperations().get(1);
 	}
 
@@ -2790,7 +2762,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getFunctionOrFieldAccessor__IsReturnValueOptional() {
+	public EOperation getFunctionOrFieldAccessor__IsAsync() {
 		return functionOrFieldAccessorEClass.getEOperations().get(2);
 	}
 
@@ -2800,18 +2772,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getFunctionOrFieldAccessor__IsAsync() {
-		return functionOrFieldAccessorEClass.getEOperations().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EOperation getFunctionOrFieldAccessor__GetDefinedFunctionOrAccessor() {
-		return functionOrFieldAccessorEClass.getEOperations().get(4);
+		return functionOrFieldAccessorEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -3110,26 +3072,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getLocalArgumentsVariable() {
-		return localArgumentsVariableEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getLocalArgumentsVariable__GetName() {
-		return localArgumentsVariableEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getFormalParameter() {
 		return formalParameterEClass;
 	}
@@ -3160,18 +3102,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getFormalParameter_DefinedTypeElement() {
-		return (EReference)formalParameterEClass.getEStructuralFeatures().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EAttribute getFormalParameter_HasInitializerAssignment() {
-		return (EAttribute)formalParameterEClass.getEStructuralFeatures().get(3);
+		return (EAttribute)formalParameterEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -3181,7 +3113,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EReference getFormalParameter_Initializer() {
-		return (EReference)formalParameterEClass.getEStructuralFeatures().get(4);
+		return (EReference)formalParameterEClass.getEStructuralFeatures().get(3);
 	}
 
 	/**
@@ -3191,7 +3123,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EReference getFormalParameter_BindingPattern() {
-		return (EReference)formalParameterEClass.getEStructuralFeatures().get(5);
+		return (EReference)formalParameterEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -3400,26 +3332,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getExportedVariableStatement() {
-		return exportedVariableStatementEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getExportedVariableStatement__IsExternal() {
-		return exportedVariableStatementEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getVariableDeclarationOrBinding() {
 		return variableDeclarationOrBindingEClass;
 	}
@@ -3480,26 +3392,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getExportedVariableBinding() {
-		return exportedVariableBindingEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getExportedVariableBinding_DefinedVariable() {
-		return (EReference)exportedVariableBindingEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getVariableDeclaration() {
 		return variableDeclarationEClass;
 	}
@@ -3540,8 +3432,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getExportedVariableDeclaration() {
-		return exportedVariableDeclarationEClass;
+	public EOperation getVariableDeclaration__IsExported() {
+		return variableDeclarationEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -3550,8 +3442,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getExportedVariableDeclaration_DefinedVariable() {
-		return (EReference)exportedVariableDeclarationEClass.getEStructuralFeatures().get(0);
+	public EOperation getVariableDeclaration__GetExportedName() {
+		return variableDeclarationEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -6270,7 +6162,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getN4TypeVariable_DeclaredCovariant() {
+	public EAttribute getN4TypeVariable_Name() {
 		return (EAttribute)n4TypeVariableEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -6280,7 +6172,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getN4TypeVariable_DeclaredContravariant() {
+	public EAttribute getN4TypeVariable_DeclaredCovariant() {
 		return (EAttribute)n4TypeVariableEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -6290,7 +6182,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getN4TypeVariable_DeclaredOptional() {
+	public EAttribute getN4TypeVariable_DeclaredContravariant() {
 		return (EAttribute)n4TypeVariableEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -6300,8 +6192,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getN4TypeVariable_DeclaredOptional() {
+		return (EAttribute)n4TypeVariableEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getN4TypeVariable_DeclaredUpperBoundNode() {
-		return (EReference)n4TypeVariableEClass.getEStructuralFeatures().get(4);
+		return (EReference)n4TypeVariableEClass.getEStructuralFeatures().get(5);
 	}
 
 	/**
@@ -6311,7 +6213,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	@Override
 	public EReference getN4TypeVariable_DeclaredDefaultArgumentNode() {
-		return (EReference)n4TypeVariableEClass.getEStructuralFeatures().get(5);
+		return (EReference)n4TypeVariableEClass.getEStructuralFeatures().get(6);
 	}
 
 	/**
@@ -6600,78 +6502,28 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EClass getN4AbstractNamespaceDeclaration() {
-		return n4AbstractNamespaceDeclarationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EAttribute getN4AbstractNamespaceDeclaration_Name() {
-		return (EAttribute)n4AbstractNamespaceDeclarationEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getN4AbstractNamespaceDeclaration_OwnedElementsRaw() {
-		return (EReference)n4AbstractNamespaceDeclarationEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getN4AbstractNamespaceDeclaration__GetDefinedNamespace() {
-		return n4AbstractNamespaceDeclarationEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getN4ModuleDeclaration() {
-		return n4ModuleDeclarationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EReference getN4ModuleDeclaration_DefinedModule() {
-		return (EReference)n4ModuleDeclarationEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getN4ModuleDeclaration__GetDefinedNamespace() {
-		return n4ModuleDeclarationEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getN4NamespaceDeclaration() {
 		return n4NamespaceDeclarationEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EAttribute getN4NamespaceDeclaration_Name() {
+		return (EAttribute)n4NamespaceDeclarationEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getN4NamespaceDeclaration_OwnedElementsRaw() {
+		return (EReference)n4NamespaceDeclarationEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -6980,7 +6832,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getModifiableElement__IsDeclaredExternal() {
+	public EOperation getModifiableElement__IsExternal() {
 		return modifiableElementEClass.getEOperations().get(0);
 	}
 
@@ -6990,8 +6842,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getModifiableElement__IsDefaultExternal() {
+	public EOperation getModifiableElement__IsDeclaredExternal() {
 		return modifiableElementEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getModifiableElement__IsDefaultExternal() {
+		return modifiableElementEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -7452,6 +7314,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EClass getBindingPattern() {
 		return bindingPatternEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getBindingPattern__GetAllVariableDeclarations() {
+		return bindingPatternEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -8105,8 +7977,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		thisArgProviderEClass = createEClass(THIS_ARG_PROVIDER);
 
-		variableEClass = createEClass(VARIABLE);
-		createEOperation(variableEClass, VARIABLE___IS_CONST);
+		abstractVariableEClass = createEClass(ABSTRACT_VARIABLE);
+		createEAttribute(abstractVariableEClass, ABSTRACT_VARIABLE__NAME);
+		createEReference(abstractVariableEClass, ABSTRACT_VARIABLE__DEFINED_VARIABLE);
+		createEOperation(abstractVariableEClass, ABSTRACT_VARIABLE___IS_CONST);
 
 		annotableElementEClass = createEClass(ANNOTABLE_ELEMENT);
 		createEOperation(annotableElementEClass, ANNOTABLE_ELEMENT___GET_ANNOTATIONS);
@@ -8147,9 +8021,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		functionOrFieldAccessorEClass = createEClass(FUNCTION_OR_FIELD_ACCESSOR);
 		createEReference(functionOrFieldAccessorEClass, FUNCTION_OR_FIELD_ACCESSOR__BODY);
-		createEReference(functionOrFieldAccessorEClass, FUNCTION_OR_FIELD_ACCESSOR__LOK);
+		createEReference(functionOrFieldAccessorEClass, FUNCTION_OR_FIELD_ACCESSOR__IMPLICIT_ARGUMENTS_VARIABLE);
 		createEOperation(functionOrFieldAccessorEClass, FUNCTION_OR_FIELD_ACCESSOR___GET_NAME);
-		createEOperation(functionOrFieldAccessorEClass, FUNCTION_OR_FIELD_ACCESSOR___GET_LOCAL_ARGUMENTS_VARIABLE);
 		createEOperation(functionOrFieldAccessorEClass, FUNCTION_OR_FIELD_ACCESSOR___IS_RETURN_VALUE_OPTIONAL);
 		createEOperation(functionOrFieldAccessorEClass, FUNCTION_OR_FIELD_ACCESSOR___IS_ASYNC);
 		createEOperation(functionOrFieldAccessorEClass, FUNCTION_OR_FIELD_ACCESSOR___GET_DEFINED_FUNCTION_OR_ACCESSOR);
@@ -8188,13 +8061,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(arrowFunctionEClass, ARROW_FUNCTION___GET_SINGLE_EXPRESSION);
 		createEOperation(arrowFunctionEClass, ARROW_FUNCTION___IMPLICIT_RETURN_EXPR);
 
-		localArgumentsVariableEClass = createEClass(LOCAL_ARGUMENTS_VARIABLE);
-		createEOperation(localArgumentsVariableEClass, LOCAL_ARGUMENTS_VARIABLE___GET_NAME);
-
 		formalParameterEClass = createEClass(FORMAL_PARAMETER);
 		createEReference(formalParameterEClass, FORMAL_PARAMETER__ANNOTATIONS);
 		createEAttribute(formalParameterEClass, FORMAL_PARAMETER__VARIADIC);
-		createEReference(formalParameterEClass, FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT);
 		createEAttribute(formalParameterEClass, FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT);
 		createEReference(formalParameterEClass, FORMAL_PARAMETER__INITIALIZER);
 		createEReference(formalParameterEClass, FORMAL_PARAMETER__BINDING_PATTERN);
@@ -8223,9 +8092,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		variableStatementEClass = createEClass(VARIABLE_STATEMENT);
 
-		exportedVariableStatementEClass = createEClass(EXPORTED_VARIABLE_STATEMENT);
-		createEOperation(exportedVariableStatementEClass, EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL);
-
 		variableDeclarationOrBindingEClass = createEClass(VARIABLE_DECLARATION_OR_BINDING);
 		createEOperation(variableDeclarationOrBindingEClass, VARIABLE_DECLARATION_OR_BINDING___GET_ALL_VARIABLE_DECLARATIONS);
 		createEOperation(variableDeclarationOrBindingEClass, VARIABLE_DECLARATION_OR_BINDING___GET_EXPRESSION);
@@ -8234,16 +8100,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(variableBindingEClass, VARIABLE_BINDING__PATTERN);
 		createEReference(variableBindingEClass, VARIABLE_BINDING__EXPRESSION);
 
-		exportedVariableBindingEClass = createEClass(EXPORTED_VARIABLE_BINDING);
-		createEReference(exportedVariableBindingEClass, EXPORTED_VARIABLE_BINDING__DEFINED_VARIABLE);
-
 		variableDeclarationEClass = createEClass(VARIABLE_DECLARATION);
 		createEReference(variableDeclarationEClass, VARIABLE_DECLARATION__ANNOTATIONS);
 		createEReference(variableDeclarationEClass, VARIABLE_DECLARATION__EXPRESSION);
 		createEOperation(variableDeclarationEClass, VARIABLE_DECLARATION___IS_CONST);
-
-		exportedVariableDeclarationEClass = createEClass(EXPORTED_VARIABLE_DECLARATION);
-		createEReference(exportedVariableDeclarationEClass, EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE);
+		createEOperation(variableDeclarationEClass, VARIABLE_DECLARATION___IS_EXPORTED);
+		createEOperation(variableDeclarationEClass, VARIABLE_DECLARATION___GET_EXPORTED_NAME);
 
 		emptyStatementEClass = createEClass(EMPTY_STATEMENT);
 
@@ -8610,6 +8472,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		n4TypeVariableEClass = createEClass(N4_TYPE_VARIABLE);
 		createEReference(n4TypeVariableEClass, N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE);
+		createEAttribute(n4TypeVariableEClass, N4_TYPE_VARIABLE__NAME);
 		createEAttribute(n4TypeVariableEClass, N4_TYPE_VARIABLE__DECLARED_COVARIANT);
 		createEAttribute(n4TypeVariableEClass, N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT);
 		createEAttribute(n4TypeVariableEClass, N4_TYPE_VARIABLE__DECLARED_OPTIONAL);
@@ -8649,16 +8512,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(n4ClassDefinitionEClass, N4_CLASS_DEFINITION___GET_SUPER_CLASSIFIER_REFS);
 		createEOperation(n4ClassDefinitionEClass, N4_CLASS_DEFINITION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS);
 
-		n4AbstractNamespaceDeclarationEClass = createEClass(N4_ABSTRACT_NAMESPACE_DECLARATION);
-		createEAttribute(n4AbstractNamespaceDeclarationEClass, N4_ABSTRACT_NAMESPACE_DECLARATION__NAME);
-		createEReference(n4AbstractNamespaceDeclarationEClass, N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW);
-		createEOperation(n4AbstractNamespaceDeclarationEClass, N4_ABSTRACT_NAMESPACE_DECLARATION___GET_DEFINED_NAMESPACE);
-
-		n4ModuleDeclarationEClass = createEClass(N4_MODULE_DECLARATION);
-		createEReference(n4ModuleDeclarationEClass, N4_MODULE_DECLARATION__DEFINED_MODULE);
-		createEOperation(n4ModuleDeclarationEClass, N4_MODULE_DECLARATION___GET_DEFINED_NAMESPACE);
-
 		n4NamespaceDeclarationEClass = createEClass(N4_NAMESPACE_DECLARATION);
+		createEAttribute(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION__NAME);
+		createEReference(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___IS_EXTERNAL);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___GET_ANNOTATIONS);
 		createEOperation(n4NamespaceDeclarationEClass, N4_NAMESPACE_DECLARATION___IS_HOLLOW);
@@ -8697,6 +8553,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		modifiableElementEClass = createEClass(MODIFIABLE_ELEMENT);
 		createEAttribute(modifiableElementEClass, MODIFIABLE_ELEMENT__DECLARED_MODIFIERS);
+		createEOperation(modifiableElementEClass, MODIFIABLE_ELEMENT___IS_EXTERNAL);
 		createEOperation(modifiableElementEClass, MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL);
 		createEOperation(modifiableElementEClass, MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL);
 
@@ -8755,6 +8612,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(n4SetterDeclarationEClass, N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT);
 
 		bindingPatternEClass = createEClass(BINDING_PATTERN);
+		createEOperation(bindingPatternEClass, BINDING_PATTERN___GET_ALL_VARIABLE_DECLARATIONS);
 
 		objectBindingPatternEClass = createEClass(OBJECT_BINDING_PATTERN);
 		createEReference(objectBindingPatternEClass, OBJECT_BINDING_PATTERN__PROPERTIES);
@@ -8858,10 +8716,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		// Create type parameters
 		ETypeParameter typeReferenceNodeEClass_T = addETypeParameter(typeReferenceNodeEClass, "T");
+		ETypeParameter abstractVariableEClass_T = addETypeParameter(abstractVariableEClass, "T");
 
 		// Set bounds for type parameters
 		EGenericType g1 = createEGenericType(theTypeRefsPackage.getTypeRef());
 		typeReferenceNodeEClass_T.getEBounds().add(g1);
+		g1 = createEGenericType(theTypesPackage.getTAbstractVariable());
+		abstractVariableEClass_T.getEBounds().add(g1);
 
 		// Add supertypes to classes
 		scriptEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
@@ -8879,9 +8740,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		namespaceImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());
 		namespaceImportSpecifierEClass.getESuperTypes().add(this.getTypeDefiningElement());
 		typedElementEClass.getESuperTypes().add(this.getTypeProvidingElement());
-		variableEClass.getESuperTypes().add(this.getTypedElement());
-		variableEClass.getESuperTypes().add(theTypesPackage.getIdentifiableElement());
-		variableEClass.getESuperTypes().add(this.getNamedElement());
+		abstractVariableEClass.getESuperTypes().add(this.getTypedElement());
+		abstractVariableEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
+		abstractVariableEClass.getESuperTypes().add(this.getNamedElement());
 		annotableScriptElementEClass.getESuperTypes().add(this.getAnnotableElement());
 		annotableScriptElementEClass.getESuperTypes().add(this.getScriptElement());
 		annotableExpressionEClass.getESuperTypes().add(this.getAnnotableElement());
@@ -8915,9 +8776,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		functionExpressionEClass.getESuperTypes().add(this.getGenericDeclaration());
 		functionExpressionEClass.getESuperTypes().add(this.getNamedElement());
 		arrowFunctionEClass.getESuperTypes().add(this.getFunctionExpression());
-		localArgumentsVariableEClass.getESuperTypes().add(this.getVariable());
-		formalParameterEClass.getESuperTypes().add(this.getAnnotableElement());
-		formalParameterEClass.getESuperTypes().add(this.getVariable());
+		g1 = createEGenericType(this.getAnnotableElement());
+		formalParameterEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getAbstractVariable());
+		EGenericType g2 = createEGenericType(theTypesPackage.getTFormalParameter());
+		g1.getETypeArguments().add(g2);
+		formalParameterEClass.getEGenericSuperTypes().add(g1);
 		blockEClass.getESuperTypes().add(this.getStatement());
 		blockEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
 		statementEClass.getESuperTypes().add(this.getScriptElement());
@@ -8925,17 +8789,19 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		variableStatementEClass.getESuperTypes().add(this.getStatement());
 		variableStatementEClass.getESuperTypes().add(this.getVariableDeclarationContainer());
 		variableStatementEClass.getESuperTypes().add(this.getNamespaceElement());
-		exportedVariableStatementEClass.getESuperTypes().add(this.getVariableStatement());
-		exportedVariableStatementEClass.getESuperTypes().add(this.getExportableElement());
-		exportedVariableStatementEClass.getESuperTypes().add(this.getAnnotableScriptElement());
-		exportedVariableStatementEClass.getESuperTypes().add(this.getModifiableElement());
+		variableStatementEClass.getESuperTypes().add(this.getExportableElement());
+		variableStatementEClass.getESuperTypes().add(this.getAnnotableScriptElement());
+		variableStatementEClass.getESuperTypes().add(this.getModifiableElement());
 		variableDeclarationOrBindingEClass.getESuperTypes().add(this.getControlFlowElement());
 		variableBindingEClass.getESuperTypes().add(this.getVariableDeclarationOrBinding());
-		exportedVariableBindingEClass.getESuperTypes().add(this.getVariableBinding());
-		variableDeclarationEClass.getESuperTypes().add(this.getVariableDeclarationOrBinding());
-		variableDeclarationEClass.getESuperTypes().add(this.getAnnotableElement());
-		variableDeclarationEClass.getESuperTypes().add(this.getVariable());
-		exportedVariableDeclarationEClass.getESuperTypes().add(this.getVariableDeclaration());
+		g1 = createEGenericType(this.getVariableDeclarationOrBinding());
+		variableDeclarationEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getAnnotableElement());
+		variableDeclarationEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getAbstractVariable());
+		g2 = createEGenericType(theTypesPackage.getTVariable());
+		g1.getETypeArguments().add(g2);
+		variableDeclarationEClass.getEGenericSuperTypes().add(g1);
 		emptyStatementEClass.getESuperTypes().add(this.getStatement());
 		expressionStatementEClass.getESuperTypes().add(this.getStatement());
 		ifStatementEClass.getESuperTypes().add(this.getStatement());
@@ -8963,7 +8829,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		tryStatementEClass.getESuperTypes().add(this.getStatement());
 		catchBlockEClass.getESuperTypes().add(this.getAbstractCatchBlock());
 		catchBlockEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
-		catchVariableEClass.getESuperTypes().add(this.getVariable());
+		g1 = createEGenericType(this.getAbstractVariable());
+		g2 = createEGenericType(theTypesPackage.getTVariable());
+		g1.getETypeArguments().add(g2);
+		catchVariableEClass.getEGenericSuperTypes().add(g1);
 		finallyBlockEClass.getESuperTypes().add(this.getAbstractCatchBlock());
 		debuggerStatementEClass.getESuperTypes().add(this.getStatement());
 		primaryExpressionEClass.getESuperTypes().add(this.getExpression());
@@ -9052,7 +8921,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		commaExpressionEClass.getESuperTypes().add(this.getExpression());
 		typeDefiningElementEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		genericDeclarationEClass.getESuperTypes().add(this.getTypeDefiningElement());
-		n4TypeVariableEClass.getESuperTypes().add(theTypesPackage.getIdentifiableElement());
+		n4TypeVariableEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		n4TypeVariableEClass.getESuperTypes().add(this.getNamedElement());
 		n4TypeDefinitionEClass.getESuperTypes().add(this.getAnnotableElement());
 		n4TypeDefinitionEClass.getESuperTypes().add(this.getTypeDefiningElement());
@@ -9068,14 +8937,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4ClassifierDefinitionEClass.getESuperTypes().add(this.getN4TypeDefinition());
 		n4ClassDefinitionEClass.getESuperTypes().add(this.getN4ClassifierDefinition());
 		n4ClassDefinitionEClass.getESuperTypes().add(this.getThisTarget());
-		n4AbstractNamespaceDeclarationEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
-		n4AbstractNamespaceDeclarationEClass.getESuperTypes().add(this.getNamedElement());
-		n4ModuleDeclarationEClass.getESuperTypes().add(this.getN4AbstractNamespaceDeclaration());
-		n4ModuleDeclarationEClass.getESuperTypes().add(this.getNamespaceElement());
-		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getN4AbstractNamespaceDeclaration());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getN4TypeDefinition());
+		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getModifiableElement());
 		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getExportableElement());
+		n4NamespaceDeclarationEClass.getESuperTypes().add(this.getNamedElement());
 		namespaceElementEClass.getESuperTypes().add(this.getScriptElement());
 		n4ClassDeclarationEClass.getESuperTypes().add(this.getN4ClassDefinition());
 		n4ClassDeclarationEClass.getESuperTypes().add(this.getN4ClassifierDeclaration());
@@ -9181,7 +9047,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getExportableElement__IsHollow(), theEcorePackage.getEBoolean(), "isHollow", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(moduleRefEClass, ModuleRef.class, "ModuleRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getModuleRef_Module(), theTypesPackage.getAbstractModule(), null, "module", null, 0, 1, ModuleRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getModuleRef_Module(), theTypesPackage.getTModule(), null, "module", null, 0, 1, ModuleRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModuleRef_ModuleSpecifierAsText(), theEcorePackage.getEString(), "moduleSpecifierAsText", null, 0, 1, ModuleRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getModuleRef_ModuleSpecifierForm(), this.getModuleSpecifierForm(), "moduleSpecifierForm", null, 0, 1, ModuleRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -9232,7 +9098,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		EOperation op = initEOperation(getTypeProvidingElement__GetDeclaredTypeRefNode(), null, "getDeclaredTypeRefNode", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(this.getTypeReferenceNode());
-		EGenericType g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
+		g2 = createEGenericType(theTypeRefsPackage.getTypeRef());
 		g1.getETypeArguments().add(g2);
 		initEOperation(op, g1);
 
@@ -9254,9 +9120,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(thisArgProviderEClass, ThisArgProvider.class, "ThisArgProvider", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(variableEClass, Variable.class, "Variable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(abstractVariableEClass, AbstractVariable.class, "AbstractVariable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getAbstractVariable_Name(), theEcorePackage.getEString(), "name", null, 0, 1, AbstractVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		g1 = createEGenericType(abstractVariableEClass_T);
+		initEReference(getAbstractVariable_DefinedVariable(), g1, null, "definedVariable", null, 0, 1, AbstractVariable.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getVariable__IsConst(), theEcorePackage.getEBoolean(), "isConst", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getAbstractVariable__IsConst(), theEcorePackage.getEBoolean(), "isConst", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(annotableElementEClass, AnnotableElement.class, "AnnotableElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -9310,11 +9179,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(functionOrFieldAccessorEClass, FunctionOrFieldAccessor.class, "FunctionOrFieldAccessor", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getFunctionOrFieldAccessor_Body(), this.getBlock(), null, "body", null, 0, 1, FunctionOrFieldAccessor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getFunctionOrFieldAccessor__lok(), this.getLocalArgumentsVariable(), null, "_lok", null, 0, 1, FunctionOrFieldAccessor.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFunctionOrFieldAccessor_ImplicitArgumentsVariable(), theTypesPackage.getTVariable(), null, "implicitArgumentsVariable", null, 0, 1, FunctionOrFieldAccessor.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getFunctionOrFieldAccessor__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionOrFieldAccessor__GetLocalArgumentsVariable(), this.getLocalArgumentsVariable(), "getLocalArgumentsVariable", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getFunctionOrFieldAccessor__IsReturnValueOptional(), theEcorePackage.getEBoolean(), "isReturnValueOptional", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -9379,14 +9246,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getArrowFunction__ImplicitReturnExpr(), this.getExpression(), "implicitReturnExpr", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(localArgumentsVariableEClass, LocalArgumentsVariable.class, "LocalArgumentsVariable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getLocalArgumentsVariable__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
 		initEClass(formalParameterEClass, FormalParameter.class, "FormalParameter", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getFormalParameter_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFormalParameter_Variadic(), theEcorePackage.getEBoolean(), "variadic", null, 0, 1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getFormalParameter_DefinedTypeElement(), theTypesPackage.getTFormalParameter(), null, "definedTypeElement", null, 0, 1, FormalParameter.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFormalParameter_HasInitializerAssignment(), theEcorePackage.getEBoolean(), "hasInitializerAssignment", null, 0, 1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFormalParameter_Initializer(), this.getExpression(), null, "initializer", null, 0, 1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFormalParameter_BindingPattern(), this.getBindingPattern(), null, "bindingPattern", null, 0, 1, FormalParameter.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -9428,10 +9290,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(variableStatementEClass, VariableStatement.class, "VariableStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-		initEClass(exportedVariableStatementEClass, ExportedVariableStatement.class, "ExportedVariableStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getExportedVariableStatement__IsExternal(), theEcorePackage.getEBoolean(), "isExternal", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
 		initEClass(variableDeclarationOrBindingEClass, VariableDeclarationOrBinding.class, "VariableDeclarationOrBinding", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getVariableDeclarationOrBinding__GetAllVariableDeclarations(), this.getVariableDeclaration(), "getAllVariableDeclarations", 0, -1, !IS_UNIQUE, IS_ORDERED);
@@ -9442,17 +9300,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getVariableBinding_Pattern(), this.getBindingPattern(), null, "pattern", null, 0, 1, VariableBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVariableBinding_Expression(), this.getExpression(), null, "expression", null, 0, 1, VariableBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(exportedVariableBindingEClass, ExportedVariableBinding.class, "ExportedVariableBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getExportedVariableBinding_DefinedVariable(), theTypesPackage.getTVariable(), null, "definedVariable", null, 0, 1, ExportedVariableBinding.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
 		initEClass(variableDeclarationEClass, VariableDeclaration.class, "VariableDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVariableDeclaration_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, VariableDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getVariableDeclaration_Expression(), this.getExpression(), null, "expression", null, 0, 1, VariableDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getVariableDeclaration__IsConst(), theEcorePackage.getEBoolean(), "isConst", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(exportedVariableDeclarationEClass, ExportedVariableDeclaration.class, "ExportedVariableDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getExportedVariableDeclaration_DefinedVariable(), theTypesPackage.getTVariable(), null, "definedVariable", null, 0, 1, ExportedVariableDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEOperation(getVariableDeclaration__IsExported(), theEcorePackage.getEBoolean(), "isExported", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getVariableDeclaration__GetExportedName(), theEcorePackage.getEString(), "getExportedName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(emptyStatementEClass, EmptyStatement.class, "EmptyStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -9886,6 +9742,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(n4TypeVariableEClass, N4TypeVariable.class, "N4TypeVariable", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getN4TypeVariable_DefinedTypeVariable(), theTypesPackage.getTypeVariable(), null, "definedTypeVariable", null, 0, 1, N4TypeVariable.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getN4TypeVariable_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getN4TypeVariable_DeclaredCovariant(), theEcorePackage.getEBoolean(), "declaredCovariant", null, 0, 1, N4TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getN4TypeVariable_DeclaredContravariant(), theEcorePackage.getEBoolean(), "declaredContravariant", null, 0, 1, N4TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getN4TypeVariable_DeclaredOptional(), theEcorePackage.getEBoolean(), "declaredOptional", null, 0, 1, N4TypeVariable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -9954,18 +9811,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4ClassDefinition__GetImplementedOrExtendedInterfaceRefs(), this.getParameterizedTypeRefNodeIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(n4AbstractNamespaceDeclarationEClass, N4AbstractNamespaceDeclaration.class, "N4AbstractNamespaceDeclaration", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getN4AbstractNamespaceDeclaration_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4AbstractNamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getN4AbstractNamespaceDeclaration_OwnedElementsRaw(), this.getNamespaceElement(), null, "ownedElementsRaw", null, 0, -1, N4AbstractNamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getN4AbstractNamespaceDeclaration__GetDefinedNamespace(), theTypesPackage.getAbstractNamespace(), "getDefinedNamespace", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(n4ModuleDeclarationEClass, N4ModuleDeclaration.class, "N4ModuleDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getN4ModuleDeclaration_DefinedModule(), theTypesPackage.getTDeclaredModule(), null, "definedModule", null, 0, 1, N4ModuleDeclaration.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getN4ModuleDeclaration__GetDefinedNamespace(), theTypesPackage.getTDeclaredModule(), "getDefinedNamespace", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
 		initEClass(n4NamespaceDeclarationEClass, N4NamespaceDeclaration.class, "N4NamespaceDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getN4NamespaceDeclaration_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4NamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getN4NamespaceDeclaration_OwnedElementsRaw(), this.getNamespaceElement(), null, "ownedElementsRaw", null, 0, -1, N4NamespaceDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4NamespaceDeclaration__IsExternal(), theEcorePackage.getEBoolean(), "isExternal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -10022,6 +9870,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(modifiableElementEClass, ModifiableElement.class, "ModifiableElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getModifiableElement_DeclaredModifiers(), this.getN4Modifier(), "declaredModifiers", null, 0, -1, ModifiableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getModifiableElement__IsExternal(), theEcorePackage.getEBoolean(), "isExternal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getModifiableElement__IsDeclaredExternal(), theEcorePackage.getEBoolean(), "isDeclaredExternal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -10113,6 +9963,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getN4SetterDeclaration__GetDefinedTypeElement(), theTypesPackage.getTMember(), "getDefinedTypeElement", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(bindingPatternEClass, BindingPattern.class, "BindingPattern", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getBindingPattern__GetAllVariableDeclarations(), this.getVariableDeclaration(), "getAllVariableDeclarations", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(objectBindingPatternEClass, ObjectBindingPattern.class, "ObjectBindingPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getObjectBindingPattern_Properties(), this.getBindingProperty(), null, "properties", null, 0, -1, ObjectBindingPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

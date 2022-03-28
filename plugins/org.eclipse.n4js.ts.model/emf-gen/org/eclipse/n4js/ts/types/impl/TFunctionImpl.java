@@ -46,6 +46,8 @@ import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
+import org.eclipse.n4js.ts.types.TypesPackage.Literals;
+
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -704,6 +706,21 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 * @generated
 	 */
 	@Override
+	public EObject getAstElementNoResolve() {
+		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+		final EObject astElem = ((EObject) _eGet);
+		if (((astElem != null) && (!astElem.eIsProxy()))) {
+			return astElem;
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -997,6 +1014,7 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 		}
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseOperationID) {
+				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.TFUNCTION___GET_AST_ELEMENT_NO_RESOLVE;
 				default: return -1;
 			}
 		}
@@ -1023,6 +1041,8 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return getFunctionAsString();
 			case TypesPackage.TFUNCTION___IS_FINAL:
 				return isFinal();
+			case TypesPackage.TFUNCTION___GET_AST_ELEMENT_NO_RESOLVE:
+				return getAstElementNoResolve();
 			case TypesPackage.TFUNCTION___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TFUNCTION___GET_TYPE_ACCESS_MODIFIER:

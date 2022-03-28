@@ -30,15 +30,14 @@ import org.eclipse.n4js.n4JS.ArrayBindingPattern;
 import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.BindingPattern;
 import org.eclipse.n4js.n4JS.BindingProperty;
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
-class DtsBindingPatternBuilder extends AbstractDtsSubBuilder<BindingPatternContext, BindingPattern> {
+class DtsBindingPatternBuilder extends AbstractDtsBuilder<BindingPatternContext, BindingPattern> {
 
 	/** Constructor */
-	public DtsBindingPatternBuilder(AbstractDtsSubBuilder<?, ?> dtsBuilder) {
+	public DtsBindingPatternBuilder(AbstractDtsBuilder<?, ?> dtsBuilder) {
 		super(dtsBuilder.tokenStream, dtsBuilder.resource);
 	}
 
@@ -72,7 +71,7 @@ class DtsBindingPatternBuilder extends AbstractDtsSubBuilder<BindingPatternConte
 			bindingElem.setVarDecl(varDecl);
 		}
 		if (bindingElemCtx.bindingPattern() != null) {
-			BindingPattern nestedBP = new DtsBindingPatternBuilder(this).consume(bindingElemCtx.bindingPattern());
+			BindingPattern nestedBP = newBindingPatternBuilder().consume(bindingElemCtx.bindingPattern());
 			bindingElem.setNestedPattern(nestedBP);
 		}
 		((ArrayBindingPattern) result).getElements().add(bindingElem);
@@ -82,13 +81,11 @@ class DtsBindingPatternBuilder extends AbstractDtsSubBuilder<BindingPatternConte
 	public void enterPropertyExpressionAssignment(PropertyExpressionAssignmentContext ctx) {
 		BindingProperty bindingProp = N4JSFactory.eINSTANCE.createBindingProperty();
 		BindingElement bindingElem = N4JSFactory.eINSTANCE.createBindingElement();
-		LiteralOrComputedPropertyName name = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-		name.setLiteralName(ctx.propertyName().getText());
-		bindingProp.setDeclaredName(name);
+		bindingProp.setDeclaredName(newPropertyNameBuilder().consume(ctx.propertyName()));
 		bindingProp.setValue(bindingElem);
 
 		if (ctx.bindingPattern() != null) {
-			BindingPattern bindingPattern = new DtsBindingPatternBuilder(this).consume(ctx.bindingPattern());
+			BindingPattern bindingPattern = newBindingPatternBuilder().consume(ctx.bindingPattern());
 			bindingElem.setNestedPattern(bindingPattern);
 		} else {
 			VariableDeclaration varDecl = N4JSFactory.eINSTANCE.createVariableDeclaration();

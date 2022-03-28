@@ -16,7 +16,6 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
 import org.eclipse.n4js.n4JS.ControlFlowElement;

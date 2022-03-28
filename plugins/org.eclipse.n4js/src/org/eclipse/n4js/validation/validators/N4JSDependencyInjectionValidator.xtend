@@ -50,7 +50,6 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -720,7 +719,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 				addIssue(
 					getMessageForDI_NOT_INJECTABLE(fpar.typeRef.typeRefAsString, '''at «fpar.name»'''),
 					fpar.astElement,
-					TypesPackage.eINSTANCE.identifiableElement_Name,
+					N4JSPackage.eINSTANCE.abstractVariable_Name,
 					DI_NOT_INJECTABLE
 				);
 			];
@@ -794,7 +793,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 		}
 		if (isVariadicOrOptional) {
 			addIssue(getMessageForDI_VARARGS_NOT_INJECTABLE(), astElement,
-				TypesPackage.eINSTANCE.identifiableElement_Name, DI_VARARGS_NOT_INJECTABLE
+				N4JSPackage.eINSTANCE.abstractVariable_Name, DI_VARARGS_NOT_INJECTABLE
 			);
 			return false;
 		}

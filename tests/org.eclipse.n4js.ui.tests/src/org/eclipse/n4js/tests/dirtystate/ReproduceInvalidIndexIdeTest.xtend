@@ -122,18 +122,17 @@ public class ReproduceInvalidIndexIdeTest extends ConvertedIdeTest {
 		val moduleAsString = UserDataMapper.getDeserializedModuleFromDescriptionAsString(moduleDescription,
 				description.getURI());
 		Assert.assertNotNull(moduleAsString);
-		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n" +
-				"<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" simpleName=\"Client\" qualifiedName=\"Client\" packageName=\"Client\" projectID=\"yarn-test-project/packages/Client\" vendorID=\"org.eclipse.n4js\">\n"
-				+
-				"  <variables name=\"a\" exportedName=\"a\" const=\"true\" newExpression=\"true\">\n" +
-				"    <astElement href=\"#/0/@scriptElements.2/@exportedElement/@varDeclsOrBindings.0\"/>\n" +
-				"    <typeRef xsi:type=\"typeRefs:ParameterizedTypeRef\">\n" +
-				"      <declaredType href=\"../../Def/src/A.n4jsd#/1/@types.0\"/>\n" +
-				"    </typeRef>\n" +
-				"  </variables>\n" +
-				"  <astElement href=\"#/0\"/>\n" +
-				"</types:TModule>\n" +
-				"", moduleAsString);
+		Assert.assertEquals("<?xml version=\"1.0\" encoding=\"ASCII\"?>\n"
+				+ "<types:TModule xmi:version=\"2.0\" xmlns:xmi=\"http://www.omg.org/XMI\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:typeRefs=\"http://www.eclipse.org/n4js/ts/TypeRefs\" xmlns:types=\"http://www.eclipse.org/n4js/ts/Types\" simpleName=\"Client\" qualifiedName=\"Client\" packageName=\"Client\" projectID=\"yarn-test-project/packages/Client\" vendorID=\"org.eclipse.n4js\">\n"
+				+ "  <exportedVariables name=\"a\" exportedName=\"a\" const=\"true\" newExpression=\"true\">\n"
+				+ "    <typeRef xsi:type=\"typeRefs:ParameterizedTypeRef\">\n"
+				+ "      <declaredType href=\"../../Def/src/A.n4jsd#/1/@types.0\"/>\n"
+				+ "    </typeRef>\n"
+				+ "    <astElement href=\"#/0/@scriptElements.2/@exportedElement/@varDeclsOrBindings.0\"/>\n"
+				+ "  </exportedVariables>\n"
+				+ "  <astElement href=\"#/0\"/>\n"
+				+ "</types:TModule>\n"
+				+ "", moduleAsString);
 	}
 
 }

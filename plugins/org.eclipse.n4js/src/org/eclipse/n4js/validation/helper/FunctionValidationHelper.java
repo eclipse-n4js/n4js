@@ -32,8 +32,9 @@ import org.eclipse.n4js.n4JS.AwaitExpression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.IdentifierRef;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TFormalParameter;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.n4js.validation.validators.N4JSFunctionValidator;
 import org.eclipse.xtext.EcoreUtil2;
@@ -66,7 +67,7 @@ public class FunctionValidationHelper {
 	 * Check for variadic, default, and missing initializer forward references in formal parameters. </br>
 	 * Note: This method is called for the {@link N4JSFunctionValidator}.
 	 */
-	static public <T extends IdentifiableElement> void internalCheckFormalParameters(
+	static public <T extends EObject> void internalCheckFormalParameters(
 			T[] fpars,
 			Predicate<T> variadic,
 			Predicate<T> hasInitAssgn,
@@ -88,7 +89,12 @@ public class FunctionValidationHelper {
 				int fpPos = fparsL.indexOf(fPar);
 				List<IdentifierRef> irs = EcoreUtil2.getAllContentsOfType(fPar, IdentifierRef.class);
 				for (IdentifierRef ir : irs) {
-					if (fparsL.indexOf(ir.getId()) >= fpPos) {
+					Object id = ir.getId();
+					if (id instanceof SyntaxRelatedTElement) {
+						id = ((SyntaxRelatedTElement) id).eGet(
+								TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+					}
+					if (fparsL.indexOf(id) >= fpPos) {
 						String msg = getMessageForFUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE();
 						issueConsumer.accept(msg, FUN_PARAM_INITIALIZER_ILLEGAL_FORWARD_REFERENCE, ir);
 					}

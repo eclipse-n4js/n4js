@@ -26,17 +26,13 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
-
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
-
 import org.eclipse.n4js.n4JS.impl.TypeReferenceNodeImpl;
-
 import org.eclipse.n4js.transpiler.im.ImFactory;
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.ManyReferencingElement_IM;

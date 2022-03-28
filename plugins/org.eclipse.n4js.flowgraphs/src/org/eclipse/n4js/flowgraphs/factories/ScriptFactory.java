@@ -21,11 +21,11 @@ import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.Statement;
+import org.eclipse.n4js.n4JS.VariableStatement;
 
 /**
  * Creates instances of {@link ComplexNode}s for AST elements of type {@link Script}s.
@@ -77,7 +77,7 @@ class ScriptFactory {
 		ScriptElement scriptElement = scriptElems.get(i);
 		if (scriptElement instanceof ExportDeclaration) {
 			ExportableElement expElem = ((ExportDeclaration) scriptElement).getExportedElement();
-			if (expElem instanceof ExportedVariableStatement) {
+			if (expElem instanceof VariableStatement) {
 				scriptElement = expElem;
 			}
 		}

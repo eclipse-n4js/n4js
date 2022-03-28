@@ -13,6 +13,16 @@
 
 export external public var
 /* XPECT specADoc ---
+
+   [[gsec:spec_adoc.SimpleVar.bar]]
+   [role=memberdoc]
+   === ++Variable bar++
+
+   ==== Signature
+
+   srclnk:++n4js:tests:org.eclipse.n4js.jsdoc2spec.tests:xpect-tests/adoc/SimpleVar:bar++[``++bar: string++``]
+
+
    ==== Description
 
    Spec of Variable.
@@ -28,6 +38,16 @@ bar : string;
 
 
 /* XPECT specADoc ---
+
+   [[gsec:spec_adoc.SimpleVar.bar2]]
+   [role=memberdoc]
+   === ++Variable bar2++
+
+   ==== Signature
+
+   srclnk:++n4js:tests:org.eclipse.n4js.jsdoc2spec.tests:xpect-tests/adoc/SimpleVar:bar2++[``++bar2: string++``]
+
+
    ==== Description
 
    Spec of Variable2.

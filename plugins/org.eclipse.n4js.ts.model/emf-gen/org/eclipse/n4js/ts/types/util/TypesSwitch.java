@@ -74,33 +74,13 @@ public class TypesSwitch<T> extends Switch<T> {
 	@Override
 	protected T doSwitch(int classifierID, EObject theEObject) {
 		switch (classifierID) {
-			case TypesPackage.ABSTRACT_MODULE: {
-				AbstractModule abstractModule = (AbstractModule)theEObject;
-				T result = caseAbstractModule(abstractModule);
-				if (result == null) result = caseAbstractNamespace(abstractModule);
-				if (result == null) result = caseSyntaxRelatedTElement(abstractModule);
-				if (result == null) result = caseTExportingElement(abstractModule);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case TypesPackage.TMODULE: {
 				TModule tModule = (TModule)theEObject;
 				T result = caseTModule(tModule);
-				if (result == null) result = caseAbstractModule(tModule);
-				if (result == null) result = caseTAnnotableElement(tModule);
 				if (result == null) result = caseAbstractNamespace(tModule);
 				if (result == null) result = caseSyntaxRelatedTElement(tModule);
+				if (result == null) result = caseTAnnotableElement(tModule);
 				if (result == null) result = caseTExportingElement(tModule);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case TypesPackage.TDECLARED_MODULE: {
-				TDeclaredModule tDeclaredModule = (TDeclaredModule)theEObject;
-				T result = caseTDeclaredModule(tDeclaredModule);
-				if (result == null) result = caseAbstractModule(tDeclaredModule);
-				if (result == null) result = caseAbstractNamespace(tDeclaredModule);
-				if (result == null) result = caseSyntaxRelatedTElement(tDeclaredModule);
-				if (result == null) result = caseTExportingElement(tDeclaredModule);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -579,10 +559,11 @@ public class TypesSwitch<T> extends Switch<T> {
 			case TypesPackage.TFORMAL_PARAMETER: {
 				TFormalParameter tFormalParameter = (TFormalParameter)theEObject;
 				T result = caseTFormalParameter(tFormalParameter);
+				if (result == null) result = caseTAbstractVariable(tFormalParameter);
 				if (result == null) result = caseIdentifiableElement(tFormalParameter);
+				if (result == null) result = caseTTypedElement(tFormalParameter);
 				if (result == null) result = caseTAnnotableElement(tFormalParameter);
 				if (result == null) result = caseSyntaxRelatedTElement(tFormalParameter);
-				if (result == null) result = caseTTypedElement(tFormalParameter);
 				if (result == null) result = caseTypableElement(tFormalParameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -591,10 +572,11 @@ public class TypesSwitch<T> extends Switch<T> {
 				TAnonymousFormalParameter tAnonymousFormalParameter = (TAnonymousFormalParameter)theEObject;
 				T result = caseTAnonymousFormalParameter(tAnonymousFormalParameter);
 				if (result == null) result = caseTFormalParameter(tAnonymousFormalParameter);
+				if (result == null) result = caseTAbstractVariable(tAnonymousFormalParameter);
 				if (result == null) result = caseIdentifiableElement(tAnonymousFormalParameter);
+				if (result == null) result = caseTTypedElement(tAnonymousFormalParameter);
 				if (result == null) result = caseTAnnotableElement(tAnonymousFormalParameter);
 				if (result == null) result = caseSyntaxRelatedTElement(tAnonymousFormalParameter);
-				if (result == null) result = caseTTypedElement(tAnonymousFormalParameter);
 				if (result == null) result = caseTypableElement(tAnonymousFormalParameter);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -748,38 +730,35 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypesPackage.TABSTRACT_VARIABLE: {
+				TAbstractVariable tAbstractVariable = (TAbstractVariable)theEObject;
+				T result = caseTAbstractVariable(tAbstractVariable);
+				if (result == null) result = caseIdentifiableElement(tAbstractVariable);
+				if (result == null) result = caseTTypedElement(tAbstractVariable);
+				if (result == null) result = caseTAnnotableElement(tAbstractVariable);
+				if (result == null) result = caseSyntaxRelatedTElement(tAbstractVariable);
+				if (result == null) result = caseTypableElement(tAbstractVariable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypesPackage.TVARIABLE: {
 				TVariable tVariable = (TVariable)theEObject;
 				T result = caseTVariable(tVariable);
+				if (result == null) result = caseTAbstractVariable(tVariable);
+				if (result == null) result = caseAccessibleTypeElement(tVariable);
 				if (result == null) result = caseTExportableElement(tVariable);
 				if (result == null) result = caseTConstableElement(tVariable);
-				if (result == null) result = caseSyntaxRelatedTElement(tVariable);
-				if (result == null) result = caseTAnnotableElement(tVariable);
-				if (result == null) result = caseAccessibleTypeElement(tVariable);
-				if (result == null) result = caseTTypedElement(tVariable);
 				if (result == null) result = caseTNamespaceElement(tVariable);
 				if (result == null) result = caseIdentifiableElement(tVariable);
+				if (result == null) result = caseTTypedElement(tVariable);
+				if (result == null) result = caseTAnnotableElement(tVariable);
+				if (result == null) result = caseSyntaxRelatedTElement(tVariable);
 				if (result == null) result = caseTypableElement(tVariable);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			default: return defaultCase(theEObject);
 		}
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Abstract Module</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Abstract Module</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseAbstractModule(AbstractModule object) {
-		return null;
 	}
 
 	/**
@@ -794,21 +773,6 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTModule(TModule object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>TDeclared Module</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>TDeclared Module</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseTDeclaredModule(TDeclaredModule object) {
 		return null;
 	}
 
@@ -1679,6 +1643,21 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTConstableElement(TConstableElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TAbstract Variable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TAbstract Variable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTAbstractVariable(TAbstractVariable object) {
 		return null;
 	}
 

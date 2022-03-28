@@ -15,9 +15,9 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.ts.types.AbstractModule
 import org.eclipse.n4js.ts.types.ElementExportDefinition
 import org.eclipse.n4js.ts.types.ModuleExportDefinition
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
@@ -68,6 +68,7 @@ class ImportSpecifiersUtil {
 				// FIXME
 			}
 		}
+
 		return importProvidedElements
 	}
 
@@ -112,7 +113,7 @@ class ImportSpecifiersUtil {
 		is.alias + "." + exportDef.exportedName
 	}
 
-	public static def AbstractModule importedModule(ImportSpecifier it) {
+	public static def TModule importedModule(ImportSpecifier it) {
 		(eContainer as ImportDeclaration).module
 	}
 
@@ -140,11 +141,6 @@ class ImportSpecifiersUtil {
 
 		// check target module
 		if (module === null || module.eIsProxy || module.qualifiedName.isNullOrEmpty)
-			return true
-
-		// check containing module of target module
-		val containingModule = module.containingModule;
-		if (containingModule === null || containingModule.eIsProxy || containingModule.qualifiedName.isNullOrEmpty)
 			return true
 
 		// check import specifier

@@ -36,12 +36,12 @@ public interface ModuleExportDefinition extends ExportDefinition {
 	 * The module being re-exported. All the module's elements will be re-exported individually under their name.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Exported Module</em>' reference.
-	 * @see #setExportedModule(AbstractModule)
+	 * @see #setExportedModule(TModule)
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getModuleExportDefinition_ExportedModule()
 	 * @model
 	 * @generated
 	 */
-	AbstractModule getExportedModule();
+	TModule getExportedModule();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.ModuleExportDefinition#getExportedModule <em>Exported Module</em>}' reference.
@@ -51,6 +51,6 @@ public interface ModuleExportDefinition extends ExportDefinition {
 	 * @see #getExportedModule()
 	 * @generated
 	 */
-	void setExportedModule(AbstractModule value);
+	void setExportedModule(TModule value);
 
 } // ModuleExportDefinition

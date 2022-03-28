@@ -20,9 +20,9 @@ import org.eclipse.n4js.jsdoc.dom.FullMemberReference;
 import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
@@ -79,7 +79,7 @@ public class SpecInfosByName {
 				Type moduleType = si.specElementRef.getElementAsType();
 
 				if (moduleType != null) {
-					AbstractModule typeModule = moduleType.getContainingModule();
+					TModule typeModule = moduleType.getContainingModule();
 					if (typeModule.isStaticPolyfillModule()) {
 						polyfilling.add(si);
 					} else if (typeModule.isStaticPolyfillAware()) {

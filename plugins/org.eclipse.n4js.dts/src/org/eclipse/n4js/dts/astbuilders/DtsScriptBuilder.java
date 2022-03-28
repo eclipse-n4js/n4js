@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_block;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_declarationStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_declareStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatement;
@@ -20,6 +21,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
@@ -31,18 +33,14 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsModuleBuilder;
-import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsNamespaceBuilder;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.Script;
@@ -53,20 +51,13 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
-public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Script> {
-	private final DtsImportBuilder importBuilder = new DtsImportBuilder(tokenStream, resource);
-	private final DtsTypeAliasBuilder typeAliasBuilder = new DtsTypeAliasBuilder(tokenStream, resource);
-	private final DtsFunctionBuilder functionBuilder = new DtsFunctionBuilder(tokenStream, resource);
-	private final DtsNamespaceBuilder namespaceBuilder = new DtsNamespaceBuilder(tokenStream, resource);
-	private final DtsModuleBuilder moduleBuilder = new DtsModuleBuilder(tokenStream, resource);
-	private final DtsClassBuilder classBuilder = new DtsClassBuilder(tokenStream, resource);
-	private final DtsInterfaceBuilder interfaceBuilder = new DtsInterfaceBuilder(tokenStream, resource);
-	private final DtsEnumBuilder enumBuilder = new DtsEnumBuilder(tokenStream, resource);
-	private final DtsVariableBuilder variableBuilder = new DtsVariableBuilder(tokenStream, resource);
+public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script> {
+	private final URI srcFolder;
 
 	/** Constructor */
-	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
 		super(tokenStream, resource);
+		this.srcFolder = srcFolder;
 	}
 
 	/** @return the script that was created during visiting the parse tree */
@@ -89,7 +80,8 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 				RULE_declareStatement,
 				RULE_declarationStatement,
 				RULE_exportStatement,
-				RULE_exportStatementTail);
+				RULE_exportStatementTail,
+				RULE_block); // temp
 	}
 
 	@Override
@@ -102,65 +94,61 @@ public class DtsScriptBuilder extends AbstractDtsSubBuilder<ProgramContext, Scri
 
 	@Override
 	public void enterImportStatement(ImportStatementContext ctx) {
-		ImportDeclaration id = importBuilder.consume(ctx);
+		ImportDeclaration id = newImportBuilder().consume(ctx);
 		addToScript(id);
 	}
 
 	@Override
 	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
-		N4NamespaceDeclaration nd = namespaceBuilder.consume(ctx);
+		N4NamespaceDeclaration nd = newNamespaceBuilder().consume(ctx);
 		addAndHandleExported(ctx, nd);
 	}
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		N4AbstractNamespaceDeclaration d = moduleBuilder.consume(ctx);
-		if (d instanceof N4ModuleDeclaration) {
-			N4ModuleDeclaration md = (N4ModuleDeclaration) d;
-			addToScript(md);
-		} else {
-			N4NamespaceDeclaration nd = (N4NamespaceDeclaration) d;
-			addAndHandleExported(ctx, nd);
+		N4NamespaceDeclaration d = newModuleBuilder(srcFolder).consume(ctx);
+		if (d != null) {
+			addAndHandleExported(ctx, d);
 		}
 	}
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-		VariableStatement vs = variableBuilder.consumeInScript(ctx);
-		addToScript(vs);
+		VariableStatement vs = newVariableBuilder().consumeInScript(ctx);
+		addAndHandleExported(ctx, vs);
 	}
 
 	@Override
 	public void enterInterfaceDeclaration(InterfaceDeclarationContext ctx) {
-		N4InterfaceDeclaration id = interfaceBuilder.consume(ctx);
+		N4InterfaceDeclaration id = newInterfaceBuilder().consume(ctx);
 		addAndHandleExported(ctx, id);
 	}
 
 	@Override
 	public void enterClassDeclaration(ClassDeclarationContext ctx) {
-		N4ClassDeclaration cd = classBuilder.consume(ctx);
+		N4ClassDeclaration cd = newClassBuilder().consume(ctx);
 		addAndHandleExported(ctx, cd);
 	}
 
 	@Override
 	public void enterEnumDeclaration(EnumDeclarationContext ctx) {
-		N4EnumDeclaration ed = enumBuilder.consume(ctx);
+		N4EnumDeclaration ed = newEnumBuilder().consume(ctx);
 		addAndHandleExported(ctx, ed);
 	}
 
 	@Override
 	public void enterTypeAliasDeclaration(TypeAliasDeclarationContext ctx) {
-		N4TypeAliasDeclaration tad = typeAliasBuilder.consume(ctx);
+		N4TypeAliasDeclaration tad = newTypeAliasBuilder().consume(ctx);
 		addAndHandleExported(ctx, tad);
 	}
 
 	@Override
 	public void enterFunctionDeclaration(FunctionDeclarationContext ctx) {
-		FunctionDeclaration fd = functionBuilder.consume(ctx);
+		FunctionDeclaration fd = newFunctionBuilder().consume(ctx);
 		addAndHandleExported(ctx, fd);
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
-		ParserContextUtil.addAndHandleExported(ctx, elem, result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS, false);
+		ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS, ctx, elem, false);
 	}
 }

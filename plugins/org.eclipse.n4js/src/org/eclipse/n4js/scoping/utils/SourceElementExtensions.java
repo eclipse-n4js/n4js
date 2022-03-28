@@ -17,9 +17,10 @@ import java.util.function.Function;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.ArrowFunction;
 import org.eclipse.n4js.n4JS.Block;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
+import org.eclipse.n4js.n4JS.CatchVariable;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionExpression;
@@ -36,6 +37,7 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TAbstractVariable;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -109,7 +111,7 @@ public class SourceElementExtensions {
 		List<IdentifiableElement> result = new ArrayList<>();
 		if (element instanceof FunctionOrFieldAccessor) {
 			if (!(element instanceof ArrowFunction)) {
-				result.add(((FunctionOrFieldAccessor) element).getLocalArgumentsVariable());
+				result.add(((FunctionOrFieldAccessor) element).getImplicitArgumentsVariable());
 			}
 		}
 		return result;
@@ -220,36 +222,29 @@ public class SourceElementExtensions {
 		}
 
 		@Override
-		public Boolean caseExportedVariableDeclaration(ExportedVariableDeclaration feature) {
-			if (feature.getName() == null) {
-				return true;
-			}
-
-			// this special case is required (in addition to case for IdentifiableElement below), to make sure
-			// the TModule element is added to 'addHere', not the AST node (as is done for non-exported or
-			// non-top-level variables)
-			collectVisibleVariable(feature, validIEs);
-			allContents.prune();
-			return true;
-		}
-
-		@Override
 		public Boolean caseN4TypeVariable(N4TypeVariable feature) {
 			// exclude type variables here, they can only be referred to as types
 			return true;
 		}
 
 		@Override
-		public Boolean caseIdentifiableElement(IdentifiableElement feature) {
+		public <T extends TAbstractVariable> Boolean caseAbstractVariable(AbstractVariable<T> feature) {
+			if (feature instanceof CatchVariable
+					&& ((CatchVariable) feature).getBindingPattern() != null) {
+				// in this case the AST node 'feature' of type CatchVariable merely serves as a container for the
+				// VariableDeclarations contained in the binding pattern and does not define a variable itself
+				// -> (1) ignore this AST node and (2) avoid the 'allContents.prune()' below!
+				return true;
+			}
 			if (N4JSASTUtils.isBlockScoped(feature)) {
 				// let, const
 				if (includeBlockScopedElements) {
-					validIEs.add(feature);
+					collectVisibleVariable(feature, validIEs);
 				}
 			} else {
 				// var
 				if (belongsToScope(feature, start)) {
-					validIEs.add(feature);
+					collectVisibleVariable(feature, validIEs);
 				}
 			}
 			allContents.prune();
@@ -309,9 +304,7 @@ public class SourceElementExtensions {
 		collectVisibleIdentifiableElement(element, addHere, e -> e.getDefinedType());
 	}
 
-	static private void collectVisibleVariable(ExportedVariableDeclaration element,
-			List<? super IdentifiableElement> addHere) {
-
+	static private void collectVisibleVariable(AbstractVariable<?> element, List<? super IdentifiableElement> addHere) {
 		collectVisibleIdentifiableElement(element, addHere, e -> e.getDefinedVariable());
 	}
 
@@ -331,7 +324,7 @@ public class SourceElementExtensions {
 		}
 	}
 
-	static private boolean belongsToScope(IdentifiableElement elem, VariableEnvironmentElement scope) {
+	static private boolean belongsToScope(AbstractVariable<?> elem, VariableEnvironmentElement scope) {
 		return N4JSASTUtils.getScope(elem) == scope;
 	}
 }

@@ -39,7 +39,7 @@ class AT_556_TypeAccessModifierTest {
 
 	private def void varIs(CharSequence script, TypeAccessModifier mod) {
 		val parsed = script.parse
-		val variable = parsed.module.variables.head
+		val variable = parsed.module.exportedVariables.head
 		Assert.assertEquals(mod, variable?.typeAccessModifier)
 	}
 

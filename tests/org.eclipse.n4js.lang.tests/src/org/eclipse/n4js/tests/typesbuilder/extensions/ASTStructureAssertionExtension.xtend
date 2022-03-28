@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.IdentifierRef
@@ -219,22 +218,11 @@ class ASTStructureAssertionExtension {
 		n4Variable
 	}
 
-	def dispatch assertDefinedVariable(String phase, ExportedVariableDeclaration variableDeclaration, Resource resource,
+	def assertDefinedVariable(String phase, VariableDeclaration variableDeclaration, Resource resource,
 		Class<?> expressionType) {
-		val tVariable = variableDeclaration.definedVariable
-		assertEquals(phase + ": expected name", variableDeclaration.name, tVariable.name)
-		assertEquals(phase + ": expected const", variableDeclaration.const, tVariable.const)
-		if (expressionType === null) {
-			assertNull(phase + ": no assignment expected: " + variableDeclaration, variableDeclaration.expression)
-		} else {
-			assertNotNull(phase + ": expected expression type", expressionType)
-			assertTrue(phase + ": expected expression type",
-				expressionType.isAssignableFrom(variableDeclaration.expression?.class))
-		}
-	}
-
-	def dispatch assertDefinedVariable(String phase, VariableDeclaration variableDeclaration, Resource resource,
-		Class<?> expressionType) {
+		val tAbstractVariable = variableDeclaration.definedVariable
+		assertEquals(phase + ": expected name", variableDeclaration.name, tAbstractVariable.name)
+		assertEquals(phase + ": expected const", variableDeclaration.const, tAbstractVariable.const)
 		if (expressionType === null) {
 			assertNull(phase + ": no assignment expected: " + variableDeclaration, variableDeclaration.expression)
 		} else {

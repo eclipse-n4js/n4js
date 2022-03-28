@@ -25,7 +25,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.*;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.ImPackage;
@@ -36,6 +35,7 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.base.Optional;
@@ -377,12 +377,6 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
-	public Boolean caseLocalArgumentsVariable(LocalArgumentsVariable original) {
-		// ignore
-		return DONE;
-	}
-
-	@Override
 	public Boolean caseFormalParameter(FormalParameter original) {
 		processAnnotations(original.getAnnotations(), false);
 		if (original.isVariadic()) {
@@ -405,6 +399,10 @@ import com.google.common.base.Strings;
 
 	@Override
 	public Boolean caseVariableStatement(VariableStatement original) {
+		if (!original.getDeclaredModifiers().isEmpty()) {
+			processModifiers(original.getDeclaredModifiers());
+			write(' ');
+		}
 		write(keyword(original.getVarStmtKeyword()));
 		write(' ');
 		process(original.getVarDeclsOrBindings(), ", ");
@@ -416,18 +414,6 @@ import com.google.common.base.Strings;
 		// });
 		// out.undent();
 		write(';');
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseExportedVariableStatement(ExportedVariableStatement original) {
-		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
-		// emitted there; so, no need to emit "export" in this method!
-		if (!original.getDeclaredModifiers().isEmpty()) {
-			processModifiers(original.getDeclaredModifiers());
-			write(' ');
-		}
-		caseVariableStatement(original);
 		return DONE;
 	}
 
@@ -457,24 +443,12 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
-	public Boolean caseExportedVariableDeclaration(ExportedVariableDeclaration original) {
-		caseVariableDeclaration(original);
-		return DONE;
-	}
-
-	@Override
 	public Boolean caseVariableBinding(VariableBinding original) {
 		process(original.getPattern());
 		if (original.getExpression() != null) {
 			write(" = ");
 			process(original.getExpression());
 		}
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseExportedVariableBinding(ExportedVariableBinding original) {
-		caseVariableBinding(original);
 		return DONE;
 	}
 
@@ -676,7 +650,12 @@ import com.google.common.base.Strings;
 
 	@Override
 	public Boolean caseCatchVariable(CatchVariable original) {
-		write(original.getName());
+		BindingPattern bindingPattern = original.getBindingPattern();
+		if (bindingPattern != null) {
+			process(bindingPattern);
+		} else {
+			write(original.getName());
+		}
 		return DONE;
 	}
 

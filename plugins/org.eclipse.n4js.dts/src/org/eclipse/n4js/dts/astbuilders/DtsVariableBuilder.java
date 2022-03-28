@@ -18,13 +18,11 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_variableDeclarationList
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.BindingPatternBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.n4JS.BindingPattern;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
@@ -33,19 +31,13 @@ import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementContext, VariableStatement> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
+public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableStatementContext, VariableStatement> {
 
 	private boolean parentIsNamespace;
 
@@ -70,21 +62,20 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 	}
 
 	/** Call this method iff the parent of ctx is a namespace */
-	public ExportedVariableStatement consumeInNamespace(VariableStatementContext ctx) {
+	public VariableStatement consumeInNamespace(VariableStatementContext ctx) {
 		this.parentIsNamespace = true;
-		return (ExportedVariableStatement) consume(ctx);
+		return consume(ctx);
 	}
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
+		result = N4JSFactory.eINSTANCE.createVariableStatement();
 		boolean exported = ParserContextUtil.isExported(ctx);
 		if (exported || parentIsNamespace) {
-			result = N4JSFactory.eINSTANCE.createExportedVariableStatement();
-			EList<N4Modifier> declaredModifiers = ((ExportedVariableStatement) result).getDeclaredModifiers();
+			EList<N4Modifier> declaredModifiers = result.getDeclaredModifiers();
 			declaredModifiers.add(N4Modifier.EXTERNAL);
 			declaredModifiers.add(N4Modifier.PUBLIC);
 		} else {
-			result = N4JSFactory.eINSTANCE.createVariableStatement();
 			// TODO: missing modifier N4Modifier.EXTERNAL
 		}
 		VariableStatementKeyword keyword = VariableStatementKeyword.VAR;
@@ -101,11 +92,9 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 
 	@Override
 	public void enterBindingPatternBlock(BindingPatternBlockContext ctx) {
-		boolean exported = ParserContextUtil.isExported(ctx);
-		VariableBinding varBinding = exported ? N4JSFactory.eINSTANCE.createExportedVariableBinding()
-				: N4JSFactory.eINSTANCE.createVariableBinding();
+		VariableBinding varBinding = N4JSFactory.eINSTANCE.createVariableBinding();
 
-		BindingPattern bindingPattern = new DtsBindingPatternBuilder(this).consume(ctx.bindingPattern());
+		BindingPattern bindingPattern = newBindingPatternBuilder().consume(ctx.bindingPattern());
 
 		varBinding.setPattern(bindingPattern);
 
@@ -114,37 +103,20 @@ public class DtsVariableBuilder extends AbstractDtsSubBuilder<VariableStatementC
 
 	@Override
 	public void enterVariableDeclaration(VariableDeclarationContext ctx) {
-		boolean exported = ParserContextUtil.isExported(ctx);
-		VariableDeclaration varDecl = exported ? N4JSFactory.eINSTANCE.createExportedVariableDeclaration()
-				: N4JSFactory.eINSTANCE.createVariableDeclaration();
+		VariableDeclaration varDecl = N4JSFactory.eINSTANCE.createVariableDeclaration();
 		varDecl.setName(ctx.identifierName().getText());
 
-		TypeReferenceNode<TypeRef> typeRef = typeRefBuilder.consume(ctx.colonSepTypeRef());
-		varDecl.setDeclaredTypeRefNode(typeRef);
-
-		Expression expr = new DtsExpressionBuilder(tokenStream, resource).consume(ctx.singleExpression());
-		varDecl.setExpression(expr);
-
-		if (typeRef == null && expr == null) {
-			// the types builder would use 'any' in this case, but we want 'any+':
-			varDecl.setDeclaredTypeRefNode(createAnyPlusTypeRef());
+		if (ctx.singleExpression() != null && ctx.colonSepTypeRef() == null) {
+			// in .d.ts, the only the following initializers are allowed:
+			// const: only string literal, numeric literal, or literal enum reference,
+			// var/let: none at all.
+			Expression expr = newExpressionBuilder().consume(ctx.singleExpression());
+			varDecl.setExpression(expr);
+		} else {
+			TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
+			varDecl.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
 		}
 
 		result.getVarDeclsOrBindings().add(varDecl);
-	}
-
-	private TypeReferenceNode<TypeRef> createAnyPlusTypeRef() {
-		ParameterizedTypeRef ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
-		ptr.setDynamic(true);
-		ptr.setDeclaredTypeAsText("any");
-
-		Type typeProxy = TypesFactory.eINSTANCE.createType();
-		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
-		ParserContextUtil.installProxy(resource, ptr, eRef, typeProxy, ptr.getDeclaredTypeAsText());
-		ptr.setDeclaredType(typeProxy);
-
-		TypeReferenceNode<TypeRef> typeRefNode = N4JSFactory.eINSTANCE.createTypeReferenceNode();
-		typeRefNode.setTypeRefInAST(ptr);
-		return typeRefNode;
 	}
 }

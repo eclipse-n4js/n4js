@@ -40,9 +40,5 @@ let t1 : string = K;
 let t2 : number = L;
 
 
-// XPECT errors --> "Structural type Object is not a subtype of non-structural type number." at "V"
+// XPECT errors --> "Object is not a subtype of number." at "V"
 let t3 : number = V;
-
-
-
-

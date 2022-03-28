@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.server.symbol;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
@@ -22,7 +21,7 @@ import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.ts.types.AbstractModule;
+import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TGetter;
@@ -81,9 +80,9 @@ public class LabelCalculationHelper {
 			N4SetterDeclaration setterDeclaration = (N4SetterDeclaration) obj;
 			return getSymbolLabel(setterDeclaration.getDefinedSetter());
 		}
-		if (obj instanceof ExportedVariableStatement) {
+		if (obj instanceof VariableStatement) {
 			// comma separated list of all contained variable names
-			ExportedVariableStatement exportedVariableStatement = (ExportedVariableStatement) obj;
+			VariableStatement exportedVariableStatement = (VariableStatement) obj;
 			String text = IterableExtensions.join(exportedVariableStatement.getVarDecl(), ", ", vd -> vd.getName());
 			return text;
 		}
@@ -132,9 +131,9 @@ public class LabelCalculationHelper {
 		return "";
 	}
 
-	private String getModuleSpecifier(AbstractModule module) {
-		if (module != null && module.getQualifiedName() != null) {
-			return module.getModuleSpecifier();
+	private String getModuleSpecifier(TModule tModule) {
+		if (tModule != null && tModule.getQualifiedName() != null) {
+			return tModule.getModuleSpecifier();
 		}
 		return "<unknown>";
 	}

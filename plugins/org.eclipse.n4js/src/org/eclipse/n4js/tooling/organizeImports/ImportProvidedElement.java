@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TModule;
 
 /**
  * Describing Elements provided by import statement and marking some state about visibility and usage.
@@ -39,7 +39,7 @@ public class ImportProvidedElement {
 	private final boolean isHollow;
 
 	/** Imported module, providing this named element. */
-	private final AbstractModule importedModule;
+	private final TModule importedModule;
 
 	/** Usage-flag in script (statements & expressions) */
 	private boolean used;
@@ -121,7 +121,7 @@ public class ImportProvidedElement {
 	/**
 	 * Returns the module from which this element was imported.
 	 */
-	public AbstractModule getImportedModule() {
+	public TModule getImportedModule() {
 		return importedModule;
 	}
 

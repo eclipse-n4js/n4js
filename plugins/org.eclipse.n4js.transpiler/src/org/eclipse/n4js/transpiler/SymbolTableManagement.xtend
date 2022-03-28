@@ -26,11 +26,11 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
-import org.eclipse.n4js.ts.types.AbstractModule
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.NameAndAccess
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TModule
 
 /**
  */
@@ -59,7 +59,7 @@ class SymbolTableManagement {
 		return newEntry;
 	}
 
-	def private static NamespaceImportSpecifier getExistingNamespaceImportSpecifierForModule(TranspilerState state, AbstractModule module) {
+	def private static NamespaceImportSpecifier getExistingNamespaceImportSpecifierForModule(TranspilerState state, TModule module) {
 		if (module !== null) {
 			val importSpec = state.steCache.mapImportedModule_2_STE.get(module)?.importSpecifier;
 			if (importSpec instanceof NamespaceImportSpecifier) {

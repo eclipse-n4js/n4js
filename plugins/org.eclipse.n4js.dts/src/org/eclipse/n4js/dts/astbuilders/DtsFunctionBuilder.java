@@ -30,11 +30,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsFunctionBuilder extends AbstractDtsSubBuilder<FunctionDeclarationContext, FunctionDeclaration> {
-	private final DtsTypeRefBuilder typeRefBuilder = new DtsTypeRefBuilder(tokenStream, resource);
-	private final DtsTypeVariablesBuilder typeVariablesBuilder = new DtsTypeVariablesBuilder(tokenStream, resource);
-	private final DtsFormalParametersBuilder formalParametersBuilder = new DtsFormalParametersBuilder(tokenStream,
-			resource);
+public class DtsFunctionBuilder extends AbstractDtsBuilderWithHelpers<FunctionDeclarationContext, FunctionDeclaration> {
 
 	/** Constructor */
 	public DtsFunctionBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -55,11 +51,12 @@ public class DtsFunctionBuilder extends AbstractDtsSubBuilder<FunctionDeclaratio
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
 		result.setGenerator(ctx.Multiply() != null);
-		TypeReferenceNode<TypeRef> trn = typeRefBuilder.consume(ctx.callSignature().typeRef());
-		result.setDeclaredReturnTypeRefNode(trn);
-		List<N4TypeVariable> typeVars = typeVariablesBuilder.consume(ctx.callSignature().typeParameters());
+		TypeRef typeRef = newTypeRefBuilder().consume(ctx.callSignature().typeRef());
+		result.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
+		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.callSignature().typeParameters());
 		result.getTypeVars().addAll(typeVars);
-		List<FormalParameter> fPars = formalParametersBuilder.consume(ctx.callSignature().parameterBlock());
+		List<FormalParameter> fPars = newFormalParametersBuilder().consumeWithDeclThisType(
+				ctx.callSignature().parameterBlock(), result);
 		result.getFpars().addAll(fPars);
 	}
 

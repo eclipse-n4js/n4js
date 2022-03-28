@@ -14,16 +14,16 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedExportSpecifier
 import org.eclipse.n4js.n4JS.TypeDefiningElement
-import org.eclipse.n4js.ts.types.AbstractModule
+import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.ExportDefinition
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TExportingElement
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.xtext.EcoreUtil2
 
@@ -42,18 +42,18 @@ class N4JSExportDefinitionTypesBuilder {
 	def package void createExportDefinition(ExportDeclaration exportDecl, AbstractNamespace target, boolean preLinkingPhase) {
 		val directlyExportedElem = exportDecl.exportedElement;
 		if (directlyExportedElem !== null) {
-			if (directlyExportedElem instanceof ExportedVariableStatement) {
+			if (directlyExportedElem instanceof VariableStatement) {
 				return; // FIXME could we move the variable special case to here???
 			}
 			createExportDefinitionForDirectlyExportedElement(directlyExportedElem, target, preLinkingPhase);
 		} else if (exportDecl.namespaceExport !== null) {
 			val exportSpec = exportDecl.namespaceExport;
-			val exportedModuleProxy = exportDecl.eGet(N4JSPackage.eINSTANCE.moduleRef_Module, false) as AbstractModule;
+			val exportedModuleProxy = exportDecl.eGet(N4JSPackage.eINSTANCE.moduleRef_Module, false) as TModule;
 			if (exportedModuleProxy !== null) {
 				val exportedModuleProxyCopy = EcoreUtil2.cloneWithProxies(exportedModuleProxy);
 				val alias = exportSpec.alias;
 				if (alias !== null) {
-					val mnvt = target.containingRootModule.addNewModuleNamespaceVirtualType(alias, exportedModuleProxy, false, exportSpec);
+					val mnvt = target.containingModule.addNewModuleNamespaceVirtualType(alias, exportedModuleProxy, false, exportSpec);
 					addElementExportDefinition(target, alias, mnvt);
 				} else {
 					addModuleExportDefinition(target, exportedModuleProxyCopy);
@@ -90,7 +90,7 @@ class N4JSExportDefinitionTypesBuilder {
 		addElementExportDefinition(target, declaredExportedName, tDirectlyExportedElem);
 	}
 
-	def private void addModuleExportDefinition(TExportingElement exportingElem, AbstractModule exportedModule) {
+	def private void addModuleExportDefinition(TExportingElement exportingElem, TModule exportedModule) {
 		val expDef = TypesFactory.eINSTANCE.createModuleExportDefinition();
 		expDef.exportedModule = exportedModule;
 		exportingElem.exportDefinitions += expDef;

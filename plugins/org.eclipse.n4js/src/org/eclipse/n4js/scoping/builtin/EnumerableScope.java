@@ -58,7 +58,7 @@ public abstract class EnumerableScope extends AbstractScope {
 		if (elements != null) {
 			return elements;
 		}
-		synchronized (this) {
+		synchronized (EnumerableScope.class) {
 			if (elements != null) {
 				return elements;
 			}
@@ -135,7 +135,7 @@ public abstract class EnumerableScope extends AbstractScope {
 	protected <T extends EObject> T getEObjectOrProxy(QualifiedName qn) {
 		IEObjectDescription description = getSingleElement(qn);
 		if (description == null)
-			throw new IllegalStateException(qn + " is not contained in this scope");
+			throw new IllegalStateException(qn + " is not contained in scope " + this.getClass().getSimpleName());
 		@SuppressWarnings("unchecked")
 		T result = (T) description.getEObjectOrProxy();
 		return result;

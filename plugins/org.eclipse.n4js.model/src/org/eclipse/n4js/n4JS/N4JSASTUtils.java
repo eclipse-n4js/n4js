@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -96,21 +97,21 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
-	 * Returns the containing variable environment scope for the given identifiable element, depending on whether the
-	 * element is block scoped (i.e. variables declared with let, const) or not.
+	 * Returns the containing variable environment scope for the given variable, depending on whether it is block scoped
+	 * (i.e. variables declared with let, const) or not.
 	 *
-	 * @param elemInAST
+	 * @param variableInAST
 	 *            an AST node of a subtype of {@link IdentifiableElement} that may appear in the AST, e.g.
-	 *            {@link Variable}, {@link TypeVariable}, {@link TStructMember}.
+	 *            {@link AbstractVariable}, {@link TypeVariable}, {@link TStructMember}.
 	 */
-	public static VariableEnvironmentElement getScope(IdentifiableElement elemInAST) {
-		return getScope(elemInAST, isBlockScoped(elemInAST));
+	public static VariableEnvironmentElement getScope(AbstractVariable<?> variableInAST) {
+		return getScope(variableInAST, isBlockScoped(variableInAST));
 	}
 
 	/**
-	 * Same as {@link #getScope(IdentifiableElement)}, but takes any kind of AST node. Flag <code>isBlockScoped</code>
-	 * can be used to determine whether the scope for "block scoped" elements should be returned (i.e. let, const) or
-	 * the scope for ordinarily scoped elements (e.g. var).
+	 * Same as {@link #getScope(AbstractVariable)}, but takes any kind of AST node. Flag <code>isBlockScoped</code> can
+	 * be used to determine whether the scope for "block scoped" elements should be returned (i.e. let, const) or the
+	 * scope for ordinarily scoped elements (e.g. var).
 	 */
 	public static VariableEnvironmentElement getScope(EObject astNode, boolean isBlockScoped) {
 		VariableEnvironmentElement scope = EcoreUtil2.getContainerOfType(astNode, VariableEnvironmentElement.class);
@@ -149,9 +150,9 @@ public abstract class N4JSASTUtils {
 	 *
 	 * @param elemInAST
 	 *            an AST node of a subtype of {@link IdentifiableElement} that may appear in the AST, e.g.
-	 *            {@link Variable}, {@link TypeVariable}, {@link TStructMember}.
+	 *            {@link AbstractVariable}, {@link TypeVariable}, {@link TStructMember}.
 	 */
-	public static boolean isBlockScoped(IdentifiableElement elemInAST) {
+	public static boolean isBlockScoped(AbstractVariable<?> elemInAST) {
 		if (elemInAST instanceof VariableDeclaration) {
 			final VariableDeclarationContainer parent = getVariableDeclarationContainer(
 					(VariableDeclaration) elemInAST);
@@ -472,10 +473,8 @@ public abstract class N4JSASTUtils {
 			return ((N4TypeVariable) obj).getDefinedTypeVariable();
 		} else if (obj instanceof PropertyAssignment) {
 			return ((PropertyAssignment) obj).getDefinedMember();
-		} else if (obj instanceof FormalParameter) {
-			return ((FormalParameter) obj).getDefinedTypeElement();
-		} else if (obj instanceof ExportedVariableDeclaration) {
-			return ((ExportedVariableDeclaration) obj).getDefinedVariable();
+		} else if (obj instanceof AbstractVariable) {
+			return ((AbstractVariable<?>) obj).getDefinedVariable();
 		}
 		// no type model element found
 		return null;
@@ -500,17 +499,43 @@ public abstract class N4JSASTUtils {
 	}
 
 	/**
+	 * Returns the name of the given {@link N4TypeVariable} or {@link TypeVariable}; throws exception if other type is
+	 * passed in.
+	 */
+	public static String getNameOfTypeVarInAST(EObject typeVarInAST) {
+		if (typeVarInAST instanceof N4TypeVariable) {
+			return ((N4TypeVariable) typeVarInAST).getName();
+		} else if (typeVarInAST instanceof TypeVariable) {
+			return ((TypeVariable) typeVarInAST).getName();
+		}
+		throw new IllegalArgumentException("type variable in AST must be a N4TypeVariable or TypeVariable");
+	}
+
+	/**
+	 * Returns the {@link EAttribute name feature} of the given {@link N4TypeVariable} or {@link TypeVariable}; throws
+	 * exception if other type is passed in.
+	 */
+	public static EAttribute getNameFeatureOfTypeVarInAST(EObject typeVarInAST) {
+		if (typeVarInAST instanceof N4TypeVariable) {
+			return N4JSPackage.Literals.N4_TYPE_VARIABLE__NAME;
+		} else if (typeVarInAST instanceof TypeVariable) {
+			return TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME;
+		}
+		throw new IllegalArgumentException("type variable in AST must be a N4TypeVariable or TypeVariable");
+	}
+
+	/**
 	 * If the given type variable is located in the TModule, then this method returns its corresponding type variable in
 	 * the AST or <code>null</code> if it is not available or not found. Usually returns a {@link N4TypeVariable}, but
 	 * in some cases also a {@link TypeVariable} may be returned.
 	 */
-	public static IdentifiableElement getCorrespondingTypeVariableInAST(TypeVariable tv) {
+	public static EObject getCorrespondingTypeVariableInAST(TypeVariable tv) {
 		EObject containerInTModule = tv.eContainer();
 		if (containerInTModule instanceof Type) {
 			List<TypeVariable> typeVarsInTModule = ((Type) containerInTModule).getTypeVars();
 			if (!typeVarsInTModule.isEmpty()) {
 				EObject containerInAST = getCorrespondingASTNode(containerInTModule);
-				List<? extends IdentifiableElement> typeVarsInAST = null;
+				List<? extends EObject> typeVarsInAST = null;
 				if (containerInAST instanceof GenericDeclaration) {
 					typeVarsInAST = ((GenericDeclaration) containerInAST).getTypeVars();
 				} else if (containerInAST instanceof TStructMethod) {
@@ -630,5 +655,30 @@ public abstract class N4JSASTUtils {
 			throw new IllegalStateException("resource does not have a valid parse result: " + resource.getURI());
 		}
 		return Hashing.murmur3_128(SEED).hashString(source, Charsets.UTF_8).toString();
+	}
+
+	/** Adds the given annotation to the given element. */
+	public static void addAnnotation(AnnotableElement elem, Annotation ann) {
+		if (elem instanceof AnnotableScriptElement) {
+			AnnotableScriptElement elemCasted = (AnnotableScriptElement) elem;
+			if (elemCasted.getAnnotationList() == null) {
+				elemCasted.setAnnotationList(N4JSFactory.eINSTANCE.createAnnotationList());
+			}
+			elemCasted.getAnnotationList().getAnnotations().add(ann);
+		} else if (elem instanceof AnnotablePropertyAssignment) {
+			AnnotablePropertyAssignment elemCasted = (AnnotablePropertyAssignment) elem;
+			if (elemCasted.getAnnotationList() == null) {
+				elemCasted.setAnnotationList(N4JSFactory.eINSTANCE.createPropertyAssignmentAnnotationList());
+			}
+			elemCasted.getAnnotationList().getAnnotations().add(ann);
+		} else if (elem instanceof AnnotableN4MemberDeclaration) {
+			AnnotableN4MemberDeclaration elemCasted = (AnnotableN4MemberDeclaration) elem;
+			if (elemCasted.getAnnotationList() == null) {
+				elemCasted.setAnnotationList(N4JSFactory.eINSTANCE.createN4MemberAnnotationList());
+			}
+			elemCasted.getAnnotationList().getAnnotations().add(ann);
+		} else {
+			elem.getAnnotations().add(ann);
+		}
 	}
 }

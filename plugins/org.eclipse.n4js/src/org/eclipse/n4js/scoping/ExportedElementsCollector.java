@@ -20,12 +20,12 @@ import org.eclipse.n4js.scoping.accessModifiers.HollowTypeOrValueDescription;
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.ExportDefinition;
 import org.eclipse.n4js.ts.types.ModuleExportDefinition;
 import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -122,7 +122,7 @@ public class ExportedElementsCollector {
 
 			} else if (exportDef instanceof ModuleExportDefinition) {
 				ModuleExportDefinition exportDefCasted = (ModuleExportDefinition) exportDef;
-				AbstractModule exportedModule = exportDefCasted.getExportedModule();
+				TModule exportedModule = exportDefCasted.getExportedModule();
 				if (exportedModule == null || exportedModule.eIsProxy()) {
 					continue;
 				}

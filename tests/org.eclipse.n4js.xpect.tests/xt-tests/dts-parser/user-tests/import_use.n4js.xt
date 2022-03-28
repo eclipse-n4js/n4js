@@ -13,23 +13,26 @@
 	File "tslib1.d.ts" {
 		export const K : string;
 		
-		export class C {
-			field : number;
+		export enum C {
+			R, G, B
 		}
 	}
 	File "tslib2.d.ts" {
 		import {K, C} from "tslib1.d.ts" // extension is trimmed
 		export const Kconst = K;
-		export const Cconst : C = new C();
+		export const Cconst1 : C = C.R;
+		export const Cconst2 = C.R;
 	}
    END_SETUP
  */
 
-import {Kconst, Cconst} from "tslib2"
+import {Kconst, Cconst1, Cconst2} from "tslib2"
 
 // XPECT type of 'k' --> string
 let k = Kconst;
 
 // XPECT type of 'c' --> C
-let c = Cconst;
+let c1 = Cconst1;
 
+// XPECT type of 'c' --> C
+let c2 = Cconst2;

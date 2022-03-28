@@ -217,7 +217,7 @@ ruleNamespaceElement:
 			ruleFunctionDeclaration
 		)
 		    |
-		ruleExportedVariableStatement
+		ruleVariableStatementWithModifier
 		    |
 		ruleExportDeclaration
 	)
@@ -301,7 +301,7 @@ norm1_NamespaceElement:
 			norm1_FunctionDeclaration
 		)
 		    |
-		ruleExportedVariableStatement
+		norm1_VariableStatementWithModifier
 		    |
 		ruleExportDeclaration
 	)
@@ -613,7 +613,7 @@ ruleExportableElement:
 			ruleFunctionDeclaration
 		)
 		    |
-		ruleExportedVariableStatement
+		ruleVariableStatementWithModifier
 	)
 ;
 
@@ -640,10 +640,10 @@ ruleAnnotatedExportableElement:
 		ruleN4Modifier
 		*
 		ruleVariableStatementKeyword
-		ruleExportedVariableDeclarationOrBinding
+		norm1_VariableDeclarationOrBinding
 		(
 			','
-			ruleExportedVariableDeclarationOrBinding
+			norm1_VariableDeclarationOrBinding
 		)*
 		ruleSemi
 		    |
@@ -1699,15 +1699,28 @@ norm3_VariableStatement:
 	ruleSemi
 ;
 
-// Rule ExportedVariableStatement
-ruleExportedVariableStatement:
+// Rule VariableStatementWithModifier
+ruleVariableStatementWithModifier:
 	ruleN4Modifier
 	*
 	ruleVariableStatementKeyword
-	ruleExportedVariableDeclarationOrBinding
+	norm1_VariableDeclarationOrBinding
 	(
 		','
-		ruleExportedVariableDeclarationOrBinding
+		norm1_VariableDeclarationOrBinding
+	)*
+	ruleSemi
+;
+
+// Rule VariableStatementWithModifier
+norm1_VariableStatementWithModifier:
+	ruleN4Modifier
+	*
+	ruleVariableStatementKeyword
+	norm3_VariableDeclarationOrBinding
+	(
+		','
+		norm3_VariableDeclarationOrBinding
 	)*
 	ruleSemi
 ;
@@ -2042,64 +2055,6 @@ norm7_VariableDeclarationImpl:
 		'='
 		norm3_AssignmentExpression
 	)?
-;
-
-// Rule ExportedVariableDeclarationOrBinding
-ruleExportedVariableDeclarationOrBinding:
-	(
-		(
-			(ruleBindingPattern
-			)=>
-			ruleExportedVariableBinding
-		)
-		    |
-		ruleExportedVariableDeclaration
-	)
-;
-
-// Rule ExportedVariableDeclarationOrBinding
-norm1_ExportedVariableDeclarationOrBinding:
-	(
-		(
-			(norm1_BindingPattern
-			)=>
-			norm1_ExportedVariableBinding
-		)
-		    |
-		norm1_ExportedVariableDeclaration
-	)
-;
-
-// Rule ExportedVariableBinding
-ruleExportedVariableBinding:
-	(
-		(ruleBindingPattern
-		)=>
-		ruleBindingPattern
-	)
-	'='
-	norm1_AssignmentExpression
-;
-
-// Rule ExportedVariableBinding
-norm1_ExportedVariableBinding:
-	(
-		(norm1_BindingPattern
-		)=>
-		norm1_BindingPattern
-	)
-	'='
-	norm3_AssignmentExpression
-;
-
-// Rule ExportedVariableDeclaration
-ruleExportedVariableDeclaration:
-	norm5_VariableDeclarationImpl
-;
-
-// Rule ExportedVariableDeclaration
-norm1_ExportedVariableDeclaration:
-	norm7_VariableDeclarationImpl
 ;
 
 // Rule EmptyStatement

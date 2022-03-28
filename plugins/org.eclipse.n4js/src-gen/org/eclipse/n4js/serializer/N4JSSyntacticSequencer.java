@@ -440,7 +440,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     ','?
 	 *
 	 * This ambiguous syntax occurs at:
-	 *     namedExports+=NamedExportSpecifier (ambiguity) '}' 'from' module=[AbstractModule|ModuleSpecifier]
+	 *     namedExports+=NamedExportSpecifier (ambiguity) '}' 'from' module=[TModule|ModuleSpecifier]
 	 *     namedExports+=NamedExportSpecifier (ambiguity) '}' Semi (rule end)
 	 
 	 * </pre>

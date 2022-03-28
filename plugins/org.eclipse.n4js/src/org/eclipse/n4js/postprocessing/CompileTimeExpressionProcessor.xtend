@@ -14,13 +14,13 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.n4js.compileTime.CompileTimeEvaluator
 import org.eclipse.n4js.compileTime.CompileTimeValue
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
+import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ts.types.TConstableElement
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 
 /**
  * Processing of compile-time expressions.
@@ -49,8 +49,10 @@ class CompileTimeExpressionProcessor {
 
 			// in some cases, we have to store the compile-time value in the TModule:
 			val parent = astNode.eContainer;
-			if (parent instanceof ExportedVariableDeclaration) {
-				storeValueInTModule(G, parent.definedVariable, value);
+			if (parent instanceof VariableDeclaration) {
+				if (parent.exported) {
+					storeValueInTModule(G, parent.definedVariable, value);
+				}
 			} else if (parent instanceof N4FieldDeclaration) {
 				storeValueInTModule(G, parent.definedField, value);
 			}

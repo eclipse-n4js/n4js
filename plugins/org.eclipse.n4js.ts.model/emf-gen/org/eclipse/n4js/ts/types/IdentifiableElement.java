@@ -68,19 +68,6 @@ public interface IdentifiableElement extends TypableElement {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	AbstractModule getContainingModule();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenience method, returns the {@link TModule} this element is contained in, or
-	 * null if it is not contained in a TModule. Does not consider {@link TDeclaredModule}s!
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	TModule getContainingRootModule();
+	TModule getContainingModule();
 
 } // IdentifiableElement

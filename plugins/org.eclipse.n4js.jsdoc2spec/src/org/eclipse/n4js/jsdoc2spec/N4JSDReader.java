@@ -154,7 +154,7 @@ public class N4JSDReader {
 							for (Type type : getRealTopLevelTypes(script)) {
 								specInfosByName.createTypeSpecInfo(type, rrph);
 							}
-							for (TVariable tvar : script.getModule().getVariables()) {
+							for (TVariable tvar : script.getModule().getExportedVariables()) {
 								specInfosByName.createTVarSpecInfo(tvar, rrph);
 							}
 						}

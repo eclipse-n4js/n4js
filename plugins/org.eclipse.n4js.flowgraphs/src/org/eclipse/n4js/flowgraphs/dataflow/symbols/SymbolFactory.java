@@ -75,7 +75,7 @@ public class SymbolFactory {
 		IdentifierRef idRef = (IdentifierRef) cfe;
 		IdentifiableElement id = getId(idRef);
 		if (id != null) {
-			if (id instanceof TVariable && !((TVariable) id).isConst()) {
+			if (id instanceof TVariable && !((TVariable) id).isConst() && ((TVariable) id).isDirectlyExported()) {
 				// id is an imported non-const variable
 				return null;
 			}

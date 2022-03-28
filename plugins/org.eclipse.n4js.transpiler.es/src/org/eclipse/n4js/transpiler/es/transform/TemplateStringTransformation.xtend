@@ -19,9 +19,9 @@ import org.eclipse.n4js.n4JS.PrimaryExpression
 import org.eclipse.n4js.n4JS.TaggedTemplateString
 import org.eclipse.n4js.n4JS.TemplateLiteral
 import org.eclipse.n4js.n4JS.TemplateSegment
-import org.eclipse.n4js.parser.conversion.ValueConverterUtils
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional
+import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 

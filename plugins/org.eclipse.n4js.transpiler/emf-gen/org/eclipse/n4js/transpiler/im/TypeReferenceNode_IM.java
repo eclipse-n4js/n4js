@@ -11,7 +11,6 @@
 package org.eclipse.n4js.transpiler.im;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;

@@ -16,14 +16,13 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.ExportDefinition;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.ModuleExportDefinition;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TConstableElement;
-import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
@@ -210,31 +209,16 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (eObject instanceof TModule) {
 			TModule module = (TModule) eObject;
 			internalCreateEObjectDescriptionForRoot(module, acceptor);
-			internalCreateEObjectDescriptionsForModuleContents(module, acceptor);
+			for (ExportDefinition exportDef : module.getExportDefinitions()) {
+				if (exportDef instanceof ElementExportDefinition) {
+					internalCreateEObjectDescription((ElementExportDefinition) exportDef, acceptor);
+				} else if (exportDef instanceof ModuleExportDefinition) {
+					// FIXME
+				}
+			}
 		}
 		// export is only possible for top-level elements
 		return false;
-	}
-
-	private void internalCreateEObjectDescriptionsForModuleContents(AbstractModule module,
-			IAcceptor<IEObjectDescription> acceptor) {
-		for (ExportDefinition exportDef : module.getExportDefinitions()) {
-			if (exportDef instanceof ElementExportDefinition) {
-				internalCreateEObjectDescription((ElementExportDefinition) exportDef, acceptor);
-			} else if (exportDef instanceof ModuleExportDefinition) {
-				// FIXME
-			}
-		}
-		boolean isRoot = module instanceof TModule;
-		if (isRoot) {
-			// declared modules nested inside other declared modules cannot be imported in TS, so we do not yet support
-			// this either and therefore the following is done only for TDeclaredModules directly contained in the root
-			// TModule:
-			for (TDeclaredModule declModule : module.getModules()) {
-				internalCreateEObjectDescriptionForDeclaredModule(declModule, acceptor);
-				internalCreateEObjectDescriptionsForModuleContents(declModule, acceptor);
-			}
-		}
 	}
 
 	/** @return the source code location of the element represented by the given {@link IEObjectDescription}. */
@@ -341,20 +325,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		acceptor.accept(eod);
 	}
 
-	private void internalCreateEObjectDescriptionForDeclaredModule(final TDeclaredModule module,
-			IAcceptor<IEObjectDescription> acceptor) {
-		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(module);
-		if (qualifiedName == null) {
-			return; // syntax error, etc.
-		}
-
-		Map<String, String> userData = new HashMap<>();
-		addLocationUserData(userData, module);
-
-		IEObjectDescription eod = new EObjectDescription(qualifiedName, module, userData);
-		acceptor.accept(eod);
-	}
-
 	private Map<String, String> createModuleUserData(final TModule module) {
 		// TODO GH-230 consider disallowing serializing reconciled modules to index with fail-safe behavior:
 		// if (module.isPreLinkingPhase() || module.isReconciled()) {
@@ -430,7 +400,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		}
 	}
 
-	private void addLocationUserData(Map<String, String> userData, EObject elem) {
+	private void addLocationUserData(Map<String, String> userData, IdentifiableElement elem) {
 		Location location = computeLocation(elem);
 		if (location != null) {
 			userData.put(LOCATION_KEY, location.toString());

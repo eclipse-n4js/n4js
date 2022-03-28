@@ -34,7 +34,6 @@ import org.eclipse.n4js.postprocessing.ComputedNameProcessor
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.types.AbstractModule
 import org.eclipse.n4js.ts.types.AccessibleTypeElement
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -217,7 +216,7 @@ package class N4JSTypesBuilderHelper {
 		}
 	}
 
-	def package ModuleNamespaceVirtualType addNewModuleNamespaceVirtualType(TModule target, String name, AbstractModule wrappedModule, boolean dynamic, TypeDefiningElement astNode) {
+	def package ModuleNamespaceVirtualType addNewModuleNamespaceVirtualType(TModule target, String name, TModule wrappedModule, boolean dynamic, TypeDefiningElement astNode) {
 		val type = TypesFactory.eINSTANCE.createModuleNamespaceVirtualType
 		type.name = name;
 		type.module = wrappedModule;

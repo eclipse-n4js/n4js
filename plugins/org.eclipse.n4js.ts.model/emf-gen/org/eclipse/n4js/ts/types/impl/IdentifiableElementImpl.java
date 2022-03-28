@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -111,17 +110,7 @@ public class IdentifiableElementImpl extends ProxyResolvingEObjectImpl implement
 	 * @generated
 	 */
 	@Override
-	public AbstractModule getContainingModule() {
-		return EcoreUtil2.<AbstractModule>getContainerOfType(this, AbstractModule.class);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TModule getContainingRootModule() {
+	public TModule getContainingModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}
 
@@ -193,8 +182,6 @@ public class IdentifiableElementImpl extends ProxyResolvingEObjectImpl implement
 		switch (operationID) {
 			case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE:
 				return getContainingModule();
-			case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_ROOT_MODULE:
-				return getContainingRootModule();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

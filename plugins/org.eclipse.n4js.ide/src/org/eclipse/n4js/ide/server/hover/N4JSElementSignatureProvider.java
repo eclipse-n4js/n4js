@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ide.server.hover;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -20,7 +19,6 @@ import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -77,16 +75,6 @@ public class N4JSElementSignatureProvider {
 
 		} else if (obj instanceof ParameterizedPropertyAccessExpression) {
 			return getLabelFromTypeSystem((ParameterizedPropertyAccessExpression) obj, obj);
-
-		} else if (obj instanceof VariableDeclaration) {
-			if (obj instanceof ExportedVariableDeclaration) {
-				EObject tElem = N4JSASTUtils.getCorrespondingTypeModelElement(obj);
-				return CustomHoverLabelUtil.getLabel(tElem);
-
-			} else {
-				return getLabelFromTypeSystem((VariableDeclaration) obj, ref);
-
-			}
 
 		} else if (obj instanceof PropertyNameValuePair) {
 			return getLabelFromTypeSystem((PropertyNameValuePair) obj, ref);

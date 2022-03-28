@@ -13,7 +13,6 @@ package org.eclipse.n4js.postprocessing
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -24,6 +23,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.TypedElement
+import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -101,7 +101,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 	def void handleDeferredTypeRefs_postChildren(RuleEnvironment G, EObject astNode, ASTMetaInfoCache cache) {
 		// DeferredTypeRefs related to poly expressions should not be handled here (poly computer responsible for this!)
 		switch (astNode) {
-			ExportedVariableDeclaration: {
+			VariableDeclaration: {
 				val tVariable = astNode.definedVariable;
 				setTypeRef(astNode, tVariable, false, G, cache);
 			}
@@ -119,7 +119,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 						// do nothing since its DeferredTypes are computed in PolyProcessor_ObjectLiteral
 					}
 					FunctionDefinition: {
-						val tFPar = astNode.definedTypeElement; // tFPar can be null if we have a broken AST
+						val tFPar = astNode.definedVariable; // tFPar can be null if we have a broken AST
 						if (tFPar?.typeRef instanceof DeferredTypeRef) {
 							setTypeRef(astNode, tFPar, true, G, cache);
 						}

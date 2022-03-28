@@ -29,7 +29,7 @@ package org.eclipse.n4js.ts.types;
  * @model
  * @generated
  */
-public interface TFormalParameter extends IdentifiableElement, TAnnotableElement, SyntaxRelatedTElement, TTypedElement {
+public interface TFormalParameter extends TAbstractVariable {
 	/**
 	 * Returns the value of the '<em><b>Variadic</b></em>' attribute.
 	 * <!-- begin-user-doc -->

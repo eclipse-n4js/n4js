@@ -13,7 +13,6 @@ package org.eclipse.n4js.dts.astbuilders;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_enumBody;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_enumMemberList;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 import org.eclipse.n4js.AnnotationDefinition;
@@ -21,7 +20,6 @@ import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.LiteralExpressionContext;
-import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.Expression;
@@ -37,7 +35,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsEnumBuilder extends AbstractDtsSubBuilder<EnumDeclarationContext, N4EnumDeclaration> {
+public class DtsEnumBuilder extends AbstractDtsBuilder<EnumDeclarationContext, N4EnumDeclaration> {
 
 	/** Constructor */
 	public DtsEnumBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -92,22 +90,11 @@ public class DtsEnumBuilder extends AbstractDtsSubBuilder<EnumDeclarationContext
 
 			} else if (leCtx.literal().numericLiteral() != null) {
 				NumericLiteral numericLiteral = N4JSFactory.eINSTANCE.createNumericLiteral();
-				numericLiteral.setValue(getBigDecimal(leCtx.literal().numericLiteral()));
+				numericLiteral.setValue(ParserContextUtil.parseNumericLiteral(leCtx.literal().numericLiteral(), false));
 				valueExpression = numericLiteral;
 			}
 			literal.setValueExpression(valueExpression);
 		}
 		result.getLiterals().add(literal);
-	}
-
-	private BigDecimal getBigDecimal(NumericLiteralContext ctx) {
-		if (ctx.DecimalLiteral() != null) {
-			int sgn = ctx.Minus() != null ? -1 : 1;
-			String decimalStr = ctx.DecimalLiteral().getText();
-			double decimalValue = Double.parseDouble(decimalStr);
-			return new BigDecimal(sgn * decimalValue);
-		}
-
-		return null;
 	}
 }

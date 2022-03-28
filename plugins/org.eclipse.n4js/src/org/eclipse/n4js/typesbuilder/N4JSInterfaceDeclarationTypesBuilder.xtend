@@ -51,10 +51,10 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 		interfaceType.addExtendedInterfaces(n4Interface, preLinkingPhase)
 
 		interfaceType.addFields(n4Interface, preLinkingPhase)
-		interfaceType.addMethods(n4Interface, preLinkingPhase)
+		interfaceType.addMethods(n4Interface, target, preLinkingPhase)
 
-		interfaceType.addGetters(n4Interface, preLinkingPhase)
-		interfaceType.addSetters(n4Interface, preLinkingPhase)
+		interfaceType.addGetters(n4Interface, target, preLinkingPhase)
+		interfaceType.addSetters(n4Interface, target, preLinkingPhase)
 
 		interfaceType.copyAnnotations(n4Interface, preLinkingPhase)
 

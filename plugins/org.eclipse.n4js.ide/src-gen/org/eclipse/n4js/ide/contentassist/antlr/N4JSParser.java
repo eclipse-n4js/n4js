@@ -62,7 +62,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getRootStatementAccess().getAlternatives(), "rule__RootStatement__Alternatives");
 			builder.put(grammarAccess.getStatementAccess().getAlternatives(), "rule__Statement__Alternatives");
 			builder.put(grammarAccess.getVariableDeclarationOrBindingAccess().getAlternatives(), "rule__VariableDeclarationOrBinding__Alternatives");
-			builder.put(grammarAccess.getExportedVariableDeclarationOrBindingAccess().getAlternatives(), "rule__ExportedVariableDeclarationOrBinding__Alternatives");
 			builder.put(grammarAccess.getIterationStatementAccess().getAlternatives(), "rule__IterationStatement__Alternatives");
 			builder.put(grammarAccess.getForStatementAccess().getAlternatives_4(), "rule__ForStatement__Alternatives_4");
 			builder.put(grammarAccess.getForStatementAccess().getAlternatives_4_1_0(), "rule__ForStatement__Alternatives_4_1_0");
@@ -254,8 +253,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVariableStatementAccess().getGroup_0(), "rule__VariableStatement__Group_0__0");
 			builder.put(grammarAccess.getVariableStatementAccess().getGroup_0_0(), "rule__VariableStatement__Group_0_0__0");
 			builder.put(grammarAccess.getVariableStatementAccess().getGroup_2(), "rule__VariableStatement__Group_2__0");
-			builder.put(grammarAccess.getExportedVariableStatementAccess().getGroup(), "rule__ExportedVariableStatement__Group__0");
-			builder.put(grammarAccess.getExportedVariableStatementAccess().getGroup_4(), "rule__ExportedVariableStatement__Group_4__0");
+			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getGroup(), "rule__VariableStatementWithModifier__Group__0");
+			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getGroup_4(), "rule__VariableStatementWithModifier__Group_4__0");
 			builder.put(grammarAccess.getVariableBindingAccess().getGroup(), "rule__VariableBinding__Group__0");
 			builder.put(grammarAccess.getVariableBindingAccess().getGroup_1_1(), "rule__VariableBinding__Group_1_1__0");
 			builder.put(grammarAccess.getVariableBindingAccess().getGroup_1_0_0(), "rule__VariableBinding__Group_1_0_0__0");
@@ -268,8 +267,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVariableDeclarationImplAccess().getGroup_1_0_0(), "rule__VariableDeclarationImpl__Group_1_0_0__0");
 			builder.put(grammarAccess.getVariableDeclarationImplAccess().getGroup_1_0_0_0(), "rule__VariableDeclarationImpl__Group_1_0_0_0__0");
 			builder.put(grammarAccess.getVariableDeclarationImplAccess().getGroup_1_0_1(), "rule__VariableDeclarationImpl__Group_1_0_1__0");
-			builder.put(grammarAccess.getExportedVariableBindingAccess().getGroup(), "rule__ExportedVariableBinding__Group__0");
-			builder.put(grammarAccess.getExportedVariableDeclarationAccess().getGroup(), "rule__ExportedVariableDeclaration__Group__0");
 			builder.put(grammarAccess.getEmptyStatementAccess().getGroup(), "rule__EmptyStatement__Group__0");
 			builder.put(grammarAccess.getExpressionStatementAccess().getGroup(), "rule__ExpressionStatement__Group__0");
 			builder.put(grammarAccess.getIfStatementAccess().getGroup(), "rule__IfStatement__Group__0");
@@ -774,10 +771,10 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVariableStatementAccess().getVarStmtKeywordAssignment_0_0_1(), "rule__VariableStatement__VarStmtKeywordAssignment_0_0_1");
 			builder.put(grammarAccess.getVariableStatementAccess().getVarDeclsOrBindingsAssignment_1(), "rule__VariableStatement__VarDeclsOrBindingsAssignment_1");
 			builder.put(grammarAccess.getVariableStatementAccess().getVarDeclsOrBindingsAssignment_2_1(), "rule__VariableStatement__VarDeclsOrBindingsAssignment_2_1");
-			builder.put(grammarAccess.getExportedVariableStatementAccess().getDeclaredModifiersAssignment_1(), "rule__ExportedVariableStatement__DeclaredModifiersAssignment_1");
-			builder.put(grammarAccess.getExportedVariableStatementAccess().getVarStmtKeywordAssignment_2(), "rule__ExportedVariableStatement__VarStmtKeywordAssignment_2");
-			builder.put(grammarAccess.getExportedVariableStatementAccess().getVarDeclsOrBindingsAssignment_3(), "rule__ExportedVariableStatement__VarDeclsOrBindingsAssignment_3");
-			builder.put(grammarAccess.getExportedVariableStatementAccess().getVarDeclsOrBindingsAssignment_4_1(), "rule__ExportedVariableStatement__VarDeclsOrBindingsAssignment_4_1");
+			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getDeclaredModifiersAssignment_1(), "rule__VariableStatementWithModifier__DeclaredModifiersAssignment_1");
+			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getVarStmtKeywordAssignment_2(), "rule__VariableStatementWithModifier__VarStmtKeywordAssignment_2");
+			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getVarDeclsOrBindingsAssignment_3(), "rule__VariableStatementWithModifier__VarDeclsOrBindingsAssignment_3");
+			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getVarDeclsOrBindingsAssignment_4_1(), "rule__VariableStatementWithModifier__VarDeclsOrBindingsAssignment_4_1");
 			builder.put(grammarAccess.getVariableBindingAccess().getPatternAssignment_0(), "rule__VariableBinding__PatternAssignment_0");
 			builder.put(grammarAccess.getVariableBindingAccess().getExpressionAssignment_1_1_1(), "rule__VariableBinding__ExpressionAssignment_1_1_1");
 			builder.put(grammarAccess.getVariableBindingAccess().getExpressionAssignment_1_0_0_1(), "rule__VariableBinding__ExpressionAssignment_1_0_0_1");
@@ -786,8 +783,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVariableDeclarationImplAccess().getExpressionAssignment_1_1_1_1(), "rule__VariableDeclarationImpl__ExpressionAssignment_1_1_1_1");
 			builder.put(grammarAccess.getVariableDeclarationImplAccess().getNameAssignment_1_0_0_0_0(), "rule__VariableDeclarationImpl__NameAssignment_1_0_0_0_0");
 			builder.put(grammarAccess.getVariableDeclarationImplAccess().getExpressionAssignment_1_0_1_1(), "rule__VariableDeclarationImpl__ExpressionAssignment_1_0_1_1");
-			builder.put(grammarAccess.getExportedVariableBindingAccess().getPatternAssignment_0(), "rule__ExportedVariableBinding__PatternAssignment_0");
-			builder.put(grammarAccess.getExportedVariableBindingAccess().getExpressionAssignment_2(), "rule__ExportedVariableBinding__ExpressionAssignment_2");
 			builder.put(grammarAccess.getExpressionStatementAccess().getExpressionAssignment_0(), "rule__ExpressionStatement__ExpressionAssignment_0");
 			builder.put(grammarAccess.getIfStatementAccess().getExpressionAssignment_2(), "rule__IfStatement__ExpressionAssignment_2");
 			builder.put(grammarAccess.getIfStatementAccess().getIfStmtAssignment_4(), "rule__IfStatement__IfStmtAssignment_4");
