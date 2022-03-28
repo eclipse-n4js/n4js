@@ -115,18 +115,8 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			ExportDeclaration:
 				exportedElement?.getFullyQualifiedName
-			ElementExportDefinition: {
-				val containingExportingElem = it.eContainer as TExportingElement;
-				val declExpName = it.declaredExportedName;
-				if (declExpName !== null) {
-					containingExportingElem.fullyQualifiedName?.append(declExpName)
-				} else {
-					val expElemName = it.exportedElement?.name;
-					if (expElemName !== null) {
-						containingExportingElem.fullyQualifiedName?.append(expElemName)
-					}
-				}
-			}
+			ElementExportDefinition:
+				fqnExportDefinition(it)
 			TypeVariable:
 				null
 			Type:
@@ -185,6 +175,20 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
 		val fqn = QualifiedNameUtils.append(prefix, type.name);
+		return fqn;
+	}
+
+	private def QualifiedName fqnExportDefinition(ElementExportDefinition exportDef) {
+		val containingExportingElem = exportDef.eContainer as TExportingElement;
+		var prefix = containingExportingElem.fullyQualifiedName;
+		val exportedElem = exportDef.exportedElement;
+		if (exportedElem instanceof Type) {
+			if (exportedElem.polyfill) {
+				prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
+			}
+		}
+		val exportedName = exportDef.declaredExportedName ?: exportedElem?.name;
+		val fqn = QualifiedNameUtils.append(prefix, exportedName);
 		return fqn;
 	}
 
