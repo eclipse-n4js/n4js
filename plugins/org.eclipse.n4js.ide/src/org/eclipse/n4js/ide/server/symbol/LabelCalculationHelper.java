@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.VariableStatement;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TGetter;
@@ -132,9 +131,9 @@ public class LabelCalculationHelper {
 		return "";
 	}
 
-	private String getModuleSpecifier(AbstractModule module) {
-		if (module != null && module.getQualifiedName() != null) {
-			return module.getModuleSpecifier();
+	private String getModuleSpecifier(TModule tModule) {
+		if (tModule != null && tModule.getQualifiedName() != null) {
+			return tModule.getModuleSpecifier();
 		}
 		return "<unknown>";
 	}

@@ -42,7 +42,10 @@ type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
 
-abstract class AbstractModule extends AbstractNamespace, SyntaxRelatedTElement {
+/**
+ * The TModule is the representation of the script on the type level.
+ */
+class TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElement {
 	/**
 	 * The module's simple name, i.e. the last segment of its qualified name.
 	 */
@@ -51,33 +54,9 @@ abstract class AbstractModule extends AbstractNamespace, SyntaxRelatedTElement {
 	 * The qualified name of the module, which is derived from the file path. Includes the module's
 	 * file name (without extension) and the names of all ancestor folders up to, excluding the
 	 * containing project's source folder. The containing project's name is also not included,
-	 * but can be retrieved via {@link #getPackageName()}.
+	 * but can be retrieved via {@link #getProjectName()}.
 	 */
 	String qualifiedName
-	/**
-	 * Returns this module's module specifier as it would appear, for example, in the string literal at the end of an
-	 * import statement.
-	 * <p>
-	 * Since we changed the delimiter for our internal qualified names from '.' to '/', this simply returns the same
-	 * value as {@link #getQualifiedName()}. However, this getter is retained for the time being to let client code
-	 * differentiate between internal use (qualified name, e.g. in the Xtext index) and Javascript context (module
-	 * specifier, e.g. in import statements).
-	 */
-	derived String moduleSpecifier get {
-		return qualifiedName
-	}
-
-	op boolean isStaticPolyfillModule()
-	op boolean isStaticPolyfillAware()
-}
-
-/*
- * The TModule is the representation of the script on the type level.
- * <p>
- * Instances of this class are created for N4JS[D] / JS / DTS source code files (one per file), whereas instances
- * of {@link TDeclaredModule} are created for module declarations inside .d.ts files (possibly many per .d.ts file).
- */
-class TModule extends AbstractModule, TAnnotableElement {
 	/**
 	 * The <em>package name</em> of the project containing this module, as defined at
 	 * {@link org.eclipse.n4js.packagejson.projectDescription.ProjectDescription#packageName}.
@@ -218,21 +197,6 @@ class TModule extends AbstractModule, TAnnotableElement {
 	 */
 	contains transient Type[] temporaryTypes
 
-	/**
-	 * Convenience method, returns module this element is contained in, or
-	 * null if it is not contained in a module.
-	 */
-	op TModule getContainingModule() {
-		return this;
-	}
-	/**
-	 * Convenience method, returns the {@link TModule} this element is contained in, or
-	 * null if it is not contained in a TModule. Does not consider intermediate {@link TDeclaredModule}s!
-	 */
-	op TModule getContainingRootModule() {
-		return this;
-	}
-
 	op void clearTransientElements() {
 		internalTypes.clear();
 		internalDynamicElements.clear();
@@ -241,39 +205,27 @@ class TModule extends AbstractModule, TAnnotableElement {
 
 		super.clearTransientElements();
 	}
-}
 
-/*
- * This type of module is created only from .d.ts files and represents a module created from
- * a module declaration such as
- * <pre>
- * // .d.ts
- * declare module "my/declared/module" { ... }
- * </pre>
- * Note that module declarations of the form
- * <pre>
- * // .d.ts
- * declare module myLegacyModule { ... }
- * </pre>
- * are actually an old syntax for namespaces and will thus be represented as a {@link TNamespace},
- * not as a {@code TDeclaredModule}.
- */
-class TDeclaredModule extends AbstractModule {
-
-	op boolean isStaticPolyfillModule() {
-		return false; // never
+	/**
+	 * Returns this module's module specifier as it would appear, for example, in the string literal at the end of an
+	 * import statement.
+	 * <p>
+	 * Since we changed the delimiter for our internal qualified names from '.' to '/', this simply returns the same
+	 * value as {@link #getQualifiedName()}. However, this getter is retained for the time being to let client code
+	 * differentiate between internal use (qualified name, e.g. in the Xtext index) and Javascript context (module
+	 * specifier, e.g. in import statements).
+	 */
+	derived String moduleSpecifier get {
+		return qualifiedName
 	}
-	op boolean isStaticPolyfillAware() {
-		return false; // never
-	}
-
+	
 	/**
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.
 	 */
-	op TDeclaredModule getContainingModule() {
-		return this;
-	}
+//	op TModule getContainingModule() {
+//		return this;
+//	}
 }
 
 /*
@@ -341,15 +293,8 @@ class IdentifiableElement extends TypableElement {
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.
 	 */
-	op AbstractModule getContainingModule() {
-		return EcoreUtil2.getContainerOfType(this, AbstractModule);
-	}
-	/**
-	 * Convenience method, returns the {@link TModule} this element is contained in, or
-	 * null if it is not contained in a TModule. Does not consider {@link TDeclaredModule}s!
-	 */
-	op TModule getContainingRootModule() {
-		return EcoreUtil2.getContainerOfType(this, TModule);
+	op TModule getContainingModule() {
+		return EcoreUtil2.getContainerOfType(this,TModule);
 	}
 }
 
@@ -880,8 +825,12 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 }
 
 abstract class AbstractNamespace {
+	// TODO jvp: what does that mean:
+	// TODO: make sure these are only top level types in the script
+	// (ß): currently these may also contain nested types since the traversal
+	// in the types builder processes the complete AST
 	/*
-	 * A list of all types directly contained in this abstract namespace.
+	 * A list of all types declarations in the script on the top level.
 	 * These include the exported classes, interfaces, function as well
 	 * as the types inferred from type defining elements that are not marked as exported.
 	 * This allows for better validation messages and diagnostics in later stages
@@ -900,35 +849,24 @@ abstract class AbstractNamespace {
 	 */
 	contains transient TVariable[] localVariables
 	/*
-	 * A list of all child namespaces directly contained in this abstract namespace.
+	 * A list of all top level namespaces in the script.
 	 * These include the exported namespaces as well as the internal namespaces.
 	 * Similar to #types, this allows for better validation messages and diagnostics.
 	 */
 	contains TNamespace[] namespaces
-	/*
-	 * A list of all declared modules directly contained in this abstract namespace.
-	 */
-	contains TDeclaredModule[] modules
-
-	/*
+	
+	/**
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.
 	 */
-	op AbstractModule getContainingModule() {
-		return EcoreUtil2.getContainerOfType(this, AbstractModule);
-	}
-	/**
-	 * Convenience method, returns the {@link TModule} this element is contained in, or
-	 * null if it is not contained in a TModule. Does not consider {@link TDeclaredModule}s!
-	 */
-	op TModule getContainingRootModule() {
+	op TModule getContainingModule() {
 		return EcoreUtil2.getContainerOfType(this, TModule);
 	}
 
 	op void clearTransientElements() {
 		localVariables.clear();
 		// continue with contained AbstractNamespaces:
-		for (child : (namespaces + modules)) {
+		for (child : namespaces) {
 			child.clearTransientElements();
 		}
 	}
@@ -937,6 +875,7 @@ abstract class AbstractNamespace {
 class TNamespace extends Type /* must be first to generate 'isExported' */,
 							AbstractNamespace, AccessibleTypeElement, SyntaxRelatedTElement, TNamespaceElement {
 	boolean external
+	
 }
 
 class TNamespaceElement {
@@ -953,7 +892,7 @@ class ModuleNamespaceVirtualType extends Type, SyntaxRelatedTElement {
 	/*
 	 * reference to module which give namespace represents
 	 */
-	refers AbstractModule module
+	refers TModule module
 
 	/**
 	 * If true, tmodule behaves like a dynamic type enabling access to plain js

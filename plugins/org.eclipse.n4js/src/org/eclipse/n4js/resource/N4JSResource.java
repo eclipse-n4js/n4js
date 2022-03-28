@@ -55,6 +55,7 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.dts.DtsParser;
+import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -277,8 +278,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private boolean removingAdapters;
 
 	/**
-	 * Default is {@code true}
+	 * True iff performance tweak should be applied, default is {@code true}.
 	 *
+	 * @see #clearUnnecessaryFunctionBodies(EObject)
 	 * @see #OPTION_CLEAR_FUNCTION_BODIES
 	 */
 	private boolean optionClearFunctionBodies = true;
@@ -440,30 +442,37 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		TModule deserializedModule = null;
 		Iterable<IEObjectDescription> modules = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
 		for (IEObjectDescription module : modules) {
+			if (UserDataMapper.isNested(module)) {
+				// load the host first that will install adapters to load this nested resource
+				URI host = UserDataMapper.getHostUri(module);
+				resourceSet.getResource(host, true);
+			}
 			deserializedModule = UserDataMapper.getDeserializedModuleFromDescription(module, getURI());
 			if (deserializedModule != null) {
 				break;
 			}
 		}
-		if (deserializedModule != null) {
-			boolean wasDeliver = eDeliver();
-			try {
-				eSetDeliver(false);
-				ModuleAwareContentsList theContents = (ModuleAwareContentsList) getContents();
-				if (!theContents.isEmpty())
-					throw new IllegalStateException("There is already something in the contents list: " + theContents);
-				InternalEObject astProxy = createAstProxy();
-				theContents.sneakyAdd(astProxy);
-				theContents.sneakyAdd(deserializedModule);
-				fullyInitialized = true;
-				// TModule loaded from index had been fully post-processed prior to serialization
-				fullyPostProcessed = true;
-			} finally {
-				eSetDeliver(wasDeliver);
-			}
-			return true;
+
+		if (deserializedModule == null) {
+			return false;
 		}
-		return false;
+
+		boolean wasDeliver = eDeliver();
+		try {
+			eSetDeliver(false);
+			ModuleAwareContentsList theContents = (ModuleAwareContentsList) getContents();
+			if (!theContents.isEmpty())
+				throw new IllegalStateException("There is already something in the contents list: " + theContents);
+			InternalEObject astProxy = createAstProxy();
+			theContents.sneakyAdd(astProxy);
+			theContents.sneakyAdd(deserializedModule);
+			fullyInitialized = true;
+			// TModule loaded from index had been fully post-processed prior to serialization
+			fullyPostProcessed = true;
+		} finally {
+			eSetDeliver(wasDeliver);
+		}
+		return true;
 	}
 
 	/**
@@ -496,6 +505,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		final Script script = getScript();
 		final TModule module = getModule();
 		return script != null && module != null && isASTProxy(script) && !module.eIsProxy();
+	}
+
+	/** Returns true iff this resource is nested/virtual */
+	public boolean isNested() {
+		return NestedResourceAdapter.isInstalled(this);
 	}
 
 	/**
@@ -620,7 +634,17 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	private void superLoad(Map<?, ?> options) throws IOException {
 		try {
-			super.load(options);
+			if (isNested()) {
+				try {
+					isLoading = true;
+					isLoaded = true; // order of state transitions see ResourceImpl#load(InputStream, Map)
+					doLoad(null, options);
+				} finally {
+					isLoading = false;
+				}
+			} else {
+				super.load(options);
+			}
 		} catch (Throwable th) {
 			isLoadedWithFailure = true;
 			throw th;
@@ -765,11 +789,22 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		} else {
 			ResourceType resourceType = ResourceType.getResourceType(getURI());
 			if (resourceType == ResourceType.DTS) {
+				// load from dts but also mimic normal loading behavior/state transitions
 				setValidationDisabled(true);
-				try (Reader reader = createReader(inputStream);) {
-					IParseResult result = new DtsParser().parse(reader, this);
-					updateInternalState(this.getParseResult(), result);
+				IParseResult result = null;
+				if (inputStream == null) {
+					// this happens in case of virtual resources
+					result = new DtsParser().parse(null, this, null);
+				} else {
+					URI srcFolder = workspaceAccess.findSourceFolderContaining(resourceSet, uri).getPath();
+					try (Reader reader = createReader(inputStream);) {
+						result = new DtsParser().parse(reader, this, srcFolder);
+					}
 				}
+				if (fullyInitialized) {
+					discardDerivedState();
+				}
+				updateInternalState(this.getParseResult(), result);
 			} else {
 				super.doLoad(inputStream, options);
 			}
@@ -1391,11 +1426,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 *
 	 * @param object
 	 *            the EObject to check
-	 * @return true, if the given object is a proxy and its fragment starts with {@link N4JSResource#AST_PROXY_FRAGMENT}
-	 *         .
+	 * @return true iff the given object is a proxy and its fragment starts with {@link N4JSResource#AST_PROXY_FRAGMENT}
 	 */
 	protected boolean isASTProxy(EObject object) {
 		if (object.eIsProxy()) {
@@ -1711,5 +1744,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				module.getTemporaryTypes().clear();
 			}, module);
 		}
+	}
+
+	/** Returns the URI of the resource this resource is nested in, or null */
+	public URI getHostUri() {
+		NestedResourceAdapter nestedResourceAdapter = NestedResourceAdapter.get(this);
+		if (nestedResourceAdapter == null) {
+			return null;
+		}
+		return nestedResourceAdapter.getHostUri();
 	}
 }

@@ -81785,13 +81785,13 @@ rule__ExportFromClause__ReexportedFromAssignment_1
 	}
 :
 	(
-		{ before(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleCrossReference_1_0()); }
+		{ before(grammarAccess.getExportFromClauseAccess().getReexportedFromTModuleCrossReference_1_0()); }
 		(
-			{ before(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleModuleSpecifierParserRuleCall_1_0_1()); }
+			{ before(grammarAccess.getExportFromClauseAccess().getReexportedFromTModuleModuleSpecifierParserRuleCall_1_0_1()); }
 			ruleModuleSpecifier
-			{ after(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleModuleSpecifierParserRuleCall_1_0_1()); }
+			{ after(grammarAccess.getExportFromClauseAccess().getReexportedFromTModuleModuleSpecifierParserRuleCall_1_0_1()); }
 		)
-		{ after(grammarAccess.getExportFromClauseAccess().getReexportedFromAbstractModuleCrossReference_1_0()); }
+		{ after(grammarAccess.getExportFromClauseAccess().getReexportedFromTModuleCrossReference_1_0()); }
 	)
 ;
 finally {
@@ -82153,13 +82153,13 @@ rule__ImportDeclarationImpl__ModuleAssignment_2
 	}
 :
 	(
-		{ before(grammarAccess.getImportDeclarationImplAccess().getModuleAbstractModuleCrossReference_2_0()); }
+		{ before(grammarAccess.getImportDeclarationImplAccess().getModuleTModuleCrossReference_2_0()); }
 		(
-			{ before(grammarAccess.getImportDeclarationImplAccess().getModuleAbstractModuleModuleSpecifierParserRuleCall_2_0_1()); }
+			{ before(grammarAccess.getImportDeclarationImplAccess().getModuleTModuleModuleSpecifierParserRuleCall_2_0_1()); }
 			ruleModuleSpecifier
-			{ after(grammarAccess.getImportDeclarationImplAccess().getModuleAbstractModuleModuleSpecifierParserRuleCall_2_0_1()); }
+			{ after(grammarAccess.getImportDeclarationImplAccess().getModuleTModuleModuleSpecifierParserRuleCall_2_0_1()); }
 		)
-		{ after(grammarAccess.getImportDeclarationImplAccess().getModuleAbstractModuleCrossReference_2_0()); }
+		{ after(grammarAccess.getImportDeclarationImplAccess().getModuleTModuleCrossReference_2_0()); }
 	)
 ;
 finally {

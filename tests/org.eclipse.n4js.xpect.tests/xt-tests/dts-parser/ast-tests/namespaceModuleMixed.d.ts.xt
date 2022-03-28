@@ -44,13 +44,11 @@ Script: true
     N4NamespaceDeclaration: [private], legacyModuleInNamespace
     ExportDeclaration: false, false
      N4NamespaceDeclaration: [public], legacyModuleInNamespaceExported
-    N4ModuleDeclaration: actualModuleInNamespace
   ExportDeclaration: false, false
    N4NamespaceDeclaration: [public], myLegacyModule
     N4NamespaceDeclaration: [private], namespaceInLegacyModule
     ExportDeclaration: false, false
      N4NamespaceDeclaration: [public], namespaceInLegacyModuleExported
-    N4ModuleDeclaration: actualModuleInLegacyModule
   N4NamespaceDeclaration: "myActualModule"
    N4NamespaceDeclaration: [private], namespaceInActualModule
    ExportDeclaration: false, false

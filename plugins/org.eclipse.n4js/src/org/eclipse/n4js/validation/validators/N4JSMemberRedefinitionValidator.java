@@ -89,7 +89,6 @@ import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
@@ -625,7 +624,7 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 
 		// Nr.1 of Constraints 67 (Overriding Members) and Constraints 69 (Implementation of Interface Members)
 		// --> s must be accessible
-		final AbstractModule contextModule = contextType.getContainingModule();
+		final TModule contextModule = contextType.getContainingModule();
 		if (contextModule != null
 				&& !memberVisibilityChecker.isVisibleWhenOverriding(contextModule, contextType, contextType, s)) {
 			if (!consumptionConflict) { // avoid consequential errors

@@ -93,7 +93,7 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 
 		n4Class.definedType = tclass;
 
-		target.containingRootModule.internalTypes += tclass;
+		target.containingModule.internalTypes += tclass;
 	}
 
 	def private createTClass(N4ClassDeclaration classDecl) {

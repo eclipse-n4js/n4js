@@ -279,7 +279,7 @@ public class ProjectBuilder {
 			if (!isOld && isNew) {
 				// added
 				result.getDirty().add(currURI);
-			} else if (isOld && !isNew) {
+			} else if (isOld && !isNew && !isNestedResource(currURI)) {
 				// removed
 				result.getDeleted().add(currURI);
 			} else if (isOld && isNew) {
@@ -306,6 +306,10 @@ public class ProjectBuilder {
 			}
 		}
 		return result;
+	}
+
+	protected boolean isNestedResource(URI uri) {
+		return false;
 	}
 
 	/** Build increments of this project. */
@@ -563,6 +567,11 @@ public class ProjectBuilder {
 	/** Getter */
 	public ProjectConfigSnapshot getProjectConfig() {
 		return projectConfig;
+	}
+
+	/** Getter */
+	public ImmutableProjectState getProjectState() {
+		return projectStateSnapshot.get();
 	}
 
 	/** Setter */

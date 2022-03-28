@@ -52,7 +52,6 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
@@ -172,7 +171,7 @@ public class PreparationStep {
 		 * Helper registry. Maps original TModules that were imported <b>via a name-space import</b> to original(!)
 		 * import specifier causing the import.
 		 */
-		private final Map<AbstractModule, NamespaceImportSpecifier> importedModules = new HashMap<>();
+		private final Map<TModule, NamespaceImportSpecifier> importedModules = new HashMap<>();
 
 		public AST2IMCopier(Script script, Tracer tracer, InformationRegistry info) {
 			// note: we set useOriginalReferences==false, which means we won't copy references to remote elements that

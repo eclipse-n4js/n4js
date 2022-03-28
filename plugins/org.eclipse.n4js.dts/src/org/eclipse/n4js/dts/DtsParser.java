@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRErrorListener;
@@ -28,9 +29,13 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.INode;
 
@@ -78,7 +83,16 @@ public class DtsParser {
 	}
 
 	/** Parses d.ts files */
-	public DtsParseResult parse(Reader reader, LazyLinkingResource resource) throws IOException {
+	public DtsParseResult parse(Reader reader, LazyLinkingResource resource, URI srcFolder) throws IOException {
+		NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
+		if (adapter == null) {
+			return parseScript(reader, resource, srcFolder);
+		} else {
+			return parseNestedScript(resource, adapter);
+		}
+	}
+
+	private DtsParseResult parseScript(Reader reader, LazyLinkingResource resource, URI srcFolder) throws IOException {
 		CharStream fileContents = fromReader(reader);
 		long millis = System.currentTimeMillis();
 
@@ -111,12 +125,41 @@ public class DtsParser {
 		stats.time = System.currentTimeMillis() - millis;
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource, srcFolder);
 		Script root = astBuilder.consume(stats.tree);
 		RootNode rootNode = new RootNode(stats.tree);
 		Iterable<? extends INode> syntaxErrors = stats.errors;
 
+		ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.get(resource);
+		if (loadResultInfo != null) {
+			loadResultInfo.ensureNestedResourcesExist(resource);
+		}
+
 		return new DtsParseResult(root, rootNode, syntaxErrors);
+	}
+
+	private DtsParseResult parseNestedScript(LazyLinkingResource resource, NestedResourceAdapter adapter) {
+		ModuleDeclarationContext ctx = adapter.getModuleDeclarationContext();
+		DtsTokenStream tokens = adapter.getTokenStream();
+
+		ProgramContext prgCtx = new ProgramContext(null, 0) {
+			{
+				this.start = ctx.start;
+				this.stop = ctx.stop;
+			}
+
+			@Override
+			public StatementListContext statementList() {
+				return ctx.block().statementList();
+			}
+		};
+
+		// convert parse tree to AST
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource, null);
+		Script root = astBuilder.consume(prgCtx);
+		RootNode rootNode = new RootNode(ctx);
+
+		return new DtsParseResult(root, rootNode, Collections.emptyList());
 	}
 
 }

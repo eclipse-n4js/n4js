@@ -11,11 +11,10 @@ package org.eclipse.n4js.ide.tests.contentassist;
 
 import java.util.List
 import org.eclipse.n4js.ide.tests.helper.server.AbstractCompletionTest
-import org.eclipse.n4js.ts.types.TDeclaredModule
 import org.junit.Test
 
 /**
- * Like {@link CompletionWithImportsTest}, but for the special case that we import from a {@link TDeclaredModule declared module}.
+ * Like {@link CompletionWithImportsTest}, but for the special case that we import from a declared module}.
  */
 public class CompletionWithImportsFromDeclaredModuleTest extends AbstractCompletionTest {
 
