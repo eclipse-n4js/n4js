@@ -26,7 +26,9 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.postprocessing.ASTFlowInfo;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.resource.UserDataMapper;
 import org.eclipse.n4js.tooling.tester.TestCatalogSupplier;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.UtilN4;
@@ -40,6 +42,8 @@ import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -153,6 +157,24 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 			}
 		}
 		return result;
+	}
+
+	@Override
+	protected boolean isNestedResource(URI uri) {
+		ImmutableProjectState projectState = getProjectState();
+		IResourceDescription resDescr = projectState.getResourceDescriptions().getResourceDescription(uri);
+		if (resDescr == null) {
+			return false;
+		}
+
+		Iterable<IEObjectDescription> eo = resDescr.getExportedObjectsByType(TypesPackage.eINSTANCE.getTModule());
+
+		for (IEObjectDescription objDescr : resDescr.getExportedObjectsByType(TypesPackage.eINSTANCE.getTModule())) {
+			if (UserDataMapper.isNested(objDescr)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Generates the test catalog for the project. */
