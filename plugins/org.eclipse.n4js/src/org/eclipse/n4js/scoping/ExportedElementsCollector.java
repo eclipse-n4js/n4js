@@ -31,6 +31,7 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
+import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
@@ -133,12 +134,26 @@ public class ExportedElementsCollector {
 			}
 		}
 
-		// special handling for non-exported elements of namespaces:
-		// they are accessible from everywhere within the containing file (even outside their containing namespace)
+		// special handling of non-exported elements
 		if (module instanceof TNamespace && module.eResource() == info.context) {
+			// non-exported elements of namespaces are accessible from everywhere within the containing file
+			// (even outside their containing namespace)
 			for (TExportableElement elem : module.getExportableElements()) {
 				if (!elem.isDirectlyExported()) {
 					doCollectElement(elem.getName(), elem, info);
+				}
+			}
+		} else {
+			// legacy behavior:
+			// non-exported elements are added as well; only visibility checking will prevent them from being used
+			boolean isDTS = ResourceType.getResourceType(module) == ResourceType.DTS;
+			if (isDTS) {
+				// cannot use this legacy behavior in .d.ts files, because visibility checking is disabled there
+			} else {
+				for (Type type : Iterables.concat(module.getTypes(), module.getNamespaces())) {
+					if (!type.isDirectlyExported()) {
+						doCollectElement(type.getName(), type, info);
+					}
 				}
 			}
 		}
