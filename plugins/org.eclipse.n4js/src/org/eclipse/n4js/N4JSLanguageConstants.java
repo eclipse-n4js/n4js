@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.json.validation.JSONIssueCodes;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.validation.IssueCodes;
 
 import com.google.common.collect.ImmutableMap;
@@ -180,6 +181,6 @@ public abstract class N4JSLanguageConstants {
 	private N4JSLanguageConstants() {
 	}
 
-	/** Elements exported by 'export default' syntax are visible under this name from outside. */
-	public static final String EXPORT_DEFAULT_NAME = "default";
+	/** Elements exported using the 'export default ...' syntax are visible under this name from outside. */
+	public static final String EXPORT_DEFAULT_NAME = UtilN4.EXPORT_DEFAULT_NAME;
 }

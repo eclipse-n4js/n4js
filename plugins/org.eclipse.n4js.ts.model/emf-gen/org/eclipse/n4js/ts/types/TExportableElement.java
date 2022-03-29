@@ -21,6 +21,7 @@ package org.eclipse.n4js.ts.types;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExported <em>Directly Exported</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExportedAsDefault <em>Directly Exported As Default</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTExportableElement()
@@ -54,5 +55,39 @@ public interface TExportableElement extends IdentifiableElement {
 	 * @generated
 	 */
 	void setDirectlyExported(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Iff this element is {@link TExportableElement#isDirectlyExported() directly exported}, then this property
+	 * tells whether the element is exported as default. Otherwise, the value is undefined.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Directly Exported As Default</em>' attribute.
+	 * @see #setDirectlyExportedAsDefault(boolean)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTExportableElement_DirectlyExportedAsDefault()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isDirectlyExportedAsDefault();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExportedAsDefault <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Directly Exported As Default</em>' attribute.
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 */
+	void setDirectlyExportedAsDefault(boolean value);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getExportedName();
 
 } // TExportableElement

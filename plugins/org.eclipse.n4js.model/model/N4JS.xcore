@@ -62,6 +62,7 @@ import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.utils.UtilN4
 
 type IteratorOfExpression wraps Iterator<Expression>
 type IteratorOfYieldExpression wraps Iterator<YieldExpression>
@@ -182,7 +183,7 @@ abstract class ExportableElement extends NamespaceElement {
 					// For example, the following two lines are equivalent in ES6:
 					//     import myFoo from "Other"
 					//     import {default as myFoo} from "Other"
-					return "default";
+					return UtilN4.EXPORT_DEFAULT_NAME;
 				}
 			}
 			val me = this;

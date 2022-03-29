@@ -25,6 +25,7 @@ import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -167,7 +168,11 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	 */
 	@Override
 	public String getExportedName() {
-		return this.getOriginalTarget().getName();
+		final IdentifiableElement trgt = this.getOriginalTarget();
+		if ((trgt instanceof TExportableElement)) {
+			return ((TExportableElement)trgt).getExportedName();
+		}
+		return trgt.getName();
 	}
 
 	/**

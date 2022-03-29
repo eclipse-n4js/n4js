@@ -48,6 +48,8 @@ import org.eclipse.n4js.n4JS.ScriptElement;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
+import org.eclipse.n4js.utils.UtilN4;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>N4 Type Declaration</b></em>'.
@@ -274,7 +276,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 				final ExportDeclaration exportDecl = ((ExportDeclaration) _eContainer);
 				boolean _isDefaultExport = exportDecl.isDefaultExport();
 				if (_isDefaultExport) {
-					return "default";
+					return UtilN4.EXPORT_DEFAULT_NAME;
 				}
 			}
 			final ExportableElement me = this;

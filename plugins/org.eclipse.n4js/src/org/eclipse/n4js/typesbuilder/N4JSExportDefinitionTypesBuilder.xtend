@@ -12,6 +12,7 @@ package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.InternalEObject
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.N4JSPackage
@@ -90,6 +91,7 @@ class N4JSExportDefinitionTypesBuilder {
 
 	def package void createExportDefinitionForDirectlyExportedElement(TExportableElement tDirectlyExportedElem, String declaredExportedName, AbstractNamespace target, boolean preLinkingPhase) {
 		tDirectlyExportedElem.directlyExported = true;
+		tDirectlyExportedElem.directlyExportedAsDefault = declaredExportedName == N4JSLanguageConstants.EXPORT_DEFAULT_NAME;
 		addElementExportDefinition(target, declaredExportedName, tDirectlyExportedElem);
 	}
 

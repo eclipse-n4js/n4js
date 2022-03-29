@@ -31,6 +31,8 @@ import org.eclipse.n4js.n4JS.Statement;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
+import org.eclipse.n4js.utils.UtilN4;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Annotation List</b></em>'.
@@ -118,7 +120,7 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 				final ExportDeclaration exportDecl = ((ExportDeclaration) _eContainer);
 				boolean _isDefaultExport = exportDecl.isDefaultExport();
 				if (_isDefaultExport) {
-					return "default";
+					return UtilN4.EXPORT_DEFAULT_NAME;
 				}
 			}
 			final ExportableElement me = this;

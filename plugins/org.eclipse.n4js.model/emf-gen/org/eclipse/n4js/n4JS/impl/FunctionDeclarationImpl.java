@@ -61,6 +61,8 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 
+import org.eclipse.n4js.utils.UtilN4;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Function Declaration</b></em>'.
@@ -581,7 +583,7 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				final ExportDeclaration exportDecl = ((ExportDeclaration) _eContainer);
 				boolean _isDefaultExport = exportDecl.isDefaultExport();
 				if (_isDefaultExport) {
-					return "default";
+					return UtilN4.EXPORT_DEFAULT_NAME;
 				}
 			}
 			final ExportableElement me = this;

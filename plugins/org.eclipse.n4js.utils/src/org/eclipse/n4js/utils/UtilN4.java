@@ -56,6 +56,9 @@ public class UtilN4 {
 	/** Default string used for indentation of a single level. */
 	public static final String DEFAULT_INDENTATION_STR = "    ";
 
+	/** Elements exported using the 'export default ...' syntax are visible under this name from outside. */
+	public static final String EXPORT_DEFAULT_NAME = "default";
+
 	/**
 	 * The maximum memory usage measured with method {@link #measureUsedMemory(boolean)} since the JVM was started.
 	 * Client code may reset this to 0 in order to start over.

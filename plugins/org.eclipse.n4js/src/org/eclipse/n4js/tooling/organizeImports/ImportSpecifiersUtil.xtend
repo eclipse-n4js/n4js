@@ -100,7 +100,7 @@ class ImportSpecifiersUtil {
 			return "<" + specifier.importedElementAsText + ">(proxy)"
 		}
 
-		return element.name ?: specifier.importedElementAsText;
+		return element.exportedName;
 	}
 
 	/** returns locally used name of element imported via {@link NamedImportSpecifier} */

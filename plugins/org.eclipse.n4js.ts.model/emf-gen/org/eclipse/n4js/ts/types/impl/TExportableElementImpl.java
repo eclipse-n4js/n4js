@@ -10,7 +10,11 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
@@ -18,6 +22,8 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TypesPackage;
+
+import org.eclipse.n4js.utils.UtilN4;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,6 +34,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TExportableElementImpl#isDirectlyExported <em>Directly Exported</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TExportableElementImpl#isDirectlyExportedAsDefault <em>Directly Exported As Default</em>}</li>
  * </ul>
  *
  * @generated
@@ -52,6 +59,26 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	 * @ordered
 	 */
 	protected boolean directlyExported = DIRECTLY_EXPORTED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDirectlyExportedAsDefault() <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDirectlyExportedAsDefault() <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean directlyExportedAsDefault = DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -101,10 +128,53 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	 * @generated
 	 */
 	@Override
+	public boolean isDirectlyExportedAsDefault() {
+		return directlyExportedAsDefault;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDirectlyExportedAsDefault(boolean newDirectlyExportedAsDefault) {
+		boolean oldDirectlyExportedAsDefault = directlyExportedAsDefault;
+		directlyExportedAsDefault = newDirectlyExportedAsDefault;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT, oldDirectlyExportedAsDefault, directlyExportedAsDefault));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getExportedName() {
+		boolean _isDirectlyExported = this.isDirectlyExported();
+		if (_isDirectlyExported) {
+			boolean _isDirectlyExportedAsDefault = this.isDirectlyExportedAsDefault();
+			if (_isDirectlyExportedAsDefault) {
+				return UtilN4.EXPORT_DEFAULT_NAME;
+			}
+			return this.getName();
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED:
 				return isDirectlyExported();
+			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT:
+				return isDirectlyExportedAsDefault();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -119,6 +189,9 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 		switch (featureID) {
 			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED:
 				setDirectlyExported((Boolean)newValue);
+				return;
+			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT:
+				setDirectlyExportedAsDefault((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -135,6 +208,9 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED:
 				setDirectlyExported(DIRECTLY_EXPORTED_EDEFAULT);
 				return;
+			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT:
+				setDirectlyExportedAsDefault(DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT);
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -149,8 +225,24 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 		switch (featureID) {
 			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED:
 				return directlyExported != DIRECTLY_EXPORTED_EDEFAULT;
+			case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT:
+				return directlyExportedAsDefault != DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case TypesPackage.TEXPORTABLE_ELEMENT___GET_EXPORTED_NAME:
+				return getExportedName();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -165,6 +257,8 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (directlyExported: ");
 		result.append(directlyExported);
+		result.append(", directlyExportedAsDefault: ");
+		result.append(directlyExportedAsDefault);
 		result.append(')');
 		return result.toString();
 	}

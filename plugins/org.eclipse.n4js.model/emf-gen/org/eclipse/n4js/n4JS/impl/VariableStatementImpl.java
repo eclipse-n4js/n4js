@@ -57,6 +57,8 @@ import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
+import org.eclipse.n4js.utils.UtilN4;
+
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
 /**
@@ -376,7 +378,7 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 				final ExportDeclaration exportDecl = ((ExportDeclaration) _eContainer);
 				boolean _isDefaultExport = exportDecl.isDefaultExport();
 				if (_isDefaultExport) {
-					return "default";
+					return UtilN4.EXPORT_DEFAULT_NAME;
 				}
 			}
 			final ExportableElement me = this;

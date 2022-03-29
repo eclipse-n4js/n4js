@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.EcoreUtil2
 
 type IterableOfTExportableElement wraps Iterable<? extends TExportableElement>
@@ -341,6 +342,23 @@ class TExportableElement extends IdentifiableElement {
 	 * from {@code #isDeclaredExported()} OR from {@code #isExportedByNamespace()}.
 	 */
 	boolean directlyExported
+
+	/*
+	 * Iff this element is {@link TExportableElement#isDirectlyExported() directly exported}, then this property
+	 * tells whether the element is exported as default. Otherwise, the value is undefined.
+	 */
+	boolean directlyExportedAsDefault
+
+	// FIXME does not yet support indirect exports
+	op String getExportedName() {
+		if (directlyExported) {
+			if (directlyExportedAsDefault) {
+				return UtilN4.EXPORT_DEFAULT_NAME;
+			}
+			return name;
+		}
+		return null;
+	}
 }
 
 /*

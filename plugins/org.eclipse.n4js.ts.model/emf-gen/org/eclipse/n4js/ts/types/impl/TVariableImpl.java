@@ -34,6 +34,8 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
+import org.eclipse.n4js.utils.UtilN4;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>TVariable</b></em>'.
@@ -45,6 +47,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#isDirectlyExported <em>Directly Exported</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#isDirectlyExportedAsDefault <em>Directly Exported As Default</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#isConst <em>Const</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#getCompileTimeValue <em>Compile Time Value</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#isExternal <em>External</em>}</li>
@@ -114,6 +117,26 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 	 * @ordered
 	 */
 	protected boolean directlyExported = DIRECTLY_EXPORTED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDirectlyExportedAsDefault() <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDirectlyExportedAsDefault() <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean directlyExportedAsDefault = DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isConst() <em>Const</em>}' attribute.
@@ -309,6 +332,29 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 	 * @generated
 	 */
 	@Override
+	public boolean isDirectlyExportedAsDefault() {
+		return directlyExportedAsDefault;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDirectlyExportedAsDefault(boolean newDirectlyExportedAsDefault) {
+		boolean oldDirectlyExportedAsDefault = directlyExportedAsDefault;
+		directlyExportedAsDefault = newDirectlyExportedAsDefault;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT, oldDirectlyExportedAsDefault, directlyExportedAsDefault));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isConst() {
 		return const_;
 	}
@@ -458,6 +504,24 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 	 * @generated
 	 */
 	@Override
+	public String getExportedName() {
+		boolean _isDirectlyExported = this.isDirectlyExported();
+		if (_isDirectlyExported) {
+			boolean _isDirectlyExportedAsDefault = this.isDirectlyExportedAsDefault();
+			if (_isDirectlyExportedAsDefault) {
+				return UtilN4.EXPORT_DEFAULT_NAME;
+			}
+			return this.getName();
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -514,6 +578,8 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 				return isDeclaredProvidedByRuntime();
 			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED:
 				return isDirectlyExported();
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT:
+				return isDirectlyExportedAsDefault();
 			case TypesPackage.TVARIABLE__CONST:
 				return isConst();
 			case TypesPackage.TVARIABLE__COMPILE_TIME_VALUE:
@@ -544,6 +610,9 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 				return;
 			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED:
 				setDirectlyExported((Boolean)newValue);
+				return;
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT:
+				setDirectlyExportedAsDefault((Boolean)newValue);
 				return;
 			case TypesPackage.TVARIABLE__CONST:
 				setConst((Boolean)newValue);
@@ -581,6 +650,9 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED:
 				setDirectlyExported(DIRECTLY_EXPORTED_EDEFAULT);
 				return;
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT:
+				setDirectlyExportedAsDefault(DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT);
+				return;
 			case TypesPackage.TVARIABLE__CONST:
 				setConst(CONST_EDEFAULT);
 				return;
@@ -614,6 +686,8 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 				return declaredProvidedByRuntime != DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
 			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED:
 				return directlyExported != DIRECTLY_EXPORTED_EDEFAULT;
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT:
+				return directlyExportedAsDefault != DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT;
 			case TypesPackage.TVARIABLE__CONST:
 				return const_ != CONST_EDEFAULT;
 			case TypesPackage.TVARIABLE__COMPILE_TIME_VALUE:
@@ -645,6 +719,7 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 		if (baseClass == TExportableElement.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED: return TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED;
+				case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT: return TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT;
 				default: return -1;
 			}
 		}
@@ -680,6 +755,7 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 		if (baseClass == TExportableElement.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED: return TypesPackage.TVARIABLE__DIRECTLY_EXPORTED;
+				case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT: return TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT;
 				default: return -1;
 			}
 		}
@@ -716,6 +792,7 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 		}
 		if (baseClass == TExportableElement.class) {
 			switch (baseOperationID) {
+				case TypesPackage.TEXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return TypesPackage.TVARIABLE___GET_EXPORTED_NAME;
 				default: return -1;
 			}
 		}
@@ -745,6 +822,8 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 				return getVariableAsString();
 			case TypesPackage.TVARIABLE___IS_HOLLOW:
 				return isHollow();
+			case TypesPackage.TVARIABLE___GET_EXPORTED_NAME:
+				return getExportedName();
 			case TypesPackage.TVARIABLE___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TVARIABLE___GET_TYPE_ACCESS_MODIFIER:
@@ -771,6 +850,8 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 		result.append(declaredProvidedByRuntime);
 		result.append(", directlyExported: ");
 		result.append(directlyExported);
+		result.append(", directlyExportedAsDefault: ");
+		result.append(directlyExportedAsDefault);
 		result.append(", const: ");
 		result.append(const_);
 		result.append(", compileTimeValue: ");

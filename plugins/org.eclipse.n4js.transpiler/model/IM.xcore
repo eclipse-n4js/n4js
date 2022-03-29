@@ -156,12 +156,11 @@ class SymbolTableEntryOriginal extends SymbolTableEntry {
 	 * this element is exported by the remote resource and can be imported in the resource to compile.
 	 */
 	op String getExportedName() {
-// FIXME IDE-2054 how to obtain the exported name???
-//		val trgt = originalTarget;
-//		if(trgt instanceof TExportableElement) {
-//			return trgt.exportedName;
-//		}
-		return originalTarget.name;
+		val trgt = originalTarget;
+		if(trgt instanceof TExportableElement) {
+			return trgt.exportedName;
+		}
+		return trgt.name;
 	}
 }
 
