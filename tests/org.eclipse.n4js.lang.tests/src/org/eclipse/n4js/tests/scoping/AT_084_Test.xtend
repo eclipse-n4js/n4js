@@ -225,7 +225,6 @@ class AT_084_Test {
 		'''.parse(URI.createURI("C.n4js"), rs).withVendorAndProject('C', 'B')
 
 		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, 'The type A is not visible.')
-		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNRESOLVED, "Import of A cannot be resolved.")
 	}
 	
 	@Test

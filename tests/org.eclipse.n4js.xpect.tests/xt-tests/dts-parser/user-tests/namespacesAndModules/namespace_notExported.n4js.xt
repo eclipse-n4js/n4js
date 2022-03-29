@@ -23,13 +23,10 @@
 	END_SETUP
 */
 
-// XPECT errors ---
-// "Import of N1 cannot be resolved." at "N1"
-// "The type N1 is not visible." at "N1"
-// ---
+// XPECT errors --> "Import of N1 cannot be resolved." at "N1"
 import { N1 } from "other"
 
 import { N2 } from "other"
 
-// XPECT errors --> "The type Cls is not visible." at "Cls"
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'Cls'." at "Cls"
 N2.Cls;

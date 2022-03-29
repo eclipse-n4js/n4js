@@ -23,13 +23,10 @@
 	END_SETUP
 */
 
-// XPECT errors ---
-// "Import of legacyModule1 cannot be resolved." at "legacyModule1"
-// "The type legacyModule1 is not visible." at "legacyModule1"
-// ---
+// XPECT errors --> "Import of legacyModule1 cannot be resolved." at "legacyModule1"
 import { legacyModule1 } from "other"
 
 import { legacyModule2 } from "other"
 
-// XPECT errors --> "The type Cls is not visible." at "Cls"
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'Cls'." at "Cls"
 legacyModule2.Cls;

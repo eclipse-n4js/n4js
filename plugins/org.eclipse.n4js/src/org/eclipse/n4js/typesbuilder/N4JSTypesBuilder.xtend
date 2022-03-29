@@ -20,11 +20,13 @@ import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.MethodDeclaration
+import org.eclipse.n4js.n4JS.ModifiableElement
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.NamespaceExportSpecifier
@@ -49,6 +51,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -427,8 +430,13 @@ public class N4JSTypesBuilder {
 			if (n instanceof ExportDeclaration) {
 				n.createType(target, preLinkingPhase);
 			} else if (n instanceof ExportableElement) {
-				if (!n.isDeclaredExported && n.isExportedByNamespace /* n.eContainer instanceof N4NamespaceDeclaration */) {
-					n.createExportDefinitionForDirectlyExportedElement(target, preLinkingPhase);
+				if (!n.isDeclaredExported && n.isExportedByNamespace) {
+					val isDtsExceptionCase = ResourceType.getResourceType(n) === ResourceType.DTS
+						&& n instanceof ModifiableElement
+						&& (n as ModifiableElement).declaredModifiers.contains(N4Modifier.PRIVATE);
+					if (!isDtsExceptionCase) {
+						n.createExportDefinitionForDirectlyExportedElement(target, preLinkingPhase);
+					}
 				}
 			}
 		}
