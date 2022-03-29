@@ -105,6 +105,18 @@ public interface AbstractNamespace extends TExportingElement {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * Returns all exportable elements directly contained in this {@link AbstractNamespace},
+	 * including those not actually exported.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfTExportableElement" unique="false"
+	 * @generated
+	 */
+	Iterable<? extends TExportableElement> getExportableElements();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * *
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.

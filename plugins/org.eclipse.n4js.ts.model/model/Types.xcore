@@ -24,6 +24,7 @@
 	language="")
 package org.eclipse.n4js.ts.types
 
+import com.google.common.collect.Iterables
 import java.util.Collections
 import java.util.HashMap
 import java.util.List
@@ -38,6 +39,7 @@ import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.EcoreUtil2
 
+type IterableOfTExportableElement wraps Iterable<? extends TExportableElement>
 type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
@@ -879,7 +881,15 @@ abstract class AbstractNamespace extends TExportingElement {
 	 * Similar to #types, this allows for better validation messages and diagnostics.
 	 */
 	contains TNamespace[] namespaces
-	
+
+	/*
+	 * Returns all exportable elements directly contained in this {@link AbstractNamespace},
+	 * including those not actually exported.
+	 */
+	op IterableOfTExportableElement getExportableElements() {
+		return Iterables.<TExportableElement>concat(types, exportedVariables, localVariables, namespaces);
+	}
+
 	/**
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.

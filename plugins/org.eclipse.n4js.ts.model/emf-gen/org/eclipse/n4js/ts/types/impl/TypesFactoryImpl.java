@@ -135,6 +135,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createMemberAccessModifierFromString(eDataType, initialValue);
 			case TypesPackage.MEMBER_TYPE:
 				return createMemberTypeFromString(eDataType, initialValue);
+			case TypesPackage.ITERABLE_OF_TEXPORTABLE_ELEMENT:
+				return createIterableOfTExportableElementFromString(eDataType, initialValue);
 			case TypesPackage.PARAMETERIZED_TYPE_REF_ITERABLE:
 				return createParameterizedTypeRefIterableFromString(eDataType, initialValue);
 			case TypesPackage.ITERABLE_OF_TCLASSIFIER:
@@ -168,6 +170,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertMemberAccessModifierToString(eDataType, instanceValue);
 			case TypesPackage.MEMBER_TYPE:
 				return convertMemberTypeToString(eDataType, instanceValue);
+			case TypesPackage.ITERABLE_OF_TEXPORTABLE_ELEMENT:
+				return convertIterableOfTExportableElementToString(eDataType, instanceValue);
 			case TypesPackage.PARAMETERIZED_TYPE_REF_ITERABLE:
 				return convertParameterizedTypeRefIterableToString(eDataType, instanceValue);
 			case TypesPackage.ITERABLE_OF_TCLASSIFIER:
@@ -736,6 +740,25 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 */
 	public String convertMemberTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public Iterable<? extends TExportableElement> createIterableOfTExportableElementFromString(EDataType eDataType, String initialValue) {
+		return (Iterable<? extends TExportableElement>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertIterableOfTExportableElementToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
 	}
 
 	/**

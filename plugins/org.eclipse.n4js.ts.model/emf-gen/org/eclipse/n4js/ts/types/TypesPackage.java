@@ -179,13 +179,22 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE_FEATURE_COUNT = TEXPORTING_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
+	 * The operation id for the '<em>Get Exportable Elements</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS = TEXPORTING_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE = TEXPORTING_ELEMENT_OPERATION_COUNT + 0;
+	int ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE = TEXPORTING_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Clear Transient Elements</em>' operation.
@@ -194,7 +203,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TEXPORTING_ELEMENT_OPERATION_COUNT + 1;
+	int ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TEXPORTING_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>Abstract Namespace</em>' class.
@@ -203,7 +212,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE_OPERATION_COUNT = TEXPORTING_ELEMENT_OPERATION_COUNT + 2;
+	int ABSTRACT_NAMESPACE_OPERATION_COUNT = TEXPORTING_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TModuleImpl <em>TModule</em>}' class.
@@ -484,6 +493,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMODULE_FEATURE_COUNT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 24;
+
+	/**
+	 * The operation id for the '<em>Get Exportable Elements</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___GET_EXPORTABLE_ELEMENTS = ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -3119,13 +3137,22 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Exportable Elements</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_EXPORTABLE_ELEMENTS = TYPE_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_CONTAINING_MODULE = TYPE_OPERATION_COUNT + 0;
+	int TNAMESPACE___GET_CONTAINING_MODULE = TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Clear Transient Elements</em>' operation.
@@ -3134,7 +3161,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TYPE_OPERATION_COUNT + 1;
+	int TNAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -3143,7 +3170,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 2;
+	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -3152,7 +3179,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 3;
+	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
@@ -3161,7 +3188,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 4;
+	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Directly Exported</em>' operation.
@@ -3170,7 +3197,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_DIRECTLY_EXPORTED = TYPE_OPERATION_COUNT + 5;
+	int TNAMESPACE___IS_DIRECTLY_EXPORTED = TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -3179,7 +3206,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_AST_ELEMENT_NO_RESOLVE = TYPE_OPERATION_COUNT + 6;
+	int TNAMESPACE___GET_AST_ELEMENT_NO_RESOLVE = TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>TNamespace</em>' class.
@@ -3188,7 +3215,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 7;
+	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceElementImpl <em>TNamespace Element</em>}' class.
@@ -12923,6 +12950,16 @@ public interface TypesPackage extends EPackage {
 	int MEMBER_TYPE = 64;
 
 	/**
+	 * The meta object id for the '<em>Iterable Of TExportable Element</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.lang.Iterable
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTExportableElement()
+	 * @generated
+	 */
+	int ITERABLE_OF_TEXPORTABLE_ELEMENT = 65;
+
+	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12930,7 +12967,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 65;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 66;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -12940,7 +12977,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 66;
+	int ITERABLE_OF_TCLASSIFIER = 67;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12950,7 +12987,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 67;
+	int VARIANCE = 68;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12960,7 +12997,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 68;
+	int NAME_AND_ACCESS = 69;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12970,7 +13007,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 69;
+	int MEMBER_LIST = 70;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12980,7 +13017,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 70;
+	int TCLASSIFIER_ITERABLE = 71;
 
 
 	/**
@@ -14292,6 +14329,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getAbstractNamespace_Namespaces();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExportableElements() <em>Get Exportable Elements</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Exportable Elements</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getExportableElements()
+	 * @generated
+	 */
+	EOperation getAbstractNamespace__GetExportableElements();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getContainingModule() <em>Get Containing Module</em>}' operation.
@@ -16044,6 +16091,17 @@ public interface TypesPackage extends EPackage {
 	EEnum getMemberType();
 
 	/**
+	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Iterable Of TExportable Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Iterable Of TExportable Element</em>'.
+	 * @see java.lang.Iterable
+	 * @model instanceClass="java.lang.Iterable&lt;? extends org.eclipse.n4js.ts.types.TExportableElement&gt;"
+	 * @generated
+	 */
+	EDataType getIterableOfTExportableElement();
+
+	/**
 	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Parameterized Type Ref Iterable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17181,6 +17239,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ABSTRACT_NAMESPACE__NAMESPACES = eINSTANCE.getAbstractNamespace_Namespaces();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Exportable Elements</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS = eINSTANCE.getAbstractNamespace__GetExportableElements();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Containing Module</b></em>' operation.
@@ -18621,6 +18687,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum MEMBER_TYPE = eINSTANCE.getMemberType();
+
+		/**
+		 * The meta object literal for the '<em>Iterable Of TExportable Element</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.lang.Iterable
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTExportableElement()
+		 * @generated
+		 */
+		EDataType ITERABLE_OF_TEXPORTABLE_ELEMENT = eINSTANCE.getIterableOfTExportableElement();
 
 		/**
 		 * The meta object literal for the '<em>Parameterized Type Ref Iterable</em>' data type.

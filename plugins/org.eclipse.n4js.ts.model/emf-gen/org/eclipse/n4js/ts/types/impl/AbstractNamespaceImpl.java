@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -25,6 +27,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.types.AbstractNamespace;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
@@ -159,6 +162,16 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 			namespaces = new EObjectContainmentEList<TNamespace>(TNamespace.class, this, TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES);
 		}
 		return namespaces;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Iterable<? extends TExportableElement> getExportableElements() {
+		return Iterables.<TExportableElement>concat(this.getTypes(), this.getExportedVariables(), this.getLocalVariables(), this.getNamespaces());
 	}
 
 	/**
@@ -306,6 +319,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypesPackage.ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS:
+				return getExportableElements();
 			case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE:
 				return getContainingModule();
 			case TypesPackage.ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS:

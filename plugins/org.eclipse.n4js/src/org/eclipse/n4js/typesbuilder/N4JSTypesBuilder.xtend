@@ -427,7 +427,7 @@ public class N4JSTypesBuilder {
 			if (n instanceof ExportDeclaration) {
 				n.createType(target, preLinkingPhase);
 			} else if (n instanceof ExportableElement) {
-				if (!n.isDeclaredExported && n.isExportedByNamespace) {
+				if (!n.isDeclaredExported && n.isExportedByNamespace /* n.eContainer instanceof N4NamespaceDeclaration */) {
 					n.createExportDefinitionForDirectlyExportedElement(target, preLinkingPhase);
 				}
 			}

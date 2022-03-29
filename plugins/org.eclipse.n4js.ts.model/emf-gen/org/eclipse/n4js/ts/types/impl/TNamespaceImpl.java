@@ -12,6 +12,8 @@ package org.eclipse.n4js.ts.types.impl;
 
 import com.google.common.base.Objects;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -35,6 +37,7 @@ import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.ExportDefinition;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TExportingElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
@@ -451,6 +454,16 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	 * @generated
 	 */
 	@Override
+	public Iterable<? extends TExportableElement> getExportableElements() {
+		return Iterables.<TExportableElement>concat(this.getTypes(), this.getExportedVariables(), this.getLocalVariables(), this.getNamespaces());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public TModule getContainingModule() {
 		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
 	}
@@ -739,6 +752,7 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 		}
 		if (baseClass == AbstractNamespace.class) {
 			switch (baseOperationID) {
+				case TypesPackage.ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS: return TypesPackage.TNAMESPACE___GET_EXPORTABLE_ELEMENTS;
 				case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE: return TypesPackage.TNAMESPACE___GET_CONTAINING_MODULE;
 				case TypesPackage.ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS: return TypesPackage.TNAMESPACE___CLEAR_TRANSIENT_ELEMENTS;
 				default: return -1;
@@ -778,6 +792,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 				return getTypeAccessModifier();
 			case TypesPackage.TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER:
 				return getDefaultTypeAccessModifier();
+			case TypesPackage.TNAMESPACE___GET_EXPORTABLE_ELEMENTS:
+				return getExportableElements();
 			case TypesPackage.TNAMESPACE___GET_CONTAINING_MODULE:
 				return getContainingModule();
 			case TypesPackage.TNAMESPACE___CLEAR_TRANSIENT_ELEMENTS:

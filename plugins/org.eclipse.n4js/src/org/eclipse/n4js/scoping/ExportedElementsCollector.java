@@ -26,6 +26,7 @@ import org.eclipse.n4js.ts.types.ExportDefinition;
 import org.eclipse.n4js.ts.types.ModuleExportDefinition;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -128,6 +129,16 @@ public class ExportedElementsCollector {
 				}
 				if (info.tryNext(exportedModule)) {
 					doCollectElements(exportedModule, info);
+				}
+			}
+		}
+
+		// special handling for non-exported elements of namespaces:
+		// they are accessible from everywhere within the containing file (even outside their containing namespace)
+		if (module instanceof TNamespace && module.eResource() == info.context) {
+			for (TExportableElement elem : module.getExportableElements()) {
+				if (!elem.isDirectlyExported()) {
+					doCollectElement(elem.getName(), elem, info);
 				}
 			}
 		}
