@@ -14,8 +14,6 @@ import static java.util.Collections.emptyList;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
@@ -58,7 +56,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	protected TypeVisibility isVisible(final Resource contextResource, final TypeAccessModifier accessModifier,
 			final T element) {
 
-		if (isDts(element)) {
+		if (ResourceType.getResourceType(element) == ResourceType.DTS) {
 			return new TypeVisibility(true);
 		}
 
@@ -113,7 +111,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	protected TypeVisibility isVisible(final Resource contextResource, final TypeAccessModifier accessModifier,
 			final IEObjectDescription element) {
 
-		if (isDts(element.getEObjectURI().trimFragment())) {
+		if (ResourceType.getResourceType(element.getEObjectURI()) == ResourceType.DTS) {
 			return new TypeVisibility(true);
 		}
 
@@ -226,20 +224,6 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 					|| isTestedProjectOf(contextModule, project);
 		}
 		return false;
-	}
-
-	private boolean isDts(EObject eObj) {
-		Resource res = eObj != null ? eObj.eResource() : null;
-		return res != null && isDts(res.getURI());
-	}
-
-	private boolean isDts(URI uri) {
-		// FIXME remove this debug code:
-		if ("Temp3.n4js".equals(uri.lastSegment())) {
-			return true;
-		}
-		ResourceType resourceType = ResourceType.getResourceType(uri);
-		return resourceType == ResourceType.DTS;
 	}
 
 	/**

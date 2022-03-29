@@ -107,9 +107,9 @@ public class ExportedElementsCollector {
 		return Iterables.concat(info.visible, info.invisible);
 	}
 
-	private void doCollectElements(AbstractNamespace module, CollectionInfo info) {
+	private void doCollectElements(AbstractNamespace namespace, CollectionInfo info) {
 
-		for (ExportDefinition exportDef : module.getExportDefinitions()) {
+		for (ExportDefinition exportDef : namespace.getExportDefinitions()) {
 			if (exportDef instanceof ElementExportDefinition) {
 				ElementExportDefinition exportDefCasted = (ElementExportDefinition) exportDef;
 				TExportableElement exportedElem = exportDefCasted.getExportedElement();
@@ -135,10 +135,10 @@ public class ExportedElementsCollector {
 		}
 
 		// special handling of non-exported elements
-		if (module instanceof TNamespace && module.eResource() == info.context) {
+		if (namespace instanceof TNamespace && namespace.eResource() == info.context) {
 			// non-exported elements of namespaces are accessible from everywhere within the containing file
 			// (even outside their containing namespace)
-			for (TExportableElement elem : module.getExportableElements()) {
+			for (TExportableElement elem : namespace.getExportableElements()) {
 				if (!elem.isDirectlyExported()) {
 					doCollectElement(elem.getName(), elem, info);
 				}
@@ -146,11 +146,11 @@ public class ExportedElementsCollector {
 		} else {
 			// legacy behavior:
 			// non-exported elements are added as well; only visibility checking will prevent them from being used
-			boolean isDTS = ResourceType.getResourceType(module) == ResourceType.DTS;
+			boolean isDTS = ResourceType.getResourceType(namespace) == ResourceType.DTS;
 			if (isDTS) {
 				// cannot use this legacy behavior in .d.ts files, because visibility checking is disabled there
 			} else {
-				for (Type type : Iterables.concat(module.getTypes(), module.getNamespaces())) {
+				for (Type type : Iterables.concat(namespace.getTypes(), namespace.getNamespaces())) {
 					if (!type.isDirectlyExported()) {
 						doCollectElement(type.getName(), type, info);
 					}
