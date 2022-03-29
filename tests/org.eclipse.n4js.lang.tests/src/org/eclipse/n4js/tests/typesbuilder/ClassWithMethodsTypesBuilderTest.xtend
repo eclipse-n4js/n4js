@@ -48,20 +48,20 @@ class ClassWithMethodsTypesBuilderTest extends AbstractTypesBuilderTest {
 	def test() {
 		val textFileName = "ClassWithMethods.n4js"
 		val expectedTypesNamePairs = #[
+			TClass -> "MyClass",
 			TClass -> "MySuperClass",
 			TClass -> "MyInterface",
-			TEnum -> "Storage",
-			TClass -> "MyClass"
+			TEnum -> "Storage"
 		]
 
 		// currently everything is exported to user data and Xtext index, e.g. to be able to
 		// use in IDE "Open Type"
 		val expectedExportedTypeToNamePairsOnIndex = #[
 			TModule -> qualifiedNamePrefix + "ClassWithMethods",
+			TClass -> "MyClass",
 			TClass -> "MySuperClass",
 			TInterface -> "MyInterface",
-			TEnum -> "Storage",
-			TClass -> "MyClass"
+			TEnum -> "Storage"
 		]
 		val expectedTypesCount = expectedTypesNamePairs.size
 		val expectedExportedElementsCount = expectedExportedTypeToNamePairsOnIndex.size

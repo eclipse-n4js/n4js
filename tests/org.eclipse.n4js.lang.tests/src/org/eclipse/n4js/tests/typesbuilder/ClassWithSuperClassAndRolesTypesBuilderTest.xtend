@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.typesbuilder
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.tests.typesbuilder.extensions.ASTStructureAssertionExtension
@@ -20,7 +21,6 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypeAccessModifier
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
@@ -48,18 +48,18 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 	def test() {
 		val textFileName = "ClassWithSuperClassAndRoles.n4js"
 		val expectedTypesNamePairs = #[
+			typeof(TClass) -> "MySubClass",
 			typeof(TClass) -> "MyClass",
 			typeof(TInterface) -> "Persistable",
-			typeof(TInterface) -> "Comparable",
-			typeof(TClass) -> "MySubClass"
+			typeof(TInterface) -> "Comparable"
 		]
 
 		val expectedExportedTypeToNamePairsOnIndex = #[
 			typeof(TModule) -> qualifiedNamePrefix + "ClassWithSuperClassAndRoles",
+			typeof(TClass) -> "MySubClass",
 			typeof(TClass) -> "MyClass",
 			typeof(TInterface) -> "Persistable",
-			typeof(TInterface) -> "Comparable",
-			typeof(TClass) -> "MySubClass"
+			typeof(TInterface) -> "Comparable"
 		]
 		val expectedTypesCount = expectedTypesNamePairs.size
 		val expectedExportedElementsCount = expectedExportedTypeToNamePairsOnIndex.size
@@ -71,6 +71,11 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 		TModule {
 		    ref EObject astElement ref: Script@(unresolved proxy src/org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles.n4js#/0)
 		    attr EString astMD5 '22b4445f617bd45c1bcdfd6c6f2f23b1'
+		    cref ExportDefinition exportDefinitions [
+		        0: ElementExportDefinition {
+		            ref TExportableElement exportedElement ref: TClass@(resource null)
+		        }
+		    ]
 		    attr EString moduleSpecifier 'org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles'
 		    attr EString packageName 'org.eclipse.n4js.lang.tests'
 		    attr EString projectID 'org.eclipse.n4js.lang.tests'
@@ -92,7 +97,7 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 		        3: TClass {
 		            ref EObject astElement ref: N4ClassDeclaration@(unresolved proxy src/org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles.n4js#/0/@scriptElements.3/@exportedElement)
 		            attr TypeAccessModifier declaredTypeAccessModifier 'publicInternal'
-		            attr EString exportedName 'MySubClass'
+		            attr EBoolean directlyExported 'true'
 		            cref ParameterizedTypeRef implementedInterfaceRefs [
 		                0: ParameterizedTypeRef {
 		                    ref Type declaredType ref: TInterface@(resource null)

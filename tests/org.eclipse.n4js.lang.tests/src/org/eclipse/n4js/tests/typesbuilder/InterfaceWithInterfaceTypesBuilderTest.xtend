@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.typesbuilder
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
@@ -21,7 +22,6 @@ import org.eclipse.n4js.tests.typesbuilder.utils.AbstractTypesBuilderTest
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypeAccessModifier
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
@@ -51,8 +51,8 @@ class InterfaceWithInterfaceTypesBuilderTest extends AbstractTypesBuilderTest {
 		val expectedTypesNamePairs = #[
 			typeof(TInterface) -> "OtherInterface",
 			typeof(TInterface) -> "MyInterface",
-			typeof(TInterface) -> "PrivateInterface",
-			typeof(TInterface) -> "PublicApiInterface"
+			typeof(TInterface) -> "PublicApiInterface",
+			typeof(TInterface) -> "PrivateInterface"
 		]
 
 		// currently everything is exported to user data and Xtext index, e.g. to be able to
@@ -61,8 +61,8 @@ class InterfaceWithInterfaceTypesBuilderTest extends AbstractTypesBuilderTest {
 			typeof(TModule) -> qualifiedNamePrefix + "InterfaceWithInterface",
 			typeof(TInterface) -> "OtherInterface",
 			typeof(TInterface) -> "MyInterface",
-			typeof(TInterface) -> "PrivateInterface",
-			typeof(TInterface) -> "PublicApiInterface"
+			typeof(TInterface) -> "PublicApiInterface",
+			typeof(TInterface) -> "PrivateInterface"
 		]
 		val expectedTypesCount = expectedTypesNamePairs.size
 		val expectedExportedElementsCount = expectedExportedTypeToNamePairsOnIndex.size
