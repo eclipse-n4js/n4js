@@ -335,6 +335,11 @@ class ModuleExportDefinition extends ExportDefinition {
 
 class TExportableElement extends IdentifiableElement {
 
+	/*
+	 * Tells whether this element is actually directly exported. This will be true
+	 * iff the corresponding {@code ExportableElement} in the AST returned true
+	 * from {@code #isDeclaredExported()} OR from {@code #isExportedByNamespace()}.
+	 */
 	boolean directlyExported
 }
 
