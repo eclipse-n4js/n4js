@@ -43,6 +43,7 @@ import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.LineAndColumn;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ForwardingMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -216,6 +217,12 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 					// FIXME
 				}
 			}
+			// to better support UI functionality such as "Open Type" we also add non-exported types to the index:
+			for (Type type : ((TModule) eObject).getTypes()) {
+				if (!type.isDirectlyExported()) {
+					internalCreateEObjectDescription(Optional.absent(), type, acceptor);
+				}
+			}
 		}
 		// export is only possible for top-level elements
 		return false;
@@ -364,7 +371,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			return;
 		}
 		if (element instanceof Type) {
-			internalCreateEObjectDescription(exportDef, (Type) element, acceptor);
+			internalCreateEObjectDescription(Optional.of(exportDef), (Type) element, acceptor);
 		} else if (element instanceof TVariable) {
 			internalCreateEObjectDescription(exportDef, (TVariable) element, acceptor);
 		} else {
@@ -377,12 +384,13 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * Create EObjectDescriptions for elements for which N4JSQualifiedNameProvider provides a FQN; elements with a FQN
 	 * of <code>null</code> will be ignored.
 	 */
-	private void internalCreateEObjectDescription(ExportDefinition exportDef, Type type,
+	private void internalCreateEObjectDescription(Optional<ExportDefinition> exportDef, Type type,
 			IAcceptor<IEObjectDescription> acceptor) {
 
 		final String typeName = type.getName();
 		if (typeName != null && typeName.length() != 0) {
-			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(exportDef);
+			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(
+					exportDef.isPresent() ? exportDef.get() : type);
 			if (qualifiedName != null) {
 				Map<String, String> userData = new HashMap<>();
 				addLocationUserData(userData, type);
