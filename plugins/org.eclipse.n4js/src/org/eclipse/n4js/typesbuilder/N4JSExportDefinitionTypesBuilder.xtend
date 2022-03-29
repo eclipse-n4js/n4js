@@ -83,7 +83,7 @@ class N4JSExportDefinitionTypesBuilder {
 		}
 		val tDirectlyExportedElem = getExportedTypesModelElement(directlyExportedElem);
 		if (tDirectlyExportedElem === null) {
-			throw new IllegalStateException("types builder for directly exported element must be invoked before the export definition types builder");
+			return; // broken AST (e.g. class declaration with missing name)
 		}
 		createExportDefinitionForDirectlyExportedElement(tDirectlyExportedElem, directlyExportedElem.exportedName, target, preLinkingPhase);
 	}
