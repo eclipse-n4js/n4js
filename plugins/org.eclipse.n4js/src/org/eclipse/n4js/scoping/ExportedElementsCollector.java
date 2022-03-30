@@ -145,10 +145,10 @@ public class ExportedElementsCollector {
 			}
 		} else {
 			// non-exported elements are added as well to obtain better error messages
-			for (Type type : Iterables.concat(namespace.getTypes(), namespace.getNamespaces())) {
-				if (!type.isDirectlyExported()) {
+			for (TExportableElement elem : namespace.getExportableElements()) {
+				if (!elem.isDirectlyExported()) {
 					info.invisible.add(new NonExportedElementDescription(
-							createObjectDescription(type.getName(), type)));
+							createObjectDescription(elem.getName(), elem)));
 				}
 			}
 		}
