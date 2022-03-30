@@ -11,6 +11,8 @@
 package org.eclipse.n4js.tooling.organizeImports
 
 import java.util.List
+import org.eclipse.n4js.N4JSLanguageConstants
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
@@ -89,6 +91,10 @@ class ImportSpecifiersUtil {
 	 * Computes exported name of the element imported by this specifier.
 	 */
 	public static def String importedElementName(NamedImportSpecifier specifier) {
+		if (specifier instanceof DefaultImportSpecifier) {
+			return N4JSLanguageConstants.EXPORT_DEFAULT_NAME;
+		}
+
 		val element = specifier.importedElement
 		if (element === null)
 			return "<" + specifier.importedElementAsText + ">(null)"
@@ -100,7 +106,7 @@ class ImportSpecifiersUtil {
 			return "<" + specifier.importedElementAsText + ">(proxy)"
 		}
 
-		return element.exportedName;
+		return specifier.importedElementAsText;
 	}
 
 	/** returns locally used name of element imported via {@link NamedImportSpecifier} */
