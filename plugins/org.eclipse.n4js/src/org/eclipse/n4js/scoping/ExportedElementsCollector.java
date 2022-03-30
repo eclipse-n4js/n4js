@@ -18,6 +18,7 @@ import org.eclipse.n4js.resource.N4JSEObjectDescription;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
 import org.eclipse.n4js.scoping.accessModifiers.HollowTypeOrValueDescription;
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription;
+import org.eclipse.n4js.scoping.accessModifiers.NonExportedElementDescription;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
@@ -31,7 +32,6 @@ import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
-import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
@@ -144,16 +144,11 @@ public class ExportedElementsCollector {
 				}
 			}
 		} else {
-			// legacy behavior:
-			// non-exported elements are added as well; only visibility checking will prevent them from being used
-			boolean isDTS = ResourceType.getResourceType(namespace) == ResourceType.DTS;
-			if (isDTS) {
-				// cannot use this legacy behavior in .d.ts files, because visibility checking is disabled there
-			} else {
-				for (Type type : Iterables.concat(namespace.getTypes(), namespace.getNamespaces())) {
-					if (!type.isDirectlyExported()) {
-						doCollectElement(type.getName(), type, info);
-					}
+			// non-exported elements are added as well to obtain better error messages
+			for (Type type : Iterables.concat(namespace.getTypes(), namespace.getNamespaces())) {
+				if (!type.isDirectlyExported()) {
+					info.invisible.add(new NonExportedElementDescription(
+							createObjectDescription(type.getName(), type)));
 				}
 			}
 		}

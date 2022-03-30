@@ -23,10 +23,11 @@
 	END_SETUP
 */
 
-// XPECT errors --> "Import of legacyModule1 cannot be resolved." at "legacyModule1"
+// XPECT errors --> "Element legacyModule1 is not exported." at "legacyModule1"
+// XPECT warnings --> "The import of legacyModule1 is unused." at "legacyModule1"
 import { legacyModule1 } from "other"
 
 import { legacyModule2 } from "other"
 
-// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'Cls'." at "Cls"
+// XPECT errors --> "Element Cls is not exported." at "Cls"
 legacyModule2.Cls;

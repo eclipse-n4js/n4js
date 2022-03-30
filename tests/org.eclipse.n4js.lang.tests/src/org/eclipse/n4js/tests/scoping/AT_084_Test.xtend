@@ -224,7 +224,7 @@ class AT_084_Test {
 			import {A} from "A"
 		'''.parse(URI.createURI("C.n4js"), rs).withVendorAndProject('C', 'B')
 
-		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, 'The type A is not visible.')
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_NOT_EXPORTED, 'Element A is not exported.')
 	}
 	
 	@Test
@@ -251,7 +251,7 @@ class AT_084_Test {
 			var a: N.A = null
 		'''.parse(URI.createURI("C.n4js"), rs).withVendorAndProject('C', 'B')
 
-		script.assertError(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, 'The type A is not visible')
+		script.assertError(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IssueCodes.IMP_NOT_EXPORTED, 'Element A is not exported.')
 	}
 
 	@Test
@@ -279,7 +279,7 @@ class AT_084_Test {
 			var a = N.A
 		'''.parse(URI.createURI("C.n4js"), rs).withVendorAndProject('C', 'B')
 
-		script.assertError(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, 'The type A is not visible')
+		script.assertError(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION, IssueCodes.IMP_NOT_EXPORTED, 'Element A is not exported.')
 	}
 
 	@Test
@@ -293,7 +293,7 @@ class AT_084_Test {
 			var a = A
 		'''.parse(URI.createURI("C.n4js"), rs).withVendorAndProject('C', 'B')
 
-		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, 'The type A is not visible')
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_NOT_EXPORTED, 'Element A is not exported.')
 		script.assertError(N4JSPackage.Literals.IDENTIFIER_REF, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, 'The type A is not visible')
 	}
 
@@ -308,7 +308,7 @@ class AT_084_Test {
 			var a: N.A = ""
 		'''.parse(URI.createURI("C.n4js"), rs).withVendorAndProject('C', 'B')
 
-		script.assertError(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, 'The type A is not visible')
+		script.assertError(TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF, IssueCodes.IMP_NOT_EXPORTED, 'Element A is not exported.')
 	}
 
 	@Test
