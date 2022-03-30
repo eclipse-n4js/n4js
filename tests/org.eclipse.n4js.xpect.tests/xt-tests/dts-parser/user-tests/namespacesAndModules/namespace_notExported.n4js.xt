@@ -24,7 +24,6 @@
 */
 
 // XPECT errors --> "Element N1 is not exported." at "N1"
-// XPECT warnings --> "The import of N1 is unused." at "N1"
 import { N1 } from "other"
 
 import { N2 } from "other"

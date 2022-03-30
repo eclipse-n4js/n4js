@@ -24,7 +24,6 @@
 */
 
 // XPECT errors --> "Element legacyModule1 is not exported." at "legacyModule1"
-// XPECT warnings --> "The import of legacyModule1 is unused." at "legacyModule1"
 import { legacyModule1 } from "other"
 
 import { legacyModule2 } from "other"

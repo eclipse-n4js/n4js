@@ -13,6 +13,7 @@ package org.eclipse.n4js.postprocessing;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,9 +22,11 @@ import java.util.Queue;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
+import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
@@ -36,6 +39,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  * The <em>AST meta-info cache</em> is created and filled with information during post-processing of an N4JS resource
@@ -54,6 +58,7 @@ public final class ASTMetaInfoCache {
 	private final N4JSResource resource;
 	private final String projectID;
 	private final boolean hasBrokenAST;
+	private final Map<Pair<EObject, EReference>, Set<String>> linkingIssueCodes = new HashMap<>();
 	private final ASTFlowInfo flowInfo;
 	private final Map<TypableElement, TypeRef> actualTypes = new HashMap<>();
 	private final Map<ParameterizedCallExpression, List<TypeRef>> inferredTypeArgs = new HashMap<>();
@@ -82,6 +87,18 @@ public final class ASTMetaInfoCache {
 	/** @return if the resource of this cache has a broken AST. */
 	public boolean hasBrokenAST() {
 		return hasBrokenAST;
+	}
+
+	/** @return issue codes of issues created by {@link ErrorAwareLinkingService} for the given object and reference. */
+	public Set<String> getLinkingIssueCodes(EObject astNode, EReference reference) {
+		Set<String> set = linkingIssueCodes.get(Pair.of(astNode, reference));
+		return set != null ? Collections.unmodifiableSet(set) : Collections.emptySet();
+	}
+
+	/** Should only be called by {@link ErrorAwareLinkingService}. */
+	public void storeLinkingIssueCode(EObject astNode, EReference reference, String issueCode) {
+		linkingIssueCodes.computeIfAbsent(Pair.of(astNode, reference), p -> new HashSet<>())
+				.add(issueCode);
 	}
 
 	/** @return if one of the actual type refs is a {@link UnknownTypeRef}. */
