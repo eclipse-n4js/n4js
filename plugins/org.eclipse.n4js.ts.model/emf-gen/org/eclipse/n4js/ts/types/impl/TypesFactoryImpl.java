@@ -137,6 +137,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createMemberTypeFromString(eDataType, initialValue);
 			case TypesPackage.ITERABLE_OF_TEXPORTABLE_ELEMENT:
 				return createIterableOfTExportableElementFromString(eDataType, initialValue);
+			case TypesPackage.ITERABLE_OF_ABSTRACT_NAMESPACE:
+				return createIterableOfAbstractNamespaceFromString(eDataType, initialValue);
 			case TypesPackage.PARAMETERIZED_TYPE_REF_ITERABLE:
 				return createParameterizedTypeRefIterableFromString(eDataType, initialValue);
 			case TypesPackage.ITERABLE_OF_TCLASSIFIER:
@@ -172,6 +174,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertMemberTypeToString(eDataType, instanceValue);
 			case TypesPackage.ITERABLE_OF_TEXPORTABLE_ELEMENT:
 				return convertIterableOfTExportableElementToString(eDataType, instanceValue);
+			case TypesPackage.ITERABLE_OF_ABSTRACT_NAMESPACE:
+				return convertIterableOfAbstractNamespaceToString(eDataType, instanceValue);
 			case TypesPackage.PARAMETERIZED_TYPE_REF_ITERABLE:
 				return convertParameterizedTypeRefIterableToString(eDataType, instanceValue);
 			case TypesPackage.ITERABLE_OF_TCLASSIFIER:
@@ -758,6 +762,25 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 * @generated
 	 */
 	public String convertIterableOfTExportableElementToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public Iterable<? extends AbstractNamespace> createIterableOfAbstractNamespaceFromString(EDataType eDataType, String initialValue) {
+		return (Iterable<? extends AbstractNamespace>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertIterableOfAbstractNamespaceToString(EDataType eDataType, Object instanceValue) {
 		return super.convertToString(instanceValue);
 	}
 

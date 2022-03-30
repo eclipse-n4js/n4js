@@ -161,13 +161,22 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE__LOCAL_VARIABLES = TEXPORTING_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Exposed Local Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES = TEXPORTING_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE__NAMESPACES = TEXPORTING_ELEMENT_FEATURE_COUNT + 3;
+	int ABSTRACT_NAMESPACE__NAMESPACES = TEXPORTING_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Abstract Namespace</em>' class.
@@ -176,7 +185,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE_FEATURE_COUNT = TEXPORTING_ELEMENT_FEATURE_COUNT + 4;
+	int ABSTRACT_NAMESPACE_FEATURE_COUNT = TEXPORTING_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Exportable Elements</em>' operation.
@@ -188,13 +197,22 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS = TEXPORTING_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get All Namespaces</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE___GET_ALL_NAMESPACES = TEXPORTING_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE = TEXPORTING_ELEMENT_OPERATION_COUNT + 1;
+	int ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE = TEXPORTING_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Clear Transient Elements</em>' operation.
@@ -203,7 +221,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TEXPORTING_ELEMENT_OPERATION_COUNT + 2;
+	int ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TEXPORTING_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Abstract Namespace</em>' class.
@@ -212,7 +230,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE_OPERATION_COUNT = TEXPORTING_ELEMENT_OPERATION_COUNT + 3;
+	int ABSTRACT_NAMESPACE_OPERATION_COUNT = TEXPORTING_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TModuleImpl <em>TModule</em>}' class.
@@ -259,6 +277,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMODULE__LOCAL_VARIABLES = ABSTRACT_NAMESPACE__LOCAL_VARIABLES;
+
+	/**
+	 * The feature id for the '<em><b>Exposed Local Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__EXPOSED_LOCAL_VARIABLES = ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -502,6 +529,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMODULE___GET_EXPORTABLE_ELEMENTS = ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS;
+
+	/**
+	 * The operation id for the '<em>Get All Namespaces</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___GET_ALL_NAMESPACES = ABSTRACT_NAMESPACE___GET_ALL_NAMESPACES;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -3119,13 +3155,22 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE__LOCAL_VARIABLES = TYPE_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Exposed Local Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE__EXPOSED_LOCAL_VARIABLES = TYPE_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__NAMESPACES = TYPE_FEATURE_COUNT + 4;
+	int TNAMESPACE__NAMESPACES = TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -3134,7 +3179,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__DECLARED_TYPE_ACCESS_MODIFIER = TYPE_FEATURE_COUNT + 5;
+	int TNAMESPACE__DECLARED_TYPE_ACCESS_MODIFIER = TYPE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
@@ -3143,7 +3188,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__DECLARED_PROVIDED_BY_RUNTIME = TYPE_FEATURE_COUNT + 6;
+	int TNAMESPACE__DECLARED_PROVIDED_BY_RUNTIME = TYPE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -3152,7 +3197,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__AST_ELEMENT = TYPE_FEATURE_COUNT + 7;
+	int TNAMESPACE__AST_ELEMENT = TYPE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -3161,7 +3206,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__EXTERNAL = TYPE_FEATURE_COUNT + 8;
+	int TNAMESPACE__EXTERNAL = TYPE_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of structural features of the '<em>TNamespace</em>' class.
@@ -3170,7 +3215,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 9;
+	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Exported Name</em>' operation.
@@ -3308,13 +3353,22 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE___GET_EXPORTABLE_ELEMENTS = TYPE_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get All Namespaces</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_ALL_NAMESPACES = TYPE_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_CONTAINING_MODULE = TYPE_OPERATION_COUNT + 1;
+	int TNAMESPACE___GET_CONTAINING_MODULE = TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Clear Transient Elements</em>' operation.
@@ -3323,7 +3377,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TYPE_OPERATION_COUNT + 2;
+	int TNAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -3332,7 +3386,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 3;
+	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -3341,7 +3395,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 4;
+	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
@@ -3350,7 +3404,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 5;
+	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Directly Exported</em>' operation.
@@ -3359,7 +3413,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_DIRECTLY_EXPORTED = TYPE_OPERATION_COUNT + 6;
+	int TNAMESPACE___IS_DIRECTLY_EXPORTED = TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -3368,7 +3422,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_AST_ELEMENT_NO_RESOLVE = TYPE_OPERATION_COUNT + 7;
+	int TNAMESPACE___GET_AST_ELEMENT_NO_RESOLVE = TYPE_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>TNamespace</em>' class.
@@ -3377,7 +3431,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 8;
+	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceElementImpl <em>TNamespace Element</em>}' class.
@@ -13428,6 +13482,16 @@ public interface TypesPackage extends EPackage {
 	int ITERABLE_OF_TEXPORTABLE_ELEMENT = 65;
 
 	/**
+	 * The meta object id for the '<em>Iterable Of Abstract Namespace</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.lang.Iterable
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfAbstractNamespace()
+	 * @generated
+	 */
+	int ITERABLE_OF_ABSTRACT_NAMESPACE = 66;
+
+	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13435,7 +13499,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 66;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 67;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -13445,7 +13509,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 67;
+	int ITERABLE_OF_TCLASSIFIER = 68;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -13455,7 +13519,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 68;
+	int VARIANCE = 69;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -13465,7 +13529,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 69;
+	int NAME_AND_ACCESS = 70;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -13475,7 +13539,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 70;
+	int MEMBER_LIST = 71;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -13485,7 +13549,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 71;
+	int TCLASSIFIER_ITERABLE = 72;
 
 
 	/**
@@ -14809,6 +14873,17 @@ public interface TypesPackage extends EPackage {
 	EReference getAbstractNamespace_LocalVariables();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExposedLocalVariables <em>Exposed Local Variables</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Exposed Local Variables</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getExposedLocalVariables()
+	 * @see #getAbstractNamespace()
+	 * @generated
+	 */
+	EReference getAbstractNamespace_ExposedLocalVariables();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNamespaces <em>Namespaces</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14828,6 +14903,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getAbstractNamespace__GetExportableElements();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getAllNamespaces() <em>Get All Namespaces</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get All Namespaces</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getAllNamespaces()
+	 * @generated
+	 */
+	EOperation getAbstractNamespace__GetAllNamespaces();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getContainingModule() <em>Get Containing Module</em>}' operation.
@@ -16591,6 +16676,17 @@ public interface TypesPackage extends EPackage {
 	EDataType getIterableOfTExportableElement();
 
 	/**
+	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Iterable Of Abstract Namespace</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Iterable Of Abstract Namespace</em>'.
+	 * @see java.lang.Iterable
+	 * @model instanceClass="java.lang.Iterable&lt;? extends org.eclipse.n4js.ts.types.AbstractNamespace&gt;"
+	 * @generated
+	 */
+	EDataType getIterableOfAbstractNamespace();
+
+	/**
 	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Parameterized Type Ref Iterable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17738,6 +17834,14 @@ public interface TypesPackage extends EPackage {
 		EReference ABSTRACT_NAMESPACE__LOCAL_VARIABLES = eINSTANCE.getAbstractNamespace_LocalVariables();
 
 		/**
+		 * The meta object literal for the '<em><b>Exposed Local Variables</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES = eINSTANCE.getAbstractNamespace_ExposedLocalVariables();
+
+		/**
 		 * The meta object literal for the '<em><b>Namespaces</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -17752,6 +17856,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS = eINSTANCE.getAbstractNamespace__GetExportableElements();
+
+		/**
+		 * The meta object literal for the '<em><b>Get All Namespaces</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ABSTRACT_NAMESPACE___GET_ALL_NAMESPACES = eINSTANCE.getAbstractNamespace__GetAllNamespaces();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Containing Module</b></em>' operation.
@@ -19202,6 +19314,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EDataType ITERABLE_OF_TEXPORTABLE_ELEMENT = eINSTANCE.getIterableOfTExportableElement();
+
+		/**
+		 * The meta object literal for the '<em>Iterable Of Abstract Namespace</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.lang.Iterable
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfAbstractNamespace()
+		 * @generated
+		 */
+		EDataType ITERABLE_OF_ABSTRACT_NAMESPACE = eINSTANCE.getIterableOfAbstractNamespace();
 
 		/**
 		 * The meta object literal for the '<em>Parameterized Type Ref Iterable</em>' data type.

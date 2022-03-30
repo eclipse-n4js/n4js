@@ -26,6 +26,8 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
+
 import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
@@ -35,6 +37,8 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.xtext.EcoreUtil2;
+
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
 /**
  * <!-- begin-user-doc -->
@@ -47,6 +51,7 @@ import org.eclipse.xtext.EcoreUtil2;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getTypes <em>Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getExportedVariables <em>Exported Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getLocalVariables <em>Local Variables</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getExposedLocalVariables <em>Exposed Local Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getNamespaces <em>Namespaces</em>}</li>
  * </ul>
  *
@@ -82,6 +87,16 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	 * @ordered
 	 */
 	protected EList<TVariable> localVariables;
+
+	/**
+	 * The cached value of the '{@link #getExposedLocalVariables() <em>Exposed Local Variables</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getExposedLocalVariables()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TVariable> exposedLocalVariables;
 
 	/**
 	 * The cached value of the '{@link #getNamespaces() <em>Namespaces</em>}' containment reference list.
@@ -157,6 +172,19 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	 * @generated
 	 */
 	@Override
+	public EList<TVariable> getExposedLocalVariables() {
+		if (exposedLocalVariables == null) {
+			exposedLocalVariables = new EObjectContainmentEList<TVariable>(TVariable.class, this, TypesPackage.ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES);
+		}
+		return exposedLocalVariables;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<TNamespace> getNamespaces() {
 		if (namespaces == null) {
 			namespaces = new EObjectContainmentEList<TNamespace>(TNamespace.class, this, TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES);
@@ -171,7 +199,27 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	 */
 	@Override
 	public Iterable<? extends TExportableElement> getExportableElements() {
-		return Iterables.<TExportableElement>concat(this.getTypes(), this.getExportedVariables(), this.getLocalVariables(), this.getNamespaces());
+		return Iterables.<TExportableElement>concat(this.getTypes(), this.getExportedVariables(), this.getLocalVariables(), this.getExposedLocalVariables(), this.getNamespaces());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Iterable<? extends AbstractNamespace> getAllNamespaces() {
+		boolean _isEmpty = this.getNamespaces().isEmpty();
+		if (_isEmpty) {
+			return java.util.Collections.<AbstractNamespace>unmodifiableList(org.eclipse.xtext.xbase.lib.CollectionLiterals.<AbstractNamespace>newArrayList(this));
+		}
+		final Function1<TNamespace, Iterable<? extends AbstractNamespace>> _function = new Function1<TNamespace, Iterable<? extends AbstractNamespace>>() {
+			public Iterable<? extends AbstractNamespace> apply(final TNamespace it) {
+				return it.getAllNamespaces();
+			}
+		};
+		Iterable<AbstractNamespace> _flatten = Iterables.<AbstractNamespace>concat(XcoreEListExtensions.<TNamespace, Iterable<? extends AbstractNamespace>>map(this.getNamespaces(), _function));
+		return Iterables.<AbstractNamespace>concat(java.util.Collections.<AbstractNamespace>unmodifiableList(org.eclipse.xtext.xbase.lib.CollectionLiterals.<AbstractNamespace>newArrayList(this)), _flatten);
 	}
 
 	/**
@@ -212,6 +260,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 				return ((InternalEList<?>)getExportedVariables()).basicRemove(otherEnd, msgs);
 			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
 				return ((InternalEList<?>)getLocalVariables()).basicRemove(otherEnd, msgs);
+			case TypesPackage.ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES:
+				return ((InternalEList<?>)getExposedLocalVariables()).basicRemove(otherEnd, msgs);
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				return ((InternalEList<?>)getNamespaces()).basicRemove(otherEnd, msgs);
 		}
@@ -232,6 +282,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 				return getExportedVariables();
 			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
 				return getLocalVariables();
+			case TypesPackage.ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES:
+				return getExposedLocalVariables();
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				return getNamespaces();
 		}
@@ -259,6 +311,10 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 				getLocalVariables().clear();
 				getLocalVariables().addAll((Collection<? extends TVariable>)newValue);
 				return;
+			case TypesPackage.ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES:
+				getExposedLocalVariables().clear();
+				getExposedLocalVariables().addAll((Collection<? extends TVariable>)newValue);
+				return;
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				getNamespaces().clear();
 				getNamespaces().addAll((Collection<? extends TNamespace>)newValue);
@@ -284,6 +340,9 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
 				getLocalVariables().clear();
 				return;
+			case TypesPackage.ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES:
+				getExposedLocalVariables().clear();
+				return;
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				getNamespaces().clear();
 				return;
@@ -305,6 +364,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 				return exportedVariables != null && !exportedVariables.isEmpty();
 			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
 				return localVariables != null && !localVariables.isEmpty();
+			case TypesPackage.ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES:
+				return exposedLocalVariables != null && !exposedLocalVariables.isEmpty();
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				return namespaces != null && !namespaces.isEmpty();
 		}
@@ -321,6 +382,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 		switch (operationID) {
 			case TypesPackage.ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS:
 				return getExportableElements();
+			case TypesPackage.ABSTRACT_NAMESPACE___GET_ALL_NAMESPACES:
+				return getAllNamespaces();
 			case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE:
 				return getContainingModule();
 			case TypesPackage.ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS:

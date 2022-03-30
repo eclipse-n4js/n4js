@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getTypes <em>Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExportedVariables <em>Exported Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getLocalVariables <em>Local Variables</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExposedLocalVariables <em>Exposed Local Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNamespaces <em>Namespaces</em>}</li>
  * </ul>
  *
@@ -85,6 +86,18 @@ public interface AbstractNamespace extends TExportingElement {
 	EList<TVariable> getLocalVariables();
 
 	/**
+	 * Returns the value of the '<em><b>Exposed Local Variables</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TVariable}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Exposed Local Variables</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_ExposedLocalVariables()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<TVariable> getExposedLocalVariables();
+
+	/**
 	 * Returns the value of the '<em><b>Namespaces</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TNamespace}.
 	 * <!-- begin-user-doc -->
@@ -112,6 +125,14 @@ public interface AbstractNamespace extends TExportingElement {
 	 * @generated
 	 */
 	Iterable<? extends TExportableElement> getExportableElements();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfAbstractNamespace" unique="false"
+	 * @generated
+	 */
+	Iterable<? extends AbstractNamespace> getAllNamespaces();
 
 	/**
 	 * <!-- begin-user-doc -->

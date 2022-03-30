@@ -574,6 +574,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	private EDataType iterableOfAbstractNamespaceEDataType = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	private EDataType parameterizedTypeRefIterableEDataType = null;
 
 	/**
@@ -1947,8 +1954,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getAbstractNamespace_Namespaces() {
+	public EReference getAbstractNamespace_ExposedLocalVariables() {
 		return (EReference)abstractNamespaceEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getAbstractNamespace_Namespaces() {
+		return (EReference)abstractNamespaceEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1967,7 +1984,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getAbstractNamespace__GetContainingModule() {
+	public EOperation getAbstractNamespace__GetAllNamespaces() {
 		return abstractNamespaceEClass.getEOperations().get(1);
 	}
 
@@ -1977,8 +1994,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getAbstractNamespace__ClearTransientElements() {
+	public EOperation getAbstractNamespace__GetContainingModule() {
 		return abstractNamespaceEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getAbstractNamespace__ClearTransientElements() {
+		return abstractNamespaceEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -3677,6 +3704,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EDataType getIterableOfAbstractNamespace() {
+		return iterableOfAbstractNamespaceEDataType;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EDataType getParameterizedTypeRefIterable() {
 		return parameterizedTypeRefIterableEDataType;
 	}
@@ -3910,8 +3947,10 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__TYPES);
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__EXPORTED_VARIABLES);
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__LOCAL_VARIABLES);
+		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES);
 		createEReference(abstractNamespaceEClass, ABSTRACT_NAMESPACE__NAMESPACES);
 		createEOperation(abstractNamespaceEClass, ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS);
+		createEOperation(abstractNamespaceEClass, ABSTRACT_NAMESPACE___GET_ALL_NAMESPACES);
 		createEOperation(abstractNamespaceEClass, ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE);
 		createEOperation(abstractNamespaceEClass, ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS);
 
@@ -4123,6 +4162,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		// Create data types
 		iterableOfTExportableElementEDataType = createEDataType(ITERABLE_OF_TEXPORTABLE_ELEMENT);
+		iterableOfAbstractNamespaceEDataType = createEDataType(ITERABLE_OF_ABSTRACT_NAMESPACE);
 		parameterizedTypeRefIterableEDataType = createEDataType(PARAMETERIZED_TYPE_REF_ITERABLE);
 		iterableOfTClassifierEDataType = createEDataType(ITERABLE_OF_TCLASSIFIER);
 		varianceEDataType = createEDataType(VARIANCE);
@@ -4483,9 +4523,12 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEReference(getAbstractNamespace_Types(), this.getType(), null, "types", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAbstractNamespace_ExportedVariables(), this.getTVariable(), null, "exportedVariables", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAbstractNamespace_LocalVariables(), this.getTVariable(), null, "localVariables", null, 0, -1, AbstractNamespace.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getAbstractNamespace_ExposedLocalVariables(), this.getTVariable(), null, "exposedLocalVariables", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAbstractNamespace_Namespaces(), this.getTNamespace(), null, "namespaces", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getAbstractNamespace__GetExportableElements(), this.getIterableOfTExportableElement(), "getExportableElements", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getAbstractNamespace__GetAllNamespaces(), this.getIterableOfAbstractNamespace(), "getAllNamespaces", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getAbstractNamespace__GetContainingModule(), this.getTModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -4808,6 +4851,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		// Initialize data types
 		initEDataType(iterableOfTExportableElementEDataType, Iterable.class, "IterableOfTExportableElement", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.lang.Iterable<? extends org.eclipse.n4js.ts.types.TExportableElement>");
+		initEDataType(iterableOfAbstractNamespaceEDataType, Iterable.class, "IterableOfAbstractNamespace", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.lang.Iterable<? extends org.eclipse.n4js.ts.types.AbstractNamespace>");
 		initEDataType(parameterizedTypeRefIterableEDataType, Iterable.class, "ParameterizedTypeRefIterable", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.lang.Iterable<org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef>");
 		initEDataType(iterableOfTClassifierEDataType, Iterable.class, "IterableOfTClassifier", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.lang.Iterable<? extends org.eclipse.n4js.ts.types.TClassifier>");
 		initEDataType(varianceEDataType, Variance.class, "Variance", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);

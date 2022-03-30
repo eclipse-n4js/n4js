@@ -41,6 +41,7 @@ import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.EcoreUtil2
 
 type IterableOfTExportableElement wraps Iterable<? extends TExportableElement>
+type IterableOfAbstractNamespace wraps Iterable<? extends AbstractNamespace>
 type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
@@ -898,6 +899,8 @@ abstract class AbstractNamespace extends TExportingElement {
 	 * methods, etc. contained in the namespace.
 	 */
 	contains transient TVariable[] localVariables
+
+	contains TVariable[] exposedLocalVariables
 	/*
 	 * A list of all top level namespaces in the script.
 	 * These include the exported namespaces as well as the internal namespaces.
@@ -910,7 +913,14 @@ abstract class AbstractNamespace extends TExportingElement {
 	 * including those not actually exported.
 	 */
 	op IterableOfTExportableElement getExportableElements() {
-		return Iterables.<TExportableElement>concat(types, exportedVariables, localVariables, namespaces);
+		return Iterables.<TExportableElement>concat(types, exportedVariables, localVariables, exposedLocalVariables, namespaces);
+	}
+
+	op IterableOfAbstractNamespace getAllNamespaces() {
+		if (namespaces.empty) {
+			return #[ this ];
+		}
+		return #[ this ] + namespaces.map[allNamespaces].flatten;
 	}
 
 	/**

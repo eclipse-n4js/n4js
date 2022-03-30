@@ -27,7 +27,12 @@ import org.eclipse.n4js.resource.PostProcessingAwareResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
+import org.eclipse.n4js.ts.types.AbstractNamespace;
+import org.eclipse.n4js.ts.types.ElementExportDefinition;
+import org.eclipse.n4js.ts.types.ExportDefinition;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
@@ -130,7 +135,7 @@ public class N4JSPostProcessor implements PostProcessor {
 		astProcessor.processAST(resource, cancelIndicator);
 		// step 4: expose internal types visible from outside
 		// (i.e. if they are referenced from a type that is visible form the outside)
-		exposeReferencedInternalTypes(resource);
+		exposeReferencedInternalElements(resource);
 		// step 5: resolve remaining proxies in TModule
 		// (the TModule was created programmatically, so it usually does not contain proxies; however, in case of
 		// explicitly declared types, the types builder copies type references from the AST to the corresponding
@@ -166,23 +171,60 @@ public class N4JSPostProcessor implements PostProcessor {
 	 * Moves all types contained in 'internalTypes' to 'exposedInternalTypes' that are referenced from any top level
 	 * type or a variable.
 	 */
-	private static void exposeReferencedInternalTypes(N4JSResource res) {
+	private static void exposeReferencedInternalElements(N4JSResource res) {
 		final TModule module = res.getModule();
 		if (module == null) {
 			return;
 		}
 
-		// reset, i.e. make all exposed types internal again
-		module.getInternalTypes().addAll(module.getExposedInternalTypes());
+		// reset, i.e. make all exposed internal types / exposed local variables internal again
+		resetExposedInternalElements(module);
+
+		// move local variables to exposedLocalVariables if they are exported
+		// (note: must be done before moving internal types!)
+		exposeExportedLocalVariables(module);
 
 		// move internal types to exposedInternalTypes if referenced from types or variables
 		final List<EObject> stuffToScan = new ArrayList<>();
-		// FIXME must be adjusted for namespaces!
-		stuffToScan.addAll(module.getTypes());
-		stuffToScan.addAll(module.getExportedVariables());
-		stuffToScan.addAll(module.getExportDefinitions());
+		collectExposingObjects(module, stuffToScan);
 		for (EObject currRoot : stuffToScan) {
 			exposeTypesReferencedBy(currRoot, true);
+		}
+	}
+
+	private static void resetExposedInternalElements(TModule module) {
+		module.getInternalTypes().addAll(module.getExposedInternalTypes());
+		for (AbstractNamespace namespace : module.getAllNamespaces()) {
+			namespace.getLocalVariables().addAll(namespace.getExposedLocalVariables());
+		}
+	}
+
+	private static void exposeExportedLocalVariables(TModule module) {
+		List<TVariable> toExpose = new ArrayList<>();
+		for (AbstractNamespace namespace : module.getAllNamespaces()) {
+			for (ExportDefinition exportDef : namespace.getExportDefinitions()) {
+				if (exportDef instanceof ElementExportDefinition) {
+					TExportableElement expElem = ((ElementExportDefinition) exportDef).getExportedElement();
+					if (expElem.eContainingFeature() == TypesPackage.eINSTANCE.getAbstractNamespace_LocalVariables()) {
+						toExpose.add((TVariable) expElem);
+					}
+				}
+			}
+			if (!toExpose.isEmpty()) {
+				EcoreUtilN4.doWithDeliver(false, () -> {
+					namespace.getExposedLocalVariables().addAll(toExpose);
+				}, namespace, module);
+				toExpose.clear();
+			}
+		}
+	}
+
+	private static void collectExposingObjects(TModule module, List<EObject> addHere) {
+		addHere.addAll(module.getExportDefinitions());
+		for (AbstractNamespace namespace : module.getAllNamespaces()) {
+			addHere.addAll(namespace.getTypes());
+			addHere.addAll(namespace.getExportedVariables());
+			addHere.addAll(namespace.getExposedLocalVariables());
 		}
 	}
 
