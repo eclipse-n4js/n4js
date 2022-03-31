@@ -92,19 +92,6 @@ class ImportedElementsScopingHelper {
 
 
 
-	def IScope getImportedIdentifiables(IScope parentScope, Script script) {
-		val IScope scriptScope = cache.get(script -> 'importedIdentifiables', script.eResource) [|
-			// TODO parentScope (usually global scope) arg is not part of cache key but used in value!
-			// filter out primitive types in next line (otherwise code like "let x = int;" would be allowed)
-			val noPrimitiveBuiltIns = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet));
-			val uberParent = new UberParentScope("ImportedElementsScopingHelper-uberParent", noPrimitiveBuiltIns, parentScope);
-			val globalObjectScope = getGlobalObjectProperties(uberParent, script);
-			val result = findImportedElements(script, globalObjectScope, true, true);
-			return result;
-		]
-		return scriptScope
-	}
-
 	def IScope getImportedTypes(IScope parentScope, Script script) {
 		val IScope scriptScope = cache.get(script -> 'importedTypes', script.eResource) [|
 			return findImportedElements(script, parentScope, true, false);
@@ -199,7 +186,7 @@ class ImportedElementsScopingHelper {
 		return new OriginAwareScope(script, importScope, originatorMap);
 	}
 
-	protected def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
+	private def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
 			Resource contextResource, IEODesc2ISpec originatorMap,
 			ImportedElementsMap validImports,
 			ImportedElementsMap invalidImports, boolean importVariables, IScope tleScope) {
@@ -436,7 +423,12 @@ class ImportedElementsScopingHelper {
 	
 	private def IEObjectDescription createDescription(QualifiedName name, IdentifiableElement element) {
 		if (name.lastSegment != element.name) {
-			return new AliasedEObjectDescription(name, N4JSEObjectDescription.create(qualifiedNameProvider.getFullyQualifiedName(element), element))
+			var qn = qualifiedNameProvider.getFullyQualifiedName(element);
+			if (qn === null) {
+				// non-directly-exported variable / function / type alias that is exported under an alias via a separate export declaration:
+				qn = qualifiedNameProvider.getFullyQualifiedName(element.containingModule)?.append(element.name);
+			}
+			return new AliasedEObjectDescription(name, N4JSEObjectDescription.create(qn, element))
 		} else {
 			return N4JSEObjectDescription.create(name, element)
 		}
