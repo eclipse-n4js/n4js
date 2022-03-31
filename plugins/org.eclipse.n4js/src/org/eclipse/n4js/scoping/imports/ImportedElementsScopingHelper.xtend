@@ -423,12 +423,7 @@ class ImportedElementsScopingHelper {
 	
 	private def IEObjectDescription createDescription(QualifiedName name, IdentifiableElement element) {
 		if (name.lastSegment != element.name) {
-			var qn = qualifiedNameProvider.getFullyQualifiedName(element);
-			if (qn === null) {
-				// non-directly-exported variable / function / type alias that is exported under an alias via a separate export declaration:
-				qn = qualifiedNameProvider.getFullyQualifiedName(element.containingModule)?.append(element.name);
-			}
-			return new AliasedEObjectDescription(name, N4JSEObjectDescription.create(qn, element))
+			return new AliasedEObjectDescription(name, N4JSEObjectDescription.create(qualifiedNameProvider.getFullyQualifiedName(element), element))
 		} else {
 			return N4JSEObjectDescription.create(name, element)
 		}

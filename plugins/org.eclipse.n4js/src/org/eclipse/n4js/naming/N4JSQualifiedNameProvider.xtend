@@ -108,11 +108,11 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			TEnum:
 				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TypeAlias:
-				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TFunction:
-				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TVariable:
-				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			ExportDeclaration:
 				exportedElement?.getFullyQualifiedName
 			ElementExportDefinition:
