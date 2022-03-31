@@ -94,4 +94,12 @@ public interface VariableDeclaration extends VariableDeclarationOrBinding, Annot
 	 */
 	String getExportedName();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	VariableDeclarationContainer getVariableDeclarationContainer();
+
 } // VariableDeclaration

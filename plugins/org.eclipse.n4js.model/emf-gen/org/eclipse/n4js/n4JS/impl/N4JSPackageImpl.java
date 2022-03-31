@@ -3452,6 +3452,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getVariableDeclaration__GetVariableDeclarationContainer() {
+		return variableDeclarationEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getEmptyStatement() {
 		return emptyStatementEClass;
 	}
@@ -8106,6 +8116,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(variableDeclarationEClass, VARIABLE_DECLARATION___IS_CONST);
 		createEOperation(variableDeclarationEClass, VARIABLE_DECLARATION___IS_EXPORTED);
 		createEOperation(variableDeclarationEClass, VARIABLE_DECLARATION___GET_EXPORTED_NAME);
+		createEOperation(variableDeclarationEClass, VARIABLE_DECLARATION___GET_VARIABLE_DECLARATION_CONTAINER);
 
 		emptyStatementEClass = createEClass(EMPTY_STATEMENT);
 
@@ -9309,6 +9320,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getVariableDeclaration__IsExported(), theEcorePackage.getEBoolean(), "isExported", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getVariableDeclaration__GetExportedName(), theEcorePackage.getEString(), "getExportedName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getVariableDeclaration__GetVariableDeclarationContainer(), this.getVariableDeclarationContainer(), "getVariableDeclarationContainer", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(emptyStatementEClass, EmptyStatement.class, "EmptyStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

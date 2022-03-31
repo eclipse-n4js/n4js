@@ -63,6 +63,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.UtilN4
+import org.eclipse.xtext.EcoreUtil2
 
 type IteratorOfExpression wraps Iterator<Expression>
 type IteratorOfYieldExpression wraps Iterator<YieldExpression>
@@ -977,7 +978,7 @@ class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement
 	// and we provide the following two operations as a work-around:
 
 	op boolean isExported() {
-		val parent = this.eContainer;
+		val parent = getVariableDeclarationContainer();
 		if (parent instanceof VariableStatement) {
 			return parent.exported;
 		}
@@ -985,13 +986,17 @@ class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement
 	}
 
 	op String getExportedName() {
-		val parent = this.eContainer;
+		val parent = getVariableDeclarationContainer();
 		if (parent instanceof VariableStatement) {
 			if (parent.exported) {
 				return parent.exportedName ?: this.name;
 			}
 		}
 		return null;
+	}
+
+	op VariableDeclarationContainer getVariableDeclarationContainer() {
+		return EcoreUtil2.getContainerOfType(this, VariableDeclarationContainer);
 	}
 }
 

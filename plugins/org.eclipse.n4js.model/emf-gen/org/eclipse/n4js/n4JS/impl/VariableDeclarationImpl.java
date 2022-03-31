@@ -54,6 +54,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 
+import org.eclipse.xtext.EcoreUtil2;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Variable Declaration</b></em>'.
@@ -339,7 +341,7 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 */
 	@Override
 	public boolean isExported() {
-		final EObject parent = this.eContainer();
+		final VariableDeclarationContainer parent = this.getVariableDeclarationContainer();
 		if ((parent instanceof VariableStatement)) {
 			return ((VariableStatement)parent).isExported();
 		}
@@ -353,7 +355,7 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 */
 	@Override
 	public String getExportedName() {
-		final EObject parent = this.eContainer();
+		final VariableDeclarationContainer parent = this.getVariableDeclarationContainer();
 		if ((parent instanceof VariableStatement)) {
 			boolean _isExported = ((VariableStatement)parent).isExported();
 			if (_isExported) {
@@ -369,6 +371,16 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public VariableDeclarationContainer getVariableDeclarationContainer() {
+		return EcoreUtil2.<VariableDeclarationContainer>getContainerOfType(this, VariableDeclarationContainer.class);
 	}
 
 	/**
@@ -687,6 +699,8 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 				return isExported();
 			case N4JSPackage.VARIABLE_DECLARATION___GET_EXPORTED_NAME:
 				return getExportedName();
+			case N4JSPackage.VARIABLE_DECLARATION___GET_VARIABLE_DECLARATION_CONTAINER:
+				return getVariableDeclarationContainer();
 			case N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
 			case N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST:

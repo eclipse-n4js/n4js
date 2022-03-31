@@ -4393,13 +4393,22 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_DECLARATION___GET_EXPORTED_NAME = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 11;
 
 	/**
+	 * The operation id for the '<em>Get Variable Declaration Container</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_DECLARATION___GET_VARIABLE_DECLARATION_CONTAINER = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 12;
+
+	/**
 	 * The number of operations of the '<em>Variable Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 12;
+	int VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 13;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.EmptyStatementImpl <em>Empty Statement</em>}' class.
@@ -19199,6 +19208,16 @@ public interface N4JSPackage extends EPackage {
 	EOperation getVariableDeclaration__GetExportedName();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.VariableDeclaration#getVariableDeclarationContainer() <em>Get Variable Declaration Container</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Variable Declaration Container</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.VariableDeclaration#getVariableDeclarationContainer()
+	 * @generated
+	 */
+	EOperation getVariableDeclaration__GetVariableDeclarationContainer();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.EmptyStatement <em>Empty Statement</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -25303,6 +25322,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation VARIABLE_DECLARATION___GET_EXPORTED_NAME = eINSTANCE.getVariableDeclaration__GetExportedName();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Variable Declaration Container</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation VARIABLE_DECLARATION___GET_VARIABLE_DECLARATION_CONTAINER = eINSTANCE.getVariableDeclaration__GetVariableDeclarationContainer();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.EmptyStatementImpl <em>Empty Statement</em>}' class.
