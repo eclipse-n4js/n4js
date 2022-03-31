@@ -310,15 +310,23 @@ abstract class TExportingElement {
 	contains ExportDefinition[] exportDefinitions
 }
 
-interface ExportDefinition {}
+abstract class ExportDefinition {
+
+	/**
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 */
+	op TModule getContainingModule() {
+		return EcoreUtil2.getContainerOfType(this,TModule);
+	}
+}
 
 class ElementExportDefinition extends ExportDefinition {
-	
-	String declaredExportedName
 
-	op String getExportedName() {
-		return declaredExportedName ?: exportedElement?.name;
-	}
+	String exportedName
+
+	/* Tells whether the exported element is a non-static or static polyfill. */
+	boolean polyfill
 
 	/*
 	 * The element being exported under name {@link ExportDefinition#getExportedName() exportedName}.

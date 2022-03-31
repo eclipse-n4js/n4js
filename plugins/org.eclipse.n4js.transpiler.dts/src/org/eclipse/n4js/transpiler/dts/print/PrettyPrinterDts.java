@@ -199,7 +199,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 	@Override
 	public Boolean caseNamedExportSpecifier(NamedExportSpecifier original) {
-		process(original.getElement());
+		process(original.getExportedElement());
 		final String alias = original.getAlias();
 		if (alias != null) {
 			write(" as ");

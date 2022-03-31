@@ -216,7 +216,7 @@ NamespaceExportSpecifier:
 ;
 
 NamedExportSpecifier:
-	element=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+	exportedElement=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
 ;
 
 ExportableElement:

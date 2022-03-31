@@ -11,6 +11,7 @@
 package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
+import java.util.Objects
 import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -25,6 +26,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TExportingElement
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.xtext.EcoreUtil2
 
@@ -52,24 +54,28 @@ class N4JSExportDefinitionTypesBuilder {
 				val alias = exportSpec.alias;
 				if (alias !== null) {
 					val mnvt = target.containingModule.addNewModuleNamespaceVirtualType(alias, exportedModuleProxy, false, exportSpec);
-					addElementExportDefinition(target, alias, mnvt);
+					addElementExportDefinition(target, alias, false, mnvt);
 				} else {
 					addModuleExportDefinition(target, exportedModuleProxyCopy);
 				}
 			}
 		} else {
 			for (NamedExportSpecifier exportSpec : exportDecl.namedExports) {
-				val idRef = exportSpec.element;
+				val idRef = exportSpec.exportedElement;
 				if (idRef !== null) {
-					val idProxy = idRef.eGet(N4JSPackage.eINSTANCE.identifierRef_Id, false) as IdentifiableElement;
-					val exportedElemProxy = TypesFactory.eINSTANCE.createTExportableElement();
-					(exportedElemProxy as InternalEObject).eSetProxyURI((idProxy as InternalEObject).eProxyURI());
-					var declExpName = exportSpec.alias;
-					if (declExpName === null && exportDecl.isReexport()) {
-						// in case of re-exports, break the dependency on the other file by providing the exported name explicitly:
-						declExpName = idRef.idAsText;
+					val expElemProxy = idRef.eGet(N4JSPackage.eINSTANCE.identifierRef_Id, false) as IdentifiableElement;
+					val expElemProxyCpy = TypesFactory.eINSTANCE.createTExportableElement();
+					(expElemProxyCpy as InternalEObject).eSetProxyURI((expElemProxy as InternalEObject).eProxyURI());
+					var expName = exportSpec.alias;
+					if (expName === null) {
+						// we do not use the name of the actually exported element here, because ...
+						// 1) we only have a proxy to the exported element (i.e. expElemProxy) anyway and are not allowed
+						//    to trigger proxy resolution in the types builder, so we cannot retrieve its name;
+						// 2) the exported element might have been imported from another file under an alias and in that
+						//    case the import specifier's alias will be the default exported name, not the element's name.
+						expName = idRef.idAsText;
 					}
-					addElementExportDefinition(target, declExpName, exportedElemProxy);
+					addElementExportDefinition(target, expName, false, expElemProxyCpy);
 				}
 			}
 		}
@@ -89,10 +95,11 @@ class N4JSExportDefinitionTypesBuilder {
 		createExportDefinitionForDirectlyExportedElement(tDirectlyExportedElem, directlyExportedElem.exportedName, target, preLinkingPhase);
 	}
 
-	def package void createExportDefinitionForDirectlyExportedElement(TExportableElement tDirectlyExportedElem, String declaredExportedName, AbstractNamespace target, boolean preLinkingPhase) {
+	def package void createExportDefinitionForDirectlyExportedElement(TExportableElement tDirectlyExportedElem, String exportedName, AbstractNamespace target, boolean preLinkingPhase) {
 		tDirectlyExportedElem.directlyExported = true;
-		tDirectlyExportedElem.directlyExportedAsDefault = declaredExportedName == N4JSLanguageConstants.EXPORT_DEFAULT_NAME;
-		addElementExportDefinition(target, declaredExportedName, tDirectlyExportedElem);
+		tDirectlyExportedElem.directlyExportedAsDefault = exportedName == N4JSLanguageConstants.EXPORT_DEFAULT_NAME;
+		val polyfill = if (tDirectlyExportedElem instanceof Type) tDirectlyExportedElem.polyfill else false;
+		addElementExportDefinition(target, exportedName, polyfill, tDirectlyExportedElem);
 	}
 
 	def private void addModuleExportDefinition(TExportingElement exportingElem, TModule exportedModule) {
@@ -101,12 +108,13 @@ class N4JSExportDefinitionTypesBuilder {
 		exportingElem.exportDefinitions += expDef;
 	}
 
-	def private ExportDefinition addElementExportDefinition(TExportingElement exportingElem, String declaredExportedName, TExportableElement exportedElem) {
+	def private ExportDefinition addElementExportDefinition(TExportingElement exportingElem, String exportedName, boolean polyfill, TExportableElement exportedElem) {
+		Objects.requireNonNull(exportingElem);
+		Objects.requireNonNull(exportedName);
+		Objects.requireNonNull(exportedElem);
 		val expDef = TypesFactory.eINSTANCE.createElementExportDefinition();
-		if (declaredExportedName !== null
-				&& (exportedElem.eIsProxy() || declaredExportedName != exportedElem.name)) {
-			expDef.declaredExportedName = declaredExportedName;
-		}
+		expDef.exportedName = exportedName;
+		expDef.polyfill = polyfill;
 		expDef.exportedElement = exportedElem;
 		exportingElem.exportDefinitions += expDef;
 		return expDef;

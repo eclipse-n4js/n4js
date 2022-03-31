@@ -21,8 +21,6 @@ import org.eclipse.n4js.ts.types.ModuleExportDefinition;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
-
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Module Export Definition</b></em>'.
@@ -36,7 +34,7 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  *
  * @generated
  */
-public class ModuleExportDefinitionImpl extends ProxyResolvingEObjectImpl implements ModuleExportDefinition {
+public class ModuleExportDefinitionImpl extends ExportDefinitionImpl implements ModuleExportDefinition {
 	/**
 	 * The cached value of the '{@link #getExportedModule() <em>Exported Module</em>}' reference.
 	 * <!-- begin-user-doc -->

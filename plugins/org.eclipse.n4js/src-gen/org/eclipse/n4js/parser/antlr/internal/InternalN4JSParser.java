@@ -3608,7 +3608,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public final EObject ruleNamedExportSpecifier() throws RecognitionException {
         EObject current = null;
         Token otherlv_1=null;
-        EObject lv_element_0_0 = null;
+        EObject lv_exportedElement_0_0 = null;
         AntlrDatatypeRuleToken lv_alias_2_0 = null;
         	enterRule();
         try {
@@ -3617,10 +3617,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             {
             if ( state.backtracking==0 ) {
-              					newCompositeNode(grammarAccess.getNamedExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0());
+              					newCompositeNode(grammarAccess.getNamedExportSpecifierAccess().getExportedElementIdentifierRefParserRuleCall_0_0());
             }
             pushFollow(FOLLOW_30);
-            lv_element_0_0=ruleIdentifierRef();
+            lv_exportedElement_0_0=ruleIdentifierRef();
             state._fsp--;
             if (state.failed) return current;
             if ( state.backtracking==0 ) {
@@ -3629,8 +3629,8 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					}
               					set(
               						current,
-              						"element",
-              						lv_element_0_0,
+              						"exportedElement",
+              						lv_exportedElement_0_0,
               						"org.eclipse.n4js.N4JS.IdentifierRef");
               					afterParserOrEnumRuleCall();
             }

@@ -1064,6 +1064,16 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EOperation getExportDefinition__GetContainingModule() {
+		return exportDefinitionEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EClass getElementExportDefinition() {
 		return elementExportDefinitionEClass;
 	}
@@ -1074,7 +1084,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getElementExportDefinition_DeclaredExportedName() {
+	public EAttribute getElementExportDefinition_ExportedName() {
 		return (EAttribute)elementExportDefinitionEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1084,8 +1094,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getElementExportDefinition_ExportedElement() {
-		return (EReference)elementExportDefinitionEClass.getEStructuralFeatures().get(1);
+	public EAttribute getElementExportDefinition_Polyfill() {
+		return (EAttribute)elementExportDefinitionEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1094,8 +1104,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getElementExportDefinition__GetExportedName() {
-		return elementExportDefinitionEClass.getEOperations().get(0);
+	public EReference getElementExportDefinition_ExportedElement() {
+		return (EReference)elementExportDefinitionEClass.getEStructuralFeatures().get(2);
 	}
 
 	/**
@@ -3840,11 +3850,12 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(tExportingElementEClass, TEXPORTING_ELEMENT__EXPORT_DEFINITIONS);
 
 		exportDefinitionEClass = createEClass(EXPORT_DEFINITION);
+		createEOperation(exportDefinitionEClass, EXPORT_DEFINITION___GET_CONTAINING_MODULE);
 
 		elementExportDefinitionEClass = createEClass(ELEMENT_EXPORT_DEFINITION);
-		createEAttribute(elementExportDefinitionEClass, ELEMENT_EXPORT_DEFINITION__DECLARED_EXPORTED_NAME);
+		createEAttribute(elementExportDefinitionEClass, ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME);
+		createEAttribute(elementExportDefinitionEClass, ELEMENT_EXPORT_DEFINITION__POLYFILL);
 		createEReference(elementExportDefinitionEClass, ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT);
-		createEOperation(elementExportDefinitionEClass, ELEMENT_EXPORT_DEFINITION___GET_EXPORTED_NAME);
 
 		moduleExportDefinitionEClass = createEClass(MODULE_EXPORT_DEFINITION);
 		createEReference(moduleExportDefinitionEClass, MODULE_EXPORT_DEFINITION__EXPORTED_MODULE);
@@ -4352,13 +4363,14 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(tExportingElementEClass, TExportingElement.class, "TExportingElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTExportingElement_ExportDefinitions(), this.getExportDefinition(), null, "exportDefinitions", null, 0, -1, TExportingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEClass(exportDefinitionEClass, ExportDefinition.class, "ExportDefinition", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(exportDefinitionEClass, ExportDefinition.class, "ExportDefinition", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEOperation(getExportDefinition__GetContainingModule(), this.getTModule(), "getContainingModule", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(elementExportDefinitionEClass, ElementExportDefinition.class, "ElementExportDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEAttribute(getElementExportDefinition_DeclaredExportedName(), theEcorePackage.getEString(), "declaredExportedName", null, 0, 1, ElementExportDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElementExportDefinition_ExportedName(), theEcorePackage.getEString(), "exportedName", null, 0, 1, ElementExportDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getElementExportDefinition_Polyfill(), theEcorePackage.getEBoolean(), "polyfill", null, 0, 1, ElementExportDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getElementExportDefinition_ExportedElement(), this.getTExportableElement(), null, "exportedElement", null, 0, 1, ElementExportDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-		initEOperation(getElementExportDefinition__GetExportedName(), theEcorePackage.getEString(), "getExportedName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(moduleExportDefinitionEClass, ModuleExportDefinition.class, "ModuleExportDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getModuleExportDefinition_ExportedModule(), this.getTModule(), null, "exportedModule", null, 0, 1, ModuleExportDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

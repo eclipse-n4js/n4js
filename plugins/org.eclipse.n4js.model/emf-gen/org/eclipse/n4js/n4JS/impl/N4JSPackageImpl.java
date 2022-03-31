@@ -1892,7 +1892,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getNamedExportSpecifier_Element() {
+	public EReference getNamedExportSpecifier_ExportedElement() {
 		return (EReference)namedExportSpecifierEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -7912,7 +7912,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEAttribute(namespaceExportSpecifierEClass, NAMESPACE_EXPORT_SPECIFIER__ALIAS);
 
 		namedExportSpecifierEClass = createEClass(NAMED_EXPORT_SPECIFIER);
-		createEReference(namedExportSpecifierEClass, NAMED_EXPORT_SPECIFIER__ELEMENT);
+		createEReference(namedExportSpecifierEClass, NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT);
 		createEAttribute(namedExportSpecifierEClass, NAMED_EXPORT_SPECIFIER__ALIAS);
 
 		exportableElementEClass = createEClass(EXPORTABLE_ELEMENT);
@@ -9027,7 +9027,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEAttribute(getNamespaceExportSpecifier_Alias(), theEcorePackage.getEString(), "alias", null, 0, 1, NamespaceExportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(namedExportSpecifierEClass, NamedExportSpecifier.class, "NamedExportSpecifier", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getNamedExportSpecifier_Element(), this.getIdentifierRef(), null, "element", null, 0, 1, NamedExportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getNamedExportSpecifier_ExportedElement(), this.getIdentifierRef(), null, "exportedElement", null, 0, 1, NamedExportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getNamedExportSpecifier_Alias(), theEcorePackage.getEString(), "alias", null, 0, 1, NamedExportSpecifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(exportableElementEClass, ExportableElement.class, "ExportableElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

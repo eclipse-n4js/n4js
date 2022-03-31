@@ -179,16 +179,13 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	}
 
 	private def QualifiedName fqnExportDefinition(ElementExportDefinition exportDef) {
+		// note: do not trigger proxy resolution here, i.e. do not invoke exportDef.exportedElement
 		val containingExportingElem = exportDef.eContainer as TExportingElement;
 		var prefix = containingExportingElem.fullyQualifiedName;
-		val exportedElem = exportDef.exportedElement;
-		if (exportedElem instanceof Type) {
-			if (exportedElem.polyfill) {
-				prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
-			}
+		if (exportDef.polyfill) {
+			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
-		val exportedName = exportDef.declaredExportedName ?: exportedElem?.name;
-		val fqn = QualifiedNameUtils.append(prefix, exportedName);
+		val fqn = QualifiedNameUtils.append(prefix, exportDef.exportedName);
 		return fqn;
 	}
 

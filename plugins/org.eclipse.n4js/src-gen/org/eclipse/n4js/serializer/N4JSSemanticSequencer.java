@@ -20033,7 +20033,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     NamedExportSpecifier returns NamedExportSpecifier
 	 *
 	 * Constraint:
-	 *     (element=IdentifierRef alias=IdentifierName?)
+	 *     (exportedElement=IdentifierRef alias=IdentifierName?)
 	 * </pre>
 	 */
 	protected void sequence_NamedExportSpecifier(ISerializationContext context, NamedExportSpecifier semanticObject) {

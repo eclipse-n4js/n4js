@@ -10,11 +10,7 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -25,8 +21,6 @@ import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
-import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
-
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Element Export Definition</b></em>'.
@@ -35,32 +29,53 @@ import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl#getDeclaredExportedName <em>Declared Exported Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl#getExportedName <em>Exported Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl#isPolyfill <em>Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl#getExportedElement <em>Exported Element</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ElementExportDefinitionImpl extends ProxyResolvingEObjectImpl implements ElementExportDefinition {
+public class ElementExportDefinitionImpl extends ExportDefinitionImpl implements ElementExportDefinition {
 	/**
-	 * The default value of the '{@link #getDeclaredExportedName() <em>Declared Exported Name</em>}' attribute.
+	 * The default value of the '{@link #getExportedName() <em>Exported Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDeclaredExportedName()
+	 * @see #getExportedName()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String DECLARED_EXPORTED_NAME_EDEFAULT = null;
+	protected static final String EXPORTED_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getDeclaredExportedName() <em>Declared Exported Name</em>}' attribute.
+	 * The cached value of the '{@link #getExportedName() <em>Exported Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDeclaredExportedName()
+	 * @see #getExportedName()
 	 * @generated
 	 * @ordered
 	 */
-	protected String declaredExportedName = DECLARED_EXPORTED_NAME_EDEFAULT;
+	protected String exportedName = EXPORTED_NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isPolyfill() <em>Polyfill</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isPolyfill()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean POLYFILL_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isPolyfill() <em>Polyfill</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isPolyfill()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean polyfill = POLYFILL_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getExportedElement() <em>Exported Element</em>}' reference.
@@ -97,8 +112,8 @@ public class ElementExportDefinitionImpl extends ProxyResolvingEObjectImpl imple
 	 * @generated
 	 */
 	@Override
-	public String getDeclaredExportedName() {
-		return declaredExportedName;
+	public String getExportedName() {
+		return exportedName;
 	}
 
 	/**
@@ -107,11 +122,34 @@ public class ElementExportDefinitionImpl extends ProxyResolvingEObjectImpl imple
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredExportedName(String newDeclaredExportedName) {
-		String oldDeclaredExportedName = declaredExportedName;
-		declaredExportedName = newDeclaredExportedName;
+	public void setExportedName(String newExportedName) {
+		String oldExportedName = exportedName;
+		exportedName = newExportedName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.ELEMENT_EXPORT_DEFINITION__DECLARED_EXPORTED_NAME, oldDeclaredExportedName, declaredExportedName));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME, oldExportedName, exportedName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isPolyfill() {
+		return polyfill;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setPolyfill(boolean newPolyfill) {
+		boolean oldPolyfill = polyfill;
+		polyfill = newPolyfill;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.ELEMENT_EXPORT_DEFINITION__POLYFILL, oldPolyfill, polyfill));
 	}
 
 	/**
@@ -160,32 +198,12 @@ public class ElementExportDefinitionImpl extends ProxyResolvingEObjectImpl imple
 	 * @generated
 	 */
 	@Override
-	public String getExportedName() {
-		String _elvis = null;
-		String _declaredExportedName = this.getDeclaredExportedName();
-		if (_declaredExportedName != null) {
-			_elvis = _declaredExportedName;
-		} else {
-			TExportableElement _exportedElement = this.getExportedElement();
-			String _name = null;
-			if (_exportedElement!=null) {
-				_name=_exportedElement.getName();
-			}
-			_elvis = _name;
-		}
-		return _elvis;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypesPackage.ELEMENT_EXPORT_DEFINITION__DECLARED_EXPORTED_NAME:
-				return getDeclaredExportedName();
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME:
+				return getExportedName();
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION__POLYFILL:
+				return isPolyfill();
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT:
 				if (resolve) return getExportedElement();
 				return basicGetExportedElement();
@@ -201,8 +219,11 @@ public class ElementExportDefinitionImpl extends ProxyResolvingEObjectImpl imple
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypesPackage.ELEMENT_EXPORT_DEFINITION__DECLARED_EXPORTED_NAME:
-				setDeclaredExportedName((String)newValue);
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME:
+				setExportedName((String)newValue);
+				return;
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION__POLYFILL:
+				setPolyfill((Boolean)newValue);
 				return;
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT:
 				setExportedElement((TExportableElement)newValue);
@@ -219,8 +240,11 @@ public class ElementExportDefinitionImpl extends ProxyResolvingEObjectImpl imple
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypesPackage.ELEMENT_EXPORT_DEFINITION__DECLARED_EXPORTED_NAME:
-				setDeclaredExportedName(DECLARED_EXPORTED_NAME_EDEFAULT);
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME:
+				setExportedName(EXPORTED_NAME_EDEFAULT);
+				return;
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION__POLYFILL:
+				setPolyfill(POLYFILL_EDEFAULT);
 				return;
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT:
 				setExportedElement((TExportableElement)null);
@@ -237,8 +261,10 @@ public class ElementExportDefinitionImpl extends ProxyResolvingEObjectImpl imple
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypesPackage.ELEMENT_EXPORT_DEFINITION__DECLARED_EXPORTED_NAME:
-				return DECLARED_EXPORTED_NAME_EDEFAULT == null ? declaredExportedName != null : !DECLARED_EXPORTED_NAME_EDEFAULT.equals(declaredExportedName);
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME:
+				return EXPORTED_NAME_EDEFAULT == null ? exportedName != null : !EXPORTED_NAME_EDEFAULT.equals(exportedName);
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION__POLYFILL:
+				return polyfill != POLYFILL_EDEFAULT;
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT:
 				return exportedElement != null;
 		}
@@ -251,26 +277,14 @@ public class ElementExportDefinitionImpl extends ProxyResolvingEObjectImpl imple
 	 * @generated
 	 */
 	@Override
-	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
-		switch (operationID) {
-			case TypesPackage.ELEMENT_EXPORT_DEFINITION___GET_EXPORTED_NAME:
-				return getExportedName();
-		}
-		return super.eInvoke(operationID, arguments);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public String toString() {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (declaredExportedName: ");
-		result.append(declaredExportedName);
+		result.append(" (exportedName: ");
+		result.append(exportedName);
+		result.append(", polyfill: ");
+		result.append(polyfill);
 		result.append(')');
 		return result.toString();
 	}

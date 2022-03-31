@@ -30,6 +30,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -366,11 +367,15 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	private void internalCreateEObjectDescription(ElementExportDefinition exportDef,
 			IAcceptor<IEObjectDescription> acceptor) {
 
-		TExportableElement element = exportDef.getExportedElement();
-		if (element == null || element.eIsProxy()) {
-			return;
-		}
-		if (element instanceof Type) {
+		TExportableElement element = (TExportableElement) exportDef.eGet(
+				TypesPackage.Literals.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT, false);
+		if (element == null) {
+			throw new NullPointerException("ExportDefinition#exportedElement may not be null");
+		} else if (element.eIsProxy()) {
+			// this will happen during pre-indexing phase for indirect exports
+			// (i.e. export via a separate export declaration)
+			internalCreateEObjectDescriptionForProxy(exportDef, element, acceptor);
+		} else if (element instanceof Type) {
 			internalCreateEObjectDescription(Optional.of(exportDef), (Type) element, acceptor);
 		} else if (element instanceof TVariable) {
 			internalCreateEObjectDescription(exportDef, (TVariable) element, acceptor);
@@ -378,6 +383,14 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			throw new UnsupportedOperationException(
 					"unsupported subclass of TExportableElement: " + element.eClass().getName());
 		}
+	}
+
+	private void internalCreateEObjectDescriptionForProxy(ExportDefinition exportDef, EObject exportedElementProxy,
+			IAcceptor<IEObjectDescription> acceptor) {
+
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(exportDef);
+		IEObjectDescription eod = N4JSEObjectDescription.create(qualifiedName, exportedElementProxy);
+		acceptor.accept(eod);
 	}
 
 	/**

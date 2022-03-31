@@ -19,8 +19,21 @@ import org.eclipse.emf.ecore.EObject;
  *
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getExportDefinition()
- * @model interface="true" abstract="true"
+ * @model abstract="true"
  * @generated
  */
 public interface ExportDefinition extends EObject {
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	TModule getContainingModule();
+
 } // ExportDefinition

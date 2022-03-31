@@ -676,13 +676,13 @@ public interface N4JSPackage extends EPackage {
 	int NAMED_EXPORT_SPECIFIER = 6;
 
 	/**
-	 * The feature id for the '<em><b>Element</b></em>' containment reference.
+	 * The feature id for the '<em><b>Exported Element</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NAMED_EXPORT_SPECIFIER__ELEMENT = 0;
+	int NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT = 0;
 
 	/**
 	 * The feature id for the '<em><b>Alias</b></em>' attribute.
@@ -17590,15 +17590,15 @@ public interface N4JSPackage extends EPackage {
 	EClass getNamedExportSpecifier();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.NamedExportSpecifier#getElement <em>Element</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.NamedExportSpecifier#getExportedElement <em>Exported Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Element</em>'.
-	 * @see org.eclipse.n4js.n4JS.NamedExportSpecifier#getElement()
+	 * @return the meta object for the containment reference '<em>Exported Element</em>'.
+	 * @see org.eclipse.n4js.n4JS.NamedExportSpecifier#getExportedElement()
 	 * @see #getNamedExportSpecifier()
 	 * @generated
 	 */
-	EReference getNamedExportSpecifier_Element();
+	EReference getNamedExportSpecifier_ExportedElement();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.n4JS.NamedExportSpecifier#getAlias <em>Alias</em>}'.
@@ -23981,12 +23981,12 @@ public interface N4JSPackage extends EPackage {
 		EClass NAMED_EXPORT_SPECIFIER = eINSTANCE.getNamedExportSpecifier();
 
 		/**
-		 * The meta object literal for the '<em><b>Element</b></em>' containment reference feature.
+		 * The meta object literal for the '<em><b>Exported Element</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference NAMED_EXPORT_SPECIFIER__ELEMENT = eINSTANCE.getNamedExportSpecifier_Element();
+		EReference NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT = eINSTANCE.getNamedExportSpecifier_ExportedElement();
 
 		/**
 		 * The meta object literal for the '<em><b>Alias</b></em>' attribute feature.

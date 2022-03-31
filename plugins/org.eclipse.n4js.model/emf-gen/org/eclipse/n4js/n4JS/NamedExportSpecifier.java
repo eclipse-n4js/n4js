@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.NamedExportSpecifier#getElement <em>Element</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.NamedExportSpecifier#getExportedElement <em>Exported Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.NamedExportSpecifier#getAlias <em>Alias</em>}</li>
  * </ul>
  *
@@ -31,26 +31,26 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface NamedExportSpecifier extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Element</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Exported Element</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Element</em>' containment reference.
-	 * @see #setElement(IdentifierRef)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getNamedExportSpecifier_Element()
+	 * @return the value of the '<em>Exported Element</em>' containment reference.
+	 * @see #setExportedElement(IdentifierRef)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getNamedExportSpecifier_ExportedElement()
 	 * @model containment="true"
 	 * @generated
 	 */
-	IdentifierRef getElement();
+	IdentifierRef getExportedElement();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.NamedExportSpecifier#getElement <em>Element</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.NamedExportSpecifier#getExportedElement <em>Exported Element</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Element</em>' containment reference.
-	 * @see #getElement()
+	 * @param value the new value of the '<em>Exported Element</em>' containment reference.
+	 * @see #getExportedElement()
 	 * @generated
 	 */
-	void setElement(IdentifierRef value);
+	void setExportedElement(IdentifierRef value);
 
 	/**
 	 * Returns the value of the '<em><b>Alias</b></em>' attribute.

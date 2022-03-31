@@ -2521,17 +2521,17 @@ ruleNamedExportSpecifier returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getNamedExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getNamedExportSpecifierAccess().getExportedElementIdentifierRefParserRuleCall_0_0());
 				}
-				lv_element_0_0=ruleIdentifierRef
+				lv_exportedElement_0_0=ruleIdentifierRef
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getNamedExportSpecifierRule());
 					}
 					set(
 						$current,
-						"element",
-						lv_element_0_0,
+						"exportedElement",
+						lv_exportedElement_0_0,
 						"org.eclipse.n4js.N4JS.IdentifierRef");
 					afterParserOrEnumRuleCall();
 				}

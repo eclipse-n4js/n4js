@@ -20,7 +20,8 @@ package org.eclipse.n4js.ts.types;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getDeclaredExportedName <em>Declared Exported Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedName <em>Exported Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.ElementExportDefinition#isPolyfill <em>Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedElement <em>Exported Element</em>}</li>
  * </ul>
  *
@@ -30,26 +31,51 @@ package org.eclipse.n4js.ts.types;
  */
 public interface ElementExportDefinition extends ExportDefinition {
 	/**
-	 * Returns the value of the '<em><b>Declared Exported Name</b></em>' attribute.
+	 * Returns the value of the '<em><b>Exported Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Declared Exported Name</em>' attribute.
-	 * @see #setDeclaredExportedName(String)
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getElementExportDefinition_DeclaredExportedName()
+	 * @return the value of the '<em>Exported Name</em>' attribute.
+	 * @see #setExportedName(String)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getElementExportDefinition_ExportedName()
 	 * @model unique="false"
 	 * @generated
 	 */
-	String getDeclaredExportedName();
+	String getExportedName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getDeclaredExportedName <em>Declared Exported Name</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedName <em>Exported Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Exported Name</em>' attribute.
-	 * @see #getDeclaredExportedName()
+	 * @param value the new value of the '<em>Exported Name</em>' attribute.
+	 * @see #getExportedName()
 	 * @generated
 	 */
-	void setDeclaredExportedName(String value);
+	void setExportedName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Polyfill</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  Tells whether the exported element is a non-static or static polyfill.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Polyfill</em>' attribute.
+	 * @see #setPolyfill(boolean)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getElementExportDefinition_Polyfill()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isPolyfill();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#isPolyfill <em>Polyfill</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Polyfill</em>' attribute.
+	 * @see #isPolyfill()
+	 * @generated
+	 */
+	void setPolyfill(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Exported Element</b></em>' reference.
@@ -76,13 +102,5 @@ public interface ElementExportDefinition extends ExportDefinition {
 	 * @generated
 	 */
 	void setExportedElement(TExportableElement value);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	String getExportedName();
 
 } // ElementExportDefinition

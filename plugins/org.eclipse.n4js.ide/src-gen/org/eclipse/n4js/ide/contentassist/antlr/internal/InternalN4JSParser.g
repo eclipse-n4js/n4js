@@ -19552,9 +19552,9 @@ rule__NamedExportSpecifier__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getNamedExportSpecifierAccess().getElementAssignment_0()); }
-	(rule__NamedExportSpecifier__ElementAssignment_0)
-	{ after(grammarAccess.getNamedExportSpecifierAccess().getElementAssignment_0()); }
+	{ before(grammarAccess.getNamedExportSpecifierAccess().getExportedElementAssignment_0()); }
+	(rule__NamedExportSpecifier__ExportedElementAssignment_0)
+	{ after(grammarAccess.getNamedExportSpecifierAccess().getExportedElementAssignment_0()); }
 )
 ;
 finally {
@@ -82016,15 +82016,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__NamedExportSpecifier__ElementAssignment_0
+rule__NamedExportSpecifier__ExportedElementAssignment_0
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getNamedExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0()); }
+		{ before(grammarAccess.getNamedExportSpecifierAccess().getExportedElementIdentifierRefParserRuleCall_0_0()); }
 		ruleIdentifierRef
-		{ after(grammarAccess.getNamedExportSpecifierAccess().getElementIdentifierRefParserRuleCall_0_0()); }
+		{ after(grammarAccess.getNamedExportSpecifierAccess().getExportedElementIdentifierRefParserRuleCall_0_0()); }
 	)
 ;
 finally {

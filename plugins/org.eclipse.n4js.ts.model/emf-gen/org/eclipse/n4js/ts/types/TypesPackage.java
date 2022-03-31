@@ -742,10 +742,10 @@ public interface TypesPackage extends EPackage {
 	int IDENTIFIABLE_ELEMENT_OPERATION_COUNT = TYPABLE_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.ExportDefinition <em>Export Definition</em>}' class.
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl <em>Export Definition</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.ts.types.ExportDefinition
+	 * @see org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getExportDefinition()
 	 * @generated
 	 */
@@ -761,13 +761,22 @@ public interface TypesPackage extends EPackage {
 	int EXPORT_DEFINITION_FEATURE_COUNT = 0;
 
 	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORT_DEFINITION___GET_CONTAINING_MODULE = 0;
+
+	/**
 	 * The number of operations of the '<em>Export Definition</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DEFINITION_OPERATION_COUNT = 0;
+	int EXPORT_DEFINITION_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl <em>Element Export Definition</em>}' class.
@@ -780,13 +789,22 @@ public interface TypesPackage extends EPackage {
 	int ELEMENT_EXPORT_DEFINITION = 7;
 
 	/**
-	 * The feature id for the '<em><b>Declared Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_EXPORT_DEFINITION__DECLARED_EXPORTED_NAME = EXPORT_DEFINITION_FEATURE_COUNT + 0;
+	int ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME = EXPORT_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Polyfill</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION__POLYFILL = EXPORT_DEFINITION_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Exported Element</b></em>' reference.
@@ -795,7 +813,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT = EXPORT_DEFINITION_FEATURE_COUNT + 1;
+	int ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT = EXPORT_DEFINITION_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>Element Export Definition</em>' class.
@@ -804,16 +822,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_EXPORT_DEFINITION_FEATURE_COUNT = EXPORT_DEFINITION_FEATURE_COUNT + 2;
+	int ELEMENT_EXPORT_DEFINITION_FEATURE_COUNT = EXPORT_DEFINITION_FEATURE_COUNT + 3;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_EXPORT_DEFINITION___GET_EXPORTED_NAME = EXPORT_DEFINITION_OPERATION_COUNT + 0;
+	int ELEMENT_EXPORT_DEFINITION___GET_CONTAINING_MODULE = EXPORT_DEFINITION___GET_CONTAINING_MODULE;
 
 	/**
 	 * The number of operations of the '<em>Element Export Definition</em>' class.
@@ -822,7 +840,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_EXPORT_DEFINITION_OPERATION_COUNT = EXPORT_DEFINITION_OPERATION_COUNT + 1;
+	int ELEMENT_EXPORT_DEFINITION_OPERATION_COUNT = EXPORT_DEFINITION_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ModuleExportDefinitionImpl <em>Module Export Definition</em>}' class.
@@ -851,6 +869,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODULE_EXPORT_DEFINITION_FEATURE_COUNT = EXPORT_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_EXPORT_DEFINITION___GET_CONTAINING_MODULE = EXPORT_DEFINITION___GET_CONTAINING_MODULE;
 
 	/**
 	 * The number of operations of the '<em>Module Export Definition</em>' class.
@@ -13951,6 +13978,16 @@ public interface TypesPackage extends EPackage {
 	EClass getExportDefinition();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.ExportDefinition#getContainingModule() <em>Get Containing Module</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Containing Module</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.ExportDefinition#getContainingModule()
+	 * @generated
+	 */
+	EOperation getExportDefinition__GetContainingModule();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ElementExportDefinition <em>Element Export Definition</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13961,15 +13998,26 @@ public interface TypesPackage extends EPackage {
 	EClass getElementExportDefinition();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getDeclaredExportedName <em>Declared Exported Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedName <em>Exported Name</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Declared Exported Name</em>'.
-	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#getDeclaredExportedName()
+	 * @return the meta object for the attribute '<em>Exported Name</em>'.
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedName()
 	 * @see #getElementExportDefinition()
 	 * @generated
 	 */
-	EAttribute getElementExportDefinition_DeclaredExportedName();
+	EAttribute getElementExportDefinition_ExportedName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#isPolyfill <em>Polyfill</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Polyfill</em>'.
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#isPolyfill()
+	 * @see #getElementExportDefinition()
+	 * @generated
+	 */
+	EAttribute getElementExportDefinition_Polyfill();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedElement <em>Exported Element</em>}'.
@@ -13981,16 +14029,6 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getElementExportDefinition_ExportedElement();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedName() <em>Get Exported Name</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Exported Name</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedName()
-	 * @generated
-	 */
-	EOperation getElementExportDefinition__GetExportedName();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ModuleExportDefinition <em>Module Export Definition</em>}'.
@@ -17076,14 +17114,22 @@ public interface TypesPackage extends EPackage {
 		EReference TEXPORTING_ELEMENT__EXPORT_DEFINITIONS = eINSTANCE.getTExportingElement_ExportDefinitions();
 
 		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.ExportDefinition <em>Export Definition</em>}' class.
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl <em>Export Definition</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.ts.types.ExportDefinition
+		 * @see org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl
 		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getExportDefinition()
 		 * @generated
 		 */
 		EClass EXPORT_DEFINITION = eINSTANCE.getExportDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Containing Module</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPORT_DEFINITION___GET_CONTAINING_MODULE = eINSTANCE.getExportDefinition__GetContainingModule();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl <em>Element Export Definition</em>}' class.
@@ -17096,12 +17142,20 @@ public interface TypesPackage extends EPackage {
 		EClass ELEMENT_EXPORT_DEFINITION = eINSTANCE.getElementExportDefinition();
 
 		/**
-		 * The meta object literal for the '<em><b>Declared Exported Name</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Exported Name</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute ELEMENT_EXPORT_DEFINITION__DECLARED_EXPORTED_NAME = eINSTANCE.getElementExportDefinition_DeclaredExportedName();
+		EAttribute ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME = eINSTANCE.getElementExportDefinition_ExportedName();
+
+		/**
+		 * The meta object literal for the '<em><b>Polyfill</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ELEMENT_EXPORT_DEFINITION__POLYFILL = eINSTANCE.getElementExportDefinition_Polyfill();
 
 		/**
 		 * The meta object literal for the '<em><b>Exported Element</b></em>' reference feature.
@@ -17110,14 +17164,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT = eINSTANCE.getElementExportDefinition_ExportedElement();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Exported Name</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation ELEMENT_EXPORT_DEFINITION___GET_EXPORTED_NAME = eINSTANCE.getElementExportDefinition__GetExportedName();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ModuleExportDefinitionImpl <em>Module Export Definition</em>}' class.
