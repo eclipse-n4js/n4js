@@ -74,6 +74,7 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 		    cref ExportDefinition exportDefinitions [
 		        0: ElementExportDefinition {
 		            ref TExportableElement exportedElement ref: TClass@(resource null)
+		            attr EString exportedName 'MySubClass'
 		        }
 		    ]
 		    attr EString moduleSpecifier 'org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles'

@@ -63,7 +63,7 @@ class N4JSScopingTestWithIndexTest {
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
 				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="Supplier" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" packageName="org.eclipse.n4js.lang.tests" projectID="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
-				  <exportDefinitions xsi:type="types:ElementExportDefinition" exportedElement="//@types.0"/>
+				  <exportDefinitions xsi:type="types:ElementExportDefinition" exportedName="Supplier" exportedElement="//@types.0"/>
 				  <types xsi:type="types:TClass" name="Supplier" directlyExported="true">
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
 				      <astElement href="#/0/@scriptElements.0/@exportedElement/@ownedMembersRaw.0"/>
@@ -87,7 +87,7 @@ class N4JSScopingTestWithIndexTest {
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
 				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="SupplierWithBuiltIn" qualifiedName="org/eclipse/n4js/tests/scoping/SupplierWithBuiltIn" packageName="org.eclipse.n4js.lang.tests" projectID="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
-				  <exportDefinitions xsi:type="types:ElementExportDefinition" exportedElement="//@types.0"/>
+				  <exportDefinitions xsi:type="types:ElementExportDefinition" exportedName="SupplierWithBuiltIn" exportedElement="//@types.0"/>
 				  <types xsi:type="types:TClass" name="SupplierWithBuiltIn" directlyExported="true">
 				    <ownedMembers xsi:type="types:TField" name="s" declaredMemberAccessModifier="public">
 				      <astElement href="#/0/@scriptElements.0/@exportedElement/@ownedMembersRaw.0"/>
