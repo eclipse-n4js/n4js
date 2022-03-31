@@ -16,6 +16,10 @@ package org.eclipse.n4js.ts.types;
  * A representation of the model object '<em><b>Element Export Definition</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * Represents the direct or indirect (re-)export of an {@link TExportableElement exportable element}.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>

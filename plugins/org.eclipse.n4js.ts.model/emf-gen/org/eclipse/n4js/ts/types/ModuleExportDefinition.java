@@ -16,6 +16,23 @@ package org.eclipse.n4js.ts.types;
  * A representation of the model object '<em><b>Module Export Definition</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * Represents the re-export of another module of the form
+ * <pre>
+ * export * from "other/module"
+ * </pre>
+ * <p>
+ * Note that this class is *not* used to represent the following two cases:
+ * <ul>
+ * <li>module re-exports using an alias (i.e. {@code export * as ALIAS from "other/module"}):
+ *     these are represented as an {@link ElementExportDefinition} with property
+ *     {@link ElementExportDefinition#getExportedElement() exportedElement}
+ *     set to a {@link ModuleNamespaceVirtualType} wrapping the re-exported module.
+ * <li>(re-)exports of namespaces:
+ *     these are represented as an {@link ElementExportDefinition}, as well.
+ * </ul>
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>

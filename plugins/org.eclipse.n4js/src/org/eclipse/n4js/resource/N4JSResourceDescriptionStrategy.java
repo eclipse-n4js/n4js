@@ -215,7 +215,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				if (exportDef instanceof ElementExportDefinition) {
 					internalCreateEObjectDescription((ElementExportDefinition) exportDef, acceptor);
 				} else if (exportDef instanceof ModuleExportDefinition) {
-					// FIXME
+					// ignore (no need to duplicate the elements of exportDef.exportedModule in the Xtext index)
 				}
 			}
 			// to better support UI functionality such as "Open Type" we also add non-exported types to the index:
