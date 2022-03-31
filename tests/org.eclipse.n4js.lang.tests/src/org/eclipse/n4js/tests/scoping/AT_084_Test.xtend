@@ -111,8 +111,10 @@ class AT_084_Test {
 		'''.parse(URI.createURI("C.n4js"), rs)
 
 		script.assertNoError(IssueCodes.IMP_AMBIGUOUS)
+		script.assertNoIssue(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT)
 		//Since A.dup cannot be linked, import is unused, but also marked with linking error
-		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNRESOLVED, "Import of dup cannot be resolved.")
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_NOT_EXPORTED, "Element dup is not exported.")
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name dup is already used as name for named import dup from A.")
 	}
 
 	@Test
@@ -133,10 +135,8 @@ class AT_084_Test {
 		script.assertNoError(IssueCodes.IMP_AMBIGUOUS)
 		script.assertNoIssue(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT)
 		//Since A.dup cannot be linked, an error is shown
-		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNRESOLVED, "Import of dup cannot be resolved.")
-		//Local name used in second import of unresolved element conflicts with the previous one
-		//but this error is not shown to avoid redundant error messages
-		script.assertNoError(IssueCodes.IMP_LOCAL_NAME_CONFLICT)
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_NOT_EXPORTED, "Element dup is not exported.")
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name dup is already used as name for named import dup from A.")
 	}
 
 	@Test
