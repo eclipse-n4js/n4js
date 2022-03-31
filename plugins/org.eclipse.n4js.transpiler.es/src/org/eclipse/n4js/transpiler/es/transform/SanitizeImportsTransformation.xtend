@@ -150,6 +150,12 @@ class SanitizeImportsTransformation extends Transformation {
 				findSymbolTableEntryForNamespaceImport(importSpec)
 			};
 
+			if (ste === null) {
+				// this may happen in case of several NamedImportSpecifiers importing the same IdentifiableElement
+				// (which is a validation error in most cases, but the validation misses some corner cases)
+				return false;
+			}
+
 			// note: here it is not enough to return !ste.referencingElements.empty, because for performance reasons
 			// transformations are not required to remove obsolete entries from that list
 			val hasReference = ste.referencingElements.exists[TranspilerUtils.isIntermediateModelElement(it)];
