@@ -17,7 +17,7 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.ts.types.AbstractModule
+import org.eclipse.n4js.ts.types.TModule
 
 /**
  * Register holding results of analyzing {@link ImportDeclaration}s
@@ -31,7 +31,7 @@ class RecordingImportState {
 	public List<ImportSpecifier> brokenImports = newArrayList();
 
 	/*TODO refactor nested collections into specialized types */
-	public List<Pair<Pair<String, AbstractModule>, List<ImportProvidedElement>>> duplicateImportsOfSameElement = newArrayList();
+	public List<Pair<Pair<String, TModule>, List<ImportProvidedElement>>> duplicateImportsOfSameElement = newArrayList();
 	public List<Pair<String, List<ImportProvidedElement>>> localNameCollision = newArrayList();
 
 	public List<ImportProvidedElement> allUsedTypeNameToSpecifierTuples = newArrayList();
@@ -145,7 +145,7 @@ class RecordingImportState {
 		return ret
 	}
 
-	def registerDuplicateImportsOfSameElement(String name, AbstractModule module, List<ImportProvidedElement> elements) {
+	def registerDuplicateImportsOfSameElement(String name, TModule module, List<ImportProvidedElement> elements) {
 		duplicateImportsOfSameElement.add((name->module)->elements);
 	}
 

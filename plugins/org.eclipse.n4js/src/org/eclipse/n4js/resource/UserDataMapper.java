@@ -30,10 +30,10 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
+import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.RuntimeDependency;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -94,6 +94,11 @@ public final class UserDataMapper {
 	 * TModule#astMD5}.
 	 */
 	public static final String USER_DATA_KEY_AST_MD5 = "astMD5";
+
+	/**
+	 * The key in the user data map for storing the uri of the host resource iff this resource was nested.
+	 */
+	public static final String USER_DATA_KEY_NESTED_MODULE_PARENT = "nestedModuleParent";
 
 	/**
 	 * Flag indicating whether the string representation contains binary or human readable data.
@@ -191,6 +196,11 @@ public final class UserDataMapper {
 		if (exportedModule.isStaticPolyfillModule()) {
 			final String contentHash = Integer.toHexString(originalResource.getParseResult().getRootNode().hashCode());
 			ret.put(USER_DATA_KEY_STATIC_POLYFILL_CONTENTHASH, contentHash);
+		}
+		if (originalResource.isNested()) {
+			NestedResourceAdapter nestedResourceAdapter = NestedResourceAdapter.get(originalResource);
+			URI host = nestedResourceAdapter.getHostUri();
+			ret.put(USER_DATA_KEY_NESTED_MODULE_PARENT, host.toFileString());
 		}
 		return ret;
 	}
@@ -292,6 +302,16 @@ public final class UserDataMapper {
 		return eObjectDescription.getUserData(USER_DATA_KEY_SERIALIZED_SCRIPT) != null;
 	}
 
+	/** Returns true iff the {@link EObject} of given description is inside a nested/virtual resource */
+	public static boolean isNested(IEObjectDescription eObjectDescription) {
+		return eObjectDescription.getUserData(USER_DATA_KEY_NESTED_MODULE_PARENT) != null;
+	}
+
+	/** Returns the URI of the host of the given description */
+	public static URI getHostUri(IEObjectDescription eObjectDescription) {
+		return URI.createFileURI(eObjectDescription.getUserData(USER_DATA_KEY_NESTED_MODULE_PARENT));
+	}
+
 	private static Joiner joiner = Joiner.on(",");
 
 	/**
@@ -313,7 +333,7 @@ public final class UserDataMapper {
 		if (script != null && !script.eIsProxy()) {
 			for (ScriptElement elem : script.getScriptElements()) {
 				if (elem instanceof ImportDeclaration) {
-					final AbstractModule module = ((ImportDeclaration) elem).getModule();
+					final TModule module = ((ImportDeclaration) elem).getModule();
 					if (module != null && !module.eIsProxy()) {
 						final Resource targetRes = module.eResource();
 						if (targetRes != null) {

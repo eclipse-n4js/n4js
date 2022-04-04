@@ -20,13 +20,11 @@ import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.MethodDeclaration
-import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
-import org.eclipse.n4js.n4JS.N4ModuleDeclaration
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
@@ -76,7 +74,6 @@ public class N4JSTypesBuilder {
 
 	@Inject(optional=true) TypesFactory typesFactory = TypesFactory.eINSTANCE
 	@Inject extension N4JSTypesBuilderHelper
-	@Inject extension N4JSModuleDeclarationTypesBuilder
 	@Inject extension N4JSNamespaceDeclarationTypesBuilder
 	@Inject extension N4JSClassDeclarationTypesBuilder
 	@Inject extension N4JSInterfaceDeclarationTypesBuilder
@@ -281,7 +278,7 @@ public class N4JSTypesBuilder {
 			}
 		}
 	}
-
+	
 	static class RelinkIndices {
 		package var namespacesIdx = 0;
 		package var topLevelTypesIdx = 0;
@@ -291,9 +288,9 @@ public class N4JSTypesBuilder {
 	def private void relinkTypes(EObject container, AbstractNamespace target, boolean preLinkingPhase, RelinkIndices rlis) {
 		for (n : container.eContents) {
 			switch n {
-				N4AbstractNamespaceDeclaration: {
+				N4NamespaceDeclaration: {
 					rlis.namespacesIdx = n.relinkType(target, preLinkingPhase, rlis.namespacesIdx);
-					val AbstractNamespace namespaceType = if (n instanceof N4NamespaceDeclaration) n.definedType as TNamespace else (n as N4ModuleDeclaration).definedModule;
+					val namespaceType = n.definedType as TNamespace;
 					relinkTypes(n, namespaceType, preLinkingPhase, new RelinkIndices());
 				}
 				TypeDefiningElement: {
@@ -303,7 +300,7 @@ public class N4JSTypesBuilder {
 					rlis.variableIdx = n.relinkType(target, preLinkingPhase, rlis.variableIdx)
 				}
 			}
-			if (!(n instanceof N4AbstractNamespaceDeclaration)) {
+			if (!(n instanceof N4NamespaceDeclaration)) {
 				relinkTypes(n, target, preLinkingPhase, rlis)
 			}
 		}
@@ -316,14 +313,6 @@ public class N4JSTypesBuilder {
 	def protected dispatch int relinkType(NamespaceImportSpecifier nsImpSpec, AbstractNamespace target, boolean preLinkingPhase,
 		int idx) {
 		// already handled up-front in N4JSNamespaceImportTypesBuilder#relinkNamespaceTypes
-		return idx;
-	}
-
-	def protected dispatch int relinkType(N4ModuleDeclaration n4ModuleDecl, AbstractNamespace target, boolean preLinkingPhase,
-		int idx) {
-		if (n4ModuleDecl.relinkTDeclaredModule(target, preLinkingPhase, idx)) {
-			return idx + 1;
-		}
 		return idx;
 	}
 
@@ -406,9 +395,9 @@ public class N4JSTypesBuilder {
 	def private void buildTypes(EObject container, AbstractNamespace target, boolean preLinkingPhase) {
 		for (n : container.eContents) {
 			switch n {
-				N4AbstractNamespaceDeclaration: {
+				N4NamespaceDeclaration: {
 					n.createType(target, preLinkingPhase);
-					val AbstractNamespace namespaceType = if (n instanceof N4NamespaceDeclaration) n.definedType as TNamespace else (n as N4ModuleDeclaration).definedModule;
+					val namespaceType = n.definedType as TNamespace;
 					if (namespaceType !== null) {
 						// can be null in broken ASTs
 						buildTypes(n, namespaceType, preLinkingPhase);
@@ -419,7 +408,7 @@ public class N4JSTypesBuilder {
 				ExportedVariableStatement:
 					n.createType(target, preLinkingPhase)
 			}
-			if (!(n instanceof N4AbstractNamespaceDeclaration)) {
+			if (!(n instanceof N4NamespaceDeclaration)) {
 				buildTypes(n, target, preLinkingPhase)
 			}
 		}
@@ -432,10 +421,6 @@ public class N4JSTypesBuilder {
 	def protected dispatch void createType(NamespaceImportSpecifier nsImpSpec, AbstractNamespace target,
 		boolean preLinkingPhase) {
 		// already handled up-front in #buildNamespacesTypesFromModuleImports()
-	}
-
-	def protected dispatch void createType(N4ModuleDeclaration n4ModuleDecl, AbstractNamespace target, boolean preLinkingPhase) {
-		n4ModuleDecl.createTDeclaredModule(target, preLinkingPhase)
 	}
 
 	def protected dispatch void createType(N4NamespaceDeclaration n4Namespace, AbstractNamespace target, boolean preLinkingPhase) {

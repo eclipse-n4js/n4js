@@ -26,7 +26,7 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.tooling.organizeImports.ImportProvidedElement
 import org.eclipse.n4js.tooling.organizeImports.ImportStateCalculator
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.types.AbstractModule
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
@@ -256,7 +256,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		]
 	}
 
-	private def handleTypeCollisions(List<Pair<Pair<String, AbstractModule>, List<ImportProvidedElement>>> duplicateslist,
+	private def handleTypeCollisions(List<Pair<Pair<String, TModule>, List<ImportProvidedElement>>> duplicateslist,
 		Map<EObject, String> eObjectToIssueCode) {
 			
 		for (duplicateEntry : duplicateslist) {
@@ -396,7 +396,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	private def addIssueDuplicate(ImportSpecifier specifier, String actualName, AbstractModule module,
+	private def addIssueDuplicate(ImportSpecifier specifier, String actualName, TModule module,
 		String firstImportName, Map<EObject, String> eObjectToIssueCode) {
 		var String issueCode = IssueCodes.IMP_DUPLICATE
 		if (eObjectToIssueCode.get(specifier) === null) {

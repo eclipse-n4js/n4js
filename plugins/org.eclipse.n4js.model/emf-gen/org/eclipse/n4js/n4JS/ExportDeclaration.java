@@ -12,7 +12,7 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.n4js.ts.types.AbstractModule;
+import org.eclipse.n4js.ts.types.TModule;
 
 /**
  * <!-- begin-user-doc -->
@@ -141,12 +141,12 @@ public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElem
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Reexported From</em>' reference.
-	 * @see #setReexportedFrom(AbstractModule)
+	 * @see #setReexportedFrom(TModule)
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportDeclaration_ReexportedFrom()
 	 * @model
 	 * @generated
 	 */
-	AbstractModule getReexportedFrom();
+	TModule getReexportedFrom();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ExportDeclaration#getReexportedFrom <em>Reexported From</em>}' reference.
@@ -156,7 +156,7 @@ public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElem
 	 * @see #getReexportedFrom()
 	 * @generated
 	 */
-	void setReexportedFrom(AbstractModule value);
+	void setReexportedFrom(TModule value);
 
 	/**
 	 * <!-- begin-user-doc -->

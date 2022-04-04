@@ -34,7 +34,6 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.tooling.organizeImports.ImportSpecifiersUtil;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
@@ -51,7 +50,6 @@ import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.ReplaceRegion;
 import org.eclipse.xtext.util.TextRegion;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.inject.Inject;
@@ -117,12 +115,8 @@ public class ImportHelper {
 			throw new IllegalArgumentException("must not create an ImportDescriptor for broken imports");
 		}
 
-		AbstractModule module = importDecl.getModule();
-		Optional<N4JSPackageName> targetProjectName = module instanceof TModule
-				? Optional.of(new N4JSPackageName(((TModule) module).getPackageName()))
-				// TDeclaredModules are global (they do not live inside the project containing the file containing the
-				// module declaration), so they do not have a targetProjectName:
-				: Optional.absent();
+		TModule module = importDecl.getModule();
+		N4JSPackageName targetProjectName = new N4JSPackageName(module.getPackageName());
 		QualifiedName targetModule = qualifiedNameConverter.toQualifiedName(module.getQualifiedName());
 
 		String moduleSpecifier = importDecl.getModuleSpecifierAsText();

@@ -32,7 +32,7 @@ import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.ModuleSpecifierForm;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 
-import org.eclipse.n4js.ts.types.AbstractModule;
+import org.eclipse.n4js.ts.types.TModule;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
@@ -94,7 +94,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 * @ordered
 	 */
-	protected AbstractModule module;
+	protected TModule module;
 
 	/**
 	 * The default value of the '{@link #getModuleSpecifierAsText() <em>Module Specifier As Text</em>}' attribute.
@@ -197,10 +197,10 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
-	public AbstractModule getModule() {
+	public TModule getModule() {
 		if (module != null && module.eIsProxy()) {
 			InternalEObject oldModule = (InternalEObject)module;
-			module = (AbstractModule)eResolveProxy(oldModule);
+			module = (TModule)eResolveProxy(oldModule);
 			if (module != oldModule) {
 				if (eNotificationRequired())
 					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.IMPORT_DECLARATION__MODULE, oldModule, module));
@@ -214,7 +214,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public AbstractModule basicGetModule() {
+	public TModule basicGetModule() {
 		return module;
 	}
 
@@ -224,8 +224,8 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
-	public void setModule(AbstractModule newModule) {
-		AbstractModule oldModule = module;
+	public void setModule(TModule newModule) {
+		TModule oldModule = module;
 		module = newModule;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.IMPORT_DECLARATION__MODULE, oldModule, module));
@@ -355,7 +355,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				setImportFrom((Boolean)newValue);
 				return;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
-				setModule((AbstractModule)newValue);
+				setModule((TModule)newValue);
 				return;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
 				setModuleSpecifierAsText((String)newValue);
@@ -382,7 +382,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 				setImportFrom(IMPORT_FROM_EDEFAULT);
 				return;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE:
-				setModule((AbstractModule)null);
+				setModule((TModule)null);
 				return;
 			case N4JSPackage.IMPORT_DECLARATION__MODULE_SPECIFIER_AS_TEXT:
 				setModuleSpecifierAsText(MODULE_SPECIFIER_AS_TEXT_EDEFAULT);

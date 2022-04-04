@@ -72,7 +72,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public EObject create(EClass eClass) {
 		switch (eClass.getClassifierID()) {
 			case TypesPackage.TMODULE: return createTModule();
-			case TypesPackage.TDECLARED_MODULE: return createTDeclaredModule();
 			case TypesPackage.RUNTIME_DEPENDENCY: return createRuntimeDependency();
 			case TypesPackage.COMPOSED_MEMBER_CACHE: return createComposedMemberCache();
 			case TypesPackage.IDENTIFIABLE_ELEMENT: return createIdentifiableElement();
@@ -193,17 +192,6 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public TModule createTModule() {
 		TModuleImpl tModule = new TModuleImpl();
 		return tModule;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TDeclaredModule createTDeclaredModule() {
-		TDeclaredModuleImpl tDeclaredModule = new TDeclaredModuleImpl();
-		return tDeclaredModule;
 	}
 
 	/**

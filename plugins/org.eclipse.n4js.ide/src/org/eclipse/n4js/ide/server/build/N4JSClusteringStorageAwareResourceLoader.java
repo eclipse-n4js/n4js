@@ -12,6 +12,7 @@ package org.eclipse.n4js.ide.server.build;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -71,6 +72,7 @@ public class N4JSClusteringStorageAwareResourceLoader extends XClusteringStorage
 			Multimap<LoadResult, LoadResult> dependsOn, Multimap<LoadResult, LoadResult> dependsOnInverse) {
 
 		Multimap<String, LoadResult> moduleName2Result = HashMultimap.create();
+		results.sort(Comparator.comparing((lr) -> lr.uri.toString()));
 		for (LoadResult result : results) {
 			URI uri = result.resource.getURI();
 			SourceFolderSnapshot srcFolder = pcs.findSourceFolderContaining(uri);

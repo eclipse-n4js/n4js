@@ -14,6 +14,8 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_declarationStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_declareStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatementTail;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_moduleDeclaration;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_namespaceDeclaration;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 
@@ -21,7 +23,10 @@ import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.LoadResultInfoAdapter;
+import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
@@ -34,18 +39,16 @@ import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
-import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
-import org.eclipse.n4js.n4JS.N4ModuleDeclaration;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
-import org.eclipse.n4js.ts.types.TDeclaredModule;
 import org.eclipse.n4js.ts.types.TNamespace;
+import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -73,13 +76,13 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * <tr>
  * <td>{@link ModuleDeclarationContext}<br>
  * with string literal as name</td>
- * <td>{@link N4ModuleDeclaration}</td>
- * <td>{@link TDeclaredModule}</td>
+ * <td>{@code N4ModuleDeclaration}</td>
+ * <td>{@code TDeclaredModule}</td>
  * </tr>
  * </table>
  */
 public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
-		extends AbstractDtsBuilder<T, N4AbstractNamespaceDeclaration> {
+		extends AbstractDtsBuilder<T, N4NamespaceDeclaration> {
 
 	/** Builder for namespaces. */
 	public static class DtsNamespaceBuilder
@@ -87,12 +90,12 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 		/** Constructor */
 		public DtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+			super(tokenStream, resource, null);
 		}
 
 		@Override
 		public N4NamespaceDeclaration consume(NamespaceDeclarationContext ctx) {
-			return (N4NamespaceDeclaration) super.consume(ctx);
+			return super.consume(ctx);
 		}
 	}
 
@@ -101,14 +104,17 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			extends AbstractDtsNamespaceBuilder<ModuleDeclarationContext> {
 
 		/** Constructor */
-		public DtsModuleBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+		public DtsModuleBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
+			super(tokenStream, resource, srcFolder);
 		}
 	}
 
+	private final URI srcFolder;
+
 	/** Constructor */
-	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
 		super(tokenStream, resource);
+		this.srcFolder = srcFolder;
 	}
 
 	@Override
@@ -143,8 +149,14 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				TerminalNode identifier = ctxName.Identifier();
 				if (strLit != null) {
 					// this module declaration actually declares a module
-					result = doCreateModuleDeclaration(ParserContextUtil.trimAndUnescapeStringLiteral(strLit));
-					walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+
+					if (!ParserContextUtil.hasParentContexts(ctx,
+							new int[] { RULE_namespaceDeclaration, RULE_moduleDeclaration })) {
+
+						// nested modules inside namespaces or nested modules are unsupported by TypeScript
+						createNestedModule(ctx, ParserContextUtil.trimAndUnescapeStringLiteral(strLit));
+					}
+					result = null;
 				} else if (identifier != null) {
 					// this module declaration declares a "legacy module" that acts like a namespace
 					boolean isExported = ParserContextUtil.isExported(ctx);
@@ -153,16 +165,23 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				}
 			}
 		} else {
-			N4AbstractNamespaceDeclaration md = newModuleBuilder().consume(ctx);
-			addAndHandleExported(ctx, md);
+			N4NamespaceDeclaration md = newModuleBuilder(srcFolder).consume(ctx);
+			if (md != null) {
+				addAndHandleExported(ctx, md);
+			}
 		}
 	}
 
-	/** Creates a {@link N4ModuleDeclaration}. The caller must assign it to {@link AbstractDtsBuilder#result}. */
-	private N4ModuleDeclaration doCreateModuleDeclaration(String name) {
-		N4ModuleDeclaration moduleDecl = N4JSFactory.eINSTANCE.createN4ModuleDeclaration();
-		moduleDecl.setName(name);
-		return moduleDecl;
+	/** Triggers the creation of a nested/virtual resource. */
+	private void createNestedModule(ModuleDeclarationContext ctx, String name) {
+		URI virtualUri = URI.createFileURI(name + ".d.ts").resolve(srcFolder);
+
+		LoadResultInfoAdapter loadResultInfo = (LoadResultInfoAdapter) ILoadResultInfoAdapter.get(resource);
+		if (loadResultInfo == null) {
+			loadResultInfo = LoadResultInfoAdapter.getOrInstall(resource);
+		}
+		NestedResourceAdapter nra = new NestedResourceAdapter(resource.getURI(), tokenStream, ctx);
+		loadResultInfo.addNestedResource(virtualUri, nra);
 	}
 
 	/** Creates a {@link N4NamespaceDeclaration}. The caller must assign it to {@link AbstractDtsBuilder#result}. */
@@ -211,29 +230,13 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		addAndHandleExported(ctx, ed);
 	}
 
-	private void addAndHandleExported(ParserRuleContext ctx, N4AbstractNamespaceDeclaration decl) {
-		if (decl instanceof N4ModuleDeclaration) {
-			addAndHandleExported(ctx, (N4ModuleDeclaration) decl);
-		} else if (decl instanceof N4NamespaceDeclaration) {
-			addAndHandleExported(ctx, (N4NamespaceDeclaration) decl);
-		} else {
-			throw new UnsupportedOperationException(
-					"unsupported subclass of N4AbstractNamespaceDeclaration: " + decl.getClass().getSimpleName());
-		}
-	}
-
-	private void addAndHandleExported(@SuppressWarnings("unused") ParserRuleContext ctx, N4ModuleDeclaration decl) {
-		N4ModuleDeclaration md = decl;
-		result.getOwnedElementsRaw().add(md);
-	}
-
 	private void addAndHandleExported(ParserRuleContext ctx, N4NamespaceDeclaration decl) {
 		addAndHandleExported(ctx, (ExportableElement) decl);
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
 		ParserContextUtil.addAndHandleExported(
-				result, N4JSPackage.Literals.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW,
+				result, N4JSPackage.Literals.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW,
 				ctx, elem, true);
 	}
 }

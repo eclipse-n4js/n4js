@@ -4682,10 +4682,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedScriptElement_ExportDeclaration_1_0_0 
 	 *         (
-	 *             (wildcardExport?='*'? reexportedFrom=[AbstractModule|ModuleSpecifier]?) | 
+	 *             (wildcardExport?='*'? reexportedFrom=[TModule|ModuleSpecifier]?) | 
 	 *             exportedElement=ExportableElement | 
 	 *             (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
-	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[AbstractModule|ModuleSpecifier]?)
+	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[TModule|ModuleSpecifier]?)
 	 *         )?
 	 *     )
 	 * </pre>
@@ -4704,10 +4704,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedScriptElement_ExportDeclaration_1_0_0? 
 	 *         (
-	 *             (wildcardExport?='*'? reexportedFrom=[AbstractModule|ModuleSpecifier]?) | 
+	 *             (wildcardExport?='*'? reexportedFrom=[TModule|ModuleSpecifier]?) | 
 	 *             exportedElement=ExportableElement | 
 	 *             (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
-	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[AbstractModule|ModuleSpecifier]?)
+	 *             (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[TModule|ModuleSpecifier]?)
 	 *         )?
 	 *     )
 	 * </pre>
@@ -4730,7 +4730,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (importSpecifiers+=NamespaceImportSpecifier | (importSpecifiers+=NamedImportSpecifier importSpecifiers+=NamedImportSpecifier*))? 
 	 *             importFrom?='from'
 	 *         )? 
-	 *         module=[AbstractModule|ModuleSpecifier]
+	 *         module=[TModule|ModuleSpecifier]
 	 *     )
 	 * </pre>
 	 */
@@ -4752,7 +4752,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (importSpecifiers+=NamespaceImportSpecifier | (importSpecifiers+=NamedImportSpecifier importSpecifiers+=NamedImportSpecifier*))? 
 	 *             importFrom?='from'
 	 *         )? 
-	 *         module=[AbstractModule|ModuleSpecifier]
+	 *         module=[TModule|ModuleSpecifier]
 	 *     )
 	 * </pre>
 	 */
@@ -12562,10 +12562,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         (wildcardExport?='*'? reexportedFrom=[AbstractModule|ModuleSpecifier]?) | 
+	 *         (wildcardExport?='*'? reexportedFrom=[TModule|ModuleSpecifier]?) | 
 	 *         exportedElement=ExportableElement | 
 	 *         (defaultExport?='default' (exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression)) | 
-	 *         (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[AbstractModule|ModuleSpecifier]?)
+	 *         (namedExports+=ExportSpecifier namedExports+=ExportSpecifier* reexportedFrom=[TModule|ModuleSpecifier]?)
 	 *     )?
 	 * </pre>
 	 */
@@ -14194,7 +14194,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             (importSpecifiers+=NamespaceImportSpecifier | (importSpecifiers+=NamedImportSpecifier importSpecifiers+=NamedImportSpecifier*))? 
 	 *             importFrom?='from'
 	 *         )? 
-	 *         module=[AbstractModule|ModuleSpecifier]
+	 *         module=[TModule|ModuleSpecifier]
 	 *     )
 	 * </pre>
 	 */

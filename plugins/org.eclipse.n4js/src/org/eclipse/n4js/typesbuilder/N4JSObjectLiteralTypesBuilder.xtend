@@ -50,7 +50,7 @@ public class N4JSObjectLiteralTypesBuilder {
 		structType.astElement = objectLiteral;
 		objectLiteral.definedType = structType;
 
-		target.containingRootModule.internalTypes += structType
+		target.containingModule.internalTypes += structType
 	}
 
 	// TODO GH-1337 add support for spread operator

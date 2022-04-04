@@ -77,7 +77,7 @@ public final class N4JSLanguageHelper {
 	}
 
 	/**
-	 * Returns {@code true} if the given identifier is a reserved one.
+	 * Returns {@code true} iff the given identifier is a reserved one.
 	 *
 	 * This includes all ECMAScript and some additional N4JS keywords as well as base type names and boolean literals.
 	 */

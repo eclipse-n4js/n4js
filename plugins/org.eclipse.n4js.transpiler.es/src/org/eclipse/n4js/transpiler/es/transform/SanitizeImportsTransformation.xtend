@@ -22,7 +22,6 @@ import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xtext.EcoreUtil2
 
@@ -102,10 +101,8 @@ class SanitizeImportsTransformation extends Transformation {
 					// (1) containing module must be annotated with @@Global (2) element must be exported
 					if(N4JSLanguageUtils.isExported(orig)) {
 						val module = orig.containingModule;
-						if (module instanceof TModule) {
-							if (AnnotationDefinition.GLOBAL.hasAnnotation(module)) {
-								addNamedImport(ste,null);
-							}
+						if(AnnotationDefinition.GLOBAL.hasAnnotation(module)) {
+							addNamedImport(ste,null);
 						}
 					}
 				}

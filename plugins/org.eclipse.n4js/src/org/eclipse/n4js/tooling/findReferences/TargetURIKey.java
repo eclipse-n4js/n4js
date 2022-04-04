@@ -17,7 +17,6 @@ import java.util.SortedSet;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TMember;
@@ -102,7 +101,7 @@ public class TargetURIKey {
 			} else if (object instanceof TModule) {
 				fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(object);
 			} else if (object instanceof IdentifiableElement) {
-				AbstractModule containingModule = ((IdentifiableElement) object).getContainingModule();
+				TModule containingModule = ((IdentifiableElement) object).getContainingModule();
 				fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(containingModule);
 			}
 
