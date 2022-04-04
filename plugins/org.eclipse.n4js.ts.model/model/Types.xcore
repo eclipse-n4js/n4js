@@ -377,8 +377,7 @@ class TExportableElement extends IdentifiableElement {
 	 */
 	boolean directlyExportedAsDefault
 
-	// FIXME does not yet support indirect exports
-	op String getExportedName() {
+	op String getDirectlyExportedName() {
 		if (directlyExported) {
 			if (directlyExportedAsDefault) {
 				return UtilN4.EXPORT_DEFAULT_NAME;

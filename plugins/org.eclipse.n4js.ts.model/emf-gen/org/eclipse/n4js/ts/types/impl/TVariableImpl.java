@@ -504,7 +504,7 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 	 * @generated
 	 */
 	@Override
-	public String getExportedName() {
+	public String getDirectlyExportedName() {
 		boolean _isDirectlyExported = this.isDirectlyExported();
 		if (_isDirectlyExported) {
 			boolean _isDirectlyExportedAsDefault = this.isDirectlyExportedAsDefault();
@@ -792,7 +792,7 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 		}
 		if (baseClass == TExportableElement.class) {
 			switch (baseOperationID) {
-				case TypesPackage.TEXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return TypesPackage.TVARIABLE___GET_EXPORTED_NAME;
+				case TypesPackage.TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME: return TypesPackage.TVARIABLE___GET_DIRECTLY_EXPORTED_NAME;
 				default: return -1;
 			}
 		}
@@ -822,8 +822,8 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 				return getVariableAsString();
 			case TypesPackage.TVARIABLE___IS_HOLLOW:
 				return isHollow();
-			case TypesPackage.TVARIABLE___GET_EXPORTED_NAME:
-				return getExportedName();
+			case TypesPackage.TVARIABLE___GET_DIRECTLY_EXPORTED_NAME:
+				return getDirectlyExportedName();
 			case TypesPackage.TVARIABLE___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TVARIABLE___GET_TYPE_ACCESS_MODIFIER:
