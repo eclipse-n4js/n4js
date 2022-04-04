@@ -1617,4 +1617,3 @@ JSXPropertyAttribute:
 			|	('{' jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')
 			)
 	)?;
-
