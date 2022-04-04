@@ -562,7 +562,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION___IS_HOLLOW = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 4;
+	int EXPORT_DECLARATION___IS_HOLLOW = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Reexport</em>' operation.
@@ -571,7 +571,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION___IS_REEXPORT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 5;
+	int EXPORT_DECLARATION___IS_REEXPORT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 6;
+
+	/**
+	 * The operation id for the '<em>Is Retained At Runtime</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORT_DECLARATION___IS_RETAINED_AT_RUNTIME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>Export Declaration</em>' class.
@@ -580,7 +589,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 6;
+	int EXPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.TypeDefiningElementImpl <em>Type Defining Element</em>}' class.
@@ -931,13 +940,22 @@ public interface N4JSPackage extends EPackage {
 	int MODULE_REF___IS_REFERRING_TO_OTHER_MODULE = 0;
 
 	/**
+	 * The operation id for the '<em>Is Retained At Runtime</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_REF___IS_RETAINED_AT_RUNTIME = 1;
+
+	/**
 	 * The number of operations of the '<em>Module Ref</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_REF_OPERATION_COUNT = 1;
+	int MODULE_REF_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl <em>Import Declaration</em>}' class.
@@ -1046,7 +1064,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION___IS_BARE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 1;
+	int IMPORT_DECLARATION___IS_BARE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Retained At Runtime</em>' operation.
@@ -1055,7 +1073,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 2;
+	int IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Import Declaration</em>' class.
@@ -1064,7 +1082,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int IMPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 3;
+	int IMPORT_DECLARATION_OPERATION_COUNT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ImportSpecifierImpl <em>Import Specifier</em>}' class.
@@ -17568,6 +17586,16 @@ public interface N4JSPackage extends EPackage {
 	EOperation getExportDeclaration__IsReexport();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportDeclaration#isRetainedAtRuntime() <em>Is Retained At Runtime</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Retained At Runtime</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ExportDeclaration#isRetainedAtRuntime()
+	 * @generated
+	 */
+	EOperation getExportDeclaration__IsRetainedAtRuntime();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.NamespaceExportSpecifier <em>Namespace Export Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17752,6 +17780,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getModuleRef__IsReferringToOtherModule();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ModuleRef#isRetainedAtRuntime() <em>Is Retained At Runtime</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Retained At Runtime</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ModuleRef#isRetainedAtRuntime()
+	 * @generated
+	 */
+	EOperation getModuleRef__IsRetainedAtRuntime();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ImportDeclaration <em>Import Declaration</em>}'.
@@ -23972,6 +24010,14 @@ public interface N4JSPackage extends EPackage {
 		EOperation EXPORT_DECLARATION___IS_REEXPORT = eINSTANCE.getExportDeclaration__IsReexport();
 
 		/**
+		 * The meta object literal for the '<em><b>Is Retained At Runtime</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPORT_DECLARATION___IS_RETAINED_AT_RUNTIME = eINSTANCE.getExportDeclaration__IsRetainedAtRuntime();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.NamespaceExportSpecifierImpl <em>Namespace Export Specifier</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -24122,6 +24168,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation MODULE_REF___IS_REFERRING_TO_OTHER_MODULE = eINSTANCE.getModuleRef__IsReferringToOtherModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Retained At Runtime</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation MODULE_REF___IS_RETAINED_AT_RUNTIME = eINSTANCE.getModuleRef__IsRetainedAtRuntime();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ImportDeclarationImpl <em>Import Declaration</em>}' class.

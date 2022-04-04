@@ -137,6 +137,10 @@ class ExportDeclaration extends AnnotableScriptElement, NamespaceElement, Module
 	op boolean isReexport() {
 		return isReferringToOtherModule();
 	}
+
+	op boolean isRetainedAtRuntime() {
+		return false; // re-exports will always be retained
+	}
 }
 
 class NamespaceExportSpecifier extends TypeDefiningElement {
@@ -205,7 +209,7 @@ abstract class ExportableElement extends NamespaceElement {
 		}
 		return eContainer instanceof Script;
 	}
-	
+
 	op boolean isHollow() {
 		return false;
 	}
@@ -221,10 +225,20 @@ abstract class ModuleRef {
 	transient String moduleSpecifierAsText
 	transient ModuleSpecifierForm moduleSpecifierForm
 
-	/* Tells whether this {@link ModuleRef} is actually referring to another model, without triggering proxy resolution. */
+	/*
+	 * Tells whether this {@link ModuleRef} is actually referring to another model, without triggering proxy resolution.
+	 * All {@link ImportDeclaration}s refer to other modules (except in case of syntax errors), but {@link ExportDeclaration}s that
+	 * export a local element of the containing module will return <code>false</code> (i.e. if they do not have a 'from "..."' clause).
+	 */
 	op boolean isReferringToOtherModule() {
 		return eGet(N4JSPackage.Literals.MODULE_REF__MODULE, false) !== null;
 	}
+
+	/*
+	 * Tells whether this module reference will be present in the transpiled output code.
+	 * Only valid after AST traversal has completed.
+	 */
+	op boolean isRetainedAtRuntime()
 }
 
 class ImportDeclaration extends AnnotableScriptElement, ModuleRef {

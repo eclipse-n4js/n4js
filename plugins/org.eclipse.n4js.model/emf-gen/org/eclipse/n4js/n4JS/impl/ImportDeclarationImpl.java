@@ -476,6 +476,7 @@ public class ImportDeclarationImpl extends AnnotableScriptElementImpl implements
 		if (baseClass == ModuleRef.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.MODULE_REF___IS_REFERRING_TO_OTHER_MODULE: return N4JSPackage.IMPORT_DECLARATION___IS_REFERRING_TO_OTHER_MODULE;
+				case N4JSPackage.MODULE_REF___IS_RETAINED_AT_RUNTIME: return N4JSPackage.IMPORT_DECLARATION___IS_RETAINED_AT_RUNTIME;
 				default: return -1;
 			}
 		}

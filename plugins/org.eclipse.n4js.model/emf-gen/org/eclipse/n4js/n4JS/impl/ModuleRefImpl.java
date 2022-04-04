@@ -219,6 +219,18 @@ public abstract class ModuleRefImpl extends ProxyResolvingEObjectImpl implements
 	 * @generated
 	 */
 	@Override
+	public boolean isRetainedAtRuntime() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case N4JSPackage.MODULE_REF__MODULE:
@@ -302,6 +314,8 @@ public abstract class ModuleRefImpl extends ProxyResolvingEObjectImpl implements
 		switch (operationID) {
 			case N4JSPackage.MODULE_REF___IS_REFERRING_TO_OTHER_MODULE:
 				return isReferringToOtherModule();
+			case N4JSPackage.MODULE_REF___IS_RETAINED_AT_RUNTIME:
+				return isRetainedAtRuntime();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
