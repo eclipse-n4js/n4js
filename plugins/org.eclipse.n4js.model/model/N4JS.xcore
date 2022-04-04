@@ -172,7 +172,6 @@ abstract class ExportableElement extends NamespaceElement {
 	op boolean isExportedAsDefault() {
 		return isDeclaredExported() && (eContainer as ExportDeclaration).isDefaultExport;
 	}
-	// FIXME clean up
 	op String getDirectlyExportedName() {
 		if (isDirectlyExported()) {
 			if (isDeclaredExported()) {
