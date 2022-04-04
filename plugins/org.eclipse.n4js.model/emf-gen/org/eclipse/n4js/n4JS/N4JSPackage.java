@@ -804,13 +804,13 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTABLE_ELEMENT___IS_IN_NAMESPACE = NAMESPACE_ELEMENT___IS_IN_NAMESPACE;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTABLE_ELEMENT___IS_EXPORTED = NAMESPACE_ELEMENT_OPERATION_COUNT + 0;
+	int EXPORTABLE_ELEMENT___IS_DIRECTLY_EXPORTED = NAMESPACE_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -840,13 +840,13 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT = NAMESPACE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTABLE_ELEMENT___GET_EXPORTED_NAME = NAMESPACE_ELEMENT_OPERATION_COUNT + 4;
+	int EXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME = NAMESPACE_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -1881,13 +1881,13 @@ public interface N4JSPackage extends EPackage {
 	int ANNOTATION_LIST___IS_IN_NAMESPACE = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 1;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTATION_LIST___IS_EXPORTED = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 3;
+	int ANNOTATION_LIST___IS_DIRECTLY_EXPORTED = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -1917,13 +1917,13 @@ public interface N4JSPackage extends EPackage {
 	int ANNOTATION_LIST___IS_EXPORTED_AS_DEFAULT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 6;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTATION_LIST___GET_EXPORTED_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
+	int ANNOTATION_LIST___GET_DIRECTLY_EXPORTED_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -2943,13 +2943,13 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DECLARATION___IS_IN_NAMESPACE = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 14;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___IS_EXPORTED = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 16;
+	int FUNCTION_DECLARATION___IS_DIRECTLY_EXPORTED = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -2979,13 +2979,13 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DECLARATION___IS_EXPORTED_AS_DEFAULT = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 19;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_DECLARATION___GET_EXPORTED_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 20;
+	int FUNCTION_DECLARATION___GET_DIRECTLY_EXPORTED_NAME = ANNOTABLE_SCRIPT_ELEMENT_OPERATION_COUNT + 20;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -4003,13 +4003,13 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_STATEMENT___IS_IN_NAMESPACE = STATEMENT_OPERATION_COUNT + 3;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_STATEMENT___IS_EXPORTED = STATEMENT_OPERATION_COUNT + 5;
+	int VARIABLE_STATEMENT___IS_DIRECTLY_EXPORTED = STATEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -4039,13 +4039,13 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT = STATEMENT_OPERATION_COUNT + 8;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_STATEMENT___GET_EXPORTED_NAME = STATEMENT_OPERATION_COUNT + 9;
+	int VARIABLE_STATEMENT___GET_DIRECTLY_EXPORTED_NAME = STATEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -4375,22 +4375,22 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_DECLARATION___IS_CONST = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 9;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___IS_EXPORTED = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 10;
+	int VARIABLE_DECLARATION___IS_DIRECTLY_EXPORTED = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 10;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___GET_EXPORTED_NAME = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 11;
+	int VARIABLE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Variable Declaration Container</em>' operation.
@@ -11428,13 +11428,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_DECLARATION___IS_IN_NAMESPACE = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___IS_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
+	int N4_TYPE_DECLARATION___IS_DIRECTLY_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -11464,13 +11464,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
+	int N4_TYPE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -11654,13 +11654,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASSIFIER_DECLARATION___IS_IN_NAMESPACE = N4_TYPE_DECLARATION___IS_IN_NAMESPACE;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION___IS_EXPORTED = N4_TYPE_DECLARATION___IS_EXPORTED;
+	int N4_CLASSIFIER_DECLARATION___IS_DIRECTLY_EXPORTED = N4_TYPE_DECLARATION___IS_DIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -11690,13 +11690,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASSIFIER_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASSIFIER_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DECLARATION___GET_EXPORTED_NAME;
+	int N4_CLASSIFIER_DECLARATION___GET_DIRECTLY_EXPORTED_NAME = N4_TYPE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -12305,13 +12305,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_NAMESPACE_DECLARATION___IS_IN_NAMESPACE = N4_TYPE_DEFINITION_OPERATION_COUNT + 5;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___IS_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
+	int N4_NAMESPACE_DECLARATION___IS_DIRECTLY_EXPORTED = N4_TYPE_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -12341,13 +12341,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_NAMESPACE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_NAMESPACE_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
+	int N4_NAMESPACE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME = N4_TYPE_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -12675,13 +12675,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DECLARATION___IS_IN_NAMESPACE = N4_CLASS_DEFINITION_OPERATION_COUNT + 5;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_EXPORTED = N4_CLASS_DEFINITION_OPERATION_COUNT + 7;
+	int N4_CLASS_DECLARATION___IS_DIRECTLY_EXPORTED = N4_CLASS_DEFINITION_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -12711,13 +12711,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_CLASS_DEFINITION_OPERATION_COUNT + 10;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___GET_EXPORTED_NAME = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
+	int N4_CLASS_DECLARATION___GET_DIRECTLY_EXPORTED_NAME = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -13154,13 +13154,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_INTERFACE_DECLARATION___IS_IN_NAMESPACE = N4_CLASSIFIER_DECLARATION___IS_IN_NAMESPACE;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INTERFACE_DECLARATION___IS_EXPORTED = N4_CLASSIFIER_DECLARATION___IS_EXPORTED;
+	int N4_INTERFACE_DECLARATION___IS_DIRECTLY_EXPORTED = N4_CLASSIFIER_DECLARATION___IS_DIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -13190,13 +13190,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_INTERFACE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_CLASSIFIER_DECLARATION___IS_EXPORTED_AS_DEFAULT;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INTERFACE_DECLARATION___GET_EXPORTED_NAME = N4_CLASSIFIER_DECLARATION___GET_EXPORTED_NAME;
+	int N4_INTERFACE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME = N4_CLASSIFIER_DECLARATION___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -13461,13 +13461,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_DECLARATION___IS_IN_NAMESPACE = N4_TYPE_DECLARATION___IS_IN_NAMESPACE;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_ENUM_DECLARATION___IS_EXPORTED = N4_TYPE_DECLARATION___IS_EXPORTED;
+	int N4_ENUM_DECLARATION___IS_DIRECTLY_EXPORTED = N4_TYPE_DECLARATION___IS_DIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -13497,13 +13497,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_ENUM_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DECLARATION___GET_EXPORTED_NAME;
+	int N4_ENUM_DECLARATION___GET_DIRECTLY_EXPORTED_NAME = N4_TYPE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -13751,13 +13751,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_ALIAS_DECLARATION___IS_IN_NAMESPACE = N4_TYPE_DECLARATION___IS_IN_NAMESPACE;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION___IS_EXPORTED = N4_TYPE_DECLARATION___IS_EXPORTED;
+	int N4_TYPE_ALIAS_DECLARATION___IS_DIRECTLY_EXPORTED = N4_TYPE_DECLARATION___IS_DIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Declared Exported</em>' operation.
@@ -13787,13 +13787,13 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_ALIAS_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_TYPE_ALIAS_DECLARATION___GET_EXPORTED_NAME = N4_TYPE_DECLARATION___GET_EXPORTED_NAME;
+	int N4_TYPE_ALIAS_DECLARATION___GET_DIRECTLY_EXPORTED_NAME = N4_TYPE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Toplevel</em>' operation.
@@ -17631,14 +17631,14 @@ public interface N4JSPackage extends EPackage {
 	EClass getExportableElement();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableElement#isExported() <em>Is Exported</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableElement#isDirectlyExported() <em>Is Directly Exported</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Exported</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.ExportableElement#isExported()
+	 * @return the meta object for the '<em>Is Directly Exported</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ExportableElement#isDirectlyExported()
 	 * @generated
 	 */
-	EOperation getExportableElement__IsExported();
+	EOperation getExportableElement__IsDirectlyExported();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableElement#isDeclaredExported() <em>Is Declared Exported</em>}' operation.
@@ -17671,14 +17671,14 @@ public interface N4JSPackage extends EPackage {
 	EOperation getExportableElement__IsExportedAsDefault();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableElement#getExportedName() <em>Get Exported Name</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableElement#getDirectlyExportedName() <em>Get Directly Exported Name</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Exported Name</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.ExportableElement#getExportedName()
+	 * @return the meta object for the '<em>Get Directly Exported Name</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ExportableElement#getDirectlyExportedName()
 	 * @generated
 	 */
-	EOperation getExportableElement__GetExportedName();
+	EOperation getExportableElement__GetDirectlyExportedName();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ExportableElement#isToplevel() <em>Is Toplevel</em>}' operation.
@@ -19188,24 +19188,24 @@ public interface N4JSPackage extends EPackage {
 	EOperation getVariableDeclaration__IsConst();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.VariableDeclaration#isExported() <em>Is Exported</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.VariableDeclaration#isDirectlyExported() <em>Is Directly Exported</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Exported</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.VariableDeclaration#isExported()
+	 * @return the meta object for the '<em>Is Directly Exported</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.VariableDeclaration#isDirectlyExported()
 	 * @generated
 	 */
-	EOperation getVariableDeclaration__IsExported();
+	EOperation getVariableDeclaration__IsDirectlyExported();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.VariableDeclaration#getExportedName() <em>Get Exported Name</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.VariableDeclaration#getDirectlyExportedName() <em>Get Directly Exported Name</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Exported Name</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.VariableDeclaration#getExportedName()
+	 * @return the meta object for the '<em>Get Directly Exported Name</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.VariableDeclaration#getDirectlyExportedName()
 	 * @generated
 	 */
-	EOperation getVariableDeclaration__GetExportedName();
+	EOperation getVariableDeclaration__GetDirectlyExportedName();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.VariableDeclaration#getVariableDeclarationContainer() <em>Get Variable Declaration Container</em>}' operation.
@@ -24026,12 +24026,12 @@ public interface N4JSPackage extends EPackage {
 		EClass EXPORTABLE_ELEMENT = eINSTANCE.getExportableElement();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Exported</b></em>' operation.
+		 * The meta object literal for the '<em><b>Is Directly Exported</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation EXPORTABLE_ELEMENT___IS_EXPORTED = eINSTANCE.getExportableElement__IsExported();
+		EOperation EXPORTABLE_ELEMENT___IS_DIRECTLY_EXPORTED = eINSTANCE.getExportableElement__IsDirectlyExported();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Declared Exported</b></em>' operation.
@@ -24058,12 +24058,12 @@ public interface N4JSPackage extends EPackage {
 		EOperation EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT = eINSTANCE.getExportableElement__IsExportedAsDefault();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Exported Name</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Directly Exported Name</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation EXPORTABLE_ELEMENT___GET_EXPORTED_NAME = eINSTANCE.getExportableElement__GetExportedName();
+		EOperation EXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME = eINSTANCE.getExportableElement__GetDirectlyExportedName();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Toplevel</b></em>' operation.
@@ -25308,20 +25308,20 @@ public interface N4JSPackage extends EPackage {
 		EOperation VARIABLE_DECLARATION___IS_CONST = eINSTANCE.getVariableDeclaration__IsConst();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Exported</b></em>' operation.
+		 * The meta object literal for the '<em><b>Is Directly Exported</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation VARIABLE_DECLARATION___IS_EXPORTED = eINSTANCE.getVariableDeclaration__IsExported();
+		EOperation VARIABLE_DECLARATION___IS_DIRECTLY_EXPORTED = eINSTANCE.getVariableDeclaration__IsDirectlyExported();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Exported Name</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Directly Exported Name</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation VARIABLE_DECLARATION___GET_EXPORTED_NAME = eINSTANCE.getVariableDeclaration__GetExportedName();
+		EOperation VARIABLE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME = eINSTANCE.getVariableDeclaration__GetDirectlyExportedName();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Variable Declaration Container</b></em>' operation.

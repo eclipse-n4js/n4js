@@ -196,7 +196,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def checkExternalVariableStatementAssigments(VariableStatement variableStatement) {
-		if (!variableStatement.exported) {
+		if (!variableStatement.directlyExported) {
 			return;
 		}
 

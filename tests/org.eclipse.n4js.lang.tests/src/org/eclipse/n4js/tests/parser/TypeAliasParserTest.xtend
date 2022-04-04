@@ -41,9 +41,9 @@ class TypeAliasParserTest extends AbstractParserTest {
 		val exportDecl = script.scriptElements.get(0) as ExportDeclaration;
 		val aliasDecl = exportDecl.exportedElement as N4TypeAliasDeclaration;
 		assertNotNull(aliasDecl);
-		assertTrue(aliasDecl.exported);
+		assertTrue(aliasDecl.directlyExported);
 		assertEquals("A", aliasDecl.name);
-		assertEquals("A", aliasDecl.exportedName);
+		assertEquals("A", aliasDecl.directlyExportedName);
 		assertEquals(#[], aliasDecl.declaredModifiers);
 	}
 
@@ -56,9 +56,9 @@ class TypeAliasParserTest extends AbstractParserTest {
 		val exportDecl = script.scriptElements.get(0) as ExportDeclaration;
 		val aliasDecl = exportDecl.exportedElement as N4TypeAliasDeclaration;
 		assertNotNull(aliasDecl);
-		assertTrue(aliasDecl.exported);
+		assertTrue(aliasDecl.directlyExported);
 		assertEquals("A", aliasDecl.name);
-		assertEquals("A", aliasDecl.exportedName);
+		assertEquals("A", aliasDecl.directlyExportedName);
 		assertEquals(#[ N4Modifier.PUBLIC ], aliasDecl.declaredModifiers);
 	}
 
@@ -72,9 +72,9 @@ class TypeAliasParserTest extends AbstractParserTest {
 		val exportDecl = script.scriptElements.get(0) as ExportDeclaration;
 		val aliasDecl = exportDecl.exportedElement as N4TypeAliasDeclaration;
 		assertNotNull(aliasDecl);
-		assertTrue(aliasDecl.exported);
+		assertTrue(aliasDecl.directlyExported);
 		assertEquals("A", aliasDecl.name);
-		assertEquals("A", aliasDecl.exportedName);
+		assertEquals("A", aliasDecl.directlyExportedName);
 		assertEquals(#[ N4Modifier.PUBLIC ], aliasDecl.declaredModifiers);
 		assertTrue(AnnotationDefinition.INTERNAL.hasAnnotation(aliasDecl));
 	}
@@ -88,9 +88,9 @@ class TypeAliasParserTest extends AbstractParserTest {
 		val exportDecl = script.scriptElements.get(0) as ExportDeclaration;
 		val aliasDecl = exportDecl.exportedElement as N4TypeAliasDeclaration;
 		assertNotNull(aliasDecl);
-		assertTrue(aliasDecl.exported);
+		assertTrue(aliasDecl.directlyExported);
 		assertEquals("A", aliasDecl.name);
-		assertEquals("default", aliasDecl.exportedName);
+		assertEquals("default", aliasDecl.directlyExportedName);
 		assertEquals(#[], aliasDecl.declaredModifiers);
 	}
 

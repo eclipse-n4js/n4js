@@ -92,7 +92,7 @@ class N4JSExportDefinitionTypesBuilder {
 		if (tDirectlyExportedElem === null) {
 			return; // broken AST (e.g. class declaration with missing name)
 		}
-		createExportDefinitionForDirectlyExportedElement(tDirectlyExportedElem, directlyExportedElem.exportedName, target, preLinkingPhase);
+		createExportDefinitionForDirectlyExportedElement(tDirectlyExportedElem, directlyExportedElem.directlyExportedName, target, preLinkingPhase);
 	}
 
 	def package void createExportDefinitionForDirectlyExportedElement(TExportableElement tDirectlyExportedElem, String exportedName, AbstractNamespace target, boolean preLinkingPhase) {

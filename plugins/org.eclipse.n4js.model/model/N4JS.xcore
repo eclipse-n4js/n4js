@@ -156,7 +156,7 @@ class NamedExportSpecifier {
  * </pre>
  */
 abstract class ExportableElement extends NamespaceElement {
-	op boolean isExported() {
+	op boolean isDirectlyExported() {
 		return isDeclaredExported() || isExportedByNamespace();
 	}
 	op boolean isDeclaredExported() {
@@ -165,7 +165,7 @@ abstract class ExportableElement extends NamespaceElement {
 	op boolean isExportedByNamespace() {
 		var ns = namespace;
 		if (ns !== null) {
-			return ns.isExported;
+			return ns.isDirectlyExported;
 		}
 		return false;
 	}
@@ -173,8 +173,8 @@ abstract class ExportableElement extends NamespaceElement {
 		return isDeclaredExported() && (eContainer as ExportDeclaration).isDefaultExport;
 	}
 	// FIXME clean up
-	op String getExportedName() {
-		if (isExported) {
+	op String getDirectlyExportedName() {
+		if (isDirectlyExported()) {
 			if (isDeclaredExported()) {
 				val exportDecl = eContainer as ExportDeclaration;
 				if (exportDecl.defaultExport) {
@@ -977,19 +977,19 @@ class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement
 	// Due to this split, #getExportedName() will return incorrect results when invoked on the variable statement
 	// and we provide the following two operations as a work-around:
 
-	op boolean isExported() {
+	op boolean isDirectlyExported() {
 		val parent = getVariableDeclarationContainer();
 		if (parent instanceof VariableStatement) {
-			return parent.exported;
+			return parent.directlyExported;
 		}
 		return false;
 	}
 
-	op String getExportedName() {
+	op String getDirectlyExportedName() {
 		val parent = getVariableDeclarationContainer();
 		if (parent instanceof VariableStatement) {
-			if (parent.exported) {
-				return parent.exportedName ?: this.name;
+			if (parent.directlyExported) {
+				return parent.directlyExportedName ?: this.name;
 			}
 		}
 		return null;

@@ -36,7 +36,7 @@ public interface ExportableElement extends NamespaceElement {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	boolean isExported();
+	boolean isDirectlyExported();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -68,7 +68,7 @@ public interface ExportableElement extends NamespaceElement {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	String getExportedName();
+	String getDirectlyExportedName();
 
 	/**
 	 * <!-- begin-user-doc -->

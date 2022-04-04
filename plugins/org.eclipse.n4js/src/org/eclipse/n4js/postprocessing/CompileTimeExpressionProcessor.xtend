@@ -50,7 +50,7 @@ class CompileTimeExpressionProcessor {
 			// in some cases, we have to store the compile-time value in the TModule:
 			val parent = astNode.eContainer;
 			if (parent instanceof VariableDeclaration) {
-				if (parent.exported) {
+				if (parent.directlyExported) {
 					storeValueInTModule(G, parent.definedVariable, value);
 				}
 			} else if (parent instanceof N4FieldDeclaration) {

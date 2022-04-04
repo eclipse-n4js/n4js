@@ -55,7 +55,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkUnusedVariables(VariableDeclaration varDecl) {
-		if (varDecl.exported) {
+		if (varDecl.directlyExported) {
 			return;
 		}
 
