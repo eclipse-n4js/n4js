@@ -127,6 +127,8 @@ public class N4JSObjectLiteralTypesBuilder {
 			} else {
 				param.typeRef = TypeUtils.createDeferredTypeRef;
 			}
+			param.astElement = setterDecl.fpar;
+			setterDecl.fpar.definedVariable = param;
 		} else {
 			// broken AST
 			param.typeRef = TypeUtils.createDeferredTypeRef;

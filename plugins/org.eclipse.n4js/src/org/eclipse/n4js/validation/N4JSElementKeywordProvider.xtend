@@ -14,7 +14,6 @@ import com.google.inject.Singleton
 import org.eclipse.n4js.n4JS.BreakStatement
 import org.eclipse.n4js.n4JS.CatchVariable
 import org.eclipse.n4js.n4JS.ContinueStatement
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -110,10 +109,6 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 
 	def dispatch String keyword(N4SetterDeclaration n4SetterDeclaration) {
 		"setter"
-	}
-
-	def dispatch String keyword(ExportedVariableStatement exportedVariableStmt) {
-		"variable"
 	}
 
 	def dispatch String keyword(VariableStatement VariableStmt) {

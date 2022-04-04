@@ -22,13 +22,11 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.generator.UnresolvedProxyInSubGeneratorException;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.JSXElementName;
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
@@ -40,7 +38,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
-import org.eclipse.n4js.n4JS.Variable;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
@@ -215,9 +213,9 @@ public class PreparationStep {
 						((TypeDefiningElement) eObject).getDefinedType());
 			}
 
-			if (copy instanceof ExportedVariableDeclaration) {
-				info.setOriginalDefinedVariable_internal((ExportedVariableDeclaration) copy,
-						((ExportedVariableDeclaration) eObject).getDefinedVariable());
+			if (copy instanceof VariableDeclaration) {
+				info.setOriginalDefinedVariable_internal((VariableDeclaration) copy,
+						((VariableDeclaration) eObject).getDefinedVariable());
 			}
 
 			if (copy instanceof Script_IM) {
@@ -294,20 +292,6 @@ public class PreparationStep {
 				final EObject obj = iter1.next();
 				if (obj instanceof IdentifiableElement) {
 					getSymbolTableEntry((IdentifiableElement) obj, true);
-				}
-			}
-			// ... and for the variables (and fpars) that do not have a TVariable in the module (i.e. non-exported)
-			final TreeIterator<EObject> iter2 = script.eAllContents();
-			while (iter2.hasNext()) {
-				final EObject obj = iter2.next();
-				if (obj instanceof Variable) { // note: this also includes FormalParameters and CatchVariables
-					final boolean isExported = obj instanceof ExportedVariableDeclaration;
-					if (!isExported) {
-						// don't do this for exported variable declarations, because we already have a SymbolTableEntry
-						// pointing to the TVariable. Calling #getSymbolTableEntry() again with the declaration instead
-						// of the TVariable would give us a second, duplicate symbol table entry!
-						getSymbolTableEntry((Variable) obj, true);
-					}
 				}
 			}
 			// ... and for imports that were not referenced yet (e.g. because they are used in type references only)
@@ -406,14 +390,10 @@ public class PreparationStep {
 			entry.setName(name);
 			entry.setOriginalTarget(elem);
 			// compute properties 'elementsOfThisName' and 'importSpecifier' from 'elem'
-			if (elem instanceof Variable) {
-				// special case of non-exported variables:
-				// 'elem' is a variable (or fpar) in the original AST (note: never in a remote resource!) and we
-				// have to point to its copy in the intermediate model via property 'elementsOfThisName'
-				final EObject copy = getCopyOf(elem);
-				entry.getElementsOfThisName().add((Variable) copy);
-			} else {
-				final EObject astElement = getASTElementIfInSameResource(elem);
+			final EObject astElement = getASTElementIfInSameResource(elem);
+			boolean isImplicitArgumentsVariable = astElement instanceof FunctionOrFieldAccessor
+					&& ((FunctionOrFieldAccessor) astElement).getImplicitArgumentsVariable() == elem;
+			if (!isImplicitArgumentsVariable) {
 				if (astElement instanceof NamedElement) {
 					final EObject copy = getCopyOf(astElement);
 					entry.getElementsOfThisName().add((NamedElement) copy);
@@ -478,16 +458,6 @@ public class PreparationStep {
 			// to not require an additional registry here, we use the tracer for this
 			final Iterator<EObject> iterator = tracer.getIntermediateModelElements(obj).iterator();
 			final EObject copy = iterator.hasNext() ? iterator.next() : null;
-
-			// SPECIAL CASE here: local arguments-variables are created in scoping but if they are not really
-			// referenced, then the copy-phase did not create a copy for them.
-			if (copy == null && obj instanceof LocalArgumentsVariable) {
-				// in this case, we create the copy of the LocalArgumentsVariable here:
-				final LocalArgumentsVariable lav = ((FunctionOrFieldAccessor) getCopyOf(obj.eContainer()))
-						.getLocalArgumentsVariable(); // this will create it and add it to the intermediate model
-				tracer.setOriginalASTNode_internal(lav, obj);
-				return lav;
-			}
 
 			// note in previous line:
 			// 1) we know there's exactly 1 IM element while we are inside IMCopier

@@ -38,7 +38,7 @@ export class Callee {
 
 	project set b(newB : string) {
 // XPECT linkedFragment at 'this.<|>data_property_b' --> /1/@types.0/@ownedMembers.1
-// XPECT linkedFragment at 'newB' --> /0/@scriptElements.0/@exportedElement/@ownedMembersRaw.3/@fpar
+// XPECT linkedFragment at 'newB' --> /1/@types.0/@ownedMembers.3/@fpar
 		this.data_property_b = newB + "_setter";
 	}
 }

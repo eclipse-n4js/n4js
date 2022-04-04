@@ -115,7 +115,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
 		VariableStatement vs = newVariableBuilder().consumeInScript(ctx);
-		addToScript(vs);
+		addAndHandleExported(ctx, vs);
 	}
 
 	@Override

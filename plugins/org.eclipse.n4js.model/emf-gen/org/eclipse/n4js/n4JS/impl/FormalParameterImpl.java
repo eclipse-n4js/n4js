@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.BindingPattern;
 import org.eclipse.n4js.n4JS.Expression;
@@ -36,17 +37,11 @@ import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
-import org.eclipse.n4js.n4JS.Variable;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
-import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TFormalParameter;
-import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypableElement;
-import org.eclipse.n4js.ts.types.TypesPackage;
-
-import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * <!-- begin-user-doc -->
@@ -58,9 +53,9 @@ import org.eclipse.xtext.EcoreUtil2;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getDeclaredTypeRefNode <em>Declared Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getDefinedVariable <em>Defined Variable</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#isVariadic <em>Variadic</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getDefinedTypeElement <em>Defined Type Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#isHasInitializerAssignment <em>Has Initializer Assignment</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getInitializer <em>Initializer</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FormalParameterImpl#getBindingPattern <em>Binding Pattern</em>}</li>
@@ -100,6 +95,16 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	protected String name = NAME_EDEFAULT;
 
 	/**
+	 * The cached value of the '{@link #getDefinedVariable() <em>Defined Variable</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDefinedVariable()
+	 * @generated
+	 * @ordered
+	 */
+	protected TFormalParameter definedVariable;
+
+	/**
 	 * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -128,16 +133,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * @ordered
 	 */
 	protected boolean variadic = VARIADIC_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getDefinedTypeElement() <em>Defined Type Element</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDefinedTypeElement()
-	 * @generated
-	 * @ordered
-	 */
-	protected TFormalParameter definedTypeElement;
 
 	/**
 	 * The default value of the '{@link #isHasInitializerAssignment() <em>Has Initializer Assignment</em>}' attribute.
@@ -272,6 +267,46 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * @generated
 	 */
 	@Override
+	public TFormalParameter getDefinedVariable() {
+		if (definedVariable != null && definedVariable.eIsProxy()) {
+			InternalEObject oldDefinedVariable = (InternalEObject)definedVariable;
+			definedVariable = (TFormalParameter)eResolveProxy(oldDefinedVariable);
+			if (definedVariable != oldDefinedVariable) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
+			}
+		}
+		return definedVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TFormalParameter basicGetDefinedVariable() {
+		return definedVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDefinedVariable(TFormalParameter newDefinedVariable) {
+		TFormalParameter oldDefinedVariable = definedVariable;
+		definedVariable = newDefinedVariable;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<Annotation> getAnnotations() {
 		if (annotations == null) {
 			annotations = new EObjectContainmentEList<Annotation>(Annotation.class, this, N4JSPackage.FORMAL_PARAMETER__ANNOTATIONS);
@@ -300,46 +335,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 		variadic = newVariadic;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FORMAL_PARAMETER__VARIADIC, oldVariadic, variadic));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public TFormalParameter getDefinedTypeElement() {
-		if (definedTypeElement != null && definedTypeElement.eIsProxy()) {
-			InternalEObject oldDefinedTypeElement = (InternalEObject)definedTypeElement;
-			definedTypeElement = (TFormalParameter)eResolveProxy(oldDefinedTypeElement);
-			if (definedTypeElement != oldDefinedTypeElement) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT, oldDefinedTypeElement, definedTypeElement));
-			}
-		}
-		return definedTypeElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public TFormalParameter basicGetDefinedTypeElement() {
-		return definedTypeElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDefinedTypeElement(TFormalParameter newDefinedTypeElement) {
-		TFormalParameter oldDefinedTypeElement = definedTypeElement;
-		definedTypeElement = newDefinedTypeElement;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT, oldDefinedTypeElement, definedTypeElement));
 	}
 
 	/**
@@ -471,16 +466,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 	 * @generated
 	 */
 	@Override
-	public TModule getContainingModule() {
-		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public TypeRef getDeclaredTypeRef() {
 		TypeReferenceNode<TypeRef> _declaredTypeRefNode = this.getDeclaredTypeRefNode();
 		TypeRef _typeRef = null;
@@ -537,13 +522,13 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 				return getDeclaredTypeRefNode();
 			case N4JSPackage.FORMAL_PARAMETER__NAME:
 				return getName();
+			case N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE:
+				if (resolve) return getDefinedVariable();
+				return basicGetDefinedVariable();
 			case N4JSPackage.FORMAL_PARAMETER__ANNOTATIONS:
 				return getAnnotations();
 			case N4JSPackage.FORMAL_PARAMETER__VARIADIC:
 				return isVariadic();
-			case N4JSPackage.FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT:
-				if (resolve) return getDefinedTypeElement();
-				return basicGetDefinedTypeElement();
 			case N4JSPackage.FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT:
 				return isHasInitializerAssignment();
 			case N4JSPackage.FORMAL_PARAMETER__INITIALIZER:
@@ -569,15 +554,15 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 			case N4JSPackage.FORMAL_PARAMETER__NAME:
 				setName((String)newValue);
 				return;
+			case N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE:
+				setDefinedVariable((TFormalParameter)newValue);
+				return;
 			case N4JSPackage.FORMAL_PARAMETER__ANNOTATIONS:
 				getAnnotations().clear();
 				getAnnotations().addAll((Collection<? extends Annotation>)newValue);
 				return;
 			case N4JSPackage.FORMAL_PARAMETER__VARIADIC:
 				setVariadic((Boolean)newValue);
-				return;
-			case N4JSPackage.FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT:
-				setDefinedTypeElement((TFormalParameter)newValue);
 				return;
 			case N4JSPackage.FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT:
 				setHasInitializerAssignment((Boolean)newValue);
@@ -606,14 +591,14 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 			case N4JSPackage.FORMAL_PARAMETER__NAME:
 				setName(NAME_EDEFAULT);
 				return;
+			case N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE:
+				setDefinedVariable((TFormalParameter)null);
+				return;
 			case N4JSPackage.FORMAL_PARAMETER__ANNOTATIONS:
 				getAnnotations().clear();
 				return;
 			case N4JSPackage.FORMAL_PARAMETER__VARIADIC:
 				setVariadic(VARIADIC_EDEFAULT);
-				return;
-			case N4JSPackage.FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT:
-				setDefinedTypeElement((TFormalParameter)null);
 				return;
 			case N4JSPackage.FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT:
 				setHasInitializerAssignment(HAS_INITIALIZER_ASSIGNMENT_EDEFAULT);
@@ -640,12 +625,12 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 				return declaredTypeRefNode != null;
 			case N4JSPackage.FORMAL_PARAMETER__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE:
+				return definedVariable != null;
 			case N4JSPackage.FORMAL_PARAMETER__ANNOTATIONS:
 				return annotations != null && !annotations.isEmpty();
 			case N4JSPackage.FORMAL_PARAMETER__VARIADIC:
 				return variadic != VARIADIC_EDEFAULT;
-			case N4JSPackage.FORMAL_PARAMETER__DEFINED_TYPE_ELEMENT:
-				return definedTypeElement != null;
 			case N4JSPackage.FORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT:
 				return hasInitializerAssignment != HAS_INITIALIZER_ASSIGNMENT_EDEFAULT;
 			case N4JSPackage.FORMAL_PARAMETER__INITIALIZER:
@@ -679,19 +664,15 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 				default: return -1;
 			}
 		}
-		if (baseClass == IdentifiableElement.class) {
-			switch (derivedFeatureID) {
-				case N4JSPackage.FORMAL_PARAMETER__NAME: return TypesPackage.IDENTIFIABLE_ELEMENT__NAME;
-				default: return -1;
-			}
-		}
 		if (baseClass == NamedElement.class) {
 			switch (derivedFeatureID) {
 				default: return -1;
 			}
 		}
-		if (baseClass == Variable.class) {
+		if (baseClass == AbstractVariable.class) {
 			switch (derivedFeatureID) {
+				case N4JSPackage.FORMAL_PARAMETER__NAME: return N4JSPackage.ABSTRACT_VARIABLE__NAME;
+				case N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE: return N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE;
 				default: return -1;
 			}
 		}
@@ -721,19 +702,15 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 				default: return -1;
 			}
 		}
-		if (baseClass == IdentifiableElement.class) {
-			switch (baseFeatureID) {
-				case TypesPackage.IDENTIFIABLE_ELEMENT__NAME: return N4JSPackage.FORMAL_PARAMETER__NAME;
-				default: return -1;
-			}
-		}
 		if (baseClass == NamedElement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
 			}
 		}
-		if (baseClass == Variable.class) {
+		if (baseClass == AbstractVariable.class) {
 			switch (baseFeatureID) {
+				case N4JSPackage.ABSTRACT_VARIABLE__NAME: return N4JSPackage.FORMAL_PARAMETER__NAME;
+				case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE: return N4JSPackage.FORMAL_PARAMETER__DEFINED_VARIABLE;
 				default: return -1;
 			}
 		}
@@ -767,21 +744,15 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 				default: return -1;
 			}
 		}
-		if (baseClass == IdentifiableElement.class) {
-			switch (baseOperationID) {
-				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE: return N4JSPackage.FORMAL_PARAMETER___GET_CONTAINING_MODULE;
-				default: return -1;
-			}
-		}
 		if (baseClass == NamedElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.NAMED_ELEMENT___GET_NAME: return N4JSPackage.FORMAL_PARAMETER___GET_NAME;
 				default: return -1;
 			}
 		}
-		if (baseClass == Variable.class) {
+		if (baseClass == AbstractVariable.class) {
 			switch (baseOperationID) {
-				case N4JSPackage.VARIABLE___IS_CONST: return N4JSPackage.FORMAL_PARAMETER___IS_CONST;
+				case N4JSPackage.ABSTRACT_VARIABLE___IS_CONST: return N4JSPackage.FORMAL_PARAMETER___IS_CONST;
 				default: return -1;
 			}
 		}
@@ -798,8 +769,6 @@ public class FormalParameterImpl extends AnnotableElementImpl implements FormalP
 		switch (operationID) {
 			case N4JSPackage.FORMAL_PARAMETER___IS_CONST:
 				return isConst();
-			case N4JSPackage.FORMAL_PARAMETER___GET_CONTAINING_MODULE:
-				return getContainingModule();
 			case N4JSPackage.FORMAL_PARAMETER___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
 			case N4JSPackage.FORMAL_PARAMETER___GET_DECLARED_TYPE_REF_IN_AST:

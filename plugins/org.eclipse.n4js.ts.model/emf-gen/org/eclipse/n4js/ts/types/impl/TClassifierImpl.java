@@ -33,6 +33,8 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
+import org.eclipse.n4js.ts.types.TypesPackage.Literals;
+
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 
 /**
@@ -228,6 +230,21 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * @generated
 	 */
 	@Override
+	public EObject getAstElementNoResolve() {
+		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+		final EObject astElem = ((EObject) _eGet);
+		if (((astElem != null) && (!astElem.eIsProxy()))) {
+			return astElem;
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.TCLASSIFIER__AST_ELEMENT:
@@ -338,6 +355,7 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 		}
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseOperationID) {
+				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.TCLASSIFIER___GET_AST_ELEMENT_NO_RESOLVE;
 				default: return -1;
 			}
 		}
@@ -362,6 +380,8 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 				return getImplementedOrExtendedInterfaceRefs();
 			case TypesPackage.TCLASSIFIER___IS_FINAL:
 				return isFinal();
+			case TypesPackage.TCLASSIFIER___GET_AST_ELEMENT_NO_RESOLVE:
+				return getAstElementNoResolve();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

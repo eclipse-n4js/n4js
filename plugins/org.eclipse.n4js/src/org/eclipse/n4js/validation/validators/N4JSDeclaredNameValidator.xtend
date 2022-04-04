@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.AbstractVariable
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.CatchVariable
@@ -36,13 +37,13 @@ import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDefinition
+import org.eclipse.n4js.n4JS.N4TypeVariable
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
@@ -53,7 +54,6 @@ import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.TypeDefiningElement
-import org.eclipse.n4js.n4JS.Variable
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
@@ -300,10 +300,6 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 									return;
 								}
 
-								if (baseEO instanceof LocalArgumentsVariable || dupeEO instanceof LocalArgumentsVariable) {
-									return;
-								}
-
 								// in case of when we duplicate element creating given scope (like function names)
 								// then we issue shadowing
 								if (baseEO.equals(vee)) {
@@ -383,7 +379,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	}
 	
 	def private boolean isVariable(EObject eo) {
-		return eo instanceof Variable
+		return eo instanceof AbstractVariable
 			|| (eo instanceof NamedImportSpecifier && (eo as NamedImportSpecifier).importedElement instanceof TVariable);
 	}
 	
@@ -590,7 +586,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 			Script: 
 				namedEOs += scope.scriptElements.filter(ImportDeclaration).flatMap[importSpecifiers].toList
 			FunctionOrFieldAccessor:
-				namedEOs += scope.localArgumentsVariable
+				namedEOs += scope.implicitArgumentsVariable
 		}
 
 		// add all elements from the scope as computed by ordinary scoping:
@@ -635,7 +631,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	def private String getDeclaredName(EObject eo) {
 
 		if (eo instanceof FunctionDeclaration || eo instanceof FunctionExpression || eo instanceof N4TypeDefinition ||
-			eo instanceof Variable) {
+			eo instanceof AbstractVariable) {
 			return eo.findName
 		}
 
@@ -691,6 +687,14 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (eo instanceof FunctionDeclaration) {
 			return N4JSPackage.Literals.FUNCTION_DECLARATION__NAME;
+		}
+
+		if (eo instanceof AbstractVariable) {
+			return N4JSPackage.Literals.ABSTRACT_VARIABLE__NAME;
+		}
+
+		if (eo instanceof N4TypeVariable) {
+			return N4JSPackage.Literals.N4_TYPE_VARIABLE__NAME;
 		}
 
 		if (eo instanceof NamedImportSpecifier) {

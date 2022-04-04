@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.parser
 
+import org.eclipse.n4js.n4JS.AnnotablePropertyAssignment
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -22,7 +23,6 @@ import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.n4JS.PropertySpread
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.junit.Test
-import org.eclipse.n4js.n4JS.AnnotablePropertyAssignment
 
 /**
  */
@@ -143,7 +143,7 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 		val expr = (objLit.propertyAssignments.get(0) as PropertySpread).expression;
 		assertNotNull(expr);
 		assertTrue(expr instanceof IdentifierRef);
-		assertSame(script.eAllContents.filter(VariableDeclaration).head, (expr as IdentifierRef).id);
+		assertSame(script.eAllContents.filter(VariableDeclaration).head.definedVariable, (expr as IdentifierRef).id);
 	}
 
 	@Test
@@ -166,7 +166,7 @@ class SpreadOperatorParserTest extends AbstractParserTest {
 		val expr = (objLit.propertyAssignments.get(0) as PropertySpread).expression;
 		assertNotNull(expr);
 		assertTrue(expr instanceof IdentifierRef);
-		assertSame(script.eAllContents.filter(VariableDeclaration).head, (expr as IdentifierRef).id);
+		assertSame(script.eAllContents.filter(VariableDeclaration).head.definedVariable, (expr as IdentifierRef).id);
 	}
 
 	@Test

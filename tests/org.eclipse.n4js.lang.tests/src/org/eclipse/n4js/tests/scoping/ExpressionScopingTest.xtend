@@ -12,25 +12,25 @@ package org.eclipse.n4js.tests.scoping
 
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.n4JS.AssignmentExpression
+import org.eclipse.n4js.n4JS.ExpressionStatement
+import org.eclipse.n4js.n4JS.FunctionDeclaration
+import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.IfStatement
+import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.NewExpression
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
+import org.eclipse.n4js.n4JS.RelationalExpression
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.n4JS.N4ClassDeclaration
-import org.eclipse.n4js.n4JS.N4MethodDeclaration
-import org.eclipse.n4js.n4JS.ExpressionStatement
-import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
-import org.junit.Assert
-import org.eclipse.n4js.n4JS.FunctionDeclaration
-import org.eclipse.n4js.n4JS.AssignmentExpression
-import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4JS.IfStatement
-import org.eclipse.n4js.n4JS.RelationalExpression
-import org.eclipse.n4js.n4JS.NewExpression
-import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.ts.types.TMember
 
 /**
  */
@@ -122,7 +122,7 @@ class ExpressionScopingTest {
 		val a = (script.scriptElements.head as VariableStatement).varDecl.head
 		val newExpr = (script.scriptElements.last as ExpressionStatement).expression as NewExpression
 		val type = newExpr.callee as IdentifierRef
-		Assert.assertSame(a, type.id)
+		Assert.assertSame(a.definedVariable, type.id)
 	}
 
 }

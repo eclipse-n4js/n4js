@@ -12,7 +12,7 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
-import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.TypeVariable;
 
 /**
@@ -25,6 +25,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getDefinedTypeVariable <em>Defined Type Variable</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.N4TypeVariable#isDeclaredOptional <em>Declared Optional</em>}</li>
@@ -36,7 +37,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * @model
  * @generated
  */
-public interface N4TypeVariable extends IdentifiableElement, NamedElement {
+public interface N4TypeVariable extends TypableElement, NamedElement {
 	/**
 	 * Returns the value of the '<em><b>Defined Type Variable</b></em>' reference.
 	 * <!-- begin-user-doc -->
@@ -58,6 +59,28 @@ public interface N4TypeVariable extends IdentifiableElement, NamedElement {
 	 * @generated
 	 */
 	void setDefinedTypeVariable(TypeVariable value);
+
+	/**
+	 * Returns the value of the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Name</em>' attribute.
+	 * @see #setName(String)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getN4TypeVariable_Name()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getName();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.N4TypeVariable#getName <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Name</em>' attribute.
+	 * @see #getName()
+	 * @generated
+	 */
+	void setName(String value);
 
 	/**
 	 * Returns the value of the '<em><b>Declared Covariant</b></em>' attribute.

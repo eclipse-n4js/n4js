@@ -23,15 +23,14 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -59,7 +58,7 @@ public final class ASTMetaInfoCache {
 	private final Map<TypableElement, TypeRef> actualTypes = new HashMap<>();
 	private final Map<ParameterizedCallExpression, List<TypeRef>> inferredTypeArgs = new HashMap<>();
 	private final Map<Expression, CompileTimeValue> compileTimeValue = new HashMap<>();
-	private final Map<VariableDeclaration, List<EObject>> localVariableReferences = new HashMap<>();
+	private final Map<TVariable, List<EObject>> localVariableReferences = new HashMap<>();
 	private boolean hasUnknownTypeRef;
 
 	/* package */ ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST, ASTFlowInfo flowInfo) {
@@ -191,11 +190,11 @@ public final class ASTMetaInfoCache {
 	}
 
 	/**
-	 * Returns all AST nodes referencing the given local (i.e. non-exported) variable declaration. Returns empty list if
-	 * variable declaration is exported.
+	 * Returns all AST nodes referencing the given local (i.e. non-exported) variable. Returns empty list if the given
+	 * variable is exported.
 	 */
-	public List<EObject> getLocalVariableReferences(VariableDeclaration varDecl) {
-		final List<EObject> references = localVariableReferences.get(varDecl);
+	public List<EObject> getLocalVariableReferences(TVariable tVariable) {
+		final List<EObject> references = localVariableReferences.get(tVariable);
 		if (references != null) {
 			return Collections.unmodifiableList(references);
 		} else {
@@ -203,17 +202,17 @@ public final class ASTMetaInfoCache {
 		}
 	}
 
-	/* package */ void storeLocalVariableReference(VariableDeclaration varDecl, EObject sourceNode) {
-		if (varDecl.eResource() != resource) {
+	/* package */ void storeLocalVariableReference(TVariable tVariable, EObject sourceNode) {
+		if (tVariable.eResource() != resource) {
 			throw new IllegalArgumentException("astNode must be from this resource");
 		}
-		if (localVariableReferences.containsKey(varDecl)) {
-			final List<EObject> references = localVariableReferences.get(varDecl);
+		if (localVariableReferences.containsKey(tVariable)) {
+			final List<EObject> references = localVariableReferences.get(tVariable);
 			references.add(sourceNode);
 		} else {
 			final List<EObject> references = new ArrayList<>();
 			references.add(sourceNode);
-			localVariableReferences.put(varDecl, references);
+			localVariableReferences.put(tVariable, references);
 		}
 	}
 
@@ -226,7 +225,6 @@ public final class ASTMetaInfoCache {
 	/* package */ final Set<EObject> forwardProcessedSubTrees = new LinkedHashSet<>();
 	/* package */ final Set<EObject> astNodesCurrentlyBeingTyped = new LinkedHashSet<>();
 	/* package */ final Queue<EObject> postponedSubTrees = new LinkedList<>(); // using LinkedList as FIFO queue, here
-	/* package */ final List<FunctionOrFieldAccessor> potentialContainersOfLocalArgumentsVariable = new LinkedList<>();
 	/* package */ final Set<IdentifiableElement> elementsReferencedAtRuntime = new LinkedHashSet<>();
 	/* package */ final Set<TModule> modulesReferencedAtLoadtimeForInheritance = new LinkedHashSet<>();
 
@@ -236,7 +234,6 @@ public final class ASTMetaInfoCache {
 		forwardProcessedSubTrees.clear();
 		astNodesCurrentlyBeingTyped.clear();
 		postponedSubTrees.clear();
-		potentialContainersOfLocalArgumentsVariable.clear();
 		elementsReferencedAtRuntime.clear();
 		modulesReferencedAtLoadtimeForInheritance.clear();
 	}

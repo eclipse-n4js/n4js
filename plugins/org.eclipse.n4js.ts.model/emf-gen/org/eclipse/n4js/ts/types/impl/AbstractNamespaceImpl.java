@@ -44,7 +44,8 @@ import org.eclipse.xtext.EcoreUtil2;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getTypes <em>Types</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getVariables <em>Variables</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getExportedVariables <em>Exported Variables</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getLocalVariables <em>Local Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getNamespaces <em>Namespaces</em>}</li>
  * </ul>
  *
@@ -62,14 +63,24 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 	protected EList<Type> types;
 
 	/**
-	 * The cached value of the '{@link #getVariables() <em>Variables</em>}' containment reference list.
+	 * The cached value of the '{@link #getExportedVariables() <em>Exported Variables</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getVariables()
+	 * @see #getExportedVariables()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TVariable> variables;
+	protected EList<TVariable> exportedVariables;
+
+	/**
+	 * The cached value of the '{@link #getLocalVariables() <em>Local Variables</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getLocalVariables()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TVariable> localVariables;
 
 	/**
 	 * The cached value of the '{@link #getNamespaces() <em>Namespaces</em>}' containment reference list.
@@ -119,11 +130,24 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 	 * @generated
 	 */
 	@Override
-	public EList<TVariable> getVariables() {
-		if (variables == null) {
-			variables = new EObjectContainmentEList<TVariable>(TVariable.class, this, TypesPackage.ABSTRACT_NAMESPACE__VARIABLES);
+	public EList<TVariable> getExportedVariables() {
+		if (exportedVariables == null) {
+			exportedVariables = new EObjectContainmentEList<TVariable>(TVariable.class, this, TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES);
 		}
-		return variables;
+		return exportedVariables;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TVariable> getLocalVariables() {
+		if (localVariables == null) {
+			localVariables = new EObjectContainmentEList<TVariable>(TVariable.class, this, TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES);
+		}
+		return localVariables;
 	}
 
 	/**
@@ -155,12 +179,28 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 	 * @generated
 	 */
 	@Override
+	public void clearTransientElements() {
+		this.getLocalVariables().clear();
+		EList<TNamespace> _namespaces = this.getNamespaces();
+		for (final TNamespace child : _namespaces) {
+			child.clearTransientElements();
+		}
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
-			case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES:
-				return ((InternalEList<?>)getVariables()).basicRemove(otherEnd, msgs);
+			case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES:
+				return ((InternalEList<?>)getExportedVariables()).basicRemove(otherEnd, msgs);
+			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
+				return ((InternalEList<?>)getLocalVariables()).basicRemove(otherEnd, msgs);
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				return ((InternalEList<?>)getNamespaces()).basicRemove(otherEnd, msgs);
 		}
@@ -177,8 +217,10 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 		switch (featureID) {
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				return getTypes();
-			case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES:
-				return getVariables();
+			case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES:
+				return getExportedVariables();
+			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
+				return getLocalVariables();
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				return getNamespaces();
 		}
@@ -198,9 +240,13 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 				getTypes().clear();
 				getTypes().addAll((Collection<? extends Type>)newValue);
 				return;
-			case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES:
-				getVariables().clear();
-				getVariables().addAll((Collection<? extends TVariable>)newValue);
+			case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES:
+				getExportedVariables().clear();
+				getExportedVariables().addAll((Collection<? extends TVariable>)newValue);
+				return;
+			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
+				getLocalVariables().clear();
+				getLocalVariables().addAll((Collection<? extends TVariable>)newValue);
 				return;
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				getNamespaces().clear();
@@ -221,8 +267,11 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				getTypes().clear();
 				return;
-			case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES:
-				getVariables().clear();
+			case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES:
+				getExportedVariables().clear();
+				return;
+			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
+				getLocalVariables().clear();
 				return;
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				getNamespaces().clear();
@@ -241,8 +290,10 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 		switch (featureID) {
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				return types != null && !types.isEmpty();
-			case TypesPackage.ABSTRACT_NAMESPACE__VARIABLES:
-				return variables != null && !variables.isEmpty();
+			case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES:
+				return exportedVariables != null && !exportedVariables.isEmpty();
+			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
+				return localVariables != null && !localVariables.isEmpty();
 			case TypesPackage.ABSTRACT_NAMESPACE__NAMESPACES:
 				return namespaces != null && !namespaces.isEmpty();
 		}
@@ -259,6 +310,9 @@ public abstract class AbstractNamespaceImpl extends ProxyResolvingEObjectImpl im
 		switch (operationID) {
 			case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE:
 				return getContainingModule();
+			case TypesPackage.ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS:
+				clearTransientElements();
+				return null;
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -32,6 +32,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 	@Inject extension N4JSFormalParameterTypesBuilder
 	@Inject extension N4JSTypeVariableTypesBuilder
+	@Inject extension N4JSVariableStatementTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean relinkTFunction(FunctionDeclaration functionDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
@@ -73,6 +74,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 		val builtInTypeScope = BuiltInTypeScope.get(functionDecl.eResource.resourceSet)
 		val functionType = functionDecl.createAndLinkTFunction(preLinkingPhase)
+		functionDecl.createImplicitArgumentsVariable(target, builtInTypeScope, preLinkingPhase);
 
 		functionType.addFormalParameters(functionDecl, builtInTypeScope, preLinkingPhase)
 		functionType.setTypeAccessModifier(functionDecl)
@@ -116,6 +118,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 		val builtInTypeScope = BuiltInTypeScope.get(functionExpr.eResource.resourceSet)
 		val functionType = functionExpr.createAndLinkTFunction(preLinkingPhase)
+		functionExpr.createImplicitArgumentsVariable(target, builtInTypeScope, preLinkingPhase);
 
 		functionType.addFormalParametersWithInferredType(functionExpr, builtInTypeScope, preLinkingPhase)
 		functionType.setReturnTypeWithInferredType(functionExpr, builtInTypeScope, preLinkingPhase)

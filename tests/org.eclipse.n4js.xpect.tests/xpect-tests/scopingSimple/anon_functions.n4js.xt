@@ -13,13 +13,13 @@
 
 var test1FunVar = function() { console.log("test1FunVar"); }
 /* accessed via variable (=> no type) XPECT scopeWithPosition at '|test1FunVar();' ---
-	test1FunVar - 14, ...
+	test1FunVar - T14, ...
 ---*/
 test1FunVar();
 
 function test2Fun(test2FunParam : { function(): string }) {
 	/* XPECT scopeWithPosition at '|test2FunParam();' ---
-		test2FunParam - 20, test1FunVar - 14, ...
+		test2FunParam - T20, test1FunVar - T14, ...
 	---*/
 	test2FunParam();
 }
@@ -28,7 +28,7 @@ test2Fun(function () { console.log("test2FunParam"); return null; })
 function test3Fun() {
 	var test3InnerFunVar = function() { console.log("test3InnerFunVar"); };
 	/* XPECT scopeWithPosition at '|test3InnerFunVar();' ---
-		test3InnerFunVar - 29, !test2FunParam - 22, test1FunVar - 14, ...
+		test3InnerFunVar - T29, !test2FunParam - T22, test1FunVar - T14, ...
 	---*/
  	test3InnerFunVar();
 }

@@ -18,7 +18,6 @@ import java.util.HashMap
 import java.util.Map
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.FormalParameter
-import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
@@ -29,8 +28,10 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.InferenceVariable
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -160,22 +161,19 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	) {
 		if (fparAST.hasInitializerAssignment) {
 			// Check if the initializer refers to other fpars
-			val allFPars = (fparAST.eContainer as FunctionDefinition).fpars;
 
 			val fparInitializer = fparAST.initializer;
-			var refIsInitializer = false;
+			var referredFparCopy = null as TFormalParameter;
 			val isPostponed = cache.postponedSubTrees.contains(fparInitializer);
 			if (fparInitializer instanceof IdentifierRef) {
 				val id = fparInitializer.getId();
-				refIsInitializer = allFPars.contains(id);
+				val idInAST = if (id instanceof SyntaxRelatedTElement) id.eGet(TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+				referredFparCopy = typeRefMap.get(idInAST);
 			}
 
-			if (refIsInitializer) {
+			if (referredFparCopy !== null) {
 				// example: f(a, b = a) {}
-				val iRef = fparInitializer as IdentifierRef;
-				val fparam = iRef.getId() as FormalParameter;
-				val fparTCopy = typeRefMap.get(fparam);
-				val TypeRef tRef = fparTCopy.typeRef;
+				val TypeRef tRef = referredFparCopy.typeRef; // point to the inference variable introduced above
 				infCtx.addConstraint(TypeUtils.createTypeRef(iv), TypeUtils.copy(tRef), Variance.CONTRA);
 			} else if (!isPostponed) {
 				val context = if (fparT.eContainer instanceof ContainerType<?>)

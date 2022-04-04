@@ -17,9 +17,8 @@ package org.eclipse.n4js.ts.types;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
- * Used for storing information about exported variables in the Xtext index, similar
- * to Types (such as TClass, TInterface, TFunction). It references the variable declaration of the
- * export declaration (via SyntaxRelatedTElement's astElement).
+ * Created for all subclasses of {@code AbstractVariable} (in N4JS.xcore), esp. {@code VariableDeclaration},
+ * except {@code FormalParameter} (in N4JS.xcore).
  * <!-- end-model-doc -->
  *
  * <p>
@@ -35,7 +34,7 @@ package org.eclipse.n4js.ts.types;
  * @model
  * @generated
  */
-public interface TVariable extends TExportableElement, TConstableElement, SyntaxRelatedTElement, TAnnotableElement, AccessibleTypeElement, TTypedElement, TNamespaceElement {
+public interface TVariable extends TAbstractVariable, AccessibleTypeElement, TExportableElement, TConstableElement, TNamespaceElement {
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->

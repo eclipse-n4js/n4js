@@ -30,7 +30,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.TypeVariable;
 
-import org.eclipse.n4js.ts.types.impl.IdentifiableElementImpl;
+import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
@@ -41,6 +41,7 @@ import org.eclipse.n4js.ts.types.impl.IdentifiableElementImpl;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getDefinedTypeVariable <em>Defined Type Variable</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#isDeclaredCovariant <em>Declared Covariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#isDeclaredContravariant <em>Declared Contravariant</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4TypeVariableImpl#isDeclaredOptional <em>Declared Optional</em>}</li>
@@ -50,7 +51,7 @@ import org.eclipse.n4js.ts.types.impl.IdentifiableElementImpl;
  *
  * @generated
  */
-public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4TypeVariable {
+public class N4TypeVariableImpl extends ProxyResolvingEObjectImpl implements N4TypeVariable {
 	/**
 	 * The cached value of the '{@link #getDefinedTypeVariable() <em>Defined Type Variable</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -60,6 +61,26 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 	 * @ordered
 	 */
 	protected TypeVariable definedTypeVariable;
+
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isDeclaredCovariant() <em>Declared Covariant</em>}' attribute.
@@ -198,6 +219,29 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 		definedTypeVariable = newDefinedTypeVariable;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE, oldDefinedTypeVariable, definedTypeVariable));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_TYPE_VARIABLE__NAME, oldName, name));
 	}
 
 	/**
@@ -411,6 +455,8 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 			case N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
 				if (resolve) return getDefinedTypeVariable();
 				return basicGetDefinedTypeVariable();
+			case N4JSPackage.N4_TYPE_VARIABLE__NAME:
+				return getName();
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_COVARIANT:
 				return isDeclaredCovariant();
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
@@ -436,6 +482,9 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 		switch (featureID) {
 			case N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
 				setDefinedTypeVariable((TypeVariable)newValue);
+				return;
+			case N4JSPackage.N4_TYPE_VARIABLE__NAME:
+				setName((String)newValue);
 				return;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_COVARIANT:
 				setDeclaredCovariant((Boolean)newValue);
@@ -467,6 +516,9 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 			case N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
 				setDefinedTypeVariable((TypeVariable)null);
 				return;
+			case N4JSPackage.N4_TYPE_VARIABLE__NAME:
+				setName(NAME_EDEFAULT);
+				return;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_COVARIANT:
 				setDeclaredCovariant(DECLARED_COVARIANT_EDEFAULT);
 				return;
@@ -496,6 +548,8 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 		switch (featureID) {
 			case N4JSPackage.N4_TYPE_VARIABLE__DEFINED_TYPE_VARIABLE:
 				return definedTypeVariable != null;
+			case N4JSPackage.N4_TYPE_VARIABLE__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_COVARIANT:
 				return declaredCovariant != DECLARED_COVARIANT_EDEFAULT;
 			case N4JSPackage.N4_TYPE_VARIABLE__DECLARED_CONTRAVARIANT:
@@ -536,7 +590,9 @@ public class N4TypeVariableImpl extends IdentifiableElementImpl implements N4Typ
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (declaredCovariant: ");
+		result.append(" (name: ");
+		result.append(name);
+		result.append(", declaredCovariant: ");
 		result.append(declaredCovariant);
 		result.append(", declaredContravariant: ");
 		result.append(declaredContravariant);

@@ -54,7 +54,6 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IntLiteral
 import org.eclipse.n4js.n4JS.JSXElement
-import org.eclipse.n4js.n4JS.ModifiableElement
 import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
@@ -953,9 +952,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 	/** var,let,const  */
 	def dispatch void format(VariableStatement vStmt, extension IFormattableDocument document) {
 
-		 // ExportedVariableStatements:
-		if( vStmt instanceof ModifiableElement) vStmt.configureModifiers(document);
-
+		vStmt.configureModifiers(document);
 
 		vStmt.regionFor.feature(
 			N4JSPackage.Literals.VARIABLE_DECLARATION_CONTAINER__VAR_STMT_KEYWORD).append [

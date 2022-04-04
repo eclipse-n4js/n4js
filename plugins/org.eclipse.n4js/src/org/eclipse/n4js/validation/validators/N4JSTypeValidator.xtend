@@ -76,7 +76,6 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareHelper
@@ -912,7 +911,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		for (n4TypeParam : genDecl.typeVars) {
 			if (haveOptional && !n4TypeParam.optional) {
 				val message = messageForTYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL;
-				addIssue(message, n4TypeParam, TypesPackage.eINSTANCE.identifiableElement_Name, TYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL);
+				addIssue(message, n4TypeParam, N4JSPackage.Literals.N4_TYPE_VARIABLE__NAME, TYP_TYPE_PARAM_MANDATORY_AFTER_OPTIONAL);
 				return false;
 			}
 			haveOptional = haveOptional || n4TypeParam.optional;

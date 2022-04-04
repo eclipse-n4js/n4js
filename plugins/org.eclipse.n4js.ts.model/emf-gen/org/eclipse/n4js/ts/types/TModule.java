@@ -584,4 +584,12 @@ public interface TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnno
 	 */
 	String getModuleSpecifier();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model
+	 * @generated
+	 */
+	void clearTransientElements();
+
 } // TModule

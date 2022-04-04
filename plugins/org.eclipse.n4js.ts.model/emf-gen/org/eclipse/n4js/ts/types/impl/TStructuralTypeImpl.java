@@ -30,6 +30,8 @@ import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
+import org.eclipse.n4js.ts.types.TypesPackage.Literals;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>TStructural Type</b></em>'.
@@ -143,6 +145,21 @@ public class TStructuralTypeImpl extends ContainerTypeImpl<TStructMember> implem
 	 * @generated
 	 */
 	@Override
+	public EObject getAstElementNoResolve() {
+		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+		final EObject astElem = ((EObject) _eGet);
+		if (((astElem != null) && (!astElem.eIsProxy()))) {
+			return astElem;
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.TSTRUCTURAL_TYPE__AST_ELEMENT:
@@ -243,6 +260,7 @@ public class TStructuralTypeImpl extends ContainerTypeImpl<TStructMember> implem
 		}
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseOperationID) {
+				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.TSTRUCTURAL_TYPE___GET_AST_ELEMENT_NO_RESOLVE;
 				default: return -1;
 			}
 		}
@@ -259,6 +277,8 @@ public class TStructuralTypeImpl extends ContainerTypeImpl<TStructMember> implem
 		switch (operationID) {
 			case TypesPackage.TSTRUCTURAL_TYPE___IS_FINAL:
 				return isFinal();
+			case TypesPackage.TSTRUCTURAL_TYPE___GET_AST_ELEMENT_NO_RESOLVE:
+				return getAstElementNoResolve();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

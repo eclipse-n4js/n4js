@@ -37,7 +37,6 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.n4JS.ExportableElement;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumDeclaration;
@@ -47,6 +46,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
+import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
@@ -196,7 +196,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
-		ExportedVariableStatement vs = newVariableBuilder().consumeInNamespace(ctx);
+		VariableStatement vs = newVariableBuilder().consumeInNamespace(ctx);
 		addAndHandleExported(ctx, vs);
 	}
 

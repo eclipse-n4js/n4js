@@ -444,7 +444,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	/** IDEBUG-211 invalid combination of undefined, variadic & omitting type */
 	def holdsModifierOfParamsHaveType(EList<FormalParameter> list) {
 		for(fp:list) {
-			if(fp.definedTypeElement.hasInitializerAssignment) {
+			if(fp.definedVariable.hasInitializerAssignment) {
 				if(fp.variadic) {
 					addIssue(messageForFUN_PARAM_VARIADIC_WITH_INITIALIZER, fp, FUN_PARAM_VARIADIC_WITH_INITIALIZER)
 				}

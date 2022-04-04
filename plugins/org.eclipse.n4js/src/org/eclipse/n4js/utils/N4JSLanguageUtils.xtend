@@ -23,12 +23,12 @@ import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.common.unicode.CharTypes
 import org.eclipse.n4js.compileTime.CompileTimeValue
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
+import org.eclipse.n4js.n4JS.AbstractVariable
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.ConditionalExpression
 import org.eclipse.n4js.n4JS.DestructureUtils
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -489,7 +489,7 @@ public class N4JSLanguageUtils {
 	}
 
 	def static boolean isTypeModelElementDefiningASTNode(EObject astNode) {
-		astNode instanceof ExportedVariableDeclaration
+		astNode instanceof VariableDeclaration
 		|| astNode instanceof TypeDefiningElement
 		|| (astNode instanceof N4MemberDeclaration && !(astNode instanceof N4MemberAnnotationList))
 		|| (astNode instanceof PropertyAssignment && !(astNode instanceof PropertyAssignmentAnnotationList))
@@ -501,12 +501,11 @@ public class N4JSLanguageUtils {
 
 	def static EObject getDefinedTypeModelElement(EObject astNode) {
 		switch(astNode) {
-			ExportedVariableDeclaration: astNode.definedVariable
+			AbstractVariable<?>: astNode.definedVariable
 			PropertyMethodDeclaration: astNode.definedMember
 			TypeDefiningElement: astNode.definedType
 			N4MemberDeclaration case !(astNode instanceof N4MemberAnnotationList): astNode.definedTypeElement
 			PropertyAssignment case !(astNode instanceof PropertyAssignmentAnnotationList): astNode.definedMember
-			FormalParameter: astNode.definedTypeElement
 			TStructMember case astNode.isASTNode: astNode.definedMember // note: a TStructMember may be an AST node or types model element!
 			N4EnumLiteral: astNode.definedLiteral
 			N4TypeVariable: astNode.definedTypeVariable
@@ -543,7 +542,7 @@ public class N4JSLanguageUtils {
 	 */
 	def static boolean isExported(IdentifiableElement elem) {
 		return switch(elem) {
-			ExportedVariableDeclaration: true
+			VariableDeclaration: true
 			TVariable: elem.exported
 			Type: elem.exported
 			default: false
@@ -1014,7 +1013,7 @@ public class N4JSLanguageUtils {
 		}
 		// cases of expressions that may or may not be a compile-time expression:
 		val parent = expr.eContainer;
-		return parent instanceof ExportedVariableDeclaration
+		return parent instanceof VariableDeclaration
 			|| parent instanceof N4FieldDeclaration;
 	}
 
@@ -1128,14 +1127,10 @@ public class N4JSLanguageUtils {
 
 		if (expr instanceof IdentifierRef) {
 			val idElem = expr.getId();
-			if (idElem instanceof VariableDeclaration) {
-				// Case 1: non-exported const, e.g. const ol = {}
+			if (idElem instanceof TVariable) {
 				if (idElem.isConst()) {
-					return idElem.expression instanceof ObjectLiteral;
+					return idElem.objectLiteral;
 				}
-			} else if (idElem instanceof TVariable) {
-				// Case 2: exported const, e.g. exported const ol = {}
-				return idElem.objectLiteral;
 			}
 		}
 
@@ -1168,14 +1163,10 @@ public class N4JSLanguageUtils {
 
 		if (expr instanceof IdentifierRef) {
 			val idElem = expr.getId();
-			if (idElem instanceof VariableDeclaration) {
-				// Case 1: non-exported const, e.g. const ol = new A()
+			if (idElem instanceof TVariable) {
 				if (idElem.isConst()) {
-					return idElem.expression instanceof NewExpression;
+					return idElem.newExpression;
 				}
-			} else if (idElem instanceof TVariable) {
-				// Case 2: exported const, e.g. exported const ol = new A()
-				return idElem.newExpression;
 			}
 		}
 

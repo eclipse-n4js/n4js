@@ -97,13 +97,22 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE__TYPES = 0;
 
 	/**
-	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Exported Variables</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE__VARIABLES = 1;
+	int ABSTRACT_NAMESPACE__EXPORTED_VARIABLES = 1;
+
+	/**
+	 * The feature id for the '<em><b>Local Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE__LOCAL_VARIABLES = 2;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -112,7 +121,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE__NAMESPACES = 2;
+	int ABSTRACT_NAMESPACE__NAMESPACES = 3;
 
 	/**
 	 * The number of structural features of the '<em>Abstract Namespace</em>' class.
@@ -121,7 +130,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE_FEATURE_COUNT = 3;
+	int ABSTRACT_NAMESPACE_FEATURE_COUNT = 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -133,13 +142,22 @@ public interface TypesPackage extends EPackage {
 	int ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE = 0;
 
 	/**
+	 * The operation id for the '<em>Clear Transient Elements</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS = 1;
+
+	/**
 	 * The number of operations of the '<em>Abstract Namespace</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE_OPERATION_COUNT = 1;
+	int ABSTRACT_NAMESPACE_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TModuleImpl <em>TModule</em>}' class.
@@ -161,13 +179,22 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__TYPES = ABSTRACT_NAMESPACE__TYPES;
 
 	/**
-	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Exported Variables</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__VARIABLES = ABSTRACT_NAMESPACE__VARIABLES;
+	int TMODULE__EXPORTED_VARIABLES = ABSTRACT_NAMESPACE__EXPORTED_VARIABLES;
+
+	/**
+	 * The feature id for the '<em><b>Local Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__LOCAL_VARIABLES = ABSTRACT_NAMESPACE__LOCAL_VARIABLES;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -413,13 +440,31 @@ public interface TypesPackage extends EPackage {
 	int TMODULE___GET_CONTAINING_MODULE = ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___GET_AST_ELEMENT_NO_RESOLVE = ABSTRACT_NAMESPACE_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Clear Transient Elements</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___CLEAR_TRANSIENT_ELEMENTS = ABSTRACT_NAMESPACE_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>TModule</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 0;
+	int TMODULE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -716,13 +761,22 @@ public interface TypesPackage extends EPackage {
 	int TDYNAMIC_ELEMENT___IS_EXPORTED = TEXPORTABLE_ELEMENT___IS_EXPORTED;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TDYNAMIC_ELEMENT___GET_AST_ELEMENT_NO_RESOLVE = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The number of operations of the '<em>TDynamic Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TDYNAMIC_ELEMENT_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 0;
+	int TDYNAMIC_ELEMENT_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TAnnotationImpl <em>TAnnotation</em>}' class.
@@ -2266,13 +2320,22 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___GET_AST_ELEMENT_NO_RESOLVE = GENERIC_TYPE_OPERATION_COUNT + 4;
+
+	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = GENERIC_TYPE_OPERATION_COUNT + 4;
+	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = GENERIC_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Call Signature</em>' operation.
@@ -2281,7 +2344,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_CALL_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 5;
+	int TFUNCTION___IS_CALL_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Construct Signature</em>' operation.
@@ -2290,7 +2353,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_CONSTRUCT_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 6;
+	int TFUNCTION___IS_CONSTRUCT_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -2299,7 +2362,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 7;
+	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Function As String</em>' operation.
@@ -2308,7 +2371,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 8;
+	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -2317,7 +2380,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 9;
+	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 10;
 
 	/**
 	 * The number of operations of the '<em>TFunction</em>' class.
@@ -2326,7 +2389,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 10;
+	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 11;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AccessibleTypeElementImpl <em>Accessible Type Element</em>}' class.
@@ -2746,13 +2809,22 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE__TYPES = TYPE_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Variables</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Exported Variables</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__VARIABLES = TYPE_FEATURE_COUNT + 1;
+	int TNAMESPACE__EXPORTED_VARIABLES = TYPE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Local Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE__LOCAL_VARIABLES = TYPE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -2761,7 +2833,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__NAMESPACES = TYPE_FEATURE_COUNT + 2;
+	int TNAMESPACE__NAMESPACES = TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -2770,7 +2842,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__DECLARED_TYPE_ACCESS_MODIFIER = TYPE_FEATURE_COUNT + 3;
+	int TNAMESPACE__DECLARED_TYPE_ACCESS_MODIFIER = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
@@ -2779,7 +2851,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__DECLARED_PROVIDED_BY_RUNTIME = TYPE_FEATURE_COUNT + 4;
+	int TNAMESPACE__DECLARED_PROVIDED_BY_RUNTIME = TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -2788,7 +2860,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__AST_ELEMENT = TYPE_FEATURE_COUNT + 5;
+	int TNAMESPACE__AST_ELEMENT = TYPE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -2797,7 +2869,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__EXTERNAL = TYPE_FEATURE_COUNT + 6;
+	int TNAMESPACE__EXTERNAL = TYPE_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>TNamespace</em>' class.
@@ -2806,7 +2878,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 7;
+	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -2935,13 +3007,22 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE___GET_CONTAINING_MODULE = TYPE_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Clear Transient Elements</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TYPE_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 1;
+	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -2950,7 +3031,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 2;
+	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
@@ -2959,7 +3040,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 3;
+	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -2968,7 +3049,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_EXPORTED = TYPE_OPERATION_COUNT + 4;
+	int TNAMESPACE___IS_EXPORTED = TYPE_OPERATION_COUNT + 5;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_AST_ELEMENT_NO_RESOLVE = TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>TNamespace</em>' class.
@@ -2977,7 +3067,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 5;
+	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceElementImpl <em>TNamespace Element</em>}' class.
@@ -3234,13 +3324,22 @@ public interface TypesPackage extends EPackage {
 	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_AST_ELEMENT_NO_RESOLVE = TYPE_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 0;
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Module Namespace Virtual Type</em>' class.
@@ -3249,7 +3348,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 1;
+	int MODULE_NAMESPACE_VIRTUAL_TYPE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.PrimitiveTypeImpl <em>Primitive Type</em>}' class.
@@ -4816,13 +4915,22 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCTURAL_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = CONTAINER_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE___GET_AST_ELEMENT_NO_RESOLVE = CONTAINER_TYPE_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCTURAL_TYPE___IS_FINAL = CONTAINER_TYPE_OPERATION_COUNT + 0;
+	int TSTRUCTURAL_TYPE___IS_FINAL = CONTAINER_TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>TStructural Type</em>' class.
@@ -4831,7 +4939,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCTURAL_TYPE_OPERATION_COUNT = CONTAINER_TYPE_OPERATION_COUNT + 1;
+	int TSTRUCTURAL_TYPE_OPERATION_COUNT = CONTAINER_TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl <em>TClassifier</em>}' class.
@@ -5123,13 +5231,22 @@ public interface TypesPackage extends EPackage {
 	int TCLASSIFIER___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = CONTAINER_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___GET_AST_ELEMENT_NO_RESOLVE = CONTAINER_TYPE_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___IS_ABSTRACT = CONTAINER_TYPE_OPERATION_COUNT + 0;
+	int TCLASSIFIER___IS_ABSTRACT = CONTAINER_TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Super Classifiers</em>' operation.
@@ -5138,7 +5255,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___GET_SUPER_CLASSIFIERS = CONTAINER_TYPE_OPERATION_COUNT + 1;
+	int TCLASSIFIER___GET_SUPER_CLASSIFIERS = CONTAINER_TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Super Classifier Refs</em>' operation.
@@ -5147,7 +5264,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS = CONTAINER_TYPE_OPERATION_COUNT + 2;
+	int TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS = CONTAINER_TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Implemented Or Extended Interface Refs</em>' operation.
@@ -5156,7 +5273,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = CONTAINER_TYPE_OPERATION_COUNT + 3;
+	int TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = CONTAINER_TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -5165,7 +5282,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___IS_FINAL = CONTAINER_TYPE_OPERATION_COUNT + 4;
+	int TCLASSIFIER___IS_FINAL = CONTAINER_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The number of operations of the '<em>TClassifier</em>' class.
@@ -5174,7 +5291,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER_OPERATION_COUNT = CONTAINER_TYPE_OPERATION_COUNT + 5;
+	int TCLASSIFIER_OPERATION_COUNT = CONTAINER_TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ArrayLikeImpl <em>Array Like</em>}' class.
@@ -5528,6 +5645,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = TCLASSIFIER___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___GET_AST_ELEMENT_NO_RESOLVE = TCLASSIFIER___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -5999,6 +6125,15 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = TN4_CLASSIFIER___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___GET_AST_ELEMENT_NO_RESOLVE = TN4_CLASSIFIER___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
 	 * The operation id for the '<em>Get Super Classifiers</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6432,6 +6567,15 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = TN4_CLASSIFIER___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___GET_AST_ELEMENT_NO_RESOLVE = TN4_CLASSIFIER___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
 	 * The operation id for the '<em>Get Super Classifiers</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6658,13 +6802,22 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER___GET_CONTAINING_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER___GET_AST_ELEMENT_NO_RESOLVE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___GET_CONTAINING_TYPE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
+	int TMEMBER___GET_CONTAINING_TYPE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Member Access Modifier</em>' operation.
@@ -6673,7 +6826,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___GET_MEMBER_ACCESS_MODIFIER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
+	int TMEMBER___GET_MEMBER_ACCESS_MODIFIER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Member Type</em>' operation.
@@ -6682,7 +6835,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___GET_MEMBER_TYPE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
+	int TMEMBER___GET_MEMBER_TYPE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Field</em>' operation.
@@ -6691,7 +6844,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_FIELD = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TMEMBER___IS_FIELD = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Getter</em>' operation.
@@ -6700,7 +6853,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_GETTER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TMEMBER___IS_GETTER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Setter</em>' operation.
@@ -6709,7 +6862,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_SETTER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 5;
+	int TMEMBER___IS_SETTER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Accessor</em>' operation.
@@ -6718,7 +6871,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_ACCESSOR = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 6;
+	int TMEMBER___IS_ACCESSOR = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Method</em>' operation.
@@ -6727,7 +6880,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_METHOD = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 7;
+	int TMEMBER___IS_METHOD = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -6736,7 +6889,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_CONSTRUCTOR = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 8;
+	int TMEMBER___IS_CONSTRUCTOR = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -6745,7 +6898,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_OPTIONAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 9;
+	int TMEMBER___IS_OPTIONAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
@@ -6754,7 +6907,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_ABSTRACT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 10;
+	int TMEMBER___IS_ABSTRACT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Readable</em>' operation.
@@ -6763,7 +6916,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_READABLE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 11;
+	int TMEMBER___IS_READABLE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Is Writeable</em>' operation.
@@ -6772,7 +6925,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_WRITEABLE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 12;
+	int TMEMBER___IS_WRITEABLE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Member As String</em>' operation.
@@ -6781,7 +6934,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___GET_MEMBER_AS_STRING = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 13;
+	int TMEMBER___GET_MEMBER_AS_STRING = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -6790,7 +6943,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_FINAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 14;
+	int TMEMBER___IS_FINAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -6799,7 +6952,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_STATIC = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 15;
+	int TMEMBER___IS_STATIC = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -6808,7 +6961,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_CONST = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 16;
+	int TMEMBER___IS_CONST = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 17;
 
 	/**
 	 * The operation id for the '<em>Is Polyfilled</em>' operation.
@@ -6817,7 +6970,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER___IS_POLYFILLED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 17;
+	int TMEMBER___IS_POLYFILLED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 18;
 
 	/**
 	 * The number of operations of the '<em>TMember</em>' class.
@@ -6826,7 +6979,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 18;
+	int TMEMBER_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 19;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TMemberWithAccessModifierImpl <em>TMember With Access Modifier</em>}' class.
@@ -6954,6 +7107,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMEMBER_WITH_ACCESS_MODIFIER___GET_CONTAINING_MODULE = TMEMBER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER___GET_AST_ELEMENT_NO_RESOLVE = TMEMBER___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -7252,6 +7414,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_MEMBER___GET_CONTAINING_MODULE = TMEMBER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER___GET_AST_ELEMENT_NO_RESOLVE = TMEMBER___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -7847,6 +8018,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMETHOD___IS_EXPORTED = TFUNCTION___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___GET_AST_ELEMENT_NO_RESOLVE = TFUNCTION___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
@@ -8480,6 +8660,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___IS_EXPORTED = TMETHOD___IS_EXPORTED;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___GET_AST_ELEMENT_NO_RESOLVE = TMETHOD___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8723,6 +8912,88 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD_OPERATION_COUNT = TMETHOD_OPERATION_COUNT + 5;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TAbstractVariableImpl <em>TAbstract Variable</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.TAbstractVariableImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAbstractVariable()
+	 * @generated
+	 */
+	int TABSTRACT_VARIABLE = 55;
+
+	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE__NAME = IDENTIFIABLE_ELEMENT__NAME;
+
+	/**
+	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE__TYPE_REF = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE__ANNOTATIONS = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE__AST_ELEMENT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>TAbstract Variable</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE___GET_CONTAINING_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE___GET_AST_ELEMENT_NO_RESOLVE = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
+	 * The number of operations of the '<em>TAbstract Variable</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TABSTRACT_VARIABLE_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TFormalParameterImpl <em>TFormal Parameter</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8739,25 +9010,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER__NAME = IDENTIFIABLE_ELEMENT__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFORMAL_PARAMETER__ANNOTATIONS = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFORMAL_PARAMETER__AST_ELEMENT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 1;
+	int TFORMAL_PARAMETER__NAME = TABSTRACT_VARIABLE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -8766,7 +9019,25 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER__TYPE_REF = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 2;
+	int TFORMAL_PARAMETER__TYPE_REF = TABSTRACT_VARIABLE__TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFORMAL_PARAMETER__ANNOTATIONS = TABSTRACT_VARIABLE__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFORMAL_PARAMETER__AST_ELEMENT = TABSTRACT_VARIABLE__AST_ELEMENT;
 
 	/**
 	 * The feature id for the '<em><b>Variadic</b></em>' attribute.
@@ -8775,7 +9046,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER__VARIADIC = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
+	int TFORMAL_PARAMETER__VARIADIC = TABSTRACT_VARIABLE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Ast Initializer</b></em>' attribute.
@@ -8784,7 +9055,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER__AST_INITIALIZER = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 4;
+	int TFORMAL_PARAMETER__AST_INITIALIZER = TABSTRACT_VARIABLE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Has Initializer Assignment</b></em>' attribute.
@@ -8793,7 +9064,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
+	int TFORMAL_PARAMETER__HAS_INITIALIZER_ASSIGNMENT = TABSTRACT_VARIABLE_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>TFormal Parameter</em>' class.
@@ -8802,7 +9073,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 6;
+	int TFORMAL_PARAMETER_FEATURE_COUNT = TABSTRACT_VARIABLE_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -8811,7 +9082,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___GET_CONTAINING_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
+	int TFORMAL_PARAMETER___GET_CONTAINING_MODULE = TABSTRACT_VARIABLE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFORMAL_PARAMETER___GET_AST_ELEMENT_NO_RESOLVE = TABSTRACT_VARIABLE___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Has AST Initializer</em>' operation.
@@ -8820,7 +9100,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___HAS_AST_INITIALIZER = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
+	int TFORMAL_PARAMETER___HAS_AST_INITIALIZER = TABSTRACT_VARIABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Optional</em>' operation.
@@ -8829,7 +9109,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___IS_OPTIONAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
+	int TFORMAL_PARAMETER___IS_OPTIONAL = TABSTRACT_VARIABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Variadic Or Optional</em>' operation.
@@ -8838,7 +9118,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___IS_VARIADIC_OR_OPTIONAL = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
+	int TFORMAL_PARAMETER___IS_VARIADIC_OR_OPTIONAL = TABSTRACT_VARIABLE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Formal Parameter As Types String</em>' operation.
@@ -8847,7 +9127,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___GET_FORMAL_PARAMETER_AS_TYPES_STRING = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TFORMAL_PARAMETER___GET_FORMAL_PARAMETER_AS_TYPES_STRING = TABSTRACT_VARIABLE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Formal Parameter As String</em>' operation.
@@ -8856,7 +9136,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER___GET_FORMAL_PARAMETER_AS_STRING = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TFORMAL_PARAMETER___GET_FORMAL_PARAMETER_AS_STRING = TABSTRACT_VARIABLE_OPERATION_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>TFormal Parameter</em>' class.
@@ -8865,7 +9145,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFORMAL_PARAMETER_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 5;
+	int TFORMAL_PARAMETER_OPERATION_COUNT = TABSTRACT_VARIABLE_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TAnonymousFormalParameterImpl <em>TAnonymous Formal Parameter</em>}' class.
@@ -8887,6 +9167,15 @@ public interface TypesPackage extends EPackage {
 	int TANONYMOUS_FORMAL_PARAMETER__NAME = TFORMAL_PARAMETER__NAME;
 
 	/**
+	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TANONYMOUS_FORMAL_PARAMETER__TYPE_REF = TFORMAL_PARAMETER__TYPE_REF;
+
+	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8903,15 +9192,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TANONYMOUS_FORMAL_PARAMETER__AST_ELEMENT = TFORMAL_PARAMETER__AST_ELEMENT;
-
-	/**
-	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TANONYMOUS_FORMAL_PARAMETER__TYPE_REF = TFORMAL_PARAMETER__TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Variadic</b></em>' attribute.
@@ -8957,6 +9237,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TANONYMOUS_FORMAL_PARAMETER___GET_CONTAINING_MODULE = TFORMAL_PARAMETER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TANONYMOUS_FORMAL_PARAMETER___GET_AST_ELEMENT_NO_RESOLVE = TFORMAL_PARAMETER___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Has AST Initializer</em>' operation.
@@ -9201,6 +9490,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFIELD___GET_CONTAINING_MODULE = TMEMBER_WITH_ACCESS_MODIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD___GET_AST_ELEMENT_NO_RESOLVE = TMEMBER_WITH_ACCESS_MODIFIER___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -9564,6 +9862,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_FIELD___GET_CONTAINING_MODULE = TFIELD___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD___GET_AST_ELEMENT_NO_RESOLVE = TFIELD___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9916,6 +10223,15 @@ public interface TypesPackage extends EPackage {
 	int FIELD_ACCESSOR___GET_CONTAINING_MODULE = TMEMBER_WITH_ACCESS_MODIFIER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR___GET_AST_ELEMENT_NO_RESOLVE = TMEMBER_WITH_ACCESS_MODIFIER___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10266,6 +10582,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TGETTER___GET_CONTAINING_MODULE = FIELD_ACCESSOR___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER___GET_AST_ELEMENT_NO_RESOLVE = FIELD_ACCESSOR___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -10627,6 +10952,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_GETTER___GET_CONTAINING_MODULE = TGETTER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER___GET_AST_ELEMENT_NO_RESOLVE = TGETTER___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -10999,6 +11333,15 @@ public interface TypesPackage extends EPackage {
 	int TSETTER___GET_CONTAINING_MODULE = FIELD_ACCESSOR___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER___GET_AST_ELEMENT_NO_RESOLVE = FIELD_ACCESSOR___GET_AST_ELEMENT_NO_RESOLVE;
+
+	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11358,6 +11701,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_SETTER___GET_CONTAINING_MODULE = TSETTER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER___GET_AST_ELEMENT_NO_RESOLVE = TSETTER___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Type</em>' operation.
@@ -11820,13 +12172,22 @@ public interface TypesPackage extends EPackage {
 	int TENUM___IS_EXPORTED = TYPE_OPERATION_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___GET_AST_ELEMENT_NO_RESOLVE = TYPE_OPERATION_COUNT + 4;
+
+	/**
 	 * The number of operations of the '<em>TEnum</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM_OPERATION_COUNT = TYPE_OPERATION_COUNT + 4;
+	int TENUM_OPERATION_COUNT = TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.SyntaxRelatedTElementImpl <em>Syntax Related TElement</em>}' class.
@@ -11857,13 +12218,22 @@ public interface TypesPackage extends EPackage {
 	int SYNTAX_RELATED_TELEMENT_FEATURE_COUNT = 1;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE = 0;
+
+	/**
 	 * The number of operations of the '<em>Syntax Related TElement</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SYNTAX_RELATED_TELEMENT_OPERATION_COUNT = 0;
+	int SYNTAX_RELATED_TELEMENT_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TEnumLiteralImpl <em>TEnum Literal</em>}' class.
@@ -11919,6 +12289,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TENUM_LITERAL_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM_LITERAL___GET_AST_ELEMENT_NO_RESOLVE = SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -12174,13 +12553,22 @@ public interface TypesPackage extends EPackage {
 	int TYPE_ALIAS___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___GET_AST_ELEMENT_NO_RESOLVE = GENERIC_TYPE_OPERATION_COUNT + 4;
+
+	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_ALIAS = GENERIC_TYPE_OPERATION_COUNT + 4;
+	int TYPE_ALIAS___IS_ALIAS = GENERIC_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12189,7 +12577,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_HOLLOW = GENERIC_TYPE_OPERATION_COUNT + 5;
+	int TYPE_ALIAS___IS_HOLLOW = GENERIC_TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>Type Alias</em>' class.
@@ -12198,7 +12586,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 6;
+	int TYPE_ALIAS_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TConstableElementImpl <em>TConstable Element</em>}' class.
@@ -12254,7 +12642,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
-	int TVARIABLE = 55;
+	int TVARIABLE = 56;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12263,70 +12651,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__NAME = TEXPORTABLE_ELEMENT__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__EXPORTED_NAME = TEXPORTABLE_ELEMENT__EXPORTED_NAME;
-
-	/**
-	 * The feature id for the '<em><b>Const</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__CONST = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 0;
-
-	/**
-	 * The feature id for the '<em><b>Compile Time Value</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__COMPILE_TIME_VALUE = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 1;
-
-	/**
-	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__AST_ELEMENT = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 2;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__ANNOTATIONS = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__DECLARED_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 4;
-
-	/**
-	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TVARIABLE__DECLARED_PROVIDED_BY_RUNTIME = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 5;
+	int TVARIABLE__NAME = TABSTRACT_VARIABLE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -12335,7 +12660,70 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__TYPE_REF = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 6;
+	int TVARIABLE__TYPE_REF = TABSTRACT_VARIABLE__TYPE_REF;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__ANNOTATIONS = TABSTRACT_VARIABLE__ANNOTATIONS;
+
+	/**
+	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__AST_ELEMENT = TABSTRACT_VARIABLE__AST_ELEMENT;
+
+	/**
+	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__DECLARED_TYPE_ACCESS_MODIFIER = TABSTRACT_VARIABLE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__DECLARED_PROVIDED_BY_RUNTIME = TABSTRACT_VARIABLE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__EXPORTED_NAME = TABSTRACT_VARIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Const</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__CONST = TABSTRACT_VARIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Compile Time Value</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__COMPILE_TIME_VALUE = TABSTRACT_VARIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -12344,7 +12732,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__EXTERNAL = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 7;
+	int TVARIABLE__EXTERNAL = TABSTRACT_VARIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Object Literal</b></em>' attribute.
@@ -12353,7 +12741,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__OBJECT_LITERAL = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 8;
+	int TVARIABLE__OBJECT_LITERAL = TABSTRACT_VARIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>New Expression</b></em>' attribute.
@@ -12362,7 +12750,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__NEW_EXPRESSION = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 9;
+	int TVARIABLE__NEW_EXPRESSION = TABSTRACT_VARIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>TVariable</em>' class.
@@ -12371,7 +12759,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE_FEATURE_COUNT = TEXPORTABLE_ELEMENT_FEATURE_COUNT + 10;
+	int TVARIABLE_FEATURE_COUNT = TABSTRACT_VARIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -12380,7 +12768,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_CONTAINING_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE;
+	int TVARIABLE___GET_CONTAINING_MODULE = TABSTRACT_VARIABLE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE___GET_AST_ELEMENT_NO_RESOLVE = TABSTRACT_VARIABLE___GET_AST_ELEMENT_NO_RESOLVE;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -12389,7 +12786,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_PROVIDED_BY_RUNTIME = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 0;
+	int TVARIABLE___IS_PROVIDED_BY_RUNTIME = TABSTRACT_VARIABLE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -12398,7 +12795,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 1;
+	int TVARIABLE___GET_TYPE_ACCESS_MODIFIER = TABSTRACT_VARIABLE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
@@ -12407,7 +12804,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 2;
+	int TVARIABLE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TABSTRACT_VARIABLE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -12416,7 +12813,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_EXPORTED = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 3;
+	int TVARIABLE___IS_EXPORTED = TABSTRACT_VARIABLE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12425,7 +12822,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_HOLLOW = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 4;
+	int TVARIABLE___IS_HOLLOW = TABSTRACT_VARIABLE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Variable As String</em>' operation.
@@ -12434,7 +12831,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_VARIABLE_AS_STRING = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 5;
+	int TVARIABLE___GET_VARIABLE_AS_STRING = TABSTRACT_VARIABLE_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>TVariable</em>' class.
@@ -12443,7 +12840,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE_OPERATION_COUNT = TEXPORTABLE_ELEMENT_OPERATION_COUNT + 6;
+	int TVARIABLE_OPERATION_COUNT = TABSTRACT_VARIABLE_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypingStrategy <em>Typing Strategy</em>}' enum.
@@ -12453,7 +12850,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
-	int TYPING_STRATEGY = 56;
+	int TYPING_STRATEGY = 57;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -12463,7 +12860,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
-	int TYPE_ACCESS_MODIFIER = 57;
+	int TYPE_ACCESS_MODIFIER = 58;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -12473,7 +12870,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
-	int MEMBER_ACCESS_MODIFIER = 58;
+	int MEMBER_ACCESS_MODIFIER = 59;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -12483,7 +12880,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
-	int MEMBER_TYPE = 59;
+	int MEMBER_TYPE = 60;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -12493,7 +12890,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 60;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 61;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -12503,7 +12900,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 61;
+	int ITERABLE_OF_TCLASSIFIER = 62;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12513,7 +12910,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 62;
+	int VARIANCE = 63;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12523,7 +12920,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 63;
+	int NAME_AND_ACCESS = 64;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12533,7 +12930,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 64;
+	int MEMBER_LIST = 65;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12543,7 +12940,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 65;
+	int TCLASSIFIER_ITERABLE = 66;
 
 
 	/**
@@ -12797,6 +13194,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTModule_ModuleSpecifier();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#clearTransientElements() <em>Clear Transient Elements</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Clear Transient Elements</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TModule#clearTransientElements()
+	 * @generated
+	 */
+	EOperation getTModule__ClearTransientElements();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.RuntimeDependency <em>Runtime Dependency</em>}'.
@@ -13730,15 +14137,26 @@ public interface TypesPackage extends EPackage {
 	EReference getAbstractNamespace_Types();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getVariables <em>Variables</em>}'.
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExportedVariables <em>Exported Variables</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Variables</em>'.
-	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getVariables()
+	 * @return the meta object for the containment reference list '<em>Exported Variables</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getExportedVariables()
 	 * @see #getAbstractNamespace()
 	 * @generated
 	 */
-	EReference getAbstractNamespace_Variables();
+	EReference getAbstractNamespace_ExportedVariables();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getLocalVariables <em>Local Variables</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Local Variables</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getLocalVariables()
+	 * @see #getAbstractNamespace()
+	 * @generated
+	 */
+	EReference getAbstractNamespace_LocalVariables();
 
 	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNamespaces <em>Namespaces</em>}'.
@@ -13760,6 +14178,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getAbstractNamespace__GetContainingModule();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#clearTransientElements() <em>Clear Transient Elements</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Clear Transient Elements</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#clearTransientElements()
+	 * @generated
+	 */
+	EOperation getAbstractNamespace__ClearTransientElements();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TNamespace <em>TNamespace</em>}'.
@@ -15347,6 +15775,16 @@ public interface TypesPackage extends EPackage {
 	EReference getSyntaxRelatedTElement_AstElement();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.SyntaxRelatedTElement#getAstElementNoResolve() <em>Get Ast Element No Resolve</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Ast Element No Resolve</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.SyntaxRelatedTElement#getAstElementNoResolve()
+	 * @generated
+	 */
+	EOperation getSyntaxRelatedTElement__GetAstElementNoResolve();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TConstableElement <em>TConstable Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15377,6 +15815,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTConstableElement_CompileTimeValue();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TAbstractVariable <em>TAbstract Variable</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>TAbstract Variable</em>'.
+	 * @see org.eclipse.n4js.ts.types.TAbstractVariable
+	 * @generated
+	 */
+	EClass getTAbstractVariable();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TVariable <em>TVariable</em>}'.
@@ -15745,6 +16193,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMODULE__MODULE_SPECIFIER = eINSTANCE.getTModule_ModuleSpecifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Clear Transient Elements</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TMODULE___CLEAR_TRANSIENT_ELEMENTS = eINSTANCE.getTModule__ClearTransientElements();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -16507,12 +16963,20 @@ public interface TypesPackage extends EPackage {
 		EReference ABSTRACT_NAMESPACE__TYPES = eINSTANCE.getAbstractNamespace_Types();
 
 		/**
-		 * The meta object literal for the '<em><b>Variables</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Exported Variables</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference ABSTRACT_NAMESPACE__VARIABLES = eINSTANCE.getAbstractNamespace_Variables();
+		EReference ABSTRACT_NAMESPACE__EXPORTED_VARIABLES = eINSTANCE.getAbstractNamespace_ExportedVariables();
+
+		/**
+		 * The meta object literal for the '<em><b>Local Variables</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ABSTRACT_NAMESPACE__LOCAL_VARIABLES = eINSTANCE.getAbstractNamespace_LocalVariables();
 
 		/**
 		 * The meta object literal for the '<em><b>Namespaces</b></em>' containment reference list feature.
@@ -16529,6 +16993,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE = eINSTANCE.getAbstractNamespace__GetContainingModule();
+
+		/**
+		 * The meta object literal for the '<em><b>Clear Transient Elements</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS = eINSTANCE.getAbstractNamespace__ClearTransientElements();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl <em>TNamespace</em>}' class.
@@ -17829,6 +18301,14 @@ public interface TypesPackage extends EPackage {
 		EReference SYNTAX_RELATED_TELEMENT__AST_ELEMENT = eINSTANCE.getSyntaxRelatedTElement_AstElement();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Ast Element No Resolve</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE = eINSTANCE.getSyntaxRelatedTElement__GetAstElementNoResolve();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TConstableElementImpl <em>TConstable Element</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -17853,6 +18333,16 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TCONSTABLE_ELEMENT__COMPILE_TIME_VALUE = eINSTANCE.getTConstableElement_CompileTimeValue();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TAbstractVariableImpl <em>TAbstract Variable</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.TAbstractVariableImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAbstractVariable()
+		 * @generated
+		 */
+		EClass TABSTRACT_VARIABLE = eINSTANCE.getTAbstractVariable();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TVariableImpl <em>TVariable</em>}' class.

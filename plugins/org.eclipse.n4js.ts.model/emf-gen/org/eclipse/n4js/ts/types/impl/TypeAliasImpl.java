@@ -37,6 +37,8 @@ import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
+import org.eclipse.n4js.ts.types.TypesPackage.Literals;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Type Alias</b></em>'.
@@ -290,6 +292,21 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	 * @generated
 	 */
 	@Override
+	public EObject getAstElementNoResolve() {
+		Object _eGet = this.eGet(Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT, false);
+		final EObject astElem = ((EObject) _eGet);
+		if (((astElem != null) && (!astElem.eIsProxy()))) {
+			return astElem;
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isProvidedByRuntime() {
 		return this.isDeclaredProvidedByRuntime();
 	}
@@ -531,6 +548,7 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 		}
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseOperationID) {
+				case TypesPackage.SYNTAX_RELATED_TELEMENT___GET_AST_ELEMENT_NO_RESOLVE: return TypesPackage.TYPE_ALIAS___GET_AST_ELEMENT_NO_RESOLVE;
 				default: return -1;
 			}
 		}
@@ -549,6 +567,8 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 				return isAlias();
 			case TypesPackage.TYPE_ALIAS___IS_HOLLOW:
 				return isHollow();
+			case TypesPackage.TYPE_ALIAS___GET_AST_ELEMENT_NO_RESOLVE:
+				return getAstElementNoResolve();
 			case TypesPackage.TYPE_ALIAS___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TYPE_ALIAS___GET_TYPE_ACCESS_MODIFIER:

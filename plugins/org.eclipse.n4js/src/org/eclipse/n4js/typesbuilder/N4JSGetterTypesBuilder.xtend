@@ -15,6 +15,7 @@ import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TGetter
@@ -25,6 +26,7 @@ import org.eclipse.n4js.types.utils.TypeUtils
  */
 package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuilder {
 
+	@Inject extension N4JSVariableStatementTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean relinkGetter(N4GetterDeclaration n4Getter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
@@ -38,7 +40,7 @@ package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		return true
 	}
 
-	def package TGetter createGetter(N4GetterDeclaration n4Getter, TClassifier classifierType, boolean preLinkingPhase) {
+	def package TGetter createGetter(N4GetterDeclaration n4Getter, TClassifier classifierType, AbstractNamespace target, boolean preLinkingPhase) {
 		if (n4Getter.name === null && !n4Getter.hasComputedPropertyName) {
 			return null
 		}
@@ -55,6 +57,7 @@ package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 
 		// TODO if possible, remove, see AbstractFunctionDefinitionTypesBuilder
 		val builtInTypeScope = BuiltInTypeScope.get(n4Getter.eResource.resourceSet)
+		n4Getter.createImplicitArgumentsVariable(target, builtInTypeScope, preLinkingPhase);
 
 		getterType.setMemberAccessModifier(n4Getter)
 		getterType.setReturnTypeConsideringThis(n4Getter, builtInTypeScope, preLinkingPhase)

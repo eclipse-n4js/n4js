@@ -43,9 +43,8 @@ class BlockTransformation extends Transformation {
 	/** capture arguments-variable to be accessible in re-written arrow-functions  */
 	private def void transformArguments(FunctionOrFieldAccessor funcOrAccess ) {
 
-		val loc_Arg = funcOrAccess._lok // if null, never used.
-		if(loc_Arg===null) {
-			// no references to this local arguments variable -> no capturing required
+		val argsVar = state.tracer.getOriginalASTNodeOfSameType(funcOrAccess, false)?.implicitArgumentsVariable
+		if(argsVar === null) {
 			return;
 		}
 
@@ -54,7 +53,7 @@ class BlockTransformation extends Transformation {
 		// 3. wire up freshname to new arguments in first line of block.
 		val newName = $CAPTURE_ARGS;
 
-		val arguments_STE = findSymbolTableEntryForElement(loc_Arg, false);
+		val arguments_STE = getSymbolTableEntryOriginal(argsVar, false);
 		if(arguments_STE===null || arguments_STE.referencingElements.empty) {
 			// no references to this local arguments variable -> no capturing required
 			return;

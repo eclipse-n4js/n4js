@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ArrowFunction;
 import org.eclipse.n4js.n4JS.Block;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
@@ -145,8 +144,8 @@ public abstract class TranspilerComponent {
 	}
 
 	@SuppressWarnings("javadoc")
-	protected VariableStatement removeExport(ExportedVariableStatement varStmt) {
-		return TranspilerStateOperations.removeExport(state, varStmt);
+	protected void removeExport(VariableStatement varStmt) {
+		TranspilerStateOperations.removeExport(state, varStmt);
 	}
 
 	@SuppressWarnings("javadoc")

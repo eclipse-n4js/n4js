@@ -26,7 +26,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  * Dependencies:
  * <ul>
  * <li>requiresBefore {@link ArrowFunction_Part1_Transformation}:<br>
- *     the transpiled output code for varargs requires the implicit local arguments parameter, which is not available in
+ *     the transpiled output code for varargs requires the implicit local arguments variable, which is not available in
  *     arrow functions; therefore, this transformation relies on arrow functions already having been transformed into
  *     ordinary function expressions.
  * <li>requiresBefore {@link BlockTransformation}:<br>
