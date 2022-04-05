@@ -111,11 +111,25 @@ public interface ModuleRef extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  Tells whether this {@link ModuleRef} is actually referring to another model, without triggering proxy resolution.
+	 * Tells whether this {@link ModuleRef} is actually referring to another model, without triggering proxy resolution.
+	 * All {@link ImportDeclaration}s refer to other modules (except in case of syntax errors), but {@link ExportDeclaration}s that
+	 * export a local element of the containing module will return <code>false</code> (i.e. if they do not have a 'from "..."' clause).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	boolean isReferringToOtherModule();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Tells whether this module reference will be present in the transpiled output code.
+	 * Only valid after AST traversal has completed.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isRetainedAtRuntime();
 
 } // ModuleRef

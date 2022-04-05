@@ -153,7 +153,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		if (annotation !== null) {
 			val typeAccessModifier = switch (it : exportableElement) {
-				VariableStatement case exported:
+				VariableStatement case directlyExported:
 					it.varDecl.head?.definedVariable?.typeAccessModifier
 				FunctionDeclaration:
 					definedType?.typeAccessModifier

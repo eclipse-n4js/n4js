@@ -380,7 +380,7 @@ public class SemanticChangeProvider {
 			}
 
 			if (element instanceof VariableStatement) {
-				if (((VariableStatement) element).isExported()) {
+				if (((VariableStatement) element).isDirectlyExported()) {
 					INode exportKeyword = astNodeForKeyword(element.eContainer(), N4JSLanguageConstants.EXPORT_KEYWORD);
 					offset = exportKeyword.getOffset() + exportKeyword.getLength() + 1;
 				}

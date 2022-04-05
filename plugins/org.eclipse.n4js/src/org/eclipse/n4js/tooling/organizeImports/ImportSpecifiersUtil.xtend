@@ -11,16 +11,19 @@
 package org.eclipse.n4js.tooling.organizeImports
 
 import java.util.List
+import java.util.function.Consumer
 import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.ElementExportDefinition
 import org.eclipse.n4js.ts.types.ModuleExportDefinition
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.RecursionGuard
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 /**
@@ -53,7 +56,7 @@ class ImportSpecifiersUtil {
 	/** Map all exported elements from namespace target module to the import provided elements. */
 	private static def List<ImportProvidedElement> namespaceToProvidedElements(JavaScriptVariantHelper jsVariantHelper, NamespaceImportSpecifier specifier) {
 		val importedModule = specifier.importedModule;
-		if (importedModule === null)
+		if (importedModule === null || importedModule.eIsProxy)
 			return emptyList
 
 		val importProvidedElements = newArrayList
@@ -61,17 +64,28 @@ class ImportSpecifiersUtil {
 		importProvidedElements.add(new ImportProvidedElement(specifier.alias,
 			computeNamespaceActualName(specifier), specifier, false));
 
-		for (exportDef : importedModule.exportDefinitions) {
-			if (exportDef instanceof ElementExportDefinition) {
-				importProvidedElements.add(
-					new ImportProvidedElement(specifier.importedElementName(exportDef), exportDef.exportedName,
-						specifier as ImportSpecifier, N4JSLanguageUtils.isHollowElement(exportDef.exportedElement, jsVariantHelper)))
-			} else if (exportDef instanceof ModuleExportDefinition) {
-				// FIXME
-			}
-		}
+		collectProvidedElements(importedModule, new RecursionGuard(), [ exportDef |
+			importProvidedElements.add(
+				new ImportProvidedElement(specifier.importedElementName(exportDef), exportDef.exportedName,
+					specifier, N4JSLanguageUtils.isHollowElement(exportDef.exportedElement, jsVariantHelper)));
+		]);
 
 		return importProvidedElements
+	}
+
+	private static def void collectProvidedElements(AbstractNamespace namespace, RecursionGuard<TModule> guard, Consumer<ElementExportDefinition> consumer) {
+		for (exportDef : namespace.exportDefinitions) {
+			if (exportDef instanceof ElementExportDefinition) {
+				consumer.accept(exportDef);
+			} else if (exportDef instanceof ModuleExportDefinition) {
+				val exportedModule = exportDef.exportedModule;
+				if (exportedModule !== null && !exportedModule.eIsProxy) {
+					if (guard.tryNext(exportedModule)) {
+						collectProvidedElements(exportedModule, guard, consumer);
+					}
+				}
+			}
+		}
 	}
 
 	/**

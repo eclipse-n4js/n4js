@@ -316,7 +316,7 @@ public class PreparationStep {
 		 */
 		private void handleCopyNamedImportSpecifier(NamedImportSpecifier namedImportSpecifier) {
 			TExportableElement importedElement = getActualImportedElement(namedImportSpecifier);
-			importedElements.put(importedElement, namedImportSpecifier);
+			importedElements.putIfAbsent(importedElement, namedImportSpecifier);
 		}
 
 		/**

@@ -151,7 +151,7 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	 * @generated
 	 */
 	@Override
-	public String getExportedName() {
+	public String getDirectlyExportedName() {
 		boolean _isDirectlyExported = this.isDirectlyExported();
 		if (_isDirectlyExported) {
 			boolean _isDirectlyExportedAsDefault = this.isDirectlyExportedAsDefault();
@@ -239,8 +239,8 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypesPackage.TEXPORTABLE_ELEMENT___GET_EXPORTED_NAME:
-				return getExportedName();
+			case TypesPackage.TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME:
+				return getDirectlyExportedName();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

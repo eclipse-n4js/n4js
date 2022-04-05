@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.ModuleRef
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
@@ -102,9 +103,9 @@ class RuntimeDependencyProcessor {
 
 	def private void doStoreDirectRuntimeDependenciesInTModule(Script script, ASTMetaInfoCache cache) {
 		val module = script.module;
-		val importDecls = script.scriptElements.filter(ImportDeclaration).toList;
 
 		// step 1: set runtime retention flag in import specifiers
+		val importDecls = script.scriptElements.filter(ImportDeclaration).toList;
 		for (importDecl : importDecls) {
 			for (importSpec : importDecl.importSpecifiers) {
 				if (importSpec !== null) {
@@ -129,9 +130,10 @@ class RuntimeDependencyProcessor {
 		// therefore use a defined order derived from the order of import declarations in the AST.
 		//
 		val modulesReferencedAtRuntime = newLinkedHashSet;
-		for (importDecl : importDecls) {
-			if (importDecl.retainedAtRuntime) { // note: will also be true for bare imports
-				val targetModule = importDecl.module;
+		val refsToOtherModules = script.scriptElements.filter(ModuleRef).filter[referringToOtherModule].toList;
+		for (moduleRef : refsToOtherModules) {
+			if (moduleRef.retainedAtRuntime) { // note: will also be true for bare imports and for all re-exports
+				val targetModule = moduleRef.module;
 				if (isDifferentModuleInSameProject(targetModule, cache)) {
 					modulesReferencedAtRuntime += targetModule;
 				}

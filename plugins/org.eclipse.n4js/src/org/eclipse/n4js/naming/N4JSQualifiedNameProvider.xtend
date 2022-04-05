@@ -152,18 +152,18 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		{
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
-		val fqn = QualifiedNameUtils.append(prefix, typeDecl.exportedName ?: typeDecl.name);
+		val fqn = QualifiedNameUtils.append(prefix, typeDecl.directlyExportedName ?: typeDecl.name);
 		return fqn;
 	}
 	
 	private def QualifiedName fqnNamespaceDeclaration(N4NamespaceDeclaration typeDecl) {
 		var prefix = typeDecl.rootContainer.fullyQualifiedName;
-		var qn = QualifiedName.create(typeDecl.exportedName ?: typeDecl.name);
+		var qn = QualifiedName.create(typeDecl.directlyExportedName ?: typeDecl.name);
 		var EObject tmpTypeDecl = typeDecl;
 		while (tmpTypeDecl.eContainer instanceof N4NamespaceDeclaration) {
 			tmpTypeDecl = tmpTypeDecl.eContainer;
 			val nsd = tmpTypeDecl as N4NamespaceDeclaration;
-			qn = QualifiedNameUtils.prepend(nsd.exportedName ?: nsd.name, qn);
+			qn = QualifiedNameUtils.prepend(nsd.directlyExportedName ?: nsd.name, qn);
 		}
 		val fqn = QualifiedNameUtils.concat(prefix, qn);
 		return fqn;

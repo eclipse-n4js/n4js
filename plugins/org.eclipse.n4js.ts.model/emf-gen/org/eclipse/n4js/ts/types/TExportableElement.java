@@ -88,6 +88,6 @@ public interface TExportableElement extends IdentifiableElement {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	String getExportedName();
+	String getDirectlyExportedName();
 
 } // TExportableElement

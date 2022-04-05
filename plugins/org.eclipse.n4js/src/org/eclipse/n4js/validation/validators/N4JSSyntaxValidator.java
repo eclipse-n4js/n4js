@@ -171,7 +171,7 @@ public class N4JSSyntaxValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	public void checkExportedKeyword(ExportDeclaration element) {
-		if (element.eContainer() instanceof N4NamespaceDeclaration) {
+		if (element.getExportedElement() != null && element.eContainer() instanceof N4NamespaceDeclaration) {
 			ICompositeNode node = NodeModelUtils.findActualNodeFor(element);
 			ILeafNode keywordNode = findLeafWithKeyword(element, "{", node, EXPORT_KEYWORD, false);
 			if (keywordNode != null) {

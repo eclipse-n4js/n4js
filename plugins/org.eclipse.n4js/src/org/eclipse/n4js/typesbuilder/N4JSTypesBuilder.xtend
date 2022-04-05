@@ -284,7 +284,7 @@ public class N4JSTypesBuilder {
 			}
 		}
 	}
-	
+
 	static class RelinkIndices {
 		package var namespacesIdx = 0;
 		package var topLevelTypesIdx = 0;
@@ -293,26 +293,35 @@ public class N4JSTypesBuilder {
 
 	def private void relinkTypes(EObject container, AbstractNamespace target, boolean preLinkingPhase, RelinkIndices rlis) {
 		for (n : container.eContents) {
+			// relink types of n (if applicable)
 			switch n {
-				N4NamespaceDeclaration: {
-					rlis.namespacesIdx = n.relinkType(target, preLinkingPhase, rlis.namespacesIdx);
-				}
-				TypeDefiningElement: {
-					rlis.topLevelTypesIdx = n.relinkType(target, preLinkingPhase, rlis.topLevelTypesIdx);
-				}
-				VariableDeclarationContainer: {
+				N4NamespaceDeclaration:
+					rlis.namespacesIdx = n.relinkType(target, preLinkingPhase, rlis.namespacesIdx)
+				TypeDefiningElement:
+					rlis.topLevelTypesIdx = n.relinkType(target, preLinkingPhase, rlis.topLevelTypesIdx)
+				VariableDeclarationContainer:
 					rlis.variableIdx = n.relinkType(target, preLinkingPhase, rlis.variableIdx)
-				}
-				TryStatement: {
+				TryStatement:
 					rlis.variableIdx = n.relinkType(target, preLinkingPhase, rlis.variableIdx)
-				}
 			}
+			// relink types of child nodes
+			var AbstractNamespace nextTarget;
+			var RelinkIndices nextRelinkIndices;
 			if (n instanceof N4NamespaceDeclaration) {
-				val namespaceType = n.definedNamespace;
-				relinkTypes(n, namespaceType, preLinkingPhase, new RelinkIndices());
+				nextTarget = n.definedNamespace;
+				nextRelinkIndices = new RelinkIndices();
 			} else {
-				relinkTypes(n, target, preLinkingPhase, rlis)
+				nextTarget = target;
+				nextRelinkIndices = rlis;
 			}
+			if (nextTarget !== null) { // can be null in broken ASTs
+				relinkTypes(n, nextTarget, preLinkingPhase, nextRelinkIndices)
+			}
+			// handle exports
+			// -> nothing to do
+			// (AST nodes of type ExportDeclaration are not TypeDefiningElements and
+			// type model elements of type ExportDefinition are not SyntaxRelatedTElements,
+			// so we do not have to relink anything between AST and types model here)
 		}
 	}
 
@@ -395,11 +404,6 @@ public class N4JSTypesBuilder {
 
 	def protected dispatch int relinkType(TryStatement tryStmnt, AbstractNamespace target, boolean preLinkingPhase, int idx) {
 		return tryStmnt.relinkVariableTypes(target, preLinkingPhase, idx)
-	}
-
-	def protected dispatch int relinkType(ExportDeclaration n4ExportDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
-		// FIXME
-		return idx;
 	}
 
 	def protected dispatch int relinkType(NamespaceExportSpecifier n4NamespaceExportSpecifier, AbstractNamespace target, boolean preLinkingPhase, int idx) {

@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	// do not export namespace NS directly, because otherwise Cls would be implicitly exported from NS
+
+	File "other.n4js" {
+
+		namespace NS {
+
+			class Cls { field: string }
+
+			export { Cls };
+		}
+
+		export { NS };
+
+	}
+
+	// note: this test is testing internal infrastructure for a feature not available in N4JS[D] (only in .d.ts)
+	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+		IssueCode "VIS_ILLEGAL_TYPE_ACCESS" { enabled = false }
+		IssueCode "VIS_ILLEGAL_MEMBER_ACCESS" { enabled = false }
+	}
+
+	END_SETUP
+ */
+
+
+import { NS } from "other"
+
+// XPECT type of 'v01' --> string
+let v01 = new NS.Cls().field;

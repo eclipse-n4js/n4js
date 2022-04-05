@@ -196,7 +196,7 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def checkExternalVariableStatementAssigments(VariableStatement variableStatement) {
-		if (!variableStatement.exported) {
+		if (!variableStatement.directlyExported) {
 			return;
 		}
 
@@ -453,7 +453,11 @@ class N4JSExternalValidator extends AbstractN4JSDeclarativeValidator {
 			return false; // concrete annotations are handled in N4JSAnnotationValidation
 		}
 		if (eo instanceof ExportDeclaration) {
-			return isUnallowedElement(eo.exportedElement);
+			val expElem = eo.exportedElement;
+			if (expElem !== null) {
+				return isUnallowedElement(eo.exportedElement);
+			}
+			return false;
 		}
 		if (eo instanceof N4ClassDeclaration) {
 			if (eo.external) {

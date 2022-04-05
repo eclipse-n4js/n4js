@@ -37,10 +37,8 @@ class N4JSExportDefinitionTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package boolean relinkExportDefinition(ExportDeclaration exportDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
-		// FIXME implement this!
-		return true;
-	}
+	// relinking export definitions not required
+	// (see N4JSTypesBuilder#relinkTypes(EObject, AbstractNamespace, boolean, RelinkIndices) for details)
 
 	def package void createExportDefinition(ExportDeclaration exportDecl, AbstractNamespace target, boolean preLinkingPhase) {
 		val directlyExportedElem = exportDecl.exportedElement;
@@ -64,18 +62,20 @@ class N4JSExportDefinitionTypesBuilder {
 				val idRef = exportSpec.exportedElement;
 				if (idRef !== null) {
 					val expElemProxy = idRef.eGet(N4JSPackage.eINSTANCE.identifierRef_Id, false) as IdentifiableElement;
-					val expElemProxyCpy = TypesFactory.eINSTANCE.createTExportableElement();
-					(expElemProxyCpy as InternalEObject).eSetProxyURI((expElemProxy as InternalEObject).eProxyURI());
-					var expName = exportSpec.alias;
-					if (expName === null) {
-						// we do not use the name of the actually exported element here, because ...
-						// 1) we only have a proxy to the exported element (i.e. expElemProxy) anyway and are not allowed
-						//    to trigger proxy resolution in the types builder, so we cannot retrieve its name;
-						// 2) the exported element might have been imported from another file under an alias and in that
-						//    case the import specifier's alias will be the default exported name, not the element's name.
-						expName = idRef.idAsText;
+					if (expElemProxy !== null) {
+						val expElemProxyCpy = TypesFactory.eINSTANCE.createTExportableElement();
+						(expElemProxyCpy as InternalEObject).eSetProxyURI((expElemProxy as InternalEObject).eProxyURI());
+						var expName = exportSpec.alias;
+						if (expName === null) {
+							// we do not use the name of the actually exported element here, because ...
+							// 1) we only have a proxy to the exported element (i.e. expElemProxy) anyway and are not allowed
+							//    to trigger proxy resolution in the types builder, so we cannot retrieve its name;
+							// 2) the exported element might have been imported from another file under an alias and in that
+							//    case the import specifier's alias will be the default exported name, not the element's name.
+							expName = idRef.idAsText;
+						}
+						addElementExportDefinition(target, expName, false, expElemProxyCpy);
 					}
-					addElementExportDefinition(target, expName, false, expElemProxyCpy);
 				}
 			}
 		}
@@ -92,7 +92,7 @@ class N4JSExportDefinitionTypesBuilder {
 		if (tDirectlyExportedElem === null) {
 			return; // broken AST (e.g. class declaration with missing name)
 		}
-		createExportDefinitionForDirectlyExportedElement(tDirectlyExportedElem, directlyExportedElem.exportedName, target, preLinkingPhase);
+		createExportDefinitionForDirectlyExportedElement(tDirectlyExportedElem, directlyExportedElem.directlyExportedName, target, preLinkingPhase);
 	}
 
 	def package void createExportDefinitionForDirectlyExportedElement(TExportableElement tDirectlyExportedElem, String exportedName, AbstractNamespace target, boolean preLinkingPhase) {

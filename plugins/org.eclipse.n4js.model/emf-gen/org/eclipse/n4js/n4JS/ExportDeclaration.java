@@ -155,4 +155,12 @@ public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElem
 	 */
 	boolean isReexport();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isRetainedAtRuntime();
+
 } // ExportDeclaration

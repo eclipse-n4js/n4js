@@ -944,13 +944,13 @@ public interface TypesPackage extends EPackage {
 	int TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEXPORTABLE_ELEMENT___GET_EXPORTED_NAME = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
+	int TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>TExportable Element</em>' class.
@@ -1026,13 +1026,13 @@ public interface TypesPackage extends EPackage {
 	int TDYNAMIC_ELEMENT___GET_CONTAINING_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TDYNAMIC_ELEMENT___GET_EXPORTED_NAME = TEXPORTABLE_ELEMENT___GET_EXPORTED_NAME;
+	int TDYNAMIC_ELEMENT___GET_DIRECTLY_EXPORTED_NAME = TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -1384,13 +1384,13 @@ public interface TypesPackage extends EPackage {
 	int TYPE___GET_CONTAINING_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE___GET_EXPORTED_NAME = TEXPORTABLE_ELEMENT___GET_EXPORTED_NAME;
+	int TYPE___GET_DIRECTLY_EXPORTED_NAME = TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -1637,13 +1637,13 @@ public interface TypesPackage extends EPackage {
 	int TYPE_VARIABLE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_VARIABLE___GET_EXPORTED_NAME = TYPE___GET_EXPORTED_NAME;
+	int TYPE_VARIABLE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -1917,13 +1917,13 @@ public interface TypesPackage extends EPackage {
 	int INFERENCE_VARIABLE___GET_CONTAINING_MODULE = TYPE_VARIABLE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INFERENCE_VARIABLE___GET_EXPORTED_NAME = TYPE_VARIABLE___GET_EXPORTED_NAME;
+	int INFERENCE_VARIABLE___GET_DIRECTLY_EXPORTED_NAME = TYPE_VARIABLE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -2170,13 +2170,13 @@ public interface TypesPackage extends EPackage {
 	int GENERIC_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GENERIC_TYPE___GET_EXPORTED_NAME = TYPE___GET_EXPORTED_NAME;
+	int GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -2495,13 +2495,13 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_EXPORTED_NAME = GENERIC_TYPE___GET_EXPORTED_NAME;
+	int TFUNCTION___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -2911,13 +2911,13 @@ public interface TypesPackage extends EPackage {
 	int CONTAINER_TYPE___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_EXPORTED_NAME = GENERIC_TYPE___GET_EXPORTED_NAME;
+	int CONTAINER_TYPE___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -3245,13 +3245,13 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 10;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_EXPORTED_NAME = TYPE___GET_EXPORTED_NAME;
+	int TNAMESPACE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -3589,13 +3589,13 @@ public interface TypesPackage extends EPackage {
 	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_EXPORTED_NAME = TYPE___GET_EXPORTED_NAME;
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -3851,13 +3851,13 @@ public interface TypesPackage extends EPackage {
 	int PRIMITIVE_TYPE___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_EXPORTED_NAME = GENERIC_TYPE___GET_EXPORTED_NAME;
+	int PRIMITIVE_TYPE___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4068,13 +4068,13 @@ public interface TypesPackage extends EPackage {
 	int BUILT_IN_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BUILT_IN_TYPE___GET_EXPORTED_NAME = TYPE___GET_EXPORTED_NAME;
+	int BUILT_IN_TYPE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4285,13 +4285,13 @@ public interface TypesPackage extends EPackage {
 	int ANY_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ANY_TYPE___GET_EXPORTED_NAME = BUILT_IN_TYPE___GET_EXPORTED_NAME;
+	int ANY_TYPE___GET_DIRECTLY_EXPORTED_NAME = BUILT_IN_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4502,13 +4502,13 @@ public interface TypesPackage extends EPackage {
 	int UNDEFINED_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNDEFINED_TYPE___GET_EXPORTED_NAME = BUILT_IN_TYPE___GET_EXPORTED_NAME;
+	int UNDEFINED_TYPE___GET_DIRECTLY_EXPORTED_NAME = BUILT_IN_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4719,13 +4719,13 @@ public interface TypesPackage extends EPackage {
 	int NULL_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NULL_TYPE___GET_EXPORTED_NAME = BUILT_IN_TYPE___GET_EXPORTED_NAME;
+	int NULL_TYPE___GET_DIRECTLY_EXPORTED_NAME = BUILT_IN_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4936,13 +4936,13 @@ public interface TypesPackage extends EPackage {
 	int VOID_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VOID_TYPE___GET_EXPORTED_NAME = BUILT_IN_TYPE___GET_EXPORTED_NAME;
+	int VOID_TYPE___GET_DIRECTLY_EXPORTED_NAME = BUILT_IN_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -5207,13 +5207,13 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCTURAL_TYPE___GET_CONTAINING_MODULE = CONTAINER_TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCTURAL_TYPE___GET_EXPORTED_NAME = CONTAINER_TYPE___GET_EXPORTED_NAME;
+	int TSTRUCTURAL_TYPE___GET_DIRECTLY_EXPORTED_NAME = CONTAINER_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -5532,13 +5532,13 @@ public interface TypesPackage extends EPackage {
 	int TCLASSIFIER___GET_CONTAINING_MODULE = CONTAINER_TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER___GET_EXPORTED_NAME = CONTAINER_TYPE___GET_EXPORTED_NAME;
+	int TCLASSIFIER___GET_DIRECTLY_EXPORTED_NAME = CONTAINER_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -6002,13 +6002,13 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER___GET_CONTAINING_MODULE = TCLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER___GET_EXPORTED_NAME = TCLASSIFIER___GET_EXPORTED_NAME;
+	int TN4_CLASSIFIER___GET_DIRECTLY_EXPORTED_NAME = TCLASSIFIER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -6507,13 +6507,13 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS___GET_EXPORTED_NAME = TN4_CLASSIFIER___GET_EXPORTED_NAME;
+	int TCLASS___GET_DIRECTLY_EXPORTED_NAME = TN4_CLASSIFIER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -6967,13 +6967,13 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE___GET_EXPORTED_NAME = TN4_CLASSIFIER___GET_EXPORTED_NAME;
+	int TINTERFACE___GET_DIRECTLY_EXPORTED_NAME = TN4_CLASSIFIER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -8411,13 +8411,13 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___GET_EXPORTED_NAME = TFUNCTION___GET_EXPORTED_NAME;
+	int TMETHOD___GET_DIRECTLY_EXPORTED_NAME = TFUNCTION___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -9069,13 +9069,13 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___GET_CONTAINING_MODULE = TMETHOD___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_METHOD___GET_EXPORTED_NAME = TMETHOD___GET_EXPORTED_NAME;
+	int TSTRUCT_METHOD___GET_DIRECTLY_EXPORTED_NAME = TMETHOD___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12590,13 +12590,13 @@ public interface TypesPackage extends EPackage {
 	int TENUM___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM___GET_EXPORTED_NAME = TYPE___GET_EXPORTED_NAME;
+	int TENUM___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -13007,13 +13007,13 @@ public interface TypesPackage extends EPackage {
 	int TYPE_ALIAS___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_EXPORTED_NAME = GENERIC_TYPE___GET_EXPORTED_NAME;
+	int TYPE_ALIAS___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -13423,13 +13423,13 @@ public interface TypesPackage extends EPackage {
 	int TVARIABLE___IS_DIRECTLY_EXPORTED = TABSTRACT_VARIABLE_OPERATION_COUNT + 3;
 
 	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_EXPORTED_NAME = TABSTRACT_VARIABLE_OPERATION_COUNT + 4;
+	int TVARIABLE___GET_DIRECTLY_EXPORTED_NAME = TABSTRACT_VARIABLE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -14084,14 +14084,14 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTExportableElement_DirectlyExportedAsDefault();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TExportableElement#getExportedName() <em>Get Exported Name</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TExportableElement#getDirectlyExportedName() <em>Get Directly Exported Name</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Exported Name</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.TExportableElement#getExportedName()
+	 * @return the meta object for the '<em>Get Directly Exported Name</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TExportableElement#getDirectlyExportedName()
 	 * @generated
 	 */
-	EOperation getTExportableElement__GetExportedName();
+	EOperation getTExportableElement__GetDirectlyExportedName();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TDynamicElement <em>TDynamic Element</em>}'.
@@ -17210,12 +17210,12 @@ public interface TypesPackage extends EPackage {
 		EAttribute TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT = eINSTANCE.getTExportableElement_DirectlyExportedAsDefault();
 
 		/**
-		 * The meta object literal for the '<em><b>Get Exported Name</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get Directly Exported Name</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TEXPORTABLE_ELEMENT___GET_EXPORTED_NAME = eINSTANCE.getTExportableElement__GetExportedName();
+		EOperation TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME = eINSTANCE.getTExportableElement__GetDirectlyExportedName();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TDynamicElementImpl <em>TDynamic Element</em>}' class.

@@ -477,6 +477,16 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 * @generated
 	 */
 	@Override
+	public boolean isRetainedAtRuntime() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isReferringToOtherModule() {
 		Object _eGet = this.eGet(Literals.MODULE_REF__MODULE, false);
 		return (_eGet != null);
@@ -725,6 +735,7 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 		if (baseClass == ModuleRef.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.MODULE_REF___IS_REFERRING_TO_OTHER_MODULE: return N4JSPackage.EXPORT_DECLARATION___IS_REFERRING_TO_OTHER_MODULE;
+				case N4JSPackage.MODULE_REF___IS_RETAINED_AT_RUNTIME: return N4JSPackage.EXPORT_DECLARATION___IS_RETAINED_AT_RUNTIME;
 				default: return -1;
 			}
 		}
@@ -743,6 +754,8 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 				return isHollow();
 			case N4JSPackage.EXPORT_DECLARATION___IS_REEXPORT:
 				return isReexport();
+			case N4JSPackage.EXPORT_DECLARATION___IS_RETAINED_AT_RUNTIME:
+				return isRetainedAtRuntime();
 			case N4JSPackage.EXPORT_DECLARATION___IS_REFERRING_TO_OTHER_MODULE:
 				return isReferringToOtherModule();
 			case N4JSPackage.EXPORT_DECLARATION___GET_NAMESPACE:

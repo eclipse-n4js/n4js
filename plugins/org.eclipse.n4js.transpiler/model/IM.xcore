@@ -155,10 +155,10 @@ class SymbolTableEntryOriginal extends SymbolTableEntry {
 	 * another, remote resource can import it. For elements defined in remote resources, this is the name under which
 	 * this element is exported by the remote resource and can be imported in the resource to compile.
 	 */
-	op String getExportedName() {
+	op String getDirectlyExportedName() {
 		val trgt = originalTarget;
 		if(trgt instanceof TExportableElement) {
-			return trgt.exportedName;
+			return trgt.directlyExportedName;
 		}
 		return trgt.name;
 	}
@@ -290,7 +290,7 @@ class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAcce
 		return if(anyPlusAccess) nameOfAnyPlusProperty else {
 			val e = rewiredTarget;
 			if(e instanceof SymbolTableEntryOriginal){
-				val exName =  e.exportedName;
+				val exName =  e.directlyExportedName;
 				if(exName !== null)
 					return exName
 				else
@@ -393,7 +393,7 @@ class StringLiteralForSTE extends StringLiteral {
 		if(useExportedName) {
 			val e = entry;
 			if(e instanceof SymbolTableEntryOriginal) {
-				return e.exportedName;
+				return e.directlyExportedName;
 			}
 		}
 		return entry?.name

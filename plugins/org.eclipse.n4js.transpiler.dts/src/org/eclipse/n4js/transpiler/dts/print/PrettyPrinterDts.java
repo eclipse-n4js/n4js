@@ -287,7 +287,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 				write("export ");
 			}
 		} else {
-			if (!((ExportableElement) original).isExported()) {
+			if (!((ExportableElement) original).isDirectlyExported()) {
 				writeJsdoc(original); // already written in #caseExportDeclaration()
 				write("declare ");
 			}
@@ -364,7 +364,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 		if (!constMembers.isEmpty()) {
 			newLine();
-			if (!original.isExported()) {
+			if (!original.isDirectlyExported()) {
 				write("declare ");
 			} else {
 				write("export ");
@@ -382,7 +382,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		N4ClassDeclaration parent = (N4ClassDeclaration) field.getOwner();
 		writeJsdoc(field);
 		processAnnotations(field.getAnnotations());
-		writeIf("export ", parent.isExported());
+		writeIf("export ", parent.isDirectlyExported());
 		write("const ");
 		processPropertyName(field);
 		processDeclaredTypeRef(field);
@@ -461,7 +461,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 		if (!staticMembers.isEmpty()) {
 			newLine();
-			if (!classifier.isExported()) {
+			if (!classifier.isDirectlyExported()) {
 				write("declare ");
 			} else {
 				write("export ");
@@ -479,7 +479,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		N4InterfaceDeclaration parent = (N4InterfaceDeclaration) member.getOwner();
 		writeJsdoc(member);
 		processAnnotations(member.getAnnotations());
-		writeIf("export ", parent.isExported());
+		writeIf("export ", parent.isDirectlyExported());
 		if (member instanceof N4FieldDeclaration) {
 			N4FieldDeclaration field = (N4FieldDeclaration) member;
 			if (field.isConst()) {
@@ -543,7 +543,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 		if (!literalBased) {
 			// Workaround since TypeScript enums do not support static methods
 
-			if (!original.isExported()) {
+			if (!original.isDirectlyExported()) {
 				write("declare ");
 			} else {
 				write("export ");
@@ -811,7 +811,7 @@ public final class PrettyPrinterDts extends N4JSSwitch<Boolean> {
 
 			write("declare ");
 
-		} else if (original.isExported()) {
+		} else if (original.isDirectlyExported()) {
 			if (((NamespaceElement) original).isInNamespace()) {
 				if (!original.getVarDecl().isEmpty()) {
 

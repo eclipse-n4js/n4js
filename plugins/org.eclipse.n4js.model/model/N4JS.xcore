@@ -137,6 +137,10 @@ class ExportDeclaration extends AnnotableScriptElement, NamespaceElement, Module
 	op boolean isReexport() {
 		return isReferringToOtherModule();
 	}
+
+	op boolean isRetainedAtRuntime() {
+		return false; // re-exports will always be retained
+	}
 }
 
 class NamespaceExportSpecifier extends TypeDefiningElement {
@@ -156,7 +160,7 @@ class NamedExportSpecifier {
  * </pre>
  */
 abstract class ExportableElement extends NamespaceElement {
-	op boolean isExported() {
+	op boolean isDirectlyExported() {
 		return isDeclaredExported() || isExportedByNamespace();
 	}
 	op boolean isDeclaredExported() {
@@ -165,16 +169,15 @@ abstract class ExportableElement extends NamespaceElement {
 	op boolean isExportedByNamespace() {
 		var ns = namespace;
 		if (ns !== null) {
-			return ns.isExported;
+			return ns.isDirectlyExported;
 		}
 		return false;
 	}
 	op boolean isExportedAsDefault() {
 		return isDeclaredExported() && (eContainer as ExportDeclaration).isDefaultExport;
 	}
-	// FIXME clean up
-	op String getExportedName() {
-		if (isExported) {
+	op String getDirectlyExportedName() {
+		if (isDirectlyExported()) {
 			if (isDeclaredExported()) {
 				val exportDecl = eContainer as ExportDeclaration;
 				if (exportDecl.defaultExport) {
@@ -206,7 +209,7 @@ abstract class ExportableElement extends NamespaceElement {
 		}
 		return eContainer instanceof Script;
 	}
-	
+
 	op boolean isHollow() {
 		return false;
 	}
@@ -222,10 +225,20 @@ abstract class ModuleRef {
 	transient String moduleSpecifierAsText
 	transient ModuleSpecifierForm moduleSpecifierForm
 
-	/* Tells whether this {@link ModuleRef} is actually referring to another model, without triggering proxy resolution. */
+	/*
+	 * Tells whether this {@link ModuleRef} is actually referring to another model, without triggering proxy resolution.
+	 * All {@link ImportDeclaration}s refer to other modules (except in case of syntax errors), but {@link ExportDeclaration}s that
+	 * export a local element of the containing module will return <code>false</code> (i.e. if they do not have a 'from "..."' clause).
+	 */
 	op boolean isReferringToOtherModule() {
 		return eGet(N4JSPackage.Literals.MODULE_REF__MODULE, false) !== null;
 	}
+
+	/*
+	 * Tells whether this module reference will be present in the transpiled output code.
+	 * Only valid after AST traversal has completed.
+	 */
+	op boolean isRetainedAtRuntime()
 }
 
 class ImportDeclaration extends AnnotableScriptElement, ModuleRef {
@@ -977,19 +990,19 @@ class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement
 	// Due to this split, #getExportedName() will return incorrect results when invoked on the variable statement
 	// and we provide the following two operations as a work-around:
 
-	op boolean isExported() {
+	op boolean isDirectlyExported() {
 		val parent = getVariableDeclarationContainer();
 		if (parent instanceof VariableStatement) {
-			return parent.exported;
+			return parent.directlyExported;
 		}
 		return false;
 	}
 
-	op String getExportedName() {
+	op String getDirectlyExportedName() {
 		val parent = getVariableDeclarationContainer();
 		if (parent instanceof VariableStatement) {
-			if (parent.exported) {
-				return parent.exportedName ?: this.name;
+			if (parent.directlyExported) {
+				return parent.directlyExportedName ?: this.name;
 			}
 		}
 		return null;
