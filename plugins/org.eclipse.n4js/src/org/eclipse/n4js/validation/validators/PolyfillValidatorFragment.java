@@ -24,6 +24,7 @@ import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_DIFFERENT_TYPE
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_EXTEND_MISSING;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_INCOMPLETE_TYPEARGS;
+import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NOT_DIRECTLY_EXPORTED;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NOT_PROVIDEDBYRUNTIME;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NO_EXTENDS_ADDITIONAL;
 import static org.eclipse.n4js.validation.IssueCodes.CLF_POLYFILL_NO_IMPLEMENTS;
@@ -40,6 +41,7 @@ import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_D
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_EXTEND_MISSING;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_FILLED_NOT_PROVIDEDBYRUNTIME;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_INCOMPLETE_TYPEARGS;
+import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NOT_DIRECTLY_EXPORTED;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NOT_PROVIDEDBYRUNTIME;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NO_EXTENDS_ADDITIONAL;
 import static org.eclipse.n4js.validation.IssueCodes.getMessageForCLF_POLYFILL_NO_IMPLEMENTS;
@@ -175,6 +177,7 @@ public class PolyfillValidatorFragment {
 						&& holdPolyfillName(state) //
 						&& holdsProvidedByRuntime(state) //
 						&& holdsNoImplementsOrConsumes(state) //
+						&& holdsIsDirectlyExported(state) //
 						&& holdsEqualModifiers(state) //
 						&& holdsEqualTypeVariables(state) //
 						&& holdsSinglePolyfillSource(state))) //
@@ -189,6 +192,7 @@ public class PolyfillValidatorFragment {
 						// && holdsNoImplementsOrConsumes(state) //
 						&& holdsFilledClassIsStaticPolyfillAware(state) //
 						&& holdsSameJavascriptVariant(state) //
+						&& holdsIsDirectlyExported(state) //
 						&& holdsEqualModifiers(state) //
 						&& holdsEqualTypeVariables(state) //
 						&& holdsSinglePolyfillSource(state))) //
@@ -336,6 +340,15 @@ public class PolyfillValidatorFragment {
 				addIssue(state, msg, CLF_POLYFILL_NO_EXTENDS_ADDITIONAL);
 				return false;
 			}
+		}
+		return true;
+	}
+
+	private boolean holdsIsDirectlyExported(PolyfillValidationState state) {
+		if (!state.polyType.isDirectlyExported()) {
+			final String msg = getMessageForCLF_POLYFILL_NOT_DIRECTLY_EXPORTED(state.name);
+			addIssue(state, msg, CLF_POLYFILL_NOT_DIRECTLY_EXPORTED);
+			return false;
 		}
 		return true;
 	}
