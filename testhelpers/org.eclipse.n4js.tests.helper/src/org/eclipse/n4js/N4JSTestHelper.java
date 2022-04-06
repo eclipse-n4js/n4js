@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -17,7 +20,6 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.inject.Inject;
@@ -32,7 +34,7 @@ public class N4JSTestHelper {
 	@Inject
 	private N4JSParseHelper parseHelper;
 	@Inject
-	private ValidationTestHelper validationTestHelper;
+	private N4JSValidationTestHelper validationTestHelper;
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
 
@@ -44,6 +46,17 @@ public class N4JSTestHelper {
 		final Script script = parseHelper.parseN4js(code);
 		parseHelper.assertNoParseErrors(script);
 		validationTestHelper.assertNoErrors(script); // this will trigger post-processing, validation, etc.
+		return script;
+	}
+
+	/**
+	 * Like {@link #parseAndValidateSuccessfully(CharSequence)}, but ignoring issues with the given issue codes.
+	 */
+	public Script parseAndValidateSuccessfullyIgnoring(CharSequence code, String... ignoredIssueCodes)
+			throws Exception {
+		final Script script = parseHelper.parseN4js(code);
+		parseHelper.assertNoParseErrors(script, new HashSet<>(Arrays.asList(ignoredIssueCodes)));
+		validationTestHelper.assertNoErrorsExcept(script, ignoredIssueCodes);
 		return script;
 	}
 

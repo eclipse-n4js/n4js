@@ -16,19 +16,24 @@
 package org.eclipse.n4js;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.validation.JavaScriptVariant;
+import org.eclipse.xtext.diagnostics.AbstractDiagnostic;
 import org.eclipse.xtext.resource.FileExtensionProvider;
 import org.eclipse.xtext.testing.util.ParseHelper;
 import org.eclipse.xtext.testing.util.ResourceHelper;
 import org.junit.Assert;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.FluentIterable;
 import com.google.inject.Inject;
 
 /**
@@ -128,8 +133,20 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 	 * validation of the given script.
 	 */
 	public void assertNoParseErrors(Script script) {
-		Assert.assertTrue(Joiner.on('\n').join(script.eResource().getErrors()),
-				script.eResource().getErrors().isEmpty());
+		assertNoParseErrors(script, null);
+	}
+
+	/**
+	 * Like {@link #assertNoParseErrors(Script)}, but ignoring all issues with the given issue codes.
+	 */
+	public void assertNoParseErrors(Script script, Set<String> ignoredIssueCodes) {
+		List<Diagnostic> errors = script.eResource().getErrors();
+		if (ignoredIssueCodes != null) {
+			errors = FluentIterable.from(errors)
+					.filter(err -> !ignoredIssueCodes.contains(getIssueCode(err)))
+					.toList();
+		}
+		Assert.assertTrue(Joiner.on('\n').join(errors), errors.isEmpty());
 	}
 
 	private void setFileExtension(String ext) {
@@ -142,4 +159,10 @@ public class N4JSParseHelper extends ParseHelper<Script> {
 		this.fileExtension = ext;
 	}
 
+	private String getIssueCode(Diagnostic diagnostic) {
+		if (diagnostic instanceof AbstractDiagnostic) {
+			return ((AbstractDiagnostic) diagnostic).getCode();
+		}
+		return null;
+	}
 }
