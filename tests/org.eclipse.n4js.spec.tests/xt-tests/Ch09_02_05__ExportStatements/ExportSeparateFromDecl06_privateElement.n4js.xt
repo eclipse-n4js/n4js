@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	// note: this test is testing internal infrastructure for a feature not available in N4JS[D] (only in .d.ts)
+	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+	}
+
+	END_SETUP
+ */
+
+
+var variableVar: string = "hello var";
+let variableLet: string = "hello let";
+const variableConst: string = "hello const";
+interface Ifc { method(p: string): int }
+class Cls { field: string }
+enum Enum { Li1, Lit2, Lit3 }
+function foo(p: string): int { return 0; }
+type TypeAlias = string;
+
+
+// XPECT errors ---
+// "Private variable variableVar cannot be exported." at "variableVar"
+// "Private variable variableLet cannot be exported." at "variableLet"
+// "Private variable variableConst cannot be exported." at "variableConst"
+// ---
+export { variableVar, variableLet, variableConst };
+
+
+// XPECT errors ---
+// "Private interface Ifc cannot be exported." at "Ifc"
+// "Private class Cls cannot be exported." at "Cls"
+// "Private enum Enum cannot be exported." at "Enum"
+// ---
+export { Ifc, Cls, Enum };
+
+
+// XPECT errors --> "Private function foo cannot be exported." at "foo"
+export { foo };
+
+
+// XPECT errors --> "Private type alias TypeAlias cannot be exported." at "TypeAlias"
+export { TypeAlias };

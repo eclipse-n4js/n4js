@@ -33,6 +33,7 @@ import org.eclipse.n4js.ts.types.TStructSetter
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeAccessModifier
+import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypesPackage
@@ -165,6 +166,10 @@ class TypesKeywordProvider {
 
 	def dispatch String keyword(TDynamicElement dynamicElement) {
 		"element"
+	}
+
+	def dispatch String keyword(TypeAlias typeAlias) {
+		"type alias"
 	}
 
 	// note: following method will also be required in case of unresolved proxies

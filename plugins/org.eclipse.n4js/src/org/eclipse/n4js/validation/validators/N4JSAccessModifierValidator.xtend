@@ -37,6 +37,7 @@ import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.AccessibleTypeElement
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TField
@@ -133,7 +134,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 	}
-	
+
 	def ILeafNode findModifierNode(EObject eo, TypeAccessModifier taModifier) {
 		if (eo instanceof ModifiableElement) {
 			for (var i = 0; i<eo.declaredModifiers.length; i++) {
@@ -145,6 +146,26 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 		return null;
+	}
+
+	@Check
+	def void checkExportedElementHasAccessibilityHigherThanPrivate(ExportDeclaration exportDecl) {
+		if (exportDecl.exportedElement !== null) {
+			return; // does not apply to direct exports
+		}
+		for (exportSpecifier : exportDecl.namedExports) {
+			val idRef = exportSpecifier.exportedElement;
+			val exportedElement = idRef?.id;
+			if (exportedElement !== null && !exportedElement.eIsProxy) {
+				if (exportedElement instanceof AccessibleTypeElement) {
+					val tam = exportedElement.typeAccessModifier;
+					if (!(tam.ordinal > TypeAccessModifier.PRIVATE.ordinal)) {
+						val msg = getMessageForEXP_PRIVATE_ELEMENT(exportedElement.keyword, exportedElement.name);
+						addIssue(msg, idRef, EXP_PRIVATE_ELEMENT);
+					}
+				}
+			}
+		}
 	}
 
 	@Check
