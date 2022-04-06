@@ -424,6 +424,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			val grandParent = parent.eContainer;
 			if (grandParent instanceof ExportDeclaration) {
 				if (grandParent.isReexport()) {
+					if (suppressCrossFileResolutionOfIdentifierRef) {
+						return IScope.NULLSCOPE;
+					}
 					return scope_ImportedElement(parent, ref);
 				}
 			}

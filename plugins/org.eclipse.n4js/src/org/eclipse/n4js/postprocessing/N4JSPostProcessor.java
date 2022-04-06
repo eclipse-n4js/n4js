@@ -169,13 +169,12 @@ public class N4JSPostProcessor implements PostProcessor {
 					ElementExportDefinition exportDefCasted = (ElementExportDefinition) exportDef;
 					TExportableElement elem = exportDefCasted.getExportedElement();
 					if (elem != null && !elem.eIsProxy()) {
-						// cross-file resolution is suppressed (see above), so an unresolved proxy means
-						// 'elem' is located in 'resource'
-						if (elem.eResource() != resource) {
-							throw new IllegalStateException(
-									"proxy resolution resulted in element from other file despite cross-file resolution suppression");
+						// cross-file resolution is suppressed (see above), so a resolved proxy should always mean that
+						// 'elem' is located in 'resource'; however, because cross-file resolution suppression is not
+						// working reliably, we need to make sure:
+						if (elem.eResource() == resource) {
+							elem.getExportingExportDefinitions().add(exportDefCasted);
 						}
-						elem.getExportingExportDefinitions().add(exportDefCasted);
 					}
 				}
 			}
