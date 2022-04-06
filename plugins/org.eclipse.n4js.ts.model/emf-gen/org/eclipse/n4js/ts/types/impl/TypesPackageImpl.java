@@ -1164,8 +1164,28 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTExportableElement__GetDirectlyExportedName() {
+	public EReference getTExportableElement_ExportingExportDefinitions() {
+		return (EReference)tExportableElementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTExportableElement__IsIndirectlyExported() {
 		return tExportableElementEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTExportableElement__GetDirectlyExportedName() {
+		return tExportableElementEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -3863,6 +3883,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tExportableElementEClass = createEClass(TEXPORTABLE_ELEMENT);
 		createEAttribute(tExportableElementEClass, TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED);
 		createEAttribute(tExportableElementEClass, TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT);
+		createEReference(tExportableElementEClass, TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS);
+		createEOperation(tExportableElementEClass, TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED);
 		createEOperation(tExportableElementEClass, TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME);
 
 		tDynamicElementEClass = createEClass(TDYNAMIC_ELEMENT);
@@ -4378,6 +4400,9 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEClass(tExportableElementEClass, TExportableElement.class, "TExportableElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTExportableElement_DirectlyExported(), theEcorePackage.getEBoolean(), "directlyExported", null, 0, 1, TExportableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTExportableElement_DirectlyExportedAsDefault(), theEcorePackage.getEBoolean(), "directlyExportedAsDefault", null, 0, 1, TExportableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTExportableElement_ExportingExportDefinitions(), this.getElementExportDefinition(), null, "exportingExportDefinitions", null, 0, -1, TExportableElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getTExportableElement__IsIndirectlyExported(), theEcorePackage.getEBoolean(), "isIndirectlyExported", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTExportableElement__GetDirectlyExportedName(), theEcorePackage.getEString(), "getDirectlyExportedName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

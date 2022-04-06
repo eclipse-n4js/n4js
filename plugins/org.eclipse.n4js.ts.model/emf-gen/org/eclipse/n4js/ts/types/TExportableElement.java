@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ts.types;
 
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,6 +23,7 @@ package org.eclipse.n4js.ts.types;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExported <em>Directly Exported</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExportedAsDefault <em>Directly Exported As Default</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TExportableElement#getExportingExportDefinitions <em>Exporting Export Definitions</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTExportableElement()
@@ -81,6 +83,38 @@ public interface TExportableElement extends IdentifiableElement {
 	 * @generated
 	 */
 	void setDirectlyExportedAsDefault(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.ElementExportDefinition}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Export definitions within the same {@link TModule} exporting this {@link TExportableElement}.
+	 * <p>
+	 * NOTE: an export definition in this list may belong to a {@code TExportableElement} other than this
+	 * exportable element's containing {@code TExportableElement}:
+	 * <pre>
+	 * public class Cls {}
+	 * export namespace N1 {
+	 *     export { Cls };
+	 * }
+	 * </pre>
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Exporting Export Definitions</em>' reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTExportableElement_ExportingExportDefinitions()
+	 * @model
+	 * @generated
+	 */
+	EList<ElementExportDefinition> getExportingExportDefinitions();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isIndirectlyExported();
 
 	/**
 	 * <!-- begin-user-doc -->

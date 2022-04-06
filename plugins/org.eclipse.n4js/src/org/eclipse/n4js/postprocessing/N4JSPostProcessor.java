@@ -126,8 +126,9 @@ public class N4JSPostProcessor implements PostProcessor {
 		// Reason is that flow analysis shall not trigger resolution of other resources.
 		// Note that flow analysis is intra-procedural only and does not rely on information of other resources.
 		try (TameAutoClosable tac = n4jsScopeProvider.newCrossFileResolutionSuppressor()) {
-			// step 1: resolve all local IdentifierRefs
+			// step 1: eager resolution of selected proxies (iff they are local, i.e. point to a target in 'resource')
 			resolveLocalIdentifierRefs(resource);
+			resolveExportableElementOfExportDefinitions(resource);
 			// step 2: create CFG/DFG and perform flow analyses
 			performFlowAnalysis(resource, cancelIndicator);
 		}
@@ -155,6 +156,28 @@ public class N4JSPostProcessor implements PostProcessor {
 					continue;
 				}
 				((IdentifierRef) eObject).getId(); // do resolve
+			}
+		}
+	}
+
+	private void resolveExportableElementOfExportDefinitions(N4JSResource resource) {
+		TModule module = resource.getModule();
+
+		for (AbstractNamespace namespace : module.getAllNamespaces()) {
+			for (ExportDefinition exportDef : namespace.getExportDefinitions()) {
+				if (exportDef instanceof ElementExportDefinition) {
+					ElementExportDefinition exportDefCasted = (ElementExportDefinition) exportDef;
+					TExportableElement elem = exportDefCasted.getExportedElement();
+					if (elem != null && !elem.eIsProxy()) {
+						// cross-file resolution is suppressed (see above), so an unresolved proxy means
+						// 'elem' is located in 'resource'
+						if (elem.eResource() != resource) {
+							throw new IllegalStateException(
+									"proxy resolution resulted in element from other file despite cross-file resolution suppression");
+						}
+						elem.getExportingExportDefinitions().add(exportDefCasted);
+					}
+				}
 			}
 		}
 	}

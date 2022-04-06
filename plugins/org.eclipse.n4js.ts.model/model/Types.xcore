@@ -377,6 +377,24 @@ class TExportableElement extends IdentifiableElement {
 	 */
 	boolean directlyExportedAsDefault
 
+	op boolean isIndirectlyExported() {
+		return exportingExportDefinitions.size > (if (directlyExported) 1 else 0);
+	}
+
+	/*
+	 * Export definitions within the same {@link TModule} exporting this {@link TExportableElement}.
+	 * <p>
+	 * NOTE: an export definition in this list may belong to a {@code TExportableElement} other than this
+	 * exportable element's containing {@code TExportableElement}:
+	 * <pre>
+	 * public class Cls {}
+	 * export namespace N1 {
+	 *     export { Cls };
+	 * }
+	 * </pre>
+	 */
+	refers ElementExportDefinition[] exportingExportDefinitions
+
 	op String getDirectlyExportedName() {
 		if (directlyExported) {
 			if (directlyExportedAsDefault) {
