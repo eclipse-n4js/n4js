@@ -308,7 +308,8 @@ public class ProjectBuilder {
 		return result;
 	}
 
-	protected boolean isNestedResource(URI uri) {
+	/** Returns true iff the given URI represents a virtual/nested resource that is embedded inside another resource. */
+	protected boolean isNestedResource(@SuppressWarnings("unused") URI uri) {
 		return false;
 	}
 

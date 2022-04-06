@@ -162,7 +162,9 @@ public final class UserDataMapper {
 			// 2020-10-07: the effect of returning a time stamp user data, here, is that resources with unresolved
 			// proxies will have no serialized TModule in the index and thus the fall-back behavior of "load from
 			// source" will apply when proxies to such a resource are being resolved.
-			return createTimestampUserData(exportedModule);
+			Map<String, String> ret = createTimestampUserData(exportedModule);
+			writeNestedToUserData(originalResource, ret);
+			return ret;
 		}
 
 		// add copy -- EObjects can only be contained in a single resource, and
@@ -197,11 +199,7 @@ public final class UserDataMapper {
 			final String contentHash = Integer.toHexString(originalResource.getParseResult().getRootNode().hashCode());
 			ret.put(USER_DATA_KEY_STATIC_POLYFILL_CONTENTHASH, contentHash);
 		}
-		if (originalResource.isNested()) {
-			NestedResourceAdapter nestedResourceAdapter = NestedResourceAdapter.get(originalResource);
-			URI host = nestedResourceAdapter.getHostUri();
-			ret.put(USER_DATA_KEY_NESTED_MODULE_PARENT, host.toFileString());
-		}
+		writeNestedToUserData(originalResource, ret);
 		return ret;
 	}
 
@@ -302,6 +300,16 @@ public final class UserDataMapper {
 		return eObjectDescription.getUserData(USER_DATA_KEY_SERIALIZED_SCRIPT) != null;
 	}
 
+	private static void writeNestedToUserData(N4JSResource originalResource, Map<String, String> ret) {
+		if (originalResource.isNested()) {
+			NestedResourceAdapter nestedResourceAdapter = NestedResourceAdapter.get(originalResource);
+			URI hostUri = nestedResourceAdapter.getHostUri();
+			URI resourceURI = originalResource.getURI();
+			URI relHostUri = hostUri.deresolve(resourceURI);
+			ret.put(USER_DATA_KEY_NESTED_MODULE_PARENT, relHostUri.toFileString());
+		}
+	}
+
 	/** Returns true iff the {@link EObject} of given description is inside a nested/virtual resource */
 	public static boolean isNested(IEObjectDescription eObjectDescription) {
 		return eObjectDescription.getUserData(USER_DATA_KEY_NESTED_MODULE_PARENT) != null;
@@ -309,7 +317,10 @@ public final class UserDataMapper {
 
 	/** Returns the URI of the host of the given description */
 	public static URI getHostUri(IEObjectDescription eObjectDescription) {
-		return URI.createFileURI(eObjectDescription.getUserData(USER_DATA_KEY_NESTED_MODULE_PARENT));
+		URI resourceUri = eObjectDescription.getEObjectURI().trimFragment();
+		URI relHostUri = URI.createFileURI(eObjectDescription.getUserData(USER_DATA_KEY_NESTED_MODULE_PARENT));
+		URI hostUri = relHostUri.resolve(resourceUri);
+		return hostUri;
 	}
 
 	private static Joiner joiner = Joiner.on(",");
