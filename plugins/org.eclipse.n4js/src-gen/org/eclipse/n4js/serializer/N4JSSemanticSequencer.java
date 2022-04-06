@@ -2360,7 +2360,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             varDeclsOrBindings+=VariableDeclarationOrBinding*
 	 *         ) | 
 	 *         (
-	 *             declaredModifiers+=N4Modifier* 
+	 *             declaredModifiers+=N4ModifierWithoutConst* 
 	 *             varStmtKeyword=VariableStatementKeyword 
 	 *             varDeclsOrBindings+=VariableDeclarationOrBinding 
 	 *             varDeclsOrBindings+=VariableDeclarationOrBinding*
@@ -28482,7 +28482,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         declaredModifiers+=N4Modifier* 
+	 *         declaredModifiers+=N4ModifierWithoutConst* 
 	 *         varStmtKeyword=VariableStatementKeyword 
 	 *         varDeclsOrBindings+=VariableDeclarationOrBinding 
 	 *         varDeclsOrBindings+=VariableDeclarationOrBinding*

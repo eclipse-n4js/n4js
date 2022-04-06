@@ -218,7 +218,7 @@ ruleNamespaceElement:
 		)
 		    |
 		(
-			(ruleN4Modifier
+			(ruleN4ModifierWithoutConst
 			*
 			ruleVariableStatementKeyword
 			)=>
@@ -308,7 +308,7 @@ norm1_NamespaceElement:
 		)
 		    |
 		(
-			(ruleN4Modifier
+			(ruleN4ModifierWithoutConst
 			*
 			ruleVariableStatementKeyword
 			)=>
@@ -626,7 +626,7 @@ ruleExportableElement:
 		)
 		    |
 		(
-			(ruleN4Modifier
+			(ruleN4ModifierWithoutConst
 			*
 			ruleVariableStatementKeyword
 			)=>
@@ -1552,7 +1552,7 @@ ruleRootStatement:
 		)
 		    |
 		(
-			(ruleN4Modifier
+			(ruleN4ModifierWithoutConst
 			*
 			ruleVariableStatementKeyword
 			)=>
@@ -1611,7 +1611,7 @@ norm1_RootStatement:
 		)
 		    |
 		(
-			(ruleN4Modifier
+			(ruleN4ModifierWithoutConst
 			*
 			ruleVariableStatementKeyword
 			)=>
@@ -1694,11 +1694,11 @@ norm1_Statement:
 // Rule VariableStatement
 ruleVariableStatement:
 	(
-		(ruleN4Modifier
+		(ruleN4ModifierWithoutConst
 		*
 		ruleVariableStatementKeyword
 		)=>
-		ruleN4Modifier
+		ruleN4ModifierWithoutConst
 		*
 		ruleVariableStatementKeyword
 	)
@@ -1713,11 +1713,11 @@ ruleVariableStatement:
 // Rule VariableStatement
 norm1_VariableStatement:
 	(
-		(ruleN4Modifier
+		(ruleN4ModifierWithoutConst
 		*
 		ruleVariableStatementKeyword
 		)=>
-		ruleN4Modifier
+		ruleN4ModifierWithoutConst
 		*
 		ruleVariableStatementKeyword
 	)

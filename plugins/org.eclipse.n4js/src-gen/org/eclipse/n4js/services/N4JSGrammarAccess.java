@@ -3423,7 +3423,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
 		private final Action cVariableStatementAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
 		private final Assignment cDeclaredModifiersAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
-		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0 = (RuleCall)cDeclaredModifiersAssignment_0_0_1.eContents().get(0);
+		private final RuleCall cDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0 = (RuleCall)cDeclaredModifiersAssignment_0_0_1.eContents().get(0);
 		private final Assignment cVarStmtKeywordAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
 		private final RuleCall cVarStmtKeywordVariableStatementKeywordEnumRuleCall_0_0_2_0 = (RuleCall)cVarStmtKeywordAssignment_0_0_2.eContents().get(0);
 		private final Assignment cVarDeclsOrBindingsAssignment_1 = (Assignment)cGroup.eContents().get(1);
@@ -3436,7 +3436,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//VariableStatement <Yield>:
 		//    =>({VariableStatement}
-		//        (declaredModifiers+=N4Modifier)*
+		//        (declaredModifiers+=N4ModifierWithoutConst)*
 		//        varStmtKeyword=VariableStatementKeyword
 		//    )
 		//    varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
@@ -3444,31 +3444,31 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=>({VariableStatement}
-		//    (declaredModifiers+=N4Modifier)*
+		//    (declaredModifiers+=N4ModifierWithoutConst)*
 		//    varStmtKeyword=VariableStatementKeyword
 		//)
 		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
 		public Group getGroup() { return cGroup; }
 		
 		//=>({VariableStatement}
-		//    (declaredModifiers+=N4Modifier)*
+		//    (declaredModifiers+=N4ModifierWithoutConst)*
 		//    varStmtKeyword=VariableStatementKeyword
 		//)
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//{VariableStatement}
-		//        (declaredModifiers+=N4Modifier)*
+		//        (declaredModifiers+=N4ModifierWithoutConst)*
 		//        varStmtKeyword=VariableStatementKeyword
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{VariableStatement}
 		public Action getVariableStatementAction_0_0_0() { return cVariableStatementAction_0_0_0; }
 		
-		//(declaredModifiers+=N4Modifier)*
+		//(declaredModifiers+=N4ModifierWithoutConst)*
 		public Assignment getDeclaredModifiersAssignment_0_0_1() { return cDeclaredModifiersAssignment_0_0_1; }
 		
-		//N4Modifier
-		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0; }
+		//N4ModifierWithoutConst
+		public RuleCall getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0() { return cDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0; }
 		
 		//varStmtKeyword=VariableStatementKeyword
 		public Assignment getVarStmtKeywordAssignment_0_0_2() { return cVarStmtKeywordAssignment_0_0_2; }
@@ -13398,7 +13398,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	//VariableStatement <Yield>:
 	//    =>({VariableStatement}
-	//        (declaredModifiers+=N4Modifier)*
+	//        (declaredModifiers+=N4ModifierWithoutConst)*
 	//        varStmtKeyword=VariableStatementKeyword
 	//    )
 	//    varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi

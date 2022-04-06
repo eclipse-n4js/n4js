@@ -476,7 +476,7 @@ enum VariableStatementKeyword:
 
 VariableStatement <Yield>:
 	=>({VariableStatement}
-		(declaredModifiers+=N4Modifier)*
+		(declaredModifiers+=N4ModifierWithoutConst)*
 		varStmtKeyword=VariableStatementKeyword
 	)
 	varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi

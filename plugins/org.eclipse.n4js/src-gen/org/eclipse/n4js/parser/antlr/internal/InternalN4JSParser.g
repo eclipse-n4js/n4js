@@ -803,7 +803,7 @@ ruleNamespaceElement returns [EObject current=null]
 				)
 				(
 					(
-						ruleN4Modifier
+						ruleN4ModifierWithoutConst
 					)
 				)*
 				(
@@ -1038,7 +1038,7 @@ norm1_NamespaceElement returns [EObject current=null]
 				)
 				(
 					(
-						ruleN4Modifier
+						ruleN4ModifierWithoutConst
 					)
 				)*
 				(
@@ -2809,7 +2809,7 @@ ruleExportableElement returns [EObject current=null]
 				)
 				(
 					(
-						ruleN4Modifier
+						ruleN4ModifierWithoutConst
 					)
 				)*
 				(
@@ -7895,7 +7895,7 @@ ruleRootStatement returns [EObject current=null]
 				)
 				(
 					(
-						ruleN4Modifier
+						ruleN4ModifierWithoutConst
 					)
 				)*
 				(
@@ -8101,7 +8101,7 @@ norm1_RootStatement returns [EObject current=null]
 				)
 				(
 					(
-						ruleN4Modifier
+						ruleN4ModifierWithoutConst
 					)
 				)*
 				(
@@ -8369,7 +8369,7 @@ ruleVariableStatement returns [EObject current=null]
 				)
 				(
 					(
-						ruleN4Modifier
+						ruleN4ModifierWithoutConst
 					)
 				)*
 				(
@@ -8390,9 +8390,9 @@ ruleVariableStatement returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0());
+							newCompositeNode(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0());
 						}
-						lv_declaredModifiers_1_0=ruleN4Modifier
+						lv_declaredModifiers_1_0=ruleN4ModifierWithoutConst
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getVariableStatementRule());
@@ -8401,7 +8401,7 @@ ruleVariableStatement returns [EObject current=null]
 								$current,
 								"declaredModifiers",
 								lv_declaredModifiers_1_0,
-								"org.eclipse.n4js.N4JS.N4Modifier");
+								"org.eclipse.n4js.N4JS.N4ModifierWithoutConst");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -8497,7 +8497,7 @@ norm1_VariableStatement returns [EObject current=null]
 				)
 				(
 					(
-						ruleN4Modifier
+						ruleN4ModifierWithoutConst
 					)
 				)*
 				(
@@ -8518,9 +8518,9 @@ norm1_VariableStatement returns [EObject current=null]
 				(
 					(
 						{
-							newCompositeNode(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0());
+							newCompositeNode(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0());
 						}
-						lv_declaredModifiers_1_0=ruleN4Modifier
+						lv_declaredModifiers_1_0=ruleN4ModifierWithoutConst
 						{
 							if ($current==null) {
 								$current = createModelElementForParent(grammarAccess.getVariableStatementRule());
@@ -8529,7 +8529,7 @@ norm1_VariableStatement returns [EObject current=null]
 								$current,
 								"declaredModifiers",
 								lv_declaredModifiers_1_0,
-								"org.eclipse.n4js.N4JS.N4Modifier");
+								"org.eclipse.n4js.N4JS.N4ModifierWithoutConst");
 							afterParserOrEnumRuleCall();
 						}
 					)

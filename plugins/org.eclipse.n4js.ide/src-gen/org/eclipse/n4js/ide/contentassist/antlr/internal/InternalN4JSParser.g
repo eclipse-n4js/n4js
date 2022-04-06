@@ -83437,9 +83437,9 @@ rule__VariableStatement__DeclaredModifiersAssignment_0_0_1
 	}
 :
 	(
-		{ before(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0()); }
-		ruleN4Modifier
-		{ after(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0()); }
+		{ before(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0()); }
+		ruleN4ModifierWithoutConst
+		{ after(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0()); }
 	)
 ;
 finally {
@@ -83497,9 +83497,9 @@ norm1_VariableStatement__DeclaredModifiersAssignment_0_0_1
 	}
 :
 	(
-		{ before(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0()); }
-		ruleN4Modifier
-		{ after(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0()); }
+		{ before(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0()); }
+		ruleN4ModifierWithoutConst
+		{ after(grammarAccess.getVariableStatementAccess().getDeclaredModifiersN4ModifierWithoutConstEnumRuleCall_0_0_1_0()); }
 	)
 ;
 finally {

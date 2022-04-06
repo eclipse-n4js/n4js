@@ -1659,10 +1659,10 @@ class ASTStructureValidator {
 		}
 		if (model.varDeclsOrBindings.empty) {
 			val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.VARIABLE_DECLARATION_CONTAINER__VAR_STMT_KEYWORD)
-				producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(model)
+			producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(model)
 			producer.addDiagnostic(
 				new DiagnosticMessage(IssueCodes.messageForAST_VAR_STMT_NO_DECL, 
-					IssueCodes.getDefaultSeverity(IssueCodes.AST_VAR_STMT_NO_DECL),
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_VAR_STMT_NO_DECL),
 						IssueCodes.AST_VAR_STMT_NO_DECL))
 		}
 		val directParent = model.eContainer;
