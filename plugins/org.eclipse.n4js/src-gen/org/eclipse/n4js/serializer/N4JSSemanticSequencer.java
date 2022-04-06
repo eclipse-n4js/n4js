@@ -1415,15 +1415,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else if (rule == grammarAccess.getExportableElementRule()) {
-					sequence_AnnotatedExportableElement_VariableStatementWithModifier(context, (VariableStatement) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getNamespaceElementRule()
-						|| rule == grammarAccess.getVariableStatementWithModifierRule()) {
-					sequence_VariableStatementWithModifier(context, (VariableStatement) semanticObject); 
+					sequence_AnnotatedExportableElement_VariableStatement(context, (VariableStatement) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getScriptElementRule()
+						|| rule == grammarAccess.getNamespaceElementRule()
 						|| rule == grammarAccess.getRootStatementRule()
 						|| rule == grammarAccess.getStatementRule()
 						|| rule == grammarAccess.getVariableStatementRule()) {
@@ -2372,7 +2368,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 * </pre>
 	 */
-	protected void sequence_AnnotatedExportableElement_VariableStatementWithModifier(ISerializationContext context, VariableStatement semanticObject) {
+	protected void sequence_AnnotatedExportableElement_VariableStatement(ISerializationContext context, VariableStatement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -28474,10 +28470,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     ScriptElement returns VariableStatement
 	 *     NamespaceElement<Yield> returns VariableStatement
 	 *     NamespaceElement returns VariableStatement
-	 *     VariableStatementWithModifier<Yield> returns VariableStatement
-	 *     VariableStatementWithModifier returns VariableStatement
+	 *     RootStatement<Yield> returns VariableStatement
+	 *     RootStatement returns VariableStatement
+	 *     Statement<Yield> returns VariableStatement
+	 *     Statement returns VariableStatement
+	 *     VariableStatement<Yield> returns VariableStatement
+	 *     VariableStatement returns VariableStatement
 	 *
 	 * Constraint:
 	 *     (
@@ -28486,28 +28487,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         varDeclsOrBindings+=VariableDeclarationOrBinding 
 	 *         varDeclsOrBindings+=VariableDeclarationOrBinding*
 	 *     )
-	 * </pre>
-	 */
-	protected void sequence_VariableStatementWithModifier(ISerializationContext context, VariableStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * <pre>
-	 * Contexts:
-	 *     ScriptElement returns VariableStatement
-	 *     RootStatement<Yield> returns VariableStatement
-	 *     RootStatement returns VariableStatement
-	 *     Statement<Yield> returns VariableStatement
-	 *     Statement returns VariableStatement
-	 *     VariableStatement<In,Yield> returns VariableStatement
-	 *     VariableStatement<In> returns VariableStatement
-	 *     VariableStatement<Yield> returns VariableStatement
-	 *     VariableStatement returns VariableStatement
-	 *
-	 * Constraint:
-	 *     (varStmtKeyword=VariableStatementKeyword varDeclsOrBindings+=VariableDeclarationOrBinding varDeclsOrBindings+=VariableDeclarationOrBinding*)
 	 * </pre>
 	 */
 	protected void sequence_VariableStatement(ISerializationContext context, VariableStatement semanticObject) {

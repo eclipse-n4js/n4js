@@ -87,7 +87,7 @@ NamespaceElement<Yield> returns NamespaceElement :
 	| N4EnumDeclaration<Yield>
 	| N4TypeAliasDeclaration<Yield>
 	| FunctionDeclaration<Yield>
-	| VariableStatementWithModifier<Yield>
+	| VariableStatement<Yield>
 	| ExportDeclaration
 ;
 
@@ -227,7 +227,7 @@ ExportableElement:
 	| N4EnumDeclaration<Yield=false>
 	| N4TypeAliasDeclaration<Yield=false>
 	| FunctionDeclaration<Yield=false>
-	| VariableStatementWithModifier<Yield=false>
+	| VariableStatement<Yield=false>
 ;
 
 /**
@@ -448,7 +448,7 @@ RootStatement <Yield> returns Statement:
 	Block<Yield>
 	// Function declarations are modeled as statements to support legacy JS parsing
 	| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
-	| VariableStatement<In=true,Yield>
+	| VariableStatement<Yield>
 	| EmptyStatement
 	| LabelledStatement<Yield>
 	| ExpressionStatement<Yield>
@@ -474,17 +474,11 @@ enum VariableStatementKeyword:
 	var='var' | const='const' | let='let'
 ;
 
-VariableStatement <In, Yield>:
+VariableStatement <Yield>:
 	=>({VariableStatement}
+		(declaredModifiers+=N4Modifier)*
 		varStmtKeyword=VariableStatementKeyword
 	)
-	varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>)* Semi
-;
-
-VariableStatementWithModifier <Yield> returns VariableStatement:
-	{VariableStatement}
-	(declaredModifiers+=N4Modifier)*
-	varStmtKeyword=VariableStatementKeyword
 	varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
 ;
 

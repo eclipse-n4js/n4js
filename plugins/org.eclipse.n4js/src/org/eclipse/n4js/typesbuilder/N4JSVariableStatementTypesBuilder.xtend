@@ -97,6 +97,7 @@ package class N4JSVariableStatementTypesBuilder {
 					variable.setTypeAccessModifier(n4VarDeclContainer as VariableStatement);
 					expVars += variable;
 				} else {
+					variable.setTypeAccessModifier(n4VarDeclContainer as VariableStatement);
 					locVars += variable;
 				}
 			}

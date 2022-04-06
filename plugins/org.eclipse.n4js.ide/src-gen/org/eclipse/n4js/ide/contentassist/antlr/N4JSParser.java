@@ -253,8 +253,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getVariableStatementAccess().getGroup_0(), "rule__VariableStatement__Group_0__0");
 			builder.put(grammarAccess.getVariableStatementAccess().getGroup_0_0(), "rule__VariableStatement__Group_0_0__0");
 			builder.put(grammarAccess.getVariableStatementAccess().getGroup_2(), "rule__VariableStatement__Group_2__0");
-			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getGroup(), "rule__VariableStatementWithModifier__Group__0");
-			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getGroup_4(), "rule__VariableStatementWithModifier__Group_4__0");
 			builder.put(grammarAccess.getVariableBindingAccess().getGroup(), "rule__VariableBinding__Group__0");
 			builder.put(grammarAccess.getVariableBindingAccess().getGroup_1_1(), "rule__VariableBinding__Group_1_1__0");
 			builder.put(grammarAccess.getVariableBindingAccess().getGroup_1_0_0(), "rule__VariableBinding__Group_1_0_0__0");
@@ -768,13 +766,10 @@ public class N4JSParser extends AbstractContentAssistParser {
 			builder.put(grammarAccess.getBindingElementFragmentAccess().getHasInitializerAssignmentAssignment_1_0(), "rule__BindingElementFragment__HasInitializerAssignmentAssignment_1_0");
 			builder.put(grammarAccess.getBindingElementFragmentAccess().getInitializerAssignment_1_1(), "rule__BindingElementFragment__InitializerAssignment_1_1");
 			builder.put(grammarAccess.getBlockAccess().getStatementsAssignment_1(), "rule__Block__StatementsAssignment_1");
-			builder.put(grammarAccess.getVariableStatementAccess().getVarStmtKeywordAssignment_0_0_1(), "rule__VariableStatement__VarStmtKeywordAssignment_0_0_1");
+			builder.put(grammarAccess.getVariableStatementAccess().getDeclaredModifiersAssignment_0_0_1(), "rule__VariableStatement__DeclaredModifiersAssignment_0_0_1");
+			builder.put(grammarAccess.getVariableStatementAccess().getVarStmtKeywordAssignment_0_0_2(), "rule__VariableStatement__VarStmtKeywordAssignment_0_0_2");
 			builder.put(grammarAccess.getVariableStatementAccess().getVarDeclsOrBindingsAssignment_1(), "rule__VariableStatement__VarDeclsOrBindingsAssignment_1");
 			builder.put(grammarAccess.getVariableStatementAccess().getVarDeclsOrBindingsAssignment_2_1(), "rule__VariableStatement__VarDeclsOrBindingsAssignment_2_1");
-			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getDeclaredModifiersAssignment_1(), "rule__VariableStatementWithModifier__DeclaredModifiersAssignment_1");
-			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getVarStmtKeywordAssignment_2(), "rule__VariableStatementWithModifier__VarStmtKeywordAssignment_2");
-			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getVarDeclsOrBindingsAssignment_3(), "rule__VariableStatementWithModifier__VarDeclsOrBindingsAssignment_3");
-			builder.put(grammarAccess.getVariableStatementWithModifierAccess().getVarDeclsOrBindingsAssignment_4_1(), "rule__VariableStatementWithModifier__VarDeclsOrBindingsAssignment_4_1");
 			builder.put(grammarAccess.getVariableBindingAccess().getPatternAssignment_0(), "rule__VariableBinding__PatternAssignment_0");
 			builder.put(grammarAccess.getVariableBindingAccess().getExpressionAssignment_1_1_1(), "rule__VariableBinding__ExpressionAssignment_1_1_1");
 			builder.put(grammarAccess.getVariableBindingAccess().getExpressionAssignment_1_0_0_1(), "rule__VariableBinding__ExpressionAssignment_1_0_0_1");

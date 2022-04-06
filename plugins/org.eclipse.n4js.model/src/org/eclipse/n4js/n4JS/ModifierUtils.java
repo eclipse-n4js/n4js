@@ -47,7 +47,7 @@ public class ModifierUtils {
 					|| isNamespaceDeclaration(astNodeType)
 					|| isN4MemberDeclaration(astNodeType)
 					|| isFunctionDeclaration(astNodeType)
-					|| (isVariableStatement(astNodeType) && ((VariableStatement) elem).isDirectlyExported());
+					|| isVariableStatement(astNodeType);
 		case PRIVATE:
 			if (isN4MemberDeclaration(astNodeType)) {
 				return true;
@@ -56,7 +56,7 @@ public class ModifierUtils {
 					(isN4TypeDeclaration(astNodeType)
 							|| isNamespaceDeclaration(astNodeType)
 							|| isFunctionDeclaration(astNodeType)
-							|| (isVariableStatement(astNodeType) && ((VariableStatement) elem).isDirectlyExported()))) {
+							|| isVariableStatement(astNodeType))) {
 
 				return true;
 			}
@@ -67,7 +67,7 @@ public class ModifierUtils {
 			return isN4TypeDeclaration(astNodeType)
 					|| isNamespaceDeclaration(astNodeType)
 					|| isFunctionDeclaration(astNodeType)
-					|| (isVariableStatement(astNodeType) && ((VariableStatement) elem).isDirectlyExported());
+					|| isVariableStatement(astNodeType);
 		case ABSTRACT:
 			return isN4ClassDeclaration(astNodeType)
 					|| isN4MethodDeclaration(astNodeType)

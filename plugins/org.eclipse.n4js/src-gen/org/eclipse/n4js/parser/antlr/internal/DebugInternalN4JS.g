@@ -217,7 +217,13 @@ ruleNamespaceElement:
 			ruleFunctionDeclaration
 		)
 		    |
-		ruleVariableStatementWithModifier
+		(
+			(ruleN4Modifier
+			*
+			ruleVariableStatementKeyword
+			)=>
+			ruleVariableStatement
+		)
 		    |
 		ruleExportDeclaration
 	)
@@ -301,7 +307,13 @@ norm1_NamespaceElement:
 			norm1_FunctionDeclaration
 		)
 		    |
-		norm1_VariableStatementWithModifier
+		(
+			(ruleN4Modifier
+			*
+			ruleVariableStatementKeyword
+			)=>
+			norm1_VariableStatement
+		)
 		    |
 		ruleExportDeclaration
 	)
@@ -613,7 +625,13 @@ ruleExportableElement:
 			ruleFunctionDeclaration
 		)
 		    |
-		ruleVariableStatementWithModifier
+		(
+			(ruleN4Modifier
+			*
+			ruleVariableStatementKeyword
+			)=>
+			ruleVariableStatement
+		)
 	)
 ;
 
@@ -1534,9 +1552,11 @@ ruleRootStatement:
 		)
 		    |
 		(
-			(ruleVariableStatementKeyword
+			(ruleN4Modifier
+			*
+			ruleVariableStatementKeyword
 			)=>
-			norm1_VariableStatement
+			ruleVariableStatement
 		)
 		    |
 		ruleEmptyStatement
@@ -1591,9 +1611,11 @@ norm1_RootStatement:
 		)
 		    |
 		(
-			(ruleVariableStatementKeyword
+			(ruleN4Modifier
+			*
+			ruleVariableStatementKeyword
 			)=>
-			norm3_VariableStatement
+			norm1_VariableStatement
 		)
 		    |
 		ruleEmptyStatement
@@ -1670,10 +1692,14 @@ norm1_Statement:
 ;
 
 // Rule VariableStatement
-norm1_VariableStatement:
+ruleVariableStatement:
 	(
-		(ruleVariableStatementKeyword
+		(ruleN4Modifier
+		*
+		ruleVariableStatementKeyword
 		)=>
+		ruleN4Modifier
+		*
 		ruleVariableStatementKeyword
 	)
 	norm1_VariableDeclarationOrBinding
@@ -1685,38 +1711,16 @@ norm1_VariableStatement:
 ;
 
 // Rule VariableStatement
-norm3_VariableStatement:
+norm1_VariableStatement:
 	(
-		(ruleVariableStatementKeyword
+		(ruleN4Modifier
+		*
+		ruleVariableStatementKeyword
 		)=>
+		ruleN4Modifier
+		*
 		ruleVariableStatementKeyword
 	)
-	norm3_VariableDeclarationOrBinding
-	(
-		','
-		norm3_VariableDeclarationOrBinding
-	)*
-	ruleSemi
-;
-
-// Rule VariableStatementWithModifier
-ruleVariableStatementWithModifier:
-	ruleN4Modifier
-	*
-	ruleVariableStatementKeyword
-	norm1_VariableDeclarationOrBinding
-	(
-		','
-		norm1_VariableDeclarationOrBinding
-	)*
-	ruleSemi
-;
-
-// Rule VariableStatementWithModifier
-norm1_VariableStatementWithModifier:
-	ruleN4Modifier
-	*
-	ruleVariableStatementKeyword
 	norm3_VariableDeclarationOrBinding
 	(
 		','

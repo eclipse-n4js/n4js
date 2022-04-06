@@ -249,7 +249,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cN4EnumDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		private final RuleCall cN4TypeAliasDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		private final RuleCall cFunctionDeclarationParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cVariableStatementWithModifierParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cVariableStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
 		private final RuleCall cExportDeclarationParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
 		
 		//NamespaceElement<Yield> returns NamespaceElement :
@@ -260,7 +260,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    | N4EnumDeclaration<Yield>
 		//    | N4TypeAliasDeclaration<Yield>
 		//    | FunctionDeclaration<Yield>
-		//    | VariableStatementWithModifier<Yield>
+		//    | VariableStatement<Yield>
 		//    | ExportDeclaration
 		//;
 		@Override public ParserRule getRule() { return rule; }
@@ -272,7 +272,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//| N4EnumDeclaration<Yield>
 		//| N4TypeAliasDeclaration<Yield>
 		//| FunctionDeclaration<Yield>
-		//| VariableStatementWithModifier<Yield>
+		//| VariableStatement<Yield>
 		//| ExportDeclaration
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
@@ -297,8 +297,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//FunctionDeclaration<Yield>
 		public RuleCall getFunctionDeclarationParserRuleCall_6() { return cFunctionDeclarationParserRuleCall_6; }
 		
-		//VariableStatementWithModifier<Yield>
-		public RuleCall getVariableStatementWithModifierParserRuleCall_7() { return cVariableStatementWithModifierParserRuleCall_7; }
+		//VariableStatement<Yield>
+		public RuleCall getVariableStatementParserRuleCall_7() { return cVariableStatementParserRuleCall_7; }
 		
 		//ExportDeclaration
 		public RuleCall getExportDeclarationParserRuleCall_8() { return cExportDeclarationParserRuleCall_8; }
@@ -1482,7 +1482,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cN4EnumDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		private final RuleCall cN4TypeAliasDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		private final RuleCall cFunctionDeclarationParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cVariableStatementWithModifierParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cVariableStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
 		
 		//ExportableElement:
 		//      AnnotatedExportableElement<Yield=false>
@@ -1492,7 +1492,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    | N4EnumDeclaration<Yield=false>
 		//    | N4TypeAliasDeclaration<Yield=false>
 		//    | FunctionDeclaration<Yield=false>
-		//    | VariableStatementWithModifier<Yield=false>
+		//    | VariableStatement<Yield=false>
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -1503,7 +1503,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//| N4EnumDeclaration<Yield=false>
 		//| N4TypeAliasDeclaration<Yield=false>
 		//| FunctionDeclaration<Yield=false>
-		//| VariableStatementWithModifier<Yield=false>
+		//| VariableStatement<Yield=false>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//AnnotatedExportableElement<Yield=false>
@@ -1527,8 +1527,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//FunctionDeclaration<Yield=false>
 		public RuleCall getFunctionDeclarationParserRuleCall_6() { return cFunctionDeclarationParserRuleCall_6; }
 		
-		//VariableStatementWithModifier<Yield=false>
-		public RuleCall getVariableStatementWithModifierParserRuleCall_7() { return cVariableStatementWithModifierParserRuleCall_7; }
+		//VariableStatement<Yield=false>
+		public RuleCall getVariableStatementParserRuleCall_7() { return cVariableStatementParserRuleCall_7; }
 	}
 	public class AnnotatedExportableElementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotatedExportableElement");
@@ -3308,7 +3308,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//    Block<Yield>
 		//    // Function declarations are modeled as statements to support legacy JS parsing
 		//    | FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
-		//    | VariableStatement<In=true,Yield>
+		//    | VariableStatement<Yield>
 		//    | EmptyStatement
 		//    | LabelledStatement<Yield>
 		//    | ExpressionStatement<Yield>
@@ -3329,7 +3329,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//Block<Yield>
 		//// Function declarations are modeled as statements to support legacy JS parsing
 		//| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
-		//| VariableStatement<In=true,Yield>
+		//| VariableStatement<Yield>
 		//| EmptyStatement
 		//| LabelledStatement<Yield>
 		//| ExpressionStatement<Yield>
@@ -3352,7 +3352,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//FunctionDeclaration<Yield>
 		public RuleCall getFunctionDeclarationParserRuleCall_1() { return cFunctionDeclarationParserRuleCall_1; }
 		
-		//VariableStatement<In=true,Yield>
+		//VariableStatement<Yield>
 		public RuleCall getVariableStatementParserRuleCall_2() { return cVariableStatementParserRuleCall_2; }
 		
 		//EmptyStatement
@@ -3422,8 +3422,10 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Group cGroup_0 = (Group)cGroup.eContents().get(0);
 		private final Group cGroup_0_0 = (Group)cGroup_0.eContents().get(0);
 		private final Action cVariableStatementAction_0_0_0 = (Action)cGroup_0_0.eContents().get(0);
-		private final Assignment cVarStmtKeywordAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
-		private final RuleCall cVarStmtKeywordVariableStatementKeywordEnumRuleCall_0_0_1_0 = (RuleCall)cVarStmtKeywordAssignment_0_0_1.eContents().get(0);
+		private final Assignment cDeclaredModifiersAssignment_0_0_1 = (Assignment)cGroup_0_0.eContents().get(1);
+		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0 = (RuleCall)cDeclaredModifiersAssignment_0_0_1.eContents().get(0);
+		private final Assignment cVarStmtKeywordAssignment_0_0_2 = (Assignment)cGroup_0_0.eContents().get(2);
+		private final RuleCall cVarStmtKeywordVariableStatementKeywordEnumRuleCall_0_0_2_0 = (RuleCall)cVarStmtKeywordAssignment_0_0_2.eContents().get(0);
 		private final Assignment cVarDeclsOrBindingsAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_1_0 = (RuleCall)cVarDeclsOrBindingsAssignment_1.eContents().get(0);
 		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
@@ -3432,124 +3434,68 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final RuleCall cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_2_1_0 = (RuleCall)cVarDeclsOrBindingsAssignment_2_1.eContents().get(0);
 		private final RuleCall cSemiParserRuleCall_3 = (RuleCall)cGroup.eContents().get(3);
 		
-		//VariableStatement <In, Yield>:
+		//VariableStatement <Yield>:
 		//    =>({VariableStatement}
+		//        (declaredModifiers+=N4Modifier)*
 		//        varStmtKeyword=VariableStatementKeyword
 		//    )
-		//    varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>)* Semi
+		//    varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//=>({VariableStatement}
+		//    (declaredModifiers+=N4Modifier)*
 		//    varStmtKeyword=VariableStatementKeyword
 		//)
-		//varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>)* Semi
+		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
 		public Group getGroup() { return cGroup; }
 		
 		//=>({VariableStatement}
+		//    (declaredModifiers+=N4Modifier)*
 		//    varStmtKeyword=VariableStatementKeyword
 		//)
 		public Group getGroup_0() { return cGroup_0; }
 		
 		//{VariableStatement}
+		//        (declaredModifiers+=N4Modifier)*
 		//        varStmtKeyword=VariableStatementKeyword
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{VariableStatement}
 		public Action getVariableStatementAction_0_0_0() { return cVariableStatementAction_0_0_0; }
 		
+		//(declaredModifiers+=N4Modifier)*
+		public Assignment getDeclaredModifiersAssignment_0_0_1() { return cDeclaredModifiersAssignment_0_0_1; }
+		
+		//N4Modifier
+		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_0_0_1_0; }
+		
 		//varStmtKeyword=VariableStatementKeyword
-		public Assignment getVarStmtKeywordAssignment_0_0_1() { return cVarStmtKeywordAssignment_0_0_1; }
+		public Assignment getVarStmtKeywordAssignment_0_0_2() { return cVarStmtKeywordAssignment_0_0_2; }
 		
 		//VariableStatementKeyword
-		public RuleCall getVarStmtKeywordVariableStatementKeywordEnumRuleCall_0_0_1_0() { return cVarStmtKeywordVariableStatementKeywordEnumRuleCall_0_0_1_0; }
+		public RuleCall getVarStmtKeywordVariableStatementKeywordEnumRuleCall_0_0_2_0() { return cVarStmtKeywordVariableStatementKeywordEnumRuleCall_0_0_2_0; }
 		
-		//varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>
+		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>
 		public Assignment getVarDeclsOrBindingsAssignment_1() { return cVarDeclsOrBindingsAssignment_1; }
 		
-		//VariableDeclarationOrBinding<In,Yield,false>
+		//VariableDeclarationOrBinding<In=true,Yield,false>
 		public RuleCall getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_1_0() { return cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_1_0; }
 		
-		//(',' varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>)*
+		//(',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)*
 		public Group getGroup_2() { return cGroup_2; }
 		
 		//','
 		public Keyword getCommaKeyword_2_0() { return cCommaKeyword_2_0; }
 		
-		//varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>
+		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>
 		public Assignment getVarDeclsOrBindingsAssignment_2_1() { return cVarDeclsOrBindingsAssignment_2_1; }
 		
-		//VariableDeclarationOrBinding<In,Yield,false>
+		//VariableDeclarationOrBinding<In=true,Yield,false>
 		public RuleCall getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_2_1_0() { return cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_2_1_0; }
 		
 		//Semi
 		public RuleCall getSemiParserRuleCall_3() { return cSemiParserRuleCall_3; }
-	}
-	public class VariableStatementWithModifierElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VariableStatementWithModifier");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cVariableStatementAction_0 = (Action)cGroup.eContents().get(0);
-		private final Assignment cDeclaredModifiersAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cDeclaredModifiersN4ModifierEnumRuleCall_1_0 = (RuleCall)cDeclaredModifiersAssignment_1.eContents().get(0);
-		private final Assignment cVarStmtKeywordAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cVarStmtKeywordVariableStatementKeywordEnumRuleCall_2_0 = (RuleCall)cVarStmtKeywordAssignment_2.eContents().get(0);
-		private final Assignment cVarDeclsOrBindingsAssignment_3 = (Assignment)cGroup.eContents().get(3);
-		private final RuleCall cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_0 = (RuleCall)cVarDeclsOrBindingsAssignment_3.eContents().get(0);
-		private final Group cGroup_4 = (Group)cGroup.eContents().get(4);
-		private final Keyword cCommaKeyword_4_0 = (Keyword)cGroup_4.eContents().get(0);
-		private final Assignment cVarDeclsOrBindingsAssignment_4_1 = (Assignment)cGroup_4.eContents().get(1);
-		private final RuleCall cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_4_1_0 = (RuleCall)cVarDeclsOrBindingsAssignment_4_1.eContents().get(0);
-		private final RuleCall cSemiParserRuleCall_5 = (RuleCall)cGroup.eContents().get(5);
-		
-		//VariableStatementWithModifier <Yield> returns VariableStatement:
-		//    {VariableStatement}
-		//    (declaredModifiers+=N4Modifier)*
-		//    varStmtKeyword=VariableStatementKeyword
-		//    varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
-		//;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//{VariableStatement}
-		//(declaredModifiers+=N4Modifier)*
-		//varStmtKeyword=VariableStatementKeyword
-		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
-		public Group getGroup() { return cGroup; }
-		
-		//{VariableStatement}
-		public Action getVariableStatementAction_0() { return cVariableStatementAction_0; }
-		
-		//(declaredModifiers+=N4Modifier)*
-		public Assignment getDeclaredModifiersAssignment_1() { return cDeclaredModifiersAssignment_1; }
-		
-		//N4Modifier
-		public RuleCall getDeclaredModifiersN4ModifierEnumRuleCall_1_0() { return cDeclaredModifiersN4ModifierEnumRuleCall_1_0; }
-		
-		//varStmtKeyword=VariableStatementKeyword
-		public Assignment getVarStmtKeywordAssignment_2() { return cVarStmtKeywordAssignment_2; }
-		
-		//VariableStatementKeyword
-		public RuleCall getVarStmtKeywordVariableStatementKeywordEnumRuleCall_2_0() { return cVarStmtKeywordVariableStatementKeywordEnumRuleCall_2_0; }
-		
-		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>
-		public Assignment getVarDeclsOrBindingsAssignment_3() { return cVarDeclsOrBindingsAssignment_3; }
-		
-		//VariableDeclarationOrBinding<In=true,Yield,false>
-		public RuleCall getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_0() { return cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_3_0; }
-		
-		//(',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)*
-		public Group getGroup_4() { return cGroup_4; }
-		
-		//','
-		public Keyword getCommaKeyword_4_0() { return cCommaKeyword_4_0; }
-		
-		//varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>
-		public Assignment getVarDeclsOrBindingsAssignment_4_1() { return cVarDeclsOrBindingsAssignment_4_1; }
-		
-		//VariableDeclarationOrBinding<In=true,Yield,false>
-		public RuleCall getVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_4_1_0() { return cVarDeclsOrBindingsVariableDeclarationOrBindingParserRuleCall_4_1_0; }
-		
-		//Semi
-		public RuleCall getSemiParserRuleCall_5() { return cSemiParserRuleCall_5; }
 	}
 	public class VariableDeclarationOrBindingElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VariableDeclarationOrBinding");
@@ -12216,7 +12162,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	private final StatementElements pStatement;
 	private final VariableStatementKeywordElements eVariableStatementKeyword;
 	private final VariableStatementElements pVariableStatement;
-	private final VariableStatementWithModifierElements pVariableStatementWithModifier;
 	private final VariableDeclarationOrBindingElements pVariableDeclarationOrBinding;
 	private final VariableBindingElements pVariableBinding;
 	private final VariableDeclarationElements pVariableDeclaration;
@@ -12473,7 +12418,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		this.pStatement = new StatementElements();
 		this.eVariableStatementKeyword = new VariableStatementKeywordElements();
 		this.pVariableStatement = new VariableStatementElements();
-		this.pVariableStatementWithModifier = new VariableStatementWithModifierElements();
 		this.pVariableDeclarationOrBinding = new VariableDeclarationOrBindingElements();
 		this.pVariableBinding = new VariableBindingElements();
 		this.pVariableDeclaration = new VariableDeclarationElements();
@@ -12769,7 +12713,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | N4EnumDeclaration<Yield>
 	//    | N4TypeAliasDeclaration<Yield>
 	//    | FunctionDeclaration<Yield>
-	//    | VariableStatementWithModifier<Yield>
+	//    | VariableStatement<Yield>
 	//    | ExportDeclaration
 	//;
 	public NamespaceElementElements getNamespaceElementAccess() {
@@ -12977,7 +12921,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    | N4EnumDeclaration<Yield=false>
 	//    | N4TypeAliasDeclaration<Yield=false>
 	//    | FunctionDeclaration<Yield=false>
-	//    | VariableStatementWithModifier<Yield=false>
+	//    | VariableStatement<Yield=false>
 	//;
 	public ExportableElementElements getExportableElementAccess() {
 		return pExportableElement;
@@ -13405,7 +13349,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	//    Block<Yield>
 	//    // Function declarations are modeled as statements to support legacy JS parsing
 	//    | FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
-	//    | VariableStatement<In=true,Yield>
+	//    | VariableStatement<Yield>
 	//    | EmptyStatement
 	//    | LabelledStatement<Yield>
 	//    | ExpressionStatement<Yield>
@@ -13452,11 +13396,12 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getVariableStatementKeywordAccess().getRule();
 	}
 	
-	//VariableStatement <In, Yield>:
+	//VariableStatement <Yield>:
 	//    =>({VariableStatement}
+	//        (declaredModifiers+=N4Modifier)*
 	//        varStmtKeyword=VariableStatementKeyword
 	//    )
-	//    varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>)* Semi
+	//    varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
 	//;
 	public VariableStatementElements getVariableStatementAccess() {
 		return pVariableStatement;
@@ -13464,20 +13409,6 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getVariableStatementRule() {
 		return getVariableStatementAccess().getRule();
-	}
-	
-	//VariableStatementWithModifier <Yield> returns VariableStatement:
-	//    {VariableStatement}
-	//    (declaredModifiers+=N4Modifier)*
-	//    varStmtKeyword=VariableStatementKeyword
-	//    varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
-	//;
-	public VariableStatementWithModifierElements getVariableStatementWithModifierAccess() {
-		return pVariableStatementWithModifier;
-	}
-	
-	public ParserRule getVariableStatementWithModifierRule() {
-		return getVariableStatementWithModifierAccess().getRule();
 	}
 	
 	//VariableDeclarationOrBinding <In, Yield, OptionalInit>:

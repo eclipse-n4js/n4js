@@ -33,13 +33,13 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.TypeReferenceNode
+import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.AccessibleTypeElement
 import org.eclipse.n4js.ts.types.ContainerType
-import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
@@ -94,7 +94,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkExportedWhenVisibilityHigherThanPrivate(TypeDefiningElement typeDefiningElement) {
+	def checkDirectlyExportedWhenVisibilityHigherThanPrivateForType(TypeDefiningElement typeDefiningElement) {
 		if (!jsVariantHelper.requireCheckExportedWhenVisibilityHigherThanPrivate(typeDefiningElement)) {
 			return; // does not apply to plain JS files
 		}
@@ -111,36 +111,44 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 
 		val type = typeDefiningElement.definedType
 
-		if (type !== null
-				&& !type.directlyExported
-				&& type.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal
-				&& ResourceType.getResourceType(typeDefiningElement) !== ResourceType.DTS) {
+		if (type instanceof AccessibleTypeElement) {
+			doCheckDirectlyExportedWhenVisibilityHigherThanPrivate(typeDefiningElement, type);
+		}
+	}
 
-			if (type instanceof SyntaxRelatedTElement) {
-				val astElem = type.astElement;
-				if (astElem !== null) {
-					// NOTE: we are using issue code UNSUPPORTED here, because the only reason for disallowing a visibility higher than
-					// private on non-exported types is that it is required/useful only with separate export declarations and such export
-					// declarations are UNSUPPORTED in N4JS(D) at the moment.
-					val message = getMessageForUNSUPPORTED("non-exported " + type.keyword + " with a visibility higher than private");
-					val node = findModifierNode(astElem, type.typeAccessModifier);
-					if (node !== null) {
-						addIssue(message, astElem, node.getOffset(), node.getLength(), UNSUPPORTED);
-					} else {
-						val eObjectToNameFeature = findNameFeature(astElem);
-						addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, UNSUPPORTED)
-					}
-				}
+	@Check
+	def checkDirectlyExportedWhenVisibilityHigherThanPrivateForVariable(VariableDeclaration varDecl) {
+		val tVar = varDecl.definedVariable;
+		doCheckDirectlyExportedWhenVisibilityHigherThanPrivate(varDecl, tVar);
+	}
+
+	def private void doCheckDirectlyExportedWhenVisibilityHigherThanPrivate(EObject astNode, AccessibleTypeElement tElem) {
+		if (tElem !== null
+				&& !tElem.directlyExported
+				&& tElem.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal
+				&& ResourceType.getResourceType(astNode) !== ResourceType.DTS) {
+
+			// NOTE: we are using issue code UNSUPPORTED here, because the only reason for disallowing a visibility higher than
+			// private on non-exported types is that it is required/useful only with separate export declarations and such export
+			// declarations are UNSUPPORTED in N4JS(D) at the moment.
+			val message = getMessageForUNSUPPORTED("non-exported " + tElem.keyword + " with a visibility higher than private");
+			val node = findModifierNode(astNode, tElem.typeAccessModifier);
+			if (node !== null) {
+				addIssue(message, astNode, node.getOffset(), node.getLength(), UNSUPPORTED);
+			} else {
+				val eObjectToNameFeature = findNameFeature(astNode);
+				addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, UNSUPPORTED)
 			}
 		}
 	}
 
 	def ILeafNode findModifierNode(EObject eo, TypeAccessModifier taModifier) {
-		if (eo instanceof ModifiableElement) {
-			for (var i = 0; i<eo.declaredModifiers.length; i++) {
-				val dm = eo.declaredModifiers.get(i);
+		val me = if (eo instanceof VariableDeclaration) eo.variableDeclarationContainer else eo;
+		if (me instanceof ModifiableElement) {
+			for (var i = 0; i<me.declaredModifiers.length; i++) {
+				val dm = me.declaredModifiers.get(i);
 				if (dm.literal == taModifier.literal) {
-					val node = ModifierUtils.getNodeForModifier(eo, i);
+					val node = ModifierUtils.getNodeForModifier(me, i);
 					return node;
 				}
 			}
