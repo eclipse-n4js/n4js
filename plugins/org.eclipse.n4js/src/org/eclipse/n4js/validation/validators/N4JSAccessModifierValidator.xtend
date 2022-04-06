@@ -49,6 +49,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -109,18 +110,24 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 
 		val type = typeDefiningElement.definedType
 
-		if (type !== null && !type.directlyExported && type.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal) {
+		if (type !== null
+				&& !type.directlyExported
+				&& type.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal
+				&& ResourceType.getResourceType(typeDefiningElement) !== ResourceType.DTS) {
+
 			if (type instanceof SyntaxRelatedTElement) {
 				val astElem = type.astElement;
 				if (astElem !== null) {
-					val message = getMessageForCLF_NOT_EXPORTED_NOT_PRIVATE(type.keyword,
-						type.typeAccessModifier.keyword);
+					// NOTE: we are using issue code UNSUPPORTED here, because the only reason for disallowing a visibility higher than
+					// private on non-exported types is that it is required/useful only with separate export declarations and such export
+					// declarations are UNSUPPORTED in N4JS(D) at the moment.
+					val message = getMessageForUNSUPPORTED("non-exported " + type.keyword + " with a visibility higher than private");
 					val node = findModifierNode(astElem, type.typeAccessModifier);
 					if (node !== null) {
-						addIssue(message, astElem, node.getOffset(), node.getLength(), CLF_NOT_EXPORTED_NOT_PRIVATE);
+						addIssue(message, astElem, node.getOffset(), node.getLength(), UNSUPPORTED);
 					} else {
 						val eObjectToNameFeature = findNameFeature(astElem);
-						addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_NOT_EXPORTED_NOT_PRIVATE)
+						addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, UNSUPPORTED)
 					}
 				}
 			}
