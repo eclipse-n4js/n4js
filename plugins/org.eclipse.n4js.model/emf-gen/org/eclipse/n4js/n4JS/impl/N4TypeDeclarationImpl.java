@@ -608,6 +608,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 		}
 		if (baseClass == ModifiableElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_EXTERNAL: return N4JSPackage.N4_TYPE_DECLARATION___IS_EXTERNAL;
 				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.N4_TYPE_DECLARATION___IS_DECLARED_EXTERNAL;
 				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.N4_TYPE_DECLARATION___IS_DEFAULT_EXTERNAL;
 				default: return -1;

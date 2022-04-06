@@ -17,6 +17,7 @@ import java.util.ArrayList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.n4JS.AbstractVariable
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
@@ -29,7 +30,9 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.IfStatement
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSMetaModelUtils
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
@@ -370,31 +373,34 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 *     declarations in the AST that are nested inside a TypeRef).
 	 * @param declaredTypeVars the declared type variables from the type model
 	 */
-	private def internalCheckNoUnusedTypeParameters(EObject root, List<? extends IdentifiableElement> actualTypeVarsInAST, List<TypeVariable> declaredTypeVars) {
+	private def internalCheckNoUnusedTypeParameters(EObject root, List<? extends EObject> actualTypeVarsInAST, List<TypeVariable> declaredTypeVars) {
 		val int typeVarCount = Math.min(actualTypeVarsInAST.size, declaredTypeVars.size)
 		if (typeVarCount == 1) {
 			// Since this is a very common case, we want it to be as fast as possible. Therefore we don't
 			// build a set of all reference type variables and do the check once directly.
-			val IdentifiableElement actualTypeVarInAST = actualTypeVarsInAST.get(0)
+			val EObject actualTypeVarInAST = actualTypeVarsInAST.get(0)
 			val TypeVariable declaredTypeVar = declaredTypeVars.get(0)
 			if (!TypeUtils.isOrContainsRefToTypeVar(root, declaredTypeVar)) {
-				addIssue(IssueCodes.getMessageForFUN_UNUSED_GENERIC_TYPE_PARAM(actualTypeVarInAST.name), actualTypeVarInAST,
-					TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME, IssueCodes.FUN_UNUSED_GENERIC_TYPE_PARAM);
+				createUnusedTypeParameterIssue(actualTypeVarInAST);
 			}
 		} else if (typeVarCount > 1) {
 			// In this case, we avoid repeatedly traversing the tree with the given root by getting a set of
 			// all type variables it references up front and using that to perform our check.
 			val referencedTypeVars = TypeUtils.getReferencedTypeVars(root);
 			for (var int i = 0; i < typeVarCount; i++) {
-				val IdentifiableElement actualTypeVarInAST = actualTypeVarsInAST.get(i)
+				val EObject actualTypeVarInAST = actualTypeVarsInAST.get(i)
 				val TypeVariable declaredTypeVar = declaredTypeVars.get(i)
 
 				if (!referencedTypeVars.contains(declaredTypeVar)) {
-					addIssue(IssueCodes.getMessageForFUN_UNUSED_GENERIC_TYPE_PARAM(actualTypeVarInAST.name), actualTypeVarInAST,
-						TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME, IssueCodes.FUN_UNUSED_GENERIC_TYPE_PARAM);
+					createUnusedTypeParameterIssue(actualTypeVarInAST);
 				}
 			}
 		}
+	}
+
+	private def void createUnusedTypeParameterIssue(EObject typeVarInAST) {
+		val msg = IssueCodes.getMessageForFUN_UNUSED_GENERIC_TYPE_PARAM(N4JSASTUtils.getNameOfTypeVarInAST(typeVarInAST));
+		addIssue(msg, typeVarInAST, N4JSASTUtils.getNameFeatureOfTypeVarInAST(typeVarInAST), IssueCodes.FUN_UNUSED_GENERIC_TYPE_PARAM);
 	}
 
 	/**
@@ -517,6 +523,10 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 			} else if (eo instanceof VariableStatement) {
 				val varDecl = eo.varDecl.head
 				findNameFeature(varDecl)
+			} else if (eo instanceof AbstractVariable<?>) {
+				eo -> N4JSPackage.Literals.ABSTRACT_VARIABLE__NAME
+			} else if (eo instanceof N4TypeVariable) {
+				eo -> N4JSPackage.Literals.N4_TYPE_VARIABLE__NAME
 			} else {
 				null
 			}

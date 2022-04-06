@@ -12,7 +12,7 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.n4js.ts.types.AbstractModule;
+import org.eclipse.n4js.ts.types.TModule;
 
 /**
  * <!-- begin-user-doc -->
@@ -74,12 +74,12 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Module</em>' reference.
-	 * @see #setModule(AbstractModule)
+	 * @see #setModule(TModule)
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getImportDeclaration_Module()
 	 * @model
 	 * @generated
 	 */
-	AbstractModule getModule();
+	TModule getModule();
 
 	/**
 	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ImportDeclaration#getModule <em>Module</em>}' reference.
@@ -89,7 +89,7 @@ public interface ImportDeclaration extends AnnotableScriptElement {
 	 * @see #getModule()
 	 * @generated
 	 */
-	void setModule(AbstractModule value);
+	void setModule(TModule value);
 
 	/**
 	 * Returns the value of the '<em><b>Module Specifier As Text</b></em>' attribute.

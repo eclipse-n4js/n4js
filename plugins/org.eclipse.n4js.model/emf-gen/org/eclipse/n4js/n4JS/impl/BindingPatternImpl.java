@@ -10,10 +10,18 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import com.google.common.collect.Iterators;
+
+import java.lang.reflect.InvocationTargetException;
+
+import org.eclipse.emf.common.util.ECollections;
+import org.eclipse.emf.common.util.EList;
+
 import org.eclipse.emf.ecore.EClass;
 
 import org.eclipse.n4js.n4JS.BindingPattern;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
@@ -42,6 +50,30 @@ public abstract class BindingPatternImpl extends ProxyResolvingEObjectImpl imple
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.BINDING_PATTERN;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<VariableDeclaration> getAllVariableDeclarations() {
+		return ECollections.<VariableDeclaration>toEList(Iterators.<VariableDeclaration>filter(this.eAllContents(), VariableDeclaration.class));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.BINDING_PATTERN___GET_ALL_VARIABLE_DECLARATIONS:
+				return getAllVariableDeclarations();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 } //BindingPatternImpl

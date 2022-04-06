@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TSetter
@@ -22,8 +23,10 @@ import org.eclipse.n4js.ts.types.TypesFactory
 /**
  */
 package class N4JSSetterTypesBuilder {
+
 	@Inject extension N4JSTypesBuilderHelper
 	@Inject extension N4JSFormalParameterTypesBuilder
+	@Inject extension N4JSVariableStatementTypesBuilder
 
 	def package boolean relinkSetter(N4SetterDeclaration n4Setter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
 		if (n4Setter.name === null && !n4Setter.hasComputedPropertyName) {
@@ -39,12 +42,13 @@ package class N4JSSetterTypesBuilder {
 		return true
 	}
 
-	def package TSetter createSetter(N4SetterDeclaration n4Setter, TClassifier classifierType, boolean preLinkingPhase) {
+	def package TSetter createSetter(N4SetterDeclaration n4Setter, TClassifier classifierType, AbstractNamespace target, boolean preLinkingPhase) {
 		if (n4Setter.name === null && !n4Setter.hasComputedPropertyName) {
 			return null
 		}
 
 		val builtInTypeScope = BuiltInTypeScope.get(n4Setter.eResource.resourceSet)
+		n4Setter.createImplicitArgumentsVariable(target, builtInTypeScope, preLinkingPhase);
 
 		val setterType = TypesFactory::eINSTANCE.createTSetter
 		setterType.setMemberName(n4Setter);
@@ -85,7 +89,7 @@ package class N4JSSetterTypesBuilder {
 		val formalParameterType = setterType.fpar;
 		ensureEqualName(n4Setter.fpar, formalParameterType);
 		formalParameterType.astElement = n4Setter.fpar;
-		n4Setter.fpar.definedTypeElement = formalParameterType;
+		n4Setter.fpar.definedVariable = formalParameterType;
 		return true;
 	}
 

@@ -174,7 +174,7 @@ public class N4JSPostProcessor implements PostProcessor {
 		// move internal types to exposedInternalTypes if referenced from types or variables
 		final List<EObject> stuffToScan = new ArrayList<>();
 		stuffToScan.addAll(module.getTypes());
-		stuffToScan.addAll(module.getVariables());
+		stuffToScan.addAll(module.getExportedVariables());
 		for (EObject currRoot : stuffToScan) {
 			exposeTypesReferencedBy(currRoot);
 		}

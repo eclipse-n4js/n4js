@@ -16,7 +16,7 @@ var x=1;
 function foo() {
 	var x=3;
 	/* XPECT scopeWithPosition at x ---
-		x - 17, b - 22, c - 24, foo - T16,
+		x - T17, b - T22, c - T24, foo - T16,
 		...
 	---*/
 	var b = x;
@@ -24,7 +24,7 @@ function foo() {
 var c;
 var b = c;
 /* XPECT scopeWithPosition at c ---
-		x - 14, b - 25, c - 24, foo - T16,
+		x - T14, b - T25, c - T24, foo - T16,
 		...
 	---*/
 c=c;

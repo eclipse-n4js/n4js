@@ -395,6 +395,16 @@ public class N4SetterDeclarationImpl extends SetterDeclarationImpl implements N4
 	 * @generated
 	 */
 	@Override
+	public boolean isExternal() {
+		return (this.isDeclaredExternal() || this.isDefaultExternal());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isDeclaredExternal() {
 		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
 	}
@@ -636,6 +646,7 @@ public class N4SetterDeclarationImpl extends SetterDeclarationImpl implements N4
 		}
 		if (baseClass == ModifiableElement.class) {
 			switch (baseOperationID) {
+				case N4JSPackage.MODIFIABLE_ELEMENT___IS_EXTERNAL: return N4JSPackage.N4_SETTER_DECLARATION___IS_EXTERNAL;
 				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL: return N4JSPackage.N4_SETTER_DECLARATION___IS_DECLARED_EXTERNAL;
 				case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL: return N4JSPackage.N4_SETTER_DECLARATION___IS_DEFAULT_EXTERNAL;
 				default: return -1;
@@ -704,6 +715,8 @@ public class N4SetterDeclarationImpl extends SetterDeclarationImpl implements N4
 				return isCallSignature();
 			case N4JSPackage.N4_SETTER_DECLARATION___IS_CONSTRUCT_SIGNATURE:
 				return isConstructSignature();
+			case N4JSPackage.N4_SETTER_DECLARATION___IS_EXTERNAL:
+				return isExternal();
 			case N4JSPackage.N4_SETTER_DECLARATION___IS_DECLARED_EXTERNAL:
 				return isDeclaredExternal();
 			case N4JSPackage.N4_SETTER_DECLARATION___IS_DEFAULT_EXTERNAL:

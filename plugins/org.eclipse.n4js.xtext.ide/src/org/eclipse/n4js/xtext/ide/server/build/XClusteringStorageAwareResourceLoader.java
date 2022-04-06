@@ -9,6 +9,7 @@ package org.eclipse.n4js.xtext.ide.server.build;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.Sets;
 
 /**
  * @author Jan Koehnlein - Initial contribution and API
@@ -73,9 +75,13 @@ public class XClusteringStorageAwareResourceLoader {
 		Set<URI> sourceLevelURIs = new HashSet<>();
 		List<LoadResult> resources = new ArrayList<>();
 		List<T> result = new ArrayList<>();
-		Iterator<URI> iter = uris.iterator();
-		while (iter.hasNext()) {
-			URI uri = iter.next();
+		Set<URI> urisCopy = Sets.newLinkedHashSet(uris);
+		Set<URI> urisDone = new HashSet<>();
+
+		while (!urisCopy.isEmpty()) {
+			Iterator<URI> iterator = urisCopy.iterator();
+			URI uri = iterator.next();
+			iterator.remove();
 			XtextResourceSet resourceSet = context.getResourceSet();
 			if (!context.getClusteringPolicy().continueProcessing(resourceSet, uri, loadedURIsCount)) {
 				result.addAll(ListExtensions.map(resources, operation::apply));
@@ -94,16 +100,28 @@ public class XClusteringStorageAwareResourceLoader {
 				}
 				SourceLevelURIsAdapter.setSourceLevelUrisWithoutCopy(resourceSet, sourceLevelURIs);
 			}
-			resources.add(loadResource(resourceSet, uri));
+			resources.add(loadResource(resourceSet, uri, urisCopy, urisDone));
+			urisDone.add(uri);
 		}
 		result.addAll(ListExtensions.map(resources, operation::apply));
 		return result;
 	}
 
 	/** Actually loads a resource. */
-	protected LoadResult loadResource(ResourceSet resourceSet, URI uri) {
+	protected LoadResult loadResource(ResourceSet resourceSet, URI uri, Set<URI> addNewUrisHere, Set<URI> urisDone) {
 		try {
 			Resource resource = resourceSet.getResource(uri, true);
+			ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.get(resource);
+			if (loadResultInfo != null) {
+				Collection<URI> newUris = loadResultInfo.getNewUris();
+				for (Iterator<URI> iter = newUris.iterator(); iter.hasNext();) {
+					if (urisDone.contains(iter.next())) {
+						iter.remove();
+					}
+				}
+				addNewUrisHere.addAll(newUris);
+				loadResultInfo.ensureNestedResourcesExist(resource);
+			}
 			return new LoadResult(resource);
 		} catch (Throwable th) {
 			return new LoadResult(uri, th);

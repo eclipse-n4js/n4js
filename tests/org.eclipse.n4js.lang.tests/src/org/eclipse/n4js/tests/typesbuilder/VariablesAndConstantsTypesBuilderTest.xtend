@@ -96,7 +96,7 @@ class VariablesAndConstantsTypesBuilderTest extends AbstractTypesBuilderTest {
 		assertBuiltinTypeFragmentURI(phase, newN4jsResource, fourthVariableType, "/1/@types.3")
 
 		Assert.assertEquals("Should have only 4 exported variables as the fifth one is not marked as exported",
-			4, (newN4jsResource.contents.get(1) as TModule).variables.size
+			4, (newN4jsResource.contents.get(1) as TModule).exportedVariables.size
 		)
 	}
 

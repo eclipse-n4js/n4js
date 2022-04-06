@@ -16,9 +16,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
@@ -54,11 +54,11 @@ public class ASTMetaInfoUtils {
 	}
 
 	/**
-	 * Returns all AST nodes referencing the given local (i.e. non-exported) variable declaration. Returns empty list if
-	 * variable declaration is exported.
+	 * Returns all AST nodes referencing the given local (i.e. non-exported) variable. Returns empty list if the given
+	 * variable is exported.
 	 */
-	public static List<EObject> getLocalVariableReferences(VariableDeclaration varDecl) {
-		return ((N4JSResource) varDecl.eResource()).getASTMetaInfoCacheVerifyContext()
-				.getLocalVariableReferences(varDecl);
+	public static List<EObject> getLocalVariableReferences(TVariable tVariable) {
+		return ((N4JSResource) tVariable.eResource()).getASTMetaInfoCacheVerifyContext()
+				.getLocalVariableReferences(tVariable);
 	}
 }

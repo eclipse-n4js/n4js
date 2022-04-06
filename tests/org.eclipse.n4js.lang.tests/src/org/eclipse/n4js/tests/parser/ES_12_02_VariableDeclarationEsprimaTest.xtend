@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.tests.parser
 
+import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.IntLiteral
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.junit.Test
-import org.eclipse.n4js.n4JS.IntLiteral
-import org.eclipse.n4js.n4JS.IdentifierRef
 
 class ES_12_02_VariableDeclarationEsprimaTest extends AbstractParserTest {
 
@@ -149,6 +149,6 @@ class ES_12_02_VariableDeclarationEsprimaTest extends AbstractParserTest {
 		assertEquals('v0', v0.name)
 		val initializer = v0.expression as IdentifierRef
 		assertEquals('v0', initializer.idAsText)
-		assertEquals(v0, initializer.id)
+		assertEquals(v0.definedVariable, initializer.id)
 	}
 }

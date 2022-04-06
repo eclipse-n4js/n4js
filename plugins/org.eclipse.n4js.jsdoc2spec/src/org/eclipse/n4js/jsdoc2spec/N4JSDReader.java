@@ -157,7 +157,7 @@ public class N4JSDReader {
 						for (Type type : getRealTopLevelTypes(script)) {
 							specInfosByName.createTypeSpecInfo(type, rrph);
 						}
-						for (TVariable tvar : script.getModule().getVariables()) {
+						for (TVariable tvar : script.getModule().getExportedVariables()) {
 							specInfosByName.createTVarSpecInfo(tvar, rrph);
 						}
 					}
@@ -166,9 +166,9 @@ public class N4JSDReader {
 					String msg = "Error processing " + uri + ": " + ex.getMessage();
 					throw new IllegalArgumentException(msg, ex);
 				}
+				sub.worked(1);
+				sub.checkCanceled();
 			}
-			sub.worked(1);
-			sub.checkCanceled();
 		}
 	}
 

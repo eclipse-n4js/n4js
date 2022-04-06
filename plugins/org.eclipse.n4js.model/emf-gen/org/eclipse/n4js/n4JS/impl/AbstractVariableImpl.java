@@ -10,10 +10,9 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
-import java.util.Collection;
+import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
@@ -22,28 +21,26 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
-
-import org.eclipse.n4js.n4JS.N4AbstractNamespaceDeclaration;
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.NamespaceElement;
+
+import org.eclipse.n4js.ts.types.TAbstractVariable;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>N4 Abstract Namespace Declaration</b></em>'.
+ * An implementation of the model object '<em><b>Abstract Variable</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4AbstractNamespaceDeclarationImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4AbstractNamespaceDeclarationImpl#getOwnedElementsRaw <em>Owned Elements Raw</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.AbstractVariableImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.AbstractVariableImpl#getDefinedVariable <em>Defined Variable</em>}</li>
  * </ul>
  *
  * @generated
  */
-public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnvironmentElementImpl implements N4AbstractNamespaceDeclaration {
+public abstract class AbstractVariableImpl<T extends TAbstractVariable> extends TypedElementImpl implements AbstractVariable<T> {
 	/**
 	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -65,21 +62,21 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 	protected String name = NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getOwnedElementsRaw() <em>Owned Elements Raw</em>}' containment reference list.
+	 * The cached value of the '{@link #getDefinedVariable() <em>Defined Variable</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getOwnedElementsRaw()
+	 * @see #getDefinedVariable()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<NamespaceElement> ownedElementsRaw;
+	protected T definedVariable;
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected N4AbstractNamespaceDeclarationImpl() {
+	protected AbstractVariableImpl() {
 		super();
 	}
 
@@ -90,7 +87,7 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return N4JSPackage.Literals.N4_ABSTRACT_NAMESPACE_DECLARATION;
+		return N4JSPackage.Literals.ABSTRACT_VARIABLE;
 	}
 
 	/**
@@ -113,7 +110,35 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 		String oldName = name;
 		name = newName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__NAME, oldName, name));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.ABSTRACT_VARIABLE__NAME, oldName, name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public T getDefinedVariable() {
+		if (definedVariable != null && definedVariable.eIsProxy()) {
+			InternalEObject oldDefinedVariable = (InternalEObject)definedVariable;
+			definedVariable = (T)eResolveProxy(oldDefinedVariable);
+			if (definedVariable != oldDefinedVariable) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
+			}
+		}
+		return definedVariable;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public T basicGetDefinedVariable() {
+		return definedVariable;
 	}
 
 	/**
@@ -122,11 +147,11 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 	 * @generated
 	 */
 	@Override
-	public EList<NamespaceElement> getOwnedElementsRaw() {
-		if (ownedElementsRaw == null) {
-			ownedElementsRaw = new EObjectContainmentEList<NamespaceElement>(NamespaceElement.class, this, N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW);
-		}
-		return ownedElementsRaw;
+	public void setDefinedVariable(T newDefinedVariable) {
+		T oldDefinedVariable = definedVariable;
+		definedVariable = newDefinedVariable;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE, oldDefinedVariable, definedVariable));
 	}
 
 	/**
@@ -135,12 +160,8 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 	 * @generated
 	 */
 	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW:
-				return ((InternalEList<?>)getOwnedElementsRaw()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
+	public boolean isConst() {
+		return false;
 	}
 
 	/**
@@ -151,10 +172,11 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__NAME:
+			case N4JSPackage.ABSTRACT_VARIABLE__NAME:
 				return getName();
-			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW:
-				return getOwnedElementsRaw();
+			case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE:
+				if (resolve) return getDefinedVariable();
+				return basicGetDefinedVariable();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -168,12 +190,11 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__NAME:
+			case N4JSPackage.ABSTRACT_VARIABLE__NAME:
 				setName((String)newValue);
 				return;
-			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW:
-				getOwnedElementsRaw().clear();
-				getOwnedElementsRaw().addAll((Collection<? extends NamespaceElement>)newValue);
+			case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE:
+				setDefinedVariable((T)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -187,11 +208,11 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__NAME:
+			case N4JSPackage.ABSTRACT_VARIABLE__NAME:
 				setName(NAME_EDEFAULT);
 				return;
-			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW:
-				getOwnedElementsRaw().clear();
+			case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE:
+				setDefinedVariable((T)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -205,12 +226,26 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__NAME:
+			case N4JSPackage.ABSTRACT_VARIABLE__NAME:
 				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case N4JSPackage.N4_ABSTRACT_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW:
-				return ownedElementsRaw != null && !ownedElementsRaw.isEmpty();
+			case N4JSPackage.ABSTRACT_VARIABLE__DEFINED_VARIABLE:
+				return definedVariable != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.ABSTRACT_VARIABLE___IS_CONST:
+				return isConst();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
@@ -229,4 +264,4 @@ public abstract class N4AbstractNamespaceDeclarationImpl extends VariableEnviron
 		return result.toString();
 	}
 
-} //N4AbstractNamespaceDeclarationImpl
+} //AbstractVariableImpl

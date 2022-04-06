@@ -11,6 +11,7 @@
 package org.eclipse.n4js.n4JS;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 
 /**
@@ -27,7 +28,7 @@ import org.eclipse.n4js.ts.types.TypableElement;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionOrFieldAccessor#getBody <em>Body</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.FunctionOrFieldAccessor#get_lok <em>lok</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.FunctionOrFieldAccessor#getImplicitArgumentsVariable <em>Implicit Arguments Variable</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionOrFieldAccessor()
@@ -58,29 +59,26 @@ public interface FunctionOrFieldAccessor extends AnnotableElement, VariableEnvir
 	void setBody(Block value);
 
 	/**
-	 * Returns the value of the '<em><b>lok</b></em>' containment reference.
+	 * Returns the value of the '<em><b>Implicit Arguments Variable</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * * Transient local arguments variable. Access through #getLocalArgumentsVariable()
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>lok</em>' containment reference.
-	 * @see #set_lok(LocalArgumentsVariable)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionOrFieldAccessor__lok()
-	 * @model containment="true" transient="true"
+	 * @return the value of the '<em>Implicit Arguments Variable</em>' reference.
+	 * @see #setImplicitArgumentsVariable(TVariable)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionOrFieldAccessor_ImplicitArgumentsVariable()
+	 * @model transient="true"
 	 * @generated
 	 */
-	LocalArgumentsVariable get_lok();
+	TVariable getImplicitArgumentsVariable();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FunctionOrFieldAccessor#get_lok <em>lok</em>}' containment reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FunctionOrFieldAccessor#getImplicitArgumentsVariable <em>Implicit Arguments Variable</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>lok</em>' containment reference.
-	 * @see #get_lok()
+	 * @param value the new value of the '<em>Implicit Arguments Variable</em>' reference.
+	 * @see #getImplicitArgumentsVariable()
 	 * @generated
 	 */
-	void set_lok(LocalArgumentsVariable value);
+	void setImplicitArgumentsVariable(TVariable value);
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -89,17 +87,6 @@ public interface FunctionOrFieldAccessor extends AnnotableElement, VariableEnvir
 	 * @generated
 	 */
 	String getName();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * * Lazy initialized reference to transient localArgurmentsVariable
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	LocalArgumentsVariable getLocalArgumentsVariable();
 
 	/**
 	 * <!-- begin-user-doc -->

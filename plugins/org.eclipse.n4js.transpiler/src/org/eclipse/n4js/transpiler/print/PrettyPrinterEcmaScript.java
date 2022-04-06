@@ -377,12 +377,6 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
-	public Boolean caseLocalArgumentsVariable(LocalArgumentsVariable original) {
-		// ignore
-		return DONE;
-	}
-
-	@Override
 	public Boolean caseFormalParameter(FormalParameter original) {
 		processAnnotations(original.getAnnotations(), false);
 		if (original.isVariadic()) {
@@ -405,6 +399,10 @@ import com.google.common.base.Strings;
 
 	@Override
 	public Boolean caseVariableStatement(VariableStatement original) {
+		if (!original.getDeclaredModifiers().isEmpty()) {
+			processModifiers(original.getDeclaredModifiers());
+			write(' ');
+		}
 		write(keyword(original.getVarStmtKeyword()));
 		write(' ');
 		process(original.getVarDeclsOrBindings(), ", ");
@@ -416,18 +414,6 @@ import com.google.common.base.Strings;
 		// });
 		// out.undent();
 		write(';');
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseExportedVariableStatement(ExportedVariableStatement original) {
-		// note: an ExportedVariableStatement is always a child of an ExportDeclaration and the "export" keyword is
-		// emitted there; so, no need to emit "export" in this method!
-		if (!original.getDeclaredModifiers().isEmpty()) {
-			processModifiers(original.getDeclaredModifiers());
-			write(' ');
-		}
-		caseVariableStatement(original);
 		return DONE;
 	}
 
@@ -457,24 +443,12 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
-	public Boolean caseExportedVariableDeclaration(ExportedVariableDeclaration original) {
-		caseVariableDeclaration(original);
-		return DONE;
-	}
-
-	@Override
 	public Boolean caseVariableBinding(VariableBinding original) {
 		process(original.getPattern());
 		if (original.getExpression() != null) {
 			write(" = ");
 			process(original.getExpression());
 		}
-		return DONE;
-	}
-
-	@Override
-	public Boolean caseExportedVariableBinding(ExportedVariableBinding original) {
-		caseVariableBinding(original);
 		return DONE;
 	}
 
@@ -676,7 +650,12 @@ import com.google.common.base.Strings;
 
 	@Override
 	public Boolean caseCatchVariable(CatchVariable original) {
-		write(original.getName());
+		BindingPattern bindingPattern = original.getBindingPattern();
+		if (bindingPattern != null) {
+			process(bindingPattern);
+		} else {
+			write(original.getName());
+		}
 		return DONE;
 	}
 

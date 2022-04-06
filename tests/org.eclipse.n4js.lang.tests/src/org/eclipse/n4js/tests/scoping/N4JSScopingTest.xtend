@@ -483,7 +483,7 @@ class N4JSScopingTest {
 		assertElements(b1ScopeIdentRef, "Expected scope at b1 variable assignment for identifier scope",
 			"a, arguments, b1, b2, c, d, e, f, foo")
 
-		assertEquals("Expected local a at b1", a2Assignment,
+		assertEquals("Expected local a at b1", a2Assignment.definedVariable,
 			b1ScopeIdentRef.allElements.findFirst[name.toString == "a"].EObjectOrProxy)
 
 		val cAssignment = testModel.eAllContents.filter(VariableDeclaration).filter[name == "c"].head;
@@ -496,18 +496,18 @@ class N4JSScopingTest {
 		val b2ScopeIdentRef = scopeProvider.getScope(identB2, N4JSPackage.Literals.IDENTIFIER_REF__ID)
 		b2ScopeIdentRef.assertElements("Expected scope at b2 variable assignment for identifier scope",
 			"a, b2, c, d, e, f, foo")
-		assertEquals("Expected global a at b2", a1Assignment,
+		assertEquals("Expected global a at b2", a1Assignment.definedVariable,
 			b2ScopeIdentRef.allElements.findFirst[name.toString == "a"].EObjectOrProxy)
-		assertEquals("Expected c at b2 assigned", cAssignment, (b2Assignment.expression as IdentifierRef).id)
+		assertEquals("Expected c at b2 assigned", cAssignment.definedVariable, (b2Assignment.expression as IdentifierRef).id)
 
 		val dAssignment = testModel.eAllContents.filter(VariableDeclaration).filter[name == "d"].head;
 		assertNotNull("d at class level found", dAssignment)
 		assertTrue(dAssignment.expression instanceof IdentifierRef)
 		val identD = dAssignment.expression as IdentifierRef
 		val dScopeIdentRef = scopeProvider.getScope(identD, N4JSPackage.Literals.IDENTIFIER_REF__ID)
-		assertEquals("Expected d at d variable assignment for identifier scope", dAssignment,
+		assertEquals("Expected d at d variable assignment for identifier scope", dAssignment.definedVariable,
 			dScopeIdentRef.allElements.findFirst[name.toString == "d"].EObjectOrProxy)
-		assertEquals("Expected d at d assigned", dAssignment, ((dAssignment.expression as IdentifierRef).id))
+		assertEquals("Expected d at d assigned", dAssignment.definedVariable, ((dAssignment.expression as IdentifierRef).id))
 
 		val eAssignment = testModel.eAllContents.filter(VariableDeclaration).filter[name == "e"].head;
 		assertNotNull("e at class level found", eAssignment)
@@ -540,8 +540,10 @@ class N4JSScopingTest {
 		val Set<QualifiedName> allElements = scope.allElements.filter [
 			name.segmentCount == 1 // ignore fully qualified names produced by global scope provider used for export
 			&& (
-			N4JSPackage.Literals.VARIABLE.isSuperTypeOf(EClass) || TypesPackage.Literals.TMEMBER.isSuperTypeOf(EClass) ||
-				TypesPackage.Literals.TFUNCTION.isSuperTypeOf(EClass))
+			N4JSPackage.Literals.ABSTRACT_VARIABLE.isSuperTypeOf(EClass)
+				|| TypesPackage.Literals.TVARIABLE.isSuperTypeOf(EClass)
+				|| TypesPackage.Literals.TMEMBER.isSuperTypeOf(EClass)
+				|| TypesPackage.Literals.TFUNCTION.isSuperTypeOf(EClass))
 		].map[name].toSet
 		val extension splitter = Splitter.on(',').trimResults
 

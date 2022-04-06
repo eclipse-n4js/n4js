@@ -32,18 +32,16 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.types.AbstractModule
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.TAbstractVariable
 import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.TDeclaredModule
 import org.eclipse.n4js.ts.types.TDynamicElement
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TField
-import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
@@ -62,6 +60,7 @@ import org.eclipse.n4js.ts.types.TypeAlias
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.ts.types.TFormalParameter
 
 type IteratorOfExpression wraps Iterator<Expression>
 type IteratorOfYieldExpression wraps Iterator<YieldExpression>
@@ -121,7 +120,7 @@ class ExportDeclaration extends AnnotableScriptElement, NamespaceElement {
 	contains ExportSpecifier[] namedExports
 	boolean wildcardExport
 	boolean defaultExport
-	refers AbstractModule reexportedFrom
+	refers TModule reexportedFrom
 	
 	
 	op boolean isHollow() {
@@ -200,7 +199,7 @@ abstract class ExportableElement extends NamespaceElement {
 class ImportDeclaration extends AnnotableScriptElement {
 	contains ImportSpecifier[] importSpecifiers
 	boolean importFrom
-	refers AbstractModule module
+	refers TModule module
 	transient String moduleSpecifierAsText
 	transient ModuleSpecifierForm moduleSpecifierForm
 
@@ -397,11 +396,20 @@ abstract class ThisTarget {
 abstract class ThisArgProvider {
 }
 
-/* Abstract super type of declared variables (VariableDeclaration), formal parameters (FormalParameter),
- * and variables declared in catch clause (CatchVariable). Variables may be used on the left-hand side
- * of assignments. Note that variables are also named (NamedElement) and typed (TypedElement).
+/* Abstract super type of
+ * <ul>
+ * <li>declared variables ({@link VariableDeclaration}),
+ * <li>formal parameters ({@link FormalParameter}),
+ * <li>variables declared in catch clause ({@link CatchVariable}).
+ * </ul>
+ * but *not* of {@link N4TypeVariable}.
  */
-abstract class Variable extends TypedElement, IdentifiableElement, NamedElement {
+abstract class AbstractVariable<T extends TAbstractVariable> extends TypedElement, TypableElement, NamedElement {
+
+	String name
+
+	refers transient T definedVariable
+
 	/**
 	 * Returns true if variable is defined as const. This is only true for variables declared in const statement.
 	 */
@@ -564,20 +572,8 @@ class TypeRefAnnotationArgument extends AnnotationArgument {
 abstract class FunctionOrFieldAccessor extends AnnotableElement, VariableEnvironmentElement, ThisArgProvider, TypableElement {
 	contains Block body
 	op String getName()
-	/** Transient local arguments variable. Access through #getLocalArgumentsVariable()  */
-	contains transient LocalArgumentsVariable _lok
-	/** Lazy initialized reference to transient localArgurmentsVariable */
-	op LocalArgumentsVariable getLocalArgumentsVariable() {
-		if (_lok === null) {
-			val newLok = N4JSFactory::eINSTANCE.createLocalArgumentsVariable;
-			newLok.name = "arguments";
-			EcoreUtilN4.doWithDeliver(false,
-				[|
-					_lok = newLok;
-				], this);
-		}
-		return _lok;
-	}
+
+	refers transient TVariable implicitArgumentsVariable
 
 	op boolean isReturnValueOptional() {
 		return false;
@@ -786,17 +782,9 @@ class ArrowFunction extends FunctionExpression {
 
 }
 
-/**  Implicit variable in function and method bodies referencing all passed in argument values. */
-class LocalArgumentsVariable extends Variable {
-	op String getName() {
-		return "arguments"
-	}
-}
-
-class FormalParameter extends AnnotableElement, Variable {
+class FormalParameter extends AnnotableElement, AbstractVariable<TFormalParameter> {
 	contains Annotation[] annotations
 	boolean variadic
-	refers transient TFormalParameter definedTypeElement
 	/* A formal parameter with a default value in a function 'foo' can look like this:
 	 * foo(defParam = undefined){}, with 'undefined' as the initializing expression, which can be omitted.
 	 * When the initializer is omitted, it evaluates to 'undefined'. To know whether a parameter is a
@@ -922,16 +910,7 @@ abstract class VariableDeclarationContainer {
 	}
 }
 
-class VariableStatement extends Statement, VariableDeclarationContainer, NamespaceElement {
-}
-
-class ExportedVariableStatement extends VariableStatement, ExportableElement, AnnotableScriptElement, ModifiableElement {
-	/**
-	 * Returns true if type is declared as external.
-	 */
-	op boolean isExternal() {
-		return isDeclaredExternal() || isDefaultExternal();
-	}
+class VariableStatement extends Statement, VariableDeclarationContainer, NamespaceElement, ExportableElement, AnnotableScriptElement, ModifiableElement {
 }
 
 abstract class VariableDeclarationOrBinding extends ControlFlowElement {
@@ -952,14 +931,7 @@ class VariableBinding extends VariableDeclarationOrBinding {
 	contains Expression expression
 }
 
-class ExportedVariableBinding extends VariableBinding {
-	/*
-	 * Link to variable information stored in the Xtext index.
-	 */
-	refers transient TVariable definedVariable
-}
-
-class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable  {
+class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, AbstractVariable<TVariable>  {
 	contains Annotation[] annotations
 	contains Expression expression
 	/**
@@ -969,13 +941,30 @@ class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement
 		val varDeclContainer = N4JSASTUtils.getVariableDeclarationContainer(this);
 		return varDeclContainer?.varStmtKeyword === VariableStatementKeyword.CONST
 	}
-}
 
-class ExportedVariableDeclaration extends VariableDeclaration {
-	/*
-	 * Link to variable information stored in the Xtext index.
-	 */
-	refers transient TVariable definedVariable
+	// Variables are a tricky special case of exportable element, because each variable is represented by two AST nodes:
+	// 1) the variable statement (must inherit from ExportableElement because it will be the node directly contained in an ExportDeclaration),
+	// 2) the variable declaration (holds the name of the exportable element).
+	// Due to this split, #getExportedName() will return incorrect results when invoked on the variable statement
+	// and we provide the following two operations as a work-around:
+
+	op boolean isExported() {
+		val parent = this.eContainer;
+		if (parent instanceof VariableStatement) {
+			return parent.exported;
+		}
+		return false;
+	}
+
+	op String getExportedName() {
+		val parent = this.eContainer;
+		if (parent instanceof VariableStatement) {
+			if (parent.exported) {
+				return parent.exportedName ?: this.name;
+			}
+		}
+		return null;
+	}
 }
 
 class EmptyStatement extends Statement {
@@ -1119,7 +1108,7 @@ class CatchBlock extends AbstractCatchBlock, VariableEnvironmentElement {
 	contains CatchVariable catchVariable
 }
 
-class CatchVariable extends Variable {
+class CatchVariable extends AbstractVariable<TVariable> {
 	contains BindingPattern bindingPattern
 }
 
@@ -2007,9 +1996,11 @@ abstract class GenericDeclaration extends TypeDefiningElement {
 	contains N4TypeVariable[] typeVars
 }
 
-class N4TypeVariable extends IdentifiableElement, NamedElement {
+class N4TypeVariable extends TypableElement, NamedElement {
 
 	refers transient TypeVariable definedTypeVariable
+
+	String name
 
 	boolean declaredCovariant
 	boolean declaredContravariant
@@ -2160,32 +2151,10 @@ abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
 	}
 }
 
-abstract class N4AbstractNamespaceDeclaration extends VariableEnvironmentElement, NamedElement {
 
+class N4NamespaceDeclaration extends N4TypeDefinition, VariableEnvironmentElement, ModifiableElement, ExportableElement, NamedElement {
 	String name
 	contains NamespaceElement[] ownedElementsRaw
-}
-
-/**
- * This type of declaration is created only from .d.ts files and represents a module declaration such as
- * <pre>
- * // .d.ts
- * declare module "my/declared/module" { ... }  // string literal as name
- * </pre>
- * Note that module declarations of the form
- * <pre>
- * // .d.ts
- * declare module myLegacyModule { ... }  // identifier as name
- * </pre>
- * are actually an old syntax for namespaces; for them, the {@code DtsNamespaceBuilder} will create
- * a {@link N4NamespaceDeclaration}, not a {@code N4ModuleDeclaration}.
- */
-class N4ModuleDeclaration extends N4AbstractNamespaceDeclaration, NamespaceElement { // note: not an ExportableElement
-
-	refers transient TDeclaredModule definedModule
-}
-
-class N4NamespaceDeclaration extends N4AbstractNamespaceDeclaration, N4TypeDefinition, ModifiableElement, ExportableElement {
 
 	/**
 	 * Returns true if type is declared as external.
@@ -2327,6 +2296,9 @@ abstract class ModifiableElement {
 	N4Modifier[] declaredModifiers
 	
 	
+	op boolean isExternal() {
+		return isDeclaredExternal() || isDefaultExternal();
+	}
 	op boolean isDeclaredExternal() {
 		return declaredModifiers.contains(N4Modifier.EXTERNAL)
 	}
@@ -2530,6 +2502,10 @@ class N4SetterDeclaration extends SetterDeclaration, N4FieldAccessor {
 }
 
 abstract class BindingPattern extends ControlFlowElement {
+
+	op VariableDeclaration[] getAllVariableDeclarations() {
+		eAllContents.filter(VariableDeclaration).toEList
+	}
 }
 
 /*

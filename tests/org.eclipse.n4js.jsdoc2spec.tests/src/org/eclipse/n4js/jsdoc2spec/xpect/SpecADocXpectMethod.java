@@ -18,12 +18,12 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.IEObjectCoveringRegion;
 import org.eclipse.n4js.jsdoc2spec.adoc.ADocFactory;
 import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
 import org.eclipse.n4js.jsdoc2spec.adoc.SpecIdentifiableElementSection;
+import org.eclipse.n4js.n4JS.AbstractVariable;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
+import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
@@ -83,23 +83,22 @@ public class SpecADocXpectMethod {
 		if (eobj instanceof ExportDeclaration) {
 			eobj = ((ExportDeclaration) eobj).getExportedElement();
 		}
-		if (eobj instanceof ExportedVariableStatement) {
-			EList<VariableDeclaration> decls = ((ExportedVariableStatement) eobj).getVarDecl();
+		if (eobj instanceof VariableStatement) {
+			EList<VariableDeclaration> decls = ((VariableStatement) eobj).getVarDecl();
 			if (decls.size() != 1) {
 				throw new IllegalStateException("JSDoc for var statements required exactly one declaration.");
 			}
-			return decls.get(0);
+			eobj = decls.get(0);
 		}
-		/** For variables using the new type notation and spec comment after export modifier */
-		if (eobj instanceof ExportedVariableDeclaration) {
-			return (ExportedVariableDeclaration) eobj;
-		}
-		/** For variables using the old type notation and spec comment after export modifier */
-		if (eobj instanceof TypeRef && eobj.eContainer() instanceof ExportedVariableDeclaration) {
-			return (ExportedVariableDeclaration) eobj.eContainer();
+		// For variables using the old type notation and spec comment after export modifier
+		if (eobj instanceof TypeRef && eobj.eContainer() instanceof VariableDeclaration) {
+			eobj = eobj.eContainer();
 		}
 		if (eobj instanceof TypeDefiningElement) {
 			return ((TypeDefiningElement) eobj).getDefinedType();
+		}
+		if (eobj instanceof AbstractVariable) {
+			return ((AbstractVariable<?>) eobj).getDefinedVariable();
 		}
 		if (eobj instanceof N4TypeVariable) {
 			return ((N4TypeVariable) eobj).getDefinedTypeVariable();

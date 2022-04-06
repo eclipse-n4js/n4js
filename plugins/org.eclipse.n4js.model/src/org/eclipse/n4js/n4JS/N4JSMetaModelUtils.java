@@ -10,14 +10,16 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.ABSTRACT_VARIABLE__NAME;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.ANNOTATION__NAME;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.FUNCTION_DECLARATION__NAME;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.FUNCTION_EXPRESSION__NAME;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.LABELLED_STATEMENT__NAME;
-import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_ABSTRACT_NAMESPACE_DECLARATION__NAME;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_CLASS_EXPRESSION__NAME;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_ENUM_LITERAL__NAME;
+import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_NAMESPACE_DECLARATION__NAME;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME;
+import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.N4_TYPE_VARIABLE__NAME;
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.PROPERTY_NAME_OWNER__DECLARED_NAME;
 import static org.eclipse.n4js.ts.types.TypesPackage.Literals.IDENTIFIABLE_ELEMENT__NAME;
 
@@ -126,6 +128,10 @@ public class N4JSMetaModelUtils {
 	public static EStructuralFeature getElementNameFeature(EObject elementWithName) {
 		if (elementWithName instanceof Annotation)
 			return ANNOTATION__NAME;
+		if (elementWithName instanceof AbstractVariable)
+			return ABSTRACT_VARIABLE__NAME;
+		if (elementWithName instanceof N4TypeVariable)
+			return N4_TYPE_VARIABLE__NAME;
 		if (elementWithName instanceof FunctionDeclaration)
 			return FUNCTION_DECLARATION__NAME;
 		if (elementWithName instanceof FunctionExpression)
@@ -135,7 +141,7 @@ public class N4JSMetaModelUtils {
 		if (elementWithName instanceof N4TypeDeclaration)
 			return N4_TYPE_DECLARATION__NAME;
 		if (elementWithName instanceof N4NamespaceDeclaration)
-			return N4_ABSTRACT_NAMESPACE_DECLARATION__NAME;
+			return N4_NAMESPACE_DECLARATION__NAME;
 		if (elementWithName instanceof N4ClassExpression)
 			return N4_CLASS_EXPRESSION__NAME;
 		if (elementWithName instanceof N4EnumLiteral)

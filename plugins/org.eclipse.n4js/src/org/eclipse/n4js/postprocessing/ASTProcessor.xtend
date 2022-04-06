@@ -19,13 +19,11 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Annotation
 import org.eclipse.n4js.n4JS.CatchBlock
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
-import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
@@ -43,7 +41,10 @@ import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
+import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.TypableElement
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -159,19 +160,7 @@ public class ASTProcessor extends AbstractProcessor {
 			// note: we need to allow adding more postponed subtrees inside this loop!
 			processSubtree(G, eObj, cache, 0);
 		}
-		// phase 3: processing of LocalArgumentsVariable
-		// (a LocalArgumentsVariable may be created on demand at any time, which means new AST nodes may appear
-		// while processing the AST (see {@link FunctionOrFieldAccessor#getLocalArgumentsVariable()}); to support
-		// these cases, we will now look for and process these newly created AST nodes:
-		for (potentialContainer : cache.potentialContainersOfLocalArgumentsVariable) {
-			val lav = potentialContainer._lok; // obtain the LocalArgumentsVariable without(!) triggering its on-demand creation
-			if (lav!==null) {
-				if (cache.getTypeFailSafe(lav)===null) { // only if not processed yet
-					processSubtree(G, lav, cache, 0);
-				}
-			}
-		}
-		// phase 4: store runtime and load-time dependencies in TModule
+		// phase 3: store runtime and load-time dependencies in TModule
 		runtimeDependencyProcessor.storeDirectRuntimeDependenciesInTModule(script, cache);
 	}
 
@@ -275,7 +264,10 @@ public class ASTProcessor extends AbstractProcessor {
 						val allRefs = EcoreUtilN4.getAllContentsOfTypeStopAt(fpar, IdentifierRef, N4JSPackage.Literals.FUNCTION_OR_FIELD_ACCESSOR__BODY);
 
 						for (IdentifierRef ir : allRefs) {
-							val id = ir.getId();
+							var Object id = ir.getId();
+							if (id instanceof SyntaxRelatedTElement) {
+								id = id.eGet(TypesPackage.eINSTANCE.syntaxRelatedTElement_AstElement, false);
+							}
 							val idRefCausesCyclDep =
 								allFPars.contains(id) // f(p, q=p) {}
 								|| id instanceof VariableDeclaration && (id as VariableDeclaration).expression === funDef; //  f(p, q=f(1)) {}
@@ -383,10 +375,6 @@ public class ASTProcessor extends AbstractProcessor {
 	 * Top-down processing of AST nodes happens here, i.e. this method will see all AST nodes in a top-down order.
 	 */
 	def private void processNode_preChildren(RuleEnvironment G, EObject node, ASTMetaInfoCache cache, int indentLevel) {
-
-		if (node instanceof FunctionOrFieldAccessor) {
-			cache.potentialContainersOfLocalArgumentsVariable.add(node); // remember for later
-		}
 
 		typeRefProcessor.handleTypeRefs(G, node, cache);
 
@@ -518,25 +506,27 @@ public class ASTProcessor extends AbstractProcessor {
 		}
 	}
 
-	def private recordReferencesToLocalVariables(EReference reference, EObject sourceNode, EObject targetNode,
-		ASTMetaInfoCache cache) {
+	def private recordReferencesToLocalVariables(EReference reference, EObject sourceNode, EObject target, ASTMetaInfoCache cache) {
 
-		// If targetNode is still a proxy its resolution failed,
-		// therefore it should be skipped.
-		if (targetNode.eIsProxy) {
+		// skip reference Variable#definedVariable (it does not constitute a usage of the variable)
+		if (reference === N4JSPackage.Literals.ABSTRACT_VARIABLE__DEFINED_VARIABLE) {
+			return;
+		}
+		// If target is still a proxy its resolution failed, therefore it should be skipped.
+		if (target.eIsProxy) {
 			return;
 		}
 		// skip non-local references
-		if (sourceNode.eResource !== targetNode.eResource) {
+		if (sourceNode.eResource !== target.eResource) {
 			return;
 		}
-		if (targetNode instanceof VariableDeclaration) {
-			// don't save references to exported variable declarations
-			if (targetNode instanceof ExportedVariableDeclaration) {
+		if (target instanceof TVariable) {
+			// don't save references to exported variables
+			if (target.exported) {
 				return;
 			}
 
-			cache.storeLocalVariableReference(targetNode, sourceNode);
+			cache.storeLocalVariableReference(target, sourceNode);
 		}
 	}
 

@@ -15,6 +15,8 @@
 
 declare module "parent" {
 	export class Cls1 {}
+	
+	// nesting of modules in namespaces or modules is unsupported by TypeScript
 	declare module "child" {
 		class Cls2 {}
 		declare module "grandChild" {
@@ -28,11 +30,4 @@ declare module "parent" {
 
 /* XPECT ast ---
 Script: true
-  N4ModuleDeclaration: parent
-   ExportDeclaration: false, false
-    N4ClassDeclaration: [external, public], Cls1, ?~
-   N4ModuleDeclaration: child
-    N4ClassDeclaration: [external, private], Cls2, ?~
-    N4ModuleDeclaration: grandChild
-     N4ClassDeclaration: [external, private], Cls3, ?~
 --- */

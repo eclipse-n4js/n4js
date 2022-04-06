@@ -68,7 +68,7 @@ class PreparationStepTest extends AbstractTranspilerTest {
 		state.assertNumOfSymbolTableEntries(1);
 
 		state.assertSymbolTableEntry("v")
-		.originalTarget(state.findFirstInAST(VariableDeclaration))
+		.originalTarget(state.findFirstInModule(TVariable))
 		.elementsOfThisName(state.findFirstInIM(VariableDeclaration))
 		.referencingElements(state.findFirstInIM(IdentifierRef_IM))
 	}
@@ -219,7 +219,7 @@ class PreparationStepTest extends AbstractTranspilerTest {
 		// no STE for 'string', because only a type reference is referring to 'string'
 
 		state.assertSymbolTableEntry("x")
-		.originalTarget(state.findFirstInAST(VariableDeclaration))
+		.originalTarget(state.findFirstInModule(TVariable))
 		.elementsOfThisName(state.findFirstInIM(VariableDeclaration))
 		.importSpecifier(null)
 		.referencingElements()
@@ -238,7 +238,7 @@ class PreparationStepTest extends AbstractTranspilerTest {
 		state.assertNumOfSymbolTableEntries(1);
 
 		state.assertSymbolTableEntry("x")
-		.originalTarget(state.findFirstInAST(VariableDeclaration))
+		.originalTarget(state.findFirstInModule(TVariable))
 		.elementsOfThisName(state.findFirstInIM(VariableDeclaration))
 		.importSpecifier(null)
 		.referencingElements()
@@ -282,7 +282,7 @@ class PreparationStepTest extends AbstractTranspilerTest {
 		.referencingElements(state.findFirstInIM(IdentifierRef_IM))
 
 		state.assertSymbolTableEntry("x")
-		.originalTarget(state.findFirstInAST(VariableDeclaration))
+		.originalTarget(state.findFirstInModule(TVariable))
 		.elementsOfThisName(state.findFirstInIM(VariableDeclaration))
 		.importSpecifier(null)
 		.referencingElements()

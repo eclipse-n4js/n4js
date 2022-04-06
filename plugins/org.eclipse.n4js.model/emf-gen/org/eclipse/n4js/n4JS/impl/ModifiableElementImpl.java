@@ -91,6 +91,16 @@ public abstract class ModifiableElementImpl extends ProxyResolvingEObjectImpl im
 	 * @generated
 	 */
 	@Override
+	public boolean isExternal() {
+		return (this.isDeclaredExternal() || this.isDefaultExternal());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isDeclaredExternal() {
 		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
 	}
@@ -180,6 +190,8 @@ public abstract class ModifiableElementImpl extends ProxyResolvingEObjectImpl im
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case N4JSPackage.MODIFIABLE_ELEMENT___IS_EXTERNAL:
+				return isExternal();
 			case N4JSPackage.MODIFIABLE_ELEMENT___IS_DECLARED_EXTERNAL:
 				return isDeclaredExternal();
 			case N4JSPackage.MODIFIABLE_ELEMENT___IS_DEFAULT_EXTERNAL:

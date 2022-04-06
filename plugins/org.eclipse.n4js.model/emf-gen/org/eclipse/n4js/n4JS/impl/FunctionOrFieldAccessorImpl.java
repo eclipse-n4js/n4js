@@ -27,18 +27,13 @@ import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
-import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
-import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
-
-import org.eclipse.n4js.utils.EcoreUtilN4;
-
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
 
 /**
  * <!-- begin-user-doc -->
@@ -49,7 +44,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionOrFieldAccessorImpl#getBody <em>Body</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionOrFieldAccessorImpl#get_lok <em>lok</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionOrFieldAccessorImpl#getImplicitArgumentsVariable <em>Implicit Arguments Variable</em>}</li>
  * </ul>
  *
  * @generated
@@ -66,14 +61,14 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	protected Block body;
 
 	/**
-	 * The cached value of the '{@link #get_lok() <em>lok</em>}' containment reference.
+	 * The cached value of the '{@link #getImplicitArgumentsVariable() <em>Implicit Arguments Variable</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #get_lok()
+	 * @see #getImplicitArgumentsVariable()
 	 * @generated
 	 * @ordered
 	 */
-	protected LocalArgumentsVariable _lok;
+	protected TVariable implicitArgumentsVariable;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -145,8 +140,16 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * @generated
 	 */
 	@Override
-	public LocalArgumentsVariable get_lok() {
-		return _lok;
+	public TVariable getImplicitArgumentsVariable() {
+		if (implicitArgumentsVariable != null && implicitArgumentsVariable.eIsProxy()) {
+			InternalEObject oldImplicitArgumentsVariable = (InternalEObject)implicitArgumentsVariable;
+			implicitArgumentsVariable = (TVariable)eResolveProxy(oldImplicitArgumentsVariable);
+			if (implicitArgumentsVariable != oldImplicitArgumentsVariable) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__IMPLICIT_ARGUMENTS_VARIABLE, oldImplicitArgumentsVariable, implicitArgumentsVariable));
+			}
+		}
+		return implicitArgumentsVariable;
 	}
 
 	/**
@@ -154,14 +157,8 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSet_lok(LocalArgumentsVariable new_lok, NotificationChain msgs) {
-		LocalArgumentsVariable old_lok = _lok;
-		_lok = new_lok;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__LOK, old_lok, new_lok);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
+	public TVariable basicGetImplicitArgumentsVariable() {
+		return implicitArgumentsVariable;
 	}
 
 	/**
@@ -170,18 +167,11 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 	 * @generated
 	 */
 	@Override
-	public void set_lok(LocalArgumentsVariable new_lok) {
-		if (new_lok != _lok) {
-			NotificationChain msgs = null;
-			if (_lok != null)
-				msgs = ((InternalEObject)_lok).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__LOK, null, msgs);
-			if (new_lok != null)
-				msgs = ((InternalEObject)new_lok).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__LOK, null, msgs);
-			msgs = basicSet_lok(new_lok, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__LOK, new_lok, new_lok));
+	public void setImplicitArgumentsVariable(TVariable newImplicitArgumentsVariable) {
+		TVariable oldImplicitArgumentsVariable = implicitArgumentsVariable;
+		implicitArgumentsVariable = newImplicitArgumentsVariable;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__IMPLICIT_ARGUMENTS_VARIABLE, oldImplicitArgumentsVariable, implicitArgumentsVariable));
 	}
 
 	/**
@@ -194,28 +184,6 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 		// TODO: implement this method
 		// Ensure that you remove @generated or mark it @generated NOT
 		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public LocalArgumentsVariable getLocalArgumentsVariable() {
-		LocalArgumentsVariable __lok = this.get_lok();
-		boolean _tripleEquals = (__lok == null);
-		if (_tripleEquals) {
-			final LocalArgumentsVariable newLok = N4JSFactory.eINSTANCE.createLocalArgumentsVariable();
-			newLok.setName("arguments");
-			final Procedure0 _function = new Procedure0() {
-				public void apply() {
-					FunctionOrFieldAccessorImpl.this.set_lok(newLok);
-				}
-			};
-			EcoreUtilN4.doWithDeliver(false, _function, this);
-		}
-		return this.get_lok();
 	}
 
 	/**
@@ -281,8 +249,6 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 		switch (featureID) {
 			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__BODY:
 				return basicSetBody(null, msgs);
-			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__LOK:
-				return basicSet_lok(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -297,8 +263,9 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 		switch (featureID) {
 			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__BODY:
 				return getBody();
-			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__LOK:
-				return get_lok();
+			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__IMPLICIT_ARGUMENTS_VARIABLE:
+				if (resolve) return getImplicitArgumentsVariable();
+				return basicGetImplicitArgumentsVariable();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -314,8 +281,8 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__BODY:
 				setBody((Block)newValue);
 				return;
-			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__LOK:
-				set_lok((LocalArgumentsVariable)newValue);
+			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__IMPLICIT_ARGUMENTS_VARIABLE:
+				setImplicitArgumentsVariable((TVariable)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -332,8 +299,8 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__BODY:
 				setBody((Block)null);
 				return;
-			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__LOK:
-				set_lok((LocalArgumentsVariable)null);
+			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__IMPLICIT_ARGUMENTS_VARIABLE:
+				setImplicitArgumentsVariable((TVariable)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -349,8 +316,8 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 		switch (featureID) {
 			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__BODY:
 				return body != null;
-			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__LOK:
-				return _lok != null;
+			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR__IMPLICIT_ARGUMENTS_VARIABLE:
+				return implicitArgumentsVariable != null;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -391,8 +358,6 @@ public abstract class FunctionOrFieldAccessorImpl extends AnnotableElementImpl i
 		switch (operationID) {
 			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR___GET_NAME:
 				return getName();
-			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR___GET_LOCAL_ARGUMENTS_VARIABLE:
-				return getLocalArgumentsVariable();
 			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR___IS_RETURN_VALUE_OPTIONAL:
 				return isReturnValueOptional();
 			case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR___IS_ASYNC:

@@ -24,9 +24,9 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getTypes <em>Types</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getVariables <em>Variables</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExportedVariables <em>Exported Variables</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getLocalVariables <em>Local Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNamespaces <em>Namespaces</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getModules <em>Modules</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace()
@@ -40,7 +40,7 @@ public interface AbstractNamespace extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * A list of all types directly contained in this abstract namespace.
+	 * A list of all types declarations in the script on the top level.
 	 * These include the exported classes, interfaces, function as well
 	 * as the types inferred from type defining elements that are not marked as exported.
 	 * This allows for better validation messages and diagnostics in later stages
@@ -54,21 +54,37 @@ public interface AbstractNamespace extends EObject {
 	EList<Type> getTypes();
 
 	/**
-	 * Returns the value of the '<em><b>Variables</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Exported Variables</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TVariable}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * A list of all variables directly contained in this abstract namespace.
-	 * These include the exported variables as well as the internal variables.
-	 * Similar to #types, this allows for better validation messages and diagnostics.
+	 * A list of all exported variables of this namespace.
+	 * Exported variables are always directly contained in the namespace.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Variables</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_Variables()
+	 * @return the value of the '<em>Exported Variables</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_ExportedVariables()
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<TVariable> getVariables();
+	EList<TVariable> getExportedVariables();
+
+	/**
+	 * Returns the value of the '<em><b>Local Variables</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TVariable}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * A list of all non-exported variables of this namespace.
+	 * These variables may be directly contained in the namespace OR may be declared inside functions,
+	 * methods, etc. contained in the namespace.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Local Variables</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_LocalVariables()
+	 * @model containment="true" transient="true"
+	 * @generated
+	 */
+	EList<TVariable> getLocalVariables();
 
 	/**
 	 * Returns the value of the '<em><b>Namespaces</b></em>' containment reference list.
@@ -76,7 +92,7 @@ public interface AbstractNamespace extends EObject {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * A list of all child namespaces directly contained in this abstract namespace.
+	 * A list of all top level namespaces in the script.
 	 * These include the exported namespaces as well as the internal namespaces.
 	 * Similar to #types, this allows for better validation messages and diagnostics.
 	 * <!-- end-model-doc -->
@@ -88,43 +104,24 @@ public interface AbstractNamespace extends EObject {
 	EList<TNamespace> getNamespaces();
 
 	/**
-	 * Returns the value of the '<em><b>Modules</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TDeclaredModule}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * A list of all declared modules directly contained in this abstract namespace.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Modules</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_Modules()
-	 * @model containment="true"
-	 * @generated
-	 */
-	EList<TDeclaredModule> getModules();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
+	 * *
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	AbstractModule getContainingModule();
+	TModule getContainingModule();
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenience method, returns the {@link TModule} this element is contained in, or
-	 * null if it is not contained in a TModule. Does not consider {@link TDeclaredModule}s!
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
+	 * @model
 	 * @generated
 	 */
-	TModule getContainingRootModule();
+	void clearTransientElements();
 
 } // AbstractNamespace

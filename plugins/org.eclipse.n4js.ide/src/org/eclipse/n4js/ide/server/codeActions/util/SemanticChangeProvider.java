@@ -24,7 +24,6 @@ import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
-import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.ModifierUtils;
@@ -40,6 +39,7 @@ import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
+import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.utils.nodemodel.NodeModelAccess;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.xtext.ide.server.Document;
@@ -379,9 +379,11 @@ public class SemanticChangeProvider {
 				offset = astNodeForKeyword(element, elementKeywordProvider.keyword(element)).getOffset();
 			}
 
-			if (element instanceof ExportedVariableStatement) {
-				INode exportKeyword = astNodeForKeyword(element.eContainer(), N4JSLanguageConstants.EXPORT_KEYWORD);
-				offset = exportKeyword.getOffset() + exportKeyword.getLength() + 1;
+			if (element instanceof VariableStatement) {
+				if (((VariableStatement) element).isExported()) {
+					INode exportKeyword = astNodeForKeyword(element.eContainer(), N4JSLanguageConstants.EXPORT_KEYWORD);
+					offset = exportKeyword.getOffset() + exportKeyword.getLength() + 1;
+				}
 			}
 
 			if (element instanceof N4MethodDeclaration) {

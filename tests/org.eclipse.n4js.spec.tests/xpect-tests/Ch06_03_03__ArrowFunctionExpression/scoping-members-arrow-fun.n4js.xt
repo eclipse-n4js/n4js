@@ -15,9 +15,9 @@ class C {
   m() : any {
     var x;
     if (this.z == 0) {
-                 // XPECT linkedPathname at 'x'      --> C/m/x
+                 // XPECT linkedPathname at 'x'      --> x
       return y => x +
-                 // XPECT linkedPathname at 'y'      --> C/m/y
+                 // XPECT linkedPathname at 'y'      --> y
                   y +
                  // XPECT linkedPathname at 'z' --> C/z
                   this.z;
@@ -27,11 +27,11 @@ class C {
       var self = this
       return (function(){
 		return function(y) {
-                   // XPECT linkedPathname at 'x' --> C/m/x
+                   // XPECT linkedPathname at 'x' --> x
       		return x +
-                   // XPECT linkedPathname at 'y' --> C/m/y
+                   // XPECT linkedPathname at 'y' --> y
       		       y +
-                   // XPECT linkedPathname at 'self' --> C/m/self
+                   // XPECT linkedPathname at 'self' --> self
                    // XPECT linkedPathname at 'z'    --> C/z
                    self.z
                 }

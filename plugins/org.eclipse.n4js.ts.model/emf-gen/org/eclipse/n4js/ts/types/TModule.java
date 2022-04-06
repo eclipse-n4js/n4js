@@ -18,16 +18,16 @@ import org.eclipse.emf.common.util.EList;
  * <!-- end-user-doc -->
  *
  * <!-- begin-model-doc -->
+ * *
  * The TModule is the representation of the script on the type level.
- * <p>
- * Instances of this class are created for N4JS[D] / JS / DTS source code files (one per file), whereas instances
- * of {@link TDeclaredModule} are created for module declarations inside .d.ts files (possibly many per .d.ts file).
  * <!-- end-model-doc -->
  *
  * <p>
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getPackageName <em>Package Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getProjectID <em>Project ID</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVendorID <em>Vendor ID</em>}</li>
@@ -47,13 +47,69 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTemporaryTypes <em>Temporary Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule()
  * @model
  * @generated
  */
-public interface TModule extends AbstractModule, TAnnotableElement {
+public interface TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnnotableElement {
+	/**
+	 * Returns the value of the '<em><b>Simple Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * The module's simple name, i.e. the last segment of its qualified name.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Simple Name</em>' attribute.
+	 * @see #setSimpleName(String)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_SimpleName()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getSimpleName();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getSimpleName <em>Simple Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Simple Name</em>' attribute.
+	 * @see #getSimpleName()
+	 * @generated
+	 */
+	void setSimpleName(String value);
+
+	/**
+	 * Returns the value of the '<em><b>Qualified Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * The qualified name of the module, which is derived from the file path. Includes the module's
+	 * file name (without extension) and the names of all ancestor folders up to, excluding the
+	 * containing project's source folder. The containing project's name is also not included,
+	 * but can be retrieved via {@link #getProjectName()}.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Qualified Name</em>' attribute.
+	 * @see #setQualifiedName(String)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_QualifiedName()
+	 * @model unique="false"
+	 * @generated
+	 */
+	String getQualifiedName();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#getQualifiedName <em>Qualified Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Qualified Name</em>' attribute.
+	 * @see #getQualifiedName()
+	 * @generated
+	 */
+	void setQualifiedName(String value);
+
 	/**
 	 * Returns the value of the '<em><b>Package Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -508,29 +564,32 @@ public interface TModule extends AbstractModule, TAnnotableElement {
 	EList<Type> getTemporaryTypes();
 
 	/**
+	 * Returns the value of the '<em><b>Module Specifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Convenience method, returns module this element is contained in, or
-	 * null if it is not contained in a module.
+	 * Returns this module's module specifier as it would appear, for example, in the string literal at the end of an
+	 * import statement.
+	 * <p>
+	 * Since we changed the delimiter for our internal qualified names from '.' to '/', this simply returns the same
+	 * value as {@link #getQualifiedName()}. However, this getter is retained for the time being to let client code
+	 * differentiate between internal use (qualified name, e.g. in the Xtext index) and Javascript context (module
+	 * specifier, e.g. in import statements).
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
+	 * @return the value of the '<em>Module Specifier</em>' attribute.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ModuleSpecifier()
+	 * @model unique="false" transient="true" changeable="false" volatile="true" derived="true"
 	 * @generated
 	 */
-	TModule getContainingModule();
+	String getModuleSpecifier();
 
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * *
-	 * Convenience method, returns the {@link TModule} this element is contained in, or
-	 * null if it is not contained in a TModule. Does not consider intermediate {@link TDeclaredModule}s!
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
+	 * @model
 	 * @generated
 	 */
-	TModule getContainingRootModule();
+	void clearTransientElements();
 
 } // TModule

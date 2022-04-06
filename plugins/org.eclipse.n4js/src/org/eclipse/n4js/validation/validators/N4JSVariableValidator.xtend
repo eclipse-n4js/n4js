@@ -12,7 +12,6 @@ package org.eclipse.n4js.validation.validators
 
 import java.util.List
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4ClassExpression
@@ -56,11 +55,12 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkUnusedVariables(VariableDeclaration varDecl) {
-		if (varDecl instanceof ExportedVariableDeclaration) {
+		if (varDecl.exported) {
 			return;
 		}
 
-		if (ASTMetaInfoUtils.getLocalVariableReferences(varDecl).empty) {
+		val tVariable = varDecl.definedVariable;
+		if (tVariable !== null && ASTMetaInfoUtils.getLocalVariableReferences(tVariable).empty) {
 			val message = IssueCodes.getMessageForCFG_LOCAL_VAR_UNUSED(varDecl.name);
 			addIssue(message, varDecl, findNameFeature(varDecl).value, IssueCodes.CFG_LOCAL_VAR_UNUSED); // deactivated during tests
 		}
@@ -77,11 +77,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 			return result;  // add nothing
 
 		// standard cases:
-		val targetForReferencesToVarDecl = if(varDecl instanceof ExportedVariableDeclaration) {
-			varDecl.definedVariable // references to ExportedVariableDeclarations point to the TVariable in the TModule
-		} else {
-			varDecl // references to local variables point directly to the VariableDeclaration
-		};
+		val targetForReferencesToVarDecl = varDecl.definedVariable;
 		if(astNode instanceof IdentifierRef) {
 			if(astNode.id===targetForReferencesToVarDecl) {
 				result.add(astNode);

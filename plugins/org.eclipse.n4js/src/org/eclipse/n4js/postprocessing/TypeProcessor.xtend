@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FieldAccessor
+import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
@@ -248,9 +249,12 @@ public class TypeProcessor extends AbstractProcessor {
 				val astNodeToProcess = if (obj instanceof SyntaxRelatedTElement) {
 						obj.astElement // NOTE: we've made sure above that we are *NOT* in a Resource loaded from the index!
 					};
-				if (astNodeToProcess instanceof TypableElement) {
-					// proceed with the corresponding AST node instead of the type model element
-					obj = astNodeToProcess;
+				val isImplicitArgumentsVariable = if (astNodeToProcess instanceof FunctionOrFieldAccessor) astNodeToProcess.implicitArgumentsVariable === obj else false;
+				if (!isImplicitArgumentsVariable) {
+					if (astNodeToProcess instanceof TypableElement) {
+						// proceed with the corresponding AST node instead of the type model element
+						obj = astNodeToProcess;
+					}
 				}
 			}
 

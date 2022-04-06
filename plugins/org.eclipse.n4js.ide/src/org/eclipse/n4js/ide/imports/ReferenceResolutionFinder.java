@@ -33,8 +33,8 @@ import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
 import org.eclipse.n4js.scoping.members.WrongTypingStrategyDescription;
 import org.eclipse.n4js.smith.Measurement;
-import org.eclipse.n4js.ts.types.AbstractModule;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
@@ -377,11 +377,11 @@ public class ReferenceResolutionFinder {
 		if (N4JSLanguageUtils.isDefaultExport(qualifiedName)) {
 			String localName = optionalAlias != null ? optionalAlias
 					: N4JSLanguageUtils.lastSegmentOrDefaultHost(qualifiedName);
-			importDesc = ImportDescriptor.createDefaultImport(localName, moduleSpecifier, Optional.of(projectName),
-					moduleName, Integer.MAX_VALUE);
+			importDesc = ImportDescriptor.createDefaultImport(localName, moduleSpecifier, projectName, moduleName,
+					Integer.MAX_VALUE);
 		} else {
 			importDesc = ImportDescriptor.createNamedImport(qualifiedName.getLastSegment(), optionalAlias,
-					moduleSpecifier, Optional.of(projectName), moduleName, Integer.MAX_VALUE);
+					moduleSpecifier, projectName, moduleName, Integer.MAX_VALUE);
 		}
 
 		return importDesc;
@@ -545,7 +545,7 @@ public class ReferenceResolutionFinder {
 			}
 
 			ModuleNamespaceVirtualType mnvt = (ModuleNamespaceVirtualType) eObject;
-			AbstractModule module = mnvt.getModule();
+			TModule module = mnvt.getModule();
 			if (module == null) {
 				return candidateViaScope;
 			}
