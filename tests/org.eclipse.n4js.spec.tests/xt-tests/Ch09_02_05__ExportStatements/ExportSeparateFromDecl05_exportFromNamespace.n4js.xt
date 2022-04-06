@@ -13,7 +13,7 @@
 
 	File "other.n4js" {
 
-		class Cls { field: string }
+		public class Cls { field: string }
 
 		export namespace NS {
 			export { Cls as ClsAlias };
@@ -24,9 +24,6 @@
 	// note: this test is testing internal infrastructure for a feature not available in N4JS[D] (only in .d.ts)
 	IssueConfiguration {
 		IssueCode "UNSUPPORTED" { enabled = false }
-		IssueCode "VIS_ILLEGAL_TYPE_ACCESS" { enabled = false }
-		IssueCode "VIS_ILLEGAL_MEMBER_ACCESS" { enabled = false }
-		IssueCode "VIS_NEW_CANNOT_INSTANTIATE_INVISIBLE_CONSTRUCTOR" { enabled = false }
 	}
 
 	END_SETUP
