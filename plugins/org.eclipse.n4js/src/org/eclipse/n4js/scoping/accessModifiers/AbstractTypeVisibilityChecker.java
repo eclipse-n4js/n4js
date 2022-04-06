@@ -22,7 +22,6 @@ import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
-import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -55,10 +54,6 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 */
 	protected TypeVisibility isVisible(final Resource contextResource, final TypeAccessModifier accessModifier,
 			final T element) {
-
-		if (ResourceType.getResourceType(element) == ResourceType.DTS) {
-			return new TypeVisibility(true);
-		}
 
 		int startIndex = accessModifier.getValue();
 		boolean visibility = false;
@@ -110,10 +105,6 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 */
 	protected TypeVisibility isVisible(final Resource contextResource, final TypeAccessModifier accessModifier,
 			final IEObjectDescription element) {
-
-		if (ResourceType.getResourceType(element.getEObjectURI()) == ResourceType.DTS) {
-			return new TypeVisibility(true);
-		}
 
 		int startIndex = accessModifier.getValue();
 		boolean visibility = false;
