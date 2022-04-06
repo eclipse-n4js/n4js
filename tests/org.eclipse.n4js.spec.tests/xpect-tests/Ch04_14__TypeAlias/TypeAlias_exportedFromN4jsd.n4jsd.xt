@@ -21,7 +21,7 @@ export external public type A2 = string;
 @Internal export external public type A3 = string;
 
 /* XPECT errors ---
-"A type with visibility public must be marked with modifier export." at "public"
+"Unsupported feature: non-exported type alias with a visibility higher than private." at "public"
 "Only namespaces, classes, interfaces, enums, type aliases and functions declared as external as well as structurally typed interfaces are allowed in n4jsd files." at "A4"
 --- */
 public type A4 = string;

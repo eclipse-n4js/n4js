@@ -27,7 +27,7 @@ export public enum EnumWithoutExternal {
 
 // 	relaxed by IDEBUG-561:	 noerrors -->  "External elements have to be exported." at "EnumWithoutExport"
 /* XPECT errors ---
-	"A enum with visibility public must be marked with modifier export." at "public"
+	"Unsupported feature: non-exported enum with a visibility higher than private." at "public"
 --- */
 external public enum EnumWithoutExport {
   MayBug,

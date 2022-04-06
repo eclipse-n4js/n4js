@@ -22,7 +22,7 @@
 
 namespace NS {
 
-	class Cls { field: string }
+	public class Cls { field: string }
 
 	export { Cls as Cls2 };
 }

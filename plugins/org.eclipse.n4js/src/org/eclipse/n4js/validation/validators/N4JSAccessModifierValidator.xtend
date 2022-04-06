@@ -50,7 +50,6 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
-import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.utils.StaticPolyfillHelper
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
@@ -95,10 +94,6 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def checkDirectlyExportedWhenVisibilityHigherThanPrivateForType(TypeDefiningElement typeDefiningElement) {
-		if (!jsVariantHelper.requireCheckExportedWhenVisibilityHigherThanPrivate(typeDefiningElement)) {
-			return; // does not apply to plain JS files
-		}
-
 		if (typeDefiningElement instanceof ObjectLiteral) {
 			return; // does not apply to ObjectLiterals and their defined type TStructuralType
 		}
@@ -110,7 +105,6 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		val type = typeDefiningElement.definedType
-
 		if (type instanceof AccessibleTypeElement) {
 			doCheckDirectlyExportedWhenVisibilityHigherThanPrivate(typeDefiningElement, type);
 		}
@@ -123,10 +117,13 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def private void doCheckDirectlyExportedWhenVisibilityHigherThanPrivate(EObject astNode, AccessibleTypeElement tElem) {
+		if (!jsVariantHelper.requireCheckExportedWhenVisibilityHigherThanPrivate(astNode)) {
+			return; // does not apply to plain JS and DTS files
+		}
+
 		if (tElem !== null
 				&& !tElem.directlyExported
-				&& tElem.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal
-				&& ResourceType.getResourceType(astNode) !== ResourceType.DTS) {
+				&& tElem.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal) {
 
 			// NOTE: we are using issue code UNSUPPORTED here, because the only reason for disallowing a visibility higher than
 			// private on non-exported types is that it is required/useful only with separate export declarations and such export

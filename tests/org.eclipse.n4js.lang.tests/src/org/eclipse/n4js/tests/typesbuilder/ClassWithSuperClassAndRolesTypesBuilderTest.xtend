@@ -99,6 +99,9 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 		            ref EObject astElement ref: N4ClassDeclaration@(unresolved proxy src/org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles.n4js#/0/@scriptElements.3/@exportedElement)
 		            attr TypeAccessModifier declaredTypeAccessModifier 'publicInternal'
 		            attr EBoolean directlyExported 'true'
+		            ref ElementExportDefinition exportingExportDefinitions [
+		                0: ElementExportDefinition@(resource null)
+		            ]
 		            cref ParameterizedTypeRef implementedInterfaceRefs [
 		                0: ParameterizedTypeRef {
 		                    ref Type declaredType ref: TInterface@(resource null)

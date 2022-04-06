@@ -20,7 +20,7 @@ export @Internal project class C {
 }
 
 /* XPECT errors ---
-	"A class with visibility project must be marked with modifier export." at "project"
+	"Unsupported feature: non-exported class with a visibility higher than private." at "project"
 	"A class with visibility project shouldn't be annotated with @Internal." at "C2"
 --- */
 @Internal project class C2 {
