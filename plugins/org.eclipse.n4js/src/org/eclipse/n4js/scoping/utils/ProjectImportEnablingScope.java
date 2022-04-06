@@ -90,7 +90,6 @@ public class ProjectImportEnablingScope implements IScope {
 	private final Optional<ImportDeclaration> importDeclaration;
 	private final IScope parent;
 	private final IScope delegate;
-	// private final N4JSModel n4jsModel;
 
 	/**
 	 * Wraps the given parent scope to enable project imports (see {@link ProjectImportEnablingScope} for details).

@@ -39,7 +39,6 @@ import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -142,11 +141,8 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 				addToResults(result, startUri);
 			}
 		} else {
-			for (SourceFolderSnapshot srcFolder : prjConfig.getSourceFolders()) {
-				List<URI> allSourceFileUris = srcFolder.getAllResources(fileSystemScanner);
-				for (URI srcFileUri : allSourceFileUris) {
-					addToResults(result, srcFileUri);
-				}
+			for (URI srcFileUri : prjConfig.getAllContents(fileSystemScanner)) {
+				addToResults(result, srcFileUri);
 			}
 		}
 		return result;

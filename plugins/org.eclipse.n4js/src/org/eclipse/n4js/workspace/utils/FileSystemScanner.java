@@ -48,47 +48,44 @@ public class FileSystemScanner implements IFileSystemScanner {
 		}
 		try {
 			Path rootPath = rootFile.toPath();
-			// if (acceptor instanceof FileVisitingAcceptor) {
 			Set<FileVisitOption> options = Collections.singleton(FileVisitOption.FOLLOW_LINKS);
-			Files.walkFileTree(rootPath, options, Integer.MAX_VALUE, new FileVisitor<Path>() {
-				@Override
-				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-					if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
-						return FileVisitResult.SKIP_SUBTREE;
-					}
-					return FileVisitResult.CONTINUE;
-				}
-
-				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-					acceptor.accept(new FileURI(file.toFile()).toURI());
-					return FileVisitResult.CONTINUE;
-				}
-
-				@Override
-				public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-					throw exc;
-				}
-
-				@Override
-				public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-					if (exc != null)
-						throw exc;
-					return FileVisitResult.CONTINUE;
-				}
-			});
-			// } else {
-			// Iterator<Path> pathIter = Files.walk(rootPath, FileVisitOption.FOLLOW_LINKS).iterator();
-			// while (pathIter.hasNext()) {
-			// Path p = pathIter.next();
-			// File file = p.toFile();
-			// if (!file.isDirectory()) {
-			// acceptor.accept(new FileURI(p.toFile()).toURI());
-			// }
-			// }
-			// }
+			Files.walkFileTree(rootPath, options, Integer.MAX_VALUE, new N4JSFileVisitor(acceptor));
 		} catch (IOException e) {
 			throw new RuntimeIOException(e);
+		}
+	}
+
+	static class N4JSFileVisitor implements FileVisitor<Path> {
+		final IAcceptor<URI> acceptor;
+
+		N4JSFileVisitor(IAcceptor<URI> acceptor) {
+			this.acceptor = acceptor;
+		}
+
+		@Override
+		public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+			if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
+				return FileVisitResult.SKIP_SUBTREE;
+			}
+			return FileVisitResult.CONTINUE;
+		}
+
+		@Override
+		public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+			acceptor.accept(new FileURI(file.toFile()).toURI());
+			return FileVisitResult.CONTINUE;
+		}
+
+		@Override
+		public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+			throw exc;
+		}
+
+		@Override
+		public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+			if (exc != null)
+				throw exc;
+			return FileVisitResult.CONTINUE;
 		}
 	}
 }

@@ -27,19 +27,67 @@ import org.eclipse.n4js.N4JSGlobals
  */
 class TsConfigRespectTest extends AbstractIdeTest {
 
-	private static val testData = #[
+	@Test
+	def void testNoTsconfig() {
+		 val testData = #[
 			CFG_NODE_MODULES + "@types/mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
 				"index.d.ts" -> '''
 					export class MyClass {
 					}
 				''',
-				"v2/index.d.ts" -> '''
-					export class MyClass2 {
+				PACKAGE_JSON -> '''
+					{
+						"name": "@types/mypackage",
+						"version": "0.0.1",
+						"main": "index.d.ts"
+					}
+				'''
+			],
+			CFG_NODE_MODULES + "mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.js" -> '''
+					export class MyClassJS {
 					}
 				''',
-				"/tsconfig.json" -> '''
+				PACKAGE_JSON -> '''
 					{
-					    "files": ["src/index.d.ts"]
+						"name": "mypackage",
+						"version": "0.0.1",
+						"main": "index.js"
+					}
+				'''
+			],
+			"client" -> #[
+				"module" -> '''
+					import { MyClass } from "mypackage";
+					MyClass;
+				''',
+				CFG_DEPENDENCIES -> '''
+					mypackage, @types/mypackage
+				'''
+			]
+		];
+		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
+		
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		shutdownLspServer();
+	}
+
+	@Test
+	def void testDefaultMainTsconfigFiles() {
+		 val testData = #[
+			CFG_NODE_MODULES + "@types/mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.d.ts" -> '''
+					export class MyClass {
+					}
+				''',
+				"tsconfig.json" -> '''
+					{
+					    "files": ["index.d.ts"]
 					}
 				''',
 				PACKAGE_JSON -> '''
@@ -50,36 +98,134 @@ class TsConfigRespectTest extends AbstractIdeTest {
 				'''
 			],
 			CFG_NODE_MODULES + "mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
 				"index.js" -> '''
 					export class MyClassJS {
-					}
-				''',
-				"v2/index.js" -> '''
-					export class MyClass2JS {
 					}
 				''',
 				PACKAGE_JSON -> '''
 					{
 						"name": "mypackage",
 						"version": "0.0.1",
-						"main": "src/index.js"
+						"main": "index.js"
 					}
 				'''
 			],
 			"client" -> #[
 				"module" -> '''
 					import { MyClass } from "mypackage";
+					MyClass;
 				''',
 				CFG_DEPENDENCIES -> '''
 					mypackage, @types/mypackage
 				'''
 			]
 		];
+		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
+		
+		startAndWaitForLspServer();
+		assertNoIssues();
 
+		shutdownLspServer();
+	}
 
 	@Test
-	def void testCreateTSConfigFile() {
+	def void testSameMainAndTsconfigFiles() {
+		 val testData = #[
+			CFG_NODE_MODULES + "@types/mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.d.ts" -> '''
+					export class MyClass {
+					}
+				''',
+				"tsconfig.json" -> '''
+					{
+					    "files": ["index.d.ts"]
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "@types/mypackage",
+						"version": "0.0.1",
+						"main": "index.d.ts"
+					}
+				'''
+			],
+			CFG_NODE_MODULES + "mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.js" -> '''
+					export class MyClassJS {
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "mypackage",
+						"version": "0.0.1",
+						"main": "index.js"
+					}
+				'''
+			],
+			"client" -> #[
+				"module" -> '''
+					import { MyClass } from "mypackage";
+					MyClass;
+				''',
+				CFG_DEPENDENCIES -> '''
+					mypackage, @types/mypackage
+				'''
+			]
+		];
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
+		
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		shutdownLspServer();
+	}
+
+	@Test
+	def void testNonStandardMain() {
+		 val testData = #[
+			CFG_NODE_MODULES + "@types/mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"module.d.ts" -> '''
+					export class MyClass {
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "@types/mypackage",
+						"version": "0.0.1",
+						"main": "module.d.ts"
+					}
+				'''
+			],
+			CFG_NODE_MODULES + "mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.js" -> '''
+					export class MyClassJS {
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "mypackage",
+						"version": "0.0.1",
+						"main": "index.js"
+					}
+				'''
+			],
+			"client" -> #[
+				"module" -> '''
+					import { MyClass } from "mypackage";
+					MyClass;
+				''',
+				CFG_DEPENDENCIES -> '''
+					mypackage, @types/mypackage
+				'''
+			]
+		];
+		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
+		
 		startAndWaitForLspServer();
 		assertNoIssues();
 

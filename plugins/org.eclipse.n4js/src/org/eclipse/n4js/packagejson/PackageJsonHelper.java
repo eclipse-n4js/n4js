@@ -136,6 +136,9 @@ public class PackageJsonHelper {
 				// need to handle this value later after all source containers have been read
 				// (see method #adjustProjectDescriptionAfterConversion())
 				break;
+			case TYPES:
+				target.setTypesModule(asNonEmptyStringOrNull(value));
+				break;
 			case MODULE:
 				// we don't care about the actual value, just about the fact that property "module" is present
 				target.setModuleProperty(true);
@@ -284,6 +287,11 @@ public class PackageJsonHelper {
 
 	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target, boolean applyDefaultValues,
 			String defaultProjectName, String valueOfTopLevelPropertyMain) {
+
+		if (target.getType() == null || target.getType() == ProjectType.PLAINJS) {
+			target.setMainModule(valueOfTopLevelPropertyMain);
+			return;
+		}
 
 		// store whether target has a declared mainModule *before* applying the default values
 		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;

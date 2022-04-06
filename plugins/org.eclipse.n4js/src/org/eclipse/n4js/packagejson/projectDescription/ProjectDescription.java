@@ -47,6 +47,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final String internalVersionStr; // for hash code computation and equality checks
 	private final ProjectType type;
 	private final String mainModule;
+	private final String typesModule;
 	private final ProjectReference extendedRuntimeEnvironment;
 	private final ImmutableList<ProjectReference> providedRuntimeLibraries;
 	private final ImmutableList<ProjectReference> requiredRuntimeLibraries;
@@ -75,7 +76,8 @@ public class ProjectDescription extends ImmutableDataClass {
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
 	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
 			String id, String packageName, String vendorId, String vendorName,
-			VersionNumber version, ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
+			VersionNumber version, ProjectType type, String mainModule, String typesModule,
+			ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
 			Iterable<ProjectReference> implementedProjects, String outputPath,
@@ -97,6 +99,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.internalVersionStr = version != null ? SemverSerializer.serialize(version) : null;
 		this.type = type;
 		this.mainModule = mainModule;
+		this.typesModule = typesModule;
 		this.extendedRuntimeEnvironment = extendedRuntimeEnvironment;
 		this.providedRuntimeLibraries = ImmutableList.copyOf(providedRuntimeLibraries);
 		this.requiredRuntimeLibraries = ImmutableList.copyOf(requiredRuntimeLibraries);
@@ -134,6 +137,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.internalVersionStr = version != null ? SemverSerializer.serialize(version) : null;
 		this.type = template.type;
 		this.mainModule = template.mainModule;
+		this.typesModule = template.typesModule;
 		this.extendedRuntimeEnvironment = template.extendedRuntimeEnvironment;
 		this.providedRuntimeLibraries = template.providedRuntimeLibraries;
 		this.requiredRuntimeLibraries = template.requiredRuntimeLibraries;
@@ -176,6 +180,7 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setVersion(version != null ? EcoreUtil.copy(version) : null);
 		builder.setType(type);
 		builder.setMainModule(mainModule);
+		builder.setTypesModule(typesModule);
 		builder.setExtendedRuntimeEnvironment(extendedRuntimeEnvironment);
 		builder.getProvidedRuntimeLibraries().addAll(providedRuntimeLibraries);
 		builder.getRequiredRuntimeLibraries().addAll(requiredRuntimeLibraries);
@@ -255,6 +260,10 @@ public class ProjectDescription extends ImmutableDataClass {
 	 */
 	public String getMainModule() {
 		return mainModule;
+	}
+
+	public String getTypesModule() {
+		return typesModule;
 	}
 
 	public ProjectReference getExtendedRuntimeEnvironment() {

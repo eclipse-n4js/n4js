@@ -38,6 +38,7 @@ public class ProjectDescriptionBuilder {
 	private VersionNumber version;
 	private ProjectType type;
 	private String mainModule;
+	private String typesModule;
 	private ProjectReference extendedRuntimeEnvironment;
 	private final List<ProjectReference> providedRuntimeLibraries = new ArrayList<>();
 	private final List<ProjectReference> requiredRuntimeLibraries = new ArrayList<>();
@@ -76,7 +77,7 @@ public class ProjectDescriptionBuilder {
 				: isGeneratorEnabledRewriteCjsImports;
 
 		return new ProjectDescription(location, relatedRootLocation, id,
-				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
+				packageName, vendorId, vendorName, version, type, mainModule, typesModule, extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
 				nestedNodeModulesFolder, esm, moduleProperty, n4jsNature, yarnWorkspaceRoot,
@@ -193,6 +194,15 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setMainModule(String mainModule) {
 		this.mainModule = mainModule;
+		return this;
+	}
+
+	public String getTypesModule() {
+		return typesModule;
+	}
+
+	public ProjectDescriptionBuilder setTypesModule(String typesModule) {
+		this.typesModule = typesModule;
 		return this;
 	}
 
