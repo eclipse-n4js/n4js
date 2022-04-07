@@ -284,6 +284,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return result.build();
 	}
 
+	/** Returns all Uris that are contained in a source folder of this project */
 	public Set<URI> getAllContents(IFileSystemScanner scanner) {
 		return Sets.newLinkedHashSet(
 				IterableExtensions.flatMap(getSourceFolders(), (srcFolder) -> srcFolder.getAllResources(scanner)));

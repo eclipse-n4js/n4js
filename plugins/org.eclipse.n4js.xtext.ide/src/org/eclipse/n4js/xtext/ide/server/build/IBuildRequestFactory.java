@@ -24,6 +24,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
  */
 public interface IBuildRequestFactory {
 
+	/** Shortcut to create an empty build request */
 	XBuildRequest createEmptyBuildRequest(WorkspaceConfigSnapshot workspaceConfig, ProjectConfigSnapshot projectConfig);
 
 	/**
@@ -53,5 +54,6 @@ public interface IBuildRequestFactory {
 			boolean doValidate,
 			boolean writeStorageResources);
 
+	/** Called after the build request was created. */
 	void onPostCreate(XBuildRequest request);
 }

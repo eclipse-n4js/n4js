@@ -168,8 +168,10 @@ public class XStatefulIncrementalBuilder {
 		return new XBuildResult(request.getIndex(), request.getFileMappings(), allProcessedDeltas);
 	}
 
-	/**  */
-	protected XBuildRequest initializeBuildRequest(XBuildRequest initialRequest, XBuildContext context) {
+	/** Overwrite this method to adjust the build request while working / loading resources already. */
+	protected XBuildRequest initializeBuildRequest(XBuildRequest initialRequest,
+			@SuppressWarnings({ "hiding", "unused" }) XBuildContext context) {
+
 		return initialRequest;
 	}
 

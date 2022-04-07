@@ -23,7 +23,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import com.google.inject.Singleton;
 
 /**
- *
+ * Default implementation for {@link IBuildRequestFactory}
  */
 @Singleton
 public class DefaultBuildRequestFactory implements IBuildRequestFactory {
@@ -37,7 +37,6 @@ public class DefaultBuildRequestFactory implements IBuildRequestFactory {
 				null, null, null, true, false);
 	}
 
-	/** Create the build request. */
 	@Override
 	public XBuildRequest createBuildRequest(
 			WorkspaceConfigSnapshot workspaceConfig,
