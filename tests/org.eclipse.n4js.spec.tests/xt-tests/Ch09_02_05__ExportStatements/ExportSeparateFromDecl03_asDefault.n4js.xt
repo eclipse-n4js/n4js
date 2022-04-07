@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	File "other_var.n4js" {
+
+		public var variableVar: string = "hello var";
+
+		export { variableVar as default };
+
+	}
+
+	File "other_cls.n4js" {
+
+		public class Cls { field: string }
+
+		export { Cls as default };
+
+	}
+
+	// note: this test is testing internal infrastructure for a feature not available in N4JS[D] (only in .d.ts)
+	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import myVariableVar from "other_var"
+// XPECT noerrors -->
+import MyCls from "other_cls"
+
+// make sure we cannot import via the original name:
+
+// XPECT errors --> "Element variableVar is not exported." at "variableVar"
+import { variableVar } from "other_var"
+// XPECT errors --> "Element Cls is not exported." at "Cls"
+import { Cls } from "other_cls"
+
+
+// XPECT type of 'myVariableVar' --> string
+myVariableVar;
+// XPECT type of 'v01' --> string
+let v01 = new MyCls().field;
