@@ -36,6 +36,7 @@ import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
@@ -109,7 +110,7 @@ public class ExportedElementsCollector {
 
 	private void doCollectElements(AbstractNamespace namespace, CollectionInfo info) {
 
-		for (ExportDefinition exportDef : namespace.getExportDefinitions()) {
+		for (ExportDefinition exportDef : Lists.reverse(namespace.getExportDefinitions())) {
 			if (exportDef instanceof ElementExportDefinition) {
 				ElementExportDefinition exportDefCasted = (ElementExportDefinition) exportDef;
 				TExportableElement exportedElem = exportDefCasted.getExportedElement();

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tooling.organizeImports
 
+import com.google.common.collect.Lists
 import java.util.List
 import java.util.function.Consumer
 import org.eclipse.n4js.N4JSLanguageConstants
@@ -74,7 +75,7 @@ class ImportSpecifiersUtil {
 	}
 
 	private static def void collectProvidedElements(AbstractNamespace namespace, RecursionGuard<TModule> guard, Consumer<ElementExportDefinition> consumer) {
-		for (exportDef : namespace.exportDefinitions) {
+		for (exportDef : Lists.reverse(namespace.exportDefinitions)) {
 			if (exportDef instanceof ElementExportDefinition) {
 				consumer.accept(exportDef);
 			} else if (exportDef instanceof ModuleExportDefinition) {
