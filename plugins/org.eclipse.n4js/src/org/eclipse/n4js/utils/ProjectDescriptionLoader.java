@@ -260,7 +260,7 @@ public class ProjectDescriptionLoader {
 		NameValuePair excludeProperty = JSONModelUtils.getNameValuePair(contentCasted, "exclude").orElse(null);
 		if (excludeProperty != null) {
 			for (String tsExclude : JSONModelUtils.asStringsInArrayOrEmpty(excludeProperty.getValue())) {
-				target.addTsInclude(tsExclude);
+				target.addTsExclude(tsExclude);
 			}
 		}
 	}
