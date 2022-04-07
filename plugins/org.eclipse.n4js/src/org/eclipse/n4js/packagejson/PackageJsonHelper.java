@@ -39,7 +39,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -57,7 +56,6 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
-import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
 
@@ -293,7 +291,7 @@ public class PackageJsonHelper {
 			String defaultProjectName, String valueOfTopLevelPropertyMain) {
 
 		if (target.getProjectType() == null || target.getProjectType() == ProjectType.PLAINJS) {
-			applyPlainJSDefaults(target, defaultProjectName, valueOfTopLevelPropertyMain);
+			applyPlainJSDefaults(target, defaultProjectName);
 			return;
 		}
 
@@ -348,16 +346,24 @@ public class PackageJsonHelper {
 	 * Apply default values to the given project description of a plain js project. This should be performed right after
 	 * loading and converting the project description from JSON.
 	 */
-	private void applyPlainJSDefaults(ProjectDescriptionBuilder target, String defaultProjectName,
-			String valueOfTopLevelPropertyMain) {
+	private void applyPlainJSDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
+		applyBaseDefaults(target);
+
+		if (target.getMain() == null) {
+			target.setMain(PackageJsonProperties.MAIN.defaultValue.toString());
+		}
 
 		if (target.getProjectType() == null) {
 			target.setProjectType(ProjectType.PLAINJS);
 		}
-		if (valueOfTopLevelPropertyMain != null) {
-			URI mainProp = URI.createFileURI(valueOfTopLevelPropertyMain);
-			URI trimmedExtension = URIUtils.trimFileExtension(mainProp);
-			target.setMainModule(trimmedExtension.toString());
+
+		List<String> sourceContainerPaths = target.getSourceContainers().stream()
+				.flatMap(scd -> ProjectDescriptionUtils.getPathsNormalized(scd).stream())
+				.collect(Collectors.toList());
+		String mainModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
+				target.getMain(), sourceContainerPaths);
+		if (mainModulePath != null) {
+			target.setMainModule(mainModulePath);
 		}
 
 		if (target.getPackageName() == null) {
@@ -369,7 +375,6 @@ public class PackageJsonHelper {
 			target.setOutputPath(".");
 		}
 
-		applyBaseDefaults(target);
 	}
 
 	/**

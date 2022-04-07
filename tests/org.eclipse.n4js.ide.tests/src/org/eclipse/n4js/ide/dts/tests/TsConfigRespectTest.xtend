@@ -75,6 +75,55 @@ class TsConfigRespectTest extends AbstractIdeTest {
 	}
 
 	@Test
+	def void testNoTsconfigNoFileExtension() {
+		 val testData = #[
+			CFG_NODE_MODULES + "@types/mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.d.ts" -> '''
+					export class MyClass {
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "@types/mypackage",
+						"version": "0.0.1",
+						"main": "index"
+					}
+				'''
+			],
+			CFG_NODE_MODULES + "mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.js" -> '''
+					export class MyClassJS {
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "mypackage",
+						"version": "0.0.1",
+						"main": "index.js"
+					}
+				'''
+			],
+			"client" -> #[
+				"module" -> '''
+					import { MyClass } from "mypackage";
+					MyClass;
+				''',
+				CFG_DEPENDENCIES -> '''
+					mypackage, @types/mypackage
+				'''
+			]
+		];
+		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
+		
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		shutdownLspServer();
+	}
+
+	@Test
 	def void testNoTsconfigClosure() {
 		 val testData = #[
 			CFG_NODE_MODULES + "@types/mypackage" -> #[

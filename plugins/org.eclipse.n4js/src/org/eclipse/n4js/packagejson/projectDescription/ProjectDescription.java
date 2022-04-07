@@ -274,8 +274,6 @@ public class ProjectDescription extends ImmutableDataClass {
 		return types;
 	}
 
-	// continue: unterscheiden zwischen main und mainModule
-
 	public ProjectReference getExtendedRuntimeEnvironment() {
 		return extendedRuntimeEnvironment;
 	}

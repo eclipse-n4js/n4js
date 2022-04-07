@@ -302,6 +302,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			sortedResults.add(uri);
 
 			Collection<URI> importedUris = getImportedUris(resourceSet, prjName, moduleName2Uri, uri);
+			importedUris.removeAll(sortedResults);
 			worklist.addAll(importedUris);
 		}
 
