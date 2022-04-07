@@ -313,7 +313,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	@Override
 	public boolean isGeneratorEnabled() {
-		ProjectType projectType = projectDescription.getType();
+		ProjectType projectType = projectDescription.getProjectType();
 		return !N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(projectType);
 	}
 

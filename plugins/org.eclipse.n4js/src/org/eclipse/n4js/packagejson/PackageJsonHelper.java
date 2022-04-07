@@ -39,6 +39,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.json.JSON.JSONDocument;
@@ -56,6 +57,7 @@ import org.eclipse.n4js.semver.SemverHelper;
 import org.eclipse.n4js.semver.Semver.NPMVersionRequirement;
 import org.eclipse.n4js.semver.Semver.VersionNumber;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
+import org.eclipse.n4js.utils.URIUtils;
 
 import com.google.inject.Inject;
 
@@ -133,11 +135,12 @@ public class PackageJsonHelper {
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.DEVELOPMENT);
 				break;
 			case MAIN:
-				// need to handle this value later after all source containers have been read
+				target.setMain(asNonEmptyStringOrNull(value));
+				// also handle this value later after all source containers have been read
 				// (see method #adjustProjectDescriptionAfterConversion())
 				break;
 			case TYPES:
-				target.setTypesModule(asNonEmptyStringOrNull(value));
+				target.setTypes(asNonEmptyStringOrNull(value));
 				break;
 			case MODULE:
 				// we don't care about the actual value, just about the fact that property "module" is present
@@ -182,7 +185,7 @@ public class PackageJsonHelper {
 			case PROJECT_TYPE:
 				ProjectType projectType = parseProjectType(asNonEmptyStringOrNull(value));
 				if (projectType != null) {
-					target.setType(projectType);
+					target.setProjectType(projectType);
 				}
 				break;
 			case VENDOR_ID:
@@ -285,11 +288,12 @@ public class PackageJsonHelper {
 		}
 	}
 
-	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target, boolean applyDefaultValues,
+	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target,
+			boolean applyN4JSDefaultValues,
 			String defaultProjectName, String valueOfTopLevelPropertyMain) {
 
-		if (target.getType() == null || target.getType() == ProjectType.PLAINJS) {
-			target.setMainModule(valueOfTopLevelPropertyMain);
+		if (target.getProjectType() == null || target.getProjectType() == ProjectType.PLAINJS) {
+			applyPlainJSDefaults(target, defaultProjectName, valueOfTopLevelPropertyMain);
 			return;
 		}
 
@@ -297,8 +301,8 @@ public class PackageJsonHelper {
 		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;
 
 		// apply default values (if desired)
-		if (applyDefaultValues) {
-			applyDefaults(target, defaultProjectName);
+		if (applyN4JSDefaultValues) {
+			applyN4JSDefaults(target, defaultProjectName);
 		}
 
 		// sanitize and set value of top-level property "main"
@@ -341,15 +345,43 @@ public class PackageJsonHelper {
 	}
 
 	/**
-	 * Apply default values to the given project description. This should be performed right after loading and
+	 * Apply default values to the given project description of a plain js project. This should be performed right after
+	 * loading and converting the project description from JSON.
+	 */
+	private void applyPlainJSDefaults(ProjectDescriptionBuilder target, String defaultProjectName,
+			String valueOfTopLevelPropertyMain) {
+
+		if (target.getProjectType() == null) {
+			target.setProjectType(ProjectType.PLAINJS);
+		}
+		if (valueOfTopLevelPropertyMain != null) {
+			URI mainProp = URI.createFileURI(valueOfTopLevelPropertyMain);
+			URI trimmedExtension = URIUtils.trimFileExtension(mainProp);
+			target.setMainModule(trimmedExtension.toString());
+		}
+
+		if (target.getPackageName() == null) {
+			target.setPackageName(defaultProjectName);
+		}
+		if (target.getOutputPath() == null) {
+			// note that in case the project is a yarn workspace project and there is a 'clean build' running
+			// the entire contents will be deleted.
+			target.setOutputPath(".");
+		}
+
+		applyBaseDefaults(target);
+	}
+
+	/**
+	 * Apply default values to the given n4js project description. This should be performed right after loading and
 	 * converting the project description from JSON.
 	 */
-	private void applyDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
+	private void applyN4JSDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
 
-		if (!target.hasN4JSNature() || target.getType() == null) {
+		if (!target.hasN4JSNature() || target.getProjectType() == null) {
 			// for non-N4JS projects, and if the project type is unset, enforce the default project type, i.e.
 			// project type 'PLAINJS':
-			target.setType(parseProjectType((String) PROJECT_TYPE.defaultValue));
+			target.setProjectType(parseProjectType((String) PROJECT_TYPE.defaultValue));
 		}
 		if (target.getPackageName() == null) {
 			target.setPackageName(defaultProjectName);
@@ -378,30 +410,33 @@ public class PackageJsonHelper {
 			target.setGeneratorEnabledRewriteCjsImports((Boolean) GENERATOR_REWRITE_CJS_IMPORTS.defaultValue);
 		}
 
+		applyBaseDefaults(target);
+	}
+
+	private void applyBaseDefaults(ProjectDescriptionBuilder target) {
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
 		// EXCEPT target represents a yarn workspace root
 
-		if (target.isYarnWorkspaceRoot()) {
-			return;
-		}
-		List<SourceContainerDescription> sourceContainers = target.getSourceContainers();
-		SourceContainerDescription sourceContainerOfTypeSource = null;
-		for (SourceContainerDescription sourceContainer : sourceContainers) {
-			if (!sourceContainer.getPaths().isEmpty()) {
-				return;
+		if (!target.isYarnWorkspaceRoot()) {
+			List<SourceContainerDescription> sourceContainers = target.getSourceContainers();
+			SourceContainerDescription sourceContainerOfTypeSource = null;
+			for (SourceContainerDescription sourceContainer : sourceContainers) {
+				if (!sourceContainer.getPaths().isEmpty()) {
+					return;
+				}
+				if (sourceContainerOfTypeSource == null
+						&& sourceContainer.getType() == SourceContainerType.SOURCE) {
+					sourceContainerOfTypeSource = sourceContainer;
+				}
 			}
-			if (sourceContainerOfTypeSource == null
-					&& sourceContainer.getType() == SourceContainerType.SOURCE) {
-				sourceContainerOfTypeSource = sourceContainer;
+			if (sourceContainerOfTypeSource != null) {
+				sourceContainers.remove(sourceContainerOfTypeSource);
 			}
+			sourceContainers.add(new SourceContainerDescription(
+					SourceContainerType.SOURCE,
+					Collections.singleton((String) OUTPUT.defaultValue)));
 		}
-		if (sourceContainerOfTypeSource != null) {
-			sourceContainers.remove(sourceContainerOfTypeSource);
-		}
-		sourceContainers.add(new SourceContainerDescription(
-				SourceContainerType.SOURCE,
-				Collections.singleton((String) OUTPUT.defaultValue)));
 	}
 
 	private VersionNumber asVersionNumberOrNull(JSONValue value) {

@@ -36,9 +36,10 @@ public class ProjectDescriptionBuilder {
 	private String vendorId;
 	private String vendorName;
 	private VersionNumber version;
-	private ProjectType type;
+	private ProjectType projectType;
+	private String main;
+	private String types;
 	private String mainModule;
-	private String typesModule;
 	private ProjectReference extendedRuntimeEnvironment;
 	private final List<ProjectReference> providedRuntimeLibraries = new ArrayList<>();
 	private final List<ProjectReference> requiredRuntimeLibraries = new ArrayList<>();
@@ -77,7 +78,8 @@ public class ProjectDescriptionBuilder {
 				: isGeneratorEnabledRewriteCjsImports;
 
 		return new ProjectDescription(location, relatedRootLocation, id,
-				packageName, vendorId, vendorName, version, type, mainModule, typesModule, extendedRuntimeEnvironment,
+				packageName, vendorId, vendorName, version, projectType, main, types, mainModule,
+				extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
 				nestedNodeModulesFolder, esm, moduleProperty, n4jsNature, yarnWorkspaceRoot,
@@ -179,12 +181,12 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
-	public ProjectType getType() {
-		return type;
+	public ProjectType getProjectType() {
+		return projectType;
 	}
 
-	public ProjectDescriptionBuilder setType(ProjectType type) {
-		this.type = type;
+	public ProjectDescriptionBuilder setProjectType(ProjectType type) {
+		this.projectType = type;
 		return this;
 	}
 
@@ -197,12 +199,21 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
-	public String getTypesModule() {
-		return typesModule;
+	public String getMain() {
+		return main;
 	}
 
-	public ProjectDescriptionBuilder setTypesModule(String typesModule) {
-		this.typesModule = typesModule;
+	public ProjectDescriptionBuilder setMain(String main) {
+		this.main = main;
+		return this;
+	}
+
+	public String getTypes() {
+		return types;
+	}
+
+	public ProjectDescriptionBuilder setTypes(String typesModule) {
+		this.types = typesModule;
 		return this;
 	}
 

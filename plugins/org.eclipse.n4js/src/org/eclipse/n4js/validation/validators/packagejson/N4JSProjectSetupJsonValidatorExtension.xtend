@@ -466,7 +466,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		val description = getProjectDescription();
 		
 		// make sure the listed tested projects do not mismatch in their type (API vs. library)
-		if (ProjectType.TEST == description.getType) {
+		if (ProjectType.TEST == description.getProjectType) {
 			val projects = description.testedProjects;
 			if (!projects.nullOrEmpty) {
 				val allProjects = getAllProjectsById();
@@ -506,7 +506,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		// obtain project description for higher-level access to contained information
 		val description = getProjectDescription();
 		
-		if (LIBRARY == description.getType && !description.implementationId.nullOrEmpty) {
+		if (LIBRARY == description.getProjectType && !description.implementationId.nullOrEmpty) {
 			val expectedImplementationId = new N4JSPackageName(description.implementationId);
 			val allProjects = getAllProjectsById();
 			val pcs = getProjectConfigSnapshot();
@@ -592,7 +592,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 		}
 
 		// special validation for API projects
-		if (projectDescription.getType == API) {
+		if (projectDescription.getProjectType == API) {
 			internalValidateAPIProjectReferences(references);
 		}
 	}
@@ -602,7 +602,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		val description = getProjectDescription();
 		val projectName = description.getPackageName;
-		val projectType = description.getType;
+		val projectType = description.getProjectType;
 		if (projectName == N4JSGlobals.N4JS_RUNTIME.rawName) {
 			return; // not applicable ("n4js-runtime" does not need to have a dependency to "n4js-runtime"!)
 		}
@@ -942,7 +942,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 * @param supportedTypesPredicate A predicate which indicates whether the feature may be used for a given project type.
 	 */
 	def boolean checkFeatureRestrictions(String featureDescription, JSONValue value, Predicate<ProjectType> supportedTypesPredicate) {
-		val type = getProjectDescription()?.getType;
+		val type = getProjectDescription()?.getProjectType;
 		if (type === null) {
 			// cannot check feature if project type cannot be determined
 			return false;
@@ -997,7 +997,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 	 * that may be declared as dependency to the currently validated project description.
 	 */
 	private def Predicate<N4JSProjectConfigSnapshot> createDependenciesPredicate() {
-		return switch(getProjectDescription().getType) {
+		return switch(getProjectDescription().getProjectType) {
 			case API: createAPIDependenciesPredicate()
 			// runtime libraries may only depend on other runtime libraries
 			case RUNTIME_LIBRARY: RL_TYPE.forN4jsProjects
@@ -1196,7 +1196,7 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 			checkVersions(currentProject, ref, allProjects);
 		}
 
-		if (description.getType !== ProjectType.DEFINITION) {
+		if (description.getProjectType !== ProjectType.DEFINITION) {
 			checkImplProjectPresentForReferencedTypeDef(ref, project, allReferencedProjectNames);
 		}
 	}

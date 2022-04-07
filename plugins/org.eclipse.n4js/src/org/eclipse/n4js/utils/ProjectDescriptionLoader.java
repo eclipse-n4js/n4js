@@ -13,7 +13,6 @@ package org.eclipse.n4js.utils;
 import static org.eclipse.n4js.json.model.utils.JSONModelUtils.asNonEmptyStringOrNull;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.MAIN;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.N4JS;
-import static org.eclipse.n4js.packagejson.PackageJsonProperties.NAME;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.PACKAGES;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.VERSION;
 import static org.eclipse.n4js.packagejson.PackageJsonProperties.WORKSPACES_ARRAY;
@@ -179,18 +178,8 @@ public class ProjectDescriptionLoader {
 			return;
 		}
 		JSONObject contentCasted = (JSONObject) content;
-		NameValuePair nameProperty = JSONModelUtils.getNameValuePair(contentCasted, NAME.name).orElse(null);
-		String prjName = nameProperty == null ? null : asNonEmptyStringOrNull(nameProperty.getValue());
-		boolean isTypeScriptDefinitionProject = prjName != null && prjName.startsWith(N4JSGlobals.TYPES_SCOPE + "/");
 		NameValuePair mainProperty = JSONModelUtils.getNameValuePair(contentCasted, MAIN.name).orElse(null);
-		if (isTypeScriptDefinitionProject) {
-			NameValuePair typesProperty = JSONModelUtils.getNameValuePair(contentCasted, "types").orElse(null);
-			if (typesProperty != null) {
-				JSONStringLiteral mainValue = JSONFactory.eINSTANCE.createJSONStringLiteral();
-				mainValue.setValue(asNonEmptyStringOrNull(typesProperty.getValue()));
-				mainProperty = JSONModelUtils.addProperty(contentCasted, MAIN.name, mainValue);
-			}
-		}
+
 		if (mainProperty == null) {
 			return;
 		}
@@ -234,7 +223,7 @@ public class ProjectDescriptionLoader {
 	 * Store some information from {@code tsconfig.json} files iff existent in the project folders root.
 	 */
 	private void setInformationFromTSConfig(FileURI location, ProjectDescriptionBuilder target) {
-		ProjectType type = target.getType();
+		ProjectType type = target.getProjectType();
 		if (type != ProjectType.PLAINJS && type != ProjectType.DEFINITION) {
 			// Note that n4js projects also create/modify tsconfig.json files iff they generate d.ts files
 			// from n4js sources. These generated tsconfig files state the 'srg-gen' folder as an 'includes'

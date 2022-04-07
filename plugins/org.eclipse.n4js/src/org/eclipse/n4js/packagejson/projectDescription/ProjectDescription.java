@@ -45,9 +45,10 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final String vendorName;
 	private final VersionNumber version;
 	private final String internalVersionStr; // for hash code computation and equality checks
-	private final ProjectType type;
+	private final ProjectType projectType;
+	private final String main;
+	private final String types;
 	private final String mainModule;
-	private final String typesModule;
 	private final ProjectReference extendedRuntimeEnvironment;
 	private final ImmutableList<ProjectReference> providedRuntimeLibraries;
 	private final ImmutableList<ProjectReference> requiredRuntimeLibraries;
@@ -76,7 +77,7 @@ public class ProjectDescription extends ImmutableDataClass {
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
 	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
 			String id, String packageName, String vendorId, String vendorName,
-			VersionNumber version, ProjectType type, String mainModule, String typesModule,
+			VersionNumber version, ProjectType projectType, String main, String types, String mainModule,
 			ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
@@ -97,9 +98,10 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.vendorName = vendorName;
 		this.version = version != null ? EcoreUtil.copy(version) : null;
 		this.internalVersionStr = version != null ? SemverSerializer.serialize(version) : null;
-		this.type = type;
+		this.projectType = projectType;
+		this.main = main;
+		this.types = types;
 		this.mainModule = mainModule;
-		this.typesModule = typesModule;
 		this.extendedRuntimeEnvironment = extendedRuntimeEnvironment;
 		this.providedRuntimeLibraries = ImmutableList.copyOf(providedRuntimeLibraries);
 		this.requiredRuntimeLibraries = ImmutableList.copyOf(requiredRuntimeLibraries);
@@ -135,9 +137,10 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.vendorName = template.vendorName;
 		this.version = template.version != null ? EcoreUtil.copy(template.version) : null;
 		this.internalVersionStr = version != null ? SemverSerializer.serialize(version) : null;
-		this.type = template.type;
+		this.projectType = template.projectType;
+		this.main = template.main;
+		this.types = template.types;
 		this.mainModule = template.mainModule;
-		this.typesModule = template.typesModule;
 		this.extendedRuntimeEnvironment = template.extendedRuntimeEnvironment;
 		this.providedRuntimeLibraries = template.providedRuntimeLibraries;
 		this.requiredRuntimeLibraries = template.requiredRuntimeLibraries;
@@ -178,9 +181,10 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setVendorId(vendorId);
 		builder.setVendorName(vendorName);
 		builder.setVersion(version != null ? EcoreUtil.copy(version) : null);
-		builder.setType(type);
+		builder.setProjectType(projectType);
+		builder.setMain(main);
+		builder.setTypes(types);
 		builder.setMainModule(mainModule);
-		builder.setTypesModule(typesModule);
 		builder.setExtendedRuntimeEnvironment(extendedRuntimeEnvironment);
 		builder.getProvidedRuntimeLibraries().addAll(providedRuntimeLibraries);
 		builder.getRequiredRuntimeLibraries().addAll(requiredRuntimeLibraries);
@@ -243,8 +247,8 @@ public class ProjectDescription extends ImmutableDataClass {
 		return version;
 	}
 
-	public ProjectType getType() {
-		return type;
+	public ProjectType getProjectType() {
+		return projectType;
 	}
 
 	/**
@@ -262,9 +266,15 @@ public class ProjectDescription extends ImmutableDataClass {
 		return mainModule;
 	}
 
-	public String getTypesModule() {
-		return typesModule;
+	public String getMain() {
+		return main;
 	}
+
+	public String getTypes() {
+		return types;
+	}
+
+	// continue: unterscheiden zwischen main und mainModule
 
 	public ProjectReference getExtendedRuntimeEnvironment() {
 		return extendedRuntimeEnvironment;
@@ -428,7 +438,9 @@ public class ProjectDescription extends ImmutableDataClass {
 				vendorName,
 				// projectVersion is covered by internalProjectVersionStr
 				internalVersionStr,
-				type,
+				projectType,
+				main,
+				types,
 				mainModule,
 				extendedRuntimeEnvironment,
 				providedRuntimeLibraries,
@@ -467,7 +479,9 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& Objects.equals(vendorName, other.vendorName)
 				// version is covered by internalVersionStr
 				&& Objects.equals(internalVersionStr, other.internalVersionStr)
-				&& type == other.type
+				&& projectType == other.projectType
+				&& Objects.equals(main, other.main)
+				&& Objects.equals(types, other.types)
 				&& Objects.equals(mainModule, other.mainModule)
 				&& Objects.equals(extendedRuntimeEnvironment, other.extendedRuntimeEnvironment)
 				&& Objects.equals(providedRuntimeLibraries, other.providedRuntimeLibraries)
@@ -536,8 +550,10 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	/** Factored out from {@link #toString()} only to allow reuse in {@link N4JSProjectConfigSnapshot}. */
 	public void toStringAdditionalProperties(StringBuilder sb) {
-		sb.append("    type: " + type + "\n");
+		sb.append("    type: " + projectType + "\n");
 		sb.append("    version: " + internalVersionStr + "\n");
+		sb.append("    main: " + main + "\n");
+		sb.append("    types: " + types + "\n");
 		sb.append("    mainModule: " + mainModule + "\n");
 		if (!testedProjects.isEmpty()) {
 			String namesStr = Joiner.on(", ").join(

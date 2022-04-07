@@ -241,7 +241,7 @@ class SemanticDependenciesTest {
 		
 		for (dependencyName : dependencies.map[getPackageName]) {
 			val dependency = workspace.findProjectByName(dependencyName);
-			if (dependency.projectDescription.getType == ProjectType.DEFINITION) {
+			if (dependency.projectDescription.getProjectType == ProjectType.DEFINITION) {
 				if (encounteredImplProjectsById.containsKey(dependency.projectDescription.definesPackage)) {
 					problems.add("Implementation project of type definition " + dependency.name + 
 						" was listed before its definition.");
@@ -348,7 +348,7 @@ class SemanticDependenciesTest {
 		val pdb = ProjectDescription.builder()
 			.setLocation(location)
 			.setPackageName(projectName.rawName)
-			.setType(projectType)
+			.setProjectType(projectType)
 			.setDefinesPackage(definesPackage?.rawName);
 		for (depName : dependencies) {
 			pdb.addDependency(new ProjectDependency(depName, DependencyType.RUNTIME, "", null));

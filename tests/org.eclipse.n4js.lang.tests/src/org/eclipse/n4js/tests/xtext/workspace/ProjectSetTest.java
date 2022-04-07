@@ -57,7 +57,7 @@ public class ProjectSetTest {
 		String name = ProjectDescriptionUtils.deriveN4JSPackageNameFromURI(path);
 		ProjectDescription pd = ProjectDescription.builder()
 				.setPackageName(name)
-				.setType(ProjectType.LIBRARY)
+				.setProjectType(ProjectType.LIBRARY)
 				.setVersion(SemverUtils.createVersionNumber(0, 0, 1))
 				.build();
 		N4JSSourceFolderSnapshot srcFolder = new N4JSSourceFolderSnapshot("src", path.appendSegment("src"),

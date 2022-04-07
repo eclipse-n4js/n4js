@@ -12,8 +12,6 @@ package org.eclipse.n4js.ide.dts.tests
 
 import org.eclipse.n4js.ide.tests.helper.server.AbstractIdeTest
 import org.junit.Test
-import static org.junit.Assert.assertEquals
-import org.eclipse.n4js.N4JSGlobals
 
 // Tests:
 //  - closure build
@@ -62,6 +60,8 @@ class TsConfigRespectTest extends AbstractIdeTest {
 				"module" -> '''
 					import { MyClass } from "mypackage";
 					MyClass;
+					
+					export public class XYZ {}
 				''',
 				CFG_DEPENDENCIES -> '''
 					mypackage, @types/mypackage
@@ -77,7 +77,7 @@ class TsConfigRespectTest extends AbstractIdeTest {
 	}
 
 	@Test
-	def void testDefaultMainTsconfigFiles() {
+	def void testEmptyMainTypesFiles() {
 		 val testData = #[
 			CFG_NODE_MODULES + "@types/mypackage" -> #[
 				CFG_SOURCE_FOLDER -> ".",
@@ -113,7 +113,7 @@ class TsConfigRespectTest extends AbstractIdeTest {
 			],
 			"client" -> #[
 				"module" -> '''
-					import { MyClass } from "mypackage";
+					import { MyClass } from "mypackage/index"; // complete import
 					MyClass;
 				''',
 				CFG_DEPENDENCIES -> '''
@@ -125,6 +125,117 @@ class TsConfigRespectTest extends AbstractIdeTest {
 		
 		startAndWaitForLspServer();
 		assertNoIssues();
+
+		shutdownLspServer();
+	}
+
+	@Test
+	def void testTsconfigFiles() {
+		 val testData = #[
+			CFG_NODE_MODULES + "@types/mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.d.ts" -> '''
+					// empty
+				''',
+				"lib.d.ts" -> '''
+					export class MyClass {
+					}
+				''',
+				"tsconfig.json" -> '''
+					{
+					    "files": ["lib.d.ts"]
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "@types/mypackage",
+						"version": "0.0.1"
+					}
+				'''
+			],
+			CFG_NODE_MODULES + "mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.js" -> '''
+					export class MyClassJS {
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "mypackage",
+						"version": "0.0.1",
+						"main": "index.js"
+					}
+				'''
+			],
+			"client" -> #[
+				"module" -> '''
+					import { MyClass } from "mypackage/lib"; // complete import
+					MyClass;
+				''',
+				CFG_DEPENDENCIES -> '''
+					mypackage, @types/mypackage
+				'''
+			]
+		];
+		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
+		
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		shutdownLspServer();
+	}
+
+	@Test
+	def void testMissingTsconfigFiles() {
+		 val testData = #[
+			CFG_NODE_MODULES + "@types/mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.d.ts" -> '''
+					// empty
+				''',
+				"lib.d.ts" -> '''
+					export class MyClass {
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "@types/mypackage",
+						"main": "index.d.ts",
+						"version": "0.0.1"
+					}
+				'''
+			],
+			CFG_NODE_MODULES + "mypackage" -> #[
+				CFG_SOURCE_FOLDER -> ".",
+				"index.js" -> '''
+					export class MyClassJS {
+					}
+				''',
+				PACKAGE_JSON -> '''
+					{
+						"name": "mypackage",
+						"version": "0.0.1",
+						"main": "index.js"
+					}
+				'''
+			],
+			"client" -> #[
+				"module" -> '''
+					import { MyClass } from "mypackage/lib"; // complete import
+					MyClass;
+				''',
+				CFG_DEPENDENCIES -> '''
+					mypackage, @types/mypackage
+				'''
+			]
+		];
+		testWorkspaceManager.createTestYarnWorkspaceOnDisk(testData);
+		
+		startAndWaitForLspServer();
+		assertIssuesInModules("client/src/module.n4js" -> #[
+			"(Error, [0:24 - 0:39], Cannot resolve complete module specifier (with project name as first segment): no matching module found.)",
+			"(Error, [1:0 - 1:7], Couldn't resolve reference to IdentifiableElement 'MyClass'.)"
+		]);
 
 		shutdownLspServer();
 	}

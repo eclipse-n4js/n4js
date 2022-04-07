@@ -201,8 +201,8 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	}
 
 	/**
-	 * Returns this project's {@link ProjectDescription#getType() type} or {@link ProjectType#DEFINITION} iff this
-	 * project is an {@code @types}-project.
+	 * Returns this project's {@link ProjectDescription#getProjectType() type} or {@link ProjectType#DEFINITION} iff
+	 * this project is an {@code @types}-project.
 	 */
 	public ProjectType getType() {
 		ProjectType typeRaw = getTypeRaw();
@@ -212,9 +212,9 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return typeRaw;
 	}
 
-	/** Returns this project's {@link ProjectDescription#getType() type}. */
+	/** Returns this project's {@link ProjectDescription#getProjectType() type}. */
 	public ProjectType getTypeRaw() {
-		return projectDescription.getType();
+		return projectDescription.getProjectType();
 	}
 
 	/** Returns this project's {@link ProjectDescription#getVersion() version}. */
@@ -300,7 +300,7 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	 */
 	public boolean hasTsConfigBuildSemantic() {
 		ProjectDescription pd = getProjectDescription();
-		if (pd.getType() != ProjectType.PLAINJS) {
+		if (pd.getProjectType() != ProjectType.PLAINJS) {
 			return false;
 		}
 		if (pd.getN4JSProjectName() != null && pd.getN4JSProjectName().isScopeTypes()) {
@@ -317,6 +317,8 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	@SuppressWarnings("resource") // due to call to FileSystems.getDefault()
 	public Set<URI> computeStartUris(IFileSystemScanner fileSystemScanner) {
 		if (hasTsConfigBuildSemantic()) {
+			Set<URI> startUris = new LinkedHashSet<>();
+
 			FileSystem fs = FileSystems.getDefault();
 			ProjectDescription pd = getProjectDescription();
 
@@ -324,10 +326,27 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			List<String> globsToInclude = new ArrayList<>();
 			List<String> globsToExclude = new ArrayList<>();
 
-			files.add(Path.of(pd.getMainModule()));
+			URI main = pd.getMain() == null
+					? null
+					: URI.createFileURI(pd.getMain()).resolve(getPath());
+			URI types = pd.getTypes() == null
+					? null
+					: URI.createFileURI(pd.getTypes()).resolve(getPath());
+
+			if (main != null && URIUtils.toFile(main).isFile()) {
+				startUris.add(main);
+			}
+			if (types != null && URIUtils.toFile(types).isFile()) {
+				startUris.add(types);
+			}
+
 			files.addAll(Lists.transform(pd.getTsFiles(), Path::of));
 			globsToInclude.addAll(pd.getTsInclude());
 			globsToExclude.addAll(pd.getTsExclude());
+
+			if (files.isEmpty() && globsToInclude.isEmpty()) {
+				return startUris;
+			}
 
 			List<PathMatcher> pmInclude = new ArrayList<>();
 			List<PathMatcher> pmExclude = new ArrayList<>();
@@ -340,7 +359,6 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 				pmExclude.add(pathMatcher);
 			}
 
-			Set<URI> startUris = new LinkedHashSet<>();
 			LOOP_ALL: for (URI someUri : getAllContents(fileSystemScanner)) {
 				Path somePath = Path.of(someUri.deresolve(getPath()).toFileString());
 				for (Path file : files) {

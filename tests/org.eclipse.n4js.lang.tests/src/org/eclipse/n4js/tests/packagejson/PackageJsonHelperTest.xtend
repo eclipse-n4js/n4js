@@ -261,9 +261,9 @@ class PackageJsonHelperTest {
 		assertEquals(VENDOR_ID.defaultValue, pd.vendorId);
 		assertEquals(null, pd.vendorName);
 		if(hasDefaultProjectType) {
-			assertEquals(ProjectType.PLAINJS, pd.getType);
+			assertEquals(ProjectType.PLAINJS, pd.getProjectType);
 		} else {
-			assertNotEquals(ProjectType.PLAINJS, pd.getType);
+			assertNotEquals(ProjectType.PLAINJS, pd.getProjectType);
 		}
 		assertEquals(MAIN_MODULE.defaultValue, pd.mainModule);
 		assertEquals(null, pd.extendedRuntimeEnvironment);
