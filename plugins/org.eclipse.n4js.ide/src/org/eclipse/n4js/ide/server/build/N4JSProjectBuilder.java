@@ -173,8 +173,6 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 			return false;
 		}
 
-		Iterable<IEObjectDescription> eo = resDescr.getExportedObjectsByType(TypesPackage.eINSTANCE.getTModule());
-
 		for (IEObjectDescription objDescr : resDescr.getExportedObjectsByType(TypesPackage.eINSTANCE.getTModule())) {
 			if (UserDataMapper.isNested(objDescr)) {
 				return true;
