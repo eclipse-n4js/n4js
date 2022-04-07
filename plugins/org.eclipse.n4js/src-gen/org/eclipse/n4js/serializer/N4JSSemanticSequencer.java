@@ -509,7 +509,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_HexIntLiteral(context, (HexIntLiteral) semanticObject); 
 				return; 
 			case N4JSPackage.IDENTIFIER_REF:
-				if (rule == grammarAccess.getPrimaryExpressionRule()
+				if (rule == grammarAccess.getIdentifierRefWithDefaultRule()) {
+					sequence_IdentifierRefWithDefault(context, (IdentifierRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getPrimaryExpressionRule()
 						|| rule == grammarAccess.getIdentifierRefRule()
 						|| rule == grammarAccess.getPropertyNameValuePairSingleNamePartRule()
 						|| action == grammarAccess.getPropertyNameValuePairSingleNamePartAccess().getAssignmentExpressionLhsAction_1_0()
@@ -13430,6 +13434,26 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * <pre>
 	 * Contexts:
+	 *     IdentifierRefWithDefault returns IdentifierRef
+	 *
+	 * Constraint:
+	 *     id=[IdentifiableElement|BindingIdentifierWithDefault]
+	 * </pre>
+	 */
+	protected void sequence_IdentifierRefWithDefault(ISerializationContext context, IdentifierRef semanticObject) {
+		if (errorAcceptor != null) {
+			if (transientValues.isValueTransient(semanticObject, N4JSPackage.Literals.IDENTIFIER_REF__ID) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.IDENTIFIER_REF__ID));
+		}
+		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
+		feeder.accept(grammarAccess.getIdentifierRefWithDefaultAccess().getIdIdentifiableElementBindingIdentifierWithDefaultParserRuleCall_0_1(), semanticObject.eGet(N4JSPackage.Literals.IDENTIFIER_REF__ID, false));
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * <pre>
+	 * Contexts:
 	 *     PrimaryExpression<Yield> returns IdentifierRef
 	 *     PrimaryExpression returns IdentifierRef
 	 *     IdentifierRef<Yield> returns IdentifierRef
@@ -20029,7 +20053,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     NamedExportSpecifier returns NamedExportSpecifier
 	 *
 	 * Constraint:
-	 *     (exportedElement=IdentifierRef alias=IdentifierName?)
+	 *     (exportedElement=IdentifierRefWithDefault alias=IdentifierName?)
 	 * </pre>
 	 */
 	protected void sequence_NamedExportSpecifier(ISerializationContext context, NamedExportSpecifier semanticObject) {

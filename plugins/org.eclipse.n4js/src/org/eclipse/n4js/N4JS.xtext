@@ -216,7 +216,7 @@ NamespaceExportSpecifier:
 ;
 
 NamedExportSpecifier:
-	exportedElement=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+	exportedElement=IdentifierRefWithDefault ('as' alias=IdentifierName)?
 ;
 
 ExportableElement:
@@ -665,6 +665,16 @@ ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 
 IdentifierRef <Yield>:
 	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
+;
+
+/* Special case of IdentifierRef where 'default' is a valid name. */
+IdentifierRefWithDefault returns IdentifierRef:
+	id=[types::IdentifiableElement|BindingIdentifierWithDefault]
+;
+
+BindingIdentifierWithDefault:
+	BindingIdentifier<Yield=false>
+	| 'default'
 ;
 
 SuperLiteral: {SuperLiteral} 'super';

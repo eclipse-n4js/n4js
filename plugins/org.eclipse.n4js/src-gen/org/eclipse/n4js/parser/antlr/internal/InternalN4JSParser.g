@@ -2555,9 +2555,9 @@ ruleNamedExportSpecifier returns [EObject current=null]
 		(
 			(
 				{
-					newCompositeNode(grammarAccess.getNamedExportSpecifierAccess().getExportedElementIdentifierRefParserRuleCall_0_0());
+					newCompositeNode(grammarAccess.getNamedExportSpecifierAccess().getExportedElementIdentifierRefWithDefaultParserRuleCall_0_0());
 				}
-				lv_exportedElement_0_0=ruleIdentifierRef
+				lv_exportedElement_0_0=ruleIdentifierRefWithDefault
 				{
 					if ($current==null) {
 						$current = createModelElementForParent(grammarAccess.getNamedExportSpecifierRule());
@@ -2566,7 +2566,7 @@ ruleNamedExportSpecifier returns [EObject current=null]
 						$current,
 						"exportedElement",
 						lv_exportedElement_0_0,
-						"org.eclipse.n4js.N4JS.IdentifierRef");
+						"org.eclipse.n4js.N4JS.IdentifierRefWithDefault");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -14936,6 +14936,74 @@ norm1_IdentifierRef returns [EObject current=null]
 				afterParserOrEnumRuleCall();
 			}
 		)
+	)
+;
+
+// Entry rule entryRuleIdentifierRefWithDefault
+entryRuleIdentifierRefWithDefault returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getIdentifierRefWithDefaultRule()); }
+	iv_ruleIdentifierRefWithDefault=ruleIdentifierRefWithDefault
+	{ $current=$iv_ruleIdentifierRefWithDefault.current; }
+	EOF;
+
+// Rule IdentifierRefWithDefault
+ruleIdentifierRefWithDefault returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getIdentifierRefWithDefaultRule());
+				}
+			}
+			{
+				newCompositeNode(grammarAccess.getIdentifierRefWithDefaultAccess().getIdIdentifiableElementCrossReference_0());
+			}
+			ruleBindingIdentifierWithDefault
+			{
+				afterParserOrEnumRuleCall();
+			}
+		)
+	)
+;
+
+// Entry rule entryRuleBindingIdentifierWithDefault
+entryRuleBindingIdentifierWithDefault returns [String current=null]:
+	{ newCompositeNode(grammarAccess.getBindingIdentifierWithDefaultRule()); }
+	iv_ruleBindingIdentifierWithDefault=ruleBindingIdentifierWithDefault
+	{ $current=$iv_ruleBindingIdentifierWithDefault.current.getText(); }
+	EOF;
+
+// Rule BindingIdentifierWithDefault
+ruleBindingIdentifierWithDefault returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		{
+			newCompositeNode(grammarAccess.getBindingIdentifierWithDefaultAccess().getBindingIdentifierParserRuleCall_0());
+		}
+		this_BindingIdentifier_0=ruleBindingIdentifier
+		{
+			$current.merge(this_BindingIdentifier_0);
+		}
+		{
+			afterParserOrEnumRuleCall();
+		}
+		    |
+		kw=Default
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getBindingIdentifierWithDefaultAccess().getDefaultKeyword_1());
+		}
 	)
 ;
 

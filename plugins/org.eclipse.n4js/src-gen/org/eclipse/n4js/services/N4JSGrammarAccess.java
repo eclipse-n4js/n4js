@@ -1440,25 +1440,25 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.NamedExportSpecifier");
 		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cExportedElementAssignment_0 = (Assignment)cGroup.eContents().get(0);
-		private final RuleCall cExportedElementIdentifierRefParserRuleCall_0_0 = (RuleCall)cExportedElementAssignment_0.eContents().get(0);
+		private final RuleCall cExportedElementIdentifierRefWithDefaultParserRuleCall_0_0 = (RuleCall)cExportedElementAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cAsKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
 		private final Assignment cAliasAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cAliasIdentifierNameParserRuleCall_1_1_0 = (RuleCall)cAliasAssignment_1_1.eContents().get(0);
 		
 		//NamedExportSpecifier:
-		//    exportedElement=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+		//    exportedElement=IdentifierRefWithDefault ('as' alias=IdentifierName)?
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//exportedElement=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+		//exportedElement=IdentifierRefWithDefault ('as' alias=IdentifierName)?
 		public Group getGroup() { return cGroup; }
 		
-		//exportedElement=IdentifierRef<Yield=false>
+		//exportedElement=IdentifierRefWithDefault
 		public Assignment getExportedElementAssignment_0() { return cExportedElementAssignment_0; }
 		
-		//IdentifierRef<Yield=false>
-		public RuleCall getExportedElementIdentifierRefParserRuleCall_0_0() { return cExportedElementIdentifierRefParserRuleCall_0_0; }
+		//IdentifierRefWithDefault
+		public RuleCall getExportedElementIdentifierRefWithDefaultParserRuleCall_0_0() { return cExportedElementIdentifierRefWithDefaultParserRuleCall_0_0; }
 		
 		//('as' alias=IdentifierName)?
 		public Group getGroup_1() { return cGroup_1; }
@@ -5219,6 +5219,49 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		
 		//BindingIdentifier<Yield>
 		public RuleCall getIdIdentifiableElementBindingIdentifierParserRuleCall_0_1() { return cIdIdentifiableElementBindingIdentifierParserRuleCall_0_1; }
+	}
+	public class IdentifierRefWithDefaultElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.IdentifierRefWithDefault");
+		private final Assignment cIdAssignment = (Assignment)rule.eContents().get(1);
+		private final CrossReference cIdIdentifiableElementCrossReference_0 = (CrossReference)cIdAssignment.eContents().get(0);
+		private final RuleCall cIdIdentifiableElementBindingIdentifierWithDefaultParserRuleCall_0_1 = (RuleCall)cIdIdentifiableElementCrossReference_0.eContents().get(1);
+		
+		///* Special case of IdentifierRef where 'default' is a valid name. */
+		//IdentifierRefWithDefault returns IdentifierRef:
+		//    id=[types::IdentifiableElement|BindingIdentifierWithDefault]
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//id=[types::IdentifiableElement|BindingIdentifierWithDefault]
+		public Assignment getIdAssignment() { return cIdAssignment; }
+		
+		//[types::IdentifiableElement|BindingIdentifierWithDefault]
+		public CrossReference getIdIdentifiableElementCrossReference_0() { return cIdIdentifiableElementCrossReference_0; }
+		
+		//BindingIdentifierWithDefault
+		public RuleCall getIdIdentifiableElementBindingIdentifierWithDefaultParserRuleCall_0_1() { return cIdIdentifiableElementBindingIdentifierWithDefaultParserRuleCall_0_1; }
+	}
+	public class BindingIdentifierWithDefaultElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.BindingIdentifierWithDefault");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cBindingIdentifierParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final Keyword cDefaultKeyword_1 = (Keyword)cAlternatives.eContents().get(1);
+		
+		//BindingIdentifierWithDefault:
+		//    BindingIdentifier<Yield=false>
+		//    | 'default'
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//BindingIdentifier<Yield=false>
+		//| 'default'
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//BindingIdentifier<Yield=false>
+		public RuleCall getBindingIdentifierParserRuleCall_0() { return cBindingIdentifierParserRuleCall_0; }
+		
+		//'default'
+		public Keyword getDefaultKeyword_1() { return cDefaultKeyword_1; }
 	}
 	public class SuperLiteralElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.SuperLiteral");
@@ -12193,6 +12236,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	private final PrimaryExpressionElements pPrimaryExpression;
 	private final ParenExpressionElements pParenExpression;
 	private final IdentifierRefElements pIdentifierRef;
+	private final IdentifierRefWithDefaultElements pIdentifierRefWithDefault;
+	private final BindingIdentifierWithDefaultElements pBindingIdentifierWithDefault;
 	private final SuperLiteralElements pSuperLiteral;
 	private final ThisLiteralElements pThisLiteral;
 	private final ArrayLiteralElements pArrayLiteral;
@@ -12449,6 +12494,8 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		this.pPrimaryExpression = new PrimaryExpressionElements();
 		this.pParenExpression = new ParenExpressionElements();
 		this.pIdentifierRef = new IdentifierRefElements();
+		this.pIdentifierRefWithDefault = new IdentifierRefWithDefaultElements();
+		this.pBindingIdentifierWithDefault = new BindingIdentifierWithDefaultElements();
 		this.pSuperLiteral = new SuperLiteralElements();
 		this.pThisLiteral = new ThisLiteralElements();
 		this.pArrayLiteral = new ArrayLiteralElements();
@@ -12903,7 +12950,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//NamedExportSpecifier:
-	//    exportedElement=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+	//    exportedElement=IdentifierRefWithDefault ('as' alias=IdentifierName)?
 	//;
 	public NamedExportSpecifierElements getNamedExportSpecifierAccess() {
 		return pNamedExportSpecifier;
@@ -13810,6 +13857,30 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	
 	public ParserRule getIdentifierRefRule() {
 		return getIdentifierRefAccess().getRule();
+	}
+	
+	///* Special case of IdentifierRef where 'default' is a valid name. */
+	//IdentifierRefWithDefault returns IdentifierRef:
+	//    id=[types::IdentifiableElement|BindingIdentifierWithDefault]
+	//;
+	public IdentifierRefWithDefaultElements getIdentifierRefWithDefaultAccess() {
+		return pIdentifierRefWithDefault;
+	}
+	
+	public ParserRule getIdentifierRefWithDefaultRule() {
+		return getIdentifierRefWithDefaultAccess().getRule();
+	}
+	
+	//BindingIdentifierWithDefault:
+	//    BindingIdentifier<Yield=false>
+	//    | 'default'
+	//;
+	public BindingIdentifierWithDefaultElements getBindingIdentifierWithDefaultAccess() {
+		return pBindingIdentifierWithDefault;
+	}
+	
+	public ParserRule getBindingIdentifierWithDefaultRule() {
+		return getBindingIdentifierWithDefaultAccess().getRule();
 	}
 	
 	//SuperLiteral: {SuperLiteral} 'super';

@@ -540,7 +540,7 @@ ruleNamespaceExportSpecifier:
 
 // Rule NamedExportSpecifier
 ruleNamedExportSpecifier:
-	ruleIdentifierRef
+	ruleIdentifierRefWithDefault
 	(
 		'as'
 		ruleIdentifierName
@@ -3062,6 +3062,20 @@ ruleIdentifierRef:
 // Rule IdentifierRef
 norm1_IdentifierRef:
 	norm1_BindingIdentifier
+;
+
+// Rule IdentifierRefWithDefault
+ruleIdentifierRefWithDefault:
+	ruleBindingIdentifierWithDefault
+;
+
+// Rule BindingIdentifierWithDefault
+ruleBindingIdentifierWithDefault:
+	(
+		ruleBindingIdentifier
+		    |
+		'default'
+	)
 ;
 
 // Rule SuperLiteral
