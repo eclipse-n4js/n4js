@@ -16,6 +16,7 @@ import java.util.Set
 import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AbstractCaseClause
 import org.eclipse.n4js.n4JS.AbstractVariable
 import org.eclipse.n4js.n4JS.Annotation
@@ -748,6 +749,19 @@ class ASTStructureValidator {
 		if (name !== null) {
 			if (constraints.isStrict && (RESERVED_WORDS_IN_STRICT_MODE.contains(name))) {
 				issueNameDiagnostic(model, producer, name, N4JSPackage.Literals.IDENTIFIER_REF__ID, Severity.ERROR)
+			}
+			if (model.eContainingFeature === N4JSPackage.Literals.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT
+				&& name == N4JSLanguageConstants.EXPORT_DEFAULT_NAME) {
+				val grandParent = model.eContainer?.eContainer;
+				if (grandParent instanceof ExportDeclaration) {
+					if (grandParent.exportedElement === null && !grandParent.isReexport) {
+						val target = NodeModelUtils.findActualNodeFor(model);
+						producer.node = target;
+						producer.addDiagnostic(
+							new DiagnosticMessage(IssueCodes.messageForAST_SEPARATE_DEFAULT_EXPORT_WITHOUT_FROM,
+								IssueCodes.getDefaultSeverity(IssueCodes.AST_SEPARATE_DEFAULT_EXPORT_WITHOUT_FROM), IssueCodes.AST_SEPARATE_DEFAULT_EXPORT_WITHOUT_FROM));
+					}
+				}
 			}
 		}
 		recursiveValidateASTStructure(
