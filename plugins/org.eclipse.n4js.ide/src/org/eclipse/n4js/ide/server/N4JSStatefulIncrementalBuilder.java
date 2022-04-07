@@ -12,12 +12,10 @@ package org.eclipse.n4js.ide.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -42,7 +40,6 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.Issue;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -163,13 +160,13 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			// this is a closure build
 			// adjust the build request: compute file closure and adjust the set of changed/deleted uris
 
-			Multimap<URI, URI> dependsOn = LinkedHashMultimap.create();
-			initDependencyMaps(initialRequest.getResourceSet(), projectConfig,
-					projectConfig.getAllContents(fileSystemScanner),
-					new LinkedHashSet<>(), dependsOn, LinkedHashMultimap.create());
+			Collection<URI> allUris = projectConfig.getAllContents(fileSystemScanner);
 			Collection<URI> startUris = projectConfig.computeStartUris(fileSystemScanner);
 			startUris.addAll(initialRequest.getDirtyFiles());
-			List<URI> sortedUriClosure = computeSortedUriClosure(startUris, dependsOn);
+
+			Multimap<String, URI> moduleName2Uri = getModuleName2UrisMap(projectConfig, allUris);
+			List<URI> sortedUriClosure = computeSortedUriClosure(initialRequest.getResourceSet(),
+					projectConfig.getName(), moduleName2Uri, startUris);
 
 			if (isInitialBuild) {
 				return new AdjustedBuildRequest(initialRequest, sortedUriClosure, null);
@@ -189,14 +186,11 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 
 		} else if (isInitialBuild) {
 			// this is a normal initial build
-
-			WorkspaceAwareResourceSet resourceSet = initialRequest.getResourceSet();
 			Collection<URI> allUris = initialRequest.getDirtyFiles();
-			Set<URI> noDeps = new LinkedHashSet<>();
-			Multimap<URI, URI> dependsOn = LinkedHashMultimap.create();
-			Multimap<URI, URI> dependsOnInverse = LinkedHashMultimap.create();
-			allUris = initDependencyMaps(resourceSet, projectConfig, allUris, noDeps, dependsOn, dependsOnInverse);
-			List<URI> sortedUris = sortAllUris(noDeps, allUris, dependsOn, dependsOnInverse);
+			Multimap<String, URI> moduleName2Uri = getModuleName2UrisMap(projectConfig, allUris);
+			List<URI> sortedUris = computeSortedUriClosure(initialRequest.getResourceSet(),
+					projectConfig.getName(), moduleName2Uri, allUris);
+
 			return new AdjustedBuildRequest(initialRequest, sortedUris, null);
 
 		} else {
@@ -205,73 +199,87 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 		}
 	}
 
-	private Set<URI> initDependencyMaps(WorkspaceAwareResourceSet resourceSet, N4JSProjectConfigSnapshot pcs,
-			Iterable<URI> allUris, Set<URI> noDeps, Multimap<URI, URI> dependsOn, Multimap<URI, URI> dependsOnInverse) {
-
-		Map<URI, Resource> resourcesMap = new HashMap<>();
-		Multimap<String, URI> moduleName2Result = HashMultimap.create();
+	private Multimap<String, URI> getModuleName2UrisMap(N4JSProjectConfigSnapshot pcs, Iterable<URI> allUris) {
+		Multimap<String, URI> moduleName2Uri = LinkedHashMultimap.create();
 		for (URI uri : allUris) {
-			Resource resource = null;
-			try {
-				resource = resourceSet.getResource(uri, true);
-			} catch (Exception e) {
-				// ignore error during load
-			}
-			if (resource != null) {
-				resourcesMap.put(uri, resource);
+			SourceFolderSnapshot srcFolder = pcs.findSourceFolderContaining(uri);
+			if (srcFolder != null) {
+				URI srcFolderUri = srcFolder.getPath();
+				URI relUri = uri.deresolve(srcFolderUri);
 
-				SourceFolderSnapshot srcFolder = pcs.findSourceFolderContaining(uri);
-				if (srcFolder != null) {
-					URI srcFolderUri = srcFolder.getPath();
-					URI relUri = uri.deresolve(srcFolderUri);
-
-					String moduleName = URIUtils.trimFileExtension(relUri).toFileString();
-					moduleName2Result.put(moduleName, uri);
-					noDeps.add(uri);
-				}
+				String moduleName = URIUtils.trimFileExtension(relUri).toFileString();
+				moduleName2Uri.put(moduleName, uri);
 			}
 		}
+		return moduleName2Uri;
+	}
 
-		String prjName = pcs.getName();
+	private Collection<URI> getImportedUris(WorkspaceAwareResourceSet resourceSet, String prjName,
+			Multimap<String, URI> moduleName2Uri, URI uri) {
 
-		for (URI uri : resourcesMap.keySet()) {
-			Resource resource = resourcesMap.get(uri);
-			for (EObject eobj : resource.getContents()) {
-				if (eobj instanceof Script) {
-					Script script = (Script) eobj;
+		List<ImportDeclaration> importDeclarations = getImportDeclarations(resourceSet, uri);
+		for (ImportDeclaration importDeclaration : importDeclarations) {
+			String moduleSpecifier = importDeclaration.getModuleSpecifierAsText();
+			String adjModuleSpecifier = getAdjustedModuleSpecifierOrNull(moduleSpecifier, prjName, moduleName2Uri);
+			if (adjModuleSpecifier != null) {
+				return moduleName2Uri.get(adjModuleSpecifier);
+			}
+		}
+		return Collections.emptyList();
+	}
 
-					for (EObject topLevelStmt : script.getScriptElements()) {
-						if (topLevelStmt instanceof ImportDeclaration) {
-							ImportDeclaration impDecl = (ImportDeclaration) topLevelStmt;
-							String moduleSpecifier = impDecl.getModuleSpecifierAsText();
+	private List<ImportDeclaration> getImportDeclarations(WorkspaceAwareResourceSet resourceSet, URI uri) {
+		List<ImportDeclaration> result = new ArrayList<>();
+		Resource resource = null;
+		try {
+			resource = resourceSet.getResource(uri, true);
+		} catch (Exception e) {
+			// ignore error during load
+		}
+		if (resource == null) {
+			return result;
+		}
 
-							boolean hasInnerProjectDependency = false;
-							if (moduleName2Result.containsKey(moduleSpecifier)) {
-								hasInnerProjectDependency = true;
-							} else if (moduleSpecifier.startsWith(prjName)) {
-								moduleSpecifier = moduleSpecifier.substring(prjName.length() + 1);
+		for (EObject eobj : resource.getContents()) {
+			if (eobj instanceof Script) {
+				Script script = (Script) eobj;
 
-								if (moduleName2Result.containsKey(moduleSpecifier)) {
-									hasInnerProjectDependency = true;
-								}
-							}
-							if (hasInnerProjectDependency) {
-								for (URI dependsOnResult : moduleName2Result.get(moduleSpecifier)) {
-									dependsOn.put(uri, dependsOnResult);
-									dependsOnInverse.put(dependsOnResult, uri);
-								}
-								noDeps.remove(uri);
-							}
-						} else {
+				for (EObject topLevelStmt : script.getScriptElements()) {
+					if (topLevelStmt instanceof ImportDeclaration) {
+						ImportDeclaration impDecl = (ImportDeclaration) topLevelStmt;
+						result.add(impDecl);
+					} else {
 
-							// we know that all import statements are at the beginning of a file
-							break;
-						}
+						// we know that all import statements are at the beginning of a file
+						break;
 					}
 				}
 			}
 		}
-		return resourcesMap.keySet();
+		return result;
+	}
+
+	private String getAdjustedModuleSpecifierOrNull(String moduleSpecifier, String prjName,
+			Multimap<String, URI> moduleName2Uri) {
+
+		if (moduleName2Uri.containsKey(moduleSpecifier)) {
+			return moduleSpecifier;
+		} else if (moduleSpecifier.startsWith("./")) {
+			moduleSpecifier = moduleSpecifier.substring(2); // remove './'
+		} else if (moduleSpecifier.startsWith(prjName)) {
+			moduleSpecifier = moduleSpecifier.substring(prjName.length() + 1);
+		}
+
+		if (moduleName2Uri.containsKey(moduleSpecifier)) {
+			return moduleSpecifier;
+		}
+
+		URI msUri = URI.createFileURI(moduleSpecifier);
+		String msWithoutExt = URIUtils.trimFileExtension(msUri).toString();
+		if (moduleName2Uri.containsKey(msWithoutExt)) {
+			return msWithoutExt;
+		}
+		return null;
 	}
 
 	/**
@@ -281,52 +289,20 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 	 * already have been processed. Note however that in case of dependency cycles, sorting cannot avoid the recursive
 	 * post processing of dependencies.
 	 */
-	private List<URI> sortAllUris(Set<URI> noDeps, Collection<URI> allUris,
-			Multimap<URI, URI> dependsOn, Multimap<URI, URI> dependsOnInverse) {
+	private List<URI> computeSortedUriClosure(WorkspaceAwareResourceSet resourceSet, String prjName,
+			Multimap<String, URI> moduleName2Uri, Collection<URI> startUris) {
 
-		List<URI> sortedResults = new ArrayList<>(allUris.size());
-		while (sortedResults.size() < allUris.size()) {
-			if (noDeps.isEmpty()) {
-				if (dependsOn.isEmpty()) {
-					// the resources of some URIs could not be created
-					break;
-				}
-				// there exist dependency cycles
-				URI randomCyclicResult = dependsOn.entries().iterator().next().getKey();
-				noDeps.add(randomCyclicResult);
-				Collection<URI> dependencies = dependsOn.removeAll(randomCyclicResult);
-				for (URI dependency : dependencies) {
-					dependsOnInverse.remove(dependency, randomCyclicResult);
-				}
-			}
-
-			Iterator<URI> iter = noDeps.iterator();
-			URI result = iter.next();
-			iter.remove();
-			sortedResults.add(result);
-
-			Collection<URI> dependees = dependsOnInverse.removeAll(result);
-			for (URI dependee : dependees) {
-				dependsOn.remove(dependee, result);
-				if (!dependsOn.containsKey(dependee)) {
-					noDeps.add(dependee);
-				}
-			}
-		}
-		return sortedResults;
-	}
-
-	private List<URI> computeSortedUriClosure(Collection<URI> startUris, Multimap<URI, URI> dependsOn) {
 		List<URI> sortedResults = new ArrayList<>(startUris.size());
 		Set<URI> worklist = new HashSet<>();
 		worklist.addAll(startUris);
 		while (!worklist.isEmpty()) {
 			Iterator<URI> iter = worklist.iterator();
-			URI result = iter.next();
+			URI uri = iter.next();
 			iter.remove();
-			sortedResults.add(result);
+			sortedResults.add(uri);
 
-			worklist.addAll(dependsOn.get(result));
+			Collection<URI> importedUris = getImportedUris(resourceSet, prjName, moduleName2Uri, uri);
+			worklist.addAll(importedUris);
 		}
 
 		return Lists.reverse(sortedResults);
