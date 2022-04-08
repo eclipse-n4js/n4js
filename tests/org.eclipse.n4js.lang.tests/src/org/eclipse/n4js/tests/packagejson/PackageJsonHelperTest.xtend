@@ -211,7 +211,7 @@ class PackageJsonHelperTest {
 			{}
 		'''.parseAndConvert
 
-		assertCorrectDefaults(pd, true);
+		assertCorrectJSDefaults(pd, true);
 
 		assertFalse(pd.hasNestedNodeModulesFolder);
 		assertFalse(pd.hasN4JSNature);
@@ -223,7 +223,7 @@ class PackageJsonHelperTest {
 			{ "n4js": {} }
 		'''.parseAndConvert
 
-		assertCorrectDefaults(pd, true);
+		assertCorrectJSDefaults(pd, true);
 
 		assertFalse(pd.hasNestedNodeModulesFolder);
 		assertTrue(pd.hasN4JSNature);
@@ -236,7 +236,7 @@ class PackageJsonHelperTest {
 			{ "n4js": { "projectType": "«defaultProjectType»" } }
 		'''.parseAndConvert
 
-		assertCorrectDefaults(pd, true);
+		assertCorrectJSDefaults(pd, true);
 
 		assertFalse(pd.hasNestedNodeModulesFolder);
 		assertTrue(pd.hasN4JSNature);
@@ -248,14 +248,14 @@ class PackageJsonHelperTest {
 			{ "n4js": { "projectType": "library" } }
 		'''.parseAndConvert
 
-		assertCorrectDefaults(pd, false);
+		assertCorrectN4JSDefaults(pd, false);
 
 		assertFalse(pd.hasNestedNodeModulesFolder);
 		assertTrue(pd.hasN4JSNature);
 	}
 
 
-	def private assertCorrectDefaults(ProjectDescription pd, boolean hasDefaultProjectType) {
+	def private assertCorrectN4JSDefaults(ProjectDescription pd, boolean hasDefaultProjectType) {
 		assertEquals(DEFAULT_PROJECT_ID, pd.getPackageName);
 		assertEquals(VERSION.defaultValue, pd.getVersion.toString);
 		assertEquals(VENDOR_ID.defaultValue, pd.vendorId);
@@ -277,6 +277,31 @@ class PackageJsonHelperTest {
 		assertEquals(#[], pd.testedProjects);
 		assertCorrectDefaultSourceContainers(pd);
 	}
+	
+	
+	def private assertCorrectJSDefaults(ProjectDescription pd, boolean hasDefaultProjectType) {
+		assertEquals(DEFAULT_PROJECT_ID, pd.getPackageName);
+		assertEquals(null, pd.getVersion);
+		assertEquals(null, pd.vendorId);
+		assertEquals(null, pd.vendorName);
+		if(hasDefaultProjectType) {
+			assertEquals(ProjectType.PLAINJS, pd.getProjectType);
+		} else {
+			assertNotEquals(ProjectType.PLAINJS, pd.getProjectType);
+		}
+		assertEquals(MAIN_MODULE.defaultValue, pd.mainModule);
+		assertEquals(null, pd.extendedRuntimeEnvironment);
+		assertEquals(#[], pd.providedRuntimeLibraries);
+		assertEquals(#[], pd.requiredRuntimeLibraries);
+		assertEquals(#[], pd.projectDependencies);
+		assertEquals(null, pd.implementationId);
+		assertEquals(#[], pd.implementedProjects);
+		assertEquals(OUTPUT.defaultValue, pd.outputPath);
+		assertEquals(#[], pd.moduleFilters);
+		assertEquals(#[], pd.testedProjects);
+		assertCorrectDefaultSourceContainers(pd);
+	}
+
 	def private assertCorrectDefaultSourceContainers(ProjectDescription pd) {
 		// expect a single source container of type "source" with path "."
 		assertEquals(1, pd.sourceContainers.size);

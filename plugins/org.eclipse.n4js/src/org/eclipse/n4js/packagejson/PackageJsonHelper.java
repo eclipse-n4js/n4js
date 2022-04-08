@@ -68,7 +68,9 @@ public class PackageJsonHelper {
 	@Inject
 	private SemverHelper semverHelper;
 
-	private VersionNumber cachedDefaultVersionNumber = null;
+	private VersionNumber cachedN4JSDefaultVersionNumber = null;
+
+	private VersionNumber cachedJSDefaultVersionNumber = null;
 
 	/**
 	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescriptionBuilder} instance. If no
@@ -287,11 +289,13 @@ public class PackageJsonHelper {
 	}
 
 	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target,
-			boolean applyN4JSDefaultValues,
+			boolean applyDefaultValues,
 			String defaultProjectName, String valueOfTopLevelPropertyMain) {
 
 		if (target.getProjectType() == null || target.getProjectType() == ProjectType.PLAINJS) {
-			applyPlainJSDefaults(target, defaultProjectName);
+			if (applyDefaultValues) {
+				applyPlainJSDefaults(target, defaultProjectName);
+			}
 			return;
 		}
 
@@ -299,7 +303,7 @@ public class PackageJsonHelper {
 		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;
 
 		// apply default values (if desired)
-		if (applyN4JSDefaultValues) {
+		if (applyDefaultValues) {
 			applyN4JSDefaults(target, defaultProjectName);
 		}
 
@@ -352,7 +356,9 @@ public class PackageJsonHelper {
 		if (target.getMain() == null) {
 			target.setMain(PackageJsonProperties.MAIN.defaultValue.toString());
 		}
-
+		if (target.getVersion() == null) {
+			target.setVersion(createJSDefaultVersionNumber());
+		}
 		if (target.getProjectType() == null) {
 			target.setProjectType(ProjectType.PLAINJS);
 		}
@@ -392,7 +398,7 @@ public class PackageJsonHelper {
 			target.setPackageName(defaultProjectName);
 		}
 		if (target.getVersion() == null) {
-			target.setVersion(createDefaultVersionNumber());
+			target.setVersion(createN4JSDefaultVersionNumber());
 		}
 		if (target.getVendorId() == null) {
 			target.setVendorId((String) VENDOR_ID.defaultValue);
@@ -449,10 +455,17 @@ public class PackageJsonHelper {
 		return versionStr != null ? semverHelper.parseVersionNumber(versionStr) : null;
 	}
 
-	private VersionNumber createDefaultVersionNumber() {
-		if (cachedDefaultVersionNumber == null) {
-			cachedDefaultVersionNumber = semverHelper.parseVersionNumber((String) VERSION.defaultValue);
+	private VersionNumber createN4JSDefaultVersionNumber() {
+		if (cachedN4JSDefaultVersionNumber == null) {
+			cachedN4JSDefaultVersionNumber = semverHelper.parseVersionNumber((String) VERSION.defaultValue);
 		}
-		return EcoreUtil.copy(cachedDefaultVersionNumber);
+		return EcoreUtil.copy(cachedN4JSDefaultVersionNumber);
+	}
+
+	private VersionNumber createJSDefaultVersionNumber() {
+		if (cachedJSDefaultVersionNumber == null) {
+			cachedJSDefaultVersionNumber = semverHelper.parseVersionNumber("");
+		}
+		return EcoreUtil.copy(cachedJSDefaultVersionNumber);
 	}
 }

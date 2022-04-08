@@ -28,12 +28,16 @@ public class SemverMatcher {
 		/** Version A and B are unrelated */
 		Unrelated;
 
-		/** @return iff this is either {@link VersionNumberRelation#Smaller} or {@link VersionNumberRelation#Equal} */
+		/**
+		 * @return true iff this is either {@link VersionNumberRelation#Smaller} or {@link VersionNumberRelation#Equal}
+		 */
 		public boolean isSmallerOrEqual() {
 			return this == Equal || this == Smaller;
 		}
 
-		/** @return iff this is either {@link VersionNumberRelation#Greater} or {@link VersionNumberRelation#Equal} */
+		/**
+		 * @return true iff this is either {@link VersionNumberRelation#Greater} or {@link VersionNumberRelation#Equal}
+		 */
 		public boolean isGreaterOrEqual() {
 			return this == Equal || this == Greater;
 		}

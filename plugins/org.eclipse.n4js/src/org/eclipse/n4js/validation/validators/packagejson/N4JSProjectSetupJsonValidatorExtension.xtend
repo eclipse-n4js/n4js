@@ -1270,6 +1270,10 @@ public class N4JSProjectSetupJsonValidatorExtension extends AbstractPackageJSONV
 
 		val depProject = allProjects.get(ref.referencedProjectId);
 		val availableVersion = depProject.version;
+		if (availableVersion === null) {
+			// version 'null' equals empty version which we are unable to check.
+			return;
+		}
 		val availableVersionMatches = SemverMatcher.matches(availableVersion, desiredVersion);
 		if (availableVersionMatches) {
 			return; // version does match

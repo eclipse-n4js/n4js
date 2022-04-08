@@ -306,7 +306,7 @@ public class Project {
 				"dependencies": {
 						«IF !projectDependencies.nullOrEmpty»
 							«FOR dep : projectDependencies SEPARATOR ','»
-								"«dep»": "*"
+								"«dep»": ""
 							«ENDFOR»
 						«ENDIF»
 				}

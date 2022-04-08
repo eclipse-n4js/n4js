@@ -159,7 +159,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		val providerProjectStateFile = getProjectRoot("ProviderProject").toPath.resolve(N4JSGlobals.N4JS_PROJECT_STATE);
 		val clientProjectPackageJson = getProjectRoot("ClientProject").toPath.resolve(PACKAGE_JSON);
 		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
-			'"ProviderProject": "*",' -> ''
+			'"ProviderProject": "",' -> ''
 		);
 
 		startAndWaitForLspServer();
@@ -176,7 +176,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		// sub-case #1: add dependency between server sessions (target project does *not* contain a .n4js.projectstate file)
 		FileUtils.delete(providerProjectStateFile);
 		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
-			'"n4js-runtime": "*"' -> '"ProviderProject": "*", "n4js-runtime": "*"'
+			'"n4js-runtime": ""' -> '"ProviderProject": "", "n4js-runtime": ""'
 		);
 
 		startAndWaitForLspServer();
@@ -186,7 +186,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 
 		// sub-case #2: remove dependency between server sessions
 		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
-			'"ProviderProject": "*", "n4js-runtime": "*"' -> '"n4js-runtime": "*"'
+			'"ProviderProject": "", "n4js-runtime": ""' -> '"n4js-runtime": ""'
 		);
 
 		startAndWaitForLspServer();
@@ -197,7 +197,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 		// sub-case #3: add dependency between server sessions (this time, target project does contain an up-to-date '.n4js.projectstate' file!)
 		assertTrue("project state file should exist but does not exist", Files.isRegularFile(providerProjectStateFile))
 		changeFileOnDiskWithoutNotification(clientProjectPackageJson.toFileURI,
-			'"n4js-runtime": "*"' -> '"ProviderProject": "*", "n4js-runtime": "*"'
+			'"n4js-runtime": ""' -> '"ProviderProject": "", "n4js-runtime": ""'
 		);
 
 		startAndWaitForLspServer();
@@ -219,7 +219,7 @@ class InitialBuildTest extends AbstractIncrementalBuilderTest {
 				"(Error, [1:9 - 1:18], Couldn't resolve reference to Type 'SomeClass'.)"
 			],
 			"ClientProject/" + PACKAGE_JSON -> #[
-				"(Error, [16:3 - 16:25], Project does not exist with project ID: ProviderProject.)"
+				"(Error, [16:3 - 16:24], Project does not exist with project ID: ProviderProject.)"
 			]
 		];
 		assertIssues(errorsWithProviderProjectMissing);

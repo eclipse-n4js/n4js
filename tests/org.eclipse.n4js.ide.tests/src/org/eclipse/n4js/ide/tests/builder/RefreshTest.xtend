@@ -265,7 +265,7 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 
 		val packageJsonOfSomeProject2 = getPackageJsonFile("SomeProject2").toFileURI;
 		changeFileOnDiskWithoutNotification(packageJsonOfSomeProject2,
-			'"n4js-runtime": "*"' -> '"n4js-runtime": "*", "SomeProject1": "*"'
+			'"n4js-runtime": ""' -> '"n4js-runtime": "", "SomeProject1": ""'
 		);
 
 		assertIssues(errorWhenDependencyMissing);
@@ -274,7 +274,7 @@ class RefreshTest extends AbstractIncrementalBuilderTest {
 		assertNoIssues();
 
 		changeFileOnDiskWithoutNotification(packageJsonOfSomeProject2,
-			'"n4js-runtime": "*", "SomeProject1": "*"' -> '"n4js-runtime": "*"'
+			'"n4js-runtime": "", "SomeProject1": ""' -> '"n4js-runtime": ""'
 		);
 
 		assertNoIssues();
