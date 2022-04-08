@@ -334,11 +334,21 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 					? null
 					: URI.createFileURI(pd.getTypes()).resolve(getPath());
 
-			if (main != null && URIUtils.toFile(main).isFile()) {
-				startUris.add(main);
+			if (main != null) {
+				if (URIUtils.toFile(main).isFile()) {
+					startUris.add(main);
+				} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION)).isFile()) {
+					startUris.add(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION));
+				} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {
+					startUris.add(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION));
+				}
 			}
-			if (types != null && URIUtils.toFile(types).isFile()) {
-				startUris.add(types);
+			if (types != null) {
+				if (URIUtils.toFile(types).isFile()) {
+					startUris.add(types);
+				} else if (URIUtils.toFile(types.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {
+					startUris.add(types.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION));
+				}
 			}
 
 			files.addAll(Lists.transform(pd.getTsFiles(), Path::of));
