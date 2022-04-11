@@ -200,7 +200,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertIssues(
 			"multiProjectTest.first/package.json" -> #[
-				"(Error, [16:3 - 16:33], Project does not exist with project ID: multiProjectTest.second.)"
+				"(Error, [16:3 - 16:32], Project does not exist with project ID: multiProjectTest.second.)"
 			],
 			"C" -> #[
 				"(Error, [0:18 - 0:21], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)",
@@ -286,7 +286,7 @@ class MultiProjectIdeTest extends ConvertedIdeTest {
 		joinServerRequests();
 		assertIssues(
 			PROJECT2_NAME + "/package.json" -> #[
-				"(Warning, [16:3 - 16:22], Project n4js-runtime of type runtime environment cannot be declared among the dependencies or devDependencies.)"
+				"(Warning, [16:3 - 16:21], Project n4js-runtime of type runtime environment cannot be declared among the dependencies or devDependencies.)"
 			]
 		);
 

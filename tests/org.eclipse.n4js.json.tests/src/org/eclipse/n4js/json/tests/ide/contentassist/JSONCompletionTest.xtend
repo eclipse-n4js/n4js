@@ -55,6 +55,7 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				}$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] name (Npm name) -> "name": "$1"$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] type (The module format used for .js files in this project. Either 'commonjs' or 'module'.) -> "type": "$1"$0 [[0, 1] .. [0, 1]]
+				[Property, Snippet] types (Type module. (TypesScript) Path is relative to package root) -> "types": "$1"$0 [[0, 1] .. [0, 1]]
 				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[0, 1] .. [0, 1]]
 				[Value, Snippet] workspaces (Array of projects names or glob that are members of the yarn workspace) -> "workspaces": [
 				    $1
@@ -84,6 +85,7 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 				}$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] name (Npm name) -> "name": "$1"$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] type (The module format used for .js files in this project. Either 'commonjs' or 'module'.) -> "type": "$1"$0 [[3, 1] .. [3, 1]]
+				[Property, Snippet] types (Type module. (TypesScript) Path is relative to package root) -> "types": "$1"$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] version (Npm semver version) -> "version": "$1"$0 [[3, 1] .. [3, 1]]
 				[Value, Snippet] workspaces (Array of projects names or glob that are members of the yarn workspace) -> "workspaces": [
 				    $1
