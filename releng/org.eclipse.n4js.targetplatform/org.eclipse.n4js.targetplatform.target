@@ -62,7 +62,7 @@
       <unit id="org.eclipse.xtext.ui.codetemplates.ui" version="2.26.0.v20211001-0456"/>
       <unit id="org.eclipse.xtext.xbase" version="2.26.0.v20211001-0443"/>
       <unit id="org.eclipse.xtext.xtext.generator" version="2.26.0.v20211001-0437"/>
-      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/milestones"/>
+      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.26.0"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.emf.ecore.editor" version="2.17.0.v20190528-0725"/>
