@@ -21,7 +21,6 @@ import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.StandardSystemProperty;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -34,11 +33,11 @@ public class XBuildRequest {
 
 	private final URI baseDir;
 
-	private final ImmutableCollection<URI> dirtyFiles;
+	private final ImmutableList<URI> dirtyFiles;
 
-	private final ImmutableCollection<URI> deletedFiles;
+	private final ImmutableList<URI> deletedFiles;
 
-	private final ImmutableCollection<IResourceDescription.Delta> externalDeltas;
+	private final ImmutableList<IResourceDescription.Delta> externalDeltas;
 
 	private final ResourceDescriptionsData index;
 
@@ -137,17 +136,17 @@ public class XBuildRequest {
 	}
 
 	/** Getter. */
-	public Collection<URI> getDirtyFiles() {
+	public List<URI> getDirtyFiles() {
 		return this.dirtyFiles;
 	}
 
 	/** Getter. */
-	public Collection<URI> getDeletedFiles() {
+	public List<URI> getDeletedFiles() {
 		return this.deletedFiles;
 	}
 
 	/** Getter. */
-	public Collection<IResourceDescription.Delta> getExternalDeltas() {
+	public List<IResourceDescription.Delta> getExternalDeltas() {
 		return this.externalDeltas;
 	}
 

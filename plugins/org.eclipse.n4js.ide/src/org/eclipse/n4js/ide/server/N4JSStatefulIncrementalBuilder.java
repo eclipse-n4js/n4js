@@ -186,7 +186,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 
 		} else if (isInitialBuild) {
 			// this is a normal initial build
-			Collection<URI> allUris = initialRequest.getDirtyFiles();
+			List<URI> allUris = initialRequest.getDirtyFiles();
 			Multimap<String, URI> moduleName2Uri = getModuleName2UrisMap(projectConfig, allUris);
 			List<URI> sortedUris = computeSortedUriClosure(initialRequest.getResourceSet(),
 					projectConfig.getName(), moduleName2Uri, allUris);

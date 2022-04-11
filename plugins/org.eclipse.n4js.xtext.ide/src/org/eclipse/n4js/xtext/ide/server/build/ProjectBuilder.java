@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -661,7 +661,7 @@ public class ProjectBuilder {
 	 * Scans the file system for source files, going over all source folders.
 	 */
 	protected Set<URI> scanForSourceFiles() {
-		Set<URI> result = new HashSet<>();
+		Set<URI> result = new LinkedHashSet<>();
 		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
 			List<URI> allSourceFileUris = srcFolder.getAllResources(fileSystemScanner);
 			for (URI srcFileUri : allSourceFileUris) {
