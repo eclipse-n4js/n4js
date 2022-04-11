@@ -139,7 +139,7 @@ class ExportDeclaration extends AnnotableScriptElement, NamespaceElement, Module
 	}
 
 	op boolean isRetainedAtRuntime() {
-		return false; // re-exports will always be retained
+		return true; // exports will always be retained
 	}
 }
 

@@ -478,7 +478,7 @@ public class ExportDeclarationImpl extends AnnotableScriptElementImpl implements
 	 */
 	@Override
 	public boolean isRetainedAtRuntime() {
-		return false;
+		return true;
 	}
 
 	/**
