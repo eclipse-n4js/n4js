@@ -13,8 +13,8 @@ package org.eclipse.n4js.ide.server;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -171,14 +171,14 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			if (isInitialBuild) {
 				return new AdjustedBuildRequest(initialRequest, sortedUriClosure, null);
 			} else {
-				Set<URI> removedFromClosure = Sets.newHashSet(oldIndex.getAllURIs());
+				Set<URI> removedFromClosure = Sets.newLinkedHashSet(oldIndex.getAllURIs());
 				removedFromClosure.removeAll(sortedUriClosure);
-				Set<URI> addedToClosure = Sets.newHashSet(sortedUriClosure);
+				Set<URI> addedToClosure = Sets.newLinkedHashSet(sortedUriClosure);
 				addedToClosure.removeAll(oldIndex.getAllURIs());
-				Set<URI> adjDeletedUris = new HashSet<>();
+				Set<URI> adjDeletedUris = new LinkedHashSet<>();
 				adjDeletedUris.addAll(initialRequest.getDeletedFiles());
 				adjDeletedUris.addAll(removedFromClosure);
-				Set<URI> adjDirtyUris = new HashSet<>();
+				Set<URI> adjDirtyUris = new LinkedHashSet<>();
 				adjDirtyUris.addAll(initialRequest.getDirtyFiles());
 				adjDirtyUris.addAll(addedToClosure);
 				return new AdjustedBuildRequest(initialRequest, adjDirtyUris, adjDeletedUris);
@@ -293,7 +293,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 			Multimap<String, URI> moduleName2Uri, Collection<URI> startUris) {
 
 		List<URI> sortedResults = new ArrayList<>(startUris.size());
-		Set<URI> worklist = new HashSet<>();
+		Set<URI> worklist = new LinkedHashSet<>();
 		worklist.addAll(startUris);
 		while (!worklist.isEmpty()) {
 			Iterator<URI> iter = worklist.iterator();
