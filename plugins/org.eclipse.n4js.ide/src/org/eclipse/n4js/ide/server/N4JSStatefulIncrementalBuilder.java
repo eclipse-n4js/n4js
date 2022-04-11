@@ -175,6 +175,7 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 				removedFromClosure.removeAll(sortedUriClosure);
 				Set<URI> addedToClosure = Sets.newLinkedHashSet(sortedUriClosure);
 				addedToClosure.removeAll(oldIndex.getAllURIs());
+
 				Set<URI> adjDeletedUris = new LinkedHashSet<>();
 				adjDeletedUris.addAll(initialRequest.getDeletedFiles());
 				adjDeletedUris.addAll(removedFromClosure);
