@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "tslib1.d.ts" {
+		export class ClsDts {
+			field: string;
+		}
+	}
+
+	File "tslib2.d.ts" {
+		export { ClsDts as default } from "./tslib1.d.ts"
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import MyClsDts from "tslib2";
+
+// XPECT errors --> "Import of ClsDts cannot be resolved." at "ClsDts"
+import { ClsDts } from "tslib2";
+
+// XPECT type of 'v01' --> string
+let v01 = new MyClsDts().field;
