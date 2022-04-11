@@ -14,8 +14,6 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_importStatement;
 
 import java.util.Set;
 
-import org.apache.log4j.Logger;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportFromBlockContext;
@@ -28,16 +26,13 @@ import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.types.TExportableElement;
-import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsImportBuilder extends AbstractDtsBuilder<ImportStatementContext, ImportDeclaration> {
-	private final static Logger LOG = Logger.getLogger(DtsImportBuilder.class);
+public class DtsImportBuilder extends AbstractModuleRefBuilder<ImportStatementContext, ImportDeclaration> {
 
 	/** Constructor */
 	public DtsImportBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -53,29 +48,9 @@ public class DtsImportBuilder extends AbstractDtsBuilder<ImportStatementContext,
 	@Override
 	public void enterImportFromBlock(ImportFromBlockContext ctx) {
 		result = N4JSFactory.eINSTANCE.createImportDeclaration();
-		String fromModule = ParserContextUtil.trimAndUnescapeStringLiteral(ctx.StringLiteral());
-		result.setImportFrom(fromModule != null);
-		if (fromModule != null) {
-			URI fromModuleUri = null;
-			try {
-				fromModuleUri = URI.createFileURI(fromModule);
-			} catch (AssertionError ae) {
-				// happens sometimes
-				LOG.error("Could not create URI for module " + fromModule);
-			}
 
-			if (fromModuleUri != null) {
-				result.setModuleSpecifierAsText(fromModule);
-
-				// trim extension
-				String moduleName = URIUtils.trimFileExtension(fromModuleUri).toFileString();
-
-				TModule tModuleProxy = TypesFactory.eINSTANCE.createTModule();
-				EReference eRef = N4JSPackage.eINSTANCE.getModuleRef_Module();
-				ParserContextUtil.installProxy(resource, result, eRef, tModuleProxy, moduleName);
-				result.setModule(tModuleProxy);
-			}
-		}
+		result.setImportFrom(ctx.From() != null); // will be null for bare imports
+		setModuleSpecifier(result, ctx.StringLiteral()); // must also do this in case ctx.From() == null
 
 		if (ctx.Multiply() != null) {
 			// default import

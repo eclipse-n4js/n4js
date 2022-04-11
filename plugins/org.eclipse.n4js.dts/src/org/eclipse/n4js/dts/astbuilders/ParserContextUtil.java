@@ -28,7 +28,9 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
+import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ReservedWordContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
@@ -146,9 +148,12 @@ public class ParserContextUtil {
 
 			toAdd = ed;
 		} else {
-			if (makePrivateIfNotExported
-					&& elem instanceof ModifiableElement) {
-				setAccessibility((ModifiableElement) elem, N4Modifier.PRIVATE);
+			if (elem instanceof ModifiableElement) {
+				if (makePrivateIfNotExported) {
+					setAccessibility((ModifiableElement) elem, N4Modifier.PRIVATE);
+				} else {
+					setAccessibility((ModifiableElement) elem, N4Modifier.PUBLIC);
+				}
 			}
 
 			toAdd = elem;
@@ -234,7 +239,10 @@ public class ParserContextUtil {
 		if (numLitCtx == null) {
 			return null;
 		}
-		String text = numLitCtx.getText().trim();
+		String text = trimAndNormalize(numLitCtx.getText());
+		if (text == null) {
+			return null;
+		}
 		if (ignoreNegation) {
 			if (text.startsWith("-")) {
 				text = text.substring(1);
@@ -259,6 +267,32 @@ public class ParserContextUtil {
 		}
 	}
 
+	/**
+	 * @return the name of the identifiable element being referred to by the given {@link IdentifierNameContext}. Blank
+	 *         strings are normalized to <code>null</code>.
+	 */
+	public static String getIdentifierName(IdentifierNameContext identifierNameCtx) {
+		if (identifierNameCtx == null) {
+			return null;
+		}
+		ReservedWordContext reservedWord = identifierNameCtx.reservedWord();
+		if (reservedWord != null) {
+			return trimAndNormalize(reservedWord.getText());
+		}
+		return getIdentifierName(identifierNameCtx.Identifier());
+	}
+
+	/**
+	 * @return the name of the identifiable element being referred to by the given identifier. Blank strings are
+	 *         normalized to <code>null</code>.
+	 */
+	public static String getIdentifierName(TerminalNode identifier) {
+		if (identifier == null) {
+			return null;
+		}
+		return trimAndNormalize(identifier.getText());
+	}
+
 	/** @return the newly created string literal. Null safe. */
 	public static StringLiteral createStringLiteral(TerminalNode stringLiteral) {
 		if (stringLiteral == null) {
@@ -272,7 +306,7 @@ public class ParserContextUtil {
 
 	/** @return the unquoted and unescaped string. Null safe. */
 	public static String trimAndUnescapeStringLiteral(TerminalNode stringLiteral) {
-		String str = stringLiteral != null ? stringLiteral.getText() : null;
+		String str = stringLiteral != null ? trimAndNormalize(stringLiteral.getText()) : null;
 		if (str == null || str.length() < 2) {
 			return "";
 		}
@@ -314,5 +348,13 @@ public class ParserContextUtil {
 		int fragmentNumber = resource.addLazyProxyInformation(container, eRef, new PseudoLeafNode(crossRefStr));
 		URI encodedLink = resource.getURI().appendFragment("|" + fragmentNumber);
 		((InternalEObject) proxy).eSetProxyURI(encodedLink);
+	}
+
+	/**
+	 * Trims the given string. Null-safe and blank strings are normalized to <code>null</code>.
+	 */
+	private static String trimAndNormalize(String str) {
+		String trimmed = str != null ? str.trim() : null;
+		return trimmed != null && trimmed.length() > 0 ? trimmed : null;
 	}
 }
