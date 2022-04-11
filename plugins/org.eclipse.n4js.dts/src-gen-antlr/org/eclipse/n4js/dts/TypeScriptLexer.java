@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL1/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptLexer.g4 by ANTLR 4.7.2
+// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-sec/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptLexer.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;

@@ -633,19 +633,17 @@ exportStatement
     ;
 
 exportStatementTail
-    : As Namespace identifierName eos                   #ExportAsNamespace
+    : Default? declareStatement                         #ExportElementDirectly
+    | Default identifierName                            #ExportElementAsDefault
+    | multipleExportElements (From StringLiteral)?      #ExportElements
+    | Multiply (As identifierName)? From StringLiteral  #ExportModule
+    | As Namespace identifierName eos                   #ExportAsNamespace
     | '=' namespaceName eos                             #ExportEquals
     | Import identifierName '=' namespaceName eos       #ExportImport
-    | Default? declareStatement                         #ExportDeclareStatement
-    | Default? exportFromBlock eos                      #ExportElement
     ;
 
-exportFromBlock
-    :
-    ( Multiply (As identifierName)?
-    | identifierName
-    | multipleImportElements
-    ) (From StringLiteral)?
+multipleExportElements
+    : '{' importedElement (',' importedElement)* ','? '}'
     ;
 
 
