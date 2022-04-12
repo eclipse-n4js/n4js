@@ -44,6 +44,9 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 		}
 
 		moduleSpecifier = convertModuleSpecifierToN4JS(moduleSpecifier);
+		if (moduleSpecifier == null) {
+			return;
+		}
 
 		moduleRef.setModuleSpecifierAsText(moduleSpecifier);
 
@@ -51,7 +54,6 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 		EReference eRef = N4JSPackage.eINSTANCE.getModuleRef_Module();
 		ParserContextUtil.installProxy(resource, moduleRef, eRef, tModuleProxy, moduleSpecifier);
 		moduleRef.setModule(tModuleProxy);
-
 	}
 
 	/**
