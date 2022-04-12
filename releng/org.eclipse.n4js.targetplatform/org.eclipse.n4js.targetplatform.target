@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_2021_06" sequenceNumber="166">
+<target name="Generated target-platform N4JS:N4JS_2021_06" sequenceNumber="167">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="javaewah" version="1.1.7.v20200107-0831"/>
@@ -36,7 +36,7 @@
       <unit id="org.eclipse.jface.notifications" version="0.3.0.v20210218-1820"/>
       <unit id="org.eclipse.jsch.core" version="1.3.900.v20200422-1935"/>
       <unit id="org.eclipse.osgi.util" version="3.6.0.v20210212-1137"/>
-      <unit id="org.junit" version="4.13.0.v20200204-1500"/>
+      <unit id="org.hamcrest.core" version="1.3.0.v20180420-1519"/>
       <unit id="org.slf4j.api" version="1.7.30.v20200204-2150"/>
       <unit id="org.w3c.dom.events" version="3.0.0.draft20060413_v201105210656"/>
       <unit id="org.w3c.dom.svg" version="1.1.0.v201011041433"/>
@@ -58,11 +58,11 @@
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.aopalliance" version="1.0.0.v201105210816"/>
-      <unit id="org.eclipse.xtext.testing" version="2.26.0.v20211001-0437"/>
-      <unit id="org.eclipse.xtext.ui.codetemplates.ui" version="2.26.0.v20211001-0456"/>
-      <unit id="org.eclipse.xtext.xbase" version="2.26.0.v20211001-0443"/>
-      <unit id="org.eclipse.xtext.xtext.generator" version="2.26.0.v20211001-0437"/>
-      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/milestones"/>
+      <unit id="org.eclipse.xtext.testing" version="2.26.0.v20220228-0751"/>
+      <unit id="org.eclipse.xtext.ui.codetemplates.ui" version="2.26.0.v20220228-0812"/>
+      <unit id="org.eclipse.xtext.xbase" version="2.26.0.v20220228-0758"/>
+      <unit id="org.eclipse.xtext.xtext.generator" version="2.26.0.v20220228-0751"/>
+      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.26.0"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.emf.ecore.editor" version="2.17.0.v20190528-0725"/>
