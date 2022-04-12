@@ -37,8 +37,12 @@ public class IssueToDiagnosticConverter {
 		result.setMessage(Strings.nullToEmpty(issue.getMessage()));
 		result.setSeverity(toSeverity(issue.getSeverity()));
 
-		Position start = new Position(issue.getLineNumber() - 1, issue.getColumn() - 1);
-		Position end = new Position(issue.getLineNumberEnd() - 1, issue.getColumnEnd() - 1);
+		int line = Math.max(0, issue.getLineNumber() - 1);
+		int column = Math.max(0, issue.getColumn() - 1);
+		int lineEnd = Math.max(0, issue.getLineNumberEnd() - 1);
+		int columnEnd = Math.max(0, issue.getColumnEnd() - 1);
+		Position start = new Position(line, column);
+		Position end = new Position(lineEnd, columnEnd);
 
 		result.setRange(new Range(start, end));
 		return result;
