@@ -81,17 +81,4 @@ public class QualifiedNameUtils {
 		segments.remove(segments.size() - 1);
 		return QualifiedName.create(segments);
 	}
-
-	/**
-	 * Null-safe replacement of the last segment of the given qualified name.
-	 */
-	public static QualifiedName replaceLastSegment(QualifiedName qn, String newLastSegment) {
-		if (qn == null) {
-			return null;
-		}
-		if (qn.getSegmentCount() < 1) {
-			return null;
-		}
-		return qn.skipLast(1).append(newLastSegment);
-	}
 }
