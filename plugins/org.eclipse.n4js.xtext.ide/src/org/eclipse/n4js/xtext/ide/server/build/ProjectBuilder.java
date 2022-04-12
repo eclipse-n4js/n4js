@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -662,7 +663,7 @@ public class ProjectBuilder {
 	 * Scans the file system for source files, going over all source folders.
 	 */
 	protected Set<URI> scanForSourceFiles() {
-		Set<URI> result = new TreeSet<>(Comparator.comparing(URI::hashCode)); // stable build order
+		Set<URI> result = new TreeSet<>(Comparator.comparing(URI::toString)); // stable build order
 		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
 			List<URI> allSourceFileUris = srcFolder.getAllResources(fileSystemScanner);
 			for (URI srcFileUri : allSourceFileUris) {
@@ -724,7 +725,7 @@ public class ProjectBuilder {
 		boolean dependenciesChanged = !newDependencies.equals(projectStateSnapshot.get().getDependencies());
 
 		ImmutableProjectState newState = this.projectStateSnapshot.updateAndGet(snapshot -> {
-			Map<URI, HashedFileContent> newHashedFileContents = new HashMap<>(snapshot.getFileHashes());
+			Map<URI, HashedFileContent> newHashedFileContents = new LinkedHashMap<>(snapshot.getFileHashes());
 			// TODO where do we update the generated file hashes?
 			for (Delta delta : result.getAffectedResources()) {
 				URI uri = delta.getUri();
