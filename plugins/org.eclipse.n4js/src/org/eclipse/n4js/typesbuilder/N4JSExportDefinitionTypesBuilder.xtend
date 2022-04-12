@@ -84,9 +84,9 @@ class N4JSExportDefinitionTypesBuilder {
 	def package void createExportDefinitionForDirectlyExportedElement(ExportableElement directlyExportedElem, AbstractNamespace target, boolean preLinkingPhase) {
 		if (directlyExportedElem instanceof VariableStatement) {
 			// variable statements inherit from ExportableElement, but they do not actually represent
-			// the element being exported (instead, the variable declarations represents those elements)
+			// the element being exported (instead, the variable declarations represent those elements)
 			// --> ignore them here
-			return; // FIXME could we move the variable special case to here???
+			return;
 		}
 		val tDirectlyExportedElem = getExportedTypesModelElement(directlyExportedElem);
 		if (tDirectlyExportedElem === null) {

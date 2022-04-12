@@ -128,7 +128,6 @@ class ImportedElementsScopingHelper {
 		return QualifiedName.create(importedName)
 	}
 
-// FIXME reconsider the following three methods!!!
 	private def QualifiedName createImportedQualifiedTypeName(Type type) {
 		return QualifiedName.create(getImportedName(type));
 	}
