@@ -597,7 +597,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				if (!expectedMembers.contains(property.name)) {
 					var astElement = property.astElement;
 					if (astElement instanceof PropertyNameValuePair) {
-						astElement = astElement.declaredName;
+						if (astElement.declaredName !== null) {
+							astElement = astElement.declaredName;
+						}
 					}
 					if (isSpecArgument) {
 						val message = getMessageForCLF_SPEC_SUPERFLUOUS_PROPERTIES(property.name, typeRef.typeRefAsString);
