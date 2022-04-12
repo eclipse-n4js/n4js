@@ -49,7 +49,7 @@ Script: true
     N4NamespaceDeclaration: [private], namespaceInLegacyModule
     ExportDeclaration: false, UNKNOWN
      N4NamespaceDeclaration: [public], namespaceInLegacyModuleExported
-  N4NamespaceDeclaration: "myActualModule"
+  N4NamespaceDeclaration: [public], "myActualModule"
    N4NamespaceDeclaration: [private], namespaceInActualModule
    ExportDeclaration: false, UNKNOWN
     N4NamespaceDeclaration: [public], namespaceInActualModuleExported
