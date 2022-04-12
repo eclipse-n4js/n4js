@@ -180,6 +180,16 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	 * @generated
 	 */
 	@Override
+	public boolean isExported() {
+		return (this.isDirectlyExported() || this.isIndirectlyExported());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isIndirectlyExported() {
 		int _size = this.getExportingExportDefinitions().size();
 		int _xifexpression = (int) 0;
@@ -299,6 +309,8 @@ public class TExportableElementImpl extends IdentifiableElementImpl implements T
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypesPackage.TEXPORTABLE_ELEMENT___IS_EXPORTED:
+				return isExported();
 			case TypesPackage.TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED:
 				return isIndirectlyExported();
 			case TypesPackage.TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME:

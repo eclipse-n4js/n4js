@@ -146,7 +146,7 @@ class TranspilerStateOperations {
 		}
 
 		// 1) create import declaration & specifier
-		val importSpec = _NamedImportSpecifier(steOfElementToImport.directlyExportedName, aliasOrNull, true); 
+		val importSpec = _NamedImportSpecifier(steOfElementToImport.exportedName, aliasOrNull, true); 
 		val importDecl = _ImportDecl(importSpec);
 		// 2) add import to intermediate model
 		val scriptElements = state.im.scriptElements;

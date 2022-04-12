@@ -115,6 +115,6 @@ public interface SymbolTableEntryOriginal extends SymbolTableEntry {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	String getDirectlyExportedName();
+	String getExportedName();
 
 } // SymbolTableEntryOriginal

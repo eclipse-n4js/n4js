@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 
+import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 
@@ -167,10 +168,25 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	 * @generated
 	 */
 	@Override
-	public String getDirectlyExportedName() {
+	public String getExportedName() {
 		final IdentifiableElement trgt = this.getOriginalTarget();
 		if ((trgt instanceof TExportableElement)) {
-			return ((TExportableElement)trgt).getDirectlyExportedName();
+			final String dirExpName = ((TExportableElement)trgt).getDirectlyExportedName();
+			if ((dirExpName != null)) {
+				return dirExpName;
+			}
+			boolean _isIndirectlyExported = ((TExportableElement)trgt).isIndirectlyExported();
+			if (_isIndirectlyExported) {
+				EList<ElementExportDefinition> _exportingExportDefinitions = ((TExportableElement)trgt).getExportingExportDefinitions();
+				for (final ElementExportDefinition exportDef : _exportingExportDefinitions) {
+					{
+						final String indirExpName = exportDef.getExportedName();
+						if ((indirExpName != null)) {
+							return indirExpName;
+						}
+					}
+				}
+			}
 		}
 		return trgt.getName();
 	}
@@ -253,8 +269,8 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case ImPackage.SYMBOL_TABLE_ENTRY_ORIGINAL___GET_DIRECTLY_EXPORTED_NAME:
-				return getDirectlyExportedName();
+			case ImPackage.SYMBOL_TABLE_ENTRY_ORIGINAL___GET_EXPORTED_NAME:
+				return getExportedName();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

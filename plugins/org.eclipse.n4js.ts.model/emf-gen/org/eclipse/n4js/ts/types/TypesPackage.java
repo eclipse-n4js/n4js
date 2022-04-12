@@ -953,13 +953,22 @@ public interface TypesPackage extends EPackage {
 	int TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE = IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXPORTABLE_ELEMENT___IS_EXPORTED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
+	int TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
@@ -968,7 +977,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
+	int TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The number of operations of the '<em>TExportable Element</em>' class.
@@ -977,7 +986,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEXPORTABLE_ELEMENT_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
+	int TEXPORTABLE_ELEMENT_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TDynamicElementImpl <em>TDynamic Element</em>}' class.
@@ -1051,6 +1060,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TDYNAMIC_ELEMENT___GET_CONTAINING_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TDYNAMIC_ELEMENT___IS_EXPORTED = TEXPORTABLE_ELEMENT___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -1429,6 +1447,15 @@ public interface TypesPackage extends EPackage {
 	int TYPE___GET_CONTAINING_MODULE = TEXPORTABLE_ELEMENT___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE___IS_EXPORTED = TEXPORTABLE_ELEMENT___IS_EXPORTED;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1698,6 +1725,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_VARIABLE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE___IS_EXPORTED = TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -1998,6 +2034,15 @@ public interface TypesPackage extends EPackage {
 	int INFERENCE_VARIABLE___GET_CONTAINING_MODULE = TYPE_VARIABLE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE___IS_EXPORTED = TYPE_VARIABLE___IS_EXPORTED;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2267,6 +2312,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERIC_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -2610,6 +2664,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFUNCTION___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -3046,6 +3109,15 @@ public interface TypesPackage extends EPackage {
 	int CONTAINER_TYPE___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3396,6 +3468,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 10;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___IS_EXPORTED = TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -3760,6 +3841,15 @@ public interface TypesPackage extends EPackage {
 	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4040,6 +4130,15 @@ public interface TypesPackage extends EPackage {
 	int PRIMITIVE_TYPE___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4273,6 +4372,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int BUILT_IN_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -4510,6 +4618,15 @@ public interface TypesPackage extends EPackage {
 	int ANY_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4743,6 +4860,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNDEFINED_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -4980,6 +5106,15 @@ public interface TypesPackage extends EPackage {
 	int NULL_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5213,6 +5348,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int VOID_TYPE___GET_CONTAINING_MODULE = BUILT_IN_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -5502,6 +5646,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCTURAL_TYPE___GET_CONTAINING_MODULE = CONTAINER_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE___IS_EXPORTED = CONTAINER_TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -5845,6 +5998,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASSIFIER___GET_CONTAINING_MODULE = CONTAINER_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___IS_EXPORTED = CONTAINER_TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -6333,6 +6495,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___GET_CONTAINING_MODULE = TCLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___IS_EXPORTED = TCLASSIFIER___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -6858,6 +7029,15 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___IS_EXPORTED = TN4_CLASSIFIER___IS_EXPORTED;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7334,6 +7514,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___IS_EXPORTED = TN4_CLASSIFIER___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -8798,6 +8987,15 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___IS_EXPORTED = TFUNCTION___IS_EXPORTED;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9472,6 +9670,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___GET_CONTAINING_MODULE = TMETHOD___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_EXPORTED = TMETHOD___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -13013,6 +13220,15 @@ public interface TypesPackage extends EPackage {
 	int TENUM___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13446,6 +13662,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_ALIAS___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -13882,13 +14107,22 @@ public interface TypesPackage extends EPackage {
 	int TVARIABLE___IS_DIRECTLY_EXPORTED = TABSTRACT_VARIABLE_OPERATION_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE___IS_EXPORTED = TABSTRACT_VARIABLE_OPERATION_COUNT + 4;
+
+	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_INDIRECTLY_EXPORTED = TABSTRACT_VARIABLE_OPERATION_COUNT + 4;
+	int TVARIABLE___IS_INDIRECTLY_EXPORTED = TABSTRACT_VARIABLE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
@@ -13897,7 +14131,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_DIRECTLY_EXPORTED_NAME = TABSTRACT_VARIABLE_OPERATION_COUNT + 5;
+	int TVARIABLE___GET_DIRECTLY_EXPORTED_NAME = TABSTRACT_VARIABLE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -13906,7 +14140,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_HOLLOW = TABSTRACT_VARIABLE_OPERATION_COUNT + 6;
+	int TVARIABLE___IS_HOLLOW = TABSTRACT_VARIABLE_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Variable As String</em>' operation.
@@ -13915,7 +14149,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_VARIABLE_AS_STRING = TABSTRACT_VARIABLE_OPERATION_COUNT + 7;
+	int TVARIABLE___GET_VARIABLE_AS_STRING = TABSTRACT_VARIABLE_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>TVariable</em>' class.
@@ -13924,7 +14158,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE_OPERATION_COUNT = TABSTRACT_VARIABLE_OPERATION_COUNT + 8;
+	int TVARIABLE_OPERATION_COUNT = TABSTRACT_VARIABLE_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypingStrategy <em>Typing Strategy</em>}' enum.
@@ -14561,6 +14795,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getTExportableElement_ExportingExportDefinitions();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TExportableElement#isExported() <em>Is Exported</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Exported</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TExportableElement#isExported()
+	 * @generated
+	 */
+	EOperation getTExportableElement__IsExported();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TExportableElement#isIndirectlyExported() <em>Is Indirectly Exported</em>}' operation.
@@ -17705,6 +17949,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS = eINSTANCE.getTExportableElement_ExportingExportDefinitions();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Exported</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TEXPORTABLE_ELEMENT___IS_EXPORTED = eINSTANCE.getTExportableElement__IsExported();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Indirectly Exported</b></em>' operation.

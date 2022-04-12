@@ -533,6 +533,16 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 	 * @generated
 	 */
 	@Override
+	public boolean isExported() {
+		return (this.isDirectlyExported() || this.isIndirectlyExported());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isIndirectlyExported() {
 		int _size = this.getExportingExportDefinitions().size();
 		int _xifexpression = (int) 0;
@@ -854,6 +864,7 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 		}
 		if (baseClass == TExportableElement.class) {
 			switch (baseOperationID) {
+				case TypesPackage.TEXPORTABLE_ELEMENT___IS_EXPORTED: return TypesPackage.TVARIABLE___IS_EXPORTED;
 				case TypesPackage.TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED: return TypesPackage.TVARIABLE___IS_INDIRECTLY_EXPORTED;
 				case TypesPackage.TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME: return TypesPackage.TVARIABLE___GET_DIRECTLY_EXPORTED_NAME;
 				default: return -1;
@@ -885,6 +896,8 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 				return getVariableAsString();
 			case TypesPackage.TVARIABLE___IS_HOLLOW:
 				return isHollow();
+			case TypesPackage.TVARIABLE___IS_EXPORTED:
+				return isExported();
 			case TypesPackage.TVARIABLE___IS_INDIRECTLY_EXPORTED:
 				return isIndirectlyExported();
 			case TypesPackage.TVARIABLE___GET_DIRECTLY_EXPORTED_NAME:

@@ -114,6 +114,14 @@ public interface TExportableElement extends IdentifiableElement {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
+	boolean isExported();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
 	boolean isIndirectlyExported();
 
 	/**
