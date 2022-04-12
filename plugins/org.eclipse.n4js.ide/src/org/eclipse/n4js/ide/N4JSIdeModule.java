@@ -208,10 +208,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSConfigSnapshotFactory.class;
 	}
 
-	// public Class<? extends SourceFolderScanner> bindSourceFolderScanner() {
-	// return N4JSSourceFolderScanner.class;
-	// }
-
 	public Class<? extends IDiagnosticConverter> bindIDiagnosticConverter() {
 		return EmfDiagnosticToLSPIssueConverter.class;
 	}
