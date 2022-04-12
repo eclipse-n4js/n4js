@@ -32,7 +32,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
-public class DtsImportBuilder extends AbstractModuleRefBuilder<ImportStatementContext, ImportDeclaration> {
+public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatementContext, ImportDeclaration> {
 
 	/** Constructor */
 	public DtsImportBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {

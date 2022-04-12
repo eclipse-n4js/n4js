@@ -26,13 +26,13 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 /**
  * Base class of the builders for import and export declarations.
  */
-public abstract class AbstractModuleRefBuilder<T extends ParserRuleContext, R>
+public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R>
 		extends AbstractDtsBuilder<T, R> {
 
 	private final static Logger LOG = Logger.getLogger(DtsImportBuilder.class);
 
 	/***/
-	public AbstractModuleRefBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+	public AbstractDtsModuleRefBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
 	}
 
