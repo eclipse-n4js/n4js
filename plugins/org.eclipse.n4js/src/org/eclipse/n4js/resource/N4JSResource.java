@@ -1298,6 +1298,17 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			// -> make all proxies unresolvable that point to a resource that could not be loaded
 			return null;
 		}
+		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
+			if (isLoadedFromDescription() && getLazyProxyInformation().isEmpty()) {
+				final boolean isLazyLinkingProxy = getEncoder().isCrossLinkFragment(this, uriFragment);
+				if (isLazyLinkingProxy) {
+					// LazyLinkingResource would trigger demand-loading of AST and relinking of TModule before noticing
+					// the 'lazyProxyInformation' is empty and the proxy cannot be resolved anyway
+					// -> short-cut here to avoid this
+					return null;
+				}
+			}
+		}
 		EObject result;
 		try {
 			result = super.getEObject(uriFragment);
