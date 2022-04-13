@@ -13,9 +13,10 @@ package org.eclipse.n4js.ide.server.build;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -138,7 +139,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	/** Overridden to exclude all ts files (yet still include d.ts files) */
 	@Override
 	protected Set<URI> scanForSourceFiles() {
-		Set<URI> result = new HashSet<>();
+		Set<URI> result = new TreeSet<>(Comparator.comparing(URI::toString)); // stable build order
 		N4JSProjectConfigSnapshot prjConfig = getProjectConfig();
 		if (prjConfig.hasTsConfigBuildSemantic()) {
 			for (URI startUri : prjConfig.computeStartUris(fileSystemScanner)) {
