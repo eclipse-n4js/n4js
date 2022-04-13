@@ -22,6 +22,8 @@ import java.util.Set;
 import java.util.concurrent.CancellationException;
 import java.util.stream.Collectors;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -61,6 +63,7 @@ import com.google.inject.Inject;
 /** Builder instance that is bound to a single running build. */
 @SuppressWarnings("restriction")
 public class XStatefulIncrementalBuilder {
+	private static final Logger LOG = LogManager.getLogger(XStatefulIncrementalBuilder.class);
 
 	private XBuildContext context;
 
@@ -216,6 +219,9 @@ public class XStatefulIncrementalBuilder {
 		operationCanceledManager.checkCanceled(cancelIndicator);
 
 		URI source = loadResult.uri;
+
+		LOG.warn("build clustered: " + source.toString());
+
 		IResourceServiceProvider serviceProvider = getResourceServiceProvider(loadResult);
 		IResourceDescription.Manager manager = serviceProvider.getResourceDescriptionManager();
 		IResourceValidator resourceValidator = serviceProvider.getResourceValidator();
