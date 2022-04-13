@@ -46,7 +46,7 @@ import org.junit.runner.RunWith;
 		ElementKeywordXpectMethod.class
 })
 @RunWith(N4JSXpectRunner.class)
-@XpectTestFiles(baseDir = "xpect-tests")
+@XpectTestFiles(baseDir = "xpect-tests/disabled")
 @XpectImport({ N4JSStandaloneTestsModule.class, N4JSSuppressIssuesSetup.class })
 public class N4JSXpectTest {
 	//
