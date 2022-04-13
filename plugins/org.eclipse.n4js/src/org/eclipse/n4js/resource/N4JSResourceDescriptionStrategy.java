@@ -213,7 +213,14 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			internalCreateEObjectDescriptionForRoot(module, acceptor);
 			for (ExportDefinition exportDef : module.getExportDefinitions()) {
 				if (exportDef instanceof ElementExportDefinition) {
-					internalCreateEObjectDescription((ElementExportDefinition) exportDef, acceptor);
+					if (isReexport((ElementExportDefinition) exportDef)) {
+						// ignore (no need to duplicate re-exported elements in the Xtext index)
+						// (WARNING: if re-exported elements should be added to the index in the future, make sure that
+						// the below calls to #addLocationUserData() won't trigger demand-loading of the AST / relinking
+						// of TModule in the resource containing the re-exported element!)
+					} else {
+						internalCreateEObjectDescription((ElementExportDefinition) exportDef, acceptor);
+					}
 				} else if (exportDef instanceof ModuleExportDefinition) {
 					// ignore (no need to duplicate the elements of exportDef.exportedModule in the Xtext index)
 				}
@@ -397,7 +404,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * Create EObjectDescriptions for elements for which N4JSQualifiedNameProvider provides a FQN; elements with a FQN
 	 * of <code>null</code> will be ignored.
 	 */
-	private void internalCreateEObjectDescription(Optional<ExportDefinition> exportDef, Type type,
+	private void internalCreateEObjectDescription(Optional<ElementExportDefinition> exportDef, Type type,
 			IAcceptor<IEObjectDescription> acceptor) {
 
 		final String typeName = type.getName();
@@ -469,7 +476,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * Create EObjectDescriptions for variables for which N4JSQualifiedNameProvider provides a FQN; variables with a FQN
 	 * of <code>null</code> (currently all non-exported variables) will be ignored.
 	 */
-	private void internalCreateEObjectDescription(ExportDefinition exportDef, TVariable variable,
+	private void internalCreateEObjectDescription(ElementExportDefinition exportDef, TVariable variable,
 			IAcceptor<IEObjectDescription> acceptor) {
 
 		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(exportDef);
@@ -524,5 +531,11 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				userData.put(TEST_CLASS_KEY, Boolean.toString(hasTestMethod));
 			}
 		}
+	}
+
+	private static boolean isReexport(ElementExportDefinition exportDef) {
+		TExportableElement element = (TExportableElement) exportDef.eGet(
+				TypesPackage.Literals.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT, false);
+		return element != null && !element.eIsProxy() && element.eResource() != exportDef.eResource();
 	}
 }
