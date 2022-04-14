@@ -138,11 +138,6 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 	}
 
 	/***/
-	protected final DtsExportBuilder newExportBuilder() {
-		return new DtsExportBuilder(tokenStream, resource);
-	}
-
-	/***/
 	protected final DtsClassBuilder newClassBuilder() {
 		return new DtsClassBuilder(tokenStream, resource);
 	}

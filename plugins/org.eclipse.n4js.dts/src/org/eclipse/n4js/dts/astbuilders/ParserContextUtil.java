@@ -125,25 +125,39 @@ public class ParserContextUtil {
 	}
 
 	/**
+	 * Convenience for {@link #addAndHandleExported(EObject, EReference, ExportableElement, boolean, boolean, boolean)}.
+	 */
+	public static void addAndHandleExported(EObject addHere, EReference eRef,
+			ExportableElement elem, boolean makePrivateIfNotExported, ParserRuleContext ctx) {
+
+		if (ctx == null) {
+			return;
+		}
+
+		boolean isExported = ParserContextUtil.isExported(ctx);
+		addAndHandleExported(addHere, eRef, elem, makePrivateIfNotExported, isExported, false);
+	}
+
+	/**
 	 * Adds 'elem' to object 'addHere', setting its accessibility and wrapping it in an {@link ExportDeclaration}, if
 	 * necessary.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void addAndHandleExported(EObject addHere, EReference eRef, ParserRuleContext ctx,
-			ExportableElement elem, boolean makePrivateIfNotExported) {
+	public static void addAndHandleExported(EObject addHere, EReference eRef,
+			ExportableElement elem, boolean makePrivateIfNotExported, boolean isExported, boolean defaultExport) {
 
-		if (ctx == null || elem == null) {
+		if (elem == null) {
 			return;
 		}
 
 		EObject toAdd;
-		boolean isExported = ParserContextUtil.isExported(ctx);
 		if (isExported) {
 			if (elem instanceof ModifiableElement) {
 				setAccessibility((ModifiableElement) elem, N4Modifier.PUBLIC);
 			}
 
 			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
+			ed.setDefaultExport(defaultExport);
 			ed.setExportedElement(elem);
 
 			toAdd = ed;

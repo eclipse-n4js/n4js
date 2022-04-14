@@ -26,6 +26,8 @@ import org.eclipse.n4js.dts.TypeScriptParser.ExportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportedElementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.MultipleExportElementsContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -39,16 +41,52 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsExportBuilder extends AbstractDtsModuleRefBuilder<ExportStatementContext, ExportDeclaration> {
+	private final String exportEqualsIdentifier;
 
 	/** Constructor */
-	public DtsExportBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+	public DtsExportBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, ProgramContext ctx) {
 		super(tokenStream, resource);
+		this.exportEqualsIdentifier = findExportEqualsIdentifier(ctx);
 	}
 
 	@Override
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
 				RULE_exportStatement);
+	}
+
+	static String findExportEqualsIdentifier(ProgramContext ctx) {
+		if (ctx.statementList() != null) {
+			for (StatementContext stmtCtx : ctx.statementList().statement()) {
+				if (stmtCtx.exportStatement() != null
+						&& stmtCtx.exportStatement().exportStatementTail() instanceof ExportEqualsContext) {
+
+					ExportEqualsContext eeCtx = (ExportEqualsContext) stmtCtx.exportStatement().exportStatementTail();
+					return eeCtx.namespaceName().getText().toString();
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Return true iff this module uses an 'export equals' statement to export elements like in the following pattern:
+	 *
+	 * <pre>
+	 *  declare function N(): void
+	 *
+	 *  declare namespace N {
+	 *  }
+	 *  export = N;
+	 * </pre>
+	 */
+	public boolean isExportedEquals() {
+		return getExportEqualsIdentifier() != null;
+	}
+
+	/** Returns the namespace name iff there exists an export equals statement or null otherwise. */
+	public String getExportEqualsIdentifier() {
+		return exportEqualsIdentifier;
 	}
 
 	/**
@@ -202,7 +240,7 @@ public class DtsExportBuilder extends AbstractDtsModuleRefBuilder<ExportStatemen
 	 */
 	@Override
 	public void enterExportEquals(ExportEqualsContext ctx) {
-		// TODO
+		// done via #isExportedEquals()
 	}
 
 	@Override

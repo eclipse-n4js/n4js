@@ -18,6 +18,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatementTail;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 
+import java.util.LinkedList;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -45,6 +46,7 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
+import org.eclipse.n4js.n4JS.NamespaceElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.VariableStatement;
@@ -55,6 +57,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  */
 public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script> {
 	private final URI srcFolder;
+
+	private DtsExportBuilder exportBuilder;
 
 	/** Constructor */
 	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
@@ -92,6 +96,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 		if (ctx.statementList() != null) {
 			walker.enqueue(ctx.statementList().statement());
 		}
+		exportBuilder = new DtsExportBuilder(tokenStream, resource, ctx);
 	}
 
 	@Override
@@ -102,7 +107,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void enterExportStatement(ExportStatementContext ctx) {
-		ExportDeclaration ed = newExportBuilder().consume(ctx);
+		ExportDeclaration ed = exportBuilder.consume(ctx);
 		addToScript(ed);
 	}
 
@@ -155,6 +160,34 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
-		ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS, ctx, elem, false);
+		if (exportBuilder.isExportedEquals()) {
+			transformExportEquals(elem);
+		} else {
+			ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
+					elem, false, ctx);
+		}
+	}
+
+	/** Ignore namespace and map all its contents to the script. Also export every element directly. */
+	private void transformExportEquals(ExportableElement elem) {
+		if (elem instanceof N4NamespaceDeclaration) {
+			N4NamespaceDeclaration nsDecl = (N4NamespaceDeclaration) elem;
+
+			for (NamespaceElement nsElem : new LinkedList<>(nsDecl.getOwnedElementsRaw())) {
+				ExportableElement exportableElem = null;
+				if (nsElem instanceof ExportableElement) {
+					exportableElem = (ExportableElement) nsElem;
+				} else if (nsElem instanceof ExportDeclaration) {
+					exportableElem = ((ExportDeclaration) nsElem).getExportedElement();
+				}
+				if (exportableElem != null) {
+					ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
+							exportableElem, false, true, false);
+				}
+			}
+		} else {
+			ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
+					elem, false, true, true);
+		}
 	}
 }
