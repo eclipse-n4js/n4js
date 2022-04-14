@@ -142,8 +142,6 @@ Contributors:
 				<property><name>!doNotExecuteBasicTests</name></property>
 			</activation>
 			<modules>
-				<module>org.eclipse.n4js.xpect.tests</module>
-<!--
 				<module>org.eclipse.n4js.lang.tests</module>
 				<module>org.eclipse.n4js.spec.tests</module>
 
@@ -177,7 +175,7 @@ Contributors:
 
 				<module>org.eclipse.n4js.ide.tests</module>
 				<module>org.eclipse.n4js.ide.tests.helper.tests</module>
-				<module>org.eclipse.n4js.ui.tests</module> --> <!-- note the bad name: these are actually IDE tests -->
+				<module>org.eclipse.n4js.ui.tests</module> <!-- note the bad name: these are actually IDE tests -->
 
 			</modules>
 		</profile>
