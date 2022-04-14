@@ -109,15 +109,26 @@ public class N4JSLinker extends LazyLinker {
 
 			private void doProcess(N4JSResource resource) throws Exception {
 				// install lazy linking proxies
-				resource.clearLazyProxyInformation();
-				clearReferences(model);
+
+				// in .d.ts resources, the Dts*Builders are responsible for installing lazy-linking proxies,
+				// so we must skip #clearLazyProxyInformation() and #clearReferences() to avoid losing those
+				boolean isDTS = Objects.equal(N4JSGlobals.DTS_FILE_EXTENSION,
+						URIUtils.fileExtension(resource.getURI()));
+				if (!isDTS) {
+					resource.clearLazyProxyInformation();
+					clearReferences(model);
+				}
+
 				installProxies(resource, model, producer);
 				TreeIterator<EObject> iterator = model.eAllContents();
 				while (iterator.hasNext()) {
 					EObject eObject = iterator.next();
-					clearReferences(eObject);
+					if (!isDTS) {
+						clearReferences(eObject);
+					}
 					installProxies(resource, eObject, producer);
 				}
+
 				// pre-processing of AST
 				preProcessor.process(resource.getScript(), resource);
 
@@ -349,11 +360,6 @@ public class N4JSLinker extends LazyLinker {
 
 	@Override
 	protected void clearReferences(EObject obj) {
-
-		if (Objects.equal(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(obj.eResource().getURI()))) {
-			return;
-		}
-
 		super.clearReferences(obj);
 		if (obj instanceof Script) {
 			((Script) obj).setFlaggedUsageMarkingFinished(false); // open transient flag for new used-resolutions

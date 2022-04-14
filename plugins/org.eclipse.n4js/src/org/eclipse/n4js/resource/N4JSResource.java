@@ -758,12 +758,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (isOpaque()) {
 			return;
 		}
-		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
-			// in .d.ts resources, the Dts*Builders are responsible for installing all necessary lazy-linking proxies,
-			// so we must skip default linking here (to avoid unnecessary work, but also to avoid deleting the
-			// lazy-linking proxies the Dts*Builders have already created)
-			return;
-		}
 		super.doLinking();
 	}
 
