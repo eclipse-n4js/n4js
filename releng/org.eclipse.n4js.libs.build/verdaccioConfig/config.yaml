@@ -20,9 +20,6 @@ auth:
 uplinks:
   npmjs:
     url: https://registry.npmjs.org/
-    auth:
-      type: bearer
-      token: 03fe7dac-cdd8-4d14-9e5e-f1c2f2b09cd8
 
 packages:
 
