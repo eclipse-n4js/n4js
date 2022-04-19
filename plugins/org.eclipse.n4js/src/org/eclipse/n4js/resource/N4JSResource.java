@@ -58,7 +58,6 @@ import org.eclipse.n4js.dts.DtsParser;
 import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
-import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.parser.conversion.AbstractN4JSStringValueConverter;
@@ -1558,23 +1557,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				|| IssueCodes.VCO_REGEX_NAMED_GROUP.equals(issueCode)
 				|| IssueCodes.VCO_REGEX_ILLEGAL_ESCAPE.equals(issueCode)
 				|| (IssueCodes.VCO_TEMPLATE_QUOTE.equals(issueCode) && syntaxErrorMessage.getIssueData() != null);
-	}
-
-	// FIXME the following method should no longer be required once TypingASTWalker is fully functional
-	@Override
-	protected EObject handleCyclicResolution(Triple<EObject, EReference, INode> triple) throws AssertionError {
-		// Don't throw exception for cyclic resolution of IdentifierRef.id or PropertyAccess.property
-		// since this is currently unavoidable because type system and scoping don't work together
-		// but have independent control flow logic.
-		// This JS snippet will cause trouble:
-		//
-		// function(a){ return a.b }
-		// System.err.println("CYCLIC RESOLUTION FOR: " + NodeModelUtils.getTokenText(triple.getThird()));
-		if (N4JSPackage.Literals.IDENTIFIER_REF__ID == triple.getSecond()
-				|| N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY == triple.getSecond()) {
-			return null;
-		}
-		return super.handleCyclicResolution(triple);
 	}
 
 	/**
