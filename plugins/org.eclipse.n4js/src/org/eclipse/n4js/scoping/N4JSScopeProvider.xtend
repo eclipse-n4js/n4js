@@ -15,6 +15,7 @@ import com.google.inject.Inject
 import com.google.inject.name.Named
 import java.util.Iterator
 import java.util.List
+import java.util.concurrent.atomic.AtomicBoolean
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.util.EcoreUtil
@@ -497,14 +498,25 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			scope = IScope.NULLSCOPE;
 		} else {
 			val Script script = EcoreUtil.getRootContainer(vee) as Script;
-			val IScope baseScope = getScriptBaseScope(script, context, reference);
-			// imported variables (added as second step to enable shadowing of imported elements)
-			scope = importedElementsScopingHelper.getImportedValues(baseScope, script);
+			val resource = script.eResource;
+			val guard = cache.get("buildLexicalEnvironmentScope__importedValuesComputationGuard" -> script, resource, [new AtomicBoolean(false)]);
+			val alreadyInProgress = guard.getAndSet(true);
+			if (alreadyInProgress) {
+				scope = IScope.NULLSCOPE;
+			} else {
+				try {
+					val IScope baseScope = getScriptBaseScope(script, context, reference);
+					// imported variables (added as second step to enable shadowing of imported elements)
+					scope = importedElementsScopingHelper.getImportedValues(baseScope, script);
+				} finally {
+					guard.set(false);
+				}
+			}
 		}
 
 
 		scope = scopeSnapshotHelper.scopeForEObjects("buildLexicalEnvironmentScope", context, scope, false, scopeLists.flatten);
-		
+
 		val scopeInfo = new ScopeInfo(scope, scope, new VeeScopeValidator(context, jsVariantHelper));
 
 		return scopeInfo;
