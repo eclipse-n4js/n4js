@@ -21,7 +21,6 @@ import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.StandardSystemProperty;
-import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
 
 /**
@@ -32,27 +31,27 @@ public class XBuildRequest {
 
 	private final String projectName;
 
-	private URI baseDir;
+	private final URI baseDir;
 
-	private ImmutableCollection<URI> dirtyFiles = ImmutableList.of();
+	private final ImmutableList<URI> dirtyFiles;
 
-	private ImmutableCollection<URI> deletedFiles = ImmutableList.of();
+	private final ImmutableList<URI> deletedFiles;
 
-	private ImmutableCollection<IResourceDescription.Delta> externalDeltas = ImmutableList.of();
+	private final ImmutableList<IResourceDescription.Delta> externalDeltas;
 
-	private ResourceDescriptionsData index;
+	private final ResourceDescriptionsData index;
 
-	private XSource2GeneratedMapping fileMappings;
+	private final WorkspaceAwareResourceSet resourceSet;
 
-	private boolean doGenerate = true;
+	private final XSource2GeneratedMapping fileMappings;
 
-	private boolean doValidate = true;
+	private final boolean doGenerate;
 
-	private boolean indexOnly = false;
+	private final boolean doValidate;
 
-	private boolean writeStorageResources = false;
+	private final boolean indexOnly;
 
-	private WorkspaceAwareResourceSet resourceSet;
+	private final boolean writeStorageResources;
 
 	private CancelIndicator cancelIndicator = CancelIndicator.NullImpl;
 
@@ -105,8 +104,25 @@ public class XBuildRequest {
 	private List<AfterBuildRequestListener> afterBuildRequestListeners;
 
 	/** Create a new instance. Use {@link IBuildRequestFactory} instead! */
-	public XBuildRequest(String projectName) {
-		this.projectName = projectName;
+	public XBuildRequest(String projectID, URI baseDir, Collection<URI> dirtyFiles, Collection<URI> deletedFiles,
+			Collection<IResourceDescription.Delta> externalDeltas, ResourceDescriptionsData index,
+			WorkspaceAwareResourceSet resourceSet, XSource2GeneratedMapping fileMappings,
+			boolean doGenerate, boolean doValidate, boolean indexOnly, boolean writeStorageResources) {
+
+		this.projectName = projectID;
+		this.baseDir = baseDir == null
+				? UriUtil.createFolderURI(new File(StandardSystemProperty.USER_DIR.value()))
+				: baseDir;
+		this.dirtyFiles = dirtyFiles == null ? ImmutableList.of() : ImmutableList.copyOf(dirtyFiles);
+		this.deletedFiles = deletedFiles == null ? ImmutableList.of() : ImmutableList.copyOf(deletedFiles);
+		this.externalDeltas = externalDeltas == null ? ImmutableList.of() : ImmutableList.copyOf(externalDeltas);
+		this.index = index;
+		this.resourceSet = resourceSet;
+		this.fileMappings = fileMappings;
+		this.doGenerate = doGenerate;
+		this.doValidate = doValidate;
+		this.indexOnly = indexOnly;
+		this.writeStorageResources = writeStorageResources;
 	}
 
 	/** Returns the project name. */
@@ -114,48 +130,79 @@ public class XBuildRequest {
 		return projectName;
 	}
 
-	/** Setter for the base directory. */
-	public void setBaseDir(URI baseDir) {
-		this.baseDir = baseDir;
-	}
-
 	/** Return the base directory. */
 	public URI getBaseDir() {
-		if (this.baseDir == null) {
-			String userDir = StandardSystemProperty.USER_DIR.value();
-			this.baseDir = UriUtil.createFolderURI(new File(userDir));
-		}
 		return this.baseDir;
 	}
 
 	/** Getter. */
-	public Collection<URI> getDirtyFiles() {
+	public List<URI> getDirtyFiles() {
 		return this.dirtyFiles;
 	}
 
-	/** Setter. */
-	public void setDirtyFiles(Collection<URI> dirtyFiles) {
-		this.dirtyFiles = ImmutableList.copyOf(dirtyFiles);
-	}
-
 	/** Getter. */
-	public Collection<URI> getDeletedFiles() {
+	public List<URI> getDeletedFiles() {
 		return this.deletedFiles;
 	}
 
-	/** Setter. */
-	public void setDeletedFiles(Collection<URI> deletedFiles) {
-		this.deletedFiles = ImmutableList.copyOf(deletedFiles);
-	}
-
 	/** Getter. */
-	public Collection<IResourceDescription.Delta> getExternalDeltas() {
+	public List<IResourceDescription.Delta> getExternalDeltas() {
 		return this.externalDeltas;
 	}
 
+	/** Getter. */
+	public ResourceDescriptionsData getIndex() {
+		return index;
+	}
+
+	/** Getter. */
+	public XSource2GeneratedMapping getFileMappings() {
+		return fileMappings;
+	}
+
+	/** Combines {@link #isValidatorEnabled()} and {@link #isIndexOnly()}. */
+	public boolean canValidate() {
+		return isValidatorEnabled() && !isIndexOnly();
+	}
+
+	/** Getter. */
+	public boolean isValidatorEnabled() {
+		return this.doValidate;
+	}
+
+	/** Combines {@link #isGeneratorEnabled()},{@link #isValidatorEnabled()} and {@link #isIndexOnly()}. */
+	public boolean canGenerate() {
+		return isGeneratorEnabled() && isValidatorEnabled() && !isIndexOnly();
+	}
+
+	/** Getter. */
+	public boolean isGeneratorEnabled() {
+		return this.doGenerate;
+	}
+
+	/** Getter. */
+	public boolean isWriteStorageResources() {
+		return this.writeStorageResources;
+	}
+
+	/** Getter. */
+	public boolean isIndexOnly() {
+		return this.indexOnly;
+	}
+
+	/** Getter. */
+	public WorkspaceAwareResourceSet getResourceSet() {
+		return this.resourceSet;
+	}
+
+	/** Getter. */
+	public CancelIndicator getCancelIndicator() {
+		return this.cancelIndicator;
+	}
+
 	/** Setter. */
-	public void setExternalDeltas(Collection<IResourceDescription.Delta> externalDeltas) {
-		this.externalDeltas = ImmutableList.copyOf(externalDeltas);
+	public void setCancelIndicator(CancelIndicator cancelIndicator) {
+		this.cancelIndicator = cancelIndicator;
 	}
 
 	/**
@@ -278,95 +325,4 @@ public class XBuildRequest {
 			}
 		}
 	}
-
-	/** Getter. */
-	public ResourceDescriptionsData getIndex() {
-		return index;
-	}
-
-	/** Setter. */
-	public void setIndex(ResourceDescriptionsData index) {
-		this.index = index;
-	}
-
-	/** Getter. */
-	public XSource2GeneratedMapping getFileMappings() {
-		return fileMappings;
-	}
-
-	/** Setter. */
-	public void setFileMappings(XSource2GeneratedMapping fileMappings) {
-		this.fileMappings = fileMappings;
-	}
-
-	/** Combines {@link #isValidatorEnabled()} and {@link #isIndexOnly()}. */
-	public boolean canValidate() {
-		return isValidatorEnabled() && !isIndexOnly();
-	}
-
-	/** Getter. */
-	public boolean isValidatorEnabled() {
-		return this.doValidate;
-	}
-
-	/** Setter. */
-	public void setValidatorEnabled(boolean doValidate) {
-		this.doValidate = doValidate;
-	}
-
-	/** Combines {@link #isGeneratorEnabled()},{@link #isValidatorEnabled()} and {@link #isIndexOnly()}. */
-	public boolean canGenerate() {
-		return isGeneratorEnabled() && isValidatorEnabled() && !isIndexOnly();
-	}
-
-	/** Getter. */
-	public boolean isGeneratorEnabled() {
-		return this.doGenerate;
-	}
-
-	/** Setter. */
-	public void setGeneratorEnabled(boolean doGenerate) {
-		this.doGenerate = doGenerate;
-	}
-
-	/** Getter. */
-	public boolean isWriteStorageResources() {
-		return this.writeStorageResources;
-	}
-
-	/** Setter. */
-	public void setWriteStorageResources(boolean writeStorageResources) {
-		this.writeStorageResources = writeStorageResources;
-	}
-
-	/** Getter. */
-	public boolean isIndexOnly() {
-		return this.indexOnly;
-	}
-
-	/** Setter. */
-	public void setIndexOnly(boolean indexOnly) {
-		this.indexOnly = indexOnly;
-	}
-
-	/** Getter. */
-	public WorkspaceAwareResourceSet getResourceSet() {
-		return this.resourceSet;
-	}
-
-	/** Setter. */
-	public void setResourceSet(WorkspaceAwareResourceSet resourceSet) {
-		this.resourceSet = resourceSet;
-	}
-
-	/** Getter. */
-	public CancelIndicator getCancelIndicator() {
-		return this.cancelIndicator;
-	}
-
-	/** Setter. */
-	public void setCancelIndicator(CancelIndicator cancelIndicator) {
-		this.cancelIndicator = cancelIndicator;
-	}
-
 }

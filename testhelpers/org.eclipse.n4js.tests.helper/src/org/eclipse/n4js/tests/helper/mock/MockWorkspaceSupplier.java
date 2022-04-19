@@ -167,7 +167,7 @@ public class MockWorkspaceSupplier {
 		ProjectDescription pd = ProjectDescription.builder()
 				.setPackageName(TEST_PROJECT__NAME)
 				.setVersion(versionNumber)
-				.setType(TEST_PROJECT__TYPE)
+				.setProjectType(TEST_PROJECT__TYPE)
 				.setVendorId(TEST_PROJECT__VENDOR_ID)
 				.setVendorName(TEST_PROJECT__VENDOR_NAME)
 				.addSourceContainers(sourceContainers)

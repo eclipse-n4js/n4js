@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.xtext.util.IAcceptor;
 
@@ -27,12 +28,16 @@ import org.eclipse.xtext.util.IAcceptor;
  * It allows skipping parts of the project, e.g. skipping traversal of node modules.
  */
 public interface FileVisitingAcceptor extends FileVisitor<Path>, IAcceptor<URI> {
+
 	@Override
 	void accept(URI uri);
 
 	@Override
 	public default FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
 			throws IOException {
+		if (dir.endsWith(N4JSGlobals.NODE_MODULES)) {
+			return FileVisitResult.SKIP_SUBTREE;
+		}
 		return FileVisitResult.CONTINUE;
 	}
 

@@ -35,6 +35,8 @@ class ProjectDescriptionUtilsTest {
 		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("a/b/c/module.js", #["./dummy2/.."]));
 
 		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("src/a/b/c/module", #["src"])); // assumes .js as implicit file extension
+		
+		assertEquals("a/b/c/module", convertMainPathToModuleSpecifier("src/a/b/c/module.n4js", #["src"])); // other extension
 	}
 
 	@Test
@@ -42,7 +44,6 @@ class ProjectDescriptionUtilsTest {
 		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module.js", #[]));
 		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module.js", #[""]));
 		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module.js", #[null]));
-		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module.n4js", #["src"])); // wrong file extension
 		assertEquals(null, convertMainPathToModuleSpecifier("some/where/else/a/b/c/module.js", #["src"]));
 		assertEquals(null, convertMainPathToModuleSpecifier("src/a/b/c/module.js", #["src1", "src2", "src3"]));
 		assertEquals(null, convertMainPathToModuleSpecifier("a/../../b/c/module.js", #["src"]));

@@ -10,9 +10,17 @@
  */
 package org.eclipse.n4js.workspace;
 
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
@@ -30,7 +38,9 @@ import org.eclipse.n4js.workspace.locations.FileURI;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
+import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriExtensions;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
@@ -38,6 +48,8 @@ import com.google.common.collect.ImmutableList.Builder;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * Extends Xtext's default {@link ProjectConfigSnapshot} by some additional attributes (e.g. project type).
@@ -189,8 +201,8 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	}
 
 	/**
-	 * Returns this project's {@link ProjectDescription#getType() type} or {@link ProjectType#DEFINITION} iff this
-	 * project is an {@code @types}-project.
+	 * Returns this project's {@link ProjectDescription#getProjectType() type} or {@link ProjectType#DEFINITION} iff
+	 * this project is an {@code @types}-project.
 	 */
 	public ProjectType getType() {
 		ProjectType typeRaw = getTypeRaw();
@@ -200,9 +212,9 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 		return typeRaw;
 	}
 
-	/** Returns this project's {@link ProjectDescription#getType() type}. */
+	/** Returns this project's {@link ProjectDescription#getProjectType() type}. */
 	public ProjectType getTypeRaw() {
-		return projectDescription.getType();
+		return projectDescription.getProjectType();
 	}
 
 	/** Returns this project's {@link ProjectDescription#getVersion() version}. */
@@ -270,5 +282,126 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 			}
 		}
 		return result.build();
+	}
+
+	/** Returns all Uris that are contained in a source folder of this project */
+	public Set<URI> getAllContents(IFileSystemScanner scanner) {
+		return Sets.newLinkedHashSet(
+				IterableExtensions.flatMap(getSourceFolders(), (srcFolder) -> srcFolder.getAllResources(scanner)));
+	}
+
+	/**
+	 * Returns {@code true} iff this is a plain js project in scope '@types'.
+	 * <p>
+	 * If {@code true}, the builder will build only the closure of all included files started from those files defined
+	 * in the tsconfig.json properties {@code files}, {@code include} and in the package.json properties {@code main},
+	 * {@code type}. As a consequence, there might be files in the source folders of this project that remain unbuilt.
+	 * <p>
+	 * If {@code false}, the builder will build all files included in the source folders.
+	 */
+	public boolean hasTsConfigBuildSemantic() {
+		ProjectDescription pd = getProjectDescription();
+		if (pd.getProjectType() != ProjectType.PLAINJS) {
+			return false;
+		}
+		if (pd.getN4JSProjectName() != null && pd.getN4JSProjectName().isScopeTypes()) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * If {@link #hasTsConfigBuildSemantic()} is {@code true}, this method returns a set of all {@link URI}s declared in
+	 * the tsconfig.json properties {@code files}, {@code include} and in the package.json properties {@code main},
+	 * {@code type}. Otherwise an empty set is returned.
+	 */
+	@SuppressWarnings("resource") // due to call to FileSystems.getDefault()
+	public Set<URI> computeStartUris(IFileSystemScanner fileSystemScanner) {
+		if (hasTsConfigBuildSemantic()) {
+			Set<URI> startUris = new LinkedHashSet<>();
+
+			FileSystem fs = FileSystems.getDefault();
+			ProjectDescription pd = getProjectDescription();
+
+			List<Path> files = new ArrayList<>();
+			List<String> globsToInclude = new ArrayList<>();
+			List<String> globsToExclude = new ArrayList<>();
+
+			URI main = pd.getMain() == null
+					? null
+					: URI.createFileURI(pd.getMain()).resolve(getPath());
+			URI types = pd.getTypes() == null
+					? null
+					: URI.createFileURI(pd.getTypes()).resolve(getPath());
+
+			if (main != null) {
+				if (URIUtils.toFile(main).isFile()) {
+					startUris.add(main);
+				} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION)).isFile()) {
+					startUris.add(main.appendFileExtension(N4JSGlobals.JS_FILE_EXTENSION));
+				} else if (URIUtils.toFile(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {
+					startUris.add(main.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION));
+				}
+			}
+			if (types != null) {
+				if (URIUtils.toFile(types).isFile()) {
+					startUris.add(types);
+				} else if (URIUtils.toFile(types.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION)).isFile()) {
+					startUris.add(types.appendFileExtension(N4JSGlobals.DTS_FILE_EXTENSION));
+				}
+			}
+
+			files.addAll(Lists.transform(pd.getTsFiles(), Path::of));
+			globsToInclude.addAll(pd.getTsInclude());
+			globsToExclude.addAll(pd.getTsExclude());
+
+			if (files.isEmpty() && globsToInclude.isEmpty()) {
+				return startUris;
+			}
+
+			List<PathMatcher> pmInclude = new ArrayList<>();
+			List<PathMatcher> pmExclude = new ArrayList<>();
+			for (String glob : globsToInclude) {
+				PathMatcher pathMatcher = fs.getPathMatcher("glob:" + glob);
+				pmInclude.add(pathMatcher);
+			}
+			for (String glob : globsToExclude) {
+				PathMatcher pathMatcher = fs.getPathMatcher("glob:" + glob);
+				pmExclude.add(pathMatcher);
+			}
+
+			LOOP_ALL: for (URI someUri : getAllContents(fileSystemScanner)) {
+				Path somePath = Path.of(someUri.deresolve(getPath()).toFileString());
+				for (Path file : files) {
+					if (Objects.equals(file, somePath)) {
+						startUris.add(someUri);
+						continue LOOP_ALL;
+					}
+				}
+
+				boolean isIncluded = false;
+				LOOP_INCLUDED: for (PathMatcher pm : pmInclude) {
+					if (pm.matches(somePath)) {
+						isIncluded = true;
+						break LOOP_INCLUDED;
+					}
+				}
+				if (isIncluded) {
+					LOOP_EXCLUDED: for (PathMatcher pm : pmExclude) {
+						if (pm.matches(somePath)) {
+							isIncluded = false;
+							break LOOP_EXCLUDED;
+						}
+					}
+
+					if (isIncluded) {
+						startUris.add(someUri);
+					}
+				}
+			}
+			return startUris;
+		} else {
+			return Collections.emptySet();
+		}
 	}
 }

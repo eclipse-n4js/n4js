@@ -47,11 +47,17 @@ import com.google.common.base.Throwables;
  */
 public class BuildN4jsLibs implements IWorkflowComponent {
 
+	/** Entry for running as application */
+	static public void main(String[] args) throws IOException {
+		buildN4jsLibs();
+	}
+
 	@Override
 	public void preInvoke() {
 		// ignore
 	}
 
+	/** Entry for running as workflow */
 	@Override
 	public void invoke(IWorkflowContext ctx) {
 		try {

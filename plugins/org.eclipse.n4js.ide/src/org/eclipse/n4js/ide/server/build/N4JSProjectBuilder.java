@@ -13,9 +13,10 @@ package org.eclipse.n4js.ide.server.build;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -41,7 +42,6 @@ import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildResult;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -66,10 +66,10 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 
 	@Override
 	protected XBuildResult doBuild(IBuildRequestFactory buildRequestFactory, Set<URI> dirtyFiles, Set<URI> deletedFiles,
-			List<Delta> externalDeltas, CancelIndicator cancelIndicator) {
+			List<Delta> externalDeltas, ProjectStateUpdater projectStateUpdater, CancelIndicator cancelIndicator) {
 
 		XBuildResult buildResult = super.doBuild(buildRequestFactory, dirtyFiles, deletedFiles, externalDeltas,
-				cancelIndicator);
+				projectStateUpdater, cancelIndicator);
 
 		writeTestCatalog();
 
@@ -139,24 +139,31 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	/** Overridden to exclude all ts files (yet still include d.ts files) */
 	@Override
 	protected Set<URI> scanForSourceFiles() {
-		Set<URI> result = new HashSet<>();
-		for (SourceFolderSnapshot srcFolder : getProjectConfig().getSourceFolders()) {
-			List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
-			for (URI srcFileUri : allSourceFileUris) {
-				if (!srcFileUri.hasTrailingPathSeparator()) {
-					IResourceServiceProvider rsp = resourceServiceProviders.getResourceServiceProvider(srcFileUri);
-					if (rsp != null) {
-						String fileExtension = URIUtils.fileExtension(srcFileUri);
-						if (N4JSGlobals.TS_FILE_EXTENSION.equals(fileExtension)) {
-							// ignore ts files (yet consider d.ts files)
-							continue;
-						}
-						result.add(srcFileUri);
-					}
-				}
+		Set<URI> result = new TreeSet<>(Comparator.comparing(URI::toString)); // stable build order
+		N4JSProjectConfigSnapshot prjConfig = getProjectConfig();
+		if (prjConfig.hasTsConfigBuildSemantic()) {
+			for (URI startUri : prjConfig.computeStartUris(fileSystemScanner)) {
+				addToResults(result, startUri);
+			}
+		} else {
+			for (URI srcFileUri : prjConfig.getAllContents(fileSystemScanner)) {
+				addToResults(result, srcFileUri);
 			}
 		}
 		return result;
+	}
+
+	private void addToResults(Set<URI> result, URI srcFileUri) {
+		if (!srcFileUri.hasTrailingPathSeparator()) {
+			IResourceServiceProvider rsp = resourceServiceProviders.getResourceServiceProvider(srcFileUri);
+			if (rsp != null) {
+				String fileExtension = URIUtils.fileExtension(srcFileUri);
+				if (N4JSGlobals.TS_FILE_EXTENSION.equals(fileExtension)) {
+					return;
+				}
+				result.add(srcFileUri);
+			}
+		}
 	}
 
 	@Override

@@ -185,6 +185,19 @@ public class Project {
 	}
 
 	/**
+	 * Creates a folder with the given name to this project.
+	 * 
+	 * @param name the name of the source folder to add
+	 * 
+	 * @return the added source folder
+	 */
+	public def Folder createFolder(String name) {
+		val Folder result = new Folder(name, false);
+		addSourceFolder(result);
+		return result;
+	}
+
+	/**
 	 * Creates a source folder with the given name to this project.
 	 * 
 	 * @param name the name of the source folder to add
@@ -192,7 +205,7 @@ public class Project {
 	 * @return the added source folder
 	 */
 	public def Folder createSourceFolder(String name) {
-		val Folder result = new Folder(name);
+		val Folder result = new Folder(name, true);
 		addSourceFolder(result);
 		return result;
 	}
@@ -293,7 +306,7 @@ public class Project {
 				"dependencies": {
 						«IF !projectDependencies.nullOrEmpty»
 							«FOR dep : projectDependencies SEPARATOR ','»
-								"«dep»": "*"
+								"«dep»": ""
 							«ENDFOR»
 						«ENDIF»
 				}

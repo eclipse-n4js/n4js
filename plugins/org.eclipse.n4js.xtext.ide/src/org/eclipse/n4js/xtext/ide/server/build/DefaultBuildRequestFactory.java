@@ -10,133 +10,68 @@
  */
 package org.eclipse.n4js.xtext.ide.server.build;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildFileListener;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildRequestListener;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterDeleteListener;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterGenerateListener;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
-import org.eclipse.xtext.resource.IResourceDescription.Delta;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- *
+ * Default implementation for {@link IBuildRequestFactory}
  */
-// TODO this should not be a stateful singleton
 @Singleton
 public class DefaultBuildRequestFactory implements IBuildRequestFactory {
-	@Inject(optional = true)
-	private AfterValidateListener afterValidateListener;
-	@Inject(optional = true)
-	private AfterGenerateListener afterGenerateListener;
-	@Inject(optional = true)
-	private AfterDeleteListener afterDeleteListener;
-	@Inject(optional = true)
-	private AfterBuildFileListener afterBuildFileListener;
-	@Inject(optional = true)
-	private AfterBuildRequestListener afterBuildRequestListener;
 
-	/** Create the build request. */
-	protected XBuildRequest getBuildRequest(String projectID) {
-		XBuildRequest result = new XBuildRequest(projectID);
-		if (afterDeleteListener != null) {
-			result.addAfterDeleteListener(afterDeleteListener);
-		}
-		if (afterValidateListener != null) {
-			result.addAfterValidateListener(afterValidateListener);
-		}
-		if (afterGenerateListener != null) {
-			result.addAfterGenerateListener(afterGenerateListener);
-		}
-		if (afterBuildFileListener != null) {
-			result.addAfterBuildFileListener(afterBuildFileListener);
-		}
-		if (afterBuildRequestListener != null) {
-			result.addAfterBuildRequestListener(afterBuildRequestListener);
-		}
-		return result;
+	@Override
+	public XBuildRequest createEmptyBuildRequest(WorkspaceConfigSnapshot workspaceConfig,
+			ProjectConfigSnapshot projectConfig) {
+
+		return createBuildRequest(workspaceConfig, projectConfig,
+				Collections.emptySet(), Collections.emptySet(), Collections.emptyList(),
+				null, null, null, true, false);
 	}
 
 	@Override
-	public XBuildRequest getBuildRequest(WorkspaceConfigSnapshot workspaceConfig, ProjectConfigSnapshot projectConfig,
-			Set<URI> changedFiles, Set<URI> deletedFiles, List<Delta> externalDeltas) {
+	public XBuildRequest createBuildRequest(
+			WorkspaceConfigSnapshot workspaceConfig,
+			ProjectConfigSnapshot projectConfig,
+			Collection<URI> dirtyFiles,
+			Collection<URI> deletedFiles,
+			Collection<IResourceDescription.Delta> externalDeltas,
+			ResourceDescriptionsData index,
+			WorkspaceAwareResourceSet resourceSet,
+			XSource2GeneratedMapping fileMappings,
+			boolean doValidate,
+			boolean writeStorageResources) {
 
 		String projectID = projectConfig.getName();
-		XBuildRequest result = getBuildRequest(projectID);
-
-		result.setIndexOnly(projectConfig.indexOnly());
-		result.setGeneratorEnabled(projectConfig.isGeneratorEnabled());
-
 		if (workspaceConfig.isInDependencyCycle(projectID)) {
-			changedFiles = new HashSet<>(changedFiles);
-			changedFiles.retainAll(projectConfig.getProjectDescriptionUris());
+			// remove all resources (except for the project description) from the build
+			// since cycles are not supported
+			dirtyFiles = new HashSet<>(dirtyFiles);
+			dirtyFiles.retainAll(projectConfig.getProjectDescriptionUris());
 			deletedFiles = new HashSet<>(deletedFiles);
 			deletedFiles.retainAll(projectConfig.getProjectDescriptionUris());
 		}
-		result.setDirtyFiles(changedFiles);
-		result.setDeletedFiles(deletedFiles);
 
-		result.setExternalDeltas(externalDeltas);
+		XBuildRequest request = new XBuildRequest(projectID, projectConfig.getPath(),
+				dirtyFiles, deletedFiles, externalDeltas,
+				index, resourceSet, fileMappings,
+				projectConfig.isGeneratorEnabled(), doValidate, projectConfig.indexOnly(), writeStorageResources);
 
-		return result;
+		onPostCreate(request);
+		return request;
 	}
 
-	/** @return {@link AfterValidateListener} */
-	public AfterValidateListener getAfterValidateListener() {
-		return afterValidateListener;
-	}
-
-	/** Set {@link #afterValidateListener} */
-	public void setAfterValidateListener(AfterValidateListener afterValidateListener) {
-		this.afterValidateListener = afterValidateListener;
-	}
-
-	/** @return {@link AfterGenerateListener} */
-	public AfterGenerateListener getAfterGenerateListener() {
-		return afterGenerateListener;
-	}
-
-	/** Set {@link #afterGenerateListener} */
-	public void setAfterGenerateListener(AfterGenerateListener afterGenerateListener) {
-		this.afterGenerateListener = afterGenerateListener;
-	}
-
-	/** @return {@link AfterDeleteListener} */
-	public AfterDeleteListener getAfterDeleteListener() {
-		return afterDeleteListener;
-	}
-
-	/** Set {@link #afterDeleteListener} */
-	public void setAfterDeleteListener(AfterDeleteListener afterDeleteListener) {
-		this.afterDeleteListener = afterDeleteListener;
-	}
-
-	/** @return {@link AfterBuildFileListener} */
-	public AfterBuildFileListener getAfterBuildFileListener() {
-		return afterBuildFileListener;
-	}
-
-	/** Set {@link #afterBuildFileListener} */
-	public void setAfterBuildFileListener(AfterBuildFileListener afterBuildFileListener) {
-		this.afterBuildFileListener = afterBuildFileListener;
-	}
-
-	/** @return {@link AfterBuildRequestListener} */
-	public AfterBuildRequestListener getAfterBuildListener() {
-		return afterBuildRequestListener;
-	}
-
-	/** Set {@link #afterBuildRequestListener} */
-	public void setAfterBuildListener(AfterBuildRequestListener afterBuildRequestListener) {
-		this.afterBuildRequestListener = afterBuildRequestListener;
+	@Override
+	public void onPostCreate(XBuildRequest request) {
+		// overwrite me
 	}
 
 }

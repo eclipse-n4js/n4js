@@ -48,12 +48,12 @@ public class DtsUtils {
 	}
 
 	private static boolean isDefinition(ProjectDescription pd) {
-		ProjectType type = pd.getType();
+		ProjectType type = pd.getProjectType();
 		return type == ProjectType.DEFINITION;
 	}
 
 	private static boolean isRuntime(ProjectDescription pd) {
-		ProjectType type = pd.getType();
+		ProjectType type = pd.getProjectType();
 		return type == ProjectType.RUNTIME_ENVIRONMENT
 				|| type == ProjectType.RUNTIME_LIBRARY;
 	}

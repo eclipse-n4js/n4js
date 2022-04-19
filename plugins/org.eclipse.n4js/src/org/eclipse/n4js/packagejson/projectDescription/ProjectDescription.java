@@ -45,7 +45,9 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final String vendorName;
 	private final VersionNumber version;
 	private final String internalVersionStr; // for hash code computation and equality checks
-	private final ProjectType type;
+	private final ProjectType projectType;
+	private final String main;
+	private final String types;
 	private final String mainModule;
 	private final ProjectReference extendedRuntimeEnvironment;
 	private final ImmutableList<ProjectReference> providedRuntimeLibraries;
@@ -68,11 +70,15 @@ public class ProjectDescription extends ImmutableDataClass {
 	private final ImmutableMap<String, String> generatorRewriteModuleSpecifiers;
 	private final boolean isGeneratorEnabledRewriteCjsImports;
 	private final ImmutableList<String> workspaces;
+	private final ImmutableList<String> tsFiles;
+	private final ImmutableList<String> tsInclude;
+	private final ImmutableList<String> tsExclude;
 
 	/** Better use a {@link ProjectDescriptionBuilder builder}. */
 	public ProjectDescription(FileURI location, FileURI relatedRootlocation,
 			String id, String packageName, String vendorId, String vendorName,
-			VersionNumber version, ProjectType type, String mainModule, ProjectReference extendedRuntimeEnvironment,
+			VersionNumber version, ProjectType projectType, String main, String types, String mainModule,
+			ProjectReference extendedRuntimeEnvironment,
 			Iterable<ProjectReference> providedRuntimeLibraries, Iterable<ProjectReference> requiredRuntimeLibraries,
 			Iterable<ProjectDependency> dependencies, String implementationId,
 			Iterable<ProjectReference> implementedProjects, String outputPath,
@@ -81,7 +87,8 @@ public class ProjectDescription extends ImmutableDataClass {
 			boolean esm, boolean moduleProperty, boolean n4jsNature, boolean yarnWorkspaceRoot,
 			boolean isGeneratorEnabledSourceMaps, boolean isGeneratorEnabledDts,
 			Map<String, String> generatorRewriteModuleSpecifiers, boolean isGeneratorEnabledRewriteCjsImports,
-			Iterable<String> workspaces) {
+			Iterable<String> workspaces, Iterable<String> tsFiles, Iterable<String> tsInclude,
+			Iterable<String> tsExclude) {
 
 		this.location = location;
 		this.relatedRootlocation = relatedRootlocation;
@@ -91,7 +98,9 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.vendorName = vendorName;
 		this.version = version != null ? EcoreUtil.copy(version) : null;
 		this.internalVersionStr = version != null ? SemverSerializer.serialize(version) : null;
-		this.type = type;
+		this.projectType = projectType;
+		this.main = main;
+		this.types = types;
 		this.mainModule = mainModule;
 		this.extendedRuntimeEnvironment = extendedRuntimeEnvironment;
 		this.providedRuntimeLibraries = ImmutableList.copyOf(providedRuntimeLibraries);
@@ -114,6 +123,9 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.generatorRewriteModuleSpecifiers = ImmutableMap.copyOf(generatorRewriteModuleSpecifiers);
 		this.isGeneratorEnabledRewriteCjsImports = isGeneratorEnabledRewriteCjsImports;
 		this.workspaces = ImmutableList.copyOf(workspaces);
+		this.tsFiles = ImmutableList.copyOf(tsFiles);
+		this.tsInclude = ImmutableList.copyOf(tsInclude);
+		this.tsExclude = ImmutableList.copyOf(tsExclude);
 	}
 
 	public ProjectDescription(ProjectDescription template) {
@@ -125,7 +137,9 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.vendorName = template.vendorName;
 		this.version = template.version != null ? EcoreUtil.copy(template.version) : null;
 		this.internalVersionStr = version != null ? SemverSerializer.serialize(version) : null;
-		this.type = template.type;
+		this.projectType = template.projectType;
+		this.main = template.main;
+		this.types = template.types;
 		this.mainModule = template.mainModule;
 		this.extendedRuntimeEnvironment = template.extendedRuntimeEnvironment;
 		this.providedRuntimeLibraries = template.providedRuntimeLibraries;
@@ -148,6 +162,9 @@ public class ProjectDescription extends ImmutableDataClass {
 		this.generatorRewriteModuleSpecifiers = template.generatorRewriteModuleSpecifiers;
 		this.isGeneratorEnabledRewriteCjsImports = template.isGeneratorEnabledRewriteCjsImports;
 		this.workspaces = template.workspaces;
+		this.tsFiles = template.tsFiles;
+		this.tsInclude = template.tsInclude;
+		this.tsExclude = template.tsExclude;
 	}
 
 	/** Builds a new {@link ProjectDescription project description}. */
@@ -164,7 +181,9 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.setVendorId(vendorId);
 		builder.setVendorName(vendorName);
 		builder.setVersion(version != null ? EcoreUtil.copy(version) : null);
-		builder.setType(type);
+		builder.setProjectType(projectType);
+		builder.setMain(main);
+		builder.setTypes(types);
 		builder.setMainModule(mainModule);
 		builder.setExtendedRuntimeEnvironment(extendedRuntimeEnvironment);
 		builder.getProvidedRuntimeLibraries().addAll(providedRuntimeLibraries);
@@ -187,6 +206,9 @@ public class ProjectDescription extends ImmutableDataClass {
 		builder.getGeneratorRewriteModuleSpecifiers().putAll(generatorRewriteModuleSpecifiers);
 		builder.setGeneratorEnabledRewriteCjsImports(isGeneratorEnabledRewriteCjsImports);
 		builder.getWorkspaces().addAll(workspaces);
+		builder.getTsFiles().addAll(tsFiles);
+		builder.getTsInclude().addAll(tsInclude);
+		builder.getTsExclude().addAll(tsExclude);
 		return builder;
 	}
 
@@ -225,8 +247,8 @@ public class ProjectDescription extends ImmutableDataClass {
 		return version;
 	}
 
-	public ProjectType getType() {
-		return type;
+	public ProjectType getProjectType() {
+		return projectType;
 	}
 
 	/**
@@ -242,6 +264,14 @@ public class ProjectDescription extends ImmutableDataClass {
 	 */
 	public String getMainModule() {
 		return mainModule;
+	}
+
+	public String getMain() {
+		return main;
+	}
+
+	public String getTypes() {
+		return types;
 	}
 
 	public ProjectReference getExtendedRuntimeEnvironment() {
@@ -371,6 +401,30 @@ public class ProjectDescription extends ImmutableDataClass {
 		return workspaces;
 	}
 
+	/**
+	 * Value of top-level property "files" in tsconfig.json, used by TypeScript to denote the entry modules of a
+	 * package.
+	 */
+	public List<String> getTsFiles() {
+		return tsFiles;
+	}
+
+	/**
+	 * Value of top-level property "include" in tsconfig.json, used by TypeScript to denote the set of modules of a
+	 * package.
+	 */
+	public List<String> getTsInclude() {
+		return tsInclude;
+	}
+
+	/**
+	 * Value of top-level property "exclude" in tsconfig.json, used by TypeScript to denote excluded modules of a
+	 * package.
+	 */
+	public List<String> getTsExclude() {
+		return tsExclude;
+	}
+
 	@Override
 	protected int computeHashCode() {
 		return Objects.hash(
@@ -382,7 +436,9 @@ public class ProjectDescription extends ImmutableDataClass {
 				vendorName,
 				// projectVersion is covered by internalProjectVersionStr
 				internalVersionStr,
-				type,
+				projectType,
+				main,
+				types,
 				mainModule,
 				extendedRuntimeEnvironment,
 				providedRuntimeLibraries,
@@ -404,7 +460,10 @@ public class ProjectDescription extends ImmutableDataClass {
 				isGeneratorEnabledDts,
 				generatorRewriteModuleSpecifiers,
 				isGeneratorEnabledRewriteCjsImports,
-				workspaces);
+				workspaces,
+				tsFiles,
+				tsInclude,
+				tsExclude);
 	}
 
 	@Override
@@ -418,7 +477,9 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& Objects.equals(vendorName, other.vendorName)
 				// version is covered by internalVersionStr
 				&& Objects.equals(internalVersionStr, other.internalVersionStr)
-				&& type == other.type
+				&& projectType == other.projectType
+				&& Objects.equals(main, other.main)
+				&& Objects.equals(types, other.types)
 				&& Objects.equals(mainModule, other.mainModule)
 				&& Objects.equals(extendedRuntimeEnvironment, other.extendedRuntimeEnvironment)
 				&& Objects.equals(providedRuntimeLibraries, other.providedRuntimeLibraries)
@@ -440,7 +501,10 @@ public class ProjectDescription extends ImmutableDataClass {
 				&& isGeneratorEnabledDts == other.isGeneratorEnabledDts
 				&& Objects.equals(generatorRewriteModuleSpecifiers, other.generatorRewriteModuleSpecifiers)
 				&& isGeneratorEnabledRewriteCjsImports == other.isGeneratorEnabledRewriteCjsImports
-				&& Objects.equals(workspaces, other.workspaces);
+				&& Objects.equals(workspaces, other.workspaces)
+				&& Objects.equals(tsFiles, other.tsFiles)
+				&& Objects.equals(tsInclude, other.tsInclude)
+				&& Objects.equals(tsExclude, other.tsExclude);
 	}
 
 	@Override
@@ -484,8 +548,10 @@ public class ProjectDescription extends ImmutableDataClass {
 
 	/** Factored out from {@link #toString()} only to allow reuse in {@link N4JSProjectConfigSnapshot}. */
 	public void toStringAdditionalProperties(StringBuilder sb) {
-		sb.append("    type: " + type + "\n");
+		sb.append("    type: " + projectType + "\n");
 		sb.append("    version: " + internalVersionStr + "\n");
+		sb.append("    main: " + main + "\n");
+		sb.append("    types: " + types + "\n");
 		sb.append("    mainModule: " + mainModule + "\n");
 		if (!testedProjects.isEmpty()) {
 			String namesStr = Joiner.on(", ").join(
@@ -500,6 +566,15 @@ public class ProjectDescription extends ImmutableDataClass {
 		}
 		if (!workspaces.isEmpty()) {
 			sb.append("    workspaces: [ " + Joiner.on(", ").join(workspaces) + " ]\n");
+		}
+		if (!tsFiles.isEmpty()) {
+			sb.append("    tsconfig-files: [ " + Joiner.on(", ").join(tsFiles) + " ]\n");
+		}
+		if (!workspaces.isEmpty()) {
+			sb.append("    tsconfig-include: [ " + Joiner.on(", ").join(tsInclude) + " ]\n");
+		}
+		if (!workspaces.isEmpty()) {
+			sb.append("    tsconfig-exclude: [ " + Joiner.on(", ").join(tsExclude) + " ]\n");
 		}
 	}
 }

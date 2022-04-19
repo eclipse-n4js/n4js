@@ -11,6 +11,8 @@
 package org.eclipse.n4js.ide;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.n4js.N4JSRuntimeModule;
@@ -21,7 +23,6 @@ import org.eclipse.n4js.semver.ide.SemverIdeSetup;
 import org.eclipse.xtext.ide.server.ServerModule;
 import org.eclipse.xtext.util.Modules2;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ObjectArrays;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -38,10 +39,9 @@ public class N4JSIdeSetup extends N4JSStandaloneSetup {
 				new ServerModule(), new N4JSRuntimeModule(), new N4JSIdeModule()
 		};
 
-		Optional<Class<? extends Module>> overridingModuleCls = getOverridingModule();
-		if (overridingModuleCls.isPresent()) {
+		for (Class<? extends Module> overridingModuleCls : getOverridingModules()) {
 			try {
-				Module overridingModule = overridingModuleCls.get().getDeclaredConstructor().newInstance();
+				Module overridingModule = overridingModuleCls.getDeclaredConstructor().newInstance();
 				modules = ObjectArrays.concat(modules, overridingModule);
 			} catch (NoSuchMethodException | IllegalAccessException | InstantiationException
 					| InvocationTargetException e) {
@@ -54,8 +54,8 @@ public class N4JSIdeSetup extends N4JSStandaloneSetup {
 	}
 
 	/** If present, the returned module will override default bindings in the injector. */
-	protected Optional<Class<? extends Module>> getOverridingModule() {
-		return Optional.absent();
+	protected List<Class<? extends Module>> getOverridingModules() {
+		return Collections.emptyList();
 	}
 
 	@Override

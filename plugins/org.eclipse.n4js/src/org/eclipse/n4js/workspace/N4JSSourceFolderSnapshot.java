@@ -10,17 +10,13 @@
  */
 package org.eclipse.n4js.workspace;
 
-import java.util.Iterator;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.locations.SafeURI;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.xtext.util.UriExtensions;
-
-import com.google.common.collect.Iterators;
 
 /**
  * N4JS-specific adjustments to {@link SourceFolderSnapshot}.
@@ -94,20 +90,4 @@ public class N4JSSourceFolderSnapshot extends SourceFolderSnapshot {
 		return type == SourceContainerType.TEST;
 	}
 
-	/**
-	 * Convenience method. Returns an iterable of all files in this source folder.
-	 * <p>
-	 * IMPORTANT: will access the disk and returns the <em>current</em> state on disk; repeated invocations of the
-	 * returned iterable's {@link Iterable#iterator() #iterator()} method may yield different results!
-	 *
-	 * @see SafeURI#getAllChildren()
-	 */
-	public Iterable<URI> getContents() {
-		return new Iterable<>() {
-			@Override
-			public Iterator<URI> iterator() {
-				return Iterators.transform(getPathAsFileURI().getAllChildren(), pl -> pl.toURI());
-			}
-		};
-	}
 }

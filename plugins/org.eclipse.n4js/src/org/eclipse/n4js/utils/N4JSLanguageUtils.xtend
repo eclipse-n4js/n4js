@@ -247,7 +247,7 @@ public class N4JSLanguageUtils {
 
 	/** Tells whether .d.ts file generation is <em>actually</em> active in a given project. */
 	def public static boolean isDtsGenerationActive(ProjectDescription pd) {
-		return pd !== null && pd.isGeneratorEnabledDts() && !N4JSGlobals.PROJECT_TYPES_WITHOUT_DTS_GENERATION.contains(pd.type);
+		return pd !== null && pd.isGeneratorEnabledDts() && !N4JSGlobals.PROJECT_TYPES_WITHOUT_DTS_GENERATION.contains(pd.getProjectType);
 	}
 
 	/** Tells whether the given module is the {@link ProjectDescription#getMainModule() main module} of the given project. */

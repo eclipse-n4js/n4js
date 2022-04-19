@@ -51,7 +51,10 @@ public enum PackageJsonProperties {
 	/** Key of package.json property "devDependences". */
 	DEV_DEPENDENCIES(UtilN4.PACKAGE_JSON__DEV_DEPENDENCIES, "Development dependencies of this npm", JSONObject.class),
 	/** Key of node's standard, top-level package.json property "main". Do not confuse with {@link #MAIN_MODULE}. */
-	MAIN("main", "Main module. Path is relative to package root"),
+	// default see https://docs.npmjs.com/cli/v8/configuring-npm/package-json#main
+	MAIN("main", "Main module. Path is relative to package root", "index.js"),
+	/** Key of TypeScript standard, top-level package.json property "types". */
+	TYPES("types", "Type module. (TypesScript) Path is relative to package root"),
 	/** Key of top-level package.json property "module", used by webpack and other tools. */
 	MODULE("module", "Like \"main\", but provides a different file with esm code"),
 

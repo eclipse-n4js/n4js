@@ -10,9 +10,12 @@
  */
 package org.eclipse.n4js.xtext.workspace;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.util.UriUtil;
 import org.eclipse.xtext.workspace.ISourceFolder;
 
@@ -43,6 +46,18 @@ public class SourceFolderSnapshot extends Snapshot {
 	 */
 	public URI getPath() {
 		return path;
+	}
+
+	/**
+	 * Return all resources in this source folder found by the given scanner.
+	 * <p>
+	 * IMPORTANT: will access the disk and returns the <em>current</em> state on disk; repeated invocations of the
+	 * returned iterable's {@link Iterable#iterator() #iterator()} method may yield different results!
+	 */
+	public List<URI> getAllResources(IFileSystemScanner scanner) {
+		List<URI> allSourceFileUris = new ArrayList<>();
+		scanner.scan(getPath(), allSourceFileUris::add);
+		return allSourceFileUris;
 	}
 
 	/**

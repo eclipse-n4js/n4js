@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.workspace;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +18,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerDescription;
 import org.eclipse.n4js.packagejson.projectDescription.SourceContainerType;
 import org.eclipse.n4js.workspace.locations.FileURI;
-import org.eclipse.n4js.workspace.utils.N4JSSourceFolderScanner;
 import org.eclipse.xtext.util.IFileSystemScanner;
 
 /**
@@ -72,7 +72,9 @@ public class N4JSSourceFolder implements IN4JSSourceFolder {
 
 	@Override
 	public List<URI> getAllResources(IFileSystemScanner scanner) {
-		return N4JSSourceFolderScanner.findAllSourceFilesInFolder(getPath(), scanner);
+		List<URI> sources = new ArrayList<>();
+		scanner.scan(getPath(), sources::add);
+		return sources;
 	}
 
 }

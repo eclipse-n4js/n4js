@@ -35,7 +35,6 @@ import org.eclipse.n4js.ide.server.N4JSWorkspaceFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.build.N4JSBuildOrderInfoComputer;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
-import org.eclipse.n4js.ide.server.build.N4JSClusteringStorageAwareResourceLoader;
 import org.eclipse.n4js.ide.server.build.N4JSConfigSnapshotFactory;
 import org.eclipse.n4js.ide.server.build.N4JSProjectBuilder;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
@@ -51,7 +50,6 @@ import org.eclipse.n4js.ide.server.util.ConfiguredWorkspaceAwareResourceSetProvi
 import org.eclipse.n4js.ide.server.util.N4JSServerIncidentLogger;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.workspace.utils.FileSystemScanner;
-import org.eclipse.n4js.workspace.utils.N4JSSourceFolderScanner;
 import org.eclipse.n4js.xtext.ide.editor.contentassist.XIdeContentProposalAcceptor;
 import org.eclipse.n4js.xtext.ide.server.DebugService;
 import org.eclipse.n4js.xtext.ide.server.LanguageServerFrontend;
@@ -69,19 +67,15 @@ import org.eclipse.n4js.xtext.ide.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.ProjectStatePersister;
 import org.eclipse.n4js.xtext.ide.server.build.WorkspaceAwareResourceSet;
-import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
-import org.eclipse.n4js.xtext.ide.server.build.XClusteringStorageAwareResourceLoader;
 import org.eclipse.n4js.xtext.ide.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 import org.eclipse.n4js.xtext.ide.server.contentassist.XContentAssistService;
-import org.eclipse.n4js.xtext.ide.server.issues.WorkspaceValidateListener;
 import org.eclipse.n4js.xtext.ide.server.util.IHeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.xtext.ide.server.util.XOperationCanceledManager;
 import org.eclipse.n4js.xtext.server.EmfDiagnosticToLSPIssueConverter;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.ConfigSnapshotFactory;
-import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.FQNPrefixMatcher;
@@ -202,10 +196,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 		return N4JSStatefulIncrementalBuilder.class;
 	}
 
-	public Class<? extends XClusteringStorageAwareResourceLoader> bindClusteringStorageAwareResourceLoader() {
-		return N4JSClusteringStorageAwareResourceLoader.class;
-	}
-
 	public Class<? extends BuildOrderFactory.BuildOrderInfoComputer> bindBuildOrderInfoComputer() {
 		return N4JSBuildOrderInfoComputer.class;
 	}
@@ -216,10 +206,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends ConfigSnapshotFactory> bindConfigSnapshotFactory() {
 		return N4JSConfigSnapshotFactory.class;
-	}
-
-	public Class<? extends SourceFolderScanner> bindSourceFolderScanner() {
-		return N4JSSourceFolderScanner.class;
 	}
 
 	public Class<? extends IDiagnosticConverter> bindIDiagnosticConverter() {
@@ -306,10 +292,6 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends OperationCanceledManager> bindOperationCanceledManager() {
 		return XOperationCanceledManager.class;
-	}
-
-	public Class<? extends AfterValidateListener> bindAfterValidateListener() {
-		return WorkspaceValidateListener.class;
 	}
 
 	public Class<? extends IHeadlessExtensionRegistrationHelper> bindIHeadlessExtensionRegistrationHelper() {
