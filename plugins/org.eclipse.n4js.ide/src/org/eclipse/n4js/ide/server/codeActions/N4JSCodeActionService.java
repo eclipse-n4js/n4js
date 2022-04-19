@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.lsp4j.CodeAction;
@@ -31,7 +32,6 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
-import org.eclipse.n4js.workspace.N4JSSourceFolderSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager;
 import org.eclipse.n4js.xtext.ide.server.TextDocumentFrontend;
@@ -44,12 +44,11 @@ import org.eclipse.xtext.ide.server.codeActions.ICodeActionService2;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.IFileSystemScanner;
 import org.eclipse.xtext.validation.Issue;
-import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -202,6 +201,9 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 	private UriExtensions uriExtensions;
 
 	@Inject
+	private IFileSystemScanner scanner;
+
+	@Inject
 	private OperationCanceledManager cancelManager;
 
 	private final Multimap<String, QuickFixImplementation> quickfixMap = HashMultimap.create();
@@ -326,8 +328,7 @@ public class N4JSCodeActionService implements ICodeActionService2 {
 		if (project == null) {
 			return result;
 		}
-		List<URI> urisInProject = Lists.newArrayList(
-				IterableExtensions.flatMap(project.getSourceFolders(), N4JSSourceFolderSnapshot::getContents));
+		Set<URI> urisInProject = project.getAllContents(scanner);
 
 		Map<String, List<TextEdit>> allEdits = new HashMap<>();
 		for (URI currURI : urisInProject) {

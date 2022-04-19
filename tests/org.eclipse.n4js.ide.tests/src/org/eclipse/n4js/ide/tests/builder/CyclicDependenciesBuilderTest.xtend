@@ -98,14 +98,14 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		
 		assertNoIssues();
 
-		changeOpenedFile("P1/package.json", "\"n4js-runtime\": \"*\"" -> "\"n4js-runtime\": \"*\", \"P2\": \"*\"");
+		changeOpenedFile("P1/package.json", "\"n4js-runtime\": \"\"" -> "\"n4js-runtime\": \"\", \"P2\": \"\"");
 
 		assertNoIssues();
 		
 		saveOpenedFile("P1/package.json");
 		
 		assertIssues(
-			"P1/package.json" -> #["(Error, [16:24 - 16:28], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
+			"P1/package.json" -> #["(Error, [16:23 - 16:27], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"],
 			"P2/package.json" -> #["(Error, [16:3 - 16:7], Dependency cycle of the projects: yarn-test-project/packages/P1, yarn-test-project/packages/P2.)"]
 		);
 	}
@@ -123,7 +123,7 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		
 		openFile("P1/package.json");
 		
-		changeOpenedFile("P1/package.json", "\"P2\": \"*\"," -> "");
+		changeOpenedFile("P1/package.json", "\"P2\": \"\"," -> "");
 		
 		saveOpenedFile("P1/package.json");
 		
@@ -206,7 +206,7 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		
 		// remove cycle
 		openFile("P1/package.json");
-		changeOpenedFile("P1/package.json", "\"P2\": \"*\"," -> "");
+		changeOpenedFile("P1/package.json", "\"P2\": \"\"," -> "");
 		saveOpenedFile("P1/package.json");
 
 		
@@ -247,7 +247,7 @@ class CyclicDependenciesBuilderTest extends AbstractIncrementalBuilderTest {
 		
 		// remove cycle
 		openFile("P1/package.json");
-		changeOpenedFile("P1/package.json", "\"P2\": \"*\"," -> "");
+		changeOpenedFile("P1/package.json", "\"P2\": \"\"," -> "");
 		saveOpenedFile("P1/package.json");
 
 		

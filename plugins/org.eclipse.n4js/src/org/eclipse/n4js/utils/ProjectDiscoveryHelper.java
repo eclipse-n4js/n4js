@@ -344,7 +344,7 @@ public class ProjectDiscoveryHelper {
 			if (pd == null) {
 				continue;
 			}
-			ProjectType type = pd.getType();
+			ProjectType type = pd.getProjectType();
 			if (type == ProjectType.PLAINJS) {
 				// note: in case a name occurs twice yarn would throw an error
 				plainjsProjects.put(pd.getPackageName(), project);
@@ -364,7 +364,7 @@ public class ProjectDiscoveryHelper {
 			Set<Path> allProjectDirs) {
 
 		ProjectDescription pd = getOrCreateProjectDescription(project, relatedRoot, pdCache);
-		if (pd != null && pd.getType() != ProjectType.PLAINJS) {
+		if (pd != null && pd.getProjectType() != ProjectType.PLAINJS) {
 			allProjectDirs.add(project);
 		}
 	}

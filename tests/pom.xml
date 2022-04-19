@@ -142,7 +142,6 @@ Contributors:
 				<property><name>!doNotExecuteBasicTests</name></property>
 			</activation>
 			<modules>
-
 				<module>org.eclipse.n4js.lang.tests</module>
 				<module>org.eclipse.n4js.spec.tests</module>
 

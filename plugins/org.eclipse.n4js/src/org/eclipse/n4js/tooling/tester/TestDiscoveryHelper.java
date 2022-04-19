@@ -60,6 +60,7 @@ import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.util.IFileSystemScanner;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.HashMultimap;
@@ -81,6 +82,9 @@ public class TestDiscoveryHelper {
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
+
+	@Inject
+	private IFileSystemScanner scanner;
 
 	private static final EClass T_CLASS = TypesPackage.eINSTANCE.getTClass();
 
@@ -245,7 +249,7 @@ public class TestDiscoveryHelper {
 			return p.getSourceFolders()
 					.stream()
 					.filter(N4JSSourceFolderSnapshot::isTest)
-					.map(N4JSSourceFolderSnapshot::getContents)
+					.map(srcFolder -> srcFolder.getAllResources(scanner))
 					.flatMap(TestDiscoveryHelper::stream)
 					.filter(uri -> isTestFile(uri) && isTestModule(resSet, index.getResourceDescription(uri)));
 		}
@@ -272,7 +276,7 @@ public class TestDiscoveryHelper {
 			if (srcContainer.isTest()) {
 				// yes --> collect all test modules (files containing test classes) in this source container
 				final String locationStr = location.toString();
-				return stream(srcContainer.getContents())
+				return stream(srcContainer.getAllResources(scanner))
 						.filter(uri -> uri.toString().startsWith(locationStr)
 								&& isTestModule(resSet, index.getResourceDescription(uri)));
 			}

@@ -73,7 +73,7 @@ class RebuildFindsNewNpmPackageTest extends AbstractIdeTest {
 				"(Error, [0:20 - 0:31], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
 			],
 			packageJsonFileURI, #[
-				"(Error, [16:3 - 16:13], Project does not exist with project ID: lib.)"
+				"(Error, [16:3 - 16:12], Project does not exist with project ID: lib.)"
 			]
 		);
 		assertIssues(errorsWhenNpmPackageMissing);

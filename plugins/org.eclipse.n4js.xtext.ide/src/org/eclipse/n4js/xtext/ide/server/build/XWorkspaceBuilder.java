@@ -29,7 +29,6 @@ import org.eclipse.n4js.xtext.ide.server.util.LspLogger;
 import org.eclipse.n4js.xtext.workspace.BuildOrderFactory;
 import org.eclipse.n4js.xtext.workspace.BuildOrderIterator;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
 import org.eclipse.n4js.xtext.workspace.WorkspaceChanges;
 import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
@@ -61,25 +60,16 @@ import com.google.inject.Inject;
 @SuppressWarnings({ "hiding" })
 public class XWorkspaceBuilder {
 
-	private static class AffectedResourcesRecordingFactory implements IBuildRequestFactory {
-		private final IBuildRequestFactory delegate;
+	private static class AffectedResourcesRecordingFactory extends DefaultBuildRequestFactory {
 		private final Set<URI> affected;
 
-		private AffectedResourcesRecordingFactory(IBuildRequestFactory delegate) {
-			this.delegate = delegate;
+		private AffectedResourcesRecordingFactory() {
 			this.affected = new HashSet<>();
 		}
 
 		@Override
-		public XBuildRequest getBuildRequest(WorkspaceConfigSnapshot workspaceConfig,
-				ProjectConfigSnapshot projectConfig, Set<URI> changedFiles, Set<URI> deletedFiles,
-				List<Delta> externalDeltas) {
-
-			XBuildRequest result = delegate.getBuildRequest(workspaceConfig, projectConfig, changedFiles, deletedFiles,
-					externalDeltas);
-
+		public void onPostCreate(XBuildRequest result) {
 			result.addAffectedListener(affected::add);
-			return result;
 		}
 
 		/**
@@ -97,9 +87,6 @@ public class XWorkspaceBuilder {
 
 	@Inject
 	private LspLogger lspLogger;
-
-	@Inject
-	private SourceFolderScanner sourceFolderScanner;
 
 	@Inject
 	private IFileSystemScanner scanner;
@@ -253,9 +240,8 @@ public class XWorkspaceBuilder {
 		return cancelIndicator -> {
 			for (ProjectBuilder projectBuilder : workspaceManager.getProjectBuilders()) {
 
-				XBuildRequest buildRequest = buildRequestFactory.getBuildRequest(workspaceManager.getWorkspaceConfig(),
-						projectBuilder.getProjectConfig(), Collections.emptySet(), Collections.emptySet(),
-						Collections.emptyList());
+				XBuildRequest buildRequest = buildRequestFactory.createEmptyBuildRequest(
+						workspaceManager.getWorkspaceConfig(), projectBuilder.getProjectConfig());
 
 				projectBuilder.doClean(buildRequest, CancelIndicator.NullImpl);
 			}
@@ -380,7 +366,7 @@ public class XWorkspaceBuilder {
 	private List<URI> scanAddedSourceFoldersForNewSourceFiles(WorkspaceChanges changes, IFileSystemScanner scanner) {
 		List<URI> added = new ArrayList<>();
 		for (SourceFolderSnapshot sourceFolder : changes.getAllAddedSourceFolders()) {
-			List<URI> sourceFilesOnDisk = sourceFolderScanner.findAllSourceFiles(sourceFolder, scanner);
+			List<URI> sourceFilesOnDisk = sourceFolder.getAllResources(scanner);
 			added.addAll(sourceFilesOnDisk);
 		}
 		return added;
@@ -445,8 +431,7 @@ public class XWorkspaceBuilder {
 				Set<URI> projectDeleted = project2deleted.getOrDefault(projectName, Collections.emptySet());
 
 				XBuildResult projectResult;
-				AffectedResourcesRecordingFactory recordingFactory = new AffectedResourcesRecordingFactory(
-						buildRequestFactory);
+				AffectedResourcesRecordingFactory recordingFactory = new AffectedResourcesRecordingFactory();
 				try {
 					projectResult = projectBuilder.doIncrementalBuild(
 							recordingFactory,

@@ -102,7 +102,7 @@ public class DefinitionProjectMap {
 	/** Add a project. */
 	public void addProject(ProjectDescription pd) {
 		N4JSPackageName name = pd.getN4JSProjectName();
-		ProjectType type = pd.getType();
+		ProjectType type = pd.getProjectType();
 		if (name == null || type == null) {
 			return; // ignore invalid project descriptions
 		}

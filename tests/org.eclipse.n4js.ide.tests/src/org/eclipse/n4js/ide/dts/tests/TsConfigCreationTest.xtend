@@ -17,7 +17,7 @@ import org.eclipse.n4js.N4JSGlobals
 
 /**
  */
-class N4jscDtsTest extends AbstractIdeTest {
+class TsConfigCreationTest extends AbstractIdeTest {
 
 	private static val testData = #[
 			"SomeModule" -> '''

@@ -68,7 +68,9 @@ public class PackageJsonHelper {
 	@Inject
 	private SemverHelper semverHelper;
 
-	private VersionNumber cachedDefaultVersionNumber = null;
+	private VersionNumber cachedN4JSDefaultVersionNumber = null;
+
+	private VersionNumber cachedJSDefaultVersionNumber = null;
 
 	/**
 	 * Transform the given {@code packageJSON} into an equivalent {@link ProjectDescriptionBuilder} instance. If no
@@ -133,8 +135,12 @@ public class PackageJsonHelper {
 				convertDependencies(target, asNameValuePairsOrEmpty(value), true, DependencyType.DEVELOPMENT);
 				break;
 			case MAIN:
-				// need to handle this value later after all source containers have been read
+				target.setMain(asNonEmptyStringOrNull(value));
+				// also handle this value later after all source containers have been read
 				// (see method #adjustProjectDescriptionAfterConversion())
+				break;
+			case TYPES:
+				target.setTypes(asNonEmptyStringOrNull(value));
 				break;
 			case MODULE:
 				// we don't care about the actual value, just about the fact that property "module" is present
@@ -179,7 +185,7 @@ public class PackageJsonHelper {
 			case PROJECT_TYPE:
 				ProjectType projectType = parseProjectType(asNonEmptyStringOrNull(value));
 				if (projectType != null) {
-					target.setType(projectType);
+					target.setProjectType(projectType);
 				}
 				break;
 			case VENDOR_ID:
@@ -282,15 +288,23 @@ public class PackageJsonHelper {
 		}
 	}
 
-	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target, boolean applyDefaultValues,
+	private void adjustProjectDescriptionAfterConversion(ProjectDescriptionBuilder target,
+			boolean applyDefaultValues,
 			String defaultProjectName, String valueOfTopLevelPropertyMain) {
+
+		if (target.getProjectType() == null || target.getProjectType() == ProjectType.PLAINJS) {
+			if (applyDefaultValues) {
+				applyPlainJSDefaults(target, defaultProjectName);
+			}
+			return;
+		}
 
 		// store whether target has a declared mainModule *before* applying the default values
 		boolean hasN4jsSpecificMainModule = target.getMainModule() != null;
 
 		// apply default values (if desired)
 		if (applyDefaultValues) {
-			applyDefaults(target, defaultProjectName);
+			applyN4JSDefaults(target, defaultProjectName);
 		}
 
 		// sanitize and set value of top-level property "main"
@@ -333,21 +347,58 @@ public class PackageJsonHelper {
 	}
 
 	/**
-	 * Apply default values to the given project description. This should be performed right after loading and
+	 * Apply default values to the given project description of a plain js project. This should be performed right after
+	 * loading and converting the project description from JSON.
+	 */
+	private void applyPlainJSDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
+		applyBaseDefaults(target);
+
+		if (target.getMain() == null) {
+			target.setMain(PackageJsonProperties.MAIN.defaultValue.toString());
+		}
+		if (target.getVersion() == null) {
+			target.setVersion(createJSDefaultVersionNumber());
+		}
+		if (target.getProjectType() == null) {
+			target.setProjectType(ProjectType.PLAINJS);
+		}
+
+		List<String> sourceContainerPaths = target.getSourceContainers().stream()
+				.flatMap(scd -> ProjectDescriptionUtils.getPathsNormalized(scd).stream())
+				.collect(Collectors.toList());
+		String mainModulePath = ProjectDescriptionUtils.convertMainPathToModuleSpecifier(
+				target.getMain(), sourceContainerPaths);
+		if (mainModulePath != null) {
+			target.setMainModule(mainModulePath);
+		}
+
+		if (target.getPackageName() == null) {
+			target.setPackageName(defaultProjectName);
+		}
+		if (target.getOutputPath() == null) {
+			// note that in case the project is a yarn workspace project and there is a 'clean build' running
+			// the entire contents will be deleted.
+			target.setOutputPath(".");
+		}
+
+	}
+
+	/**
+	 * Apply default values to the given n4js project description. This should be performed right after loading and
 	 * converting the project description from JSON.
 	 */
-	private void applyDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
+	private void applyN4JSDefaults(ProjectDescriptionBuilder target, String defaultProjectName) {
 
-		if (!target.hasN4JSNature() || target.getType() == null) {
+		if (!target.hasN4JSNature() || target.getProjectType() == null) {
 			// for non-N4JS projects, and if the project type is unset, enforce the default project type, i.e.
 			// project type 'PLAINJS':
-			target.setType(parseProjectType((String) PROJECT_TYPE.defaultValue));
+			target.setProjectType(parseProjectType((String) PROJECT_TYPE.defaultValue));
 		}
 		if (target.getPackageName() == null) {
 			target.setPackageName(defaultProjectName);
 		}
 		if (target.getVersion() == null) {
-			target.setVersion(createDefaultVersionNumber());
+			target.setVersion(createN4JSDefaultVersionNumber());
 		}
 		if (target.getVendorId() == null) {
 			target.setVendorId((String) VENDOR_ID.defaultValue);
@@ -370,30 +421,33 @@ public class PackageJsonHelper {
 			target.setGeneratorEnabledRewriteCjsImports((Boolean) GENERATOR_REWRITE_CJS_IMPORTS.defaultValue);
 		}
 
+		applyBaseDefaults(target);
+	}
+
+	private void applyBaseDefaults(ProjectDescriptionBuilder target) {
 		// if no source containers are defined (no matter what type),
 		// then add a default source container of type "source" with path "."
 		// EXCEPT target represents a yarn workspace root
 
-		if (target.isYarnWorkspaceRoot()) {
-			return;
-		}
-		List<SourceContainerDescription> sourceContainers = target.getSourceContainers();
-		SourceContainerDescription sourceContainerOfTypeSource = null;
-		for (SourceContainerDescription sourceContainer : sourceContainers) {
-			if (!sourceContainer.getPaths().isEmpty()) {
-				return;
+		if (!target.isYarnWorkspaceRoot()) {
+			List<SourceContainerDescription> sourceContainers = target.getSourceContainers();
+			SourceContainerDescription sourceContainerOfTypeSource = null;
+			for (SourceContainerDescription sourceContainer : sourceContainers) {
+				if (!sourceContainer.getPaths().isEmpty()) {
+					return;
+				}
+				if (sourceContainerOfTypeSource == null
+						&& sourceContainer.getType() == SourceContainerType.SOURCE) {
+					sourceContainerOfTypeSource = sourceContainer;
+				}
 			}
-			if (sourceContainerOfTypeSource == null
-					&& sourceContainer.getType() == SourceContainerType.SOURCE) {
-				sourceContainerOfTypeSource = sourceContainer;
+			if (sourceContainerOfTypeSource != null) {
+				sourceContainers.remove(sourceContainerOfTypeSource);
 			}
+			sourceContainers.add(new SourceContainerDescription(
+					SourceContainerType.SOURCE,
+					Collections.singleton((String) OUTPUT.defaultValue)));
 		}
-		if (sourceContainerOfTypeSource != null) {
-			sourceContainers.remove(sourceContainerOfTypeSource);
-		}
-		sourceContainers.add(new SourceContainerDescription(
-				SourceContainerType.SOURCE,
-				Collections.singleton((String) OUTPUT.defaultValue)));
 	}
 
 	private VersionNumber asVersionNumberOrNull(JSONValue value) {
@@ -401,10 +455,17 @@ public class PackageJsonHelper {
 		return versionStr != null ? semverHelper.parseVersionNumber(versionStr) : null;
 	}
 
-	private VersionNumber createDefaultVersionNumber() {
-		if (cachedDefaultVersionNumber == null) {
-			cachedDefaultVersionNumber = semverHelper.parseVersionNumber((String) VERSION.defaultValue);
+	private VersionNumber createN4JSDefaultVersionNumber() {
+		if (cachedN4JSDefaultVersionNumber == null) {
+			cachedN4JSDefaultVersionNumber = semverHelper.parseVersionNumber((String) VERSION.defaultValue);
 		}
-		return EcoreUtil.copy(cachedDefaultVersionNumber);
+		return EcoreUtil.copy(cachedN4JSDefaultVersionNumber);
+	}
+
+	private VersionNumber createJSDefaultVersionNumber() {
+		if (cachedJSDefaultVersionNumber == null) {
+			cachedJSDefaultVersionNumber = semverHelper.parseVersionNumber("");
+		}
+		return EcoreUtil.copy(cachedJSDefaultVersionNumber);
 	}
 }

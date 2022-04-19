@@ -36,7 +36,9 @@ public class ProjectDescriptionBuilder {
 	private String vendorId;
 	private String vendorName;
 	private VersionNumber version;
-	private ProjectType type;
+	private ProjectType projectType;
+	private String main;
+	private String types;
 	private String mainModule;
 	private ProjectReference extendedRuntimeEnvironment;
 	private final List<ProjectReference> providedRuntimeLibraries = new ArrayList<>();
@@ -60,6 +62,10 @@ public class ProjectDescriptionBuilder {
 	private Boolean isGeneratorEnabledRewriteCjsImports;
 	private final List<String> workspaces = new ArrayList<>();
 
+	private final List<String> tsFiles = new ArrayList<>();
+	private final List<String> tsInclude = new ArrayList<>();
+	private final List<String> tsExclude = new ArrayList<>();
+
 	public ProjectDescriptionBuilder() {
 	}
 
@@ -72,12 +78,13 @@ public class ProjectDescriptionBuilder {
 				: isGeneratorEnabledRewriteCjsImports;
 
 		return new ProjectDescription(location, relatedRootLocation, id,
-				packageName, vendorId, vendorName, version, type, mainModule, extendedRuntimeEnvironment,
+				packageName, vendorId, vendorName, version, projectType, main, types, mainModule,
+				extendedRuntimeEnvironment,
 				providedRuntimeLibraries, requiredRuntimeLibraries, dependencies, implementationId, implementedProjects,
 				outputPath, sourceContainers, moduleFilters, testedProjects, definesPackage,
 				nestedNodeModulesFolder, esm, moduleProperty, n4jsNature, yarnWorkspaceRoot,
 				isGeneratorEnabledSourceMaps, isGeneratorEnabledDts, generatorRewriteModuleSpecifiers,
-				isGeneratorEnabledRewriteCjsImports, workspaces);
+				isGeneratorEnabledRewriteCjsImports, workspaces, tsFiles, tsInclude, tsExclude);
 	}
 
 	public String computeProjectID() {
@@ -174,12 +181,12 @@ public class ProjectDescriptionBuilder {
 		return this;
 	}
 
-	public ProjectType getType() {
-		return type;
+	public ProjectType getProjectType() {
+		return projectType;
 	}
 
-	public ProjectDescriptionBuilder setType(ProjectType type) {
-		this.type = type;
+	public ProjectDescriptionBuilder setProjectType(ProjectType type) {
+		this.projectType = type;
 		return this;
 	}
 
@@ -189,6 +196,24 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder setMainModule(String mainModule) {
 		this.mainModule = mainModule;
+		return this;
+	}
+
+	public String getMain() {
+		return main;
+	}
+
+	public ProjectDescriptionBuilder setMain(String main) {
+		this.main = main;
+		return this;
+	}
+
+	public String getTypes() {
+		return types;
+	}
+
+	public ProjectDescriptionBuilder setTypes(String typesModule) {
+		this.types = typesModule;
 		return this;
 	}
 
@@ -379,6 +404,33 @@ public class ProjectDescriptionBuilder {
 
 	public ProjectDescriptionBuilder addWorkspace(String workspace) {
 		this.workspaces.add(workspace);
+		return this;
+	}
+
+	public List<String> getTsFiles() {
+		return tsFiles;
+	}
+
+	public ProjectDescriptionBuilder addTsFile(String tsFileElem) {
+		this.tsFiles.add(tsFileElem);
+		return this;
+	}
+
+	public List<String> getTsInclude() {
+		return tsInclude;
+	}
+
+	public ProjectDescriptionBuilder addTsInclude(String tsIncludeElem) {
+		this.tsInclude.add(tsIncludeElem);
+		return this;
+	}
+
+	public List<String> getTsExclude() {
+		return tsExclude;
+	}
+
+	public ProjectDescriptionBuilder addTsExclude(String tsExcludeElem) {
+		this.tsExclude.add(tsExcludeElem);
 		return this;
 	}
 }

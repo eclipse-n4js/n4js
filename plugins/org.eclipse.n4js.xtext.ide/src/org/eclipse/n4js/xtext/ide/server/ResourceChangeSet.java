@@ -25,8 +25,8 @@ import com.google.common.collect.Sets;
  */
 public class ResourceChangeSet {
 
-	private final Set<URI> dirty = Sets.newHashSet();
-	private final Set<URI> deleted = Sets.newHashSet();
+	private final Set<URI> dirty = Sets.newLinkedHashSet();
+	private final Set<URI> deleted = Sets.newLinkedHashSet();
 	private final List<IResourceDescription.Delta> additionalExternalDeltas = Lists.newArrayList();
 
 	/**

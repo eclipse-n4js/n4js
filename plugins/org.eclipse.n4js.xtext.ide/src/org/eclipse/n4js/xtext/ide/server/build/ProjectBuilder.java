@@ -10,13 +10,16 @@ package org.eclipse.n4js.xtext.ide.server.build;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.log4j.LogManager;
@@ -30,15 +33,14 @@ import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.xtext.ide.server.ProjectStatePersisterConfig;
 import org.eclipse.n4js.xtext.ide.server.ResourceChangeSet;
+import org.eclipse.n4js.xtext.ide.server.ResourceTaskManager;
 import org.eclipse.n4js.xtext.ide.server.XIProjectDescriptionFactory;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterBuildRequestListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterDeleteListener;
 import org.eclipse.n4js.xtext.ide.server.build.XBuildRequest.AfterValidateListener;
 import org.eclipse.n4js.xtext.ide.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.xtext.workspace.ProjectConfigSnapshot;
-import org.eclipse.n4js.xtext.workspace.SourceFolderScanner;
 import org.eclipse.n4js.xtext.workspace.SourceFolderSnapshot;
-import org.eclipse.n4js.xtext.workspace.WorkspaceConfigSnapshot;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.generator.OutputConfigurationProvider;
@@ -84,9 +86,9 @@ public class ProjectBuilder {
 	@Inject
 	protected Provider<WorkspaceAwareResourceSet> resourceSetProvider;
 
-	/** Scans the file system for source files contained in a {@link SourceFolderSnapshot source folder}. */
-	@Inject
-	protected SourceFolderScanner sourceFolderScanner;
+	// /** Scans the file system for source files contained in a {@link SourceFolderSnapshot source folder}. */
+	// @Inject
+	// protected SourceFolderScanner sourceFolderScanner;
 
 	/** Scans the file system. */
 	@Inject
@@ -131,6 +133,9 @@ public class ProjectBuilder {
 	@Inject
 	private ConcurrentIndex workspaceIndex;
 
+	@Inject
+	private ResourceTaskManager resourceTaskManager;
+
 	private ProjectConfigSnapshot projectConfig;
 
 	private WorkspaceAwareResourceSet resourceSet;
@@ -164,10 +169,11 @@ public class ProjectBuilder {
 		ResourceChangeSet changeSet = readProjectState();
 
 		XBuildResult result = doBuild(
-				createInitialBuildRequestFactory(buildRequestFactory),
+				buildRequestFactory,
 				changeSet.getDirty(),
 				changeSet.getDeleted(),
 				UtilN4.concat(externalDeltas, changeSet.getAdditionalExternalDeltas()),
+				new ProjectStateUpdater(true),
 				CancelIndicator.NullImpl);
 
 		// clear the resource set to release memory
@@ -190,13 +196,29 @@ public class ProjectBuilder {
 		}
 	}
 
-	class ProjectStateUpdater implements AfterValidateListener, AfterDeleteListener, AfterBuildRequestListener {
+	/**
+	 * Create a wrapper around the given build request factory that yields a build request which will update the stored
+	 * project state via {@link ProjectBuilder#updateProjectState}. Iff
+	 * {{@link ProjectStateUpdater#propagateIssuesAfterBuild} is true all previously known issues along with the newly
+	 * computed issues are published at the end.
+	 */
+	protected class ProjectStateUpdater
+			implements AfterValidateListener, AfterDeleteListener, AfterBuildRequestListener {
+
+		final boolean propagateIssuesAfterBuild;
 		final Map<URI, ImmutableList<? extends Issue>> newValidationIssues = new HashMap<>();
 		final List<URI> deleted = new ArrayList<>();
+
+		ProjectStateUpdater(boolean propagateIssuesAfterBuild) {
+			this.propagateIssuesAfterBuild = propagateIssuesAfterBuild;
+		}
 
 		@Override
 		public void afterValidate(URI source, List<? extends Issue> issues) {
 			newValidationIssues.put(source, ImmutableList.copyOf(issues));
+			if (!resourceTaskManager.hasContext(source)) {
+				issuePublisher.accept(source, issues);
+			}
 		}
 
 		@Override
@@ -207,59 +229,25 @@ public class ProjectBuilder {
 		@Override
 		public void afterBuildRequest(XBuildRequest request, XBuildResult buildResult) {
 			updateProjectState(buildResult, newValidationIssues, deleted);
+
+			if (propagateIssuesAfterBuild) {
+				// now submit all validation issues, that have not been submitted yet
+				for (Map.Entry<URI, Collection<Issue>> entry : getValidationIssues().asMap().entrySet()) {
+					URI uri = entry.getKey();
+					Collection<Issue> issues = entry.getValue();
+					if (!newValidationIssues.containsKey(uri)) {
+						request.afterValidate(uri, ImmutableList.copyOf(issues));
+					}
+				}
+			}
 		}
 
+		/** Adds this instance to the listeners of the given {@link XBuildRequest} */
 		public void attachTo(XBuildRequest request) {
 			request.addAfterValidateListener(this);
 			request.addAfterDeleteListener(this);
 			request.addAfterBuildRequestListener(this);
 		}
-	}
-
-	static class ProjectStateUpdatingBuildRequestFactory implements IBuildRequestFactory {
-
-		private final IBuildRequestFactory delegate;
-		private final ProjectStateUpdater updater;
-
-		ProjectStateUpdatingBuildRequestFactory(IBuildRequestFactory delegate, ProjectStateUpdater updater) {
-			this.delegate = delegate;
-			this.updater = updater;
-		}
-
-		@Override
-		public XBuildRequest getBuildRequest(WorkspaceConfigSnapshot workspaceConfig,
-				ProjectConfigSnapshot projectConfig, Set<URI> changedFiles, Set<URI> deletedFiles,
-				List<Delta> externalDeltas) {
-
-			XBuildRequest request = delegate.getBuildRequest(workspaceConfig, projectConfig, changedFiles, deletedFiles,
-					externalDeltas);
-
-			updater.attachTo(request);
-			return request;
-		}
-
-	}
-
-	/**
-	 * Create a wrapper around the given build request factory that yields a build request which will update the stored
-	 * project state via {@link ProjectBuilder#updateProjectState} and publish all previously known issues along with
-	 * the newly computed issues.
-	 */
-	protected IBuildRequestFactory createInitialBuildRequestFactory(IBuildRequestFactory base) {
-		ProjectStateUpdater updater = new ProjectStateUpdater() {
-			@Override
-			public void afterBuildRequest(XBuildRequest req, XBuildResult buildResult) {
-				super.afterBuildRequest(req, buildResult);
-
-				// now submit all validation issues, that have not been submitted yet
-				getValidationIssues().asMap().forEach((uri, issues) -> {
-					if (!newValidationIssues.containsKey(uri)) {
-						req.afterValidate(uri, ImmutableList.copyOf(issues));
-					}
-				});
-			}
-		};
-		return new ProjectStateUpdatingBuildRequestFactory(base, updater);
 	}
 
 	/**
@@ -321,17 +309,13 @@ public class ProjectBuilder {
 			List<IResourceDescription.Delta> externalDeltas,
 			CancelIndicator cancelIndicator) {
 
-		return doBuild(createIncrementalBuildFactory(buildRequestFactory), dirtyFiles, deletedFiles, externalDeltas,
+		return doBuild(
+				buildRequestFactory,
+				dirtyFiles,
+				deletedFiles,
+				externalDeltas,
+				new ProjectStateUpdater(false),
 				cancelIndicator);
-	}
-
-	/**
-	 * Create a wrapper around the given build request factory that yields a build request which will update the stored
-	 * project state via {@link ProjectBuilder#updateProjectState}.
-	 */
-	protected ProjectStateUpdatingBuildRequestFactory createIncrementalBuildFactory(
-			IBuildRequestFactory buildRequestFactory) {
-		return new ProjectStateUpdatingBuildRequestFactory(buildRequestFactory, new ProjectStateUpdater());
 	}
 
 	/** Build this project according to the request provided by the given buildRequestFactory. */
@@ -340,6 +324,7 @@ public class ProjectBuilder {
 			Set<URI> dirtyFiles,
 			Set<URI> deletedFiles,
 			List<IResourceDescription.Delta> externalDeltas,
+			ProjectStateUpdater projectStateUpdater,
 			CancelIndicator cancelIndicator) {
 
 		URI persistenceFile = getPersistenceFile();
@@ -353,6 +338,8 @@ public class ProjectBuilder {
 				externalDeltas,
 				cancelIndicator);
 		resourceSet = request.getResourceSet();
+
+		projectStateUpdater.attachTo(request);
 
 		try {
 			return incrementalBuilder.build(request);
@@ -456,20 +443,19 @@ public class ProjectBuilder {
 			List<IResourceDescription.Delta> externalDeltas,
 			CancelIndicator cancelIndicator) {
 
-		XBuildRequest request = buildRequestFactory.getBuildRequest(workspaceManager.getWorkspaceConfig(),
-				projectConfig, changedFiles, deletedFiles, externalDeltas);
-
 		ImmutableProjectState currentProjectState = this.projectStateSnapshot.get();
 
 		ResourceDescriptionsData indexCopy = currentProjectState.internalGetResourceDescriptions().copy();
 		XSource2GeneratedMapping fileMappingsCopy = currentProjectState.getFileMappings().copy();
-
-		request.setIndex(indexCopy);
-		request.setFileMappings(fileMappingsCopy);
 		updateResourceSetIndex(indexCopy);
-		request.setResourceSet(resourceSet);
+
+		XBuildRequest request = buildRequestFactory.createBuildRequest(
+				workspaceManager.getWorkspaceConfig(), projectConfig,
+				changedFiles, deletedFiles, externalDeltas,
+				indexCopy, resourceSet, fileMappingsCopy,
+				true, true);
+
 		request.setCancelIndicator(cancelIndicator);
-		request.setBaseDir(getBaseDir());
 
 		return request;
 	}
@@ -677,9 +663,9 @@ public class ProjectBuilder {
 	 * Scans the file system for source files, going over all source folders.
 	 */
 	protected Set<URI> scanForSourceFiles() {
-		Set<URI> result = new HashSet<>();
+		Set<URI> result = new TreeSet<>(Comparator.comparing(URI::toString)); // stable build order
 		for (SourceFolderSnapshot srcFolder : projectConfig.getSourceFolders()) {
-			List<URI> allSourceFileUris = sourceFolderScanner.findAllSourceFiles(srcFolder, fileSystemScanner);
+			List<URI> allSourceFileUris = srcFolder.getAllResources(fileSystemScanner);
 			for (URI srcFileUri : allSourceFileUris) {
 				if (!srcFileUri.hasTrailingPathSeparator()) {
 					IResourceServiceProvider rsp = resourceServiceProviders.getResourceServiceProvider(srcFileUri);
@@ -739,7 +725,7 @@ public class ProjectBuilder {
 		boolean dependenciesChanged = !newDependencies.equals(projectStateSnapshot.get().getDependencies());
 
 		ImmutableProjectState newState = this.projectStateSnapshot.updateAndGet(snapshot -> {
-			Map<URI, HashedFileContent> newHashedFileContents = new HashMap<>(snapshot.getFileHashes());
+			Map<URI, HashedFileContent> newHashedFileContents = new LinkedHashMap<>(snapshot.getFileHashes());
 			// TODO where do we update the generated file hashes?
 			for (Delta delta : result.getAffectedResources()) {
 				URI uri = delta.getUri();

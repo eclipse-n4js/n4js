@@ -153,10 +153,8 @@ public class TestWorkspaceManager {
 			int idxSlash = fileName.lastIndexOf('/');
 			int idxDot = fileName.indexOf('.', idxSlash);
 			if (idxDot >= 0) {
+				name = fileName.substring(0, idxDot);
 				extension = fileName.substring(idxDot + 1);
-				if (N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension)) {
-					name = fileName.substring(0, idxDot);
-				}
 			}
 		}
 		return new NameAndExtension(name, extension);
@@ -587,9 +585,13 @@ public class TestWorkspaceManager {
 				if (moduleName.startsWith("/")) {
 					// use first segment as source folder
 					int endOfFirstSegment = moduleName.indexOf("/", 1);
-					String sourceFolderName = moduleName.subSequence(1, endOfFirstSegment).toString();
-					moduleName = moduleName.substring(endOfFirstSegment + 1);
-					moduleSpecificSourceFolder = project.createSourceFolder(sourceFolderName);
+					if (endOfFirstSegment >= 0) {
+						String sourceFolderName = moduleName.subSequence(1, endOfFirstSegment).toString();
+						moduleName = moduleName.substring(endOfFirstSegment + 1);
+						moduleSpecificSourceFolder = project.createSourceFolder(sourceFolderName);
+					} else {
+						moduleSpecificSourceFolder = project.createFolder(".");
+					}
 				}
 
 				createAndAddModule(contents, moduleName, moduleSpecificSourceFolder);

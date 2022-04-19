@@ -54,7 +54,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 			"(Error, [1:4 - 1:14], Couldn't resolve reference to IdentifiableElement 'OtherClass'.)"
 		],
 		"MainProject/" + PACKAGE_JSON -> #[
-			"(Error, [16:3 - 16:22], Project does not exist with project ID: OtherProject.)"
+			"(Error, [16:3 - 16:21], Project does not exist with project ID: OtherProject.)"
 		]
 	];
 
@@ -303,7 +303,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 				'''    (Warning, [1:9 - 1:25], As a convention the package name "RenamedProject" should match the name of the project folder "OtherProject" on the file system.)'''
 			],
 			"MainProject/package.json" -> #[
-				'''    (Error, [16:3 - 16:22], Project does not exist with project ID: OtherProject.)'''
+				'''    (Error, [16:3 - 16:21], Project does not exist with project ID: OtherProject.)'''
 			],
 			"Main.n4js" -> #[
 				'''    (Error, [0:25 - 0:32], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)''',
@@ -315,7 +315,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		val packageJsonMPFileURI = getPackageJsonFile("MainProject").toFileURI;
 		openFile(packageJsonMPFileURI);
 		changeOpenedFile(packageJsonMPFileURI,
-			'"OtherProject": "*"' -> '''"RenamedProject": "*"'''
+			'"OtherProject": ""' -> '''"RenamedProject": ""'''
 		);
 		joinServerRequests();
 		
@@ -447,7 +447,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		val packageJsonFileURI = getPackageJsonFile(sourceProjectName).toFileURI;
 		openFile(packageJsonFileURI);
 		changeOpenedFile(packageJsonFileURI,
-			'"n4js-runtime": "*"' -> '''"n4js-runtime": "*", "«targetProjectName»": "*"'''
+			'"n4js-runtime": ""' -> '''"n4js-runtime": "", "«targetProjectName»": ""'''
 		);
 		joinServerRequests();
 
@@ -456,10 +456,10 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		} else {
 			// unfortunately we have an additional error in the open, non-saved package.json file when a dependency to a plain-JS-project is added
 			// (due to the optimization in ProjectDiscoveryHelper of hiding all unnecessary PLAINJS projects)
-			val tpnLength = 31 + targetProjectName.length;
+			val tpnLength = 29 + targetProjectName.length;
 			val errorsBeforeSaving = originalErrors + #[
 				sourceProjectName + "/" + PACKAGE_JSON -> #[
-					"(Error, [16:24 - 16:" + tpnLength + "], Project does not exist with project ID: " + targetProjectName + ".)"
+					"(Error, [16:23 - 16:" + tpnLength + "], Project does not exist with project ID: " + targetProjectName + ".)"
 				]
 			];
 			assertIssues(errorsBeforeSaving); // changes in package.json not saved yet, so still the original errors + 1 error in the unsaved package.json editor
@@ -471,7 +471,7 @@ class IncrementalBuilderWorkspaceChangesTest extends AbstractIncrementalBuilderT
 		assertNoIssues(); // now the original errors have gone away
 
 		changeOpenedFile(packageJsonFileURI,
-			'''"n4js-runtime": "*", "«targetProjectName»": "*"''' -> '"n4js-runtime": "*"'
+			'''"n4js-runtime": "", "«targetProjectName»": ""''' -> '"n4js-runtime": ""'
 		);
 		saveOpenedFile(packageJsonFileURI);
 		joinServerRequests();

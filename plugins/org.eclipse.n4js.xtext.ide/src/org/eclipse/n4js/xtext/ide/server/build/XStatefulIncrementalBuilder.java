@@ -92,6 +92,8 @@ public class XStatefulIncrementalBuilder {
 		List<IResourceDescription.Delta> allProcessedDeltas = new ArrayList<>();
 
 		try {
+			this.request = initializeBuildRequest(this.request, context);
+
 			XSource2GeneratedMapping newSource2GeneratedMapping = request.getFileMappings();
 
 			Set<URI> unloaded = new HashSet<>();
@@ -145,7 +147,7 @@ public class XStatefulIncrementalBuilder {
 					remainingURIs.remove(uri);
 				}
 
-				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt, true,
+				List<IResourceDescription.Delta> deltasBuilt = context.executeClustered(urisToBeBuilt,
 						(loadResult) -> buildClustered(loadResult, newSource2GeneratedMapping, result));
 				newDeltas.addAll(deltasBuilt);
 
@@ -164,6 +166,13 @@ public class XStatefulIncrementalBuilder {
 		}
 
 		return new XBuildResult(request.getIndex(), request.getFileMappings(), allProcessedDeltas);
+	}
+
+	/** Overwrite this method to adjust the build request while working / loading resources already. */
+	protected XBuildRequest initializeBuildRequest(XBuildRequest initialRequest,
+			@SuppressWarnings({ "hiding", "unused" }) XBuildContext context) {
+
+		return initialRequest;
 	}
 
 	private void addIfNotYetPresent(List<Delta> addHere, List<Delta> toBeAdded) {
