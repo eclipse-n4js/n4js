@@ -18,11 +18,14 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatementTail;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
@@ -37,6 +40,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -51,6 +55,9 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
+
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 
 /**
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
@@ -97,6 +104,11 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 			walker.enqueue(ctx.statementList().statement());
 		}
 		exportBuilder = new DtsExportBuilder(tokenStream, resource, ctx);
+	}
+
+	@Override
+	public void exitProgram(ProgramContext ctx) {
+		removeOverloadingFunctions();
 	}
 
 	@Override
@@ -188,6 +200,55 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 		} else {
 			ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
 					elem, false, true, true);
+		}
+	}
+
+	/** Of all equally named functions remove all but the one functions with the most parameters. */
+	private void removeOverloadingFunctions() {
+		Multimap<String, FunctionDeclaration> functionsByName = HashMultimap.create();
+		for (ScriptElement elem : result.getScriptElements()) {
+			if (elem instanceof ExportDeclaration) {
+				ExportDeclaration expDecl = (ExportDeclaration) elem;
+				elem = expDecl.getExportedElement();
+			}
+			if (elem instanceof FunctionDeclaration) {
+				FunctionDeclaration fd = (FunctionDeclaration) elem;
+				functionsByName.put(fd.getName(), fd);
+			}
+		}
+
+		for (String fName : functionsByName.keySet()) {
+			Collection<FunctionDeclaration> signatures = functionsByName.get(fName);
+			if (signatures.size() > 1) {
+				// find the survivor
+				Iterator<FunctionDeclaration> iter = signatures.iterator();
+				FunctionDeclaration survivor = iter.next();
+				for (FunctionDeclaration fd = iter.next(); fd != null; fd = iter.hasNext() ? iter.next() : null) {
+					int fparCountSurvivor = survivor.getFpars() == null ? 0 : survivor.getFpars().size();
+					int fparCountFd = fd.getFpars() == null ? 0 : fd.getFpars().size();
+					if (fparCountFd > fparCountSurvivor) {
+						survivor = fd;
+					} else if (fparCountFd > 0 && fparCountFd == fparCountSurvivor) {
+						FormalParameter lastFParSurvivor = survivor.getFpars().get(survivor.getFpars().size() - 1);
+						FormalParameter lastFParFd = fd.getFpars().get(fd.getFpars().size() - 1);
+						if (!lastFParSurvivor.isVariadic() && lastFParFd.isVariadic()) {
+							survivor = fd;
+						}
+					}
+				}
+
+				// remove all but the survivor
+				for (FunctionDeclaration fd : functionsByName.get(fName)) {
+					if (fd == survivor) {
+						continue;
+					}
+					EObject elemToRemove = fd;
+					if (elemToRemove.eContainer() instanceof ExportDeclaration) {
+						elemToRemove = elemToRemove.eContainer();
+					}
+					result.getScriptElements().remove(elemToRemove);
+				}
+			}
 		}
 	}
 }
