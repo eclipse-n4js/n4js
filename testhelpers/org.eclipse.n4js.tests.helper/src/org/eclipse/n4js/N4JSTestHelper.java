@@ -77,7 +77,7 @@ public class N4JSTestHelper {
 		for (Pair<String, String> pair : fileNamesToCode) {
 			String fileName = pair.getKey();
 			String code = pair.getValue();
-			Script script = parseWithFileExtensionFromURI(code, URI.createURI(fileName), rs);
+			Script script = parseInFile(code, fileName, rs);
 			parseHelper.assertNoParseErrors(script);
 		}
 
@@ -90,6 +90,13 @@ public class N4JSTestHelper {
 		}
 
 		return rs;
+	}
+
+	/**
+	 * Create a new {@link Resource} in the given {@link ResourceSet} and parse the given source code.
+	 */
+	public Script parseInFile(CharSequence code, String fileName, ResourceSet resourceSetToUse) throws Exception {
+		return parseWithFileExtensionFromURI(code, URI.createURI(fileName), resourceSetToUse);
 	}
 
 	private Script parseWithFileExtensionFromURI(CharSequence text, URI uriToUse, ResourceSet resourceSetToUse)
