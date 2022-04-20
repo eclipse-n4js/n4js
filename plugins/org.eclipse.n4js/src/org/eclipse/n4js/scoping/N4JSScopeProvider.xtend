@@ -499,6 +499,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		} else {
 			val Script script = EcoreUtil.getRootContainer(vee) as Script;
 			val resource = script.eResource;
+			// TODO GH-2338 reconsider the following recursion guard (required for chains of re-exports in cyclic modules)
 			val guard = cache.get("buildLexicalEnvironmentScope__importedValuesComputationGuard" -> script, resource, [new AtomicBoolean(false)]);
 			val alreadyInProgress = guard.getAndSet(true);
 			if (alreadyInProgress) {
@@ -562,12 +563,23 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (ns === null) {
 			return IScope.NULLSCOPE;
 		}
-		
-		// get regular top-level elements scope
-		val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, includeHollows, includeVariables);
-		val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromModule", ns, IScope.NULLSCOPE, false, tlElems);
-		
-		return topLevelElementsScope;
+
+		val resource = context.eResource;
+
+		// TODO GH-2338 reconsider the following recursion guard (required for chains of re-exports in cyclic modules)
+		val guard = cache.get("scope_AllTopLevelElementsFromAbstractNamespace__exportedElementsComputationGuard" -> context, resource, [new AtomicBoolean(false)]);
+		val alreadyInProgress = guard.getAndSet(true);
+		if (alreadyInProgress) {
+			return IScope.NULLSCOPE;
+		}
+		try {
+			// get regular top-level elements scope
+			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, includeHollows, includeVariables);
+			val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromAbstractNamespace", ns, IScope.NULLSCOPE, false, tlElems);
+			return topLevelElementsScope;
+		} finally {
+			guard.set(false);
+		}
 	}
 
 	/*
