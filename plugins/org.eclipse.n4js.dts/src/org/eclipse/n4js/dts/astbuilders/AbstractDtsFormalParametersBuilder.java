@@ -68,10 +68,12 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 		}
 
 		@Override
-		protected void setInitializer(FormalParameter fPar, InitializerContext initCtx) {
+		protected void setOptional(FormalParameter fPar, InitializerContext initCtx) {
 			fPar.setHasInitializerAssignment(true);
-			Expression expr = newExpressionBuilder().consume(initCtx.singleExpression());
-			fPar.setInitializer(expr);
+			if (initCtx != null) {
+				Expression expr = newExpressionBuilder().consume(initCtx.singleExpression());
+				fPar.setInitializer(expr);
+			}
 		}
 
 		@Override
@@ -106,7 +108,7 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 		}
 
 		@Override
-		protected void setInitializer(TFormalParameter fPar, InitializerContext initCtx) {
+		protected void setOptional(TFormalParameter fPar, InitializerContext initCtx) {
 			fPar.setHasInitializerAssignment(true);
 		}
 
@@ -183,8 +185,8 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 	public void enterOptionalParameter(OptionalParameterContext ctx) {
 		T fPar = buildBaseFormalParameter(ctx.identifierOrPattern(), ctx.colonSepTypeRef());
 
-		if (fPar != null && ctx.initializer() != null) {
-			setInitializer(fPar, ctx.initializer());
+		if (fPar != null) {
+			setOptional(fPar, ctx.initializer());
 		}
 	}
 
@@ -210,8 +212,8 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 	/** Both arguments may be <code>null</code>. */
 	protected abstract T createFormalParameter(String name, TypeRef typeRef);
 
-	/** Arguments will never be <code>null</code>. */
-	protected abstract void setInitializer(T fPar, InitializerContext initCtx);
+	/** Initializer may be <code>null</code>. */
+	protected abstract void setOptional(T fPar, InitializerContext initCtx);
 
 	/** Argument will never be <code>null</code>. */
 	protected abstract void setVariadic(T fPar);
