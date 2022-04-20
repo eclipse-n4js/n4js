@@ -45,6 +45,7 @@ import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -71,6 +72,7 @@ public class DtsInterfaceBuilder
 		result = N4JSFactory.eINSTANCE.createN4InterfaceDeclaration();
 		result.setName(ctx.identifierName().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
+		result.setTypingStrategy(TypingStrategy.STRUCTURAL);
 
 		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);

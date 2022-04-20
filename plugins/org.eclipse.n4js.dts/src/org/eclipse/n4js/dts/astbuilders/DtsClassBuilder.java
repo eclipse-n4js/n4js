@@ -47,6 +47,7 @@ import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -75,6 +76,7 @@ public class DtsClassBuilder
 		result = N4JSFactory.eINSTANCE.createN4ClassDeclaration();
 		result.setName(ctx.identifierOrKeyWord().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
+		result.setTypingStrategy(TypingStrategy.STRUCTURAL);
 
 		if (ctx.Abstract() != null) {
 			result.getDeclaredModifiers().add(N4Modifier.ABSTRACT);
