@@ -413,4 +413,52 @@ class RuntimeDependencyValidationIdeTest extends AbstractIdeTest {
 
 		assertIssues(defaultExpectedIssues); // original issue should have come back
 	}
+
+	@Test
+	def void testReexportDoesNotIntroduceLoadTimeDependency01() {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"A" -> '''
+				export public class ClsA {}
+				export { ClsB as ClsBViaA } from "B"
+			''',
+			"B" -> '''
+				export public class ClsB {}
+				export { ClsA as ClsAViaB } from "A"
+			'''
+		);
+		startAndWaitForLspServer();
+		assertIssues(
+			"A" -> #[
+				"(Error, [1:0 - 2:0], Unsupported feature: separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration).)"
+			],
+			"B" -> #[
+				"(Error, [1:0 - 2:0], Unsupported feature: separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration).)"
+			]
+		);
+	}
+
+	@Test
+	def void testReexportDoesNotIntroduceLoadTimeDependency02() {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"A" -> '''
+				import { ClsB } from "B"
+				export public class ClsA {}
+				export { ClsB as ClsBViaA }
+			''',
+			"B" -> '''
+				import { ClsA } from "A"
+				export public class ClsB {}
+				export { ClsA as ClsAViaB }
+			'''
+		);
+		startAndWaitForLspServer();
+		assertIssues(
+			"A" -> #[
+				"(Error, [2:0 - 3:0], Unsupported feature: separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration).)"
+			],
+			"B" -> #[
+				"(Error, [2:0 - 3:0], Unsupported feature: separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration).)"
+			]
+		);
+	}
 }
