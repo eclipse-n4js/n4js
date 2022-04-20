@@ -98,6 +98,7 @@ public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableSt
 
 		varBinding.setPattern(bindingPattern);
 
+		addLocationInfo(varBinding, ctx);
 		result.getVarDeclsOrBindings().add(varBinding);
 	}
 
@@ -117,6 +118,7 @@ public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableSt
 			varDecl.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
 		}
 
+		addLocationInfo(varDecl, ctx);
 		result.getVarDeclsOrBindings().add(varDecl);
 	}
 }

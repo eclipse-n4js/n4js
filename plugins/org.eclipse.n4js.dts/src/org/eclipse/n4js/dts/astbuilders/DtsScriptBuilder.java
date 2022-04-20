@@ -173,6 +173,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
 		if (exportBuilder.isExportedEquals()) {
+			// TODO check for name
 			transformExportEquals(elem);
 		} else {
 			ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
