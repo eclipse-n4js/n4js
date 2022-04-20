@@ -81,6 +81,7 @@ import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -1311,8 +1312,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			// The logging in LazyLinkingResource#getEObject(String) does not emit the stack trace of the caught
 			// exception in all logger configurations; we therefore log the error again and include the stack trace in
 			// the main message:
-			LOGGER.error("exception during proxy resolution in super class of N4JSResource:\n"
-					+ Throwables.getStackTraceAsString(th));
+			UtilN4.reportErrorIfNotYetReported(
+					LOGGER, "exception during proxy resolution in super class of N4JSResource", th);
 			throw th;
 		}
 		if (result == null

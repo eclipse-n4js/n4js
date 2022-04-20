@@ -18,9 +18,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
+import java.util.WeakHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -353,6 +356,21 @@ public class UtilN4 {
 		return str.replace("\n", "\n" + indentStr);
 	}
 
+	private static final Map<Throwable, Boolean> reportedExceptions = Collections.synchronizedMap(
+			new WeakHashMap<Throwable, Boolean>());
+
+	/**
+	 * Same as {@link #reportError(Logger, String, Throwable)}, but will log the incident only if the given exception
+	 * was not logger before using this method.
+	 */
+	@SuppressWarnings("hiding")
+	public static <T extends Throwable> T reportErrorIfNotYetReported(Logger logger, String msg, T exception) {
+		if (reportedExceptions.put(exception, Boolean.TRUE) == null) {
+			reportError(logger, msg, exception);
+		}
+		return exception;
+	}
+
 	/**
 	 * Same as {@link #reportError(String, Throwable)}, using the given {@link Throwable}'s message as first argument.
 	 */
@@ -370,6 +388,14 @@ public class UtilN4 {
 	 * console, even if some code higher up in the call hierarchy catches and ignores the exception (e.g. Xsemantics).
 	 */
 	public static <T extends Throwable> T reportError(String msg, T exception) {
+		return reportError(logger, msg, exception);
+	}
+
+	/**
+	 * Same as {@link #reportError(String, Throwable)}, but a custom logger can be provided for logging the error.
+	 */
+	@SuppressWarnings("hiding")
+	public static <T extends Throwable> T reportError(Logger logger, String msg, T exception) {
 		logger.error(msg, exception); // make sure we see this (some clients eat up all exceptions!)
 		return exception;
 	}
