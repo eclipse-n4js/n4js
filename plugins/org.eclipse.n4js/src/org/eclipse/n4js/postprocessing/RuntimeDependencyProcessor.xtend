@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.ModuleRef
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
@@ -53,6 +54,9 @@ class RuntimeDependencyProcessor {
 	 */
 	def package recordRuntimeReferencesInCache(EObject node, ASTMetaInfoCache cache) {
 		if (node instanceof IdentifierRef) {
+			if (node.eContainingFeature === N4JSPackage.Literals.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT) {
+				return; // re-exports are not harmful
+			}
 			val target = node.targetElement;
 			if (N4JSLanguageUtils.hasRuntimeRepresentation(target, variantHelper)) {
 				cache.elementsReferencedAtRuntime += target;

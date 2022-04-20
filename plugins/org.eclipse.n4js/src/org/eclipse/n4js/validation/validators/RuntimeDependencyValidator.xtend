@@ -62,6 +62,9 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 		if (!N4JSASTUtils.isTopLevelCode(idRef)) {
 			return; // only interested in top-level == load-time references here!
 		}
+		if (idRef.eContainingFeature === N4JSPackage.Literals.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT) {
+			return; // re-exports are not harmful
+		}
 		val targetModule = getTargetModule(idRef);
 		if (targetModule === null) {
 			return;
