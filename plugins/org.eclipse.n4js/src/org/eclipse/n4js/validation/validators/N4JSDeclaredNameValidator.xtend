@@ -640,12 +640,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 			if (!namedIS.getAlias().nullOrEmpty) {
 				return namedIS.getAlias()
 			} else {
-				val importedElem = namedIS.getImportedElement()
-				if (importedElem === null) {
-					return null
-				}
-				val n = importedElem.findName
-				return n;
+				return namedIS.getImportedElementAsText();
 			}
 		}
 
