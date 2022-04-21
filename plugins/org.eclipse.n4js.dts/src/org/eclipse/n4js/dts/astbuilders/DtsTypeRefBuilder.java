@@ -350,6 +350,10 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			return null;
 		}
 
+		if (Set.of("null", "never", "unknown", "bigint", "BigInt").contains(declTypeName)) {
+			return createAnyPlusTypeRef();
+		}
+
 		ParameterizedTypeRef ptr = structural
 				? TypeRefsFactory.eINSTANCE.createParameterizedTypeRefStructural()
 				: TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();

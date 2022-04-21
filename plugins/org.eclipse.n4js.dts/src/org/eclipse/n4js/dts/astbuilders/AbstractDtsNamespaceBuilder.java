@@ -141,6 +141,13 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 	}
 
 	@Override
+	public void exitNamespaceDeclaration(NamespaceDeclarationContext ctx) {
+		if (result != null) {
+			ParserContextUtil.removeOverloadingFunctionDefs(result.getOwnedElementsRaw());
+		}
+	}
+
+	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
 		if (result == null) {
 			ModuleNameContext ctxName = ctx.moduleName();

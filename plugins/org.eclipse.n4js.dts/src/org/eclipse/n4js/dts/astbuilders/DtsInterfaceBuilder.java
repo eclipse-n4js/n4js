@@ -93,6 +93,13 @@ public class DtsInterfaceBuilder
 	}
 
 	@Override
+	public void exitInterfaceDeclaration(InterfaceDeclarationContext ctx) {
+		if (result != null) {
+			ParserContextUtil.removeOverloadingFunctionDefs(result.getOwnedMembersRaw());
+		}
+	}
+
+	@Override
 	public void enterPropertySignature(PropertySignatureContext ctx) {
 		N4FieldDeclaration fd = N4JSFactory.eINSTANCE.createN4FieldDeclaration();
 		fd.getDeclaredModifiers().add(N4Modifier.PUBLIC);

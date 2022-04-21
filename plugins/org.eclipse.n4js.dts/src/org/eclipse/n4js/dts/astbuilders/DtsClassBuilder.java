@@ -108,6 +108,13 @@ public class DtsClassBuilder
 	}
 
 	@Override
+	public void exitClassDeclaration(ClassDeclarationContext ctx) {
+		if (result != null) {
+			ParserContextUtil.removeOverloadingFunctionDefs(result.getOwnedMembersRaw());
+		}
+	}
+
+	@Override
 	public void enterPropertyOrMethod(PropertyOrMethodContext ctx) {
 		if (ctx.propertyName() == null) {
 			return;

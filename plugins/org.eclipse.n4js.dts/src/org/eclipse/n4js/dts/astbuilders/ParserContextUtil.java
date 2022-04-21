@@ -12,6 +12,7 @@ package org.eclipse.n4js.dts.astbuilders;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -40,6 +41,8 @@ import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.FormalParameter;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -56,6 +59,8 @@ import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.primitives.Ints;
 
 /**
@@ -370,5 +375,62 @@ public class ParserContextUtil {
 	private static String trimAndNormalize(String str) {
 		String trimmed = str != null ? str.trim() : null;
 		return trimmed != null && trimmed.length() > 0 ? trimmed : null;
+	}
+
+	/**
+	 * Of all equally named functions remove all but the one functions with the most parameters. The parameters of the
+	 * surviving function will be made optional.
+	 */
+	public static void removeOverloadingFunctionDefs(Collection<? extends EObject> elements) {
+		Multimap<String, FunctionDefinition> functionsByName = HashMultimap.create();
+		for (EObject elem : elements) {
+			if (elem instanceof ExportDeclaration) {
+				ExportDeclaration expDecl = (ExportDeclaration) elem;
+				elem = expDecl.getExportedElement();
+			}
+			if (elem instanceof FunctionDefinition) {
+				FunctionDefinition fd = (FunctionDefinition) elem;
+				functionsByName.put(fd.getName(), fd);
+			}
+		}
+
+		for (String fName : functionsByName.keySet()) {
+			Collection<FunctionDefinition> signatures = functionsByName.get(fName);
+			if (signatures.size() > 1) {
+				// find the survivor
+				Iterator<FunctionDefinition> iter = signatures.iterator();
+				FunctionDefinition survivor = iter.next();
+				for (FunctionDefinition fd = iter.next(); fd != null; fd = iter.hasNext() ? iter.next() : null) {
+					int fparCountSurvivor = survivor.getFpars() == null ? 0 : survivor.getFpars().size();
+					int fparCountFd = fd.getFpars() == null ? 0 : fd.getFpars().size();
+					if (fparCountFd > fparCountSurvivor) {
+						survivor = fd;
+					} else if (fparCountFd > 0 && fparCountFd == fparCountSurvivor) {
+						FormalParameter lastFParSurvivor = survivor.getFpars().get(survivor.getFpars().size() - 1);
+						FormalParameter lastFParFd = fd.getFpars().get(fd.getFpars().size() - 1);
+						if (!lastFParSurvivor.isVariadic() && lastFParFd.isVariadic()) {
+							survivor = fd;
+						}
+					}
+				}
+
+				// remove all but the survivor
+				for (FunctionDefinition fd : functionsByName.get(fName)) {
+					if (fd == survivor) {
+						continue;
+					}
+					EObject elemToRemove = fd;
+					if (elemToRemove.eContainer() instanceof ExportDeclaration) {
+						elemToRemove = elemToRemove.eContainer();
+					}
+					elements.remove(elemToRemove);
+				}
+
+				// make parameters optional
+				for (FormalParameter fpar : survivor.getFpars()) {
+					fpar.setHasInitializerAssignment(true);
+				}
+			}
+		}
 	}
 }
