@@ -10,10 +10,16 @@
  */
 package org.eclipse.n4js.tests.scoping
 
+import com.google.inject.Inject
+import com.google.inject.Provider
 import org.eclipse.n4js.AbstractN4JSTest
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.scoping.ExportedElementsCollector
 import org.eclipse.n4js.ts.types.ElementExportDefinition
 import org.eclipse.n4js.ts.types.ExportDefinition
+import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.junit.Test
 
 import static org.eclipse.n4js.validation.IssueCodes.UNSUPPORTED
@@ -23,12 +29,17 @@ import static org.eclipse.n4js.validation.IssueCodes.UNSUPPORTED
  */
 class ExportDefinitionTest extends AbstractN4JSTest {
 
+	@Inject
+	private Provider<XtextResourceSet> resourceSetProvider;
+
+	@Inject
+	private ExportedElementsCollector exportedElementsCollector;
+
 	@Test
 	def void testOnlyDirectlyExported() {
 		val res = '''
 			export class Cls {}
 		'''.parseAndValidateSuccessfullyIgnoring(UNSUPPORTED).eResource as N4JSResource;
-		res.performPostProcessing;
 
 		val module = res.module;
 		val cls = module.types.get(0);
@@ -39,7 +50,13 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 		assertSame(cls, ed.exportedElement);
 		assertEquals(1, cls.exportingExportDefinitions.size);
 		assertSame(ed, cls.exportingExportDefinitions.get(0));
-	}	
+
+		val elems = exportedElementsCollector.getExportedElements(res.module, res, true, true).toList;
+		assertEquals(1, elems.size);
+		assertEquals("Cls", elems.head.name.toString);
+		assertSame(cls, elems.head.EObjectOrProxy);
+		assertFalse(elems.head instanceof IEObjectDescriptionWithError);
+	}
 
 	@Test
 	def void testOnlyIndirectlyExported() {
@@ -47,7 +64,6 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 			public class Cls {}
 			export { Cls };
 		'''.parseAndValidateSuccessfullyIgnoring(UNSUPPORTED).eResource as N4JSResource;
-		res.performPostProcessing;
 
 		val module = res.module;
 		val cls = module.types.get(0);
@@ -58,7 +74,17 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 		assertSame(cls, ed.exportedElement);
 		assertEquals(1, cls.exportingExportDefinitions.size);
 		assertSame(ed, cls.exportingExportDefinitions.get(0));
-	}	
+
+		val elems = exportedElementsCollector.getExportedElements(res.module, res, true, true).toList;
+		assertEquals(2, elems.size);
+		assertEquals("Cls", elems.head.name.toString);
+		assertSame(cls, elems.head.EObjectOrProxy);
+		assertFalse(elems.head instanceof IEObjectDescriptionWithError);
+		assertEquals("Cls", elems.get(1).name.toString);
+		assertSame(cls, elems.get(1).EObjectOrProxy);
+		assertTrue(elems.get(1) instanceof IEObjectDescriptionWithError);
+		assertEquals(IssueCodes.IMP_NOT_EXPORTED, (elems.get(1) as IEObjectDescriptionWithError).issueCode);
+	}
 
 	@Test
 	def void testBothDirectlyAndIndirectlyExported() {
@@ -66,7 +92,6 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 			export class Cls {}
 			export { Cls as Cls1 };
 		'''.parseAndValidateSuccessfullyIgnoring(UNSUPPORTED).eResource as N4JSResource;
-		res.performPostProcessing;
 
 		val module = res.module;
 		val cls = module.types.get(0);
@@ -80,5 +105,171 @@ class ExportDefinitionTest extends AbstractN4JSTest {
 		assertEquals(2, cls.exportingExportDefinitions.size);
 		assertSame(ed1, cls.exportingExportDefinitions.get(0));
 		assertSame(ed2, cls.exportingExportDefinitions.get(1));
-	}	
+
+		val elems = exportedElementsCollector.getExportedElements(res.module, res, true, true).toList;
+		assertEquals(2, elems.size);
+		assertEquals("Cls1", elems.head.name.toString);
+		assertSame(cls, elems.head.EObjectOrProxy);
+		assertFalse(elems.head instanceof IEObjectDescriptionWithError);
+		assertEquals("Cls", elems.get(1).name.toString);
+		assertSame(cls, elems.get(1).EObjectOrProxy);
+		assertFalse(elems.get(1) instanceof IEObjectDescriptionWithError);
+	}
+
+	@Test
+	def void testReexport1() {
+		val rs = resourceSetProvider.get();
+
+		val scriptOther = '''
+			export class Cls {}
+		'''.parseInFile("other.n4js", rs);
+
+		val scriptMain = '''
+			import { Cls } from "other"
+			export { Cls };
+		'''.parseInFile("main.n4js", rs);
+
+		assertNoErrorsExcept(scriptOther, UNSUPPORTED);
+		assertNoErrorsExcept(scriptMain, UNSUPPORTED);
+
+		val moduleOther = scriptOther.module;
+		val moduleMain = scriptMain.module;
+		val cls = moduleOther.types.get(0);
+		val ed = moduleMain.exportDefinitions.get(0) as ElementExportDefinition;
+
+		assertSame(cls, ed.exportedElement);
+
+		val elems = exportedElementsCollector.getExportedElements(moduleMain, moduleMain.eResource, true, true).toList;
+		assertEquals(1, elems.size);
+		assertEquals("Cls", elems.head.name.toString);
+		assertSame(cls, elems.head.EObjectOrProxy);
+		assertFalse(elems.head instanceof IEObjectDescriptionWithError);
+	}
+
+	@Test
+	def void testReexport2() {
+		val rs = resourceSetProvider.get();
+
+		val scriptOther = '''
+			export class Cls {}
+		'''.parseInFile("other.n4js", rs);
+
+		val scriptMain = '''
+			export { Cls } from "other"
+		'''.parseInFile("main.n4js", rs);
+
+		assertNoErrorsExcept(scriptOther, UNSUPPORTED);
+		assertNoErrorsExcept(scriptMain, UNSUPPORTED);
+
+		val moduleOther = scriptOther.module;
+		val moduleMain = scriptMain.module;
+		val cls = moduleOther.types.get(0);
+		val ed = moduleMain.exportDefinitions.get(0) as ElementExportDefinition;
+
+		assertSame(cls, ed.exportedElement);
+
+		val elems = exportedElementsCollector.getExportedElements(moduleMain, moduleMain.eResource, true, true).toList;
+		assertEquals(1, elems.size);
+		assertEquals("Cls", elems.head.name.toString);
+		assertSame(cls, elems.head.EObjectOrProxy);
+		assertFalse(elems.head instanceof IEObjectDescriptionWithError);
+	}
+
+	@Test
+	def void testReexport3() {
+		val rs = resourceSetProvider.get();
+
+		val scriptOther = '''
+			export class Cls {}
+		'''.parseInFile("other.n4js", rs);
+
+		val scriptMain = '''
+			export { Cls as ClsAlias } from "other"
+		'''.parseInFile("main.n4js", rs);
+
+		assertNoErrorsExcept(scriptOther, UNSUPPORTED);
+		assertNoErrorsExcept(scriptMain, UNSUPPORTED);
+
+		val moduleOther = scriptOther.module;
+		val moduleMain = scriptMain.module;
+		val cls = moduleOther.types.get(0);
+		val ed = moduleMain.exportDefinitions.get(0) as ElementExportDefinition;
+
+		assertSame(cls, ed.exportedElement);
+
+		val elems = exportedElementsCollector.getExportedElements(moduleMain, moduleMain.eResource, true, true).toList;
+		assertEquals(1, elems.size);
+		assertEquals("ClsAlias", elems.head.name.toString);
+		assertSame(cls, elems.head.EObjectOrProxy);
+		assertFalse(elems.head instanceof IEObjectDescriptionWithError);
+	}
+
+	@Test
+	def void testOnlyDirectlyExported_variable() {
+		val res = '''
+			export var v;
+		'''.parseAndValidateSuccessfullyIgnoring(UNSUPPORTED).eResource as N4JSResource;
+
+		val module = res.module;
+
+		assertEquals(1, module.exportedVariables.size);
+		assertEquals(0, module.localVariables.size);
+		assertEquals(0, module.exposedLocalVariables.size);
+
+		val v = module.exportedVariables.get(0);
+		val ed = module.exportDefinitions.get(0) as ElementExportDefinition;
+
+		assertTrue(v.directlyExported);
+		assertFalse(v.indirectlyExported);
+		assertSame(v, ed.exportedElement);
+		assertEquals(1, v.exportingExportDefinitions.size);
+		assertSame(ed, v.exportingExportDefinitions.get(0));
+
+		val elems = exportedElementsCollector.getExportedElements(res.module, res, true, true).toList;
+		assertEquals(1, elems.size);
+		assertEquals("v", elems.head.name.toString);
+		assertSame(v, elems.head.EObjectOrProxy);
+		assertFalse(elems.head instanceof IEObjectDescriptionWithError);
+	}
+
+	@Test
+	def void testOnlyIndirectlyExported_variable() {
+		val res = '''
+			public var v;
+			export { v };
+		'''.parseN4js.eResource as N4JSResource;
+
+		res.installDerivedState(false);
+
+		val module = res.module;
+		assertEquals(1, module.localVariables.size);
+		assertEquals(0, module.exposedLocalVariables.size);
+
+		res.performPostProcessing();
+
+		assertEquals(0, module.exportedVariables.size);
+		assertEquals(0, module.localVariables.size);
+		assertEquals(1, module.exposedLocalVariables.size);
+
+		assertNoErrorsExcept(res.script, UNSUPPORTED);
+
+		val v = module.exposedLocalVariables.get(0);
+		val ed = module.exportDefinitions.get(0) as ElementExportDefinition;
+
+		assertFalse(v.directlyExported);
+		assertTrue(v.indirectlyExported);
+		assertSame(v, ed.exportedElement);
+		assertEquals(1, v.exportingExportDefinitions.size);
+		assertSame(ed, v.exportingExportDefinitions.get(0));
+
+		val elems = exportedElementsCollector.getExportedElements(res.module, res, true, true).toList;
+		assertEquals(2, elems.size);
+		assertEquals("v", elems.head.name.toString);
+		assertSame(v, elems.head.EObjectOrProxy);
+		assertFalse(elems.head instanceof IEObjectDescriptionWithError);
+		assertEquals("v", elems.get(1).name.toString);
+		assertSame(v, elems.get(1).EObjectOrProxy);
+		assertTrue(elems.get(1) instanceof IEObjectDescriptionWithError);
+		assertEquals(IssueCodes.IMP_NOT_EXPORTED, (elems.get(1) as IEObjectDescriptionWithError).issueCode);
+	}
 }

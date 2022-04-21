@@ -59,7 +59,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testDirectExports() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			import { ClsB } from "other2"
@@ -95,7 +95,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testSeparateExports() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			import { ClsB } from "other2"
@@ -133,7 +133,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testSeparateExports_withImportedType() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			import { ClsValueB } from "other2"
@@ -175,7 +175,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testReexports_separateImportExport() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			import { ClsB } from "other2"
@@ -215,7 +215,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testReexports_mergedImportExport() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			export public class ClsA { fieldA: number; }
@@ -251,7 +251,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testReexportChain() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			import { ClsUnrelated2 } from "other2"
@@ -298,7 +298,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testReexportChain_reverse() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			import { ClsUnrelated2 } from "other2"
@@ -345,7 +345,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testReexportLoop_minimal_separateImportExport() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			import { Cls2 } from "other2"
@@ -375,7 +375,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testReexportLoop_minimal_mergedImportExport() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			export public class Cls1 { field: number; }
@@ -403,7 +403,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testReexportLoop_minimalUnsupported_separateImportExport() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			import { Cls2 } from "other2"
@@ -427,7 +427,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testReexportLoop_minimalUnsupported_mergedImportExport() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			export public class Cls1 {}
@@ -448,7 +448,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testReexportLoop_crazy_separateImportExport() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			import { ClsUnrelated2 } from "other2"
@@ -527,7 +527,7 @@ class ExportDefinitionInCyclicResourcesTest extends AbstractN4JSTest {
 
 	@Test
 	def void testReexportLoop_crazy_mergedImportExport() {
-		var rs = resourceSetProvider.get();
+		val rs = resourceSetProvider.get();
 
 		val script1 = '''
 			import { ClsUnrelated2 } from "other2"
