@@ -556,11 +556,15 @@ propertyAssignment
 propertyName
     : StringLiteral
     | numericLiteral
-    | '[' (identifierName '.' identifierName // usually Symbol.iterator
+    | computedPropertyName
+    | identifierName
+    ;
+
+computedPropertyName
+    : '[' (identifierName '.' identifierName // usually Symbol.iterator
           | StringLiteral
           )
       ']'
-    | identifierName
     ;
 
 getAccessor

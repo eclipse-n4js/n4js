@@ -10,11 +10,18 @@
  */
 package org.eclipse.n4js.dts.astbuilders;
 
-import java.util.List;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_computedPropertyName;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_identifierName;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_numericLiteral;
+import static org.eclipse.n4js.dts.TypeScriptParser.RULE_propertyName;
 
-import org.antlr.v4.runtime.tree.TerminalNode;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.TypeScriptParser.ComputedPropertyNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
+import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
@@ -34,34 +41,53 @@ public class DtsPropertyNameBuilder
 	}
 
 	@Override
-	public void enterPropertyName(PropertyNameContext name) {
-		if (name == null) {
+	protected Set<Integer> getVisitChildrenOfRules() {
+		return java.util.Set.of(
+				RULE_propertyName,
+				RULE_numericLiteral,
+				RULE_computedPropertyName,
+				RULE_identifierName);
+	}
+
+	@Override
+	public void enterPropertyName(PropertyNameContext ctx) {
+		if (ctx == null) {
 			return;
 		}
 		result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
-		List<IdentifierNameContext> identifierName = name.identifierName();
-		if (name.OpenBracket() == null) {
-			if (identifierName != null && identifierName.size() == 1) {
-				result.setKind(PropertyNameKind.IDENTIFIER);
-				TerminalNode id = identifierName.get(0).Identifier();
-				result.setLiteralName(id != null ? id.getText() : null);
-			} else if (name.numericLiteral() != null) {
-				result.setKind(PropertyNameKind.NUMBER);
-				result.setLiteralName(name.numericLiteral().getText());
-			} else if (name.StringLiteral() != null) {
-				result.setKind(PropertyNameKind.STRING);
-				result.setLiteralName(ParserContextUtil.trimAndUnescapeStringLiteral(name.StringLiteral()));
+		if (ctx.StringLiteral() != null) {
+			result.setKind(PropertyNameKind.STRING);
+			result.setLiteralName(ParserContextUtil.trimAndUnescapeStringLiteral(ctx.StringLiteral()));
+		}
+	}
+
+	@Override
+	public void enterComputedPropertyName(ComputedPropertyNameContext ctx) {
+		List<IdentifierNameContext> identifierName = ctx.identifierName();
+		result.setKind(PropertyNameKind.COMPUTED);
+		if (identifierName != null && !identifierName.isEmpty()) {
+			Expression expr = newExpressionBuilder().consume(identifierName.get(0));
+			for (int idx = 1; idx < identifierName.size(); idx++) {
+				expr = createParameterizedPropertyAccessExpression(expr, identifierName.get(idx));
 			}
-		} else {
-			result.setKind(PropertyNameKind.COMPUTED);
-			if (identifierName != null && !identifierName.isEmpty()) {
-				Expression expr = newExpressionBuilder().consume(identifierName.get(0));
-				for (int idx = 1; idx < identifierName.size(); idx++) {
-					expr = createParameterizedPropertyAccessExpression(expr, identifierName.get(idx));
-				}
-			} else if (name.StringLiteral() != null) {
-				result.setExpression(ParserContextUtil.createStringLiteral(name.StringLiteral()));
-			}
+		} else if (ctx.StringLiteral() != null) {
+			result.setExpression(ParserContextUtil.createStringLiteral(ctx.StringLiteral()));
+		}
+	}
+
+	@Override
+	public void enterNumericLiteral(NumericLiteralContext ctx) {
+		result.setKind(PropertyNameKind.NUMBER);
+		result.setLiteralName(ctx.getText());
+	}
+
+	@Override
+	public void enterIdentifierName(IdentifierNameContext ctx) {
+		result.setKind(PropertyNameKind.IDENTIFIER);
+		if (ctx.Identifier() != null) {
+			result.setLiteralName(ctx.Identifier().getText());
+		} else if (ctx.reservedWord() != null) {
+			result.setLiteralName(ctx.reservedWord().getText());
 		}
 	}
 }
