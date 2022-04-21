@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.n4js.ts.types.TModule;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Export Declaration</b></em>'.
@@ -25,17 +23,16 @@ import org.eclipse.n4js.ts.types.TModule;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getExportedElement <em>Exported Element</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getDefaultExportedExpression <em>Default Exported Expression</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getNamespaceExport <em>Namespace Export</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getNamedExports <em>Named Exports</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#isWildcardExport <em>Wildcard Export</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#isDefaultExport <em>Default Export</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.ExportDeclaration#getReexportedFrom <em>Reexported From</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportDeclaration()
  * @model
  * @generated
  */
-public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElement {
+public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElement, ModuleRef {
 	/**
 	 * Returns the value of the '<em><b>Exported Element</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
@@ -81,8 +78,30 @@ public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElem
 	void setDefaultExportedExpression(Expression value);
 
 	/**
+	 * Returns the value of the '<em><b>Namespace Export</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Namespace Export</em>' containment reference.
+	 * @see #setNamespaceExport(NamespaceExportSpecifier)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportDeclaration_NamespaceExport()
+	 * @model containment="true"
+	 * @generated
+	 */
+	NamespaceExportSpecifier getNamespaceExport();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ExportDeclaration#getNamespaceExport <em>Namespace Export</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Namespace Export</em>' containment reference.
+	 * @see #getNamespaceExport()
+	 * @generated
+	 */
+	void setNamespaceExport(NamespaceExportSpecifier value);
+
+	/**
 	 * Returns the value of the '<em><b>Named Exports</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.n4JS.ExportSpecifier}.
+	 * The list contents are of type {@link org.eclipse.n4js.n4JS.NamedExportSpecifier}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @return the value of the '<em>Named Exports</em>' containment reference list.
@@ -90,29 +109,7 @@ public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElem
 	 * @model containment="true"
 	 * @generated
 	 */
-	EList<ExportSpecifier> getNamedExports();
-
-	/**
-	 * Returns the value of the '<em><b>Wildcard Export</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Wildcard Export</em>' attribute.
-	 * @see #setWildcardExport(boolean)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportDeclaration_WildcardExport()
-	 * @model unique="false"
-	 * @generated
-	 */
-	boolean isWildcardExport();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ExportDeclaration#isWildcardExport <em>Wildcard Export</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Wildcard Export</em>' attribute.
-	 * @see #isWildcardExport()
-	 * @generated
-	 */
-	void setWildcardExport(boolean value);
+	EList<NamedExportSpecifier> getNamedExports();
 
 	/**
 	 * Returns the value of the '<em><b>Default Export</b></em>' attribute.
@@ -137,26 +134,26 @@ public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElem
 	void setDefaultExport(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Reexported From</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Reexported From</em>' reference.
-	 * @see #setReexportedFrom(TModule)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getExportDeclaration_ReexportedFrom()
-	 * @model
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	TModule getReexportedFrom();
+	boolean isHollow();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.ExportDeclaration#getReexportedFrom <em>Reexported From</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Reexported From</em>' reference.
-	 * @see #getReexportedFrom()
+	 * <!-- begin-model-doc -->
+	 * Tells whether this is a "re-export", i.e. something like:
+	 * <pre>export { Cls } from "a/b/module";</pre>
+	 * <b>not</b> something like:
+	 * <pre>export { Cls };</pre>
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	void setReexportedFrom(TModule value);
+	boolean isReexport();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -164,6 +161,6 @@ public interface ExportDeclaration extends AnnotableScriptElement, NamespaceElem
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	boolean isHollow();
+	boolean isRetainedAtRuntime();
 
 } // ExportDeclaration

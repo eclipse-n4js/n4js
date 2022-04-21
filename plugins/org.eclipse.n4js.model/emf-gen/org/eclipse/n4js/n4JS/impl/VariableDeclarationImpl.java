@@ -54,6 +54,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypableElement;
 
+import org.eclipse.xtext.EcoreUtil2;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Variable Declaration</b></em>'.
@@ -338,10 +340,10 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * @generated
 	 */
 	@Override
-	public boolean isExported() {
-		final EObject parent = this.eContainer();
+	public boolean isDirectlyExported() {
+		final VariableDeclarationContainer parent = this.getVariableDeclarationContainer();
 		if ((parent instanceof VariableStatement)) {
-			return ((VariableStatement)parent).isExported();
+			return ((VariableStatement)parent).isDirectlyExported();
 		}
 		return false;
 	}
@@ -352,15 +354,15 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * @generated
 	 */
 	@Override
-	public String getExportedName() {
-		final EObject parent = this.eContainer();
+	public String getDirectlyExportedName() {
+		final VariableDeclarationContainer parent = this.getVariableDeclarationContainer();
 		if ((parent instanceof VariableStatement)) {
-			boolean _isExported = ((VariableStatement)parent).isExported();
-			if (_isExported) {
+			boolean _isDirectlyExported = ((VariableStatement)parent).isDirectlyExported();
+			if (_isDirectlyExported) {
 				String _elvis = null;
-				String _exportedName = ((VariableStatement)parent).getExportedName();
-				if (_exportedName != null) {
-					_elvis = _exportedName;
+				String _directlyExportedName = ((VariableStatement)parent).getDirectlyExportedName();
+				if (_directlyExportedName != null) {
+					_elvis = _directlyExportedName;
 				} else {
 					String _name = this.getName();
 					_elvis = _name;
@@ -369,6 +371,16 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public VariableDeclarationContainer getVariableDeclarationContainer() {
+		return EcoreUtil2.<VariableDeclarationContainer>getContainerOfType(this, VariableDeclarationContainer.class);
 	}
 
 	/**
@@ -683,10 +695,12 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 		switch (operationID) {
 			case N4JSPackage.VARIABLE_DECLARATION___IS_CONST:
 				return isConst();
-			case N4JSPackage.VARIABLE_DECLARATION___IS_EXPORTED:
-				return isExported();
-			case N4JSPackage.VARIABLE_DECLARATION___GET_EXPORTED_NAME:
-				return getExportedName();
+			case N4JSPackage.VARIABLE_DECLARATION___IS_DIRECTLY_EXPORTED:
+				return isDirectlyExported();
+			case N4JSPackage.VARIABLE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME:
+				return getDirectlyExportedName();
+			case N4JSPackage.VARIABLE_DECLARATION___GET_VARIABLE_DECLARATION_CONTAINER:
+				return getVariableDeclarationContainer();
 			case N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF:
 				return getDeclaredTypeRef();
 			case N4JSPackage.VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF_IN_AST:

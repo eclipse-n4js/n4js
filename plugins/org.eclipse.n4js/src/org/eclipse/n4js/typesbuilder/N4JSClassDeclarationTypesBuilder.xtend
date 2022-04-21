@@ -59,12 +59,10 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 		tclass.addGetters(n4Class, target, preLinkingPhase);
 		tclass.addSetters(n4Class, target, preLinkingPhase);
 
-
 		tclass.copyAnnotations(n4Class, preLinkingPhase);
 
 		// + set "bindings" (derived refs from ast to types and vice versa)
 		tclass.astElement = n4Class;
-
 		n4Class.definedType = tclass;
 
 		target.types += tclass;
@@ -90,7 +88,6 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 
 		// + set "bindings" (derived refs from ast to types and vice versa)
 		tclass.astElement = n4Class;
-
 		n4Class.definedType = tclass;
 
 		target.containingModule.internalTypes += tclass;
@@ -99,7 +96,6 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 	def private createTClass(N4ClassDeclaration classDecl) {
 		val tclass = TypesFactory::eINSTANCE.createTClass();
 		tclass.name = classDecl.name;
-		tclass.exportedName = classDecl.exportedName;
 		tclass.external = classDecl.external;
 		tclass.declaredAbstract = classDecl.abstract;
 		tclass.declaredFinal = AnnotationDefinition.FINAL.hasAnnotation(classDecl);

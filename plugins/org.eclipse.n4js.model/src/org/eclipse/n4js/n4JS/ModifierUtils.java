@@ -47,7 +47,7 @@ public class ModifierUtils {
 					|| isNamespaceDeclaration(astNodeType)
 					|| isN4MemberDeclaration(astNodeType)
 					|| isFunctionDeclaration(astNodeType)
-					|| (isVariableStatement(astNodeType) && ((VariableStatement) elem).isExported());
+					|| isVariableStatement(astNodeType);
 		case PRIVATE:
 			if (isN4MemberDeclaration(astNodeType)) {
 				return true;
@@ -56,7 +56,7 @@ public class ModifierUtils {
 					(isN4TypeDeclaration(astNodeType)
 							|| isNamespaceDeclaration(astNodeType)
 							|| isFunctionDeclaration(astNodeType)
-							|| (isVariableStatement(astNodeType) && ((VariableStatement) elem).isExported()))) {
+							|| isVariableStatement(astNodeType))) {
 
 				return true;
 			}
@@ -67,7 +67,7 @@ public class ModifierUtils {
 			return isN4TypeDeclaration(astNodeType)
 					|| isNamespaceDeclaration(astNodeType)
 					|| isFunctionDeclaration(astNodeType)
-					|| (isVariableStatement(astNodeType) && ((VariableStatement) elem).isExported());
+					|| isVariableStatement(astNodeType);
 		case ABSTRACT:
 			return isN4ClassDeclaration(astNodeType)
 					|| isN4MethodDeclaration(astNodeType)
@@ -107,7 +107,7 @@ public class ModifierUtils {
 			if (elem instanceof NamespaceElement && ((NamespaceElement) elem).isInNamespace()) {
 				// TODO: remove later the previous condition
 
-				if (isVariableStatement(astNodeType) && ((VariableStatement) elem).isExported()) {
+				if (isVariableStatement(astNodeType) && ((VariableStatement) elem).isDirectlyExported()) {
 					VariableStatement evs = (VariableStatement) elem;
 					if (!evs.getVarDeclsOrBindings().isEmpty()
 							&& isVariableDeclaration(evs.getVarDeclsOrBindings().get(0).eClass())) {

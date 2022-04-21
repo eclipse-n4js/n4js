@@ -81,6 +81,7 @@ import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.N4JSLanguageHelper;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.utils.URIUtils;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -1292,6 +1293,17 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			// -> make all proxies unresolvable that point to a resource that could not be loaded
 			return null;
 		}
+		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
+			if (isLoadedFromDescription() && getLazyProxyInformation().isEmpty()) {
+				final boolean isLazyLinkingProxy = getEncoder().isCrossLinkFragment(this, uriFragment);
+				if (isLazyLinkingProxy) {
+					// LazyLinkingResource would trigger demand-loading of AST and relinking of TModule before noticing
+					// the 'lazyProxyInformation' is empty and the proxy cannot be resolved anyway
+					// -> short-cut here to avoid this
+					return null;
+				}
+			}
+		}
 		EObject result;
 		try {
 			result = super.getEObject(uriFragment);
@@ -1300,8 +1312,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			// The logging in LazyLinkingResource#getEObject(String) does not emit the stack trace of the caught
 			// exception in all logger configurations; we therefore log the error again and include the stack trace in
 			// the main message:
-			LOGGER.error("exception during proxy resolution in super class of N4JSResource:\n"
-					+ Throwables.getStackTraceAsString(th));
+			UtilN4.reportErrorIfNotYetReported(
+					LOGGER, "exception during proxy resolution in super class of N4JSResource", th);
 			throw th;
 		}
 		if (result == null
@@ -1445,14 +1457,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// makes sense remains to be reconsidered (see IDEBUG-257 and IDEBUG-233) ...
 		contents.get(0); // trigger demand load if necessary
 		return super.getLazyProxyInformation(idx);
-	}
-
-	@Override
-	public void clearLazyProxyInformation() {
-		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
-			return;
-		}
-		super.clearLazyProxyInformation();
 	}
 
 	/**

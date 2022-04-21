@@ -84,7 +84,7 @@ public interface VariableDeclaration extends VariableDeclarationOrBinding, Annot
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	boolean isExported();
+	boolean isDirectlyExported();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -92,6 +92,14 @@ public interface VariableDeclaration extends VariableDeclarationOrBinding, Annot
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	String getExportedName();
+	String getDirectlyExportedName();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	VariableDeclarationContainer getVariableDeclarationContainer();
 
 } // VariableDeclaration

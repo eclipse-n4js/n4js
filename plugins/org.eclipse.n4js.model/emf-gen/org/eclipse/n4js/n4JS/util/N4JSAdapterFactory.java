@@ -101,12 +101,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createExportDeclarationAdapter();
 			}
 			@Override
-			public Adapter caseExportSpecifier(ExportSpecifier object) {
-				return createExportSpecifierAdapter();
+			public Adapter caseNamespaceExportSpecifier(NamespaceExportSpecifier object) {
+				return createNamespaceExportSpecifierAdapter();
+			}
+			@Override
+			public Adapter caseNamedExportSpecifier(NamedExportSpecifier object) {
+				return createNamedExportSpecifierAdapter();
 			}
 			@Override
 			public Adapter caseExportableElement(ExportableElement object) {
 				return createExportableElementAdapter();
+			}
+			@Override
+			public Adapter caseModuleRef(ModuleRef object) {
+				return createModuleRefAdapter();
 			}
 			@Override
 			public Adapter caseImportDeclaration(ImportDeclaration object) {
@@ -879,16 +887,30 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ExportSpecifier <em>Export Specifier</em>}'.
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.NamespaceExportSpecifier <em>Namespace Export Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
 	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.ExportSpecifier
+	 * @see org.eclipse.n4js.n4JS.NamespaceExportSpecifier
 	 * @generated
 	 */
-	public Adapter createExportSpecifierAdapter() {
+	public Adapter createNamespaceExportSpecifierAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.NamedExportSpecifier <em>Named Export Specifier</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.NamedExportSpecifier
+	 * @generated
+	 */
+	public Adapter createNamedExportSpecifierAdapter() {
 		return null;
 	}
 
@@ -903,6 +925,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createExportableElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ModuleRef <em>Module Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.ModuleRef
+	 * @generated
+	 */
+	public Adapter createModuleRefAdapter() {
 		return null;
 	}
 

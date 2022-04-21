@@ -65,6 +65,17 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	}
 
 	@Override
+	public ResourceChangeSet scanForSourceFileChanges() {
+		N4JSProjectConfigSnapshot prjConfig = getProjectConfig();
+		Set<URI> sourceFileURIsToStartWith = scanForSourceFiles(true);
+		Set<URI> sourceFileURIsOnDisk = prjConfig.hasTsConfigBuildSemantic()
+				? scanForSourceFiles(false)
+				: sourceFileURIsToStartWith;
+
+		return super.scanForSourceFileChanges(sourceFileURIsToStartWith, sourceFileURIsOnDisk);
+	}
+
+	@Override
 	protected XBuildResult doBuild(IBuildRequestFactory buildRequestFactory, Set<URI> dirtyFiles, Set<URI> deletedFiles,
 			List<Delta> externalDeltas, ProjectStateUpdater projectStateUpdater, CancelIndicator cancelIndicator) {
 
@@ -139,9 +150,19 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 	/** Overridden to exclude all ts files (yet still include d.ts files) */
 	@Override
 	protected Set<URI> scanForSourceFiles() {
+		return scanForSourceFiles(true);
+	}
+
+	/**
+	 * @param useTsConfigBuildSemantic
+	 *            if <code>true</code> and the project being built has
+	 *            {@link N4JSProjectConfigSnapshot#hasTsConfigBuildSemantic() tsconfig.json build semantics}, only the
+	 *            "start URIs" will be returned; otherwise, URIs for all source files on disk will be returned.
+	 */
+	protected Set<URI> scanForSourceFiles(boolean useTsConfigBuildSemantic) {
 		Set<URI> result = new TreeSet<>(Comparator.comparing(URI::toString)); // stable build order
 		N4JSProjectConfigSnapshot prjConfig = getProjectConfig();
-		if (prjConfig.hasTsConfigBuildSemantic()) {
+		if (useTsConfigBuildSemantic && prjConfig.hasTsConfigBuildSemantic()) {
 			for (URI startUri : prjConfig.computeStartUris(fileSystemScanner)) {
 				addToResults(result, startUri);
 			}

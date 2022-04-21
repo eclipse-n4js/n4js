@@ -23,7 +23,7 @@ export public enum EnumWithoutExternal {
 }
 
 /* XPECT errors ---
-	"A enum with visibility public must be marked with modifier export." at "public"
+	"Unsupported feature: non-exported enum with a visibility higher than private." at "public"
 	"Enumerations declared as external have to be placed in a file with file extension n4jsd." at "EnumWithoutExport"
 --- */
 external public enum EnumWithoutExport {

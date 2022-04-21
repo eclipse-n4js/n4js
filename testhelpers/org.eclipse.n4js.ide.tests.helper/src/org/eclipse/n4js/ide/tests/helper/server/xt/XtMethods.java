@@ -119,7 +119,7 @@ public class XtMethods {
 				if (variableStatement != null) {
 					context = variableStatement.getVarDecl().get(0);
 					if (context instanceof VariableDeclaration) {
-						if (((VariableDeclaration) context).isExported()) {
+						if (((VariableDeclaration) context).isDirectlyExported()) {
 							actual = ((VariableDeclaration) context).getDefinedVariable().getTypeAccessModifier()
 									.getName();
 						} else {

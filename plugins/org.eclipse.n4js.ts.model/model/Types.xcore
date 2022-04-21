@@ -24,6 +24,7 @@
 	language="")
 package org.eclipse.n4js.ts.types
 
+import com.google.common.collect.Iterables
 import java.util.Collections
 import java.util.HashMap
 import java.util.List
@@ -36,8 +37,11 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.EcoreUtilN4
+import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.EcoreUtil2
 
+type IterableOfTExportableElement wraps Iterable<? extends TExportableElement>
+type IterableOfAbstractNamespace wraps Iterable<? extends AbstractNamespace>
 type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
 type Variance wraps Variance
@@ -298,12 +302,111 @@ class IdentifiableElement extends TypableElement {
 	}
 }
 
-class TExportableElement extends IdentifiableElement {
+/*
+ * An element that may export one or more {@link TExportableElement}s.
+ */
+abstract class TExportingElement {
+
+	contains ExportDefinition[] exportDefinitions
+}
+
+abstract class ExportDefinition {
+
+	/**
+	 * Convenience method, returns module this element is contained in, or
+	 * null if it is not contained in a module.
+	 */
+	op TModule getContainingModule() {
+		return EcoreUtil2.getContainerOfType(this,TModule);
+	}
+}
+
+/*
+ * Represents the direct or indirect (re-)export of an {@link TExportableElement exportable element}.
+ */
+class ElementExportDefinition extends ExportDefinition {
 
 	String exportedName
 
+	/* Tells whether the exported element is a non-static or static polyfill. */
+	boolean polyfill
+
+	/*
+	 * The element being exported under name {@link ExportDefinition#getExportedName() exportedName}.
+	 * This element need not be contained in this definition's parent {@link TExportingElement}.
+	 */
+	refers TExportableElement exportedElement
+}
+
+/*
+ * Represents the re-export of another module of the form
+ * <pre>
+ * export * from "other/module"
+ * </pre>
+ * <p>
+ * Note that this class is *not* used to represent the following two cases:
+ * <ul>
+ * <li>module re-exports using an alias (i.e. {@code export * as ALIAS from "other/module"}):
+ *     these are represented as an {@link ElementExportDefinition} with property
+ *     {@link ElementExportDefinition#getExportedElement() exportedElement}
+ *     set to a {@link ModuleNamespaceVirtualType} wrapping the re-exported module.
+ * <li>(re-)exports of namespaces:
+ *     these are represented as an {@link ElementExportDefinition}, as well.
+ * </ul>
+ */
+class ModuleExportDefinition extends ExportDefinition {
+
+	/*
+	 * The module being re-exported. All the module's elements will be re-exported individually under their name.
+	 */
+	refers TModule exportedModule
+}
+
+class TExportableElement extends IdentifiableElement {
+
 	op boolean isExported() {
-		exportedName!==null
+		return directlyExported || indirectlyExported;
+	}
+
+	/*
+	 * Tells whether this element is actually directly exported. This will be true
+	 * iff the corresponding {@code ExportableElement} in the AST returned true
+	 * from {@code #isDeclaredExported()} OR from {@code #isExportedByNamespace()}.
+	 */
+	boolean directlyExported
+
+	/*
+	 * Iff this element is {@link TExportableElement#isDirectlyExported() directly exported}, then this property
+	 * tells whether the element is exported as default. Otherwise, the value is undefined.
+	 */
+	boolean directlyExportedAsDefault
+
+	op boolean isIndirectlyExported() {
+		return exportingExportDefinitions.size > (if (directlyExported) 1 else 0);
+	}
+
+	/*
+	 * Export definitions within the same {@link TModule} exporting this {@link TExportableElement}.
+	 * <p>
+	 * NOTE: an export definition in this list may belong to a {@code TExportableElement} other than this
+	 * exportable element's containing {@code TExportableElement}:
+	 * <pre>
+	 * public class Cls {}
+	 * export namespace N1 {
+	 *     export { Cls };
+	 * }
+	 * </pre>
+	 */
+	refers ElementExportDefinition[] exportingExportDefinitions
+
+	op String getDirectlyExportedName() {
+		if (directlyExported) {
+			if (directlyExportedAsDefault) {
+				return UtilN4.EXPORT_DEFAULT_NAME;
+			}
+			return name;
+		}
+		return null;
 	}
 }
 
@@ -735,7 +838,7 @@ abstract class AccessibleTypeElement {
 		}
 		return declaredTypeAccessModifier
 	}
-	
+
 	/**
 	 * Returns default type modifier. If this element is exported, 'project' otherwise 'private'.
 	 * Namespace elements inherit the default modifier from their parent namespace.
@@ -744,7 +847,7 @@ abstract class AccessibleTypeElement {
 		if (eContainer instanceof TNamespace) {
 			return (eContainer as TNamespace).getTypeAccessModifier;
 		} else {
-			if (exported) {
+			if (directlyExported) {
 				return TypeAccessModifier.PROJECT;
 			} else {
 				return TypeAccessModifier.PRIVATE;
@@ -752,7 +855,7 @@ abstract class AccessibleTypeElement {
 		}
 	}
 
-	op boolean isExported()
+	op boolean isDirectlyExported()
 
 }
 
@@ -824,11 +927,7 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 	}
 }
 
-abstract class AbstractNamespace {
-	// TODO jvp: what does that mean:
-	// TODO: make sure these are only top level types in the script
-	// (ß): currently these may also contain nested types since the traversal
-	// in the types builder processes the complete AST
+abstract class AbstractNamespace extends TExportingElement {
 	/*
 	 * A list of all types declarations in the script on the top level.
 	 * These include the exported classes, interfaces, function as well
@@ -848,13 +947,30 @@ abstract class AbstractNamespace {
 	 * methods, etc. contained in the namespace.
 	 */
 	contains transient TVariable[] localVariables
+
+	contains TVariable[] exposedLocalVariables
 	/*
 	 * A list of all top level namespaces in the script.
 	 * These include the exported namespaces as well as the internal namespaces.
 	 * Similar to #types, this allows for better validation messages and diagnostics.
 	 */
 	contains TNamespace[] namespaces
-	
+
+	/*
+	 * Returns all exportable elements directly contained in this {@link AbstractNamespace},
+	 * including those not actually exported.
+	 */
+	op IterableOfTExportableElement getExportableElements() {
+		return Iterables.<TExportableElement>concat(types, exportedVariables, localVariables, exposedLocalVariables, namespaces);
+	}
+
+	op IterableOfAbstractNamespace getAllNamespaces() {
+		if (namespaces.empty) {
+			return #[ this ];
+		}
+		return #[ this ] + namespaces.map[allNamespaces].flatten;
+	}
+
 	/**
 	 * Convenience method, returns module this element is contained in, or
 	 * null if it is not contained in a module.

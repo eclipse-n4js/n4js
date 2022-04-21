@@ -16,6 +16,7 @@ import java.util.Set
 import org.eclipse.emf.ecore.EAttribute
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AbstractCaseClause
 import org.eclipse.n4js.n4JS.AbstractVariable
 import org.eclipse.n4js.n4JS.Annotation
@@ -389,32 +390,6 @@ class ASTStructureValidator {
 	}
 
 	def private dispatch void validateASTStructure(
-		ExportDeclaration model,
-		ASTStructureDiagnosticProducer producer,
-		Set<LabelledStatement> validLabels,
-		Constraints constraints
-	) {
-		if (model.isDefaultExport) {
-			val exportedElement = model.exportedElement;
-			if (exportedElement instanceof VariableStatement) {
-// TODO GH-47: re-enable this validation when default export of values is supported
-// NOTE: tests already exist for this; search for files DefaultExportWith*.n4js.xt
-//				val nodes = NodeModelUtils.findNodesForFeature(exportedElement, N4JSPackage.eINSTANCE.variableDeclarationContainer_VarStmtKeyword);
-//				producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(exportedElement);
-//				producer.addDiagnostic(
-//					new DiagnosticMessage(IssueCodes.messageForIMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST,
-//						IssueCodes.getDefaultSeverity(IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST), IssueCodes.IMP_DEFAULT_EXPORT_WITH_VAR_LET_CONST))
-			}
-		}
-		recursiveValidateASTStructure(
-			model,
-			producer,
-			validLabels,
-			constraints
-		)
-	}
-	
-	def private dispatch void validateASTStructure(
 		CoalesceExpression model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -774,6 +749,19 @@ class ASTStructureValidator {
 		if (name !== null) {
 			if (constraints.isStrict && (RESERVED_WORDS_IN_STRICT_MODE.contains(name))) {
 				issueNameDiagnostic(model, producer, name, N4JSPackage.Literals.IDENTIFIER_REF__ID, Severity.ERROR)
+			}
+			if (model.eContainingFeature === N4JSPackage.Literals.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT
+				&& name == N4JSLanguageConstants.EXPORT_DEFAULT_NAME) {
+				val grandParent = model.eContainer?.eContainer;
+				if (grandParent instanceof ExportDeclaration) {
+					if (grandParent.exportedElement === null && !grandParent.isReexport) {
+						val target = NodeModelUtils.findActualNodeFor(model);
+						producer.node = target;
+						producer.addDiagnostic(
+							new DiagnosticMessage(IssueCodes.messageForAST_SEPARATE_DEFAULT_EXPORT_WITHOUT_FROM,
+								IssueCodes.getDefaultSeverity(IssueCodes.AST_SEPARATE_DEFAULT_EXPORT_WITHOUT_FROM), IssueCodes.AST_SEPARATE_DEFAULT_EXPORT_WITHOUT_FROM));
+					}
+				}
 			}
 		}
 		recursiveValidateASTStructure(
@@ -1659,10 +1647,10 @@ class ASTStructureValidator {
 		}
 		if (model.varDeclsOrBindings.empty) {
 			val nodes = NodeModelUtils.findNodesForFeature(model, N4JSPackage.Literals.VARIABLE_DECLARATION_CONTAINER__VAR_STMT_KEYWORD)
-				producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(model)
+			producer.node = nodes.head ?: NodeModelUtils.findActualNodeFor(model)
 			producer.addDiagnostic(
 				new DiagnosticMessage(IssueCodes.messageForAST_VAR_STMT_NO_DECL, 
-					IssueCodes.getDefaultSeverity(IssueCodes.AST_VAR_STMT_NO_DECL),
+						IssueCodes.getDefaultSeverity(IssueCodes.AST_VAR_STMT_NO_DECL),
 						IssueCodes.AST_VAR_STMT_NO_DECL))
 		}
 		val directParent = model.eContainer;

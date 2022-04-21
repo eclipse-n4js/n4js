@@ -33,6 +33,8 @@ package class N4JSVariableStatementTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 
+	@Inject N4JSExportDefinitionTypesBuilder exportDefinitionTypesBuilder;
+
 	def package int relinkVariableTypes(VariableDeclarationContainer n4VarDeclContainer, AbstractNamespace target, boolean preLinkingPhase, int start) {
 		return relinkVariableTypes(n4VarDeclContainer.varDecl, target, preLinkingPhase, start);
 	}
@@ -66,7 +68,7 @@ package class N4JSVariableStatementTypesBuilder {
 		if(n4VariableDeclaration.name === null) {
 			return false
 		}
-		if (!n4VariableDeclaration.exported) {
+		if (!n4VariableDeclaration.directlyExported) {
 			// local variables are not serialized, so we have to re-create them during re-linking
 			val tVariable = createVariable(n4VariableDeclaration, preLinkingPhase);
 			target.localVariables += tVariable;
@@ -84,16 +86,20 @@ package class N4JSVariableStatementTypesBuilder {
 		val expVars = target.exportedVariables;
 		val locVars = target.localVariables;
 
-		val isExported = if (n4VarDeclContainer instanceof VariableStatement) n4VarDeclContainer.exported else false;
+		val isExported = if (n4VarDeclContainer instanceof VariableStatement) n4VarDeclContainer.directlyExported else false;
 
 		for (varDecl : n4VarDeclContainer.varDecl) {
 			val variable = createVariable(varDecl, preLinkingPhase);
 			if (variable !== null) {
 				if (isExported) {
-					variable.exportedName = varDecl.exportedName;
+					val exportedName = varDecl.directlyExportedName;
+					exportDefinitionTypesBuilder.createExportDefinitionForDirectlyExportedElement(variable, exportedName, target, preLinkingPhase);
 					variable.setTypeAccessModifier(n4VarDeclContainer as VariableStatement);
 					expVars += variable;
 				} else {
+					if (n4VarDeclContainer instanceof VariableStatement) { // could also be a ForStatement
+						variable.setTypeAccessModifier(n4VarDeclContainer);
+					}
 					locVars += variable;
 				}
 			}

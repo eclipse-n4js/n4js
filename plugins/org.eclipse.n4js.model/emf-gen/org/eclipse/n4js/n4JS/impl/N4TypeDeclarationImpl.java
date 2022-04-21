@@ -48,6 +48,8 @@ import org.eclipse.n4js.n4JS.ScriptElement;
 
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
+import org.eclipse.n4js.utils.UtilN4;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>N4 Type Declaration</b></em>'.
@@ -220,7 +222,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * @generated
 	 */
 	@Override
-	public boolean isExported() {
+	public boolean isDirectlyExported() {
 		return (this.isDeclaredExported() || this.isExportedByNamespace());
 	}
 
@@ -244,7 +246,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	public boolean isExportedByNamespace() {
 		N4NamespaceDeclaration ns = this.getNamespace();
 		if ((ns != null)) {
-			return ns.isExported();
+			return ns.isDirectlyExported();
 		}
 		return false;
 	}
@@ -265,16 +267,16 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * @generated
 	 */
 	@Override
-	public String getExportedName() {
-		boolean _isExported = this.isExported();
-		if (_isExported) {
+	public String getDirectlyExportedName() {
+		boolean _isDirectlyExported = this.isDirectlyExported();
+		if (_isDirectlyExported) {
 			boolean _isDeclaredExported = this.isDeclaredExported();
 			if (_isDeclaredExported) {
 				EObject _eContainer = this.eContainer();
 				final ExportDeclaration exportDecl = ((ExportDeclaration) _eContainer);
 				boolean _isDefaultExport = exportDecl.isDefaultExport();
 				if (_isDefaultExport) {
-					return "default";
+					return UtilN4.EXPORT_DEFAULT_NAME;
 				}
 			}
 			final ExportableElement me = this;
@@ -624,11 +626,11 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 		}
 		if (baseClass == ExportableElement.class) {
 			switch (baseOperationID) {
-				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED: return N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED;
+				case N4JSPackage.EXPORTABLE_ELEMENT___IS_DIRECTLY_EXPORTED: return N4JSPackage.N4_TYPE_DECLARATION___IS_DIRECTLY_EXPORTED;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_DECLARED_EXPORTED: return N4JSPackage.N4_TYPE_DECLARATION___IS_DECLARED_EXPORTED;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_BY_NAMESPACE: return N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED_BY_NAMESPACE;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_EXPORTED_AS_DEFAULT: return N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT;
-				case N4JSPackage.EXPORTABLE_ELEMENT___GET_EXPORTED_NAME: return N4JSPackage.N4_TYPE_DECLARATION___GET_EXPORTED_NAME;
+				case N4JSPackage.EXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME: return N4JSPackage.N4_TYPE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_TOPLEVEL: return N4JSPackage.N4_TYPE_DECLARATION___IS_TOPLEVEL;
 				case N4JSPackage.EXPORTABLE_ELEMENT___IS_HOLLOW: return N4JSPackage.N4_TYPE_DECLARATION___IS_HOLLOW;
 				default: return -1;
@@ -653,16 +655,16 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 		switch (operationID) {
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_EXTERNAL:
 				return isExternal();
-			case N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED:
-				return isExported();
+			case N4JSPackage.N4_TYPE_DECLARATION___IS_DIRECTLY_EXPORTED:
+				return isDirectlyExported();
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_DECLARED_EXPORTED:
 				return isDeclaredExported();
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED_BY_NAMESPACE:
 				return isExportedByNamespace();
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_EXPORTED_AS_DEFAULT:
 				return isExportedAsDefault();
-			case N4JSPackage.N4_TYPE_DECLARATION___GET_EXPORTED_NAME:
-				return getExportedName();
+			case N4JSPackage.N4_TYPE_DECLARATION___GET_DIRECTLY_EXPORTED_NAME:
+				return getDirectlyExportedName();
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_TOPLEVEL:
 				return isToplevel();
 			case N4JSPackage.N4_TYPE_DECLARATION___IS_HOLLOW:

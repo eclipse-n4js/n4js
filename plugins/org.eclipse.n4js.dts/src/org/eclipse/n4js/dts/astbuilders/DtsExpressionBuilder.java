@@ -52,8 +52,8 @@ public class DtsExpressionBuilder extends AbstractDtsBuilderWithHelpers<SingleEx
 
 	@Override
 	public void enterIdentifierName(IdentifierNameContext ctx) {
-		String idAsText = ctx.getText();
-		if (idAsText.isBlank()) {
+		String idAsText = ParserContextUtil.getIdentifierName(ctx);
+		if (idAsText == null) {
 			return;
 		}
 

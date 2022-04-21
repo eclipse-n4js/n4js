@@ -18,36 +18,36 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Export Specifier</b></em>'.
+ * An implementation of the model object '<em><b>Named Export Specifier</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportSpecifierImpl#getElement <em>Element</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.ExportSpecifierImpl#getAlias <em>Alias</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.NamedExportSpecifierImpl#getExportedElement <em>Exported Element</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.NamedExportSpecifierImpl#getAlias <em>Alias</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements ExportSpecifier {
+public class NamedExportSpecifierImpl extends ProxyResolvingEObjectImpl implements NamedExportSpecifier {
 	/**
-	 * The cached value of the '{@link #getElement() <em>Element</em>}' containment reference.
+	 * The cached value of the '{@link #getExportedElement() <em>Exported Element</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getElement()
+	 * @see #getExportedElement()
 	 * @generated
 	 * @ordered
 	 */
-	protected IdentifierRef element;
+	protected IdentifierRef exportedElement;
 
 	/**
 	 * The default value of the '{@link #getAlias() <em>Alias</em>}' attribute.
@@ -74,7 +74,7 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected ExportSpecifierImpl() {
+	protected NamedExportSpecifierImpl() {
 		super();
 	}
 
@@ -85,7 +85,7 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return N4JSPackage.Literals.EXPORT_SPECIFIER;
+		return N4JSPackage.Literals.NAMED_EXPORT_SPECIFIER;
 	}
 
 	/**
@@ -94,8 +94,8 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 * @generated
 	 */
 	@Override
-	public IdentifierRef getElement() {
-		return element;
+	public IdentifierRef getExportedElement() {
+		return exportedElement;
 	}
 
 	/**
@@ -103,11 +103,11 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public NotificationChain basicSetElement(IdentifierRef newElement, NotificationChain msgs) {
-		IdentifierRef oldElement = element;
-		element = newElement;
+	public NotificationChain basicSetExportedElement(IdentifierRef newExportedElement, NotificationChain msgs) {
+		IdentifierRef oldExportedElement = exportedElement;
+		exportedElement = newExportedElement;
 		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_SPECIFIER__ELEMENT, oldElement, newElement);
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT, oldExportedElement, newExportedElement);
 			if (msgs == null) msgs = notification; else msgs.add(notification);
 		}
 		return msgs;
@@ -119,18 +119,18 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	 * @generated
 	 */
 	@Override
-	public void setElement(IdentifierRef newElement) {
-		if (newElement != element) {
+	public void setExportedElement(IdentifierRef newExportedElement) {
+		if (newExportedElement != exportedElement) {
 			NotificationChain msgs = null;
-			if (element != null)
-				msgs = ((InternalEObject)element).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.EXPORT_SPECIFIER__ELEMENT, null, msgs);
-			if (newElement != null)
-				msgs = ((InternalEObject)newElement).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.EXPORT_SPECIFIER__ELEMENT, null, msgs);
-			msgs = basicSetElement(newElement, msgs);
+			if (exportedElement != null)
+				msgs = ((InternalEObject)exportedElement).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT, null, msgs);
+			if (newExportedElement != null)
+				msgs = ((InternalEObject)newExportedElement).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT, null, msgs);
+			msgs = basicSetExportedElement(newExportedElement, msgs);
 			if (msgs != null) msgs.dispatch();
 		}
 		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_SPECIFIER__ELEMENT, newElement, newElement));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT, newExportedElement, newExportedElement));
 	}
 
 	/**
@@ -153,7 +153,7 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 		String oldAlias = alias;
 		alias = newAlias;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.EXPORT_SPECIFIER__ALIAS, oldAlias, alias));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.NAMED_EXPORT_SPECIFIER__ALIAS, oldAlias, alias));
 	}
 
 	/**
@@ -164,8 +164,8 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case N4JSPackage.EXPORT_SPECIFIER__ELEMENT:
-				return basicSetElement(null, msgs);
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT:
+				return basicSetExportedElement(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -178,9 +178,9 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.EXPORT_SPECIFIER__ELEMENT:
-				return getElement();
-			case N4JSPackage.EXPORT_SPECIFIER__ALIAS:
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT:
+				return getExportedElement();
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER__ALIAS:
 				return getAlias();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -194,10 +194,10 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.EXPORT_SPECIFIER__ELEMENT:
-				setElement((IdentifierRef)newValue);
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT:
+				setExportedElement((IdentifierRef)newValue);
 				return;
-			case N4JSPackage.EXPORT_SPECIFIER__ALIAS:
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER__ALIAS:
 				setAlias((String)newValue);
 				return;
 		}
@@ -212,10 +212,10 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.EXPORT_SPECIFIER__ELEMENT:
-				setElement((IdentifierRef)null);
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT:
+				setExportedElement((IdentifierRef)null);
 				return;
-			case N4JSPackage.EXPORT_SPECIFIER__ALIAS:
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER__ALIAS:
 				setAlias(ALIAS_EDEFAULT);
 				return;
 		}
@@ -230,9 +230,9 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.EXPORT_SPECIFIER__ELEMENT:
-				return element != null;
-			case N4JSPackage.EXPORT_SPECIFIER__ALIAS:
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT:
+				return exportedElement != null;
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER__ALIAS:
 				return ALIAS_EDEFAULT == null ? alias != null : !ALIAS_EDEFAULT.equals(alias);
 		}
 		return super.eIsSet(featureID);
@@ -254,4 +254,4 @@ public class ExportSpecifierImpl extends ProxyResolvingEObjectImpl implements Ex
 		return result.toString();
 	}
 
-} //ExportSpecifierImpl
+} //NamedExportSpecifierImpl

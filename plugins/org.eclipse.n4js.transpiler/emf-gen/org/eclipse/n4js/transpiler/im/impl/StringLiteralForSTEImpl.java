@@ -20,13 +20,10 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.n4js.n4JS.Literal;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.StringLiteral;
-
 import org.eclipse.n4js.n4JS.impl.StringLiteralImpl;
-
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.StringLiteralForSTE;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;

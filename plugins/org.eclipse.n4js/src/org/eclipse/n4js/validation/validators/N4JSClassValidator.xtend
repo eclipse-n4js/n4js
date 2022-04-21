@@ -92,7 +92,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 	def void checkTestClassExported(N4ClassDeclaration classDecl) {
 		if (classDecl?.definedType instanceof TClass) {
 			var clazz = classDecl.definedType as TClass;
-			if (!clazz.abstract && !clazz.exported && clazz.hasTestMethods) {
+			if (!clazz.abstract && !clazz.directlyExported && clazz.hasTestMethods) {
 				addIssue(getMessageForCLF_TEST_CLASS_NOT_EXPORTED, classDecl,
 					N4_TYPE_DECLARATION__NAME, CLF_TEST_CLASS_NOT_EXPORTED
 				);

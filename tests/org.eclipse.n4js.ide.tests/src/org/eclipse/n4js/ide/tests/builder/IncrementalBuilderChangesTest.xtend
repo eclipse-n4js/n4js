@@ -391,6 +391,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 		assertContentOfFileOnDisk(outputFileURI, "// changed");
 	}
 
+	// TODO GH-1822, GH-2060
 	@Ignore("https://github.com/eclipse/n4js/issues/1822")
 	@Test
 	def void testTransitivelyAffected() {
@@ -421,5 +422,67 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 		joinServerRequests();
 		issues = getIssues().values().map[getStringLSP4J.toStringShort(it)].toSet;
 		assertEquals(issues.join('\n'), 0, issues.size);
+	}
+
+	@Test
+	def void testTransitivelyAffected2() {
+		testWorkspaceManager.createTestOnDisk(
+			"OtherProject1" -> #[
+				"Other1" -> '''
+					export public class Cls1 {
+						public field: string;
+					}
+				'''
+			],
+			"OtherProject2" -> #[
+				"Other2" -> '''
+					import { Cls1 } from "Other1"
+					export public class Cls2 extends Cls1 {}
+				''',
+				CFG_DEPENDENCIES -> '''
+					OtherProject1
+				'''
+			],
+			"OtherProject3" -> #[
+				"Other3" -> '''
+					import { Cls2 } from "Other2"
+					export public class Cls3 extends Cls2 {}
+				''',
+				CFG_DEPENDENCIES -> '''
+					OtherProject2
+				'''
+			],
+			"MainProject" -> #[
+				"Main" -> '''
+					import {Cls3} from "Other3";
+
+					let x: string = new Cls3().field;
+				''',
+				CFG_DEPENDENCIES -> '''
+					OtherProject3
+				'''
+			]
+		);
+		startAndWaitForLspServer();
+
+		assertNoIssues();
+
+		changeNonOpenedFile("Other1", "field: string" -> "field: number");
+		joinServerRequests();
+// TODO GH-2060 next line should not be necessary
+cleanBuildAndWait();
+
+		assertIssues(
+			"Main" -> #[
+				"(Error, [2:16 - 2:32], number is not a subtype of string.)"
+			]
+		);
+
+		changeNonOpenedFile("Other1", "field: number" -> "field: string");
+		joinServerRequests();
+// TODO GH-2060 next line should not be necessary
+cleanBuildAndWait();
+
+		assertNoIssues();
 	}
 }

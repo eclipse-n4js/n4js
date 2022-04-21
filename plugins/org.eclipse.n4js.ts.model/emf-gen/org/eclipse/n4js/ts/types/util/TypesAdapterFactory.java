@@ -96,6 +96,22 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 				return createIdentifiableElementAdapter();
 			}
 			@Override
+			public Adapter caseTExportingElement(TExportingElement object) {
+				return createTExportingElementAdapter();
+			}
+			@Override
+			public Adapter caseExportDefinition(ExportDefinition object) {
+				return createExportDefinitionAdapter();
+			}
+			@Override
+			public Adapter caseElementExportDefinition(ElementExportDefinition object) {
+				return createElementExportDefinitionAdapter();
+			}
+			@Override
+			public Adapter caseModuleExportDefinition(ModuleExportDefinition object) {
+				return createModuleExportDefinitionAdapter();
+			}
+			@Override
 			public Adapter caseTExportableElement(TExportableElement object) {
 				return createTExportableElementAdapter();
 			}
@@ -390,6 +406,62 @@ public class TypesAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createIdentifiableElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.TExportingElement <em>TExporting Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.TExportingElement
+	 * @generated
+	 */
+	public Adapter createTExportingElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.ExportDefinition <em>Export Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.ExportDefinition
+	 * @generated
+	 */
+	public Adapter createExportDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.ElementExportDefinition <em>Element Export Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition
+	 * @generated
+	 */
+	public Adapter createElementExportDefinitionAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.types.ModuleExportDefinition <em>Module Export Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.types.ModuleExportDefinition
+	 * @generated
+	 */
+	public Adapter createModuleExportDefinitionAdapter() {
 		return null;
 	}
 

@@ -15,11 +15,15 @@ import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
+import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
+import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 import static extension org.eclipse.n4js.tooling.organizeImports.ImportSpecifiersUtil.*
@@ -33,13 +37,15 @@ class ImportStateCalculator {
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
-	
+
 	/**
 	 * Algorithm to check the Model for Issues with Imports.
 	 * @returns {@link RecordingImportState}
 	 */
 	public def RecordingImportState calculateImportstate(Script script) {
 		val reg = new RecordingImportState();
+
+		val astMetaInfoCache = (script.eResource as N4JSResource).getASTMetaInfoCacheVerifyContext();
 
 		// Calculate Available
 		val importDeclarationsALL = script.scriptElements.filter(ImportDeclaration)
@@ -51,7 +57,7 @@ class ImportStateCalculator {
 //		markDuplicatingSpecifiersAsUnused(importSpecifiersUnAnalyzed)
 
 		// collect all unused if stable
-		reg.registerUnusedAndBrokenImports(importSpecifiersUnAnalyzed)
+		reg.registerUnusedAndBrokenImports(importSpecifiersUnAnalyzed, astMetaInfoCache)
 
 		val List<ImportProvidedElement> importProvidedElements = importSpecifiersUnAnalyzed.filter[!(reg.brokenImports.contains(it))].toList.mapToImportProvidedElements(jsVariantHelper)
 
@@ -219,13 +225,19 @@ class ImportStateCalculator {
 	/**
 	 * Registers unused or broken (missing or unresolved imported module) import specifiers in the provided {@link RecordingImportState}
 	 */
-	private def void registerUnusedAndBrokenImports(RecordingImportState reg, List<ImportSpecifier> importSpecifiers) {
+	private def void registerUnusedAndBrokenImports(RecordingImportState reg, List<ImportSpecifier> importSpecifiers, ASTMetaInfoCache astMetaInfoCache) {
 		for (is : importSpecifiers) {
-			if (! is.isFlaggedUsedInCode) {
+			if (!isNamedImportOfNonExportedElement(is, astMetaInfoCache) // avoid duplicate error messages
+					&& !is.isFlaggedUsedInCode) {
 				reg.registerUnusedImport(is);
 				if (is.isBrokenImport)
 					reg.registerBrokenImport(is);
 			}
 		}
+	}
+
+	private static def boolean isNamedImportOfNonExportedElement(ImportSpecifier importSpec, ASTMetaInfoCache astMetaInfoCache) {
+		return astMetaInfoCache.getLinkingIssueCodes(importSpec, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT)
+			.contains(IssueCodes.IMP_NOT_EXPORTED);
 	}
 }

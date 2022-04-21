@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	File "other1a.n4js" {
+
+		export public var variableVar: string = "hello var";
+		export public class Cls { field: string }
+
+	}
+
+	File "other1b.n4js" {
+
+		export public var variableVar: number = "hello var";
+		export public class Cls { field: number }
+
+	}
+
+	File "other2_ab.n4js" {
+
+		export * from "other1a"
+		export * from "other1b"
+
+	}
+
+	File "other2_ba.n4js" {
+
+		export * from "other1b"
+		export * from "other1a"
+
+	}
+
+	// note: this test is testing internal infrastructure for a feature not available in N4JS[D] (only in .d.ts)
+	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import { variableVar as variableVar_ab } from "other2_ab"
+// XPECT noerrors -->
+import { Cls as Cls_ab } from "other2_ab"
+// XPECT noerrors -->
+import { variableVar as variableVar_ba } from "other2_ba"
+// XPECT noerrors -->
+import { Cls as Cls_ba } from "other2_ba"
+
+
+// XPECT type of 'variableVar_ab' --> number
+variableVar_ab;
+// XPECT type of 'v01' --> number
+let v01 = new Cls_ab().field;
+
+
+// XPECT type of 'variableVar_ba' --> string
+variableVar_ba;
+// XPECT type of 'v02' --> string
+let v02 = new Cls_ba().field;

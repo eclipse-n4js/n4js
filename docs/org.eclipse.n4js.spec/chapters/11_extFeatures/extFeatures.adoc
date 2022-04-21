@@ -1209,6 +1209,7 @@ P.topLevel = \TRUE \land F.topLevel = \TRUE
 ++++
 P.implementedInterfaces=\emptyset
 ++++
+. $P$ must be directly exported.
 . $P$ must have the same access modifier (access, abstract, final) as the filled class: +
 +
 [math]

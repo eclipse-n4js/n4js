@@ -54,8 +54,8 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 */
 	protected TypeVisibility isVisible(final Resource contextResource, final TypeAccessModifier accessModifier,
 			final T element) {
-		int startIndex = accessModifier.getValue();
 
+		int startIndex = accessModifier.getValue();
 		boolean visibility = false;
 		String firstVisible = TypeAccessModifier.PUBLIC.getName().toUpperCase();
 
@@ -105,6 +105,7 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 	 */
 	protected TypeVisibility isVisible(final Resource contextResource, final TypeAccessModifier accessModifier,
 			final IEObjectDescription element) {
+
 		int startIndex = accessModifier.getValue();
 		boolean visibility = false;
 		String firstVisible = "PUBLIC";

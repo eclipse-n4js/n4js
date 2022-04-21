@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	File "other.n4js" {
+
+		export class Cls { field: string }
+
+	}
+
+	// note: this test is testing internal infrastructure for a feature not available in N4JS[D] (only in .d.ts)
+	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+	}
+
+	END_SETUP
+ */
+
+
+namespace NS1 {
+	export { Cls } from "other";
+}
+
+// XPECT type of 'v01' --> string
+let v01 = new NS1.Cls().field;
+
+
+
+namespace NS2 {
+	export { Cls as Cls2 } from "other";
+}
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'Cls'." at "Cls"
+NS2.Cls;
+// XPECT type of 'v02' --> string
+let v02 = new NS2.Cls2().field;

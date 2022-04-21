@@ -148,7 +148,7 @@ class ApiImplStubGenerationTransformation extends Transformation {
 		stub0.annotationList = _AnnotationList( tinter.annotations.map[ AnnotationDefinition.find(it.name) ] )
 
 		// export
-		val stub = wrapExported(tinter.isExported, stub0) as ScriptElement
+		val stub = wrapExported(tinter.isDirectlyExported, stub0) as ScriptElement
 
 		// members
 		// (in an interface stub we need member stubs for static AND non-static members)
@@ -179,7 +179,7 @@ class ApiImplStubGenerationTransformation extends Transformation {
 		stub0.annotationList = _AnnotationList( tclass.annotations.map[ AnnotationDefinition.find(it.name) ] )
 
 		// export
-		val stub = wrapExported(tclass.isExported, stub0) as ScriptElement
+		val stub = wrapExported(tclass.isDirectlyExported, stub0) as ScriptElement
 
 		// members
 		// (in a class stub we need member stubs ONLY for static members)
@@ -201,7 +201,7 @@ class ApiImplStubGenerationTransformation extends Transformation {
 		val stub0 = _EnumDeclaration(tenum.name, tenum.literals.map[ _EnumLiteral(name, name) ] );
 
 		// exported
-		var ScriptElement stub = wrapExported( tenum.isExported ,
+		var ScriptElement stub = wrapExported( tenum.isDirectlyExported ,
 			stub0
 		) as ScriptElement;
 
@@ -233,10 +233,10 @@ class ApiImplStubGenerationTransformation extends Transformation {
 	}
 
 	def private dispatch missing(TVariable tvar){
-		missingFuncOrVar(tvar, tvar.isExported,"variable")
+		missingFuncOrVar(tvar, tvar.isDirectlyExported, "variable")
 	}
 	def private dispatch missing(TFunction func){
-		missingFuncOrVar(func, func.isExported,"function")
+		missingFuncOrVar(func, func.isDirectlyExported, "function")
 	}
 
 	def private N4ApiNotImplementedErrorSTE() {

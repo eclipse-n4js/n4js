@@ -12,8 +12,6 @@ package org.eclipse.n4js.ts.types;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Abstract Namespace</b></em>'.
@@ -26,6 +24,7 @@ import org.eclipse.emf.ecore.EObject;
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getTypes <em>Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExportedVariables <em>Exported Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getLocalVariables <em>Local Variables</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExposedLocalVariables <em>Exposed Local Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNamespaces <em>Namespaces</em>}</li>
  * </ul>
  *
@@ -33,7 +32,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface AbstractNamespace extends EObject {
+public interface AbstractNamespace extends TExportingElement {
 	/**
 	 * Returns the value of the '<em><b>Types</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.Type}.
@@ -87,6 +86,18 @@ public interface AbstractNamespace extends EObject {
 	EList<TVariable> getLocalVariables();
 
 	/**
+	 * Returns the value of the '<em><b>Exposed Local Variables</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TVariable}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Exposed Local Variables</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_ExposedLocalVariables()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<TVariable> getExposedLocalVariables();
+
+	/**
 	 * Returns the value of the '<em><b>Namespaces</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TNamespace}.
 	 * <!-- begin-user-doc -->
@@ -102,6 +113,26 @@ public interface AbstractNamespace extends EObject {
 	 * @generated
 	 */
 	EList<TNamespace> getNamespaces();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns all exportable elements directly contained in this {@link AbstractNamespace},
+	 * including those not actually exported.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfTExportableElement" unique="false"
+	 * @generated
+	 */
+	Iterable<? extends TExportableElement> getExportableElements();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfAbstractNamespace" unique="false"
+	 * @generated
+	 */
+	Iterable<? extends AbstractNamespace> getAllNamespaces();
 
 	/**
 	 * <!-- begin-user-doc -->

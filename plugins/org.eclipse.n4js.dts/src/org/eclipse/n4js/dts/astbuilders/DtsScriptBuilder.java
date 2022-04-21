@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ExportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
@@ -33,6 +34,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
@@ -99,6 +101,12 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	}
 
 	@Override
+	public void enterExportStatement(ExportStatementContext ctx) {
+		ExportDeclaration ed = newExportBuilder().consume(ctx);
+		addToScript(ed);
+	}
+
+	@Override
 	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
 		N4NamespaceDeclaration nd = newNamespaceBuilder().consume(ctx);
 		addAndHandleExported(ctx, nd);
@@ -107,9 +115,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
 		N4NamespaceDeclaration d = newModuleBuilder(srcFolder).consume(ctx);
-		if (d != null) {
-			addAndHandleExported(ctx, d);
-		}
+		addAndHandleExported(ctx, d);
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL1/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-sec/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -1158,6 +1158,54 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitExportStatement(TypeScriptParser.ExportStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code ExportElementDirectly}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void enterExportElementDirectly(TypeScriptParser.ExportElementDirectlyContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExportElementDirectly}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void exitExportElementDirectly(TypeScriptParser.ExportElementDirectlyContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExportElementAsDefault}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void enterExportElementAsDefault(TypeScriptParser.ExportElementAsDefaultContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExportElementAsDefault}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void exitExportElementAsDefault(TypeScriptParser.ExportElementAsDefaultContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExportElements}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void enterExportElements(TypeScriptParser.ExportElementsContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExportElements}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void exitExportElements(TypeScriptParser.ExportElementsContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code ExportModule}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void enterExportModule(TypeScriptParser.ExportModuleContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ExportModule}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 */
+	void exitExportModule(TypeScriptParser.ExportModuleContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code ExportAsNamespace}
 	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
 	 * @param ctx the parse tree
@@ -1194,39 +1242,15 @@ public interface TypeScriptParserListener extends ParseTreeListener {
 	 */
 	void exitExportImport(TypeScriptParser.ExportImportContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code ExportDeclareStatement}
-	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * Enter a parse tree produced by {@link TypeScriptParser#multipleExportElements}.
 	 * @param ctx the parse tree
 	 */
-	void enterExportDeclareStatement(TypeScriptParser.ExportDeclareStatementContext ctx);
+	void enterMultipleExportElements(TypeScriptParser.MultipleExportElementsContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code ExportDeclareStatement}
-	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * Exit a parse tree produced by {@link TypeScriptParser#multipleExportElements}.
 	 * @param ctx the parse tree
 	 */
-	void exitExportDeclareStatement(TypeScriptParser.ExportDeclareStatementContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code ExportElement}
-	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
-	 * @param ctx the parse tree
-	 */
-	void enterExportElement(TypeScriptParser.ExportElementContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code ExportElement}
-	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
-	 * @param ctx the parse tree
-	 */
-	void exitExportElement(TypeScriptParser.ExportElementContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link TypeScriptParser#exportFromBlock}.
-	 * @param ctx the parse tree
-	 */
-	void enterExportFromBlock(TypeScriptParser.ExportFromBlockContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link TypeScriptParser#exportFromBlock}.
-	 * @param ctx the parse tree
-	 */
-	void exitExportFromBlock(TypeScriptParser.ExportFromBlockContext ctx);
+	void exitMultipleExportElements(TypeScriptParser.MultipleExportElementsContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link TypeScriptParser#variableStatement}.
 	 * @param ctx the parse tree

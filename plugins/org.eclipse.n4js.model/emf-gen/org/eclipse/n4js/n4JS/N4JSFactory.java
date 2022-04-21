@@ -50,13 +50,22 @@ public interface N4JSFactory extends EFactory {
 	ExportDeclaration createExportDeclaration();
 
 	/**
-	 * Returns a new object of class '<em>Export Specifier</em>'.
+	 * Returns a new object of class '<em>Namespace Export Specifier</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Export Specifier</em>'.
+	 * @return a new object of class '<em>Namespace Export Specifier</em>'.
 	 * @generated
 	 */
-	ExportSpecifier createExportSpecifier();
+	NamespaceExportSpecifier createNamespaceExportSpecifier();
+
+	/**
+	 * Returns a new object of class '<em>Named Export Specifier</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Named Export Specifier</em>'.
+	 * @generated
+	 */
+	NamedExportSpecifier createNamedExportSpecifier();
 
 	/**
 	 * Returns a new object of class '<em>Import Declaration</em>'.

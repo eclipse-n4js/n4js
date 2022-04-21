@@ -389,7 +389,8 @@ class N4JSScopingTest {
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
 				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" simpleName="Supplier" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" packageName="org.eclipse.n4js.lang.tests" projectID="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js">
-				  <types xsi:type="types:TClass" name="Supplier" exportedName="Supplier">
+				  <exportDefinitions xsi:type="types:ElementExportDefinition" exportedName="Supplier" exportedElement="//@types.0"/>
+				  <types xsi:type="types:TClass" name="Supplier" directlyExported="true" exportingExportDefinitions="//@exportDefinitions.0">
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
 				      <astElement href="#/0/@scriptElements.0/@exportedElement/@ownedMembersRaw.0"/>
 				      <returnTypeRef xsi:type="typeRefs:ParameterizedTypeRef" declaredType="//@types.0"/>

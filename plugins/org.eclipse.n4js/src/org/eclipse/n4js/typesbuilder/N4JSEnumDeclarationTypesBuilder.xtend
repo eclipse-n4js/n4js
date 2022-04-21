@@ -81,7 +81,6 @@ public class N4JSEnumDeclarationTypesBuilder {
 	def private TEnum createTEnum(N4EnumDeclaration n4Enum) {
 		val enumType = TypesFactory::eINSTANCE.createTEnum();
 		enumType.name = n4Enum.name;
-		enumType.exportedName = n4Enum.exportedName;
 		enumType.external = n4Enum.external;
 		enumType
 	}

@@ -1,0 +1,90 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	File "other.n4js" {
+
+		// these elements are not exported at all:
+
+		public var variableVar1: string = "hello var";
+		public let variableLet1: string = "hello let";
+		public const variableConst1: string = "hello const";
+		public interface Ifc1 { method(p: string): int }
+		public class Cls1 { field: string }
+		public enum Enum1 { Li1, Lit2, Lit3 }
+		public function foo1(p: string): int {}
+		public type TypeAlias1 = string;
+
+		// these elements are exported under an alias:
+
+		public var variableVar2: string = "hello var";
+		public let variableLet2: string = "hello let";
+		public const variableConst2: string = "hello const";
+		public interface Ifc2 { method(p: string): int }
+		public class Cls2 { field: string }
+		public enum Enum2 { Li1, Lit2, Lit3 }
+		public function foo2(p: string): int {}
+		public type TypeAlias2 = string;
+
+		export { variableVar2 as variableVarAlias, variableLet2 as variableLetAlias, variableConst2 as variableConstAlias };
+		export { Ifc2 as IfcAlias, Cls2 as ClsAlias, Enum2 as EnumAlias };
+		export { foo2 as fooAlias };
+		export { TypeAlias2 as TypeAliasAlias };
+
+	}
+
+	// note: this test is testing internal infrastructure for a feature not available in N4JS[D] (only in .d.ts)
+	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+	}
+
+	END_SETUP
+ */
+
+
+// for all the above elements in other.n4js, we must be unable to import them:
+
+
+// XPECT errors ---
+// "Import of variableVar1 cannot be resolved." at "variableVar1"
+// "Import of variableLet1 cannot be resolved." at "variableLet1"
+// "Import of variableConst1 cannot be resolved." at "variableConst1"
+// ---
+import { variableVar1, variableLet1, variableConst1 } from "other"
+// XPECT errors ---
+// "Element Ifc1 is not exported." at "Ifc1"
+// "Element Cls1 is not exported." at "Cls1"
+// "Element Enum1 is not exported." at "Enum1"
+// ---
+import { Ifc1, Cls1, Enum1 } from "other"
+// XPECT errors --> "Element foo1 is not exported." at "foo1"
+import { foo1 } from "other"
+// XPECT errors --> "Element TypeAlias1 is not exported." at "TypeAlias1"
+import { TypeAlias1 } from "other"
+
+
+// XPECT errors ---
+// "Element variableVar2 is not exported." at "variableVar2"
+// "Element variableLet2 is not exported." at "variableLet2"
+// "Element variableConst2 is not exported." at "variableConst2"
+// ---
+import { variableVar2, variableLet2, variableConst2 } from "other"
+// XPECT errors ---
+// "Element Ifc2 is not exported." at "Ifc2"
+// "Element Cls2 is not exported." at "Cls2"
+// "Element Enum2 is not exported." at "Enum2"
+// ---
+import { Ifc2, Cls2, Enum2 } from "other"
+// XPECT errors --> "Element foo2 is not exported." at "foo2"
+import { foo2 } from "other"
+// XPECT errors --> "Element TypeAlias2 is not exported." at "TypeAlias2"
+import { TypeAlias2 } from "other"

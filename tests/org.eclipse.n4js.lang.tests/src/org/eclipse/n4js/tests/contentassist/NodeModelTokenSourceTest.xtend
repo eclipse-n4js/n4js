@@ -280,7 +280,7 @@ class NodeModelTokenSourceTest implements Procedures.Procedure1<Integer> {
 	def void testKnownRightCurlies() {
 		val curlies = grammarAccess.findKeywords('}').filter[!(GrammarUtil.containingRule(it) instanceof TerminalRule)].toSet
 
-		Assert.assertTrue(curlies.remove(grammarAccess.exportClauseAccess.rightCurlyBracketKeyword_2))
+		Assert.assertTrue(curlies.remove(grammarAccess.namedExportClauseAccess.rightCurlyBracketKeyword_2))
 		Assert.assertTrue(curlies.remove(grammarAccess.annotatedScriptElementAccess.rightCurlyBracketKeyword_1_4_7))
 		
 		Assert.assertTrue(curlies.remove(grammarAccess.annotatedNamespaceElementAccess.rightCurlyBracketKeyword_1_2_7))

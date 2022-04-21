@@ -20,7 +20,7 @@ export public type A2 = string;
 // XPECT noerrors -->
 @Internal export public type A3 = string;
 
-// XPECT errors --> "A type with visibility public must be marked with modifier export." at "public"
+// XPECT errors --> "Unsupported feature: non-exported type alias with a visibility higher than private." at "public"
 public type A4 = string;
 
 

@@ -521,8 +521,8 @@ public class ASTProcessor extends AbstractProcessor {
 			return;
 		}
 		if (target instanceof TVariable) {
-			// don't save references to exported variables
-			if (target.exported) {
+			// don't record references to directly exported variables
+			if (target.directlyExported) {
 				return;
 			}
 

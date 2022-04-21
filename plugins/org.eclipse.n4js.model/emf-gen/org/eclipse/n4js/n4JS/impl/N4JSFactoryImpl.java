@@ -72,7 +72,8 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 		switch (eClass.getClassifierID()) {
 			case N4JSPackage.SCRIPT: return createScript();
 			case N4JSPackage.EXPORT_DECLARATION: return createExportDeclaration();
-			case N4JSPackage.EXPORT_SPECIFIER: return createExportSpecifier();
+			case N4JSPackage.NAMESPACE_EXPORT_SPECIFIER: return createNamespaceExportSpecifier();
+			case N4JSPackage.NAMED_EXPORT_SPECIFIER: return createNamedExportSpecifier();
 			case N4JSPackage.IMPORT_DECLARATION: return createImportDeclaration();
 			case N4JSPackage.NAMED_IMPORT_SPECIFIER: return createNamedImportSpecifier();
 			case N4JSPackage.DEFAULT_IMPORT_SPECIFIER: return createDefaultImportSpecifier();
@@ -331,9 +332,20 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	 * @generated
 	 */
 	@Override
-	public ExportSpecifier createExportSpecifier() {
-		ExportSpecifierImpl exportSpecifier = new ExportSpecifierImpl();
-		return exportSpecifier;
+	public NamespaceExportSpecifier createNamespaceExportSpecifier() {
+		NamespaceExportSpecifierImpl namespaceExportSpecifier = new NamespaceExportSpecifierImpl();
+		return namespaceExportSpecifier;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public NamedExportSpecifier createNamedExportSpecifier() {
+		NamedExportSpecifierImpl namedExportSpecifier = new NamedExportSpecifierImpl();
+		return namedExportSpecifier;
 	}
 
 	/**

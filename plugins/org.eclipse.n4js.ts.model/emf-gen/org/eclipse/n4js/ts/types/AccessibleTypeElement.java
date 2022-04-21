@@ -120,6 +120,6 @@ public interface AccessibleTypeElement extends EObject {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	boolean isExported();
+	boolean isDirectlyExported();
 
 } // AccessibleTypeElement

@@ -256,14 +256,24 @@ public class ProjectBuilder {
 	 * way of hash comparison.
 	 */
 	public ResourceChangeSet scanForSourceFileChanges() {
+		Set<URI> existingSourceFileURIs = scanForSourceFiles();
+		return scanForSourceFileChanges(existingSourceFileURIs, existingSourceFileURIs);
+	}
+
+	/**
+	 * Like {@link #scanForSourceFileChanges()}, but allows for more control over what source files are assumed to exist
+	 * at the moment.
+	 */
+	protected ResourceChangeSet scanForSourceFileChanges(Set<URI> currSourceFileURIsToConsider,
+			Set<URI> currSourceFileURIsOnDisk) {
+
 		ResourceChangeSet result = new ResourceChangeSet();
 		ImmutableProjectState oldProjectState = this.projectStateSnapshot.get();
 		Map<URI, HashedFileContent> oldHashes = oldProjectState.getFileHashes();
 		Set<URI> oldSourceFilesURIs = oldProjectState.internalGetResourceDescriptions().getAllURIs();
-		Set<URI> existingSourceFileURIs = scanForSourceFiles();
-		for (URI currURI : Sets.union(oldSourceFilesURIs, existingSourceFileURIs)) {
+		for (URI currURI : Sets.union(oldSourceFilesURIs, currSourceFileURIsToConsider)) {
 			boolean isOld = oldSourceFilesURIs.contains(currURI);
-			boolean isNew = existingSourceFileURIs.contains(currURI);
+			boolean isNew = currSourceFileURIsOnDisk.contains(currURI);
 			if (!isOld && isNew) {
 				// added
 				result.getDirty().add(currURI);

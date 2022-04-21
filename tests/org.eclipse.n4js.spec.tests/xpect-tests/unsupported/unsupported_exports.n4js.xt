@@ -12,10 +12,6 @@
 /* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP  */
 
 
-class C {}
-class D {}
-
-
 // XPECT errors --> "Unsupported feature: anonymous default export." at "class {}"
 export default class {}
 // XPECT errors ---
@@ -35,12 +31,18 @@ export default enum { YES, NO }
 export default function() {}
 
 
+// XPECT errors --> "Unsupported feature: non-exported class with a visibility higher than private." at "public"
+public class C {}
 // XPECT errors --> "Unsupported feature: separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration)." at "export {C} "
 export {C}
-
-
+// XPECT errors --> "Unsupported feature: non-exported class with a visibility higher than private." at "public"
+public class D {}
 // XPECT errors --> "Unsupported feature: separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration)." at "export {D as X} "
 export {D as X}
+// XPECT errors --> "Unsupported feature: non-exported variable with a visibility higher than private." at "public"
+public var v;
+// XPECT errors --> "Unsupported feature: separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration)." at "export {v} "
+export {v}
 
 
 // XPECT errors ---

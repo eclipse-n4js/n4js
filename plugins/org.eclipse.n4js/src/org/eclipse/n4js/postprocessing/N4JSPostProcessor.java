@@ -20,13 +20,19 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
+import org.eclipse.n4js.ts.types.AbstractNamespace;
+import org.eclipse.n4js.ts.types.ElementExportDefinition;
+import org.eclipse.n4js.ts.types.ExportDefinition;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
@@ -120,8 +126,9 @@ public class N4JSPostProcessor implements PostProcessor {
 		// Reason is that flow analysis shall not trigger resolution of other resources.
 		// Note that flow analysis is intra-procedural only and does not rely on information of other resources.
 		try (TameAutoClosable tac = n4jsScopeProvider.newCrossFileResolutionSuppressor()) {
-			// step 1: resolve all local IdentifierRefs
+			// step 1: eager resolution of selected proxies (iff they are local, i.e. point to a target in 'resource')
 			resolveLocalIdentifierRefs(resource);
+			resolveExportableElementOfExportDefinitions(resource);
 			// step 2: create CFG/DFG and perform flow analyses
 			performFlowAnalysis(resource, cancelIndicator);
 		}
@@ -129,7 +136,7 @@ public class N4JSPostProcessor implements PostProcessor {
 		astProcessor.processAST(resource, cancelIndicator);
 		// step 4: expose internal types visible from outside
 		// (i.e. if they are referenced from a type that is visible form the outside)
-		exposeReferencedInternalTypes(resource);
+		exposeReferencedInternalElements(resource);
 		// step 5: resolve remaining proxies in TModule
 		// (the TModule was created programmatically, so it usually does not contain proxies; however, in case of
 		// explicitly declared types, the types builder copies type references from the AST to the corresponding
@@ -145,7 +152,31 @@ public class N4JSPostProcessor implements PostProcessor {
 		for (Iterator<EObject> iter = script.eAllContents(); iter.hasNext();) {
 			EObject eObject = iter.next();
 			if (eObject instanceof IdentifierRef) {
+				if (eObject.eContainer() instanceof NamedExportSpecifier) {
+					continue;
+				}
 				((IdentifierRef) eObject).getId(); // do resolve
+			}
+		}
+	}
+
+	private void resolveExportableElementOfExportDefinitions(N4JSResource resource) {
+		TModule module = resource.getModule();
+
+		for (AbstractNamespace namespace : module.getAllNamespaces()) {
+			for (ExportDefinition exportDef : namespace.getExportDefinitions()) {
+				if (exportDef instanceof ElementExportDefinition) {
+					ElementExportDefinition exportDefCasted = (ElementExportDefinition) exportDef;
+					TExportableElement elem = exportDefCasted.getExportedElement();
+					if (elem != null && !elem.eIsProxy()) {
+						// cross-file resolution is suppressed (see above), so a resolved proxy should always mean that
+						// 'elem' is located in 'resource'; however, because cross-file resolution suppression is not
+						// working reliably, we need to make sure:
+						if (elem.eResource() == resource) {
+							elem.getExportingExportDefinitions().add(exportDefCasted);
+						}
+					}
+				}
 			}
 		}
 	}
@@ -162,39 +193,81 @@ public class N4JSPostProcessor implements PostProcessor {
 	 * Moves all types contained in 'internalTypes' to 'exposedInternalTypes' that are referenced from any top level
 	 * type or a variable.
 	 */
-	private static void exposeReferencedInternalTypes(N4JSResource res) {
+	private static void exposeReferencedInternalElements(N4JSResource res) {
 		final TModule module = res.getModule();
 		if (module == null) {
 			return;
 		}
 
-		// reset, i.e. make all exposed types internal again
-		module.getInternalTypes().addAll(module.getExposedInternalTypes());
+		// reset, i.e. make all exposed internal types / exposed local variables internal again
+		resetExposedInternalElements(module);
+
+		// move local variables to exposedLocalVariables if they are exported
+		// (note: must be done before moving internal types!)
+		exposeExportedLocalVariables(module);
 
 		// move internal types to exposedInternalTypes if referenced from types or variables
 		final List<EObject> stuffToScan = new ArrayList<>();
-		stuffToScan.addAll(module.getTypes());
-		stuffToScan.addAll(module.getExportedVariables());
+		collectExposingObjects(module, stuffToScan);
 		for (EObject currRoot : stuffToScan) {
-			exposeTypesReferencedBy(currRoot);
+			exposeTypesReferencedBy(currRoot, true);
 		}
 	}
 
-	private static void exposeTypesReferencedBy(EObject root) {
-		final TreeIterator<EObject> i = root.eAllContents();
-		while (i.hasNext()) {
-			final EObject object = i.next();
-			for (EReference currRef : object.eClass().getEAllReferences()) {
-				if (!currRef.isContainment() && !currRef.isContainer()) {
-					final Object currTarget = object.eGet(currRef);
-					if (currTarget instanceof Collection<?>) {
-						for (Object currObj : (Collection<?>) currTarget) {
-							exposeType(currObj);
-						}
-					} else {
-						exposeType(currTarget);
+	private static void resetExposedInternalElements(TModule module) {
+		module.getInternalTypes().addAll(module.getExposedInternalTypes());
+		for (AbstractNamespace namespace : module.getAllNamespaces()) {
+			namespace.getLocalVariables().addAll(namespace.getExposedLocalVariables());
+		}
+	}
+
+	private static void exposeExportedLocalVariables(TModule module) {
+		List<TVariable> toExpose = new ArrayList<>();
+		for (AbstractNamespace namespace : module.getAllNamespaces()) {
+			for (ExportDefinition exportDef : namespace.getExportDefinitions()) {
+				if (exportDef instanceof ElementExportDefinition) {
+					TExportableElement expElem = ((ElementExportDefinition) exportDef).getExportedElement();
+					if (expElem.eContainingFeature() == TypesPackage.eINSTANCE.getAbstractNamespace_LocalVariables()) {
+						toExpose.add((TVariable) expElem);
 					}
 				}
+			}
+			if (!toExpose.isEmpty()) {
+				EcoreUtilN4.doWithDeliver(false, () -> {
+					namespace.getExposedLocalVariables().addAll(toExpose);
+				}, namespace, module);
+				toExpose.clear();
+			}
+		}
+	}
+
+	private static void collectExposingObjects(TModule module, List<EObject> addHere) {
+		addHere.addAll(module.getExportDefinitions());
+		for (AbstractNamespace namespace : module.getAllNamespaces()) {
+			addHere.addAll(namespace.getTypes());
+			addHere.addAll(namespace.getExportedVariables());
+			addHere.addAll(namespace.getExposedLocalVariables());
+		}
+	}
+
+	private static void exposeTypesReferencedBy(EObject object, boolean includeChildren) {
+		for (EReference currRef : object.eClass().getEAllReferences()) {
+			if (!currRef.isContainment() && !currRef.isContainer()) {
+				final Object currTarget = object.eGet(currRef);
+				if (currTarget instanceof Collection<?>) {
+					for (Object currObj : (Collection<?>) currTarget) {
+						exposeType(currObj);
+					}
+				} else {
+					exposeType(currTarget);
+				}
+			}
+		}
+		if (includeChildren) {
+			final TreeIterator<EObject> i = object.eAllContents();
+			while (i.hasNext()) {
+				final EObject child = i.next();
+				exposeTypesReferencedBy(child, false);
 			}
 		}
 	}
@@ -226,7 +299,7 @@ public class N4JSPostProcessor implements PostProcessor {
 			// everything referenced by the type we just moved to 'exposedInternalTypes' has to be exposed as well
 			// (this is required, for example, if 'root' is a structural type, see:
 			// org.eclipse.n4js.xpect.ui.tests/testdata_ui/typesystem/structuralTypeRefWithMembersAcrossFiles/Main.n4js.xt)
-			exposeTypesReferencedBy(root);
+			exposeTypesReferencedBy(root, true);
 		}
 	}
 }

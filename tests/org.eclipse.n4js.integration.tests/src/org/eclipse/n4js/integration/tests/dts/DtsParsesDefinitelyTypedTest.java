@@ -13,14 +13,18 @@ package org.eclipse.n4js.integration.tests.dts;
 import static org.eclipse.n4js.tests.helper.git.GitUtils.hardReset;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -34,13 +38,25 @@ import org.junit.Test;
 
 import com.google.common.base.StandardSystemProperty;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.FluentIterable;
 
 /**
  * Test for d.ts grammar
  */
 public class DtsParsesDefinitelyTypedTest {
+
 	static final String WORKSPACE_ENV = "WORKSPACE";
 	static final String DEFINITELY_TYPED_CHECKOUT_DIR_NAME = "checkout_definitely_typed_snapshot";
+
+	/**
+	 * If non-<code>null</code>, loads list of files with known failures/errors from the given file and emits additional
+	 * messages when encountering failures/errors in other files.
+	 */
+	private static final Path LOAD_BAD_FILES_FROM = null; // Path.of("/Users/MyName/Desktop/bad-dts-files.txt");
+	/**
+	 * If non-<code>null</code>, saves list of files with failures/errors to the given file.
+	 */
+	private static final Path SAVE_BAD_FILES_TO = null; // Path.of("/Users/MyName/Desktop/bad-dts-files.txt");
 
 	/** Parse every d.ts-file in the definitely typed repository (except some) */
 	@Test
@@ -87,10 +103,23 @@ public class DtsParsesDefinitelyTypedTest {
 				.collect(Collectors.toList());
 		Collections.sort(files, (p1, p2) -> p1.toString().compareTo(p2.toString()));
 
+		Set<Path> badFilesExpected = null;
+		if (LOAD_BAD_FILES_FROM != null) {
+			badFilesExpected = FluentIterable.from(Files.readString(LOAD_BAD_FILES_FROM).split("\\n"))
+					.transform(s -> Path.of(s))
+					.toSet();
+		}
+		PrintWriter w = null;
+		if (SAVE_BAD_FILES_TO != null) {
+			Files.deleteIfExists(SAVE_BAD_FILES_TO);
+			w = new PrintWriter(new BufferedWriter(new FileWriter(SAVE_BAD_FILES_TO.toFile())));
+		}
+
 		int filesCount = files.size();
 		int pass = 0;
 		int fail = 0;
 		int error = 0;
+		int unexpectedBad = 0;
 		System.out.println("Processing " + filesCount + " files ...");
 		Stopwatch sw = Stopwatch.createStarted();
 
@@ -104,6 +133,14 @@ public class DtsParsesDefinitelyTypedTest {
 
 				if (parseResult.hasSyntaxErrors()) {
 					fail++;
+					if (w != null) {
+						w.println(file);
+						w.flush();
+					}
+					if (badFilesExpected != null && !badFilesExpected.contains(file)) {
+						unexpectedBad++;
+						System.out.println("UNEXPECTED FAILURE: " + file);
+					}
 				} else {
 					pass++;
 				}
@@ -112,11 +149,26 @@ public class DtsParsesDefinitelyTypedTest {
 				e.printStackTrace();
 
 				if (e instanceof Error) {
+					if (w != null) {
+						w.close();
+					}
 					throw e;
 				}
 
 				error++;
+				if (w != null) {
+					w.println(file);
+					w.flush();
+				}
+				if (badFilesExpected != null && !badFilesExpected.contains(file)) {
+					unexpectedBad++;
+					System.out.println("UNEXPECTED ERROR: " + file);
+				}
 			}
+		}
+
+		if (w != null) {
+			w.close();
 		}
 
 		System.out.println("Done processing " + filesCount + " files in " + sw.elapsed(TimeUnit.SECONDS) + "s");
@@ -134,6 +186,10 @@ public class DtsParsesDefinitelyTypedTest {
 
 		if (pass < minPass) {
 			Assert.fail("Less passes detected than expected: " + pass);
+		}
+
+		if (unexpectedBad > 0) {
+			Assert.fail("Encountered failure(s)/error(s) in " + unexpectedBad + " unexpected files.");
 		}
 	}
 

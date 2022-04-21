@@ -1,4 +1,4 @@
-// Generated from /Users/marcusmews/Eclipses/ECL1/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-sec/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -700,6 +700,34 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExportStatement(TypeScriptParser.ExportStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ExportElementDirectly}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExportElementDirectly(TypeScriptParser.ExportElementDirectlyContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExportElementAsDefault}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExportElementAsDefault(TypeScriptParser.ExportElementAsDefaultContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExportElements}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExportElements(TypeScriptParser.ExportElementsContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ExportModule}
+	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExportModule(TypeScriptParser.ExportModuleContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code ExportAsNamespace}
 	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
 	 * @param ctx the parse tree
@@ -721,25 +749,11 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExportImport(TypeScriptParser.ExportImportContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code ExportDeclareStatement}
-	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
+	 * Visit a parse tree produced by {@link TypeScriptParser#multipleExportElements}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExportDeclareStatement(TypeScriptParser.ExportDeclareStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code ExportElement}
-	 * labeled alternative in {@link TypeScriptParser#exportStatementTail}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExportElement(TypeScriptParser.ExportElementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link TypeScriptParser#exportFromBlock}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExportFromBlock(TypeScriptParser.ExportFromBlockContext ctx);
+	T visitMultipleExportElements(TypeScriptParser.MultipleExportElementsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#variableStatement}.
 	 * @param ctx the parse tree

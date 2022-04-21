@@ -18,7 +18,7 @@
 		}
 	}
 	File "tslib2.d.ts" {
-		import {K, C} from "tslib1.d.ts" // extension is trimmed
+		import {K, C} from "./tslib1.d.ts" // extension is trimmed
 		export const Kconst = K;
 		export const Cconst1 : C = C.R;
 		export const Cconst2 = C.R;

@@ -78,6 +78,43 @@ public interface TypesPackage extends EPackage {
 	TypesPackage eINSTANCE = org.eclipse.n4js.ts.types.impl.TypesPackageImpl.init();
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TExportingElementImpl <em>TExporting Element</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.TExportingElementImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTExportingElement()
+	 * @generated
+	 */
+	int TEXPORTING_ELEMENT = 5;
+
+	/**
+	 * The feature id for the '<em><b>Export Definitions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXPORTING_ELEMENT__EXPORT_DEFINITIONS = 0;
+
+	/**
+	 * The number of structural features of the '<em>TExporting Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXPORTING_ELEMENT_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>TExporting Element</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXPORTING_ELEMENT_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl <em>Abstract Namespace</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -85,7 +122,16 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAbstractNamespace()
 	 * @generated
 	 */
-	int ABSTRACT_NAMESPACE = 20;
+	int ABSTRACT_NAMESPACE = 24;
+
+	/**
+	 * The feature id for the '<em><b>Export Definitions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE__EXPORT_DEFINITIONS = TEXPORTING_ELEMENT__EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
@@ -94,7 +140,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE__TYPES = 0;
+	int ABSTRACT_NAMESPACE__TYPES = TEXPORTING_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Exported Variables</b></em>' containment reference list.
@@ -103,7 +149,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE__EXPORTED_VARIABLES = 1;
+	int ABSTRACT_NAMESPACE__EXPORTED_VARIABLES = TEXPORTING_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Local Variables</b></em>' containment reference list.
@@ -112,7 +158,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE__LOCAL_VARIABLES = 2;
+	int ABSTRACT_NAMESPACE__LOCAL_VARIABLES = TEXPORTING_ELEMENT_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Exposed Local Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES = TEXPORTING_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -121,7 +176,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE__NAMESPACES = 3;
+	int ABSTRACT_NAMESPACE__NAMESPACES = TEXPORTING_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Abstract Namespace</em>' class.
@@ -130,7 +185,25 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE_FEATURE_COUNT = 4;
+	int ABSTRACT_NAMESPACE_FEATURE_COUNT = TEXPORTING_ELEMENT_FEATURE_COUNT + 5;
+
+	/**
+	 * The operation id for the '<em>Get Exportable Elements</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS = TEXPORTING_ELEMENT_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get All Namespaces</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ABSTRACT_NAMESPACE___GET_ALL_NAMESPACES = TEXPORTING_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -139,7 +212,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE = 0;
+	int ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE = TEXPORTING_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Clear Transient Elements</em>' operation.
@@ -148,7 +221,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS = 1;
+	int ABSTRACT_NAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TEXPORTING_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Abstract Namespace</em>' class.
@@ -157,7 +230,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ABSTRACT_NAMESPACE_OPERATION_COUNT = 2;
+	int ABSTRACT_NAMESPACE_OPERATION_COUNT = TEXPORTING_ELEMENT_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TModuleImpl <em>TModule</em>}' class.
@@ -168,6 +241,15 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	int TMODULE = 0;
+
+	/**
+	 * The feature id for the '<em><b>Export Definitions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__EXPORT_DEFINITIONS = ABSTRACT_NAMESPACE__EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
@@ -195,6 +277,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMODULE__LOCAL_VARIABLES = ABSTRACT_NAMESPACE__LOCAL_VARIABLES;
+
+	/**
+	 * The feature id for the '<em><b>Exposed Local Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__EXPOSED_LOCAL_VARIABLES = ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -431,6 +522,24 @@ public interface TypesPackage extends EPackage {
 	int TMODULE_FEATURE_COUNT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 24;
 
 	/**
+	 * The operation id for the '<em>Get Exportable Elements</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___GET_EXPORTABLE_ELEMENTS = ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS;
+
+	/**
+	 * The operation id for the '<em>Get All Namespaces</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___GET_ALL_NAMESPACES = ABSTRACT_NAMESPACE___GET_ALL_NAMESPACES;
+
+	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -633,6 +742,153 @@ public interface TypesPackage extends EPackage {
 	int IDENTIFIABLE_ELEMENT_OPERATION_COUNT = TYPABLE_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl <em>Export Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getExportDefinition()
+	 * @generated
+	 */
+	int EXPORT_DEFINITION = 6;
+
+	/**
+	 * The number of structural features of the '<em>Export Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORT_DEFINITION_FEATURE_COUNT = 0;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORT_DEFINITION___GET_CONTAINING_MODULE = 0;
+
+	/**
+	 * The number of operations of the '<em>Export Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORT_DEFINITION_OPERATION_COUNT = 1;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl <em>Element Export Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getElementExportDefinition()
+	 * @generated
+	 */
+	int ELEMENT_EXPORT_DEFINITION = 7;
+
+	/**
+	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME = EXPORT_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Polyfill</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION__POLYFILL = EXPORT_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Exported Element</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT = EXPORT_DEFINITION_FEATURE_COUNT + 2;
+
+	/**
+	 * The number of structural features of the '<em>Element Export Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION_FEATURE_COUNT = EXPORT_DEFINITION_FEATURE_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION___GET_CONTAINING_MODULE = EXPORT_DEFINITION___GET_CONTAINING_MODULE;
+
+	/**
+	 * The number of operations of the '<em>Element Export Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ELEMENT_EXPORT_DEFINITION_OPERATION_COUNT = EXPORT_DEFINITION_OPERATION_COUNT + 0;
+
+	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ModuleExportDefinitionImpl <em>Module Export Definition</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.ModuleExportDefinitionImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleExportDefinition()
+	 * @generated
+	 */
+	int MODULE_EXPORT_DEFINITION = 8;
+
+	/**
+	 * The feature id for the '<em><b>Exported Module</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_EXPORT_DEFINITION__EXPORTED_MODULE = EXPORT_DEFINITION_FEATURE_COUNT + 0;
+
+	/**
+	 * The number of structural features of the '<em>Module Export Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_EXPORT_DEFINITION_FEATURE_COUNT = EXPORT_DEFINITION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Containing Module</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_EXPORT_DEFINITION___GET_CONTAINING_MODULE = EXPORT_DEFINITION___GET_CONTAINING_MODULE;
+
+	/**
+	 * The number of operations of the '<em>Module Export Definition</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_EXPORT_DEFINITION_OPERATION_COUNT = EXPORT_DEFINITION_OPERATION_COUNT + 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TExportableElementImpl <em>TExportable Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -640,7 +896,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTExportableElement()
 	 * @generated
 	 */
-	int TEXPORTABLE_ELEMENT = 5;
+	int TEXPORTABLE_ELEMENT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -652,13 +908,31 @@ public interface TypesPackage extends EPackage {
 	int TEXPORTABLE_ELEMENT__NAME = IDENTIFIABLE_ELEMENT__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEXPORTABLE_ELEMENT__EXPORTED_NAME = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 0;
+	int TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The number of structural features of the '<em>TExportable Element</em>' class.
@@ -667,7 +941,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TEXPORTABLE_ELEMENT_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 1;
+	int TEXPORTABLE_ELEMENT_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -688,13 +962,31 @@ public interface TypesPackage extends EPackage {
 	int TEXPORTABLE_ELEMENT___IS_EXPORTED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 2;
+
+	/**
 	 * The number of operations of the '<em>TExportable Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TEXPORTABLE_ELEMENT_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 1;
+	int TEXPORTABLE_ELEMENT_OPERATION_COUNT = IDENTIFIABLE_ELEMENT_OPERATION_COUNT + 3;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TDynamicElementImpl <em>TDynamic Element</em>}' class.
@@ -704,7 +996,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTDynamicElement()
 	 * @generated
 	 */
-	int TDYNAMIC_ELEMENT = 6;
+	int TDYNAMIC_ELEMENT = 10;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -716,13 +1008,31 @@ public interface TypesPackage extends EPackage {
 	int TDYNAMIC_ELEMENT__NAME = TEXPORTABLE_ELEMENT__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TDYNAMIC_ELEMENT__EXPORTED_NAME = TEXPORTABLE_ELEMENT__EXPORTED_NAME;
+	int TDYNAMIC_ELEMENT__DIRECTLY_EXPORTED = TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TDYNAMIC_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT = TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TDYNAMIC_ELEMENT__EXPORTING_EXPORT_DEFINITIONS = TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -761,6 +1071,24 @@ public interface TypesPackage extends EPackage {
 	int TDYNAMIC_ELEMENT___IS_EXPORTED = TEXPORTABLE_ELEMENT___IS_EXPORTED;
 
 	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TDYNAMIC_ELEMENT___IS_INDIRECTLY_EXPORTED = TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TDYNAMIC_ELEMENT___GET_DIRECTLY_EXPORTED_NAME = TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME;
+
+	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -786,7 +1114,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotation()
 	 * @generated
 	 */
-	int TANNOTATION = 7;
+	int TANNOTATION = 11;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -850,7 +1178,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationArgument()
 	 * @generated
 	 */
-	int TANNOTATION_ARGUMENT = 8;
+	int TANNOTATION_ARGUMENT = 12;
 
 	/**
 	 * The number of structural features of the '<em>TAnnotation Argument</em>' class.
@@ -887,7 +1215,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationStringArgument()
 	 * @generated
 	 */
-	int TANNOTATION_STRING_ARGUMENT = 9;
+	int TANNOTATION_STRING_ARGUMENT = 13;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -933,7 +1261,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTTypedElement()
 	 * @generated
 	 */
-	int TTYPED_ELEMENT = 10;
+	int TTYPED_ELEMENT = 14;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -970,7 +1298,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationTypeRefArgument()
 	 * @generated
 	 */
-	int TANNOTATION_TYPE_REF_ARGUMENT = 11;
+	int TANNOTATION_TYPE_REF_ARGUMENT = 15;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -1016,7 +1344,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotableElement()
 	 * @generated
 	 */
-	int TANNOTABLE_ELEMENT = 12;
+	int TANNOTABLE_ELEMENT = 16;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1053,7 +1381,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getType()
 	 * @generated
 	 */
-	int TYPE = 16;
+	int TYPE = 20;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1065,13 +1393,31 @@ public interface TypesPackage extends EPackage {
 	int TYPE__NAME = TEXPORTABLE_ELEMENT__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE__EXPORTED_NAME = TEXPORTABLE_ELEMENT__EXPORTED_NAME;
+	int TYPE__DIRECTLY_EXPORTED = TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE__EXPORTING_EXPORT_DEFINITIONS = TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1108,6 +1454,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE___IS_EXPORTED = TEXPORTABLE_ELEMENT___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE___IS_INDIRECTLY_EXPORTED = TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE___GET_DIRECTLY_EXPORTED_NAME = TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -1261,7 +1625,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeVariable()
 	 * @generated
 	 */
-	int TYPE_VARIABLE = 13;
+	int TYPE_VARIABLE = 17;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1273,13 +1637,31 @@ public interface TypesPackage extends EPackage {
 	int TYPE_VARIABLE__NAME = TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_VARIABLE__EXPORTED_NAME = TYPE__EXPORTED_NAME;
+	int TYPE_VARIABLE__DIRECTLY_EXPORTED = TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE__EXPORTING_EXPORT_DEFINITIONS = TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1352,6 +1734,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_VARIABLE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE___IS_INDIRECTLY_EXPORTED = TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_VARIABLE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -1532,7 +1932,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getInferenceVariable()
 	 * @generated
 	 */
-	int INFERENCE_VARIABLE = 14;
+	int INFERENCE_VARIABLE = 18;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1544,13 +1944,31 @@ public interface TypesPackage extends EPackage {
 	int INFERENCE_VARIABLE__NAME = TYPE_VARIABLE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INFERENCE_VARIABLE__EXPORTED_NAME = TYPE_VARIABLE__EXPORTED_NAME;
+	int INFERENCE_VARIABLE__DIRECTLY_EXPORTED = TYPE_VARIABLE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE_VARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE__EXPORTING_EXPORT_DEFINITIONS = TYPE_VARIABLE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1623,6 +2041,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int INFERENCE_VARIABLE___IS_EXPORTED = TYPE_VARIABLE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE___IS_INDIRECTLY_EXPORTED = TYPE_VARIABLE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INFERENCE_VARIABLE___GET_DIRECTLY_EXPORTED_NAME = TYPE_VARIABLE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -1803,7 +2239,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getGenericType()
 	 * @generated
 	 */
-	int GENERIC_TYPE = 17;
+	int GENERIC_TYPE = 21;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1815,13 +2251,31 @@ public interface TypesPackage extends EPackage {
 	int GENERIC_TYPE__NAME = TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GENERIC_TYPE__EXPORTED_NAME = TYPE__EXPORTED_NAME;
+	int GENERIC_TYPE__DIRECTLY_EXPORTED = TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE__EXPORTING_EXPORT_DEFINITIONS = TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -1867,6 +2321,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int GENERIC_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE___IS_INDIRECTLY_EXPORTED = TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -2020,7 +2492,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFunction()
 	 * @generated
 	 */
-	int TFUNCTION = 15;
+	int TFUNCTION = 19;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2032,13 +2504,31 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION__NAME = GENERIC_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__EXPORTED_NAME = GENERIC_TYPE__EXPORTED_NAME;
+	int TFUNCTION__DIRECTLY_EXPORTED = GENERIC_TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT = GENERIC_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION__EXPORTING_EXPORT_DEFINITIONS = GENERIC_TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2176,6 +2666,33 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___IS_INDIRECTLY_EXPORTED = GENERIC_TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2311,13 +2828,13 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION___GET_DEFAULT_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 3;
+	int TFUNCTION___IS_DIRECTLY_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -2399,7 +2916,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAccessibleTypeElement()
 	 * @generated
 	 */
-	int ACCESSIBLE_TYPE_ELEMENT = 18;
+	int ACCESSIBLE_TYPE_ELEMENT = 22;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -2456,13 +2973,13 @@ public interface TypesPackage extends EPackage {
 	int ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER = 2;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED = 3;
+	int ACCESSIBLE_TYPE_ELEMENT___IS_DIRECTLY_EXPORTED = 3;
 
 	/**
 	 * The number of operations of the '<em>Accessible Type Element</em>' class.
@@ -2481,7 +2998,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getContainerType()
 	 * @generated
 	 */
-	int CONTAINER_TYPE = 19;
+	int CONTAINER_TYPE = 23;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2493,13 +3010,31 @@ public interface TypesPackage extends EPackage {
 	int CONTAINER_TYPE__NAME = GENERIC_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__EXPORTED_NAME = GENERIC_TYPE__EXPORTED_NAME;
+	int CONTAINER_TYPE__DIRECTLY_EXPORTED = GENERIC_TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = GENERIC_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE__EXPORTING_EXPORT_DEFINITIONS = GENERIC_TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2581,6 +3116,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int CONTAINER_TYPE___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE___IS_INDIRECTLY_EXPORTED = GENERIC_TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int CONTAINER_TYPE___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -2770,7 +3323,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNamespace()
 	 * @generated
 	 */
-	int TNAMESPACE = 21;
+	int TNAMESPACE = 25;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2782,13 +3335,31 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE__NAME = TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__EXPORTED_NAME = TYPE__EXPORTED_NAME;
+	int TNAMESPACE__DIRECTLY_EXPORTED = TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE__EXPORTING_EXPORT_DEFINITIONS = TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -2800,13 +3371,22 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE__ANNOTATIONS = TYPE__ANNOTATIONS;
 
 	/**
+	 * The feature id for the '<em><b>Export Definitions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE__EXPORT_DEFINITIONS = TYPE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Types</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__TYPES = TYPE_FEATURE_COUNT + 0;
+	int TNAMESPACE__TYPES = TYPE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Exported Variables</b></em>' containment reference list.
@@ -2815,7 +3395,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__EXPORTED_VARIABLES = TYPE_FEATURE_COUNT + 1;
+	int TNAMESPACE__EXPORTED_VARIABLES = TYPE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Local Variables</b></em>' containment reference list.
@@ -2824,7 +3404,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__LOCAL_VARIABLES = TYPE_FEATURE_COUNT + 2;
+	int TNAMESPACE__LOCAL_VARIABLES = TYPE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Exposed Local Variables</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE__EXPOSED_LOCAL_VARIABLES = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Namespaces</b></em>' containment reference list.
@@ -2833,7 +3422,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__NAMESPACES = TYPE_FEATURE_COUNT + 3;
+	int TNAMESPACE__NAMESPACES = TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -2842,7 +3431,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__DECLARED_TYPE_ACCESS_MODIFIER = TYPE_FEATURE_COUNT + 4;
+	int TNAMESPACE__DECLARED_TYPE_ACCESS_MODIFIER = TYPE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
@@ -2851,7 +3440,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__DECLARED_PROVIDED_BY_RUNTIME = TYPE_FEATURE_COUNT + 5;
+	int TNAMESPACE__DECLARED_PROVIDED_BY_RUNTIME = TYPE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -2860,7 +3449,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__AST_ELEMENT = TYPE_FEATURE_COUNT + 6;
+	int TNAMESPACE__AST_ELEMENT = TYPE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -2869,7 +3458,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE__EXTERNAL = TYPE_FEATURE_COUNT + 7;
+	int TNAMESPACE__EXTERNAL = TYPE_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of structural features of the '<em>TNamespace</em>' class.
@@ -2878,7 +3467,34 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 8;
+	int TNAMESPACE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 10;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___IS_INDIRECTLY_EXPORTED = TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -2998,13 +3614,31 @@ public interface TypesPackage extends EPackage {
 	int TNAMESPACE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
+	 * The operation id for the '<em>Get Exportable Elements</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_EXPORTABLE_ELEMENTS = TYPE_OPERATION_COUNT + 0;
+
+	/**
+	 * The operation id for the '<em>Get All Namespaces</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TNAMESPACE___GET_ALL_NAMESPACES = TYPE_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_CONTAINING_MODULE = TYPE_OPERATION_COUNT + 0;
+	int TNAMESPACE___GET_CONTAINING_MODULE = TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Clear Transient Elements</em>' operation.
@@ -3013,7 +3647,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TYPE_OPERATION_COUNT + 1;
+	int TNAMESPACE___CLEAR_TRANSIENT_ELEMENTS = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -3022,7 +3656,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 2;
+	int TNAMESPACE___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -3031,7 +3665,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 3;
+	int TNAMESPACE___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
@@ -3040,16 +3674,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 4;
+	int TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 6;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___IS_EXPORTED = TYPE_OPERATION_COUNT + 5;
+	int TNAMESPACE___IS_DIRECTLY_EXPORTED = TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -3058,7 +3692,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE___GET_AST_ELEMENT_NO_RESOLVE = TYPE_OPERATION_COUNT + 6;
+	int TNAMESPACE___GET_AST_ELEMENT_NO_RESOLVE = TYPE_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>TNamespace</em>' class.
@@ -3067,7 +3701,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 7;
+	int TNAMESPACE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceElementImpl <em>TNamespace Element</em>}' class.
@@ -3077,7 +3711,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTNamespaceElement()
 	 * @generated
 	 */
-	int TNAMESPACE_ELEMENT = 22;
+	int TNAMESPACE_ELEMENT = 26;
 
 	/**
 	 * The number of structural features of the '<em>TNamespace Element</em>' class.
@@ -3114,7 +3748,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleNamespaceVirtualType()
 	 * @generated
 	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE = 23;
+	int MODULE_NAMESPACE_VIRTUAL_TYPE = 27;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3126,13 +3760,31 @@ public interface TypesPackage extends EPackage {
 	int MODULE_NAMESPACE_VIRTUAL_TYPE__NAME = TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE__EXPORTED_NAME = TYPE__EXPORTED_NAME;
+	int MODULE_NAMESPACE_VIRTUAL_TYPE__DIRECTLY_EXPORTED = TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE__EXPORTING_EXPORT_DEFINITIONS = TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3196,6 +3848,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___IS_INDIRECTLY_EXPORTED = TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int MODULE_NAMESPACE_VIRTUAL_TYPE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -3358,7 +4028,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getPrimitiveType()
 	 * @generated
 	 */
-	int PRIMITIVE_TYPE = 24;
+	int PRIMITIVE_TYPE = 28;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3370,13 +4040,31 @@ public interface TypesPackage extends EPackage {
 	int PRIMITIVE_TYPE__NAME = GENERIC_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__EXPORTED_NAME = GENERIC_TYPE__EXPORTED_NAME;
+	int PRIMITIVE_TYPE__DIRECTLY_EXPORTED = GENERIC_TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = GENERIC_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE__EXPORTING_EXPORT_DEFINITIONS = GENERIC_TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3449,6 +4137,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int PRIMITIVE_TYPE___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE___IS_INDIRECTLY_EXPORTED = GENERIC_TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PRIMITIVE_TYPE___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -3602,7 +4308,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getBuiltInType()
 	 * @generated
 	 */
-	int BUILT_IN_TYPE = 25;
+	int BUILT_IN_TYPE = 29;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3614,13 +4320,31 @@ public interface TypesPackage extends EPackage {
 	int BUILT_IN_TYPE__NAME = TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BUILT_IN_TYPE__EXPORTED_NAME = TYPE__EXPORTED_NAME;
+	int BUILT_IN_TYPE__DIRECTLY_EXPORTED = TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE__EXPORTING_EXPORT_DEFINITIONS = TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3657,6 +4381,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int BUILT_IN_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE___IS_INDIRECTLY_EXPORTED = TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BUILT_IN_TYPE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -3810,7 +4552,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAnyType()
 	 * @generated
 	 */
-	int ANY_TYPE = 26;
+	int ANY_TYPE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3822,13 +4564,31 @@ public interface TypesPackage extends EPackage {
 	int ANY_TYPE__NAME = BUILT_IN_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ANY_TYPE__EXPORTED_NAME = BUILT_IN_TYPE__EXPORTED_NAME;
+	int ANY_TYPE__DIRECTLY_EXPORTED = BUILT_IN_TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = BUILT_IN_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE__EXPORTING_EXPORT_DEFINITIONS = BUILT_IN_TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3865,6 +4625,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int ANY_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE___IS_INDIRECTLY_EXPORTED = BUILT_IN_TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANY_TYPE___GET_DIRECTLY_EXPORTED_NAME = BUILT_IN_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4018,7 +4796,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getUndefinedType()
 	 * @generated
 	 */
-	int UNDEFINED_TYPE = 27;
+	int UNDEFINED_TYPE = 31;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4030,13 +4808,31 @@ public interface TypesPackage extends EPackage {
 	int UNDEFINED_TYPE__NAME = BUILT_IN_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNDEFINED_TYPE__EXPORTED_NAME = BUILT_IN_TYPE__EXPORTED_NAME;
+	int UNDEFINED_TYPE__DIRECTLY_EXPORTED = BUILT_IN_TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = BUILT_IN_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE__EXPORTING_EXPORT_DEFINITIONS = BUILT_IN_TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -4073,6 +4869,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNDEFINED_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE___IS_INDIRECTLY_EXPORTED = BUILT_IN_TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNDEFINED_TYPE___GET_DIRECTLY_EXPORTED_NAME = BUILT_IN_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4226,7 +5040,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNullType()
 	 * @generated
 	 */
-	int NULL_TYPE = 28;
+	int NULL_TYPE = 32;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4238,13 +5052,31 @@ public interface TypesPackage extends EPackage {
 	int NULL_TYPE__NAME = BUILT_IN_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int NULL_TYPE__EXPORTED_NAME = BUILT_IN_TYPE__EXPORTED_NAME;
+	int NULL_TYPE__DIRECTLY_EXPORTED = BUILT_IN_TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = BUILT_IN_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE__EXPORTING_EXPORT_DEFINITIONS = BUILT_IN_TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -4281,6 +5113,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int NULL_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE___IS_INDIRECTLY_EXPORTED = BUILT_IN_TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NULL_TYPE___GET_DIRECTLY_EXPORTED_NAME = BUILT_IN_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4434,7 +5284,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVoidType()
 	 * @generated
 	 */
-	int VOID_TYPE = 29;
+	int VOID_TYPE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4446,13 +5296,31 @@ public interface TypesPackage extends EPackage {
 	int VOID_TYPE__NAME = BUILT_IN_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VOID_TYPE__EXPORTED_NAME = BUILT_IN_TYPE__EXPORTED_NAME;
+	int VOID_TYPE__DIRECTLY_EXPORTED = BUILT_IN_TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = BUILT_IN_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE__EXPORTING_EXPORT_DEFINITIONS = BUILT_IN_TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -4489,6 +5357,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int VOID_TYPE___IS_EXPORTED = BUILT_IN_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE___IS_INDIRECTLY_EXPORTED = BUILT_IN_TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VOID_TYPE___GET_DIRECTLY_EXPORTED_NAME = BUILT_IN_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4642,7 +5528,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructuralType()
 	 * @generated
 	 */
-	int TSTRUCTURAL_TYPE = 30;
+	int TSTRUCTURAL_TYPE = 34;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4654,13 +5540,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCTURAL_TYPE__NAME = CONTAINER_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCTURAL_TYPE__EXPORTED_NAME = CONTAINER_TYPE__EXPORTED_NAME;
+	int TSTRUCTURAL_TYPE__DIRECTLY_EXPORTED = CONTAINER_TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = CONTAINER_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE__EXPORTING_EXPORT_DEFINITIONS = CONTAINER_TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -4751,6 +5655,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCTURAL_TYPE___IS_EXPORTED = CONTAINER_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE___IS_INDIRECTLY_EXPORTED = CONTAINER_TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCTURAL_TYPE___GET_DIRECTLY_EXPORTED_NAME = CONTAINER_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4949,7 +5871,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifier()
 	 * @generated
 	 */
-	int TCLASSIFIER = 31;
+	int TCLASSIFIER = 35;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4961,13 +5883,31 @@ public interface TypesPackage extends EPackage {
 	int TCLASSIFIER__NAME = CONTAINER_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASSIFIER__EXPORTED_NAME = CONTAINER_TYPE__EXPORTED_NAME;
+	int TCLASSIFIER__DIRECTLY_EXPORTED = CONTAINER_TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER__DIRECTLY_EXPORTED_AS_DEFAULT = CONTAINER_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER__EXPORTING_EXPORT_DEFINITIONS = CONTAINER_TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -5067,6 +6007,24 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TCLASSIFIER___IS_EXPORTED = CONTAINER_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___IS_INDIRECTLY_EXPORTED = CONTAINER_TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASSIFIER___GET_DIRECTLY_EXPORTED_NAME = CONTAINER_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -5301,7 +6259,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getArrayLike()
 	 * @generated
 	 */
-	int ARRAY_LIKE = 32;
+	int ARRAY_LIKE = 36;
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -5347,7 +6305,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTN4Classifier()
 	 * @generated
 	 */
-	int TN4_CLASSIFIER = 33;
+	int TN4_CLASSIFIER = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5359,13 +6317,31 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER__NAME = TCLASSIFIER__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER__EXPORTED_NAME = TCLASSIFIER__EXPORTED_NAME;
+	int TN4_CLASSIFIER__DIRECTLY_EXPORTED = TCLASSIFIER__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER__DIRECTLY_EXPORTED_AS_DEFAULT = TCLASSIFIER__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER__EXPORTING_EXPORT_DEFINITIONS = TCLASSIFIER__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -5519,6 +6495,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TN4_CLASSIFIER___GET_CONTAINING_MODULE = TCLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___IS_EXPORTED = TCLASSIFIER___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___IS_INDIRECTLY_EXPORTED = TCLASSIFIER___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TN4_CLASSIFIER___GET_DIRECTLY_EXPORTED_NAME = TCLASSIFIER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -5728,13 +6731,13 @@ public interface TypesPackage extends EPackage {
 	int TN4_CLASSIFIER___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TCLASSIFIER_OPERATION_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TN4_CLASSIFIER___IS_EXPORTED = TCLASSIFIER_OPERATION_COUNT + 3;
+	int TN4_CLASSIFIER___IS_DIRECTLY_EXPORTED = TCLASSIFIER_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -5771,7 +6774,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClass()
 	 * @generated
 	 */
-	int TCLASS = 34;
+	int TCLASS = 38;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5783,13 +6786,31 @@ public interface TypesPackage extends EPackage {
 	int TCLASS__NAME = TN4_CLASSIFIER__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS__EXPORTED_NAME = TN4_CLASSIFIER__EXPORTED_NAME;
+	int TCLASS__DIRECTLY_EXPORTED = TN4_CLASSIFIER__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS__DIRECTLY_EXPORTED_AS_DEFAULT = TN4_CLASSIFIER__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS__EXPORTING_EXPORT_DEFINITIONS = TN4_CLASSIFIER__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -6008,6 +7029,33 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___IS_EXPORTED = TN4_CLASSIFIER___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___IS_INDIRECTLY_EXPORTED = TN4_CLASSIFIER___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TCLASS___GET_DIRECTLY_EXPORTED_NAME = TN4_CLASSIFIER___GET_DIRECTLY_EXPORTED_NAME;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6170,13 +7218,13 @@ public interface TypesPackage extends EPackage {
 	int TCLASS___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TN4_CLASSIFIER___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TCLASS___IS_EXPORTED = TN4_CLASSIFIER___IS_EXPORTED;
+	int TCLASS___IS_DIRECTLY_EXPORTED = TN4_CLASSIFIER___IS_DIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -6267,7 +7315,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTInterface()
 	 * @generated
 	 */
-	int TINTERFACE = 35;
+	int TINTERFACE = 39;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6279,13 +7327,31 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE__NAME = TN4_CLASSIFIER__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE__EXPORTED_NAME = TN4_CLASSIFIER__EXPORTED_NAME;
+	int TINTERFACE__DIRECTLY_EXPORTED = TN4_CLASSIFIER__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE__DIRECTLY_EXPORTED_AS_DEFAULT = TN4_CLASSIFIER__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE__EXPORTING_EXPORT_DEFINITIONS = TN4_CLASSIFIER__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -6448,6 +7514,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TINTERFACE___GET_CONTAINING_MODULE = TN4_CLASSIFIER___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___IS_EXPORTED = TN4_CLASSIFIER___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___IS_INDIRECTLY_EXPORTED = TN4_CLASSIFIER___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TINTERFACE___GET_DIRECTLY_EXPORTED_NAME = TN4_CLASSIFIER___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -6621,13 +7714,13 @@ public interface TypesPackage extends EPackage {
 	int TINTERFACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TN4_CLASSIFIER___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TINTERFACE___IS_EXPORTED = TN4_CLASSIFIER___IS_EXPORTED;
+	int TINTERFACE___IS_DIRECTLY_EXPORTED = TN4_CLASSIFIER___IS_DIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -6700,7 +7793,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMember()
 	 * @generated
 	 */
-	int TMEMBER = 36;
+	int TMEMBER = 40;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6989,7 +8082,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMemberWithAccessModifier()
 	 * @generated
 	 */
-	int TMEMBER_WITH_ACCESS_MODIFIER = 37;
+	int TMEMBER_WITH_ACCESS_MODIFIER = 41;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7305,7 +8398,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMember()
 	 * @generated
 	 */
-	int TSTRUCT_MEMBER = 38;
+	int TSTRUCT_MEMBER = 42;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7630,7 +8723,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMethod()
 	 * @generated
 	 */
-	int TMETHOD = 39;
+	int TMETHOD = 43;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7642,13 +8735,31 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD__NAME = TFUNCTION__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD__EXPORTED_NAME = TFUNCTION__EXPORTED_NAME;
+	int TMETHOD__DIRECTLY_EXPORTED = TFUNCTION__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD__DIRECTLY_EXPORTED_AS_DEFAULT = TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD__EXPORTING_EXPORT_DEFINITIONS = TFUNCTION__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -7876,6 +8987,33 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_CONTAINING_MODULE = TFUNCTION___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___IS_EXPORTED = TFUNCTION___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___IS_INDIRECTLY_EXPORTED = TFUNCTION___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___GET_DIRECTLY_EXPORTED_NAME = TFUNCTION___GET_DIRECTLY_EXPORTED_NAME;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8011,13 +9149,13 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TFUNCTION___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD___IS_EXPORTED = TFUNCTION___IS_EXPORTED;
+	int TMETHOD___IS_DIRECTLY_EXPORTED = TFUNCTION___IS_DIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -8261,7 +9399,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMethod()
 	 * @generated
 	 */
-	int TSTRUCT_METHOD = 40;
+	int TSTRUCT_METHOD = 44;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8273,13 +9411,31 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD__NAME = TMETHOD__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_METHOD__EXPORTED_NAME = TMETHOD__EXPORTED_NAME;
+	int TSTRUCT_METHOD__DIRECTLY_EXPORTED = TMETHOD__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD__DIRECTLY_EXPORTED_AS_DEFAULT = TMETHOD__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD__EXPORTING_EXPORT_DEFINITIONS = TMETHOD__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -8516,6 +9672,33 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___GET_CONTAINING_MODULE = TMETHOD___GET_CONTAINING_MODULE;
 
 	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_EXPORTED = TMETHOD___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_INDIRECTLY_EXPORTED = TMETHOD___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___GET_DIRECTLY_EXPORTED_NAME = TMETHOD___GET_DIRECTLY_EXPORTED_NAME;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8651,13 +9834,13 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TMETHOD___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TSTRUCT_METHOD___IS_EXPORTED = TMETHOD___IS_EXPORTED;
+	int TSTRUCT_METHOD___IS_DIRECTLY_EXPORTED = TMETHOD___IS_DIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -8919,7 +10102,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAbstractVariable()
 	 * @generated
 	 */
-	int TABSTRACT_VARIABLE = 55;
+	int TABSTRACT_VARIABLE = 59;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9001,7 +10184,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFormalParameter()
 	 * @generated
 	 */
-	int TFORMAL_PARAMETER = 41;
+	int TFORMAL_PARAMETER = 45;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9155,7 +10338,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnonymousFormalParameter()
 	 * @generated
 	 */
-	int TANONYMOUS_FORMAL_PARAMETER = 42;
+	int TANONYMOUS_FORMAL_PARAMETER = 46;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9327,7 +10510,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTField()
 	 * @generated
 	 */
-	int TFIELD = 43;
+	int TFIELD = 47;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9688,7 +10871,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructField()
 	 * @generated
 	 */
-	int TSTRUCT_FIELD = 44;
+	int TSTRUCT_FIELD = 48;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10076,7 +11259,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getFieldAccessor()
 	 * @generated
 	 */
-	int FIELD_ACCESSOR = 45;
+	int FIELD_ACCESSOR = 49;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10428,7 +11611,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTGetter()
 	 * @generated
 	 */
-	int TGETTER = 46;
+	int TGETTER = 50;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10789,7 +11972,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructGetter()
 	 * @generated
 	 */
-	int TSTRUCT_GETTER = 47;
+	int TSTRUCT_GETTER = 51;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11177,7 +12360,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTSetter()
 	 * @generated
 	 */
-	int TSETTER = 48;
+	int TSETTER = 52;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11538,7 +12721,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructSetter()
 	 * @generated
 	 */
-	int TSTRUCT_SETTER = 49;
+	int TSTRUCT_SETTER = 53;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11926,7 +13109,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnum()
 	 * @generated
 	 */
-	int TENUM = 50;
+	int TENUM = 54;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11938,13 +13121,31 @@ public interface TypesPackage extends EPackage {
 	int TENUM__NAME = TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM__EXPORTED_NAME = TYPE__EXPORTED_NAME;
+	int TENUM__DIRECTLY_EXPORTED = TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM__EXPORTING_EXPORT_DEFINITIONS = TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -12017,6 +13218,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TENUM___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___IS_EXPORTED = TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___IS_INDIRECTLY_EXPORTED = TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TENUM___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -12163,13 +13391,13 @@ public interface TypesPackage extends EPackage {
 	int TENUM___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TENUM___IS_EXPORTED = TYPE_OPERATION_COUNT + 3;
+	int TENUM___IS_DIRECTLY_EXPORTED = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -12197,7 +13425,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getSyntaxRelatedTElement()
 	 * @generated
 	 */
-	int SYNTAX_RELATED_TELEMENT = 53;
+	int SYNTAX_RELATED_TELEMENT = 57;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -12243,7 +13471,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnumLiteral()
 	 * @generated
 	 */
-	int TENUM_LITERAL = 51;
+	int TENUM_LITERAL = 55;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -12325,7 +13553,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAlias()
 	 * @generated
 	 */
-	int TYPE_ALIAS = 52;
+	int TYPE_ALIAS = 56;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12337,13 +13565,31 @@ public interface TypesPackage extends EPackage {
 	int TYPE_ALIAS__NAME = GENERIC_TYPE__NAME;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__EXPORTED_NAME = GENERIC_TYPE__EXPORTED_NAME;
+	int TYPE_ALIAS__DIRECTLY_EXPORTED = GENERIC_TYPE__DIRECTLY_EXPORTED;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS__DIRECTLY_EXPORTED_AS_DEFAULT = GENERIC_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS__EXPORTING_EXPORT_DEFINITIONS = GENERIC_TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -12416,6 +13662,33 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_ALIAS___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+
+	/**
+	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___IS_INDIRECTLY_EXPORTED = GENERIC_TYPE___IS_INDIRECTLY_EXPORTED;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_ALIAS___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -12544,13 +13817,13 @@ public interface TypesPackage extends EPackage {
 	int TYPE_ALIAS___GET_DEFAULT_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 2;
 
 	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 3;
+	int TYPE_ALIAS___IS_DIRECTLY_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -12596,7 +13869,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTConstableElement()
 	 * @generated
 	 */
-	int TCONSTABLE_ELEMENT = 54;
+	int TCONSTABLE_ELEMENT = 58;
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -12642,7 +13915,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
-	int TVARIABLE = 56;
+	int TVARIABLE = 60;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -12699,13 +13972,31 @@ public interface TypesPackage extends EPackage {
 	int TVARIABLE__DECLARED_PROVIDED_BY_RUNTIME = TABSTRACT_VARIABLE_FEATURE_COUNT + 1;
 
 	/**
-	 * The feature id for the '<em><b>Exported Name</b></em>' attribute.
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__EXPORTED_NAME = TABSTRACT_VARIABLE_FEATURE_COUNT + 2;
+	int TVARIABLE__DIRECTLY_EXPORTED = TABSTRACT_VARIABLE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT = TABSTRACT_VARIABLE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE__EXPORTING_EXPORT_DEFINITIONS = TABSTRACT_VARIABLE_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -12714,7 +14005,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__CONST = TABSTRACT_VARIABLE_FEATURE_COUNT + 3;
+	int TVARIABLE__CONST = TABSTRACT_VARIABLE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Compile Time Value</b></em>' attribute.
@@ -12723,7 +14014,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__COMPILE_TIME_VALUE = TABSTRACT_VARIABLE_FEATURE_COUNT + 4;
+	int TVARIABLE__COMPILE_TIME_VALUE = TABSTRACT_VARIABLE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -12732,7 +14023,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__EXTERNAL = TABSTRACT_VARIABLE_FEATURE_COUNT + 5;
+	int TVARIABLE__EXTERNAL = TABSTRACT_VARIABLE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Object Literal</b></em>' attribute.
@@ -12741,7 +14032,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__OBJECT_LITERAL = TABSTRACT_VARIABLE_FEATURE_COUNT + 6;
+	int TVARIABLE__OBJECT_LITERAL = TABSTRACT_VARIABLE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>New Expression</b></em>' attribute.
@@ -12750,7 +14041,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE__NEW_EXPRESSION = TABSTRACT_VARIABLE_FEATURE_COUNT + 7;
+	int TVARIABLE__NEW_EXPRESSION = TABSTRACT_VARIABLE_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of structural features of the '<em>TVariable</em>' class.
@@ -12759,7 +14050,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE_FEATURE_COUNT = TABSTRACT_VARIABLE_FEATURE_COUNT + 8;
+	int TVARIABLE_FEATURE_COUNT = TABSTRACT_VARIABLE_FEATURE_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -12807,6 +14098,15 @@ public interface TypesPackage extends EPackage {
 	int TVARIABLE___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TABSTRACT_VARIABLE_OPERATION_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Is Directly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE___IS_DIRECTLY_EXPORTED = TABSTRACT_VARIABLE_OPERATION_COUNT + 3;
+
+	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -12816,13 +14116,31 @@ public interface TypesPackage extends EPackage {
 	int TVARIABLE___IS_EXPORTED = TABSTRACT_VARIABLE_OPERATION_COUNT + 4;
 
 	/**
+	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE___IS_INDIRECTLY_EXPORTED = TABSTRACT_VARIABLE_OPERATION_COUNT + 5;
+
+	/**
+	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TVARIABLE___GET_DIRECTLY_EXPORTED_NAME = TABSTRACT_VARIABLE_OPERATION_COUNT + 6;
+
+	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___IS_HOLLOW = TABSTRACT_VARIABLE_OPERATION_COUNT + 5;
+	int TVARIABLE___IS_HOLLOW = TABSTRACT_VARIABLE_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Variable As String</em>' operation.
@@ -12831,7 +14149,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE___GET_VARIABLE_AS_STRING = TABSTRACT_VARIABLE_OPERATION_COUNT + 6;
+	int TVARIABLE___GET_VARIABLE_AS_STRING = TABSTRACT_VARIABLE_OPERATION_COUNT + 8;
 
 	/**
 	 * The number of operations of the '<em>TVariable</em>' class.
@@ -12840,7 +14158,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TVARIABLE_OPERATION_COUNT = TABSTRACT_VARIABLE_OPERATION_COUNT + 7;
+	int TVARIABLE_OPERATION_COUNT = TABSTRACT_VARIABLE_OPERATION_COUNT + 9;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypingStrategy <em>Typing Strategy</em>}' enum.
@@ -12850,7 +14168,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
-	int TYPING_STRATEGY = 57;
+	int TYPING_STRATEGY = 61;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -12860,7 +14178,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
-	int TYPE_ACCESS_MODIFIER = 58;
+	int TYPE_ACCESS_MODIFIER = 62;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -12870,7 +14188,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
-	int MEMBER_ACCESS_MODIFIER = 59;
+	int MEMBER_ACCESS_MODIFIER = 63;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -12880,7 +14198,27 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
-	int MEMBER_TYPE = 60;
+	int MEMBER_TYPE = 64;
+
+	/**
+	 * The meta object id for the '<em>Iterable Of TExportable Element</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.lang.Iterable
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTExportableElement()
+	 * @generated
+	 */
+	int ITERABLE_OF_TEXPORTABLE_ELEMENT = 65;
+
+	/**
+	 * The meta object id for the '<em>Iterable Of Abstract Namespace</em>' data type.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see java.lang.Iterable
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfAbstractNamespace()
+	 * @generated
+	 */
+	int ITERABLE_OF_ABSTRACT_NAMESPACE = 66;
 
 	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
@@ -12890,7 +14228,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 61;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 67;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -12900,7 +14238,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 62;
+	int ITERABLE_OF_TCLASSIFIER = 68;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -12910,7 +14248,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 63;
+	int VARIANCE = 69;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -12920,7 +14258,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 64;
+	int NAME_AND_ACCESS = 70;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -12930,7 +14268,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 65;
+	int MEMBER_LIST = 71;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -12940,7 +14278,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 66;
+	int TCLASSIFIER_ITERABLE = 72;
 
 
 	/**
@@ -13311,6 +14649,111 @@ public interface TypesPackage extends EPackage {
 	EOperation getIdentifiableElement__GetContainingModule();
 
 	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TExportingElement <em>TExporting Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>TExporting Element</em>'.
+	 * @see org.eclipse.n4js.ts.types.TExportingElement
+	 * @generated
+	 */
+	EClass getTExportingElement();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TExportingElement#getExportDefinitions <em>Export Definitions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Export Definitions</em>'.
+	 * @see org.eclipse.n4js.ts.types.TExportingElement#getExportDefinitions()
+	 * @see #getTExportingElement()
+	 * @generated
+	 */
+	EReference getTExportingElement_ExportDefinitions();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ExportDefinition <em>Export Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Export Definition</em>'.
+	 * @see org.eclipse.n4js.ts.types.ExportDefinition
+	 * @generated
+	 */
+	EClass getExportDefinition();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.ExportDefinition#getContainingModule() <em>Get Containing Module</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Containing Module</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.ExportDefinition#getContainingModule()
+	 * @generated
+	 */
+	EOperation getExportDefinition__GetContainingModule();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ElementExportDefinition <em>Element Export Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Element Export Definition</em>'.
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition
+	 * @generated
+	 */
+	EClass getElementExportDefinition();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedName <em>Exported Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Exported Name</em>'.
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedName()
+	 * @see #getElementExportDefinition()
+	 * @generated
+	 */
+	EAttribute getElementExportDefinition_ExportedName();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#isPolyfill <em>Polyfill</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Polyfill</em>'.
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#isPolyfill()
+	 * @see #getElementExportDefinition()
+	 * @generated
+	 */
+	EAttribute getElementExportDefinition_Polyfill();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedElement <em>Exported Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Exported Element</em>'.
+	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedElement()
+	 * @see #getElementExportDefinition()
+	 * @generated
+	 */
+	EReference getElementExportDefinition_ExportedElement();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ModuleExportDefinition <em>Module Export Definition</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Module Export Definition</em>'.
+	 * @see org.eclipse.n4js.ts.types.ModuleExportDefinition
+	 * @generated
+	 */
+	EClass getModuleExportDefinition();
+
+	/**
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.ModuleExportDefinition#getExportedModule <em>Exported Module</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference '<em>Exported Module</em>'.
+	 * @see org.eclipse.n4js.ts.types.ModuleExportDefinition#getExportedModule()
+	 * @see #getModuleExportDefinition()
+	 * @generated
+	 */
+	EReference getModuleExportDefinition_ExportedModule();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TExportableElement <em>TExportable Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13321,15 +14764,37 @@ public interface TypesPackage extends EPackage {
 	EClass getTExportableElement();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TExportableElement#getExportedName <em>Exported Name</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExported <em>Directly Exported</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Exported Name</em>'.
-	 * @see org.eclipse.n4js.ts.types.TExportableElement#getExportedName()
+	 * @return the meta object for the attribute '<em>Directly Exported</em>'.
+	 * @see org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExported()
 	 * @see #getTExportableElement()
 	 * @generated
 	 */
-	EAttribute getTExportableElement_ExportedName();
+	EAttribute getTExportableElement_DirectlyExported();
+
+	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExportedAsDefault <em>Directly Exported As Default</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Directly Exported As Default</em>'.
+	 * @see org.eclipse.n4js.ts.types.TExportableElement#isDirectlyExportedAsDefault()
+	 * @see #getTExportableElement()
+	 * @generated
+	 */
+	EAttribute getTExportableElement_DirectlyExportedAsDefault();
+
+	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TExportableElement#getExportingExportDefinitions <em>Exporting Export Definitions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Exporting Export Definitions</em>'.
+	 * @see org.eclipse.n4js.ts.types.TExportableElement#getExportingExportDefinitions()
+	 * @see #getTExportableElement()
+	 * @generated
+	 */
+	EReference getTExportableElement_ExportingExportDefinitions();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TExportableElement#isExported() <em>Is Exported</em>}' operation.
@@ -13340,6 +14805,26 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTExportableElement__IsExported();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TExportableElement#isIndirectlyExported() <em>Is Indirectly Exported</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Indirectly Exported</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TExportableElement#isIndirectlyExported()
+	 * @generated
+	 */
+	EOperation getTExportableElement__IsIndirectlyExported();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TExportableElement#getDirectlyExportedName() <em>Get Directly Exported Name</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Directly Exported Name</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TExportableElement#getDirectlyExportedName()
+	 * @generated
+	 */
+	EOperation getTExportableElement__GetDirectlyExportedName();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TDynamicElement <em>TDynamic Element</em>}'.
@@ -14012,14 +15497,14 @@ public interface TypesPackage extends EPackage {
 	EOperation getAccessibleTypeElement__GetDefaultTypeAccessModifier();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AccessibleTypeElement#isExported() <em>Is Exported</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AccessibleTypeElement#isDirectlyExported() <em>Is Directly Exported</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Exported</em>' operation.
-	 * @see org.eclipse.n4js.ts.types.AccessibleTypeElement#isExported()
+	 * @return the meta object for the '<em>Is Directly Exported</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.AccessibleTypeElement#isDirectlyExported()
 	 * @generated
 	 */
-	EOperation getAccessibleTypeElement__IsExported();
+	EOperation getAccessibleTypeElement__IsDirectlyExported();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ContainerType <em>Container Type</em>}'.
@@ -14159,6 +15644,17 @@ public interface TypesPackage extends EPackage {
 	EReference getAbstractNamespace_LocalVariables();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExposedLocalVariables <em>Exposed Local Variables</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Exposed Local Variables</em>'.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getExposedLocalVariables()
+	 * @see #getAbstractNamespace()
+	 * @generated
+	 */
+	EReference getAbstractNamespace_ExposedLocalVariables();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getNamespaces <em>Namespaces</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14168,6 +15664,26 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getAbstractNamespace_Namespaces();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExportableElements() <em>Get Exportable Elements</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Exportable Elements</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getExportableElements()
+	 * @generated
+	 */
+	EOperation getAbstractNamespace__GetExportableElements();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getAllNamespaces() <em>Get All Namespaces</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get All Namespaces</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.AbstractNamespace#getAllNamespaces()
+	 * @generated
+	 */
+	EOperation getAbstractNamespace__GetAllNamespaces();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.AbstractNamespace#getContainingModule() <em>Get Containing Module</em>}' operation.
@@ -15920,6 +17436,28 @@ public interface TypesPackage extends EPackage {
 	EEnum getMemberType();
 
 	/**
+	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Iterable Of TExportable Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Iterable Of TExportable Element</em>'.
+	 * @see java.lang.Iterable
+	 * @model instanceClass="java.lang.Iterable&lt;? extends org.eclipse.n4js.ts.types.TExportableElement&gt;"
+	 * @generated
+	 */
+	EDataType getIterableOfTExportableElement();
+
+	/**
+	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Iterable Of Abstract Namespace</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for data type '<em>Iterable Of Abstract Namespace</em>'.
+	 * @see java.lang.Iterable
+	 * @model instanceClass="java.lang.Iterable&lt;? extends org.eclipse.n4js.ts.types.AbstractNamespace&gt;"
+	 * @generated
+	 */
+	EDataType getIterableOfAbstractNamespace();
+
+	/**
 	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Parameterized Type Ref Iterable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16291,6 +17829,94 @@ public interface TypesPackage extends EPackage {
 		EOperation IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE = eINSTANCE.getIdentifiableElement__GetContainingModule();
 
 		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TExportingElementImpl <em>TExporting Element</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.TExportingElementImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTExportingElement()
+		 * @generated
+		 */
+		EClass TEXPORTING_ELEMENT = eINSTANCE.getTExportingElement();
+
+		/**
+		 * The meta object literal for the '<em><b>Export Definitions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TEXPORTING_ELEMENT__EXPORT_DEFINITIONS = eINSTANCE.getTExportingElement_ExportDefinitions();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl <em>Export Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.ExportDefinitionImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getExportDefinition()
+		 * @generated
+		 */
+		EClass EXPORT_DEFINITION = eINSTANCE.getExportDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Containing Module</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation EXPORT_DEFINITION___GET_CONTAINING_MODULE = eINSTANCE.getExportDefinition__GetContainingModule();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl <em>Element Export Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getElementExportDefinition()
+		 * @generated
+		 */
+		EClass ELEMENT_EXPORT_DEFINITION = eINSTANCE.getElementExportDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Exported Name</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME = eINSTANCE.getElementExportDefinition_ExportedName();
+
+		/**
+		 * The meta object literal for the '<em><b>Polyfill</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute ELEMENT_EXPORT_DEFINITION__POLYFILL = eINSTANCE.getElementExportDefinition_Polyfill();
+
+		/**
+		 * The meta object literal for the '<em><b>Exported Element</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT = eINSTANCE.getElementExportDefinition_ExportedElement();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ModuleExportDefinitionImpl <em>Module Export Definition</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.ModuleExportDefinitionImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleExportDefinition()
+		 * @generated
+		 */
+		EClass MODULE_EXPORT_DEFINITION = eINSTANCE.getModuleExportDefinition();
+
+		/**
+		 * The meta object literal for the '<em><b>Exported Module</b></em>' reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference MODULE_EXPORT_DEFINITION__EXPORTED_MODULE = eINSTANCE.getModuleExportDefinition_ExportedModule();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TExportableElementImpl <em>TExportable Element</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -16301,12 +17927,28 @@ public interface TypesPackage extends EPackage {
 		EClass TEXPORTABLE_ELEMENT = eINSTANCE.getTExportableElement();
 
 		/**
-		 * The meta object literal for the '<em><b>Exported Name</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>Directly Exported</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute TEXPORTABLE_ELEMENT__EXPORTED_NAME = eINSTANCE.getTExportableElement_ExportedName();
+		EAttribute TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED = eINSTANCE.getTExportableElement_DirectlyExported();
+
+		/**
+		 * The meta object literal for the '<em><b>Directly Exported As Default</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT = eINSTANCE.getTExportableElement_DirectlyExportedAsDefault();
+
+		/**
+		 * The meta object literal for the '<em><b>Exporting Export Definitions</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS = eINSTANCE.getTExportableElement_ExportingExportDefinitions();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Exported</b></em>' operation.
@@ -16315,6 +17957,22 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TEXPORTABLE_ELEMENT___IS_EXPORTED = eINSTANCE.getTExportableElement__IsExported();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Indirectly Exported</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED = eINSTANCE.getTExportableElement__IsIndirectlyExported();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Directly Exported Name</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME = eINSTANCE.getTExportableElement__GetDirectlyExportedName();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.TDynamicElementImpl <em>TDynamic Element</em>}' class.
@@ -16863,12 +18521,12 @@ public interface TypesPackage extends EPackage {
 		EOperation ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER = eINSTANCE.getAccessibleTypeElement__GetDefaultTypeAccessModifier();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Exported</b></em>' operation.
+		 * The meta object literal for the '<em><b>Is Directly Exported</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED = eINSTANCE.getAccessibleTypeElement__IsExported();
+		EOperation ACCESSIBLE_TYPE_ELEMENT___IS_DIRECTLY_EXPORTED = eINSTANCE.getAccessibleTypeElement__IsDirectlyExported();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl <em>Container Type</em>}' class.
@@ -16979,12 +18637,36 @@ public interface TypesPackage extends EPackage {
 		EReference ABSTRACT_NAMESPACE__LOCAL_VARIABLES = eINSTANCE.getAbstractNamespace_LocalVariables();
 
 		/**
+		 * The meta object literal for the '<em><b>Exposed Local Variables</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES = eINSTANCE.getAbstractNamespace_ExposedLocalVariables();
+
+		/**
 		 * The meta object literal for the '<em><b>Namespaces</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference ABSTRACT_NAMESPACE__NAMESPACES = eINSTANCE.getAbstractNamespace_Namespaces();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Exportable Elements</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS = eINSTANCE.getAbstractNamespace__GetExportableElements();
+
+		/**
+		 * The meta object literal for the '<em><b>Get All Namespaces</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ABSTRACT_NAMESPACE___GET_ALL_NAMESPACES = eINSTANCE.getAbstractNamespace__GetAllNamespaces();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Containing Module</b></em>' operation.
@@ -18425,6 +20107,26 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EEnum MEMBER_TYPE = eINSTANCE.getMemberType();
+
+		/**
+		 * The meta object literal for the '<em>Iterable Of TExportable Element</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.lang.Iterable
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTExportableElement()
+		 * @generated
+		 */
+		EDataType ITERABLE_OF_TEXPORTABLE_ELEMENT = eINSTANCE.getIterableOfTExportableElement();
+
+		/**
+		 * The meta object literal for the '<em>Iterable Of Abstract Namespace</em>' data type.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see java.lang.Iterable
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfAbstractNamespace()
+		 * @generated
+		 */
+		EDataType ITERABLE_OF_ABSTRACT_NAMESPACE = eINSTANCE.getIterableOfAbstractNamespace();
 
 		/**
 		 * The meta object literal for the '<em>Parameterized Type Ref Iterable</em>' data type.

@@ -14,6 +14,7 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.scoping.utils.SourceElementExtensions;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -32,6 +33,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 public class VeeScopeValidator implements IScopeValidator {
 	private final JavaScriptVariantHelper jsVariantHelper;
 	private final EObject context;
+	private final boolean contextIsExportedElementInNamedExportSpecifier;
 
 	/** See {@link VeeScopeValidator}. */
 	public VeeScopeValidator(EObject context, JavaScriptVariantHelper jsVariantHelper) {
@@ -40,10 +42,17 @@ public class VeeScopeValidator implements IScopeValidator {
 		}
 		this.jsVariantHelper = jsVariantHelper;
 		this.context = context;
+		this.contextIsExportedElementInNamedExportSpecifier = context.eContainer() instanceof NamedExportSpecifier
+				&& ((NamedExportSpecifier) context.eContainer()).getExportedElement() == context;
 	}
 
 	@Override
 	public boolean isValid(IEObjectDescription originalDescr) {
+		if (contextIsExportedElementInNamedExportSpecifier) {
+			// IdentifierRefs used as NamedExportSpecifier#exportedElement are special
+			// in that they may refer to hollow elements
+			return true;
+		}
 		EObject eObjectOrProxy = originalDescr.getEObjectOrProxy();
 		if (!(eObjectOrProxy instanceof IdentifiableElement)) {
 			return true;

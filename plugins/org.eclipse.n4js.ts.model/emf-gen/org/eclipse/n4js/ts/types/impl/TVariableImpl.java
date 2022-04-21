@@ -14,6 +14,8 @@ import com.google.common.base.Objects;
 
 import java.lang.reflect.InvocationTargetException;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 
 import org.eclipse.emf.common.util.EList;
@@ -23,9 +25,12 @@ import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
+import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.TConstableElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TNamespace;
@@ -33,6 +38,8 @@ import org.eclipse.n4js.ts.types.TNamespaceElement;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypesPackage;
+
+import org.eclipse.n4js.utils.UtilN4;
 
 /**
  * <!-- begin-user-doc -->
@@ -44,7 +51,9 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#getExportedName <em>Exported Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#isDirectlyExported <em>Directly Exported</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#isDirectlyExportedAsDefault <em>Directly Exported As Default</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#getExportingExportDefinitions <em>Exporting Export Definitions</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#isConst <em>Const</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#getCompileTimeValue <em>Compile Time Value</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TVariableImpl#isExternal <em>External</em>}</li>
@@ -96,24 +105,54 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 	protected boolean declaredProvidedByRuntime = DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
 
 	/**
-	 * The default value of the '{@link #getExportedName() <em>Exported Name</em>}' attribute.
+	 * The default value of the '{@link #isDirectlyExported() <em>Directly Exported</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getExportedName()
+	 * @see #isDirectlyExported()
 	 * @generated
 	 * @ordered
 	 */
-	protected static final String EXPORTED_NAME_EDEFAULT = null;
+	protected static final boolean DIRECTLY_EXPORTED_EDEFAULT = false;
 
 	/**
-	 * The cached value of the '{@link #getExportedName() <em>Exported Name</em>}' attribute.
+	 * The cached value of the '{@link #isDirectlyExported() <em>Directly Exported</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getExportedName()
+	 * @see #isDirectlyExported()
 	 * @generated
 	 * @ordered
 	 */
-	protected String exportedName = EXPORTED_NAME_EDEFAULT;
+	protected boolean directlyExported = DIRECTLY_EXPORTED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDirectlyExportedAsDefault() <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDirectlyExportedAsDefault() <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean directlyExportedAsDefault = DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getExportingExportDefinitions() <em>Exporting Export Definitions</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getExportingExportDefinitions()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ElementExportDefinition> exportingExportDefinitions;
 
 	/**
 	 * The default value of the '{@link #isConst() <em>Const</em>}' attribute.
@@ -286,8 +325,8 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 	 * @generated
 	 */
 	@Override
-	public String getExportedName() {
-		return exportedName;
+	public boolean isDirectlyExported() {
+		return directlyExported;
 	}
 
 	/**
@@ -296,11 +335,47 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 	 * @generated
 	 */
 	@Override
-	public void setExportedName(String newExportedName) {
-		String oldExportedName = exportedName;
-		exportedName = newExportedName;
+	public void setDirectlyExported(boolean newDirectlyExported) {
+		boolean oldDirectlyExported = directlyExported;
+		directlyExported = newDirectlyExported;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TVARIABLE__EXPORTED_NAME, oldExportedName, exportedName));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TVARIABLE__DIRECTLY_EXPORTED, oldDirectlyExported, directlyExported));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDirectlyExportedAsDefault() {
+		return directlyExportedAsDefault;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDirectlyExportedAsDefault(boolean newDirectlyExportedAsDefault) {
+		boolean oldDirectlyExportedAsDefault = directlyExportedAsDefault;
+		directlyExportedAsDefault = newDirectlyExportedAsDefault;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT, oldDirectlyExportedAsDefault, directlyExportedAsDefault));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<ElementExportDefinition> getExportingExportDefinitions() {
+		if (exportingExportDefinitions == null) {
+			exportingExportDefinitions = new EObjectResolvingEList<ElementExportDefinition>(ElementExportDefinition.class, this, TypesPackage.TVARIABLE__EXPORTING_EXPORT_DEFINITIONS);
+		}
+		return exportingExportDefinitions;
 	}
 
 	/**
@@ -459,8 +534,44 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 	 */
 	@Override
 	public boolean isExported() {
-		String _exportedName = this.getExportedName();
-		return (_exportedName != null);
+		return (this.isDirectlyExported() || this.isIndirectlyExported());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isIndirectlyExported() {
+		int _size = this.getExportingExportDefinitions().size();
+		int _xifexpression = (int) 0;
+		boolean _isDirectlyExported = this.isDirectlyExported();
+		if (_isDirectlyExported) {
+			_xifexpression = 1;
+		}
+		else {
+			_xifexpression = 0;
+		}
+		return (_size > _xifexpression);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getDirectlyExportedName() {
+		boolean _isDirectlyExported = this.isDirectlyExported();
+		if (_isDirectlyExported) {
+			boolean _isDirectlyExportedAsDefault = this.isDirectlyExportedAsDefault();
+			if (_isDirectlyExportedAsDefault) {
+				return UtilN4.EXPORT_DEFAULT_NAME;
+			}
+			return this.getName();
+		}
+		return null;
 	}
 
 	/**
@@ -501,8 +612,8 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 			return ((TNamespace) _eContainer_1).getTypeAccessModifier();
 		}
 		else {
-			boolean _isExported = this.isExported();
-			if (_isExported) {
+			boolean _isDirectlyExported = this.isDirectlyExported();
+			if (_isDirectlyExported) {
 				return TypeAccessModifier.PROJECT;
 			}
 			else {
@@ -523,8 +634,12 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 				return getDeclaredTypeAccessModifier();
 			case TypesPackage.TVARIABLE__DECLARED_PROVIDED_BY_RUNTIME:
 				return isDeclaredProvidedByRuntime();
-			case TypesPackage.TVARIABLE__EXPORTED_NAME:
-				return getExportedName();
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED:
+				return isDirectlyExported();
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT:
+				return isDirectlyExportedAsDefault();
+			case TypesPackage.TVARIABLE__EXPORTING_EXPORT_DEFINITIONS:
+				return getExportingExportDefinitions();
 			case TypesPackage.TVARIABLE__CONST:
 				return isConst();
 			case TypesPackage.TVARIABLE__COMPILE_TIME_VALUE:
@@ -544,6 +659,7 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -553,8 +669,15 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 			case TypesPackage.TVARIABLE__DECLARED_PROVIDED_BY_RUNTIME:
 				setDeclaredProvidedByRuntime((Boolean)newValue);
 				return;
-			case TypesPackage.TVARIABLE__EXPORTED_NAME:
-				setExportedName((String)newValue);
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED:
+				setDirectlyExported((Boolean)newValue);
+				return;
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT:
+				setDirectlyExportedAsDefault((Boolean)newValue);
+				return;
+			case TypesPackage.TVARIABLE__EXPORTING_EXPORT_DEFINITIONS:
+				getExportingExportDefinitions().clear();
+				getExportingExportDefinitions().addAll((Collection<? extends ElementExportDefinition>)newValue);
 				return;
 			case TypesPackage.TVARIABLE__CONST:
 				setConst((Boolean)newValue);
@@ -589,8 +712,14 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 			case TypesPackage.TVARIABLE__DECLARED_PROVIDED_BY_RUNTIME:
 				setDeclaredProvidedByRuntime(DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT);
 				return;
-			case TypesPackage.TVARIABLE__EXPORTED_NAME:
-				setExportedName(EXPORTED_NAME_EDEFAULT);
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED:
+				setDirectlyExported(DIRECTLY_EXPORTED_EDEFAULT);
+				return;
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT:
+				setDirectlyExportedAsDefault(DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT);
+				return;
+			case TypesPackage.TVARIABLE__EXPORTING_EXPORT_DEFINITIONS:
+				getExportingExportDefinitions().clear();
 				return;
 			case TypesPackage.TVARIABLE__CONST:
 				setConst(CONST_EDEFAULT);
@@ -623,8 +752,12 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 				return declaredTypeAccessModifier != DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT;
 			case TypesPackage.TVARIABLE__DECLARED_PROVIDED_BY_RUNTIME:
 				return declaredProvidedByRuntime != DECLARED_PROVIDED_BY_RUNTIME_EDEFAULT;
-			case TypesPackage.TVARIABLE__EXPORTED_NAME:
-				return EXPORTED_NAME_EDEFAULT == null ? exportedName != null : !EXPORTED_NAME_EDEFAULT.equals(exportedName);
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED:
+				return directlyExported != DIRECTLY_EXPORTED_EDEFAULT;
+			case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT:
+				return directlyExportedAsDefault != DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT;
+			case TypesPackage.TVARIABLE__EXPORTING_EXPORT_DEFINITIONS:
+				return exportingExportDefinitions != null && !exportingExportDefinitions.isEmpty();
 			case TypesPackage.TVARIABLE__CONST:
 				return const_ != CONST_EDEFAULT;
 			case TypesPackage.TVARIABLE__COMPILE_TIME_VALUE:
@@ -655,7 +788,9 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 		}
 		if (baseClass == TExportableElement.class) {
 			switch (derivedFeatureID) {
-				case TypesPackage.TVARIABLE__EXPORTED_NAME: return TypesPackage.TEXPORTABLE_ELEMENT__EXPORTED_NAME;
+				case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED: return TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED;
+				case TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT: return TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT;
+				case TypesPackage.TVARIABLE__EXPORTING_EXPORT_DEFINITIONS: return TypesPackage.TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS;
 				default: return -1;
 			}
 		}
@@ -690,7 +825,9 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 		}
 		if (baseClass == TExportableElement.class) {
 			switch (baseFeatureID) {
-				case TypesPackage.TEXPORTABLE_ELEMENT__EXPORTED_NAME: return TypesPackage.TVARIABLE__EXPORTED_NAME;
+				case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED: return TypesPackage.TVARIABLE__DIRECTLY_EXPORTED;
+				case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT: return TypesPackage.TVARIABLE__DIRECTLY_EXPORTED_AS_DEFAULT;
+				case TypesPackage.TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS: return TypesPackage.TVARIABLE__EXPORTING_EXPORT_DEFINITIONS;
 				default: return -1;
 			}
 		}
@@ -721,13 +858,15 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TVARIABLE___IS_PROVIDED_BY_RUNTIME;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TVARIABLE___GET_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___GET_DEFAULT_TYPE_ACCESS_MODIFIER: return TypesPackage.TVARIABLE___GET_DEFAULT_TYPE_ACCESS_MODIFIER;
-				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_EXPORTED: return TypesPackage.TVARIABLE___IS_EXPORTED;
+				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT___IS_DIRECTLY_EXPORTED: return TypesPackage.TVARIABLE___IS_DIRECTLY_EXPORTED;
 				default: return -1;
 			}
 		}
 		if (baseClass == TExportableElement.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TEXPORTABLE_ELEMENT___IS_EXPORTED: return TypesPackage.TVARIABLE___IS_EXPORTED;
+				case TypesPackage.TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED: return TypesPackage.TVARIABLE___IS_INDIRECTLY_EXPORTED;
+				case TypesPackage.TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME: return TypesPackage.TVARIABLE___GET_DIRECTLY_EXPORTED_NAME;
 				default: return -1;
 			}
 		}
@@ -759,6 +898,10 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 				return isHollow();
 			case TypesPackage.TVARIABLE___IS_EXPORTED:
 				return isExported();
+			case TypesPackage.TVARIABLE___IS_INDIRECTLY_EXPORTED:
+				return isIndirectlyExported();
+			case TypesPackage.TVARIABLE___GET_DIRECTLY_EXPORTED_NAME:
+				return getDirectlyExportedName();
 			case TypesPackage.TVARIABLE___IS_PROVIDED_BY_RUNTIME:
 				return isProvidedByRuntime();
 			case TypesPackage.TVARIABLE___GET_TYPE_ACCESS_MODIFIER:
@@ -783,8 +926,10 @@ public class TVariableImpl extends TAbstractVariableImpl implements TVariable {
 		result.append(declaredTypeAccessModifier);
 		result.append(", declaredProvidedByRuntime: ");
 		result.append(declaredProvidedByRuntime);
-		result.append(", exportedName: ");
-		result.append(exportedName);
+		result.append(", directlyExported: ");
+		result.append(directlyExported);
+		result.append(", directlyExportedAsDefault: ");
+		result.append(directlyExportedAsDefault);
 		result.append(", const: ");
 		result.append(const_);
 		result.append(", compileTimeValue: ");

@@ -26,18 +26,20 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
+import org.eclipse.n4js.n4JS.NamespaceExportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.TypeReferenceNode
+import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.AccessibleTypeElement
 import org.eclipse.n4js.ts.types.ContainerType
-import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
@@ -91,49 +93,84 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def checkExportedWhenVisibilityHigherThanPrivate(TypeDefiningElement typeDefiningElement) {
-		if (!jsVariantHelper.requireCheckExportedWhenVisibilityHigherThanPrivate(typeDefiningElement)) {
-			return; // does not apply to plain JS files
-		}
-
+	def checkDirectlyExportedWhenVisibilityHigherThanPrivateForType(TypeDefiningElement typeDefiningElement) {
 		if (typeDefiningElement instanceof ObjectLiteral) {
 			return; // does not apply to ObjectLiterals and their defined type TStructuralType
 		}
 		if (typeDefiningElement instanceof NamespaceImportSpecifier) {
 			return; // does not apply to NamespaceImportSpecifier and their defined type ModuleNamespaceVirtualType
 		}
+		if (typeDefiningElement instanceof NamespaceExportSpecifier) {
+			return; // does not apply to NamespaceExportSpecifier and their defined type ModuleNamespaceVirtualType
+		}
 
 		val type = typeDefiningElement.definedType
+		if (type instanceof AccessibleTypeElement) {
+			doCheckDirectlyExportedWhenVisibilityHigherThanPrivate(typeDefiningElement, type);
+		}
+	}
 
-		if (type !== null && !type.exported && type.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal) {
-			if (type instanceof SyntaxRelatedTElement) {
-				val astElem = type.astElement;
-				if (astElem !== null) {
-					val message = getMessageForCLF_NOT_EXPORTED_NOT_PRIVATE(type.keyword,
-						type.typeAccessModifier.keyword);
-					val node = findModifierNode(astElem, type.typeAccessModifier);
-					if (node !== null) {
-						addIssue(message, astElem, node.getOffset(), node.getLength(), CLF_NOT_EXPORTED_NOT_PRIVATE);
-					} else {
-						val eObjectToNameFeature = findNameFeature(astElem);
-						addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, CLF_NOT_EXPORTED_NOT_PRIVATE)
-					}
-				}
+	@Check
+	def checkDirectlyExportedWhenVisibilityHigherThanPrivateForVariable(VariableDeclaration varDecl) {
+		val tVar = varDecl.definedVariable;
+		doCheckDirectlyExportedWhenVisibilityHigherThanPrivate(varDecl, tVar);
+	}
+
+	def private void doCheckDirectlyExportedWhenVisibilityHigherThanPrivate(EObject astNode, AccessibleTypeElement tElem) {
+		if (!jsVariantHelper.requireCheckExportedWhenVisibilityHigherThanPrivate(astNode)) {
+			return; // does not apply to plain JS and DTS files
+		}
+
+		if (tElem !== null
+				&& !tElem.directlyExported
+				&& tElem.typeAccessModifier.ordinal > TypeAccessModifier.PRIVATE.ordinal) {
+
+			// NOTE: we are using issue code UNSUPPORTED here, because the only reason for disallowing a visibility higher than
+			// private on non-exported types is that it is required/useful only with separate export declarations and such export
+			// declarations are UNSUPPORTED in N4JS(D) at the moment.
+			val message = getMessageForUNSUPPORTED("non-exported " + tElem.keyword + " with a visibility higher than private");
+			val node = findModifierNode(astNode, tElem.typeAccessModifier);
+			if (node !== null) {
+				addIssue(message, astNode, node.getOffset(), node.getLength(), UNSUPPORTED);
+			} else {
+				val eObjectToNameFeature = findNameFeature(astNode);
+				addIssue(message, eObjectToNameFeature.key, eObjectToNameFeature.value, UNSUPPORTED)
 			}
 		}
 	}
-	
+
 	def ILeafNode findModifierNode(EObject eo, TypeAccessModifier taModifier) {
-		if (eo instanceof ModifiableElement) {
-			for (var i = 0; i<eo.declaredModifiers.length; i++) {
-				val dm = eo.declaredModifiers.get(i);
+		val me = if (eo instanceof VariableDeclaration) eo.variableDeclarationContainer else eo;
+		if (me instanceof ModifiableElement) {
+			for (var i = 0; i<me.declaredModifiers.length; i++) {
+				val dm = me.declaredModifiers.get(i);
 				if (dm.literal == taModifier.literal) {
-					val node = ModifierUtils.getNodeForModifier(eo, i);
+					val node = ModifierUtils.getNodeForModifier(me, i);
 					return node;
 				}
 			}
 		}
 		return null;
+	}
+
+	@Check
+	def void checkExportedElementHasAccessibilityHigherThanPrivate(ExportDeclaration exportDecl) {
+		if (exportDecl.exportedElement !== null) {
+			return; // does not apply to direct exports
+		}
+		for (exportSpecifier : exportDecl.namedExports) {
+			val idRef = exportSpecifier.exportedElement;
+			val exportedElement = idRef?.id;
+			if (exportedElement !== null && !exportedElement.eIsProxy) {
+				if (exportedElement instanceof AccessibleTypeElement) {
+					val tam = exportedElement.typeAccessModifier;
+					if (!(tam.ordinal > TypeAccessModifier.PRIVATE.ordinal)) {
+						val msg = getMessageForEXP_PRIVATE_ELEMENT(exportedElement.keyword, exportedElement.name);
+						addIssue(msg, idRef, EXP_PRIVATE_ELEMENT);
+					}
+				}
+			}
+		}
 	}
 
 	@Check
@@ -149,7 +186,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		if (annotation !== null) {
 			val typeAccessModifier = switch (it : exportableElement) {
-				VariableStatement case exported:
+				VariableStatement case directlyExported:
 					it.varDecl.head?.definedVariable?.typeAccessModifier
 				FunctionDeclaration:
 					definedType?.typeAccessModifier

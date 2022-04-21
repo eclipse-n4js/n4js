@@ -26,7 +26,6 @@ public class N4JSNamespaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 		ensureEqualName(n4Namespace, namespaceType);
 				
 		namespaceType.astElement = n4Namespace
-
 		n4Namespace.definedType = namespaceType
 		
 		return true;
@@ -44,8 +43,6 @@ public class N4JSNamespaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 		namespaceType.setProvidedByRuntime(n4Namespace, preLinkingPhase)
 
 		namespaceType.astElement = n4Namespace
-		namespaceType.exportedName = n4Namespace.exportedName;
-
 		n4Namespace.definedType = namespaceType
 
 		target.namespaces += namespaceType
@@ -55,7 +52,6 @@ public class N4JSNamespaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 	def private TNamespace createTNamespace(N4NamespaceDeclaration n4Namespace) {
 		val namespaceType = TypesFactory::eINSTANCE.createTNamespace();
 		namespaceType.name = n4Namespace.name;
-		namespaceType.exportedName = n4Namespace.exportedName;
 		namespaceType.external = n4Namespace.external;
 		
 		return namespaceType

@@ -14,8 +14,11 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -24,8 +27,11 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.tests.issues.IssueUtils;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.eclipse.xtext.validation.Issue;
+import org.junit.Assert;
 
 import com.google.common.base.Joiner;
 
@@ -34,25 +40,73 @@ import com.google.common.base.Joiner;
 public class N4JSValidationTestHelper extends ValidationTestHelper {
 
 	/**
-	 * Asserts the given model to not have any issues except the ones specified by the exception issue codes parameter.
+	 * Asserts the given model to not have any issues except the ones specified by the ignored issue codes parameter.
 	 *
 	 * @param model
 	 *            The model
-	 * @param exceptionIssueCodes
+	 * @param ignoredIssueCodes
 	 *            Issue codes which should be ignored
 	 */
-	public void assertNoIssuesExcept(EObject model, String... exceptionIssueCodes) {
+	public void assertNoIssuesExcept(EObject model, String... ignoredIssueCodes) {
 		Resource resource = model.eResource();
-		final List<Issue> issues = validate(resource);
-
-		if (removeIssuesWithCode(issues, exceptionIssueCodes).size() > 0) {
+		List<Issue> issues = validate(resource);
+		issues = removeIssuesWithCode(issues, false, ignoredIssueCodes);
+		if (issues.size() > 0) {
 			fail("Expected no issues, but got :" + getIssuesAsString(resource, issues, new StringBuilder()));
 		}
 	}
 
-	private List<Issue> removeIssuesWithCode(List<Issue> issues, String... codes) {
-		List<String> excludedIssueCodesList = Arrays.asList(codes);
-		return issues.stream().filter(issue -> !excludedIssueCodesList.contains(issue.getCode()))
+	/**
+	 * Asserts the given model to not have any errors except the ones specified by the ignored issue codes parameter.
+	 *
+	 * @param model
+	 *            The model
+	 * @param ignoredIssueCodes
+	 *            Issue codes which should be ignored
+	 */
+	public void assertNoErrorsExcept(EObject model, String... ignoredIssueCodes) {
+		Resource resource = model.eResource();
+		List<Issue> issues = validate(resource);
+		issues = removeIssuesWithCode(issues, true, ignoredIssueCodes);
+		if (issues.size() > 0) {
+			fail("Expected no errors, but got :" + getIssuesAsString(resource, issues, new StringBuilder()));
+		}
+	}
+
+	/**
+	 * Asserts the given model to have exactly the given errors, ignoring issues of the given issue codes.
+	 *
+	 * @param model
+	 *            The model
+	 * @param ignoredIssueCodes
+	 *            Issue codes which should be ignored
+	 * @param expectedErrors
+	 *            The expected errors.
+	 */
+	public void assertErrorsExcept(EObject model, String[] ignoredIssueCodes, String... expectedErrors) {
+		if (expectedErrors.length == 0) {
+			// use above method for better error messages:
+			assertNoErrorsExcept(model, ignoredIssueCodes);
+			return;
+		}
+		Resource resource = model.eResource();
+		List<Issue> issues = validate(resource);
+		issues = removeIssuesWithCode(issues, true, ignoredIssueCodes);
+		List<String> actualErrorsSorted = issues.stream()
+				.map(issue -> IssueUtils.toString(issue))
+				.sorted()
+				.collect(Collectors.toList());
+		List<String> expectedErrorsSorted = Stream.of(expectedErrors)
+				.sorted()
+				.collect(Collectors.toList());
+		Assert.assertEquals("Actual errors differ from expected errors", expectedErrorsSorted, actualErrorsSorted);
+	}
+
+	private List<Issue> removeIssuesWithCode(List<Issue> issues, boolean removeWarningsAndInfos, String... codes) {
+		Set<String> excludedIssueCodes = new HashSet<>(Arrays.asList(codes));
+		return issues.stream()
+				.filter(issue -> (!removeWarningsAndInfos || issue.getSeverity() == Severity.ERROR)
+						&& !excludedIssueCodes.contains(issue.getCode()))
 				.collect(Collectors.toList());
 	}
 

@@ -16,9 +16,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.n4js.n4JS.impl.N4SetterDeclarationImpl;
-
 import org.eclipse.n4js.transpiler.im.DelegatingMember;
 import org.eclipse.n4js.transpiler.im.DelegatingSetterDeclaration;
 import org.eclipse.n4js.transpiler.im.ImPackage;

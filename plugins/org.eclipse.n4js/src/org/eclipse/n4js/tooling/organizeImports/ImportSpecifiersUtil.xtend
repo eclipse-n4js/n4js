@@ -10,13 +10,21 @@
  */
 package org.eclipse.n4js.tooling.organizeImports
 
+import com.google.common.collect.Lists
 import java.util.List
+import java.util.function.Consumer
+import org.eclipse.n4js.N4JSLanguageConstants
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.AbstractNamespace
+import org.eclipse.n4js.ts.types.ElementExportDefinition
+import org.eclipse.n4js.ts.types.ModuleExportDefinition
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.RecursionGuard
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 
 /**
@@ -47,9 +55,9 @@ class ImportSpecifiersUtil {
 	}
 
 	/** Map all exported elements from namespace target module to the import provided elements. */
-	private static def namespaceToProvidedElements(JavaScriptVariantHelper jsVariantHelper, NamespaceImportSpecifier specifier) {
+	private static def List<ImportProvidedElement> namespaceToProvidedElements(JavaScriptVariantHelper jsVariantHelper, NamespaceImportSpecifier specifier) {
 		val importedModule = specifier.importedModule;
-		if (importedModule === null)
+		if (importedModule === null || importedModule.eIsProxy)
 			return emptyList
 
 		val importProvidedElements = newArrayList
@@ -57,17 +65,28 @@ class ImportSpecifiersUtil {
 		importProvidedElements.add(new ImportProvidedElement(specifier.alias,
 			computeNamespaceActualName(specifier), specifier, false));
 
-		val topNamespaces = importedModule.namespaces.filter[isExported].map[it as TExportableElement]
-		val topExportedTypes = importedModule.types.filter[isExported].map[it as TExportableElement]
-		val topExportedVars = importedModule.exportedVariables.filter[it.isExported].map[it as TExportableElement];
-		val topExported = topNamespaces + topExportedTypes + topExportedVars
-
-		topExported.forEach [ type |
+		collectProvidedElements(importedModule, new RecursionGuard(), [ exportDef |
 			importProvidedElements.add(
-				new ImportProvidedElement(specifier.importedElementName(type), type.exportedName,
-					specifier as ImportSpecifier, N4JSLanguageUtils.isHollowElement(type, jsVariantHelper)))
-		]
+				new ImportProvidedElement(specifier.importedElementName(exportDef), exportDef.exportedName,
+					specifier, N4JSLanguageUtils.isHollowElement(exportDef.exportedElement, jsVariantHelper)));
+		]);
+
 		return importProvidedElements
+	}
+
+	private static def void collectProvidedElements(AbstractNamespace namespace, RecursionGuard<TModule> guard, Consumer<ElementExportDefinition> consumer) {
+		for (exportDef : Lists.reverse(namespace.exportDefinitions)) {
+			if (exportDef instanceof ElementExportDefinition) {
+				consumer.accept(exportDef);
+			} else if (exportDef instanceof ModuleExportDefinition) {
+				val exportedModule = exportDef.exportedModule;
+				if (exportedModule !== null && !exportedModule.eIsProxy) {
+					if (guard.tryNext(exportedModule)) {
+						collectProvidedElements(exportedModule, guard, consumer);
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -87,6 +106,10 @@ class ImportSpecifiersUtil {
 	 * Computes exported name of the element imported by this specifier.
 	 */
 	public static def String importedElementName(NamedImportSpecifier specifier) {
+		if (specifier instanceof DefaultImportSpecifier) {
+			return N4JSLanguageConstants.EXPORT_DEFAULT_NAME;
+		}
+
 		val element = specifier.importedElement
 		if (element === null)
 			return "<" + specifier.importedElementAsText + ">(null)"
@@ -98,20 +121,20 @@ class ImportSpecifiersUtil {
 			return "<" + specifier.importedElementAsText + ">(proxy)"
 		}
 
-		return element.exportedName
+		return specifier.importedElementAsText;
 	}
 
 	/** returns locally used name of element imported via {@link NamedImportSpecifier} */
-	public static def usedName(NamedImportSpecifier it) {
+	public static def String usedName(NamedImportSpecifier it) {
 		if (alias === null) importedElementName else alias
 	}
 
 	/** returns locally used name of element imported via {@link NamespaceImportSpecifier} */
-	public static def importedElementName(NamespaceImportSpecifier is, TExportableElement element) {
-		is.alias + "." + element.exportedName
+	public static def String importedElementName(NamespaceImportSpecifier is, ElementExportDefinition exportDef) {
+		is.alias + "." + exportDef.exportedName
 	}
 
-	public static def importedModule(ImportSpecifier it) {
+	public static def TModule importedModule(ImportSpecifier it) {
 		(eContainer as ImportDeclaration).module
 	}
 
@@ -122,7 +145,7 @@ class ImportSpecifiersUtil {
 	 * @param spec - the ImportSpecifier to investigate
 	 * @return true import looks broken
 	 * */
-	public static def isBrokenImport(ImportSpecifier spec) {
+	public static def boolean isBrokenImport(ImportSpecifier spec) {
 		return isBrokenImport(spec.eContainer as ImportDeclaration, spec);
 	}
 
@@ -130,11 +153,11 @@ class ImportSpecifiersUtil {
 	 * Returns true iff the target module of the given import declaration is invalid (null, proxy, no name).
 	 * Import specifiers are not checked.
 	 */
-	public static def isBrokenImport(ImportDeclaration decl) {
+	public static def boolean isBrokenImport(ImportDeclaration decl) {
 		return isBrokenImport(decl, null);
 	}
 
-	private static def isBrokenImport(ImportDeclaration decl, ImportSpecifier spec) {
+	private static def boolean isBrokenImport(ImportDeclaration decl, ImportSpecifier spec) {
 		val module = decl.module;
 
 		// check target module
@@ -152,8 +175,6 @@ class ImportSpecifiersUtil {
 			if (imported === null)
 				return true
 			if (imported.eIsProxy)
-				return true
-			if (imported.exportedName.isNullOrEmpty)
 				return true
 		}
 

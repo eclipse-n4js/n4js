@@ -28,9 +28,11 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
+import org.eclipse.n4js.ts.types.ElementExportDefinition
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TExportingElement
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
@@ -104,15 +106,17 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			TInterface:
 				if (name !== null) fqnType(it)
 			TEnum:
-				if (name !== null) rootContainer.fullyQualifiedName?.append(exportedName ?: name)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TypeAlias:
-				if (name !== null && it.exported) rootContainer.fullyQualifiedName?.append(exportedName ?: name)
+				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
 			TFunction:
-				if (name !== null && it.exported) rootContainer.fullyQualifiedName?.append(exportedName)
+				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
 			TVariable:
-				if (name !== null && it.exported) rootContainer.fullyQualifiedName?.append(exportedName)
+				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
 			ExportDeclaration:
 				exportedElement?.getFullyQualifiedName
+			ElementExportDefinition:
+				fqnExportDefinition(it)
 			TypeVariable:
 				null
 			Type:
@@ -148,18 +152,18 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		{
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
-		val fqn = QualifiedNameUtils.append(prefix, typeDecl.exportedName ?: typeDecl.name);
+		val fqn = QualifiedNameUtils.append(prefix, typeDecl.directlyExportedName ?: typeDecl.name);
 		return fqn;
 	}
 	
 	private def QualifiedName fqnNamespaceDeclaration(N4NamespaceDeclaration typeDecl) {
 		var prefix = typeDecl.rootContainer.fullyQualifiedName;
-		var qn = QualifiedName.create(typeDecl.exportedName ?: typeDecl.name);
+		var qn = QualifiedName.create(typeDecl.directlyExportedName ?: typeDecl.name);
 		var EObject tmpTypeDecl = typeDecl;
 		while (tmpTypeDecl.eContainer instanceof N4NamespaceDeclaration) {
 			tmpTypeDecl = tmpTypeDecl.eContainer;
 			val nsd = tmpTypeDecl as N4NamespaceDeclaration;
-			qn = QualifiedNameUtils.prepend(nsd.exportedName ?: nsd.name, qn);
+			qn = QualifiedNameUtils.prepend(nsd.directlyExportedName ?: nsd.name, qn);
 		}
 		val fqn = QualifiedNameUtils.concat(prefix, qn);
 		return fqn;
@@ -170,7 +174,18 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		if (type.polyfill) {
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
-		val fqn = QualifiedNameUtils.append(prefix, type.exportedName ?: type.name);
+		val fqn = QualifiedNameUtils.append(prefix, type.name);
+		return fqn;
+	}
+
+	private def QualifiedName fqnExportDefinition(ElementExportDefinition exportDef) {
+		// note: do not trigger proxy resolution here, i.e. do not invoke exportDef.exportedElement
+		val containingExportingElem = exportDef.eContainer as TExportingElement;
+		var prefix = containingExportingElem.fullyQualifiedName;
+		if (exportDef.polyfill) {
+			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
+		}
+		val fqn = QualifiedNameUtils.append(prefix, exportDef.exportedName);
 		return fqn;
 	}
 

@@ -25,8 +25,8 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.resource.N4JSEObjectDescription
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.scoping.ExportedElementsCollector
 import org.eclipse.n4js.scoping.N4JSScopeProvider
-import org.eclipse.n4js.scoping.TopLevelElementsCollector
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
@@ -88,22 +88,9 @@ class ImportedElementsScopingHelper {
 	private ScopeSnapshotHelper scopesHelper;
 	
 	@Inject
-	private TopLevelElementsCollector topLevelElementCollector
+	private ExportedElementsCollector exportedElementsCollector
 
 
-
-	def IScope getImportedIdentifiables(IScope parentScope, Script script) {
-		val IScope scriptScope = cache.get(script -> 'importedIdentifiables', script.eResource) [|
-			// TODO parentScope (usually global scope) arg is not part of cache key but used in value!
-			// filter out primitive types in next line (otherwise code like "let x = int;" would be allowed)
-			val noPrimitiveBuiltIns = new NoPrimitiveTypesScope(BuiltInTypeScope.get(script.eResource.resourceSet));
-			val uberParent = new UberParentScope("ImportedElementsScopingHelper-uberParent", noPrimitiveBuiltIns, parentScope);
-			val globalObjectScope = getGlobalObjectProperties(uberParent, script);
-			val result = findImportedElements(script, globalObjectScope, true, true);
-			return result;
-		]
-		return scriptScope
-	}
 
 	def IScope getImportedTypes(IScope parentScope, Script script) {
 		val IScope scriptScope = cache.get(script -> 'importedTypes', script.eResource) [|
@@ -136,7 +123,7 @@ class ImportedElementsScopingHelper {
 				// -> use the string 'localName' (but this is not the alias property!)
 				specifier.importedElementAsText
 			} else {
-				specifier.alias ?: importedElement.exportedName ?: importedElement.name
+				specifier.alias ?: specifier.importedElementAsText
 		};
 		return QualifiedName.create(importedName)
 	}
@@ -146,7 +133,7 @@ class ImportedElementsScopingHelper {
 	}
 
 	private def String getImportedName(Type type) {
-		return type.exportedName ?: type.name;
+		return type.name;
 	}
 
 	private def QualifiedName createImportedQualifiedTypeName(String namespace, Type type) {
@@ -172,7 +159,7 @@ class ImportedElementsScopingHelper {
 			val module = imp?.module;
 			if (module !== null) {
 				
-				val topLevelElements = topLevelElementCollector.getTopLevelElements(module, contextResource, includeHollows, includeVariables);
+				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, includeHollows, includeVariables);
 				val tleScope = scopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", module, IScope.NULLSCOPE, false, topLevelElements)
 			
 				for (specifier : imp.importSpecifiers) {
@@ -198,7 +185,7 @@ class ImportedElementsScopingHelper {
 		return new OriginAwareScope(script, importScope, originatorMap);
 	}
 
-	protected def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
+	private def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
 			Resource contextResource, IEODesc2ISpec originatorMap,
 			ImportedElementsMap validImports,
 			ImportedElementsMap invalidImports, boolean importVariables, IScope tleScope) {
@@ -302,7 +289,7 @@ class ImportedElementsScopingHelper {
 			// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 			for (importedVar : imp.module.exportedVariables) {
 				val varVisibility = variableVisibilityChecker.isVisible(contextResource, importedVar);
-				val varName = importedVar.exportedName
+				val varName = importedVar.name
 				val qn = QualifiedName.create(namespaceName, varName)
 				if (varVisibility.visibility) {
 					val originalName = QualifiedName.create(varName)
@@ -435,7 +422,12 @@ class ImportedElementsScopingHelper {
 	
 	private def IEObjectDescription createDescription(QualifiedName name, IdentifiableElement element) {
 		if (name.lastSegment != element.name) {
-			return new AliasedEObjectDescription(name, N4JSEObjectDescription.create(qualifiedNameProvider.getFullyQualifiedName(element), element))
+			var qn = qualifiedNameProvider.getFullyQualifiedName(element);
+			if (qn === null) {
+				// non-directly-exported variable / function / type alias that is exported under an alias via a separate export declaration:
+				qn = qualifiedNameProvider.getFullyQualifiedName(element.containingModule)?.append(element.name);
+			}
+			return new AliasedEObjectDescription(name, N4JSEObjectDescription.create(qn, element))
 		} else {
 			return N4JSEObjectDescription.create(name, element)
 		}

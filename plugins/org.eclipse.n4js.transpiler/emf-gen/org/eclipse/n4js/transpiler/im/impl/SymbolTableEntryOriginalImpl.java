@@ -20,12 +20,11 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-
 import org.eclipse.n4js.n4JS.ImportSpecifier;
-
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 
+import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 
@@ -172,9 +171,24 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 	public String getExportedName() {
 		final IdentifiableElement trgt = this.getOriginalTarget();
 		if ((trgt instanceof TExportableElement)) {
-			return ((TExportableElement)trgt).getExportedName();
+			final String dirExpName = ((TExportableElement)trgt).getDirectlyExportedName();
+			if ((dirExpName != null)) {
+				return dirExpName;
+			}
+			boolean _isIndirectlyExported = ((TExportableElement)trgt).isIndirectlyExported();
+			if (_isIndirectlyExported) {
+				EList<ElementExportDefinition> _exportingExportDefinitions = ((TExportableElement)trgt).getExportingExportDefinitions();
+				for (final ElementExportDefinition exportDef : _exportingExportDefinitions) {
+					{
+						final String indirExpName = exportDef.getExportedName();
+						if ((indirExpName != null)) {
+							return indirExpName;
+						}
+					}
+				}
+			}
 		}
-		return this.getOriginalTarget().getName();
+		return trgt.getName();
 	}
 
 	/**

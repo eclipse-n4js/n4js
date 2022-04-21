@@ -17,7 +17,7 @@ import java.util.LinkedHashSet
 import java.util.List
 import java.util.Set
 import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.ModuleRef
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.Script
@@ -62,6 +62,9 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 		if (!N4JSASTUtils.isTopLevelCode(idRef)) {
 			return; // only interested in top-level == load-time references here!
 		}
+		if (idRef.eContainingFeature === N4JSPackage.Literals.NAMED_EXPORT_SPECIFIER__EXPORTED_ELEMENT) {
+			return; // re-exports are not harmful
+		}
 		val targetModule = getTargetModule(idRef);
 		if (targetModule === null) {
 			return;
@@ -77,19 +80,19 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	@Check
-	def void checkIllegalImportOfLTDTarget(Script script) {
+	def void checkIllegalModuleRefToLTDTarget(Script script) {
 		val containingModule = script.module;
-		val importDecls = script.scriptElements.filter(ImportDeclaration).toList;
+		val refsToOtherModules = script.scriptElements.filter(ModuleRef).filter[referringToOtherModule].toList;
 
 		val modulesInHealedCycles = new HashSet<TModule>();
-		for (importDecl : importDecls) {
-			if (holdsNotAnIllegalImportWithinLoadtimeCycle(containingModule, importDecl)
-				&& holdsNotAnIllegalImportOfLTDTarget(containingModule, importDecl, modulesInHealedCycles)) {
+		for (moduleRef : refsToOtherModules) {
+			if (holdsNotAnIllegalModuleRefWithinLoadtimeCycle(containingModule, moduleRef)
+				&& holdsNotAnIllegalModuleRefToLTDTarget(containingModule, moduleRef, modulesInHealedCycles)) {
 
-				if (importDecl.retainedAtRuntime) {
-					// we have a valid import that will be retained at runtime
-					// --> it may contribute to healing later imports:
-					val targetModule = importDecl.module;
+				if (moduleRef.retainedAtRuntime) {
+					// we have a valid reference to another module that will be retained at runtime
+					// --> it may contribute to healing later moduleRefs:
+					val targetModule = moduleRef.module;
 					if (!targetModule.cyclicModulesRuntime.empty) {
 						modulesInHealedCycles += targetModule;
 						modulesInHealedCycles += targetModule.cyclicModulesRuntime;
@@ -102,14 +105,14 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	/**
 	 * Req. GH-1678, Constraint 1
 	 * <p>
-	 * This method will show an error on all imports that constitute the cycle.
+	 * This method will show an error on all module references (i.e. imports/exports with 'from "..."') that constitute the cycle.
 	 */
-	def private boolean holdsNotAnIllegalImportWithinLoadtimeCycle(TModule containingModule, ImportDeclaration importDecl) {
-		val targetModule = importDecl.module;
+	def private boolean holdsNotAnIllegalModuleRefWithinLoadtimeCycle(TModule containingModule, ModuleRef moduleRef) {
+		val targetModule = moduleRef.module;
 		if (containingModule.cyclicModulesLoadtimeForInheritance.contains(targetModule)) {
 			val message = IssueCodes.getMessageForLTD_LOADTIME_DEPENDENCY_CYCLE() + "\n"
 				+ dependencyCycleToString(targetModule, true, INDENT);
-			addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CYCLE);
+			addIssue(message, moduleRef, N4JSPackage.eINSTANCE.moduleRef_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CYCLE);
 			return false;
 		}
 		return true;
@@ -118,14 +121,14 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 	/**
 	 * Req. GH-1678, Constraints 2 and 3.
 	 */
-	def private boolean holdsNotAnIllegalImportOfLTDTarget(TModule containingModule, ImportDeclaration importDecl, Set<TModule> modulesInHealedCycles) {
-		if (!importDecl.isRetainedAtRuntime()) {
-			return true; // only interested in imports that are retained at runtime
+	def private boolean holdsNotAnIllegalModuleRefToLTDTarget(TModule containingModule, ModuleRef moduleRef, Set<TModule> modulesInHealedCycles) {
+		if (!moduleRef.isRetainedAtRuntime()) {
+			return true; // only interested in imports/exports that are retained at runtime
 		}
 
-		val targetModule = importDecl.module;
+		val targetModule = moduleRef.module;
 		if (!targetModule.isLTDTarget) {
-			return true; // only interested in imports of LTD targets
+			return true; // only interested in references to LTD targets
 		}
 		if (!targetModule.cyclicModulesLoadtimeForInheritance.empty) {
 			// target is part of a load-time dependency cycle, so other errors are shown already there
@@ -134,30 +137,30 @@ class RuntimeDependencyValidator extends AbstractN4JSDeclarativeValidator {
 
 		val ltdSources = targetModule.runtimeCyclicLoadtimeDependents; // never includes the containing module itself!
 		val isSingletonLTDTarget = ltdSources.size() == 1
-			&& !containingModule.equals(Iterables.getFirst(ltdSources, null)); // excludes the one valid import of an LTD target
+			&& !containingModule.equals(Iterables.getFirst(ltdSources, null)); // excludes the one valid reference to an LTD target
 		val isMultiLTDTarget = ltdSources.size() > 1;
 
 		if (isSingletonLTDTarget || isMultiLTDTarget) {
 			if (!modulesInHealedCycles.contains(targetModule)) {
-				// illegal import of an LTD target
+				// illegal reference to an LTD target
 				val withinSameDependencyCycleCluster = targetModule.cyclicModulesRuntime.contains(containingModule);
 				if (withinSameDependencyCycleCluster) {
-					// ERROR: importing a multi-LTD-target from within the dependency cycle cluster (Req. GH-1678, Constraint 2)
+					// ERROR: referring to a multi-LTD-target from within the dependency cycle cluster (Req. GH-1678, Constraint 2)
 					// --> load-time dependency conflict
 					val otherLTDSources = otherLTDSourcesToString(containingModule, targetModule);
 					val message = IssueCodes.getMessageForLTD_LOADTIME_DEPENDENCY_CONFLICT(targetModule.simpleName, otherLTDSources) + "\n"
 						+ "Containing runtime dependency cycle cluster:\n"
 						+ dependencyCycleToString(targetModule, false, INDENT);
-					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CONFLICT);
+					addIssue(message, moduleRef, N4JSPackage.eINSTANCE.moduleRef_Module, IssueCodes.LTD_LOADTIME_DEPENDENCY_CONFLICT);
 					return false;
 				} else {
-					// ERROR: importing an LTD target from outside the dependency cycle cluster (Req. GH-1678, Constraint 3)
+					// ERROR: referring to an LTD target from outside the dependency cycle cluster (Req. GH-1678, Constraint 3)
 					val healingModulesStr = healingModulesToString(targetModule);
-					val message = IssueCodes.getMessageForLTD_IMPORT_OF_LOADTIME_DEPENDENCY_TARGET(targetModule.simpleName, healingModulesStr) + "\n"
+					val message = IssueCodes.getMessageForLTD_REFERENCE_TO_LOADTIME_DEPENDENCY_TARGET(targetModule.simpleName, healingModulesStr) + "\n"
 						+ "Containing runtime dependency cycle cluster:\n"
 						+ dependencyCycleToString(targetModule, false, INDENT);
-					addIssue(message, importDecl, N4JSPackage.eINSTANCE.importDeclaration_Module, IssueCodes.LTD_IMPORT_OF_LOADTIME_DEPENDENCY_TARGET);
-					return true; // because we assume a healing import will be added by transpiler, this import can be treated as healing in calling method
+					addIssue(message, moduleRef, N4JSPackage.eINSTANCE.moduleRef_Module, IssueCodes.LTD_REFERENCE_TO_LOADTIME_DEPENDENCY_TARGET);
+					return true; // because we assume a healing import will be added by transpiler, this module reference can be treated as healing in calling method
 				}
 			}
 		}

@@ -98,8 +98,8 @@ class SanitizeImportsTransformation extends Transformation {
 				if( ste.importSpecifier === null ) {
 					val orig = ste.originalTarget;
 					// for an element to be globally available, there are two preconditions:
-					// (1) containing module must be annotated with @@Global (2) element must be exported
-					if(N4JSLanguageUtils.isExported(orig)) {
+					// (1) containing module must be annotated with @@Global (2) element must be directly exported
+					if(N4JSLanguageUtils.isDirectlyExported(orig)) {
 						val module = orig.containingModule;
 						if(AnnotationDefinition.GLOBAL.hasAnnotation(module)) {
 							addNamedImport(ste,null);
@@ -148,6 +148,12 @@ class SanitizeImportsTransformation extends Transformation {
 			} else if(importSpec instanceof NamespaceImportSpecifier) {
 				findSymbolTableEntryForNamespaceImport(importSpec)
 			};
+
+			if (ste === null) {
+				// this may happen in case of several NamedImportSpecifiers importing the same IdentifiableElement
+				// (which is a validation error in most cases, but the validation misses some corner cases)
+				return false;
+			}
 
 			// note: here it is not enough to return !ste.referencingElements.empty, because for performance reasons
 			// transformations are not required to remove obsolete entries from that list

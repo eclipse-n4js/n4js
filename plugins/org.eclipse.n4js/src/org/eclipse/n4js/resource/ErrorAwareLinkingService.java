@@ -109,7 +109,7 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 							.getDescriptionWithError(eObjectDescription)) != null
 					// isNoValidate traverses the file system so it should be the last part of the check
 					&& !workspaceAccess.isNoValidate(resource, resource.getURI())) {
-				addIssue(context, node, errorDescr);
+				addIssue(context, ref, node, errorDescr);
 			} else if (eObjectDescription instanceof UnresolvableObjectDescription) {
 				return Collections.<EObject> singletonList((EObject) context.eGet(ref, false));
 			}
@@ -135,7 +135,7 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 						if (eObjectDescription == null) {
 							List<ScopeElementIssue> issues = scopeInfo.getIssues(invalidEOD);
 							for (ScopeElementIssue issue : issues) {
-								addIssue(context, node, issue);
+								addIssue(context, ref, node, issue);
 							}
 							eObjectDescription = invalidEOD;
 						} else {
@@ -205,8 +205,8 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 	 * @param issue
 	 *            the actual error description.
 	 */
-	protected void addIssue(EObject context, INode node, IEObjectDescriptionWithError issue) {
-		doAddIssue(context, node, issue, issue.getSeverity(), issue.getIssueCode(), issue.getMessage());
+	protected void addIssue(EObject context, EReference ref, INode node, IEObjectDescriptionWithError issue) {
+		doAddIssue(context, ref, node, issue, issue.getSeverity(), issue.getIssueCode(), issue.getMessage());
 	}
 
 	/**
@@ -219,12 +219,12 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 	 * @param issue
 	 *            the actual error description.
 	 */
-	protected void addIssue(EObject context, INode node, ScopeElementIssue issue) {
-		doAddIssue(context, node, issue.delegate, issue.severity, issue.issueCode, issue.message);
+	protected void addIssue(EObject context, EReference ref, INode node, ScopeElementIssue issue) {
+		doAddIssue(context, ref, node, issue.delegate, issue.severity, issue.issueCode, issue.message);
 	}
 
-	private void doAddIssue(EObject context, INode node, IEObjectDescription objDescr, Severity severity,
-			String issueCode, String message) {
+	private void doAddIssue(EObject context, EReference ref, INode node, IEObjectDescription objDescr,
+			Severity severity, String issueCode, String message) {
 
 		N4JSResource resource = (N4JSResource) context.eResource();
 		if (resource.isValidationDisabled()) {
@@ -256,6 +256,8 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 
 		if (!list.contains(diagnostic)) {
 			list.add(diagnostic);
+
+			resource.getASTMetaInfoCacheVerifyContext().storeLinkingIssueCode(context, ref, issueCode);
 		}
 	}
 }

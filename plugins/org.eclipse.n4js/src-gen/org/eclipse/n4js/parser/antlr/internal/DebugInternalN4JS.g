@@ -217,7 +217,13 @@ ruleNamespaceElement:
 			ruleFunctionDeclaration
 		)
 		    |
-		ruleVariableStatementWithModifier
+		(
+			(ruleN4ModifierWithoutConst
+			*
+			ruleVariableStatementKeyword
+			)=>
+			ruleVariableStatement
+		)
 		    |
 		ruleExportDeclaration
 	)
@@ -301,7 +307,13 @@ norm1_NamespaceElement:
 			norm1_FunctionDeclaration
 		)
 		    |
-		norm1_VariableStatementWithModifier
+		(
+			(ruleN4ModifierWithoutConst
+			*
+			ruleVariableStatementKeyword
+			)=>
+			norm1_VariableStatement
+		)
 		    |
 		ruleExportDeclaration
 	)
@@ -466,11 +478,11 @@ ruleExportDeclaration:
 ruleExportDeclarationImpl:
 	'export'
 	(
-		'*'
+		ruleNamespaceExportClause
 		ruleExportFromClause
 		ruleSemi
 		    |
-		ruleExportClause
+		ruleNamedExportClause
 		(
 			('from')=>
 			ruleExportFromClause
@@ -498,23 +510,37 @@ ruleExportFromClause:
 	ruleModuleSpecifier
 ;
 
-// Rule ExportClause
-ruleExportClause:
+// Rule NamespaceExportClause
+ruleNamespaceExportClause:
+	ruleNamespaceExportSpecifier
+;
+
+// Rule NamedExportClause
+ruleNamedExportClause:
 	'{'
 	(
-		ruleExportSpecifier
+		ruleNamedExportSpecifier
 		(
 			','
-			ruleExportSpecifier
+			ruleNamedExportSpecifier
 		)*
 		','?
 	)?
 	'}'
 ;
 
-// Rule ExportSpecifier
-ruleExportSpecifier:
-	ruleIdentifierRef
+// Rule NamespaceExportSpecifier
+ruleNamespaceExportSpecifier:
+	'*'
+	(
+		'as'
+		ruleIdentifierName
+	)?
+;
+
+// Rule NamedExportSpecifier
+ruleNamedExportSpecifier:
+	ruleIdentifierRefWithDefault
 	(
 		'as'
 		ruleIdentifierName
@@ -599,7 +625,13 @@ ruleExportableElement:
 			ruleFunctionDeclaration
 		)
 		    |
-		ruleVariableStatementWithModifier
+		(
+			(ruleN4ModifierWithoutConst
+			*
+			ruleVariableStatementKeyword
+			)=>
+			ruleVariableStatement
+		)
 	)
 ;
 
@@ -1520,9 +1552,11 @@ ruleRootStatement:
 		)
 		    |
 		(
-			(ruleVariableStatementKeyword
+			(ruleN4ModifierWithoutConst
+			*
+			ruleVariableStatementKeyword
 			)=>
-			norm1_VariableStatement
+			ruleVariableStatement
 		)
 		    |
 		ruleEmptyStatement
@@ -1577,9 +1611,11 @@ norm1_RootStatement:
 		)
 		    |
 		(
-			(ruleVariableStatementKeyword
+			(ruleN4ModifierWithoutConst
+			*
+			ruleVariableStatementKeyword
 			)=>
-			norm3_VariableStatement
+			norm1_VariableStatement
 		)
 		    |
 		ruleEmptyStatement
@@ -1656,10 +1692,14 @@ norm1_Statement:
 ;
 
 // Rule VariableStatement
-norm1_VariableStatement:
+ruleVariableStatement:
 	(
-		(ruleVariableStatementKeyword
+		(ruleN4ModifierWithoutConst
+		*
+		ruleVariableStatementKeyword
 		)=>
+		ruleN4ModifierWithoutConst
+		*
 		ruleVariableStatementKeyword
 	)
 	norm1_VariableDeclarationOrBinding
@@ -1671,38 +1711,16 @@ norm1_VariableStatement:
 ;
 
 // Rule VariableStatement
-norm3_VariableStatement:
+norm1_VariableStatement:
 	(
-		(ruleVariableStatementKeyword
+		(ruleN4ModifierWithoutConst
+		*
+		ruleVariableStatementKeyword
 		)=>
+		ruleN4ModifierWithoutConst
+		*
 		ruleVariableStatementKeyword
 	)
-	norm3_VariableDeclarationOrBinding
-	(
-		','
-		norm3_VariableDeclarationOrBinding
-	)*
-	ruleSemi
-;
-
-// Rule VariableStatementWithModifier
-ruleVariableStatementWithModifier:
-	ruleN4Modifier
-	*
-	ruleVariableStatementKeyword
-	norm1_VariableDeclarationOrBinding
-	(
-		','
-		norm1_VariableDeclarationOrBinding
-	)*
-	ruleSemi
-;
-
-// Rule VariableStatementWithModifier
-norm1_VariableStatementWithModifier:
-	ruleN4Modifier
-	*
-	ruleVariableStatementKeyword
 	norm3_VariableDeclarationOrBinding
 	(
 		','
@@ -3044,6 +3062,20 @@ ruleIdentifierRef:
 // Rule IdentifierRef
 norm1_IdentifierRef:
 	norm1_BindingIdentifier
+;
+
+// Rule IdentifierRefWithDefault
+ruleIdentifierRefWithDefault:
+	ruleBindingIdentifierWithDefault
+;
+
+// Rule BindingIdentifierWithDefault
+ruleBindingIdentifierWithDefault:
+	(
+		ruleBindingIdentifier
+		    |
+		'default'
+	)
 ;
 
 // Rule SuperLiteral

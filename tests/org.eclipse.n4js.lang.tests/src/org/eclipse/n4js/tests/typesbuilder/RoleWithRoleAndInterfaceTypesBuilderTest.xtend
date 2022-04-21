@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.typesbuilder
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.tests.typesbuilder.extensions.ASTStructureAssertionExtension
@@ -21,7 +22,6 @@ import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypeAccessModifier
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
@@ -51,22 +51,22 @@ class RoleWithRoleAndInterfaceTypesBuilderTest extends AbstractTypesBuilderTest 
 	def test() {
 		val textFileName = "RoleWithRoleAndInterface.n4js"
 		val expectedTypesNamePairs = #[
+			typeof(TInterface) -> "Persistable",
 			typeof(TInterface) -> "Loadable",
 			typeof(TInterface) -> "MyInterface",
 			typeof(TEnum) -> "StorageType",
-			typeof(TClass) -> "Storage",
-			typeof(TInterface) -> "Persistable"
+			typeof(TClass) -> "Storage"
 		]
 
 		// currently everything is exported to user data and Xtext index, e.g. to be able to
 		// use in IDE "Open Type"
 		val expectedExportedTypeToNamePairsOnIndex = #[
 			typeof(TModule) -> qualifiedNamePrefix + "RoleWithRoleAndInterface",
+			typeof(TInterface) -> "Persistable",
 			typeof(TInterface) -> "Loadable",
 			typeof(TInterface) -> "MyInterface",
 			typeof(TEnum) -> "StorageType",
-			typeof(TClass) -> "Storage",
-			typeof(TInterface) -> "Persistable"
+			typeof(TClass) -> "Storage"
 		]
 		val expectedTypesCount = expectedTypesNamePairs.size
 		val expectedExportedElementsCount = expectedExportedTypeToNamePairsOnIndex.size

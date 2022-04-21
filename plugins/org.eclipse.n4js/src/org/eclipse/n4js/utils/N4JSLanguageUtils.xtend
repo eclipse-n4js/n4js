@@ -540,11 +540,10 @@ public class N4JSLanguageUtils {
 	/**
 	 * Tells if the given identifiable element is exported.
 	 */
-	def static boolean isExported(IdentifiableElement elem) {
+	def static boolean isDirectlyExported(IdentifiableElement elem) {
 		return switch(elem) {
-			VariableDeclaration: true
-			TVariable: elem.exported
-			Type: elem.exported
+			TVariable: elem.directlyExported
+			Type: elem.directlyExported
 			default: false
 		};
 	}

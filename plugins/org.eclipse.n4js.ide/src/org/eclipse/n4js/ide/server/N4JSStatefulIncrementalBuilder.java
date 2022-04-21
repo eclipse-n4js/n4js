@@ -21,7 +21,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
@@ -218,9 +218,9 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 	private Collection<URI> getImportedUris(WorkspaceAwareResourceSet resourceSet, String prjName,
 			Multimap<String, URI> moduleName2Uri, URI uri) {
 
-		List<ImportDeclaration> importDeclarations = getImportDeclarations(resourceSet, uri);
-		for (ImportDeclaration importDeclaration : importDeclarations) {
-			String moduleSpecifier = importDeclaration.getModuleSpecifierAsText();
+		List<ModuleRef> moduleRefs = getModuleRefsToOtherModules(resourceSet, uri);
+		for (ModuleRef moduleRef : moduleRefs) {
+			String moduleSpecifier = moduleRef.getModuleSpecifierAsText();
 			String adjModuleSpecifier = getAdjustedModuleSpecifierOrNull(moduleSpecifier, prjName, moduleName2Uri);
 			if (adjModuleSpecifier != null) {
 				return moduleName2Uri.get(adjModuleSpecifier);
@@ -229,8 +229,8 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 		return Collections.emptyList();
 	}
 
-	private List<ImportDeclaration> getImportDeclarations(WorkspaceAwareResourceSet resourceSet, URI uri) {
-		List<ImportDeclaration> result = new ArrayList<>();
+	private List<ModuleRef> getModuleRefsToOtherModules(WorkspaceAwareResourceSet resourceSet, URI uri) {
+		List<ModuleRef> result = new ArrayList<>();
 		Resource resource = null;
 		try {
 			resource = resourceSet.getResource(uri, true);
@@ -246,9 +246,15 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 				Script script = (Script) eobj;
 
 				for (EObject topLevelStmt : script.getScriptElements()) {
-					if (topLevelStmt instanceof ImportDeclaration) {
-						ImportDeclaration impDecl = (ImportDeclaration) topLevelStmt;
-						result.add(impDecl);
+					if (topLevelStmt instanceof ModuleRef) {
+						ModuleRef impExpDecl = (ModuleRef) topLevelStmt;
+						if (!impExpDecl.isReferringToOtherModule()) {
+							continue;
+						}
+						if (impExpDecl.getModuleSpecifierAsText() == null) {
+							continue;
+						}
+						result.add(impExpDecl);
 					} else {
 
 						// we know that all import statements are at the beginning of a file

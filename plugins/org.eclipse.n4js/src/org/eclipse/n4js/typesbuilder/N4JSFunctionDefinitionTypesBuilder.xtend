@@ -86,7 +86,6 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionType.declaredAsync = functionDecl.async // TODO change to declaredAsync once the annotation is gone
 		functionType.declaredGenerator = functionDecl.generator
 
-
 		// set container
 		target.types += functionType
 	}
@@ -163,7 +162,6 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	def private TFunction createAndLinkTFunction(FunctionDefinition functionDef, boolean preLinkingPhase) {
 		val functionType = this.createTFunction(functionDef);
 		if(functionDef instanceof FunctionDeclaration) {
-			functionType.exportedName = functionDef.exportedName;
 			functionType.external = functionDef.external;
 		}
 		functionType.name = functionDef.name; // maybe null in case of function expression

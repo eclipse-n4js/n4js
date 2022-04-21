@@ -158,9 +158,20 @@ class SymbolTableEntryOriginal extends SymbolTableEntry {
 	op String getExportedName() {
 		val trgt = originalTarget;
 		if(trgt instanceof TExportableElement) {
-			return trgt.exportedName;
+			val dirExpName = trgt.directlyExportedName;
+			if (dirExpName !== null) {
+				return dirExpName;
+			}
+			if (trgt.indirectlyExported) {
+				for (exportDef : trgt.exportingExportDefinitions) {
+					val indirExpName = exportDef.exportedName;
+					if (indirExpName !== null) {
+						return indirExpName;
+					}
+				}
+			}
 		}
-		return originalTarget.name;
+		return trgt.name;
 	}
 }
 

@@ -39,21 +39,21 @@ declare namespace "myActualModule" {
 
 /* XPECT ast ---
 Script: true
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    N4NamespaceDeclaration: [public], myNamespace
     N4NamespaceDeclaration: [private], legacyModuleInNamespace
-    ExportDeclaration: false, false
+    ExportDeclaration: false, UNKNOWN
      N4NamespaceDeclaration: [public], legacyModuleInNamespaceExported
-  ExportDeclaration: false, false
+  ExportDeclaration: false, UNKNOWN
    N4NamespaceDeclaration: [public], myLegacyModule
     N4NamespaceDeclaration: [private], namespaceInLegacyModule
-    ExportDeclaration: false, false
+    ExportDeclaration: false, UNKNOWN
      N4NamespaceDeclaration: [public], namespaceInLegacyModuleExported
-  N4NamespaceDeclaration: "myActualModule"
+  N4NamespaceDeclaration: [public], "myActualModule"
    N4NamespaceDeclaration: [private], namespaceInActualModule
-   ExportDeclaration: false, false
+   ExportDeclaration: false, UNKNOWN
     N4NamespaceDeclaration: [public], namespaceInActualModuleExported
    N4NamespaceDeclaration: [private], legacyModuleInActualModule
-   ExportDeclaration: false, false
+   ExportDeclaration: false, UNKNOWN
     N4NamespaceDeclaration: [public], legacyModuleInActualModuleExported
 --- */

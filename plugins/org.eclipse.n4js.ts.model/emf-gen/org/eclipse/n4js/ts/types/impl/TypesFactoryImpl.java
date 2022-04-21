@@ -75,6 +75,8 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 			case TypesPackage.RUNTIME_DEPENDENCY: return createRuntimeDependency();
 			case TypesPackage.COMPOSED_MEMBER_CACHE: return createComposedMemberCache();
 			case TypesPackage.IDENTIFIABLE_ELEMENT: return createIdentifiableElement();
+			case TypesPackage.ELEMENT_EXPORT_DEFINITION: return createElementExportDefinition();
+			case TypesPackage.MODULE_EXPORT_DEFINITION: return createModuleExportDefinition();
 			case TypesPackage.TEXPORTABLE_ELEMENT: return createTExportableElement();
 			case TypesPackage.TDYNAMIC_ELEMENT: return createTDynamicElement();
 			case TypesPackage.TANNOTATION: return createTAnnotation();
@@ -133,6 +135,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return createMemberAccessModifierFromString(eDataType, initialValue);
 			case TypesPackage.MEMBER_TYPE:
 				return createMemberTypeFromString(eDataType, initialValue);
+			case TypesPackage.ITERABLE_OF_TEXPORTABLE_ELEMENT:
+				return createIterableOfTExportableElementFromString(eDataType, initialValue);
+			case TypesPackage.ITERABLE_OF_ABSTRACT_NAMESPACE:
+				return createIterableOfAbstractNamespaceFromString(eDataType, initialValue);
 			case TypesPackage.PARAMETERIZED_TYPE_REF_ITERABLE:
 				return createParameterizedTypeRefIterableFromString(eDataType, initialValue);
 			case TypesPackage.ITERABLE_OF_TCLASSIFIER:
@@ -166,6 +172,10 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 				return convertMemberAccessModifierToString(eDataType, instanceValue);
 			case TypesPackage.MEMBER_TYPE:
 				return convertMemberTypeToString(eDataType, instanceValue);
+			case TypesPackage.ITERABLE_OF_TEXPORTABLE_ELEMENT:
+				return convertIterableOfTExportableElementToString(eDataType, instanceValue);
+			case TypesPackage.ITERABLE_OF_ABSTRACT_NAMESPACE:
+				return convertIterableOfAbstractNamespaceToString(eDataType, instanceValue);
 			case TypesPackage.PARAMETERIZED_TYPE_REF_ITERABLE:
 				return convertParameterizedTypeRefIterableToString(eDataType, instanceValue);
 			case TypesPackage.ITERABLE_OF_TCLASSIFIER:
@@ -225,6 +235,28 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	public IdentifiableElement createIdentifiableElement() {
 		IdentifiableElementImpl identifiableElement = new IdentifiableElementImpl();
 		return identifiableElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ElementExportDefinition createElementExportDefinition() {
+		ElementExportDefinitionImpl elementExportDefinition = new ElementExportDefinitionImpl();
+		return elementExportDefinition;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public ModuleExportDefinition createModuleExportDefinition() {
+		ModuleExportDefinitionImpl moduleExportDefinition = new ModuleExportDefinitionImpl();
+		return moduleExportDefinition;
 	}
 
 	/**
@@ -712,6 +744,44 @@ public class TypesFactoryImpl extends EFactoryImpl implements TypesFactory {
 	 */
 	public String convertMemberTypeToString(EDataType eDataType, Object instanceValue) {
 		return instanceValue == null ? null : instanceValue.toString();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public Iterable<? extends TExportableElement> createIterableOfTExportableElementFromString(EDataType eDataType, String initialValue) {
+		return (Iterable<? extends TExportableElement>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertIterableOfTExportableElementToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@SuppressWarnings("unchecked")
+	public Iterable<? extends AbstractNamespace> createIterableOfAbstractNamespaceFromString(EDataType eDataType, String initialValue) {
+		return (Iterable<? extends AbstractNamespace>)super.createFromString(initialValue);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertIterableOfAbstractNamespaceToString(EDataType eDataType, Object instanceValue) {
+		return super.convertToString(instanceValue);
 	}
 
 	/**

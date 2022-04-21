@@ -59,7 +59,6 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 		interfaceType.copyAnnotations(n4Interface, preLinkingPhase)
 
 		interfaceType.astElement = n4Interface
-
 		n4Interface.definedType = interfaceType
 
 		target.types += interfaceType
@@ -69,7 +68,6 @@ public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarat
 	def private TInterface createTInterface(N4InterfaceDeclaration n4Interface) {
 		val interfaceType = TypesFactory::eINSTANCE.createTInterface();
 		interfaceType.name = n4Interface.name;
-		interfaceType.exportedName = n4Interface.exportedName;
 		interfaceType.external = n4Interface.external;
 		
 		return interfaceType

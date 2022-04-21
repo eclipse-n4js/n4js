@@ -13,6 +13,7 @@ package org.eclipse.n4js.validation.validators
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.BindingPattern
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -26,6 +27,7 @@ import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NamespaceElement
 import org.eclipse.n4js.n4JS.NewTarget
 import org.eclipse.n4js.n4JS.PropertySpread
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.ASTStructureValidator
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
@@ -35,7 +37,6 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.n4JS.AnnotableElement
 
 /**
  * Validations to show an error for unsupported language features, mostly ECMAScript6 features.
@@ -73,9 +74,12 @@ class UnsupportedFeatureValidator extends AbstractN4JSDeclarativeValidator {
 					"exporting values (only declared classes, interfaces, enums, functions and variables can be exported)",
 					exportDecl);
 			} else {
-				unsupported(
-					"separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration)",
-					exportDecl);
+				val isDTS = ResourceType.getResourceType(exportDecl) === ResourceType.DTS;
+				if (!isDTS) {
+					unsupported(
+						"separate export statements (add keyword 'export' directly before a class, interface, enum, function or variable declaration)",
+						exportDecl);
+				}
 			}
 		}
 	}

@@ -1,0 +1,74 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+
+	File "other.n4js" {
+
+		public var variableVar: string = "hello var";
+		public let variableLet: string = "hello let";
+		public const variableConst: string = "hello const";
+		public interface Ifc { method(p: string): int }
+		public class Cls { field: string }
+		public enum Enum { Li1, Lit2, Lit3 }
+		public function foo(p: string): int { return 0; }
+		public type TypeAlias = string;
+
+		export { variableVar as variableVarAlias, variableLet as variableLetAlias, variableConst as variableConstAlias };
+		export { Ifc as IfcAlias, Cls as ClsAlias, Enum as EnumAlias };
+		export { foo as fooAlias };
+		export { TypeAlias as TypeAliasAlias };
+
+	}
+
+	// note: this test is testing internal infrastructure for a feature not available in N4JS[D] (only in .d.ts)
+	IssueConfiguration {
+		IssueCode "UNSUPPORTED" { enabled = false }
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import { variableVarAlias, variableLetAlias, variableConstAlias } from "other"
+// XPECT noerrors -->
+import { IfcAlias, ClsAlias, EnumAlias } from "other"
+// XPECT noerrors -->
+import { fooAlias } from "other"
+// XPECT noerrors -->
+import { TypeAliasAlias } from "other"
+
+
+// XPECT type of 'variableVarAlias' --> string
+variableVarAlias;
+// XPECT type of 'variableLetAlias' --> string
+variableLetAlias;
+// XPECT type of 'variableConstAlias' --> string
+variableConstAlias;
+
+
+let ifc: IfcAlias;
+// XPECT type of 'v01' --> int
+let v01 = ifc.method("");
+// XPECT type of 'v02' --> string
+let v02 = new ClsAlias().field;
+// XPECT type of 'Lit2' --> Enum.Lit2
+EnumAlias.Lit2;
+
+
+// XPECT type of 'v03' --> int
+let v03 = fooAlias("hello");
+
+
+// XPECT noerrors -->
+let v04: TypeAliasAlias = "hello";
+// XPECT noerrors -->
+let v05: string = v04;

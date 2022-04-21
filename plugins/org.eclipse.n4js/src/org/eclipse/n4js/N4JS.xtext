@@ -87,7 +87,7 @@ NamespaceElement<Yield> returns NamespaceElement :
 	| N4EnumDeclaration<Yield>
 	| N4TypeAliasDeclaration<Yield>
 	| FunctionDeclaration<Yield>
-	| VariableStatementWithModifier<Yield>
+	| VariableStatement<Yield>
 	| ExportDeclaration
 ;
 
@@ -188,27 +188,35 @@ ExportDeclaration:
 	ExportDeclarationImpl
 ;
 
-fragment ExportDeclarationImpl *:
+fragment ExportDeclarationImpl*:
 	'export' (
-		wildcardExport?='*' ExportFromClause Semi
-	|	ExportClause ->ExportFromClause? Semi
+		NamespaceExportClause ExportFromClause Semi
+	|	NamedExportClause ->ExportFromClause? Semi
 	|	exportedElement=ExportableElement
 	|	defaultExport?='default' (->exportedElement=ExportableElement | defaultExportedExpression=AssignmentExpression<In=true,Yield=false> Semi)
 	)
 ;
 
 fragment ExportFromClause*:
-	'from' reexportedFrom=[types::TModule|ModuleSpecifier]
+	'from' module=[types::TModule|ModuleSpecifier]
 ;
 
-fragment ExportClause*:
+fragment NamespaceExportClause*:
+	namespaceExport=NamespaceExportSpecifier
+;
+
+fragment NamedExportClause*:
 	'{'
-		(namedExports+=ExportSpecifier (',' namedExports+=ExportSpecifier)* ','?)?
+		(namedExports+=NamedExportSpecifier (',' namedExports+=NamedExportSpecifier)* ','?)?
 	'}'
 ;
 
-ExportSpecifier:
-	element=IdentifierRef<Yield=false> ('as' alias=IdentifierName)?
+NamespaceExportSpecifier:
+	{NamespaceExportSpecifier} '*' ('as' alias=IdentifierName)?
+;
+
+NamedExportSpecifier:
+	exportedElement=IdentifierRefWithDefault ('as' alias=IdentifierName)?
 ;
 
 ExportableElement:
@@ -219,7 +227,7 @@ ExportableElement:
 	| N4EnumDeclaration<Yield=false>
 	| N4TypeAliasDeclaration<Yield=false>
 	| FunctionDeclaration<Yield=false>
-	| VariableStatementWithModifier<Yield=false>
+	| VariableStatement<Yield=false>
 ;
 
 /**
@@ -440,7 +448,7 @@ RootStatement <Yield> returns Statement:
 	Block<Yield>
 	// Function declarations are modeled as statements to support legacy JS parsing
 	| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
-	| VariableStatement<In=true,Yield>
+	| VariableStatement<Yield>
 	| EmptyStatement
 	| LabelledStatement<Yield>
 	| ExpressionStatement<Yield>
@@ -466,17 +474,11 @@ enum VariableStatementKeyword:
 	var='var' | const='const' | let='let'
 ;
 
-VariableStatement <In, Yield>:
+VariableStatement <Yield>:
 	=>({VariableStatement}
+		(declaredModifiers+=N4ModifierWithoutConst)*
 		varStmtKeyword=VariableStatementKeyword
 	)
-	varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In,Yield,false>)* Semi
-;
-
-VariableStatementWithModifier <Yield> returns VariableStatement:
-	{VariableStatement}
-	(declaredModifiers+=N4Modifier)*
-	varStmtKeyword=VariableStatementKeyword
 	varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false> (',' varDeclsOrBindings+=VariableDeclarationOrBinding<In=true,Yield,false>)* Semi
 ;
 
@@ -663,6 +665,16 @@ ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 
 IdentifierRef <Yield>:
 	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
+;
+
+/* Special case of IdentifierRef where 'default' is a valid name. */
+IdentifierRefWithDefault returns IdentifierRef:
+	id=[types::IdentifiableElement|BindingIdentifierWithDefault]
+;
+
+BindingIdentifierWithDefault:
+	BindingIdentifier<Yield=false>
+	| 'default'
 ;
 
 SuperLiteral: {SuperLiteral} 'super';

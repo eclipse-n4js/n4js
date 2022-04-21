@@ -106,12 +106,12 @@ import com.google.common.base.Strings;
 
 	@Override
 	public Boolean caseExportDeclaration(ExportDeclaration original) {
-		if (original.getReexportedFrom() != null) {
+		if (original.getModule() != null) {
 			throwUnsupportedSyntax();
 		}
 		processAnnotations(original.getAnnotations());
 		write("export ");
-		final List<ExportSpecifier> namedExports = original.getNamedExports();
+		final List<NamedExportSpecifier> namedExports = original.getNamedExports();
 		if (!namedExports.isEmpty()) {
 			write("{ ");
 			process(namedExports, ", ");
@@ -135,8 +135,8 @@ import com.google.common.base.Strings;
 	}
 
 	@Override
-	public Boolean caseExportSpecifier(ExportSpecifier original) {
-		process(original.getElement());
+	public Boolean caseNamedExportSpecifier(NamedExportSpecifier original) {
+		process(original.getExportedElement());
 		final String alias = original.getAlias();
 		if (alias != null) {
 			write(" as ");
