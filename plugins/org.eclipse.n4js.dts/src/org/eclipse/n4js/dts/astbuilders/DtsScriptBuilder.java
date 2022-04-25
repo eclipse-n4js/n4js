@@ -18,6 +18,7 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatementTail;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statement;
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_statementList;
 
+import java.util.List;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -34,6 +35,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
+import org.eclipse.n4js.dts.utils.TripleSlashDirective;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
@@ -89,6 +91,11 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	@Override
 	public void enterProgram(ProgramContext ctx) {
 		result = N4JSFactory.eINSTANCE.createScript();
+
+		List<TripleSlashDirective> tripleSlashDirectives = tokenStream.getTripleSlashDirectives();
+		List<ImportDeclaration> importDecls = newImportBuilder().consumeTripleSlashDirectives(tripleSlashDirectives);
+		result.getScriptElements().addAll(importDecls);
+
 		if (ctx.statementList() != null) {
 			walker.enqueue(ctx.statementList().statement());
 		}

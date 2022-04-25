@@ -29,7 +29,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R>
 		extends AbstractDtsBuilder<T, R> {
 
-	private final static Logger LOG = Logger.getLogger(DtsImportBuilder.class);
+	private final static Logger LOG = Logger.getLogger(AbstractDtsModuleRefBuilder.class);
 
 	/***/
 	public AbstractDtsModuleRefBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -39,6 +39,11 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 	/** Converts the given module specifier from .d.ts to N4JS and updates the given {@link ModuleRef} accordingly. */
 	protected void setModuleSpecifier(ModuleRef moduleRef, TerminalNode moduleSpecifierLit) {
 		String moduleSpecifier = ParserContextUtil.trimAndUnescapeStringLiteral(moduleSpecifierLit);
+		setModuleSpecifier(moduleRef, moduleSpecifier);
+	}
+
+	/** Converts the given module specifier from .d.ts to N4JS and updates the given {@link ModuleRef} accordingly. */
+	protected void setModuleSpecifier(ModuleRef moduleRef, String moduleSpecifier) {
 		if (moduleSpecifier == null) {
 			return;
 		}

@@ -12,6 +12,8 @@ package org.eclipse.n4js.dts.astbuilders;
 
 import static org.eclipse.n4js.dts.TypeScriptParser.RULE_importStatement;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EReference;
@@ -19,6 +21,7 @@ import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportFromBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportedElementContext;
+import org.eclipse.n4js.dts.utils.TripleSlashDirective;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -43,6 +46,51 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 	protected Set<Integer> getVisitChildrenOfRules() {
 		return java.util.Set.of(
 				RULE_importStatement);
+	}
+
+	/**
+	 * Like {@link #consumeTripleSlashDirective(TripleSlashDirective)}, but for several directives.
+	 */
+	public List<ImportDeclaration> consumeTripleSlashDirectives(Iterable<TripleSlashDirective> tsds) {
+		@SuppressWarnings("hiding")
+		List<ImportDeclaration> result = new ArrayList<>();
+		for (TripleSlashDirective tsd : tsds) {
+			ImportDeclaration importDecl = consumeTripleSlashDirective(tsd);
+			if (importDecl != null) {
+				result.add(importDecl);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Converts a single {@link TripleSlashDirective triple-slash directive} to an {@link ImportDeclaration}.
+	 */
+	public ImportDeclaration consumeTripleSlashDirective(TripleSlashDirective tsd) {
+		if ("reference".equals(tsd.name)) {
+			if (tsd.attr.isPresent()) {
+				String attrName = tsd.attr.get().getKey();
+				String attrValue = tsd.attr.get().getValue();
+				if ("path".equals(attrName)) {
+					ImportDeclaration importDecl = N4JSFactory.eINSTANCE.createImportDeclaration();
+					setModuleSpecifier(importDecl, attrValue);
+					return importDecl;
+				} else if ("types".equals(attrName)) {
+					ImportDeclaration importDecl = N4JSFactory.eINSTANCE.createImportDeclaration();
+					attrValue = attrValue.trim();
+					if (!attrValue.startsWith("@types/")
+							&& !attrValue.startsWith("./")
+							&& !attrValue.startsWith("../")) {
+						attrValue = "@types/" + attrValue;
+					}
+					setModuleSpecifier(importDecl, attrValue);
+					return importDecl;
+				} else if ("lib".equals(attrName)) {
+					// TODO library references in .d.ts files
+				}
+			}
+		}
+		return null;
 	}
 
 	@Override
