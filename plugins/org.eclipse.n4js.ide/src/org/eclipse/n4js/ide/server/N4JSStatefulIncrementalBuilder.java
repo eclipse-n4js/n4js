@@ -12,7 +12,6 @@ package org.eclipse.n4js.ide.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -218,15 +217,16 @@ public class N4JSStatefulIncrementalBuilder extends XStatefulIncrementalBuilder 
 	private Collection<URI> getImportedUris(WorkspaceAwareResourceSet resourceSet, String prjName,
 			Multimap<String, URI> moduleName2Uri, URI uri) {
 
+		List<URI> result = new ArrayList<>();
 		List<ModuleRef> moduleRefs = getModuleRefsToOtherModules(resourceSet, uri);
 		for (ModuleRef moduleRef : moduleRefs) {
 			String moduleSpecifier = moduleRef.getModuleSpecifierAsText();
 			String adjModuleSpecifier = getAdjustedModuleSpecifierOrNull(moduleSpecifier, prjName, moduleName2Uri);
 			if (adjModuleSpecifier != null) {
-				return moduleName2Uri.get(adjModuleSpecifier);
+				result.addAll(moduleName2Uri.get(adjModuleSpecifier));
 			}
 		}
-		return Collections.emptyList();
+		return result;
 	}
 
 	private List<ModuleRef> getModuleRefsToOtherModules(WorkspaceAwareResourceSet resourceSet, URI uri) {
