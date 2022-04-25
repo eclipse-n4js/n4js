@@ -12,7 +12,7 @@
 import * as lib_path from "path";
 import * as lib_fs from "fs";
 import Minimatch from "minimatch";
-import Glob from "glob";
+import {Glob} from "glob";
 
 
 
@@ -30,7 +30,7 @@ export public function findProjectDirectories(dir: string) : string[] {
         const options = { cwd: parentProjectDir, absolute: true, sync: true };
 
         for (const workspacesGlob of workspacesGlobs) {
-            const ee = Glob(workspacesGlob, options);
+            const ee = new Glob(workspacesGlob, options);
             const foundLocs = ee.found;
             for (const subProjectDir of foundLocs) {
                 const manifestFile = lib_path.join(subProjectDir, 'package.json');
