@@ -35,6 +35,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
@@ -101,7 +102,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void exitProgram(ProgramContext ctx) {
-		ParserContextUtil.removeOverloadingFunctionDefs(result.getScriptElements());
+		ParserContextUtils.removeOverloadingFunctionDefs(result.getScriptElements());
 	}
 
 	@Override
@@ -169,7 +170,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 			// TODO check for name
 			transformExportEquals(elem);
 		} else {
-			ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
+			ParserContextUtils.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
 					elem, false, ctx);
 		}
 	}
@@ -187,12 +188,12 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 					exportableElem = ((ExportDeclaration) nsElem).getExportedElement();
 				}
 				if (exportableElem != null) {
-					ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
+					ParserContextUtils.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
 							exportableElem, false, true, false);
 				}
 			}
 		} else {
-			ParserContextUtil.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
+			ParserContextUtils.addAndHandleExported(result, N4JSPackage.Literals.SCRIPT__SCRIPT_ELEMENTS,
 					elem, false, true, true);
 		}
 	}

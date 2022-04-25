@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.dts.astbuilders;
+package org.eclipse.n4js.dts.utils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -66,7 +66,7 @@ import com.google.common.primitives.Ints;
 /**
  * Utilities to retrieve information from the parse tree
  */
-public class ParserContextUtil {
+public class ParserContextUtils {
 
 	/** Like {@code N4JSGlobals#NAMESPACE_ACCESS_DELIMITER}, but for .d.ts files. */
 	public static final String NAMESPACE_ACCESS_DELIMITER = ".";
@@ -139,7 +139,7 @@ public class ParserContextUtil {
 			return;
 		}
 
-		boolean isExported = ParserContextUtil.isExported(ctx);
+		boolean isExported = ParserContextUtils.isExported(ctx);
 		addAndHandleExported(addHere, eRef, elem, makePrivateIfNotExported, isExported, false);
 	}
 

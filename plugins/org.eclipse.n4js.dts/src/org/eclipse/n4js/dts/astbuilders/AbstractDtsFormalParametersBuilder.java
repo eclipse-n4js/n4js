@@ -30,6 +30,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.OptionalParameterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.RequiredParameterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.RestParameterContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
@@ -62,7 +63,7 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 		protected FormalParameter createFormalParameter(String name, TypeRef typeRef) {
 			FormalParameter fPar = N4JSFactory.eINSTANCE.createFormalParameter();
 			fPar.setName(name); // TODO: bindingPattern
-			fPar.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
+			fPar.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(orAnyPlus(typeRef)));
 			return fPar;
 
 		}
@@ -83,7 +84,7 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 
 		@Override
 		protected void setDeclThisType(AnnotableElement annotableElem, TypeRef declThisTypeRef) {
-			ParserContextUtil.setDeclThisType(annotableElem, declThisTypeRef);
+			ParserContextUtils.setDeclThisType(annotableElem, declThisTypeRef);
 		}
 	}
 
@@ -119,7 +120,7 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 
 		@Override
 		protected void setDeclThisType(TAnnotableElement annotableElem, TypeRef declThisTypeRef) {
-			ParserContextUtil.setDeclThisType(annotableElem, declThisTypeRef);
+			ParserContextUtils.setDeclThisType(annotableElem, declThisTypeRef);
 		}
 	}
 

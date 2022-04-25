@@ -28,6 +28,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.ImportedElementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.MultipleExportElementsContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -159,7 +160,7 @@ public class DtsExportBuilder extends AbstractDtsModuleRefBuilder<ExportStatemen
 					NamedExportSpecifier nes = N4JSFactory.eINSTANCE.createNamedExportSpecifier();
 					nes.setExportedElement(idRef);
 
-					String alias = ParserContextUtil.getIdentifierName(
+					String alias = ParserContextUtils.getIdentifierName(
 							impElemCtx.identifierName().size() >= 2 ? impElemCtx.identifierName(1) : null);
 					if (alias != null && alias.length() > 0) {
 						nes.setAlias(alias);
@@ -184,7 +185,7 @@ public class DtsExportBuilder extends AbstractDtsModuleRefBuilder<ExportStatemen
 
 		NamespaceExportSpecifier nes = N4JSFactory.eINSTANCE.createNamespaceExportSpecifier();
 		if (ctx.As() != null) {
-			String alias = ParserContextUtil.getIdentifierName(ctx.identifierName());
+			String alias = ParserContextUtils.getIdentifierName(ctx.identifierName());
 			if (alias != null) {
 				nes.setAlias(alias);
 			}

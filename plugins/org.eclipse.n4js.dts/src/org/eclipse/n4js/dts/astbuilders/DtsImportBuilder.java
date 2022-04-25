@@ -19,6 +19,7 @@ import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportFromBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportedElementContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -73,7 +74,7 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 
 					TExportableElement tExpElemProxy = TypesFactory.eINSTANCE.createTExportableElement();
 					EReference eRef = N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement();
-					ParserContextUtil.installProxy(resource, nis, eRef, tExpElemProxy, ieName);
+					ParserContextUtils.installProxy(resource, nis, eRef, tExpElemProxy, ieName);
 					nis.setImportedElement(tExpElemProxy);
 
 					result.getImportSpecifiers().add(nis);

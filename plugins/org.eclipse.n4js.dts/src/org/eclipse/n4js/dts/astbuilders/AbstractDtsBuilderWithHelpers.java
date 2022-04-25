@@ -22,6 +22,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberBaseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
@@ -66,7 +67,7 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		getter.setDeclaredName(newPropertyNameBuilder().consume(ctx.getter().propertyName()));
 
 		TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
-		getter.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
+		getter.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(typeRef));
 
 		if (ctx.parent instanceof PropertyMemberContext) { // true for classes
 			PropertyMemberContext pmctx = (PropertyMemberContext) ctx.parent;
@@ -95,7 +96,7 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		FormalParameter fpar = N4JSFactory.eINSTANCE.createFormalParameter();
 		setter.setFpar(fpar);
 		TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
-		fpar.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
+		fpar.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(typeRef));
 		if (ctx.Identifier() != null) {
 			fpar.setName(ctx.Identifier().getText());
 		} else if (ctx.bindingPattern() != null) {
@@ -136,7 +137,7 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 
 		IdentifiableElement ieProxy = TypesFactory.eINSTANCE.createIdentifiableElement();
 		EReference eRef = N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property();
-		ParserContextUtil.installProxy(resource, ppae, eRef, ieProxy, propertyAsText);
+		ParserContextUtils.installProxy(resource, ppae, eRef, ieProxy, propertyAsText);
 		ppae.setProperty(ieProxy);
 
 		return ppae;
@@ -163,7 +164,7 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		if (typeRefNode != null) {
 			return typeRefNode;
 		}
-		return ParserContextUtil.wrapInTypeRefNode(createAnyPlusTypeRef());
+		return ParserContextUtils.wrapInTypeRefNode(createAnyPlusTypeRef());
 	}
 
 	/** @return the given type reference, if non-<code>null</code>; otherwise a new {@code any+} type reference. */
@@ -199,7 +200,7 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 
 		Type typeProxy = TypesFactory.eINSTANCE.createType();
 		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
-		ParserContextUtil.installProxy(resource, ptr, eRef, typeProxy, ptr.getDeclaredTypeAsText());
+		ParserContextUtils.installProxy(resource, ptr, eRef, typeProxy, ptr.getDeclaredTypeAsText());
 		ptr.setDeclaredType(typeProxy);
 
 		if (typeArgs != null) {

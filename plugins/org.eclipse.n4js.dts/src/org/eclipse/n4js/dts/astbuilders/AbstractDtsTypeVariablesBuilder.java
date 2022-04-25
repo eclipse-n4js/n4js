@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParameterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -54,13 +55,13 @@ public abstract class AbstractDtsTypeVariablesBuilder<T extends EObject>
 
 		@Override
 		protected void setUpperBound(N4TypeVariable typeVar, TypeRef upperBound) {
-			typeVar.setDeclaredUpperBoundNode(ParserContextUtil.wrapInTypeRefNode(upperBound));
+			typeVar.setDeclaredUpperBoundNode(ParserContextUtils.wrapInTypeRefNode(upperBound));
 		}
 
 		@Override
 		protected void setDefaultArgument(N4TypeVariable typeVar, TypeRef defaultArg) {
 			typeVar.setDeclaredOptional(true);
-			typeVar.setDeclaredDefaultArgumentNode(ParserContextUtil.wrapInTypeRefNode(defaultArg));
+			typeVar.setDeclaredDefaultArgumentNode(ParserContextUtils.wrapInTypeRefNode(defaultArg));
 		}
 	}
 

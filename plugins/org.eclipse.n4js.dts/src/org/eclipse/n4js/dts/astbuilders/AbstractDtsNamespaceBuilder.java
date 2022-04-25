@@ -36,6 +36,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.ModuleNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -131,9 +132,9 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 	@Override
 	public void enterNamespaceDeclaration(NamespaceDeclarationContext ctx) {
 		if (result == null) {
-			boolean isExported = ParserContextUtil.isExported(ctx);
+			boolean isExported = ParserContextUtils.isExported(ctx);
 			result = doCreateN4NamespaceDeclaration(ctx.namespaceName().getText(), isExported);
-			walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+			walker.enqueue(ParserContextUtils.getStatements(ctx.block()));
 		} else {
 			N4NamespaceDeclaration nd = newNamespaceBuilder().consume(ctx);
 			addAndHandleExported(ctx, nd);
@@ -143,7 +144,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 	@Override
 	public void exitNamespaceDeclaration(NamespaceDeclarationContext ctx) {
 		if (result != null) {
-			ParserContextUtil.removeOverloadingFunctionDefs(result.getOwnedElementsRaw());
+			ParserContextUtils.removeOverloadingFunctionDefs(result.getOwnedElementsRaw());
 		}
 	}
 
@@ -157,18 +158,18 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				if (strLit != null) {
 					// this module declaration actually declares a module
 
-					if (!ParserContextUtil.hasParentContexts(ctx,
+					if (!ParserContextUtils.hasParentContexts(ctx,
 							new int[] { RULE_namespaceDeclaration, RULE_moduleDeclaration })) {
 
 						// nested modules inside namespaces or nested modules are unsupported by TypeScript
-						createNestedModule(ctx, ParserContextUtil.trimAndUnescapeStringLiteral(strLit));
+						createNestedModule(ctx, ParserContextUtils.trimAndUnescapeStringLiteral(strLit));
 					}
 					result = null;
 				} else if (identifier != null) {
 					// this module declaration declares a "legacy module" that acts like a namespace
-					boolean isExported = ParserContextUtil.isExported(ctx);
+					boolean isExported = ParserContextUtils.isExported(ctx);
 					result = doCreateN4NamespaceDeclaration(identifier.getText(), isExported);
-					walker.enqueue(ParserContextUtil.getStatements(ctx.block()));
+					walker.enqueue(ParserContextUtils.getStatements(ctx.block()));
 				}
 			}
 		} else {
@@ -242,7 +243,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
-		ParserContextUtil.addAndHandleExported(
+		ParserContextUtils.addAndHandleExported(
 				result, N4JSPackage.Literals.N4_NAMESPACE_DECLARATION__OWNED_ELEMENTS_RAW,
 				elem, true, ctx);
 	}

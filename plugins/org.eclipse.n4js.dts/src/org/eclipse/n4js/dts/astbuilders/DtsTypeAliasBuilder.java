@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
@@ -50,7 +51,7 @@ public class DtsTypeAliasBuilder extends AbstractDtsBuilder<TypeAliasDeclaration
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 
 		TypeRef typeRef = newTypeRefBuilder().consume(ctx.typeRef());
-		result.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
+		result.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(typeRef));
 		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.typeParameters());
 		result.getTypeVars().addAll(typeVars);
 	}

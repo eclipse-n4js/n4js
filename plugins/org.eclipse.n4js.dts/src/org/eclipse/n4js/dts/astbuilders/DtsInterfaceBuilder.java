@@ -31,6 +31,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertySignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
@@ -85,7 +86,7 @@ public class DtsInterfaceBuilder
 			for (ParameterizedTypeRefContext extendsTypeRefCtx : extendsClause.classOrInterfaceTypeList()
 					.parameterizedTypeRef()) {
 				ParameterizedTypeRef typeRef = newTypeRefBuilder().consume(extendsTypeRefCtx);
-				result.getSuperInterfaceRefs().add(ParserContextUtil.wrapInTypeRefNode(typeRef));
+				result.getSuperInterfaceRefs().add(ParserContextUtils.wrapInTypeRefNode(typeRef));
 			}
 		}
 
@@ -95,7 +96,7 @@ public class DtsInterfaceBuilder
 	@Override
 	public void exitInterfaceDeclaration(InterfaceDeclarationContext ctx) {
 		if (result != null) {
-			ParserContextUtil.removeOverloadingFunctionDefs(result.getOwnedMembersRaw());
+			ParserContextUtils.removeOverloadingFunctionDefs(result.getOwnedMembersRaw());
 		}
 	}
 
@@ -112,7 +113,7 @@ public class DtsInterfaceBuilder
 		}
 
 		TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
-		fd.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(typeRef));
+		fd.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(typeRef));
 
 		addLocationInfo(fd, ctx);
 		result.getOwnedMembersRaw().add(fd);
@@ -170,7 +171,7 @@ public class DtsInterfaceBuilder
 		}
 		if (returnTypeRefCtx != null) {
 			TypeRef returnTypeRef = newTypeRefBuilder().consume(returnTypeRefCtx);
-			md.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(returnTypeRef));
+			md.setDeclaredReturnTypeRefNode(ParserContextUtils.wrapInTypeRefNode(returnTypeRef));
 		}
 
 		return md;

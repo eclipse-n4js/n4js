@@ -23,6 +23,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.ComputedPropertyNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyNameContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -57,7 +58,7 @@ public class DtsPropertyNameBuilder
 		result = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
 		if (ctx.StringLiteral() != null) {
 			result.setKind(PropertyNameKind.STRING);
-			result.setLiteralName(ParserContextUtil.trimAndUnescapeStringLiteral(ctx.StringLiteral()));
+			result.setLiteralName(ParserContextUtils.trimAndUnescapeStringLiteral(ctx.StringLiteral()));
 		}
 	}
 
@@ -71,7 +72,7 @@ public class DtsPropertyNameBuilder
 				expr = createParameterizedPropertyAccessExpression(expr, identifierName.get(idx));
 			}
 		} else if (ctx.StringLiteral() != null) {
-			result.setExpression(ParserContextUtil.createStringLiteral(ctx.StringLiteral()));
+			result.setExpression(ParserContextUtils.createStringLiteral(ctx.StringLiteral()));
 		}
 	}
 
