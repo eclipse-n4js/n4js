@@ -338,8 +338,9 @@ public class XtSetupParser {
 		File strippedXtFile = XtFileData.stripXtExtension(xtFile);
 		Path xtFileFolder = xtFile.toPath().getParent();
 		String nameInQuotes = tokens.hasNameInQuotes() ? tokens.expectNameInQuotes() : null; // optional
-		Path fromFile = nameInQuotes == null ? null : xtFileFolder.resolve(nameInQuotes);
+		Path pathToLoad = nameInQuotes == null ? null : xtFileFolder.resolve(nameInQuotes);
 
+		String fromFileName = null;
 		if (Objects.equal(tokens.current(), "{")) { // optional block
 			tokens.expect("{");
 			LOOP: while (tokens.hasNext()) {
@@ -349,8 +350,8 @@ public class XtSetupParser {
 							ERROR + "'This' file's content cannot be loaded using 'from'" + " in file "
 									+ xtFile.getPath());
 
-					String copyContentFrom = tokens.expectNameInQuotes();
-					fromFile = xtFileFolder.resolve(copyContentFrom).normalize();
+					fromFileName = tokens.expectNameInQuotes();
+					pathToLoad = xtFileFolder.resolve(fromFileName).normalize();
 					break;
 				case "}":
 					break LOOP;
@@ -361,11 +362,11 @@ public class XtSetupParser {
 			}
 		}
 
-		boolean implicitIsThis = fromFile != null && fromFile.equals(xtFile.toPath());
+		boolean implicitIsThis = pathToLoad != null && pathToLoad.equals(xtFile.toPath());
 		isThis |= implicitIsThis;
 		String name = nameInQuotes != null ? nameInQuotes : //
 				(isThis ? strippedXtFile.getName() : //
-						(fromFile != null ? fromFile.toFile().getName() : null));
+						(pathToLoad != null ? pathToLoad.toFile().getName() : null));
 
 		Preconditions.checkState(name != null,
 				ERROR + "Missing new file name in file " + xtFile.getPath());
@@ -373,12 +374,12 @@ public class XtSetupParser {
 		String content = null;
 		if (isThis) {
 			content = xtFileContent;
-		} else if (fromFile != null && fromFile.toFile().isFile()) {
+		} else if (pathToLoad != null && pathToLoad.toFile().isFile()) {
 			try {
-				content = Files.readString(fromFile);
+				content = Files.readString(pathToLoad);
 			} catch (IOException e) {
 				Preconditions.checkState(false,
-						ERROR + "Could not read: " + fromFile.toString() + " in file " + xtFile.getPath());
+						ERROR + "Could not read: " + pathToLoad.toString() + " in file " + xtFile.getPath());
 			}
 		} else {
 			// content must be given in a 'File' section and is set later
@@ -391,10 +392,10 @@ public class XtSetupParser {
 		boolean isModule = extension != null && N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(extension);
 		OtherFileBuilder fileBuilder;
 		if (isModule) {
-			fileBuilder = folderBuilder.addModule(nameWithoutExtension, extension, content);
+			fileBuilder = folderBuilder.addModule(nameWithoutExtension, extension, fromFileName, content);
 			folderBuilder.setSourceFolder();
 		} else {
-			fileBuilder = folderBuilder.addFile(name, content);
+			fileBuilder = folderBuilder.addFile(name, fromFileName, content);
 		}
 		if (isThis) {
 			BuilderInfo bi = folderBuilder.getBuilderInfo();
@@ -432,7 +433,9 @@ public class XtSetupParser {
 			for (Folder srcFolder : prj.getSourceFolders()) {
 				Iterable<OtherFile> allFiles = Iterables.concat(srcFolder.getModules(), srcFolder.getOtherFiles());
 				for (OtherFile file : allFiles) {
-					String mName = file.getNameWithExtension();
+					String mName = file.getFromFileName() != null
+							? file.getFromFileName()
+							: file.getNameWithExtension();
 					if (file.getContents() == null) {
 						if (files.containsKey(mName)) {
 							String contents = files.get(mName);

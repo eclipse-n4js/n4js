@@ -93,7 +93,7 @@ public class XtFileDataParser {
 		String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 		String moduleName = fileName.substring(0, fileName.length() - 1 - extension.length());
 
-		Module xtFileModule = new Module(moduleName, extension);
+		Module xtFileModule = new Module(moduleName, extension, null);
 		xtFileModule.setContents(xtFileContent);
 		Folder srcFolder = new Folder(DEFAULT_SOURCE_FOLDER);
 		srcFolder.addModule(xtFileModule);
@@ -105,7 +105,7 @@ public class XtFileDataParser {
 			String otherExt = URIUtils.fileExtension(URIUtils.toFileUri(otherSrcFileName));
 			String otherContent = setupParseResult.files.get(otherSrcFileName);
 			String otherModuleName = otherSrcFileName.substring(0, otherSrcFileName.length() - otherExt.length() - 1);
-			Module otherModule = new Module(otherModuleName, otherExt);
+			Module otherModule = new Module(otherModuleName, otherExt, null);
 			otherModule.setContents(otherContent);
 			srcFolder.addModule(otherModule);
 		}
