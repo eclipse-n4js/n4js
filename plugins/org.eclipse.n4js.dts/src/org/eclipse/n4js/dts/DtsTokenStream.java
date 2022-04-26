@@ -88,11 +88,16 @@ public class DtsTokenStream extends CommonTokenStream {
 			String text = token.getText().trim();
 			if (text.startsWith("///")) {
 				String directiveStr = text.substring(3).trim();
-				TripleSlashDirective directive = TripleSlashDirective.parse(directiveStr);
-				if (directive != null) {
-					result.add(directive);
+				if (directiveStr.startsWith("<")) {
+					TripleSlashDirective directive = TripleSlashDirective.parse(directiveStr);
+					if (directive != null) {
+						result.add(directive);
+					} else {
+						LOG.error("cannot parse triple-slash directive: " + directiveStr);
+					}
 				} else {
-					LOG.error("cannot parse triple-slash directive: " + directiveStr);
+					// people use /// also for ordinary comments in .d.ts files,
+					// so we cannot show an error in this case
 				}
 			}
 			++idx;
