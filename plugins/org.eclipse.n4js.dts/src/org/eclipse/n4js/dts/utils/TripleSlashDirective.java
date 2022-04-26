@@ -24,7 +24,15 @@ public class TripleSlashDirective {
 
 	private static final Pattern PATTERN = Pattern.compile("\\<\\s*"
 			+ "(?<name>(\\w|-)+)"
-			+ "(\\s+(?<attrName>(\\w|-)+)\\s*=\\s*\\\"(?<attrValue>.*)\\\")?"
+			+ "("
+			+ "\\s+(?<attrName>(\\w|-)+)"
+			+ "\\s*=\\s*"
+			+ "(("
+			+ "\\\"(?<attrValue1>.*)\\\""
+			+ ")|("
+			+ "\\\'(?<attrValue2>.*)\\\'"
+			+ "))"
+			+ ")?"
 			+ "\\s*\\/\\>");
 
 	/** Name of the directive. */
@@ -62,7 +70,9 @@ public class TripleSlashDirective {
 		if (m.matches()) {
 			String name = m.group("name");
 			String attrName = m.group("attrName");
-			String attrValue = m.group("attrValue");
+			String attrValue1 = m.group("attrValue1");
+			String attrValue2 = m.group("attrValue2");
+			String attrValue = attrValue1 != null ? attrValue1 : attrValue2;
 			if (attrName == null && attrValue == null) {
 				return new TripleSlashDirective(name);
 			} else if (attrName != null && attrValue != null) {

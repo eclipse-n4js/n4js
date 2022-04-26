@@ -46,6 +46,11 @@ class TripleSlashDirectiveTest {
 	}
 
 	@Test
+	def void testAttr_singleQuotes() {
+		'''<name attr='value'/>'''.assertTSD("name", "attr", "value");
+	}
+
+	@Test
 	def void testFailed01() {
 		Assert.assertNull(TripleSlashDirective.parse('''< />'''));
 	}
@@ -63,6 +68,11 @@ class TripleSlashDirectiveTest {
 	@Test
 	def void testFailed04() {
 		Assert.assertNull(TripleSlashDirective.parse('''<attr="value"/>'''));
+	}
+
+	@Test
+	def void testFailed05() {
+		Assert.assertNull(TripleSlashDirective.parse('''<name attr='value"/>'''));
 	}
 
 	@Test
