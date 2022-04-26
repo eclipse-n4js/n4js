@@ -180,13 +180,6 @@ public class ProjectDescriptionLoader {
 		JSONObject contentCasted = (JSONObject) content;
 		NameValuePair mainProperty = JSONModelUtils.getNameValuePair(contentCasted, MAIN.name).orElse(null);
 
-		// FIXME: move or delete following patch!
-		// if (mainProperty == null) {
-		// mainProperty = JSONModelUtils.addProperty(contentCasted, MAIN.name, mainValue);
-		// } else {
-		// mainProperty.setValue(mainValue);
-		// }
-
 		if (mainProperty == null) {
 			return;
 		}
