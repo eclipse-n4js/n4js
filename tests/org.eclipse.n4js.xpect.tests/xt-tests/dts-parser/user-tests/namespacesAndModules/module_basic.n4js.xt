@@ -15,7 +15,7 @@
 
 		declare module "a/b/someModule1" {
 			export class Cls {
-				field: string;
+				field: number;
 			}
 		}
 
@@ -27,7 +27,7 @@
 	}
 
 	END_SETUP
-*/
+ */
 
 import "other"
 
@@ -35,6 +35,16 @@ import "other"
 import { Cls } from "a/b/someModule1"
 // XPECT noerrors -->
 import * as M2 from "a/b/someModule2"
+
+// XPECT errors --> "number is not a subtype of string." at "new Cls().field"
+let v01: string = new Cls().field;
+// XPECT noerrors -->
+let v02: number = new Cls().field;
+
+// XPECT errors --> "number is not a subtype of string." at "new M2.Cls().field"
+let v11: string = new M2.Cls().field;
+// XPECT noerrors -->
+let v12: number = new M2.Cls().field;
 
 // XPECT noerrors -->
 let cls1: Cls = new Cls();
