@@ -164,6 +164,10 @@ public final class UserDataMapper {
 			// source" will apply when proxies to such a resource are being resolved.
 			Map<String, String> ret = createTimestampUserData(exportedModule);
 			writeNestedToUserData(originalResource, ret);
+			if (exportedModule.isMainModule()) {
+				ret.put(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY,
+						Boolean.toString(exportedModule.isMainModule()));
+			}
 			return ret;
 		}
 

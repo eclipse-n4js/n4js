@@ -8,14 +8,18 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.dts.astbuilders;
+package org.eclipse.n4js.dts.utils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -26,9 +30,13 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ReservedWordContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
@@ -40,10 +48,13 @@ import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.FormalParameter;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -56,12 +67,14 @@ import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.primitives.Ints;
 
 /**
  * Utilities to retrieve information from the parse tree
  */
-public class ParserContextUtil {
+public class ParserContextUtils {
 
 	/** Like {@code N4JSGlobals#NAMESPACE_ACCESS_DELIMITER}, but for .d.ts files. */
 	public static final String NAMESPACE_ACCESS_DELIMITER = ".";
@@ -125,25 +138,39 @@ public class ParserContextUtil {
 	}
 
 	/**
+	 * Convenience for {@link #addAndHandleExported(EObject, EReference, ExportableElement, boolean, boolean, boolean)}.
+	 */
+	public static void addAndHandleExported(EObject addHere, EReference eRef,
+			ExportableElement elem, boolean makePrivateIfNotExported, ParserRuleContext ctx) {
+
+		if (ctx == null) {
+			return;
+		}
+
+		boolean isExported = ParserContextUtils.isExported(ctx);
+		addAndHandleExported(addHere, eRef, elem, makePrivateIfNotExported, isExported, false);
+	}
+
+	/**
 	 * Adds 'elem' to object 'addHere', setting its accessibility and wrapping it in an {@link ExportDeclaration}, if
 	 * necessary.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void addAndHandleExported(EObject addHere, EReference eRef, ParserRuleContext ctx,
-			ExportableElement elem, boolean makePrivateIfNotExported) {
+	public static void addAndHandleExported(EObject addHere, EReference eRef,
+			ExportableElement elem, boolean makePrivateIfNotExported, boolean isExported, boolean defaultExport) {
 
-		if (ctx == null || elem == null) {
+		if (elem == null) {
 			return;
 		}
 
 		EObject toAdd;
-		boolean isExported = ParserContextUtil.isExported(ctx);
 		if (isExported) {
 			if (elem instanceof ModifiableElement) {
 				setAccessibility((ModifiableElement) elem, N4Modifier.PUBLIC);
 			}
 
 			ExportDeclaration ed = N4JSFactory.eINSTANCE.createExportDeclaration();
+			ed.setDefaultExport(defaultExport);
 			ed.setExportedElement(elem);
 
 			toAdd = ed;
@@ -356,5 +383,114 @@ public class ParserContextUtil {
 	private static String trimAndNormalize(String str) {
 		String trimmed = str != null ? str.trim() : null;
 		return trimmed != null && trimmed.length() > 0 ? trimmed : null;
+	}
+
+	/**
+	 * Of all equally named functions remove all but the one functions with the most parameters. The parameters of the
+	 * surviving function will be made optional.
+	 */
+	public static void removeOverloadingFunctionDefs(Collection<? extends EObject> elements) {
+		Multimap<String, FunctionDefinition> functionsByName = HashMultimap.create();
+		for (EObject elem : elements) {
+			if (elem instanceof ExportDeclaration) {
+				ExportDeclaration expDecl = (ExportDeclaration) elem;
+				elem = expDecl.getExportedElement();
+			}
+			if (elem instanceof FunctionDefinition) {
+				FunctionDefinition fd = (FunctionDefinition) elem;
+				functionsByName.put(fd.getName(), fd);
+			}
+		}
+
+		for (String fName : functionsByName.keySet()) {
+			Collection<FunctionDefinition> signatures = functionsByName.get(fName);
+			if (signatures.size() > 1) {
+				// find the survivor
+				Iterator<FunctionDefinition> iter = signatures.iterator();
+				FunctionDefinition survivor = iter.next();
+				for (FunctionDefinition fd = iter.next(); fd != null; fd = iter.hasNext() ? iter.next() : null) {
+					int fparCountSurvivor = survivor.getFpars() == null ? 0 : survivor.getFpars().size();
+					int fparCountFd = fd.getFpars() == null ? 0 : fd.getFpars().size();
+					if (fparCountFd > fparCountSurvivor) {
+						survivor = fd;
+					} else if (fparCountFd > 0 && fparCountFd == fparCountSurvivor) {
+						FormalParameter lastFParSurvivor = survivor.getFpars().get(survivor.getFpars().size() - 1);
+						FormalParameter lastFParFd = fd.getFpars().get(fd.getFpars().size() - 1);
+						if (!lastFParSurvivor.isVariadic() && lastFParFd.isVariadic()) {
+							survivor = fd;
+						}
+					}
+				}
+
+				// remove all but the survivor
+				for (FunctionDefinition fd : functionsByName.get(fName)) {
+					if (fd == survivor) {
+						continue;
+					}
+					EObject elemToRemove = fd;
+					if (elemToRemove.eContainer() instanceof ExportDeclaration) {
+						elemToRemove = elemToRemove.eContainer();
+					}
+					elements.remove(elemToRemove);
+				}
+
+				// make parameters optional
+				for (FormalParameter fpar : survivor.getFpars()) {
+					fpar.setHasInitializerAssignment(true);
+				}
+			}
+		}
+	}
+
+	/**  */
+	public static void transformPromisifiables(EList<ScriptElement> scriptElements) {
+		Map<String, FunctionDefinition> functionsTop = new HashMap<>();
+		List<FunctionDefinition> functionsPrms = new ArrayList<>();
+		for (EObject elem : scriptElements) {
+			if (elem instanceof ExportDeclaration) {
+				elem = ((ExportDeclaration) elem).getExportedElement();
+			}
+			if (elem instanceof FunctionDefinition) {
+				FunctionDefinition fd = (FunctionDefinition) elem;
+				if (Objects.equals("__promisify__", fd.getName())) {
+					// fd.remove();
+					functionsPrms.add(fd);
+				} else {
+					functionsTop.put(fd.getName(), fd);
+				}
+			}
+		}
+
+		for (FunctionDefinition promFd : functionsPrms) {
+			DtsParseTreeNodeInfo dtsParseTreeNodeInfo = DtsParseTreeNodeInfo.get(promFd);
+			if (dtsParseTreeNodeInfo != null) {
+				ParserRuleContext ctx = dtsParseTreeNodeInfo.getParserRuleContext();
+				if (ctx != null) {
+					NamespaceDeclarationContext nsDeclCtx = (NamespaceDeclarationContext) findParentContext(ctx,
+							TypeScriptParser.RULE_namespaceDeclaration);
+					String nsName = null;
+					if (nsDeclCtx != null) {
+						nsName = nsDeclCtx.namespaceName() != null
+								? nsDeclCtx.namespaceName().getText()
+								: null;
+					} else {
+						ModuleDeclarationContext mDeclCtx = (ModuleDeclarationContext) findParentContext(ctx,
+								TypeScriptParser.RULE_moduleDeclaration);
+
+						if (mDeclCtx != null) {
+							nsName = mDeclCtx.moduleName() != null && mDeclCtx.moduleName().Identifier() != null
+									? mDeclCtx.moduleName().Identifier().getText()
+									: null;
+						}
+					}
+					if (nsName != null && functionsTop.containsKey(nsName)) {
+						FunctionDefinition fd = functionsTop.get(nsName);
+						Annotation promisifiable = N4JSFactory.eINSTANCE.createAnnotation();
+						promisifiable.setName(AnnotationDefinition.PROMISIFIABLE.name);
+						N4JSASTUtils.addAnnotation(fd, promisifiable);
+					}
+				}
+			}
+		}
 	}
 }

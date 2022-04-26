@@ -26,7 +26,7 @@
     "mocha": "^8.3.2"
   },
   "dependencies": {
-    "@n4jsd/debug": "<=4.1.*",
+    "@types/debug": "*",
     "follow-redirects": "1.14.9",
     "decompress": "4.2.1",
     "debug": "~4.3.1",

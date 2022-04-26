@@ -30,10 +30,25 @@ public class DtsParseTreeNodeInfo implements Adapter, XITextRegionWithLineInform
 
 	private EObject semanticElement;
 
+	/** Returns the {@link DtsParseTreeNodeInfo} that is installed on the given resource. */
+	public static DtsParseTreeNodeInfo get(EObject obj) {
+		for (Adapter adapter : obj.eAdapters()) {
+			if (adapter instanceof DtsParseTreeNodeInfo) {
+				return (DtsParseTreeNodeInfo) adapter;
+			}
+		}
+		return null;
+	}
+
 	/** Constructor */
 	public DtsParseTreeNodeInfo(DtsTokenStream tokenStream, ParserRuleContext ctx) {
 		this.tokenStream = tokenStream;
 		this.ctx = ctx;
+	}
+
+	/** @return the {@link ParserRuleContext} of this element */
+	public ParserRuleContext getParserRuleContext() {
+		return ctx;
 	}
 
 	/** @return true iff there exists jsdoc */

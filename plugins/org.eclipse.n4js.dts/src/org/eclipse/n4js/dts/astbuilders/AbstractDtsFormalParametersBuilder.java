@@ -30,6 +30,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.OptionalParameterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.RequiredParameterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.RestParameterContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
@@ -62,16 +63,18 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 		protected FormalParameter createFormalParameter(String name, TypeRef typeRef) {
 			FormalParameter fPar = N4JSFactory.eINSTANCE.createFormalParameter();
 			fPar.setName(name); // TODO: bindingPattern
-			fPar.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
+			fPar.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(orAnyPlus(typeRef)));
 			return fPar;
 
 		}
 
 		@Override
-		protected void setInitializer(FormalParameter fPar, InitializerContext initCtx) {
+		protected void setOptional(FormalParameter fPar, InitializerContext initCtx) {
 			fPar.setHasInitializerAssignment(true);
-			Expression expr = newExpressionBuilder().consume(initCtx.singleExpression());
-			fPar.setInitializer(expr);
+			if (initCtx != null) {
+				Expression expr = newExpressionBuilder().consume(initCtx.singleExpression());
+				fPar.setInitializer(expr);
+			}
 		}
 
 		@Override
@@ -81,7 +84,7 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 
 		@Override
 		protected void setDeclThisType(AnnotableElement annotableElem, TypeRef declThisTypeRef) {
-			ParserContextUtil.setDeclThisType(annotableElem, declThisTypeRef);
+			ParserContextUtils.setDeclThisType(annotableElem, declThisTypeRef);
 		}
 	}
 
@@ -106,7 +109,7 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 		}
 
 		@Override
-		protected void setInitializer(TFormalParameter fPar, InitializerContext initCtx) {
+		protected void setOptional(TFormalParameter fPar, InitializerContext initCtx) {
 			fPar.setHasInitializerAssignment(true);
 		}
 
@@ -117,7 +120,7 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 
 		@Override
 		protected void setDeclThisType(TAnnotableElement annotableElem, TypeRef declThisTypeRef) {
-			ParserContextUtil.setDeclThisType(annotableElem, declThisTypeRef);
+			ParserContextUtils.setDeclThisType(annotableElem, declThisTypeRef);
 		}
 	}
 
@@ -183,8 +186,8 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 	public void enterOptionalParameter(OptionalParameterContext ctx) {
 		T fPar = buildBaseFormalParameter(ctx.identifierOrPattern(), ctx.colonSepTypeRef());
 
-		if (fPar != null && ctx.initializer() != null) {
-			setInitializer(fPar, ctx.initializer());
+		if (fPar != null) {
+			setOptional(fPar, ctx.initializer());
 		}
 	}
 
@@ -210,8 +213,8 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 	/** Both arguments may be <code>null</code>. */
 	protected abstract T createFormalParameter(String name, TypeRef typeRef);
 
-	/** Arguments will never be <code>null</code>. */
-	protected abstract void setInitializer(T fPar, InitializerContext initCtx);
+	/** Initializer may be <code>null</code>. */
+	protected abstract void setOptional(T fPar, InitializerContext initCtx);
 
 	/** Argument will never be <code>null</code>. */
 	protected abstract void setVariadic(T fPar);

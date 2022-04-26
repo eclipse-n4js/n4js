@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.ts.types.TModule;
@@ -38,7 +39,7 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 
 	/** Converts the given module specifier from .d.ts to N4JS and updates the given {@link ModuleRef} accordingly. */
 	protected void setModuleSpecifier(ModuleRef moduleRef, TerminalNode moduleSpecifierLit) {
-		String moduleSpecifier = ParserContextUtil.trimAndUnescapeStringLiteral(moduleSpecifierLit);
+		String moduleSpecifier = ParserContextUtils.trimAndUnescapeStringLiteral(moduleSpecifierLit);
 		setModuleSpecifier(moduleRef, moduleSpecifier);
 	}
 
@@ -57,7 +58,7 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 
 		TModule tModuleProxy = TypesFactory.eINSTANCE.createTModule();
 		EReference eRef = N4JSPackage.eINSTANCE.getModuleRef_Module();
-		ParserContextUtil.installProxy(resource, moduleRef, eRef, tModuleProxy, moduleSpecifier);
+		ParserContextUtils.installProxy(resource, moduleRef, eRef, tModuleProxy, moduleSpecifier);
 		moduleRef.setModule(tModuleProxy);
 	}
 

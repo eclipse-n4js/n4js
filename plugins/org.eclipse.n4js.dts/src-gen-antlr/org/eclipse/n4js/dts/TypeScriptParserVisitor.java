@@ -1,4 +1,4 @@
-// Generated from /Users/mark-oliver.reiser/Home/Prog/Java/n4js-sec/git-repo/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
+// Generated from /Users/marcusmews/Eclipses/ECL3/git/n4js/plugins/org.eclipse.n4js.dts/grammar/TypeScriptParser.g4 by ANTLR 4.7.2
 package org.eclipse.n4js.dts;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -627,6 +627,12 @@ public interface TypeScriptParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitPropertyName(TypeScriptParser.PropertyNameContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link TypeScriptParser#computedPropertyName}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComputedPropertyName(TypeScriptParser.ComputedPropertyNameContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link TypeScriptParser#getAccessor}.
 	 * @param ctx the parse tree

@@ -20,6 +20,7 @@ import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.LiteralExpressionContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.Expression;
@@ -90,7 +91,7 @@ public class DtsEnumBuilder extends AbstractDtsBuilder<EnumDeclarationContext, N
 
 			} else if (leCtx.literal().numericLiteral() != null) {
 				NumericLiteral numericLiteral = N4JSFactory.eINSTANCE.createNumericLiteral();
-				numericLiteral.setValue(ParserContextUtil.parseNumericLiteral(leCtx.literal().numericLiteral(), false));
+				numericLiteral.setValue(ParserContextUtils.parseNumericLiteral(leCtx.literal().numericLiteral(), false));
 				valueExpression = numericLiteral;
 			}
 			literal.setValueExpression(valueExpression);

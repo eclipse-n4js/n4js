@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -52,7 +53,7 @@ public class DtsFunctionBuilder extends AbstractDtsBuilderWithHelpers<FunctionDe
 
 		result.setGenerator(ctx.Multiply() != null);
 		TypeRef typeRef = newTypeRefBuilder().consume(ctx.callSignature().typeRef());
-		result.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
+		result.setDeclaredReturnTypeRefNode(ParserContextUtils.wrapInTypeRefNode(orAnyPlus(typeRef)));
 		List<N4TypeVariable> typeVars = newN4TypeVariablesBuilder().consume(ctx.callSignature().typeParameters());
 		result.getTypeVars().addAll(typeVars);
 		List<FormalParameter> fPars = newFormalParametersBuilder().consumeWithDeclThisType(

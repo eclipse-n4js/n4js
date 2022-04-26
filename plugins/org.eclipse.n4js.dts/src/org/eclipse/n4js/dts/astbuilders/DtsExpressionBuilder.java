@@ -16,6 +16,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.IdentifierExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyAccessExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SingleExpressionContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -52,7 +53,7 @@ public class DtsExpressionBuilder extends AbstractDtsBuilderWithHelpers<SingleEx
 
 	@Override
 	public void enterIdentifierName(IdentifierNameContext ctx) {
-		String idAsText = ParserContextUtil.getIdentifierName(ctx);
+		String idAsText = ParserContextUtils.getIdentifierName(ctx);
 		if (idAsText == null) {
 			return;
 		}
@@ -62,7 +63,7 @@ public class DtsExpressionBuilder extends AbstractDtsBuilderWithHelpers<SingleEx
 
 		IdentifiableElement ieProxy = TypesFactory.eINSTANCE.createIdentifiableElement();
 		EReference eRef = N4JSPackage.eINSTANCE.getIdentifierRef_Id();
-		ParserContextUtil.installProxy(resource, idRef, eRef, ieProxy, idAsText);
+		ParserContextUtils.installProxy(resource, idRef, eRef, ieProxy, idAsText);
 		idRef.setId(ieProxy);
 
 		result = idRef;

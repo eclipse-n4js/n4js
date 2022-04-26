@@ -53,6 +53,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentsContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.UnionTypeExpressionContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
@@ -248,7 +249,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			NumericLiteralTypeRef tr = TypeRefsFactory.eINSTANCE.createNumericLiteralTypeRef();
 			NumericLiteralContext numLitCtx = ctx.numericLiteral();
 			tr.setAstNegated(numLitCtx.Minus() != null);
-			BigDecimal value = ParserContextUtil.parseNumericLiteral(numLitCtx, true);
+			BigDecimal value = ParserContextUtils.parseNumericLiteral(numLitCtx, true);
 			if (value == null) {
 				return;
 			}
@@ -256,7 +257,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			result = tr;
 		} else if (ctx.StringLiteral() != null) {
 			StringLiteralTypeRef tr = TypeRefsFactory.eINSTANCE.createStringLiteralTypeRef();
-			tr.setAstValue(ParserContextUtil.trimAndUnescapeStringLiteral(ctx.StringLiteral()));
+			tr.setAstValue(ParserContextUtils.trimAndUnescapeStringLiteral(ctx.StringLiteral()));
 			result = tr;
 		}
 	}
@@ -334,7 +335,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 	private ParameterizedTypeRef createParameterizedTypeRef(String declTypeName, TypeArgumentsContext typeArgsCtx,
 			boolean structural) {
-		return createParameterizedTypeRef(declTypeName, ParserContextUtil.getTypeArgsFromTypeArgCtx(typeArgsCtx),
+		return createParameterizedTypeRef(declTypeName, ParserContextUtils.getTypeArgsFromTypeArgCtx(typeArgsCtx),
 				structural);
 	}
 
@@ -350,11 +351,15 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 			return null;
 		}
 
+		if (Set.of("null", "never", "unknown", "bigint", "BigInt").contains(declTypeName)) {
+			return createAnyPlusTypeRef();
+		}
+
 		ParameterizedTypeRef ptr = structural
 				? TypeRefsFactory.eINSTANCE.createParameterizedTypeRefStructural()
 				: TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
 
-		String[] segs = declTypeName.split(Pattern.quote(ParserContextUtil.NAMESPACE_ACCESS_DELIMITER));
+		String[] segs = declTypeName.split(Pattern.quote(ParserContextUtils.NAMESPACE_ACCESS_DELIMITER));
 		for (int i = 0; i < segs.length - 1; i++) {
 			String currSeg = segs[i];
 			NamespaceLikeRef nslRef = TypeRefsFactory.eINSTANCE.createNamespaceLikeRef();
@@ -362,7 +367,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 			Type nsProxy = TypesFactory.eINSTANCE.createType();
 			EReference eRef = TypeRefsPackage.eINSTANCE.getNamespaceLikeRef_DeclaredType();
-			ParserContextUtil.installProxy(resource, nslRef, eRef, nsProxy, currSeg);
+			ParserContextUtils.installProxy(resource, nslRef, eRef, nsProxy, currSeg);
 			nslRef.setDeclaredType(nsProxy);
 
 			ptr.getAstNamespaceLikeRefs().add(nslRef);
@@ -372,7 +377,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 
 		Type typeProxy = TypesFactory.eINSTANCE.createType();
 		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
-		ParserContextUtil.installProxy(resource, ptr, eRef, typeProxy, lastSeg);
+		ParserContextUtils.installProxy(resource, ptr, eRef, typeProxy, lastSeg);
 		ptr.setDeclaredType(typeProxy);
 
 		ptr.getDeclaredTypeArgs().addAll(newTypeRefBuilder().consumeManyTypeArgs(typeArgs));
