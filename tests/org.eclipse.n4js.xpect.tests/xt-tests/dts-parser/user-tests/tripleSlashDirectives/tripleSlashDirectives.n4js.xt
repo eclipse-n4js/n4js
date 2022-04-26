@@ -19,6 +19,7 @@
 			Folder "subFolder" {
 				File "other2.d.ts" {}
 			}
+			File "other3.d.ts" {}
 			File "package.json" { from="other__package.json" }
 		}
 		Project "Main" {
@@ -45,6 +46,12 @@
 			class Cls2 {
 				field: number;
 			}
+		}
+	}
+
+	File "other3.d.ts" {
+		declare module "declModule3" {
+			class Cls3 {}
 		}
 	}
 
@@ -86,6 +93,8 @@
 import { Cls1 } from "declModule1"
 // XPECT noerrors -->
 import * as dm2 from "declModule2"
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""declModule3""
+import { Cls3 } from "declModule3"
 
 
 // XPECT errors --> "number is not a subtype of string." at "new Cls1().field"

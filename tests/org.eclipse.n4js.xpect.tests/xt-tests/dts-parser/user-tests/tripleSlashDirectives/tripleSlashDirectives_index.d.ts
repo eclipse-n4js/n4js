@@ -11,3 +11,4 @@
 
 /// <reference path="other1.d.ts" />
 /// <reference path="subFolder/other2.d.ts" />
+// note: we are *not* including a reference to "other3.d.ts"
