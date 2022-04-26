@@ -32,6 +32,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberBaseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyOrMethodContext;
 import org.eclipse.n4js.dts.TypeScriptParser.SetAccessorContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.FormalParameter;
@@ -47,6 +48,7 @@ import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
@@ -75,6 +77,7 @@ public class DtsClassBuilder
 		result = N4JSFactory.eINSTANCE.createN4ClassDeclaration();
 		result.setName(ctx.identifierOrKeyWord().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
+		result.setTypingStrategy(TypingStrategy.STRUCTURAL);
 
 		if (ctx.Abstract() != null) {
 			result.getDeclaredModifiers().add(N4Modifier.ABSTRACT);
@@ -88,7 +91,7 @@ public class DtsClassBuilder
 			ClassExtendsClauseContext extendsClause = heritage.classExtendsClause();
 			if (extendsClause != null && extendsClause.parameterizedTypeRef() != null) {
 				ParameterizedTypeRef typeRef = newTypeRefBuilder().consume(extendsClause.parameterizedTypeRef());
-				result.setSuperClassRef(ParserContextUtil.wrapInTypeRefNode(typeRef));
+				result.setSuperClassRef(ParserContextUtils.wrapInTypeRefNode(typeRef));
 			}
 			ClassImplementsClauseContext implementsClause = heritage.classImplementsClause();
 			if (implementsClause != null && implementsClause.classOrInterfaceTypeList() != null
@@ -97,12 +100,19 @@ public class DtsClassBuilder
 				for (ParameterizedTypeRefContext extendsTypeRefCtx : implementsClause.classOrInterfaceTypeList()
 						.parameterizedTypeRef()) {
 					ParameterizedTypeRef typeRef = newTypeRefBuilder().consume(extendsTypeRefCtx);
-					result.getImplementedInterfaceRefs().add(ParserContextUtil.wrapInTypeRefNode(typeRef));
+					result.getImplementedInterfaceRefs().add(ParserContextUtils.wrapInTypeRefNode(typeRef));
 				}
 			}
 		}
 
 		walker.enqueue(ctx.classBody());
+	}
+
+	@Override
+	public void exitClassDeclaration(ClassDeclarationContext ctx) {
+		if (result != null) {
+			ParserContextUtils.removeOverloadingFunctionDefs(result.getOwnedMembersRaw());
+		}
 	}
 
 	@Override
@@ -128,7 +138,7 @@ public class DtsClassBuilder
 			fd.setDeclaredOptional(ctx.QuestionMark() != null);
 
 			TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
-			fd.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
+			fd.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(orAnyPlus(typeRef)));
 
 			memberDecl = fd;
 
@@ -143,7 +153,7 @@ public class DtsClassBuilder
 					ctx.callSignature().parameterBlock(), md);
 			md.getFpars().addAll(fPars);
 			TypeRef typeRef = newTypeRefBuilder().consume(ctx.callSignature().typeRef());
-			md.setDeclaredReturnTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
+			md.setDeclaredReturnTypeRefNode(ParserContextUtils.wrapInTypeRefNode(orAnyPlus(typeRef)));
 
 			memberDecl = md;
 		}

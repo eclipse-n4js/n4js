@@ -40,5 +40,5 @@ import * as M2 from "a/b/someModule2"
 let cls1: Cls = new Cls();
 // XPECT noerrors -->
 let cls2: M2.Cls = new M2.Cls();
-// XPECT errors --> "Cls is not a subtype of Cls." at "cls2"
+// XPECT errors --> "Cls is not a structural subtype of Cls: field failed: number is not equal to string." at "cls2"
 cls1 = cls2;

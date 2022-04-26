@@ -31,7 +31,7 @@ declare interface ID {
 /* XPECT ast ---
 Script: true
   ExportDeclaration: false, UNKNOWN
-   N4InterfaceDeclaration: [external, public], IE, ?~
+   N4InterfaceDeclaration: [external, public], IE, ~
     N4FieldDeclaration: [public], false
      TypeReferenceNode
       ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
@@ -61,7 +61,7 @@ Script: true
      FormalParameter: false, v, false
       TypeReferenceNode
        ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
-  N4InterfaceDeclaration: [external, public], ID, ?~
+  N4InterfaceDeclaration: [external, public], ID, ~
    N4FieldDeclaration: [public], false
     TypeReferenceNode
      ParameterizedTypeRef: OFF, false, false, number, ?~, false, false

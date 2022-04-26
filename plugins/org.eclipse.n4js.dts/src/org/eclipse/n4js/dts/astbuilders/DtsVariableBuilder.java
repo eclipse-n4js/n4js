@@ -22,6 +22,7 @@ import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.BindingPatternBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
+import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.BindingPattern;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -70,7 +71,7 @@ public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableSt
 	@Override
 	public void enterVariableStatement(VariableStatementContext ctx) {
 		result = N4JSFactory.eINSTANCE.createVariableStatement();
-		boolean exported = ParserContextUtil.isExported(ctx);
+		boolean exported = ParserContextUtils.isExported(ctx);
 		if (exported || parentIsNamespace) {
 			EList<N4Modifier> declaredModifiers = result.getDeclaredModifiers();
 			declaredModifiers.add(N4Modifier.EXTERNAL);
@@ -98,6 +99,7 @@ public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableSt
 
 		varBinding.setPattern(bindingPattern);
 
+		addLocationInfo(varBinding, ctx);
 		result.getVarDeclsOrBindings().add(varBinding);
 	}
 
@@ -114,9 +116,10 @@ public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableSt
 			varDecl.setExpression(expr);
 		} else {
 			TypeRef typeRef = newTypeRefBuilder().consume(ctx.colonSepTypeRef());
-			varDecl.setDeclaredTypeRefNode(ParserContextUtil.wrapInTypeRefNode(orAnyPlus(typeRef)));
+			varDecl.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(orAnyPlus(typeRef)));
 		}
 
+		addLocationInfo(varDecl, ctx);
 		result.getVarDeclsOrBindings().add(varDecl);
 	}
 }

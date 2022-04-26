@@ -11,10 +11,9 @@
 
 import * as lib_path from "path";
 import * as lib_fs from "fs";
-import * as lib_minimatch+ from "minimatch";
+import Minimatch from "minimatch";
 import {Glob} from "glob";
 
-const minimatch : {function(proband: string, pattern: string): boolean} = lib_minimatch as any+;
 
 
 /**
@@ -72,7 +71,7 @@ function getWorkspacesGlobs(yarnworkspaceDir:string, subprojectDir: string) : st
         // is yarn workspaces project
         const relativePath = lib_path.relative(yarnworkspaceDir, subprojectDir);
         for (const workspacesEntry of workspaces) {
-            if (relativePath === '' || minimatch(relativePath, workspacesEntry)) {
+            if (relativePath === '' || Minimatch(relativePath, workspacesEntry)) {
                 return workspaces; 
             }
         }
