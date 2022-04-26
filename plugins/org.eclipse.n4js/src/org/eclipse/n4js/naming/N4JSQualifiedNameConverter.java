@@ -13,7 +13,6 @@ package org.eclipse.n4js.naming;
 import java.util.List;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.utils.ProjectDescriptionUtils;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -36,7 +35,6 @@ public class N4JSQualifiedNameConverter extends IQualifiedNameConverter.DefaultI
 	@Override
 	public QualifiedName toQualifiedName(String qualifiedNameAsString) {
 		QualifiedName result = super.toQualifiedName(qualifiedNameAsString);
-		result = encodeSegments(result);
 		if (result != null && ProjectDescriptionUtils.isPackageNameWithScope(qualifiedNameAsString)) {
 			// in case of NPM scopes, merge the first two segments:
 			List<String> segs = Lists.newArrayList(result.getSegments());
@@ -45,11 +43,5 @@ public class N4JSQualifiedNameConverter extends IQualifiedNameConverter.DefaultI
 			return QualifiedName.create(segs);
 		}
 		return result;
-	}
-
-	private QualifiedName encodeSegments(QualifiedName qn) {
-		return QualifiedNameUtils.modifySegments(qn, seg -> {
-			return seg.replace(":", "%3A");
-		});
 	}
 }
