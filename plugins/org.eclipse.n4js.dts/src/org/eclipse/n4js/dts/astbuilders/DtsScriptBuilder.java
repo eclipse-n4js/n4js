@@ -103,6 +103,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	@Override
 	public void exitProgram(ProgramContext ctx) {
 		ParserContextUtils.removeOverloadingFunctionDefs(result.getScriptElements());
+		ParserContextUtils.transformPromisifiables(result.getScriptElements());
 	}
 
 	@Override

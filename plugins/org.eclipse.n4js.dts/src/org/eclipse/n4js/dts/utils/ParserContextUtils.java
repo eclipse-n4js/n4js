@@ -12,11 +12,14 @@ package org.eclipse.n4js.dts.utils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -27,9 +30,13 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ReservedWordContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
@@ -47,6 +54,7 @@ import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
@@ -429,6 +437,58 @@ public class ParserContextUtils {
 				// make parameters optional
 				for (FormalParameter fpar : survivor.getFpars()) {
 					fpar.setHasInitializerAssignment(true);
+				}
+			}
+		}
+	}
+
+	/**  */
+	public static void transformPromisifiables(EList<ScriptElement> scriptElements) {
+		Map<String, FunctionDefinition> functionsTop = new HashMap<>();
+		List<FunctionDefinition> functionsPrms = new ArrayList<>();
+		for (EObject elem : scriptElements) {
+			if (elem instanceof ExportDeclaration) {
+				elem = ((ExportDeclaration) elem).getExportedElement();
+			}
+			if (elem instanceof FunctionDefinition) {
+				FunctionDefinition fd = (FunctionDefinition) elem;
+				if (Objects.equals("__promisify__", fd.getName())) {
+					// fd.remove();
+					functionsPrms.add(fd);
+				} else {
+					functionsTop.put(fd.getName(), fd);
+				}
+			}
+		}
+
+		for (FunctionDefinition promFd : functionsPrms) {
+			DtsParseTreeNodeInfo dtsParseTreeNodeInfo = DtsParseTreeNodeInfo.get(promFd);
+			if (dtsParseTreeNodeInfo != null) {
+				ParserRuleContext ctx = dtsParseTreeNodeInfo.getParserRuleContext();
+				if (ctx != null) {
+					NamespaceDeclarationContext nsDeclCtx = (NamespaceDeclarationContext) findParentContext(ctx,
+							TypeScriptParser.RULE_namespaceDeclaration);
+					String nsName = null;
+					if (nsDeclCtx != null) {
+						nsName = nsDeclCtx.namespaceName() != null
+								? nsDeclCtx.namespaceName().getText()
+								: null;
+					} else {
+						ModuleDeclarationContext mDeclCtx = (ModuleDeclarationContext) findParentContext(ctx,
+								TypeScriptParser.RULE_moduleDeclaration);
+
+						if (mDeclCtx != null) {
+							nsName = mDeclCtx.moduleName() != null && mDeclCtx.moduleName().Identifier() != null
+									? mDeclCtx.moduleName().Identifier().getText()
+									: null;
+						}
+					}
+					if (nsName != null && functionsTop.containsKey(nsName)) {
+						FunctionDefinition fd = functionsTop.get(nsName);
+						Annotation promisifiable = N4JSFactory.eINSTANCE.createAnnotation();
+						promisifiable.setName(AnnotationDefinition.PROMISIFIABLE.name);
+						N4JSASTUtils.addAnnotation(fd, promisifiable);
+					}
 				}
 			}
 		}
