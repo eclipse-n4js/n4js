@@ -22,6 +22,7 @@
 		declare module "a/b/someModule2" {
 			export class Cls {
 				field: number;
+				fieldOnlyInM2: number;
 			}
 		}
 	}
@@ -50,5 +51,7 @@ let v12: number = new M2.Cls().field;
 let cls1: Cls = new Cls();
 // XPECT noerrors -->
 let cls2: M2.Cls = new M2.Cls();
-// XPECT errors --> "Cls is not a structural subtype of Cls: field failed: number is not equal to string." at "cls2"
+// XPECT noerrors -->
 cls1 = cls2;
+// XPECT errors --> "Cls is not a structural subtype of Cls: missing field fieldOnlyInM2." at "cls1"
+cls2 = cls1;
