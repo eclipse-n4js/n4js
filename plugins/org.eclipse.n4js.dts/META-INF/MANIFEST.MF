@@ -19,7 +19,8 @@ Require-Bundle: org.eclipse.emf.ecore;visibility:=reexport,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.xtext.ide
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.n4js.dts,
+Export-Package: org.antlr.v4.runtime,
+ org.eclipse.n4js.dts,
  org.eclipse.n4js.dts.utils
 Automatic-Module-Name: org.eclipse.n4js.dts
 Bundle-RequiredExecutionEnvironment: JavaSE-11

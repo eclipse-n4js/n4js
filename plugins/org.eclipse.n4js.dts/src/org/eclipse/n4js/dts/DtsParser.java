@@ -14,6 +14,7 @@ import static org.antlr.v4.runtime.CharStreams.fromReader;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
@@ -94,6 +95,16 @@ public class DtsParser {
 		} else {
 			return parseNestedScript(resource, adapter);
 		}
+	}
+
+	public static ProgramContext parseDts(CharSequence dtsCode) throws IOException {
+		CharStream fileContents = fromReader(new StringReader(dtsCode.toString()));
+		TypeScriptLexer lexer = new TypeScriptLexer(fileContents);
+		DtsTokenStream tokens = new DtsTokenStream(lexer);
+		TypeScriptParser parser = new TypeScriptParser(tokens);
+		parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
+		ProgramContext program = parser.program();
+		return program;
 	}
 
 	private DtsParseResult parseScript(Reader reader, LazyLinkingResource resource, URI srcFolder) throws IOException {
