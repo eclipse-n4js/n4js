@@ -58,10 +58,15 @@ import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TAnnotationTypeRefArgument;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
@@ -385,11 +390,48 @@ public class ParserContextUtils {
 		return trimmed != null && trimmed.length() > 0 ? trimmed : null;
 	}
 
+	/** @return a new {@code boolean} type reference. */
+	public static ParameterizedTypeRef createBooleanTypeRef(LazyLinkingResource resource) {
+		return createParameterizedTypeRef(resource, "boolean", false);
+	}
+
+	/** @return a new {@code any+} type reference. */
+	public static ParameterizedTypeRef createAnyPlusTypeRef(LazyLinkingResource resource) {
+		return createParameterizedTypeRef(resource, "any", true);
+	}
+
+	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type. */
+	public static ParameterizedTypeRef createParameterizedTypeRef(LazyLinkingResource resource, String declTypeName,
+			boolean dynamic) {
+		return ParserContextUtils.createParameterizedTypeRef(resource, declTypeName, null, dynamic);
+	}
+
+	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type and type arguments. */
+	public static ParameterizedTypeRef createParameterizedTypeRef(LazyLinkingResource resource, String declTypeName,
+			Collection<? extends TypeArgument> typeArgs, boolean dynamic) {
+
+		ParameterizedTypeRef ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
+		ptr.setDynamic(dynamic);
+		ptr.setDeclaredTypeAsText(declTypeName);
+
+		Type typeProxy = TypesFactory.eINSTANCE.createType();
+		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
+		ParserContextUtils.installProxy(resource, ptr, eRef, typeProxy, ptr.getDeclaredTypeAsText());
+		ptr.setDeclaredType(typeProxy);
+
+		if (typeArgs != null) {
+			ptr.getDeclaredTypeArgs().addAll(typeArgs);
+		}
+
+		return ptr;
+	}
+
 	/**
 	 * Of all equally named functions remove all but the one functions with the most parameters. The parameters of the
 	 * surviving function will be made optional.
 	 */
-	public static void removeOverloadingFunctionDefs(Collection<? extends EObject> elements) {
+	public static void removeOverloadingFunctionDefs(LazyLinkingResource resource,
+			Collection<? extends EObject> elements) {
 		Multimap<String, FunctionDefinition> functionsByName = HashMultimap.create();
 		for (EObject elem : elements) {
 			if (elem instanceof ExportDeclaration) {
@@ -409,16 +451,8 @@ public class ParserContextUtils {
 				Iterator<FunctionDefinition> iter = signatures.iterator();
 				FunctionDefinition survivor = iter.next();
 				for (FunctionDefinition fd = iter.next(); fd != null; fd = iter.hasNext() ? iter.next() : null) {
-					int fparCountSurvivor = survivor.getFpars() == null ? 0 : survivor.getFpars().size();
-					int fparCountFd = fd.getFpars() == null ? 0 : fd.getFpars().size();
-					if (fparCountFd > fparCountSurvivor) {
+					if (survivor.getDeclaredReturnTypeRefNode() != null) {
 						survivor = fd;
-					} else if (fparCountFd > 0 && fparCountFd == fparCountSurvivor) {
-						FormalParameter lastFParSurvivor = survivor.getFpars().get(survivor.getFpars().size() - 1);
-						FormalParameter lastFParFd = fd.getFpars().get(fd.getFpars().size() - 1);
-						if (!lastFParSurvivor.isVariadic() && lastFParFd.isVariadic()) {
-							survivor = fd;
-						}
 					}
 				}
 
@@ -434,9 +468,26 @@ public class ParserContextUtils {
 					elements.remove(elemToRemove);
 				}
 
-				// make parameters optional
-				for (FormalParameter fpar : survivor.getFpars()) {
-					fpar.setHasInitializerAssignment(true);
+				// make return type any+
+				if (survivor.getDeclaredReturnTypeRefNode() != null) {
+					survivor.getDeclaredReturnTypeRefNode().setTypeRefInAST(createAnyPlusTypeRef(resource));
+				}
+				// make parameters ...any+
+				if (survivor.getFpars() == null) {
+				}
+				if (survivor.getFpars().isEmpty()) {
+					FormalParameter fPar = N4JSFactory.eINSTANCE.createFormalParameter();
+					fPar.setDeclaredTypeRefNode(wrapInTypeRefNode(createAnyPlusTypeRef(resource)));
+					survivor.getFpars().add(fPar);
+				}
+				Iterator<FormalParameter> iterFPars = survivor.getFpars().iterator();
+				FormalParameter fPar = iterFPars.next();
+				fPar.setName("args");
+				fPar.setVariadic(true);
+				fPar.setDeclaredTypeRefNode(wrapInTypeRefNode(createAnyPlusTypeRef(resource)));
+				while (iterFPars.hasNext()) {
+					iterFPars.next();
+					iterFPars.remove();
 				}
 			}
 		}
