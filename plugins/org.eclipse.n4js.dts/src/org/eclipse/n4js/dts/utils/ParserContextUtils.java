@@ -38,6 +38,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ReservedWordContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
@@ -79,11 +80,27 @@ public class ParserContextUtils {
 	/** Like {@code N4JSGlobals#NAMESPACE_ACCESS_DELIMITER}, but for .d.ts files. */
 	public static final String NAMESPACE_ACCESS_DELIMITER = ".";
 
-	/** @return true iff the given rule is contained in an {@link TypeScriptParser#RULE_exportStatement} */
-	public static boolean isExported(ParserRuleContext ctx) {
-		ParserRuleContext exportedParentCtx = findParentContext(ctx, TypeScriptParser.RULE_exportStatement,
-				TypeScriptParser.RULE_statement);
-		return exportedParentCtx != null;
+	/** @return the {@link DtsMode mode} of the .d.ts file represented by the given {@link ProgramContext context}. */
+	public static DtsMode getDtsMode(ProgramContext ctx) {
+		StatementListContext stmnts = ctx.statementList();
+		if (stmnts != null && stmnts.statement() != null) {
+			for (StatementContext stmnt : stmnts.statement()) {
+				if (stmnt.importStatement() != null || stmnt.exportStatement() != null) {
+					return DtsMode.MODULE;
+				}
+			}
+		}
+		return DtsMode.SCRIPT;
+	}
+
+	/** @return true iff the element represented by the given context should be exported on N4JS-side. */
+	public static boolean isExported(@SuppressWarnings("unused") ParserRuleContext ctx) {
+		// as it turns out, elements declared in a .d.ts file are always available from the outside, not matter whether
+		// they are preceded by keyword 'declared' or 'export' or none of the two; thus, we always return 'true':
+		return true;
+		// ParserRuleContext exportedParentCtx = findParentContext(ctx, TypeScriptParser.RULE_exportStatement,
+		// TypeScriptParser.RULE_statement);
+		// return exportedParentCtx != null;
 	}
 
 	/** @return the statements in the given block or an empty list if not available. */
