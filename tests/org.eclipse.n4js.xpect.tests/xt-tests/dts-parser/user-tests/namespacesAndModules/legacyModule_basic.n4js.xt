@@ -15,7 +15,7 @@
 
 		export module legacyModule {
 			export class Cls {
-				field: string;
+				field: number;
 			}
 		}
 
@@ -23,7 +23,7 @@
 	}
 
 	END_SETUP
-*/
+ */
 
 // XPECT noerrors -->
 import { legacyModule } from "other"
@@ -32,6 +32,13 @@ import { legacyModule } from "other"
 import * as BAD from "legacyModule"
 
 import { foo } from "other"
+
+
+// XPECT errors --> "number is not a subtype of string." at "new legacyModule.Cls().field"
+let v01: string = new legacyModule.Cls().field;
+// XPECT noerrors -->
+let v02: number = new legacyModule.Cls().field;
+
 
 // XPECT type of 'foo' --> {function(Cls):void}
 foo;

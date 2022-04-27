@@ -28,7 +28,7 @@ class Module extends OtherFile {
 	 * @param name the module name without extension
 	 */
 	public new(String name) {
-		super(name, N4JSGlobals.N4JS_FILE_EXTENSION);
+		super(name, N4JSGlobals.N4JS_FILE_EXTENSION, null);
 	}
 
 	/**
@@ -36,8 +36,8 @@ class Module extends OtherFile {
 	 * 
 	 * @param name the module name without extension
 	 */
-	public new(String name, String fExtension) {
-		super(name, fExtension);
+	public new(String name, String fExtension, String fromFileName) {
+		super(name, fExtension, fromFileName);
 	}
 
 	/**

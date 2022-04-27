@@ -18,9 +18,9 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.utils.ResourceType
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.n4js.utils.URIUtils
 
 /**
  * Utility class to calculate the qualified name of the resource depending on the project configuration.
@@ -66,7 +66,11 @@ class ModuleNameComputer {
 				} else {
 					relativeURI = URIUtils.trimFileExtension(relativeURI);
 				}
-				return QualifiedName.create(relativeURI.segments)
+				val segments = relativeURI.segments;
+				for (var i = 0; i < segments.length; i++) {
+					segments.set(i, URI.decode(segments.get(i)));
+				}
+				return QualifiedName.create(segments);
 			}
 		} else if (uri.segmentCount == 1 && fileExtension !== null) {
 			// Special case of synthesized test resources where we don't have a source container.

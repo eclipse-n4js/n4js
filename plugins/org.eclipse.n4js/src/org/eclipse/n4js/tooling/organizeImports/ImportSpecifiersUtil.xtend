@@ -65,10 +65,18 @@ class ImportSpecifiersUtil {
 		importProvidedElements.add(new ImportProvidedElement(specifier.alias,
 			computeNamespaceActualName(specifier), specifier, false));
 
+		val localNamesAdded = newHashSet;
 		collectProvidedElements(importedModule, new RecursionGuard(), [ exportDef |
-			importProvidedElements.add(
-				new ImportProvidedElement(specifier.importedElementName(exportDef), exportDef.exportedName,
-					specifier, N4JSLanguageUtils.isHollowElement(exportDef.exportedElement, jsVariantHelper)));
+			val localName = specifier.importedElementName(exportDef);
+			// function overloading and declaration merging in .d.ts can lead to multiple elements of same name
+			// being imported via a single namespace import -> to avoid showing bogus "duplicate import" errors
+			// in those cases we need to avoid adding more than one ImportProvidedElement in those cases:
+			// TODO IDE-3604 no longer required for function overloading; should probably be removed once declaration merging is supported
+			if (localNamesAdded.add(localName)) {
+				importProvidedElements.add(
+					new ImportProvidedElement(localName, exportDef.exportedName,
+						specifier, N4JSLanguageUtils.isHollowElement(exportDef.exportedElement, jsVariantHelper)));
+			}
 		]);
 
 		return importProvidedElements

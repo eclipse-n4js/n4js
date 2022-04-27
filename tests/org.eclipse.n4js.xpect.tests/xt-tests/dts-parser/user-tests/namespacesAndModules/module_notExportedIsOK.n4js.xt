@@ -13,30 +13,22 @@
 
 	File "other.d.ts" {
 
-		export namespace N1 {
-			export namespace N2 {
-				export class Cls {
-					field: number;
-				}
+		declare module "a/b/someModule" {
+			class Cls {  // note: no export keyword!
+				field: number;
 			}
 		}
-
-		export function foo(p: N1.N2.Cls): void;
 	}
 
 	END_SETUP
- */
+*/
 
-import { N1, foo } from "other"
+import "other"
 
-
-// XPECT errors --> "number is not a subtype of string." at "new N1.N2.Cls().field"
-let v01: string = new N1.N2.Cls().field;
 // XPECT noerrors -->
-let v02: number = new N1.N2.Cls().field;
+import { Cls } from "a/b/someModule"
 
-
-// XPECT type of 'foo' --> {function(Cls):void}
-foo;
+// XPECT errors --> "number is not a subtype of string." at "new Cls().field"
+let v01: string = new Cls().field;
 // XPECT noerrors -->
-foo(new N1.N2.Cls());
+let v02: number = new Cls().field;

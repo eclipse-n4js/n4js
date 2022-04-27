@@ -13,30 +13,20 @@
 
 	File "other.d.ts" {
 
-		export namespace N1 {
-			export namespace N2 {
-				export class Cls {
-					field: number;
-				}
-			}
+		declare module "a/b/someModule" {
+			export const value: any;
+			export namespace value {}
 		}
-
-		export function foo(p: N1.N2.Cls): void;
 	}
 
 	END_SETUP
  */
 
-import { N1, foo } from "other"
+import "other"
 
+// Don't wanna see an error from N4JSImportValidator along the lines of "value imported multiple times":
 
-// XPECT errors --> "number is not a subtype of string." at "new N1.N2.Cls().field"
-let v01: string = new N1.N2.Cls().field;
 // XPECT noerrors -->
-let v02: number = new N1.N2.Cls().field;
+import * as M1 from "a/b/someModule"
 
-
-// XPECT type of 'foo' --> {function(Cls):void}
-foo;
-// XPECT noerrors -->
-foo(new N1.N2.Cls());
+M1.value; // avoid "unused import" warning

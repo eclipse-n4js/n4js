@@ -141,11 +141,11 @@ public class WorkspaceBuilder {
 			 * @param nameWithExtension
 			 *            full name, including the file extension in case the file has an extension.
 			 */
-			public OtherFileBuilder addFile(String nameWithExtension, String content) {
+			public OtherFileBuilder addFile(String nameWithExtension, String fromFileName, String content) {
 				int idx = nameWithExtension.lastIndexOf(".", nameWithExtension.lastIndexOf('/') + 1);
 				String nameWithoutExtension = idx >= 0 ? nameWithExtension.substring(0, idx) : nameWithExtension;
 				String extension = idx >= 0 ? nameWithExtension.substring(idx + 1) : null;
-				return addFile(nameWithoutExtension, extension, content);
+				return addFile(nameWithoutExtension, extension, fromFileName, content);
 			}
 
 			/**
@@ -155,18 +155,22 @@ public class WorkspaceBuilder {
 			 *            the file extension. Use <code>null</code> for files without extension and the empty string for
 			 *            files with a name ending in ".".
 			 */
-			public OtherFileBuilder addFile(String fNameWithoutExtension, String fExtension, String content) {
+			public OtherFileBuilder addFile(String fNameWithoutExtension, String fExtension, String fromFileName,
+					String content) {
 				OtherFileBuilder fileBuilder = new OtherFileBuilder(fNameWithoutExtension);
 				fileBuilder.fExtension = fExtension;
+				fileBuilder.fromFileName = fromFileName;
 				fileBuilder.content = content;
 				files.put(fileBuilder.getNameWithExtension(), fileBuilder);
 				return fileBuilder;
 			}
 
 			/** Adds a {@link Module} */
-			public ModuleBuilder addModule(String nameWithoutExtension, String fExtension, String content) {
+			public ModuleBuilder addModule(String nameWithoutExtension, String fExtension, String fromFileName,
+					String content) {
 				ModuleBuilder moduleBuilder = new ModuleBuilder(nameWithoutExtension);
 				moduleBuilder.fExtension = fExtension;
+				moduleBuilder.fromFileName = fromFileName;
 				moduleBuilder.content = content;
 				modules.put(nameWithoutExtension + "." + fExtension, moduleBuilder);
 				return moduleBuilder;
@@ -196,6 +200,8 @@ public class WorkspaceBuilder {
 				 * with a name ending in ".".
 				 */
 				public String fExtension;
+				/** File name provided using the {@code from=""} syntax or <code>null</code> if not provided. */
+				public String fromFileName;
 				/** File content */
 				public String content;
 
@@ -205,7 +211,7 @@ public class WorkspaceBuilder {
 
 				/** Builds the {@link OtherFile} */
 				public OtherFile build() {
-					OtherFile file = new OtherFile(name, fExtension);
+					OtherFile file = new OtherFile(name, fExtension, fromFileName);
 					file.content = content;
 					return file;
 				}
@@ -239,7 +245,7 @@ public class WorkspaceBuilder {
 				/** Builds the {@link Module} */
 				@Override
 				public Module build() {
-					Module module = new Module(name, fExtension);
+					Module module = new Module(name, fExtension, fromFileName);
 					module.content = content;
 					return module;
 				}

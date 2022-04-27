@@ -34,7 +34,11 @@ import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.INode;
@@ -159,7 +163,22 @@ public class DtsParser {
 		Script root = astBuilder.consume(prgCtx);
 		RootNode rootNode = new RootNode(ctx);
 
+		// nested scripts represent declared modules and elements directly contained
+		// in a declared module are always exported, so we have to adjust as follows:
+		exportAllTopLevelElements(root);
+
 		return new DtsParseResult(root, rootNode, Collections.emptyList());
 	}
 
+	private void exportAllTopLevelElements(Script script) {
+		List<ScriptElement> elems = script.getScriptElements();
+		for (int i = 0; i < elems.size(); i++) {
+			ScriptElement elem = elems.get(i);
+			if (elem instanceof ExportableElement) {
+				ExportDeclaration exportDecl = N4JSFactory.eINSTANCE.createExportDeclaration();
+				elems.set(i, exportDecl);
+				exportDecl.setExportedElement((ExportableElement) elem);
+			}
+		}
+	}
 }
