@@ -427,11 +427,19 @@ public class ParserContextUtils {
 	}
 
 	/**
-	 * Of all equally named functions remove all but the one functions with the most parameters. The parameters of the
-	 * surviving function will be made optional.
+	 * Of all equally named functions remove all but the one functions with the most parameters. The return type will be
+	 * changed to any+ iff there exist at least two overloads with different return types. The parameters of the
+	 * surviving function will be made optional. Also, a simple name and type inference for parameters works as follows:
+	 * <ul>
+	 * <li>Parameter names are kept as long as all parameters at the same position have the same name. Otherwise, an
+	 * artificial name is used.
+	 * <li>Parameter types are kept as long as all parameters at the same position have the same type name. Otherwise,
+	 * any+ is used.
+	 * </ul>
 	 */
 	public static void removeOverloadingFunctionDefs(LazyLinkingResource resource,
 			Collection<? extends EObject> elements) {
+
 		Multimap<String, FunctionDefinition> functionsByName = HashMultimap.create();
 		for (EObject elem : elements) {
 			if (elem instanceof ExportDeclaration) {
@@ -447,16 +455,56 @@ public class ParserContextUtils {
 		for (String fName : functionsByName.keySet()) {
 			Collection<FunctionDefinition> signatures = functionsByName.get(fName);
 			if (signatures.size() > 1) {
+				Map<Integer, String> fparNames = new HashMap<>();
+				Map<Integer, String> fparTypes = new HashMap<>();
+				String returnTypeName;
+
 				// find the survivor
 				Iterator<FunctionDefinition> iter = signatures.iterator();
 				FunctionDefinition survivor = iter.next();
+				for (int i = 0; i < survivor.getFpars().size(); i++) {
+					FormalParameter fPar = survivor.getFpars().get(i);
+					fparNames.put(i, fPar.getName());
+					fparTypes.put(i, fPar.getDeclaredTypeRefInAST() == null ? null
+							: fPar.getDeclaredTypeRefInAST().getTypeRefAsString());
+				}
+				returnTypeName = survivor.getDeclaredReturnTypeRefInAST() == null ? null
+						: survivor.getDeclaredReturnTypeRefInAST().getTypeRefAsString();
+
 				for (FunctionDefinition fd = iter.next(); fd != null; fd = iter.hasNext() ? iter.next() : null) {
-					if (survivor.getDeclaredReturnTypeRefNode() != null) {
+					int survFPars = survivor.getFpars().size();
+					int fdFPars = fd.getFpars().size();
+					for (int i = 0; i < fdFPars; i++) {
+						FormalParameter fPar = fd.getFpars().get(i);
+						if (fparNames.containsKey(i)) {
+							String oldName = fparNames.get(i);
+							if (!Objects.equals(oldName, fPar.getName())) {
+								fparNames.put(i, "arg" + i);
+							}
+							String oldTypeRef = fparTypes.get(i);
+							if (!Objects.equals(oldTypeRef, fPar.getDeclaredTypeRefInAST() == null ? null
+									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString())) {
+								fparTypes.put(i, null);
+							}
+						} else {
+							fparNames.put(i, fPar.getName());
+							fparTypes.put(i, fPar.getDeclaredTypeRefInAST() == null ? null
+									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString());
+						}
+
+						if (!Objects.equals(returnTypeName, fd.getDeclaredReturnTypeRefInAST() == null ? null
+								: fd.getDeclaredReturnTypeRefInAST().getTypeRefAsString())) {
+							returnTypeName = null;
+						}
+					}
+					if (survFPars < fdFPars) {
+						survivor = fd;
+					} else if (survFPars == fdFPars && survivor.getDeclaredReturnTypeRefNode() == null) {
 						survivor = fd;
 					}
 				}
 
-				// remove all but the survivor
+				// remove all overloads but the survivor
 				for (FunctionDefinition fd : functionsByName.get(fName)) {
 					if (fd == survivor) {
 						continue;
@@ -468,26 +516,20 @@ public class ParserContextUtils {
 					elements.remove(elemToRemove);
 				}
 
-				// make return type any+
-				if (survivor.getDeclaredReturnTypeRefNode() != null) {
+				// change return type iff necessary
+				if (survivor.getDeclaredReturnTypeRefNode() != null && returnTypeName == null) {
 					survivor.getDeclaredReturnTypeRefNode().setTypeRefInAST(createAnyPlusTypeRef(resource));
 				}
-				// make parameters ...any+
-				if (survivor.getFpars() == null) {
-				}
-				if (survivor.getFpars().isEmpty()) {
-					FormalParameter fPar = N4JSFactory.eINSTANCE.createFormalParameter();
-					fPar.setDeclaredTypeRefNode(wrapInTypeRefNode(createAnyPlusTypeRef(resource)));
-					survivor.getFpars().add(fPar);
-				}
-				Iterator<FormalParameter> iterFPars = survivor.getFpars().iterator();
-				FormalParameter fPar = iterFPars.next();
-				fPar.setName("args");
-				fPar.setVariadic(true);
-				fPar.setDeclaredTypeRefNode(wrapInTypeRefNode(createAnyPlusTypeRef(resource)));
-				while (iterFPars.hasNext()) {
-					iterFPars.next();
-					iterFPars.remove();
+
+				// change parameter names and types iff necessary
+				for (int i = 0; i < survivor.getFpars().size(); i++) {
+					FormalParameter fPar = survivor.getFpars().get(i);
+					String fparName = fparNames.get(i);
+					fPar.setName(fparName);
+					fPar.setHasInitializerAssignment(true);
+					if (fparTypes.get(i) == null) {
+						fPar.setDeclaredTypeRefNode(wrapInTypeRefNode(createAnyPlusTypeRef(resource)));
+					}
 				}
 			}
 		}
