@@ -24,12 +24,13 @@ import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ExportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
@@ -40,7 +41,6 @@ import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.dts.utils.DtsMode;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.dts.utils.TripleSlashDirective;
-import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
@@ -100,11 +100,17 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	public void enterProgram(ProgramContext ctx) {
 		result = N4JSFactory.eINSTANCE.createScript();
 
-		DtsMode dtsMode = ParserContextUtils.getDtsMode(ctx);
-		if (dtsMode == DtsMode.SCRIPT) {
-			Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
-			ann.setName(AnnotationDefinition.GLOBAL.name);
-			result.getAnnotations().add(ann);
+		// add @@Global (if necessary)
+		if (isNested()) {
+			NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
+			if (adapter.getContext() instanceof GlobalScopeAugmentationContext) {
+				ParserContextUtils.makeGlobal(result);
+			}
+		} else {
+			DtsMode dtsMode = ParserContextUtils.getDtsMode(ctx);
+			if (dtsMode == DtsMode.SCRIPT) {
+				ParserContextUtils.makeGlobal(result);
+			}
 		}
 
 		List<TripleSlashDirective> tripleSlashDirectives = tokenStream.getTripleSlashDirectives();
@@ -145,6 +151,11 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
 		N4NamespaceDeclaration d = newModuleBuilder(srcFolder).consume(ctx);
 		addAndHandleExported(ctx, d);
+	}
+
+	@Override
+	public void enterGlobalScopeAugmentation(GlobalScopeAugmentationContext ctx) {
+		newGlobalScopeAugmentationBuilder(srcFolder).consume(ctx);
 	}
 
 	@Override

@@ -26,6 +26,7 @@ import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParserBaseListener;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsFormalParametersBuilder;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsTFormalParametersBuilder;
+import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsGlobalScopeAugmentationBuilder;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsModuleBuilder;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsNamespaceBuilder.DtsNamespaceBuilder;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsTypeVariablesBuilder.DtsN4TypeVariablesBuilder;
@@ -160,6 +161,11 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 	/***/
 	protected final DtsModuleBuilder newModuleBuilder(URI srcFolder) {
 		return new DtsModuleBuilder(tokenStream, resource, srcFolder);
+	}
+
+	/***/
+	protected final DtsGlobalScopeAugmentationBuilder newGlobalScopeAugmentationBuilder(URI srcFolder) {
+		return new DtsGlobalScopeAugmentationBuilder(tokenStream, resource, srcFolder);
 	}
 
 	/***/

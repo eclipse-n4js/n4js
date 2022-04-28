@@ -34,6 +34,9 @@ import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
+import org.eclipse.n4js.dts.TypeScriptParser.DeclarationStatementContext;
+import org.eclipse.n4js.dts.TypeScriptParser.DeclareStatementContext;
+import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
@@ -55,6 +58,7 @@ import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
@@ -103,6 +107,24 @@ public class ParserContextUtils {
 		// return exportedParentCtx != null;
 	}
 
+	/** @return the global scope augmentations directly contained in the given module declaration. */
+	public static List<GlobalScopeAugmentationContext> getGlobalScopeAugmentations(ModuleDeclarationContext ctx) {
+		List<GlobalScopeAugmentationContext> result = new ArrayList<>();
+		for (StatementContext stmntCtx : ParserContextUtils.getStatements(ctx.block())) {
+			DeclareStatementContext declStmnt = stmntCtx.declareStatement();
+			if (declStmnt != null) {
+				DeclarationStatementContext declStmnt2 = declStmnt.declarationStatement();
+				if (declStmnt2 != null) {
+					GlobalScopeAugmentationContext gsa = declStmnt2.globalScopeAugmentation();
+					if (gsa != null) {
+						result.add(gsa);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
 	/** @return the statements in the given block or an empty list if not available. */
 	public static List<StatementContext> getStatements(BlockContext block) {
 		if (block != null) {
@@ -128,6 +150,13 @@ public class ParserContextUtils {
 			}
 		}
 		modifiers.add(accessibility);
+	}
+
+	/** Makes the given {@link Script} global by inserting a {@code @@Global} at the top. */
+	public static void makeGlobal(Script script) {
+		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+		ann.setName(AnnotationDefinition.GLOBAL.name);
+		script.getAnnotations().add(0, ann);
 	}
 
 	/** Sets the given element's "declared this type" by adding a {@code @This()} annotation. */

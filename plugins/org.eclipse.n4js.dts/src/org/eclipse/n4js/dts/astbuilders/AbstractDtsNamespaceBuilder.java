@@ -30,10 +30,12 @@ import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
@@ -110,6 +112,17 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		}
 	}
 
+	/** Builder for global scope augmentations. */
+	public static class DtsGlobalScopeAugmentationBuilder
+			extends AbstractDtsNamespaceBuilder<GlobalScopeAugmentationContext> {
+
+		/** Constructor */
+		public DtsGlobalScopeAugmentationBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource,
+				URI srcFolder) {
+			super(tokenStream, resource, srcFolder);
+		}
+	}
+
 	private final URI srcFolder;
 
 	/** Constructor */
@@ -162,7 +175,18 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 							new int[] { RULE_namespaceDeclaration, RULE_moduleDeclaration })) {
 
 						// nested modules inside namespaces or nested modules are unsupported by TypeScript
-						createNestedModule(ctx, ParserContextUtils.trimAndUnescapeStringLiteral(strLit));
+						if (ctx.block() != null) {
+							createNestedModule(ctx, ctx.block().statementList(),
+									ParserContextUtils.trimAndUnescapeStringLiteral(strLit));
+
+							// declared modules may contain global state augmentations
+							// (to avoid creating virtual resources from within a virtual resource,
+							// we have to handle this ahead of time!)
+							for (GlobalScopeAugmentationContext gsaCtx : ParserContextUtils.getGlobalScopeAugmentations(
+									ctx)) {
+								enterGlobalScopeAugmentation(gsaCtx);
+							}
+						}
 					}
 					result = null;
 				} else if (identifier != null) {
@@ -180,15 +204,34 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		}
 	}
 
+	@Override
+	public void enterGlobalScopeAugmentation(GlobalScopeAugmentationContext ctx) {
+		// note: global scope augmentations may only appear on top-level of files with DtsMode MODULE or
+		// as direct children of declared modules
+		if (result != null) {
+			// nested inside a namespace or "legacy module" --> ignore
+			return;
+		}
+		if (isNested()) {
+			// we are in a virtual resource
+			// -> ignore this ctx here, because it was handled ahead of time in #enterModuleDeclaration()
+			return;
+		}
+		if (ctx.block() == null) {
+			return;
+		}
+		createNestedModule(ctx, ctx.block().statementList(), "_globalScopeAugmentation1");
+	}
+
 	/** Triggers the creation of a nested/virtual resource. */
-	private void createNestedModule(ModuleDeclarationContext ctx, String name) {
+	private void createNestedModule(ParserRuleContext ctx, StatementListContext statements, String name) {
 		URI virtualUri = URI.createFileURI(name + ".d.ts").resolve(srcFolder);
 
 		LoadResultInfoAdapter loadResultInfo = (LoadResultInfoAdapter) ILoadResultInfoAdapter.get(resource);
 		if (loadResultInfo == null) {
 			loadResultInfo = LoadResultInfoAdapter.getOrInstall(resource);
 		}
-		NestedResourceAdapter nra = new NestedResourceAdapter(resource.getURI(), tokenStream, ctx);
+		NestedResourceAdapter nra = new NestedResourceAdapter(resource.getURI(), tokenStream, ctx, statements);
 		loadResultInfo.addNestedResource(virtualUri, nra);
 	}
 

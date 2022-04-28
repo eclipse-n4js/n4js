@@ -25,13 +25,13 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.DefaultErrorStrategy;
 import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
@@ -154,7 +154,8 @@ public class DtsParser {
 	}
 
 	private DtsParseResult parseNestedScript(LazyLinkingResource resource, NestedResourceAdapter adapter) {
-		ModuleDeclarationContext ctx = adapter.getModuleDeclarationContext();
+		ParserRuleContext ctx = adapter.getContext();
+		StatementListContext statements = adapter.getStatements();
 		DtsTokenStream tokens = adapter.getTokenStream();
 
 		ProgramContext prgCtx = new ProgramContext(null, 0) {
@@ -165,7 +166,7 @@ public class DtsParser {
 
 			@Override
 			public StatementListContext statementList() {
-				return ctx.block().statementList();
+				return statements;
 			}
 		};
 
