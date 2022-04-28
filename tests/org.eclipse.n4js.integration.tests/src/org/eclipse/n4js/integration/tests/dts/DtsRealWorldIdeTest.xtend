@@ -20,7 +20,7 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 /**
- *
+ * Testing .d.ts support with real-world type definitions.
  */
 class DtsRealWorldIdeTest extends AbstractIdeTest {
 
