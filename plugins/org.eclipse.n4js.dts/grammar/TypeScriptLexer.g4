@@ -199,6 +199,7 @@ Set: 'set';
 
 Constructor: 'constructor';
 Namespace: 'namespace';
+Global: 'global';
 Require: 'require';
 Module: 'module';
 Declare: 'declare';

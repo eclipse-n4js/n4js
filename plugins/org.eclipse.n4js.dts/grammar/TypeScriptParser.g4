@@ -73,6 +73,7 @@ declareStatement
 declarationStatement
     : moduleDeclaration
     | namespaceDeclaration
+    | globalScopeAugmentation
     | interfaceDeclaration
     | typeAliasDeclaration
     | functionDeclaration
@@ -284,6 +285,10 @@ namespaceDeclaration
 
 namespaceName
     : typeReferenceName ('.' typeReferenceName)*
+    ;
+
+globalScopeAugmentation
+    : Global block
     ;
 
 // Decorators
@@ -637,7 +642,7 @@ exportStatement
     ;
 
 exportStatementTail
-    : Default? declareStatement                         #ExportElementDirectly
+    : Default? declarationStatement                     #ExportElementDirectly
     | Default identifierName                            #ExportElementAsDefault
     | multipleExportElements (From StringLiteral)?      #ExportElements
     | Multiply (As identifierName)? From StringLiteral  #ExportModule
