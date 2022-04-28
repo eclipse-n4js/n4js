@@ -615,7 +615,7 @@ public class TestWorkspaceManager {
 
 	private void createAndAddModule(String contents, String moduleName, Folder nmSourceFolder) {
 		NameAndExtension nae = getN4JSNameAndExtension(moduleName);
-		Module module = nae.extension == null ? new Module(moduleName) : new Module(nae.name, nae.extension);
+		Module module = nae.extension == null ? new Module(moduleName) : new Module(nae.name, nae.extension, null);
 		module.setContents(contents);
 		nmSourceFolder.addModule(module);
 	}

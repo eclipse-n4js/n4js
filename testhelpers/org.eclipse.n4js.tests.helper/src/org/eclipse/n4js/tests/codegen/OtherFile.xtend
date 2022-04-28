@@ -27,6 +27,8 @@ class OtherFile {
 	 * with a name ending in ".".
 	 */
 	final protected String fExtension;
+	/** File name provided using the {@code from=""} syntax or <code>null</code> if not provided. */
+	final protected String fromFileName;
 	protected String content;
 
 	/**
@@ -35,7 +37,7 @@ class OtherFile {
 	 * @param name the module name without extension
 	 */
 	public new(String name) {
-		this(name, N4JSGlobals.N4JS_FILE_EXTENSION);
+		this(name, N4JSGlobals.N4JS_FILE_EXTENSION, null);
 	}
 
 	/**
@@ -43,9 +45,10 @@ class OtherFile {
 	 * 
 	 * @param name the module name without extension
 	 */
-	public new(String name, String fExtension) {
+	public new(String name, String fExtension, String fromFileName) {
 		this.name = Objects.requireNonNull(name);
 		this.fExtension = fExtension;
+		this.fromFileName = fromFileName;
 	}
 
 	/**
@@ -70,6 +73,11 @@ class OtherFile {
 	/** @return filename with extension (if any). */
 	public def String getNameWithExtension() {
 		return fExtension !== null ? name + "." + fExtension : name;
+	}
+
+	/** File name provided using the {@code from=""} syntax or <code>null</code> if not provided. */
+	public def String getFromFileName() {
+		return fromFileName;
 	}
 
 	/**

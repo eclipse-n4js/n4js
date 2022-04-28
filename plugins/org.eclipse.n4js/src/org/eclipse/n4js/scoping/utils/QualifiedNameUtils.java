@@ -12,6 +12,7 @@ package org.eclipse.n4js.scoping.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -80,5 +81,27 @@ public class QualifiedNameUtils {
 		List<String> segments = new ArrayList<>(qn.getSegments());
 		segments.remove(segments.size() - 1);
 		return QualifiedName.create(segments);
+	}
+
+	/**
+	 * Changes each segment of the given {@link QualifiedName} using the given function.
+	 *
+	 * @param qn
+	 *            the qualified name to encode.
+	 * @param fn
+	 *            transformation function; will be invoked for each segment.
+	 */
+	public static QualifiedName modifySegments(QualifiedName qn, Function<String, String> fn) {
+		if (qn == null || qn.isEmpty()) {
+			return qn;
+		}
+		int len = qn.getSegmentCount();
+		String[] segsModified = new String[len];
+		for (int i = 0; i < len; i++) {
+			String seg = qn.getSegment(i);
+			String segModified = fn.apply(seg);
+			segsModified[i] = segModified;
+		}
+		return QualifiedName.create(segsModified);
 	}
 }
