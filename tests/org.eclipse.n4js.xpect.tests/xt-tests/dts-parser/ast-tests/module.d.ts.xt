@@ -30,4 +30,5 @@ declare module "parent" {
 
 /* XPECT ast ---
 Script: true
+  Annotation: Global
 --- */

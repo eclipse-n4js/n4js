@@ -22,8 +22,6 @@
 	END_SETUP
  */
 
-import "other"
-
 // Don't wanna see an error from N4JSImportValidator along the lines of "value imported multiple times":
 
 // XPECT noerrors -->

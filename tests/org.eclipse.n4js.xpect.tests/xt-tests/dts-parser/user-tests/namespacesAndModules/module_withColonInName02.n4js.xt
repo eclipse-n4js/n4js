@@ -27,8 +27,6 @@
 	END_SETUP
  */
 
-import "other"
-
 // XPECT noerrors -->
 import { Cls as Cls1 } from "someModule"
 // XPECT noerrors -->

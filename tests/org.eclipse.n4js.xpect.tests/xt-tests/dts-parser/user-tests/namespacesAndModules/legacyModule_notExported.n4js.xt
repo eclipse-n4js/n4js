@@ -13,7 +13,9 @@
 
 	File "other.d.ts" {
 
-		declare module legacyModule1 {}
+		declare module legacyModule1 {
+			class Cls {}
+		}
 
 		export module legacyModule2 {
 			class Cls {}
@@ -21,12 +23,18 @@
 	}
 
 	END_SETUP
-*/
+ */
 
-// XPECT errors --> "Element legacyModule1 is not exported." at "legacyModule1"
+
+// note: even though N1 and Cls are not explicitly exported, they can be imported!
+
+
+// XPECT noerrors --> "Element legacyModule1 is not exported." at "legacyModule1"
 import { legacyModule1 } from "other"
-
+// XPECT noerrors -->
 import { legacyModule2 } from "other"
 
-// XPECT errors --> "Element Cls is not exported." at "Cls"
+// XPECT noerrors -->
+legacyModule1.Cls;
+// XPECT noerrors --> "Element Cls is not exported." at "Cls"
 legacyModule2.Cls;

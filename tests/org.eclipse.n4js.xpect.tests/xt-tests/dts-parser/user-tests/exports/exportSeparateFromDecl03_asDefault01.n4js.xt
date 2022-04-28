@@ -25,8 +25,10 @@
 // XPECT noerrors -->
 import MyClsDts from "tslib";
 
-// XPECT errors --> "Element ClsDts is not exported." at "ClsDts"
+// note: even though ClsDts is not explicitly/directly exported, it can be imported!
+// XPECT noerrors --> "Element ClsDts is not exported." at "ClsDts"
 import { ClsDts } from "tslib";
+ClsDts; // avoid "unused import" warning
 
 // XPECT type of 'v01' --> string
 let v01 = new MyClsDts().field;
