@@ -36,10 +36,7 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
@@ -177,36 +174,22 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 
 	/** @return a new {@code boolean} type reference. */
 	protected final ParameterizedTypeRef createBooleanTypeRef() {
-		return createParameterizedTypeRef("boolean", false);
+		return ParserContextUtils.createBooleanTypeRef(resource);
 	}
 
 	/** @return a new {@code any+} type reference. */
 	protected final ParameterizedTypeRef createAnyPlusTypeRef() {
-		return createParameterizedTypeRef("any", true);
+		return ParserContextUtils.createAnyPlusTypeRef(resource);
 	}
 
 	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type. */
 	protected final ParameterizedTypeRef createParameterizedTypeRef(String declTypeName, boolean dynamic) {
-		return createParameterizedTypeRef(declTypeName, null, dynamic);
+		return ParserContextUtils.createParameterizedTypeRef(resource, declTypeName, null, dynamic);
 	}
 
 	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type and type arguments. */
 	protected final ParameterizedTypeRef createParameterizedTypeRef(String declTypeName,
 			Collection<? extends TypeArgument> typeArgs, boolean dynamic) {
-
-		ParameterizedTypeRef ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
-		ptr.setDynamic(dynamic);
-		ptr.setDeclaredTypeAsText(declTypeName);
-
-		Type typeProxy = TypesFactory.eINSTANCE.createType();
-		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
-		ParserContextUtils.installProxy(resource, ptr, eRef, typeProxy, ptr.getDeclaredTypeAsText());
-		ptr.setDeclaredType(typeProxy);
-
-		if (typeArgs != null) {
-			ptr.getDeclaredTypeArgs().addAll(typeArgs);
-		}
-
-		return ptr;
+		return ParserContextUtils.createParameterizedTypeRef(resource, declTypeName, typeArgs, dynamic);
 	}
 }
