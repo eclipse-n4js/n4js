@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+	File "MyList.n4jsd" {
+		export external public class ~MyList<T> {
+		    public constructor(collection: Iterable<T> | ArrayLike<T> =);
+		
+		    public asImmutable(): this;
+		
+		    public <C>concat(...valuesOrCollections: Array<Iterable<C> | C>): MyList<T | C>;
+		}
+	}
+   END_SETUP
+ */
+
+// This test provokes a StackOverflowError in case an recursion is not handled properly
+
+import {MyList} from "MyList";
+
+// XPECT noerrors -->
+
+class C {}
+
+let l0 : MyList<C>;
+let l1 : MyList<C>;
+
+l0 = l1;
