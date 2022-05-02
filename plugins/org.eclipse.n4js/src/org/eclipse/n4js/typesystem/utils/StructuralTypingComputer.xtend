@@ -344,6 +344,9 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 				info.missingMembers.add(keywordProvider.keyword(right, info.rightStrategy) + " " + right.name);
 			}
 
+		} else if (left === right) {
+			// early exit to avoid recursion, see test GH-2344_Recursion_Bug_Type_Judgement.n4js.xt
+
 		} else {
 			// found a corresponding member
 			// -> make sure types are compatible
