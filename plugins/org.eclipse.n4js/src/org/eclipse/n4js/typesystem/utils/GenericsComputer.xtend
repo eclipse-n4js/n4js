@@ -24,7 +24,6 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
@@ -65,9 +64,6 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 
 	@Inject
 	private TypeCompareHelper typeCompareHelper;
-	
-	@Inject
-	private SimplifyComputer simplifyComputer;
 
 
 	/**
@@ -155,11 +151,6 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 
 		// resolve typeArg
 		var Object actualTypeArg = typeArg;
-		
-		// simplify to avoid recursion, see test GH-2344_Recursion_Bug_Type_Judgement.n4js.xt
-		actualTypeArg = if (actualTypeArg instanceof ComposedTypeRef)
-			simplifyComputer.simplify(G, actualTypeArg) else actualTypeArg;
-
 		while(G.hasSubstitutionFor(actualTypeArg)) {
 			val actualTypeArgCasted = actualTypeArg as TypeRef; // otherwise #hasSubstitutionFor() would not have returned true
 			val fromEnv = G.environment.get(actualTypeArgCasted.declaredType);
