@@ -96,6 +96,7 @@ public class DtsParser {
 		}
 	}
 
+	/** Parse the given .d.ts source code to an ANTLR {@link ParserRuleContext}. Intended for testing only. */
 	public static ProgramContext parseDts(CharSequence dtsCode) throws IOException {
 		CharStream fileContents = fromReader(new StringReader(dtsCode.toString()));
 		TypeScriptLexer lexer = new TypeScriptLexer(fileContents);
