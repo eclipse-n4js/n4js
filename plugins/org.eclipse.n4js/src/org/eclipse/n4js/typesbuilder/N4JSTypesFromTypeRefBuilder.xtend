@@ -56,10 +56,19 @@ public class N4JSTypesFromTypeRefBuilder {
 				if (memberInAST.isASTCallSignature()) {
 					if (structType.callSignature === null) {
 						structType.callSignature = memberForTModule as TStructMethod;
+					} else {
+						// error case: duplicate call signatures
+						// --> to avoid scoping from returning elements that are not contained in a resource (esp. in case of
+						// type parameters of generic call signatures), we have to add 'memberForTModule' as an ordinary member
+						structType.ownedMembers += memberForTModule;
 					}
 				} else if (memberInAST.isASTConstructSignature()) {
 					if (structType.constructSignature === null) {
 						structType.constructSignature = memberForTModule as TStructMethod;
+					} else {
+						// error case: duplicate construct signatures
+						// --> we have to add 'memberForTModule' as an ordinary member (see above)
+						structType.ownedMembers += memberForTModule;
 					}
 				} else {
 					structType.ownedMembers += memberForTModule;
