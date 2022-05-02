@@ -47,6 +47,18 @@ class DtsRealWorldIdeTest extends AbstractIdeTest {
 		]);
 	}
 
+	@Test
+	def void testNode_withColonInModuleSpecifier() {
+		assertDtsUsage('''
+			import * as url from "node:url"
+			let u: url.Url;
+			let v01: number = u.href;
+			let v02: string = u.href;
+		''', #[
+			"(Error, [2:18 - 2:24], string is not a subtype of number.)"
+		]);
+	}
+
 
 	private FileURI mainModuleURI = null;
 
