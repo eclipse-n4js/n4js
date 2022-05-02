@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
@@ -43,7 +44,8 @@ public class N4JSDocumentationProvider extends MultiLineCommentDocumentationProv
 
 	@Override
 	protected String findComment(EObject obj) {
-		final String fileExt = URIUtils.fileExtension(obj.eResource().getURI());
+		final URI uri = obj != null && obj.eResource() != null ? obj.eResource().getURI() : null;
+		final String fileExt = URIUtils.fileExtension(uri);
 		if (N4JSGlobals.DTS_FILE_EXTENSION.equals(fileExt)) {
 			EObject astNode = N4JSASTUtils.getCorrespondingASTNode(obj);
 			for (Adapter adapter : astNode.eAdapters()) {
