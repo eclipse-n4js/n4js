@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
@@ -62,14 +61,12 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
 public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script> {
-	private final URI srcFolder;
 
 	private DtsExportBuilder exportBuilder;
 
 	/** Constructor */
-	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
+	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
-		this.srcFolder = srcFolder;
 	}
 
 	/** @return the script that was created during visiting the parse tree */
@@ -149,13 +146,13 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		N4NamespaceDeclaration d = newModuleBuilder(srcFolder).consume(ctx);
+		N4NamespaceDeclaration d = newModuleBuilder().consume(ctx);
 		addAndHandleExported(ctx, d);
 	}
 
 	@Override
 	public void enterGlobalScopeAugmentation(GlobalScopeAugmentationContext ctx) {
-		newGlobalScopeAugmentationBuilder(srcFolder).consume(ctx);
+		newGlobalScopeAugmentationBuilder().consume(ctx);
 	}
 
 	@Override

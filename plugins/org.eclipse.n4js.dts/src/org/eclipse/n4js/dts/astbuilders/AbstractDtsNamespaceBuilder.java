@@ -51,6 +51,7 @@ import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.types.TNamespace;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
@@ -93,7 +94,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 
 		/** Constructor */
 		public DtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource, null);
+			super(tokenStream, resource);
 		}
 
 		@Override
@@ -107,8 +108,8 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			extends AbstractDtsNamespaceBuilder<ModuleDeclarationContext> {
 
 		/** Constructor */
-		public DtsModuleBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
-			super(tokenStream, resource, srcFolder);
+		public DtsModuleBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+			super(tokenStream, resource);
 		}
 	}
 
@@ -117,18 +118,14 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			extends AbstractDtsNamespaceBuilder<GlobalScopeAugmentationContext> {
 
 		/** Constructor */
-		public DtsGlobalScopeAugmentationBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource,
-				URI srcFolder) {
-			super(tokenStream, resource, srcFolder);
+		public DtsGlobalScopeAugmentationBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+			super(tokenStream, resource);
 		}
 	}
 
-	private final URI srcFolder;
-
 	/** Constructor */
-	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
+	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
-		this.srcFolder = srcFolder;
 	}
 
 	@Override
@@ -197,7 +194,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				}
 			}
 		} else {
-			N4NamespaceDeclaration md = newModuleBuilder(srcFolder).consume(ctx);
+			N4NamespaceDeclaration md = newModuleBuilder().consume(ctx);
 			if (md != null) {
 				addAndHandleExported(ctx, md);
 			}
@@ -220,12 +217,12 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		if (ctx.block() == null) {
 			return;
 		}
-		createNestedModule(ctx, ctx.block().statementList(), "_globalScopeAugmentation1");
+		createNestedModule(ctx, ctx.block().statementList(), "$globalScopeAugmentation");
 	}
 
 	/** Triggers the creation of a nested/virtual resource. */
 	private void createNestedModule(ParserRuleContext ctx, StatementListContext statements, String name) {
-		URI virtualUri = URI.createFileURI(name + ".d.ts").resolve(srcFolder);
+		URI virtualUri = URIUtils.createVirtualResourceURI(resource.getURI(), name + ".d.ts");
 
 		LoadResultInfoAdapter loadResultInfo = (LoadResultInfoAdapter) ILoadResultInfoAdapter.get(resource);
 		if (loadResultInfo == null) {

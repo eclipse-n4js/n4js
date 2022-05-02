@@ -31,7 +31,6 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
@@ -88,10 +87,10 @@ public class DtsParser {
 	}
 
 	/** Parses d.ts files */
-	public DtsParseResult parse(Reader reader, LazyLinkingResource resource, URI srcFolder) throws IOException {
+	public DtsParseResult parse(Reader reader, LazyLinkingResource resource) throws IOException {
 		NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
 		if (adapter == null) {
-			return parseScript(reader, resource, srcFolder);
+			return parseScript(reader, resource);
 		} else {
 			return parseNestedScript(resource, adapter);
 		}
@@ -107,7 +106,7 @@ public class DtsParser {
 		return program;
 	}
 
-	private DtsParseResult parseScript(Reader reader, LazyLinkingResource resource, URI srcFolder) throws IOException {
+	private DtsParseResult parseScript(Reader reader, LazyLinkingResource resource) throws IOException {
 		CharStream fileContents = fromReader(reader);
 		long millis = System.currentTimeMillis();
 
@@ -140,7 +139,7 @@ public class DtsParser {
 		stats.time = System.currentTimeMillis() - millis;
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource, srcFolder);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
 		Script root = astBuilder.consume(stats.tree);
 		RootNode rootNode = new RootNode(stats.tree);
 		Iterable<? extends INode> syntaxErrors = stats.errors;
@@ -171,7 +170,7 @@ public class DtsParser {
 		};
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource, null);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
 		Script root = astBuilder.consume(prgCtx);
 		RootNode rootNode = new RootNode(ctx);
 

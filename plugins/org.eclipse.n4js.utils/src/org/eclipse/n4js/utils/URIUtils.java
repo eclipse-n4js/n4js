@@ -14,9 +14,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.regex.Pattern;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.emf.common.CommonPlugin;
@@ -27,6 +29,12 @@ import org.eclipse.emf.ecore.resource.Resource;
  * Utilities for different URI types
  */
 public class URIUtils {
+
+	/** URI segment used for virtual resources. */
+	public static final String VIRTUAL_RESOURCE_SEGMENT = "$VIRTUAL$";
+
+	private static final Pattern VIRTUAL_RESOURCE_NAME_SPLIT_PATTERN = Pattern.compile(Pattern.quote("/"));
+
 	static final Map<String, Set<String>> extensionPrefixes = Map.of("ts", Set.of("d"));
 
 	/** Fix {@link URI#fileExtension()} w.r.t. unsupported d.ts file extension that includes dots */
@@ -223,5 +231,52 @@ public class URIUtils {
 	public static URI trimTrailingPathSeparator(URI uri) {
 		uri = uri.trimFragment();
 		return uri.hasTrailingPathSeparator() ? uri.trimSegments(1) : uri;
+	}
+
+	/**
+	 * Creates an URI for a {@link #VIRTUAL_RESOURCE_SEGMENT virtual resource}.
+	 *
+	 * @param hostResourceURI
+	 *            URI of the host resource.
+	 * @param virtualResourceName
+	 *            name of the virtual resource. May denote a path using <code>/</code> as separator, *not* the platform
+	 *            specific separator. Will be {@link URI#encodeSegment(String, boolean) URI-encoded}.
+	 */
+	public static URI createVirtualResourceURI(URI hostResourceURI, String virtualResourceName) {
+		String[] segments = VIRTUAL_RESOURCE_NAME_SPLIT_PATTERN.split(virtualResourceName);
+		for (int i = 0; i < segments.length; i++) {
+			segments[i] = URI.encodeSegment(segments[i], false);
+		}
+		return createVirtualResourceURI(hostResourceURI, segments);
+	}
+
+	/**
+	 * Creates an URI for a {@link #VIRTUAL_RESOURCE_SEGMENT virtual resource}.
+	 *
+	 * @param hostResourceURI
+	 *            URI of the host resource.
+	 * @param virtualResourcePathSegments
+	 *            path and name segments. Will not be encoded (caller has to do that).
+	 */
+	public static URI createVirtualResourceURI(URI hostResourceURI, String[] virtualResourcePathSegments) {
+		URI virtualURI = hostResourceURI.appendSegment(VIRTUAL_RESOURCE_SEGMENT);
+		virtualURI = virtualURI.appendSegments(virtualResourcePathSegments);
+		return virtualURI;
+	}
+
+	/**
+	 * Extracts the path of a {@link #VIRTUAL_RESOURCE_SEGMENT virtual resource} from its URI. The returned segments
+	 * will still be {@link URI#encodeSegment(String, boolean) URI-encoded}; caller has to decode them (if desired).
+	 */
+	public static String[] getPathOfVirtualResource(URI uri) {
+		String[] segs = uri.segments();
+		int len = segs.length;
+		for (int i = 0; i < len; i++) {
+			if (URIUtils.VIRTUAL_RESOURCE_SEGMENT.equals(segs[i])) {
+				String[] segsRemaining = Arrays.copyOfRange(segs, ++i, len);
+				return segsRemaining;
+			}
+		}
+		return null;
 	}
 }
