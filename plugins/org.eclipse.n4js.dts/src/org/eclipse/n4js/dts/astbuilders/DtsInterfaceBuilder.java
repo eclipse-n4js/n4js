@@ -96,7 +96,7 @@ public class DtsInterfaceBuilder
 	@Override
 	public void exitInterfaceDeclaration(InterfaceDeclarationContext ctx) {
 		if (result != null) {
-			ParserContextUtils.removeOverloadingFunctionDefs(result.getOwnedMembersRaw());
+			ParserContextUtils.removeOverloadingFunctionDefs(resource, result.getOwnedMembersRaw());
 		}
 	}
 

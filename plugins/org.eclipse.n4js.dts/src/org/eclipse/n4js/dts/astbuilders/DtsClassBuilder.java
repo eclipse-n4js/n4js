@@ -111,7 +111,7 @@ public class DtsClassBuilder
 	@Override
 	public void exitClassDeclaration(ClassDeclarationContext ctx) {
 		if (result != null) {
-			ParserContextUtils.removeOverloadingFunctionDefs(result.getOwnedMembersRaw());
+			ParserContextUtils.removeOverloadingFunctionDefs(resource, result.getOwnedMembersRaw());
 		}
 	}
 
