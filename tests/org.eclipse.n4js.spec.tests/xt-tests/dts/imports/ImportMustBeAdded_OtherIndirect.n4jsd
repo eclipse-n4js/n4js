@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-declare class ClsLocalName {}
+public class ClsLocalName {}
 export { ClsLocalName as ClsExportedName };
 
-export function F() : ClsLocalName;
+export external function F() : ClsLocalName;
