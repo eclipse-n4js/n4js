@@ -267,6 +267,18 @@ public class URIUtils {
 		return virtualURI;
 	}
 
+	/** @return <code>true</code> iff the given URI is a {@link #VIRTUAL_RESOURCE_SEGMENT virtual resource URI}. */
+	public static boolean isVirtualResourceURI(URI uri) {
+		String[] segs = uri.segments();
+		int len = segs.length;
+		for (int i = 0; i < len; i++) {
+			if (URIUtils.VIRTUAL_RESOURCE_SEGMENT.equals(segs[i])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Extracts the path of a {@link #VIRTUAL_RESOURCE_SEGMENT virtual resource} from its URI. The returned segments
 	 * will still be {@link URI#encodeSegment(String, boolean) URI-encoded}; caller has to decode them (if desired).
