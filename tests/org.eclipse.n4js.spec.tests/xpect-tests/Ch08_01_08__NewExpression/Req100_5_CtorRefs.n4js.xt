@@ -49,9 +49,9 @@ new G<D>().m(D);
 
 // XPECT warnings --> "The use of redundant subtypes is discouraged." at "B"
 let g: G<union{A,B}>;
-// XPECT errors --> "type{A} is not a subtype of constructor{A}." at "A"
+// XPECT errors --> "type{A} is not a subtype of constructor{union{A,B}}." at "A"
 g.m(A);
-// XPECT noerrors --> "constructor{B} is not a subtype of constructor{union{A,B}}." at "B"
+// XPECT errors --> "constructor{B} is not a subtype of constructor{union{A,B}}." at "B"
 g.m(B);
 
 function h(ctor: constructor{? extends A}) {

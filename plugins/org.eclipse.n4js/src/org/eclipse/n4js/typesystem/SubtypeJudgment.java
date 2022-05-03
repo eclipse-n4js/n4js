@@ -406,7 +406,8 @@ import com.google.common.collect.Iterables;
 					final TypeArgument rightArg = rightArgs.get(i);
 					final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
 
-					final Result currResult = checkTypeArgumentCompatibility(G, left, right, leftArg, rightArg,
+					RuleEnvironment G2 = wrap(G);
+					final Result currResult = checkTypeArgumentCompatibility(G2, left, right, leftArg, rightArg,
 							Optional.of(variance));
 					if (currResult.isFailure()) {
 						// ignore, since in structural case type args are only important iff they are actually used in
