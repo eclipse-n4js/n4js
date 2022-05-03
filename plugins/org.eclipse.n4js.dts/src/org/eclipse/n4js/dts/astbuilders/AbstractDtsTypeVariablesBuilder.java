@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParameterContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeParametersContext;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
@@ -28,7 +27,6 @@ import org.eclipse.n4js.n4JS.N4TypeVariable;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Abstract base class for builders creating type variables from parse tree elements.
@@ -42,8 +40,8 @@ public abstract class AbstractDtsTypeVariablesBuilder<T extends EObject>
 	public static final class DtsN4TypeVariablesBuilder extends AbstractDtsTypeVariablesBuilder<N4TypeVariable> {
 
 		/** Constructor */
-		public DtsN4TypeVariablesBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+		public DtsN4TypeVariablesBuilder(AbstractDtsBuilder<?, ?> parent) {
+			super(parent);
 		}
 
 		@Override
@@ -71,8 +69,8 @@ public abstract class AbstractDtsTypeVariablesBuilder<T extends EObject>
 	public static final class DtsTypeVariablesBuilder extends AbstractDtsTypeVariablesBuilder<TypeVariable> {
 
 		/** Constructor */
-		public DtsTypeVariablesBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+		public DtsTypeVariablesBuilder(AbstractDtsBuilder<?, ?> parent) {
+			super(parent);
 		}
 
 		@Override
@@ -94,8 +92,8 @@ public abstract class AbstractDtsTypeVariablesBuilder<T extends EObject>
 	}
 
 	/** Constructor */
-	public AbstractDtsTypeVariablesBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public AbstractDtsTypeVariablesBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override

@@ -89,11 +89,10 @@ Script: true
      FormalParameter: false, v, false
       TypeReferenceNode
        ParameterizedTypeRef: OFF, false, false, string, ?~, false, false
-  N4ClassDeclaration: [external, public], KD, ~
-   N4FieldDeclaration: [public], false
-    TypeReferenceNode
-     ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
-    LiteralOrComputedPropertyName: false, identifier, field
+  ExportDeclaration: false, UNKNOWN
+   N4ClassDeclaration: [external, public], KD, ~
+    N4FieldDeclaration: [public], false
+     TypeReferenceNode
+      ParameterizedTypeRef: OFF, false, false, number, ?~, false, false
+     LiteralOrComputedPropertyName: false, identifier, field
 --- */
-
-

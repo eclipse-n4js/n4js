@@ -54,24 +54,20 @@ class ModuleNameComputer {
 	 * Please note there is also a special treatment for Xpect test files that may have a file extension
 	 * like {@code ".n4js.xt"}. The calculation will handle this as a hole file extension, so {@code ".n4js"} will be pruned, too.
 	 */
-	def public getQualifiedModuleName(Notifier context, URI uri) {
-		val sourceContainer = workspaceAccess.findSourceFolderContaining(context, uri);
+	def public QualifiedName getQualifiedModuleName(Notifier context, URI uri) {
 		val fileExtension = URIUtils.fileExtension(uri);
-		if (sourceContainer !== null) {
-			val location = sourceContainer.pathAsFileURI.withTrailingPathDelimiter.toURI
-			if(uri.uriStartsWith(location)) {
-				var relativeURI = uri.deresolve(location)
-				if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == fileExtension.toLowerCase)) {
-					relativeURI = URIUtils.trimFileExtension(URIUtils.trimFileExtension(relativeURI));
-				} else {
-					relativeURI = URIUtils.trimFileExtension(relativeURI);
-				}
-				val segments = relativeURI.segments;
-				for (var i = 0; i < segments.length; i++) {
-					segments.set(i, URI.decode(segments.get(i)));
-				}
-				return QualifiedName.create(segments);
+		var relativeURI = getRelativeURI(context, uri);
+		if (relativeURI !== null) {
+			if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == fileExtension.toLowerCase)) {
+				relativeURI = URIUtils.trimFileExtension(URIUtils.trimFileExtension(relativeURI));
+			} else {
+				relativeURI = URIUtils.trimFileExtension(relativeURI);
 			}
+			val segments = relativeURI.segments;
+			for (var i = 0; i < segments.length; i++) {
+				segments.set(i, URI.decode(segments.get(i)));
+			}
+			return QualifiedName.create(segments);
 		} else if (uri.segmentCount == 1 && fileExtension !== null) {
 			// Special case of synthesized test resources where we don't have a source container.
 			// In this case we deal with top-level test resources.
@@ -82,6 +78,24 @@ class ModuleNameComputer {
 			}
 		}
 		return uri.createDefaultQualifiedName
+	}
+
+	def private URI getRelativeURI(Notifier context, URI uri) {
+		val virtualResourcePath = URIUtils.getPathOfVirtualResource(uri);
+		if (virtualResourcePath !== null) {
+			// special case: virtual resources
+			return URI.createHierarchicalURI("file", null, null, virtualResourcePath, null, null);
+		}
+		// standard case:
+		val sourceContainer = workspaceAccess.findSourceFolderContaining(context, uri);
+		if (sourceContainer !== null) {
+			val location = sourceContainer.pathAsFileURI.withTrailingPathDelimiter.toURI;
+			if(uri.uriStartsWith(location)) {
+				val relativeURI = uri.deresolve(location);
+				return relativeURI;
+			}
+		}
+		return null;
 	}
 
 	/** Called only for URIs without container, e.g. from tests, or built-ins. Hardcoded values should be fine for those cases.*/

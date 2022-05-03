@@ -16,15 +16,15 @@
 			Folder "src" {
 
 				// Because indirect exports (i.e. export declarations separate from the declaration of
-				// the element being exported) are not allowed in N4JS[D], we have to use a .d.ts file
+				// the element being exported) are not allowed in N4JS, we have to use an N4JSD file
 				// for testing this:
-				File "Other.d.ts" { from="./ImportMustBeAdded_OtherIndirect.d.ts" }
+				File "Other.n4jsd" { from="./ImportMustBeAdded_OtherIndirect.n4jsd" }
 
 				ThisFile {}
 			}
 			Folder "src-gen" {
 
-				// Because the N4JS transpiler does not copy .d.ts files from source to output folder,
+				// Because the N4JS transpiler does not emit .d.ts files for .n4jsd files,
 				// we have to copy the .d.ts file to the output folder manually:
 				File "Other.d.ts" { from="./ImportMustBeAdded_OtherIndirect.d.ts" }
 			}

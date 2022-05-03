@@ -41,19 +41,24 @@ declare namespace "myActualModule" {
 Script: true
   ExportDeclaration: false, UNKNOWN
    N4NamespaceDeclaration: [public], myNamespace
-    N4NamespaceDeclaration: [private], legacyModuleInNamespace
+    ExportDeclaration: false, UNKNOWN
+     N4NamespaceDeclaration: [public], legacyModuleInNamespace
     ExportDeclaration: false, UNKNOWN
      N4NamespaceDeclaration: [public], legacyModuleInNamespaceExported
   ExportDeclaration: false, UNKNOWN
    N4NamespaceDeclaration: [public], myLegacyModule
-    N4NamespaceDeclaration: [private], namespaceInLegacyModule
+    ExportDeclaration: false, UNKNOWN
+     N4NamespaceDeclaration: [public], namespaceInLegacyModule
     ExportDeclaration: false, UNKNOWN
      N4NamespaceDeclaration: [public], namespaceInLegacyModuleExported
-  N4NamespaceDeclaration: [public], "myActualModule"
-   N4NamespaceDeclaration: [private], namespaceInActualModule
-   ExportDeclaration: false, UNKNOWN
-    N4NamespaceDeclaration: [public], namespaceInActualModuleExported
-   N4NamespaceDeclaration: [private], legacyModuleInActualModule
-   ExportDeclaration: false, UNKNOWN
-    N4NamespaceDeclaration: [public], legacyModuleInActualModuleExported
+  ExportDeclaration: false, UNKNOWN
+   N4NamespaceDeclaration: [public], "myActualModule"
+    ExportDeclaration: false, UNKNOWN
+     N4NamespaceDeclaration: [public], namespaceInActualModule
+    ExportDeclaration: false, UNKNOWN
+     N4NamespaceDeclaration: [public], namespaceInActualModuleExported
+    ExportDeclaration: false, UNKNOWN
+     N4NamespaceDeclaration: [public], legacyModuleInActualModule
+    ExportDeclaration: false, UNKNOWN
+     N4NamespaceDeclaration: [public], legacyModuleInActualModuleExported
 --- */

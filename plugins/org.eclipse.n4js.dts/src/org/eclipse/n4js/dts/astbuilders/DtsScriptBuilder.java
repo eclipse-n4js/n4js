@@ -23,12 +23,13 @@ import java.util.List;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.DtsTokenStream;
+import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ExportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
@@ -36,6 +37,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
+import org.eclipse.n4js.dts.utils.DtsMode;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.dts.utils.TripleSlashDirective;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
@@ -59,14 +61,51 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  * Builder to create {@link Script} elements and all its children from d.ts parse tree elements
  */
 public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script> {
-	private final URI srcFolder;
 
-	private DtsExportBuilder exportBuilder;
+	private NestedResourceAdapter nestedResourceAdapter;
+	private String exportEqualsIdentifier;
+	private int globalScopeAugmentationCounter = 0;
 
 	/** Constructor */
-	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
+	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
-		this.srcFolder = srcFolder;
+	}
+
+	/** Returns true iff this resource is nested/virtual */
+	protected boolean isNested() {
+		return getNestedResourceAdapter() != null;
+	}
+
+	/**
+	 * Returns the {@link NestedResourceAdapter} installed on {@link AbstractDtsBuilder#resource} or <code>null</code>.
+	 */
+	public NestedResourceAdapter getNestedResourceAdapter() {
+		return nestedResourceAdapter;
+	}
+
+	/**
+	 * Return true iff this module uses an 'export equals' statement to export elements like in the following pattern:
+	 *
+	 * <pre>
+	 *  declare function N(): void
+	 *
+	 *  declare namespace N {
+	 *  }
+	 *  export = N;
+	 * </pre>
+	 */
+	public boolean isExportedEquals() {
+		return getExportEqualsIdentifier() != null;
+	}
+
+	/** Returns the namespace name iff there exists an export equals statement or null otherwise. */
+	public String getExportEqualsIdentifier() {
+		return exportEqualsIdentifier;
+	}
+
+	/** Increments and returns the counter for <code>global { ... }</code> declarations in this script. */
+	public int incrementAndGetGlobalScopeAugmentationCounter() {
+		return ++globalScopeAugmentationCounter;
 	}
 
 	/** @return the script that was created during visiting the parse tree */
@@ -97,6 +136,21 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	public void enterProgram(ProgramContext ctx) {
 		result = N4JSFactory.eINSTANCE.createScript();
 
+		nestedResourceAdapter = NestedResourceAdapter.get(resource);
+		exportEqualsIdentifier = DtsExportBuilder.findExportEqualsIdentifier(ctx);
+
+		// add @@Global (if necessary)
+		if (isNested()) {
+			if (getNestedResourceAdapter().getContext() instanceof GlobalScopeAugmentationContext) {
+				ParserContextUtils.makeGlobal(result);
+			}
+		} else {
+			DtsMode dtsMode = ParserContextUtils.getDtsMode(ctx);
+			if (dtsMode == DtsMode.SCRIPT) {
+				ParserContextUtils.makeGlobal(result);
+			}
+		}
+
 		List<TripleSlashDirective> tripleSlashDirectives = tokenStream.getTripleSlashDirectives();
 		List<ImportDeclaration> importDecls = newImportBuilder().consumeTripleSlashDirectives(tripleSlashDirectives);
 		result.getScriptElements().addAll(importDecls);
@@ -104,7 +158,6 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 		if (ctx.statementList() != null) {
 			walker.enqueue(ctx.statementList().statement());
 		}
-		exportBuilder = new DtsExportBuilder(tokenStream, resource, ctx);
 	}
 
 	@Override
@@ -121,7 +174,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void enterExportStatement(ExportStatementContext ctx) {
-		ExportDeclaration ed = exportBuilder.consume(ctx);
+		ExportDeclaration ed = newExportBuilder().consume(ctx);
 		addToScript(ed);
 	}
 
@@ -133,8 +186,13 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void enterModuleDeclaration(ModuleDeclarationContext ctx) {
-		N4NamespaceDeclaration d = newModuleBuilder(srcFolder).consume(ctx);
+		N4NamespaceDeclaration d = newModuleBuilder().consume(ctx);
 		addAndHandleExported(ctx, d);
+	}
+
+	@Override
+	public void enterGlobalScopeAugmentation(GlobalScopeAugmentationContext ctx) {
+		newGlobalScopeAugmentationBuilder().consume(ctx);
 	}
 
 	@Override
@@ -174,7 +232,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
-		if (exportBuilder.isExportedEquals()) {
+		if (isExportedEquals()) {
 			// TODO check for name
 			transformExportEquals(elem);
 		} else {

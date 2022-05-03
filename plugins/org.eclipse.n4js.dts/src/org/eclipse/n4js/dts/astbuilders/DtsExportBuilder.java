@@ -14,7 +14,6 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_exportStatement;
 
 import java.util.Set;
 
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ExportAsNamespaceContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ExportElementAsDefaultContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ExportElementDirectlyContext;
@@ -36,18 +35,15 @@ import org.eclipse.n4js.n4JS.NamedExportSpecifier;
 import org.eclipse.n4js.n4JS.NamespaceExportSpecifier;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.utils.UtilN4;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
  */
 public class DtsExportBuilder extends AbstractDtsModuleRefBuilder<ExportStatementContext, ExportDeclaration> {
-	private final String exportEqualsIdentifier;
 
 	/** Constructor */
-	public DtsExportBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, ProgramContext ctx) {
-		super(tokenStream, resource);
-		this.exportEqualsIdentifier = findExportEqualsIdentifier(ctx);
+	public DtsExportBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override
@@ -68,26 +64,6 @@ public class DtsExportBuilder extends AbstractDtsModuleRefBuilder<ExportStatemen
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Return true iff this module uses an 'export equals' statement to export elements like in the following pattern:
-	 *
-	 * <pre>
-	 *  declare function N(): void
-	 *
-	 *  declare namespace N {
-	 *  }
-	 *  export = N;
-	 * </pre>
-	 */
-	public boolean isExportedEquals() {
-		return getExportEqualsIdentifier() != null;
-	}
-
-	/** Returns the namespace name iff there exists an export equals statement or null otherwise. */
-	public String getExportEqualsIdentifier() {
-		return exportEqualsIdentifier;
 	}
 
 	/**

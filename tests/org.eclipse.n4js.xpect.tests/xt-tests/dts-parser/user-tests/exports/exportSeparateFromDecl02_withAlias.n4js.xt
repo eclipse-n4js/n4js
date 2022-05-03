@@ -25,8 +25,8 @@
 // XPECT noerrors -->
 import { ClsAlias } from "tslib";
 
+// note: even though ClsDts is not explicitly/directly exported, it can be imported!
 // XPECT errors ---
-// "Element ClsDts is not exported." at "ClsDts"
 // "Duplicate named import statement with local name ClsAlias and imported module tslib." at "import { ClsDts } from "tslib";"
 // ---
 import { ClsDts } from "tslib";

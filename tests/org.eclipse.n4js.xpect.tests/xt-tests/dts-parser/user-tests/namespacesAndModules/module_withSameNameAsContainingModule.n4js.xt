@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "other.d.ts" {
+
+		// note: DtsMode of other.d.ts is MODULE
+
+		export function foo(): number;
+
+		declare module "other" {
+			class Cls {
+				field: number;
+			}
+		}
+	}
+
+	END_SETUP
+ */
+
+// NOTE: in TypeScript, the above .d.ts file is accepted without error,
+// but it is not possible to import anything from "other", only from "./other"
+
+// FIXME should work:
+// import { foo } from "other"
+
+// XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/src/other.d.ts, test-project/src/other.d.ts/$VIRTUAL$/other.d.ts." at ""other""
+import { Cls } from "other"

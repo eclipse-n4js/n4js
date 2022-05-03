@@ -23,8 +23,6 @@
 	END_SETUP
  */
 
-import "other"
-
 // XPECT noerrors -->
 import { Cls } from "node:someModule"
 // XPECT errors --> "Cannot resolve plain module specifier (without project name as first segment): no matching module found." at ""someModule""

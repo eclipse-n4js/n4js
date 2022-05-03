@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "def.d.ts" {
+		export var dummy: any; // <-- this makes this file a module!
+
+		global {
+			export var v: number;
+			export let l: number;
+			export const c: number;
+			export function foo(): number;
+			export interface Ifc { field: number; }
+			export class Cls { field: number; }
+			enum Color { R, G, B }
+		}
+	}
+
+   END_SETUP
+ */
+
+// XPECT noerrors -->
+// XPECT type of 'v01' --> number
+let v01 = v;
+
+// XPECT noerrors -->
+// XPECT type of 'v02' --> number
+let v02 = l;
+
+// XPECT noerrors -->
+// XPECT type of 'v03' --> number
+let v03 = c;
+
+// XPECT noerrors -->
+// XPECT type of 'v04' --> number
+let v04 = foo();
+
+// XPECT noerrors -->
+let ifc: Ifc;
+// XPECT noerrors -->
+// XPECT type of 'v05' --> number
+let v05 = ifc.field;
+
+// XPECT noerrors -->
+// XPECT type of 'v06' --> number
+let v06 = new Cls().field;
+
+// XPECT noerrors -->
+// XPECT type of 'v07' --> Color
+let v07 = Color.R;

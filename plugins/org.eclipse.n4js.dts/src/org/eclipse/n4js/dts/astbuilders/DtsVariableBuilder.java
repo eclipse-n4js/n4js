@@ -18,7 +18,6 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_variableDeclarationList
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.BindingPatternBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
@@ -33,7 +32,6 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
@@ -43,8 +41,8 @@ public class DtsVariableBuilder extends AbstractDtsBuilderWithHelpers<VariableSt
 	private boolean parentIsNamespace;
 
 	/** Constructor */
-	public DtsVariableBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public DtsVariableBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override

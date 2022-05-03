@@ -20,7 +20,7 @@ import org.junit.Test
 import static org.junit.Assert.*
 
 /**
- *
+ * Testing .d.ts support with real-world type definitions.
  */
 class DtsRealWorldIdeTest extends AbstractIdeTest {
 
@@ -39,6 +39,18 @@ class DtsRealWorldIdeTest extends AbstractIdeTest {
 	def void testNode() {
 		assertDtsUsage('''
 			import * as url from "url"
+			let u: url.Url;
+			let v01: number = u.href;
+			let v02: string = u.href;
+		''', #[
+			"(Error, [2:18 - 2:24], string is not a subtype of number.)"
+		]);
+	}
+
+	@Test
+	def void testNode_withColonInModuleSpecifier() {
+		assertDtsUsage('''
+			import * as url from "node:url"
 			let u: url.Url;
 			let v01: number = u.href;
 			let v02: string = u.href;

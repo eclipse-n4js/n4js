@@ -24,16 +24,17 @@ import java.util.Set;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.LoadResultInfoAdapter;
 import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.FunctionDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InterfaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.VariableStatementContext;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
@@ -49,8 +50,8 @@ import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeAliasDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.types.TNamespace;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Base class of the builders for namespace and module declarations.
@@ -90,8 +91,8 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			extends AbstractDtsNamespaceBuilder<NamespaceDeclarationContext> {
 
 		/** Constructor */
-		public DtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource, null);
+		public DtsNamespaceBuilder(AbstractDtsBuilder<?, ?> parent) {
+			super(parent);
 		}
 
 		@Override
@@ -105,17 +106,24 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			extends AbstractDtsNamespaceBuilder<ModuleDeclarationContext> {
 
 		/** Constructor */
-		public DtsModuleBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
-			super(tokenStream, resource, srcFolder);
+		public DtsModuleBuilder(AbstractDtsBuilder<?, ?> parent) {
+			super(parent);
 		}
 	}
 
-	private final URI srcFolder;
+	/** Builder for global scope augmentations. */
+	public static class DtsGlobalScopeAugmentationBuilder
+			extends AbstractDtsNamespaceBuilder<GlobalScopeAugmentationContext> {
+
+		/** Constructor */
+		public DtsGlobalScopeAugmentationBuilder(AbstractDtsBuilder<?, ?> parent) {
+			super(parent);
+		}
+	}
 
 	/** Constructor */
-	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource, URI srcFolder) {
-		super(tokenStream, resource);
-		this.srcFolder = srcFolder;
+	public AbstractDtsNamespaceBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override
@@ -162,7 +170,18 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 							new int[] { RULE_namespaceDeclaration, RULE_moduleDeclaration })) {
 
 						// nested modules inside namespaces or nested modules are unsupported by TypeScript
-						createNestedModule(ctx, ParserContextUtils.trimAndUnescapeStringLiteral(strLit));
+						if (ctx.block() != null) {
+							createNestedModule(ctx, ctx.block().statementList(),
+									ParserContextUtils.trimAndUnescapeStringLiteral(strLit));
+
+							// declared modules may contain global state augmentations
+							// (to avoid creating virtual resources from within a virtual resource,
+							// we have to handle this ahead of time!)
+							for (GlobalScopeAugmentationContext gsaCtx : ParserContextUtils.getGlobalScopeAugmentations(
+									ctx)) {
+								enterGlobalScopeAugmentation(gsaCtx);
+							}
+						}
 					}
 					result = null;
 				} else if (identifier != null) {
@@ -173,22 +192,43 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 				}
 			}
 		} else {
-			N4NamespaceDeclaration md = newModuleBuilder(srcFolder).consume(ctx);
+			N4NamespaceDeclaration md = newModuleBuilder().consume(ctx);
 			if (md != null) {
 				addAndHandleExported(ctx, md);
 			}
 		}
 	}
 
+	@Override
+	public void enterGlobalScopeAugmentation(GlobalScopeAugmentationContext ctx) {
+		// note: global scope augmentations may only appear on top-level of files with DtsMode MODULE or
+		// as direct children of declared modules
+		if (result != null) {
+			// nested inside a namespace or "legacy module" --> ignore
+			return;
+		}
+		if (getScriptBuilder().isNested()) {
+			// we are in a virtual resource
+			// -> ignore this ctx here, because it was handled ahead of time in #enterModuleDeclaration()
+			return;
+		}
+		if (ctx.block() == null) {
+			return;
+		}
+		String resName = URIUtils.SPECIAL_SEGMENT_MARKER + "globalScopeAugmentation"
+				+ getScriptBuilder().incrementAndGetGlobalScopeAugmentationCounter();
+		createNestedModule(ctx, ctx.block().statementList(), resName);
+	}
+
 	/** Triggers the creation of a nested/virtual resource. */
-	private void createNestedModule(ModuleDeclarationContext ctx, String name) {
-		URI virtualUri = URI.createFileURI(name + ".d.ts").resolve(srcFolder);
+	private void createNestedModule(ParserRuleContext ctx, StatementListContext statements, String name) {
+		URI virtualUri = URIUtils.createVirtualResourceURI(resource.getURI(), name + ".d.ts");
 
 		LoadResultInfoAdapter loadResultInfo = (LoadResultInfoAdapter) ILoadResultInfoAdapter.get(resource);
 		if (loadResultInfo == null) {
 			loadResultInfo = LoadResultInfoAdapter.getOrInstall(resource);
 		}
-		NestedResourceAdapter nra = new NestedResourceAdapter(resource.getURI(), tokenStream, ctx);
+		NestedResourceAdapter nra = new NestedResourceAdapter(resource.getURI(), tokenStream, ctx, statements);
 		loadResultInfo.addNestedResource(virtualUri, nra);
 	}
 
