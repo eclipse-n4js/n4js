@@ -97,6 +97,6 @@ class PerformanceSubtypeTest extends AbstractTypesystemForPerformanceTest {
 			let i1: I<string>;
 			let i2: I<number>;
 			i1 = i2; // <-- took extremely long
-		'''.assertValidate(0)
+		'''.assertValidate(0) // 0 errors since T is never used and I is structural
 	}
 }
