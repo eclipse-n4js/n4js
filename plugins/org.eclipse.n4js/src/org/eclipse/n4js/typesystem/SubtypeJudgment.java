@@ -392,6 +392,35 @@ import com.google.common.collect.Iterables;
 				|| (leftDeclType == numberType(G) && rightDeclType == intType(G))) {
 			return success(); // int <: number AND number <: int (for now, int and number are synonymous)
 		}
+
+		if (leftDeclType == rightDeclType) {
+			final List<TypeArgument> leftArgs = left.getTypeArgsWithDefaults();
+			final List<TypeArgument> rightArgs = right.getTypeArgsWithDefaults();
+			final int leftArgsCount = leftArgs.size();
+			final int rightArgsCount = rightArgs.size();
+			if (leftArgsCount > 0 && leftArgsCount <= rightArgsCount) { // ignore raw types
+				final int len = Math.min(Math.min(leftArgsCount, rightArgsCount), rightDeclType.getTypeVars().size());
+				boolean failed = false;
+				for (int i = 0; i < len; i++) {
+					final TypeArgument leftArg = leftArgs.get(i);
+					final TypeArgument rightArg = rightArgs.get(i);
+					final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
+
+					final Result currResult = checkTypeArgumentCompatibility(G, left, right, leftArg, rightArg,
+							Optional.of(variance));
+					if (currResult.isFailure()) {
+						// ignore, since in structural case type args are only important iff they are actually used in
+						// members
+						failed = true;
+						break;
+					}
+				}
+				if (!failed) {
+					return success();
+				}
+			}
+		}
+
 		if (leftDeclType instanceof TEnum) {
 			EnumKind enumKind = N4JSLanguageUtils.getEnumKind((TEnum) leftDeclType);
 			if (rightDeclType == n4EnumType(G)
