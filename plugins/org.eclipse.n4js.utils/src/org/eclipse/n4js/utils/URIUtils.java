@@ -30,8 +30,11 @@ import org.eclipse.emf.ecore.resource.Resource;
  */
 public class URIUtils {
 
+	/** Character used to denote special segments in {@link URI}s. */
+	public static final char SPECIAL_SEGMENT_MARKER = '$';
+
 	/** URI segment used for virtual resources. */
-	public static final String VIRTUAL_RESOURCE_SEGMENT = "$VIRTUAL$";
+	public static final String VIRTUAL_RESOURCE_SEGMENT = SPECIAL_SEGMENT_MARKER + "VIRTUAL" + SPECIAL_SEGMENT_MARKER;
 
 	private static final Pattern VIRTUAL_RESOURCE_NAME_SPLIT_PATTERN = Pattern.compile(Pattern.quote("/"));
 

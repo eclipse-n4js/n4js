@@ -215,7 +215,9 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 		if (ctx.block() == null) {
 			return;
 		}
-		createNestedModule(ctx, ctx.block().statementList(), "$globalScopeAugmentation");
+		String resName = URIUtils.SPECIAL_SEGMENT_MARKER + "globalScopeAugmentation"
+				+ getScriptBuilder().incrementAndGetGlobalScopeAugmentationCounter();
+		createNestedModule(ctx, ctx.block().statementList(), resName);
 	}
 
 	/** Triggers the creation of a nested/virtual resource. */

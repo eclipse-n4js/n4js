@@ -63,6 +63,7 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script> {
 
 	private String exportEqualsIdentifier;
+	private int globalScopeAugmentationCounter = 0;
 
 	/** Constructor */
 	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
@@ -87,6 +88,11 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	/** Returns the namespace name iff there exists an export equals statement or null otherwise. */
 	public String getExportEqualsIdentifier() {
 		return exportEqualsIdentifier;
+	}
+
+	/** Increments and returns the counter for <code>global { ... }</code> declarations in this script. */
+	public int incrementAndGetGlobalScopeAugmentationCounter() {
+		return ++globalScopeAugmentationCounter;
 	}
 
 	/** @return the script that was created during visiting the parse tree */
