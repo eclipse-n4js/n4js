@@ -21,7 +21,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.ManualParseTreeWalker;
-import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParserBaseListener;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsFormalParametersBuilder;
 import org.eclipse.n4js.dts.astbuilders.AbstractDtsFormalParametersBuilder.DtsTFormalParametersBuilder;
@@ -147,11 +146,6 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 			}
 		}
 		obj.eAdapters().add(new DtsParseTreeNodeInfo(tokenStream, ctx));
-	}
-
-	/** Returns true iff this resource is nested/virtual */
-	protected boolean isNested() {
-		return NestedResourceAdapter.isInstalled(resource);
 	}
 
 	/***/

@@ -62,12 +62,25 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  */
 public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script> {
 
+	private NestedResourceAdapter nestedResourceAdapter;
 	private String exportEqualsIdentifier;
 	private int globalScopeAugmentationCounter = 0;
 
 	/** Constructor */
 	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
+	}
+
+	/** Returns true iff this resource is nested/virtual */
+	protected boolean isNested() {
+		return getNestedResourceAdapter() != null;
+	}
+
+	/**
+	 * Returns the {@link NestedResourceAdapter} installed on {@link AbstractDtsBuilder#resource} or <code>null</code>.
+	 */
+	public NestedResourceAdapter getNestedResourceAdapter() {
+		return nestedResourceAdapter;
 	}
 
 	/**
@@ -123,12 +136,12 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	public void enterProgram(ProgramContext ctx) {
 		result = N4JSFactory.eINSTANCE.createScript();
 
+		nestedResourceAdapter = NestedResourceAdapter.get(resource);
 		exportEqualsIdentifier = DtsExportBuilder.findExportEqualsIdentifier(ctx);
 
 		// add @@Global (if necessary)
 		if (isNested()) {
-			NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
-			if (adapter.getContext() instanceof GlobalScopeAugmentationContext) {
+			if (getNestedResourceAdapter().getContext() instanceof GlobalScopeAugmentationContext) {
 				ParserContextUtils.makeGlobal(result);
 			}
 		} else {

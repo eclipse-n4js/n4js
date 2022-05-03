@@ -207,7 +207,7 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			// nested inside a namespace or "legacy module" --> ignore
 			return;
 		}
-		if (isNested()) {
+		if (getScriptBuilder().isNested()) {
 			// we are in a virtual resource
 			// -> ignore this ctx here, because it was handled ahead of time in #enterModuleDeclaration()
 			return;
