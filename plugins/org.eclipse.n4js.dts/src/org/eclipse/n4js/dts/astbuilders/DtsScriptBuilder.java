@@ -62,11 +62,31 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
  */
 public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script> {
 
-	private DtsExportBuilder exportBuilder;
+	private String exportEqualsIdentifier;
 
 	/** Constructor */
 	public DtsScriptBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
 		super(tokenStream, resource);
+	}
+
+	/**
+	 * Return true iff this module uses an 'export equals' statement to export elements like in the following pattern:
+	 *
+	 * <pre>
+	 *  declare function N(): void
+	 *
+	 *  declare namespace N {
+	 *  }
+	 *  export = N;
+	 * </pre>
+	 */
+	public boolean isExportedEquals() {
+		return getExportEqualsIdentifier() != null;
+	}
+
+	/** Returns the namespace name iff there exists an export equals statement or null otherwise. */
+	public String getExportEqualsIdentifier() {
+		return exportEqualsIdentifier;
 	}
 
 	/** @return the script that was created during visiting the parse tree */
@@ -97,6 +117,8 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	public void enterProgram(ProgramContext ctx) {
 		result = N4JSFactory.eINSTANCE.createScript();
 
+		exportEqualsIdentifier = DtsExportBuilder.findExportEqualsIdentifier(ctx);
+
 		// add @@Global (if necessary)
 		if (isNested()) {
 			NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
@@ -117,7 +139,6 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 		if (ctx.statementList() != null) {
 			walker.enqueue(ctx.statementList().statement());
 		}
-		exportBuilder = new DtsExportBuilder(tokenStream, resource, ctx);
 	}
 
 	@Override
@@ -134,7 +155,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	@Override
 	public void enterExportStatement(ExportStatementContext ctx) {
-		ExportDeclaration ed = exportBuilder.consume(ctx);
+		ExportDeclaration ed = newExportBuilder().consume(ctx);
 		addToScript(ed);
 	}
 
@@ -192,7 +213,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 	}
 
 	private void addAndHandleExported(ParserRuleContext ctx, ExportableElement elem) {
-		if (exportBuilder.isExportedEquals()) {
+		if (isExportedEquals()) {
 			// TODO check for name
 			transformExportEquals(elem);
 		} else {

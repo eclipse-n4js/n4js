@@ -39,6 +39,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 		extends TypeScriptParserBaseListener {
 
+	/** Parent builder or <code>null</code>. */
+	protected final AbstractDtsBuilder<?, ?> parent;
 	/** Token stream for access to other lexer channels */
 	protected final DtsTokenStream tokenStream;
 	/** Current resource */
@@ -51,10 +53,30 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 	/** result value of {@link #consume(ParserRuleContext)} */
 	protected R result = getDefaultResult();
 
-	/** Constructor */
+	/** Creates a new child builder for the given parent. */
+	public AbstractDtsBuilder(AbstractDtsBuilder<?, ?> parent) {
+		this(parent, parent.tokenStream, parent.resource);
+	}
+
+	/** Creates a new root builder without parent. */
 	public AbstractDtsBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
+		this(null, tokenStream, resource);
+	}
+
+	private AbstractDtsBuilder(AbstractDtsBuilder<?, ?> parent, DtsTokenStream tokenStream,
+			LazyLinkingResource resource) {
+		this.parent = parent;
 		this.tokenStream = tokenStream;
 		this.resource = resource;
+	}
+
+	/** @return the root {@link DtsScriptBuilder} of this builder hierarchy. */
+	protected DtsScriptBuilder getScriptBuilder() {
+		AbstractDtsBuilder<?, ?> curr = this;
+		while (curr.parent != null) {
+			curr = curr.parent;
+		}
+		return (DtsScriptBuilder) curr;
 	}
 
 	/** Defines the subclass' rule ids of parser rules to visit as default */
@@ -134,77 +156,82 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 
 	/***/
 	protected final DtsImportBuilder newImportBuilder() {
-		return new DtsImportBuilder(tokenStream, resource);
+		return new DtsImportBuilder(this);
+	}
+
+	/***/
+	protected final DtsExportBuilder newExportBuilder() {
+		return new DtsExportBuilder(this);
 	}
 
 	/***/
 	protected final DtsClassBuilder newClassBuilder() {
-		return new DtsClassBuilder(tokenStream, resource);
+		return new DtsClassBuilder(this);
 	}
 
 	/***/
 	protected final DtsInterfaceBuilder newInterfaceBuilder() {
-		return new DtsInterfaceBuilder(tokenStream, resource);
+		return new DtsInterfaceBuilder(this);
 	}
 
 	/***/
 	protected final DtsEnumBuilder newEnumBuilder() {
-		return new DtsEnumBuilder(tokenStream, resource);
+		return new DtsEnumBuilder(this);
 	}
 
 	/***/
 	protected final DtsNamespaceBuilder newNamespaceBuilder() {
-		return new DtsNamespaceBuilder(tokenStream, resource);
+		return new DtsNamespaceBuilder(this);
 	}
 
 	/***/
 	protected final DtsModuleBuilder newModuleBuilder() {
-		return new DtsModuleBuilder(tokenStream, resource);
+		return new DtsModuleBuilder(this);
 	}
 
 	/***/
 	protected final DtsGlobalScopeAugmentationBuilder newGlobalScopeAugmentationBuilder() {
-		return new DtsGlobalScopeAugmentationBuilder(tokenStream, resource);
+		return new DtsGlobalScopeAugmentationBuilder(this);
 	}
 
 	/***/
 	protected final DtsTypeAliasBuilder newTypeAliasBuilder() {
-		return new DtsTypeAliasBuilder(tokenStream, resource);
+		return new DtsTypeAliasBuilder(this);
 	}
 
 	/***/
 	protected final DtsFunctionBuilder newFunctionBuilder() {
-		return new DtsFunctionBuilder(tokenStream, resource);
+		return new DtsFunctionBuilder(this);
 	}
 
 	/***/
 	protected final DtsVariableBuilder newVariableBuilder() {
-		return new DtsVariableBuilder(tokenStream, resource);
+		return new DtsVariableBuilder(this);
 	}
 
 	/***/
 	protected final DtsTypeVariablesBuilder newTypeVariablesBuilder() {
-		return new DtsTypeVariablesBuilder(tokenStream, resource);
+		return new DtsTypeVariablesBuilder(this);
 	}
 
 	/***/
 	protected final DtsN4TypeVariablesBuilder newN4TypeVariablesBuilder() {
-		return new DtsN4TypeVariablesBuilder(tokenStream, resource);
+		return new DtsN4TypeVariablesBuilder(this);
 	}
 
 	/***/
 	protected final DtsFormalParametersBuilder newFormalParametersBuilder() {
-		return new DtsFormalParametersBuilder(tokenStream, resource);
+		return new DtsFormalParametersBuilder(this);
 	}
 
 	/***/
 	protected final DtsTFormalParametersBuilder newTFormalParametersBuilder() {
-		return new DtsTFormalParametersBuilder(tokenStream, resource);
+		return new DtsTFormalParametersBuilder(this);
 	}
 
 	/***/
 	protected final DtsPropertyNameBuilder newPropertyNameBuilder() {
-		return new DtsPropertyNameBuilder(tokenStream, resource);
+		return new DtsPropertyNameBuilder(this);
 	}
 
 	/***/
@@ -214,11 +241,17 @@ public class AbstractDtsBuilder<T extends ParserRuleContext, R>
 
 	/***/
 	protected final DtsExpressionBuilder newExpressionBuilder() {
-		return new DtsExpressionBuilder(tokenStream, resource);
+		return new DtsExpressionBuilder(this);
 	}
 
 	/***/
 	protected final DtsTypeRefBuilder newTypeRefBuilder() {
-		return new DtsTypeRefBuilder(tokenStream, resource);
+		return new DtsTypeRefBuilder(this);
 	}
+
+	/***/
+	protected final DtsTStructBodyBuilder newTStructBodyBuilder() {
+		return new DtsTStructBodyBuilder(this);
+	}
+
 }

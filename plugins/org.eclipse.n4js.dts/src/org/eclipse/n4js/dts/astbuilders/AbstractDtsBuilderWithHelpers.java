@@ -14,7 +14,6 @@ import java.util.Collection;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyAccessExpressionContext;
@@ -38,7 +37,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Adds helper methods to {@link AbstractDtsBuilder} intended for use across different concrete builders.
@@ -49,8 +47,8 @@ public abstract class AbstractDtsBuilderWithHelpers<T extends ParserRuleContext,
 		extends AbstractDtsBuilder<T, R> {
 
 	/** Constructor */
-	public AbstractDtsBuilderWithHelpers(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public AbstractDtsBuilderWithHelpers(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	/** Builds a {@link N4GetterDeclaration} from a {@link GetAccessorContext} */

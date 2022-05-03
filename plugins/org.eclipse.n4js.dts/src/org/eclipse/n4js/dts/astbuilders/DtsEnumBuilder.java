@@ -16,7 +16,6 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_enumMemberList;
 import java.util.Set;
 
 import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.EnumMemberContext;
 import org.eclipse.n4js.dts.TypeScriptParser.LiteralExpressionContext;
@@ -31,7 +30,6 @@ import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
@@ -39,8 +37,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class DtsEnumBuilder extends AbstractDtsBuilder<EnumDeclarationContext, N4EnumDeclaration> {
 
 	/** Constructor */
-	public DtsEnumBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public DtsEnumBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override
@@ -91,7 +89,8 @@ public class DtsEnumBuilder extends AbstractDtsBuilder<EnumDeclarationContext, N
 
 			} else if (leCtx.literal().numericLiteral() != null) {
 				NumericLiteral numericLiteral = N4JSFactory.eINSTANCE.createNumericLiteral();
-				numericLiteral.setValue(ParserContextUtils.parseNumericLiteral(leCtx.literal().numericLiteral(), false));
+				numericLiteral
+						.setValue(ParserContextUtils.parseNumericLiteral(leCtx.literal().numericLiteral(), false));
 				valueExpression = numericLiteral;
 			}
 			literal.setValueExpression(valueExpression);

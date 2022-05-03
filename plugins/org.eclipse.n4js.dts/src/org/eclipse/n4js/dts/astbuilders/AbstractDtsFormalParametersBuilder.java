@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ColonSepTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierOrPatternContext;
 import org.eclipse.n4js.dts.TypeScriptParser.InitializerContext;
@@ -40,7 +39,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Abstract base class for builders creating formal parameters from parse tree elements.
@@ -55,8 +53,8 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 			extends AbstractDtsFormalParametersBuilder<FormalParameter, AnnotableElement> {
 
 		/** Constructor */
-		public DtsFormalParametersBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+		public DtsFormalParametersBuilder(AbstractDtsBuilder<?, ?> parent) {
+			super(parent);
 		}
 
 		@Override
@@ -95,8 +93,8 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 			extends AbstractDtsFormalParametersBuilder<TFormalParameter, TAnnotableElement> {
 
 		/** Constructor */
-		public DtsTFormalParametersBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+		public DtsTFormalParametersBuilder(AbstractDtsBuilder<?, ?> parent) {
+			super(parent);
 		}
 
 		@Override
@@ -125,8 +123,8 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 	}
 
 	/** Constructor */
-	protected AbstractDtsFormalParametersBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	protected AbstractDtsFormalParametersBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override

@@ -24,7 +24,6 @@ import java.util.Set;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.LoadResultInfoAdapter;
 import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
@@ -53,7 +52,6 @@ import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Base class of the builders for namespace and module declarations.
@@ -93,8 +91,8 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			extends AbstractDtsNamespaceBuilder<NamespaceDeclarationContext> {
 
 		/** Constructor */
-		public DtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+		public DtsNamespaceBuilder(AbstractDtsBuilder<?, ?> parent) {
+			super(parent);
 		}
 
 		@Override
@@ -108,8 +106,8 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			extends AbstractDtsNamespaceBuilder<ModuleDeclarationContext> {
 
 		/** Constructor */
-		public DtsModuleBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+		public DtsModuleBuilder(AbstractDtsBuilder<?, ?> parent) {
+			super(parent);
 		}
 	}
 
@@ -118,14 +116,14 @@ public abstract class AbstractDtsNamespaceBuilder<T extends ParserRuleContext>
 			extends AbstractDtsNamespaceBuilder<GlobalScopeAugmentationContext> {
 
 		/** Constructor */
-		public DtsGlobalScopeAugmentationBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-			super(tokenStream, resource);
+		public DtsGlobalScopeAugmentationBuilder(AbstractDtsBuilder<?, ?> parent) {
+			super(parent);
 		}
 	}
 
 	/** Constructor */
-	public AbstractDtsNamespaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public AbstractDtsNamespaceBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override
