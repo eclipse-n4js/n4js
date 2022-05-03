@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.naming.QualifiedName;
 
@@ -422,6 +423,15 @@ public final class N4JSGlobals {
 	 * Name of the N4JS headless builder JAR.
 	 */
 	public static final String N4JSC_JAR = "n4jsc.jar";
+
+	/**
+	 * For the npm packages in this set, ts-config build semantics will always be activated no matter whether the
+	 * default rules (as implemented {@link N4JSProjectConfigSnapshot#hasTsConfigBuildSemantic() here}) apply.
+	 *
+	 * TODO IDE-3605 apply ts-config build semantics to more/all .packages with .d.ts files and remove this constant
+	 */
+	public static final Set<N4JSPackageName> NPM_PACKAGES_WITH_TS_CONFIG_BUILD_SEMANTICS = ImmutableSet.of(
+			new N4JSPackageName("typescript"));
 
 	private N4JSGlobals() {
 		// private to prevent inheritance & instantiation.

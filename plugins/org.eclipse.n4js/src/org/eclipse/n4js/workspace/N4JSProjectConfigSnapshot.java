@@ -301,10 +301,16 @@ public class N4JSProjectConfigSnapshot extends ProjectConfigSnapshot {
 	 */
 	public boolean hasTsConfigBuildSemantic() {
 		ProjectDescription pd = getProjectDescription();
+		N4JSPackageName packageName = pd.getN4JSProjectName();
+		if (packageName != null
+				&& N4JSGlobals.NPM_PACKAGES_WITH_TS_CONFIG_BUILD_SEMANTICS.contains(packageName)) {
+			return true;
+		}
+		// default rules
 		if (pd.getProjectType() != ProjectType.PLAINJS) {
 			return false;
 		}
-		if (pd.getN4JSProjectName() != null && pd.getN4JSProjectName().isScopeTypes()) {
+		if (packageName != null && packageName.isScopeTypes()) {
 			return true;
 		}
 		return false;
