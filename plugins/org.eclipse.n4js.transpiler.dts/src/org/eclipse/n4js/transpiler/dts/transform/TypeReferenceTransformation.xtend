@@ -140,19 +140,28 @@ class TypeReferenceTransformation extends Transformation {
 		}
 
 		val declType = typeRef.getDeclaredType();
-		if (state.G.isArrayN(declType)) {
-			val isExtendsClass = typeRefNode.eContainmentFeature === N4JSPackage.Literals.N4_CLASS_DEFINITION__SUPER_CLASS_REF;
-			if (isExtendsClass) {
-				val referenceStr = getReferenceToType(declType, state);
-				write(referenceStr);
-				convertTypeArguments(typeRef as ParameterizedTypeRef);
-				return;
+		val isExtendsClass = typeRefNode.eContainmentFeature === N4JSPackage.Literals.N4_CLASS_DEFINITION__SUPER_CLASS_REF;
+		if (isExtendsClass && state.G.isArrayN(declType)) {
+			// special case: ArrayN in extends clause
+			val referenceStr = getReferenceToType(declType, state);
+			write(referenceStr);
+			convertTypeArguments(typeRef as ParameterizedTypeRef);
+		} else {
+			// standard case
+			convertTypeRef(typeRef);
+		}
+
+		if (isReturnType) {
+			val funDef = typeRefNode.eContainer as FunctionDefinition;
+			val funDefInAST = state.tracer.getOriginalASTNodeOfSameType(funDef, false);
+			if (funDefInAST !== null) {
+				if (funDefInAST.isReturnValueOptional) {
+					writeSuffixForReturnTypeOfFunctionWithOptionalReturnValue();
+				}
 			}
 		}
-		
-		convertTypeRef(typeRef);
 	}
-	
+
 	def private void convertDeclaredTypeRef(TTypedElement elem) {
 		val declaredTypeRef = elem.getTypeRef();
 		if (declaredTypeRef !== null) {
@@ -232,6 +241,9 @@ class TypeReferenceTransformation extends Transformation {
 		write(")=>");
 		if (returnTypeRef !== null) {
 			convertTypeRef(returnTypeRef);
+			if (typeRef.isReturnValueOptional) {
+				writeSuffixForReturnTypeOfFunctionWithOptionalReturnValue();
+			}
 		} else {
 			// TypeScript's default return type is 'any', so we need to emit 'void' in this case!
 			write("void");
@@ -450,6 +462,12 @@ class TypeReferenceTransformation extends Transformation {
 			// TypeScript's default return type is 'any', so we need to emit 'void' in this case!
 			write("void");
 		}
+	}
+
+	def private void writeSuffixForReturnTypeOfFunctionWithOptionalReturnValue() {
+		// note: due to limitations in N4JS, the return type of a function with an optional return value cannot be a ComposedTypeRef,
+		// so we do not need to bother with parentheses around the actual return type reference
+		write("|void");
 	}
 
 	def private <T extends EObject> void write(Iterable<? extends T> nodesInIM, Consumer<? super T> processor, String separator) {
