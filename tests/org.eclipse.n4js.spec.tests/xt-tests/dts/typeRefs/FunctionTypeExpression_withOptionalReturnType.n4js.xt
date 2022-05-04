@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2021 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.SpecXtTest
+   GENERATE_DTS
+   END_SETUP
+ */
+
+interface Ifc {}
+
+let v01: ()=>any?;
+let v02: ()=>string?;
+let v03: ()=>()=>boolean?; // see also unsupported case below!
+let v04: ()=>type{Object}?;
+
+let v11: Ifc | ()=>string?;
+let v12: Ifc & ()=>string?;
+
+// not supported by N4JS, so we cannot test these:
+// let v21: ()=>(()=>boolean)?;
+// let v22: ()=>string|number?;
+// let v23: ()=>(string|number)?;
+
+
+
+/* XPECT generated_dts ---
+declare interface Ifc {}
+declare let v01: ()=>any|void;
+declare let v02: ()=>string|void;
+declare let v03: ()=>()=>boolean|void;
+declare let v04: ()=>any|void;
+declare let v11: Ifc | (()=>string|void);
+declare let v12: Ifc & (()=>string|void);
+--- */
