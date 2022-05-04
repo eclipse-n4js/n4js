@@ -34,10 +34,14 @@ import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
 import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
+import org.eclipse.n4js.dts.TypeScriptParser.DeclarationStatementContext;
+import org.eclipse.n4js.dts.TypeScriptParser.DeclareStatementContext;
+import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ReservedWordContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
@@ -54,14 +58,20 @@ import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TAnnotationTypeRefArgument;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
@@ -79,11 +89,45 @@ public class ParserContextUtils {
 	/** Like {@code N4JSGlobals#NAMESPACE_ACCESS_DELIMITER}, but for .d.ts files. */
 	public static final String NAMESPACE_ACCESS_DELIMITER = ".";
 
-	/** @return true iff the given rule is contained in an {@link TypeScriptParser#RULE_exportStatement} */
-	public static boolean isExported(ParserRuleContext ctx) {
-		ParserRuleContext exportedParentCtx = findParentContext(ctx, TypeScriptParser.RULE_exportStatement,
-				TypeScriptParser.RULE_statement);
-		return exportedParentCtx != null;
+	/** @return the {@link DtsMode mode} of the .d.ts file represented by the given {@link ProgramContext context}. */
+	public static DtsMode getDtsMode(ProgramContext ctx) {
+		StatementListContext stmnts = ctx.statementList();
+		if (stmnts != null && stmnts.statement() != null) {
+			for (StatementContext stmnt : stmnts.statement()) {
+				if (stmnt.importStatement() != null || stmnt.exportStatement() != null) {
+					return DtsMode.MODULE;
+				}
+			}
+		}
+		return DtsMode.SCRIPT;
+	}
+
+	/** @return true iff the element represented by the given context should be exported on N4JS-side. */
+	public static boolean isExported(@SuppressWarnings("unused") ParserRuleContext ctx) {
+		// as it turns out, elements declared in a .d.ts file are always available from the outside, not matter whether
+		// they are preceded by keyword 'declared' or 'export' or none of the two; thus, we always return 'true':
+		return true;
+		// ParserRuleContext exportedParentCtx = findParentContext(ctx, TypeScriptParser.RULE_exportStatement,
+		// TypeScriptParser.RULE_statement);
+		// return exportedParentCtx != null;
+	}
+
+	/** @return the global scope augmentations directly contained in the given module declaration. */
+	public static List<GlobalScopeAugmentationContext> getGlobalScopeAugmentations(ModuleDeclarationContext ctx) {
+		List<GlobalScopeAugmentationContext> result = new ArrayList<>();
+		for (StatementContext stmntCtx : ParserContextUtils.getStatements(ctx.block())) {
+			DeclareStatementContext declStmnt = stmntCtx.declareStatement();
+			if (declStmnt != null) {
+				DeclarationStatementContext declStmnt2 = declStmnt.declarationStatement();
+				if (declStmnt2 != null) {
+					GlobalScopeAugmentationContext gsa = declStmnt2.globalScopeAugmentation();
+					if (gsa != null) {
+						result.add(gsa);
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	/** @return the statements in the given block or an empty list if not available. */
@@ -111,6 +155,13 @@ public class ParserContextUtils {
 			}
 		}
 		modifiers.add(accessibility);
+	}
+
+	/** Makes the given {@link Script} global by inserting a {@code @@Global} at the top. */
+	public static void makeGlobal(Script script) {
+		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+		ann.setName(AnnotationDefinition.GLOBAL.name);
+		script.getAnnotations().add(0, ann);
 	}
 
 	/** Sets the given element's "declared this type" by adding a {@code @This()} annotation. */
@@ -385,11 +436,56 @@ public class ParserContextUtils {
 		return trimmed != null && trimmed.length() > 0 ? trimmed : null;
 	}
 
+	/** @return a new {@code boolean} type reference. */
+	public static ParameterizedTypeRef createBooleanTypeRef(LazyLinkingResource resource) {
+		return createParameterizedTypeRef(resource, "boolean", false);
+	}
+
+	/** @return a new {@code any+} type reference. */
+	public static ParameterizedTypeRef createAnyPlusTypeRef(LazyLinkingResource resource) {
+		return createParameterizedTypeRef(resource, "any", true);
+	}
+
+	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type. */
+	public static ParameterizedTypeRef createParameterizedTypeRef(LazyLinkingResource resource, String declTypeName,
+			boolean dynamic) {
+		return ParserContextUtils.createParameterizedTypeRef(resource, declTypeName, null, dynamic);
+	}
+
+	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type and type arguments. */
+	public static ParameterizedTypeRef createParameterizedTypeRef(LazyLinkingResource resource, String declTypeName,
+			Collection<? extends TypeArgument> typeArgs, boolean dynamic) {
+
+		ParameterizedTypeRef ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
+		ptr.setDynamic(dynamic);
+		ptr.setDeclaredTypeAsText(declTypeName);
+
+		Type typeProxy = TypesFactory.eINSTANCE.createType();
+		EReference eRef = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
+		ParserContextUtils.installProxy(resource, ptr, eRef, typeProxy, ptr.getDeclaredTypeAsText());
+		ptr.setDeclaredType(typeProxy);
+
+		if (typeArgs != null) {
+			ptr.getDeclaredTypeArgs().addAll(typeArgs);
+		}
+
+		return ptr;
+	}
+
 	/**
-	 * Of all equally named functions remove all but the one functions with the most parameters. The parameters of the
-	 * surviving function will be made optional.
+	 * Of all equally named functions remove all but the one functions with the most parameters. The return type will be
+	 * changed to any+ iff there exist at least two overloads with different return types. The parameters of the
+	 * surviving function will be made optional. Also, a simple name and type inference for parameters works as follows:
+	 * <ul>
+	 * <li>Parameter names are kept as long as all parameters at the same position have the same name. Otherwise, an
+	 * artificial name is used.
+	 * <li>Parameter types are kept as long as all parameters at the same position have the same type name. Otherwise,
+	 * any+ is used.
+	 * </ul>
 	 */
-	public static void removeOverloadingFunctionDefs(Collection<? extends EObject> elements) {
+	public static void removeOverloadingFunctionDefs(LazyLinkingResource resource,
+			Collection<? extends EObject> elements) {
+
 		Multimap<String, FunctionDefinition> functionsByName = HashMultimap.create();
 		for (EObject elem : elements) {
 			if (elem instanceof ExportDeclaration) {
@@ -405,24 +501,56 @@ public class ParserContextUtils {
 		for (String fName : functionsByName.keySet()) {
 			Collection<FunctionDefinition> signatures = functionsByName.get(fName);
 			if (signatures.size() > 1) {
+				Map<Integer, String> fparNames = new HashMap<>();
+				Map<Integer, String> fparTypes = new HashMap<>();
+				String returnTypeName;
+
 				// find the survivor
 				Iterator<FunctionDefinition> iter = signatures.iterator();
 				FunctionDefinition survivor = iter.next();
+				for (int i = 0; i < survivor.getFpars().size(); i++) {
+					FormalParameter fPar = survivor.getFpars().get(i);
+					fparNames.put(i, fPar.getName());
+					fparTypes.put(i, fPar.getDeclaredTypeRefInAST() == null ? null
+							: fPar.getDeclaredTypeRefInAST().getTypeRefAsString());
+				}
+				returnTypeName = survivor.getDeclaredReturnTypeRefInAST() == null ? null
+						: survivor.getDeclaredReturnTypeRefInAST().getTypeRefAsString();
+
 				for (FunctionDefinition fd = iter.next(); fd != null; fd = iter.hasNext() ? iter.next() : null) {
-					int fparCountSurvivor = survivor.getFpars() == null ? 0 : survivor.getFpars().size();
-					int fparCountFd = fd.getFpars() == null ? 0 : fd.getFpars().size();
-					if (fparCountFd > fparCountSurvivor) {
-						survivor = fd;
-					} else if (fparCountFd > 0 && fparCountFd == fparCountSurvivor) {
-						FormalParameter lastFParSurvivor = survivor.getFpars().get(survivor.getFpars().size() - 1);
-						FormalParameter lastFParFd = fd.getFpars().get(fd.getFpars().size() - 1);
-						if (!lastFParSurvivor.isVariadic() && lastFParFd.isVariadic()) {
-							survivor = fd;
+					int survFPars = survivor.getFpars().size();
+					int fdFPars = fd.getFpars().size();
+					for (int i = 0; i < fdFPars; i++) {
+						FormalParameter fPar = fd.getFpars().get(i);
+						if (fparNames.containsKey(i)) {
+							String oldName = fparNames.get(i);
+							if (!Objects.equals(oldName, fPar.getName())) {
+								fparNames.put(i, "arg" + i);
+							}
+							String oldTypeRef = fparTypes.get(i);
+							if (!Objects.equals(oldTypeRef, fPar.getDeclaredTypeRefInAST() == null ? null
+									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString())) {
+								fparTypes.put(i, null);
+							}
+						} else {
+							fparNames.put(i, fPar.getName());
+							fparTypes.put(i, fPar.getDeclaredTypeRefInAST() == null ? null
+									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString());
 						}
+
+						if (!Objects.equals(returnTypeName, fd.getDeclaredReturnTypeRefInAST() == null ? null
+								: fd.getDeclaredReturnTypeRefInAST().getTypeRefAsString())) {
+							returnTypeName = null;
+						}
+					}
+					if (survFPars < fdFPars) {
+						survivor = fd;
+					} else if (survFPars == fdFPars && survivor.getDeclaredReturnTypeRefNode() == null) {
+						survivor = fd;
 					}
 				}
 
-				// remove all but the survivor
+				// remove all overloads but the survivor
 				for (FunctionDefinition fd : functionsByName.get(fName)) {
 					if (fd == survivor) {
 						continue;
@@ -434,9 +562,20 @@ public class ParserContextUtils {
 					elements.remove(elemToRemove);
 				}
 
-				// make parameters optional
-				for (FormalParameter fpar : survivor.getFpars()) {
-					fpar.setHasInitializerAssignment(true);
+				// change return type iff necessary
+				if (survivor.getDeclaredReturnTypeRefNode() != null && returnTypeName == null) {
+					survivor.getDeclaredReturnTypeRefNode().setTypeRefInAST(createAnyPlusTypeRef(resource));
+				}
+
+				// change parameter names and types iff necessary
+				for (int i = 0; i < survivor.getFpars().size(); i++) {
+					FormalParameter fPar = survivor.getFpars().get(i);
+					String fparName = fparNames.get(i);
+					fPar.setName(fparName);
+					fPar.setHasInitializerAssignment(true);
+					if (fparTypes.get(i) == null) {
+						fPar.setDeclaredTypeRefNode(wrapInTypeRefNode(createAnyPlusTypeRef(resource)));
+					}
 				}
 			}
 		}

@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.AbstractDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassExtendsClauseContext;
@@ -49,7 +48,6 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypingStrategy;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
@@ -58,8 +56,8 @@ public class DtsClassBuilder
 		extends AbstractDtsBuilderWithHelpers<ClassDeclarationContext, N4ClassDeclaration> {
 
 	/** Constructor */
-	public DtsClassBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public DtsClassBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override
@@ -111,7 +109,7 @@ public class DtsClassBuilder
 	@Override
 	public void exitClassDeclaration(ClassDeclarationContext ctx) {
 		if (result != null) {
-			ParserContextUtils.removeOverloadingFunctionDefs(result.getOwnedMembersRaw());
+			ParserContextUtils.removeOverloadingFunctionDefs(resource, result.getOwnedMembersRaw());
 		}
 	}
 

@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "def1.d.ts" {
+		declare namespace N1 {
+			class Cls1 {}
+		}
+	}
+
+	File "def2.d.ts" {
+		declare namespace N2 {
+			export class Cls2 {}
+		}
+	}
+
+   END_SETUP
+ */
+
+// XPECT noerrors -->
+N1.Cls1;
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'Cls1'." at "Cls1"
+Cls1;
+
+// XPECT noerrors -->
+N2.Cls2;
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'Cls2'." at "Cls2"
+Cls2;

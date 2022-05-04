@@ -17,7 +17,6 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_interfaceMemberList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.CallSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ConstructSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
@@ -47,7 +46,6 @@ import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypingStrategy;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
@@ -56,8 +54,8 @@ public class DtsInterfaceBuilder
 		extends AbstractDtsBuilderWithHelpers<InterfaceDeclarationContext, N4InterfaceDeclaration> {
 
 	/** Constructor */
-	public DtsInterfaceBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public DtsInterfaceBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override
@@ -96,7 +94,7 @@ public class DtsInterfaceBuilder
 	@Override
 	public void exitInterfaceDeclaration(InterfaceDeclarationContext ctx) {
 		if (result != null) {
-			ParserContextUtils.removeOverloadingFunctionDefs(result.getOwnedMembersRaw());
+			ParserContextUtils.removeOverloadingFunctionDefs(resource, result.getOwnedMembersRaw());
 		}
 	}
 

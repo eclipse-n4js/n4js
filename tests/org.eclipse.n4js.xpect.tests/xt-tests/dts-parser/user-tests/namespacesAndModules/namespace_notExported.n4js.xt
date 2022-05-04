@@ -13,7 +13,9 @@
 
 	File "other.d.ts" {
 
-		declare namespace N1 {}
+		declare namespace N1 {
+			class Cls {}
+		}
 
 		export namespace N2 {
 			class Cls {}
@@ -21,12 +23,18 @@
 	}
 
 	END_SETUP
-*/
+ */
 
-// XPECT errors --> "Element N1 is not exported." at "N1"
+
+// note: even though N1 and Cls are not explicitly exported, they can be imported!
+
+
+// XPECT noerrors --> "Element N1 is not exported." at "N1"
 import { N1 } from "other"
-
+// XPECT noerrors -->
 import { N2 } from "other"
 
-// XPECT errors --> "Element Cls is not exported." at "Cls"
+// XPECT noerrors -->
+N1.Cls;
+// XPECT noerrors --> "Element Cls is not exported." at "Cls"
 N2.Cls;

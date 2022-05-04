@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.CallSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ConstructSignatureContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
@@ -42,7 +41,6 @@ import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TStructSetter;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 import com.google.common.base.Strings;
 
@@ -53,8 +51,8 @@ public class DtsTStructBodyBuilder
 		extends AbstractDtsBuilderWithHelpers<InterfaceBodyContext, List<TStructMember>> {
 
 	/** Constructor */
-	public DtsTStructBodyBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public DtsTStructBodyBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override

@@ -18,7 +18,6 @@ import static org.eclipse.n4js.dts.TypeScriptParser.RULE_propertyName;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ComputedPropertyNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
@@ -28,7 +27,6 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link LiteralOrComputedPropertyName} from parse tree elements
@@ -37,8 +35,8 @@ public class DtsPropertyNameBuilder
 		extends AbstractDtsBuilderWithHelpers<PropertyNameContext, LiteralOrComputedPropertyName> {
 
 	/** Constructor */
-	public DtsPropertyNameBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public DtsPropertyNameBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override

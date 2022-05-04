@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "def1.d.ts" {
+		declare namespace N1 {
+			class Cls1 {}
+		}
+		export var v: any; // <-- this makes this file a module!
+	}
+
+	File "def2.d.ts" {
+		declare namespace N2 {
+			class Cls2 {}
+		}
+		export { N2 as N2Exported } // <-- this makes this file a module!
+	}
+
+	File "def3.d.ts" {
+		declare namespace N3 {
+			export class Cls3 {}
+		}
+		export { N3 as N3Exported } // <-- this makes this file a module!
+	}
+
+   END_SETUP
+ */
+
+import { N2Exported } from "def2"
+import { N3Exported } from "def3"
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'N1'." at "N1"
+N1.Cls1;
+
+// XPECT noerrors -->
+N2Exported.Cls2;
+
+// XPECT noerrors -->
+N3Exported.Cls3;

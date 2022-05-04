@@ -37,8 +37,8 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 class DtsBindingPatternBuilder extends AbstractDtsBuilder<BindingPatternContext, BindingPattern> {
 
 	/** Constructor */
-	public DtsBindingPatternBuilder(AbstractDtsBuilder<?, ?> dtsBuilder) {
-		super(dtsBuilder.tokenStream, dtsBuilder.resource);
+	public DtsBindingPatternBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override

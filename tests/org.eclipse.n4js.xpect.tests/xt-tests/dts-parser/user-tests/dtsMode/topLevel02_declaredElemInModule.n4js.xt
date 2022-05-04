@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "def1.d.ts" {
+		declare class Cls1 {}
+		export var v: any; // <-- this makes this file a module!
+	}
+
+	File "def2.d.ts" {
+		declare class Cls2 {}
+		export var v: any; // <-- this makes this file a module!
+	}
+
+   END_SETUP
+ */
+
+
+// an element with "declare" contained in a module can be imported:
+
+// XPECT noerrors -->
+import { Cls1 } from "def1"
+Cls1;
+
+
+// ... but is not available globally:
+
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'Cls2'." at "Cls2"
+Cls2;

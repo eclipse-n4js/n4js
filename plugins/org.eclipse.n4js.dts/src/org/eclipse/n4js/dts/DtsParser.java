@@ -14,6 +14,7 @@ import static org.antlr.v4.runtime.CharStreams.fromReader;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collections;
@@ -24,13 +25,12 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.ConsoleErrorListener;
 import org.antlr.v4.runtime.DefaultErrorStrategy;
 import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
@@ -87,16 +87,27 @@ public class DtsParser {
 	}
 
 	/** Parses d.ts files */
-	public DtsParseResult parse(Reader reader, LazyLinkingResource resource, URI srcFolder) throws IOException {
+	public DtsParseResult parse(Reader reader, LazyLinkingResource resource) throws IOException {
 		NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
 		if (adapter == null) {
-			return parseScript(reader, resource, srcFolder);
+			return parseScript(reader, resource);
 		} else {
 			return parseNestedScript(resource, adapter);
 		}
 	}
 
-	private DtsParseResult parseScript(Reader reader, LazyLinkingResource resource, URI srcFolder) throws IOException {
+	/** Parse the given .d.ts source code to an ANTLR {@link ParserRuleContext}. Intended for testing only. */
+	public static ProgramContext parseDts(CharSequence dtsCode) throws IOException {
+		CharStream fileContents = fromReader(new StringReader(dtsCode.toString()));
+		TypeScriptLexer lexer = new TypeScriptLexer(fileContents);
+		DtsTokenStream tokens = new DtsTokenStream(lexer);
+		TypeScriptParser parser = new TypeScriptParser(tokens);
+		parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
+		ProgramContext program = parser.program();
+		return program;
+	}
+
+	private DtsParseResult parseScript(Reader reader, LazyLinkingResource resource) throws IOException {
 		CharStream fileContents = fromReader(reader);
 		long millis = System.currentTimeMillis();
 
@@ -129,7 +140,7 @@ public class DtsParser {
 		stats.time = System.currentTimeMillis() - millis;
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource, srcFolder);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
 		Script root = astBuilder.consume(stats.tree);
 		RootNode rootNode = new RootNode(stats.tree);
 		Iterable<? extends INode> syntaxErrors = stats.errors;
@@ -143,7 +154,8 @@ public class DtsParser {
 	}
 
 	private DtsParseResult parseNestedScript(LazyLinkingResource resource, NestedResourceAdapter adapter) {
-		ModuleDeclarationContext ctx = adapter.getModuleDeclarationContext();
+		ParserRuleContext ctx = adapter.getContext();
+		StatementListContext statements = adapter.getStatements();
 		DtsTokenStream tokens = adapter.getTokenStream();
 
 		ProgramContext prgCtx = new ProgramContext(null, 0) {
@@ -154,12 +166,12 @@ public class DtsParser {
 
 			@Override
 			public StatementListContext statementList() {
-				return ctx.block().statementList();
+				return statements;
 			}
 		};
 
 		// convert parse tree to AST
-		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource, null);
+		DtsScriptBuilder astBuilder = new DtsScriptBuilder(tokens, resource);
 		Script root = astBuilder.consume(prgCtx);
 		RootNode rootNode = new RootNode(ctx);
 

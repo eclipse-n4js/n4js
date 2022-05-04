@@ -30,7 +30,6 @@ import java.util.regex.Pattern;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrayTypeExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrayTypeExpressionSuffixContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ArrowFunctionTypeExpressionContext;
@@ -71,7 +70,6 @@ import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
@@ -79,8 +77,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefContext, TypeRef> {
 
 	/** Constructor */
-	public DtsTypeRefBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public DtsTypeRefBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	@Override
@@ -328,7 +326,7 @@ public class DtsTypeRefBuilder extends AbstractDtsBuilderWithHelpers<TypeRefCont
 		ParameterizedTypeRefStructural ptr = (ParameterizedTypeRefStructural) createParameterizedTypeRef("Object",
 				(TypeArgumentsContext) null, true);
 
-		List<TStructMember> members = new DtsTStructBodyBuilder(tokenStream, resource).consume(ctx.interfaceBody());
+		List<TStructMember> members = newTStructBodyBuilder().consume(ctx.interfaceBody());
 		ptr.getAstStructuralMembers().addAll(members);
 		result = ptr;
 	}

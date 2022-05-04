@@ -15,14 +15,12 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.ModuleRef;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.utils.URIUtils;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Base class of the builders for import and export declarations.
@@ -33,8 +31,8 @@ public abstract class AbstractDtsModuleRefBuilder<T extends ParserRuleContext, R
 	private final static Logger LOG = Logger.getLogger(AbstractDtsModuleRefBuilder.class);
 
 	/***/
-	public AbstractDtsModuleRefBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public AbstractDtsModuleRefBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	/** Converts the given module specifier from .d.ts to N4JS and updates the given {@link ModuleRef} accordingly. */

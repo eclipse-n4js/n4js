@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.dts;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.TokenStream;
 import org.eclipse.emf.common.notify.Adapter;
@@ -17,7 +18,8 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
+import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 
 /**
  * This adapter holds the {@link TokenStream} and {@link RuleContext} the belong to the nested resource this adapter is
@@ -61,13 +63,23 @@ public class NestedResourceAdapter implements Adapter {
 
 	final URI hostUri;
 	final DtsTokenStream tokenStream;
-	final ModuleDeclarationContext ctx;
+	final ParserRuleContext ctx;
+	final StatementListContext statements;
 
-	/** Constructor */
-	public NestedResourceAdapter(URI hostUri, DtsTokenStream tokenStream, ModuleDeclarationContext ctx) {
+	/**
+	 * Constructor
+	 *
+	 * @param ctx
+	 *            see {@link #getContext()}.
+	 * @param statements
+	 *            see {@link #getStatements()}.
+	 */
+	public NestedResourceAdapter(URI hostUri, DtsTokenStream tokenStream, ParserRuleContext ctx,
+			StatementListContext statements) {
 		this.hostUri = hostUri;
 		this.tokenStream = tokenStream;
 		this.ctx = ctx;
+		this.statements = statements;
 	}
 
 	@Override
@@ -93,9 +105,17 @@ public class NestedResourceAdapter implements Adapter {
 		return hostUri;
 	}
 
-	/** Returns the {@link ModuleDeclarationContext} that belongs to the resource this adapter is installed on. */
-	public ModuleDeclarationContext getModuleDeclarationContext() {
+	/** Returns the {@link ParserRuleContext} that belongs to the resource this adapter is installed on. */
+	public ParserRuleContext getContext() {
 		return ctx;
+	}
+
+	/**
+	 * Returns the context containing the {@link StatementContext statements} to be treated as the top-level elements of
+	 * the nested virtual resource.
+	 */
+	public StatementListContext getStatements() {
+		return statements;
 	}
 
 	/** Returns the token stream that belongs to the resource this adapter is installed on. */

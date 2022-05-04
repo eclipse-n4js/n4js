@@ -30,8 +30,6 @@
 	END_SETUP
  */
 
-import "other"
-
 // XPECT noerrors -->
 import { Cls } from "a/b/someModule1"
 // XPECT noerrors -->

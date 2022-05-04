@@ -11,7 +11,6 @@
 package org.eclipse.n4js.dts.astbuilders;
 
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierExpressionContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyAccessExpressionContext;
@@ -24,7 +23,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
 /**
  * Builder to create {@link TypeReferenceNode} from parse tree elements
@@ -32,8 +30,8 @@ import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 public class DtsExpressionBuilder extends AbstractDtsBuilderWithHelpers<SingleExpressionContext, Expression> {
 
 	/** Constructor */
-	public DtsExpressionBuilder(DtsTokenStream tokenStream, LazyLinkingResource resource) {
-		super(tokenStream, resource);
+	public DtsExpressionBuilder(AbstractDtsBuilder<?, ?> parent) {
+		super(parent);
 	}
 
 	/** Special use case of this builder. */

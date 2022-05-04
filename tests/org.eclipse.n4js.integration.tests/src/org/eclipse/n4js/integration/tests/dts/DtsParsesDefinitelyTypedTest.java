@@ -129,7 +129,7 @@ public class DtsParsesDefinitelyTypedTest {
 				N4JSResource resource = new N4JSResource();
 				URI fileUri = new FileURI(file).toURI();
 				resource.setURI(fileUri);
-				DtsParseResult parseResult = new DtsParser().parse(buf, resource, fileUri);
+				DtsParseResult parseResult = new DtsParser().parse(buf, resource);
 
 				if (parseResult.hasSyntaxErrors()) {
 					fail++;

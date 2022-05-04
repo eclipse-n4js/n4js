@@ -34,7 +34,10 @@ Script: true
      N4ClassDeclaration: [external, public], Cls1, ~
     ExportDeclaration: false, UNKNOWN
      N4NamespaceDeclaration: [public], child
-      N4ClassDeclaration: [external, private], Cls2, ~
-      N4NamespaceDeclaration: [private], grandChild
-       N4ClassDeclaration: [external, private], Cls3, ~
+      ExportDeclaration: false, UNKNOWN
+       N4ClassDeclaration: [external, public], Cls2, ~
+      ExportDeclaration: false, UNKNOWN
+       N4NamespaceDeclaration: [public], grandChild
+        ExportDeclaration: false, UNKNOWN
+         N4ClassDeclaration: [external, public], Cls3, ~
 --- */
