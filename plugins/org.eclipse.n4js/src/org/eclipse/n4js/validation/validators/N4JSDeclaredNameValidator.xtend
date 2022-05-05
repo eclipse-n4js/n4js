@@ -81,6 +81,7 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 
 /**
  */
@@ -668,6 +669,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * attribute.
 	 */
 	def private EStructuralFeature findNameEAttribute(EObject eo) {
+		if (eo instanceof N4NamespaceDeclaration) {
+			return N4JSPackage.Literals.N4_NAMESPACE_DECLARATION__NAME;
+		}
+
 		if (eo instanceof N4TypeDeclaration) {
 			return N4JSPackage.Literals.N4_TYPE_DECLARATION__NAME;
 		}
