@@ -556,8 +556,7 @@ import com.google.common.collect.Iterables;
 				final TypeArgument rightArg = rightArgs.get(i);
 				final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
 
-				RuleEnvironment G2 = wrap(G);
-				final Result currResult = checkTypeArgumentCompatibility(G2, left, right, leftArg, rightArg,
+				final Result currResult = checkTypeArgumentCompatibility(G, left, right, leftArg, rightArg,
 						Optional.of(variance));
 				if (currResult.isFailure()) {
 					return currResult;
