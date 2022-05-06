@@ -26,6 +26,7 @@ import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.ExportDefinition;
 import org.eclipse.n4js.ts.types.ModuleExportDefinition;
 import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
@@ -158,7 +159,8 @@ public class ExportedElementsCollector {
 	private void doCollectElement(String exportedName, TExportableElement exportedElem, CollectionInfo info) {
 
 		boolean include = (info.includeHollows || !N4JSLanguageUtils.isHollowElement(exportedElem, variantHelper))
-				&& (info.includeVariables || !(exportedElem instanceof TVariable));
+				&& (info.includeVariables || !N4JSLanguageUtils.isValueOnlyElement(exportedElem, variantHelper));
+
 		if (include) {
 			TypeVisibility visibility = isVisible(info.context, exportedElem);
 			if (visibility.visibility) {
@@ -169,7 +171,7 @@ public class ExportedElementsCollector {
 						visibility.accessModifierSuggestion));
 			}
 		} else {
-			if (exportedElem instanceof Type) {
+			if (exportedElem instanceof Type && !(exportedElem instanceof TFunction)) {
 				info.invisible.add(new HollowTypeOrValueDescription(
 						createObjectDescription(exportedName, exportedElem), "type"));
 			} else {

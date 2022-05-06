@@ -41,6 +41,7 @@ import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDefinition
 import org.eclipse.n4js.n4JS.N4TypeVariable
@@ -53,7 +54,6 @@ import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.SetterDeclaration
-import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType
@@ -64,8 +64,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TMember
-import org.eclipse.n4js.ts.types.TVariable
-import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -81,7 +80,6 @@ import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
 import static org.eclipse.n4js.validation.IssueCodes.*
-import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 
 /**
  */
@@ -371,25 +369,29 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	}
 	
 	def private boolean isEqualNameDuplicate(EObject baseEO, EObject dupeEO) {
-		if (isVariable(baseEO) && isHollow(dupeEO)) {
+		if (isValueOnly(baseEO) && isHollow(dupeEO)) {
 			return false;
-		} else if (isVariable(dupeEO) && isHollow(baseEO)) {
+		} else if (isValueOnly(dupeEO) && isHollow(baseEO)) {
 			return false;
 		}
 		return true;
 	}
 	
-	def private boolean isVariable(EObject eo) {
-		return eo instanceof AbstractVariable
-			|| (eo instanceof NamedImportSpecifier && (eo as NamedImportSpecifier).importedElement instanceof TVariable);
+	def private boolean isValueOnly(EObject eo) {
+		var EObject eo2 = eo;
+		if (eo instanceof NamedImportSpecifier) {
+			eo2 = eo.importedElement
+		}
+
+		return (eo2 instanceof TypableElement && N4JSLanguageUtils.isValueOnlyElement(eo2 as TypableElement, jsVariantHelper));
 	}
 	
 	def private boolean isHollow(EObject eo) {
-		return (eo instanceof TypeDefiningElement && N4JSLanguageUtils.isHollowElement(eo as TypeDefiningElement, jsVariantHelper))
-			|| (eo instanceof NamedImportSpecifier
-				&& (eo as NamedImportSpecifier).importedElement instanceof Type
-				&& N4JSLanguageUtils.isHollowElement((eo as NamedImportSpecifier).importedElement as Type, jsVariantHelper)
-			);
+		var EObject eo2 = eo;
+		if (eo instanceof NamedImportSpecifier) {
+			eo2 = eo.importedElement
+		}
+		return (eo2 instanceof TypableElement && N4JSLanguageUtils.isHollowElement(eo2 as TypableElement, jsVariantHelper));
 	}
 
 	/**
