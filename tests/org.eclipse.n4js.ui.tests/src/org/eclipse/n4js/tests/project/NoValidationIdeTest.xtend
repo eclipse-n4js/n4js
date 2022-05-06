@@ -74,7 +74,7 @@ class NoValidationIdeTest extends ConvertedIdeTest {
 		assertEquals("file B should have markers", 2, getIssuesInFile(fileBValidated).size);
 		assertEquals("file C should have markers", 2, getIssuesInFile(fileC).size);
 		assertEquals("file D should have markers", 2, getIssuesInFile(fileD).size);
-		assertEquals("file E should have markers", 6, getIssuesInFile(fileE).size);
+		assertEquals("file E should have markers", 5, getIssuesInFile(fileE).size);
 		assertEquals("file F should have markers", 2, getIssuesInFile(fileF).size);
 
 		val moduleFiltersStep1 = '''"moduleFilters": { "noValidate": [ "p/D", "p/q/*" ] }''';
