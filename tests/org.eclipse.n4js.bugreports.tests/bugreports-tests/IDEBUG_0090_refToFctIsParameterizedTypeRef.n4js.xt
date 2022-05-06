@@ -20,7 +20,7 @@ function f () {
 }
 
 
-// TODO GHOLD-204 remove when fully supported  XPECT errors --> "The name of a declared function may not be used as a type name." at "f"
+// TODO GHOLD-204 remove when fully supported  XPECT errors --> "Couldn't resolve reference to Type 'f'." at "f"
 var myF : f = f;
 // XPECT noerrors --> "Not a function or method: f."
 myF();

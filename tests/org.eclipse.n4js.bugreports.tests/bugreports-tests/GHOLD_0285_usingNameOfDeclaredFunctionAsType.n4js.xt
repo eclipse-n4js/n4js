@@ -18,5 +18,5 @@
 
 function foo(str: string):number { return 42; }
 
-// XPECT errors --> "The name of a declared function may not be used as a type name." at "foo"
+// XPECT errors --> "Couldn't resolve reference to Type 'foo'." at "foo"
 let f: foo;

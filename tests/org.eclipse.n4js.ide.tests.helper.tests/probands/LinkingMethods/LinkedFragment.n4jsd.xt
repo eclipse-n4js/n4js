@@ -51,6 +51,6 @@ export external public class MySuperClass<T extends MyInterface> extends MySuper
 	private counter: number;
 // LF-2 XPECT linkedFragment at 'any' --> n4scheme:/primitives.n4jsd#/1/@types.6
 // LF-3 XPECT linkedFragment at 'any' --> Wrong Expectation
-// LF-4 XPECT linkedFragment at 'T' --> /1/@types.8/@typeVars.0
+// LF-4 XPECT linkedFragment at 'T' --> /1/@types.7/@typeVars.0
 	protected doStuff(input: T): any;
 }

@@ -34,5 +34,5 @@ var foo6 : ~Object with { s?: B; } = {};
 function x() {}
 
 // TODO GHOLD-204 reenable when fully supported  XPECT ! noerrors --> "Missing type name for type modifier ?." at "type{Object}"
-// TODO GHOLD-204 remove when fully supported  XPECT errors --> "The name of a declared function may not be used as a type name." at "x"
+// TODO GHOLD-204 remove when fully supported  XPECT errors --> "Couldn't resolve reference to Type 'x'." at "x"
 var foo7 : ~Object with { s?: x; } = {};
