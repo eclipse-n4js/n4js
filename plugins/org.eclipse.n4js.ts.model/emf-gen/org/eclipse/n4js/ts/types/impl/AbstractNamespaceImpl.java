@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
 import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
@@ -49,6 +50,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getTypes <em>Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getFunctions <em>Functions</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getExportedVariables <em>Exported Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getLocalVariables <em>Local Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.AbstractNamespaceImpl#getExposedLocalVariables <em>Exposed Local Variables</em>}</li>
@@ -67,6 +69,16 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	 * @ordered
 	 */
 	protected EList<Type> types;
+
+	/**
+	 * The cached value of the '{@link #getFunctions() <em>Functions</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFunctions()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TFunction> functions;
 
 	/**
 	 * The cached value of the '{@link #getExportedVariables() <em>Exported Variables</em>}' containment reference list.
@@ -146,6 +158,19 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	 * @generated
 	 */
 	@Override
+	public EList<TFunction> getFunctions() {
+		if (functions == null) {
+			functions = new EObjectContainmentEList<TFunction>(TFunction.class, this, TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS);
+		}
+		return functions;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<TVariable> getExportedVariables() {
 		if (exportedVariables == null) {
 			exportedVariables = new EObjectContainmentEList<TVariable>(TVariable.class, this, TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES);
@@ -198,8 +223,18 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	 * @generated
 	 */
 	@Override
+	public Iterable<? extends Type> getTypesAndFunctions() {
+		return Iterables.<Type>concat(this.getTypes(), this.getFunctions());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Iterable<? extends TExportableElement> getExportableElements() {
-		return Iterables.<TExportableElement>concat(this.getTypes(), this.getExportedVariables(), this.getLocalVariables(), this.getExposedLocalVariables(), this.getNamespaces());
+		return Iterables.<TExportableElement>concat(this.getTypes(), this.getFunctions(), this.getExportedVariables(), this.getLocalVariables(), this.getExposedLocalVariables(), this.getNamespaces());
 	}
 
 	/**
@@ -256,6 +291,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 		switch (featureID) {
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
+			case TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS:
+				return ((InternalEList<?>)getFunctions()).basicRemove(otherEnd, msgs);
 			case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES:
 				return ((InternalEList<?>)getExportedVariables()).basicRemove(otherEnd, msgs);
 			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
@@ -278,6 +315,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 		switch (featureID) {
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				return getTypes();
+			case TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS:
+				return getFunctions();
 			case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES:
 				return getExportedVariables();
 			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
@@ -302,6 +341,10 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				getTypes().clear();
 				getTypes().addAll((Collection<? extends Type>)newValue);
+				return;
+			case TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS:
+				getFunctions().clear();
+				getFunctions().addAll((Collection<? extends TFunction>)newValue);
 				return;
 			case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES:
 				getExportedVariables().clear();
@@ -334,6 +377,9 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				getTypes().clear();
 				return;
+			case TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS:
+				getFunctions().clear();
+				return;
 			case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES:
 				getExportedVariables().clear();
 				return;
@@ -360,6 +406,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 		switch (featureID) {
 			case TypesPackage.ABSTRACT_NAMESPACE__TYPES:
 				return types != null && !types.isEmpty();
+			case TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS:
+				return functions != null && !functions.isEmpty();
 			case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES:
 				return exportedVariables != null && !exportedVariables.isEmpty();
 			case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES:
@@ -380,6 +428,8 @@ public abstract class AbstractNamespaceImpl extends TExportingElementImpl implem
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypesPackage.ABSTRACT_NAMESPACE___GET_TYPES_AND_FUNCTIONS:
+				return getTypesAndFunctions();
 			case TypesPackage.ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS:
 				return getExportableElements();
 			case TypesPackage.ABSTRACT_NAMESPACE___GET_ALL_NAMESPACES:

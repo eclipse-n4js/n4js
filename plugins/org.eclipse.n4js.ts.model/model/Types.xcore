@@ -41,6 +41,7 @@ import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.EcoreUtil2
 
 type IterableOfTExportableElement wraps Iterable<? extends TExportableElement>
+type IterableOfType wraps Iterable<? extends Type>
 type IterableOfAbstractNamespace wraps Iterable<? extends AbstractNamespace>
 type ParameterizedTypeRefIterable wraps Iterable<ParameterizedTypeRef>
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
@@ -550,7 +551,7 @@ class InferenceVariable extends TypeVariable {}
  * Represents a function declaration. In JavaScript, functions are first-class objects, hence
  * a function declaration also is a type declaration.
  */
-class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement, Type {
+class TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement {
 	boolean external
 	/*
 	 * Formal parameters
@@ -929,13 +930,19 @@ abstract class ContainerType<MT extends TMember> extends GenericType {
 
 abstract class AbstractNamespace extends TExportingElement {
 	/*
-	 * A list of all types declarations in the script on the top level.
-	 * These include the exported classes, interfaces, function as well
-	 * as the types inferred from type defining elements that are not marked as exported.
+	 * A list of all types declarations of this namespace.
+	 * These include the exported classes, interfaces as well as the types
+	 * inferred from type defining elements that are not marked as exported.
 	 * This allows for better validation messages and diagnostics in later stages
 	 * of the processing.
 	 */
 	contains Type[] types
+	/*
+	 * A list of all functions of this namespace, both exported and local.
+	 * This allows for better validation messages and diagnostics in later stages
+	 * of the processing.
+	 */
+	contains TFunction[] functions
 	/*
 	 * A list of all exported variables of this namespace.
 	 * Exported variables are always directly contained in the namespace.
@@ -960,8 +967,16 @@ abstract class AbstractNamespace extends TExportingElement {
 	 * Returns all exportable elements directly contained in this {@link AbstractNamespace},
 	 * including those not actually exported.
 	 */
+	op IterableOfType getTypesAndFunctions() {
+		return Iterables.<Type>concat(types, functions);
+	}
+
+	/*
+	 * Returns all exportable elements directly contained in this {@link AbstractNamespace},
+	 * including those not actually exported.
+	 */
 	op IterableOfTExportableElement getExportableElements() {
-		return Iterables.<TExportableElement>concat(types, exportedVariables, localVariables, exposedLocalVariables, namespaces);
+		return Iterables.<TExportableElement>concat(types, functions, exportedVariables, localVariables, exposedLocalVariables, namespaces);
 	}
 
 	op IterableOfAbstractNamespace getAllNamespaces() {
