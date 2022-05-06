@@ -43,9 +43,7 @@ export public class LowerComponent extends React.Component<~React.ComponentProps
 
 
 /* XPECT scope at 'React.<|>Component'  ---
-Component, ComponentProps, ReactElement, Fragment, PropConstraint, PropType, PropTypes,
-PureComponent, cloneElement, createElement, isValidElement, renderToStaticMarkup,
-renderToString
+Component, ComponentProps, Fragment, PropConstraint, PropType, PropTypes, PureComponent, ReactElement
 --- */
 export public class MyComponent extends React.Component<~React.ComponentProps with {aProp: string}, String> {
 

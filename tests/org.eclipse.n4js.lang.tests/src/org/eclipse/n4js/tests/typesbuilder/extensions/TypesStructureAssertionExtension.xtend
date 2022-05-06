@@ -133,6 +133,12 @@ public class TypesStructureAssertionExtension {
 		assertTClass(phase, newN4jsResource, type, name, memberCount)
 	}
 
+	def assertFunctionForName(Resource newN4jsResource, String name, String phase) {
+		val type = (newN4jsResource.contents.get(1) as TModule).functions.filter[it.name == name].head
+		assertNotNull(phase + ": there should be a type with expected name " + name, type)
+		type
+	}
+
 	def assertTypeForName(Resource newN4jsResource, String name, String phase) {
 		val type = (newN4jsResource.contents.get(1) as TModule).types.filter[it.name == name].head
 		assertNotNull(phase + ": there should be a type with expected name " + name, type)
@@ -228,9 +234,8 @@ public class TypesStructureAssertionExtension {
 	}
 
 	def assertTFunction(String phase, Resource newN4jsResource, String name, int parameterCount) {
-		val type = assertTypeForName(newN4jsResource, name, phase)
-		assertTrue(phase + ": TFunction expected", type instanceof TFunction)
-		val tFunction = type as TFunction
+		val tFunction = assertFunctionForName(newN4jsResource, name, phase)
+		assertNotNull(phase + ": TFunction expected", tFunction)
 		assertEquals(phase + ": Should be named", name, tFunction.name)
 		assertEquals(phase + ": TFunction should have expected parameter count", parameterCount, tFunction.fpars.size)
 		tFunction
