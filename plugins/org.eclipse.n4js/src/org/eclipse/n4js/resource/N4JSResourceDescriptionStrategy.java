@@ -226,7 +226,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				}
 			}
 			// to better support UI functionality such as "Open Type" we also add non-exported types to the index:
-			for (Type type : ((TModule) eObject).getTypes()) {
+			for (Type type : ((TModule) eObject).getTypesAndFunctions()) {
 				if (!type.isDirectlyExported()) {
 					internalCreateEObjectDescription(Optional.absent(), type, acceptor);
 				}
