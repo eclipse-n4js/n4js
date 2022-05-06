@@ -21,3 +21,12 @@ export external const I1 : string;
 export external type T1 = string;
 export external const T1 : string;
 
+
+
+export external interface ~I2 {}
+export external function I2(i: number) : string;
+
+
+export external type T2 = string;
+export external function T2(i: number) : string;
+

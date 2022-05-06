@@ -14,10 +14,40 @@
  */
 
 
+// Hollows and variables: ERROR (Actually OK, but only in n4jsd files at the moment)
+type T1 = string;
+// XPECT errors --> "Variable T1 duplicates type alias T1 (line 18)." at "T1"
+const T1 : string = "";
+// XPECT noerrors -->
+let t1a : T1 = null;
+// XPECT noerrors -->
+let t1b = T1;
+
+
+// reverse order
+const T2 : string = "";
+// XPECT errors --> "Type alias T2 duplicates variable T2 (line 28)." at "T2"
+type T2 = string;
+// XPECT noerrors -->
+let t2a : T2 = null;
+// XPECT noerrors -->
+let t2b = T2;
+
+
+
+// Hollows and functions: ERROR (Actually OK, but only in n4jsd files at the moment)
+type F1 = string;
+// XPECT errors --> "Function F1 duplicates type alias F1 (line 39)." at "F1"
+function F1() : void {}
+// XPECT noerrors -->
+let f1a : F1 = "";
+// XPECT noerrors -->
+let f1b = F1;
+
 
 // reverse order
 function F2() : void {}
-// XPECT errors --> "Type alias F2 duplicates function F2 (line 19)." at "F2"
+// XPECT errors --> "Type alias F2 duplicates function F2 (line 49)." at "F2"
 type F2 = string;
 // XPECT noerrors -->
 let f2a : F2 = "";
