@@ -35,6 +35,7 @@ import org.eclipse.n4js.ide.server.N4JSWorkspaceFrontend;
 import org.eclipse.n4js.ide.server.N4JSWorkspaceManager;
 import org.eclipse.n4js.ide.server.build.N4JSBuildOrderInfoComputer;
 import org.eclipse.n4js.ide.server.build.N4JSBuilderFrontend;
+import org.eclipse.n4js.ide.server.build.N4JSClusteringStorageAwareResourceLoader;
 import org.eclipse.n4js.ide.server.build.N4JSConfigSnapshotFactory;
 import org.eclipse.n4js.ide.server.build.N4JSProjectBuilder;
 import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
@@ -67,6 +68,7 @@ import org.eclipse.n4js.xtext.ide.server.build.IBuildRequestFactory;
 import org.eclipse.n4js.xtext.ide.server.build.ProjectBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.ProjectStatePersister;
 import org.eclipse.n4js.xtext.ide.server.build.WorkspaceAwareResourceSet;
+import org.eclipse.n4js.xtext.ide.server.build.XClusteringStorageAwareResourceLoader;
 import org.eclipse.n4js.xtext.ide.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 import org.eclipse.n4js.xtext.ide.server.contentassist.XContentAssistService;
@@ -194,6 +196,10 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends XStatefulIncrementalBuilder> bindStatefulIncrementalBuilder() {
 		return N4JSStatefulIncrementalBuilder.class;
+	}
+
+	public Class<? extends XClusteringStorageAwareResourceLoader> bindXClusteringStorageAwareResourceLoader() {
+		return N4JSClusteringStorageAwareResourceLoader.class;
 	}
 
 	public Class<? extends BuildOrderFactory.BuildOrderInfoComputer> bindBuildOrderInfoComputer() {

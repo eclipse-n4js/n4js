@@ -16,9 +16,11 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.utils.URIUtils;
 
 /**
- * This adapter holds information about nested resources that need to be created and loaded when loading this resource.
+ * This adapter is installed on host resources and holds information about nested resources that need to be created and
+ * loaded when loading this resource.
  */
 public interface ILoadResultInfoAdapter extends Adapter {
 
@@ -50,4 +52,15 @@ public interface ILoadResultInfoAdapter extends Adapter {
 	 */
 	public void ensureNestedResourcesExist(Resource resource);
 
+	/**
+	 * Ensures that all nested resources of the host resource corresponding to the given URI exist.
+	 */
+	public static void ensureNestedResourcesExist(ResourceSet resourceSet, URI hostOrNestedResourceURI) {
+		URI hostURI = URIUtils.getBaseOfVirtualResourceURI(hostOrNestedResourceURI);
+		Resource hostResource = resourceSet.getResource(hostURI, true);
+		ILoadResultInfoAdapter loadResultInfoAdapter = ILoadResultInfoAdapter.get(hostResource);
+		if (loadResultInfoAdapter != null) {
+			loadResultInfoAdapter.ensureNestedResourcesExist(hostResource);
+		}
+	}
 }
