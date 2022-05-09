@@ -100,4 +100,9 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 			ISelectable importFrom, EClass type, boolean ignoreCase) {
 		return new NonResolvingImportScope(namespaceResolvers, parent, importFrom, type, ignoreCase);
 	}
+
+	@Override
+	protected IScope getResourceScope(IScope parent, EObject context, EReference reference) {
+		return parent; // not required in N4JS
+	}
 }
