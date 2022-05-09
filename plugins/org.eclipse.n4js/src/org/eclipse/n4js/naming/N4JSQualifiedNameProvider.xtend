@@ -49,41 +49,27 @@ import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
- * Calculates the fully qualified name for the passed in objects.
- * <p>
- * Be very careful when changing anything here as the FQN affects a lot of concepts, including scoping and even typing.
- * That is, elements are often handled differently if they have a qualified name or not.
+ * Calculates the fully qualified name for the passed-in objects.
  */
 class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 
-	/**
-	 * The injected qualified name converter.
-	 */
+	/** The injected qualified name converter. */
 	@Inject
 	protected IQualifiedNameConverter converter;
 
-	/**
-	 * Segment used for the global module.
-	 */
+	/** Segment used for globally available elements. */
 	public static String GLOBAL_NAMESPACE_SEGMENT = "#";
 
 	/** Last segment of fully qualified names for the root {@link JSONDocument} of package.json files. */
 	public static final String PACKAGE_JSON_SEGMENT = "!package_json";
 
-	/**
-	 * For the root element (Script) the resource qualified name is used.
-	 * For all other elements the resource qualified name plus the simple
-	 * name of the element is used as qualified name.
-	 * Exceptions are IdentifiableElement, N4ClassExpression and FunctionExpression
-	 * for which only the simple name is returned.
-	 * For a ExportDeclaration the qualified name of its contained element is returned.
-	 * For a TModule the qualified name is just converted from dots to slashes.
-	 */
 	override QualifiedName getFullyQualifiedName(EObject it) {
 		switch (it) {
 			// AST Nodes
 			Script:
 				module.fullyQualifiedName
+			N4NamespaceDeclaration:
+				if (name !== null) fqnNamespaceDeclaration(it)
 			N4TypeDeclaration:
 				if (name !== null) fqnTypeDeclaration(it)
 			FunctionDeclaration:
@@ -92,8 +78,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				if (name !== null && it.eContainer instanceof ExportDeclaration) rootContainer.fullyQualifiedName?.append(name)
 			N4TypeVariable:
 				null
-			N4NamespaceDeclaration:
-				if (name !== null) fqnNamespaceDeclaration(it)
 
 			// Type Model Elements
 			TModule:
@@ -128,8 +112,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				null
 		}
 	}
-
-
 
 	private def QualifiedName fqnTModule(TModule module) {
 		if ( module.qualifiedName.length != 0 && ! AnnotationDefinition.GLOBAL.hasAnnotation(module)) {
