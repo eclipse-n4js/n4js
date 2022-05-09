@@ -347,6 +347,45 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 	def void testChangeInDts_declaredModule() throws Exception {
 		testWorkspaceManager.createTestProjectOnDisk(
 			"A.d.ts" -> '''
+				declare module "declModuleA" {
+					export class ClsA {
+						fieldA: number;
+					}
+				}
+			''',
+			"B.d.ts" -> '''
+				declare module "declModuleB" {
+					import {ClsA} from "declModuleA"
+					export class ClsB {
+						fieldB: ClsA;
+					}
+				}
+			''',
+			"Main" -> '''
+				import {ClsB} from "declModuleB";
+				const y: number = new ClsB().fieldB.fieldA;
+			'''
+		);
+		startAndWaitForLspServer();
+		assertNoIssues();
+
+		changeNonOpenedFile("A.d.ts", ': number' -> ': string');
+		joinServerRequests();
+		assertIssues("Main" -> #[
+			// what we don't want to see:
+			// "Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
+			'(Error, [1:18 - 1:42], string is not a subtype of number.)'
+		]);
+
+		changeNonOpenedFile("A.d.ts", ': string' -> ': number');
+		joinServerRequests();
+		assertNoIssues();
+	}
+
+	@Test
+	def void testChangeInDts_declaredModuleAffectedButNotItsHost() throws Exception {
+		testWorkspaceManager.createTestProjectOnDisk(
+			"A.d.ts" -> '''
 				declare module "a/b/declModule" {
 					export const x: number;
 				}
