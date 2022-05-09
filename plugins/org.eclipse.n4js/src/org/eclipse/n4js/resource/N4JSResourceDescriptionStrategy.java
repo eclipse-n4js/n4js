@@ -16,21 +16,18 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.ts.types.ElementExportDefinition;
-import org.eclipse.n4js.ts.types.ExportDefinition;
+import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.ModuleExportDefinition;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TConstableElement;
-import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
-import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -44,7 +41,6 @@ import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.ITextRegion;
 import org.eclipse.xtext.util.LineAndColumn;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.ForwardingMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -204,38 +200,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	@Inject
 	private ILocationInFileProvider locationInFileProvider;
 
-	@Override
-	public boolean createEObjectDescriptions(final EObject eObject, IAcceptor<IEObjectDescription> acceptor) {
-		if (getQualifiedNameProvider() == null)
-			return false;
-		if (eObject instanceof TModule) {
-			TModule module = (TModule) eObject;
-			internalCreateEObjectDescriptionForRoot(module, acceptor);
-			for (ExportDefinition exportDef : module.getExportDefinitions()) {
-				if (exportDef instanceof ElementExportDefinition) {
-					if (isReexport((ElementExportDefinition) exportDef)) {
-						// ignore (no need to duplicate re-exported elements in the Xtext index)
-						// (WARNING: if re-exported elements should be added to the index in the future, make sure that
-						// the below calls to #addLocationUserData() won't trigger demand-loading of the AST / relinking
-						// of TModule in the resource containing the re-exported element!)
-					} else {
-						internalCreateEObjectDescription((ElementExportDefinition) exportDef, acceptor);
-					}
-				} else if (exportDef instanceof ModuleExportDefinition) {
-					// ignore (no need to duplicate the elements of exportDef.exportedModule in the Xtext index)
-				}
-			}
-			// to better support UI functionality such as "Open Type" we also add non-exported types to the index:
-			for (Type type : ((TModule) eObject).getTypes()) {
-				if (!type.isDirectlyExported()) {
-					internalCreateEObjectDescription(Optional.absent(), type, acceptor);
-				}
-			}
-		}
-		// export is only possible for top-level elements
-		return false;
-	}
-
 	/** @return the source code location of the element represented by the given {@link IEObjectDescription}. */
 	public static Location getLocation(IEObjectDescription description) {
 		String userData = description.getUserData(LOCATION_KEY);
@@ -330,6 +294,39 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		return Boolean.parseBoolean(value);
 	}
 
+	/**
+	 * Registers type model elements (types, functions, variables, etc.) in the global Xtext index under their
+	 * {@link QualifiedName qualified name}.
+	 * <p>
+	 * <b><u>Usually</u></b>, this registration does not have a direct impact on scoping, i.e. the elements registered
+	 * here are not directly available as targets for cross-references in the source code. Instead, this information
+	 * will mainly be used by UI functionality (e.g. "Open Workspace Symbol") and for internal element look up by name
+	 * in special cases (e.g. searching polyfills for a filled classifier; searching declarations for declaration
+	 * merging).
+	 * <p>
+	 * The only <b><u>exception</u></b> are global elements, which become directly available in the source code by being
+	 * registered here with the {@link N4JSQualifiedNameProvider #GLOBAL_NAMESPACE_SEGMENT GLOBAL_NAMESPACE_SEGMENT}.
+	 */
+	@Override
+	public boolean createEObjectDescriptions(final EObject eObject, IAcceptor<IEObjectDescription> acceptor) {
+		if (getQualifiedNameProvider() == null)
+			return false;
+		if (eObject instanceof TModule) {
+			TModule module = (TModule) eObject;
+			internalCreateEObjectDescriptionForRoot(module, acceptor);
+			for (TNamespace namespace : module.getNamespaces()) {
+				internalCreateEObjectDescription(namespace, acceptor);
+			}
+			for (Type type : module.getTypes()) {
+				internalCreateEObjectDescription(type, acceptor);
+			}
+			for (TVariable variable : module.getExportedVariables()) {
+				internalCreateEObjectDescription(variable, acceptor);
+			}
+		}
+		return false;
+	}
+
 	private void internalCreateEObjectDescriptionForRoot(final TModule module,
 			IAcceptor<IEObjectDescription> acceptor) {
 		// user data: serialized representation
@@ -371,46 +368,15 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 
 	}
 
-	private void internalCreateEObjectDescription(ElementExportDefinition exportDef,
-			IAcceptor<IEObjectDescription> acceptor) {
-
-		TExportableElement element = (TExportableElement) exportDef.eGet(
-				TypesPackage.Literals.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT, false);
-		if (element == null) {
-			throw new NullPointerException("ExportDefinition#exportedElement may not be null");
-		} else if (element.eIsProxy()) {
-			// this will happen during pre-indexing phase for indirect exports
-			// (i.e. export via a separate export declaration)
-			internalCreateEObjectDescriptionForProxy(exportDef, element, acceptor);
-		} else if (element instanceof Type) {
-			internalCreateEObjectDescription(Optional.of(exportDef), (Type) element, acceptor);
-		} else if (element instanceof TVariable) {
-			internalCreateEObjectDescription(exportDef, (TVariable) element, acceptor);
-		} else {
-			throw new UnsupportedOperationException(
-					"unsupported subclass of TExportableElement: " + element.eClass().getName());
-		}
-	}
-
-	private void internalCreateEObjectDescriptionForProxy(ExportDefinition exportDef, EObject exportedElementProxy,
-			IAcceptor<IEObjectDescription> acceptor) {
-
-		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(exportDef);
-		IEObjectDescription eod = N4JSEObjectDescription.create(qualifiedName, exportedElementProxy);
-		acceptor.accept(eod);
-	}
-
 	/**
 	 * Create EObjectDescriptions for elements for which N4JSQualifiedNameProvider provides a FQN; elements with a FQN
 	 * of <code>null</code> will be ignored.
 	 */
-	private void internalCreateEObjectDescription(Optional<ElementExportDefinition> exportDef, Type type,
-			IAcceptor<IEObjectDescription> acceptor) {
+	private void internalCreateEObjectDescription(Type type, IAcceptor<IEObjectDescription> acceptor) {
 
 		final String typeName = type.getName();
 		if (typeName != null && typeName.length() != 0) {
-			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(
-					exportDef.isPresent() ? exportDef.get() : type);
+			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
 			if (qualifiedName != null) {
 				Map<String, String> userData = new HashMap<>();
 				addLocationUserData(userData, type);
@@ -425,6 +391,23 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				IEObjectDescription eod = N4JSEObjectDescription.create(qualifiedName, type, userData);
 				acceptor.accept(eod);
 			}
+		}
+	}
+
+	/**
+	 * Create EObjectDescriptions for variables for which N4JSQualifiedNameProvider provides a FQN; variables with a FQN
+	 * of <code>null</code> (currently all non-exported variables) will be ignored.
+	 */
+	private void internalCreateEObjectDescription(TVariable variable, IAcceptor<IEObjectDescription> acceptor) {
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(variable);
+		if (qualifiedName != null) {
+			Map<String, String> userData = new HashMap<>();
+			addLocationUserData(userData, variable);
+			addAccessModifierUserData(userData, variable.getTypeAccessModifier());
+			addConstUserData(userData, variable);
+
+			IEObjectDescription eod = EObjectDescription.create(qualifiedName, variable, userData);
+			acceptor.accept(eod);
 		}
 	}
 
@@ -473,25 +456,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	}
 
 	/**
-	 * Create EObjectDescriptions for variables for which N4JSQualifiedNameProvider provides a FQN; variables with a FQN
-	 * of <code>null</code> (currently all non-exported variables) will be ignored.
-	 */
-	private void internalCreateEObjectDescription(ElementExportDefinition exportDef, TVariable variable,
-			IAcceptor<IEObjectDescription> acceptor) {
-
-		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(exportDef);
-		if (qualifiedName != null) {
-			Map<String, String> userData = new HashMap<>();
-			addLocationUserData(userData, variable);
-			addAccessModifierUserData(userData, variable.getTypeAccessModifier());
-			addConstUserData(userData, variable);
-
-			IEObjectDescription eod = EObjectDescription.create(qualifiedName, variable, userData);
-			acceptor.accept(eod);
-		}
-	}
-
-	/**
 	 * Creates the additional user data map for elements of type {@link TClassifier}.
 	 *
 	 * @param userData
@@ -531,11 +495,5 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				userData.put(TEST_CLASS_KEY, Boolean.toString(hasTestMethod));
 			}
 		}
-	}
-
-	private static boolean isReexport(ElementExportDefinition exportDef) {
-		TExportableElement element = (TExportableElement) exportDef.eGet(
-				TypesPackage.Literals.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT, false);
-		return element != null && !element.eIsProxy() && element.eResource() != exportDef.eResource();
 	}
 }
