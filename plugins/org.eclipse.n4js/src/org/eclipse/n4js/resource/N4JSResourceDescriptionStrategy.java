@@ -327,14 +327,42 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		return false;
 	}
 
-	private void internalCreateEObjectDescriptionForRoot(final TModule module,
-			IAcceptor<IEObjectDescription> acceptor) {
-		// user data: serialized representation
-		final Map<String, String> userData = createModuleUserData(module);
+	private void internalCreateEObjectDescriptionForRoot(TModule module, IAcceptor<IEObjectDescription> acceptor) {
 		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(module);
+		if (qualifiedName != null) {
+			Map<String, String> userData = createModuleUserData(module); // includes serialized TModule
 
-		IEObjectDescription eod = new EObjectDescription(qualifiedName, module, userData);
-		acceptor.accept(eod);
+			IEObjectDescription eod = new EObjectDescription(qualifiedName, module, userData);
+			acceptor.accept(eod);
+		}
+	}
+
+	private void internalCreateEObjectDescription(Type type, IAcceptor<IEObjectDescription> acceptor) {
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
+		if (qualifiedName != null) {
+			Map<String, String> userData = new HashMap<>();
+			addLocationUserData(userData, type);
+			addAccessModifierUserData(userData, type.getTypeAccessModifier());
+			if (type instanceof TClassifier) {
+				addClassifierUserData(userData, (TClassifier) type);
+			}
+
+			IEObjectDescription eod = N4JSEObjectDescription.create(qualifiedName, type, userData);
+			acceptor.accept(eod);
+		}
+	}
+
+	private void internalCreateEObjectDescription(TVariable variable, IAcceptor<IEObjectDescription> acceptor) {
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(variable);
+		if (qualifiedName != null) {
+			Map<String, String> userData = new HashMap<>();
+			addLocationUserData(userData, variable);
+			addAccessModifierUserData(userData, variable.getTypeAccessModifier());
+			addConstUserData(userData, variable);
+
+			IEObjectDescription eod = EObjectDescription.create(qualifiedName, variable, userData);
+			acceptor.accept(eod);
+		}
 	}
 
 	private Map<String, String> createModuleUserData(final TModule module) {
@@ -366,49 +394,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			}
 		};
 
-	}
-
-	/**
-	 * Create EObjectDescriptions for elements for which N4JSQualifiedNameProvider provides a FQN; elements with a FQN
-	 * of <code>null</code> will be ignored.
-	 */
-	private void internalCreateEObjectDescription(Type type, IAcceptor<IEObjectDescription> acceptor) {
-
-		final String typeName = type.getName();
-		if (typeName != null && typeName.length() != 0) {
-			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
-			if (qualifiedName != null) {
-				Map<String, String> userData = new HashMap<>();
-				addLocationUserData(userData, type);
-				addAccessModifierUserData(userData, type.getTypeAccessModifier());
-
-				// Add additional user data for descriptions representing a TClassifier
-				if (type instanceof TClassifier) {
-					final TClassifier tClassifier = (TClassifier) type;
-					addClassifierUserData(userData, tClassifier);
-				}
-
-				IEObjectDescription eod = N4JSEObjectDescription.create(qualifiedName, type, userData);
-				acceptor.accept(eod);
-			}
-		}
-	}
-
-	/**
-	 * Create EObjectDescriptions for variables for which N4JSQualifiedNameProvider provides a FQN; variables with a FQN
-	 * of <code>null</code> (currently all non-exported variables) will be ignored.
-	 */
-	private void internalCreateEObjectDescription(TVariable variable, IAcceptor<IEObjectDescription> acceptor) {
-		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(variable);
-		if (qualifiedName != null) {
-			Map<String, String> userData = new HashMap<>();
-			addLocationUserData(userData, variable);
-			addAccessModifierUserData(userData, variable.getTypeAccessModifier());
-			addConstUserData(userData, variable);
-
-			IEObjectDescription eod = EObjectDescription.create(qualifiedName, variable, userData);
-			acceptor.accept(eod);
-		}
 	}
 
 	private void addLocationUserData(Map<String, String> userData, IdentifiableElement elem) {
