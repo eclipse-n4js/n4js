@@ -18,6 +18,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 import org.eclipse.xtext.resource.IResourceServiceProviderExtension;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -110,6 +111,9 @@ public class XClusteringStorageAwareResourceLoader {
 	/** Actually loads a resource. */
 	protected LoadResult loadResource(ResourceSet resourceSet, URI uri, Set<URI> addNewUrisHere, Set<URI> urisDone) {
 		try {
+			if (URIUtils.isVirtualResourceURI(uri)) {
+				ILoadResultInfoAdapter.ensureNestedResourcesExist(resourceSet, uri);
+			}
 			Resource resource = resourceSet.getResource(uri, true);
 			ILoadResultInfoAdapter loadResultInfo = ILoadResultInfoAdapter.get(resource);
 			if (loadResultInfo != null) {
