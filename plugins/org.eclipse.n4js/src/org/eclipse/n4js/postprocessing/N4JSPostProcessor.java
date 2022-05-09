@@ -245,6 +245,7 @@ public class N4JSPostProcessor implements PostProcessor {
 		addHere.addAll(module.getExportDefinitions());
 		for (AbstractNamespace namespace : module.getAllNamespaces()) {
 			addHere.addAll(namespace.getTypes());
+			addHere.addAll(namespace.getFunctions());
 			addHere.addAll(namespace.getExportedVariables());
 			addHere.addAll(namespace.getExposedLocalVariables());
 		}

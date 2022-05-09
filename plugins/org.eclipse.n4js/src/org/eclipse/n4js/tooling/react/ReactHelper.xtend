@@ -240,10 +240,9 @@ class ReactHelper {
 	 */
 	def private TFunction lookUpReactElementFactoryFunction(TModule module) {
 		if (module !== null) {
-			for (Type currTopLevelType : module.getTypes()) {
-				if (currTopLevelType instanceof TFunction
-						&& REACT_ELEMENT_FACTORY_FUNCTION_NAME.equals(currTopLevelType.getName())) {
-					return currTopLevelType as TFunction;
+			for (TFunction currTopLevelType : module.getFunctions()) {
+				if (REACT_ELEMENT_FACTORY_FUNCTION_NAME.equals(currTopLevelType.getName())) {
+					return currTopLevelType;
 				}
 			}
 		}

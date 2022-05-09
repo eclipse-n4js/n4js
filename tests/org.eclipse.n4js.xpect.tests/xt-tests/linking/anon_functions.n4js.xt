@@ -29,7 +29,7 @@ test1FunVar();
 // ast:2, types:0
 // tested with Node.js and Chrome Dev Tools (without typing test2FunParam)
 function test2Fun(test2FunParam : { function(): string }) {
-// XPECT linkedFragment at '<|>test2FunParam();' --> /1/@types.0/@fpars.0
+// XPECT linkedFragment at '<|>test2FunParam();' --> /1/@functions.0/@fpars.0
 	test2FunParam();
 }
 // ast:3

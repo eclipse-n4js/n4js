@@ -558,7 +558,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * @param contextResource Receiver context {@link EObject} which is importing elements
 	 */
 	private def IScope scope_AllTopLevelElementsFromAbstractNamespace(AbstractNamespace ns, EObject context,
-		boolean includeHollows, boolean includeVariables
+		boolean includeHollows, boolean includeValueOnlyElements
 	) {
 		if (ns === null) {
 			return IScope.NULLSCOPE;
@@ -574,7 +574,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		try {
 			// get regular top-level elements scope
-			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, includeHollows, includeVariables);
+			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, includeHollows, includeValueOnlyElements);
 			val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromAbstractNamespace", ns, IScope.NULLSCOPE, false, tlElems);
 			return topLevelElementsScope;
 		} finally {
@@ -628,11 +628,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	
 
 	private def IScope createScopeForNamespaceAccess(ModuleNamespaceVirtualType namespace, EObject context,
-		boolean includeHollows, boolean includeVariables
+		boolean includeHollows, boolean includeValueOnlyElements
 	) {
 		val module = namespace.module;
 		val result = if (module !== null && !module.eIsProxy) {
-				scope_AllTopLevelElementsFromAbstractNamespace(module, context, includeHollows, includeVariables);
+				scope_AllTopLevelElementsFromAbstractNamespace(module, context, includeHollows, includeValueOnlyElements);
 			} else {
 				// error cases
 				if (namespace.eIsProxy) {

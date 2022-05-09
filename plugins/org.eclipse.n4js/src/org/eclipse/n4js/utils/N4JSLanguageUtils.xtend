@@ -1200,23 +1200,31 @@ public class N4JSLanguageUtils {
 	
 	
 	/**
-	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
-	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
+	 * Elements can have a type-only semantic (called 'hollow'), a value-only semantic, or can have both of them.
+	 * A typical example for a hollow element is a shape, a typical example for a value-only element is a
+	 * const variable, and a typical example for an element that has both semantics is a class. 
+	 *
+	 * @return {@code true} iff the given element is hollow.
 	 */
-	def static boolean isHollowElement(TypeDefiningElement typeDecl, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isHollow = typeDecl instanceof NamespaceElement && (typeDecl as NamespaceElement).isHollow;
+	def static boolean isHollowElement(TypableElement typableElem, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isHollow = typableElem instanceof NamespaceElement && (typableElem as NamespaceElement).isHollow
+						|| typableElem instanceof Type && (typableElem as Type).isHollow;
 		return isHollow;
 	}
 	
-	
 	/**
-	 * Tells whether the given type like element is an element such as a {@Type} that can coexist
-	 * with another value like identifiable element such as a {@link TVariable} despite having the same name.
+	 * @see #isHollowElement(TypeDefiningElement, JavaScriptVariantHelper)
+	 *
+	 * @return true iff the given element is value-only.
 	 */
-	def static boolean isHollowElement(IdentifiableElement element, JavaScriptVariantHelper javaScriptVariantHelper) {
-		val isHollowElement = element instanceof Type && (element as Type).isHollow;
-		return isHollowElement;
+	def static boolean isValueOnlyElement(TypableElement typableElem, JavaScriptVariantHelper javaScriptVariantHelper) {
+		val isValueOnly = typableElem instanceof VariableDeclaration
+						|| typableElem instanceof TVariable
+						|| typableElem instanceof FunctionDefinition
+						|| typableElem instanceof TFunction;
+		return isValueOnly;
 	}
+	
 
 	/**
 	 * Check if the interface is built-in or an external without N4JS annotation.
