@@ -676,7 +676,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 		beforeRegistration(fileName, module);
 
 		// register types
-		for (Type type : module.getTypes()) {
+		for (Type type : module.getTypesAndFunctions()) {
 			IEObjectDescription description = EObjectDescription.create(type.getName(), type);
 			elements.put(description.getName(), description);
 		}

@@ -21,7 +21,7 @@ var v2 : constructor{G<string>};
 
 function foo() {}
 
-// XPECT errors --> "Function types are not allowed in classifier type references." at "foo"
+// XPECT errors --> "Couldn't resolve reference to Type 'foo'." at "foo"
 var v3 : type{foo};
 
 // Syntax error:

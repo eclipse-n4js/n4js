@@ -41,6 +41,7 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.internal.WildcardAsStringUtils
+import org.eclipse.n4js.ts.types.util.TypeModelUtils
 import org.eclipse.n4js.utils.Strings
 
 type UUID wraps UUID
@@ -312,6 +313,13 @@ abstract class TypeRef extends TypeArgument {
 	 */
 	op TStructMember[] getStructuralMembers() {
 		return emptyEList();
+	}
+	/*
+	 * Returns true if type ref is structural. This is different from {@link #getTypingStrategy}, which
+	 * returns true if either use or def site structural typing is true.
+	 */
+	op boolean isStructuralTyping() {
+		return TypeModelUtils.isStructural(getTypingStrategy());
 	}
 	/*
 	 * Returns true if type ref is structural. This is different from {@link #getTypingStrategy}, which

@@ -51,6 +51,7 @@ import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.RecursionGuard
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 
 /**
  * Type System Helper Strategy for managing type variable mappings in RuleEnvironments of XSemantics.
@@ -65,6 +66,8 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	@Inject
 	private TypeCompareHelper typeCompareHelper;
 
+	@Inject
+	private SimplifyComputer simplifyComputer;
 
 	/**
 	 * Given a type reference to a generic type G where type variables are already bound, e.g.,
@@ -151,6 +154,10 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 
 		// resolve typeArg
 		var Object actualTypeArg = typeArg;
+		// simplify to avoid recursion, see test GH-2344_Recursion_Bug_Type_Judgement.n4js.xt
+		actualTypeArg = if (actualTypeArg instanceof ComposedTypeRef)
+			simplifyComputer.simplify(G, actualTypeArg) else actualTypeArg;
+
 		while(G.hasSubstitutionFor(actualTypeArg)) {
 			val actualTypeArgCasted = actualTypeArg as TypeRef; // otherwise #hasSubstitutionFor() would not have returned true
 			val fromEnv = G.environment.get(actualTypeArgCasted.declaredType);

@@ -57,7 +57,7 @@ public class DtsAfterBuildListener implements AfterBuildRequestListener {
 				ensureTSConfig();
 			}
 		} catch (Exception e) {
-			LOGGER.error("Could not read tsconfig.json: " + tsconfig.toString(), e);
+			LOGGER.error("Could not read tsconfig.json: " + tsconfig.toString() + ". Error was " + e.getMessage());
 		}
 	}
 

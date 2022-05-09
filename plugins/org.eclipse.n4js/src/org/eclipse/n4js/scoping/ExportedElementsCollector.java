@@ -25,6 +25,7 @@ import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.ExportDefinition;
 import org.eclipse.n4js.ts.types.ModuleExportDefinition;
 import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
@@ -62,7 +63,7 @@ public class ExportedElementsCollector {
 		final AbstractNamespace start;
 		final Resource context;
 		final boolean includeHollows;
-		final boolean includeVariables;
+		final boolean includeValueOnlyElements;
 
 		final List<IEObjectDescription> visible = new ArrayList<>();
 		final List<IEObjectDescription> invisible = new ArrayList<>();
@@ -74,7 +75,7 @@ public class ExportedElementsCollector {
 			this.start = start;
 			this.context = context;
 			this.includeHollows = includeHollows;
-			this.includeVariables = includeVariables;
+			this.includeValueOnlyElements = includeVariables;
 		}
 
 		public boolean tryNext(AbstractNamespace next) {
@@ -101,9 +102,9 @@ public class ExportedElementsCollector {
 	 *            The context resource for visibility checks.
 	 */
 	public Iterable<IEObjectDescription> getExportedElements(AbstractNamespace namespace, Resource context,
-			boolean includeHollows, boolean includeVariables) {
+			boolean includeHollows, boolean includeValueOnlyElements) {
 
-		CollectionInfo info = new CollectionInfo(namespace, context, includeHollows, includeVariables);
+		CollectionInfo info = new CollectionInfo(namespace, context, includeHollows, includeValueOnlyElements);
 		doCollectElements(namespace, info);
 		return Iterables.concat(info.visible, info.invisible);
 	}
@@ -158,7 +159,8 @@ public class ExportedElementsCollector {
 	private void doCollectElement(String exportedName, TExportableElement exportedElem, CollectionInfo info) {
 
 		boolean include = (info.includeHollows || !N4JSLanguageUtils.isHollowElement(exportedElem, variantHelper))
-				&& (info.includeVariables || !(exportedElem instanceof TVariable));
+				&& (info.includeValueOnlyElements || !N4JSLanguageUtils.isValueOnlyElement(exportedElem, variantHelper));
+
 		if (include) {
 			TypeVisibility visibility = isVisible(info.context, exportedElem);
 			if (visibility.visibility) {
@@ -169,7 +171,7 @@ public class ExportedElementsCollector {
 						visibility.accessModifierSuggestion));
 			}
 		} else {
-			if (exportedElem instanceof Type) {
+			if (exportedElem instanceof Type && !(exportedElem instanceof TFunction)) {
 				info.invisible.add(new HollowTypeOrValueDescription(
 						createObjectDescription(exportedName, exportedElem), "type"));
 			} else {

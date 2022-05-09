@@ -20,3 +20,5 @@ export external type T1 = string;
 
 export external const K1 : string;
 
+export external function F1(i: number) : string;
+

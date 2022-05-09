@@ -140,7 +140,7 @@ class ImportedElementsScopingHelper {
 		return QualifiedName.create(namespace, getImportedName(type));
 	}
 
-	private def IScope findImportedElements(Script script, IScope parentScope, boolean includeHollows, boolean includeVariables) {
+	private def IScope findImportedElements(Script script, IScope parentScope, boolean includeHollows, boolean includeValueOnlyElements) {
 		val contextResource = script.eResource;
 		val imports = script.scriptElements.filter(ImportDeclaration)
 
@@ -159,18 +159,18 @@ class ImportedElementsScopingHelper {
 			val module = imp?.module;
 			if (module !== null) {
 				
-				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, includeHollows, includeVariables);
+				val topLevelElements = exportedElementsCollector.getExportedElements(module, contextResource, includeHollows, includeValueOnlyElements);
 				val tleScope = scopesHelper.scopeFor("scope_AllTopLevelElementsFromModule", module, IScope.NULLSCOPE, false, topLevelElements)
 			
 				for (specifier : imp.importSpecifiers) {
 					switch (specifier) {
 						NamedImportSpecifier: {
 							processNamedImportSpecifier(specifier, imp, contextResource, originatorMap, validImports,
-								invalidImports, includeVariables, tleScope)
+								invalidImports, includeValueOnlyElements, tleScope)
 						}
 						NamespaceImportSpecifier: {
 							processNamespaceSpecifier(specifier, imp, script, contextResource, originatorMap, validImports,
-								invalidImports, includeVariables)
+								invalidImports, includeValueOnlyElements)
 						}
 					}
 				}
@@ -188,7 +188,7 @@ class ImportedElementsScopingHelper {
 	private def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
 			Resource contextResource, IEODesc2ISpec originatorMap,
 			ImportedElementsMap validImports,
-			ImportedElementsMap invalidImports, boolean importVariables, IScope tleScope) {
+			ImportedElementsMap invalidImports, boolean includeValueOnlyElements, IScope tleScope) {
 
 		val element = if (specifier.declaredDynamic) {
 			(specifier.eResource as N4JSResource).module.internalDynamicElements.findFirst[it.astElement === specifier];
@@ -207,7 +207,7 @@ class ImportedElementsScopingHelper {
 
 		if (element !== null && !element.eIsProxy) {
 
-			if (!importVariables && element.isVariableFrom(imp)) {
+			if (!includeValueOnlyElements && element.isValueOnlyFrom(imp)) {
 				return;
 			}
 
@@ -244,7 +244,7 @@ class ImportedElementsScopingHelper {
 		IEODesc2ISpec originatorMap,
 		ImportedElementsMap validImports,
 		ImportedElementsMap invalidImports,
-		boolean importVariables
+		boolean includeValueOnlyElements
 	) {
 		if (specifier.alias === null) {
 			return; // if broken code, e.g. "import * as 123 as N from 'some/Module'"
@@ -284,7 +284,7 @@ class ImportedElementsScopingHelper {
 		val ieodx = validImports.putOrError(namespaceType, namespaceQName, IssueCodes.IMP_AMBIGUOUS)
 		originatorMap.putWithOrigin(ieodx, specifier)
 
-		if (importVariables) {
+		if (includeValueOnlyElements) {
 			// add vars to namespace
 			// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 			for (importedVar : imp.module.exportedVariables) {
@@ -294,8 +294,20 @@ class ImportedElementsScopingHelper {
 				if (varVisibility.visibility) {
 					val originalName = QualifiedName.create(varName)
 					if (!invalidImports.containsElement(originalName)) {
-						importedVar.handleNamespacedAccess(originalName, qn, invalidImports, originatorMap,
-							specifier)
+						importedVar.handleNamespacedAccess(originalName, qn, invalidImports, originatorMap, specifier)
+					}
+				}
+			}
+			// add functions to namespace
+			// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
+			for (importedFun : imp.module.functions) {
+				val varVisibility = typeVisibilityChecker.isVisible(contextResource, importedFun);
+				val varName = importedFun.name
+				val qn = QualifiedName.create(namespaceName, varName)
+				if (varVisibility.visibility) {
+					val originalName = QualifiedName.create(varName)
+					if (!invalidImports.containsElement(originalName)) {
+						importedFun.handleNamespacedAccess(originalName, qn, invalidImports, originatorMap, specifier)
 					}
 				}
 			}
@@ -359,12 +371,17 @@ class ImportedElementsScopingHelper {
 		}
 	}
 
-	def private boolean isVariableFrom(IdentifiableElement element, ImportDeclaration imp) {
-		var res = false;
-		if ((imp?.module !== null && imp?.module.exportedVariables.contains(element))) {
-			res = true
+	def private boolean isValueOnlyFrom(IdentifiableElement element, ImportDeclaration imp) {
+		if (imp?.module === null) {
+			return false;
 		}
-		return res;
+		if (imp.module.functions.contains(element)) {
+			return true
+		}
+		if (imp.module.exportedVariables.contains(element)) {
+			return true
+		}
+		return false;
 	}
 
 	private def AbstractTypeVisibilityChecker.TypeVisibility isVisible(Resource contextResource,

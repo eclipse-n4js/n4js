@@ -39,9 +39,7 @@ class ~Props {
 }
 
 	/* XPECT scope at 'React.<|>ReactElement'  ---
-Component, ComponentProps, ReactElement, Fragment, PropConstraint, PropType,
-PropTypes, PureComponent, cloneElement, createElement, isValidElement,
-renderToStaticMarkup, renderToString
+Component, ComponentProps, Fragment, PropConstraint, PropType, PropTypes, PureComponent, ReactElement
 --- */
 export public function NamedFnComponent(props: Props): React.ReactElement {
 	return (<div>{props.myProp}</div>);

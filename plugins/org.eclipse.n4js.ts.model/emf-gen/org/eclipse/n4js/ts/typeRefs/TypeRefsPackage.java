@@ -404,13 +404,22 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_ARGUMENT_OPERATION_COUNT + 23;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_REF___IS_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 24;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 24;
+	int TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 25;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -419,7 +428,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 25;
+	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 26;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -428,7 +437,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 26;
+	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 27;
 
 	/**
 	 * The number of operations of the '<em>Type Ref</em>' class.
@@ -437,7 +446,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 27;
+	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 28;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StaticBaseTypeRefImpl <em>Static Base Type Ref</em>}' class.
@@ -700,6 +709,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int STATIC_BASE_TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STATIC_BASE_TYPE_REF___IS_STRUCTURAL_TYPING = TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -1000,6 +1018,15 @@ public interface TypeRefsPackage extends EPackage {
 	int BASE_TYPE_REF___GET_STRUCTURAL_MEMBERS = STATIC_BASE_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BASE_TYPE_REF___IS_STRUCTURAL_TYPING = STATIC_BASE_TYPE_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1296,6 +1323,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int COMPOSED_TYPE_REF___GET_STRUCTURAL_MEMBERS = STATIC_BASE_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_TYPE_REF___IS_STRUCTURAL_TYPING = STATIC_BASE_TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -1605,6 +1641,15 @@ public interface TypeRefsPackage extends EPackage {
 	int UNION_TYPE_EXPRESSION___GET_STRUCTURAL_MEMBERS = COMPOSED_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNION_TYPE_EXPRESSION___IS_STRUCTURAL_TYPING = COMPOSED_TYPE_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1912,6 +1957,15 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___GET_STRUCTURAL_MEMBERS = COMPOSED_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int INTERSECTION_TYPE_EXPRESSION___IS_STRUCTURAL_TYPING = COMPOSED_TYPE_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2199,6 +2253,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF___IS_BOTTOM_TYPE = BASE_TYPE_REF___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF___IS_STRUCTURAL_TYPING = BASE_TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -2506,6 +2569,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF_NOMINAL___IS_BOTTOM_TYPE = THIS_TYPE_REF___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_NOMINAL___IS_STRUCTURAL_TYPING = THIS_TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -2858,6 +2930,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int THIS_TYPE_REF_STRUCTURAL___IS_BOTTOM_TYPE = THIS_TYPE_REF___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int THIS_TYPE_REF_STRUCTURAL___IS_STRUCTURAL_TYPING = THIS_TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Def Site Structural Typing</em>' operation.
@@ -3237,6 +3318,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int BOUND_THIS_TYPE_REF___IS_BOTTOM_TYPE = THIS_TYPE_REF___IS_BOTTOM_TYPE;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOUND_THIS_TYPE_REF___IS_STRUCTURAL_TYPING = THIS_TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -3625,6 +3715,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int PARAMETERIZED_TYPE_REF___GET_STRUCTURAL_MEMBERS = BASE_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF___IS_STRUCTURAL_TYPING = BASE_TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -4151,6 +4250,15 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_BOTTOM_TYPE = PARAMETERIZED_TYPE_REF___IS_BOTTOM_TYPE;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4548,6 +4656,15 @@ public interface TypeRefsPackage extends EPackage {
 	int EXISTENTIAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXISTENTIAL_TYPE_REF___IS_STRUCTURAL_TYPING = TYPE_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -4862,6 +4979,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNKNOWN_TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int UNKNOWN_TYPE_REF___IS_STRUCTURAL_TYPING = TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -5187,6 +5313,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int TYPE_TYPE_REF___GET_STRUCTURAL_MEMBERS = BASE_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TYPE_TYPE_REF___IS_STRUCTURAL_TYPING = BASE_TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -5642,6 +5777,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPR_OR_REF___GET_STRUCTURAL_MEMBERS = STATIC_BASE_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPR_OR_REF___IS_STRUCTURAL_TYPING = STATIC_BASE_TYPE_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6055,6 +6199,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_TYPE_REF___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_REF___IS_STRUCTURAL_TYPING = PARAMETERIZED_TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
@@ -6553,6 +6706,15 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION___GET_STRUCTURAL_MEMBERS = FUNCTION_TYPE_EXPR_OR_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION___IS_STRUCTURAL_TYPING = FUNCTION_TYPE_EXPR_OR_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6941,6 +7103,15 @@ public interface TypeRefsPackage extends EPackage {
 	int DEFERRED_TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DEFERRED_TYPE_REF___IS_STRUCTURAL_TYPING = TYPE_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7303,6 +7474,15 @@ public interface TypeRefsPackage extends EPackage {
 	int LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int LITERAL_TYPE_REF___IS_STRUCTURAL_TYPING = TYPE_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7617,6 +7797,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int BOOLEAN_LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BOOLEAN_LITERAL_TYPE_REF___IS_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -7953,6 +8142,15 @@ public interface TypeRefsPackage extends EPackage {
 	int NUMERIC_LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int NUMERIC_LITERAL_TYPE_REF___IS_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8278,6 +8476,15 @@ public interface TypeRefsPackage extends EPackage {
 	int STRING_LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int STRING_LITERAL_TYPE_REF___IS_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_STRUCTURAL_TYPING;
+
+	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8601,6 +8808,15 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int ENUM_LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS = LITERAL_TYPE_REF___GET_STRUCTURAL_MEMBERS;
+
+	/**
+	 * The operation id for the '<em>Is Structural Typing</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ENUM_LITERAL_TYPE_REF___IS_STRUCTURAL_TYPING = LITERAL_TYPE_REF___IS_STRUCTURAL_TYPING;
 
 	/**
 	 * The operation id for the '<em>Is Use Site Structural Typing</em>' operation.
@@ -9007,6 +9223,16 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTypeRef__GetStructuralMembers();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isStructuralTyping() <em>Is Structural Typing</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Structural Typing</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#isStructuralTyping()
+	 * @generated
+	 */
+	EOperation getTypeRef__IsStructuralTyping();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isUseSiteStructuralTyping() <em>Is Use Site Structural Typing</em>}' operation.
@@ -10855,6 +11081,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TYPE_REF___GET_STRUCTURAL_MEMBERS = eINSTANCE.getTypeRef__GetStructuralMembers();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Structural Typing</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TYPE_REF___IS_STRUCTURAL_TYPING = eINSTANCE.getTypeRef__IsStructuralTyping();
 
 		/**
 		 * The meta object literal for the '<em><b>Is Use Site Structural Typing</b></em>' operation.

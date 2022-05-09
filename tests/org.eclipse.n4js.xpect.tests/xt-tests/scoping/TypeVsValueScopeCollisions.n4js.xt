@@ -32,3 +32,24 @@ type T2 = string;
 let t2a : T2 = null;
 // XPECT noerrors -->
 let t2b = T2;
+
+
+
+// Hollows and functions: ERROR (Actually OK, but only in n4jsd files at the moment)
+type F1 = string;
+// XPECT errors --> "Function F1 duplicates type alias F1 (line 39)." at "F1"
+function F1() : void {}
+// XPECT noerrors -->
+let f1a : F1 = "";
+// XPECT noerrors -->
+let f1b = F1;
+
+
+// reverse order
+function F2() : void {}
+// XPECT errors --> "Type alias F2 duplicates function F2 (line 49)." at "F2"
+type F2 = string;
+// XPECT noerrors -->
+let f2a : F2 = "";
+// XPECT noerrors -->
+let f2b = F2;

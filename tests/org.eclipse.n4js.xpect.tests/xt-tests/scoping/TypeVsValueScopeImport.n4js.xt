@@ -27,7 +27,7 @@
  */
 
 
-import {I1, T1} from "TypeVsValueScopeExport"
+import {I1, T1, I2, T2} from "TypeVsValueScopeExport"
 
 
 // XPECT noerrors -->
@@ -37,7 +37,20 @@ let i1_VAL = I1;
 
 
 // XPECT noerrors -->
-let t1_TYPE : T1 = null;
+let t1_TYPE : T1 = "s";
 // XPECT noerrors -->
 let t1_VAL = T1;
+
+
+
+// XPECT noerrors -->
+interface I2_TYPE extends I2 {}
+// XPECT noerrors -->
+I2(42);
+
+
+// XPECT noerrors -->
+let t2_TYPE : T2 = "s";
+// XPECT noerrors -->
+T2(42);
 

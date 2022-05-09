@@ -22,6 +22,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getTypes <em>Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getFunctions <em>Functions</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExportedVariables <em>Exported Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getLocalVariables <em>Local Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.AbstractNamespace#getExposedLocalVariables <em>Exposed Local Variables</em>}</li>
@@ -39,9 +40,9 @@ public interface AbstractNamespace extends TExportingElement {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * A list of all types declarations in the script on the top level.
-	 * These include the exported classes, interfaces, function as well
-	 * as the types inferred from type defining elements that are not marked as exported.
+	 * A list of all types declarations of this namespace.
+	 * These include the exported classes, interfaces as well as the types
+	 * inferred from type defining elements that are not marked as exported.
 	 * This allows for better validation messages and diagnostics in later stages
 	 * of the processing.
 	 * <!-- end-model-doc -->
@@ -51,6 +52,23 @@ public interface AbstractNamespace extends TExportingElement {
 	 * @generated
 	 */
 	EList<Type> getTypes();
+
+	/**
+	 * Returns the value of the '<em><b>Functions</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TFunction}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * A list of all functions of this namespace, both exported and local.
+	 * This allows for better validation messages and diagnostics in later stages
+	 * of the processing.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Functions</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getAbstractNamespace_Functions()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<TFunction> getFunctions();
 
 	/**
 	 * Returns the value of the '<em><b>Exported Variables</b></em>' containment reference list.
@@ -113,6 +131,18 @@ public interface AbstractNamespace extends TExportingElement {
 	 * @generated
 	 */
 	EList<TNamespace> getNamespaces();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns all exportable elements directly contained in this {@link AbstractNamespace},
+	 * including those not actually exported.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfType" unique="false"
+	 * @generated
+	 */
+	Iterable<? extends Type> getTypesAndFunctions();
 
 	/**
 	 * <!-- begin-user-doc -->

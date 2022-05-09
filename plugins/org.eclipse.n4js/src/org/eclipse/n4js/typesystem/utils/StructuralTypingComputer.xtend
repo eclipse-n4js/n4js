@@ -105,7 +105,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		if (G.isStructuralSubtypingInProgressFor(left, right)) {
 			return result(left, right, emptyList, emptyList);
 		}
-		val G2 = G.wrapIfInitialInvocation; // don't pollute incoming rule environment with our recursion guard
+		val G2 = G.wrap;
 		G2.rememberStructuralSubtypingInProgressFor(left, right);
 
 		val info = new StructTypingInfo(G2, left, right, leftStrategy, rightStrategy); // we'll collect error messages in here
@@ -486,31 +486,6 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		return rightMemberIsOptional;
 	}
 
-	def private RuleEnvironment wrapIfInitialInvocation(RuleEnvironment G) {
-		if (G.isStructuralSubtypingInProgress()) {
-			// this is a reentrant invocation as part of an outer structural subtype check
-			// --> do *not* create a new rule environment to avoid losing added recursion guards when this reentrant invocation completes
-			return G;
-		} else {
-			// this is an initial invocation not nested within an outer structural subtype check
-			// --> wrap given rule environment to avoid polluting it with newly added recursion guards
-			val G2 = G.wrap;
-			G2.rememberStructuralSubtypingInProgress();
-			return G2;
-		};
-	}
-
-	/** 
-	 * Store a guard in the given rule environment to note that we are in the process of computing
-	 * a structural subtype check, independent of the left/right type reference being checked.
-	 * <p>
-	 * For details about recursion guards of {@code StructuralTypingComputer} see
-	 * {@link #rememberStructuralSubtypingInProgressFor(RuleEnvironment, TypeRef, TypeRef)}.
-	 */
-	def private void rememberStructuralSubtypingInProgress(RuleEnvironment G) {
-		G.put(GUARD_STRUCTURAL_TYPING_COMPUTER__IN_PROGRESS, Boolean.TRUE);
-	}
-
 	/**
 	 * Store a guard in the given rule environment to note that we are in the process of inferring
 	 * left ~<: right.
@@ -549,10 +524,6 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 	 */
 	def private void rememberStructuralSubtypingInProgressFor(RuleEnvironment G, TypeRef left, TypeRef right) {
 		G.put(GUARD_STRUCTURAL_TYPING_COMPUTER__IN_PROGRESS_FOR_TYPE_REF -> (left.wrap -> right.wrap), Boolean.TRUE);
-	}
-
-	def private boolean isStructuralSubtypingInProgress(RuleEnvironment G) {
-		return G.get(GUARD_STRUCTURAL_TYPING_COMPUTER__IN_PROGRESS) !== null;
 	}
 
 	def private boolean isStructuralSubtypingInProgressFor(RuleEnvironment G, TypeRef left, TypeRef right) {

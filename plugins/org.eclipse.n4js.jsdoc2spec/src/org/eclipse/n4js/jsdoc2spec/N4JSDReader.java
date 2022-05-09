@@ -180,7 +180,7 @@ public class N4JSDReader {
 	 */
 	private Collection<Type> getRealTopLevelTypes(Script script) {
 		Collection<Type> realTLT = new LinkedList<>();
-		for (Type tlt : script.getModule().getTypes()) {
+		for (Type tlt : script.getModule().getTypesAndFunctions()) {
 			if (tlt instanceof SyntaxRelatedTElement) {
 				SyntaxRelatedTElement srte = (SyntaxRelatedTElement) tlt;
 				EObject astElem = srte.getAstElement();

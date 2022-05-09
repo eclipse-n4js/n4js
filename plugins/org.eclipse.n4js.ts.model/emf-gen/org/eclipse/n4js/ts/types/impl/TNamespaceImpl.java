@@ -41,6 +41,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TExportingElement;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
@@ -64,6 +65,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getExportDefinitions <em>Export Definitions</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getTypes <em>Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getFunctions <em>Functions</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getExportedVariables <em>Exported Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getLocalVariables <em>Local Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl#getExposedLocalVariables <em>Exposed Local Variables</em>}</li>
@@ -96,6 +98,16 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	 * @ordered
 	 */
 	protected EList<Type> types;
+
+	/**
+	 * The cached value of the '{@link #getFunctions() <em>Functions</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getFunctions()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TFunction> functions;
 
 	/**
 	 * The cached value of the '{@link #getExportedVariables() <em>Exported Variables</em>}' containment reference list.
@@ -250,6 +262,19 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 			types = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TNAMESPACE__TYPES);
 		}
 		return types;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TFunction> getFunctions() {
+		if (functions == null) {
+			functions = new EObjectContainmentEList<TFunction>(TFunction.class, this, TypesPackage.TNAMESPACE__FUNCTIONS);
+		}
+		return functions;
 	}
 
 	/**
@@ -482,8 +507,18 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	 * @generated
 	 */
 	@Override
+	public Iterable<? extends Type> getTypesAndFunctions() {
+		return Iterables.<Type>concat(this.getTypes(), this.getFunctions());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Iterable<? extends TExportableElement> getExportableElements() {
-		return Iterables.<TExportableElement>concat(this.getTypes(), this.getExportedVariables(), this.getLocalVariables(), this.getExposedLocalVariables(), this.getNamespaces());
+		return Iterables.<TExportableElement>concat(this.getTypes(), this.getFunctions(), this.getExportedVariables(), this.getLocalVariables(), this.getExposedLocalVariables(), this.getNamespaces());
 	}
 
 	/**
@@ -542,6 +577,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 				return ((InternalEList<?>)getExportDefinitions()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TNAMESPACE__TYPES:
 				return ((InternalEList<?>)getTypes()).basicRemove(otherEnd, msgs);
+			case TypesPackage.TNAMESPACE__FUNCTIONS:
+				return ((InternalEList<?>)getFunctions()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TNAMESPACE__EXPORTED_VARIABLES:
 				return ((InternalEList<?>)getExportedVariables()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TNAMESPACE__LOCAL_VARIABLES:
@@ -566,6 +603,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 				return getExportDefinitions();
 			case TypesPackage.TNAMESPACE__TYPES:
 				return getTypes();
+			case TypesPackage.TNAMESPACE__FUNCTIONS:
+				return getFunctions();
 			case TypesPackage.TNAMESPACE__EXPORTED_VARIABLES:
 				return getExportedVariables();
 			case TypesPackage.TNAMESPACE__LOCAL_VARIABLES:
@@ -603,6 +642,10 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 			case TypesPackage.TNAMESPACE__TYPES:
 				getTypes().clear();
 				getTypes().addAll((Collection<? extends Type>)newValue);
+				return;
+			case TypesPackage.TNAMESPACE__FUNCTIONS:
+				getFunctions().clear();
+				getFunctions().addAll((Collection<? extends TFunction>)newValue);
 				return;
 			case TypesPackage.TNAMESPACE__EXPORTED_VARIABLES:
 				getExportedVariables().clear();
@@ -650,6 +693,9 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 			case TypesPackage.TNAMESPACE__TYPES:
 				getTypes().clear();
 				return;
+			case TypesPackage.TNAMESPACE__FUNCTIONS:
+				getFunctions().clear();
+				return;
 			case TypesPackage.TNAMESPACE__EXPORTED_VARIABLES:
 				getExportedVariables().clear();
 				return;
@@ -690,6 +736,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 				return exportDefinitions != null && !exportDefinitions.isEmpty();
 			case TypesPackage.TNAMESPACE__TYPES:
 				return types != null && !types.isEmpty();
+			case TypesPackage.TNAMESPACE__FUNCTIONS:
+				return functions != null && !functions.isEmpty();
 			case TypesPackage.TNAMESPACE__EXPORTED_VARIABLES:
 				return exportedVariables != null && !exportedVariables.isEmpty();
 			case TypesPackage.TNAMESPACE__LOCAL_VARIABLES:
@@ -726,6 +774,7 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 		if (baseClass == AbstractNamespace.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.TNAMESPACE__TYPES: return TypesPackage.ABSTRACT_NAMESPACE__TYPES;
+				case TypesPackage.TNAMESPACE__FUNCTIONS: return TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS;
 				case TypesPackage.TNAMESPACE__EXPORTED_VARIABLES: return TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES;
 				case TypesPackage.TNAMESPACE__LOCAL_VARIABLES: return TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES;
 				case TypesPackage.TNAMESPACE__EXPOSED_LOCAL_VARIABLES: return TypesPackage.ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES;
@@ -765,6 +814,7 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 		if (baseClass == AbstractNamespace.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.ABSTRACT_NAMESPACE__TYPES: return TypesPackage.TNAMESPACE__TYPES;
+				case TypesPackage.ABSTRACT_NAMESPACE__FUNCTIONS: return TypesPackage.TNAMESPACE__FUNCTIONS;
 				case TypesPackage.ABSTRACT_NAMESPACE__EXPORTED_VARIABLES: return TypesPackage.TNAMESPACE__EXPORTED_VARIABLES;
 				case TypesPackage.ABSTRACT_NAMESPACE__LOCAL_VARIABLES: return TypesPackage.TNAMESPACE__LOCAL_VARIABLES;
 				case TypesPackage.ABSTRACT_NAMESPACE__EXPOSED_LOCAL_VARIABLES: return TypesPackage.TNAMESPACE__EXPOSED_LOCAL_VARIABLES;
@@ -815,6 +865,7 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 		}
 		if (baseClass == AbstractNamespace.class) {
 			switch (baseOperationID) {
+				case TypesPackage.ABSTRACT_NAMESPACE___GET_TYPES_AND_FUNCTIONS: return TypesPackage.TNAMESPACE___GET_TYPES_AND_FUNCTIONS;
 				case TypesPackage.ABSTRACT_NAMESPACE___GET_EXPORTABLE_ELEMENTS: return TypesPackage.TNAMESPACE___GET_EXPORTABLE_ELEMENTS;
 				case TypesPackage.ABSTRACT_NAMESPACE___GET_ALL_NAMESPACES: return TypesPackage.TNAMESPACE___GET_ALL_NAMESPACES;
 				case TypesPackage.ABSTRACT_NAMESPACE___GET_CONTAINING_MODULE: return TypesPackage.TNAMESPACE___GET_CONTAINING_MODULE;
@@ -856,6 +907,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 				return getTypeAccessModifier();
 			case TypesPackage.TNAMESPACE___GET_DEFAULT_TYPE_ACCESS_MODIFIER:
 				return getDefaultTypeAccessModifier();
+			case TypesPackage.TNAMESPACE___GET_TYPES_AND_FUNCTIONS:
+				return getTypesAndFunctions();
 			case TypesPackage.TNAMESPACE___GET_EXPORTABLE_ELEMENTS:
 				return getExportableElements();
 			case TypesPackage.TNAMESPACE___GET_ALL_NAMESPACES:

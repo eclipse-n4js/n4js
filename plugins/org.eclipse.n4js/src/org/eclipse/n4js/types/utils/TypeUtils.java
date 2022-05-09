@@ -90,6 +90,7 @@ import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.UndefinedType;
 import org.eclipse.n4js.ts.types.VoidType;
+import org.eclipse.n4js.ts.types.util.TypeModelUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.xtext.EcoreUtil2;
@@ -1644,15 +1645,14 @@ public class TypeUtils {
 
 	/** Tells whether the given type reference has a typing strategy that denotes structural typing. */
 	public static boolean isStructural(TypeRef typeRef) {
-		return typeRef != null && isStructural(typeRef.getTypingStrategy());
+		return TypeModelUtils.isStructural(typeRef);
 	}
 
 	/**
 	 * Tells whether the given typing strategy denotes structural typing.
 	 */
 	public static boolean isStructural(TypingStrategy typingStrategy) {
-		return typingStrategy != null && typingStrategy != TypingStrategy.NOMINAL
-				&& typingStrategy != TypingStrategy.DEFAULT;
+		return TypeModelUtils.isStructural(typingStrategy);
 	}
 
 	/**

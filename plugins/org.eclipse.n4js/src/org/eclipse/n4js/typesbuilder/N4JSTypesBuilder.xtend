@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
+import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.MethodDeclaration
 import org.eclipse.n4js.n4JS.ModifiableElement
@@ -287,7 +288,8 @@ public class N4JSTypesBuilder {
 
 	static class RelinkIndices {
 		package var namespacesIdx = 0;
-		package var topLevelTypesIdx = 0;
+		package var typesIdx = 0;
+		package var functionIdx = 0;
 		package var variableIdx = 0;
 	}
 
@@ -296,9 +298,11 @@ public class N4JSTypesBuilder {
 			// relink types of n (if applicable)
 			switch n {
 				N4NamespaceDeclaration:
-					rlis.namespacesIdx = n.relinkType(target, preLinkingPhase, rlis.namespacesIdx)
+					rlis.namespacesIdx = n.relinkNamespace(target, preLinkingPhase, rlis.namespacesIdx)
+				FunctionDefinition:
+					rlis.functionIdx = n.relinkFunction(target, preLinkingPhase, rlis.functionIdx)
 				TypeDefiningElement:
-					rlis.topLevelTypesIdx = n.relinkType(target, preLinkingPhase, rlis.topLevelTypesIdx)
+					rlis.typesIdx = n.relinkType(target, preLinkingPhase, rlis.typesIdx)
 				VariableDeclarationContainer:
 					rlis.variableIdx = n.relinkType(target, preLinkingPhase, rlis.variableIdx)
 				TryStatement:
@@ -325,6 +329,13 @@ public class N4JSTypesBuilder {
 		}
 	}
 
+	def protected int relinkNamespace(N4NamespaceDeclaration n4Namespace, AbstractNamespace target, boolean preLinkingPhase, int idx) {
+		if (n4Namespace.relinkTNamespace(target, preLinkingPhase, idx)) {
+			return idx + 1;
+		}
+		return idx;
+	}
+
 	def protected dispatch int relinkType(TypeDefiningElement other, AbstractNamespace target, boolean preLinkingPhase, int idx) {
 		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: " + other?.eClass.name);
 	}
@@ -334,10 +345,21 @@ public class N4JSTypesBuilder {
 		return idx;
 	}
 
-	def protected dispatch int relinkType(N4NamespaceDeclaration n4Namespace, AbstractNamespace target, boolean preLinkingPhase, int idx) {
-		if (n4Namespace.relinkTNamespace(target, preLinkingPhase, idx)) {
+	def protected dispatch int relinkFunction(MethodDeclaration n4MethodDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
+		// methods are handled in their containing class/interface -> ignore them here
+		return idx;
+	}
+
+	def protected dispatch int relinkFunction(FunctionDeclaration n4FunctionDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
+		if (n4FunctionDecl.relinkTFunction(target, preLinkingPhase, idx)) {
 			return idx + 1;
 		}
+		return idx;
+	}
+
+	/** Function expressions are special, see {@link N4JSFunctionDefinitionTypesBuilder#createTFunction(FunctionExpression,TModule,boolean)}. */
+	def protected dispatch int relinkFunction(FunctionExpression n4FunctionExpr, AbstractNamespace target, boolean preLinkingPhase, int idx) {
+		n4FunctionExpr.createTFunction(target, preLinkingPhase);
 		return idx;
 	}
 
@@ -380,24 +402,6 @@ public class N4JSTypesBuilder {
 		return idx;
 	}
 
-	def protected dispatch int relinkType(MethodDeclaration n4MethodDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
-		// methods are handled in their containing class/interface -> ignore them here
-		return idx;
-	}
-
-	def protected dispatch int relinkType(FunctionDeclaration n4FunctionDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
-		if (n4FunctionDecl.relinkTFunction(target, preLinkingPhase, idx)) {
-			return idx + 1;
-		}
-		return idx;
-	}
-
-	/** Function expressions are special, see {@link N4JSFunctionDefinitionTypesBuilder#createTFunction(FunctionExpression,TModule,boolean)}. */
-	def protected dispatch int relinkType(FunctionExpression n4FunctionExpr, AbstractNamespace target, boolean preLinkingPhase, int idx) {
-		n4FunctionExpr.createTFunction(target, preLinkingPhase);
-		return idx;
-	}
-
 	def protected dispatch int relinkType(VariableDeclarationContainer n4VarDeclContainer, AbstractNamespace target, boolean preLinkingPhase, int idx) {
 		return n4VarDeclContainer.relinkVariableTypes(target, preLinkingPhase, idx)
 	}
@@ -417,7 +421,9 @@ public class N4JSTypesBuilder {
 			// build type for n (if applicable)
 			switch n {
 				N4NamespaceDeclaration:
-					n.createType(target, preLinkingPhase)
+					n.createNamespace(target, preLinkingPhase)
+				FunctionDefinition:
+					n.createFunction(target, preLinkingPhase)
 				TypeDefiningElement:
 					n.createType(target, preLinkingPhase)
 				VariableDeclarationContainer: // VariableStatement and ForStatement
@@ -446,16 +452,29 @@ public class N4JSTypesBuilder {
 		}
 	}
 
+	def protected void createNamespace(N4NamespaceDeclaration n4Namespace, AbstractNamespace target, boolean preLinkingPhase) {
+		n4Namespace.createTNamespace(target, preLinkingPhase)
+	}
+
+	def protected dispatch void createFunction(MethodDeclaration n4MethodDecl, AbstractNamespace target, boolean preLinkingPhase) {
+		// methods are handled in their containing class/interface -> ignore them here
+	}
+
+	def protected dispatch void createFunction(FunctionDeclaration n4FunctionDecl, AbstractNamespace target, boolean preLinkingPhase) {
+		n4FunctionDecl.createTFunction(target, preLinkingPhase)
+	}
+
+	/** Function expressions are special, see {@link N4JSFunctionDefinitionTypesBuilder#createTFunction(FunctionExpression,TModule,boolean)}. */
+	def protected dispatch void createFunction(FunctionExpression n4FunctionExpr, AbstractNamespace target, boolean preLinkingPhase) {
+		n4FunctionExpr.createTFunction(target, preLinkingPhase)
+	}
+
 	def protected dispatch void createType(TypeDefiningElement other, AbstractNamespace target, boolean preLinkingPhase) {
 		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: " + other?.eClass.name);
 	}
 
 	def protected dispatch void createType(NamespaceImportSpecifier nsImpSpec, AbstractNamespace target, boolean preLinkingPhase) {
 		// already handled up-front in #buildNamespacesTypesFromModuleImports()
-	}
-
-	def protected dispatch void createType(N4NamespaceDeclaration n4Namespace, AbstractNamespace target, boolean preLinkingPhase) {
-		n4Namespace.createTNamespace(target, preLinkingPhase)
 	}
 
 	def protected dispatch void createType(N4ClassDeclaration n4Class, AbstractNamespace target, boolean preLinkingPhase) {
@@ -480,19 +499,6 @@ public class N4JSTypesBuilder {
 
 	def protected dispatch void createType(ObjectLiteral objectLiteral, AbstractNamespace target, boolean preLinkingPhase) {
 		objectLiteral.createObjectLiteral(target, preLinkingPhase)
-	}
-
-	def protected dispatch void createType(MethodDeclaration n4MethodDecl, AbstractNamespace target, boolean preLinkingPhase) {
-		// methods are handled in their containing class/interface -> ignore them here
-	}
-
-	def protected dispatch void createType(FunctionDeclaration n4FunctionDecl, AbstractNamespace target, boolean preLinkingPhase) {
-		n4FunctionDecl.createTFunction(target, preLinkingPhase)
-	}
-
-	/** Function expressions are special, see {@link N4JSFunctionDefinitionTypesBuilder#createTFunction(FunctionExpression,TModule,boolean)}. */
-	def protected dispatch void createType(FunctionExpression n4FunctionExpr, AbstractNamespace target, boolean preLinkingPhase) {
-		n4FunctionExpr.createTFunction(target, preLinkingPhase)
 	}
 
 	def protected dispatch void createType(VariableDeclarationContainer n4VarDeclContainer, AbstractNamespace target, boolean preLinkingPhase) {

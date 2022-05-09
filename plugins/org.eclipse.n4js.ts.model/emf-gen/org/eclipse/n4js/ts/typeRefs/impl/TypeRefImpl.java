@@ -36,6 +36,8 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.UndefinedType;
 
+import org.eclipse.n4js.ts.types.util.TypeModelUtils;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Type Ref</b></em>'.
@@ -420,6 +422,16 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
+	public boolean isStructuralTyping() {
+		return TypeModelUtils.isStructural(this.getTypingStrategy());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isUseSiteStructuralTyping() {
 		return false;
 	}
@@ -597,6 +609,8 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return getTypingStrategy();
 			case TypeRefsPackage.TYPE_REF___GET_STRUCTURAL_MEMBERS:
 				return getStructuralMembers();
+			case TypeRefsPackage.TYPE_REF___IS_STRUCTURAL_TYPING:
+				return isStructuralTyping();
 			case TypeRefsPackage.TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING:
 				return isUseSiteStructuralTyping();
 			case TypeRefsPackage.TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING:

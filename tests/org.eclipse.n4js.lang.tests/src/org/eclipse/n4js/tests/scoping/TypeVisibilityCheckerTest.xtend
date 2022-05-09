@@ -62,7 +62,7 @@ class TypeVisibilityCheckerTest {
 	private def void doAssertVisibility(CharSequence type, String myVendor, String myProject, boolean expectation) {
 		val rs = resourceSetProvider.get
 		val script = type.parse(URI.createURI('''a.n4js'''), rs).withVendorAndProject(SAME_VENDOR, SAME_PROJECT)
-		val parsedType = (script.eResource.contents.last as TModule).types.head
+		val parsedType = (script.eResource.contents.last as TModule).typesAndFunctions.head
 		val myScript = '''class A{}'''.parse(URI.createURI('''b.n4js?«myVendor»|«myProject»'''), rs).withVendorAndProject(myVendor, myProject)
 
 		Assert.assertEquals(expectation, myScript.eResource.isVisible(parsedType).visibility)
