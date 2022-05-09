@@ -18,7 +18,6 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -28,12 +27,11 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
-import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TVariable
@@ -73,9 +71,9 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			N4TypeDeclaration:
 				if (name !== null) fqnTypeDeclaration(it)
 			FunctionDeclaration:
-				if (name !== null && it.eContainer instanceof ExportDeclaration) rootContainer.fullyQualifiedName?.append(name)
+				if (name !== null) rootContainer.fullyQualifiedName?.append(name)
 			VariableDeclaration:
-				if (name !== null && it.eContainer instanceof ExportDeclaration) rootContainer.fullyQualifiedName?.append(name)
+				if (name !== null) rootContainer.fullyQualifiedName?.append(name)
 			N4TypeVariable:
 				null
 
@@ -91,24 +89,20 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			TEnum:
 				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TypeAlias:
-				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
-			TFunction:
-				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
+			TFunction case !(it instanceof TMethod):
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TVariable:
-				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TypeVariable:
 				null
-			Type:
+			Type case !(it instanceof TMethod):
 				if (name !== null) QualifiedName.create(name)
-			TMember:
-				null // either null or a real qualified name, but not the simple name! since they cannot be accessed via FQN, we return null
-			IdentifiableElement: // including TFormalParameter, and Variable with CatchVariable, FormalParameter, LocalArgumentsVariable
-				null
 
 			JSONDocument:
 				fqnJSONDocument(it)
 
-			default:
+			default: // including TMember, TFormalParameter, and AbstractVariable with CatchVariable, FormalParameter
 				null
 		}
 	}

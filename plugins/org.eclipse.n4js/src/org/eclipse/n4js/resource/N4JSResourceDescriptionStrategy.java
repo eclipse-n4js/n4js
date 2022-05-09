@@ -21,6 +21,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TConstableElement;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
@@ -28,6 +29,7 @@ import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
+import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -338,6 +340,10 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	}
 
 	private void internalCreateEObjectDescription(Type type, IAcceptor<IEObjectDescription> acceptor) {
+		boolean mustBeExported = type instanceof TFunction || type instanceof TypeAlias;
+		if (mustBeExported && !type.isDirectlyExported()) {
+			return;
+		}
 		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
 		if (qualifiedName != null) {
 			Map<String, String> userData = new HashMap<>();
@@ -353,6 +359,9 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	}
 
 	private void internalCreateEObjectDescription(TVariable variable, IAcceptor<IEObjectDescription> acceptor) {
+		if (!variable.isDirectlyExported()) {
+			return;
+		}
 		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(variable);
 		if (qualifiedName != null) {
 			Map<String, String> userData = new HashMap<>();
