@@ -373,7 +373,7 @@ class IncrementalBuilderChangesTest extends AbstractIncrementalBuilderTest {
 		joinServerRequests();
 		assertIssues("Main" -> #[
 			// what we don't want to see:
-			// "Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
+			// "(Error, [0:xx - 0:xx], Cannot resolve plain module specifier (without project name as first segment): no matching module found.)"
 			'(Error, [1:18 - 1:42], string is not a subtype of number.)'
 		]);
 
