@@ -347,7 +347,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				addClassifierUserData(userData, (TClassifier) type);
 			}
 
-			IEObjectDescription eod = N4JSEObjectDescription.create(qualifiedName, type, userData);
+			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type, userData);
 			acceptor.accept(eod);
 		}
 	}

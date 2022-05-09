@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.resource.N4JSEObjectDescription;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
 import org.eclipse.n4js.scoping.accessModifiers.HollowTypeOrValueDescription;
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription;
@@ -33,6 +32,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
+import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.collect.Iterables;
@@ -195,6 +195,6 @@ public class ExportedElementsCollector {
 	 * Helper method to create an {@link IEObjectDescription} for a given {@link TExportableElement}.
 	 */
 	private IEObjectDescription createObjectDescription(String exportedName, TExportableElement element) {
-		return N4JSEObjectDescription.create(exportedName, element);
+		return EObjectDescription.create(exportedName, element);
 	}
 }
