@@ -54,7 +54,6 @@ import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -393,10 +392,7 @@ import com.google.common.collect.Iterables;
 				|| (leftDeclType == numberType(G) && rightDeclType == intType(G))) {
 			return success(); // int <: number AND number <: int (for now, int and number are synonymous)
 		}
-		if (leftDeclType == rightDeclType
-				&& !(left instanceof ParameterizedTypeRefStructural)
-				&& !(right instanceof ParameterizedTypeRefStructural)) {
-
+		if (leftDeclType == rightDeclType && !left.isStructuralTyping() && !right.isStructuralTyping()) {
 			Result result = checkSameDeclaredTypes(G, left, right, rightDeclType);
 			if (result.isSuccess()) {
 				// ignore fails since in structural case type args are only important iff they are actually used in

@@ -15,9 +15,11 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.ts.types.TypingStrategy;
 
 /**
  * Utility methods related to the type models defined in Types.xcore and TypeRefs.xcore.
@@ -74,5 +76,18 @@ public class TypeModelUtils {
 			result.add(eobj);
 		}
 		return result;
+	}
+
+	/** Tells whether the given type reference has a typing strategy that denotes structural typing. */
+	public static boolean isStructural(TypeRef typeRef) {
+		return typeRef != null && isStructural(typeRef.getTypingStrategy());
+	}
+
+	/**
+	 * Tells whether the given typing strategy denotes structural typing.
+	 */
+	public static boolean isStructural(TypingStrategy typingStrategy) {
+		return typingStrategy != null && typingStrategy != TypingStrategy.NOMINAL
+				&& typingStrategy != TypingStrategy.DEFAULT;
 	}
 }
