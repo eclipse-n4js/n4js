@@ -63,7 +63,7 @@ public class ExportedElementsCollector {
 		final AbstractNamespace start;
 		final Resource context;
 		final boolean includeHollows;
-		final boolean includeVariables;
+		final boolean includeValueOnlyElements;
 
 		final List<IEObjectDescription> visible = new ArrayList<>();
 		final List<IEObjectDescription> invisible = new ArrayList<>();
@@ -75,7 +75,7 @@ public class ExportedElementsCollector {
 			this.start = start;
 			this.context = context;
 			this.includeHollows = includeHollows;
-			this.includeVariables = includeVariables;
+			this.includeValueOnlyElements = includeVariables;
 		}
 
 		public boolean tryNext(AbstractNamespace next) {
@@ -102,9 +102,9 @@ public class ExportedElementsCollector {
 	 *            The context resource for visibility checks.
 	 */
 	public Iterable<IEObjectDescription> getExportedElements(AbstractNamespace namespace, Resource context,
-			boolean includeHollows, boolean includeVariables) {
+			boolean includeHollows, boolean includeValueOnlyElements) {
 
-		CollectionInfo info = new CollectionInfo(namespace, context, includeHollows, includeVariables);
+		CollectionInfo info = new CollectionInfo(namespace, context, includeHollows, includeValueOnlyElements);
 		doCollectElements(namespace, info);
 		return Iterables.concat(info.visible, info.invisible);
 	}
@@ -159,7 +159,7 @@ public class ExportedElementsCollector {
 	private void doCollectElement(String exportedName, TExportableElement exportedElem, CollectionInfo info) {
 
 		boolean include = (info.includeHollows || !N4JSLanguageUtils.isHollowElement(exportedElem, variantHelper))
-				&& (info.includeVariables || !N4JSLanguageUtils.isValueOnlyElement(exportedElem, variantHelper));
+				&& (info.includeValueOnlyElements || !N4JSLanguageUtils.isValueOnlyElement(exportedElem, variantHelper));
 
 		if (include) {
 			TypeVisibility visibility = isVisible(info.context, exportedElem);
