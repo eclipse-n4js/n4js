@@ -30,7 +30,6 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl#getExportedName <em>Exported Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl#isPolyfill <em>Polyfill</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ElementExportDefinitionImpl#getExportedElement <em>Exported Element</em>}</li>
  * </ul>
  *
@@ -56,26 +55,6 @@ public class ElementExportDefinitionImpl extends ExportDefinitionImpl implements
 	 * @ordered
 	 */
 	protected String exportedName = EXPORTED_NAME_EDEFAULT;
-
-	/**
-	 * The default value of the '{@link #isPolyfill() <em>Polyfill</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isPolyfill()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean POLYFILL_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isPolyfill() <em>Polyfill</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isPolyfill()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean polyfill = POLYFILL_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getExportedElement() <em>Exported Element</em>}' reference.
@@ -135,29 +114,6 @@ public class ElementExportDefinitionImpl extends ExportDefinitionImpl implements
 	 * @generated
 	 */
 	@Override
-	public boolean isPolyfill() {
-		return polyfill;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setPolyfill(boolean newPolyfill) {
-		boolean oldPolyfill = polyfill;
-		polyfill = newPolyfill;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.ELEMENT_EXPORT_DEFINITION__POLYFILL, oldPolyfill, polyfill));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public TExportableElement getExportedElement() {
 		if (exportedElement != null && exportedElement.eIsProxy()) {
 			InternalEObject oldExportedElement = (InternalEObject)exportedElement;
@@ -202,8 +158,6 @@ public class ElementExportDefinitionImpl extends ExportDefinitionImpl implements
 		switch (featureID) {
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME:
 				return getExportedName();
-			case TypesPackage.ELEMENT_EXPORT_DEFINITION__POLYFILL:
-				return isPolyfill();
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT:
 				if (resolve) return getExportedElement();
 				return basicGetExportedElement();
@@ -221,9 +175,6 @@ public class ElementExportDefinitionImpl extends ExportDefinitionImpl implements
 		switch (featureID) {
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME:
 				setExportedName((String)newValue);
-				return;
-			case TypesPackage.ELEMENT_EXPORT_DEFINITION__POLYFILL:
-				setPolyfill((Boolean)newValue);
 				return;
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT:
 				setExportedElement((TExportableElement)newValue);
@@ -243,9 +194,6 @@ public class ElementExportDefinitionImpl extends ExportDefinitionImpl implements
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME:
 				setExportedName(EXPORTED_NAME_EDEFAULT);
 				return;
-			case TypesPackage.ELEMENT_EXPORT_DEFINITION__POLYFILL:
-				setPolyfill(POLYFILL_EDEFAULT);
-				return;
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT:
 				setExportedElement((TExportableElement)null);
 				return;
@@ -263,8 +211,6 @@ public class ElementExportDefinitionImpl extends ExportDefinitionImpl implements
 		switch (featureID) {
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME:
 				return EXPORTED_NAME_EDEFAULT == null ? exportedName != null : !EXPORTED_NAME_EDEFAULT.equals(exportedName);
-			case TypesPackage.ELEMENT_EXPORT_DEFINITION__POLYFILL:
-				return polyfill != POLYFILL_EDEFAULT;
 			case TypesPackage.ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT:
 				return exportedElement != null;
 		}
@@ -283,8 +229,6 @@ public class ElementExportDefinitionImpl extends ExportDefinitionImpl implements
 		StringBuilder result = new StringBuilder(super.toString());
 		result.append(" (exportedName: ");
 		result.append(exportedName);
-		result.append(", polyfill: ");
-		result.append(polyfill);
 		result.append(')');
 		return result.toString();
 	}

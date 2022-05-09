@@ -26,7 +26,6 @@ import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TExportingElement
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.xtext.EcoreUtil2
 
@@ -52,7 +51,7 @@ class N4JSExportDefinitionTypesBuilder {
 				val alias = exportSpec.alias;
 				if (alias !== null) {
 					val mnvt = target.containingModule.addNewModuleNamespaceVirtualType(alias, exportedModuleProxy, false, exportSpec);
-					addElementExportDefinition(target, alias, false, mnvt);
+					addElementExportDefinition(target, alias, mnvt);
 				} else {
 					addModuleExportDefinition(target, exportedModuleProxyCopy);
 				}
@@ -74,7 +73,7 @@ class N4JSExportDefinitionTypesBuilder {
 							//    case the import specifier's alias will be the default exported name, not the element's name.
 							expName = idRef.idAsText;
 						}
-						addElementExportDefinition(target, expName, false, expElemProxyCpy);
+						addElementExportDefinition(target, expName, expElemProxyCpy);
 					}
 				}
 			}
@@ -98,8 +97,7 @@ class N4JSExportDefinitionTypesBuilder {
 	def package void createExportDefinitionForDirectlyExportedElement(TExportableElement tDirectlyExportedElem, String exportedName, AbstractNamespace target, boolean preLinkingPhase) {
 		tDirectlyExportedElem.directlyExported = true;
 		tDirectlyExportedElem.directlyExportedAsDefault = exportedName == N4JSLanguageConstants.EXPORT_DEFAULT_NAME;
-		val polyfill = if (tDirectlyExportedElem instanceof Type) tDirectlyExportedElem.polyfill else false;
-		addElementExportDefinition(target, exportedName, polyfill, tDirectlyExportedElem);
+		addElementExportDefinition(target, exportedName, tDirectlyExportedElem);
 	}
 
 	def private void addModuleExportDefinition(TExportingElement exportingElem, TModule exportedModule) {
@@ -108,13 +106,12 @@ class N4JSExportDefinitionTypesBuilder {
 		exportingElem.exportDefinitions += expDef;
 	}
 
-	def private ExportDefinition addElementExportDefinition(TExportingElement exportingElem, String exportedName, boolean polyfill, TExportableElement exportedElem) {
+	def private ExportDefinition addElementExportDefinition(TExportingElement exportingElem, String exportedName, TExportableElement exportedElem) {
 		Objects.requireNonNull(exportingElem);
 		Objects.requireNonNull(exportedName);
 		Objects.requireNonNull(exportedElem);
 		val expDef = TypesFactory.eINSTANCE.createElementExportDefinition();
 		expDef.exportedName = exportedName;
-		expDef.polyfill = polyfill;
 		expDef.exportedElement = exportedElem;
 		exportingElem.exportDefinitions += expDef;
 		return expDef;

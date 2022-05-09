@@ -28,11 +28,9 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
-import org.eclipse.n4js.ts.types.ElementExportDefinition
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.ts.types.TExportingElement
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
@@ -96,8 +94,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				null
 			N4NamespaceDeclaration:
 				if (name !== null) fqnNamespaceDeclaration(it)
-			ExportDeclaration:
-				exportedElement?.getFullyQualifiedName
 
 			// Type Model Elements
 			TModule:
@@ -116,8 +112,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
 			TVariable:
 				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
-			ElementExportDefinition:
-				fqnExportDefinition(it)
 			TypeVariable:
 				null
 			Type:
@@ -178,17 +172,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
 		val fqn = QualifiedNameUtils.append(prefix, type.name);
-		return fqn;
-	}
-
-	private def QualifiedName fqnExportDefinition(ElementExportDefinition exportDef) {
-		// note: do not trigger proxy resolution here, i.e. do not invoke exportDef.exportedElement
-		val containingExportingElem = exportDef.eContainer as TExportingElement;
-		var prefix = containingExportingElem.fullyQualifiedName;
-		if (exportDef.polyfill) {
-			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
-		}
-		val fqn = QualifiedNameUtils.append(prefix, exportDef.exportedName);
 		return fqn;
 	}
 
