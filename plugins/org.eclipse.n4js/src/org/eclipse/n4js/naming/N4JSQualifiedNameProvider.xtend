@@ -83,12 +83,9 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	 */
 	override QualifiedName getFullyQualifiedName(EObject it) {
 		switch (it) {
+			// AST Nodes
 			Script:
 				module.fullyQualifiedName
-			TModule:
-				if (qualifiedName !== null) {
-					fqnTModule(it)
-				}
 			N4TypeDeclaration:
 				if (name !== null) fqnTypeDeclaration(it)
 			FunctionDeclaration:
@@ -99,6 +96,12 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				null
 			N4NamespaceDeclaration:
 				if (name !== null) fqnNamespaceDeclaration(it)
+			ExportDeclaration:
+				exportedElement?.getFullyQualifiedName
+
+			// Type Model Elements
+			TModule:
+				if (qualifiedName !== null) fqnTModule(it)
 			TNamespace:
 				if (name !== null) fqnType(it)
 			TClass:
@@ -113,8 +116,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
 			TVariable:
 				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
-			ExportDeclaration:
-				exportedElement?.getFullyQualifiedName
 			ElementExportDefinition:
 				fqnExportDefinition(it)
 			TypeVariable:
@@ -125,8 +126,10 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 				null // either null or a real qualified name, but not the simple name! since they cannot be accessed via FQN, we return null
 			IdentifiableElement: // including TFormalParameter, and Variable with CatchVariable, FormalParameter, LocalArgumentsVariable
 				null
+
 			JSONDocument:
 				fqnJSONDocument(it)
+
 			default:
 				null
 		}
