@@ -392,6 +392,14 @@ import com.google.common.collect.Iterables;
 				|| (leftDeclType == numberType(G) && rightDeclType == intType(G))) {
 			return success(); // int <: number AND number <: int (for now, int and number are synonymous)
 		}
+		if (leftDeclType == rightDeclType && !left.isStructuralTyping() && !right.isStructuralTyping()) {
+			Result result = checkSameDeclaredTypes(G, left, right, rightDeclType);
+			if (result.isSuccess()) {
+				// ignore fails since in structural case type args are only important iff they are actually used in
+				// members
+				return result;
+			}
+		}
 		if (leftDeclType instanceof TEnum) {
 			EnumKind enumKind = N4JSLanguageUtils.getEnumKind((TEnum) leftDeclType);
 			if (rightDeclType == n4EnumType(G)
@@ -496,27 +504,7 @@ import com.google.common.collect.Iterables;
 				return failure();
 			}
 		} else if (leftDeclType == rightDeclType) {
-			final List<TypeArgument> leftArgs = left.getTypeArgsWithDefaults();
-			final List<TypeArgument> rightArgs = right.getTypeArgsWithDefaults();
-			final int leftArgsCount = leftArgs.size();
-			final int rightArgsCount = rightArgs.size();
-			if (leftArgsCount > 0 && leftArgsCount <= rightArgsCount) { // ignore raw types
-				final int len = Math.min(Math.min(leftArgsCount, rightArgsCount), rightDeclType.getTypeVars().size());
-				for (int i = 0; i < len; i++) {
-					final TypeArgument leftArg = leftArgs.get(i);
-					final TypeArgument rightArg = rightArgs.get(i);
-					final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
-
-					final Result currResult = checkTypeArgumentCompatibility(G, left, right, leftArg, rightArg,
-							Optional.of(variance));
-					if (currResult.isFailure()) {
-						return currResult;
-					}
-				}
-				return success();
-			} else {
-				return success(); // always true for raw types
-			}
+			return checkSameDeclaredTypes(G, left, right, rightDeclType);
 		} else {
 			final List<ParameterizedTypeRef> allSuperTypeRefs = leftDeclType instanceof ContainerType<?>
 					? AllSuperTypeRefsCollector.collect((ContainerType<?>) leftDeclType)
@@ -547,6 +535,32 @@ import com.google.common.collect.Iterables;
 			} else {
 				return failure();
 			}
+		}
+	}
+
+	private Result checkSameDeclaredTypes(RuleEnvironment G, ParameterizedTypeRef left, ParameterizedTypeRef right,
+			final Type rightDeclType) {
+
+		final List<TypeArgument> leftArgs = left.getTypeArgsWithDefaults();
+		final List<TypeArgument> rightArgs = right.getTypeArgsWithDefaults();
+		final int leftArgsCount = leftArgs.size();
+		final int rightArgsCount = rightArgs.size();
+		if (leftArgsCount > 0 && leftArgsCount <= rightArgsCount) { // ignore raw types
+			final int len = Math.min(Math.min(leftArgsCount, rightArgsCount), rightDeclType.getTypeVars().size());
+			for (int i = 0; i < len; i++) {
+				final TypeArgument leftArg = leftArgs.get(i);
+				final TypeArgument rightArg = rightArgs.get(i);
+				final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
+
+				final Result currResult = checkTypeArgumentCompatibility(G, left, right, leftArg, rightArg,
+						Optional.of(variance));
+				if (currResult.isFailure()) {
+					return currResult;
+				}
+			}
+			return success();
+		} else {
+			return success(); // always true for raw types
 		}
 	}
 

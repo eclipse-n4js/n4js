@@ -410,6 +410,18 @@ public interface TypeRef extends TypeArgument {
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
+	boolean isStructuralTyping();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Returns true if type ref is structural. This is different from {@link #getTypingStrategy}, which
+	 * returns true if either use or def site structural typing is true.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
 	boolean isUseSiteStructuralTyping();
 
 	/**
