@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
@@ -87,17 +88,17 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			TInterface:
 				if (name !== null) fqnType(it)
 			TEnum:
-				if (name !== null) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) it.contextPrefix?.append(name)
 			TypeAlias:
-				if (name !== null) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) it.contextPrefix?.append(name)
 			TFunction case !(it instanceof TMethod):
-				if (name !== null) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) it.contextPrefix?.append(name)
 			TVariable:
-				if (name !== null) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) it.contextPrefix?.append(name)
 			TypeVariable:
 				null
 			Type case !(it instanceof TMethod):
-				if (name !== null) QualifiedName.create(name)
+				if (name !== null) it.contextPrefix?.append(name)
 
 			JSONDocument:
 				fqnJSONDocument(it)
@@ -128,7 +129,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		val fqn = QualifiedNameUtils.append(prefix, typeDecl.directlyExportedName ?: typeDecl.name);
 		return fqn;
 	}
-	
+
 	private def QualifiedName fqnNamespaceDeclaration(N4NamespaceDeclaration typeDecl) {
 		var prefix = typeDecl.rootContainer.fullyQualifiedName;
 		var qn = QualifiedName.create(typeDecl.directlyExportedName ?: typeDecl.name);
@@ -143,7 +144,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	}
 
 	private def QualifiedName fqnType(Type type) {
-		var prefix = type.rootContainer.fullyQualifiedName;
+		var prefix = type.contextPrefix;
 		if (type.polyfill) {
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
@@ -176,5 +177,24 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			}
 		}
 		return null; // failed
+	}
+
+	private def QualifiedName contextPrefix(IdentifiableElement elem) {
+		val segments = newArrayList;
+
+		var curr = elem.eContainer;
+		while (curr !== null) {
+			if (curr instanceof TModule) {
+				return QualifiedNameUtils.append(curr.fqnTModule, segments.reverseView);
+			} else if (curr instanceof TNamespace) {
+				val name = curr.name;
+				if (name === null) {
+					return null;
+				}
+				segments += name;
+			}
+			curr = curr.eContainer;
+		}
+		return null;
 	}
 }

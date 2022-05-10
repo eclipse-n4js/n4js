@@ -22,7 +22,7 @@ import org.eclipse.xtext.naming.QualifiedName;
 public class QualifiedNameUtils {
 
 	/**
-	 * Null-safe appending of segments. If segment is null, null is returned. If prefix is null, a new qualified name
+	 * Null-safe appending of a segment. If segment is null, null is returned. If prefix is null, a new qualified name
 	 * (with non-null segment) is created.
 	 */
 	public static QualifiedName append(QualifiedName prefix, String segment) {
@@ -33,6 +33,25 @@ public class QualifiedNameUtils {
 			return QualifiedName.create(segment);
 		}
 		return prefix.append(segment);
+	}
+
+	/**
+	 * Null-safe appending of one or more segments.
+	 */
+	public static QualifiedName append(QualifiedName prefix, List<String> segments) {
+		if (segments == null) {
+			return null;
+		}
+		if (segments.isEmpty()) {
+			return prefix;
+		}
+		if (prefix == null) {
+			return QualifiedName.create(segments);
+		}
+		List<String> allSegments = new ArrayList<>(prefix.getSegmentCount() + segments.size());
+		allSegments.addAll(prefix.getSegments());
+		allSegments.addAll(segments);
+		return QualifiedName.create(allSegments);
 	}
 
 	/**
