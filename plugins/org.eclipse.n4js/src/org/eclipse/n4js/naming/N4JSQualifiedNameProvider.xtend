@@ -58,11 +58,11 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			TModule:
 				if (qualifiedName !== null) fqnTModule(it)
 			TNamespace:
-				if (name !== null) fqnType(it)
+				if (name !== null) it.contextPrefix?.append(name)
 			TClass:
-				if (name !== null) fqnType(it)
+				if (name !== null) it.contextPrefix?.adjustIfPolyfill(it)?.append(name)
 			TInterface:
-				if (name !== null) fqnType(it)
+				if (name !== null) it.contextPrefix?.adjustIfPolyfill(it)?.append(name)
 			TEnum:
 				if (name !== null) it.contextPrefix?.append(name)
 			TypeAlias:
@@ -94,15 +94,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		} else {
 			return QualifiedName.create(GLOBAL_NAMESPACE_SEGMENT)
 		}
-	}
-
-	private def QualifiedName fqnType(Type type) {
-		var prefix = type.contextPrefix;
-		if (type.polyfill) {
-			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
-		}
-		val fqn = QualifiedNameUtils.append(prefix, type.name);
-		return fqn;
 	}
 
 	private def QualifiedName fqnJSONDocument(JSONDocument document) {
@@ -149,5 +140,12 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			curr = curr.eContainer;
 		}
 		return null;
+	}
+
+	private def QualifiedName adjustIfPolyfill(QualifiedName qn, Type type) {
+		if (type.polyfill) {
+			return QualifiedNameUtils.append(qn, PolyfillUtils.POLYFILL_SEGMENT);
+		}
+		return qn;
 	}
 }
