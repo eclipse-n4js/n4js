@@ -64,7 +64,7 @@ SyntaxError, SyntaxErrorConstructor, ThisType, TypeError, TypeErrorConstructor, 
 URIError, URIErrorConstructor,
 Uint16Array, Uint16ArrayConstructor, Uint32Array, Uint32ArrayConstructor, Uint8Array, Uint8ArrayConstructor, Uint8ClampedArray, Uint8ClampedArrayConstructor,
 any, boolean, console, i18nKey, int, number, pathSelector,
-scoping.Brother.Brother, scoping.Child.Child, scoping.Sister.Sister,
+scoping.Brother.Brother, scoping.Child.Child,
 string, symbol, typeName,
 undefined, void
 ---*/

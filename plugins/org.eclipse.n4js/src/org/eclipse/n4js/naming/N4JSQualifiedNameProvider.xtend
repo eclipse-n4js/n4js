@@ -18,7 +18,6 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -28,14 +27,11 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
-import org.eclipse.n4js.ts.types.ElementExportDefinition
-import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.ts.types.TExportingElement
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TVariable
@@ -51,54 +47,39 @@ import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
- * Calculates the fully qualified name for the passed in objects.
- * <p>
- * Be very careful when changing anything here as the FQN affects a lot of concepts, including scoping and even typing.
- * That is, elements are often handled differently if they have a qualified name or not.
+ * Calculates the fully qualified name for the passed-in objects.
  */
 class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 
-	/**
-	 * The injected qualified name converter.
-	 */
+	/** The injected qualified name converter. */
 	@Inject
 	protected IQualifiedNameConverter converter;
 
-	/**
-	 * Segment used for the global module.
-	 */
+	/** Segment used for globally available elements. */
 	public static String GLOBAL_NAMESPACE_SEGMENT = "#";
 
 	/** Last segment of fully qualified names for the root {@link JSONDocument} of package.json files. */
 	public static final String PACKAGE_JSON_SEGMENT = "!package_json";
 
-	/**
-	 * For the root element (Script) the resource qualified name is used.
-	 * For all other elements the resource qualified name plus the simple
-	 * name of the element is used as qualified name.
-	 * Exceptions are IdentifiableElement, N4ClassExpression and FunctionExpression
-	 * for which only the simple name is returned.
-	 * For a ExportDeclaration the qualified name of its contained element is returned.
-	 * For a TModule the qualified name is just converted from dots to slashes.
-	 */
 	override QualifiedName getFullyQualifiedName(EObject it) {
 		switch (it) {
+			// AST Nodes
 			Script:
 				module.fullyQualifiedName
-			TModule:
-				if (qualifiedName !== null) {
-					fqnTModule(it)
-				}
+			N4NamespaceDeclaration:
+				if (name !== null) fqnNamespaceDeclaration(it)
 			N4TypeDeclaration:
 				if (name !== null) fqnTypeDeclaration(it)
 			FunctionDeclaration:
-				if (name !== null && it.eContainer instanceof ExportDeclaration) rootContainer.fullyQualifiedName?.append(name)
+				if (name !== null) rootContainer.fullyQualifiedName?.append(name)
 			VariableDeclaration:
-				if (name !== null && it.eContainer instanceof ExportDeclaration) rootContainer.fullyQualifiedName?.append(name)
+				if (name !== null) rootContainer.fullyQualifiedName?.append(name)
 			N4TypeVariable:
 				null
-			N4NamespaceDeclaration:
-				if (name !== null) fqnNamespaceDeclaration(it)
+
+			// Type Model Elements
+			TModule:
+				if (qualifiedName !== null) fqnTModule(it)
 			TNamespace:
 				if (name !== null) fqnType(it)
 			TClass:
@@ -108,31 +89,23 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			TEnum:
 				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TypeAlias:
-				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
-			TFunction:
-				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
+			TFunction case !(it instanceof TMethod):
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TVariable:
-				if (name !== null && it.directlyExported) containingModule.fullyQualifiedName?.append(name)
-			ExportDeclaration:
-				exportedElement?.getFullyQualifiedName
-			ElementExportDefinition:
-				fqnExportDefinition(it)
+				if (name !== null) containingModule.fullyQualifiedName?.append(name)
 			TypeVariable:
 				null
-			Type:
+			Type case !(it instanceof TMethod):
 				if (name !== null) QualifiedName.create(name)
-			TMember:
-				null // either null or a real qualified name, but not the simple name! since they cannot be accessed via FQN, we return null
-			IdentifiableElement: // including TFormalParameter, and Variable with CatchVariable, FormalParameter, LocalArgumentsVariable
-				null
+
 			JSONDocument:
 				fqnJSONDocument(it)
-			default:
+
+			default: // including TMember, TFormalParameter, and AbstractVariable with CatchVariable, FormalParameter
 				null
 		}
 	}
-
-
 
 	private def QualifiedName fqnTModule(TModule module) {
 		if ( module.qualifiedName.length != 0 && ! AnnotationDefinition.GLOBAL.hasAnnotation(module)) {
@@ -175,17 +148,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
 		}
 		val fqn = QualifiedNameUtils.append(prefix, type.name);
-		return fqn;
-	}
-
-	private def QualifiedName fqnExportDefinition(ElementExportDefinition exportDef) {
-		// note: do not trigger proxy resolution here, i.e. do not invoke exportDef.exportedElement
-		val containingExportingElem = exportDef.eContainer as TExportingElement;
-		var prefix = containingExportingElem.fullyQualifiedName;
-		if (exportDef.polyfill) {
-			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
-		}
-		val fqn = QualifiedNameUtils.append(prefix, exportDef.exportedName);
 		return fqn;
 	}
 

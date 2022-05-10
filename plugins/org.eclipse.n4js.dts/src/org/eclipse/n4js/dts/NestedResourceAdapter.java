@@ -22,8 +22,8 @@ import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 
 /**
- * This adapter holds the {@link TokenStream} and {@link RuleContext} the belong to the nested resource this adapter is
- * installed on.
+ * This adapter is installed on nested/virtual resources and holds the {@link TokenStream} and {@link RuleContext} that
+ * belong to the nested resource this adapter is installed on.
  */
 public class NestedResourceAdapter implements Adapter {
 

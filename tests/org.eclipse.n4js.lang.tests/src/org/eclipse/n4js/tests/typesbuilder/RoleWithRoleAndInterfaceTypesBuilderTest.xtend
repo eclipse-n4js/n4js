@@ -51,22 +51,22 @@ class RoleWithRoleAndInterfaceTypesBuilderTest extends AbstractTypesBuilderTest 
 	def test() {
 		val textFileName = "RoleWithRoleAndInterface.n4js"
 		val expectedTypesNamePairs = #[
-			typeof(TInterface) -> "Persistable",
 			typeof(TInterface) -> "Loadable",
 			typeof(TInterface) -> "MyInterface",
 			typeof(TEnum) -> "StorageType",
-			typeof(TClass) -> "Storage"
+			typeof(TClass) -> "Storage",
+			typeof(TInterface) -> "Persistable"
 		]
 
 		// currently everything is exported to user data and Xtext index, e.g. to be able to
 		// use in IDE "Open Type"
 		val expectedExportedTypeToNamePairsOnIndex = #[
 			typeof(TModule) -> qualifiedNamePrefix + "RoleWithRoleAndInterface",
-			typeof(TInterface) -> "Persistable",
 			typeof(TInterface) -> "Loadable",
 			typeof(TInterface) -> "MyInterface",
 			typeof(TEnum) -> "StorageType",
-			typeof(TClass) -> "Storage"
+			typeof(TClass) -> "Storage",
+			typeof(TInterface) -> "Persistable"
 		]
 		val expectedTypesCount = expectedTypesNamePairs.size
 		val expectedExportedElementsCount = expectedExportedTypeToNamePairsOnIndex.size

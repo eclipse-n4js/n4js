@@ -40,7 +40,7 @@ class ContentAssistBugGH1756IdeTest extends ConvertedCompletionIdeTest {
 
 			function someFunctionWithAnExtremelyLooooongName() {}
 		''', '''
-			(someFunctionWithAnExtremelyLooooongName, Function, someFunctionWithAnExtremelyLooooongName, , , 00000, , , , ([6:13 - 6:20], someFunctionWithAnExtremelyLooooongName), [], [], , )
+			(someFunctionWithAnExtremelyLooooongName, Function, MyModule, , , 00000, , , , ([6:13 - 6:20], someFunctionWithAnExtremelyLooooongName), [], [], , )
 		''');
 	}
 

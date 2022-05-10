@@ -74,12 +74,12 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 			normalizers.add(createImportedNamespaceResolver(
 					module.getQualifiedName() + N4JSQualifiedNameConverter.DELIMITER + "*", false));
 		}
+		// -- done change --||
 
 		if (!normalizers.isEmpty()) {
 			globalScope = createImportScope(globalScope, normalizers, null, reference.getEReferenceType(),
 					isIgnoreCase(reference));
 		}
-		// -- done change --||
 
 		IScope resScope = getResourceScope(globalScope, context, reference);
 		return resScope;
@@ -99,5 +99,10 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 	protected ImportScope createImportScope(IScope parent, List<ImportNormalizer> namespaceResolvers,
 			ISelectable importFrom, EClass type, boolean ignoreCase) {
 		return new NonResolvingImportScope(namespaceResolvers, parent, importFrom, type, ignoreCase);
+	}
+
+	@Override
+	protected IScope getResourceScope(IScope parent, EObject context, EReference reference) {
+		return parent; // not required in N4JS
 	}
 }

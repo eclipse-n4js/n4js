@@ -48,18 +48,18 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 	def test() {
 		val textFileName = "ClassWithSuperClassAndRoles.n4js"
 		val expectedTypesNamePairs = #[
-			typeof(TClass) -> "MySubClass",
 			typeof(TClass) -> "MyClass",
 			typeof(TInterface) -> "Persistable",
-			typeof(TInterface) -> "Comparable"
+			typeof(TInterface) -> "Comparable",
+			typeof(TClass) -> "MySubClass"
 		]
 
 		val expectedExportedTypeToNamePairsOnIndex = #[
 			typeof(TModule) -> qualifiedNamePrefix + "ClassWithSuperClassAndRoles",
-			typeof(TClass) -> "MySubClass",
 			typeof(TClass) -> "MyClass",
 			typeof(TInterface) -> "Persistable",
-			typeof(TInterface) -> "Comparable"
+			typeof(TInterface) -> "Comparable",
+			typeof(TClass) -> "MySubClass"
 		]
 		val expectedTypesCount = expectedTypesNamePairs.size
 		val expectedExportedElementsCount = expectedExportedTypeToNamePairsOnIndex.size

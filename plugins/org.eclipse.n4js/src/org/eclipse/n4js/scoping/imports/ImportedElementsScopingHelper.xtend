@@ -23,7 +23,6 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.resource.N4JSEObjectDescription
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.ExportedElementsCollector
 import org.eclipse.n4js.scoping.N4JSScopeProvider
@@ -48,6 +47,7 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
+import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
@@ -330,7 +330,7 @@ class ImportedElementsScopingHelper {
 
 	private def handleAliasedAccess(IdentifiableElement element, QualifiedName originalName, String importedName,
 		ImportedElementsMap invalidImports, IEODesc2ISpec originatorMap, ImportSpecifier specifier) {
-		val invalidAccess = new PlainAccessOfAliasedImportDescription(N4JSEObjectDescription.create(originalName, element),
+		val invalidAccess = new PlainAccessOfAliasedImportDescription(EObjectDescription.create(originalName, element),
 			importedName)
 		invalidImports.put(originalName, invalidAccess)
 	// TODO IDEBUG-702 originatorMap.putWithOrigin(invalidAccess, specifier)
@@ -339,7 +339,7 @@ class ImportedElementsScopingHelper {
 	private def handleNamespacedAccess(IdentifiableElement importedType, QualifiedName originalName, QualifiedName qn,
 		ImportedElementsMap invalidImports, IEODesc2ISpec originatorMap, ImportSpecifier specifier) {
 		val invalidAccess = new PlainAccessOfNamespacedImportDescription(
-			N4JSEObjectDescription.create(originalName, importedType), qn)
+			EObjectDescription.create(originalName, importedType), qn)
 		invalidImports.put(originalName, invalidAccess)
 	// TODO IDEBUG-702 originatorMap.putWithOrigin(invalidAccess, specifier)
 	}
@@ -444,9 +444,9 @@ class ImportedElementsScopingHelper {
 				// non-directly-exported variable / function / type alias that is exported under an alias via a separate export declaration:
 				qn = qualifiedNameProvider.getFullyQualifiedName(element.containingModule)?.append(element.name);
 			}
-			return new AliasedEObjectDescription(name, N4JSEObjectDescription.create(qn, element))
+			return new AliasedEObjectDescription(name, EObjectDescription.create(qn, element))
 		} else {
-			return N4JSEObjectDescription.create(name, element)
+			return EObjectDescription.create(name, element)
 		}
 	}
 

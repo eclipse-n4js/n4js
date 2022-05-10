@@ -280,8 +280,31 @@ public class URIUtils {
 	}
 
 	/**
-	 * Extracts the path of a {@link #VIRTUAL_RESOURCE_SEGMENT virtual resource} from its URI. The returned segments
-	 * will still be {@link URI#encodeSegment(String, boolean) URI-encoded}; caller has to decode them (if desired).
+	 * Extracts the base URI of a {@link #isVirtualResourceURI(URI) virtual resource URI}, i.e. the URI up to, excluding
+	 * the {@link #VIRTUAL_RESOURCE_SEGMENT virtual resource segment}, equivalent to the URI of the host resource.
+	 * <p>
+	 * Returns the given URI itself if it isn't a virtual resource URI.
+	 */
+	public static URI getBaseOfVirtualResourceURI(URI uri) {
+		String[] segs = uri.segments();
+		int len = segs.length;
+		for (int i = 0; i < len; i++) {
+			if (URIUtils.VIRTUAL_RESOURCE_SEGMENT.equals(segs[i])) {
+				URI result = uri.trimSegments(len - i);
+				return result;
+			}
+		}
+		return uri;
+	}
+
+	/**
+	 * Extracts the path of a {@link #isVirtualResourceURI(URI) virtual resource URI}, i.e. the segments following the
+	 * {@link #VIRTUAL_RESOURCE_SEGMENT}.
+	 * <p>
+	 * The returned segments will still be {@link URI#encodeSegment(String, boolean) URI-encoded}; caller has to decode
+	 * them, if desired.
+	 * <p>
+	 * Returns <code>null</code> iff the given URI isn't a virtual resource URI.
 	 */
 	public static String[] getPathOfVirtualResource(URI uri) {
 		String[] segs = uri.segments();

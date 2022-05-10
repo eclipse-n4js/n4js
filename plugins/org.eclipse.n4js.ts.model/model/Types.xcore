@@ -329,9 +329,6 @@ class ElementExportDefinition extends ExportDefinition {
 
 	String exportedName
 
-	/* Tells whether the exported element is a non-static or static polyfill. */
-	boolean polyfill
-
 	/*
 	 * The element being exported under name {@link ExportDefinition#getExportedName() exportedName}.
 	 * This element need not be contained in this definition's parent {@link TExportingElement}.

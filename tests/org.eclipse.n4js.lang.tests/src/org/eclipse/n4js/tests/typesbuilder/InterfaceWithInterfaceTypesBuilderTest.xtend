@@ -51,8 +51,8 @@ class InterfaceWithInterfaceTypesBuilderTest extends AbstractTypesBuilderTest {
 		val expectedTypesNamePairs = #[
 			typeof(TInterface) -> "OtherInterface",
 			typeof(TInterface) -> "MyInterface",
-			typeof(TInterface) -> "PublicApiInterface",
-			typeof(TInterface) -> "PrivateInterface"
+			typeof(TInterface) -> "PrivateInterface",
+			typeof(TInterface) -> "PublicApiInterface"
 		]
 
 		// currently everything is exported to user data and Xtext index, e.g. to be able to
@@ -61,8 +61,8 @@ class InterfaceWithInterfaceTypesBuilderTest extends AbstractTypesBuilderTest {
 			typeof(TModule) -> qualifiedNamePrefix + "InterfaceWithInterface",
 			typeof(TInterface) -> "OtherInterface",
 			typeof(TInterface) -> "MyInterface",
-			typeof(TInterface) -> "PublicApiInterface",
-			typeof(TInterface) -> "PrivateInterface"
+			typeof(TInterface) -> "PrivateInterface",
+			typeof(TInterface) -> "PublicApiInterface"
 		]
 		val expectedTypesCount = expectedTypesNamePairs.size
 		val expectedExportedElementsCount = expectedExportedTypeToNamePairsOnIndex.size

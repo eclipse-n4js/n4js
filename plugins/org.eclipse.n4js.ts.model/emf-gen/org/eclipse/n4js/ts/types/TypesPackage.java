@@ -834,22 +834,13 @@ public interface TypesPackage extends EPackage {
 	int ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME = EXPORT_DEFINITION_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Polyfill</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ELEMENT_EXPORT_DEFINITION__POLYFILL = EXPORT_DEFINITION_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Exported Element</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT = EXPORT_DEFINITION_FEATURE_COUNT + 2;
+	int ELEMENT_EXPORT_DEFINITION__EXPORTED_ELEMENT = EXPORT_DEFINITION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Element Export Definition</em>' class.
@@ -858,7 +849,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ELEMENT_EXPORT_DEFINITION_FEATURE_COUNT = EXPORT_DEFINITION_FEATURE_COUNT + 3;
+	int ELEMENT_EXPORT_DEFINITION_FEATURE_COUNT = EXPORT_DEFINITION_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -14775,17 +14766,6 @@ public interface TypesPackage extends EPackage {
 	EAttribute getElementExportDefinition_ExportedName();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#isPolyfill <em>Polyfill</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Polyfill</em>'.
-	 * @see org.eclipse.n4js.ts.types.ElementExportDefinition#isPolyfill()
-	 * @see #getElementExportDefinition()
-	 * @generated
-	 */
-	EAttribute getElementExportDefinition_Polyfill();
-
-	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.ElementExportDefinition#getExportedElement <em>Exported Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -17977,14 +17957,6 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute ELEMENT_EXPORT_DEFINITION__EXPORTED_NAME = eINSTANCE.getElementExportDefinition_ExportedName();
-
-		/**
-		 * The meta object literal for the '<em><b>Polyfill</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute ELEMENT_EXPORT_DEFINITION__POLYFILL = eINSTANCE.getElementExportDefinition_Polyfill();
 
 		/**
 		 * The meta object literal for the '<em><b>Exported Element</b></em>' reference feature.

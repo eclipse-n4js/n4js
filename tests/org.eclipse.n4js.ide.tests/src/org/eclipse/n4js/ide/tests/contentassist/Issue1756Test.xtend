@@ -39,7 +39,7 @@ class Issue1756Test extends AbstractCompletionTest {
 			
 			function someFunctionWithAnExtremelyLooooongName() {}
 		''', ''' 
-			(someFunctionWithAnExtremelyLooooongName, Function, someFunctionWithAnExtremelyLooooongName, , , 00000, , , , ([6:4 - 6:11], someFunctionWithAnExtremelyLooooongName), [], [], , )
+			(someFunctionWithAnExtremelyLooooongName, Function, MyModule, , , 00000, , , , ([6:4 - 6:11], someFunctionWithAnExtremelyLooooongName), [], [], , )
 		''');
 	}
 
@@ -57,7 +57,7 @@ class Issue1756Test extends AbstractCompletionTest {
 			}
 			function xxxx() {}
 		''', ''' 
-			(xxxx, Function, xxxx, , , 00000, , , , ([4:4 - 4:7], xxxx), [], [], , )
+			(xxxx, Function, MyModule, , , 00000, , , , ([4:4 - 4:7], xxxx), [], [], , )
 			(xxxxx, Function, MyModule, , , 00001, , , , ([4:4 - 4:7], xxxxx), [], [], , )
 		''');
 	}
