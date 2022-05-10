@@ -589,24 +589,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	private def IScope scope_PropertyAccessExpression_property(ParameterizedPropertyAccessExpression propertyAccess, EReference ref) {
 		val Expression receiver = propertyAccess.target;
 
-		// if accessing namespace import
-		if (receiver instanceof IdentifierRef) {
-			val id = receiver.id;
-			if (id instanceof TNamespace) {
-				return scope_AllTopLevelElementsFromAbstractNamespace(id, propertyAccess, false, true);
-			}
-			if (id instanceof ModuleNamespaceVirtualType) {
-				return createScopeForNamespaceAccess(id, propertyAccess, false, true);
-			}
-		}
-		
-		if (receiver instanceof ParameterizedPropertyAccessExpression) {
-			val prop = receiver.property;
-			if (prop instanceof TNamespace) {
-				return scope_AllTopLevelElementsFromAbstractNamespace(prop, propertyAccess, false, true);
-			}
-		}
-
 		val G = propertyAccess.newRuleEnvironment;
 		val TypeRef typeRefRaw = ts.type(G, receiver);
 		// take upper bound to get rid of ExistentialTypeRefs, ThisTypeRefs, etc.
