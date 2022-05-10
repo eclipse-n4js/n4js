@@ -18,12 +18,6 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.n4JS.FunctionDeclaration
-import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
-import org.eclipse.n4js.n4JS.N4TypeDeclaration
-import org.eclipse.n4js.n4JS.N4TypeVariable
-import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
@@ -44,9 +38,6 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 
-import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
-import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-
 /**
  * Calculates the fully qualified name for the passed-in objects.
  */
@@ -64,21 +55,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 
 	override QualifiedName getFullyQualifiedName(EObject it) {
 		switch (it) {
-			// AST Nodes
-			Script:
-				module.fullyQualifiedName
-			N4NamespaceDeclaration:
-				if (name !== null) fqnNamespaceDeclaration(it)
-			N4TypeDeclaration:
-				if (name !== null) fqnTypeDeclaration(it)
-			FunctionDeclaration:
-				if (name !== null) rootContainer.fullyQualifiedName?.append(name)
-			VariableDeclaration:
-				if (name !== null) rootContainer.fullyQualifiedName?.append(name)
-			N4TypeVariable:
-				null
-
-			// Type Model Elements
 			TModule:
 				if (qualifiedName !== null) fqnTModule(it)
 			TNamespace:
@@ -103,7 +79,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			JSONDocument:
 				fqnJSONDocument(it)
 
-			default: // including TMember, TFormalParameter, and AbstractVariable with CatchVariable, FormalParameter
+			default: // including TMember, TFormalParameter
 				null
 		}
 	}
@@ -118,29 +94,6 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		} else {
 			return QualifiedName.create(GLOBAL_NAMESPACE_SEGMENT)
 		}
-	}
-
-	private def QualifiedName fqnTypeDeclaration(N4TypeDeclaration typeDecl) {
-		var prefix = typeDecl.rootContainer.fullyQualifiedName;
-		if ( typeDecl.isNonStaticPolyfill || typeDecl.isStaticPolyfill )
-		{
-			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
-		}
-		val fqn = QualifiedNameUtils.append(prefix, typeDecl.directlyExportedName ?: typeDecl.name);
-		return fqn;
-	}
-
-	private def QualifiedName fqnNamespaceDeclaration(N4NamespaceDeclaration typeDecl) {
-		var prefix = typeDecl.rootContainer.fullyQualifiedName;
-		var qn = QualifiedName.create(typeDecl.directlyExportedName ?: typeDecl.name);
-		var EObject tmpTypeDecl = typeDecl;
-		while (tmpTypeDecl.eContainer instanceof N4NamespaceDeclaration) {
-			tmpTypeDecl = tmpTypeDecl.eContainer;
-			val nsd = tmpTypeDecl as N4NamespaceDeclaration;
-			qn = QualifiedNameUtils.prepend(nsd.directlyExportedName ?: nsd.name, qn);
-		}
-		val fqn = QualifiedNameUtils.concat(prefix, qn);
-		return fqn;
 	}
 
 	private def QualifiedName fqnType(Type type) {
