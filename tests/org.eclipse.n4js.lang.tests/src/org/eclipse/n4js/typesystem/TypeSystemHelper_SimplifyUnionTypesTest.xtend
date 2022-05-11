@@ -90,8 +90,8 @@ class TypeSystemHelper_SimplifyUnionTypesTest extends AbstractTypeSystemHelperTe
 	@Test
 	def void testDontSimplifyNonDuplicates() {
 		assertSimplify(
-			"union{Array<union{A,D}>,Array<union{string,number}>}", // must not be simplified to "Array<union{A,D}>"
-			"union{Array<union{A,D}>,Array<union{string,number}>}"
+			"union{Array<union{string,number}>,Array<union{A,D}>}", // must not be simplified to "Array<union{A,D}>"
+			"union{Array<union{string,number}>,Array<union{A,D}>}"
 		);
 		assertSimplify(
 			"union{type{A},type{D}}", // must not be simplified to "type{A}" (note: D is not a subtype of A)
