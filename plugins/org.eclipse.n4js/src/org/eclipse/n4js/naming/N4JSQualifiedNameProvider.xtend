@@ -19,6 +19,7 @@ import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.packagejson.PackageJsonProperties
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -85,15 +86,17 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	}
 
 	private def QualifiedName fqnTModule(TModule module) {
-		if ( module.qualifiedName.length != 0 && ! AnnotationDefinition.GLOBAL.hasAnnotation(module)) {
-			var plainQN = converter.toQualifiedName(module.qualifiedName);
-			if( module.isStaticPolyfillModule ) {
-				return QualifiedNameUtils.prepend(PolyfillUtils.MODULE_POLYFILL_SEGMENT, plainQN)
-			}
-			return plainQN
-		} else {
+		val isGlobal = AnnotationDefinition.GLOBAL.hasAnnotation(module);
+		if (isGlobal
+			// primitives act like global types, but their module does not contain @@Global:
+			|| BuiltInTypeScope.isPrimitivesResource(module.eResource)) {
 			return QualifiedName.create(GLOBAL_NAMESPACE_SEGMENT)
 		}
+		var plainQN = converter.toQualifiedName(module.qualifiedName);
+		if( module.isStaticPolyfillModule ) {
+			return QualifiedNameUtils.prepend(PolyfillUtils.MODULE_POLYFILL_SEGMENT, plainQN)
+		}
+		return plainQN
 	}
 
 	private def QualifiedName fqnJSONDocument(JSONDocument document) {
