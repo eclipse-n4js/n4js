@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.scoping.utils;
 
+import static org.eclipse.n4js.naming.N4JSQualifiedNameProvider.MODULE_CONTENT_SEGMENT;
+
 import java.util.Optional;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -39,8 +41,7 @@ public class PolyfillUtils {
 	public static QualifiedName getNonStaticPolyfillFQN(TClassifier tClassifier,
 			IQualifiedNameProvider qualifiedNameProvider) {
 		QualifiedName prefix = qualifiedNameProvider.getFullyQualifiedName(EcoreUtil.getRootContainer(tClassifier));
-		prefix = QualifiedNameUtils.append(prefix, POLYFILL_SEGMENT);
-		return QualifiedNameUtils.append(prefix, tClassifier.getName());
+		return QualifiedNameUtils.append(prefix, MODULE_CONTENT_SEGMENT, POLYFILL_SEGMENT, tClassifier.getName());
 	}
 
 	/**
@@ -51,8 +52,7 @@ public class PolyfillUtils {
 			IQualifiedNameProvider qualifiedNameProvider) {
 		QualifiedName prefix = qualifiedNameProvider.getFullyQualifiedName(EcoreUtil.getRootContainer(tClassifier));
 		prefix = QualifiedNameUtils.prepend(MODULE_POLYFILL_SEGMENT, prefix);
-		prefix = QualifiedNameUtils.append(prefix, POLYFILL_SEGMENT);
-		return QualifiedNameUtils.append(prefix, tClassifier.getName());
+		return QualifiedNameUtils.append(prefix, MODULE_CONTENT_SEGMENT, POLYFILL_SEGMENT, tClassifier.getName());
 	}
 
 	/**

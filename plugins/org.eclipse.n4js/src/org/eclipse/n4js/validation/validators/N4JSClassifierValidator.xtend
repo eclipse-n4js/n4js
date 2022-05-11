@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeVariable
+import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -35,7 +36,6 @@ import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -53,8 +53,6 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private extension IQualifiedNameProvider qualifiedNameProvider;
-	@Inject
-	private IQualifiedNameConverter qualifiedNameConverter
 
 	/**
 	 * NEEEDED
@@ -126,22 +124,22 @@ class N4JSClassifierValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (names.nullOrEmpty) return;
 
-		val duplicates = names.map[qualifiedNameConverter.toString(it)].computeStringOccurance.filter[value > 1]
+		val duplicates = names.computeStringOccurance.filter[value > 1]
 
 		for (dupe : duplicates) {
-			val message = getMessageForCLF_MULTIPLE_ROLE_CONSUME(dupe.key)
+			val message = getMessageForCLF_MULTIPLE_ROLE_CONSUME(QualifiedNameUtils.toHumanReadableString(dupe.key))
 			addIssue(message, source.astElement, eref, CLF_MULTIPLE_ROLE_CONSUME)
 		}
 	}
 
 	/**
-	 * Computes occurrence of every String in the Collection.
-	 * Returns Iterable&lt;Pair&lt;String, Integer>>, where {@link Pair} keys are
+	 * Computes occurrence of every qualified name in the Collection.
+	 * Returns Iterable&lt;Pair&lt;QualifiedName, Integer>>, where {@link Pair} keys are
 	 * items of original collection and values are number of occurrences in collection
 	 */
-	def static private computeStringOccurance(Collection<String> collection) {
+	def static private computeStringOccurance(Collection<QualifiedName> collection) {
 
-		var acc = new HashMap<String, Integer>()
+		var acc = new HashMap<QualifiedName, Integer>()
 
 		for (entry : collection) {
 			if (acc.containsKey(entry)) {

@@ -32,6 +32,7 @@ import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfAliasedImportDescription;
 import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
 import org.eclipse.n4js.scoping.members.WrongTypingStrategyDescription;
+import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
 import org.eclipse.n4js.ts.types.TModule;
@@ -223,7 +224,7 @@ public class ReferenceResolutionFinder {
 					addHereNames.add(curr.getName());
 				}
 				if (curr.getEObjectURI() != null) {
-					QualifiedName candidateModuleQN = getQualifiedNameOfModule(curr);
+					QualifiedName candidateModuleQN = QualifiedNameUtils.trimModuleContent(curr.getQualifiedName());
 					if (candidateModuleQN != null) {
 						if (moduleQN2Prj.containsKey(candidateModuleQN)) {
 							if (moduleQN2Prj.get(candidateModuleQN) != prj) {
@@ -327,31 +328,21 @@ public class ReferenceResolutionFinder {
 
 	private String getDescription(ReferenceResolutionCandidate rrc) {
 		if (rrc.isAlias()) {
-			return "alias for " + qualifiedNameConverter.toString(rrc.qualifiedName);
+			return "alias for " + QualifiedNameUtils.toHumanReadableString(rrc.qualifiedName);
 		}
 		if (rrc.isNamespace()) {
-			return qualifiedNameConverter.toString(rrc.qualifiedName);
+			return QualifiedNameUtils.toHumanReadableString(rrc.qualifiedName);
 		}
 		if (rrc.newImportHasAlias()) {
 			String descr = "via new alias " + rrc.addedImportNameAndAlias.alias;
-			descr += " for " + qualifiedNameConverter.toString(rrc.qualifiedName);
+			descr += " for " + QualifiedNameUtils.toHumanReadableString(rrc.qualifiedName);
 			descr += "\n\n";
 			descr += "Introduces the new alias '" + rrc.addedImportNameAndAlias.alias;
-			descr += "' for element " + qualifiedNameConverter.toString(rrc.qualifiedName);
+			descr += "' for element " + QualifiedNameUtils.toHumanReadableString(rrc.qualifiedName);
 			return descr;
 		}
 
-		QualifiedName rrcQN = rrc.qualifiedName;
-		final int segCount = rrcQN.getSegmentCount();
-		final QualifiedName descrQN;
-		if (segCount > 0 && rrcQN.getFirstSegment().equals(N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT)) {
-			descrQN = rrcQN.skipFirst(1);
-		} else if (rrcQN.getSegmentCount() > 1) {
-			descrQN = rrcQN.skipLast(1);
-		} else {
-			descrQN = rrcQN;
-		}
-		return qualifiedNameConverter.toString(descrQN);
+		return QualifiedNameUtils.toHumanReadableString(rrc.qualifiedName, true);
 	}
 
 	private ImportDescriptor getImportToBeAdded(ReferenceResolutionCandidate rrc) {
@@ -360,7 +351,9 @@ public class ReferenceResolutionFinder {
 			return null;
 		}
 
-		QualifiedName qualifiedName = requestedImport.name;
+		String elementName = requestedImport.elementName;
+		QualifiedName moduleSpecifier = requestedImport.moduleSpecifier;
+		String moduleSpecifierStr = qualifiedNameConverter.toString(moduleSpecifier);
 		String optionalAlias = requestedImport.alias;
 
 		N4JSPackageName projectName = rrc.candidateProjectOrNull != null
@@ -370,18 +363,15 @@ public class ReferenceResolutionFinder {
 			return null;
 		}
 
-		QualifiedName moduleName = qualifiedName.skipLast(1);
-		String moduleSpecifier = qualifiedNameConverter.toString(moduleName);
-
 		ImportDescriptor importDesc;
-		if (N4JSLanguageUtils.isDefaultExport(qualifiedName)) {
+		if (N4JSLanguageUtils.isDefaultExport(rrc.qualifiedName)) {
 			String localName = optionalAlias != null ? optionalAlias
-					: N4JSLanguageUtils.lastSegmentOrDefaultHost(qualifiedName);
-			importDesc = ImportDescriptor.createDefaultImport(localName, moduleSpecifier, projectName, moduleName,
-					Integer.MAX_VALUE);
+					: N4JSLanguageUtils.lastSegmentOrDefaultHost(rrc.qualifiedName);
+			importDesc = ImportDescriptor.createDefaultImport(localName, moduleSpecifierStr, projectName,
+					moduleSpecifier, Integer.MAX_VALUE);
 		} else {
-			importDesc = ImportDescriptor.createNamedImport(qualifiedName.getLastSegment(), optionalAlias,
-					moduleSpecifier, projectName, moduleName, Integer.MAX_VALUE);
+			importDesc = ImportDescriptor.createNamedImport(elementName, optionalAlias, moduleSpecifierStr, projectName,
+					moduleSpecifier, Integer.MAX_VALUE);
 		}
 
 		return importDesc;
@@ -692,8 +682,7 @@ public class ReferenceResolutionFinder {
 				return null;
 			}
 
-			QualifiedName importName = getImportName(collisioningModules);
-
+			QualifiedName importName = candidate.getQualifiedName();
 			if (importName == null) {
 				return null;
 			}
@@ -705,9 +694,18 @@ public class ReferenceResolutionFinder {
 			}
 
 			// Globally available elements should not generate imports
-			if (importName.getSegmentCount() == 2
-					&& N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(importName.getFirstSegment())) {
+			if (QualifiedNameUtils.isGlobal(qualifiedName)) {
 				// type name is a simple name from global Namespace - no need to hassle with imports
+				return null;
+			}
+
+			String elementName = getImportElementName();
+			if (elementName == null) {
+				return null;
+			}
+
+			QualifiedName moduleSpecifier = getImportModuleSpecifier(collisioningModules);
+			if (moduleSpecifier == null) {
 				return null;
 			}
 
@@ -721,27 +719,41 @@ public class ReferenceResolutionFinder {
 
 				// the simple name is already reachable, i.e. already in use - another import is present
 				// try to use an alias
-				alias = "Alias_" + UtilN4.toUpperCaseFirst(qualifiedName.toString().replace(".", "_"));
+				alias = "Alias_" + UtilN4.toUpperCaseFirst(qualifiedName.toString()
+						.replace("." + N4JSQualifiedNameProvider.MODULE_CONTENT_SEGMENT + ".", "_")
+						.replace(".", "_"));
 			}
 
-			return new NameAndAlias(importName, alias);
+			return new NameAndAlias(elementName, moduleSpecifier, alias);
 		}
 
-		/** Return fully qualified name (= module specifier + element name) of the element to be imported. */
-		private QualifiedName getImportName(Set<QualifiedName> collisioningModules) {
-			QualifiedName candidateModuleQN = getQualifiedNameOfModule(candidate);
-			String candidateModuleQNStr = candidateModuleQN != null
-					? qualifiedNameConverter.toString(candidateModuleQN)
-					: null;
+		private String getImportElementName() {
+			QualifiedName candidateElementQN = QualifiedNameUtils.getModuleContent(qualifiedName);
+			if (candidateElementQN == null || candidateElementQN.isEmpty()) {
+				return null;
+			}
+			if (candidateElementQN.getSegmentCount() > 1) {
+				// type is nested in namespace(s) - no way to import it directly
+				return null;
+			}
+			return candidateElementQN.getSegment(0);
+		}
+
+		private QualifiedName getImportModuleSpecifier(Set<QualifiedName> collisioningModules) {
+			QualifiedName candidateModuleQN = QualifiedNameUtils.trimModuleContent(qualifiedName);
+			if (candidateModuleQN == null) {
+				return null;
+			}
+
+			String candidateModuleQNStr = qualifiedNameConverter.toString(candidateModuleQN);
 			ProjectType projectType = candidateProjectOrNull != null ? candidateProjectOrNull.getType() : null;
 
-			QualifiedName candidateName;
+			QualifiedName moduleSpecifier;
 			if (candidateProjectOrNull != null && candidateModuleQNStr != null
 					&& N4JSLanguageUtils.isMainModule(candidateProjectOrNull, candidateModuleQNStr)) {
 				// use project import when importing from a main module (e.g. index.Element -> react.Element)
 				N4JSPackageName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
-				String lastSegmentOfQFN = candidate.getQualifiedName().getLastSegment().toString();
-				candidateName = projectName.toQualifiedName().append(lastSegmentOfQFN);
+				moduleSpecifier = projectName.toQualifiedName();
 
 			} else if (candidateProjectOrNull != null && (projectType == ProjectType.PLAINJS
 					|| projectType == ProjectType.DEFINITION
@@ -750,13 +762,13 @@ public class ReferenceResolutionFinder {
 				// from PLAINJS or DEFINITION project
 				// OR when the imported module is clashing with another module that is equally named
 				N4JSPackageName projectName = getNameOfDefinedOrGivenProject(candidateProjectOrNull);
-				candidateName = projectName.toQualifiedName().append(candidate.getQualifiedName());
+				moduleSpecifier = projectName.toQualifiedName().append(candidateModuleQN);
 
 			} else {
 				// standard case: use plain module specifier
-				candidateName = candidate.getQualifiedName();
+				moduleSpecifier = candidateModuleQN;
 			}
-			return candidateName;
+			return moduleSpecifier;
 		}
 
 		public boolean hasNewImport() {
@@ -774,12 +786,6 @@ public class ReferenceResolutionFinder {
 		public boolean isNamespace() {
 			return accessType == CandidateAccessType.namespace;
 		}
-	}
-
-	private static QualifiedName getQualifiedNameOfModule(IEObjectDescription descr) {
-		return descr.getQualifiedName().getSegmentCount() >= 2
-				? descr.getQualifiedName().skipLast(1)
-				: null;
 	}
 
 	/**
@@ -810,11 +816,13 @@ public class ReferenceResolutionFinder {
 	}
 
 	private static class NameAndAlias {
-		private final QualifiedName name;
+		private final String elementName;
+		private final QualifiedName moduleSpecifier;
 		private final String alias;
 
-		public NameAndAlias(QualifiedName qualifiedName, String alias) {
-			this.name = qualifiedName;
+		public NameAndAlias(String elementName, QualifiedName moduleSpecifier, String alias) {
+			this.elementName = elementName;
+			this.moduleSpecifier = moduleSpecifier;
 			this.alias = alias;
 		}
 	}

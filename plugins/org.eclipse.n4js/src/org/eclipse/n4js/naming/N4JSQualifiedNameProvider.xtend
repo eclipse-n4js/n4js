@@ -51,6 +51,9 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	/** Segment used for globally available elements. */
 	public static String GLOBAL_NAMESPACE_SEGMENT = "#";
 
+	/** Segment used to separate the module specifier from the element name in a {@link QualifiedName}. */
+	public static String MODULE_CONTENT_SEGMENT = "!";
+
 	/** Last segment of fully qualified names for the root {@link JSONDocument} of package.json files. */
 	public static final String PACKAGE_JSON_SEGMENT = "!package_json";
 
@@ -93,8 +96,8 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			return QualifiedName.create(GLOBAL_NAMESPACE_SEGMENT)
 		}
 		var plainQN = converter.toQualifiedName(module.qualifiedName);
-		if( module.isStaticPolyfillModule ) {
-			return QualifiedNameUtils.prepend(PolyfillUtils.MODULE_POLYFILL_SEGMENT, plainQN)
+		if (module.isStaticPolyfillModule) {
+			plainQN = QualifiedNameUtils.prepend(PolyfillUtils.MODULE_POLYFILL_SEGMENT, plainQN);
 		}
 		return plainQN
 	}
@@ -132,6 +135,7 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 		var curr = elem.eContainer;
 		while (curr !== null) {
 			if (curr instanceof TModule) {
+				segments += MODULE_CONTENT_SEGMENT;
 				return QualifiedNameUtils.append(curr.fqnTModule, segments.reverseView);
 			} else if (curr instanceof TNamespace) {
 				val name = curr.name;
