@@ -223,7 +223,7 @@ public class CompletionWithImportsTest extends AbstractCompletionTest {
 			import * as A2 from "MA";
 			A2<|>
 		''', ''' 
-			(A2, Color, A2, , , 00000, , , , ([1:0 - 1:2], A2), [], [], , )
+			(A2, Color, MyModule, , , 00000, , , , ([1:0 - 1:2], A2), [], [], , )
 			(A2.A2, Class, MA/A2, , , 00001, , , , ([1:0 - 1:2], A2.A2), [], [], , )
 			(A2, Class, via new alias Alias_MBA_A2 for MBA/A2
 			
