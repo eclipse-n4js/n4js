@@ -38,8 +38,8 @@
 /*
 these names are stored in the Xtext Index
 XPECT exportedObjects ---
-	types::TModule: resourcedescriptions.Brother,
-	types::TClass: resourcedescriptions.Brother.Brother
+	types::TModule: resourcedescriptions/Brother,
+	types::TClass: resourcedescriptions/Brother.Brother
 --- */
 
 import { Sister as SisterObject } from "resourcedescriptions/Sister"

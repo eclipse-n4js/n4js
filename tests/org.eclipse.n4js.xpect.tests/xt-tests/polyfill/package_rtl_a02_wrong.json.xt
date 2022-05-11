@@ -55,7 +55,7 @@
 		"vendorId": "org.eclipse.n4js",
 		"vendorName": "Eclipse N4JS Project",
 		"requiredRuntimeLibraries": [
-			// XPECT errors --> "Erroneous library P_RTL_A01 provides contradicting polyfills for "#.MObject#mi"." at ""P_RTL_A01""
+			// XPECT errors --> "Erroneous library P_RTL_A01 provides contradicting polyfills for "MObject#mi"." at ""P_RTL_A01""
 			"P_RTL_A01"
 		],
 		"output": "src-gen",

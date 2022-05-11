@@ -48,6 +48,7 @@ import org.eclipse.n4js.ide.tests.helper.server.xt.XtMethodPattern.Match;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.tests.codegen.Project;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.Strings;
@@ -499,7 +500,7 @@ public class XtIdeTest extends AbstractIdeTest {
 	public void linkedName(XtMethodData data) {
 		IEObjectCoveringRegion ocr = eobjProvider.checkAndGetObjectCoveringRegion(data, "linkedName", "at");
 		QualifiedName linkedName = xtMethods.getLinkedName(ocr);
-		assertEquals(data.expectation, linkedName.toString());
+		assertEquals(data.expectation, QualifiedNameUtils.toHumanReadableString(linkedName));
 	}
 
 	/**
@@ -966,7 +967,8 @@ public class XtIdeTest extends AbstractIdeTest {
 			expectElems.removeAll(Lists.newArrayList(i2s));
 			expectMissingElems.retainAll(Sets.newHashSet(i2s));
 
-			assertTrue("Not found: " + Strings.join(", ", expectElems), expectElems.isEmpty());
+			assertTrue("Not found:\n    " + Strings.join("\n    ", expectElems) + "\n"
+					+ "Among these actual elements:\n    " + Strings.join("\n    ", i2s), expectElems.isEmpty());
 
 			assertTrue("Expected missing, but found: " + Strings.join(", ", expectMissingElems),
 					expectMissingElems.isEmpty());

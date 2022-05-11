@@ -31,11 +31,11 @@
 import * as N from "linking/imports/MultipleClasses"
 
 // XPECT linkedFragment at 'Class1' --> MultipleClasses.n4js#/1/@types.0
-// XPECT linkedName at 'Class1' --> linking.imports.MultipleClasses.Class1
+// XPECT linkedName at 'Class1' --> linking/imports/MultipleClasses.Class1
 var class1: N.Class1
 // XPECT linkedFragment at 'Class2' --> MultipleClasses.n4js#/1/@types.1
-// XPECT linkedName at 'Class2' --> linking.imports.MultipleClasses.Class2
+// XPECT linkedName at 'Class2' --> linking/imports/MultipleClasses.Class2
 var class2: N.Class2
 // XPECT linkedFragment at 'Class4' --> MultipleClasses.n4js#/1/@types.3
-// XPECT linkedName at 'Class4' --> linking.imports.MultipleClasses.Class4
+// XPECT linkedName at 'Class4' --> linking/imports/MultipleClasses.Class4
 var class4: N.Class4

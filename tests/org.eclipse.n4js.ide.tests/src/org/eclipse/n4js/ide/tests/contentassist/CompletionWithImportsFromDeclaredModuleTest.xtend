@@ -45,7 +45,7 @@ public class CompletionWithImportsFromDeclaredModuleTest extends AbstractComplet
 			import * as N from "a/b/myDeclModule"
 			let x = new MyC<|>
 		''', '''
-			(N.MyCls, Class, a/b/myDeclModule/MyCls, , , 00000, , , , ([1:12 - 1:15], N.MyCls), [], [], , )
+			(N.MyCls, Class, a/b/myDeclModule.MyCls, , , 00000, , , , ([1:12 - 1:15], N.MyCls), [], [], , )
 		''');
 	}
 
@@ -65,7 +65,7 @@ public class CompletionWithImportsFromDeclaredModuleTest extends AbstractComplet
 			import { MyCls as MyAlias } from "a/b/myDeclModule"
 			let x = new MyC<|>
 		''', '''
-			(MyAlias, Class, alias for a/b/myDeclModule/MyCls, , , 00000, , , , ([1:12 - 1:15], MyAlias), [], [], , )
+			(MyAlias, Class, alias for a/b/myDeclModule.MyCls, , , 00000, , , , ([1:12 - 1:15], MyAlias), [], [], , )
 		''');
 	}
 }

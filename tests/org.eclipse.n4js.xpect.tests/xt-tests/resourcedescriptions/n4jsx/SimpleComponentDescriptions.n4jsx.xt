@@ -33,11 +33,11 @@
 
 
 /* these names are stored in the Xtext Index XPECT exportedObjects ---
-types::TModule: resourcedescriptions.SimpleComponentDescriptions,
-types::TVariable: resourcedescriptions.SimpleComponentDescriptions.simpleNested,
-types::TVariable: resourcedescriptions.SimpleComponentDescriptions.simpleOpenClose,
-types::TVariable: resourcedescriptions.SimpleComponentDescriptions.simpleSelfClosing,
-types::TVariable: resourcedescriptions.SimpleComponentDescriptions.simpleSpread
+types::TModule: resourcedescriptions/SimpleComponentDescriptions,
+types::TVariable: resourcedescriptions/SimpleComponentDescriptions.simpleNested,
+types::TVariable: resourcedescriptions/SimpleComponentDescriptions.simpleOpenClose,
+types::TVariable: resourcedescriptions/SimpleComponentDescriptions.simpleSelfClosing,
+types::TVariable: resourcedescriptions/SimpleComponentDescriptions.simpleSpread
 --- */
 
 

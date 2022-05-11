@@ -33,9 +33,9 @@
 
 
 /* these names are stored in the Xtext Index XPECT exportedObjects ---
-types::TClass: resourcedescriptions.ClassComponentDescriptions.LowerComponent,
-types::TClass: resourcedescriptions.ClassComponentDescriptions.MyComponent,
-types::TModule: resourcedescriptions.ClassComponentDescriptions
+types::TClass: resourcedescriptions/ClassComponentDescriptions.LowerComponent,
+types::TClass: resourcedescriptions/ClassComponentDescriptions.MyComponent,
+types::TModule: resourcedescriptions/ClassComponentDescriptions
 --- */
 
 
