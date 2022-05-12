@@ -21,6 +21,7 @@ import org.eclipse.n4js.jsdoc2spec.adoc.RepoRelativePathHolder;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
@@ -66,9 +67,9 @@ public class SpecInfosByName {
 		this.workspaceAccess = workspaceAccess;
 	}
 
-	void createTypeSpecInfo(Type type, RepoRelativePathHolder rrph) {
-		SpecInfo typeInfo = new SpecInfo(type);
-		String regionName = KeyUtils.getSpecKeyWithoutProjectFolder(rrph, type);
+	void createTypeSpecInfo(TExportableElement expElem, RepoRelativePathHolder rrph) {
+		SpecInfo typeInfo = new SpecInfo(expElem);
+		String regionName = KeyUtils.getSpecKeyWithoutProjectFolder(rrph, expElem);
 		specInfoByName.put(regionName, typeInfo);
 
 		Collection<SpecInfo> identicalSpecInfo = specInfoByName.get(regionName);

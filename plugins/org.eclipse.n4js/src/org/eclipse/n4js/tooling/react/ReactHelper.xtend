@@ -16,7 +16,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.TClass
@@ -180,7 +180,7 @@ class ReactHelper {
 				TypeUtils.createTypeRef(reactComponentProps));
 			return reactComponentPropsTypeRef;
 
-		} else if (exprTypeRef instanceof FunctionTypeExprOrRef) {
+		} else if (exprTypeRef instanceof FunctionTypeExpression) {
 			// The JSX elements refers to a function, assume that the first parameter is props
 			if (exprTypeRef.fpars.length > 0) {
 				val tPropsParam = exprTypeRef.fpars.get(0);

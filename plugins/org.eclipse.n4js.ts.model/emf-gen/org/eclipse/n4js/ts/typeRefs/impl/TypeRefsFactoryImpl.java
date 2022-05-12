@@ -79,7 +79,6 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 			case TypeRefsPackage.TYPE_TYPE_REF: return createTypeTypeRef();
 			case TypeRefsPackage.NAMESPACE_LIKE_REF: return createNamespaceLikeRef();
 			case TypeRefsPackage.WILDCARD: return createWildcard();
-			case TypeRefsPackage.FUNCTION_TYPE_REF: return createFunctionTypeRef();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION: return createFunctionTypeExpression();
 			case TypeRefsPackage.DEFERRED_TYPE_REF: return createDeferredTypeRef();
 			case TypeRefsPackage.TYPE_VARIABLE_MAPPING: return createTypeVariableMapping();
@@ -256,17 +255,6 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	public Wildcard createWildcard() {
 		WildcardImpl wildcard = new WildcardImpl();
 		return wildcard;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public FunctionTypeRef createFunctionTypeRef() {
-		FunctionTypeRefImpl functionTypeRef = new FunctionTypeRefImpl();
-		return functionTypeRef;
 	}
 
 	/**

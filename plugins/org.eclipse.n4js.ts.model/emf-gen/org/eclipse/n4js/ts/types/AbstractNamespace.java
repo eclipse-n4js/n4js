@@ -139,10 +139,10 @@ public interface AbstractNamespace extends TExportingElement {
 	 * Returns all exportable elements directly contained in this {@link AbstractNamespace},
 	 * including those not actually exported.
 	 * <!-- end-model-doc -->
-	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfType" unique="false"
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfTExportableElement" unique="false"
 	 * @generated
 	 */
-	Iterable<? extends Type> getTypesAndFunctions();
+	Iterable<? extends TExportableElement> getTypesAndFunctions();
 
 	/**
 	 * <!-- begin-user-doc -->

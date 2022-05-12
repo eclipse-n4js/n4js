@@ -29,7 +29,7 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -107,10 +107,10 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 
 
 	def void addSubstitutions(RuleEnvironment G, TypeRef typeRef) {
-		genericsComputer.addSubstitutions(G,typeRef)
+		genericsComputer.addSubstitutions(G, typeRef)
 	}
-	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, FunctionTypeExprOrRef targetTypeRef) {
-		genericsComputer.addSubstitutions(G,callExpr,targetTypeRef)
+	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, FunctionTypeExpression targetTypeRef) {
+		genericsComputer.addSubstitutions(G, callExpr, targetTypeRef)
 	}
 	def void addSubstitutions(RuleEnvironment G, NewExpression newExpr, TMethod constructSignature) {
 		genericsComputer.addSubstitutions(G, newExpr, constructSignature);
@@ -184,7 +184,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		meetComputer.meet(G, typeRefs)
 	}
 
-	def boolean isSubtypeFunction(RuleEnvironment G, FunctionTypeExprOrRef left, FunctionTypeExprOrRef right) {
+	def boolean isSubtypeFunction(RuleEnvironment G, FunctionTypeExpression left, FunctionTypeExpression right) {
 		return subtypeComputer.isSubtypeFunction(G, left, right)
 	}
 
@@ -301,7 +301,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 
 	/**
 	 * Returns the explicitly declared this type, or <code>null</code>.
-	 * @param type either subtype of TFunction, of FieldAccessor, or of FunctionTypeExprOrRef can have a declared this
+	 * @param type either subtype of TFunction, of FieldAccessor, or of FunctionTypeExpression can have a declared this
 	 *             type ("@This")
 	 * @return declaredThisType if any, null in other cases.
 	 */
@@ -316,7 +316,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			TSetter: {
 				type.declaredThisType
 			}
-			FunctionTypeExprOrRef: {
+			FunctionTypeExpression: {
 				type.declaredThisType
 			}
 			default:
@@ -368,7 +368,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		val declType = typeRef.declaredType;
 		if(declType instanceof TFunction)
 			return true;
-		if(typeRef instanceof FunctionTypeExprOrRef)
+		if(typeRef instanceof FunctionTypeExpression)
 			return true;
 		if (ts.subtypeSucceeded(G, typeRef, G.structuralFunctionTypeRef))
 			return true;
@@ -387,8 +387,8 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			if(declaredType.isConstructor)
 				return true;
 		}
-		if(typeRef instanceof FunctionTypeExprOrRef) {
-			val ft = typeRef.functionType;
+		if(typeRef instanceof FunctionTypeExpression) {
+			val ft = typeRef.declaredFunction;
 			if(ft instanceof TMethod) {
 				if(ft.isConstructor)
 					return true;
@@ -408,8 +408,8 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			if(declaredType.isConstructor)
 				type = declaredType.containingType;
 		}
-		if(typeRef instanceof FunctionTypeExprOrRef) {
-			val ft = typeRef.functionType;
+		if(typeRef instanceof FunctionTypeExpression) {
+			val ft = typeRef.declaredFunction;
 			if(ft instanceof TMethod) {
 				if(ft.isConstructor)
 					type = ft.containingType;
@@ -589,8 +589,8 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		if (funDef === null || !funDef.isGenerator)
 			return null; // yield only occurs in generator functions
 
-		val tFun = funDef.definedType;
-		if (tFun instanceof TFunction) {
+		val tFun = funDef.definedFunction;
+		if (tFun !== null) {
 			val actualReturnTypeRef = tFun.returnTypeRef;
 			val scope = G.getPredefinedTypes().builtInTypeScope;
 			if (TypeUtils.isGeneratorOrAsyncGenerator(actualReturnTypeRef, scope)) {

@@ -24,7 +24,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -249,13 +249,13 @@ import com.google.common.collect.Sets;
 				// choose the "most promising" of the disjoint constraints and continue with that (and simply ignore the
 				// other possible paths)
 				int idx = -1;
-				if (idx == -1 && left instanceof FunctionTypeExprOrRef) {
+				if (idx == -1 && left instanceof FunctionTypeExpression) {
 					// choose first function type (except those for which it is obvious they cannot match)
 					for (int i = 0; i < rightsSize; i++) {
 						final TypeRef currElem = rights.get(i);
-						if (currElem instanceof FunctionTypeExprOrRef) {
-							final FunctionTypeExprOrRef leftCasted = (FunctionTypeExprOrRef) left;
-							final FunctionTypeExprOrRef currElemCasted = (FunctionTypeExprOrRef) currElem;
+						if (currElem instanceof FunctionTypeExpression) {
+							final FunctionTypeExpression leftCasted = (FunctionTypeExpression) left;
+							final FunctionTypeExpression currElemCasted = (FunctionTypeExpression) currElem;
 							final boolean mightMatch = (variance == CO && mightBeSubtypeOf(leftCasted, currElemCasted))
 									|| (variance == CONTRA && mightBeSubtypeOf(currElemCasted, leftCasted))
 									|| (variance == INV && mightBeSubtypeOf(leftCasted, currElemCasted)
@@ -401,8 +401,9 @@ import com.google.common.collect.Sets;
 
 		if (left instanceof TypeTypeRef && right instanceof TypeTypeRef) {
 			return reduceTypeTypeRef((TypeTypeRef) left, (TypeTypeRef) right, variance);
-		} else if (left instanceof FunctionTypeExprOrRef && right instanceof FunctionTypeExprOrRef) {
-			return reduceFunctionTypeExprOrRef((FunctionTypeExprOrRef) left, (FunctionTypeExprOrRef) right, variance);
+		} else if (left instanceof FunctionTypeExpression && right instanceof FunctionTypeExpression) {
+			return reduceFunctionTypeExpression((FunctionTypeExpression) left, (FunctionTypeExpression) right,
+					variance);
 		} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
 			return reduceParameterizedTypeRefNominal((ParameterizedTypeRef) left, (ParameterizedTypeRef) right,
 					variance);
@@ -554,10 +555,10 @@ import com.google.common.collect.Sets;
 
 	/**
 	 * IMPORTANT: the implementation of this method has to be kept consistent with
-	 * {@code SubtypeComputer#isSubtypeFunction(RuleEnvironment, FunctionTypeExprOrRef, FunctionTypeExprOrRef)} and esp.
-	 * <code>#primIsSubtypeFunction()</code>.
+	 * {@code SubtypeComputer#isSubtypeFunction(RuleEnvironment, FunctionTypeExpression, FunctionTypeExpression)} and
+	 * esp. <code>#primIsSubtypeFunction()</code>.
 	 */
-	private boolean reduceFunctionTypeExprOrRef(FunctionTypeExprOrRef left, FunctionTypeExprOrRef right,
+	private boolean reduceFunctionTypeExpression(FunctionTypeExpression left, FunctionTypeExpression right,
 			Variance variance) {
 		if (left.isGeneric() || right.isGeneric()) {
 			left = ic.newInferenceVariablesFor(left);
@@ -877,7 +878,7 @@ import com.google.common.collect.Sets;
 		throw new IllegalStateException("unreachable"); // actually unreachable, each case above returns
 	}
 
-	private boolean mightBeSubtypeOf(FunctionTypeExprOrRef left, FunctionTypeExprOrRef right) {
+	private boolean mightBeSubtypeOf(FunctionTypeExpression left, FunctionTypeExpression right) {
 		// step 1: replace all inference variables by UnknownTypeRef
 		final TypeRef unknown = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
 		final RuleEnvironment G_temp = RuleEnvironmentExtensions.newRuleEnvironment(G);

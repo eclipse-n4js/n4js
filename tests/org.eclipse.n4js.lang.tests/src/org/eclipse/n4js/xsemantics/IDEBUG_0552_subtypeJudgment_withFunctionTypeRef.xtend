@@ -15,8 +15,6 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
-import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -55,7 +53,7 @@ class IDEBUG_0552_subtypeJudgment_withFunctionTypeRef extends AbstractTypesystem
 
 
 	private RuleEnvironment G;
-	private FunctionTypeRef functionTypeRef;
+	private FunctionTypeExpression functionTypeRef;
 	private FunctionTypeExpression functionTypeExpression;
 
 
@@ -64,12 +62,12 @@ class IDEBUG_0552_subtypeJudgment_withFunctionTypeRef extends AbstractTypesystem
 		val script = createScript(JavaScriptVariant.n4js, CODE);
 		script.validate();
 
-		val foo = script.eAllContents.filter(FunctionDeclaration).head.definedType as TFunction;
+		val foo = script.eAllContents.filter(FunctionDeclaration).head.definedFunction;
 		val fun = script.eAllContents.filter(VariableDeclaration).head;
 
 		G = script.newRuleEnvironment;
 		functionTypeExpression = fun.declaredTypeRef as FunctionTypeExpression;
-		functionTypeRef = TypeUtils.createTypeRef(foo) as FunctionTypeRef;
+		functionTypeRef = TypeUtils.createFunctionTypeExpression(foo);
 	}
 
 

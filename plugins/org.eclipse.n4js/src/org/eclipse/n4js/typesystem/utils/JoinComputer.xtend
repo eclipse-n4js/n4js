@@ -18,7 +18,6 @@ import java.util.HashSet
 import java.util.List
 import java.util.Set
 import org.eclipse.n4js.scoping.members.TypingStrategyFilter
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -538,7 +537,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 		commonSuperTypes.clear();
 	}
 
-	private def dispatch addSuperTypesToCommonList(RuleEnvironment G, FunctionTypeExprOrRef f,
+	private def dispatch addSuperTypesToCommonList(RuleEnvironment G, FunctionTypeExpression f,
 		List<TypeRef> commonSuperTypes) {
 		val allDeclaredSuperTypes = newSuperTypesList(getTypeRefComparator);
 		allDeclaredSuperTypes.add(f)
@@ -593,10 +592,10 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 		} else {
 
 			// extract all functions, they have to be handled differently:
-			// there must be only one FunctionTypeExprOrRef in the list:
-			val FunctionTypeExprOrRef currentSuperFunction = allDeclaredSuperTypes.filter(FunctionTypeExprOrRef).head();
-			val FunctionTypeExprOrRef prevCommonSuperFunction = if (currentSuperFunction !== null) {
-					commonSuperTypes.filter(FunctionTypeExprOrRef).head()
+			// there must be only one FunctionTypeExpression in the list:
+			val FunctionTypeExpression currentSuperFunction = allDeclaredSuperTypes.filter(FunctionTypeExpression).head();
+			val FunctionTypeExpression prevCommonSuperFunction = if (currentSuperFunction !== null) {
+					commonSuperTypes.filter(FunctionTypeExpression).head()
 				} else {
 					null // do not search, would be removed anyway
 				}
@@ -615,8 +614,8 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 	/**
 	 * May return null if no join is possible, e.g., in f(string) and f(number)
 	 */
-	private def FunctionTypeExprOrRef joinFunctionTypeRefs(RuleEnvironment G, FunctionTypeExprOrRef f1,
-		FunctionTypeExprOrRef f2) {
+	private def FunctionTypeExpression joinFunctionTypeRefs(RuleEnvironment G, FunctionTypeExpression f1,
+		FunctionTypeExpression f2) {
 		val joinedFunctionTypeExpr = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression;
 
 		if (f1.returnTypeRef !== null && f2.returnTypeRef !== null) {
@@ -672,7 +671,7 @@ package class JoinComputer extends TypeSystemHelperStrategy {
 		return joinedFunctionTypeExpr
 	}
 
-	private def TFormalParameter getFParSmartAndFailSafe(FunctionTypeExprOrRef f, int index) {
+	private def TFormalParameter getFParSmartAndFailSafe(FunctionTypeExpression f, int index) {
 		if (f.fpars.size == 0) {
 			return null;
 		}

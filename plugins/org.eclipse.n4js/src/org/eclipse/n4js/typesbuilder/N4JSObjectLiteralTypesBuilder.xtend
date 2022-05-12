@@ -158,7 +158,7 @@ public class N4JSObjectLiteralTypesBuilder {
 			result.returnTypeRef = builtInTypeScope.voidTypeRef;
 		}
 		result.astElement = methodDecl;
-		methodDecl.definedType = result;
+		methodDecl.definedFunction = result;
 		return result;
 	}
 }

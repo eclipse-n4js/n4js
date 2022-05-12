@@ -21,7 +21,7 @@ import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.TFormalParameter;
@@ -219,10 +219,10 @@ public class TFormalParameterImpl extends TAbstractVariableImpl implements TForm
 			_switchResult = ((TFunction) _eContainer_1).getFpars();
 		}
 		if (!_matched) {
-			if (_eContainer instanceof FunctionTypeExprOrRef) {
+			if (_eContainer instanceof FunctionTypeExpression) {
 				_matched=true;
 				EObject _eContainer_1 = this.eContainer();
-				_switchResult = ((FunctionTypeExprOrRef) _eContainer_1).getFpars();
+				_switchResult = ((FunctionTypeExpression) _eContainer_1).getFpars();
 			}
 		}
 		if (!_matched) {

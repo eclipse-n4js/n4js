@@ -138,15 +138,6 @@ public interface TypeRefsFactory extends EFactory {
 	Wildcard createWildcard();
 
 	/**
-	 * Returns a new object of class '<em>Function Type Ref</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Function Type Ref</em>'.
-	 * @generated
-	 */
-	FunctionTypeRef createFunctionTypeRef();
-
-	/**
 	 * Returns a new object of class '<em>Function Type Expression</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

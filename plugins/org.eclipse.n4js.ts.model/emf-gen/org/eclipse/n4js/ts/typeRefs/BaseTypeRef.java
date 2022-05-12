@@ -27,7 +27,7 @@ package org.eclipse.n4js.ts.typeRefs;
  * @model abstract="true"
  * @generated
  */
-public interface BaseTypeRef extends StaticBaseTypeRef {
+public interface BaseTypeRef extends TypeRef {
 	/**
 	 * Returns the value of the '<em><b>Dynamic</b></em>' attribute.
 	 * The default value is <code>"false"</code>.

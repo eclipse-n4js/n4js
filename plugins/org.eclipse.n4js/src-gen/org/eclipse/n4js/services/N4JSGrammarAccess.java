@@ -15991,7 +15991,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getPrimaryTypeExpressionAccess().getRule();
 	}
 	
-	//TypeRefWithModifiers returns StaticBaseTypeRef:
+	//TypeRefWithModifiers returns TypeRef:
 	//    TypeRefWithoutModifiers =>followedByQuestionMark?='?'?;
 	public TypeExpressionsGrammarAccess.TypeRefWithModifiersElements getTypeRefWithModifiersAccess() {
 		return gaTypeExpressions.getTypeRefWithModifiersAccess();
@@ -16001,7 +16001,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getTypeRefWithModifiersAccess().getRule();
 	}
 	
-	//TypeRefWithoutModifiers returns StaticBaseTypeRef:
+	//TypeRefWithoutModifiers returns TypeRef:
 	//      ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
 	//    | TypeTypeRef
 	//    | FunctionTypeExpressionOLD
@@ -16015,7 +16015,7 @@ public class N4JSGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		return getTypeRefWithoutModifiersAccess().getRule();
 	}
 	
-	//TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
+	//TypeRefFunctionTypeExpression returns TypeRef:
 	//      ParameterizedTypeRef
 	//    | ArrayNTypeExpression
 	//    | TypeTypeRef

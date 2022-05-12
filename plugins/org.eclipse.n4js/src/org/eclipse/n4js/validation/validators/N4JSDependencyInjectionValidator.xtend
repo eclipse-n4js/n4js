@@ -201,7 +201,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 			if (currentType instanceof ContainerType<?>) {
 				// Get all super constructors (if any) which is annotated with @Inject.
 				val injectedParentInjectors = ctor.fromContext.allMembers(currentType).filter(TMethod)
-					.filter[constructor && it !== ctor.definedType && INJECT.hasAnnotation(it)];
+					.filter[constructor && it !== ctor.definedFunction && INJECT.hasAnnotation(it)];
 				if (!injectedParentInjectors.empty) {
 					val currentName = currentType.name;
 					val superName = injectedParentInjectors.get(0)?.containingType?.name;
@@ -692,7 +692,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 	 */
 	private def boolean holdsAnnotatedTMethodIsContainedInTClassAnnotatedWith(Annotation ann, AnnotationDefinition requiredDef) {
 		val methodDecl = getAnnotatedMethod(ann);
-		val tClass = methodDecl?.definedType?.eContainer;
+		val tClass = methodDecl?.definedFunction?.eContainer;
 		if(tClass instanceof TClass && !requiredDef.hasAnnotation(tClass as TClass)) {
 			addIssue(getMessageForDI_ANN_ONLY_ON_METHOD_IN_CLASS_ANNOTATED_WITH(ann.name,requiredDef.name),
 				ann, N4JSPackage.eINSTANCE.annotation_Name, DI_ANN_ONLY_ON_METHOD_IN_CLASS_ANNOTATED_WITH);
@@ -712,7 +712,7 @@ class N4JSDependencyInjectionValidator extends AbstractN4JSDeclarativeValidator 
 	 */
 	private def boolean holdsAnnotatedTMethodHasCorrectSignature(Annotation ann) {
 		val methodDecl = getAnnotatedMethod(ann);
-		val tMethod = methodDecl?.definedType;
+		val tMethod = methodDecl?.definedFunction;
 		if(tMethod instanceof TMethod) {
 			val nonInjectableParams = tMethod.fpars.filter[fpar| !(fpar.typeRef.isInjectableType)]
 			nonInjectableParams.forEach[fpar|

@@ -278,7 +278,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		for (currAss : objLit.propertyAssignments) {
 			if (currAss.definedMember !== null) {
 				if (currAss instanceof PropertyMethodDeclaration) {
-					cache.storeType(currAss, TypeUtils.createTypeRef(currAss.definedMember));
+					cache.storeType(currAss, TypeUtils.createFunctionTypeExpression(currAss.definedMember));
 				} else {
 					cache.storeType(currAss, TypeUtils.copy(currAss.definedMember.typeOfMember));
 				}

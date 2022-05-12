@@ -977,12 +977,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == Type.class) {
-			switch (baseOperationID) {
-				case TypesPackage.TYPE___IS_FINAL: return TypesPackage.TMETHOD___IS_FINAL;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
 		if (baseClass == TFunction.class) {
 			switch (baseOperationID) {
 				case TypesPackage.TFUNCTION___GET_FUNCTION_AS_STRING: return TypesPackage.TMETHOD___GET_FUNCTION_AS_STRING;

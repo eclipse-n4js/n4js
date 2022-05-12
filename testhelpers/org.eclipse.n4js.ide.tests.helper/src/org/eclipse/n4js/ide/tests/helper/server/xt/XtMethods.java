@@ -34,7 +34,7 @@ import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
-import org.eclipse.n4js.n4JS.GenericDeclaration;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
@@ -42,12 +42,13 @@ import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
+import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -113,7 +114,7 @@ public class XtMethods {
 		} else {
 			FunctionDeclaration functionDeclaration = EcoreUtil2.getContainerOfType(context, FunctionDeclaration.class);
 			if (functionDeclaration != null) {
-				actual = functionDeclaration.getDefinedType().getTypeAccessModifier().getName();
+				actual = functionDeclaration.getDefinedFunction().getTypeAccessModifier().getName();
 			} else {
 				VariableStatement variableStatement = EcoreUtil2.getContainerOfType(context, VariableStatement.class);
 				if (variableStatement != null) {
@@ -213,8 +214,10 @@ public class XtMethods {
 			}
 
 			String text = NodeModelUtils.getTokenText(srcNode);
-			if (ref instanceof GenericDeclaration) {
-				text = ((GenericDeclaration) ref).getDefinedType().getName();
+			if (ref instanceof TypeDefiningElement) {
+				text = ((TypeDefiningElement) ref).getDefinedType().getName();
+			} else if (ref instanceof FunctionDefinition) {
+				text = ((FunctionDefinition) ref).getDefinedFunction().getName();
 			}
 
 			String resultText = moduleName + " - " + text + " - " + line;
@@ -360,10 +363,10 @@ public class XtMethods {
 		final ParameterizedCallExpression callExpr = (ParameterizedCallExpression) container;
 		final RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(eobject);
 		final TypeRef targetTypeRef = ts.type(G, callExpr.getTarget());
-		if (!(targetTypeRef instanceof FunctionTypeExprOrRef)) {
+		if (!(targetTypeRef instanceof FunctionTypeExpression)) {
 			return "xpect method error: cannot infer type of call expression target OR it's not a FunctionTypeExprOrRef";
 		}
-		final List<TypeVariable> typeParams = ((FunctionTypeExprOrRef) targetTypeRef).getTypeVars();
+		final List<TypeVariable> typeParams = ((FunctionTypeExpression) targetTypeRef).getTypeVars();
 		final int expectedNumOfTypeArgs = typeParams.size(); // not interested in the actual typeParams, just the size
 		final List<TypeRef> typeArgs;
 		if (callExpr.getTypeArgs().isEmpty()) {

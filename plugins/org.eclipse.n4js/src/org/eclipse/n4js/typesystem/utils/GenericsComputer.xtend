@@ -24,9 +24,9 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
@@ -51,7 +51,6 @@ import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.RecursionGuard
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 
 /**
  * Type System Helper Strategy for managing type variable mappings in RuleEnvironments of XSemantics.
@@ -261,7 +260,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	 *                       this method do the inference; only purpose of this argument is to avoid an
 	 *                       unnecessary 2nd type inference if caller has already performed this.
 	 */
-	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, FunctionTypeExprOrRef targetTypeRef) {
+	def void addSubstitutions(RuleEnvironment G, ParameterizedCallExpression callExpr, FunctionTypeExpression targetTypeRef) {
 		addSubstitutions(G, callExpr, true, targetTypeRef);
 	}
 
@@ -269,7 +268,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		addSubstitutions(G, newExpr, false, TypeExtensions.ref(constructSignature));
 	}
 
-	def private void addSubstitutions(RuleEnvironment G, ParameterizedAccess paramAccessExpr, boolean isCallExpr, FunctionTypeExprOrRef targetTypeRef) {
+	def private void addSubstitutions(RuleEnvironment G, ParameterizedAccess paramAccessExpr, boolean isCallExpr, FunctionTypeExpression targetTypeRef) {
 		// restore type mappings from postponed substitutions
 		// TODO what if the structural type ref is contained in another typeRef (e.g. in a ComposedTypeRef)???
 		// TODO is there a better place to do this???
@@ -536,7 +535,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	//       used and therefore not been updated for a long time, probably also this method is out-dated!
 	def package bindTypeVariables(RuleEnvironment G, TypeRef typeRef) {
 		switch typeRef {
-			FunctionTypeRef:
+			FunctionTypeExpression:
 				return typeRef
 			ParameterizedTypeRef:
 				if (typeRef.declaredType instanceof TypeVariable) {

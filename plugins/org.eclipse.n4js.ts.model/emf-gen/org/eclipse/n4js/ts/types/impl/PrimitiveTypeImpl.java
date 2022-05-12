@@ -10,19 +10,28 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.ArrayLike;
+import org.eclipse.n4js.ts.types.GenericType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -33,6 +42,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.PrimitiveTypeImpl#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.PrimitiveTypeImpl#getDeclaredElementType <em>Declared Element Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.PrimitiveTypeImpl#getAssignmentCompatible <em>Assignment Compatible</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.PrimitiveTypeImpl#getAutoboxedType <em>Autoboxed Type</em>}</li>
@@ -40,7 +50,17 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *
  * @generated
  */
-public class PrimitiveTypeImpl extends GenericTypeImpl implements PrimitiveType {
+public class PrimitiveTypeImpl extends TypeImpl implements PrimitiveType {
+	/**
+	 * The cached value of the '{@link #getTypeVars() <em>Type Vars</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypeVars()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TypeVariable> typeVars;
+
 	/**
 	 * The cached value of the '{@link #getDeclaredElementType() <em>Declared Element Type</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -88,6 +108,19 @@ public class PrimitiveTypeImpl extends GenericTypeImpl implements PrimitiveType 
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.PRIMITIVE_TYPE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TypeVariable> getTypeVars() {
+		if (typeVars == null) {
+			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, TypesPackage.PRIMITIVE_TYPE__TYPE_VARS);
+		}
+		return typeVars;
 	}
 
 	/**
@@ -223,6 +256,8 @@ public class PrimitiveTypeImpl extends GenericTypeImpl implements PrimitiveType 
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case TypesPackage.PRIMITIVE_TYPE__TYPE_VARS:
+				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
 			case TypesPackage.PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE:
 				return basicSetDeclaredElementType(null, msgs);
 		}
@@ -237,6 +272,8 @@ public class PrimitiveTypeImpl extends GenericTypeImpl implements PrimitiveType 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypesPackage.PRIMITIVE_TYPE__TYPE_VARS:
+				return getTypeVars();
 			case TypesPackage.PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE:
 				return getDeclaredElementType();
 			case TypesPackage.PRIMITIVE_TYPE__ASSIGNMENT_COMPATIBLE:
@@ -254,9 +291,14 @@ public class PrimitiveTypeImpl extends GenericTypeImpl implements PrimitiveType 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypesPackage.PRIMITIVE_TYPE__TYPE_VARS:
+				getTypeVars().clear();
+				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
+				return;
 			case TypesPackage.PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE:
 				setDeclaredElementType((TypeRef)newValue);
 				return;
@@ -278,6 +320,9 @@ public class PrimitiveTypeImpl extends GenericTypeImpl implements PrimitiveType 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypesPackage.PRIMITIVE_TYPE__TYPE_VARS:
+				getTypeVars().clear();
+				return;
 			case TypesPackage.PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE:
 				setDeclaredElementType((TypeRef)null);
 				return;
@@ -299,6 +344,8 @@ public class PrimitiveTypeImpl extends GenericTypeImpl implements PrimitiveType 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypesPackage.PRIMITIVE_TYPE__TYPE_VARS:
+				return typeVars != null && !typeVars.isEmpty();
 			case TypesPackage.PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE:
 				return declaredElementType != null;
 			case TypesPackage.PRIMITIVE_TYPE__ASSIGNMENT_COMPATIBLE:
@@ -316,6 +363,12 @@ public class PrimitiveTypeImpl extends GenericTypeImpl implements PrimitiveType 
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == GenericType.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.PRIMITIVE_TYPE__TYPE_VARS: return TypesPackage.GENERIC_TYPE__TYPE_VARS;
+				default: return -1;
+			}
+		}
 		if (baseClass == ArrayLike.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE: return TypesPackage.ARRAY_LIKE__DECLARED_ELEMENT_TYPE;
@@ -332,6 +385,12 @@ public class PrimitiveTypeImpl extends GenericTypeImpl implements PrimitiveType 
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == GenericType.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.GENERIC_TYPE__TYPE_VARS: return TypesPackage.PRIMITIVE_TYPE__TYPE_VARS;
+				default: return -1;
+			}
+		}
 		if (baseClass == ArrayLike.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.ARRAY_LIKE__DECLARED_ELEMENT_TYPE: return TypesPackage.PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE;

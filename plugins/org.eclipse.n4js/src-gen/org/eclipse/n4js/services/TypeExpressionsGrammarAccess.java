@@ -353,7 +353,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final Assignment cFollowedByQuestionMarkAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final Keyword cFollowedByQuestionMarkQuestionMarkKeyword_1_0 = (Keyword)cFollowedByQuestionMarkAssignment_1.eContents().get(0);
 		
-		//TypeRefWithModifiers returns StaticBaseTypeRef:
+		//TypeRefWithModifiers returns TypeRef:
 		//    TypeRefWithoutModifiers =>followedByQuestionMark?='?'?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -383,7 +383,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cUnionTypeExpressionOLDParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cIntersectionTypeExpressionOLDParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		
-		//TypeRefWithoutModifiers returns StaticBaseTypeRef:
+		//TypeRefWithoutModifiers returns TypeRef:
 		//      ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
 		//    | TypeTypeRef
 		//    | FunctionTypeExpressionOLD
@@ -437,7 +437,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		private final RuleCall cUnionTypeExpressionOLDParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
 		private final RuleCall cIntersectionTypeExpressionOLDParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		
-		//TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
+		//TypeRefFunctionTypeExpression returns TypeRef:
 		//      ParameterizedTypeRef
 		//    | ArrayNTypeExpression
 		//    | TypeTypeRef
@@ -2959,7 +2959,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return getPrimaryTypeExpressionAccess().getRule();
 	}
 	
-	//TypeRefWithModifiers returns StaticBaseTypeRef:
+	//TypeRefWithModifiers returns TypeRef:
 	//    TypeRefWithoutModifiers =>followedByQuestionMark?='?'?;
 	public TypeRefWithModifiersElements getTypeRefWithModifiersAccess() {
 		return pTypeRefWithModifiers;
@@ -2969,7 +2969,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return getTypeRefWithModifiersAccess().getRule();
 	}
 	
-	//TypeRefWithoutModifiers returns StaticBaseTypeRef:
+	//TypeRefWithoutModifiers returns TypeRef:
 	//      ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
 	//    | TypeTypeRef
 	//    | FunctionTypeExpressionOLD
@@ -2983,7 +2983,7 @@ public class TypeExpressionsGrammarAccess extends AbstractElementFinder.Abstract
 		return getTypeRefWithoutModifiersAccess().getRule();
 	}
 	
-	//TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
+	//TypeRefFunctionTypeExpression returns TypeRef:
 	//      ParameterizedTypeRef
 	//    | ArrayNTypeExpression
 	//    | TypeTypeRef

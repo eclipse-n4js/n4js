@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
@@ -162,29 +162,30 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		}
 
 		@Override
-		protected boolean caseFunctionTypeExprOrRef_isTypeParameterRetained(FunctionTypeExprOrRef F, TypeVariable tv) {
+		protected boolean caseFunctionTypeExpression_isTypeParameterRetained(FunctionTypeExpression F,
+				TypeVariable tv) {
 			// type parameters are retained iff they are unbound,
 			// i.e. if G does not contain a type variable mapping for them:
 			return G.get(tv) == null;
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_processTypeParameterUpperBound(TypeRef ub) {
+		protected TypeRef caseFunctionTypeExpression_processTypeParameterUpperBound(TypeRef ub) {
 			return substTypeVariables(G, ub, false);
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_processDeclaredThisType(TypeRef declThisType) {
+		protected TypeRef caseFunctionTypeExpression_processDeclaredThisType(TypeRef declThisType) {
 			return substTypeVariables(G, declThisType, false);
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_processReturnType(TypeRef returnTypeRef) {
+		protected TypeRef caseFunctionTypeExpression_processReturnType(TypeRef returnTypeRef) {
 			return substTypeVariables(G, returnTypeRef, false);
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_processParameterType(TypeRef fparTypeRef) {
+		protected TypeRef caseFunctionTypeExpression_processParameterType(TypeRef fparTypeRef) {
 			return substTypeVariables(G, fparTypeRef, false);
 		}
 

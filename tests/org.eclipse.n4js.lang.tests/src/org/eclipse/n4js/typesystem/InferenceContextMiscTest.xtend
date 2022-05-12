@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AbstractN4JSTest
 import org.eclipse.n4js.n4JS.FunctionDeclaration
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
@@ -51,7 +50,7 @@ class InferenceContextMiscTest extends AbstractN4JSTest {
 		'''.parseAndValidateSuccessfully;
 
 		val fun = script.eAllContents.filter(FunctionDeclaration).head.definedFunction;
-		val funTypeRef = TypeUtils.createTypeRef(fun) as FunctionTypeRef;
+		val funTypeRef = TypeUtils.createFunctionTypeExpression(fun);
 
 		val ic = script.createInferenceContext;
 
@@ -69,7 +68,7 @@ class InferenceContextMiscTest extends AbstractN4JSTest {
 		'''.parseAndValidateSuccessfully;
 
 		val fun = script.eAllContents.filter(FunctionDeclaration).head.definedFunction;
-		val funTypeRef = TypeUtils.createTypeRef(fun) as FunctionTypeRef;
+		val funTypeRef = TypeUtils.createFunctionTypeExpression(fun);
 
 		val ic = script.createInferenceContext;
 

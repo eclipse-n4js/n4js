@@ -80,7 +80,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.tooling.react.ReactHelper;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
@@ -248,8 +248,8 @@ import com.google.inject.Inject;
 				}
 
 				final TypeRef targetTypeRef = ts.type(G, expr.getTarget());
-				if (targetTypeRef instanceof FunctionTypeExprOrRef) {
-					final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) targetTypeRef;
+				if (targetTypeRef instanceof FunctionTypeExpression) {
+					final FunctionTypeExpression F = (FunctionTypeExpression) targetTypeRef;
 					final int argIndex = ECollections.indexOf(expr.getArguments(), argument, 0);
 					final TFormalParameter fpar = F.getFparForArgIdx(argIndex);
 					if (fpar == null) {

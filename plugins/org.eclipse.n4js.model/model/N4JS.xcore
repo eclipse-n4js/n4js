@@ -631,7 +631,7 @@ abstract class FunctionOrFieldAccessor extends AnnotableElement, VariableEnviron
 	op IdentifiableElement getDefinedFunctionOrAccessor() {
 		val _this = this;
 		return switch(_this) {
-			FunctionDefinition: _this.definedType
+			FunctionDefinition: _this.definedFunction
 			FieldAccessor: _this.definedAccessor
 		};
 	}
@@ -642,7 +642,7 @@ abstract class FunctionOrFieldAccessor extends AnnotableElement, VariableEnviron
 /* A function definition is either a FunctionDeclaration, a FunctionExpression or a MethodDeclaration.
  * Note that, since an anonymous function expression has no name, the function definition is not a named element.
  */
-abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement {
+abstract class FunctionDefinition extends FunctionOrFieldAccessor {
 	contains FormalParameter[] fpars
 	/*
 	 * Tells if the return value is optional.
@@ -685,11 +685,7 @@ abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningE
 		return declaredAsync;
 	}
 
-	/* Convenience method returning the 'definedType' if it is a TFunction, otherwise <code>null</code>. */
-	op TFunction getDefinedFunction() {
-		val defType = definedType;
-		return if(defType instanceof TFunction) { defType };
-	}
+	refers transient TFunction definedFunction
 }
 
 /*
@@ -1432,7 +1428,7 @@ class PropertyMethodDeclaration extends AnnotablePropertyAssignment, MethodDecla
 	// PropertyMethodDeclaration as instances of TypeDefiningElement or FunctionDefinition!
 
 	op TStructMethod getDefinedMember() {
-		definedType as TStructMethod
+		definedFunction as TStructMethod
 	}
 }
 
@@ -2034,7 +2030,7 @@ abstract class TypeDefiningElement extends TypableElement {
  * Do not use this method in the context of binding: instead, refer to the defined type (of the type model) and
  * query its type variables.
  */
-abstract class GenericDeclaration extends TypeDefiningElement {
+abstract class GenericDeclaration {
 	/*
 	 * Type variables as declared by the declaration of the AST. These type variables are copied to the type model,
 	 * so in most cases, the type model type variables are to be used.
@@ -2093,7 +2089,7 @@ abstract class N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElemen
 	}
 }
 
-abstract class N4ClassifierDeclaration extends N4TypeDeclaration, N4ClassifierDefinition , GenericDeclaration, ThisTarget {
+abstract class N4ClassifierDeclaration extends N4TypeDeclaration, N4ClassifierDefinition , GenericDeclaration, TypeDefiningElement, ThisTarget {
 	TypingStrategy typingStrategy
 }
 
@@ -2299,7 +2295,7 @@ class N4EnumLiteral extends NamedElement, TypableElement {
 }
 
 
-class N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration, TypedElement {
+class N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration, TypeDefiningElement, TypedElement {
 
 	op TypeAlias getDefinedTypeAsTypeAlias() {
 		return definedType as TypeAlias;
@@ -2478,7 +2474,7 @@ abstract class MethodDeclaration extends FunctionDefinition, GenericDeclaration,
 		return existsSuperCall;
 	}
 	op TMember getDefinedTypeElement() {
-		return if(definedType === null) /*wrong parsed*/ null else if(definedType instanceof TMember) definedType as TMember else throw new IllegalArgumentException(
+		return if(definedFunction === null) /*wrong parsed*/ null else if(definedFunction instanceof TMember) definedFunction as TMember else throw new IllegalArgumentException(
 			"");
 	}
 	op boolean isStatic() {

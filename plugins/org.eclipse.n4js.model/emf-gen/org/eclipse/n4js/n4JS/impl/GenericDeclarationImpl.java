@@ -26,6 +26,8 @@ import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
 
+import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Generic Declaration</b></em>'.
@@ -39,7 +41,7 @@ import org.eclipse.n4js.n4JS.N4TypeVariable;
  *
  * @generated
  */
-public abstract class GenericDeclarationImpl extends TypeDefiningElementImpl implements GenericDeclaration {
+public abstract class GenericDeclarationImpl extends ProxyResolvingEObjectImpl implements GenericDeclaration {
 	/**
 	 * The cached value of the '{@link #getTypeVars() <em>Type Vars</em>}' containment reference list.
 	 * <!-- begin-user-doc -->

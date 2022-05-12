@@ -56,7 +56,6 @@ import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.SuperLiteral;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
-import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 
@@ -66,7 +65,6 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TVariable;
-import org.eclipse.n4js.ts.types.Type;
 
 import org.eclipse.n4js.utils.EcoreUtilN4;
 
@@ -85,11 +83,11 @@ import org.eclipse.xtext.xbase.lib.IteratorExtensions;
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getBody <em>Body</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getImplicitArgumentsVariable <em>Implicit Arguments Variable</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDefinedType <em>Defined Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#isDeclaredAsync <em>Declared Async</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDefinedFunction <em>Defined Function</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.N4MethodDeclarationImpl#getDeclaredName <em>Declared Name</em>}</li>
  * </ul>
@@ -116,16 +114,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @ordered
 	 */
 	protected TVariable implicitArgumentsVariable;
-
-	/**
-	 * The cached value of the '{@link #getDefinedType() <em>Defined Type</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDefinedType()
-	 * @generated
-	 * @ordered
-	 */
-	protected Type definedType;
 
 	/**
 	 * The cached value of the '{@link #getFpars() <em>Fpars</em>}' containment reference list.
@@ -186,6 +174,16 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @ordered
 	 */
 	protected boolean declaredAsync = DECLARED_ASYNC_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getDefinedFunction() <em>Defined Function</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDefinedFunction()
+	 * @generated
+	 * @ordered
+	 */
+	protected TFunction definedFunction;
 
 	/**
 	 * The cached value of the '{@link #getTypeVars() <em>Type Vars</em>}' containment reference list.
@@ -317,46 +315,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @generated
 	 */
 	@Override
-	public Type getDefinedType() {
-		if (definedType != null && definedType.eIsProxy()) {
-			InternalEObject oldDefinedType = (InternalEObject)definedType;
-			definedType = (Type)eResolveProxy(oldDefinedType);
-			if (definedType != oldDefinedType) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE, oldDefinedType, definedType));
-			}
-		}
-		return definedType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Type basicGetDefinedType() {
-		return definedType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDefinedType(Type newDefinedType) {
-		Type oldDefinedType = definedType;
-		definedType = newDefinedType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE, oldDefinedType, definedType));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EList<FormalParameter> getFpars() {
 		if (fpars == null) {
 			fpars = new EObjectContainmentEList<FormalParameter>(FormalParameter.class, this, N4JSPackage.N4_METHOD_DECLARATION__FPARS);
@@ -453,6 +411,46 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 		declaredAsync = newDeclaredAsync;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC, oldDeclaredAsync, declaredAsync));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TFunction getDefinedFunction() {
+		if (definedFunction != null && definedFunction.eIsProxy()) {
+			InternalEObject oldDefinedFunction = (InternalEObject)definedFunction;
+			definedFunction = (TFunction)eResolveProxy(oldDefinedFunction);
+			if (definedFunction != oldDefinedFunction) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.N4_METHOD_DECLARATION__DEFINED_FUNCTION, oldDefinedFunction, definedFunction));
+			}
+		}
+		return definedFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TFunction basicGetDefinedFunction() {
+		return definedFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDefinedFunction(TFunction newDefinedFunction) {
+		TFunction oldDefinedFunction = definedFunction;
+		definedFunction = newDefinedFunction;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.N4_METHOD_DECLARATION__DEFINED_FUNCTION, oldDefinedFunction, definedFunction));
 	}
 
 	/**
@@ -630,17 +628,17 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	@Override
 	public TMember getDefinedTypeElement() {
 		TMember _xifexpression = null;
-		Type _definedType = this.getDefinedType();
-		boolean _tripleEquals = (_definedType == null);
+		TFunction _definedFunction = this.getDefinedFunction();
+		boolean _tripleEquals = (_definedFunction == null);
 		if (_tripleEquals) {
 			_xifexpression = null;
 		}
 		else {
 			TMember _xifexpression_1 = null;
-			Type _definedType_1 = this.getDefinedType();
-			if ((_definedType_1 instanceof TMember)) {
-				Type _definedType_2 = this.getDefinedType();
-				_xifexpression_1 = ((TMember) _definedType_2);
+			TFunction _definedFunction_1 = this.getDefinedFunction();
+			if ((_definedFunction_1 instanceof TMember)) {
+				TFunction _definedFunction_2 = this.getDefinedFunction();
+				_xifexpression_1 = ((TMember) _definedFunction_2);
 			}
 			else {
 				throw new IllegalArgumentException(
@@ -752,28 +750,13 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @generated
 	 */
 	@Override
-	public TFunction getDefinedFunction() {
-		final Type defType = this.getDefinedType();
-		TFunction _xifexpression = null;
-		if ((defType instanceof TFunction)) {
-			_xifexpression = ((TFunction)defType);
-		}
-		return _xifexpression;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public IdentifiableElement getDefinedFunctionOrAccessor() {
 		final FunctionOrFieldAccessor _this = this;
 		EObject _switchResult = null;
 		boolean _matched = false;
 		if (_this instanceof FunctionDefinition) {
 			_matched=true;
-			_switchResult = ((FunctionDefinition)_this).getDefinedType();
+			_switchResult = ((FunctionDefinition)_this).getDefinedFunction();
 		}
 		if (!_matched) {
 			if (_this instanceof FieldAccessor) {
@@ -829,9 +812,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 			case N4JSPackage.N4_METHOD_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE:
 				if (resolve) return getImplicitArgumentsVariable();
 				return basicGetImplicitArgumentsVariable();
-			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
-				if (resolve) return getDefinedType();
-				return basicGetDefinedType();
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				return getFpars();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -840,6 +820,9 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return isGenerator();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC:
 				return isDeclaredAsync();
+			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_FUNCTION:
+				if (resolve) return getDefinedFunction();
+				return basicGetDefinedFunction();
 			case N4JSPackage.N4_METHOD_DECLARATION__TYPE_VARS:
 				return getTypeVars();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_NAME:
@@ -863,9 +846,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 			case N4JSPackage.N4_METHOD_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE:
 				setImplicitArgumentsVariable((TVariable)newValue);
 				return;
-			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
-				setDefinedType((Type)newValue);
-				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				getFpars().clear();
 				getFpars().addAll((Collection<? extends FormalParameter>)newValue);
@@ -878,6 +858,9 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC:
 				setDeclaredAsync((Boolean)newValue);
+				return;
+			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_FUNCTION:
+				setDefinedFunction((TFunction)newValue);
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__TYPE_VARS:
 				getTypeVars().clear();
@@ -904,9 +887,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 			case N4JSPackage.N4_METHOD_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE:
 				setImplicitArgumentsVariable((TVariable)null);
 				return;
-			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
-				setDefinedType((Type)null);
-				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				getFpars().clear();
 				return;
@@ -918,6 +898,9 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC:
 				setDeclaredAsync(DECLARED_ASYNC_EDEFAULT);
+				return;
+			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_FUNCTION:
+				setDefinedFunction((TFunction)null);
 				return;
 			case N4JSPackage.N4_METHOD_DECLARATION__TYPE_VARS:
 				getTypeVars().clear();
@@ -941,8 +924,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return body != null;
 			case N4JSPackage.N4_METHOD_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE:
 				return implicitArgumentsVariable != null;
-			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE:
-				return definedType != null;
 			case N4JSPackage.N4_METHOD_DECLARATION__FPARS:
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -951,6 +932,8 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return generator != GENERATOR_EDEFAULT;
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC:
 				return declaredAsync != DECLARED_ASYNC_EDEFAULT;
+			case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_FUNCTION:
+				return definedFunction != null;
 			case N4JSPackage.N4_METHOD_DECLARATION__TYPE_VARS:
 				return typeVars != null && !typeVars.isEmpty();
 			case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_NAME:
@@ -983,18 +966,13 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				default: return -1;
 			}
 		}
-		if (baseClass == TypeDefiningElement.class) {
-			switch (derivedFeatureID) {
-				case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE: return N4JSPackage.TYPE_DEFINING_ELEMENT__DEFINED_TYPE;
-				default: return -1;
-			}
-		}
 		if (baseClass == FunctionDefinition.class) {
 			switch (derivedFeatureID) {
 				case N4JSPackage.N4_METHOD_DECLARATION__FPARS: return N4JSPackage.FUNCTION_DEFINITION__FPARS;
 				case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE;
 				case N4JSPackage.N4_METHOD_DECLARATION__GENERATOR: return N4JSPackage.FUNCTION_DEFINITION__GENERATOR;
 				case N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC: return N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC;
+				case N4JSPackage.N4_METHOD_DECLARATION__DEFINED_FUNCTION: return N4JSPackage.FUNCTION_DEFINITION__DEFINED_FUNCTION;
 				default: return -1;
 			}
 		}
@@ -1042,18 +1020,13 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				default: return -1;
 			}
 		}
-		if (baseClass == TypeDefiningElement.class) {
-			switch (baseFeatureID) {
-				case N4JSPackage.TYPE_DEFINING_ELEMENT__DEFINED_TYPE: return N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE;
-				default: return -1;
-			}
-		}
 		if (baseClass == FunctionDefinition.class) {
 			switch (baseFeatureID) {
 				case N4JSPackage.FUNCTION_DEFINITION__FPARS: return N4JSPackage.N4_METHOD_DECLARATION__FPARS;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE: return N4JSPackage.N4_METHOD_DECLARATION__DECLARED_RETURN_TYPE_REF_NODE;
 				case N4JSPackage.FUNCTION_DEFINITION__GENERATOR: return N4JSPackage.N4_METHOD_DECLARATION__GENERATOR;
 				case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC: return N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC;
+				case N4JSPackage.FUNCTION_DEFINITION__DEFINED_FUNCTION: return N4JSPackage.N4_METHOD_DECLARATION__DEFINED_FUNCTION;
 				default: return -1;
 			}
 		}
@@ -1122,18 +1095,12 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				default: return -1;
 			}
 		}
-		if (baseClass == TypeDefiningElement.class) {
-			switch (baseOperationID) {
-				default: return -1;
-			}
-		}
 		if (baseClass == FunctionDefinition.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.FUNCTION_DEFINITION___IS_RETURN_VALUE_OPTIONAL: return N4JSPackage.N4_METHOD_DECLARATION___IS_RETURN_VALUE_OPTIONAL;
 				case N4JSPackage.FUNCTION_DEFINITION___GET_DECLARED_RETURN_TYPE_REF: return N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_RETURN_TYPE_REF;
 				case N4JSPackage.FUNCTION_DEFINITION___GET_DECLARED_RETURN_TYPE_REF_IN_AST: return N4JSPackage.N4_METHOD_DECLARATION___GET_DECLARED_RETURN_TYPE_REF_IN_AST;
 				case N4JSPackage.FUNCTION_DEFINITION___IS_ASYNC: return N4JSPackage.N4_METHOD_DECLARATION___IS_ASYNC;
-				case N4JSPackage.FUNCTION_DEFINITION___GET_DEFINED_FUNCTION: return N4JSPackage.N4_METHOD_DECLARATION___GET_DEFINED_FUNCTION;
 				default: return -1;
 			}
 		}
@@ -1197,8 +1164,6 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 				return getDeclaredReturnTypeRefInAST();
 			case N4JSPackage.N4_METHOD_DECLARATION___IS_ASYNC:
 				return isAsync();
-			case N4JSPackage.N4_METHOD_DECLARATION___GET_DEFINED_FUNCTION:
-				return getDefinedFunction();
 			case N4JSPackage.N4_METHOD_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR:
 				return getDefinedFunctionOrAccessor();
 			case N4JSPackage.N4_METHOD_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS:

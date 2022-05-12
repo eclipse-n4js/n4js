@@ -22,7 +22,7 @@ import org.eclipse.n4js.ts.types.TypeAlias;
  * @model
  * @generated
  */
-public interface N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration, TypedElement {
+public interface N4TypeAliasDeclaration extends N4TypeDeclaration, GenericDeclaration, TypeDefiningElement, TypedElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

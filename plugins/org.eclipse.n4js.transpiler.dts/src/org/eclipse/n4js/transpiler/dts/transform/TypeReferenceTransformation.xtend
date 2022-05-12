@@ -37,8 +37,7 @@ import org.eclipse.n4js.transpiler.im.TypeReferenceNode_IM
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -188,8 +187,8 @@ class TypeReferenceTransformation extends Transformation {
 
 		if (typeRef instanceof ComposedTypeRef) {
 			convertComposedTypeRef(typeRef);
-		} else if (typeRef instanceof FunctionTypeExprOrRef) {
-			convertFunctionTypeExprOrRef(typeRef);
+		} else if (typeRef instanceof FunctionTypeExpression) {
+			convertFunctionTypeExpression(typeRef);
 		} else if (typeRef instanceof ParameterizedTypeRef) {
 			convertParameterizedTypeRef(typeRef);
 		} else if (typeRef instanceof ThisTypeRef) {
@@ -223,7 +222,7 @@ class TypeReferenceTransformation extends Transformation {
 	/** Convert the member of a composed type reference. */
 	def private void convertMemberTypeRef(TypeRef memberTypeRef) {
 		val requiresParentheses = memberTypeRef instanceof ComposedTypeRef
-				|| memberTypeRef instanceof FunctionTypeExprOrRef;
+				|| memberTypeRef instanceof FunctionTypeExpression;
 		if (requiresParentheses) {
 			write('(');
 		}
@@ -233,7 +232,7 @@ class TypeReferenceTransformation extends Transformation {
 		}
 	}
 
-	def private void convertFunctionTypeExprOrRef(FunctionTypeExprOrRef typeRef) {
+	def private void convertFunctionTypeExpression(FunctionTypeExpression typeRef) {
 		val fpars = typeRef.getFpars();
 		val returnTypeRef = typeRef.getReturnTypeRef();
 		write('(');
@@ -251,8 +250,8 @@ class TypeReferenceTransformation extends Transformation {
 	}
 
 	def private void convertParameterizedTypeRef(ParameterizedTypeRef typeRef) {
-		if (typeRef instanceof FunctionTypeRef) {
-			convertFunctionTypeExprOrRef(typeRef);
+		if (typeRef instanceof FunctionTypeExpression) {
+			convertFunctionTypeExpression(typeRef);
 			return;
 		}
 		val declType = typeRef.getDeclaredType();

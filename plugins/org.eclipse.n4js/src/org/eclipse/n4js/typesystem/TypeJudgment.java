@@ -78,7 +78,7 @@ import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FormalParameter;
-import org.eclipse.n4js.n4JS.FunctionExpression;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
@@ -131,7 +131,6 @@ import org.eclipse.n4js.tooling.react.ReactHelper;
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -263,6 +262,11 @@ import com.google.inject.Inject;
 			EnumLiteralTypeRef result = TypeRefsFactory.eINSTANCE.createEnumLiteralTypeRef();
 			result.setValue(enumLiteral);
 			return result;
+		}
+
+		@Override
+		public TypeRef caseTFunction(TFunction tFun) {
+			return TypeUtils.createFunctionTypeExpression(tFun);
 		}
 
 		/** Covers cases TField, TFormalParameter, TVariable. */
@@ -566,8 +570,8 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseTaggedTemplateString(TaggedTemplateString taggedTemplate) {
 			final TypeRef tagTypeRef = ts.type(G, taggedTemplate.getTarget());
-			if (tagTypeRef instanceof FunctionTypeExprOrRef) {
-				return ((FunctionTypeExprOrRef) tagTypeRef).getReturnTypeRef();
+			if (tagTypeRef instanceof FunctionTypeExpression) {
+				return ((FunctionTypeExpression) tagTypeRef).getReturnTypeRef();
 			}
 			return unknown();
 		}
@@ -812,7 +816,7 @@ import com.google.inject.Inject;
 					// super() is used in a constructor
 					final TMethod ctor = containerTypesHelper.fromContext(superLiteral.eResource())
 							.findConstructor(effectiveSuperClassifier);
-					return ctor != null ? TypeUtils.createTypeRef(ctor)
+					return ctor != null ? TypeUtils.createFunctionTypeExpression(ctor)
 							: unknown();
 				} else {
 					// super() used in a normal method, getter or setter (not in a constructor)
@@ -1068,15 +1072,15 @@ import com.google.inject.Inject;
 				T = ts.substTypeVariablesWithPartialCapture(G2, T);
 			}
 
-			if (expr.getTarget() instanceof SuperLiteral && T instanceof FunctionTypeExprOrRef) {
+			if (expr.getTarget() instanceof SuperLiteral && T instanceof FunctionTypeExpression) {
 				// super.foo(): this; cf. GHOLD-95
-				final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) T;
+				final FunctionTypeExpression F = (FunctionTypeExpression) T;
 				if (F.getReturnTypeRef() instanceof BoundThisTypeRef) {
 					final TypeRef rawT = typeSystemHelper.getThisTypeAtLocation(G2, expr);
 					final TypeRef thisTypeRef = TypeUtils.enforceNominalTyping(rawT);
-					if (F instanceof FunctionTypeExpression && F.eContainer() == null) {
+					if (F.eContainer() == null) {
 						// avoid creation of new instance
-						final FunctionTypeExpression FTE = (FunctionTypeExpression) F;
+						final FunctionTypeExpression FTE = F;
 						FTE.setReturnTypeRef(TypeUtils.copyIfContained(thisTypeRef));
 					} else {
 						T = TypeUtils.createFunctionTypeExpression(null, F.getTypeVars(), F.getFpars(), thisTypeRef);
@@ -1090,9 +1094,9 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseParameterizedCallExpression(ParameterizedCallExpression expr) {
 			final TypeRef targetTypeRef = ts.type(G, expr.getTarget());
-			if (targetTypeRef instanceof FunctionTypeExprOrRef) {
-				final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) targetTypeRef;
-				final TFunction tFunction = F.getFunctionType();
+			if (targetTypeRef instanceof FunctionTypeExpression) {
+				final FunctionTypeExpression F = (FunctionTypeExpression) targetTypeRef;
+				final TFunction tFunction = F.getDeclaredFunction();
 
 				TypeRef T;
 				final Pair<String, Expression> guardKey = Pair.of(GUARD_TYPE_CALL_EXPRESSION, expr);
@@ -1379,11 +1383,10 @@ import com.google.inject.Inject;
 			return this.caseTypeDefiningElement(e);
 		}
 
-		// This is needed to remove the ambiguity:
-		// FunctionExpression is both a TypeDefininingElement and an Expression
 		@Override
-		public TypeRef caseFunctionExpression(FunctionExpression e) {
-			return this.caseTypeDefiningElement(e);
+		public TypeRef caseFunctionDefinition(FunctionDefinition e) {
+			final TypeRef defTypeRef = TypeUtils.createFunctionTypeExpression(e.getDefinedFunction());
+			return defTypeRef != null ? defTypeRef : unknown();
 		}
 
 		// ----------------------------------------------------------------------

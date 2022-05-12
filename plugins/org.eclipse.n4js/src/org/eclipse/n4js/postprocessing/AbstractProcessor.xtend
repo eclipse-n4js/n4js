@@ -23,7 +23,6 @@ import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -112,8 +111,8 @@ package abstract class AbstractProcessor {
 		val isAsync = funDef.isAsync;
 		val isGenerator = funDef.isGenerator;
 		if(isAsync || isGenerator) {
-			val tFunction = funDef.definedType;
-			if(tFunction instanceof TFunction) {
+			val tFunction = funDef.definedFunction;
+			if(tFunction !== null) {
 				val innerReturnTypeRef = tFunction.returnTypeRef;
 				if (innerReturnTypeRef !== null && !(innerReturnTypeRef instanceof DeferredTypeRef)) {
 					// we took 'innerReturnTypeRef' from the TModule (not the AST), so normally we would not have to

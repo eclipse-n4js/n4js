@@ -881,7 +881,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_InternalDynamicElements() {
+	public EReference getTModule_InternalFunctions() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(17);
 	}
 
@@ -891,8 +891,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EAttribute getTModule_AstMD5() {
-		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(18);
+	public EReference getTModule_ExposedInternalFunctions() {
+		return (EReference)tModuleEClass.getEStructuralFeatures().get(18);
 	}
 
 	/**
@@ -901,7 +901,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EReference getTModule_ComposedMemberCaches() {
+	public EReference getTModule_InternalDynamicElements() {
 		return (EReference)tModuleEClass.getEStructuralFeatures().get(19);
 	}
 
@@ -911,8 +911,28 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
+	public EAttribute getTModule_AstMD5() {
+		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(20);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EReference getTModule_ComposedMemberCaches() {
+		return (EReference)tModuleEClass.getEStructuralFeatures().get(21);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EReference getTModule_TemporaryTypes() {
-		return (EReference)tModuleEClass.getEStructuralFeatures().get(20);
+		return (EReference)tModuleEClass.getEStructuralFeatures().get(22);
 	}
 
 	/**
@@ -922,7 +942,27 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	@Override
 	public EAttribute getTModule_ModuleSpecifier() {
-		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(21);
+		return (EAttribute)tModuleEClass.getEStructuralFeatures().get(23);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTModule__GetInternalTypesAndFunctions() {
+		return tModuleEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTModule__GetExposedInternalTypesAndFunctions() {
+		return tModuleEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -932,7 +972,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	@Override
 	public EOperation getTModule__ClearTransientElements() {
-		return tModuleEClass.getEOperations().get(0);
+		return tModuleEClass.getEOperations().get(2);
 	}
 
 	/**
@@ -1591,7 +1631,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTFunction__GetFparForArgIdx__int() {
+	public EOperation getTFunction__IsGeneric() {
 		return tFunctionEClass.getEOperations().get(3);
 	}
 
@@ -1601,7 +1641,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTFunction__GetFunctionAsString() {
+	public EOperation getTFunction__GetFparForArgIdx__int() {
 		return tFunctionEClass.getEOperations().get(4);
 	}
 
@@ -1611,8 +1651,18 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	@Override
-	public EOperation getTFunction__IsFinal() {
+	public EOperation getTFunction__GetFunctionAsString() {
 		return tFunctionEClass.getEOperations().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getTFunction__IsFinal() {
+		return tFunctionEClass.getEOperations().get(6);
 	}
 
 	/**
@@ -3882,11 +3932,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEReference(tModuleEClass, TMODULE__RUNTIME_CYCLIC_LOADTIME_DEPENDENTS);
 		createEReference(tModuleEClass, TMODULE__INTERNAL_TYPES);
 		createEReference(tModuleEClass, TMODULE__EXPOSED_INTERNAL_TYPES);
+		createEReference(tModuleEClass, TMODULE__INTERNAL_FUNCTIONS);
+		createEReference(tModuleEClass, TMODULE__EXPOSED_INTERNAL_FUNCTIONS);
 		createEReference(tModuleEClass, TMODULE__INTERNAL_DYNAMIC_ELEMENTS);
 		createEAttribute(tModuleEClass, TMODULE__AST_MD5);
 		createEReference(tModuleEClass, TMODULE__COMPOSED_MEMBER_CACHES);
 		createEReference(tModuleEClass, TMODULE__TEMPORARY_TYPES);
 		createEAttribute(tModuleEClass, TMODULE__MODULE_SPECIFIER);
+		createEOperation(tModuleEClass, TMODULE___GET_INTERNAL_TYPES_AND_FUNCTIONS);
+		createEOperation(tModuleEClass, TMODULE___GET_EXPOSED_INTERNAL_TYPES_AND_FUNCTIONS);
 		createEOperation(tModuleEClass, TMODULE___CLEAR_TRANSIENT_ELEMENTS);
 
 		runtimeDependencyEClass = createEClass(RUNTIME_DEPENDENCY);
@@ -3972,6 +4026,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		createEOperation(tFunctionEClass, TFUNCTION___IS_RETURN_VALUE_OPTIONAL);
 		createEOperation(tFunctionEClass, TFUNCTION___IS_CALL_SIGNATURE);
 		createEOperation(tFunctionEClass, TFUNCTION___IS_CONSTRUCT_SIGNATURE);
+		createEOperation(tFunctionEClass, TFUNCTION___IS_GENERIC);
 		createEOperation(tFunctionEClass, TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT);
 		createEOperation(tFunctionEClass, TFUNCTION___GET_FUNCTION_AS_STRING);
 		createEOperation(tFunctionEClass, TFUNCTION___IS_FINAL);
@@ -4294,12 +4349,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		typeVariableEClass.getESuperTypes().add(this.getType());
 		inferenceVariableEClass.getESuperTypes().add(this.getTypeVariable());
 		tFunctionEClass.getESuperTypes().add(this.getGenericType());
+		tFunctionEClass.getESuperTypes().add(this.getTExportableElement());
+		tFunctionEClass.getESuperTypes().add(this.getTAnnotableElement());
+		tFunctionEClass.getESuperTypes().add(this.getTNamespaceElement());
 		tFunctionEClass.getESuperTypes().add(this.getAccessibleTypeElement());
 		tFunctionEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		typeEClass.getESuperTypes().add(this.getTExportableElement());
 		typeEClass.getESuperTypes().add(this.getTAnnotableElement());
 		typeEClass.getESuperTypes().add(this.getTNamespaceElement());
-		genericTypeEClass.getESuperTypes().add(this.getType());
+		containerTypeEClass.getESuperTypes().add(this.getType());
 		containerTypeEClass.getESuperTypes().add(this.getGenericType());
 		abstractNamespaceEClass.getESuperTypes().add(this.getTExportingElement());
 		tNamespaceEClass.getESuperTypes().add(this.getType());
@@ -4309,6 +4367,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tNamespaceEClass.getESuperTypes().add(this.getTNamespaceElement());
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getType());
 		moduleNamespaceVirtualTypeEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
+		primitiveTypeEClass.getESuperTypes().add(this.getType());
 		primitiveTypeEClass.getESuperTypes().add(this.getGenericType());
 		primitiveTypeEClass.getESuperTypes().add(this.getArrayLike());
 		builtInTypeEClass.getESuperTypes().add(this.getType());
@@ -4365,6 +4424,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tEnumEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		tEnumLiteralEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		tEnumLiteralEClass.getESuperTypes().add(this.getIdentifiableElement());
+		typeAliasEClass.getESuperTypes().add(this.getType());
 		typeAliasEClass.getESuperTypes().add(this.getGenericType());
 		typeAliasEClass.getESuperTypes().add(this.getAccessibleTypeElement());
 		typeAliasEClass.getESuperTypes().add(this.getTTypedElement());
@@ -4398,11 +4458,17 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEReference(getTModule_RuntimeCyclicLoadtimeDependents(), this.getTModule(), null, "runtimeCyclicLoadtimeDependents", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_InternalTypes(), this.getType(), null, "internalTypes", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_ExposedInternalTypes(), this.getType(), null, "exposedInternalTypes", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTModule_InternalFunctions(), this.getTFunction(), null, "internalFunctions", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTModule_ExposedInternalFunctions(), this.getTFunction(), null, "exposedInternalFunctions", null, 0, -1, TModule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_InternalDynamicElements(), this.getTDynamicElement(), null, "internalDynamicElements", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_AstMD5(), theEcorePackage.getEString(), "astMD5", null, 0, 1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_ComposedMemberCaches(), this.getComposedMemberCache(), null, "composedMemberCaches", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTModule_TemporaryTypes(), this.getType(), null, "temporaryTypes", null, 0, -1, TModule.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTModule_ModuleSpecifier(), theEcorePackage.getEString(), "moduleSpecifier", null, 0, 1, TModule.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getTModule__GetInternalTypesAndFunctions(), this.getIterableOfTExportableElement(), "getInternalTypesAndFunctions", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getTModule__GetExposedInternalTypesAndFunctions(), this.getIterableOfTExportableElement(), "getExposedInternalTypesAndFunctions", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTModule__ClearTransientElements(), null, "clearTransientElements", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -4509,6 +4575,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getTFunction__IsConstructSignature(), theEcorePackage.getEBoolean(), "isConstructSignature", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getTFunction__IsGeneric(), theEcorePackage.getEBoolean(), "isGeneric", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		op = initEOperation(getTFunction__GetFparForArgIdx__int(), this.getTFormalParameter(), "getFparForArgIdx", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theEcorePackage.getEInt(), "argIndex", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -4604,7 +4672,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEReference(getAbstractNamespace_ExposedLocalVariables(), this.getTVariable(), null, "exposedLocalVariables", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getAbstractNamespace_Namespaces(), this.getTNamespace(), null, "namespaces", null, 0, -1, AbstractNamespace.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-		initEOperation(getAbstractNamespace__GetTypesAndFunctions(), this.getIterableOfType(), "getTypesAndFunctions", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getAbstractNamespace__GetTypesAndFunctions(), this.getIterableOfTExportableElement(), "getTypesAndFunctions", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getAbstractNamespace__GetExportableElements(), this.getIterableOfTExportableElement(), "getExportableElements", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

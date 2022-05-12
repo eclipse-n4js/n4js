@@ -28,7 +28,6 @@ import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
@@ -156,7 +155,7 @@ class ExpressionTransformation extends Transformation {
 		if(targetSTE instanceof SymbolTableEntryOriginal) {
 			val originalTarget = targetSTE.originalTarget;
 			if(originalTarget instanceof TFunction) { // could be a method
-				val originalTargetTypeRef = TypeUtils.createTypeRef(originalTarget) as FunctionTypeRef;
+				val originalTargetTypeRef = TypeUtils.createFunctionTypeExpression(originalTarget);
 				val returnTypeRef = promisifyHelper.extractPromisifiedReturnType(state.G, originalTargetTypeRef);
 				val returnTypeRefTypeArgs = returnTypeRef.typeArgsWithDefaults;
 				val hasErrorValue = !TypeUtils.isUndefined(returnTypeRefTypeArgs.drop(1).head); // isUndefined() is null-safe

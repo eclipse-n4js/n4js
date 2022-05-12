@@ -43,6 +43,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getRuntimeCyclicLoadtimeDependents <em>Runtime Cyclic Loadtime Dependents</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalFunctions <em>Internal Functions</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getExposedInternalFunctions <em>Exposed Internal Functions</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalDynamicElements <em>Internal Dynamic Elements</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
@@ -469,6 +471,30 @@ public interface TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnno
 	EList<Type> getExposedInternalTypes();
 
 	/**
+	 * Returns the value of the '<em><b>Internal Functions</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TFunction}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Internal Functions</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_InternalFunctions()
+	 * @model containment="true" transient="true"
+	 * @generated
+	 */
+	EList<TFunction> getInternalFunctions();
+
+	/**
+	 * Returns the value of the '<em><b>Exposed Internal Functions</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TFunction}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Exposed Internal Functions</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ExposedInternalFunctions()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<TFunction> getExposedInternalFunctions();
+
+	/**
 	 * Returns the value of the '<em><b>Internal Dynamic Elements</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TDynamicElement}.
 	 * <!-- begin-user-doc -->
@@ -583,6 +609,22 @@ public interface TModule extends AbstractNamespace, SyntaxRelatedTElement, TAnno
 	 * @generated
 	 */
 	String getModuleSpecifier();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfTExportableElement" unique="false"
+	 * @generated
+	 */
+	Iterable<? extends TExportableElement> getInternalTypesAndFunctions();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" dataType="org.eclipse.n4js.ts.types.IterableOfTExportableElement" unique="false"
+	 * @generated
+	 */
+	Iterable<? extends TExportableElement> getExposedInternalTypesAndFunctions();
 
 	/**
 	 * <!-- begin-user-doc -->

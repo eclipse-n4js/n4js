@@ -35,7 +35,6 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFormalParameter
-import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
@@ -394,7 +393,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator implements Pol
 		int parIndex
 	) {
 		val TClass tclass = n4ClassDeclaration.definedType as TClass;
-		val fpars = (ctor.definedType as TFunction).fpars;
+		val fpars = ctor.definedFunction.fpars;
 		if (parIndex >= fpars.size) return; //broken AST
 		val TFormalParameter fpar = fpars.get(parIndex);
 		val fparType = fpar.typeRef;

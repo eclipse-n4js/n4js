@@ -36,8 +36,8 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean relinkTFunction(FunctionDeclaration functionDecl, AbstractNamespace target, boolean preLinkingPhase, int idx) {
-		val functionDefinedType = functionDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
-		if (functionDefinedType !== null && ! functionDefinedType.eIsProxy) {
+		val functionDefinedFunction = functionDecl.eGet(N4JSPackage.eINSTANCE.functionDefinition_DefinedFunction, false) as EObject;
+		if (functionDefinedFunction !== null && ! functionDefinedFunction.eIsProxy) {
 			throw new IllegalStateException("TFunction already created for FunctionDeclaration");
 		}
 
@@ -50,7 +50,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 		functionType.relinkFormalParameters(functionDecl, preLinkingPhase)
 		functionType.astElement = functionDecl
-		functionDecl.definedType = functionType
+		functionDecl.definedFunction = functionType
 		
 		return true;
 	}
@@ -63,8 +63,8 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 * @param target the module to which the newly created TFunction is added
 	 */
 	def package void createTFunction(FunctionDeclaration functionDecl, AbstractNamespace target, boolean preLinkingPhase) {
-		val functionDefinedType = functionDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
-		if (functionDefinedType !== null && ! functionDefinedType.eIsProxy) {
+		val functionDefinedFunction = functionDecl.eGet(N4JSPackage.eINSTANCE.functionDefinition_DefinedFunction, false) as EObject;
+		if (functionDefinedFunction !== null && ! functionDefinedFunction.eIsProxy) {
 			throw new IllegalStateException("TFunction already created for FunctionDeclaration");
 		}
 
@@ -110,8 +110,8 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 * </ol>
 	 */
 	def package void createTFunction(FunctionExpression functionExpr, AbstractNamespace target, boolean preLinkingPhase) {
-		val functionDefinedType = functionExpr.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
-		if (functionDefinedType !== null && ! functionDefinedType.eIsProxy) {
+		val functionDefinedFunction = functionExpr.eGet(N4JSPackage.eINSTANCE.functionDefinition_DefinedFunction, false) as EObject;
+		if (functionDefinedFunction !== null && ! functionDefinedFunction.eIsProxy) {
 			throw new IllegalStateException("TFunction already created for FunctionExpression");
 		}
 
@@ -127,7 +127,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		functionType.copyAnnotations(functionExpr, preLinkingPhase)
 
 		// set container
-		target.containingModule.internalTypes += functionType
+		target.containingModule.internalFunctions += functionType
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 		// link
 		functionType.astElement = functionDef
-		functionDef.definedType = functionType
+		functionDef.definedFunction = functionType
 
 		return functionType
 	}

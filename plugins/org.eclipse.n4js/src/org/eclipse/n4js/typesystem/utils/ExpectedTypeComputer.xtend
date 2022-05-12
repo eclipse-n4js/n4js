@@ -17,7 +17,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -69,7 +69,7 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		    } else {
 		        // this is the normal case
 				val fType = ts.type(G2, fofa);
-				if (fType instanceof FunctionTypeExprOrRef) {
+				if (fType instanceof FunctionTypeExpression) {
 					return ts.substTypeVariables(G2, fType.returnTypeRef);
 				}
 		    }
@@ -87,8 +87,8 @@ package class ExpectedTypeComputer extends TypeSystemHelperStrategy {
 		// we have an async function:
 		// in case it does not already have a return type of Promise, N4JSFunctionDefinitionTypesBuilder sets
 		// funDef.definedType.returnTypeRef to Promise<R,?>, where R can be based on funDef.returnTypeRef
-		val tFun = funDef.definedType;
-		if (tFun instanceof TFunction) {
+		val tFun = funDef.definedFunction;
+		if (tFun !== null) {
 			val actualReturnTypeRef = getAndResolveOuterReturnType(G, tFun);
 			if (TypeUtils.isPromise(actualReturnTypeRef, G.getPredefinedTypes().builtInTypeScope)) {
 				val firstTypeArg = actualReturnTypeRef.declaredTypeArgs.head;

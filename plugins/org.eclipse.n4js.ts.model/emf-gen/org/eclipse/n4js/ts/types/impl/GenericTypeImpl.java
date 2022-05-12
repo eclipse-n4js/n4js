@@ -26,6 +26,8 @@ import org.eclipse.n4js.ts.types.GenericType;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
+import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Generic Type</b></em>'.
@@ -39,7 +41,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *
  * @generated
  */
-public abstract class GenericTypeImpl extends TypeImpl implements GenericType {
+public abstract class GenericTypeImpl extends ProxyResolvingEObjectImpl implements GenericType {
 	/**
 	 * The cached value of the '{@link #getTypeVars() <em>Type Vars</em>}' containment reference list.
 	 * <!-- begin-user-doc -->

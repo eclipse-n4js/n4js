@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
+import org.eclipse.n4js.scoping.accessModifiers.FunctionVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.HollowTypeOrValueDescription;
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription;
 import org.eclipse.n4js.scoping.accessModifiers.NonExportedElementDescription;
@@ -51,6 +52,9 @@ public class ExportedElementsCollector {
 
 	@Inject
 	private TypeVisibilityChecker typeVisibilityChecker;
+
+	@Inject
+	private FunctionVisibilityChecker functionVisibilityChecker;
 
 	@Inject
 	private VariableVisibilityChecker variableVisibilityChecker;
@@ -159,7 +163,8 @@ public class ExportedElementsCollector {
 	private void doCollectElement(String exportedName, TExportableElement exportedElem, CollectionInfo info) {
 
 		boolean include = (info.includeHollows || !N4JSLanguageUtils.isHollowElement(exportedElem, variantHelper))
-				&& (info.includeValueOnlyElements || !N4JSLanguageUtils.isValueOnlyElement(exportedElem, variantHelper));
+				&& (info.includeValueOnlyElements
+						|| !N4JSLanguageUtils.isValueOnlyElement(exportedElem, variantHelper));
 
 		if (include) {
 			TypeVisibility visibility = isVisible(info.context, exportedElem);
@@ -187,6 +192,8 @@ public class ExportedElementsCollector {
 	private TypeVisibility isVisible(Resource contextResource, TExportableElement elem) {
 		if (elem instanceof Type) {
 			return typeVisibilityChecker.isVisible(contextResource, (Type) elem);
+		} else if (elem instanceof TFunction) {
+			return functionVisibilityChecker.isVisible(contextResource, (TFunction) elem);
 		} else if (elem instanceof TVariable) {
 			return variableVisibilityChecker.isVisible(contextResource, (TVariable) elem);
 		}

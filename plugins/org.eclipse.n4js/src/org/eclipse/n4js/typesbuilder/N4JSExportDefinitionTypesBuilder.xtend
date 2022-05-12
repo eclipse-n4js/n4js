@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.types.TExportingElement
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.n4js.n4JS.FunctionDefinition
 
 /**
  * Does not create new types but instead creates {@link ExportDefinition}s for {@link ExportDeclaration}s.
@@ -120,6 +121,7 @@ class N4JSExportDefinitionTypesBuilder {
 	def private TExportableElement getExportedTypesModelElement(ExportableElement n4ExportableElem) {
 		return switch n4ExportableElem {
 			TypeDefiningElement: n4ExportableElem.definedType
+			FunctionDefinition: n4ExportableElem.definedFunction
 		};
 	}
 }

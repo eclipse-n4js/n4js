@@ -455,7 +455,7 @@ public abstract class N4FieldAccessorImpl extends AnnotableN4MemberDeclarationIm
 		boolean _matched = false;
 		if (_this instanceof FunctionDefinition) {
 			_matched=true;
-			_switchResult = ((FunctionDefinition)_this).getDefinedType();
+			_switchResult = ((FunctionDefinition)_this).getDefinedFunction();
 		}
 		if (!_matched) {
 			if (_this instanceof org.eclipse.n4js.n4JS.FieldAccessor) {

@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TField;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TStructMember;
@@ -398,7 +399,7 @@ public abstract class N4JSASTUtils {
 		final FunctionDefinition containingFunction = getContainingFunction(assExpr);
 		if (containingFunction == null)
 			return false;
-		final Type containingTFunction = containingFunction.getDefinedType();
+		final TFunction containingTFunction = containingFunction.getDefinedFunction();
 		if (containingTFunction == null)
 			return false;
 		// (b) find constructor of the owner of the field

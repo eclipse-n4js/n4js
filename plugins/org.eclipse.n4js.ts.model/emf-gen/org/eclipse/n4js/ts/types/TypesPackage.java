@@ -495,13 +495,31 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__EXPOSED_INTERNAL_TYPES = ABSTRACT_NAMESPACE_FEATURE_COUNT + 18;
 
 	/**
+	 * The feature id for the '<em><b>Internal Functions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__INTERNAL_FUNCTIONS = ABSTRACT_NAMESPACE_FEATURE_COUNT + 19;
+
+	/**
+	 * The feature id for the '<em><b>Exposed Internal Functions</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__EXPOSED_INTERNAL_FUNCTIONS = ABSTRACT_NAMESPACE_FEATURE_COUNT + 20;
+
+	/**
 	 * The feature id for the '<em><b>Internal Dynamic Elements</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__INTERNAL_DYNAMIC_ELEMENTS = ABSTRACT_NAMESPACE_FEATURE_COUNT + 19;
+	int TMODULE__INTERNAL_DYNAMIC_ELEMENTS = ABSTRACT_NAMESPACE_FEATURE_COUNT + 21;
 
 	/**
 	 * The feature id for the '<em><b>Ast MD5</b></em>' attribute.
@@ -510,7 +528,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__AST_MD5 = ABSTRACT_NAMESPACE_FEATURE_COUNT + 20;
+	int TMODULE__AST_MD5 = ABSTRACT_NAMESPACE_FEATURE_COUNT + 22;
 
 	/**
 	 * The feature id for the '<em><b>Composed Member Caches</b></em>' containment reference list.
@@ -519,7 +537,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__COMPOSED_MEMBER_CACHES = ABSTRACT_NAMESPACE_FEATURE_COUNT + 21;
+	int TMODULE__COMPOSED_MEMBER_CACHES = ABSTRACT_NAMESPACE_FEATURE_COUNT + 23;
 
 	/**
 	 * The feature id for the '<em><b>Temporary Types</b></em>' containment reference list.
@@ -528,7 +546,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__TEMPORARY_TYPES = ABSTRACT_NAMESPACE_FEATURE_COUNT + 22;
+	int TMODULE__TEMPORARY_TYPES = ABSTRACT_NAMESPACE_FEATURE_COUNT + 24;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
@@ -537,7 +555,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MODULE_SPECIFIER = ABSTRACT_NAMESPACE_FEATURE_COUNT + 23;
+	int TMODULE__MODULE_SPECIFIER = ABSTRACT_NAMESPACE_FEATURE_COUNT + 25;
 
 	/**
 	 * The number of structural features of the '<em>TModule</em>' class.
@@ -546,7 +564,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_FEATURE_COUNT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 24;
+	int TMODULE_FEATURE_COUNT = ABSTRACT_NAMESPACE_FEATURE_COUNT + 26;
 
 	/**
 	 * The operation id for the '<em>Get Types And Functions</em>' operation.
@@ -594,13 +612,31 @@ public interface TypesPackage extends EPackage {
 	int TMODULE___GET_AST_ELEMENT_NO_RESOLVE = ABSTRACT_NAMESPACE_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get Internal Types And Functions</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___GET_INTERNAL_TYPES_AND_FUNCTIONS = ABSTRACT_NAMESPACE_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Exposed Internal Types And Functions</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE___GET_EXPOSED_INTERNAL_TYPES_AND_FUNCTIONS = ABSTRACT_NAMESPACE_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Clear Transient Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE___CLEAR_TRANSIENT_ELEMENTS = ABSTRACT_NAMESPACE_OPERATION_COUNT + 1;
+	int TMODULE___CLEAR_TRANSIENT_ELEMENTS = ABSTRACT_NAMESPACE_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -609,7 +645,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 2;
+	int TMODULE_OPERATION_COUNT = ABSTRACT_NAMESPACE_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.RuntimeDependencyImpl <em>Runtime Dependency</em>}' class.
@@ -2269,58 +2305,13 @@ public interface TypesPackage extends EPackage {
 	int GENERIC_TYPE = 21;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE__NAME = TYPE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE__DIRECTLY_EXPORTED = TYPE__DIRECTLY_EXPORTED;
-
-	/**
-	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
-
-	/**
-	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE__EXPORTING_EXPORT_DEFINITIONS = TYPE__EXPORTING_EXPORT_DEFINITIONS;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE__ANNOTATIONS = TYPE__ANNOTATIONS;
-
-	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int GENERIC_TYPE__TYPE_VARS = TYPE_FEATURE_COUNT + 0;
+	int GENERIC_TYPE__TYPE_VARS = 0;
 
 	/**
 	 * The number of structural features of the '<em>Generic Type</em>' class.
@@ -2329,178 +2320,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GENERIC_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get Containing Module</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
-
-	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
-
-	/**
-	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_INDIRECTLY_EXPORTED = TYPE___IS_INDIRECTLY_EXPORTED;
-
-	/**
-	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
-
-	/**
-	 * The operation id for the '<em>Is Hollow</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Is Alias</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_ALIAS = TYPE___IS_ALIAS;
-
-	/**
-	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_PROVIDED_BY_RUNTIME = TYPE___IS_PROVIDED_BY_RUNTIME;
-
-	/**
-	 * The operation id for the '<em>Is Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_POLYFILL = TYPE___IS_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_STATIC_POLYFILL = TYPE___IS_STATIC_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Final</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_FINAL = TYPE___IS_FINAL;
-
-	/**
-	 * The operation id for the '<em>Is Dynamizable</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_DYNAMIZABLE = TYPE___IS_DYNAMIZABLE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_ARRAY_LIKE = TYPE___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Get Element Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___GET_ELEMENT_TYPE = TYPE___GET_ELEMENT_TYPE;
-
-	/**
-	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___GET_TYPE_ACCESS_MODIFIER = TYPE___GET_TYPE_ACCESS_MODIFIER;
-
-	/**
-	 * The operation id for the '<em>Is Generic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___IS_GENERIC = TYPE___IS_GENERIC;
-
-	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___GET_TYPE_VARS = TYPE___GET_TYPE_VARS;
-
-	/**
-	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
-
-	/**
-	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___GET_RAW_TYPE_AS_STRING = TYPE___GET_RAW_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int GENERIC_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
+	int GENERIC_TYPE_FEATURE_COUNT = 1;
 
 	/**
 	 * The number of operations of the '<em>Generic Type</em>' class.
@@ -2509,7 +2329,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int GENERIC_TYPE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 0;
+	int GENERIC_TYPE_OPERATION_COUNT = 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl <em>TFunction</em>}' class.
@@ -2522,51 +2342,6 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION = 19;
 
 	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION__NAME = GENERIC_TYPE__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION__DIRECTLY_EXPORTED = GENERIC_TYPE__DIRECTLY_EXPORTED;
-
-	/**
-	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT = GENERIC_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
-
-	/**
-	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION__EXPORTING_EXPORT_DEFINITIONS = GENERIC_TYPE__EXPORTING_EXPORT_DEFINITIONS;
-
-	/**
-	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION__ANNOTATIONS = GENERIC_TYPE__ANNOTATIONS;
-
-	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2576,13 +2351,58 @@ public interface TypesPackage extends EPackage {
 	int TFUNCTION__TYPE_VARS = GENERIC_TYPE__TYPE_VARS;
 
 	/**
+	 * The feature id for the '<em><b>Name</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION__NAME = GENERIC_TYPE_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION__DIRECTLY_EXPORTED = GENERIC_TYPE_FEATURE_COUNT + 1;
+
+	/**
+	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT = GENERIC_TYPE_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION__EXPORTING_EXPORT_DEFINITIONS = GENERIC_TYPE_FEATURE_COUNT + 3;
+
+	/**
+	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION__ANNOTATIONS = GENERIC_TYPE_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_FEATURE_COUNT + 0;
+	int TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
@@ -2591,7 +2411,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME = GENERIC_TYPE_FEATURE_COUNT + 1;
+	int TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME = GENERIC_TYPE_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -2600,7 +2420,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__AST_ELEMENT = GENERIC_TYPE_FEATURE_COUNT + 2;
+	int TFUNCTION__AST_ELEMENT = GENERIC_TYPE_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>External</b></em>' attribute.
@@ -2609,7 +2429,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__EXTERNAL = GENERIC_TYPE_FEATURE_COUNT + 3;
+	int TFUNCTION__EXTERNAL = GENERIC_TYPE_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
@@ -2618,7 +2438,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__FPARS = GENERIC_TYPE_FEATURE_COUNT + 4;
+	int TFUNCTION__FPARS = GENERIC_TYPE_FEATURE_COUNT + 9;
 
 	/**
 	 * The feature id for the '<em><b>Return Value Marked Optional</b></em>' attribute.
@@ -2627,7 +2447,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__RETURN_VALUE_MARKED_OPTIONAL = GENERIC_TYPE_FEATURE_COUNT + 5;
+	int TFUNCTION__RETURN_VALUE_MARKED_OPTIONAL = GENERIC_TYPE_FEATURE_COUNT + 10;
 
 	/**
 	 * The feature id for the '<em><b>Return Type Ref</b></em>' containment reference.
@@ -2636,7 +2456,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__RETURN_TYPE_REF = GENERIC_TYPE_FEATURE_COUNT + 6;
+	int TFUNCTION__RETURN_TYPE_REF = GENERIC_TYPE_FEATURE_COUNT + 11;
 
 	/**
 	 * The feature id for the '<em><b>Declared This Type</b></em>' containment reference.
@@ -2645,7 +2465,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_THIS_TYPE = GENERIC_TYPE_FEATURE_COUNT + 7;
+	int TFUNCTION__DECLARED_THIS_TYPE = GENERIC_TYPE_FEATURE_COUNT + 12;
 
 	/**
 	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
@@ -2654,7 +2474,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_ASYNC = GENERIC_TYPE_FEATURE_COUNT + 8;
+	int TFUNCTION__DECLARED_ASYNC = GENERIC_TYPE_FEATURE_COUNT + 13;
 
 	/**
 	 * The feature id for the '<em><b>Declared Generator</b></em>' attribute.
@@ -2663,7 +2483,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__DECLARED_GENERATOR = GENERIC_TYPE_FEATURE_COUNT + 9;
+	int TFUNCTION__DECLARED_GENERATOR = GENERIC_TYPE_FEATURE_COUNT + 14;
 
 	/**
 	 * The feature id for the '<em><b>Constructor</b></em>' attribute.
@@ -2672,7 +2492,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION__CONSTRUCTOR = GENERIC_TYPE_FEATURE_COUNT + 10;
+	int TFUNCTION__CONSTRUCTOR = GENERIC_TYPE_FEATURE_COUNT + 15;
 
 	/**
 	 * The number of structural features of the '<em>TFunction</em>' class.
@@ -2681,7 +2501,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 11;
+	int TFUNCTION_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 16;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -2690,7 +2510,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+	int TFUNCTION___GET_CONTAINING_MODULE = GENERIC_TYPE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -2699,7 +2519,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+	int TFUNCTION___IS_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -2708,7 +2528,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_INDIRECTLY_EXPORTED = GENERIC_TYPE___IS_INDIRECTLY_EXPORTED;
+	int TFUNCTION___IS_INDIRECTLY_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
@@ -2717,7 +2537,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
+	int TFUNCTION___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -2726,106 +2546,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
-
-	/**
-	 * The operation id for the '<em>Is Alias</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___IS_ALIAS = GENERIC_TYPE___IS_ALIAS;
-
-	/**
-	 * The operation id for the '<em>Is Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___IS_POLYFILL = GENERIC_TYPE___IS_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___IS_STATIC_POLYFILL = GENERIC_TYPE___IS_STATIC_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Dynamizable</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___IS_DYNAMIZABLE = GENERIC_TYPE___IS_DYNAMIZABLE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___IS_ARRAY_LIKE = GENERIC_TYPE___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Get Element Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___GET_ELEMENT_TYPE = GENERIC_TYPE___GET_ELEMENT_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Generic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___IS_GENERIC = GENERIC_TYPE___IS_GENERIC;
-
-	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___GET_TYPE_VARS = GENERIC_TYPE___GET_TYPE_VARS;
-
-	/**
-	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___GET_VARIANCE_OF_TYPE_VAR__INT = GENERIC_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
-
-	/**
-	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___GET_RAW_TYPE_AS_STRING = GENERIC_TYPE___GET_RAW_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TFUNCTION___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
+	int TFUNCTION___IS_HOLLOW = GENERIC_TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -2834,7 +2555,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_PROVIDED_BY_RUNTIME = GENERIC_TYPE_OPERATION_COUNT + 0;
+	int TFUNCTION___IS_PROVIDED_BY_RUNTIME = GENERIC_TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -2843,7 +2564,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 1;
+	int TFUNCTION___GET_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
@@ -2852,7 +2573,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_DEFAULT_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 2;
+	int TFUNCTION___GET_DEFAULT_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Directly Exported</em>' operation.
@@ -2861,7 +2582,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_DIRECTLY_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 3;
+	int TFUNCTION___IS_DIRECTLY_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -2870,7 +2591,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_AST_ELEMENT_NO_RESOLVE = GENERIC_TYPE_OPERATION_COUNT + 4;
+	int TFUNCTION___GET_AST_ELEMENT_NO_RESOLVE = GENERIC_TYPE_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
@@ -2879,7 +2600,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = GENERIC_TYPE_OPERATION_COUNT + 5;
+	int TFUNCTION___IS_RETURN_VALUE_OPTIONAL = GENERIC_TYPE_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Is Call Signature</em>' operation.
@@ -2888,7 +2609,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_CALL_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 6;
+	int TFUNCTION___IS_CALL_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Is Construct Signature</em>' operation.
@@ -2897,7 +2618,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_CONSTRUCT_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 7;
+	int TFUNCTION___IS_CONSTRUCT_SIGNATURE = GENERIC_TYPE_OPERATION_COUNT + 12;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFUNCTION___IS_GENERIC = GENERIC_TYPE_OPERATION_COUNT + 13;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -2906,7 +2636,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 8;
+	int TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT = GENERIC_TYPE_OPERATION_COUNT + 14;
 
 	/**
 	 * The operation id for the '<em>Get Function As String</em>' operation.
@@ -2915,7 +2645,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 9;
+	int TFUNCTION___GET_FUNCTION_AS_STRING = GENERIC_TYPE_OPERATION_COUNT + 15;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -2924,7 +2654,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 10;
+	int TFUNCTION___IS_FINAL = GENERIC_TYPE_OPERATION_COUNT + 16;
 
 	/**
 	 * The number of operations of the '<em>TFunction</em>' class.
@@ -2933,7 +2663,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 11;
+	int TFUNCTION_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 17;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.AccessibleTypeElementImpl <em>Accessible Type Element</em>}' class.
@@ -3034,7 +2764,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__NAME = GENERIC_TYPE__NAME;
+	int CONTAINER_TYPE__NAME = TYPE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
@@ -3043,7 +2773,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__DIRECTLY_EXPORTED = GENERIC_TYPE__DIRECTLY_EXPORTED;
+	int CONTAINER_TYPE__DIRECTLY_EXPORTED = TYPE__DIRECTLY_EXPORTED;
 
 	/**
 	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
@@ -3052,7 +2782,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = GENERIC_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+	int CONTAINER_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
 
 	/**
 	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
@@ -3061,7 +2791,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__EXPORTING_EXPORT_DEFINITIONS = GENERIC_TYPE__EXPORTING_EXPORT_DEFINITIONS;
+	int CONTAINER_TYPE__EXPORTING_EXPORT_DEFINITIONS = TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -3070,7 +2800,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__ANNOTATIONS = GENERIC_TYPE__ANNOTATIONS;
+	int CONTAINER_TYPE__ANNOTATIONS = TYPE__ANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -3079,7 +2809,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__TYPE_VARS = GENERIC_TYPE__TYPE_VARS;
+	int CONTAINER_TYPE__TYPE_VARS = TYPE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Owned Members By Name And Access</b></em>' attribute.
@@ -3088,7 +2818,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS = GENERIC_TYPE_FEATURE_COUNT + 0;
+	int CONTAINER_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS = TYPE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Owned Members</b></em>' containment reference list.
@@ -3097,7 +2827,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__OWNED_MEMBERS = GENERIC_TYPE_FEATURE_COUNT + 1;
+	int CONTAINER_TYPE__OWNED_MEMBERS = TYPE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Call Signature</b></em>' containment reference.
@@ -3106,7 +2836,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__CALL_SIGNATURE = GENERIC_TYPE_FEATURE_COUNT + 2;
+	int CONTAINER_TYPE__CALL_SIGNATURE = TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Construct Signature</b></em>' containment reference.
@@ -3115,7 +2845,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE__CONSTRUCT_SIGNATURE = GENERIC_TYPE_FEATURE_COUNT + 3;
+	int CONTAINER_TYPE__CONSTRUCT_SIGNATURE = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Container Type</em>' class.
@@ -3124,7 +2854,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 4;
+	int CONTAINER_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -3133,7 +2863,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+	int CONTAINER_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -3142,7 +2872,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+	int CONTAINER_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -3151,7 +2881,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_INDIRECTLY_EXPORTED = GENERIC_TYPE___IS_INDIRECTLY_EXPORTED;
+	int CONTAINER_TYPE___IS_INDIRECTLY_EXPORTED = TYPE___IS_INDIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
@@ -3160,7 +2890,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
+	int CONTAINER_TYPE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -3169,7 +2899,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
+	int CONTAINER_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -3178,7 +2908,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_ALIAS = GENERIC_TYPE___IS_ALIAS;
+	int CONTAINER_TYPE___IS_ALIAS = TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -3187,7 +2917,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_PROVIDED_BY_RUNTIME = GENERIC_TYPE___IS_PROVIDED_BY_RUNTIME;
+	int CONTAINER_TYPE___IS_PROVIDED_BY_RUNTIME = TYPE___IS_PROVIDED_BY_RUNTIME;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -3196,7 +2926,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_POLYFILL = GENERIC_TYPE___IS_POLYFILL;
+	int CONTAINER_TYPE___IS_POLYFILL = TYPE___IS_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -3205,7 +2935,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_STATIC_POLYFILL = GENERIC_TYPE___IS_STATIC_POLYFILL;
+	int CONTAINER_TYPE___IS_STATIC_POLYFILL = TYPE___IS_STATIC_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -3214,7 +2944,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_FINAL = GENERIC_TYPE___IS_FINAL;
+	int CONTAINER_TYPE___IS_FINAL = TYPE___IS_FINAL;
 
 	/**
 	 * The operation id for the '<em>Is Dynamizable</em>' operation.
@@ -3223,7 +2953,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_DYNAMIZABLE = GENERIC_TYPE___IS_DYNAMIZABLE;
+	int CONTAINER_TYPE___IS_DYNAMIZABLE = TYPE___IS_DYNAMIZABLE;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -3232,7 +2962,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_ARRAY_LIKE = GENERIC_TYPE___IS_ARRAY_LIKE;
+	int CONTAINER_TYPE___IS_ARRAY_LIKE = TYPE___IS_ARRAY_LIKE;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -3241,7 +2971,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_ELEMENT_TYPE = GENERIC_TYPE___GET_ELEMENT_TYPE;
+	int CONTAINER_TYPE___GET_ELEMENT_TYPE = TYPE___GET_ELEMENT_TYPE;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -3250,7 +2980,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_TYPE_ACCESS_MODIFIER = GENERIC_TYPE___GET_TYPE_ACCESS_MODIFIER;
+	int CONTAINER_TYPE___GET_TYPE_ACCESS_MODIFIER = TYPE___GET_TYPE_ACCESS_MODIFIER;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -3259,7 +2989,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___IS_GENERIC = GENERIC_TYPE___IS_GENERIC;
+	int CONTAINER_TYPE___IS_GENERIC = TYPE___IS_GENERIC;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -3268,7 +2998,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_TYPE_VARS = GENERIC_TYPE___GET_TYPE_VARS;
+	int CONTAINER_TYPE___GET_TYPE_VARS = TYPE___GET_TYPE_VARS;
 
 	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
@@ -3277,7 +3007,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = GENERIC_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
+	int CONTAINER_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
 
 	/**
 	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
@@ -3286,7 +3016,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_RAW_TYPE_AS_STRING = GENERIC_TYPE___GET_RAW_TYPE_AS_STRING;
+	int CONTAINER_TYPE___GET_RAW_TYPE_AS_STRING = TYPE___GET_RAW_TYPE_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Type As String</em>' operation.
@@ -3295,7 +3025,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
+	int CONTAINER_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
@@ -3304,7 +3034,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_OWNED_CTOR = GENERIC_TYPE_OPERATION_COUNT + 0;
+	int CONTAINER_TYPE___GET_OWNED_CTOR = TYPE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Find Owned Member</em>' operation.
@@ -3313,7 +3043,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING = GENERIC_TYPE_OPERATION_COUNT + 1;
+	int CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING = TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Find Owned Member</em>' operation.
@@ -3322,7 +3052,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING_BOOLEAN_BOOLEAN = GENERIC_TYPE_OPERATION_COUNT + 2;
+	int CONTAINER_TYPE___FIND_OWNED_MEMBER__STRING_BOOLEAN_BOOLEAN = TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Or Create Owned Members By Name And Access</em>' operation.
@@ -3331,7 +3061,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = GENERIC_TYPE_OPERATION_COUNT + 3;
+	int CONTAINER_TYPE___GET_OR_CREATE_OWNED_MEMBERS_BY_NAME_AND_ACCESS = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Container Type</em>' class.
@@ -3340,7 +3070,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int CONTAINER_TYPE_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 4;
+	int CONTAINER_TYPE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TNamespaceImpl <em>TNamespace</em>}' class.
@@ -4082,7 +3812,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__NAME = GENERIC_TYPE__NAME;
+	int PRIMITIVE_TYPE__NAME = TYPE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
@@ -4091,7 +3821,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__DIRECTLY_EXPORTED = GENERIC_TYPE__DIRECTLY_EXPORTED;
+	int PRIMITIVE_TYPE__DIRECTLY_EXPORTED = TYPE__DIRECTLY_EXPORTED;
 
 	/**
 	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
@@ -4100,7 +3830,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = GENERIC_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+	int PRIMITIVE_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
 
 	/**
 	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
@@ -4109,7 +3839,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__EXPORTING_EXPORT_DEFINITIONS = GENERIC_TYPE__EXPORTING_EXPORT_DEFINITIONS;
+	int PRIMITIVE_TYPE__EXPORTING_EXPORT_DEFINITIONS = TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -4118,7 +3848,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__ANNOTATIONS = GENERIC_TYPE__ANNOTATIONS;
+	int PRIMITIVE_TYPE__ANNOTATIONS = TYPE__ANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -4127,7 +3857,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__TYPE_VARS = GENERIC_TYPE__TYPE_VARS;
+	int PRIMITIVE_TYPE__TYPE_VARS = TYPE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -4136,7 +3866,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE = GENERIC_TYPE_FEATURE_COUNT + 0;
+	int PRIMITIVE_TYPE__DECLARED_ELEMENT_TYPE = TYPE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Assignment Compatible</b></em>' reference.
@@ -4145,7 +3875,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__ASSIGNMENT_COMPATIBLE = GENERIC_TYPE_FEATURE_COUNT + 1;
+	int PRIMITIVE_TYPE__ASSIGNMENT_COMPATIBLE = TYPE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Autoboxed Type</b></em>' reference.
@@ -4154,7 +3884,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE__AUTOBOXED_TYPE = GENERIC_TYPE_FEATURE_COUNT + 2;
+	int PRIMITIVE_TYPE__AUTOBOXED_TYPE = TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Primitive Type</em>' class.
@@ -4163,7 +3893,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 3;
+	int PRIMITIVE_TYPE_FEATURE_COUNT = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -4172,7 +3902,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+	int PRIMITIVE_TYPE___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -4181,7 +3911,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+	int PRIMITIVE_TYPE___IS_EXPORTED = TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -4190,7 +3920,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_INDIRECTLY_EXPORTED = GENERIC_TYPE___IS_INDIRECTLY_EXPORTED;
+	int PRIMITIVE_TYPE___IS_INDIRECTLY_EXPORTED = TYPE___IS_INDIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
@@ -4199,7 +3929,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
+	int PRIMITIVE_TYPE___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -4208,7 +3938,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_HOLLOW = GENERIC_TYPE___IS_HOLLOW;
+	int PRIMITIVE_TYPE___IS_HOLLOW = TYPE___IS_HOLLOW;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -4217,7 +3947,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_ALIAS = GENERIC_TYPE___IS_ALIAS;
+	int PRIMITIVE_TYPE___IS_ALIAS = TYPE___IS_ALIAS;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -4226,7 +3956,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_PROVIDED_BY_RUNTIME = GENERIC_TYPE___IS_PROVIDED_BY_RUNTIME;
+	int PRIMITIVE_TYPE___IS_PROVIDED_BY_RUNTIME = TYPE___IS_PROVIDED_BY_RUNTIME;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -4235,7 +3965,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_POLYFILL = GENERIC_TYPE___IS_POLYFILL;
+	int PRIMITIVE_TYPE___IS_POLYFILL = TYPE___IS_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -4244,7 +3974,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_STATIC_POLYFILL = GENERIC_TYPE___IS_STATIC_POLYFILL;
+	int PRIMITIVE_TYPE___IS_STATIC_POLYFILL = TYPE___IS_STATIC_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -4253,7 +3983,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_FINAL = GENERIC_TYPE___IS_FINAL;
+	int PRIMITIVE_TYPE___IS_FINAL = TYPE___IS_FINAL;
 
 	/**
 	 * The operation id for the '<em>Is Dynamizable</em>' operation.
@@ -4262,7 +3992,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_DYNAMIZABLE = GENERIC_TYPE___IS_DYNAMIZABLE;
+	int PRIMITIVE_TYPE___IS_DYNAMIZABLE = TYPE___IS_DYNAMIZABLE;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -4271,7 +4001,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_ARRAY_LIKE = GENERIC_TYPE___IS_ARRAY_LIKE;
+	int PRIMITIVE_TYPE___IS_ARRAY_LIKE = TYPE___IS_ARRAY_LIKE;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -4280,7 +4010,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_TYPE_ACCESS_MODIFIER = GENERIC_TYPE___GET_TYPE_ACCESS_MODIFIER;
+	int PRIMITIVE_TYPE___GET_TYPE_ACCESS_MODIFIER = TYPE___GET_TYPE_ACCESS_MODIFIER;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -4289,7 +4019,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___IS_GENERIC = GENERIC_TYPE___IS_GENERIC;
+	int PRIMITIVE_TYPE___IS_GENERIC = TYPE___IS_GENERIC;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -4298,7 +4028,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_TYPE_VARS = GENERIC_TYPE___GET_TYPE_VARS;
+	int PRIMITIVE_TYPE___GET_TYPE_VARS = TYPE___GET_TYPE_VARS;
 
 	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
@@ -4307,7 +4037,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = GENERIC_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
+	int PRIMITIVE_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT = TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
 
 	/**
 	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
@@ -4316,7 +4046,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_RAW_TYPE_AS_STRING = GENERIC_TYPE___GET_RAW_TYPE_AS_STRING;
+	int PRIMITIVE_TYPE___GET_RAW_TYPE_AS_STRING = TYPE___GET_RAW_TYPE_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Type As String</em>' operation.
@@ -4325,7 +4055,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
+	int PRIMITIVE_TYPE___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -4334,7 +4064,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE___GET_ELEMENT_TYPE = GENERIC_TYPE_OPERATION_COUNT + 0;
+	int PRIMITIVE_TYPE___GET_ELEMENT_TYPE = TYPE_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Primitive Type</em>' class.
@@ -4343,7 +4073,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PRIMITIVE_TYPE_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 1;
+	int PRIMITIVE_TYPE_OPERATION_COUNT = TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.BuiltInTypeImpl <em>Built In Type</em>}' class.
@@ -8771,6 +8501,15 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD = 43;
 
 	/**
+	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD__TYPE_VARS = TFUNCTION__TYPE_VARS;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8814,15 +8553,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMETHOD__ANNOTATIONS = TFUNCTION__ANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD__TYPE_VARS = TFUNCTION__TYPE_VARS;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -9068,105 +8798,6 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD___IS_HOLLOW = TFUNCTION___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Is Alias</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___IS_ALIAS = TFUNCTION___IS_ALIAS;
-
-	/**
-	 * The operation id for the '<em>Is Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___IS_POLYFILL = TFUNCTION___IS_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___IS_STATIC_POLYFILL = TFUNCTION___IS_STATIC_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Dynamizable</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___IS_DYNAMIZABLE = TFUNCTION___IS_DYNAMIZABLE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___IS_ARRAY_LIKE = TFUNCTION___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Get Element Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___GET_ELEMENT_TYPE = TFUNCTION___GET_ELEMENT_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Generic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___IS_GENERIC = TFUNCTION___IS_GENERIC;
-
-	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___GET_TYPE_VARS = TFUNCTION___GET_TYPE_VARS;
-
-	/**
-	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___GET_VARIANCE_OF_TYPE_VAR__INT = TFUNCTION___GET_VARIANCE_OF_TYPE_VAR__INT;
-
-	/**
-	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___GET_RAW_TYPE_AS_STRING = TFUNCTION___GET_RAW_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TMETHOD___GET_TYPE_AS_STRING = TFUNCTION___GET_TYPE_AS_STRING;
-
-	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9237,6 +8868,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMETHOD___IS_CONSTRUCT_SIGNATURE = TFUNCTION___IS_CONSTRUCT_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD___IS_GENERIC = TFUNCTION___IS_GENERIC;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -9447,6 +9087,15 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD = 44;
 
 	/**
+	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD__TYPE_VARS = TMETHOD__TYPE_VARS;
+
+	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9490,15 +9139,6 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD__ANNOTATIONS = TMETHOD__ANNOTATIONS;
-
-	/**
-	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD__TYPE_VARS = TMETHOD__TYPE_VARS;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -9753,105 +9393,6 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD___IS_HOLLOW = TMETHOD___IS_HOLLOW;
 
 	/**
-	 * The operation id for the '<em>Is Alias</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___IS_ALIAS = TMETHOD___IS_ALIAS;
-
-	/**
-	 * The operation id for the '<em>Is Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___IS_POLYFILL = TMETHOD___IS_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___IS_STATIC_POLYFILL = TMETHOD___IS_STATIC_POLYFILL;
-
-	/**
-	 * The operation id for the '<em>Is Dynamizable</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___IS_DYNAMIZABLE = TMETHOD___IS_DYNAMIZABLE;
-
-	/**
-	 * The operation id for the '<em>Is Array Like</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___IS_ARRAY_LIKE = TMETHOD___IS_ARRAY_LIKE;
-
-	/**
-	 * The operation id for the '<em>Get Element Type</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___GET_ELEMENT_TYPE = TMETHOD___GET_ELEMENT_TYPE;
-
-	/**
-	 * The operation id for the '<em>Is Generic</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___IS_GENERIC = TMETHOD___IS_GENERIC;
-
-	/**
-	 * The operation id for the '<em>Get Type Vars</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___GET_TYPE_VARS = TMETHOD___GET_TYPE_VARS;
-
-	/**
-	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___GET_VARIANCE_OF_TYPE_VAR__INT = TMETHOD___GET_VARIANCE_OF_TYPE_VAR__INT;
-
-	/**
-	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___GET_RAW_TYPE_AS_STRING = TMETHOD___GET_RAW_TYPE_AS_STRING;
-
-	/**
-	 * The operation id for the '<em>Get Type As String</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TSTRUCT_METHOD___GET_TYPE_AS_STRING = TMETHOD___GET_TYPE_AS_STRING;
-
-	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9922,6 +9463,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD___IS_CONSTRUCT_SIGNATURE = TMETHOD___IS_CONSTRUCT_SIGNATURE;
+
+	/**
+	 * The operation id for the '<em>Is Generic</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD___IS_GENERIC = TMETHOD___IS_GENERIC;
 
 	/**
 	 * The operation id for the '<em>Get Fpar For Arg Idx</em>' operation.
@@ -13607,7 +13157,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__NAME = GENERIC_TYPE__NAME;
+	int TYPE_ALIAS__NAME = TYPE__NAME;
 
 	/**
 	 * The feature id for the '<em><b>Directly Exported</b></em>' attribute.
@@ -13616,7 +13166,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__DIRECTLY_EXPORTED = GENERIC_TYPE__DIRECTLY_EXPORTED;
+	int TYPE_ALIAS__DIRECTLY_EXPORTED = TYPE__DIRECTLY_EXPORTED;
 
 	/**
 	 * The feature id for the '<em><b>Directly Exported As Default</b></em>' attribute.
@@ -13625,7 +13175,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__DIRECTLY_EXPORTED_AS_DEFAULT = GENERIC_TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
+	int TYPE_ALIAS__DIRECTLY_EXPORTED_AS_DEFAULT = TYPE__DIRECTLY_EXPORTED_AS_DEFAULT;
 
 	/**
 	 * The feature id for the '<em><b>Exporting Export Definitions</b></em>' reference list.
@@ -13634,7 +13184,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__EXPORTING_EXPORT_DEFINITIONS = GENERIC_TYPE__EXPORTING_EXPORT_DEFINITIONS;
+	int TYPE_ALIAS__EXPORTING_EXPORT_DEFINITIONS = TYPE__EXPORTING_EXPORT_DEFINITIONS;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -13643,7 +13193,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__ANNOTATIONS = GENERIC_TYPE__ANNOTATIONS;
+	int TYPE_ALIAS__ANNOTATIONS = TYPE__ANNOTATIONS;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -13652,7 +13202,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__TYPE_VARS = GENERIC_TYPE__TYPE_VARS;
+	int TYPE_ALIAS__TYPE_VARS = TYPE_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -13661,7 +13211,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__DECLARED_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_FEATURE_COUNT + 0;
+	int TYPE_ALIAS__DECLARED_TYPE_ACCESS_MODIFIER = TYPE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Declared Provided By Runtime</b></em>' attribute.
@@ -13670,7 +13220,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME = GENERIC_TYPE_FEATURE_COUNT + 1;
+	int TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME = TYPE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -13679,7 +13229,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__TYPE_REF = GENERIC_TYPE_FEATURE_COUNT + 2;
+	int TYPE_ALIAS__TYPE_REF = TYPE_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -13688,7 +13238,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS__AST_ELEMENT = GENERIC_TYPE_FEATURE_COUNT + 3;
+	int TYPE_ALIAS__AST_ELEMENT = TYPE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Type Alias</em>' class.
@@ -13697,7 +13247,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS_FEATURE_COUNT = GENERIC_TYPE_FEATURE_COUNT + 4;
+	int TYPE_ALIAS_FEATURE_COUNT = TYPE_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -13706,7 +13256,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_CONTAINING_MODULE = GENERIC_TYPE___GET_CONTAINING_MODULE;
+	int TYPE_ALIAS___GET_CONTAINING_MODULE = TYPE___GET_CONTAINING_MODULE;
 
 	/**
 	 * The operation id for the '<em>Is Exported</em>' operation.
@@ -13715,7 +13265,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_EXPORTED = GENERIC_TYPE___IS_EXPORTED;
+	int TYPE_ALIAS___IS_EXPORTED = TYPE___IS_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Is Indirectly Exported</em>' operation.
@@ -13724,7 +13274,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_INDIRECTLY_EXPORTED = GENERIC_TYPE___IS_INDIRECTLY_EXPORTED;
+	int TYPE_ALIAS___IS_INDIRECTLY_EXPORTED = TYPE___IS_INDIRECTLY_EXPORTED;
 
 	/**
 	 * The operation id for the '<em>Get Directly Exported Name</em>' operation.
@@ -13733,7 +13283,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_DIRECTLY_EXPORTED_NAME = GENERIC_TYPE___GET_DIRECTLY_EXPORTED_NAME;
+	int TYPE_ALIAS___GET_DIRECTLY_EXPORTED_NAME = TYPE___GET_DIRECTLY_EXPORTED_NAME;
 
 	/**
 	 * The operation id for the '<em>Is Polyfill</em>' operation.
@@ -13742,7 +13292,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_POLYFILL = GENERIC_TYPE___IS_POLYFILL;
+	int TYPE_ALIAS___IS_POLYFILL = TYPE___IS_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Static Polyfill</em>' operation.
@@ -13751,7 +13301,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_STATIC_POLYFILL = GENERIC_TYPE___IS_STATIC_POLYFILL;
+	int TYPE_ALIAS___IS_STATIC_POLYFILL = TYPE___IS_STATIC_POLYFILL;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -13760,7 +13310,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_FINAL = GENERIC_TYPE___IS_FINAL;
+	int TYPE_ALIAS___IS_FINAL = TYPE___IS_FINAL;
 
 	/**
 	 * The operation id for the '<em>Is Dynamizable</em>' operation.
@@ -13769,7 +13319,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_DYNAMIZABLE = GENERIC_TYPE___IS_DYNAMIZABLE;
+	int TYPE_ALIAS___IS_DYNAMIZABLE = TYPE___IS_DYNAMIZABLE;
 
 	/**
 	 * The operation id for the '<em>Is Array Like</em>' operation.
@@ -13778,7 +13328,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_ARRAY_LIKE = GENERIC_TYPE___IS_ARRAY_LIKE;
+	int TYPE_ALIAS___IS_ARRAY_LIKE = TYPE___IS_ARRAY_LIKE;
 
 	/**
 	 * The operation id for the '<em>Get Element Type</em>' operation.
@@ -13787,7 +13337,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_ELEMENT_TYPE = GENERIC_TYPE___GET_ELEMENT_TYPE;
+	int TYPE_ALIAS___GET_ELEMENT_TYPE = TYPE___GET_ELEMENT_TYPE;
 
 	/**
 	 * The operation id for the '<em>Is Generic</em>' operation.
@@ -13796,7 +13346,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_GENERIC = GENERIC_TYPE___IS_GENERIC;
+	int TYPE_ALIAS___IS_GENERIC = TYPE___IS_GENERIC;
 
 	/**
 	 * The operation id for the '<em>Get Type Vars</em>' operation.
@@ -13805,7 +13355,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_TYPE_VARS = GENERIC_TYPE___GET_TYPE_VARS;
+	int TYPE_ALIAS___GET_TYPE_VARS = TYPE___GET_TYPE_VARS;
 
 	/**
 	 * The operation id for the '<em>Get Variance Of Type Var</em>' operation.
@@ -13814,7 +13364,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_VARIANCE_OF_TYPE_VAR__INT = GENERIC_TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
+	int TYPE_ALIAS___GET_VARIANCE_OF_TYPE_VAR__INT = TYPE___GET_VARIANCE_OF_TYPE_VAR__INT;
 
 	/**
 	 * The operation id for the '<em>Get Raw Type As String</em>' operation.
@@ -13823,7 +13373,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_RAW_TYPE_AS_STRING = GENERIC_TYPE___GET_RAW_TYPE_AS_STRING;
+	int TYPE_ALIAS___GET_RAW_TYPE_AS_STRING = TYPE___GET_RAW_TYPE_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Get Type As String</em>' operation.
@@ -13832,7 +13382,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_TYPE_AS_STRING = GENERIC_TYPE___GET_TYPE_AS_STRING;
+	int TYPE_ALIAS___GET_TYPE_AS_STRING = TYPE___GET_TYPE_AS_STRING;
 
 	/**
 	 * The operation id for the '<em>Is Provided By Runtime</em>' operation.
@@ -13841,7 +13391,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_PROVIDED_BY_RUNTIME = GENERIC_TYPE_OPERATION_COUNT + 0;
+	int TYPE_ALIAS___IS_PROVIDED_BY_RUNTIME = TYPE_OPERATION_COUNT + 0;
 
 	/**
 	 * The operation id for the '<em>Get Type Access Modifier</em>' operation.
@@ -13850,7 +13400,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 1;
+	int TYPE_ALIAS___GET_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Get Default Type Access Modifier</em>' operation.
@@ -13859,7 +13409,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_DEFAULT_TYPE_ACCESS_MODIFIER = GENERIC_TYPE_OPERATION_COUNT + 2;
+	int TYPE_ALIAS___GET_DEFAULT_TYPE_ACCESS_MODIFIER = TYPE_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Is Directly Exported</em>' operation.
@@ -13868,7 +13418,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_DIRECTLY_EXPORTED = GENERIC_TYPE_OPERATION_COUNT + 3;
+	int TYPE_ALIAS___IS_DIRECTLY_EXPORTED = TYPE_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Ast Element No Resolve</em>' operation.
@@ -13877,7 +13427,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___GET_AST_ELEMENT_NO_RESOLVE = GENERIC_TYPE_OPERATION_COUNT + 4;
+	int TYPE_ALIAS___GET_AST_ELEMENT_NO_RESOLVE = TYPE_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Alias</em>' operation.
@@ -13886,7 +13436,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_ALIAS = GENERIC_TYPE_OPERATION_COUNT + 5;
+	int TYPE_ALIAS___IS_ALIAS = TYPE_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Hollow</em>' operation.
@@ -13895,7 +13445,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS___IS_HOLLOW = GENERIC_TYPE_OPERATION_COUNT + 6;
+	int TYPE_ALIAS___IS_HOLLOW = TYPE_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>Type Alias</em>' class.
@@ -13904,7 +13454,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_ALIAS_OPERATION_COUNT = GENERIC_TYPE_OPERATION_COUNT + 7;
+	int TYPE_ALIAS_OPERATION_COUNT = TYPE_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.TConstableElementImpl <em>TConstable Element</em>}' class.
@@ -14534,6 +14084,28 @@ public interface TypesPackage extends EPackage {
 	EReference getTModule_ExposedInternalTypes();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getInternalFunctions <em>Internal Functions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Internal Functions</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getInternalFunctions()
+	 * @see #getTModule()
+	 * @generated
+	 */
+	EReference getTModule_InternalFunctions();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getExposedInternalFunctions <em>Exposed Internal Functions</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Exposed Internal Functions</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getExposedInternalFunctions()
+	 * @see #getTModule()
+	 * @generated
+	 */
+	EReference getTModule_ExposedInternalFunctions();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getInternalDynamicElements <em>Internal Dynamic Elements</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14587,6 +14159,26 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTModule_ModuleSpecifier();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#getInternalTypesAndFunctions() <em>Get Internal Types And Functions</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Internal Types And Functions</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TModule#getInternalTypesAndFunctions()
+	 * @generated
+	 */
+	EOperation getTModule__GetInternalTypesAndFunctions();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#getExposedInternalTypesAndFunctions() <em>Get Exposed Internal Types And Functions</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Exposed Internal Types And Functions</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TModule#getExposedInternalTypesAndFunctions()
+	 * @generated
+	 */
+	EOperation getTModule__GetExposedInternalTypesAndFunctions();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TModule#clearTransientElements() <em>Clear Transient Elements</em>}' operation.
@@ -15276,6 +14868,16 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getTFunction__IsConstructSignature();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TFunction#isGeneric() <em>Is Generic</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Generic</em>' operation.
+	 * @see org.eclipse.n4js.ts.types.TFunction#isGeneric()
+	 * @generated
+	 */
+	EOperation getTFunction__IsGeneric();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TFunction#getFparForArgIdx(int) <em>Get Fpar For Arg Idx</em>}' operation.
@@ -17769,6 +17371,22 @@ public interface TypesPackage extends EPackage {
 		EReference TMODULE__EXPOSED_INTERNAL_TYPES = eINSTANCE.getTModule_ExposedInternalTypes();
 
 		/**
+		 * The meta object literal for the '<em><b>Internal Functions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TMODULE__INTERNAL_FUNCTIONS = eINSTANCE.getTModule_InternalFunctions();
+
+		/**
+		 * The meta object literal for the '<em><b>Exposed Internal Functions</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TMODULE__EXPOSED_INTERNAL_FUNCTIONS = eINSTANCE.getTModule_ExposedInternalFunctions();
+
+		/**
 		 * The meta object literal for the '<em><b>Internal Dynamic Elements</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -17807,6 +17425,22 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMODULE__MODULE_SPECIFIER = eINSTANCE.getTModule_ModuleSpecifier();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Internal Types And Functions</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TMODULE___GET_INTERNAL_TYPES_AND_FUNCTIONS = eINSTANCE.getTModule__GetInternalTypesAndFunctions();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Exposed Internal Types And Functions</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TMODULE___GET_EXPOSED_INTERNAL_TYPES_AND_FUNCTIONS = eINSTANCE.getTModule__GetExposedInternalTypesAndFunctions();
 
 		/**
 		 * The meta object literal for the '<em><b>Clear Transient Elements</b></em>' operation.
@@ -18373,6 +18007,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation TFUNCTION___IS_CONSTRUCT_SIGNATURE = eINSTANCE.getTFunction__IsConstructSignature();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Generic</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation TFUNCTION___IS_GENERIC = eINSTANCE.getTFunction__IsGeneric();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Fpar For Arg Idx</b></em>' operation.

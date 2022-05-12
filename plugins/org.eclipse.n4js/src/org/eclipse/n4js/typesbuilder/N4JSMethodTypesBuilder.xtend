@@ -44,21 +44,21 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	}
 
 	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TMethod tMethod, boolean preLinkingPhase) {
-		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
-		if (methodDefinedType !== null && ! methodDefinedType.eIsProxy) {
+		val methodDefinedFunction = methodDecl.eGet(N4JSPackage.eINSTANCE.functionDefinition_DefinedFunction, false) as EObject;
+		if (methodDefinedFunction !== null && ! methodDefinedFunction.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
 		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callSignature) {
 			return false
 		}
-		val methodType = tMethod;
-		ensureEqualName(methodDecl, methodType);
+		val method = tMethod;
+		ensureEqualName(methodDecl, method);
 
-		methodType.relinkFormalParameters(methodDecl, preLinkingPhase)
+		method.relinkFormalParameters(methodDecl, preLinkingPhase)
 
 		// link
-		methodType.astElement = methodDecl
-		methodDecl.definedType = methodType
+		method.astElement = methodDecl
+		methodDecl.definedFunction = method
 
 		return true;
 	}
@@ -70,48 +70,48 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	 * @param preLinkingPhase
 	 */
 	def package TMethod createMethod(N4MethodDeclaration methodDecl, AbstractNamespace target, boolean preLinkingPhase) {
-		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
-		if (methodDefinedType !== null && !methodDefinedType.eIsProxy) {
+		val methodDefinedFunction = methodDecl.eGet(N4JSPackage.eINSTANCE.functionDefinition_DefinedFunction, false) as EObject;
+		if (methodDefinedFunction !== null && !methodDefinedFunction.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
 		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callSignature) {
 			return null
 		}
-		val methodType = TypesFactory::eINSTANCE.createTMethod();
+		val method = TypesFactory::eINSTANCE.createTMethod();
 		if (methodDecl.isCallSignature) {
-			methodType.name = N4JSLanguageUtils.CALL_SIGNATURE_NAME;
+			method.name = N4JSLanguageUtils.CALL_SIGNATURE_NAME;
 		} else {
-			methodType.setMemberName(methodDecl);
+			method.setMemberName(methodDecl);
 		}
-		methodType.declaredAbstract = methodDecl.abstract
-		methodType.declaredStatic = methodDecl.declaredStatic
-		methodType.declaredFinal = methodDecl.declaredFinal
-		methodType.declaredOverride = AnnotationDefinition.OVERRIDE.hasAnnotation(methodDecl);
-		methodType.constructor = methodDecl.constructor
-		methodType.declaredAsync = methodDecl.async
-		methodType.declaredGenerator = methodDecl.generator
+		method.declaredAbstract = methodDecl.abstract
+		method.declaredStatic = methodDecl.declaredStatic
+		method.declaredFinal = methodDecl.declaredFinal
+		method.declaredOverride = AnnotationDefinition.OVERRIDE.hasAnnotation(methodDecl);
+		method.constructor = methodDecl.constructor
+		method.declaredAsync = methodDecl.async
+		method.declaredGenerator = methodDecl.generator
 
 		val providesDefaultImpl = AnnotationDefinition.PROVIDES_DEFAULT_IMPLEMENTATION.hasAnnotation(methodDecl);
-		methodType.hasNoBody = methodDecl.body===null && !providesDefaultImpl;
+		method.hasNoBody = methodDecl.body===null && !providesDefaultImpl;
 
-		methodType.lacksThisOrSuperUsage = hasNonNullBody(methodDecl.body) && !containsThisOrSuperUsage(methodDecl.body)
+		method.lacksThisOrSuperUsage = hasNonNullBody(methodDecl.body) && !containsThisOrSuperUsage(methodDecl.body)
 
 		val builtInTypeScope = BuiltInTypeScope.get(methodDecl.eResource.resourceSet)
 		methodDecl.createImplicitArgumentsVariable(target, builtInTypeScope, preLinkingPhase);
 
-		methodType.setMemberAccessModifier(methodDecl)
-		methodType.addTypeParameters(methodDecl, preLinkingPhase)
-		methodType.addFormalParameters(methodDecl, builtInTypeScope, preLinkingPhase)
-		methodType.setReturnTypeConsideringThis(methodDecl, builtInTypeScope, preLinkingPhase)
-		methodType.setDeclaredThisTypeFromAnnotation(methodDecl, preLinkingPhase)
+		method.setMemberAccessModifier(methodDecl)
+		method.addTypeParameters(methodDecl, preLinkingPhase)
+		method.addFormalParameters(methodDecl, builtInTypeScope, preLinkingPhase)
+		method.setReturnTypeConsideringThis(methodDecl, builtInTypeScope, preLinkingPhase)
+		method.setDeclaredThisTypeFromAnnotation(methodDecl, preLinkingPhase)
 
-		methodType.copyAnnotations(methodDecl, preLinkingPhase)
+		method.copyAnnotations(methodDecl, preLinkingPhase)
 
 		// link
-		methodType.astElement = methodDecl
-		methodDecl.definedType = methodType
+		method.astElement = methodDecl
+		methodDecl.definedFunction = method
 
-		return methodType;
+		return method;
 	}
 
 	def private void setMemberAccessModifier(TMethod methodType, N4MethodDeclaration n4Method) {

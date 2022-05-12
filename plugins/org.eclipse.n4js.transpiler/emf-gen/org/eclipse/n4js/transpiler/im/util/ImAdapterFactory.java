@@ -46,7 +46,6 @@ import org.eclipse.n4js.n4JS.SetterDeclaration;
 import org.eclipse.n4js.n4JS.StrictModeRelevant;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
-import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
@@ -303,10 +302,6 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseN4SetterDeclaration(N4SetterDeclaration object) {
 				return createN4SetterDeclarationAdapter();
-			}
-			@Override
-			public Adapter caseTypeDefiningElement(TypeDefiningElement object) {
-				return createTypeDefiningElementAdapter();
 			}
 			@Override
 			public Adapter caseFunctionDefinition(FunctionDefinition object) {
@@ -1021,20 +1016,6 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createN4SetterDeclarationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.TypeDefiningElement <em>Type Defining Element</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.TypeDefiningElement
-	 * @generated
-	 */
-	public Adapter createTypeDefiningElementAdapter() {
 		return null;
 	}
 

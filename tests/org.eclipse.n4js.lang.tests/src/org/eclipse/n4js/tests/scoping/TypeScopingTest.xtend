@@ -82,7 +82,7 @@ class TypeScopingTest {
 		val m = c.ownedMembers.head as N4MethodDeclaration
 		val returnType = (m.declaredReturnTypeRefInAST as ParameterizedTypeRef).declaredType
 		val firstParamType = (m.fpars.head.declaredTypeRefInAST as ParameterizedTypeRef).declaredType
-		Assert.assertSame((m.definedType as TMethod).typeVars.head, firstParamType)
+		Assert.assertSame((m.definedFunction as TMethod).typeVars.head, firstParamType)
 		Assert.assertSame(c.definedTypeAsClass.typeVars.head, returnType)
 	}
 

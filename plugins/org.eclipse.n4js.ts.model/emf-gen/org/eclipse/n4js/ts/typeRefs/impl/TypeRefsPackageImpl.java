@@ -28,9 +28,7 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.NamespaceLikeRef;
@@ -38,7 +36,6 @@ import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
-import org.eclipse.n4js.ts.typeRefs.StaticBaseTypeRef;
 import org.eclipse.n4js.ts.typeRefs.StringLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
@@ -78,13 +75,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	private EClass typeRefEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass staticBaseTypeRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -197,20 +187,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	private EClass wildcardEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass functionTypeExprOrRefEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass functionTypeRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -710,16 +686,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	@Override
 	public EOperation getTypeRef__GetASTNodeOptionalFieldStrategy() {
 		return typeRefEClass.getEOperations().get(27);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getStaticBaseTypeRef() {
-		return staticBaseTypeRefEClass;
 	}
 
 	/**
@@ -1658,186 +1624,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EClass getFunctionTypeExprOrRef() {
-		return functionTypeExprOrRefEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__GetDeclaredThisType() {
-		return functionTypeExprOrRefEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__GetFunctionType() {
-		return functionTypeExprOrRefEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__GetTypeVars() {
-		return functionTypeExprOrRefEClass.getEOperations().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__GetTypeVarUpperBound__TypeVariable() {
-		return functionTypeExprOrRefEClass.getEOperations().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__GetFpars() {
-		return functionTypeExprOrRefEClass.getEOperations().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__IsReturnValueOptional() {
-		return functionTypeExprOrRefEClass.getEOperations().get(5);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__GetReturnTypeRef() {
-		return functionTypeExprOrRefEClass.getEOperations().get(6);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__IsGeneric() {
-		return functionTypeExprOrRefEClass.getEOperations().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__IsRaw() {
-		return functionTypeExprOrRefEClass.getEOperations().get(8);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__GetFparForArgIdx__int() {
-		return functionTypeExprOrRefEClass.getEOperations().get(9);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExprOrRef__InternalGetTypeRefAsString() {
-		return functionTypeExprOrRefEClass.getEOperations().get(10);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EClass getFunctionTypeRef() {
-		return functionTypeRefEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeRef__GetDeclaredThisType() {
-		return functionTypeRefEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeRef__GetTypeVars() {
-		return functionTypeRefEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeRef__GetTypeVarUpperBound__TypeVariable() {
-		return functionTypeRefEClass.getEOperations().get(2);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeRef__GetFpars() {
-		return functionTypeRefEClass.getEOperations().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeRef__GetReturnTypeRef() {
-		return functionTypeRefEClass.getEOperations().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EClass getFunctionTypeExpression() {
 		return functionTypeExpressionEClass;
 	}
@@ -1858,7 +1644,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionTypeExpression_DeclaredType() {
+	public EReference getFunctionTypeExpression_DeclaredFunction() {
 		return (EReference)functionTypeExpressionEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -1918,18 +1704,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EAttribute getFunctionTypeExpression_ReturnValueMarkedOptional() {
-		return (EAttribute)functionTypeExpressionEClass.getEStructuralFeatures().get(7);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public EReference getFunctionTypeExpression_ReturnTypeRef() {
-		return (EReference)functionTypeExpressionEClass.getEStructuralFeatures().get(8);
+		return (EReference)functionTypeExpressionEClass.getEStructuralFeatures().get(7);
 	}
 
 	/**
@@ -1938,18 +1714,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EOperation getFunctionTypeExpression__GetTypeVars() {
-		return functionTypeExpressionEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionTypeExpression__GetTypeVarUpperBound__TypeVariable() {
-		return functionTypeExpressionEClass.getEOperations().get(1);
+	public EAttribute getFunctionTypeExpression_ReturnValueMarkedOptional() {
+		return (EAttribute)functionTypeExpressionEClass.getEStructuralFeatures().get(8);
 	}
 
 	/**
@@ -1959,7 +1725,67 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 */
 	@Override
 	public EOperation getFunctionTypeExpression__IsReturnValueOptional() {
+		return functionTypeExpressionEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getFunctionTypeExpression__GetTypeVars() {
+		return functionTypeExpressionEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getFunctionTypeExpression__IsGeneric() {
 		return functionTypeExpressionEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getFunctionTypeExpression__IsRaw() {
+		return functionTypeExpressionEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getFunctionTypeExpression__GetFparForArgIdx__int() {
+		return functionTypeExpressionEClass.getEOperations().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getFunctionTypeExpression__InternalGetTypeRefAsString() {
+		return functionTypeExpressionEClass.getEOperations().get(5);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EOperation getFunctionTypeExpression__GetTypeVarUpperBound__TypeVariable() {
+		return functionTypeExpressionEClass.getEOperations().get(6);
 	}
 
 	/**
@@ -2269,8 +2095,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(typeRefEClass, TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING);
 		createEOperation(typeRefEClass, TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY);
 
-		staticBaseTypeRefEClass = createEClass(STATIC_BASE_TYPE_REF);
-
 		baseTypeRefEClass = createEClass(BASE_TYPE_REF);
 		createEAttribute(baseTypeRefEClass, BASE_TYPE_REF__DYNAMIC);
 		createEOperation(baseTypeRefEClass, BASE_TYPE_REF___GET_MODIFIERS_AS_STRING);
@@ -2380,39 +2204,23 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(wildcardEClass, WILDCARD___IS_IMPLICIT_UPPER_BOUND_IN_EFFECT);
 		createEOperation(wildcardEClass, WILDCARD___INTERNAL_GET_TYPE_REF_AS_STRING);
 
-		functionTypeExprOrRefEClass = createEClass(FUNCTION_TYPE_EXPR_OR_REF);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___GET_DECLARED_THIS_TYPE);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___GET_FUNCTION_TYPE);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_VARS);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___GET_FPARS);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___IS_RETURN_VALUE_OPTIONAL);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___GET_RETURN_TYPE_REF);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___IS_GENERIC);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___IS_RAW);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___GET_FPAR_FOR_ARG_IDX__INT);
-		createEOperation(functionTypeExprOrRefEClass, FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
-
-		functionTypeRefEClass = createEClass(FUNCTION_TYPE_REF);
-		createEOperation(functionTypeRefEClass, FUNCTION_TYPE_REF___GET_DECLARED_THIS_TYPE);
-		createEOperation(functionTypeRefEClass, FUNCTION_TYPE_REF___GET_TYPE_VARS);
-		createEOperation(functionTypeRefEClass, FUNCTION_TYPE_REF___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE);
-		createEOperation(functionTypeRefEClass, FUNCTION_TYPE_REF___GET_FPARS);
-		createEOperation(functionTypeRefEClass, FUNCTION_TYPE_REF___GET_RETURN_TYPE_REF);
-
 		functionTypeExpressionEClass = createEClass(FUNCTION_TYPE_EXPRESSION);
 		createEAttribute(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__BINDING);
-		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE);
+		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__DECLARED_FUNCTION);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS_UPPER_BOUNDS);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__FPARS);
-		createEAttribute(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF);
-		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___GET_TYPE_VARS);
-		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE);
+		createEAttribute(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL);
 		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___IS_RETURN_VALUE_OPTIONAL);
+		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___GET_TYPE_VARS);
+		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___IS_GENERIC);
+		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___IS_RAW);
+		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___GET_FPAR_FOR_ARG_IDX__INT);
+		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING);
+		createEOperation(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE);
 
 		deferredTypeRefEClass = createEClass(DEFERRED_TYPE_REF);
 		createEOperation(deferredTypeRefEClass, DEFERRED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING);
@@ -2483,9 +2291,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 
 		// Add supertypes to classes
 		typeRefEClass.getESuperTypes().add(this.getTypeArgument());
-		staticBaseTypeRefEClass.getESuperTypes().add(this.getTypeRef());
-		baseTypeRefEClass.getESuperTypes().add(this.getStaticBaseTypeRef());
-		composedTypeRefEClass.getESuperTypes().add(this.getStaticBaseTypeRef());
+		baseTypeRefEClass.getESuperTypes().add(this.getTypeRef());
+		composedTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 		unionTypeExpressionEClass.getESuperTypes().add(this.getComposedTypeRef());
 		intersectionTypeExpressionEClass.getESuperTypes().add(this.getComposedTypeRef());
 		thisTypeRefEClass.getESuperTypes().add(this.getBaseTypeRef());
@@ -2501,10 +2308,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		unknownTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 		typeTypeRefEClass.getESuperTypes().add(this.getBaseTypeRef());
 		wildcardEClass.getESuperTypes().add(this.getTypeArgument());
-		functionTypeExprOrRefEClass.getESuperTypes().add(this.getStaticBaseTypeRef());
-		functionTypeRefEClass.getESuperTypes().add(this.getParameterizedTypeRef());
-		functionTypeRefEClass.getESuperTypes().add(this.getFunctionTypeExprOrRef());
-		functionTypeExpressionEClass.getESuperTypes().add(this.getFunctionTypeExprOrRef());
+		functionTypeExpressionEClass.getESuperTypes().add(this.getTypeRef());
 		deferredTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 		literalTypeRefEClass.getESuperTypes().add(this.getTypeRef());
 		booleanLiteralTypeRefEClass.getESuperTypes().add(this.getLiteralTypeRef());
@@ -2582,8 +2386,6 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getTypeRef__IsDefSiteStructuralTyping(), theEcorePackage.getEBoolean(), "isDefSiteStructuralTyping", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTypeRef__GetASTNodeOptionalFieldStrategy(), this.getOptionalFieldStrategy(), "getASTNodeOptionalFieldStrategy", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(staticBaseTypeRefEClass, StaticBaseTypeRef.class, "StaticBaseTypeRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(baseTypeRefEClass, BaseTypeRef.class, "BaseTypeRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getBaseTypeRef_Dynamic(), theEcorePackage.getEBoolean(), "dynamic", "false", 0, 1, BaseTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -2750,62 +2552,32 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 
 		initEOperation(getWildcard__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(functionTypeExprOrRefEClass, FunctionTypeExprOrRef.class, "FunctionTypeExprOrRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getFunctionTypeExprOrRef__GetDeclaredThisType(), this.getTypeRef(), "getDeclaredThisType", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeExprOrRef__GetFunctionType(), theTypesPackage.getTFunction(), "getFunctionType", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeExprOrRef__GetTypeVars(), theTypesPackage.getTypeVariable(), "getTypeVars", 0, -1, !IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getFunctionTypeExprOrRef__GetTypeVarUpperBound__TypeVariable(), this.getTypeRef(), "getTypeVarUpperBound", 0, 1, !IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theTypesPackage.getTypeVariable(), "typeVar", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeExprOrRef__GetFpars(), theTypesPackage.getTFormalParameter(), "getFpars", 0, -1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeExprOrRef__IsReturnValueOptional(), theEcorePackage.getEBoolean(), "isReturnValueOptional", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeExprOrRef__GetReturnTypeRef(), this.getTypeRef(), "getReturnTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeExprOrRef__IsGeneric(), theEcorePackage.getEBoolean(), "isGeneric", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeExprOrRef__IsRaw(), theEcorePackage.getEBoolean(), "isRaw", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getFunctionTypeExprOrRef__GetFparForArgIdx__int(), theTypesPackage.getTFormalParameter(), "getFparForArgIdx", 0, 1, !IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theEcorePackage.getEInt(), "argIndex", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeExprOrRef__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(functionTypeRefEClass, FunctionTypeRef.class, "FunctionTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getFunctionTypeRef__GetDeclaredThisType(), this.getTypeRef(), "getDeclaredThisType", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeRef__GetTypeVars(), theTypesPackage.getTypeVariable(), "getTypeVars", 0, -1, !IS_UNIQUE, IS_ORDERED);
-
-		op = initEOperation(getFunctionTypeRef__GetTypeVarUpperBound__TypeVariable(), this.getTypeRef(), "getTypeVarUpperBound", 0, 1, !IS_UNIQUE, IS_ORDERED);
-		addEParameter(op, theTypesPackage.getTypeVariable(), "typeVar", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeRef__GetFpars(), theTypesPackage.getTFormalParameter(), "getFpars", 0, -1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeRef__GetReturnTypeRef(), this.getTypeRef(), "getReturnTypeRef", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
 		initEClass(functionTypeExpressionEClass, FunctionTypeExpression.class, "FunctionTypeExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getFunctionTypeExpression_Binding(), theEcorePackage.getEBoolean(), "binding", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getFunctionTypeExpression_DeclaredType(), theTypesPackage.getTFunction(), null, "declaredType", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFunctionTypeExpression_DeclaredFunction(), theTypesPackage.getTFunction(), null, "declaredFunction", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_DeclaredThisType(), this.getTypeRef(), null, "declaredThisType", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_OwnedTypeVars(), theTypesPackage.getTypeVariable(), null, "ownedTypeVars", null, 0, -1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_UnboundTypeVars(), theTypesPackage.getTypeVariable(), null, "unboundTypeVars", null, 0, -1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_UnboundTypeVarsUpperBounds(), this.getTypeRef(), null, "unboundTypeVarsUpperBounds", null, 0, -1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_Fpars(), theTypesPackage.getTFormalParameter(), null, "fpars", null, 0, -1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getFunctionTypeExpression_ReturnValueMarkedOptional(), theEcorePackage.getEBoolean(), "returnValueMarkedOptional", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_ReturnTypeRef(), this.getTypeRef(), null, "returnTypeRef", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFunctionTypeExpression_ReturnValueMarkedOptional(), theEcorePackage.getEBoolean(), "returnValueMarkedOptional", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getFunctionTypeExpression__IsReturnValueOptional(), theEcorePackage.getEBoolean(), "isReturnValueOptional", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getFunctionTypeExpression__GetTypeVars(), theTypesPackage.getTypeVariable(), "getTypeVars", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getFunctionTypeExpression__IsGeneric(), theEcorePackage.getEBoolean(), "isGeneric", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getFunctionTypeExpression__IsRaw(), theEcorePackage.getEBoolean(), "isRaw", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		op = initEOperation(getFunctionTypeExpression__GetFparForArgIdx__int(), theTypesPackage.getTFormalParameter(), "getFparForArgIdx", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		addEParameter(op, theEcorePackage.getEInt(), "argIndex", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getFunctionTypeExpression__InternalGetTypeRefAsString(), theEcorePackage.getEString(), "internalGetTypeRefAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		op = initEOperation(getFunctionTypeExpression__GetTypeVarUpperBound__TypeVariable(), this.getTypeRef(), "getTypeVarUpperBound", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		addEParameter(op, theTypesPackage.getTypeVariable(), "typeVar", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionTypeExpression__IsReturnValueOptional(), theEcorePackage.getEBoolean(), "isReturnValueOptional", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(deferredTypeRefEClass, DeferredTypeRef.class, "DeferredTypeRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

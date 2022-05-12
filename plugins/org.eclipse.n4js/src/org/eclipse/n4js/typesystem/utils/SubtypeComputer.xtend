@@ -14,7 +14,7 @@ import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.List
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TClassifier
@@ -49,7 +49,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 	/**
 	 * Returns true iff function/method 'left' is a subtype of function/method 'right'.
 	 */
-	def boolean isSubtypeFunction(RuleEnvironment G, FunctionTypeExprOrRef left, FunctionTypeExprOrRef right) {
+	def boolean isSubtypeFunction(RuleEnvironment G, FunctionTypeExpression left, FunctionTypeExpression right) {
 		val leftTypeVars = left.typeVars;
 		val rightTypeVars = right.typeVars;
 
@@ -74,7 +74,7 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 				val G_solution = G.newRuleEnvironment;
 				solution.entrySet.forEach[G_solution.addTypeMapping(key,value)];
 				val leftSubst = ts.substTypeVariables(G_solution, left_withInfVars);
-				if (leftSubst instanceof FunctionTypeExprOrRef) {
+				if (leftSubst instanceof FunctionTypeExpression) {
 					return primIsSubtypeFunction(G, leftSubst, right);
 				}
 			}
@@ -112,8 +112,8 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 				G2.addTypeMapping(rightTypeVars.get(i), TypeUtils.createTypeRef(leftTypeVars.get(i)))
 			}
 			val TypeRef rightSubst = ts.substTypeVariables(G2, right);
-			if (!(rightSubst instanceof FunctionTypeExprOrRef &&
-				primIsSubtypeFunction(G, left, rightSubst as FunctionTypeExprOrRef)))
+			if (!(rightSubst instanceof FunctionTypeExpression &&
+				primIsSubtypeFunction(G, left, rightSubst as FunctionTypeExpression)))
 				return false;
 
 			//
@@ -131,9 +131,9 @@ package class SubtypeComputer extends TypeSystemHelperStrategy {
 	/**
 	 * Contains the core logic for subtype relation of functions/methods but <em>without</em>
 	 * taking into account type variables of generic functions/methods. Generic functions are handled
-	 * in method {@link #isSubtypeFunction(RuleEnvironment,FunctionTypeExprOrRef,FunctionTypeExprOrRef)}.
+	 * in method {@link #isSubtypeFunction(RuleEnvironment,FunctionTypeExpression,FunctionTypeExpression)}.
 	 */
-	private def boolean primIsSubtypeFunction(RuleEnvironment G, FunctionTypeExprOrRef left, FunctionTypeExprOrRef right) {
+	private def boolean primIsSubtypeFunction(RuleEnvironment G, FunctionTypeExpression left, FunctionTypeExpression right) {
 
 		// return type
 		val leftReturnTypeRef = left.returnTypeRef;

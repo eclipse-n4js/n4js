@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.JSXElement
@@ -695,6 +696,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				val polyfilledOrOriginalType = sourceElementExtensions.getTypeOrPolyfilledType(context);
 
 				return locallyKnownTypesScopingHelper.scopeWithTypeAndItsTypeVariables(parent, polyfilledOrOriginalType, fromStaticContext); // use old static access status for current scope
+			}
+			FunctionDefinition: {
+				val isStaticContext = context instanceof N4MemberDeclaration && (context as N4MemberDeclaration).static;
+				val IScope parent = getTypeScopeInternal(context.eContainer, isStaticContext); // use new static access status for parent scope
+
+				return locallyKnownTypesScopingHelper.scopeWithTypeVariables(parent, context.definedFunction, fromStaticContext); // use old static access status for current scope
 			}
 			TStructMethod: {
 				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);

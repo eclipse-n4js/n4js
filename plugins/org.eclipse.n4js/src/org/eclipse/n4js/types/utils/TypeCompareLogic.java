@@ -18,7 +18,6 @@ import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
@@ -157,10 +156,10 @@ import org.eclipse.xtext.naming.QualifiedName;
 
 		// this needs to be checked before the EClass comparison, due to the inheritance of FunctionTypeExprOrRef and
 		// its subclasses
-		if (ref1 instanceof FunctionTypeExprOrRef && ref2 instanceof FunctionTypeExprOrRef) {
-			final FunctionTypeExprOrRef f1 = (FunctionTypeExprOrRef) ref1;
-			final FunctionTypeExprOrRef f2 = (FunctionTypeExprOrRef) ref2;
-			return compareFunctionTypeExprOrRefs(fqnProvider, f1, f2);
+		if (ref1 instanceof FunctionTypeExpression && ref2 instanceof FunctionTypeExpression) {
+			final FunctionTypeExpression f1 = (FunctionTypeExpression) ref1;
+			final FunctionTypeExpression f2 = (FunctionTypeExpression) ref2;
+			return compareFunctionTypeExpressions(fqnProvider, f1, f2);
 		}
 
 		int c;
@@ -295,8 +294,8 @@ import org.eclipse.xtext.naming.QualifiedName;
 		return 0;
 	}
 
-	private static int compareFunctionTypeExprOrRefs(IQualifiedNameProvider fqnProvider, FunctionTypeExprOrRef f1,
-			FunctionTypeExprOrRef f2) {
+	private static int compareFunctionTypeExpressions(IQualifiedNameProvider fqnProvider, FunctionTypeExpression f1,
+			FunctionTypeExpression f2) {
 		if (f1 == f2) {
 			return 0;
 		}
@@ -477,8 +476,8 @@ import org.eclipse.xtext.naming.QualifiedName;
 	}
 
 	/** Returns the name of the function or <code>null</code> (e.g. in case of a {@link FunctionTypeExpression}). */
-	private static String getFunctionName(FunctionTypeExprOrRef f) {
-		final TFunction ft = f.getFunctionType();
+	private static String getFunctionName(FunctionTypeExpression f) {
+		final TFunction ft = f.getDeclaredFunction();
 		return ft != null ? ft.getName() : null;
 	}
 

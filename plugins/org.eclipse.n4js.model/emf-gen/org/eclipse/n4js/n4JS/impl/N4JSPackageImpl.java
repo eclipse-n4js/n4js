@@ -2852,6 +2852,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	@Override
+	public EReference getFunctionDefinition_DefinedFunction() {
+		return (EReference)functionDefinitionEClass.getEStructuralFeatures().get(4);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EOperation getFunctionDefinition__IsReturnValueOptional() {
 		return functionDefinitionEClass.getEOperations().get(0);
 	}
@@ -2884,16 +2894,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	@Override
 	public EOperation getFunctionDefinition__IsAsync() {
 		return functionDefinitionEClass.getEOperations().get(3);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public EOperation getFunctionDefinition__GetDefinedFunction() {
-		return functionDefinitionEClass.getEOperations().get(4);
 	}
 
 	/**
@@ -8064,11 +8064,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE);
 		createEAttribute(functionDefinitionEClass, FUNCTION_DEFINITION__GENERATOR);
 		createEAttribute(functionDefinitionEClass, FUNCTION_DEFINITION__DECLARED_ASYNC);
+		createEReference(functionDefinitionEClass, FUNCTION_DEFINITION__DEFINED_FUNCTION);
 		createEOperation(functionDefinitionEClass, FUNCTION_DEFINITION___IS_RETURN_VALUE_OPTIONAL);
 		createEOperation(functionDefinitionEClass, FUNCTION_DEFINITION___GET_DECLARED_RETURN_TYPE_REF);
 		createEOperation(functionDefinitionEClass, FUNCTION_DEFINITION___GET_DECLARED_RETURN_TYPE_REF_IN_AST);
 		createEOperation(functionDefinitionEClass, FUNCTION_DEFINITION___IS_ASYNC);
-		createEOperation(functionDefinitionEClass, FUNCTION_DEFINITION___GET_DEFINED_FUNCTION);
 
 		fieldAccessorEClass = createEClass(FIELD_ACCESSOR);
 		createEAttribute(fieldAccessorEClass, FIELD_ACCESSOR__DECLARED_OPTIONAL);
@@ -8793,7 +8793,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		functionOrFieldAccessorEClass.getESuperTypes().add(this.getThisArgProvider());
 		functionOrFieldAccessorEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		functionDefinitionEClass.getESuperTypes().add(this.getFunctionOrFieldAccessor());
-		functionDefinitionEClass.getESuperTypes().add(this.getTypeDefiningElement());
 		fieldAccessorEClass.getESuperTypes().add(this.getFunctionOrFieldAccessor());
 		fieldAccessorEClass.getESuperTypes().add(this.getTypeProvidingElement());
 		fieldAccessorEClass.getESuperTypes().add(this.getPropertyNameOwner());
@@ -8953,7 +8952,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		assignmentExpressionEClass.getESuperTypes().add(this.getExpression());
 		commaExpressionEClass.getESuperTypes().add(this.getExpression());
 		typeDefiningElementEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
-		genericDeclarationEClass.getESuperTypes().add(this.getTypeDefiningElement());
 		n4TypeVariableEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		n4TypeVariableEClass.getESuperTypes().add(this.getNamedElement());
 		n4TypeDefinitionEClass.getESuperTypes().add(this.getAnnotableElement());
@@ -8966,6 +8964,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4ClassifierDeclarationEClass.getESuperTypes().add(this.getN4TypeDeclaration());
 		n4ClassifierDeclarationEClass.getESuperTypes().add(this.getN4ClassifierDefinition());
 		n4ClassifierDeclarationEClass.getESuperTypes().add(this.getGenericDeclaration());
+		n4ClassifierDeclarationEClass.getESuperTypes().add(this.getTypeDefiningElement());
 		n4ClassifierDeclarationEClass.getESuperTypes().add(this.getThisTarget());
 		n4ClassifierDefinitionEClass.getESuperTypes().add(this.getN4TypeDefinition());
 		n4ClassDefinitionEClass.getESuperTypes().add(this.getN4ClassifierDefinition());
@@ -8988,6 +8987,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4EnumLiteralEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		n4TypeAliasDeclarationEClass.getESuperTypes().add(this.getN4TypeDeclaration());
 		n4TypeAliasDeclarationEClass.getESuperTypes().add(this.getGenericDeclaration());
+		n4TypeAliasDeclarationEClass.getESuperTypes().add(this.getTypeDefiningElement());
 		n4TypeAliasDeclarationEClass.getESuperTypes().add(this.getTypedElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getAnnotableElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getModifiableElement());
@@ -9234,6 +9234,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getFunctionDefinition_DeclaredReturnTypeRefNode(), g1, null, "declaredReturnTypeRefNode", null, 0, 1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFunctionDefinition_Generator(), theEcorePackage.getEBoolean(), "generator", null, 0, 1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getFunctionDefinition_DeclaredAsync(), theEcorePackage.getEBoolean(), "declaredAsync", null, 0, 1, FunctionDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFunctionDefinition_DefinedFunction(), theTypesPackage.getTFunction(), null, "definedFunction", null, 0, 1, FunctionDefinition.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getFunctionDefinition__IsReturnValueOptional(), theEcorePackage.getEBoolean(), "isReturnValueOptional", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -9242,8 +9243,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getFunctionDefinition__GetDeclaredReturnTypeRefInAST(), theTypeRefsPackage.getTypeRef(), "getDeclaredReturnTypeRefInAST", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getFunctionDefinition__IsAsync(), theEcorePackage.getEBoolean(), "isAsync", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getFunctionDefinition__GetDefinedFunction(), theTypesPackage.getTFunction(), "getDefinedFunction", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(fieldAccessorEClass, FieldAccessor.class, "FieldAccessor", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getFieldAccessor_DeclaredOptional(), theEcorePackage.getEBoolean(), "declaredOptional", null, 0, 1, FieldAccessor.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

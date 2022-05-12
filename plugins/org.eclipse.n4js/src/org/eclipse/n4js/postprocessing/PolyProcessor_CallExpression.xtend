@@ -16,7 +16,7 @@ import com.google.inject.Singleton
 import java.util.Map
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.InferenceVariable
@@ -54,9 +54,9 @@ package class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 		val target = callExpr.target;
 		// IMPORTANT: do not use #processExpr() here (if target is a PolyExpression, it has been processed in a separate, independent inference!)
 		val targetTypeRef = ts.type(G, target);
-		if (!(targetTypeRef instanceof FunctionTypeExprOrRef))
+		if (!(targetTypeRef instanceof FunctionTypeExpression))
 			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
-		val fteor = targetTypeRef as FunctionTypeExprOrRef;
+		val fteor = targetTypeRef as FunctionTypeExpression;
 		val isPoly = fteor.generic && callExpr.typeArgs.size < fteor.typeVars.size
 
 		if (!isPoly) {
@@ -88,7 +88,7 @@ package class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 	 * Processes all parameters and derives constraints from their bounds and matching types.
 	 */
 	private def void processParameters(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
-		ParameterizedCallExpression callExpr, FunctionTypeExprOrRef fteor, Map<TypeVariable, InferenceVariable> typeParam2infVar
+		ParameterizedCallExpression callExpr, FunctionTypeExpression fteor, Map<TypeVariable, InferenceVariable> typeParam2infVar
 	) {
 		//
 		// (1) derive constraints from the bounds of the type parameters

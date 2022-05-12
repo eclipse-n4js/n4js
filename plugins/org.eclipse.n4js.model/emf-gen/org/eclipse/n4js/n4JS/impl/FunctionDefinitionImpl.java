@@ -31,13 +31,11 @@ import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.TFunction;
-import org.eclipse.n4js.ts.types.Type;
 
 /**
  * <!-- begin-user-doc -->
@@ -47,26 +45,16 @@ import org.eclipse.n4js.ts.types.Type;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDefinedType <em>Defined Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getFpars <em>Fpars</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#isDeclaredAsync <em>Declared Async</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.FunctionDefinitionImpl#getDefinedFunction <em>Defined Function</em>}</li>
  * </ul>
  *
  * @generated
  */
 public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl implements FunctionDefinition {
-	/**
-	 * The cached value of the '{@link #getDefinedType() <em>Defined Type</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getDefinedType()
-	 * @generated
-	 * @ordered
-	 */
-	protected Type definedType;
-
 	/**
 	 * The cached value of the '{@link #getFpars() <em>Fpars</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
@@ -128,6 +116,16 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	protected boolean declaredAsync = DECLARED_ASYNC_EDEFAULT;
 
 	/**
+	 * The cached value of the '{@link #getDefinedFunction() <em>Defined Function</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDefinedFunction()
+	 * @generated
+	 * @ordered
+	 */
+	protected TFunction definedFunction;
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -144,46 +142,6 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.FUNCTION_DEFINITION;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public Type getDefinedType() {
-		if (definedType != null && definedType.eIsProxy()) {
-			InternalEObject oldDefinedType = (InternalEObject)definedType;
-			definedType = (Type)eResolveProxy(oldDefinedType);
-			if (definedType != oldDefinedType) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE, oldDefinedType, definedType));
-			}
-		}
-		return definedType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public Type basicGetDefinedType() {
-		return definedType;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setDefinedType(Type newDefinedType) {
-		Type oldDefinedType = definedType;
-		definedType = newDefinedType;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE, oldDefinedType, definedType));
 	}
 
 	/**
@@ -296,6 +254,46 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * @generated
 	 */
 	@Override
+	public TFunction getDefinedFunction() {
+		if (definedFunction != null && definedFunction.eIsProxy()) {
+			InternalEObject oldDefinedFunction = (InternalEObject)definedFunction;
+			definedFunction = (TFunction)eResolveProxy(oldDefinedFunction);
+			if (definedFunction != oldDefinedFunction) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.FUNCTION_DEFINITION__DEFINED_FUNCTION, oldDefinedFunction, definedFunction));
+			}
+		}
+		return definedFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public TFunction basicGetDefinedFunction() {
+		return definedFunction;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDefinedFunction(TFunction newDefinedFunction) {
+		TFunction oldDefinedFunction = definedFunction;
+		definedFunction = newDefinedFunction;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.FUNCTION_DEFINITION__DEFINED_FUNCTION, oldDefinedFunction, definedFunction));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public boolean isReturnValueOptional() {
 		boolean _or = false;
 		if (((this.getDefinedFunction() != null) && this.getDefinedFunction().isReturnValueOptional())) {
@@ -365,21 +363,6 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	 * @generated
 	 */
 	@Override
-	public TFunction getDefinedFunction() {
-		final Type defType = this.getDefinedType();
-		TFunction _xifexpression = null;
-		if ((defType instanceof TFunction)) {
-			_xifexpression = ((TFunction)defType);
-		}
-		return _xifexpression;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
@@ -398,9 +381,6 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE:
-				if (resolve) return getDefinedType();
-				return basicGetDefinedType();
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
 				return getFpars();
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -409,6 +389,9 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return isGenerator();
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC:
 				return isDeclaredAsync();
+			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_FUNCTION:
+				if (resolve) return getDefinedFunction();
+				return basicGetDefinedFunction();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -422,9 +405,6 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE:
-				setDefinedType((Type)newValue);
-				return;
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
 				getFpars().clear();
 				getFpars().addAll((Collection<? extends FormalParameter>)newValue);
@@ -438,6 +418,9 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC:
 				setDeclaredAsync((Boolean)newValue);
 				return;
+			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_FUNCTION:
+				setDefinedFunction((TFunction)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -450,9 +433,6 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE:
-				setDefinedType((Type)null);
-				return;
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
 				getFpars().clear();
 				return;
@@ -464,6 +444,9 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return;
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC:
 				setDeclaredAsync(DECLARED_ASYNC_EDEFAULT);
+				return;
+			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_FUNCTION:
+				setDefinedFunction((TFunction)null);
 				return;
 		}
 		super.eUnset(featureID);
@@ -477,8 +460,6 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE:
-				return definedType != null;
 			case N4JSPackage.FUNCTION_DEFINITION__FPARS:
 				return fpars != null && !fpars.isEmpty();
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_RETURN_TYPE_REF_NODE:
@@ -487,40 +468,10 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return generator != GENERATOR_EDEFAULT;
 			case N4JSPackage.FUNCTION_DEFINITION__DECLARED_ASYNC:
 				return declaredAsync != DECLARED_ASYNC_EDEFAULT;
+			case N4JSPackage.FUNCTION_DEFINITION__DEFINED_FUNCTION:
+				return definedFunction != null;
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == TypeDefiningElement.class) {
-			switch (derivedFeatureID) {
-				case N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE: return N4JSPackage.TYPE_DEFINING_ELEMENT__DEFINED_TYPE;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == TypeDefiningElement.class) {
-			switch (baseFeatureID) {
-				case N4JSPackage.TYPE_DEFINING_ELEMENT__DEFINED_TYPE: return N4JSPackage.FUNCTION_DEFINITION__DEFINED_TYPE;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 	/**
@@ -535,11 +486,6 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR___IS_RETURN_VALUE_OPTIONAL: return N4JSPackage.FUNCTION_DEFINITION___IS_RETURN_VALUE_OPTIONAL;
 				case N4JSPackage.FUNCTION_OR_FIELD_ACCESSOR___IS_ASYNC: return N4JSPackage.FUNCTION_DEFINITION___IS_ASYNC;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
-			}
-		}
-		if (baseClass == TypeDefiningElement.class) {
-			switch (baseOperationID) {
-				default: return -1;
 			}
 		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);
@@ -561,8 +507,6 @@ public abstract class FunctionDefinitionImpl extends FunctionOrFieldAccessorImpl
 				return getDeclaredReturnTypeRefInAST();
 			case N4JSPackage.FUNCTION_DEFINITION___IS_ASYNC:
 				return isAsync();
-			case N4JSPackage.FUNCTION_DEFINITION___GET_DEFINED_FUNCTION:
-				return getDefinedFunction();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

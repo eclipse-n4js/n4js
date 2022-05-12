@@ -507,8 +507,8 @@ public class TNamespaceImpl extends TypeImpl implements TNamespace {
 	 * @generated
 	 */
 	@Override
-	public Iterable<? extends Type> getTypesAndFunctions() {
-		return Iterables.<Type>concat(this.getTypes(), this.getFunctions());
+	public Iterable<? extends TExportableElement> getTypesAndFunctions() {
+		return Iterables.<TExportableElement>concat(this.getTypes(), this.getFunctions());
 	}
 
 	/**

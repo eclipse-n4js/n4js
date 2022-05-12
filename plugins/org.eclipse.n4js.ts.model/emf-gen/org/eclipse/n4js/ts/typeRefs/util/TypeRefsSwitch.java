@@ -87,18 +87,9 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case TypeRefsPackage.STATIC_BASE_TYPE_REF: {
-				StaticBaseTypeRef staticBaseTypeRef = (StaticBaseTypeRef)theEObject;
-				T result = caseStaticBaseTypeRef(staticBaseTypeRef);
-				if (result == null) result = caseTypeRef(staticBaseTypeRef);
-				if (result == null) result = caseTypeArgument(staticBaseTypeRef);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case TypeRefsPackage.BASE_TYPE_REF: {
 				BaseTypeRef baseTypeRef = (BaseTypeRef)theEObject;
 				T result = caseBaseTypeRef(baseTypeRef);
-				if (result == null) result = caseStaticBaseTypeRef(baseTypeRef);
 				if (result == null) result = caseTypeRef(baseTypeRef);
 				if (result == null) result = caseTypeArgument(baseTypeRef);
 				if (result == null) result = defaultCase(theEObject);
@@ -107,7 +98,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 			case TypeRefsPackage.COMPOSED_TYPE_REF: {
 				ComposedTypeRef composedTypeRef = (ComposedTypeRef)theEObject;
 				T result = caseComposedTypeRef(composedTypeRef);
-				if (result == null) result = caseStaticBaseTypeRef(composedTypeRef);
 				if (result == null) result = caseTypeRef(composedTypeRef);
 				if (result == null) result = caseTypeArgument(composedTypeRef);
 				if (result == null) result = defaultCase(theEObject);
@@ -117,7 +107,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				UnionTypeExpression unionTypeExpression = (UnionTypeExpression)theEObject;
 				T result = caseUnionTypeExpression(unionTypeExpression);
 				if (result == null) result = caseComposedTypeRef(unionTypeExpression);
-				if (result == null) result = caseStaticBaseTypeRef(unionTypeExpression);
 				if (result == null) result = caseTypeRef(unionTypeExpression);
 				if (result == null) result = caseTypeArgument(unionTypeExpression);
 				if (result == null) result = defaultCase(theEObject);
@@ -127,7 +116,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				IntersectionTypeExpression intersectionTypeExpression = (IntersectionTypeExpression)theEObject;
 				T result = caseIntersectionTypeExpression(intersectionTypeExpression);
 				if (result == null) result = caseComposedTypeRef(intersectionTypeExpression);
-				if (result == null) result = caseStaticBaseTypeRef(intersectionTypeExpression);
 				if (result == null) result = caseTypeRef(intersectionTypeExpression);
 				if (result == null) result = caseTypeArgument(intersectionTypeExpression);
 				if (result == null) result = defaultCase(theEObject);
@@ -137,7 +125,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				ThisTypeRef thisTypeRef = (ThisTypeRef)theEObject;
 				T result = caseThisTypeRef(thisTypeRef);
 				if (result == null) result = caseBaseTypeRef(thisTypeRef);
-				if (result == null) result = caseStaticBaseTypeRef(thisTypeRef);
 				if (result == null) result = caseTypeRef(thisTypeRef);
 				if (result == null) result = caseTypeArgument(thisTypeRef);
 				if (result == null) result = defaultCase(theEObject);
@@ -148,7 +135,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				T result = caseThisTypeRefNominal(thisTypeRefNominal);
 				if (result == null) result = caseThisTypeRef(thisTypeRefNominal);
 				if (result == null) result = caseBaseTypeRef(thisTypeRefNominal);
-				if (result == null) result = caseStaticBaseTypeRef(thisTypeRefNominal);
 				if (result == null) result = caseTypeRef(thisTypeRefNominal);
 				if (result == null) result = caseTypeArgument(thisTypeRefNominal);
 				if (result == null) result = defaultCase(theEObject);
@@ -160,7 +146,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = caseThisTypeRef(thisTypeRefStructural);
 				if (result == null) result = caseStructuralTypeRef(thisTypeRefStructural);
 				if (result == null) result = caseBaseTypeRef(thisTypeRefStructural);
-				if (result == null) result = caseStaticBaseTypeRef(thisTypeRefStructural);
 				if (result == null) result = caseTypeRef(thisTypeRefStructural);
 				if (result == null) result = caseTypeArgument(thisTypeRefStructural);
 				if (result == null) result = defaultCase(theEObject);
@@ -172,7 +157,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = caseThisTypeRef(boundThisTypeRef);
 				if (result == null) result = caseStructuralTypeRef(boundThisTypeRef);
 				if (result == null) result = caseBaseTypeRef(boundThisTypeRef);
-				if (result == null) result = caseStaticBaseTypeRef(boundThisTypeRef);
 				if (result == null) result = caseTypeRef(boundThisTypeRef);
 				if (result == null) result = caseTypeArgument(boundThisTypeRef);
 				if (result == null) result = defaultCase(theEObject);
@@ -182,7 +166,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				ParameterizedTypeRef parameterizedTypeRef = (ParameterizedTypeRef)theEObject;
 				T result = caseParameterizedTypeRef(parameterizedTypeRef);
 				if (result == null) result = caseBaseTypeRef(parameterizedTypeRef);
-				if (result == null) result = caseStaticBaseTypeRef(parameterizedTypeRef);
 				if (result == null) result = caseTypeRef(parameterizedTypeRef);
 				if (result == null) result = caseTypeArgument(parameterizedTypeRef);
 				if (result == null) result = defaultCase(theEObject);
@@ -200,7 +183,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = caseParameterizedTypeRef(parameterizedTypeRefStructural);
 				if (result == null) result = caseStructuralTypeRef(parameterizedTypeRefStructural);
 				if (result == null) result = caseBaseTypeRef(parameterizedTypeRefStructural);
-				if (result == null) result = caseStaticBaseTypeRef(parameterizedTypeRefStructural);
 				if (result == null) result = caseTypeRef(parameterizedTypeRefStructural);
 				if (result == null) result = caseTypeArgument(parameterizedTypeRefStructural);
 				if (result == null) result = defaultCase(theEObject);
@@ -226,7 +208,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				TypeTypeRef typeTypeRef = (TypeTypeRef)theEObject;
 				T result = caseTypeTypeRef(typeTypeRef);
 				if (result == null) result = caseBaseTypeRef(typeTypeRef);
-				if (result == null) result = caseStaticBaseTypeRef(typeTypeRef);
 				if (result == null) result = caseTypeRef(typeTypeRef);
 				if (result == null) result = caseTypeArgument(typeTypeRef);
 				if (result == null) result = defaultCase(theEObject);
@@ -245,32 +226,9 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF: {
-				FunctionTypeExprOrRef functionTypeExprOrRef = (FunctionTypeExprOrRef)theEObject;
-				T result = caseFunctionTypeExprOrRef(functionTypeExprOrRef);
-				if (result == null) result = caseStaticBaseTypeRef(functionTypeExprOrRef);
-				if (result == null) result = caseTypeRef(functionTypeExprOrRef);
-				if (result == null) result = caseTypeArgument(functionTypeExprOrRef);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case TypeRefsPackage.FUNCTION_TYPE_REF: {
-				FunctionTypeRef functionTypeRef = (FunctionTypeRef)theEObject;
-				T result = caseFunctionTypeRef(functionTypeRef);
-				if (result == null) result = caseParameterizedTypeRef(functionTypeRef);
-				if (result == null) result = caseFunctionTypeExprOrRef(functionTypeRef);
-				if (result == null) result = caseBaseTypeRef(functionTypeRef);
-				if (result == null) result = caseStaticBaseTypeRef(functionTypeRef);
-				if (result == null) result = caseTypeRef(functionTypeRef);
-				if (result == null) result = caseTypeArgument(functionTypeRef);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION: {
 				FunctionTypeExpression functionTypeExpression = (FunctionTypeExpression)theEObject;
 				T result = caseFunctionTypeExpression(functionTypeExpression);
-				if (result == null) result = caseFunctionTypeExprOrRef(functionTypeExpression);
-				if (result == null) result = caseStaticBaseTypeRef(functionTypeExpression);
 				if (result == null) result = caseTypeRef(functionTypeExpression);
 				if (result == null) result = caseTypeArgument(functionTypeExpression);
 				if (result == null) result = defaultCase(theEObject);
@@ -365,21 +323,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTypeRef(TypeRef object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Static Base Type Ref</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Static Base Type Ref</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseStaticBaseTypeRef(StaticBaseTypeRef object) {
 		return null;
 	}
 
@@ -620,36 +563,6 @@ public class TypeRefsSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseWildcard(Wildcard object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Function Type Expr Or Ref</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Function Type Expr Or Ref</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseFunctionTypeExprOrRef(FunctionTypeExprOrRef object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Function Type Ref</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Function Type Ref</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseFunctionTypeRef(FunctionTypeRef object) {
 		return null;
 	}
 

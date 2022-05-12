@@ -48,8 +48,7 @@ import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef;
@@ -234,19 +233,23 @@ import com.google.common.collect.Iterables;
 		}
 
 		// FunctionTypeExprOrRef
-		if (left instanceof FunctionTypeExprOrRef) {
-			if (right instanceof FunctionTypeExprOrRef) {
-				return applyFunctionTypeExprOrRef(G, (FunctionTypeExprOrRef) left, (FunctionTypeExprOrRef) right);
+		if (left instanceof FunctionTypeExpression) {
+			if (right instanceof FunctionTypeExpression) {
+				return applyFunctionTypeExpression(G, (FunctionTypeExpression) left, (FunctionTypeExpression) right);
 			} else if (right instanceof ParameterizedTypeRef && right.getDeclaredType() instanceof TFunction) {
 				// special case:
-				// FunctionTypeExprOrRef on left and a ParameterizedTypeRef pointing to a TFunction on right;
+				// FunctionTypeExprOrRef on left and a ParameterizedTypeRef pointing to a TFunction on right:
+				// cannot happen
+				throw new IllegalStateException(); // FIXME
 				// normally ParameterizedTypeRef is not allowed to point to a TFunction (an instance of FunctionTypeRef
 				// is to be used instead); however, the parser cannot distinguish these cases and will create such an
 				// invalid ParameterizedTypeRef whenever the name of a declared function is used in the source code as a
 				// reference. To avoid confusing error messages, we provide subtyping support for this case.
-				final FunctionTypeRef rightFixed = (FunctionTypeRef) TypeUtils.createTypeRef(right.getDeclaredType());
-				TypeUtils.copyTypeModifiers(rightFixed, right);
-				return applyFunctionTypeExprOrRef(G, (FunctionTypeExprOrRef) left, rightFixed);
+
+				// final FunctionTypeRef rightFixed = (FunctionTypeRef)
+				// TypeUtils.createTypeRef(right.getDeclaredType());
+				// TypeUtils.copyTypeModifiers(rightFixed, right);
+				// return applyFunctionTypeExprOrRef(G, (FunctionTypeExprOrRef) left, rightFixed);
 			} else if (right instanceof ParameterizedTypeRef
 					&& (right.isUseSiteStructuralTyping() || right.isDefSiteStructuralTyping())) {
 				// special case: (string)=>number <: ~Object with { prop: string }
@@ -564,8 +567,8 @@ import com.google.common.collect.Iterables;
 		}
 	}
 
-	private Result applyFunctionTypeExprOrRef(RuleEnvironment G,
-			FunctionTypeExprOrRef left, FunctionTypeExprOrRef right) {
+	private Result applyFunctionTypeExpression(RuleEnvironment G,
+			FunctionTypeExpression left, FunctionTypeExpression right) {
 		return resultFromBoolean(typeSystemHelper.isSubtypeFunction(G, left, right));
 	}
 

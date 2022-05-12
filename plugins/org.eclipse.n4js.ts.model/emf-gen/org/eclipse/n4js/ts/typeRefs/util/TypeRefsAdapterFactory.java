@@ -84,10 +84,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 				return createTypeRefAdapter();
 			}
 			@Override
-			public Adapter caseStaticBaseTypeRef(StaticBaseTypeRef object) {
-				return createStaticBaseTypeRefAdapter();
-			}
-			@Override
 			public Adapter caseBaseTypeRef(BaseTypeRef object) {
 				return createBaseTypeRefAdapter();
 			}
@@ -150,14 +146,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseWildcard(Wildcard object) {
 				return createWildcardAdapter();
-			}
-			@Override
-			public Adapter caseFunctionTypeExprOrRef(FunctionTypeExprOrRef object) {
-				return createFunctionTypeExprOrRefAdapter();
-			}
-			@Override
-			public Adapter caseFunctionTypeRef(FunctionTypeRef object) {
-				return createFunctionTypeRefAdapter();
 			}
 			@Override
 			public Adapter caseFunctionTypeExpression(FunctionTypeExpression object) {
@@ -236,20 +224,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTypeRefAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.StaticBaseTypeRef <em>Static Base Type Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.StaticBaseTypeRef
-	 * @generated
-	 */
-	public Adapter createStaticBaseTypeRefAdapter() {
 		return null;
 	}
 
@@ -474,34 +448,6 @@ public class TypeRefsAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createWildcardAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef <em>Function Type Expr Or Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
-	 * @generated
-	 */
-	public Adapter createFunctionTypeExprOrRefAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeRef <em>Function Type Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
-	 * @generated
-	 */
-	public Adapter createFunctionTypeRefAdapter() {
 		return null;
 	}
 

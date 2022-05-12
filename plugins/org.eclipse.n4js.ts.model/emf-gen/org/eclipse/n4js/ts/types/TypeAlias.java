@@ -27,7 +27,7 @@ package org.eclipse.n4js.ts.types;
  * @model
  * @generated
  */
-public interface TypeAlias extends GenericType, AccessibleTypeElement, TTypedElement, SyntaxRelatedTElement {
+public interface TypeAlias extends Type, GenericType, AccessibleTypeElement, TTypedElement, SyntaxRelatedTElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

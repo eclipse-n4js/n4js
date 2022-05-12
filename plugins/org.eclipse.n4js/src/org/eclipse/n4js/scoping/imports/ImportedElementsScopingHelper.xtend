@@ -27,6 +27,7 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.ExportedElementsCollector
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker
+import org.eclipse.n4js.scoping.accessModifiers.FunctionVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker
@@ -52,6 +53,7 @@ import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.util.IResourceScopeCache
+import org.eclipse.n4js.ts.types.TFunction
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -71,12 +73,15 @@ class ImportedElementsScopingHelper {
 
 	@Inject
 	private TypeVisibilityChecker typeVisibilityChecker
-	
+
 	@Inject
-	private IQualifiedNameProvider qualifiedNameProvider
+	private FunctionVisibilityChecker functionVisibilityChecker
 
 	@Inject
 	private VariableVisibilityChecker variableVisibilityChecker
+	
+	@Inject
+	private IQualifiedNameProvider qualifiedNameProvider
 
 	@Inject
 	private ImportedElementsMap.Provider elementsMapProvider
@@ -301,7 +306,7 @@ class ImportedElementsScopingHelper {
 			// add functions to namespace
 			// (this is *only* about adding some IEObjectDescriptionWithError to improve error messages)
 			for (importedFun : imp.module.functions) {
-				val varVisibility = typeVisibilityChecker.isVisible(contextResource, importedFun);
+				val varVisibility = functionVisibilityChecker.isVisible(contextResource, importedFun);
 				val varName = importedFun.name
 				val qn = QualifiedName.create(namespaceName, varName)
 				if (varVisibility.visibility) {
@@ -388,6 +393,8 @@ class ImportedElementsScopingHelper {
 		IdentifiableElement element) {
 		if (element instanceof Type)
 			typeVisibilityChecker.isVisible(contextResource, element)
+		else if (element instanceof TFunction)
+			functionVisibilityChecker.isVisible(contextResource, element)
 		else if (element instanceof TVariable)
 			variableVisibilityChecker.isVisible(contextResource, element)
 		else if (element instanceof TDynamicElement)

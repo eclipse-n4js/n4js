@@ -333,8 +333,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def checkFunctionDeclarationBody(FunctionDeclaration functionDeclaration) {
-		if (functionDeclaration.body === null && functionDeclaration.definedType instanceof TFunction &&
-			!(functionDeclaration.definedType as TFunction).external) {
+		if (functionDeclaration.body === null && !functionDeclaration.definedFunction.external) {
 			addIssue(getMessageForFUN_BODY, functionDeclaration, N4JSPackage.Literals.FUNCTION_DECLARATION__NAME,
 				FUN_BODY)
 		}
@@ -469,8 +468,8 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def checkNonVoidAsyncMethod(FunctionDefinition funDef) {
-		if (funDef.isAsync && (null !== funDef.definedType)) {
-			val TypeRef tfunctionRetType = (funDef.definedType as TFunction).getReturnTypeRef();
+		if (funDef.isAsync && (null !== funDef.definedFunction)) {
+			val TypeRef tfunctionRetType = funDef.definedFunction.getReturnTypeRef();
 			if (TypeUtils.isVoid(tfunctionRetType)) {
 				val message = messageForTYS_NON_VOID_ASYNC
 				addIssue(message, funDef, TYS_NON_VOID_ASYNC)

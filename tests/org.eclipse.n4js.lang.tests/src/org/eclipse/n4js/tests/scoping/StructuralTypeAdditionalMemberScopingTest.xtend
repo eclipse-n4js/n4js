@@ -18,11 +18,10 @@ import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
+import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TField
-import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -57,7 +56,7 @@ class StructuralTypeAdditionalMemberScopingTest {
 		script.assertNoErrors
 		script.assertNoDanglingReferences
 
-		val tfunc = script.eAllContents.filter(FunctionDeclaration).head.definedType as TFunction
+		val tfunc = script.eAllContents.filter(FunctionDeclaration).head.definedFunction
 		val tclass = (script.scriptElements.get(0) as N4ClassDeclaration).definedType as TClass;
 		val additionalMembers = (tfunc.fpars.get(0).typeRef as ParameterizedTypeRefStructural).structuralMembers;
 
@@ -94,7 +93,7 @@ class StructuralTypeAdditionalMemberScopingTest {
 		script.assertNoDanglingReferences
 
 		val tclass = (script.scriptElements.get(0) as N4ClassDeclaration).definedType as TClass;
-		val tfunc = script.eAllContents.filter(FunctionDeclaration).head.definedType as TFunction
+		val tfunc = script.eAllContents.filter(FunctionDeclaration).head.definedFunction
 		val additionalMembers = (tfunc.returnTypeRef as ParameterizedTypeRefStructural).structuralMembers;
 
 		val accesses = script.eAllContents.filter(ParameterizedPropertyAccessExpression)

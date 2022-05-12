@@ -28,14 +28,20 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
+
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TypeVariable;
+
+import org.eclipse.xtext.xbase.lib.Functions.Function1;
+
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 /**
  * <!-- begin-user-doc -->
@@ -46,19 +52,19 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isBinding <em>Binding</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getDeclaredType <em>Declared Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getDeclaredFunction <em>Declared Function</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getDeclaredThisType <em>Declared This Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getOwnedTypeVars <em>Owned Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getUnboundTypeVars <em>Unbound Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getUnboundTypeVarsUpperBounds <em>Unbound Type Vars Upper Bounds</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getFpars <em>Fpars</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getReturnTypeRef <em>Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implements FunctionTypeExpression {
+public class FunctionTypeExpressionImpl extends TypeRefImpl implements FunctionTypeExpression {
 	/**
 	 * The default value of the '{@link #isBinding() <em>Binding</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -80,14 +86,14 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	protected boolean binding = BINDING_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getDeclaredType() <em>Declared Type</em>}' reference.
+	 * The cached value of the '{@link #getDeclaredFunction() <em>Declared Function</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getDeclaredType()
+	 * @see #getDeclaredFunction()
 	 * @generated
 	 * @ordered
 	 */
-	protected TFunction declaredType;
+	protected TFunction declaredFunction;
 
 	/**
 	 * The cached value of the '{@link #getDeclaredThisType() <em>Declared This Type</em>}' containment reference.
@@ -140,6 +146,16 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	protected EList<TFormalParameter> fpars;
 
 	/**
+	 * The cached value of the '{@link #getReturnTypeRef() <em>Return Type Ref</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getReturnTypeRef()
+	 * @generated
+	 * @ordered
+	 */
+	protected TypeRef returnTypeRef;
+
+	/**
 	 * The default value of the '{@link #isReturnValueMarkedOptional() <em>Return Value Marked Optional</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -158,16 +174,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * @ordered
 	 */
 	protected boolean returnValueMarkedOptional = RETURN_VALUE_MARKED_OPTIONAL_EDEFAULT;
-
-	/**
-	 * The cached value of the '{@link #getReturnTypeRef() <em>Return Type Ref</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getReturnTypeRef()
-	 * @generated
-	 * @ordered
-	 */
-	protected TypeRef returnTypeRef;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -217,16 +223,16 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * @generated
 	 */
 	@Override
-	public TFunction getDeclaredType() {
-		if (declaredType != null && declaredType.eIsProxy()) {
-			InternalEObject oldDeclaredType = (InternalEObject)declaredType;
-			declaredType = (TFunction)eResolveProxy(oldDeclaredType);
-			if (declaredType != oldDeclaredType) {
+	public TFunction getDeclaredFunction() {
+		if (declaredFunction != null && declaredFunction.eIsProxy()) {
+			InternalEObject oldDeclaredFunction = (InternalEObject)declaredFunction;
+			declaredFunction = (TFunction)eResolveProxy(oldDeclaredFunction);
+			if (declaredFunction != oldDeclaredFunction) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE, oldDeclaredType, declaredType));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_FUNCTION, oldDeclaredFunction, declaredFunction));
 			}
 		}
-		return declaredType;
+		return declaredFunction;
 	}
 
 	/**
@@ -234,8 +240,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TFunction basicGetDeclaredType() {
-		return declaredType;
+	public TFunction basicGetDeclaredFunction() {
+		return declaredFunction;
 	}
 
 	/**
@@ -244,11 +250,11 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * @generated
 	 */
 	@Override
-	public void setDeclaredType(TFunction newDeclaredType) {
-		TFunction oldDeclaredType = declaredType;
-		declaredType = newDeclaredType;
+	public void setDeclaredFunction(TFunction newDeclaredFunction) {
+		TFunction oldDeclaredFunction = declaredFunction;
+		declaredFunction = newDeclaredFunction;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE, oldDeclaredType, declaredType));
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_FUNCTION, oldDeclaredFunction, declaredFunction));
 	}
 
 	/**
@@ -354,29 +360,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * @generated
 	 */
 	@Override
-	public boolean isReturnValueMarkedOptional() {
-		return returnValueMarkedOptional;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public void setReturnValueMarkedOptional(boolean newReturnValueMarkedOptional) {
-		boolean oldReturnValueMarkedOptional = returnValueMarkedOptional;
-		returnValueMarkedOptional = newReturnValueMarkedOptional;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL, oldReturnValueMarkedOptional, returnValueMarkedOptional));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
 	public TypeRef getReturnTypeRef() {
 		return returnTypeRef;
 	}
@@ -422,6 +405,39 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 * @generated
 	 */
 	@Override
+	public boolean isReturnValueMarkedOptional() {
+		return returnValueMarkedOptional;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setReturnValueMarkedOptional(boolean newReturnValueMarkedOptional) {
+		boolean oldReturnValueMarkedOptional = returnValueMarkedOptional;
+		returnValueMarkedOptional = newReturnValueMarkedOptional;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL, oldReturnValueMarkedOptional, returnValueMarkedOptional));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isReturnValueOptional() {
+		return (this.isReturnValueMarkedOptional() || ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark()));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<TypeVariable> getTypeVars() {
 		EList<TypeVariable> _xifexpression = null;
 		boolean _isBinding = this.isBinding();
@@ -430,10 +446,10 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 		}
 		else {
 			EList<TypeVariable> _xifexpression_1 = null;
-			TFunction _declaredType = this.getDeclaredType();
-			boolean _tripleNotEquals = (_declaredType != null);
+			TFunction _declaredFunction = this.getDeclaredFunction();
+			boolean _tripleNotEquals = (_declaredFunction != null);
 			if (_tripleNotEquals) {
-				_xifexpression_1 = this.getDeclaredType().getTypeVars();
+				_xifexpression_1 = this.getDeclaredFunction().getTypeVars();
 			}
 			else {
 				_xifexpression_1 = this.getOwnedTypeVars();
@@ -441,6 +457,128 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 			_xifexpression = _xifexpression_1;
 		}
 		return _xifexpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isGeneric() {
+		boolean _isEmpty = this.getTypeVars().isEmpty();
+		return (!_isEmpty);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isRaw() {
+		boolean _isGeneric = this.isGeneric();
+		if (_isGeneric) {
+			final Function1<TypeVariable, Boolean> _function = new Function1<TypeVariable, Boolean>() {
+				public Boolean apply(final TypeVariable it) {
+					boolean _isOptional = it.isOptional();
+					return Boolean.valueOf((!_isOptional));
+				}
+			};
+			final int mandatoryTypeParamsCount = IterableExtensions.size(IterableExtensions.<TypeVariable>filter(this.getTypeVars(), _function));
+			int _size = this.getDeclaredTypeArgs().size();
+			return (_size < mandatoryTypeParamsCount);
+		}
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TFormalParameter getFparForArgIdx(final int argIndex) {
+		final int fparsSize = this.getFpars().size();
+		if (((argIndex >= 0) && (argIndex < fparsSize))) {
+			return this.getFpars().get(argIndex);
+		}
+		else {
+			if ((((argIndex >= fparsSize) && (fparsSize > 0)) && this.getFpars().get((fparsSize - 1)).isVariadic())) {
+				return this.getFpars().get((fparsSize - 1));
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String internalGetTypeRefAsString() {
+		String _xifexpression = null;
+		TypeRef _declaredThisType = this.getDeclaredThisType();
+		boolean _tripleNotEquals = (_declaredThisType != null);
+		if (_tripleNotEquals) {
+			String _typeRefAsString = this.getDeclaredThisType().getTypeRefAsString();
+			String _plus = ("@This(" + _typeRefAsString);
+			_xifexpression = (_plus + ") ");
+		}
+		else {
+			_xifexpression = "";
+		}
+		String _plus_1 = ("{" + _xifexpression);
+		String _plus_2 = (_plus_1 + "function");
+		String _xifexpression_1 = null;
+		boolean _isGeneric = this.isGeneric();
+		if (_isGeneric) {
+			final Function1<TypeVariable, String> _function = new Function1<TypeVariable, String>() {
+				public String apply(final TypeVariable it) {
+					return it.getTypeVariableAsString(FunctionTypeExpressionImpl.this.getTypeVarUpperBound(it));
+				}
+			};
+			String _join = IterableExtensions.join(XcoreEListExtensions.<TypeVariable, String>map(this.getTypeVars(), _function), ",");
+			String _plus_3 = ("<" + _join);
+			_xifexpression_1 = (_plus_3 + ">");
+		}
+		else {
+			_xifexpression_1 = "";
+		}
+		String _plus_4 = (_plus_2 + _xifexpression_1);
+		String _plus_5 = (_plus_4 + "(");
+		final Function1<TFormalParameter, String> _function_1 = new Function1<TFormalParameter, String>() {
+			public String apply(final TFormalParameter it) {
+				return it.getFormalParameterAsTypesString();
+			}
+		};
+		String _join_1 = IterableExtensions.join(XcoreEListExtensions.<TFormalParameter, String>map(this.getFpars(), _function_1), ",");
+		String _plus_6 = (_plus_5 + _join_1);
+		String _plus_7 = (_plus_6 + ")");
+		String _xifexpression_2 = null;
+		TypeRef _returnTypeRef = this.getReturnTypeRef();
+		boolean _tripleNotEquals_1 = (_returnTypeRef != null);
+		if (_tripleNotEquals_1) {
+			String _typeRefAsString_1 = this.getReturnTypeRef().getTypeRefAsString();
+			_xifexpression_2 = (":" + _typeRefAsString_1);
+		}
+		else {
+			_xifexpression_2 = "";
+		}
+		String _plus_8 = (_plus_7 + _xifexpression_2);
+		String _xifexpression_3 = null;
+		boolean _isReturnValueOptional = this.isReturnValueOptional();
+		if (_isReturnValueOptional) {
+			_xifexpression_3 = "?";
+		}
+		else {
+			_xifexpression_3 = "";
+		}
+		String _plus_9 = (_plus_8 + _xifexpression_3);
+		String _plus_10 = (_plus_9 + "}");
+		String _modifiersAsString = this.getModifiersAsString();
+		return (_plus_10 + _modifiersAsString);
 	}
 
 	/**
@@ -463,16 +601,6 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 			}
 		}
 		return typeVar.getDeclaredUpperBound();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public boolean isReturnValueOptional() {
-		return (this.isReturnValueMarkedOptional() || ((this.getReturnTypeRef() != null) && this.getReturnTypeRef().isFollowedByQuestionMark()));
 	}
 
 	/**
@@ -507,9 +635,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 		switch (featureID) {
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__BINDING:
 				return isBinding();
-			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE:
-				if (resolve) return getDeclaredType();
-				return basicGetDeclaredType();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_FUNCTION:
+				if (resolve) return getDeclaredFunction();
+				return basicGetDeclaredFunction();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE:
 				return getDeclaredThisType();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS:
@@ -520,10 +648,10 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 				return getUnboundTypeVarsUpperBounds();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__FPARS:
 				return getFpars();
-			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL:
-				return isReturnValueMarkedOptional();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				return getReturnTypeRef();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL:
+				return isReturnValueMarkedOptional();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -540,8 +668,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__BINDING:
 				setBinding((Boolean)newValue);
 				return;
-			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE:
-				setDeclaredType((TFunction)newValue);
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_FUNCTION:
+				setDeclaredFunction((TFunction)newValue);
 				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE:
 				setDeclaredThisType((TypeRef)newValue);
@@ -562,11 +690,11 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 				getFpars().clear();
 				getFpars().addAll((Collection<? extends TFormalParameter>)newValue);
 				return;
-			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL:
-				setReturnValueMarkedOptional((Boolean)newValue);
-				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				setReturnTypeRef((TypeRef)newValue);
+				return;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL:
+				setReturnValueMarkedOptional((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -583,8 +711,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__BINDING:
 				setBinding(BINDING_EDEFAULT);
 				return;
-			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE:
-				setDeclaredType((TFunction)null);
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_FUNCTION:
+				setDeclaredFunction((TFunction)null);
 				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE:
 				setDeclaredThisType((TypeRef)null);
@@ -601,11 +729,11 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__FPARS:
 				getFpars().clear();
 				return;
-			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL:
-				setReturnValueMarkedOptional(RETURN_VALUE_MARKED_OPTIONAL_EDEFAULT);
-				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				setReturnTypeRef((TypeRef)null);
+				return;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL:
+				setReturnValueMarkedOptional(RETURN_VALUE_MARKED_OPTIONAL_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -621,8 +749,8 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 		switch (featureID) {
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__BINDING:
 				return binding != BINDING_EDEFAULT;
-			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE:
-				return declaredType != null;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_FUNCTION:
+				return declaredFunction != null;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE:
 				return declaredThisType != null;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS:
@@ -633,10 +761,10 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 				return unboundTypeVarsUpperBounds != null && !unboundTypeVarsUpperBounds.isEmpty();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__FPARS:
 				return fpars != null && !fpars.isEmpty();
-			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL:
-				return returnValueMarkedOptional != RETURN_VALUE_MARKED_OPTIONAL_EDEFAULT;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF:
 				return returnTypeRef != null;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL:
+				return returnValueMarkedOptional != RETURN_VALUE_MARKED_OPTIONAL_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -648,11 +776,16 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == FunctionTypeExprOrRef.class) {
+		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_VARS: return TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___GET_TYPE_VARS;
-				case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE: return TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE;
-				case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___IS_RETURN_VALUE_OPTIONAL: return TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___IS_RETURN_VALUE_OPTIONAL;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING;
+				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == TypeRef.class) {
+			switch (baseOperationID) {
+				case TypeRefsPackage.TYPE_REF___IS_GENERIC: return TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___IS_GENERIC;
+				case TypeRefsPackage.TYPE_REF___IS_RAW: return TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___IS_RAW;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -667,12 +800,20 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___GET_TYPE_VARS:
-				return getTypeVars();
-			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE:
-				return getTypeVarUpperBound((TypeVariable)arguments.get(0));
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___IS_RETURN_VALUE_OPTIONAL:
 				return isReturnValueOptional();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___GET_TYPE_VARS:
+				return getTypeVars();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___IS_GENERIC:
+				return isGeneric();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___IS_RAW:
+				return isRaw();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___GET_FPAR_FOR_ARG_IDX__INT:
+				return getFparForArgIdx((Integer)arguments.get(0));
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___INTERNAL_GET_TYPE_REF_AS_STRING:
+				return internalGetTypeRefAsString();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION___GET_TYPE_VAR_UPPER_BOUND__TYPEVARIABLE:
+				return getTypeVarUpperBound((TypeVariable)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

@@ -33,9 +33,11 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.GenericType;
 import org.eclipse.n4js.ts.types.NameAndAccess;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
+import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap;
@@ -56,6 +58,7 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getOwnedMembersByNameAndAccess <em>Owned Members By Name And Access</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getOwnedMembers <em>Owned Members</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.ContainerTypeImpl#getCallSignature <em>Call Signature</em>}</li>
@@ -64,7 +67,17 @@ import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
  *
  * @generated
  */
-public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeImpl implements ContainerType<MT> {
+public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl implements ContainerType<MT> {
+	/**
+	 * The cached value of the '{@link #getTypeVars() <em>Type Vars</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypeVars()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TypeVariable> typeVars;
+
 	/**
 	 * The cached value of the '{@link #getOwnedMembersByNameAndAccess() <em>Owned Members By Name And Access</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -122,6 +135,19 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.CONTAINER_TYPE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TypeVariable> getTypeVars() {
+		if (typeVars == null) {
+			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, TypesPackage.CONTAINER_TYPE__TYPE_VARS);
+		}
+		return typeVars;
 	}
 
 	/**
@@ -352,6 +378,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case TypesPackage.CONTAINER_TYPE__TYPE_VARS:
+				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS:
 				return ((InternalEList<?>)getOwnedMembers()).basicRemove(otherEnd, msgs);
 			case TypesPackage.CONTAINER_TYPE__CALL_SIGNATURE:
@@ -370,6 +398,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypesPackage.CONTAINER_TYPE__TYPE_VARS:
+				return getTypeVars();
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS:
 				return getOwnedMembersByNameAndAccess();
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS:
@@ -391,6 +421,10 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypesPackage.CONTAINER_TYPE__TYPE_VARS:
+				getTypeVars().clear();
+				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
+				return;
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS:
 				setOwnedMembersByNameAndAccess((Map<NameAndAccess, ? extends TMember>)newValue);
 				return;
@@ -416,6 +450,9 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypesPackage.CONTAINER_TYPE__TYPE_VARS:
+				getTypeVars().clear();
+				return;
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS:
 				setOwnedMembersByNameAndAccess((Map<NameAndAccess, ? extends TMember>)null);
 				return;
@@ -440,6 +477,8 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypesPackage.CONTAINER_TYPE__TYPE_VARS:
+				return typeVars != null && !typeVars.isEmpty();
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS_BY_NAME_AND_ACCESS:
 				return ownedMembersByNameAndAccess != null;
 			case TypesPackage.CONTAINER_TYPE__OWNED_MEMBERS:
@@ -450,6 +489,38 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends GenericTypeI
 				return constructSignature != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == GenericType.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.CONTAINER_TYPE__TYPE_VARS: return TypesPackage.GENERIC_TYPE__TYPE_VARS;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == GenericType.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.GENERIC_TYPE__TYPE_VARS: return TypesPackage.CONTAINER_TYPE__TYPE_VARS;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 	/**

@@ -27,6 +27,7 @@ import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SingletonScope
 import org.eclipse.xtext.util.IResourceScopeCache
+import org.eclipse.n4js.ts.types.TFunction
 
 /**
  * Helper for {@link N4JSScopeProvider N4JSScopeProvider} using
@@ -66,6 +67,31 @@ class LocallyKnownTypesScopingHelper {
 				} else {
 					// success case: simply add type variables to scope
 					result = scopeSnapshotHelper.scopeForEObjects("scopeWithTypeAndItsTypeVariables-2", type, result, type.typeVars);
+				}
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Returns the type variables in case the type is generic.
+	 */
+	def IScope scopeWithTypeVariables(IScope parent, TFunction function, boolean staticAccess) {
+		var IScope result = parent;
+		if (function !== null) {
+
+			// add the type variables
+			if (function.generic) {
+				if (staticAccess) {
+					// error case: type variables of a classifier cannot be accessed from static members
+					// e.g. class C<T> { static x: T; }
+					// --> return same scope as in success case, but wrap descriptions with a WrongStaticAccessorDescription
+					val wrapEODs = [new WrongStaticAccessDescription(it, staticAccess)];
+					result = scopeSnapshotHelper.scopeForEObjects("scopeWithTypeVariables-1", function, result, function.typeVars, wrapEODs);
+				} else {
+					// success case: simply add type variables to scope
+					result = scopeSnapshotHelper.scopeForEObjects("scopeWithTypeVariables-2", function, result, function.typeVars);
 				}
 			}
 		}

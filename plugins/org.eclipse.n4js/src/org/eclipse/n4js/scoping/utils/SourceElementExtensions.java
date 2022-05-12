@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.CatchVariable;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -96,7 +97,7 @@ public class SourceElementExtensions {
 			result.add((IdentifiableElement) element);
 
 		} else if (element instanceof FunctionExpression && ((FunctionExpression) element).getName() != null) {
-			collectVisibleTypedElement((FunctionExpression) element, result);
+			collectVisibleFunction((FunctionExpression) element, result);
 		}
 
 		List<IdentifiableElement> visibleIdentifiableElements = doCollectVisibleIdentifiableElements(element,
@@ -216,7 +217,7 @@ public class SourceElementExtensions {
 
 		@Override
 		public Boolean caseFunctionDeclaration(FunctionDeclaration feature) {
-			collectVisibleTypedElement(feature, validIEs);
+			collectVisibleFunction(feature, validIEs);
 			allContents.prune();
 			return true;
 		}
@@ -302,6 +303,10 @@ public class SourceElementExtensions {
 			List<? super IdentifiableElement> addHere) {
 
 		collectVisibleIdentifiableElement(element, addHere, e -> e.getDefinedType());
+	}
+
+	static private void collectVisibleFunction(FunctionDefinition element, List<? super IdentifiableElement> addHere) {
+		collectVisibleIdentifiableElement(element, addHere, e -> e.getDefinedFunction());
 	}
 
 	static private void collectVisibleVariable(AbstractVariable<?> element, List<? super IdentifiableElement> addHere) {

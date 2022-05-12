@@ -61,17 +61,17 @@ PrimaryTypeExpression returns TypeRef:
 	| "(" TypeRef ")"
 	);
 
-TypeRefWithModifiers returns StaticBaseTypeRef:
+TypeRefWithModifiers returns TypeRef:
 	TypeRefWithoutModifiers =>followedByQuestionMark?='?'?;
 
-TypeRefWithoutModifiers returns StaticBaseTypeRef:
+TypeRefWithoutModifiers returns TypeRef:
 	  ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
 	| TypeTypeRef
 	| FunctionTypeExpressionOLD
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
 
-TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
+TypeRefFunctionTypeExpression returns TypeRef:
 	  ParameterizedTypeRef
 	| ArrayNTypeExpression
 	| TypeTypeRef

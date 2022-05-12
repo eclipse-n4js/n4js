@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
@@ -36,17 +37,28 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
 import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.ElementExportDefinition;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.ts.types.TAnnotableElement;
+import org.eclipse.n4js.ts.types.TAnnotation;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMethod;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
-import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TNamespaceElement;
+import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.n4js.ts.types.TypesPackage.Literals;
+
+import org.eclipse.n4js.utils.UtilN4;
+
+import org.eclipse.xtext.EcoreUtil2;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
@@ -60,6 +72,11 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isDirectlyExported <em>Directly Exported</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isDirectlyExportedAsDefault <em>Directly Exported As Default</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getExportingExportDefinitions <em>Exporting Export Definitions</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getAnnotations <em>Annotations</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TFunctionImpl#getAstElement <em>Ast Element</em>}</li>
@@ -76,6 +93,86 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * @generated
  */
 public class TFunctionImpl extends GenericTypeImpl implements TFunction {
+	/**
+	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String NAME_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getName()
+	 * @generated
+	 * @ordered
+	 */
+	protected String name = NAME_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDirectlyExported() <em>Directly Exported</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExported()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DIRECTLY_EXPORTED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDirectlyExported() <em>Directly Exported</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExported()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean directlyExported = DIRECTLY_EXPORTED_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDirectlyExportedAsDefault() <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDirectlyExportedAsDefault() <em>Directly Exported As Default</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDirectlyExportedAsDefault()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean directlyExportedAsDefault = DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getExportingExportDefinitions() <em>Exporting Export Definitions</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getExportingExportDefinitions()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ElementExportDefinition> exportingExportDefinitions;
+
+	/**
+	 * The cached value of the '{@link #getAnnotations() <em>Annotations</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAnnotations()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TAnnotation> annotations;
+
 	/**
 	 * The default value of the '{@link #getDeclaredTypeAccessModifier() <em>Declared Type Access Modifier</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -273,6 +370,101 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.TFUNCTION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setName(String newName) {
+		String oldName = name;
+		name = newName;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__NAME, oldName, name));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDirectlyExported() {
+		return directlyExported;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDirectlyExported(boolean newDirectlyExported) {
+		boolean oldDirectlyExported = directlyExported;
+		directlyExported = newDirectlyExported;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__DIRECTLY_EXPORTED, oldDirectlyExported, directlyExported));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isDirectlyExportedAsDefault() {
+		return directlyExportedAsDefault;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public void setDirectlyExportedAsDefault(boolean newDirectlyExportedAsDefault) {
+		boolean oldDirectlyExportedAsDefault = directlyExportedAsDefault;
+		directlyExportedAsDefault = newDirectlyExportedAsDefault;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT, oldDirectlyExportedAsDefault, directlyExportedAsDefault));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<ElementExportDefinition> getExportingExportDefinitions() {
+		if (exportingExportDefinitions == null) {
+			exportingExportDefinitions = new EObjectResolvingEList<ElementExportDefinition>(ElementExportDefinition.class, this, TypesPackage.TFUNCTION__EXPORTING_EXPORT_DEFINITIONS);
+		}
+		return exportingExportDefinitions;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TAnnotation> getAnnotations() {
+		if (annotations == null) {
+			annotations = new EObjectContainmentEList<TAnnotation>(TAnnotation.class, this, TypesPackage.TFUNCTION__ANNOTATIONS);
+		}
+		return annotations;
 	}
 
 	/**
@@ -633,6 +825,17 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 * @generated
 	 */
 	@Override
+	public boolean isGeneric() {
+		boolean _isEmpty = this.getTypeVars().isEmpty();
+		return (!_isEmpty);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public TFormalParameter getFparForArgIdx(final int argIndex) {
 		final int fparsSize = this.getFpars().size();
 		if (((argIndex >= 0) && (argIndex < fparsSize))) {
@@ -769,8 +972,77 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 * @generated
 	 */
 	@Override
+	public boolean isHollow() {
+		return false;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isExported() {
+		return (this.isDirectlyExported() || this.isIndirectlyExported());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public boolean isIndirectlyExported() {
+		int _size = this.getExportingExportDefinitions().size();
+		int _xifexpression = (int) 0;
+		boolean _isDirectlyExported = this.isDirectlyExported();
+		if (_isDirectlyExported) {
+			_xifexpression = 1;
+		}
+		else {
+			_xifexpression = 0;
+		}
+		return (_size > _xifexpression);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String getDirectlyExportedName() {
+		boolean _isDirectlyExported = this.isDirectlyExported();
+		if (_isDirectlyExported) {
+			boolean _isDirectlyExportedAsDefault = this.isDirectlyExportedAsDefault();
+			if (_isDirectlyExportedAsDefault) {
+				return UtilN4.EXPORT_DEFAULT_NAME;
+			}
+			return this.getName();
+		}
+		return null;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public TModule getContainingModule() {
+		return EcoreUtil2.<TModule>getContainerOfType(this, TModule.class);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case TypesPackage.TFUNCTION__ANNOTATIONS:
+				return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TFUNCTION__FPARS:
 				return ((InternalEList<?>)getFpars()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TFUNCTION__RETURN_TYPE_REF:
@@ -789,6 +1061,16 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypesPackage.TFUNCTION__NAME:
+				return getName();
+			case TypesPackage.TFUNCTION__DIRECTLY_EXPORTED:
+				return isDirectlyExported();
+			case TypesPackage.TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT:
+				return isDirectlyExportedAsDefault();
+			case TypesPackage.TFUNCTION__EXPORTING_EXPORT_DEFINITIONS:
+				return getExportingExportDefinitions();
+			case TypesPackage.TFUNCTION__ANNOTATIONS:
+				return getAnnotations();
 			case TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER:
 				return getDeclaredTypeAccessModifier();
 			case TypesPackage.TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME:
@@ -825,6 +1107,23 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypesPackage.TFUNCTION__NAME:
+				setName((String)newValue);
+				return;
+			case TypesPackage.TFUNCTION__DIRECTLY_EXPORTED:
+				setDirectlyExported((Boolean)newValue);
+				return;
+			case TypesPackage.TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT:
+				setDirectlyExportedAsDefault((Boolean)newValue);
+				return;
+			case TypesPackage.TFUNCTION__EXPORTING_EXPORT_DEFINITIONS:
+				getExportingExportDefinitions().clear();
+				getExportingExportDefinitions().addAll((Collection<? extends ElementExportDefinition>)newValue);
+				return;
+			case TypesPackage.TFUNCTION__ANNOTATIONS:
+				getAnnotations().clear();
+				getAnnotations().addAll((Collection<? extends TAnnotation>)newValue);
+				return;
 			case TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER:
 				setDeclaredTypeAccessModifier((TypeAccessModifier)newValue);
 				return;
@@ -871,6 +1170,21 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypesPackage.TFUNCTION__NAME:
+				setName(NAME_EDEFAULT);
+				return;
+			case TypesPackage.TFUNCTION__DIRECTLY_EXPORTED:
+				setDirectlyExported(DIRECTLY_EXPORTED_EDEFAULT);
+				return;
+			case TypesPackage.TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT:
+				setDirectlyExportedAsDefault(DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT);
+				return;
+			case TypesPackage.TFUNCTION__EXPORTING_EXPORT_DEFINITIONS:
+				getExportingExportDefinitions().clear();
+				return;
+			case TypesPackage.TFUNCTION__ANNOTATIONS:
+				getAnnotations().clear();
+				return;
 			case TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER:
 				setDeclaredTypeAccessModifier(DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT);
 				return;
@@ -916,6 +1230,16 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypesPackage.TFUNCTION__NAME:
+				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+			case TypesPackage.TFUNCTION__DIRECTLY_EXPORTED:
+				return directlyExported != DIRECTLY_EXPORTED_EDEFAULT;
+			case TypesPackage.TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT:
+				return directlyExportedAsDefault != DIRECTLY_EXPORTED_AS_DEFAULT_EDEFAULT;
+			case TypesPackage.TFUNCTION__EXPORTING_EXPORT_DEFINITIONS:
+				return exportingExportDefinitions != null && !exportingExportDefinitions.isEmpty();
+			case TypesPackage.TFUNCTION__ANNOTATIONS:
+				return annotations != null && !annotations.isEmpty();
 			case TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER:
 				return declaredTypeAccessModifier != DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT;
 			case TypesPackage.TFUNCTION__DECLARED_PROVIDED_BY_RUNTIME:
@@ -949,6 +1273,36 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == TypableElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == IdentifiableElement.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.TFUNCTION__NAME: return TypesPackage.IDENTIFIABLE_ELEMENT__NAME;
+				default: return -1;
+			}
+		}
+		if (baseClass == TExportableElement.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.TFUNCTION__DIRECTLY_EXPORTED: return TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED;
+				case TypesPackage.TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT: return TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT;
+				case TypesPackage.TFUNCTION__EXPORTING_EXPORT_DEFINITIONS: return TypesPackage.TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS;
+				default: return -1;
+			}
+		}
+		if (baseClass == TAnnotableElement.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.TFUNCTION__ANNOTATIONS: return TypesPackage.TANNOTABLE_ELEMENT__ANNOTATIONS;
+				default: return -1;
+			}
+		}
+		if (baseClass == TNamespaceElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == AccessibleTypeElement.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER;
@@ -972,6 +1326,36 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == TypableElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == IdentifiableElement.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.IDENTIFIABLE_ELEMENT__NAME: return TypesPackage.TFUNCTION__NAME;
+				default: return -1;
+			}
+		}
+		if (baseClass == TExportableElement.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED: return TypesPackage.TFUNCTION__DIRECTLY_EXPORTED;
+				case TypesPackage.TEXPORTABLE_ELEMENT__DIRECTLY_EXPORTED_AS_DEFAULT: return TypesPackage.TFUNCTION__DIRECTLY_EXPORTED_AS_DEFAULT;
+				case TypesPackage.TEXPORTABLE_ELEMENT__EXPORTING_EXPORT_DEFINITIONS: return TypesPackage.TFUNCTION__EXPORTING_EXPORT_DEFINITIONS;
+				default: return -1;
+			}
+		}
+		if (baseClass == TAnnotableElement.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.TANNOTABLE_ELEMENT__ANNOTATIONS: return TypesPackage.TFUNCTION__ANNOTATIONS;
+				default: return -1;
+			}
+		}
+		if (baseClass == TNamespaceElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == AccessibleTypeElement.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.TFUNCTION__DECLARED_TYPE_ACCESS_MODIFIER;
@@ -995,12 +1379,34 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 	 */
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
-		if (baseClass == Type.class) {
+		if (baseClass == TypableElement.class) {
 			switch (baseOperationID) {
-				case TypesPackage.TYPE___IS_PROVIDED_BY_RUNTIME: return TypesPackage.TFUNCTION___IS_PROVIDED_BY_RUNTIME;
-				case TypesPackage.TYPE___IS_FINAL: return TypesPackage.TFUNCTION___IS_FINAL;
-				case TypesPackage.TYPE___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TFUNCTION___GET_TYPE_ACCESS_MODIFIER;
-				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+				default: return -1;
+			}
+		}
+		if (baseClass == IdentifiableElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.IDENTIFIABLE_ELEMENT___GET_CONTAINING_MODULE: return TypesPackage.TFUNCTION___GET_CONTAINING_MODULE;
+				default: return -1;
+			}
+		}
+		if (baseClass == TExportableElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TEXPORTABLE_ELEMENT___IS_EXPORTED: return TypesPackage.TFUNCTION___IS_EXPORTED;
+				case TypesPackage.TEXPORTABLE_ELEMENT___IS_INDIRECTLY_EXPORTED: return TypesPackage.TFUNCTION___IS_INDIRECTLY_EXPORTED;
+				case TypesPackage.TEXPORTABLE_ELEMENT___GET_DIRECTLY_EXPORTED_NAME: return TypesPackage.TFUNCTION___GET_DIRECTLY_EXPORTED_NAME;
+				default: return -1;
+			}
+		}
+		if (baseClass == TAnnotableElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == TNamespaceElement.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TNAMESPACE_ELEMENT___IS_HOLLOW: return TypesPackage.TFUNCTION___IS_HOLLOW;
+				default: return -1;
 			}
 		}
 		if (baseClass == AccessibleTypeElement.class) {
@@ -1035,6 +1441,8 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return isCallSignature();
 			case TypesPackage.TFUNCTION___IS_CONSTRUCT_SIGNATURE:
 				return isConstructSignature();
+			case TypesPackage.TFUNCTION___IS_GENERIC:
+				return isGeneric();
 			case TypesPackage.TFUNCTION___GET_FPAR_FOR_ARG_IDX__INT:
 				return getFparForArgIdx((Integer)arguments.get(0));
 			case TypesPackage.TFUNCTION___GET_FUNCTION_AS_STRING:
@@ -1049,6 +1457,16 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 				return getTypeAccessModifier();
 			case TypesPackage.TFUNCTION___GET_DEFAULT_TYPE_ACCESS_MODIFIER:
 				return getDefaultTypeAccessModifier();
+			case TypesPackage.TFUNCTION___IS_HOLLOW:
+				return isHollow();
+			case TypesPackage.TFUNCTION___IS_EXPORTED:
+				return isExported();
+			case TypesPackage.TFUNCTION___IS_INDIRECTLY_EXPORTED:
+				return isIndirectlyExported();
+			case TypesPackage.TFUNCTION___GET_DIRECTLY_EXPORTED_NAME:
+				return getDirectlyExportedName();
+			case TypesPackage.TFUNCTION___GET_CONTAINING_MODULE:
+				return getContainingModule();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
@@ -1063,7 +1481,13 @@ public class TFunctionImpl extends GenericTypeImpl implements TFunction {
 		if (eIsProxy()) return super.toString();
 
 		StringBuilder result = new StringBuilder(super.toString());
-		result.append(" (declaredTypeAccessModifier: ");
+		result.append(" (name: ");
+		result.append(name);
+		result.append(", directlyExported: ");
+		result.append(directlyExported);
+		result.append(", directlyExportedAsDefault: ");
+		result.append(directlyExportedAsDefault);
+		result.append(", declaredTypeAccessModifier: ");
 		result.append(declaredTypeAccessModifier);
 		result.append(", declaredProvidedByRuntime: ");
 		result.append(declaredProvidedByRuntime);

@@ -42,7 +42,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
  * @model
  * @generated
  */
-public interface TFunction extends GenericType, AccessibleTypeElement, SyntaxRelatedTElement {
+public interface TFunction extends GenericType, TExportableElement, TAnnotableElement, TNamespaceElement, AccessibleTypeElement, SyntaxRelatedTElement {
 	/**
 	 * Returns the value of the '<em><b>External</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -269,6 +269,19 @@ public interface TFunction extends GenericType, AccessibleTypeElement, SyntaxRel
 	 * @generated
 	 */
 	boolean isConstructSignature();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Convenience method, returns true if at least one type variable is defined.
+	 * This actually returns false for most kind of types, only ContainerTypes (such as TClassifiers) may be declared generic---
+	 * this method is introduced to simplify client code and reduce the number of instance-of cascades.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isGeneric();
 
 	/**
 	 * <!-- begin-user-doc -->

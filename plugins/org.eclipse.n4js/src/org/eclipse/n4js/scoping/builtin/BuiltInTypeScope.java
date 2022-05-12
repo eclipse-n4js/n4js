@@ -31,6 +31,7 @@ import org.eclipse.n4js.ts.types.NullType;
 import org.eclipse.n4js.ts.types.PrimitiveType;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -676,7 +677,7 @@ public final class BuiltInTypeScope extends EnumerableScope {
 		beforeRegistration(fileName, module);
 
 		// register types
-		for (Type type : module.getTypesAndFunctions()) {
+		for (TExportableElement type : module.getTypesAndFunctions()) {
 			IEObjectDescription description = EObjectDescription.create(type.getName(), type);
 			elements.put(description.getName(), description);
 		}

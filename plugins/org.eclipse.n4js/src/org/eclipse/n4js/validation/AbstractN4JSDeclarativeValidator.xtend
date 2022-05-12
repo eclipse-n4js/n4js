@@ -331,10 +331,10 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 	 * @param genericFunctionDeclaration the generic function or method declaration to check.
 	 */
 	protected def <T extends GenericDeclaration & FunctionDefinition> internalCheckNoUnusedTypeParameters(T genericFunctionOrMethod) {
-		if (genericFunctionOrMethod.definedType === null)
+		if (genericFunctionOrMethod.definedFunction === null)
 			return;
 
-		val TFunction functionType = genericFunctionOrMethod.definedType as TFunction;
+		val TFunction functionType = genericFunctionOrMethod.definedFunction;
 		internalCheckNoUnusedTypeParameters(genericFunctionOrMethod, genericFunctionOrMethod.typeVars, functionType.typeVars);
 	}
 
@@ -348,7 +348,7 @@ public abstract class AbstractN4JSDeclarativeValidator extends AbstractMessageAd
 		if (functionTypeExpInAST.declaredType === null)
 			return;
 
-		val TFunction declaredType = functionTypeExpInAST.declaredType;
+		val TFunction declaredType = functionTypeExpInAST.declaredFunction;
 		internalCheckNoUnusedTypeParameters(functionTypeExpInAST, functionTypeExpInAST.ownedTypeVars, declaredType.typeVars);
 	}
 

@@ -189,7 +189,7 @@ class N4JSAccessModifierValidator extends AbstractN4JSDeclarativeValidator {
 				VariableStatement case directlyExported:
 					it.varDecl.head?.definedVariable?.typeAccessModifier
 				FunctionDeclaration:
-					definedType?.typeAccessModifier
+					definedFunction?.typeAccessModifier
 				TypeDefiningElement:
 					definedType?.typeAccessModifier
 				default:

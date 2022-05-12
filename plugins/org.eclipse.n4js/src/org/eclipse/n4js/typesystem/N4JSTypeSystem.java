@@ -21,9 +21,7 @@ import org.eclipse.n4js.postprocessing.TypeProcessor;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -223,7 +221,7 @@ public class N4JSTypeSystem {
 	 * <p>
 	 * NOTE: unlike {@link Wildcard}s, {@link ExistentialTypeRef}s, and {@link BoundThisTypeRef}s, type variables are
 	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
-	 * or inside a {@link FunctionTypeExprOrRef} (as the type of a parameter or return type).
+	 * or inside a {@link FunctionTypeExpression} (as the type of a parameter or return type).
 	 */
 	public TypeRef upperBoundWithReopenAndResolveTypeVars(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyUpperBound(G, typeArgument, true, true, false);
@@ -236,7 +234,7 @@ public class N4JSTypeSystem {
 	 * <p>
 	 * NOTE: unlike {@link Wildcard}s, {@link ExistentialTypeRef}s, and {@link BoundThisTypeRef}s, literal types are
 	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
-	 * or inside a {@link FunctionTypeExprOrRef} (as the type of a parameter or return type).
+	 * or inside a {@link FunctionTypeExpression} (as the type of a parameter or return type).
 	 */
 	public TypeRef upperBoundWithReopenAndResolveLiteralTypes(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyUpperBound(G, typeArgument, true, false, true);
@@ -293,7 +291,7 @@ public class N4JSTypeSystem {
 	 * <p>
 	 * NOTE: unlike {@link Wildcard}s, {@link ExistentialTypeRef}s, and {@link BoundThisTypeRef}s, type variables are
 	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
-	 * or inside a {@link FunctionTypeExprOrRef} (as parameter or return type).
+	 * or inside a {@link FunctionTypeExpression} (as parameter or return type).
 	 */
 	public TypeRef lowerBoundWithReopenAndResolveTypeVars(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyLowerBound(G, typeArgument, true, true, false);
@@ -305,7 +303,7 @@ public class N4JSTypeSystem {
 	 * <p>
 	 * NOTE: unlike {@link Wildcard}s, {@link ExistentialTypeRef}s, and {@link BoundThisTypeRef}s, literal types are
 	 * only affected on top-level, i.e. not if they are nested inside a {@link ParameterizedTypeRef} (as type argument)
-	 * or inside a {@link FunctionTypeExprOrRef} (as the type of a parameter or return type).
+	 * or inside a {@link FunctionTypeExpression} (as the type of a parameter or return type).
 	 */
 	public TypeRef lowerBoundWithReopenAndResolveLiteralTypes(RuleEnvironment G, TypeArgument typeArgument) {
 		return boundJudgment.applyLowerBound(G, typeArgument, true, false, true);
@@ -351,8 +349,7 @@ public class N4JSTypeSystem {
 	 * performed.
 	 * <p>
 	 * INVARIANT: if you pass in a {@link TypeRef}, you'll get a {@code TypeRef} back (only other case: pass in a
-	 * {@link Wildcard} and you'll get a {@code Wildcard} back). But this is not true for subclasses of {@code TypeRef},
-	 * e.g. pass in a {@link FunctionTypeRef} and you might get a {@link FunctionTypeExpression} back.
+	 * {@link Wildcard} and you'll get a {@code Wildcard} back).
 	 * <p>
 	 * NOTE: in some cases, this method converts nested {@code Wildcard}s to an {@link ExistentialTypeRef} with
 	 * {@code reopened == true}, because due to substitution {@code Wildcard}s may end up in positions where only

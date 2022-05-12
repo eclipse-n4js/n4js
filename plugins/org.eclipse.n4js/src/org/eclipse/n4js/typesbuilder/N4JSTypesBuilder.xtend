@@ -59,6 +59,7 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.DerivedStateAwareResource
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.ts.types.TFunction
 
 /**
  * This class with its {@link N4JSTypesBuilder#createTModuleFromSource(DerivedStateAwareResource,boolean) createTModuleFromSource()}
@@ -257,6 +258,7 @@ public class N4JSTypesBuilder {
 			// ~Object with { number fieldOfField; } field;
 			// } x;
 			val List<Type> addTypesToTargets = new ArrayList();
+			val List<TFunction> addFunctionsToTargets = new ArrayList();
 			for (tr : script.eAllContents.filter(TypeRef).toList.reverseView) {
 				switch tr {
 					StructuralTypeRef: {
@@ -268,7 +270,7 @@ public class N4JSTypesBuilder {
 					FunctionTypeExpression: {
 						tr.createTFunction()
 						if (tr.declaredType !== null) {
-							addTypesToTargets += tr.declaredType;
+							addFunctionsToTargets += tr.declaredFunction;
 						}
 					}
 					N4NamespaceDeclaration: {
@@ -282,6 +284,9 @@ public class N4JSTypesBuilder {
 			
 			for (Type type : addTypesToTargets) {
 				target.internalTypes += type;
+			}
+			for (TFunction function : addFunctionsToTargets) {
+				target.internalFunctions += function;
 			}
 		}
 	}

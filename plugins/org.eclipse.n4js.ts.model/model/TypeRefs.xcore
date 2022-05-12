@@ -346,11 +346,7 @@ abstract class TypeRef extends TypeArgument {
 	}
 }
 
-abstract class StaticBaseTypeRef extends TypeRef {
-	// pulled nullModififer and UndefModdifier up as part of IDEBUG-596
-}
-
-abstract class BaseTypeRef extends StaticBaseTypeRef {
+abstract class BaseTypeRef extends TypeRef {
 	/*
 	 * Flag indicating that new properties can be dynamically added to the type. Default value is false.
 	 */
@@ -371,7 +367,7 @@ abstract class BaseTypeRef extends StaticBaseTypeRef {
  * Base class for type references containing an ordered set of other types, that is
  * {@link UnionTypeExpression} and {@link IntersectionTypeExpression}.
  */
-abstract class ComposedTypeRef extends StaticBaseTypeRef {
+abstract class ComposedTypeRef extends TypeRef {
 	/*
 	 * Union type cannot be marked as dynamic
 	 */
@@ -1091,43 +1087,127 @@ class Wildcard extends TypeArgument {
 	}
 }
 
-
 /*
- * Base class for {@link FunctionTypeRef} and {@link FunctionTypeExpression}.
+ * Function type expression for declaring the type of a variable, parameter, etc. as a function.
+ * Clients only <em>using</em> these kind of references should probably better use the API of
+ * {@link FunctionTypeExprOrRef}.
+ * <p>
+ * There are the following use cases of FunctionTypeExpressions:
+ * <ol>
+ * <li>ordinary, self-contained function type expressions, in particular (i) non-generic
+ *     <em>and</em> generic function type expressions that were created programmatically and
+ *     (ii) AST nodes for non(!)-generic function type expressions (<b>standard use case</b>).
+ * <li>those that are created by type system rule 'substTypeVariablesInFunctionType[ExprOr]Ref'
+ *     as a copy of another
+ *     <ol type="a">
+ *     <li>FunctionTypeRef or
+ *     <li>FunctionTypeExpression
+ *     </ol>
+ *     to represent a particular binding of the original FunctionTypeRef/FunctionTypeExpression
+ *     (<b>work-around case</b>).
+ * <li>those that represent AST nodes for <em>generic</em> function type expressions
+ *     (<b>work-around case</b>).
+ * </ol>
+ * In standard case 1 the FunctionTypeExpression does *not* have a 'declaredType', because it
+ * does not define an actual function (no element like TFunction to be stored in type model).
+ * This is why class FunctionTypeExpression does not inherit from BaseTypeRef.
+ * <p>
+ * Case 2 is only a work-around, because the FunctionTypeRef cannot hold bound references to the
+ * function's parameters, and therefore a FunctionTypeExpression is created in the xsemantics rule
+ * 'substTypeVariablesInFunctionType[ExprOr]Ref' to represent the binding. In case 2.a only, the
+ * FunctionTypeExpression will have a 'declaredType' pointing to the TFunction of the original
+ * FunctionTypeRef.
+ * <p>
+ * Case 3 is also a work-around, required because resolution of lazy links takes place after the
+ * types builder may have copied the FunctionTypeExpression contained in the AST and therefore the
+ * lazy references to the type variables will be copied to the types model as well. As a result,
+ * it is impossible to let the type variable references point to different type variables in the
+ * original and copied function type expressions (which would be required for the "self-contained"
+ * use case #1 above). The solution is to create a TFunction from the function type expression
+ * contained in the AST and let all type variable references point to the type variables in that
+ * TFunction. After this adjustment, the function type expression in the AST can be copied without
+ * any special handling.
+ * <p>
+ * Note: this class is intended for function type(!) expressions and may play the role of an
+ * ordinary type reference or an AST node; for function expressions there exists a different
+ * class {@link org.eclipse.n4js.n4JS.FunctionExpression FunctionExpression} that can
+ * only be used as an AST node.
  */
-abstract class FunctionTypeExprOrRef extends StaticBaseTypeRef {
+class FunctionTypeExpression extends TypeRef {
 	/*
+	 * Tells if this FunctionTypeExpression represents a binding of a TFunction or
+	 * another FunctionTypeExpression (use cases 2.a and 2.b, respectively).
+	 * Always true in use case 2; always false in use cases 1 and 3.
+	 */
+	boolean binding
+	
+	/*
+	 * Always <code>null</code> in use case 1. In use case 2.a (not 2.b) this refers(!)
+	 * to the original TFunction for which this FunctionTypeExpression represents a binding.
+	 * In use case 3 this refers(!) to the TFunction in the type model generated from
+	 * the FunctionTypeExpression in the AST.
+	 * For more details on use cases see API doc of {@link FunctionTypeExpression}.
+	 */
+	refers TFunction declaredFunction
+	
+	/*
+	 * Reference to the declared this-type via @This annotation inside the FunctionTypeExpression.
+	 * In use case 2.a this is a copy of <code>declaredType.declaredThisType</code>, in use case
+	 * 2.b this is a copy of the original FunctionTypeExperession's declaredThisType.
+	 * 
 	 * optional thisType declaration e.g. for a given class A it's member-type can be specified as "{A.function():void}"
 	 */
-	op TypeRef getDeclaredThisType()
+	contains TypeRef declaredThisType
 	/*
-	 * Convenience method, returns the declared type casted to a TFunction
+	 * Type variables declared in FunctionTypeExpression (programmatically or in the AST).
+	 * In use case #2 this is always empty.
 	 */
-	op TFunction getFunctionType() {
-		return declaredType as TFunction
-	}
+	contains TypeVariable[] ownedTypeVars
 	/*
-	 * The type variables as declared in the expression or of the referenced function type.
+	 * Always empty in use cases #1 and #3.
+	 * In use case #2 this refers(!) to those type variables of the 'declaredType' (case 2.a)
+	 * or original FunctionTypeExpression (case 2.b) that were *not* bound when creating this
+	 * FunctionTypeExpression as a representation of a particular type variable binding of the
+	 * 'declaredType' / original FunctionTypeExpression.
 	 */
-	op TypeVariable[] getTypeVars()
+	refers TypeVariable[] unboundTypeVars
 	/*
-	 * Returns the upper bounds of the given type variable (which should be one of those returned by
-	 * {@link FunctionTypeExprOrRef#getTypeVars()}). Never read the upper bounds directly from the type variable in
-	 * case of type variables coming from a FunctionTypeExprOrRef; for more info why this is required, see
-	 * {@link FunctionTypeExpression#getTypeVarUpperBound(TypeVariable)}.
+	 * Property 'unboundTypeVars' refers to type variables contained somewhere else. During type variable substitution,
+	 * we would have to substitute type variables in these upper bounds, but we cannot, of course, directly change them.
+	 * Thus, for the type variables in unboundTypeVars, rule 'substTypeVariablesInFunctionType[ExprOr]Ref' will store
+	 * the upper bounds here, but only if they are different from the type variables original upper bounds. If they are
+	 * not different, then an UnknownTypeRef will be used in this list for padding.
 	 */
-	op TypeRef getTypeVarUpperBound(TypeVariable typeVar)
+	contains TypeRef[] unboundTypeVarsUpperBounds
+	// TODO extract FormalParameterContainer
 	/*
-	 * The formal parameters as declared in the expression or of the referenced function type.
+	 * Formal parameters declared in the FunctionTypeExpression in the AST or
+	 * a copy of the formal parameters of the 'declaredType' or original FunctionTypeExpression.
 	 */
-	op TFormalParameter[] getFpars()
+	contains TFormalParameter[] fpars
+	/*
+	 * Return type declared in the FunctionTypeExpression in the AST or
+	 * a copy of the return type of the 'declaredType' or original FunctionTypeExpression.
+	 */
+	contains TypeRef returnTypeRef
+	/*
+	 * Explicitly marks the return value of this FunctionTypeExpression as optional. This only used for function type
+	 * expressions that are created programmatically. Those that appear in the AST will instead have a 'returnTypeRef'
+	 * with 'followedByQuestionMark' set to <code>true</code>.
+	 * This will probably become obsolete once we implement undefined/null analysis.
+	 */
+	boolean returnValueMarkedOptional
 	op boolean isReturnValueOptional() {
-		return returnTypeRef!==null && returnTypeRef.followedByQuestionMark;
+		return returnValueMarkedOptional || (returnTypeRef!==null && returnTypeRef.followedByQuestionMark);
 	}
 	/*
-	 * The return type as declared in the expression or of the referenced function type.
+	 * Returns 'ownedTypeVars' in use case #1, 'unboundTypeVars' in use case #2 and the type
+	 * variables of the TFunction that was generated from the AST node in use case #3.
+	 * For more details on use cases see API doc of {@link FunctionTypeExpression}.
 	 */
-	op TypeRef getReturnTypeRef()
+	op TypeVariable[] getTypeVars() {
+		return if(isBinding) unboundTypeVars else ( if(declaredFunction!==null) declaredFunction.typeVars else ownedTypeVars );
+	}
 	// TODO returntype -> declaredReturnType
 	// TODO returntype = declared || default (Any!?)
 	/*
@@ -1175,147 +1255,9 @@ abstract class FunctionTypeExprOrRef extends StaticBaseTypeRef {
 			+ (if (returnValueOptional) "?" else "")
 			+ "}" + getModifiersAsString();
 	}
-}
-
-/*
- * Function type, always references a function, that is, declaredType returns a TFunction.
- * This kind of reference is created implicitly by function calls. Clients only <em>using</em> this kind
- * of references should probably better use {@link FunctionTypeExprOrRef}.
- */
-class FunctionTypeRef extends ParameterizedTypeRef, FunctionTypeExprOrRef {
-	/*
-	 * Convenience method, returns the declared this type of the referenced function type.
-	 */
-	op TypeRef getDeclaredThisType() {
-		return functionType.declaredThisType
-	}
-	/*
-	 * Convenience method, returns the type variables of the referenced function type.
-	 */
-	op TypeVariable[] getTypeVars() {
-		return functionType.typeVars
-	}
-	/*
-	 * Simply returns the given type variable's declared upper bounds (required by super class API).
-	 */
-	op TypeRef getTypeVarUpperBound(TypeVariable typeVar) {
-		return typeVar.declaredUpperBound;
-	}
-	/*
-	 * Convenience method, returns the fpars of the referenced function type.
-	 */
-	op TFormalParameter[] getFpars() {
-		return functionType.fpars
-	}
-	/*
-	 * Convenience method, returns the return type of the referenced function type.
-	 */
-	op TypeRef getReturnTypeRef() {
-		return functionType.returnTypeRef
-	}
-}
-
-/*
- * Function type expression for declaring the type of a variable, parameter, etc. as a function.
- * Clients only <em>using</em> these kind of references should probably better use the API of
- * {@link FunctionTypeExprOrRef}.
- * <p>
- * There are the following use cases of FunctionTypeExpressions:
- * <ol>
- * <li>ordinary, self-contained function type expressions, in particular (i) non-generic
- *     <em>and</em> generic function type expressions that were created programmatically and
- *     (ii) AST nodes for non(!)-generic function type expressions (<b>standard use case</b>).
- * <li>those that are created by type system rule 'substTypeVariablesInFunctionType[ExprOr]Ref'
- *     as a copy of another
- *     <ol type="a">
- *     <li>FunctionTypeRef or
- *     <li>FunctionTypeExpression
- *     </ol>
- *     to represent a particular binding of the original FunctionTypeRef/FunctionTypeExpression
- *     (<b>work-around case</b>).
- * <li>those that represent AST nodes for <em>generic</em> function type expressions
- *     (<b>work-around case</b>).
- * </ol>
- * In standard case 1 the FunctionTypeExpression does *not* have a 'declaredType', because it
- * does not define an actual function (no element like TFunction to be stored in type model).
- * This is why class FunctionTypeExpression does not inherit from BaseTypeRef.
- * <p>
- * Case 2 is only a work-around, because the FunctionTypeRef cannot hold bound references to the
- * function's parameters, and therefore a FunctionTypeExpression is created in the xsemantics rule
- * 'substTypeVariablesInFunctionType[ExprOr]Ref' to represent the binding. In case 2.a only, the
- * FunctionTypeExpression will have a 'declaredType' pointing to the TFunction of the original
- * FunctionTypeRef.
- * <p>
- * Case 3 is also a work-around, required because resolution of lazy links takes place after the
- * types builder may have copied the FunctionTypeExpression contained in the AST and therefore the
- * lazy references to the type variables will be copied to the types model as well. As a result,
- * it is impossible to let the type variable references point to different type variables in the
- * original and copied function type expressions (which would be required for the "self-contained"
- * use case #1 above). The solution is to create a TFunction from the function type expression
- * contained in the AST and let all type variable references point to the type variables in that
- * TFunction. After this adjustment, the function type expression in the AST can be copied without
- * any special handling.
- * <p>
- * Note: this class is intended for function type(!) expressions and may play the role of an
- * ordinary type reference or an AST node; for function expressions there exists a different
- * class {@link org.eclipse.n4js.n4JS.FunctionExpression FunctionExpression} that can
- * only be used as an AST node.
- */
-class FunctionTypeExpression extends FunctionTypeExprOrRef {
-
-	/*
-	 * Tells if this FunctionTypeExpression represents a binding of a TFunction or
-	 * another FunctionTypeExpression (use cases 2.a and 2.b, respectively).
-	 * Always true in use case 2; always false in use cases 1 and 3.
-	 */
-	boolean binding
-
-	/*
-	 * Always <code>null</code> in use case 1. In use case 2.a (not 2.b) this refers(!)
-	 * to the original TFunction for which this FunctionTypeExpression represents a binding.
-	 * In use case 3 this refers(!) to the TFunction in the type model generated from
-	 * the FunctionTypeExpression in the AST.
-	 * For more details on use cases see API doc of {@link FunctionTypeExpression}.
-	 */
-	refers TFunction declaredType
-	/*
-	 * Reference to the declared this-type via @This annotation inside the FunctionTypeExpression.
-	 * In use case 2.a this is a copy of <code>declaredType.declaredThisType</code>, in use case
-	 * 2.b this is a copy of the original FunctionTypeExperession's declaredThisType.
-	 */
-	contains TypeRef declaredThisType
-	/*
-	 * Type variables declared in FunctionTypeExpression (programmatically or in the AST).
-	 * In use case #2 this is always empty.
-	 */
-	contains TypeVariable[] ownedTypeVars
-	/*
-	 * Always empty in use cases #1 and #3.
-	 * In use case #2 this refers(!) to those type variables of the 'declaredType' (case 2.a)
-	 * or original FunctionTypeExpression (case 2.b) that were *not* bound when creating this
-	 * FunctionTypeExpression as a representation of a particular type variable binding of the
-	 * 'declaredType' / original FunctionTypeExpression.
-	 */
-	refers TypeVariable[] unboundTypeVars
-	/*
-	 * Property 'unboundTypeVars' refers to type variables contained somewhere else. During type variable substitution,
-	 * we would have to substitute type variables in these upper bounds, but we cannot, of course, directly change them.
-	 * Thus, for the type variables in unboundTypeVars, rule 'substTypeVariablesInFunctionType[ExprOr]Ref' will store
-	 * the upper bounds here, but only if they are different from the type variables original upper bounds. If they are
-	 * not different, then an UnknownTypeRef will be used in this list for padding.
-	 */
-	contains TypeRef[] unboundTypeVarsUpperBounds
-	/*
-	 * Returns 'ownedTypeVars' in use case #1, 'unboundTypeVars' in use case #2 and the type
-	 * variables of the TFunction that was generated from the AST node in use case #3.
-	 * For more details on use cases see API doc of {@link FunctionTypeExpression}.
-	 */
-	op TypeVariable[] getTypeVars() {
-		return if(isBinding) unboundTypeVars else ( if(declaredType!==null) declaredType.typeVars else ownedTypeVars );
-	}
 	/*
 	 * Returns the upper bounds of the given type variable (which should be one of those returned by
-	 * {@link FunctionTypeExprOrRef#getTypeVars()}). Usually, this will just return
+	 * {@link FunctionTypeExpression#getTypeVars()}). Usually, this will just return
 	 * {@link TypeVariable#getDeclaredUpperBounds()}, but in case of a FunctionTypeExpression created during type
 	 * variable substitution, a different upper bound might be returned (i.e. original upper bound after type variable
 	 * substitution).
@@ -1336,27 +1278,6 @@ class FunctionTypeExpression extends FunctionTypeExprOrRef {
 		}
 		return typeVar.declaredUpperBound;
 	}
-	// TODO extract FormalParameterContainer
-	/*
-	 * Formal parameters declared in the FunctionTypeExpression in the AST or
-	 * a copy of the formal parameters of the 'declaredType' or original FunctionTypeExpression.
-	 */
-	contains TFormalParameter[] fpars
-	/*
-	 * Explicitly marks the return value of this FunctionTypeExpression as optional. This only used for function type
-	 * expressions that are created programmatically. Those that appear in the AST will instead have a 'returnTypeRef'
-	 * with 'followedByQuestionMark' set to <code>true</code>.
-	 * This will probably become obsolete once we implement undefined/null analysis.
-	 */
-	boolean returnValueMarkedOptional
-	op boolean isReturnValueOptional() {
-		return returnValueMarkedOptional || (returnTypeRef!==null && returnTypeRef.followedByQuestionMark);
-	}
-	/*
-	 * Return type declared in the FunctionTypeExpression in the AST or
-	 * a copy of the return type of the 'declaredType' or original FunctionTypeExpression.
-	 */
-	contains TypeRef returnTypeRef
 }
 
 /**

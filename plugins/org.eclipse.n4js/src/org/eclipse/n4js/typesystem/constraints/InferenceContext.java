@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -275,7 +275,7 @@ public final class InferenceContext {
 	 *
 	 * Note that the returned function type is non-generic.
 	 */
-	public FunctionTypeExprOrRef newInferenceVariablesFor(FunctionTypeExprOrRef funTypeRef) {
+	public FunctionTypeExpression newInferenceVariablesFor(FunctionTypeExpression funTypeRef) {
 		if (!funTypeRef.isGeneric())
 			return funTypeRef;
 		final List<TypeVariable> typeParams = funTypeRef.getTypeVars(); // NOTE: typeParam may contain null entries!
@@ -285,8 +285,8 @@ public final class InferenceContext {
 		final RuleEnvironment G_params2infVars = RuleEnvironmentExtensions.newRuleEnvironment(G); // new, empty RE
 		RuleEnvironmentExtensions.addTypeMappings(G_params2infVars, typeParams, newInfVarsRefs);
 		final TypeArgument left_withInfVars = ts.substTypeVariables(G_params2infVars, funTypeRef);
-		if (left_withInfVars instanceof FunctionTypeExprOrRef)
-			return (FunctionTypeExprOrRef) left_withInfVars;
+		if (left_withInfVars instanceof FunctionTypeExpression)
+			return (FunctionTypeExpression) left_withInfVars;
 		// in case of substitution error: return original funTypeRef
 		return funTypeRef;
 	}

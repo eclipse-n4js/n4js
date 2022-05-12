@@ -33,7 +33,7 @@ import org.eclipse.emf.common.util.EList;
  * @model abstract="true"
  * @generated
  */
-public interface ComposedTypeRef extends StaticBaseTypeRef {
+public interface ComposedTypeRef extends TypeRef {
 	/**
 	 * Returns the value of the '<em><b>Type Refs</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.TypeRef}.

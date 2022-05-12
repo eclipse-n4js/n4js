@@ -17,10 +17,9 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
-import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -51,15 +50,15 @@ class PromisifyHelper {
 	 * Checks if the given function or method may be annotated with <code>@Promisifiable</code>.
 	 */
 	def public CheckResult checkPromisifiablePreconditions(FunctionDefinition funDef) {
-		val lastFpar = (funDef.definedType as TFunction)?.fpars?.last;
+		val lastFpar = funDef.definedFunction?.fpars?.last;
 		val lastFparTypeRef = lastFpar?.typeRef;
-		if(!(lastFparTypeRef instanceof FunctionTypeExprOrRef)) {
+		if(!(lastFparTypeRef instanceof FunctionTypeExpression)) {
 			// error: last fpar of promisifiable function/method must be a function (i.e. the callback)
 			return CheckResult.MISSING_CALLBACK;
 		}
 		// ok, we have a callback; now check its signature ...
 		val G = funDef.newRuleEnvironment;
-		val callbackTypeRef = lastFparTypeRef as FunctionTypeExprOrRef;
+		val callbackTypeRef = lastFparTypeRef as FunctionTypeExpression;
 		val callbackFpars = callbackTypeRef.fpars;
 		val errorFpars = callbackFpars.filter[isErrorOrSubtype(G,it.typeRef)].toList;
 		if(errorFpars.size>1) {
@@ -95,8 +94,8 @@ class PromisifyHelper {
 		if(expr instanceof ParameterizedCallExpression) {
 			val G = expr.newRuleEnvironment;
 			val targetTypeRef = ts.type(G, expr.target);
-			if(targetTypeRef instanceof FunctionTypeExprOrRef) {
-				val fun = targetTypeRef.functionType;
+			if(targetTypeRef instanceof FunctionTypeExpression) {
+				val fun = targetTypeRef.declaredFunction;
 				return fun!==null && PROMISIFIABLE.hasAnnotation(fun);
 			}
 		}
@@ -112,7 +111,7 @@ class PromisifyHelper {
 		if(isPromisifiableExpression(expr)) {
 			val G = expr.newRuleEnvironment;
 			// casts in next line are OK, because of isPromisifiableExpression() returned true
-			val targetTypeRef = ts.type(G, (expr as ParameterizedCallExpression).target) as FunctionTypeExprOrRef;
+			val targetTypeRef = ts.type(G, (expr as ParameterizedCallExpression).target) as FunctionTypeExpression;
 			val promisifiedReturnTypeRef = extractPromisifiedReturnType(G, targetTypeRef);
 			if(promisifiedReturnTypeRef!==null) {
 				return promisifiedReturnTypeRef;
@@ -127,11 +126,11 @@ class PromisifyHelper {
 	 * this method will return the function's return type after promisification. If the function is not promisifiable,
 	 * this method returns <code>null</code>.
 	 */
-	def public TypeRef extractPromisifiedReturnType(RuleEnvironment G, FunctionTypeExprOrRef targetTypeRef) {
+	def public TypeRef extractPromisifiedReturnType(RuleEnvironment G, FunctionTypeExpression targetTypeRef) {
 		val callbackFpar = targetTypeRef.fpars.last; // last fpar must be the callback
 		if(callbackFpar!==null) {
 			val callbackTypeRef = callbackFpar.typeRef;
-			if(callbackTypeRef instanceof FunctionTypeExprOrRef) {
+			if(callbackTypeRef instanceof FunctionTypeExpression) {
 				val callback1stFparTypeRef = callbackTypeRef.fpars.head?.typeRef;
 				val hasErrorFpar = isErrorOrSubtype(G, callback1stFparTypeRef);
 				val errorTypeRef = if(hasErrorFpar) {

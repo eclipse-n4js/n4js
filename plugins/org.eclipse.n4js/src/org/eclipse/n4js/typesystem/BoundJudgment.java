@@ -273,12 +273,12 @@ import org.eclipse.n4js.utils.RecursionGuard;
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_processReturnType(TypeRef returnTypeRef) {
+		protected TypeRef caseFunctionTypeExpression_processReturnType(TypeRef returnTypeRef) {
 			return bound(G, returnTypeRef, boundType, reopen, false, false);
 		}
 
 		@Override
-		protected TypeRef caseFunctionTypeExprOrRef_processParameterType(TypeRef fparTypeRef) {
+		protected TypeRef caseFunctionTypeExpression_processParameterType(TypeRef fparTypeRef) {
 			return bound(G, fparTypeRef, boundType.inverse(), reopen, false, false);
 		}
 

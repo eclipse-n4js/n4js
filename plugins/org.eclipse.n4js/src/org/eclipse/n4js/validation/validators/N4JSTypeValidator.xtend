@@ -54,7 +54,7 @@ import org.eclipse.n4js.scoping.members.TypingStrategyFilter
 import org.eclipse.n4js.scoping.utils.ExpressionExtensions
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -211,10 +211,12 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		if (!paramTypeRefInAST.declaredTypeArgs.isEmpty) {
 			addIssue(IssueCodes.getMessageForAST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_TYPE_ARGS_IN_CLASSIFIERTYPEREF)
-		} else if (paramTypeRefInAST instanceof FunctionTypeRef) {
+		} else if (paramTypeRefInAST instanceof FunctionTypeExpression) {
+			// dead code?
 			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF)
 		} else if (paramTypeRefInAST.declaredType instanceof TFunction) {
+			// dead code?
 			addIssue(IssueCodes.getMessageForAST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF, paramTypeRefInAST,
 				AST_NO_FUNCTIONTYPEREFS_IN_CLASSIFIERTYPEREF)
 		}

@@ -29,8 +29,7 @@ import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -317,7 +316,7 @@ class RuleEnvironmentExtensions {
 
 	def static TypeRef getReplacement(RuleEnvironment G, TypeRef typeRef) {
 		if(typeRef instanceof ParameterizedTypeRef) {
-			if(!(typeRef instanceof FunctionTypeRef)) {
+			if(!(typeRef instanceof FunctionTypeExpression)) {
 				val type = typeRef.declaredType;
 				val replacement = getReplacement(G,type);
 				if(replacement!==type) { // identity compare is ok here
@@ -1067,7 +1066,7 @@ class RuleEnvironmentExtensions {
 	}
 
 	public def static dispatch List<ParameterizedTypeRef> collectAllImplicitSuperTypes(RuleEnvironment G,
-		FunctionTypeExprOrRef typeRef) {
+		FunctionTypeExpression typeRef) {
 
 		return collectAllImplicitSuperTypes(G, typeRef, new RecursionGuard<Type>());
 	}
@@ -1085,7 +1084,7 @@ class RuleEnvironmentExtensions {
 	}
 
 	private def static dispatch List<ParameterizedTypeRef> collectAllImplicitSuperTypes(RuleEnvironment G,
-		FunctionTypeExprOrRef typeRef, /*unused*/ RecursionGuard<Type> guard) {
+		FunctionTypeExpression typeRef, /*unused*/ RecursionGuard<Type> guard) {
 
 		return G.functionTypesAllImplicitSuperTypeRefs;
 	}

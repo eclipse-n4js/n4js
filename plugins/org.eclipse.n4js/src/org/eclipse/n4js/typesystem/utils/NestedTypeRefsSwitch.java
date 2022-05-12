@@ -20,9 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef;
@@ -259,15 +257,8 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		return actualThisTypeRef;
 	}
 
-	// required due to multiple inheritance, to ensure FunctionTypeRef is handled like a FunctionTypeExpression,
-	// not as a ParameterizedTypeRef
 	@Override
-	public TypeRef caseFunctionTypeRef(FunctionTypeRef typeRef) {
-		return caseFunctionTypeExprOrRef(typeRef);
-	}
-
-	@Override
-	public TypeRef caseFunctionTypeExprOrRef(FunctionTypeExprOrRef F) {
+	public TypeRef caseFunctionTypeExpression(FunctionTypeExpression F) {
 		boolean haveReplacement = false;
 
 		// collect type variables in 'F.typeVars' that do not have a type mapping in 'G' and perform substitution on
@@ -290,13 +281,13 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		final List<TypeVariable> resultUnboundTypeVars = new ArrayList<>();
 		final List<TypeRef> resultUnboundTypeVarsUpperBounds = new ArrayList<>();
 		for (TypeVariable currTV : F.getTypeVars()) {
-			if (currTV != null && caseFunctionTypeExprOrRef_isTypeParameterRetained(F, currTV)) {
+			if (currTV != null && caseFunctionTypeExpression_isTypeParameterRetained(F, currTV)) {
 				resultUnboundTypeVars.add(currTV);
 				// handle upper bound of currTV
 				final TypeRef declUB = currTV.getDeclaredUpperBound();
 				if (declUB != null) {
 					final TypeRef oldUB = F.getTypeVarUpperBound(currTV);
-					final TypeRef newUB = caseFunctionTypeExprOrRef_processTypeParameterUpperBound(oldUB);
+					final TypeRef newUB = caseFunctionTypeExpression_processTypeParameterUpperBound(oldUB);
 					if (newUB != declUB) { // note: identity compare is what we want
 						while (resultUnboundTypeVarsUpperBounds.size() < resultUnboundTypeVars.size() - 1) {
 							// add an UnknownTypeRef as padding entry
@@ -320,14 +311,14 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		// handle declared this type
 		final TypeRef declaredThisType = F.getDeclaredThisType();
 		final TypeRef resultDeclaredThisType = declaredThisType != null
-				? caseFunctionTypeExprOrRef_processDeclaredThisType(declaredThisType)
+				? caseFunctionTypeExpression_processDeclaredThisType(declaredThisType)
 				: null;
 		haveReplacement |= resultDeclaredThisType != declaredThisType;
 
 		// handle return type
 		final TypeRef returnTypeRef = F.getReturnTypeRef();
 		final TypeRef resultReturnTypeRef = returnTypeRef != null
-				? caseFunctionTypeExprOrRef_processReturnType(returnTypeRef)
+				? caseFunctionTypeExpression_processReturnType(returnTypeRef)
 				: null;
 		haveReplacement |= resultReturnTypeRef != returnTypeRef;
 
@@ -347,7 +338,7 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 
 			final TypeRef oldParTypeRef = oldPar.getTypeRef();
 			if (oldParTypeRef != null) {
-				final TypeRef newParTypeRef = caseFunctionTypeExprOrRef_processParameterType(oldParTypeRef);
+				final TypeRef newParTypeRef = caseFunctionTypeExpression_processParameterType(oldParTypeRef);
 				newPar.setTypeRef(TypeUtils.copyIfContained(newParTypeRef));
 				haveReplacement |= newParTypeRef != oldParTypeRef;
 			}
@@ -359,13 +350,13 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 			final FunctionTypeExpression result = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
 
 			// let posterity know that the newly created FunctionTypeExpression
-			// represents the binding of another FunctionTypeExprOrRef
+			// represents the binding of another FunctionTypeExpression
 			result.setBinding(true);
 
 			// if the original 'typeRef' was a FunctionTypeRef, then retain the
 			// pointer to its declared type in the copied FunctionTypeExpression
 			// (see API doc of FunctionTypeExpression#declaredType for more info)
-			result.setDeclaredType(F.getFunctionType());
+			result.setDeclaredFunction(F.getDeclaredFunction());
 
 			result.getUnboundTypeVars().addAll(resultUnboundTypeVars);
 			result.getUnboundTypeVarsUpperBounds().addAll(
@@ -388,25 +379,25 @@ public abstract class NestedTypeRefsSwitch extends TypeRefsSwitch<TypeArgument> 
 		return F;
 	}
 
-	protected boolean caseFunctionTypeExprOrRef_isTypeParameterRetained(
-			@SuppressWarnings("unused") FunctionTypeExprOrRef F,
+	protected boolean caseFunctionTypeExpression_isTypeParameterRetained(
+			@SuppressWarnings("unused") FunctionTypeExpression F,
 			@SuppressWarnings("unused") TypeVariable tv) {
 		return true;
 	}
 
-	protected TypeRef caseFunctionTypeExprOrRef_processTypeParameterUpperBound(TypeRef ub) {
+	protected TypeRef caseFunctionTypeExpression_processTypeParameterUpperBound(TypeRef ub) {
 		return processNested(G, ub);
 	}
 
-	protected TypeRef caseFunctionTypeExprOrRef_processDeclaredThisType(TypeRef declThisType) {
+	protected TypeRef caseFunctionTypeExpression_processDeclaredThisType(TypeRef declThisType) {
 		return processNested(G, declThisType);
 	}
 
-	protected TypeRef caseFunctionTypeExprOrRef_processReturnType(TypeRef returnTypeRef) {
+	protected TypeRef caseFunctionTypeExpression_processReturnType(TypeRef returnTypeRef) {
 		return processNested(G, returnTypeRef);
 	}
 
-	protected TypeRef caseFunctionTypeExprOrRef_processParameterType(TypeRef fparTypeRef) {
+	protected TypeRef caseFunctionTypeExpression_processParameterType(TypeRef fparTypeRef) {
 		return processNested(G, fparTypeRef);
 	}
 

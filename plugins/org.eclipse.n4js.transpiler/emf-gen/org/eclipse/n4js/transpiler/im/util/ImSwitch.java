@@ -44,7 +44,6 @@ import org.eclipse.n4js.n4JS.SetterDeclaration;
 import org.eclipse.n4js.n4JS.StrictModeRelevant;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.ThisArgProvider;
-import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.n4JS.TypedElement;
@@ -299,7 +298,6 @@ public class ImSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModifiableElement(delegatingMethodDeclaration);
 				if (result == null) result = caseNamedElement(delegatingMethodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(delegatingMethodDeclaration);
-				if (result == null) result = caseTypeDefiningElement(delegatingMethodDeclaration);
 				if (result == null) result = caseAnnotableElement(delegatingMethodDeclaration);
 				if (result == null) result = caseTypableElement(delegatingMethodDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(delegatingMethodDeclaration);
@@ -1040,21 +1038,6 @@ public class ImSwitch<T1> extends Switch<T1> {
 	 * @generated
 	 */
 	public T1 caseN4SetterDeclaration(N4SetterDeclaration object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Type Defining Element</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Type Defining Element</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T1 caseTypeDefiningElement(TypeDefiningElement object) {
 		return null;
 	}
 

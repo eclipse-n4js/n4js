@@ -12,18 +12,21 @@ package org.eclipse.n4js.tests.scoping
 
 import com.google.inject.Inject
 import com.google.inject.Provider
+import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.scoping.accessModifiers.FunctionVisibilityChecker
+import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.emf.common.util.URI
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.eclipse.xtext.resource.XtextResourceSet
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
+import org.eclipse.n4js.ts.types.Type
 
 /**
  */
@@ -38,7 +41,11 @@ class TypeVisibilityCheckerTest {
 
 	@Inject extension ParseHelper<Script>
 
-	@Inject extension TypeVisibilityChecker visibilityChecker
+	@Inject
+	TypeVisibilityChecker typeVisibilityChecker
+	
+	@Inject
+	FunctionVisibilityChecker functionVisibilityChecker
 
 	@Inject
 	Provider<XtextResourceSet> resourceSetProvider;
@@ -65,7 +72,11 @@ class TypeVisibilityCheckerTest {
 		val parsedType = (script.eResource.contents.last as TModule).typesAndFunctions.head
 		val myScript = '''class A{}'''.parse(URI.createURI('''b.n4js?«myVendor»|«myProject»'''), rs).withVendorAndProject(myVendor, myProject)
 
-		Assert.assertEquals(expectation, myScript.eResource.isVisible(parsedType).visibility)
+		if (parsedType instanceof Type) {
+			Assert.assertEquals(expectation, typeVisibilityChecker.isVisible(myScript.eResource, parsedType).visibility)
+		} else if (parsedType instanceof TFunction) {
+			Assert.assertEquals(expectation, functionVisibilityChecker.isVisible(myScript.eResource, parsedType).visibility)
+		}
 	}
 
 	/**

@@ -56,8 +56,8 @@ class ClassWithConstructorTypesBuilderTest extends AbstractParserTest {
 		assertEquals("C", classDecl.name)
 
 		val ctorDecl = classDecl.getOwnedMembers.get(0) as N4MethodDeclaration
-		assertTrue(ctorDecl.definedType instanceof TMethod);
-		val ctor = ctorDecl.definedType as TMethod;
+		assertTrue(ctorDecl.definedFunction instanceof TMethod);
+		val ctor = ctorDecl.definedFunction as TMethod;
 		assertSame(ctorDecl, ctor.astElement);
 
 		assertEquals("constructor", ctorDecl.name);
@@ -68,7 +68,7 @@ class ClassWithConstructorTypesBuilderTest extends AbstractParserTest {
 		assertTrue(ctor.returnTypeRef instanceof DeferredTypeRef);
 
 		val mDecl = classDecl.getOwnedMembers.get(1) as N4MethodDeclaration
-		val m = mDecl.definedType as TMethod
+		val m = mDecl.definedFunction as TMethod
 		assertEquals("m", mDecl.name);
 		assertEquals("m", m.name);
 		assertFalse(mDecl.constructor)

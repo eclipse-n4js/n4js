@@ -15,7 +15,6 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
@@ -45,7 +44,7 @@ class FunctionDeclarationScopingTest {
 			}
 		'''.parse
 		script.assertNoErrors
-		val tfunc = script.eAllContents.filter(FunctionDeclaration).head.definedType as TFunction
+		val tfunc = script.eAllContents.filter(FunctionDeclaration).head.definedFunction
 		val t = script.eAllContents.filter(VariableDeclaration).head
 		assertEquals(t.declaredTypeRefInAST.declaredType, tfunc.typeVars.head)
 	}
@@ -59,7 +58,7 @@ class FunctionDeclarationScopingTest {
 		'''.parse
 		// script.assertNoErrors // we expect errors, U cannot be bound
 		val funcDecl = script.eAllContents.filter(FunctionDeclaration).head;
-		val tfunc = funcDecl.definedType as TFunction
+		val tfunc = funcDecl.definedFunction
 		val typeVar = tfunc.typeVars.head
 		assertEquals(funcDecl.declaredReturnTypeRefInAST.declaredType, typeVar)
 		assertEquals(funcDecl.fpars.get(0).declaredTypeRefInAST.declaredType, typeVar)

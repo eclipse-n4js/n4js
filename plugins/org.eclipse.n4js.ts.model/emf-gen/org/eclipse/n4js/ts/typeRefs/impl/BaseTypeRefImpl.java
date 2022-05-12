@@ -37,7 +37,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
  *
  * @generated
  */
-public abstract class BaseTypeRefImpl extends StaticBaseTypeRefImpl implements BaseTypeRef {
+public abstract class BaseTypeRefImpl extends TypeRefImpl implements BaseTypeRef {
 	/**
 	 * The default value of the '{@link #isDynamic() <em>Dynamic</em>}' attribute.
 	 * <!-- begin-user-doc -->

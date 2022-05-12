@@ -74,7 +74,6 @@ import org.eclipse.n4js.scoping.utils.ExpressionExtensions
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
@@ -400,7 +399,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		if (typeRef instanceof FunctionTypeExprOrRef) {
+		if (typeRef instanceof FunctionTypeExpression) {
 			// check type arguments
 			internalCheckTypeArgumentsNodes(typeRef.typeVars, callExpression.typeArgs, true, typeRef.declaredType,
 				callExpression, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
@@ -430,7 +429,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	 * </ul>
 	 * To clarify, a not-awaited-for call is perfectly valid, after all sometimes only the promise is of interest, but more commonly an await was forgotten.
 	 */
-	def internalCheckCallingAsyncFunWithoutAwaitingForIt(FunctionTypeExprOrRef fteor,
+	def internalCheckCallingAsyncFunWithoutAwaitingForIt(FunctionTypeExpression fteor,
 		ParameterizedCallExpression callExpression) {
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(callExpression);
 		if (!N4JSLanguageUtils.isAsync(fteor, G)) {
@@ -830,7 +829,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val target = callExpression.target
 		if (target !== null) {
 			val targetTypeRef = ts.tau(target); // no context, we only need the number of fpars
-			if (targetTypeRef instanceof FunctionTypeExprOrRef) {
+			if (targetTypeRef instanceof FunctionTypeExpression) {
 
 				// obtain fpars from invoked function/method
 				var fpars = new ArrayList(targetTypeRef.fpars);

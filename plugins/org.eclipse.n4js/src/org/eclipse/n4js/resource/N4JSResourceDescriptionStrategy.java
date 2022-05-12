@@ -322,7 +322,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			for (Type type : module.getTypes()) {
 				internalCreateEObjectDescription(type, acceptor);
 			}
-			for (Type fun : module.getFunctions()) {
+			for (TFunction fun : module.getFunctions()) {
 				internalCreateEObjectDescription(fun, acceptor);
 			}
 			for (TVariable variable : module.getExportedVariables()) {
@@ -357,6 +357,21 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 			}
 
 			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type, userData);
+			acceptor.accept(eod);
+		}
+	}
+
+	private void internalCreateEObjectDescription(TFunction function, IAcceptor<IEObjectDescription> acceptor) {
+		if (!function.isDirectlyExported()) {
+			return;
+		}
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(function);
+		if (qualifiedName != null) {
+			Map<String, String> userData = new HashMap<>();
+			addLocationUserData(userData, function);
+			addAccessModifierUserData(userData, function.getTypeAccessModifier());
+
+			IEObjectDescription eod = EObjectDescription.create(qualifiedName, function, userData);
 			acceptor.accept(eod);
 		}
 	}

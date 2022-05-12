@@ -94,7 +94,6 @@ import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.StaticBaseTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural
@@ -1288,7 +1287,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 
 
 
-	def private void configureUndefModifier( StaticBaseTypeRef sbtr,  extension IFormattableDocument document){
+	def private void configureUndefModifier( TypeRef sbtr,  extension IFormattableDocument document){
 		// UndefModifier "?"
 		sbtr.regionFor.feature(TypeRefsPackage.Literals.TYPE_REF__FOLLOWED_BY_QUESTION_MARK).prepend[noSpace;newLines=0;];
 	}

@@ -44,10 +44,10 @@ import org.eclipse.n4js.tooling.tester.model.TestSuite;
 import org.eclipse.n4js.tooling.tester.model.TestTree;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TClass;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ResourceNameComputer;
@@ -365,7 +365,8 @@ public class TestDiscoveryHelper {
 	private void collectTestSuiteAndTestCaseForMethod(N4JSWorkspaceConfigSnapshot ws, URI uri, TModule module,
 			Map<String, TestSuite> suites) {
 		final EObject object = module.eResource().getResourceSet().getEObject(uri, true);
-		final Type type = (object instanceof N4MethodDeclaration) ? ((N4MethodDeclaration) object).getDefinedType()
+		final TFunction type = (object instanceof N4MethodDeclaration)
+				? ((N4MethodDeclaration) object).getDefinedFunction()
 				: (object instanceof TMethod) ? (TMethod) object : null;
 		if (type instanceof TMethod) {
 			final TMethod method = (TMethod) type;

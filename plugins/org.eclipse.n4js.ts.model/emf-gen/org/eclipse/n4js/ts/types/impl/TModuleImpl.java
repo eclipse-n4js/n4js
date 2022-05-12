@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.ts.types.impl;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -36,6 +38,8 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TDynamicElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -69,6 +73,8 @@ import org.eclipse.n4js.ts.types.TypesPackage.Literals;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getRuntimeCyclicLoadtimeDependents <em>Runtime Cyclic Loadtime Dependents</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalFunctions <em>Internal Functions</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getExposedInternalFunctions <em>Exposed Internal Functions</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalDynamicElements <em>Internal Dynamic Elements</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
@@ -378,6 +384,26 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 	 * @ordered
 	 */
 	protected EList<Type> exposedInternalTypes;
+
+	/**
+	 * The cached value of the '{@link #getInternalFunctions() <em>Internal Functions</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getInternalFunctions()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TFunction> internalFunctions;
+
+	/**
+	 * The cached value of the '{@link #getExposedInternalFunctions() <em>Exposed Internal Functions</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getExposedInternalFunctions()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TFunction> exposedInternalFunctions;
 
 	/**
 	 * The cached value of the '{@link #getInternalDynamicElements() <em>Internal Dynamic Elements</em>}' containment reference list.
@@ -848,6 +874,32 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 	 * @generated
 	 */
 	@Override
+	public EList<TFunction> getInternalFunctions() {
+		if (internalFunctions == null) {
+			internalFunctions = new EObjectContainmentEList<TFunction>(TFunction.class, this, TypesPackage.TMODULE__INTERNAL_FUNCTIONS);
+		}
+		return internalFunctions;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TFunction> getExposedInternalFunctions() {
+		if (exposedInternalFunctions == null) {
+			exposedInternalFunctions = new EObjectContainmentEList<TFunction>(TFunction.class, this, TypesPackage.TMODULE__EXPOSED_INTERNAL_FUNCTIONS);
+		}
+		return exposedInternalFunctions;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EList<TDynamicElement> getInternalDynamicElements() {
 		if (internalDynamicElements == null) {
 			internalDynamicElements = new EObjectContainmentEList<TDynamicElement>(TDynamicElement.class, this, TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS);
@@ -920,6 +972,26 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 	 * @generated
 	 */
 	@Override
+	public Iterable<? extends TExportableElement> getInternalTypesAndFunctions() {
+		return Iterables.<TExportableElement>concat(this.getInternalTypes(), this.getInternalFunctions());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Iterable<? extends TExportableElement> getExposedInternalTypesAndFunctions() {
+		return Iterables.<TExportableElement>concat(this.getExposedInternalTypes(), this.getExposedInternalFunctions());
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public void clearTransientElements() {
 		this.getInternalTypes().clear();
 		this.getInternalDynamicElements().clear();
@@ -959,6 +1031,10 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 				return ((InternalEList<?>)getInternalTypes()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return ((InternalEList<?>)getExposedInternalTypes()).basicRemove(otherEnd, msgs);
+			case TypesPackage.TMODULE__INTERNAL_FUNCTIONS:
+				return ((InternalEList<?>)getInternalFunctions()).basicRemove(otherEnd, msgs);
+			case TypesPackage.TMODULE__EXPOSED_INTERNAL_FUNCTIONS:
+				return ((InternalEList<?>)getExposedInternalFunctions()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS:
 				return ((InternalEList<?>)getInternalDynamicElements()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
@@ -1016,6 +1092,10 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 				return getInternalTypes();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return getExposedInternalTypes();
+			case TypesPackage.TMODULE__INTERNAL_FUNCTIONS:
+				return getInternalFunctions();
+			case TypesPackage.TMODULE__EXPOSED_INTERNAL_FUNCTIONS:
+				return getExposedInternalFunctions();
 			case TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS:
 				return getInternalDynamicElements();
 			case TypesPackage.TMODULE__AST_MD5:
@@ -1103,6 +1183,14 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 				getExposedInternalTypes().clear();
 				getExposedInternalTypes().addAll((Collection<? extends Type>)newValue);
 				return;
+			case TypesPackage.TMODULE__INTERNAL_FUNCTIONS:
+				getInternalFunctions().clear();
+				getInternalFunctions().addAll((Collection<? extends TFunction>)newValue);
+				return;
+			case TypesPackage.TMODULE__EXPOSED_INTERNAL_FUNCTIONS:
+				getExposedInternalFunctions().clear();
+				getExposedInternalFunctions().addAll((Collection<? extends TFunction>)newValue);
+				return;
 			case TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS:
 				getInternalDynamicElements().clear();
 				getInternalDynamicElements().addAll((Collection<? extends TDynamicElement>)newValue);
@@ -1187,6 +1275,12 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				getExposedInternalTypes().clear();
 				return;
+			case TypesPackage.TMODULE__INTERNAL_FUNCTIONS:
+				getInternalFunctions().clear();
+				return;
+			case TypesPackage.TMODULE__EXPOSED_INTERNAL_FUNCTIONS:
+				getExposedInternalFunctions().clear();
+				return;
 			case TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS:
 				getInternalDynamicElements().clear();
 				return;
@@ -1249,6 +1343,10 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 				return internalTypes != null && !internalTypes.isEmpty();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return exposedInternalTypes != null && !exposedInternalTypes.isEmpty();
+			case TypesPackage.TMODULE__INTERNAL_FUNCTIONS:
+				return internalFunctions != null && !internalFunctions.isEmpty();
+			case TypesPackage.TMODULE__EXPOSED_INTERNAL_FUNCTIONS:
+				return exposedInternalFunctions != null && !exposedInternalFunctions.isEmpty();
 			case TypesPackage.TMODULE__INTERNAL_DYNAMIC_ELEMENTS:
 				return internalDynamicElements != null && !internalDynamicElements.isEmpty();
 			case TypesPackage.TMODULE__AST_MD5:
@@ -1342,6 +1440,10 @@ public class TModuleImpl extends AbstractNamespaceImpl implements TModule {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
+			case TypesPackage.TMODULE___GET_INTERNAL_TYPES_AND_FUNCTIONS:
+				return getInternalTypesAndFunctions();
+			case TypesPackage.TMODULE___GET_EXPOSED_INTERNAL_TYPES_AND_FUNCTIONS:
+				return getExposedInternalTypesAndFunctions();
 			case TypesPackage.TMODULE___CLEAR_TRANSIENT_ELEMENTS:
 				clearTransientElements();
 				return null;

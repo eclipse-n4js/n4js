@@ -14,6 +14,8 @@ import com.google.common.base.Objects;
 
 import java.lang.reflect.InvocationTargetException;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
@@ -25,9 +27,13 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
+
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 import org.eclipse.n4js.ts.types.AccessibleTypeElement;
+import org.eclipse.n4js.ts.types.GenericType;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TNamespaceElement;
@@ -35,6 +41,7 @@ import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeAlias;
+import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.n4js.ts.types.TypesPackage.Literals;
@@ -47,6 +54,7 @@ import org.eclipse.n4js.ts.types.TypesPackage.Literals;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeAliasImpl#getTypeVars <em>Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeAliasImpl#getDeclaredTypeAccessModifier <em>Declared Type Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeAliasImpl#isDeclaredProvidedByRuntime <em>Declared Provided By Runtime</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TypeAliasImpl#getTypeRef <em>Type Ref</em>}</li>
@@ -55,7 +63,17 @@ import org.eclipse.n4js.ts.types.TypesPackage.Literals;
  *
  * @generated
  */
-public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
+public class TypeAliasImpl extends TypeImpl implements TypeAlias {
+	/**
+	 * The cached value of the '{@link #getTypeVars() <em>Type Vars</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTypeVars()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TypeVariable> typeVars;
+
 	/**
 	 * The default value of the '{@link #getDeclaredTypeAccessModifier() <em>Declared Type Access Modifier</em>}' attribute.
 	 * <!-- begin-user-doc -->
@@ -133,6 +151,19 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	@Override
 	protected EClass eStaticClass() {
 		return TypesPackage.Literals.TYPE_ALIAS;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TypeVariable> getTypeVars() {
+		if (typeVars == null) {
+			typeVars = new EObjectContainmentEList<TypeVariable>(TypeVariable.class, this, TypesPackage.TYPE_ALIAS__TYPE_VARS);
+		}
+		return typeVars;
 	}
 
 	/**
@@ -357,6 +388,8 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
+			case TypesPackage.TYPE_ALIAS__TYPE_VARS:
+				return ((InternalEList<?>)getTypeVars()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TYPE_ALIAS__TYPE_REF:
 				return basicSetTypeRef(null, msgs);
 		}
@@ -371,6 +404,8 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case TypesPackage.TYPE_ALIAS__TYPE_VARS:
+				return getTypeVars();
 			case TypesPackage.TYPE_ALIAS__DECLARED_TYPE_ACCESS_MODIFIER:
 				return getDeclaredTypeAccessModifier();
 			case TypesPackage.TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME:
@@ -389,9 +424,14 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case TypesPackage.TYPE_ALIAS__TYPE_VARS:
+				getTypeVars().clear();
+				getTypeVars().addAll((Collection<? extends TypeVariable>)newValue);
+				return;
 			case TypesPackage.TYPE_ALIAS__DECLARED_TYPE_ACCESS_MODIFIER:
 				setDeclaredTypeAccessModifier((TypeAccessModifier)newValue);
 				return;
@@ -416,6 +456,9 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case TypesPackage.TYPE_ALIAS__TYPE_VARS:
+				getTypeVars().clear();
+				return;
 			case TypesPackage.TYPE_ALIAS__DECLARED_TYPE_ACCESS_MODIFIER:
 				setDeclaredTypeAccessModifier(DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT);
 				return;
@@ -440,6 +483,8 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case TypesPackage.TYPE_ALIAS__TYPE_VARS:
+				return typeVars != null && !typeVars.isEmpty();
 			case TypesPackage.TYPE_ALIAS__DECLARED_TYPE_ACCESS_MODIFIER:
 				return declaredTypeAccessModifier != DECLARED_TYPE_ACCESS_MODIFIER_EDEFAULT;
 			case TypesPackage.TYPE_ALIAS__DECLARED_PROVIDED_BY_RUNTIME:
@@ -459,6 +504,12 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == GenericType.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.TYPE_ALIAS__TYPE_VARS: return TypesPackage.GENERIC_TYPE__TYPE_VARS;
+				default: return -1;
+			}
+		}
 		if (baseClass == AccessibleTypeElement.class) {
 			switch (derivedFeatureID) {
 				case TypesPackage.TYPE_ALIAS__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER;
@@ -488,6 +539,12 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == GenericType.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.GENERIC_TYPE__TYPE_VARS: return TypesPackage.TYPE_ALIAS__TYPE_VARS;
+				default: return -1;
+			}
+		}
 		if (baseClass == AccessibleTypeElement.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.ACCESSIBLE_TYPE_ELEMENT__DECLARED_TYPE_ACCESS_MODIFIER: return TypesPackage.TYPE_ALIAS__DECLARED_TYPE_ACCESS_MODIFIER;
@@ -530,6 +587,11 @@ public class TypeAliasImpl extends GenericTypeImpl implements TypeAlias {
 				case TypesPackage.TYPE___GET_TYPE_ACCESS_MODIFIER: return TypesPackage.TYPE_ALIAS___GET_TYPE_ACCESS_MODIFIER;
 				case TypesPackage.TYPE___IS_HOLLOW: return TypesPackage.TYPE_ALIAS___IS_HOLLOW;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == GenericType.class) {
+			switch (baseOperationID) {
+				default: return -1;
 			}
 		}
 		if (baseClass == AccessibleTypeElement.class) {

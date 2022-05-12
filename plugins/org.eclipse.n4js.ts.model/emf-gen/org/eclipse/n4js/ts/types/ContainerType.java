@@ -37,7 +37,7 @@ import org.eclipse.emf.common.util.EList;
  * @model abstract="true"
  * @generated
  */
-public interface ContainerType<MT extends TMember> extends GenericType {
+public interface ContainerType<MT extends TMember> extends Type, GenericType {
 	/**
 	 * Returns the value of the '<em><b>Owned Members By Name And Access</b></em>' attribute.
 	 * <!-- begin-user-doc -->

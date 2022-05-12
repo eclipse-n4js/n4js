@@ -86,7 +86,7 @@ package class TypeRefProcessor extends AbstractProcessor {
 			StructuralTypeRef:
 				astNode.structuralType
 			FunctionTypeExpression:
-				astNode.declaredType
+				astNode.declaredFunction
 			VariableDeclaration:
 				astNode.definedVariable
 		};

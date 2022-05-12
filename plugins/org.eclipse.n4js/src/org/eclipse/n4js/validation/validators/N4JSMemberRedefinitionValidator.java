@@ -86,7 +86,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4TypeDeclaration;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -1265,13 +1265,13 @@ public class N4JSMemberRedefinitionValidator extends AbstractN4JSDeclarativeVali
 		// i.e. turn {function(string):this[C]?} into {function(string)}
 		// (simplifies subtype check and, more importantly, leads to better error messages)
 		RuleEnvironment G = getCurrentRuleEnvironment();
-		if (left.isConstructor() && typeLeft instanceof FunctionTypeExprOrRef) {
+		if (left.isConstructor() && typeLeft instanceof FunctionTypeExpression) {
 			typeLeft = TypeUtils.createFunctionTypeExpression(null, Collections.emptyList(),
-					((FunctionTypeExprOrRef) typeLeft).getFpars(), null);
+					((FunctionTypeExpression) typeLeft).getFpars(), null);
 		}
-		if (right.isConstructor() && typeRight instanceof FunctionTypeExprOrRef) {
+		if (right.isConstructor() && typeRight instanceof FunctionTypeExpression) {
 			typeRight = TypeUtils.createFunctionTypeExpression(null, Collections.emptyList(),
-					((FunctionTypeExprOrRef) typeRight).getFpars(), null);
+					((FunctionTypeExpression) typeRight).getFpars(), null);
 		}
 
 		return ts.subtype(G, typeLeft, typeRight);

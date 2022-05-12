@@ -43,8 +43,8 @@ import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.SuperLiteral;
 
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.Type;
 
 import org.eclipse.n4js.utils.EcoreUtilN4;
 
@@ -194,17 +194,17 @@ public abstract class MethodDeclarationImpl extends FunctionDefinitionImpl imple
 	@Override
 	public TMember getDefinedTypeElement() {
 		TMember _xifexpression = null;
-		Type _definedType = this.getDefinedType();
-		boolean _tripleEquals = (_definedType == null);
+		TFunction _definedFunction = this.getDefinedFunction();
+		boolean _tripleEquals = (_definedFunction == null);
 		if (_tripleEquals) {
 			_xifexpression = null;
 		}
 		else {
 			TMember _xifexpression_1 = null;
-			Type _definedType_1 = this.getDefinedType();
-			if ((_definedType_1 instanceof TMember)) {
-				Type _definedType_2 = this.getDefinedType();
-				_xifexpression_1 = ((TMember) _definedType_2);
+			TFunction _definedFunction_1 = this.getDefinedFunction();
+			if ((_definedFunction_1 instanceof TMember)) {
+				TFunction _definedFunction_2 = this.getDefinedFunction();
+				_xifexpression_1 = ((TMember) _definedFunction_2);
 			}
 			else {
 				throw new IllegalArgumentException(

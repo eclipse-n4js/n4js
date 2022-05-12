@@ -20,7 +20,7 @@ import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.TFunction
@@ -59,10 +59,10 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 
 		val fundef = EcoreUtil2.getAllContentsOfType(script, N4MethodDeclaration).head;
 
-		val tmethF = fundef.definedType as TMethod
+		val tmethF = fundef.definedFunction as TMethod
 		assertNull("No @This at f() but declaredThisType != null", tmethF.declaredThisType )
 
-		val tfun = fundef.infer as FunctionTypeExprOrRef
+		val tfun = fundef.infer as FunctionTypeExpression
 		assertNull("No @This at f() but on inferred type saw declaredThisType != null", tfun.declaredThisType )
 
 		assertNoValidationErrors(script);
@@ -84,17 +84,17 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 		val functionDeclarations = EcoreUtil2.getAllContentsOfType(script, FunctionDeclaration);
 		val fundecl = functionDeclarations.get(0)
 
-		val tfun = fundecl.definedType as TFunction
+		val tfun = fundecl.definedFunction
 		tfun.assertDeclaredThisType("A")
 
-		val fte = fundecl.infer as FunctionTypeExprOrRef
+		val fte = fundecl.infer as FunctionTypeExpression
 		fte.assertDeclaredThisType("A");
 
 		val fundecl1 = functionDeclarations.get(1)
-		val tfun1 = fundecl1.definedType as TFunction
+		val tfun1 = fundecl1.definedFunction
 		tfun1.assertDeclaredThisType("~A with { s: string }")
 
-		val fte1 = fundecl1.infer as FunctionTypeExprOrRef
+		val fte1 = fundecl1.infer as FunctionTypeExpression
 		fte1.assertDeclaredThisType("~A with { s: string }");
 		assertNoValidationErrors(script);
 	}
@@ -130,7 +130,7 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 			}
 		''')
 		val fdecl = script.scriptElements.get(1) as FunctionDeclaration
-		assertDeclaredThisType( fdecl.infer as FunctionTypeExprOrRef,"X" )
+		assertDeclaredThisType( fdecl.infer as FunctionTypeExpression,"X" )
 		assertNoValidationErrors(script);
 	}
 
@@ -145,7 +145,7 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 				}
 			}
 		''')
-		assertDeclaredThisType((script.scriptElements.get(2) as FunctionDeclaration).definedType as TFunction,"X")
+		assertDeclaredThisType((script.scriptElements.get(2) as FunctionDeclaration).definedFunction, "X")
 	}
 
 	@Test
@@ -162,7 +162,7 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 
 		val fe = EcoreUtil2.eAllOfType(script,FunctionExpression).head
 
-		assertDeclaredThisType(fe.definedType as TFunction,"X")
+		assertDeclaredThisType(fe.definedFunction, "X")
 
 		assertNoValidationErrors(script);
 	}
@@ -181,7 +181,7 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 		''')
 
 		val methDeclM = (script.scriptElements.get(1) as N4ClassDeclaration).ownedMethods.get(0);
-		assertDeclaredThisType( methDeclM.definedType as TMethod, "Y")
+		assertDeclaredThisType( methDeclM.definedFunction as TMethod, "Y")
 		assertNoValidationErrors(script);
 	}
 
@@ -197,7 +197,7 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 
 		val fe = EcoreUtil2.eAllOfType(script,FunctionExpression).head
 
-		assertDeclaredThisType(fe.definedType as TFunction,"~Object with { a: any }")
+		assertDeclaredThisType(fe.definedFunction, "~Object with { a: any }")
 
 		assertNoValidationErrors(script);
 	}
@@ -229,7 +229,7 @@ class AT_802_ThisTypeAnnotationTest extends AbstractTypesystemTest {
 	def dispatch void assertDeclaredThisType(TFunction tf, String expectedDeclType) {
 		assertEquals(expectedDeclType, tf.declaredThisType?.typeRefAsString)
 	}
-	def dispatch void assertDeclaredThisType(FunctionTypeExprOrRef tf, String expectedDeclType) {
+	def dispatch void assertDeclaredThisType(FunctionTypeExpression tf, String expectedDeclType) {
 		assertEquals(expectedDeclType, tf.declaredThisType?.typeRefAsString)
 	}
 

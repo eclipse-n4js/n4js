@@ -79,7 +79,6 @@ import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
@@ -566,8 +565,8 @@ public class N4JSLanguageUtils {
 	 * <p>
 	 * The declared type (ie, a TFunction) is usually but not always available.
 	 */
-	def static boolean isAsync(FunctionTypeExprOrRef fteor, RuleEnvironment G) {
-		val tfunction = fteor.functionType
+	def static boolean isAsync(FunctionTypeExpression fteor, RuleEnvironment G) {
+		val tfunction = fteor.declaredFunction
 		val tscope = RuleEnvironmentExtensions.getPredefinedTypes(G).builtInTypeScope
 		if (null === tfunction) {
 			return TypeUtils.isPromise(fteor.returnTypeRef, tscope)

@@ -28,7 +28,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  * @model abstract="true"
  * @generated
  */
-public interface N4ClassifierDeclaration extends N4TypeDeclaration, N4ClassifierDefinition, GenericDeclaration, ThisTarget {
+public interface N4ClassifierDeclaration extends N4TypeDeclaration, N4ClassifierDefinition, GenericDeclaration, TypeDefiningElement, ThisTarget {
 	/**
 	 * Returns the value of the '<em><b>Typing Strategy</b></em>' attribute.
 	 * The literals are from the enumeration {@link org.eclipse.n4js.ts.types.TypingStrategy}.

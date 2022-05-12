@@ -325,7 +325,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				FunctionDefinition functionDefinition = (FunctionDefinition)theEObject;
 				T1 result = caseFunctionDefinition(functionDefinition);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionDefinition);
-				if (result == null) result = caseTypeDefiningElement(functionDefinition);
 				if (result == null) result = caseAnnotableElement(functionDefinition);
 				if (result == null) result = caseVariableEnvironmentElement(functionDefinition);
 				if (result == null) result = caseThisArgProvider(functionDefinition);
@@ -359,7 +358,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseNamedElement(functionDeclaration);
 				if (result == null) result = caseControlFlowElement(functionDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionDeclaration);
-				if (result == null) result = caseTypeDefiningElement(functionDeclaration);
 				if (result == null) result = caseNamespaceElement(functionDeclaration);
 				if (result == null) result = caseAnnotableElement(functionDeclaration);
 				if (result == null) result = caseScriptElement(functionDeclaration);
@@ -377,7 +375,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseGenericDeclaration(functionExpression);
 				if (result == null) result = caseNamedElement(functionExpression);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionExpression);
-				if (result == null) result = caseTypeDefiningElement(functionExpression);
 				if (result == null) result = caseExpression(functionExpression);
 				if (result == null) result = caseAnnotableElement(functionExpression);
 				if (result == null) result = caseVariableEnvironmentElement(functionExpression);
@@ -396,7 +393,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseGenericDeclaration(arrowFunction);
 				if (result == null) result = caseNamedElement(arrowFunction);
 				if (result == null) result = caseFunctionOrFieldAccessor(arrowFunction);
-				if (result == null) result = caseTypeDefiningElement(arrowFunction);
 				if (result == null) result = caseExpression(arrowFunction);
 				if (result == null) result = caseAnnotableElement(arrowFunction);
 				if (result == null) result = caseVariableEnvironmentElement(arrowFunction);
@@ -885,7 +881,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseGenericDeclaration(propertyMethodDeclaration);
 				if (result == null) result = casePropertyNameOwner(propertyMethodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(propertyMethodDeclaration);
-				if (result == null) result = caseTypeDefiningElement(propertyMethodDeclaration);
 				if (result == null) result = caseAnnotableElement(propertyMethodDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(propertyMethodDeclaration);
 				if (result == null) result = caseNamedElement(propertyMethodDeclaration);
@@ -1434,8 +1429,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 			case N4JSPackage.GENERIC_DECLARATION: {
 				GenericDeclaration genericDeclaration = (GenericDeclaration)theEObject;
 				T1 result = caseGenericDeclaration(genericDeclaration);
-				if (result == null) result = caseTypeDefiningElement(genericDeclaration);
-				if (result == null) result = caseTypableElement(genericDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1705,7 +1698,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseGenericDeclaration(methodDeclaration);
 				if (result == null) result = casePropertyNameOwner(methodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(methodDeclaration);
-				if (result == null) result = caseTypeDefiningElement(methodDeclaration);
 				if (result == null) result = caseNamedElement(methodDeclaration);
 				if (result == null) result = caseAnnotableElement(methodDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(methodDeclaration);
@@ -1726,7 +1718,6 @@ public class N4JSSwitch<T1> extends Switch<T1> {
 				if (result == null) result = caseModifiableElement(n4MethodDeclaration);
 				if (result == null) result = caseNamedElement(n4MethodDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(n4MethodDeclaration);
-				if (result == null) result = caseTypeDefiningElement(n4MethodDeclaration);
 				if (result == null) result = caseAnnotableElement(n4MethodDeclaration);
 				if (result == null) result = caseTypableElement(n4MethodDeclaration);
 				if (result == null) result = caseVariableEnvironmentElement(n4MethodDeclaration);

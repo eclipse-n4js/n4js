@@ -40,11 +40,11 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
-import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.util.MemberList;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.URIUtils;
@@ -154,8 +154,8 @@ public class N4JSDReader {
 							continue;
 						}
 						N4JSResource.postProcess(resource);
-						for (Type type : getRealTopLevelTypes(script)) {
-							specInfosByName.createTypeSpecInfo(type, rrph);
+						for (TExportableElement expElem : getRealTopLevelTypes(script)) {
+							specInfosByName.createTypeSpecInfo(expElem, rrph);
 						}
 						for (TVariable tvar : script.getModule().getExportedVariables()) {
 							specInfosByName.createTVarSpecInfo(tvar, rrph);
@@ -178,9 +178,9 @@ public class N4JSDReader {
 	 *
 	 * @return real top level types
 	 */
-	private Collection<Type> getRealTopLevelTypes(Script script) {
-		Collection<Type> realTLT = new LinkedList<>();
-		for (Type tlt : script.getModule().getTypesAndFunctions()) {
+	private Collection<TExportableElement> getRealTopLevelTypes(Script script) {
+		Collection<TExportableElement> realTLT = new LinkedList<>();
+		for (TExportableElement tlt : script.getModule().getTypesAndFunctions()) {
 			if (tlt instanceof SyntaxRelatedTElement) {
 				SyntaxRelatedTElement srte = (SyntaxRelatedTElement) tlt;
 				EObject astElem = srte.getAstElement();
@@ -205,9 +205,9 @@ public class N4JSDReader {
 	private void linkTests(SpecInfosByName specInfosByName, N4JSProjectConfigSnapshot project, ResourceSet resSet,
 			SubMonitorMsg monitor) throws InterruptedException {
 
-		List<Type> testTypes = getTestTypes(project, resSet, monitor);
+		List<TExportableElement> testTypes = getTestTypes(project, resSet, monitor);
 
-		for (Type testType : testTypes) {
+		for (TExportableElement testType : testTypes) {
 			try {
 				if (testType instanceof TClassifier) {
 					TClassifier ctype = (TClassifier) testType;
@@ -221,10 +221,11 @@ public class N4JSDReader {
 		}
 	}
 
-	private List<Type> getTestTypes(N4JSProjectConfigSnapshot project, ResourceSet resSet, SubMonitorMsg monitor)
+	private List<TExportableElement> getTestTypes(N4JSProjectConfigSnapshot project, ResourceSet resSet,
+			SubMonitorMsg monitor)
 			throws InterruptedException {
 
-		List<Type> testTypes = new ArrayList<>();
+		List<TExportableElement> testExpElem = new ArrayList<>();
 		ImmutableSet<? extends N4JSSourceFolderSnapshot> srcCont = project.getSourceFolders();
 		List<URI> testSources = new LinkedList<>();
 
@@ -253,15 +254,15 @@ public class N4JSDReader {
 						throw new IllegalStateException("Error parsing " + uri);
 					}
 					N4JSResource.postProcess(resource);
-					for (Type type : getRealTopLevelTypes(script)) {
-						testTypes.add(type);
+					for (TExportableElement expElem : getRealTopLevelTypes(script)) {
+						testExpElem.add(expElem);
 					}
 				}
 			}
 			sub.worked(1);
 			sub.checkCanceled();
 		}
-		return testTypes;
+		return testExpElem;
 	}
 
 	private void processClassifier(SpecInfosByName specInfosByName, TClassifier testType) {

@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
@@ -66,7 +65,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	def package TypeRef processFunctionExpression(RuleEnvironment G, FunctionExpression funExpr, TypeRef expectedTypeRef,
 		InferenceContext infCtx, ASTMetaInfoCache cache
 	) {
-		val fun = funExpr.definedType as TFunction; // types builder will have created this already
+		val fun = funExpr.definedFunction; // types builder will have created this already
 
 		if (!funExpr.isPoly) { // funExpr has declared types on all fpars and explicitly declared return type
 			// can't use xsemantics here, because it would give us a DeferredTypeRef
@@ -90,8 +89,8 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		processFormalParameters(G, cache, infCtx, funExpr, funTE, expectedTypeRef);
 		processReturnType(G, cache, infCtx, funExpr, funTE);
 
-		funTE.returnValueMarkedOptional = expectedTypeRef instanceof FunctionTypeExprOrRef
-			&& (expectedTypeRef as FunctionTypeExprOrRef).returnValueOptional;
+		funTE.returnValueMarkedOptional = expectedTypeRef instanceof FunctionTypeExpression
+			&& (expectedTypeRef as FunctionTypeExpression).returnValueOptional;
 
 		// create temporary type (i.e. may contain inference variables)
 		val resultTypeRef = if (fun.typeVars.empty) {
@@ -116,8 +115,8 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	private def void processFormalParameters(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
 		FunctionExpression funExpr, FunctionTypeExpression funTE, TypeRef expectedTypeRef
 	) {
-		val fun = funExpr.definedType as TFunction; // types builder will have created this already
-		val expectedFunctionTypeExprOrRef = if (expectedTypeRef instanceof FunctionTypeExprOrRef) { expectedTypeRef };
+		val fun = funExpr.definedFunction; // types builder will have created this already
+		val expectedFunctionTypeExpression = if (expectedTypeRef instanceof FunctionTypeExpression) { expectedTypeRef };
 
 		// first, new type refs for each formal parameter are created
 		val len = Math.min(funExpr.fpars.size, fun.fpars.size);
@@ -147,7 +146,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 			if (fparAST.declaredTypeRef === null) {
 				val iv = fparTCopy.typeRef.declaredType as InferenceVariable;
 				addConstraintForDefaultInitializers(funExpr, fparAST, fparTCopy, G, cache, iv, infCtx, typeRefMap);
-				inferOptionalityFromExpectedFpar(funExpr, funTE, expectedFunctionTypeExprOrRef, fparAST, fparTCopy);
+				inferOptionalityFromExpectedFpar(funExpr, funTE, expectedFunctionTypeExpression, fparAST, fparTCopy);
 			}
 		}
 	}
@@ -193,11 +192,11 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	 * 		let fun: {function(string=)} = function(p) {};
 	 */
 	private def void inferOptionalityFromExpectedFpar(FunctionExpression funExpr, FunctionTypeExpression funTE,
-		FunctionTypeExprOrRef expectedFunctionTypeExprOrRef, FormalParameter fparAST, TFormalParameter fparTCopy
+		FunctionTypeExpression expectedFunctionTypeExpression, FormalParameter fparAST, TFormalParameter fparTCopy
 	) {
-		if (expectedFunctionTypeExprOrRef !== null) {
+		if (expectedFunctionTypeExpression !== null) {
 			val int fparIdx = funExpr.fpars.indexOf(fparAST);
-			val fparExpected = expectedFunctionTypeExprOrRef.getFparForArgIdx(fparIdx);
+			val fparExpected = expectedFunctionTypeExpression.getFparForArgIdx(fparIdx);
 			if (fparExpected !== null && fparExpected.optional && !fparExpected.variadic) {
 				funTE.fpars.last.hasInitializerAssignment = true;
 				EcoreUtilN4.doWithDeliver(false, [
@@ -214,7 +213,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	private def void processReturnType(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
 		FunctionExpression funExpr, FunctionTypeExpression funTE
 	) {
-		val fun = funExpr.definedType as TFunction; // types builder will have created this already
+		val fun = funExpr.definedFunction; // types builder will have created this already
 		var TypeRef returnTypeRef;
 		if (funExpr.declaredReturnTypeRef !== null) {
 			// explicitly declared return type
@@ -268,11 +267,11 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		val resolveLiteralTypes = false; // if we resolved here, we might break constraints (it's the responsibility of the constraint solver to avoid literal types as far as possible)
 		solution3.replaceAll[k, v | if (k !== returnTypeInfVar) tsh.sanitizeTypeOfVariableFieldPropertyParameter(G2, v, resolveLiteralTypes) else v];
 		// apply solution to resultTypeRef
-		val resultSolved = resultTypeRef.applySolution(G, solution3) as FunctionTypeExprOrRef;
+		val resultSolved = resultTypeRef.applySolution(G, solution3) as FunctionTypeExpression;
 		// store type of funExpr in cache ...
 		cache.storeType(funExpr, resultSolved);
 		// update the defined function in the TModule
-		val fun = funExpr.definedType as TFunction; // types builder will have created this already
+		val fun = funExpr.definedFunction; // types builder will have created this already
 		fun.replaceDeferredTypeRefs(resultSolved);
 		if(fun.returnValueMarkedOptional !== resultSolved.returnValueOptional) {
 			EcoreUtilN4.doWithDeliver(false, [
@@ -316,7 +315,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	 * </pre>
 	 */
 	def private void tweakReturnTypeOfSingleExpressionArrowFunction(RuleEnvironment G, ASTMetaInfoCache cache,
-		ArrowFunction arrFun, FunctionTypeExprOrRef arrFunTypeRef
+		ArrowFunction arrFun, FunctionTypeExpression arrFunTypeRef
 	) {
 		if (!arrFun.isSingleExprImplicitReturn) {
 			return; // not applicable
@@ -341,29 +340,27 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		val exprTypeRef = cache.getType(expr); // must now be in cache, because we just processed arrFun's body
 		if (TypeUtils.isVoid(exprTypeRef)) {
 			// the actual type of 'expr' is void
-			if (arrFunTypeRef instanceof FunctionTypeExpression) {
-				if (!TypeUtils.isVoid(arrFunTypeRef.returnTypeRef)) {
-					// the return type of the single-expression arrow function 'arrFun' is *not* void
-					// --> this would lead to a type error in N4JSTypeValidation, which we want to fix now
-					//     in case the outer type expectation for the containing arrow function has a
-					//     return type of 'void' OR there is no outer type expectation at all
-					val outerTypeExpectation = expectedTypeForArrowFunction(G, arrFun);
-					val outerReturnTypeExpectation = outerTypeExpectation?.returnTypeRef;
-					if (outerTypeExpectation === null
-						|| (outerReturnTypeExpectation !== null && TypeUtils.isVoid(outerReturnTypeExpectation))) {
-						// fix the future type error by changing the return type of the containing arrow function
-						// from non-void to void
-						if (isDEBUG_LOG) {
-							log(1, "tweaking return type from " + arrFunTypeRef.returnTypeRef?.typeRefAsString + " to void");
-						}
-						EcoreUtilN4.doWithDeliver(false, [
-							arrFunTypeRef.returnTypeRef = G.voidTypeRef;
-						], arrFunTypeRef);
-						if (isDEBUG_LOG) {
-							log(1, "tweaked type of arrow function is: " + arrFunTypeRef.typeRefAsString);
-						}
-						didTweakReturnType = true;
+			if (arrFunTypeRef !== null && !TypeUtils.isVoid(arrFunTypeRef.returnTypeRef)) {
+				// the return type of the single-expression arrow function 'arrFun' is *not* void
+				// --> this would lead to a type error in N4JSTypeValidation, which we want to fix now
+				//     in case the outer type expectation for the containing arrow function has a
+				//     return type of 'void' OR there is no outer type expectation at all
+				val outerTypeExpectation = expectedTypeForArrowFunction(G, arrFun);
+				val outerReturnTypeExpectation = outerTypeExpectation?.returnTypeRef;
+				if (outerTypeExpectation === null
+					|| (outerReturnTypeExpectation !== null && TypeUtils.isVoid(outerReturnTypeExpectation))) {
+					// fix the future type error by changing the return type of the containing arrow function
+					// from non-void to void
+					if (isDEBUG_LOG) {
+						log(1, "tweaking return type from " + arrFunTypeRef.returnTypeRef?.typeRefAsString + " to void");
 					}
+					EcoreUtilN4.doWithDeliver(false, [
+						arrFunTypeRef.returnTypeRef = G.voidTypeRef;
+					], arrFunTypeRef);
+					if (isDEBUG_LOG) {
+						log(1, "tweaked type of arrow function is: " + arrFunTypeRef.typeRefAsString);
+					}
+					didTweakReturnType = true;
 				}
 			}
 		}
@@ -378,7 +375,7 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 	 * when this method returns, also the given TFunction 'fun' won't contain DeferredTypeRefs anymore.
 	 * Will throw exception if 'fun' and 'result' do not match (e.g. 'result' has fewer fpars than 'fun').
 	 */
-	def private void replaceDeferredTypeRefs(TFunction fun, FunctionTypeExprOrRef result) {
+	def private void replaceDeferredTypeRefs(TFunction fun, FunctionTypeExpression result) {
 		val len = fun.fpars.length; // note: we do not take Math.min here (fail fast)
 		for (var i = 0; i < len; i++) {
 			val funFpar = fun.fpars.get(i);
@@ -396,10 +393,10 @@ package class PolyProcessor_FunctionExpression extends AbstractPolyProcessor {
 		}
 	}
 
-	def private FunctionTypeExprOrRef expectedTypeForArrowFunction(RuleEnvironment G, ArrowFunction fe) {
+	def private FunctionTypeExpression expectedTypeForArrowFunction(RuleEnvironment G, ArrowFunction fe) {
 		val G_new = G.newRuleEnvironment;
 		val tr = ts.expectedType(G_new, fe.eContainer(), fe);
-		if (tr instanceof FunctionTypeExprOrRef) {
+		if (tr instanceof FunctionTypeExpression) {
 			return tr;
 		}
 		return null;

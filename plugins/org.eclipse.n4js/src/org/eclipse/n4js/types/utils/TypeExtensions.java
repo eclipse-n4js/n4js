@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.types.utils;
 
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TFunction;
@@ -31,10 +31,10 @@ public class TypeExtensions {
 	}
 
 	/**
-	 * Type-safe version of {@link #ref(Type, TypeArgument...)} for creating {@link FunctionTypeRef}s.
+	 * Type-safe version of {@link #ref(Type, TypeArgument...)} for creating {@link FunctionTypeExpression}s.
 	 */
-	public static final FunctionTypeRef ref(TFunction declaredType, TypeArgument... typeArgs) {
+	public static final FunctionTypeExpression ref(TFunction declaredType, TypeArgument... typeArgs) {
 		// we can be sure that TypeUtils#createTypeRef() will create a FunctionTypeRef here
-		return (FunctionTypeRef) TypeUtils.createTypeRef(declaredType, typeArgs);
+		return TypeUtils.createFunctionTypeExpression(declaredType, typeArgs);
 	}
 }

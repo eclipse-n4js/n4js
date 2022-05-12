@@ -19,15 +19,13 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.StaticWriteAccessFilterScope
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope
-import org.eclipse.n4js.scoping.utils.CompositeScope
-import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.builtin.N4Scheme
+import org.eclipse.n4js.scoping.utils.CompositeScope
+import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.NumericLiteralTypeRef
@@ -309,16 +307,12 @@ class MemberScopingHelper {
 		return new IntersectionMemberScope(intersectiontypeexp, request, subScopes, ts);
 	}
 
-	private def dispatch IScope members(FunctionTypeRef ftExpr, MemberScopeRequest request) {
-		return membersOfFunctionTypeRef(ftExpr, request)
-	}
-
 	private def dispatch IScope members(FunctionTypeExpression ftExpr, MemberScopeRequest request) {
 		return membersOfFunctionTypeRef(ftExpr, request)
 	}
 
 	/** delegated from two methods above, to avoid catch-all of ParameterizedTypeRef for FuntionTypeRefs while dispatching */
-	def private IScope membersOfFunctionTypeRef(FunctionTypeExprOrRef ftExpr, MemberScopeRequest request) {
+	def private IScope membersOfFunctionTypeRef(FunctionTypeExpression ftExpr, MemberScopeRequest request) {
 		val builtInTypeScope = BuiltInTypeScope.get(getResourceSet(ftExpr, request.context));
 		val fType = builtInTypeScope.functionType
 		val ret = membersOfType(fType, request)

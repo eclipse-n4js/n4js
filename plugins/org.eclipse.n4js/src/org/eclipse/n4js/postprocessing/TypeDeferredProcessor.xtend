@@ -59,7 +59,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 			N4MethodDeclaration: {
 				val declReturnTypeRefInAST = astNode.declaredReturnTypeRefNode?.typeRefInAST;
 				if (astNode.isConstructor) {
-					val tCtor = astNode.definedType as TMethod;
+					val tCtor = astNode.definedFunction as TMethod;
 					if (null !== tCtor) {
 						assertTrueIfRigid(cache, "TMethod in TModule should be a constructor", tCtor.isConstructor);
 						assertTrueIfRigid(cache, "return type of constructor in TModule should be a DeferredTypeRef",
@@ -72,7 +72,7 @@ package class TypeDeferredProcessor extends AbstractProcessor {
 						], tCtor);
 					}
 				} else if (declReturnTypeRefInAST instanceof ThisTypeRef) {
-					val tMethod = astNode.definedType as TMethod;
+					val tMethod = astNode.definedFunction as TMethod;
 					if (null !== tMethod) {
 						assertTrueIfRigid(cache, "return type of TMethod in TModule should be a DeferredTypeRef",
 							tMethod.returnTypeRef instanceof DeferredTypeRef);

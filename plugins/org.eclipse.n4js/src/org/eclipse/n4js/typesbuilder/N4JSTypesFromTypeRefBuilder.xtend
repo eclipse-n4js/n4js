@@ -121,7 +121,7 @@ public class N4JSTypesFromTypeRefBuilder {
 				ft.returnTypeRef = builtInTypeScope.getAnyTypeRef();
 			}
 
-			fte.declaredType = ft;
+			fte.declaredFunction = ft;
 			ft.astElement = fte;
 		}
 	}

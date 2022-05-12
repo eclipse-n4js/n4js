@@ -513,18 +513,18 @@ class N4JSScopingTest {
 		val eAssignment = testModel.eAllContents.filter(VariableDeclaration).filter[name == "e"].head;
 		assertNotNull("e at class level found", eAssignment)
 		assertTrue(eAssignment.expression instanceof ParameterizedCallExpression)
-		assertEquals("Expected foo at e assigned", functionDeclaration.definedType,
+		assertEquals("Expected foo at e assigned", functionDeclaration.definedFunction,
 			((eAssignment.expression as ParameterizedCallExpression).target as IdentifierRef).id)
 
 		val fAssignment = testModel.eAllContents.filter(VariableDeclaration).filter[name == "f"].head;
 		assertNotNull("f at class level found", fAssignment)
 		assertTrue(fAssignment.expression instanceof IdentifierRef)
-		assertEquals("Expected foo at f assigned", functionDeclaration.definedType,
+		assertEquals("Expected foo at f assigned", functionDeclaration.definedFunction,
 			((fAssignment.expression as IdentifierRef).id))
 
 		val fooStatement = testModel.eAllContents.filter(ExpressionStatement).filter [
 			eContainer?.eContainer == functionDeclaration && expression instanceof IdentifierRef &&
-				(expression as IdentifierRef).id == functionDeclaration.definedType
+				(expression as IdentifierRef).id == functionDeclaration.definedFunction
 		].head;
 		assertNotNull("fooStatement at function level found", fooStatement)
 
@@ -532,7 +532,7 @@ class N4JSScopingTest {
 			eContainer?.eContainer == functionDeclaration && expression instanceof ParameterizedCallExpression &&
 				(expression as ParameterizedCallExpression).target instanceof IdentifierRef &&
 				((expression as ParameterizedCallExpression).target as IdentifierRef).id ==
-					functionDeclaration.definedType
+					functionDeclaration.definedFunction
 		].head;
 		assertNotNull("fooCallStatement at function level found", fooCallStatement)
 	}

@@ -199,7 +199,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val functionDecl = (script.scriptElements.head as ExportDeclaration).exportedElement as FunctionDeclaration
 		assertTrue(functionDecl.declaredModifiers.empty)
-		val accessModifier = functionDecl.definedType.typeAccessModifier
+		val accessModifier = functionDecl.definedFunction.typeAccessModifier
 		assertEquals(TypeAccessModifier.PROJECT, accessModifier)
 	}
 
@@ -212,7 +212,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val functionDecl = (script.scriptElements.head as ExportDeclaration).exportedElement as FunctionDeclaration
 		assertTrue(functionDecl.declaredModifiers.contains(N4Modifier.PUBLIC))
-		val accessModifier = functionDecl.definedType.typeAccessModifier
+		val accessModifier = functionDecl.definedFunction.typeAccessModifier
 		assertEquals(TypeAccessModifier.PUBLIC_INTERNAL, accessModifier)
 	}
 
@@ -225,7 +225,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val functionDecl = (script.scriptElements.head as ExportDeclaration).exportedElement as FunctionDeclaration
 		assertTrue(functionDecl.declaredModifiers.contains(N4Modifier.PUBLIC))
-		val accessModifier = functionDecl.definedType.typeAccessModifier
+		val accessModifier = functionDecl.definedFunction.typeAccessModifier
 		assertEquals(TypeAccessModifier.PUBLIC, accessModifier)
 	}
 
@@ -238,7 +238,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val functionDecl = (script.scriptElements.head as ExportDeclaration).exportedElement as FunctionDeclaration
 		assertTrue(functionDecl.declaredModifiers.contains(N4Modifier.PUBLIC))
-		val accessModifier = functionDecl.definedType.typeAccessModifier
+		val accessModifier = functionDecl.definedFunction.typeAccessModifier
 		assertEquals(TypeAccessModifier.PUBLIC_INTERNAL, accessModifier)
 	}
 
@@ -251,7 +251,7 @@ class N4_03_AccessModifiersTest extends AbstractParserTest {
 		assertTrue(script.eResource.errors.toString, script.eResource.errors.empty)
 		val functionDecl = (script.scriptElements.head as ExportDeclaration).exportedElement as FunctionDeclaration
 		assertTrue(functionDecl.declaredModifiers.contains(N4Modifier.PROJECT))
-		val accessModifier = functionDecl.definedType.typeAccessModifier
+		val accessModifier = functionDecl.definedFunction.typeAccessModifier
 		assertEquals(TypeAccessModifier.PROJECT, accessModifier)
 	}
 }

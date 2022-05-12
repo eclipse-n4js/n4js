@@ -85,7 +85,7 @@ class ExpressionScopingTest {
 		val a = script.scriptElements.head as FunctionDeclaration
 		val assignment = (script.scriptElements.last as ExpressionStatement).expression as AssignmentExpression
 		val lhs = assignment.lhs as IdentifierRef
-		Assert.assertSame(a.definedType, lhs.id)
+		Assert.assertSame(a.definedFunction, lhs.id)
 	}
 
 	@Test
@@ -97,7 +97,7 @@ class ExpressionScopingTest {
 		val a = script.scriptElements.head as FunctionDeclaration
 		val cond = (script.scriptElements.last as IfStatement).expression as RelationalExpression
 		val type = cond.rhs as IdentifierRef
-		Assert.assertSame(a.definedType, type.id)
+		Assert.assertSame(a.definedFunction, type.id)
 	}
 
 	@Test
@@ -109,7 +109,7 @@ class ExpressionScopingTest {
 		val a = script.scriptElements.head as FunctionDeclaration
 		val newExpr = (script.scriptElements.last as ExpressionStatement).expression as NewExpression
 		val type = newExpr.callee as IdentifierRef
-		Assert.assertSame(a.definedType, type.id)
+		Assert.assertSame(a.definedFunction, type.id)
 	}
 
 

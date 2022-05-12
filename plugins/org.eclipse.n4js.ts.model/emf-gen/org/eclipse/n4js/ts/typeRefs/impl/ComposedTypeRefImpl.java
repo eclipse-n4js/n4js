@@ -48,7 +48,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *
  * @generated
  */
-public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implements ComposedTypeRef {
+public abstract class ComposedTypeRefImpl extends TypeRefImpl implements ComposedTypeRef {
 	/**
 	 * The cached value of the '{@link #getTypeRefs() <em>Type Refs</em>}' containment reference list.
 	 * <!-- begin-user-doc -->

@@ -34,13 +34,14 @@ import org.eclipse.n4js.ts.types.TFunction;
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDeclaredReturnTypeRefNode <em>Declared Return Type Ref Node</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#isGenerator <em>Generator</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#isDeclaredAsync <em>Declared Async</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDefinedFunction <em>Defined Function</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDefinition()
  * @model abstract="true"
  * @generated
  */
-public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement {
+public interface FunctionDefinition extends FunctionOrFieldAccessor {
 	/**
 	 * Returns the value of the '<em><b>Fpars</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.FormalParameter}.
@@ -133,6 +134,28 @@ public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefinin
 	void setDeclaredAsync(boolean value);
 
 	/**
+	 * Returns the value of the '<em><b>Defined Function</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Defined Function</em>' reference.
+	 * @see #setDefinedFunction(TFunction)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getFunctionDefinition_DefinedFunction()
+	 * @model transient="true"
+	 * @generated
+	 */
+	TFunction getDefinedFunction();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.FunctionDefinition#getDefinedFunction <em>Defined Function</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Defined Function</em>' reference.
+	 * @see #getDefinedFunction()
+	 * @generated
+	 */
+	void setDefinedFunction(TFunction value);
+
+	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -170,16 +193,5 @@ public interface FunctionDefinition extends FunctionOrFieldAccessor, TypeDefinin
 	 * @generated
 	 */
 	boolean isAsync();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 *  Convenience method returning the 'definedType' if it is a TFunction, otherwise <code>null</code>.
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	TFunction getDefinedFunction();
 
 } // FunctionDefinition

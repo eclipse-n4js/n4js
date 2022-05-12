@@ -32,7 +32,7 @@ package org.eclipse.n4js.ts.types;
  * @model
  * @generated
  */
-public interface PrimitiveType extends GenericType, ArrayLike {
+public interface PrimitiveType extends Type, GenericType, ArrayLike {
 	/**
 	 * Returns the value of the '<em><b>Assignment Compatible</b></em>' reference.
 	 * <!-- begin-user-doc -->

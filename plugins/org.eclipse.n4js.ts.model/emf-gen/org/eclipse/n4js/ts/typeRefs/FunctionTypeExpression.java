@@ -73,21 +73,21 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isBinding <em>Binding</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredType <em>Declared Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredFunction <em>Declared Function</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredThisType <em>Declared This Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getOwnedTypeVars <em>Owned Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getUnboundTypeVars <em>Unbound Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getUnboundTypeVarsUpperBounds <em>Unbound Type Vars Upper Bounds</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getFpars <em>Fpars</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getReturnTypeRef <em>Return Type Ref</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isReturnValueMarkedOptional <em>Return Value Marked Optional</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression()
  * @model
  * @generated
  */
-public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
+public interface FunctionTypeExpression extends TypeRef {
 	/**
 	 * Returns the value of the '<em><b>Binding</b></em>' attribute.
 	 * <!-- begin-user-doc -->
@@ -116,7 +116,7 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	void setBinding(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Declared Type</b></em>' reference.
+	 * Returns the value of the '<em><b>Declared Function</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
@@ -126,23 +126,23 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * the FunctionTypeExpression in the AST.
 	 * For more details on use cases see API doc of {@link FunctionTypeExpression}.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Declared Type</em>' reference.
-	 * @see #setDeclaredType(TFunction)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression_DeclaredType()
+	 * @return the value of the '<em>Declared Function</em>' reference.
+	 * @see #setDeclaredFunction(TFunction)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression_DeclaredFunction()
 	 * @model
 	 * @generated
 	 */
-	TFunction getDeclaredType();
+	TFunction getDeclaredFunction();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredType <em>Declared Type</em>}' reference.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredFunction <em>Declared Function</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Declared Type</em>' reference.
-	 * @see #getDeclaredType()
+	 * @param value the new value of the '<em>Declared Function</em>' reference.
+	 * @see #getDeclaredFunction()
 	 * @generated
 	 */
-	void setDeclaredType(TFunction value);
+	void setDeclaredFunction(TFunction value);
 
 	/**
 	 * Returns the value of the '<em><b>Declared This Type</b></em>' containment reference.
@@ -152,6 +152,8 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * Reference to the declared this-type via @This annotation inside the FunctionTypeExpression.
 	 * In use case 2.a this is a copy of <code>declaredType.declaredThisType</code>, in use case
 	 * 2.b this is a copy of the original FunctionTypeExperession's declaredThisType.
+	 * 
+	 * optional thisType declaration e.g. for a given class A it's member-type can be specified as "{A.function():void}"
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Declared This Type</em>' containment reference.
 	 * @see #setDeclaredThisType(TypeRef)
@@ -242,6 +244,32 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	EList<TFormalParameter> getFpars();
 
 	/**
+	 * Returns the value of the '<em><b>Return Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Return type declared in the FunctionTypeExpression in the AST or
+	 * a copy of the return type of the 'declaredType' or original FunctionTypeExpression.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Return Type Ref</em>' containment reference.
+	 * @see #setReturnTypeRef(TypeRef)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression_ReturnTypeRef()
+	 * @model containment="true"
+	 * @generated
+	 */
+	TypeRef getReturnTypeRef();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getReturnTypeRef <em>Return Type Ref</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Return Type Ref</em>' containment reference.
+	 * @see #getReturnTypeRef()
+	 * @generated
+	 */
+	void setReturnTypeRef(TypeRef value);
+
+	/**
 	 * Returns the value of the '<em><b>Return Value Marked Optional</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -270,30 +298,12 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	void setReturnValueMarkedOptional(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Return Type Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Return type declared in the FunctionTypeExpression in the AST or
-	 * a copy of the return type of the 'declaredType' or original FunctionTypeExpression.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Return Type Ref</em>' containment reference.
-	 * @see #setReturnTypeRef(TypeRef)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression_ReturnTypeRef()
-	 * @model containment="true"
+	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
-	TypeRef getReturnTypeRef();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getReturnTypeRef <em>Return Type Ref</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Return Type Ref</em>' containment reference.
-	 * @see #getReturnTypeRef()
-	 * @generated
-	 */
-	void setReturnTypeRef(TypeRef value);
+	boolean isReturnValueOptional();
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -312,8 +322,54 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
+	 * Overrides {@link TypeRef#isGeneric()}
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isGeneric();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Overrides {@link TypeRef#isRaw()}.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	boolean isRaw();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Returns the formal parameter corresponding to the argument at index 'argIndex' in a function call
+	 * or 'null' if 'argIndex' is invalid. This method takes into account optional and variadic parameters.
+	 * <!-- end-model-doc -->
+	 * @model unique="false" argIndexUnique="false"
+	 * @generated
+	 */
+	TFormalParameter getFparForArgIdx(int argIndex);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Overrides {@link TypeRef#internalGetTypeRefAsString()}
+	 * <!-- end-model-doc -->
+	 * @model unique="false"
+	 * @generated
+	 */
+	String internalGetTypeRefAsString();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
 	 * Returns the upper bounds of the given type variable (which should be one of those returned by
-	 * {@link FunctionTypeExprOrRef#getTypeVars()}). Usually, this will just return
+	 * {@link FunctionTypeExpression#getTypeVars()}). Usually, this will just return
 	 * {@link TypeVariable#getDeclaredUpperBounds()}, but in case of a FunctionTypeExpression created during type
 	 * variable substitution, a different upper bound might be returned (i.e. original upper bound after type variable
 	 * substitution).
@@ -325,13 +381,5 @@ public interface FunctionTypeExpression extends FunctionTypeExprOrRef {
 	 * @generated
 	 */
 	TypeRef getTypeVarUpperBound(TypeVariable typeVar);
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @model kind="operation" unique="false"
-	 * @generated
-	 */
-	boolean isReturnValueOptional();
 
 } // FunctionTypeExpression

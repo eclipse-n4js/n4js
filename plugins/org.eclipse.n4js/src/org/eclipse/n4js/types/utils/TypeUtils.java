@@ -45,9 +45,7 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
 import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
@@ -83,6 +81,7 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TStructuralType;
+import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAlias;
 import org.eclipse.n4js.ts.types.TypeVariable;
@@ -200,11 +199,7 @@ public class TypeUtils {
 			return null; // avoid creating a bogus ParameterizedTypeRef with a 'declaredType' property of 'null'
 		}
 		final ParameterizedTypeRef ref;
-		if (declaredType instanceof TFunction) {
-			ref = TypeRefsFactory.eINSTANCE.createFunctionTypeRef();
-			// } else if (declaredType instanceof TStructuralType) {
-			// throw new IllegalArgumentException("a TStructuralType should not be used as declared type of a TypeRef");
-		} else if (isStructural(typingStrategy)) {
+		if (isStructural(typingStrategy)) {
 			ref = TypeRefsFactory.eINSTANCE.createParameterizedTypeRefStructural();
 		} else {
 			ref = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
@@ -299,16 +294,11 @@ public class TypeUtils {
 	 * Creates new type reference for constructor. if the declared type is TFunction a FunctionTypeRef is created. If
 	 * declared type is TClassifier than TypeTypeRef is created (i.e. <code>constructor{A}</code> in N4JS code)
 	 */
-	public static TypeRef createConstructorTypeRef(Type declaredType, TypeArgument... typeArgs) {
+	public static TypeRef createConstructorTypeRef(TypableElement declaredType, TypeArgument... typeArgs) {
 		TypeRef typeRef = null;
 		if (declaredType instanceof TFunction) {
-			// TODO is this correct?
-			FunctionTypeRef ref = TypeRefsFactory.eINSTANCE.createFunctionTypeRef();
-			ref.setDeclaredType(declaredType);
-			for (TypeArgument typeArg : typeArgs) {
-				ref.getDeclaredTypeArgs().add(TypeUtils.copyIfContained(typeArg));
-			}
-			typeRef = ref;
+			TFunction tFunction = (TFunction) declaredType;
+			typeRef = createFunctionTypeExpression(tFunction, typeArgs);
 		} else if (declaredType instanceof TClassifier) {
 			TClassifier tClassifier = (TClassifier) declaredType;
 			typeRef = createTypeTypeRef(createTypeRef(tClassifier, typeArgs), true);
@@ -657,7 +647,7 @@ public class TypeUtils {
 	private static TypeRef mergeTypingStrategies(TypeRef target, TypingStrategy source, boolean targetAlreadyCopied) {
 		final TypingStrategy combined = concatTypingStrategies(target.getTypingStrategy(), source);
 		if (combined != target.getTypingStrategy()) {
-			if (target instanceof ParameterizedTypeRef && !(target instanceof FunctionTypeRef)) {
+			if (target instanceof ParameterizedTypeRef && !(target instanceof FunctionTypeExpression)) {
 				final ParameterizedTypeRefStructural ptrs;
 				if (!targetAlreadyCopied || !(target instanceof ParameterizedTypeRefStructural)) {
 					ptrs = copyToParameterizedTypeRefStructural((ParameterizedTypeRef) target);
@@ -836,6 +826,13 @@ public class TypeUtils {
 		}
 	}
 
+	public static FunctionTypeExpression createFunctionTypeExpression(TFunction fun, TypeArgument... typeArgs) {
+		FunctionTypeExpression fte = createFunctionTypeExpression(fun.getDeclaredThisType(), fun.getTypeVars(),
+				fun.getFpars(), fun.getReturnTypeRef(), typeArgs);
+		fte.setDeclaredFunction(fun);
+		return fte;
+	}
+
 	/**
 	 * Same as {@link #createFunctionTypeExpression(List, TypeRef)}, but accepting types of parameters instead of
 	 * parameter instances.
@@ -861,7 +858,8 @@ public class TypeUtils {
 	 */
 	public static FunctionTypeExpression createFunctionTypeExpression(
 			TypeRef declaredThisType, List<TypeVariable> ownedTypeVars,
-			List<TFormalParameter> fpars, TypeRef returnTypeRef) {
+			List<TFormalParameter> fpars, TypeRef returnTypeRef, TypeArgument... typeArgs) {
+
 		final FunctionTypeExpression f = TypeRefsFactory.eINSTANCE.createFunctionTypeExpression();
 		if (declaredThisType != null) {
 			f.setDeclaredThisType(TypeUtils.copyIfContained(declaredThisType));
@@ -869,6 +867,19 @@ public class TypeUtils {
 		ownedTypeVars.stream().forEachOrdered(tv -> f.getOwnedTypeVars().add(TypeUtils.copyIfContained(tv)));
 		fpars.stream().forEachOrdered(tp -> f.getFpars().add(TypeUtils.copyIfContained(tp)));
 		f.setReturnTypeRef(TypeUtils.copyIfContained(returnTypeRef));
+
+		if (typeArgs != null) {
+			EList<TypeArgument> refDeclTypeArgs = f.getDeclaredTypeArgs();
+			for (TypeArgument typeArg : typeArgs) {
+				if (typeArg != null) {
+					refDeclTypeArgs.add(TypeUtils.copyIfContained(typeArg));
+				} else {
+					// 'null' here is invalid (most likely caused by a syntax error) and EMF would throw an exception;
+					// to keep indices of any following type arguments valid, we create and add an UnknownTypeRef:
+					refDeclTypeArgs.add(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
+				}
+			}
+		}
 		return f;
 	}
 
@@ -1262,8 +1273,8 @@ public class TypeUtils {
 			}
 		}
 		// follow cross-references
-		if (followFunctionTypeRefs && obj instanceof FunctionTypeRef) {
-			TFunction f = ((FunctionTypeRef) obj).getFunctionType();
+		if (followFunctionTypeRefs && obj instanceof FunctionTypeExpression) {
+			TFunction f = ((FunctionTypeExpression) obj).getDeclaredFunction();
 			if (guard == null) {
 				guard = new RecursionGuard<>();
 			}
@@ -1418,16 +1429,9 @@ public class TypeUtils {
 	/**
 	 * Converts the given {@link ParameterizedTypeRef} into a {@link ParameterizedTypeRefStructural}. Creates a copy and
 	 * does not modify the passed-in type reference.
-	 *
-	 * @throws IllegalArgumentException
-	 *             if given a {@link FunctionTypeRef}, because {@code FunctionTypeRef}s do not have a corresponding
-	 *             subclass that implements {@link ParameterizedTypeRefStructural}.
 	 */
 	public static final ParameterizedTypeRefStructural copyToParameterizedTypeRefStructural(
 			ParameterizedTypeRef source) {
-		if (source instanceof FunctionTypeRef) {
-			throw new IllegalArgumentException("FunctionTypeRefs do not have a corresponding structural variant");
-		}
 		EClass ptrsEClass = TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural();
 		return (ParameterizedTypeRefStructural) copy(source, false, false, ptrsEClass);
 	}
@@ -1573,8 +1577,8 @@ public class TypeUtils {
 	/**
 	 * Returns true iff the given function type has a return type of void.
 	 */
-	public static boolean isVoidReturnType(FunctionTypeExprOrRef funTypeRef) {
-		if (funTypeRef instanceof FunctionTypeExpression && funTypeRef.getReturnTypeRef() == null) {
+	public static boolean isVoidReturnType(FunctionTypeExpression funTypeRef) {
+		if (funTypeRef != null && funTypeRef.getReturnTypeRef() == null) {
 			// special case: FunctionTypeExpression may have null as returnTypeRef and that means void!
 			return true;
 		} else {

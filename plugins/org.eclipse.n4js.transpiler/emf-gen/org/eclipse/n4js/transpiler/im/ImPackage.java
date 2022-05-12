@@ -2228,15 +2228,6 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_METHOD_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE = N4JSPackage.N4_METHOD_DECLARATION__IMPLICIT_ARGUMENTS_VARIABLE;
 
 	/**
-	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_METHOD_DECLARATION__DEFINED_TYPE = N4JSPackage.N4_METHOD_DECLARATION__DEFINED_TYPE;
-
-	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2271,6 +2262,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION__DECLARED_ASYNC = N4JSPackage.N4_METHOD_DECLARATION__DECLARED_ASYNC;
+
+	/**
+	 * The feature id for the '<em><b>Defined Function</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION__DEFINED_FUNCTION = N4JSPackage.N4_METHOD_DECLARATION__DEFINED_FUNCTION;
 
 	/**
 	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
@@ -2469,15 +2469,6 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION___IS_ASYNC = N4JSPackage.N4_METHOD_DECLARATION___IS_ASYNC;
-
-	/**
-	 * The operation id for the '<em>Get Defined Function</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DELEGATING_METHOD_DECLARATION___GET_DEFINED_FUNCTION = N4JSPackage.N4_METHOD_DECLARATION___GET_DEFINED_FUNCTION;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
