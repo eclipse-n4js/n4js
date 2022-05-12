@@ -11,7 +11,9 @@
 package org.eclipse.n4js.ts.types.util;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
@@ -51,6 +53,11 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	 * The recursion guard
 	 */
 	protected final RecursionGuard<Type> guard;
+
+	/**
+	 * Used for temporarily marking types as not to be traversed, i.e. their super types won't be processed.
+	 */
+	protected final Set<Type> typesWithSuppressedTraversal = new HashSet<>();
 
 	/**
 	 * The type which the traverser has to traverse, that is the bottom type of the hierarchy.
@@ -140,16 +147,21 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	@Override
 	public Boolean caseTClass(TClass object) {
 		if (guard.tryNext(object)) {
-			if (!object.isPolyfill()) {
-				if (doSwitchTypeRefs(getPolyfills(object))) {
-					return Boolean.TRUE;
+			if (!object.isPolyfill() && !isSuppressedTraversal(object)) {
+				List<ParameterizedTypeRef> polyfills = getPolyfills(object);
+				try {
+					registerSuppressedTraversal(polyfills);
+					if (doSwitchTypeRefs(getPolyfills(object))) {
+						return Boolean.TRUE;
+					}
+				} finally {
+					unregisterSuppressedTraversal(polyfills);
 				}
 			}
 			if (process(object)) {
 				return Boolean.TRUE;
 			}
-			if (!object.isPolyfill()) {
-				// enqueueInterface(object.getConsumedRoles());
+			if (!object.isPolyfill() && !isSuppressedTraversal(object)) {
 				if (doSwitchSuperTypes(object)) {
 					return Boolean.TRUE;
 				}
@@ -178,15 +190,21 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	@Override
 	public Boolean caseTInterface(TInterface object) {
 		if (guard.tryNext(object)) {
-			if (!object.isPolyfill()) {
-				if (doSwitchTypeRefs(getPolyfills(object))) {
-					return Boolean.TRUE;
+			if (!object.isPolyfill() && !isSuppressedTraversal(object)) {
+				List<ParameterizedTypeRef> polyfills = getPolyfills(object);
+				try {
+					registerSuppressedTraversal(polyfills);
+					if (doSwitchTypeRefs(polyfills)) {
+						return Boolean.TRUE;
+					}
+				} finally {
+					unregisterSuppressedTraversal(polyfills);
 				}
 			}
 			if (process(object)) {
 				return Boolean.TRUE;
 			}
-			if (!object.isPolyfill()) {
+			if (!object.isPolyfill() && !isSuppressedTraversal(object)) {
 				if (doSwitchSuperInterfaces(object)) {
 					return Boolean.TRUE;
 				}
@@ -272,4 +290,33 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 		return Collections.emptyList(); // polyfills not supported by default
 	}
 
+	protected boolean isSuppressedTraversal(Type type) {
+		return typesWithSuppressedTraversal.contains(type);
+	}
+
+	protected void registerSuppressedTraversal(List<ParameterizedTypeRef> typeRefs) {
+		for (ParameterizedTypeRef typeRef : typeRefs) {
+			Type declType = typeRef.getDeclaredType();
+			if (declType == null || declType.eIsProxy()) {
+				continue;
+			}
+			if (declType.isPolyfill()) {
+				continue; // polyfills are not traversed anyway, so no need to suppress traversal
+			}
+			typesWithSuppressedTraversal.add(declType);
+		}
+	}
+
+	protected void unregisterSuppressedTraversal(List<ParameterizedTypeRef> typeRefs) {
+		for (ParameterizedTypeRef typeRef : typeRefs) {
+			Type declType = typeRef.getDeclaredType();
+			if (declType == null || declType.eIsProxy()) {
+				continue;
+			}
+			if (declType.isPolyfill()) {
+				continue;
+			}
+			typesWithSuppressedTraversal.remove(declType);
+		}
+	}
 }
