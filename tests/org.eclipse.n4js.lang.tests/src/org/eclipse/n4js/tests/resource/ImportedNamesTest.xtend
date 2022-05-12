@@ -62,9 +62,9 @@ class ImportedNamesTest {
 
 		val expectedImportedNames = #["org.eclipse.n4js.tests.resource.C",
 			"org.eclipse.n4js.tests.resource.A",
-			"org.eclipse.n4js.tests.resource.C.C",
-			"org.eclipse.n4js.tests.resource.C.Z",
-			"#.org.eclipse.n4js.tests.resource.C"].toSet;
+			"org.eclipse.n4js.tests.resource.C.!.C",
+			"org.eclipse.n4js.tests.resource.C.!.Z",
+			"#.!.org.eclipse.n4js.tests.resource.C"].toSet;
 		val resourceA = rs.getResource(resourceA, true) as N4JSResource
 		val actualImportedNames = resourceA.getImportedNames.map[toString].toSet
 		assertEquals("The list of imported names is wrong", expectedImportedNames, actualImportedNames)
@@ -88,16 +88,16 @@ class ImportedNamesTest {
 		EcoreUtil.resolveAll(rs)
 
 		val expectedImportedNames = #[
-			"#.!POLY.Object",
-			"#.two",
-			"org.eclipse.n4js.tests.resource.MyClassTwo.MyClassTwo",
-			"void",
-			"#.void",
-			"org.eclipse.n4js.tests.resource.MyRoleLikeInterface.MyRoleLikeInterface",
-			"org.eclipse.n4js.tests.resource.MyInterfaceFour.MyInterfaceFour",
+			"#.!.org.eclipse.n4js.tests.resource.MyVariableTwo",
+			"#.!.two",
+			"#.!.void",
+			"#.!.!POLY.Object",
 			"org.eclipse.n4js.tests.resource.MyClassOne",
-			"#.org.eclipse.n4js.tests.resource.MyVariableTwo",
-			"org.eclipse.n4js.tests.resource.MyVariableTwo"
+			"org.eclipse.n4js.tests.resource.MyClassTwo.!.MyClassTwo",
+			"org.eclipse.n4js.tests.resource.MyInterfaceFour.!.MyInterfaceFour",
+			"org.eclipse.n4js.tests.resource.MyRoleLikeInterface.!.MyRoleLikeInterface",
+			"org.eclipse.n4js.tests.resource.MyVariableTwo",
+			"void"
 		].toSet
 		val myClassOneResource = rs.getResource(myClassOne, true) as N4JSResource
 		val actualImportedNames = myClassOneResource.getImportedNames.map[toString].toSet
@@ -116,11 +116,11 @@ class ImportedNamesTest {
 
 		val resourceX = rs.getResource(resourceYURI, true) as N4JSResource
 
-		val expectedImportedNames = #["#.org.eclipse.n4js.tests.resource.X",
-									 "org.eclipse.n4js.tests.resource.X.J",
-									 "org.eclipse.n4js.tests.resource.X.I",
-									 "org.eclipse.n4js.tests.resource.X.X1",
-									 "org.eclipse.n4js.tests.resource.X.X2",
+		val expectedImportedNames = #["#.!.org.eclipse.n4js.tests.resource.X",
+									 "org.eclipse.n4js.tests.resource.X.!.J",
+									 "org.eclipse.n4js.tests.resource.X.!.I",
+									 "org.eclipse.n4js.tests.resource.X.!.X1",
+									 "org.eclipse.n4js.tests.resource.X.!.X2",
 									 "org.eclipse.n4js.tests.resource.Y",
 									 "org.eclipse.n4js.tests.resource.X"].toSet;
 

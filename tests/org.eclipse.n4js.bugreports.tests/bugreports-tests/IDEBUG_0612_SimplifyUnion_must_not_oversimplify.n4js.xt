@@ -17,7 +17,7 @@ class B {}
 class C {}
 class D {}
 // arr1 will be inferred to wrong type "Array<Array<union{number,string}>>"
-// XPECT type of 'arr1' --> Array<union{Array<union{A,B}>,Array<union{int,string}>}>
+// XPECT type of 'arr1' --> Array<union{Array<union{int,string}>,Array<union{A,B}>}>
 var arr1 = [ [42,""], [new A, new B] ];
 // arr2 will be inferred to wrong type "Array<constructor{A}>"
 // XPECT type of 'arr2' --> Array<union{constructor{A},constructor{B},constructor{C},constructor{D}}>

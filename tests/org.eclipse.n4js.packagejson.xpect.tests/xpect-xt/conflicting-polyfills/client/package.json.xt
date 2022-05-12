@@ -48,9 +48,9 @@
 			]
 		},
 		"requiredRuntimeLibraries": [
-			// XPECT errors --> "The libraries lib1, lib2 provide polyfills for the same elements "#.IArguments#addedField", "#.IArguments#addedGetter", "#.IArguments#addedMethod", "#.IArguments#addedSetter", "#.String#fromCodePoint", "#.String#startsWith" and cannot be used together." at ""lib1""
+			// XPECT errors --> "The libraries lib1, lib2 provide polyfills for the same elements "IArguments#addedField", "IArguments#addedGetter", "IArguments#addedMethod", "IArguments#addedSetter", "String#fromCodePoint", "String#startsWith" and cannot be used together." at ""lib1""
 			"lib1",
-			// XPECT errors --> "The libraries lib1, lib2 provide polyfills for the same elements "#.IArguments#addedField", "#.IArguments#addedGetter", "#.IArguments#addedMethod", "#.IArguments#addedSetter", "#.String#fromCodePoint", "#.String#startsWith" and cannot be used together." at ""lib2""
+			// XPECT errors --> "The libraries lib1, lib2 provide polyfills for the same elements "IArguments#addedField", "IArguments#addedGetter", "IArguments#addedMethod", "IArguments#addedSetter", "String#fromCodePoint", "String#startsWith" and cannot be used together." at ""lib2""
 			"lib2"
 		]
 	}

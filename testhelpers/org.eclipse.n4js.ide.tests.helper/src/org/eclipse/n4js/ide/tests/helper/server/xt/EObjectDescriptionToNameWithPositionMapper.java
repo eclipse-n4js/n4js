@@ -13,6 +13,7 @@ package org.eclipse.n4js.ide.tests.helper.server.xt;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -88,7 +89,7 @@ public class EObjectDescriptionToNameWithPositionMapper implements Function<IEOb
 	 */
 	public static String descriptionToNameWithPosition(URI currentURI, boolean withLineNumber,
 			IEObjectDescription desc) {
-		String name = desc.getName().toString();
+		String name = QualifiedNameUtils.toHumanReadableString(desc.getName());
 
 		EObject eobj = desc.getEObjectOrProxy();
 

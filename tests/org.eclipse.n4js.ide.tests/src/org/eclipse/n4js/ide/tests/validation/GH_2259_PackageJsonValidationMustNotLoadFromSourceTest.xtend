@@ -134,8 +134,8 @@ class GH_2259_PackageJsonValidationMustNotLoadFromSourceTest extends AbstractIde
 		startAndWaitForLspServer();
 		assertIssues(
 			"MainProject/package.json" -> #[
-				'(Error, [13:3 - 13:13], The libraries Project1, Project2 provide polyfills for the same element "#.Array#addedMethod" and cannot be used together.)',
-				'(Error, [14:3 - 14:13], The libraries Project1, Project2 provide polyfills for the same element "#.Array#addedMethod" and cannot be used together.)'
+				'(Error, [13:3 - 13:13], The libraries Project1, Project2 provide polyfills for the same element "Array#addedMethod" and cannot be used together.)',
+				'(Error, [14:3 - 14:13], The libraries Project1, Project2 provide polyfills for the same element "Array#addedMethod" and cannot be used together.)'
 			]
 		);
 

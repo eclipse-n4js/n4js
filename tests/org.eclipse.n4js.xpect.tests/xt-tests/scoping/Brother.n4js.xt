@@ -35,7 +35,7 @@
    END_SETUP
  */
 
-// XPECT scope at 'from <|>"scoping/Sister"' --> scoping.Child, scoping.Sister
+// XPECT scope at 'from <|>"scoping/Sister"' --> scoping/Child, scoping/Sister
 import { Sister as SisterObject } from "scoping/Sister"
 import { Child } from "scoping/Child"
 

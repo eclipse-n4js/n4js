@@ -79,7 +79,7 @@ class TypeReferenceContentAssistIdeTest extends ConvertedCompletionIdeTest {
 
 			var varName: MyF<|>
 		''', '''
-			==>(L.MyFirstClass, Class, path/Libs/MyFirstClass, , , 00000, , , , ([2:13 - 2:16], L.MyFirstClass), [], [], , )
+			==>(L.MyFirstClass, Class, path/Libs.MyFirstClass, , , 00000, , , , ([2:13 - 2:16], L.MyFirstClass), [], [], , )
 		''', '''
 			import * as L from 'path/Libs'
 
@@ -219,7 +219,7 @@ class TypeReferenceContentAssistIdeTest extends ConvertedCompletionIdeTest {
 		testAtCursor('''
 			import {MyFirstClass as MyRenamedClass} from 'path/Libs'; var varName: my<|>
 		''', '''
-			(MyRenamedClass, Class, alias for path/Libs/MyFirstClass, , , 00000, , , , ([0:71 - 0:73], MyRenamedClass), [], [], , )
+			(MyRenamedClass, Class, alias for path/Libs.MyFirstClass, , , 00000, , , , ([0:71 - 0:73], MyRenamedClass), [], [], , )
 			(MySecondClass, Class, path/Libs, , , 00001, , , , ([0:71 - 0:73], MySecondClass), [([0:57 - 0:57], 
 			import {MySecondClass} from "path/Libs";)], [], , )
 		''');
