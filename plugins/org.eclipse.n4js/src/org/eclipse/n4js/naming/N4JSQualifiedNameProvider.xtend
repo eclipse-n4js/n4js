@@ -19,6 +19,7 @@ import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
 import org.eclipse.n4js.packagejson.PackageJsonProperties
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
@@ -40,7 +41,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 
 /**
- * Calculates the fully qualified name for the passed-in objects.
+ * See {@link #getFullyQualifiedName(EObject)}.
  */
 class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 
@@ -57,6 +58,13 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	/** Last segment of fully qualified names for the root {@link JSONDocument} of package.json files. */
 	public static final String PACKAGE_JSON_SEGMENT = "!package_json";
 
+	/**
+	 * The qualified name computed here is used when adding type model elements to the Xtext index / global scope
+	 * (see {@link N4JSResourceDescriptionStrategy#createEObjectDescriptions(EObject, IAcceptor) here} for details).
+	 * <p>
+	 * Since project names are not included, these names are not globally unique. However, they are unique among
+	 * the elements of a single project.
+	 */
 	override QualifiedName getFullyQualifiedName(EObject it) {
 		switch (it) {
 			TModule:

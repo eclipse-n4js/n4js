@@ -299,7 +299,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 
 	/**
 	 * Registers type model elements (types, functions, variables, etc.) in the global Xtext index under their
-	 * {@link QualifiedName qualified name}.
+	 * {@link QualifiedName qualified name} (see {@link N4JSQualifiedNameProvider#getFullyQualifiedName(EObject) here}
+	 * for details).
 	 * <p>
 	 * <b><u>Usually</u></b>, this registration does not have a direct impact on scoping, i.e. the elements registered
 	 * here are not directly available as targets for cross-references in the source code. Instead, this information
