@@ -30,12 +30,16 @@
 		}
 		
 		export abstract class AC {}
+
+		export class WC {
+		    constructor(p1: string, p2: number)
+		}
 	}
 	END_SETUP
  */
 
 
-import {KE, AC} from "tslib";
+import {KE, AC, WC} from "tslib";
 
 // XPECT noerrors -->
 let num : number = KE.staticField;
@@ -71,3 +75,10 @@ ke.readonlyField = 0;
 // XPECT errors --> "Cannot instantiate abstract class AC." at "AC"
 new AC();
 
+
+// XPECT noerrors -->
+new WC("hello", 42);
+// XPECT errors --> "Incorrect number of arguments: expected 2, got 0." at "new WC()"
+new WC();
+// XPECT errors --> ""world" is not a subtype of number." at ""world""
+new WC("hello", "world");

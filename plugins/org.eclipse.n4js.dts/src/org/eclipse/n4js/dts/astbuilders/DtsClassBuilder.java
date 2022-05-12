@@ -25,6 +25,7 @@ import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassExtendsClauseContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassHeritageContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassImplementsClauseContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ConstructorDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GetAccessorContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ParameterizedTypeRefContext;
 import org.eclipse.n4js.dts.TypeScriptParser.PropertyMemberBaseContext;
@@ -35,6 +36,7 @@ import org.eclipse.n4js.dts.utils.ParserContextUtils;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.FormalParameter;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
@@ -44,6 +46,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4Modifier;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.N4TypeVariable;
+import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -111,6 +114,23 @@ public class DtsClassBuilder
 		if (result != null) {
 			ParserContextUtils.removeOverloadingFunctionDefs(resource, result.getOwnedMembersRaw());
 		}
+	}
+
+	@Override
+	public void enterConstructorDeclaration(ConstructorDeclarationContext ctx) {
+		N4MethodDeclaration md = N4JSFactory.eINSTANCE.createN4MethodDeclaration();
+
+		LiteralOrComputedPropertyName name = N4JSFactory.eINSTANCE.createLiteralOrComputedPropertyName();
+		name.setKind(PropertyNameKind.IDENTIFIER);
+		name.setLiteralName("constructor");
+		md.setDeclaredName(name);
+
+		List<FormalParameter> fPars = newFormalParametersBuilder().consumeWithDeclThisType(ctx.parameterBlock(), md);
+		md.getFpars().addAll(fPars);
+
+		md.getDeclaredModifiers().add(N4Modifier.PUBLIC);
+		addLocationInfo(md, ctx);
+		result.getOwnedMembersRaw().add(md);
 	}
 
 	@Override
