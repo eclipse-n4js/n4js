@@ -40,6 +40,7 @@ import org.eclipse.n4js.scoping.members.TMemberEntry;
 import org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource;
 import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.NameAndAccess;
@@ -84,6 +85,9 @@ public class ContainerTypesHelper {
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
+
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	/**
 	 * Utilize a wrapping scope for recoding imported names, thus enable notifications. Internally uses global scope
@@ -456,7 +460,8 @@ public class ContainerTypesHelper {
 
 		private List<Type> getPolyfillTypesFromScope(QualifiedName fqn) {
 
-			IScope contextScope = polyfillScopeAccess.getRecordingPolyfillScope(contextResource);
+			IScope contextScope = polyfillScopeAccess.getRecordingPolyfillScope(contextResource,
+					TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
 			List<Type> types = new ArrayList<>();
 
 			// contextScope.getElements(fqn) returns all polyfills, since shadowing is handled differently
@@ -805,6 +810,11 @@ public class ContainerTypesHelper {
 							return polyfills.stream().map(
 									polyFill -> TypeUtils.createTypeRef(polyFill)).collect(Collectors.toList());
 						}
+					}
+					if (ResourceType.getResourceType(filledType) == ResourceType.DTS) {
+						List<Type> polyfills = declMergingHelper.getMergedElements(contextResource, tClassifier);
+						return polyfills.stream().map(
+								polyFill -> TypeUtils.createTypeRef(polyFill)).collect(Collectors.toList());
 					}
 				}
 				return Collections.emptyList();

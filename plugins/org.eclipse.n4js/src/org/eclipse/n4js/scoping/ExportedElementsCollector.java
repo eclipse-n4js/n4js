@@ -30,8 +30,11 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
+import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -57,6 +60,9 @@ public class ExportedElementsCollector {
 
 	@Inject
 	private JavaScriptVariantHelper variantHelper;
+
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 
 	private static final class CollectionInfo {
 
@@ -106,6 +112,20 @@ public class ExportedElementsCollector {
 
 		CollectionInfo info = new CollectionInfo(namespace, context, includeHollows, includeValueOnlyElements);
 		doCollectElements(namespace, info);
+
+		if (ResourceType.getResourceType(namespace) == ResourceType.DTS
+				&& URIUtils.isVirtualResourceURI(namespace.eResource().getURI())) {
+
+			List<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(info.context, namespace);
+			for (AbstractNamespace mergedNamespace : mergedNamespaces) {
+				doCollectElements(mergedNamespace, info);
+			}
+
+			return Iterables.concat(
+					declMergingHelper.chooseRepresentatives(info.visible),
+					declMergingHelper.chooseRepresentatives(info.invisible));
+		}
+
 		return Iterables.concat(info.visible, info.invisible);
 	}
 
@@ -159,7 +179,8 @@ public class ExportedElementsCollector {
 	private void doCollectElement(String exportedName, TExportableElement exportedElem, CollectionInfo info) {
 
 		boolean include = (info.includeHollows || !N4JSLanguageUtils.isHollowElement(exportedElem, variantHelper))
-				&& (info.includeValueOnlyElements || !N4JSLanguageUtils.isValueOnlyElement(exportedElem, variantHelper));
+				&& (info.includeValueOnlyElements
+						|| !N4JSLanguageUtils.isValueOnlyElement(exportedElem, variantHelper));
 
 		if (include) {
 			TypeVisibility visibility = isVisible(info.context, exportedElem);

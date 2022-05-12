@@ -81,7 +81,7 @@ class ModuleNameComputer {
 	}
 
 	def private URI getRelativeURI(Notifier context, URI uri) {
-		val virtualResourcePath = URIUtils.getPathOfVirtualResource(uri);
+		val virtualResourcePath = URIUtils.getPathOfVirtualResource(uri, false);
 		if (virtualResourcePath !== null) {
 			// special case: virtual resources
 			return URI.createHierarchicalURI("file", null, null, virtualResourcePath, null, null);

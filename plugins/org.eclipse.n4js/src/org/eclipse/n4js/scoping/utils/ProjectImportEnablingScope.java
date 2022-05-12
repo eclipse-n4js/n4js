@@ -37,6 +37,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -91,6 +92,8 @@ public class ProjectImportEnablingScope implements IScope {
 	private final IScope parent;
 	private final IScope delegate;
 
+	private final DeclMergingHelper declMergingHelper;
+
 	/**
 	 * Wraps the given parent scope to enable project imports (see {@link ProjectImportEnablingScope} for details).
 	 * <p>
@@ -104,7 +107,8 @@ public class ProjectImportEnablingScope implements IScope {
 	 */
 	public static IScope create(N4JSWorkspaceConfigSnapshot ws, Resource resource,
 			Optional<ModuleRef> importOrExportDecl,
-			IScope parent, IScope delegate) {
+			IScope parent, IScope delegate,
+			DeclMergingHelper declMergingHelper) {
 
 		if (ws == null || resource == null || importOrExportDecl == null || parent == null) {
 			throw new IllegalArgumentException("none of the arguments may be null");
@@ -119,7 +123,8 @@ public class ProjectImportEnablingScope implements IScope {
 			// without properly setting up the IN4JSCore; to not break those tests, we return 'parent' here
 			return parent;
 		}
-		return new ProjectImportEnablingScope(ws, contextProject, importOrExportDecl, parent, delegate);
+		return new ProjectImportEnablingScope(ws, contextProject, importOrExportDecl, parent, delegate,
+				declMergingHelper);
 	}
 
 	/**
@@ -128,7 +133,9 @@ public class ProjectImportEnablingScope implements IScope {
 	 *            the project containing the import declaration (not the project containing the module to import from)!
 	 */
 	private ProjectImportEnablingScope(N4JSWorkspaceConfigSnapshot ws, N4JSProjectConfigSnapshot contextProject,
-			Optional<ModuleRef> importOrExportDecl, IScope parent, IScope delegate) {
+			Optional<ModuleRef> importOrExportDecl,
+			IScope parent, IScope delegate,
+			DeclMergingHelper declMergingHelper) {
 
 		if (ws == null || contextProject == null || importOrExportDecl == null || parent == null) {
 			throw new IllegalArgumentException("none of the arguments may be null");
@@ -138,16 +145,22 @@ public class ProjectImportEnablingScope implements IScope {
 		this.parent = parent;
 		this.importOrExportDecl = importOrExportDecl;
 		this.delegate = delegate;
+		this.declMergingHelper = declMergingHelper;
 	}
 
 	@Override
 	public IEObjectDescription getSingleElement(QualifiedName name) {
-		final List<IEObjectDescription> result = Lists.newArrayList(getElements(name));
+		List<IEObjectDescription> result = Lists.newArrayList(getElements(name));
 		int size = result.size();
 
 		// handle combination of .js / .cjs / .mjs files with same base name
 		if (size > 1) {
 			removeSuperfluousPlainJsFiles(result);
+			size = result.size();
+		}
+		// handle merged declared modules
+		if (size > 1) {
+			result = declMergingHelper.chooseRepresentatives(result);
 			size = result.size();
 		}
 
@@ -157,8 +170,7 @@ public class ProjectImportEnablingScope implements IScope {
 		}
 
 		// use sorted entries and linked map for determinism in error message
-		Collections.sort(result,
-				Comparator.comparing(IEObjectDescription::getEObjectURI, Comparator.comparing(URI::toString)));
+		Collections.sort(result, Comparator.comparing(IEObjectDescription::getEObjectURI, URIUtils::compare));
 		final Map<IEObjectDescription, N4JSProjectConfigSnapshot> descriptionsToProject = new LinkedHashMap<>();
 
 		for (IEObjectDescription objDescr : result) {

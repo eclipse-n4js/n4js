@@ -58,6 +58,7 @@ import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope
+import org.eclipse.n4js.scoping.utils.MergedScope
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
 import org.eclipse.n4js.scoping.utils.ScopeSnapshotHelper
 import org.eclipse.n4js.scoping.utils.SourceElementExtensions
@@ -74,14 +75,19 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.AbstractNamespace
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.DeclMergingHelper
+import org.eclipse.n4js.utils.DeclMergingUtils
 import org.eclipse.n4js.utils.EObjectDescriptionHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceType
@@ -150,6 +156,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject ExportedElementsCollector exportedElementCollector
 
 	@Inject ScopeSnapshotHelper scopeSnapshotHelper
+
+	@Inject DeclMergingHelper declMergingHelper;
 
 
 	/** True: Proxies of IdentifierRefs are only resolved within the resource. Otherwise, the proxy is returned. */
@@ -382,7 +390,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		val ws = workspaceAccess.getWorkspaceConfig(resource);
 		val projectImportEnabledScope = ProjectImportEnablingScope.create(ws, resource, importOrExportDecl,
-			initialScope, delegateMainModuleAwareScope);
+			initialScope, delegateMainModuleAwareScope, declMergingHelper);
 
 		return projectImportEnabledScope;
 	}
@@ -605,7 +613,28 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val staticAccess = typeRef instanceof TypeTypeRef;
 		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 		val checkVisibility = true;
-		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode);
+		var result = memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode);
+
+		if (declaredType instanceof TFunction) {
+			// a function may be merged with classes and namespaces
+			if (DeclMergingUtils.mayBeMerged(declaredType)) {
+				val mergedElems = declMergingHelper.getMergedElements(propertyAccess.eResource, declaredType);
+				// FIXME here assuming 'mergedElems' to be sorted!!!
+				val firstClass = mergedElems.filter(TClass).head;
+				val firstNamespace = mergedElems.filter(TNamespace).head;
+				if (firstClass !== null) {
+					val typeTypeRef = TypeUtils.createTypeTypeRef(firstClass, true);
+					val scopeClass = memberScopingHelper.createMemberScope(typeTypeRef, propertyAccess, checkVisibility, true /* always static */, structFieldInitMode);
+					result = new MergedScope(scopeClass, result);
+				}
+				if (firstNamespace !== null) {
+					val scopeNamespace = scope_AllTopLevelElementsFromAbstractNamespace(firstNamespace, propertyAccess, false, true);
+					result = new MergedScope(scopeNamespace, result);
+				}
+			}
+		}
+
+		return result;
 	}
 	
 

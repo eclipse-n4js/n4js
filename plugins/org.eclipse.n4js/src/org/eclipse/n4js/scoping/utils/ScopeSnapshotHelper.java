@@ -121,6 +121,9 @@ public class ScopeSnapshotHelper {
 			return parent;
 		}
 
+		// Multimap<QualifiedName, IEObjectDescription> mapByQN =
+		// MultimapBuilder.linkedHashKeys().arrayListValues().build();
+		// Multimap<URI, IEObjectDescription> mapByURI = MultimapBuilder.linkedHashKeys().arrayListValues().build();
 		Map<QualifiedName, IEObjectDescription> mapByQN = new LinkedHashMap<>();
 		Map<URI, IEObjectDescription> mapByURI = new LinkedHashMap<>();
 
