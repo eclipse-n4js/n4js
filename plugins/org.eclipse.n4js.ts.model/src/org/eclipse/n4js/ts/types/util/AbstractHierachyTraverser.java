@@ -148,7 +148,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 			if (process(object)) {
 				return Boolean.TRUE;
 			}
-			if (!object.isPolyfill() || object.isStaticPolyfill()) {
+			if (!object.isPolyfill()) {
 				// enqueueInterface(object.getConsumedRoles());
 				if (doSwitchSuperTypes(object)) {
 					return Boolean.TRUE;
