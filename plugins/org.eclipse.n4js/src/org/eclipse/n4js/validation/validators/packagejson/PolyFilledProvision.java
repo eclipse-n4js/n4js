@@ -13,6 +13,7 @@ package org.eclipse.n4js.validation.validators.packagejson;
 import org.eclipse.n4js.json.JSON.JSONStringLiteral;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectReference;
 import org.eclipse.n4js.scoping.utils.PolyfillUtils;
+import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.workspace.utils.N4JSPackageName;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -66,12 +67,8 @@ public class PolyFilledProvision {
 	 * @return string representation without polyfill marker
 	 */
 	public static String withoutPolyfillAsString(QualifiedName qualifiedName) {
-		// Assumption: 2nd-last segment is "!POLY"
-		String last = qualifiedName.getLastSegment();
-		String poly = qualifiedName.skipLast(1).getLastSegment();
-		assert (PolyfillUtils.POLYFILL_SEGMENT.equals(poly));
-		QualifiedName ret = qualifiedName.skipLast(2).append(last);
-		return ret.toString();
+		qualifiedName = QualifiedNameUtils.removeIf(qualifiedName, s -> PolyfillUtils.POLYFILL_SEGMENT.equals(s));
+		return QualifiedNameUtils.toHumanReadableString(qualifiedName);
 	}
 
 	/**

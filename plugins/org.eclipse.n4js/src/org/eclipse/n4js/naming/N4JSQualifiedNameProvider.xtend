@@ -18,15 +18,12 @@ import org.eclipse.n4js.json.JSON.JSONDocument
 import org.eclipse.n4js.json.JSON.JSONObject
 import org.eclipse.n4js.json.JSON.JSONStringLiteral
 import org.eclipse.n4js.json.model.utils.JSONModelUtils
-import org.eclipse.n4js.n4JS.FunctionDeclaration
-import org.eclipse.n4js.n4JS.N4NamespaceDeclaration
-import org.eclipse.n4js.n4JS.N4TypeDeclaration
-import org.eclipse.n4js.n4JS.N4TypeVariable
-import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.packagejson.PackageJsonProperties
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.scoping.utils.PolyfillUtils
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TFunction
@@ -43,11 +40,8 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 
-import static extension org.eclipse.emf.ecore.util.EcoreUtil.*
-import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-
 /**
- * Calculates the fully qualified name for the passed-in objects.
+ * See {@link #getFullyQualifiedName(EObject)}.
  */
 class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 
@@ -58,97 +52,62 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 	/** Segment used for globally available elements. */
 	public static String GLOBAL_NAMESPACE_SEGMENT = "#";
 
+	/** Segment used to separate the module specifier from the element name in a {@link QualifiedName}. */
+	public static String MODULE_CONTENT_SEGMENT = "!";
+
 	/** Last segment of fully qualified names for the root {@link JSONDocument} of package.json files. */
 	public static final String PACKAGE_JSON_SEGMENT = "!package_json";
 
+	/**
+	 * The qualified name computed here is used when adding type model elements to the Xtext index / global scope
+	 * (see {@link N4JSResourceDescriptionStrategy#createEObjectDescriptions(EObject, IAcceptor) here} for details).
+	 * <p>
+	 * Since project names are not included, these names are not globally unique. However, they are unique among
+	 * the elements of a single project.
+	 */
 	override QualifiedName getFullyQualifiedName(EObject it) {
 		switch (it) {
-			// AST Nodes
-			Script:
-				module.fullyQualifiedName
-			N4NamespaceDeclaration:
-				if (name !== null) fqnNamespaceDeclaration(it)
-			N4TypeDeclaration:
-				if (name !== null) fqnTypeDeclaration(it)
-			FunctionDeclaration:
-				if (name !== null) rootContainer.fullyQualifiedName?.append(name)
-			VariableDeclaration:
-				if (name !== null) rootContainer.fullyQualifiedName?.append(name)
-			N4TypeVariable:
-				null
-
-			// Type Model Elements
 			TModule:
 				if (qualifiedName !== null) fqnTModule(it)
 			TNamespace:
-				if (name !== null) fqnType(it)
+				if (name !== null) it.contextPrefix?.append(name)
 			TClass:
-				if (name !== null) fqnType(it)
+				if (name !== null) it.contextPrefix?.adjustIfPolyfill(it)?.append(name)
 			TInterface:
-				if (name !== null) fqnType(it)
+				if (name !== null) it.contextPrefix?.adjustIfPolyfill(it)?.append(name)
 			TEnum:
-				if (name !== null) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) it.contextPrefix?.append(name)
 			TypeAlias:
-				if (name !== null) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) it.contextPrefix?.append(name)
 			TFunction case !(it instanceof TMethod):
-				if (name !== null) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) it.contextPrefix?.append(name)
 			TVariable:
-				if (name !== null) containingModule.fullyQualifiedName?.append(name)
+				if (name !== null) it.contextPrefix?.append(name)
 			TypeVariable:
 				null
 			Type case !(it instanceof TMethod):
-				if (name !== null) QualifiedName.create(name)
+				if (name !== null) it.contextPrefix?.append(name)
 
 			JSONDocument:
 				fqnJSONDocument(it)
 
-			default: // including TMember, TFormalParameter, and AbstractVariable with CatchVariable, FormalParameter
+			default: // including TMember, TFormalParameter
 				null
 		}
 	}
 
 	private def QualifiedName fqnTModule(TModule module) {
-		if ( module.qualifiedName.length != 0 && ! AnnotationDefinition.GLOBAL.hasAnnotation(module)) {
-			var plainQN = converter.toQualifiedName(module.qualifiedName);
-			if( module.isStaticPolyfillModule ) {
-				return QualifiedNameUtils.prepend(PolyfillUtils.MODULE_POLYFILL_SEGMENT, plainQN)
-			}
-			return plainQN
-		} else {
+		val isGlobal = AnnotationDefinition.GLOBAL.hasAnnotation(module);
+		if (isGlobal
+			// primitives act like global types, but their module does not contain @@Global:
+			|| BuiltInTypeScope.isPrimitivesResource(module.eResource)) {
 			return QualifiedName.create(GLOBAL_NAMESPACE_SEGMENT)
 		}
-	}
-
-	private def QualifiedName fqnTypeDeclaration(N4TypeDeclaration typeDecl) {
-		var prefix = typeDecl.rootContainer.fullyQualifiedName;
-		if ( typeDecl.isNonStaticPolyfill || typeDecl.isStaticPolyfill )
-		{
-			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
+		var plainQN = converter.toQualifiedName(module.qualifiedName);
+		if (module.isStaticPolyfillModule) {
+			plainQN = QualifiedNameUtils.prepend(PolyfillUtils.MODULE_POLYFILL_SEGMENT, plainQN);
 		}
-		val fqn = QualifiedNameUtils.append(prefix, typeDecl.directlyExportedName ?: typeDecl.name);
-		return fqn;
-	}
-	
-	private def QualifiedName fqnNamespaceDeclaration(N4NamespaceDeclaration typeDecl) {
-		var prefix = typeDecl.rootContainer.fullyQualifiedName;
-		var qn = QualifiedName.create(typeDecl.directlyExportedName ?: typeDecl.name);
-		var EObject tmpTypeDecl = typeDecl;
-		while (tmpTypeDecl.eContainer instanceof N4NamespaceDeclaration) {
-			tmpTypeDecl = tmpTypeDecl.eContainer;
-			val nsd = tmpTypeDecl as N4NamespaceDeclaration;
-			qn = QualifiedNameUtils.prepend(nsd.directlyExportedName ?: nsd.name, qn);
-		}
-		val fqn = QualifiedNameUtils.concat(prefix, qn);
-		return fqn;
-	}
-
-	private def QualifiedName fqnType(Type type) {
-		var prefix = type.rootContainer.fullyQualifiedName;
-		if (type.polyfill) {
-			prefix = QualifiedNameUtils.append(prefix, PolyfillUtils.POLYFILL_SEGMENT);
-		}
-		val fqn = QualifiedNameUtils.append(prefix, type.name);
-		return fqn;
+		return plainQN
 	}
 
 	private def QualifiedName fqnJSONDocument(JSONDocument document) {
@@ -176,5 +135,32 @@ class N4JSQualifiedNameProvider extends IQualifiedNameProvider.AbstractImpl {
 			}
 		}
 		return null; // failed
+	}
+
+	private def QualifiedName contextPrefix(IdentifiableElement elem) {
+		val segments = newArrayList;
+
+		var curr = elem.eContainer;
+		while (curr !== null) {
+			if (curr instanceof TModule) {
+				segments += MODULE_CONTENT_SEGMENT;
+				return QualifiedNameUtils.append(curr.fqnTModule, segments.reverseView);
+			} else if (curr instanceof TNamespace) {
+				val name = curr.name;
+				if (name === null) {
+					return null;
+				}
+				segments += name;
+			}
+			curr = curr.eContainer;
+		}
+		return null;
+	}
+
+	private def QualifiedName adjustIfPolyfill(QualifiedName qn, Type type) {
+		if (type.polyfill) {
+			return QualifiedNameUtils.append(qn, PolyfillUtils.POLYFILL_SEGMENT);
+		}
+		return qn;
 	}
 }

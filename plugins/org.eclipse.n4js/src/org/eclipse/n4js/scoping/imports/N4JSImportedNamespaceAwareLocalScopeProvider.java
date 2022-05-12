@@ -72,7 +72,10 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 		if (module.isStaticPolyfillModule()) { // limit to situations of resources, that contain at least
 			// one @StaticPolyfill
 			normalizers.add(createImportedNamespaceResolver(
-					module.getQualifiedName() + N4JSQualifiedNameConverter.DELIMITER + "*", false));
+					module.getQualifiedName() + N4JSQualifiedNameConverter.DELIMITER
+							+ N4JSQualifiedNameProvider.MODULE_CONTENT_SEGMENT + N4JSQualifiedNameConverter.DELIMITER
+							+ "*",
+					false));
 		}
 		// -- done change --||
 
@@ -90,7 +93,9 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 		// "#global#
 		List<ImportNormalizer> result = newArrayList();
 		result.add(createImportedNamespaceResolver(
-				N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT + N4JSQualifiedNameConverter.DELIMITER + "*",
+				N4JSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT + N4JSQualifiedNameConverter.DELIMITER
+						+ N4JSQualifiedNameProvider.MODULE_CONTENT_SEGMENT + N4JSQualifiedNameConverter.DELIMITER
+						+ "*",
 				ignoreCase));
 		return result;
 	}

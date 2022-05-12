@@ -226,7 +226,7 @@ class N4JSScopingTest {
 		assertNotNull("No serialized script in user data", serializedScript);
 
 		val typeEod = eods.tail.head;
-		assertEquals("A.A", typeEod.qualifiedName.toString);
+		assertEquals("A.!.A", typeEod.qualifiedName.toString);
 		serializedScript = typeEod.getUserData(UserDataMapper.USER_DATA_KEY_SERIALIZED_SCRIPT)
 		assertNull("No serialized script in user data", serializedScript);
 	}

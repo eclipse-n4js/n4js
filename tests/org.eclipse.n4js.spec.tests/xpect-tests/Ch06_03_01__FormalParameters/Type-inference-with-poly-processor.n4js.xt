@@ -42,7 +42,7 @@ function (p0 = new A()) {}; f1b;
 
 
 let f2: {function(A)} =
-// XPECT type of 'p0' --> union{A,int}
+// XPECT type of 'p0' --> union{int,A}
 function (p0 = 2) {}; f2;
 
 
@@ -72,12 +72,12 @@ function (p0, p1 = p0) {}; f7;
 
 
 let f8: {function(Z,A)} =
-// XPECT type of 'p1' --> union{A,Z,int}
+// XPECT type of 'p1' --> union{int,A,Z}
 function (p0 = 8, p1 = p0) {}; f8;
 
 
 let f9a: {function(Z,A)} =
-// XPECT type of 'p1' --> union{A,int}
+// XPECT type of 'p1' --> union{int,A}
 // XPECT errors at 'p2' --> "Illegal forward reference to formal parameter of same function." at "p2"
 function (p0, p1 = p2, p2 = 9) {}; f9a;
 
@@ -175,7 +175,7 @@ let a1b: (B)=>void =
 
 
 let a2: (A)=>void =
-// XPECT type of 'p0' --> union{A,int}
+// XPECT type of 'p0' --> union{int,A}
 (p0 = 2) => {}; a2;
 
 
@@ -205,12 +205,12 @@ let a7: (Z,A)=>void =
 
 
 let a8: (Z,A)=>void =
-// XPECT type of 'p1' --> union{A,Z,int}
+// XPECT type of 'p1' --> union{int,A,Z}
 (p0 = 8, p1 = p0) => {}; a8;
 
 
 let a9a: (Z,A)=>void =
-// XPECT type of 'p1' --> union{A,int}
+// XPECT type of 'p1' --> union{int,A}
 // XPECT errors at 'p2' --> "Illegal forward reference to formal parameter of same function." at "p2"
 (p0, p1 = p2, p2 = 9) => {}; a9a;
 

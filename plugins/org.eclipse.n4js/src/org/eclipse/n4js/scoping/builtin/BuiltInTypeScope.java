@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -89,6 +90,20 @@ public final class BuiltInTypeScope extends EnumerableScope {
 			throw new IllegalStateException("Missing adapter for BuiltInTypeScope");
 		}
 		return result.getScope();
+	}
+
+	/** @return <code>true</code> iff the given resource is the built-in type resource {@value #PRIMITIVES_N4JSD}. */
+	public static boolean isPrimitivesResource(Resource resource) {
+		return isBuiltInTypeResource(resource, BuiltInTypeScope.PRIMITIVES_N4JSD);
+	}
+
+	/** @return <code>true</code> iff the given resource is the built-in type resource of the given name. */
+	public static boolean isBuiltInTypeResource(Resource resource, String name) {
+		if (resource != null && N4Scheme.isResourceWithN4Scheme(resource)) {
+			URI uri = resource.getURI();
+			return uri.segmentCount() == 1 && name.equals(uri.segment(0));
+		}
+		return false;
 	}
 
 	/**

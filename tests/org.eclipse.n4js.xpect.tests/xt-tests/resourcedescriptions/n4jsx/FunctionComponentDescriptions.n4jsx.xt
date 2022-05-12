@@ -32,10 +32,10 @@
 
 
 /* these names are stored in the Xtext Index XPECT exportedObjects ---
-types::TClass: resourcedescriptions.FunctionComponentDescriptions.Props,
-types::TFunction: resourcedescriptions.FunctionComponentDescriptions.NamedFnComponent,
-types::TModule: resourcedescriptions.FunctionComponentDescriptions,
-types::TVariable: resourcedescriptions.FunctionComponentDescriptions.AnonymusFnComponent
+types::TClass: resourcedescriptions/FunctionComponentDescriptions.Props,
+types::TFunction: resourcedescriptions/FunctionComponentDescriptions.NamedFnComponent,
+types::TModule: resourcedescriptions/FunctionComponentDescriptions,
+types::TVariable: resourcedescriptions/FunctionComponentDescriptions.AnonymusFnComponent
 --- */
 
 import * as React from "react"

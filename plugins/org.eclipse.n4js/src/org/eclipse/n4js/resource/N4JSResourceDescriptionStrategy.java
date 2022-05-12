@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
+import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TClassifier;
@@ -298,7 +299,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 
 	/**
 	 * Registers type model elements (types, functions, variables, etc.) in the global Xtext index under their
-	 * {@link QualifiedName qualified name}.
+	 * {@link QualifiedName qualified name} (see {@link N4JSQualifiedNameProvider#getFullyQualifiedName(EObject) here}
+	 * for details).
 	 * <p>
 	 * <b><u>Usually</u></b>, this registration does not have a direct impact on scoping, i.e. the elements registered
 	 * here are not directly available as targets for cross-references in the source code. Instead, this information
@@ -316,17 +318,19 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (eObject instanceof TModule) {
 			TModule module = (TModule) eObject;
 			internalCreateEObjectDescriptionForRoot(module, acceptor);
-			for (TNamespace namespace : module.getNamespaces()) {
-				internalCreateEObjectDescription(namespace, acceptor);
-			}
-			for (Type type : module.getTypes()) {
-				internalCreateEObjectDescription(type, acceptor);
-			}
-			for (TFunction fun : module.getFunctions()) {
-				internalCreateEObjectDescription(fun, acceptor);
-			}
-			for (TVariable variable : module.getExportedVariables()) {
-				internalCreateEObjectDescription(variable, acceptor);
+			for (AbstractNamespace ns : module.getAllNamespaces()) {
+				for (TNamespace namespace : ns.getNamespaces()) {
+					internalCreateEObjectDescription(namespace, acceptor);
+				}
+				for (Type type : ns.getTypes()) {
+					internalCreateEObjectDescription(type, acceptor);
+				}
+				for (TFunction fun : ns.getFunctions()) {
+					internalCreateEObjectDescription(fun, acceptor);
+				}
+				for (TVariable variable : ns.getExportedVariables()) {
+					internalCreateEObjectDescription(variable, acceptor);
+				}
 			}
 		}
 		return false;

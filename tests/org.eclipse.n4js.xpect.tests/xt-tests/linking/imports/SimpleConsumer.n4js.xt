@@ -29,9 +29,9 @@
  */
 
 // XPECT linkedFragment at 'Class1' --> MultipleClasses.n4js#/1/@types.0
-// XPECT linkedName at 'Class1' --> linking.imports.MultipleClasses.Class1
+// XPECT linkedName at 'Class1' --> linking/imports/MultipleClasses.Class1
 import { Class1 } from "linking/imports/MultipleClasses"
 
 // XPECT linkedFragment at 'class1: <|>Class1' --> MultipleClasses.n4js#/1/@types.0
-// XPECT linkedName at 'class1: <|>Class1' --> linking.imports.MultipleClasses.Class1
+// XPECT linkedName at 'class1: <|>Class1' --> linking/imports/MultipleClasses.Class1
 var class1: Class1

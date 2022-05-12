@@ -48,6 +48,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -173,7 +174,7 @@ public class XtMethods {
 		for (IEObjectDescription desc : exportedObjects) {
 			String str = desc.getEClass().getEPackage().getNsPrefix()
 					+ "::" + desc.getEClass().getName()
-					+ ": " + desc.getName().toString();
+					+ ": " + QualifiedNameUtils.toHumanReadableString(desc.getName());
 			exportedObjectStrings.add(str);
 		}
 		return exportedObjectStrings;
@@ -398,7 +399,7 @@ public class XtMethods {
 
 	/** Implementation for {@link XtIdeTest#scope(XtMethodData)} */
 	public Set<String> getScopeString(IEObjectCoveringRegion ocr) {
-		return getScopeWithResourceString(ocr, desc -> desc.getName().toString());
+		return getScopeWithResourceString(ocr, desc -> QualifiedNameUtils.toHumanReadableString(desc.getName()));
 	}
 
 	/** Implementation for {@link XtIdeTest#scopeWithResource(XtMethodData)} */

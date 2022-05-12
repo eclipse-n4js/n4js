@@ -50,7 +50,7 @@ class N4_02_1_1_IdentifierNamesAndIdentifiersTest extends AbstractParserTest {
 		var classX = s1.module.types.head as TClass;
 		assertEquals("X", classX.name)
 		val fqn = qualifiedNameProvider.getFullyQualifiedName(classX)
-		assertEquals("A/X", qualifiedNameConverter.toString(fqn));
+		assertEquals("A/!/X", qualifiedNameConverter.toString(fqn));
 	}
 
 	@Test
@@ -63,7 +63,7 @@ class N4_02_1_1_IdentifierNamesAndIdentifiersTest extends AbstractParserTest {
 		var classX = s1.module.types.head as TClass;
 		assertEquals("A", classX.name)
 		val fqn = qualifiedNameProvider.getFullyQualifiedName(classX)
-		assertEquals("A/A", qualifiedNameConverter.toString(fqn));
+		assertEquals("A/!/A", qualifiedNameConverter.toString(fqn));
 
 	}
 }

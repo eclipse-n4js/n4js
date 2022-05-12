@@ -36,16 +36,16 @@
  */
 
 // XPECT linkedFragment at 'from <|>"linking/Sister"' --> Sister.n4js#/1
-// XPECT linkedName at 'from <|>"linking/Sister"' --> linking.Sister
+// XPECT linkedName at 'from <|>"linking/Sister"' --> linking/Sister
 import { Sister as SisterObject } from "linking/Sister"
 import { Child } from "linking/Child"
 
 export class Brother {
 // XPECT linkedFragment at 'SisterObject' --> Sister.n4js#/1/@types.0
-// XPECT linkedName at 'SisterObject' --> linking.Sister.Sister
+// XPECT linkedName at 'SisterObject' --> linking/Sister.Sister
 	project getSister() : SisterObject { return null; }
 // XPECT linkedFragment at ': <|>Child' --> Child.n4js#/1/@types.0
-// XPECT linkedName at ': <|>Child' --> linking.Child.Child
+// XPECT linkedName at ': <|>Child' --> linking/Child.Child
 	project getChild() : Child { return null; }
 }
 var brother : Brother = new Brother();

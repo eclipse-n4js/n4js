@@ -38,8 +38,8 @@
 /*
 these names are stored in the Xtext Index
 XPECT exportedObjects ---
-	types::TModule: resourcedescriptions.Sister,
-	types::TClass: resourcedescriptions.Sister.Sister
+	types::TModule: resourcedescriptions/Sister,
+	types::TClass: resourcedescriptions/Sister.Sister
 --- */
 
 import { Brother } from "resourcedescriptions/Brother";

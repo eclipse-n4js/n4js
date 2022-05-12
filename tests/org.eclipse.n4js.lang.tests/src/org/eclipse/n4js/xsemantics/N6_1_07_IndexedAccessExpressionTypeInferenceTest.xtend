@@ -101,8 +101,8 @@ class N6_1_07_IndexedAccessExpressionTypeInferenceTest extends AbstractTypesyste
 	def void testUnionElementType() {
 		assertIndexedAccessExpressionType("union{int,string}", '''["Walter", 1]''');
 		assertIndexedAccessExpressionType("union{int,string}", '''["Walter", 1"]'''); // syntax error was intended (I guess)
-		assertIndexedAccessExpressionType("union{A,int,string}", '''["Walter", a, 1]''');
-		assertIndexedAccessExpressionType("union{A,int,string}", '''["Walter", a, 1"]'''); // syntax error was intended (I guess)
+		assertIndexedAccessExpressionType("union{int,string,A}", '''["Walter", a, 1]''');
+		assertIndexedAccessExpressionType("union{int,string,A}", '''["Walter", a, 1"]'''); // syntax error was intended (I guess)
 		assertIndexedAccessExpressionType("A", '''[a,b]''');
 		assertIndexedAccessExpressionType("A", '''[a,b,a]''');
 		assertIndexedAccessExpressionType("A", '''[a,b,a,b,a,a,b]''');
@@ -117,8 +117,8 @@ class N6_1_07_IndexedAccessExpressionTypeInferenceTest extends AbstractTypesyste
 
 		assertIndexedAccessExpressionType("union{int,string}", '''[,"Walter", 1]''');
 		assertIndexedAccessExpressionType("union{int,string}", '''[,"Walter", 1"]'''); // syntax error was intended (I guess)
-		assertIndexedAccessExpressionType("union{A,int,string}", '''["Walter", a, 1,]''');
-		assertIndexedAccessExpressionType("union{A,int,string}", '''["Walter", a, 1",]'''); // syntax error was intended (I guess)
+		assertIndexedAccessExpressionType("union{int,string,A}", '''["Walter", a, 1,]''');
+		assertIndexedAccessExpressionType("union{int,string,A}", '''["Walter", a, 1",]'''); // syntax error was intended (I guess)
 		assertIndexedAccessExpressionType("A", '''[a,b,,]''');
 		assertIndexedAccessExpressionType("A", '''[a,b,a,,,]''');
 		assertIndexedAccessExpressionType("A", '''[a,b,a,,a,,b]''');
