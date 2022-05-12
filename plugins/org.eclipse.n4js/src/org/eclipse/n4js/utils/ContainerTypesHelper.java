@@ -1022,11 +1022,11 @@ public class ContainerTypesHelper {
 			}
 
 			@Override
-			protected boolean doProcessImplementedInterfaces(TClass object) {
+			protected boolean doSwitchImplementedInterfaces(TClass object) {
 				if (object == bottomType) {
 					source = MIXEDIN;
 				}
-				return super.doProcessImplementedInterfaces(object);
+				return super.doSwitchImplementedInterfaces(object);
 			}
 		}
 
