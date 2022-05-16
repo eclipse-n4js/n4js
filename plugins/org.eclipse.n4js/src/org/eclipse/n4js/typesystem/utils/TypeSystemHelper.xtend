@@ -356,16 +356,36 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	}
 
 	def public TypeRef getCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
-		val result = getCallableTypeRefWithFullInfo(G, typeRef);
+		val result = getCallableTypeRefWithErrorInfo(G, typeRef);
 		return if (result.size === 1) result.get(0);
 	}
 
-	def public List<TypeRef> getCallableTypeRefWithFullInfo(RuleEnvironment G, TypeRef typeRef) {
+	def public List<TypeRef> getCallableTypeRefWithErrorInfo(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef instanceof UnionTypeExpression) {
 			// TODO implement special handling for unions
 		} else if (typeRef instanceof IntersectionTypeExpression) {
 			// TODO improve special handling for intersections
-			return typeRef.typeRefs.map[internalGetCallableTypeRef(G, it)].filterNull.toList;
+			val functionType = G.functionType;
+			val callableTypeRefs = <TypeRef>newArrayList;
+			var foundFunctionType = false;
+			var foundFunctionTypeDynamic = false;
+			for (currTypeRef : typeRef.typeRefs) {
+				val currCallableTypeRef = internalGetCallableTypeRef(G, currTypeRef);
+				if (currCallableTypeRef !== null) {
+					if (currCallableTypeRef.declaredType === functionType) {
+						foundFunctionType = true;
+						foundFunctionTypeDynamic = foundFunctionTypeDynamic || currCallableTypeRef.dynamic;
+					} else {
+						callableTypeRefs += currCallableTypeRef;
+					}
+				}
+			}
+			if (callableTypeRefs.empty && foundFunctionType) {
+				val ftr = G.functionTypeRef;
+				ftr.dynamic = foundFunctionTypeDynamic;
+				return Collections.singletonList(ftr);
+			}
+			return callableTypeRefs;
 		}
 		val result = internalGetCallableTypeRef(G, typeRef);
 		if (result !== null) {
