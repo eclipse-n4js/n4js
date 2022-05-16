@@ -173,7 +173,7 @@ public class URIUtils {
 		String[] segs2 = uri2.segments();
 		int len = Math.min(segs1.length, segs2.length);
 		for (int i = 0; i < len; i++) {
-			cmp = doCompare(segs1[i], segs2[1]);
+			cmp = doCompare(segs1[i], segs2[i]);
 			if (cmp != 0) {
 				return cmp;
 			}
