@@ -965,7 +965,7 @@ class RuleEnvironmentExtensions {
 
 	public def static boolean isValidTypeMapping(RuleEnvironment G, TypeVariable key, TypeArgument value) {
 		// ignore reflexive mappings, e.g. T -> T, T -> G<T>, etc.
-		if (TypeUtils.isOrContainsRefToTypeVar(value,key))
+		if (!(value instanceof FunctionTypeExpression) && TypeUtils.isOrContainsRefToTypeVar(value,key))
 			return false;
 		// ignore DeferredTypeRefs
 		if (value instanceof DeferredTypeRef)
@@ -994,7 +994,7 @@ class RuleEnvironmentExtensions {
 
 	/**
 	 * Returns transitive, non-reflexive closure of implicit super types. All implicit super types are non-generic, so
-	 * type arguments can be ignored here savely.
+	 * type arguments can be ignored here safely.
 	 */
 	public def static List<ParameterizedTypeRef> collectAllImplicitSuperTypesOfType(RuleEnvironment G, Type declaredType) {
 		collectAllImplicitSuperTypesOfType(G, declaredType, new RecursionGuard<Type>());

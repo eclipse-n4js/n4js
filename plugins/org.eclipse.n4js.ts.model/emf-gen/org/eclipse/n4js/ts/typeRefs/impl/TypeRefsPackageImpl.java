@@ -1664,7 +1664,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionTypeExpression_OwnedTypeVars() {
+	public EReference getFunctionTypeExpression_DeclaredTypeArgs() {
 		return (EReference)functionTypeExpressionEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -1674,7 +1674,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionTypeExpression_UnboundTypeVars() {
+	public EReference getFunctionTypeExpression_OwnedTypeVars() {
 		return (EReference)functionTypeExpressionEClass.getEStructuralFeatures().get(4);
 	}
 
@@ -1684,7 +1684,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionTypeExpression_UnboundTypeVarsUpperBounds() {
+	public EReference getFunctionTypeExpression_UnboundTypeVars() {
 		return (EReference)functionTypeExpressionEClass.getEStructuralFeatures().get(5);
 	}
 
@@ -1694,7 +1694,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionTypeExpression_Fpars() {
+	public EReference getFunctionTypeExpression_UnboundTypeVarsUpperBounds() {
 		return (EReference)functionTypeExpressionEClass.getEStructuralFeatures().get(6);
 	}
 
@@ -1704,7 +1704,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
-	public EReference getFunctionTypeExpression_ReturnTypeRef() {
+	public EReference getFunctionTypeExpression_Fpars() {
 		return (EReference)functionTypeExpressionEClass.getEStructuralFeatures().get(7);
 	}
 
@@ -1714,8 +1714,18 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	@Override
+	public EReference getFunctionTypeExpression_ReturnTypeRef() {
+		return (EReference)functionTypeExpressionEClass.getEStructuralFeatures().get(8);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public EAttribute getFunctionTypeExpression_ReturnValueMarkedOptional() {
-		return (EAttribute)functionTypeExpressionEClass.getEStructuralFeatures().get(8);
+		return (EAttribute)functionTypeExpressionEClass.getEStructuralFeatures().get(9);
 	}
 
 	/**
@@ -2208,6 +2218,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEAttribute(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__BINDING);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__DECLARED_FUNCTION);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE);
+		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE_ARGS);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS);
 		createEReference(functionTypeExpressionEClass, FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS_UPPER_BOUNDS);
@@ -2556,6 +2567,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEAttribute(getFunctionTypeExpression_Binding(), theEcorePackage.getEBoolean(), "binding", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_DeclaredFunction(), theTypesPackage.getTFunction(), null, "declaredFunction", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_DeclaredThisType(), this.getTypeRef(), null, "declaredThisType", null, 0, 1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFunctionTypeExpression_DeclaredTypeArgs(), this.getTypeArgument(), null, "declaredTypeArgs", null, 0, -1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_OwnedTypeVars(), theTypesPackage.getTypeVariable(), null, "ownedTypeVars", null, 0, -1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_UnboundTypeVars(), theTypesPackage.getTypeVariable(), null, "unboundTypeVars", null, 0, -1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getFunctionTypeExpression_UnboundTypeVarsUpperBounds(), this.getTypeRef(), null, "unboundTypeVarsUpperBounds", null, 0, -1, FunctionTypeExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

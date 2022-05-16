@@ -12,7 +12,7 @@ package org.eclipse.n4js.typesystem.utils;
 
 import java.util.List;
 
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 
 import com.google.common.base.Strings;
 
@@ -48,7 +48,7 @@ public class StructuralTypingResult {
 	 * otherwise a success is assumed (value=true).
 	 */
 	public static StructuralTypingResult result(
-			TypeRef left, TypeRef right,
+			TypeArgument left, TypeArgument right,
 			List<String> missingMembers, List<String> wrongMembersErrors) {
 		if (missingMembers.isEmpty() && wrongMembersErrors.isEmpty()) {
 			return success();

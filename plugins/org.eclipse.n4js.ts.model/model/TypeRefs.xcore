@@ -1158,6 +1158,8 @@ class FunctionTypeExpression extends TypeRef {
 	 * optional thisType declaration e.g. for a given class A it's member-type can be specified as "{A.function():void}"
 	 */
 	contains TypeRef declaredThisType
+	
+	contains TypeArgument[] declaredTypeArgs
 	/*
 	 * Type variables declared in FunctionTypeExpression (programmatically or in the AST).
 	 * In use case #2 this is always empty.

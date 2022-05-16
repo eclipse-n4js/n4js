@@ -75,6 +75,7 @@ import org.eclipse.n4js.ts.types.TypeVariable;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#isBinding <em>Binding</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredFunction <em>Declared Function</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredThisType <em>Declared This Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredTypeArgs <em>Declared Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getOwnedTypeVars <em>Owned Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getUnboundTypeVars <em>Unbound Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getUnboundTypeVarsUpperBounds <em>Unbound Type Vars Upper Bounds</em>}</li>
@@ -172,6 +173,18 @@ public interface FunctionTypeExpression extends TypeRef {
 	 * @generated
 	 */
 	void setDeclaredThisType(TypeRef value);
+
+	/**
+	 * Returns the value of the '<em><b>Declared Type Args</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.typeRefs.TypeArgument}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Declared Type Args</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getFunctionTypeExpression_DeclaredTypeArgs()
+	 * @model containment="true"
+	 * @generated
+	 */
+	EList<TypeArgument> getDeclaredTypeArgs();
 
 	/**
 	 * Returns the value of the '<em><b>Owned Type Vars</b></em>' containment reference list.

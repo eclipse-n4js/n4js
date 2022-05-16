@@ -81,9 +81,24 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			&& left.typingStrategy === right.typingStrategy
 			&& STRUCTURAL_FIELD_INITIALIZER !== leftStrategy && STRUCTURAL_FIELD_INITIALIZER !== rightStrategy
 			&& left.declaredType === right.declaredType
-			&& left.structuralMembers.empty && right.structuralMembers.empty
-			&& !left.generic) {
-			return result(left, right, emptyList, emptyList);
+			&& left.structuralMembers.empty && right.structuralMembers.empty) {
+
+			if (left.generic) {
+				if (left.typeArgsWithDefaults.size === right.typeArgsWithDefaults.size) {
+					for (var idx=0; idx < left.typeArgsWithDefaults.size; idx++) {
+						val ltArg = left.typeArgsWithDefaults.get(idx);
+						val rtArg = right.typeArgsWithDefaults.get(idx);
+					
+						val result = ts.subtype(G, ltArg, rtArg);
+						if (result.failure) {
+							return result(ltArg, rtArg, emptyList, emptyList);
+						}
+					}
+					return success();
+				}
+			} else {
+				return result(left, right, emptyList, emptyList);
+			}
 		}
 
 		// 61, 2a)

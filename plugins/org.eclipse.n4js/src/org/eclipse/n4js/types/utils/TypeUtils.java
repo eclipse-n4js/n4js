@@ -1369,6 +1369,18 @@ public class TypeUtils {
 				}
 			}
 		}
+		if (typeRef instanceof FunctionTypeExpression) {
+			final TFunction function = ((FunctionTypeExpression) typeRef).getDeclaredFunction();
+			if (function != null) {
+				final int n = function.getTypeVars().size();
+				if (n > 0) {
+					final List<TypeArgument> l = typeRef.getDeclaredTypeArgs();
+					while (l.size() < n) {
+						l.add(TypeRefsFactory.eINSTANCE.createWildcard());
+					}
+				}
+			}
+		}
 	}
 
 	/**

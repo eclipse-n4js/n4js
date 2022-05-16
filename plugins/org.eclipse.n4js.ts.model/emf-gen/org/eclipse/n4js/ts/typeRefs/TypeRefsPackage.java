@@ -5290,13 +5290,22 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE = TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
+	 * The feature id for the '<em><b>Declared Type Args</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE_ARGS = TYPE_REF_FEATURE_COUNT + 3;
+
+	/**
 	 * The feature id for the '<em><b>Owned Type Vars</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS = TYPE_REF_FEATURE_COUNT + 3;
+	int FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS = TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
 	 * The feature id for the '<em><b>Unbound Type Vars</b></em>' reference list.
@@ -5305,7 +5314,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS = TYPE_REF_FEATURE_COUNT + 4;
+	int FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS = TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Unbound Type Vars Upper Bounds</b></em>' containment reference list.
@@ -5314,7 +5323,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS_UPPER_BOUNDS = TYPE_REF_FEATURE_COUNT + 5;
+	int FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS_UPPER_BOUNDS = TYPE_REF_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
@@ -5323,7 +5332,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__FPARS = TYPE_REF_FEATURE_COUNT + 6;
+	int FUNCTION_TYPE_EXPRESSION__FPARS = TYPE_REF_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Return Type Ref</b></em>' containment reference.
@@ -5332,7 +5341,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF = TYPE_REF_FEATURE_COUNT + 7;
+	int FUNCTION_TYPE_EXPRESSION__RETURN_TYPE_REF = TYPE_REF_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Return Value Marked Optional</b></em>' attribute.
@@ -5341,7 +5350,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL = TYPE_REF_FEATURE_COUNT + 8;
+	int FUNCTION_TYPE_EXPRESSION__RETURN_VALUE_MARKED_OPTIONAL = TYPE_REF_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of structural features of the '<em>Function Type Expression</em>' class.
@@ -5350,7 +5359,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 9;
+	int FUNCTION_TYPE_EXPRESSION_FEATURE_COUNT = TYPE_REF_FEATURE_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type</em>' operation.
@@ -9074,6 +9083,17 @@ public interface TypeRefsPackage extends EPackage {
 	EReference getFunctionTypeExpression_DeclaredThisType();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredTypeArgs <em>Declared Type Args</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Declared Type Args</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getDeclaredTypeArgs()
+	 * @see #getFunctionTypeExpression()
+	 * @generated
+	 */
+	EReference getFunctionTypeExpression_DeclaredTypeArgs();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression#getOwnedTypeVars <em>Owned Type Vars</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10582,6 +10602,14 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE = eINSTANCE.getFunctionTypeExpression_DeclaredThisType();
+
+		/**
+		 * The meta object literal for the '<em><b>Declared Type Args</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE_ARGS = eINSTANCE.getFunctionTypeExpression_DeclaredTypeArgs();
 
 		/**
 		 * The meta object literal for the '<em><b>Owned Type Vars</b></em>' containment reference list feature.

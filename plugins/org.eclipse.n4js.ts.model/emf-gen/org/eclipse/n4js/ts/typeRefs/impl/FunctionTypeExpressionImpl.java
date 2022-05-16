@@ -54,6 +54,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#isBinding <em>Binding</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getDeclaredFunction <em>Declared Function</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getDeclaredThisType <em>Declared This Type</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getDeclaredTypeArgs <em>Declared Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getOwnedTypeVars <em>Owned Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getUnboundTypeVars <em>Unbound Type Vars</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.FunctionTypeExpressionImpl#getUnboundTypeVarsUpperBounds <em>Unbound Type Vars Upper Bounds</em>}</li>
@@ -104,6 +105,16 @@ public class FunctionTypeExpressionImpl extends TypeRefImpl implements FunctionT
 	 * @ordered
 	 */
 	protected TypeRef declaredThisType;
+
+	/**
+	 * The cached value of the '{@link #getDeclaredTypeArgs() <em>Declared Type Args</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getDeclaredTypeArgs()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TypeArgument> declaredTypeArgs;
 
 	/**
 	 * The cached value of the '{@link #getOwnedTypeVars() <em>Owned Type Vars</em>}' containment reference list.
@@ -300,6 +311,19 @@ public class FunctionTypeExpressionImpl extends TypeRefImpl implements FunctionT
 		}
 		else if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE, newDeclaredThisType, newDeclaredThisType));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public EList<TypeArgument> getDeclaredTypeArgs() {
+		if (declaredTypeArgs == null) {
+			declaredTypeArgs = new EObjectContainmentEList<TypeArgument>(TypeArgument.class, this, TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE_ARGS);
+		}
+		return declaredTypeArgs;
 	}
 
 	/**
@@ -613,6 +637,8 @@ public class FunctionTypeExpressionImpl extends TypeRefImpl implements FunctionT
 		switch (featureID) {
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE:
 				return basicSetDeclaredThisType(null, msgs);
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE_ARGS:
+				return ((InternalEList<?>)getDeclaredTypeArgs()).basicRemove(otherEnd, msgs);
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS:
 				return ((InternalEList<?>)getOwnedTypeVars()).basicRemove(otherEnd, msgs);
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS_UPPER_BOUNDS:
@@ -640,6 +666,8 @@ public class FunctionTypeExpressionImpl extends TypeRefImpl implements FunctionT
 				return basicGetDeclaredFunction();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE:
 				return getDeclaredThisType();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE_ARGS:
+				return getDeclaredTypeArgs();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS:
 				return getOwnedTypeVars();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS:
@@ -673,6 +701,10 @@ public class FunctionTypeExpressionImpl extends TypeRefImpl implements FunctionT
 				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE:
 				setDeclaredThisType((TypeRef)newValue);
+				return;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE_ARGS:
+				getDeclaredTypeArgs().clear();
+				getDeclaredTypeArgs().addAll((Collection<? extends TypeArgument>)newValue);
 				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS:
 				getOwnedTypeVars().clear();
@@ -717,6 +749,9 @@ public class FunctionTypeExpressionImpl extends TypeRefImpl implements FunctionT
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE:
 				setDeclaredThisType((TypeRef)null);
 				return;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE_ARGS:
+				getDeclaredTypeArgs().clear();
+				return;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS:
 				getOwnedTypeVars().clear();
 				return;
@@ -753,6 +788,8 @@ public class FunctionTypeExpressionImpl extends TypeRefImpl implements FunctionT
 				return declaredFunction != null;
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_THIS_TYPE:
 				return declaredThisType != null;
+			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__DECLARED_TYPE_ARGS:
+				return declaredTypeArgs != null && !declaredTypeArgs.isEmpty();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__OWNED_TYPE_VARS:
 				return ownedTypeVars != null && !ownedTypeVars.isEmpty();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION__UNBOUND_TYPE_VARS:
