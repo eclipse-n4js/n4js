@@ -721,20 +721,6 @@ import com.google.inject.Inject;
 				}
 			}
 
-			if (T != null
-					&& idref.eContainer() instanceof ParameterizedCallExpression
-					&& idref.eContainmentFeature() == N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET) {
-				final TMethod callableCtorFunction = typeSystemHelper.getCallableClassConstructorFunction(G, T);
-				if (callableCtorFunction != null) {
-					T = ref(callableCtorFunction);
-				} else {
-					final TMethod callSigOfT = typeSystemHelper.getCallSignature(G, T);
-					if (callSigOfT != null) {
-						T = ref(callSigOfT);
-					}
-				}
-			}
-
 			if (!N4JSASTUtils.isWriteAccess(idref)) {
 				T = ts.substTypeVariablesWithFullCapture(G, T);
 			} else {
@@ -1090,8 +1076,9 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseParameterizedCallExpression(ParameterizedCallExpression expr) {
 			final TypeRef targetTypeRef = ts.type(G, expr.getTarget());
-			if (targetTypeRef instanceof FunctionTypeExprOrRef) {
-				final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) targetTypeRef;
+			final TypeRef callableTypeRef = tsh.getCallableTypeRef(G, targetTypeRef);
+			if (callableTypeRef instanceof FunctionTypeExprOrRef) {
+				final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) callableTypeRef;
 				final TFunction tFunction = F.getFunctionType();
 
 				TypeRef T;
@@ -1148,8 +1135,8 @@ import com.google.inject.Inject;
 					}
 				}
 				return T;
-			} else if (targetTypeRef.getDeclaredType() == functionType(G)) {
-				return anyTypeRef(G);
+			} else if (callableTypeRef != null && callableTypeRef.getDeclaredType() == functionType(G)) {
+				return anyTypeRef(G, callableTypeRef.isDynamic());
 			} else if (targetTypeRef.isDynamic()) {
 				return anyTypeRefDynamic(G);
 			} else {

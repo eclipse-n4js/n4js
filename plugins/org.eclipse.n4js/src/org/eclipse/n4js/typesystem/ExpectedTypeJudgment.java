@@ -18,6 +18,7 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayT
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.asyncIterableTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.booleanTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.bottomTypeRef;
+import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isNumeric;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.iterableTypeRef;
@@ -248,8 +249,9 @@ import com.google.inject.Inject;
 				}
 
 				final TypeRef targetTypeRef = ts.type(G, expr.getTarget());
-				if (targetTypeRef instanceof FunctionTypeExprOrRef) {
-					final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) targetTypeRef;
+				final TypeRef callableTypeRef = tsh.getCallableTypeRef(G, targetTypeRef);
+				if (callableTypeRef instanceof FunctionTypeExprOrRef) {
+					final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) callableTypeRef;
 					final int argIndex = ECollections.indexOf(expr.getArguments(), argument, 0);
 					final TFormalParameter fpar = F.getFparForArgIdx(argIndex);
 					if (fpar == null) {
@@ -294,6 +296,8 @@ import com.google.inject.Inject;
 							return paramTypeRefSubst;
 						}
 					}
+				} else if (callableTypeRef != null && callableTypeRef.getDeclaredType() == functionType(G)) {
+					return anyTypeRef(G, callableTypeRef.isDynamic());
 				} else if (targetTypeRef.isDynamic()) {
 					return anyTypeRefDynamic(G);
 				} else {

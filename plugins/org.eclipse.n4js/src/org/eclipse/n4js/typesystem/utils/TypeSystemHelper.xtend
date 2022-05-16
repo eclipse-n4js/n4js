@@ -15,6 +15,7 @@ import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.Arrays
+import java.util.Collections
 import java.util.LinkedList
 import java.util.List
 import org.eclipse.emf.ecore.EObject
@@ -30,6 +31,8 @@ import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.YieldExpression
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
+import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.StructuralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
@@ -37,6 +40,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -351,33 +355,53 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return ts.substTypeVariables(localG, typeRef);
 	}
 
-	/**
-	 * Checks if a value of type <code>typeRef</code> is "callable", i.e. if it can be directly invoked using a call
-	 * expression.
-	 */
-	def public boolean isCallable(RuleEnvironment G, TypeRef typeRef) {
-		if(isClassConstructorFunction(G, typeRef)) {
-			// don't allow direct invocation of class constructors
-			if(getCallableClassConstructorFunction(G, typeRef)!==null)
-				return true; // exception: this is a class that provides a call signature
-			return false;
-		}
-		if(getCallSignature(G, typeRef) !== null) {
-			return true;
-		}
-		val declType = typeRef.declaredType;
-		if(declType instanceof TFunction)
-			return true;
-		if(typeRef instanceof FunctionTypeExprOrRef)
-			return true;
-		if (ts.subtypeSucceeded(G, typeRef, G.structuralFunctionTypeRef))
-			return true;
-		if(ts.subtypeSucceeded(G, typeRef, G.functionTypeRef))
-			return true;
-		if(typeRef.dynamic && ts.subtypeSucceeded(G, G.functionTypeRef, typeRef))
-			return true;
-		return false;
+	def public TypeRef getCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
+		val result = getCallableTypeRefWithFullInfo(G, typeRef);
+		return if (result.size === 1) result.get(0);
 	}
+
+	def public List<TypeRef> getCallableTypeRefWithFullInfo(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof UnionTypeExpression) {
+			// TODO implement special handling for unions
+		} else if (typeRef instanceof IntersectionTypeExpression) {
+			// TODO improve special handling for intersections
+			return typeRef.typeRefs.map[internalGetCallableTypeRef(G, it)].filterNull.toList;
+		}
+		val result = internalGetCallableTypeRef(G, typeRef);
+		if (result !== null) {
+			return Collections.singletonList(result);
+		}
+		return Collections.emptyList();
+	}
+
+	def private TypeRef internalGetCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof UnknownTypeRef) {
+			return null;
+		}
+		if (typeRef instanceof FunctionTypeExprOrRef) {
+			return typeRef;
+		}
+		if (isClassConstructorFunction(G, typeRef)) {
+			// don't allow direct invocation of class constructors
+			val callableCtor = getCallableClassConstructorFunction(G, typeRef);
+			if (callableCtor !== null) {
+				// exception: this is a class that provides a call signature
+				return TypeUtils.createTypeRef(callableCtor) as FunctionTypeRef;
+			}
+			return null;
+		}
+		val callSig = getCallSignature(G, typeRef);
+		if (callSig !== null) {
+			return TypeUtils.createTypeRef(callSig) as FunctionTypeRef;
+		}
+		if (ts.subtypeSucceeded(G, typeRef, G.functionTypeRef)
+			|| ts.subtypeSucceeded(G, typeRef, G.structuralFunctionTypeRef)
+			|| (typeRef.dynamic && ts.subtypeSucceeded(G, G.functionTypeRef, typeRef))) {
+			return G.functionTypeRef => [dynamic = typeRef.dynamic];
+		}
+		return null;
+	}
+
 	/**
 	 * Checks if a value of type <code>typeRef</code> is a class constructor function.
 	 */
