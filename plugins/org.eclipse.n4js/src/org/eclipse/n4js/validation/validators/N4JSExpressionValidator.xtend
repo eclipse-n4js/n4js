@@ -385,10 +385,15 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 		// make sure target can be invoked
 		val G = callExpression.newRuleEnvironment;
-		val callableTypeRef = tsh.getCallableTypeRef(G, typeRef);
-		val isCallable = callableTypeRef !== null;
+		val callableTypeRefs = tsh.getCallableTypeRefWithErrorInfo(G, typeRef);
+		val callableTypeRefsCount = callableTypeRefs.size;
+		val isCallable = callableTypeRefsCount === 1;
 		if (!isCallable && !(callExpression.target instanceof SuperLiteral)) {
-			if (tsh.isClassConstructorFunction(G, typeRef) || isClassifierTypeRefToAbstractClass(G, typeRef)) {
+			if (callableTypeRefsCount > 1) {
+				val callableTypeRefsAsStr = callableTypeRefs.map[typeRefAsString].join(", ");
+				val message = IssueCodes.getMessageForEXP_CALL_CONFLICT_IN_INTERSECTION(callableTypeRefsAsStr);
+				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CONFLICT_IN_INTERSECTION);
+			} else if (tsh.isClassConstructorFunction(G, typeRef) || isClassifierTypeRefToAbstractClass(G, typeRef)) {
 				val message = IssueCodes.getMessageForEXP_CALL_CLASS_CTOR;
 				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CLASS_CTOR);
 			} else {
@@ -404,6 +409,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
+		val callableTypeRef = if (callableTypeRefsCount === 1) callableTypeRefs.get(0);
 		if (callableTypeRef instanceof FunctionTypeExprOrRef) {
 			// check type arguments
 			internalCheckTypeArgumentsNodes(callableTypeRef.typeVars, callExpression.typeArgs, true, callableTypeRef.declaredType,
