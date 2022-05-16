@@ -27,6 +27,7 @@ import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 /**
@@ -43,6 +44,8 @@ package class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 
 	@Inject
 	private N4JSTypeSystem ts;
+	@Inject
+	private TypeSystemHelper tsh;
 
 	/**
 	 * BEFORE CHANGING THIS METHOD, READ THIS:
@@ -54,9 +57,10 @@ package class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 		val target = callExpr.target;
 		// IMPORTANT: do not use #processExpr() here (if target is a PolyExpression, it has been processed in a separate, independent inference!)
 		val targetTypeRef = ts.type(G, target);
-		if (!(targetTypeRef instanceof FunctionTypeExprOrRef))
+		val callableTypeRef = tsh.getCallableTypeRef(G, targetTypeRef);
+		if (!(callableTypeRef instanceof FunctionTypeExprOrRef))
 			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
-		val fteor = targetTypeRef as FunctionTypeExprOrRef;
+		val fteor = callableTypeRef as FunctionTypeExprOrRef;
 		val isPoly = fteor.generic && callExpr.typeArgs.size < fteor.typeVars.size
 
 		if (!isPoly) {
