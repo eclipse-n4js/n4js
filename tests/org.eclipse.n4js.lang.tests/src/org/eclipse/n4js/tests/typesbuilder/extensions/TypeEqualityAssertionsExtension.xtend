@@ -10,11 +10,12 @@
  */
 package org.eclipse.n4js.tests.typesbuilder.extensions
 
+import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
-import java.util.List
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.resource.IEObjectDescription
 
 import static org.junit.Assert.*
@@ -46,6 +47,7 @@ class TypeEqualityAssertionsExtension {
 	def private void assertEqualsNames(String phase, EObject element, String expectedName) {
 		val actualName = switch it : element {
 					Type: name
+					TFunction: name
 					TVariable: name
 					TModule: qualifiedName
 					default: "unknown type: " + element.toString()

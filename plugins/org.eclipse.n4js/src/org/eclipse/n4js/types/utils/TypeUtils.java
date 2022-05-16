@@ -827,6 +827,9 @@ public class TypeUtils {
 	}
 
 	public static FunctionTypeExpression createFunctionTypeExpression(TFunction fun, TypeArgument... typeArgs) {
+		if (fun == null) {
+			return null;
+		}
 		FunctionTypeExpression fte = createFunctionTypeExpression(fun.getDeclaredThisType(), fun.getTypeVars(),
 				fun.getFpars(), fun.getReturnTypeRef(), typeArgs);
 		fte.setDeclaredFunction(fun);

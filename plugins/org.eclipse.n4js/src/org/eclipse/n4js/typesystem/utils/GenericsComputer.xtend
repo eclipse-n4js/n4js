@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.GenericType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.Type
@@ -241,10 +242,13 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 	def void addSubstitutions(RuleEnvironment G, ParameterizedPropertyAccessExpression paExpr) {
 		if (paExpr.parameterized) {
 			val prop = paExpr.property;
-			if(prop instanceof Type) {
+			if (prop instanceof Type) {
 				val typeArgs = paExpr.typeArgs.map[typeRef].toList;
 				G.addTypeMappings(prop.typeVars, typeArgs);
-			}
+			} else if (prop instanceof TFunction) {
+				val typeArgs = paExpr.typeArgs.map[typeRef].toList;
+				G.addTypeMappings(prop.typeVars, typeArgs);
+			} 
 		}
 	}
 
