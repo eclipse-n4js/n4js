@@ -62,6 +62,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
+import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
@@ -356,11 +357,11 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 	}
 
 	def public TypeRef getCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
-		val result = getCallableTypeRefWithErrorInfo(G, typeRef);
+		val result = getCallableTypeRefs(G, typeRef);
 		return if (result.size === 1) result.get(0);
 	}
 
-	def public List<TypeRef> getCallableTypeRefWithErrorInfo(RuleEnvironment G, TypeRef typeRef) {
+	def public List<TypeRef> getCallableTypeRefs(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef instanceof UnionTypeExpression) {
 			// TODO implement special handling for unions
 		} else if (typeRef instanceof IntersectionTypeExpression) {
@@ -422,6 +423,70 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return null;
 	}
 
+	@Data
+	public static class Newable {
+		TypeRef newableTypeRef;
+		TMethod ctorOrConstructSig;
+		TypeRef instanceTypeRef;
+	}
+
+	def public Newable getConstructorOrConstructSignature(RuleEnvironment G, NewExpression newExpr, boolean ignoreConstructSignatures) {
+		val calleeTypeRef = ts.type(G, newExpr.callee);
+		return getConstructorOrConstructSignature(G, calleeTypeRef, newExpr, ignoreConstructSignatures);
+	}
+
+	def public Newable getConstructorOrConstructSignature(RuleEnvironment G, TypeRef typeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
+		val result = getConstructorOrConstructSignatures(G, typeRef, newExpr, ignoreConstructSignatures);
+		return if (result.size === 1) result.get(0);
+	}
+
+	def public List<Newable> getConstructorOrConstructSignatures(RuleEnvironment G, TypeRef typeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
+		if (typeRef instanceof UnionTypeExpression) {
+			// TODO implement special handling for unions
+			return Collections.emptyList();
+		} else if (typeRef instanceof IntersectionTypeExpression) {
+			// TODO improve special handling for intersections
+			val result = <Newable>newArrayList;
+			for (currTypeRef : typeRef.typeRefs) {
+				val curr = internalGetConstructorOrConstructSignature(G, currTypeRef, newExpr, ignoreConstructSignatures);
+				if (curr !== null) {
+					result += curr;
+				}
+			}
+			return result;
+		}
+		val result = internalGetConstructorOrConstructSignature(G, typeRef, newExpr, ignoreConstructSignatures);
+		if (result !== null) {
+			return Collections.singletonList(result);
+		}
+		return Collections.emptyList();
+	}
+
+	def private Newable internalGetConstructorOrConstructSignature(RuleEnvironment G, TypeRef calleeTypeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
+		if (calleeTypeRef instanceof TypeTypeRef) {
+			var ctor = null as TMethod;
+			val staticType = getStaticType(G, calleeTypeRef, true);
+			if (staticType instanceof ContainerType<?>) {
+				ctor = containerTypesHelper.fromContext(G.contextResource).findConstructor(staticType);
+			}
+			val instanceTypeRef = createTypeRefFromStaticType(G, calleeTypeRef, newExpr);
+			return new Newable(calleeTypeRef, ctor, instanceTypeRef)
+		}
+		if (!ignoreConstructSignatures) {
+			val constructSig = getConstructSignature(G, calleeTypeRef);
+			if (constructSig !== null) {
+				val returnTypeRef = constructSig.getReturnTypeRef();
+				if (returnTypeRef !== null && !TypeUtils.isVoid(returnTypeRef)) {
+					val G2 = wrap(G);
+					addSubstitutions(G2, newExpr, constructSig);
+					val returnTypeRefSubst = ts.substTypeVariablesWithFullCapture(G2, returnTypeRef);
+					return new Newable(calleeTypeRef, constructSig, returnTypeRefSubst);
+				}
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * Checks if a value of type <code>typeRef</code> is a class constructor function.
 	 */
@@ -469,27 +534,6 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			// and cannot appear in StructuralTypeRefs, so no need for ContainerTypesHelper or
 			// checking for TStructuralType here:
 			return type.callSignature;
-		}
-		return null;
-	}
-
-	def public TMethod getConstructorOrConstructSignature(RuleEnvironment G, NewExpression newExpr, boolean ignoreConstructSignatures) {
-		val calleeTypeRef = ts.type(G, newExpr.callee);
-		return getConstructorOrConstructSignature(G, calleeTypeRef, ignoreConstructSignatures);
-	}
-
-	def public TMethod getConstructorOrConstructSignature(RuleEnvironment G, TypeRef calleeTypeRef, boolean ignoreConstructSignatures) {
-		if (calleeTypeRef instanceof TypeTypeRef) {
-			val staticType = getStaticType(G, calleeTypeRef, true);
-			if (staticType instanceof ContainerType<?>) {
-				val ctor = containerTypesHelper.fromContext(G.contextResource).findConstructor(staticType);
-				if (ctor !== null) {
-					return ctor;
-				}
-			}
-		}
-		if (!ignoreConstructSignatures) {
-			return getConstructSignature(G, calleeTypeRef);
 		}
 		return null;
 	}

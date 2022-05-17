@@ -385,7 +385,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 		// make sure target can be invoked
 		val G = callExpression.newRuleEnvironment;
-		val callableTypeRefs = tsh.getCallableTypeRefWithErrorInfo(G, typeRef);
+		val callableTypeRefs = tsh.getCallableTypeRefs(G, typeRef);
 		val callableTypeRefsCount = callableTypeRefs.size;
 		val isCallable = callableTypeRefsCount === 1;
 		if (!isCallable && !(callExpression.target instanceof SuperLiteral)) {
@@ -556,10 +556,19 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 					return;
 				}
 			}
-			val constructSig = tsh.getConstructSignature(newExpression.eResource, typeRef);
-			if (constructSig !== null) {
+			val newables = tsh.getConstructorOrConstructSignatures(G, typeRef, newExpression, false);
+			if (newables.size > 1) {
+				val newableTypeRefsAsStr = newables.map[newableTypeRef.typeRefAsString].join(", ");
+				val message = IssueCodes.getMessageForEXP_NEW_CONFLICT_IN_INTERSECTION(newableTypeRefsAsStr);
+				addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
+					IssueCodes.EXP_NEW_CONFLICT_IN_INTERSECTION);
+				return;
+			} else if (newables.size === 1) {
 				// special success case; but perform some further checks
-				internalCheckConstructSignatureInvocation(newExpression, typeRef, constructSig);
+				val newable = newables.get(0);
+				val newableTypeRef = newable.newableTypeRef;
+				val ctorOrConstructSig = newable.ctorOrConstructSig;
+				internalCheckConstructSignatureInvocation(newExpression, newableTypeRef, ctorOrConstructSig);
 				return;
 			}
 			issueNotACtor(typeRef, newExpression);
@@ -632,7 +641,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		} else if (staticType === null || !isCtor || !isConcreteOrCovariant) {
 			// remaining cases
-			val name = classifierTypeRef.typeRefAsString;
+			val name = typeRef.typeRefAsString;
 			val message = IssueCodes.getMessageForEXP_NEW_WILDCARD_OR_TYPEVAR(name);
 			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
 				IssueCodes.EXP_NEW_WILDCARD_OR_TYPEVAR);

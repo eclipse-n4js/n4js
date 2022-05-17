@@ -168,6 +168,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Newable;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
@@ -1156,19 +1157,11 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseNewExpression(NewExpression e) {
-			final TypeRef calleeTypeRef = ts.type(G, e.getCallee());
-			if (calleeTypeRef instanceof TypeTypeRef) {
-				return typeSystemHelper.createTypeRefFromStaticType(G, (TypeTypeRef) calleeTypeRef, e);
-			} else {
-				TMethod constructSig = typeSystemHelper.getConstructSignature(G, calleeTypeRef);
-				if (constructSig != null) {
-					TypeRef returnTypeRef = constructSig.getReturnTypeRef();
-					if (returnTypeRef != null && !TypeUtils.isVoid(returnTypeRef)) {
-						RuleEnvironment G2 = wrap(G);
-						tsh.addSubstitutions(G2, e, constructSig);
-						TypeRef returnTypeRefSubst = ts.substTypeVariablesWithFullCapture(G2, returnTypeRef);
-						return returnTypeRefSubst;
-					}
+			Newable newable = tsh.getConstructorOrConstructSignature(G, e, false);
+			if (newable != null) {
+				TypeRef instanceTypeRef = newable.getInstanceTypeRef();
+				if (instanceTypeRef != null) {
+					return instanceTypeRef;
 				}
 			}
 			return unknown();
