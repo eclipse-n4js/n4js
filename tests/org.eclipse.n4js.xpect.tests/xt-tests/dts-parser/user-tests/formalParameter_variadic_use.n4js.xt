@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/*
+	XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	Workspace {
+		Project "dts-test" {
+			Folder "src" {
+				ThisFile {}
+				File "tslib.d.ts" {}
+			}
+		}
+	}
+	
+	File "tslib.d.ts" {
+
+		export function fn(p1: string, ...p2: number[]): void
+
+		export class Cls {
+			m(p1: string, ...p2: number[]): void
+		}
+
+		export const c: {
+			m(p1: string, ...p2: number[]): void
+		}
+	}
+	END_SETUP
+ */
+
+import { fn, Cls, c } from "tslib"
+
+let cls: Cls;
+
+// XPECT errors --> "false is not a subtype of number." at "false"
+fn("", false);
+// XPECT noerrors -->
+fn("", 42, 43, 44);
+
+// XPECT errors --> "false is not a subtype of number." at "false"
+cls.m("", false);
+// XPECT noerrors -->
+cls.m("", 42, 43, 44);
+
+// XPECT errors --> "false is not a subtype of number." at "false"
+c.m("", false);
+// XPECT noerrors -->
+c.m("", 42, 43, 44);

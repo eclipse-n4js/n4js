@@ -34,6 +34,7 @@ import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.N4JSFactory;
+import org.eclipse.n4js.n4JS.TypeReferenceNode;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
@@ -64,6 +65,22 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 			fPar.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(orAnyPlus(typeRef)));
 			return fPar;
 
+		}
+
+		@Override
+		protected TypeRef getTypeRef(FormalParameter fPar) {
+			TypeReferenceNode<TypeRef> node = fPar.getDeclaredTypeRefNode();
+			return node != null ? node.getTypeRefInAST() : null;
+		}
+
+		@Override
+		protected void setTypeRef(FormalParameter fPar, TypeRef typeRef) {
+			TypeReferenceNode<TypeRef> node = fPar.getDeclaredTypeRefNode();
+			if (node != null) {
+				node.setTypeRefInAST(typeRef);
+			} else {
+				fPar.setDeclaredTypeRefNode(ParserContextUtils.wrapInTypeRefNode(typeRef));
+			}
 		}
 
 		@Override
@@ -104,6 +121,16 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 			fPar.setTypeRef(orAnyPlus(typeRef));
 			return fPar;
 
+		}
+
+		@Override
+		protected TypeRef getTypeRef(TFormalParameter fPar) {
+			return fPar.getTypeRef();
+		}
+
+		@Override
+		protected void setTypeRef(TFormalParameter fPar, TypeRef typeRef) {
+			fPar.setTypeRef(typeRef);
 		}
 
 		@Override
@@ -195,6 +222,11 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 
 		if (fPar != null) {
 			setVariadic(fPar);
+			TypeRef typeRefOld = getTypeRef(fPar);
+			TypeRef typeRefNew = ParserContextUtils.getElementTypeRefOfArrayTypeRef(typeRefOld);
+			if (typeRefNew != typeRefOld) {
+				setTypeRef(fPar, typeRefNew);
+			}
 		}
 	}
 
@@ -210,6 +242,12 @@ public abstract class AbstractDtsFormalParametersBuilder<T extends EObject, AE e
 
 	/** Both arguments may be <code>null</code>. */
 	protected abstract T createFormalParameter(String name, TypeRef typeRef);
+
+	/** Argument will never be <code>null</code>. */
+	protected abstract TypeRef getTypeRef(T fPar);
+
+	/** First Argument will never be <code>null</code>. Type reference may be <code>null</code>. */
+	protected abstract void setTypeRef(T fPar, TypeRef typeRef);
 
 	/** Initializer may be <code>null</code>. */
 	protected abstract void setOptional(T fPar, InitializerContext initCtx);
