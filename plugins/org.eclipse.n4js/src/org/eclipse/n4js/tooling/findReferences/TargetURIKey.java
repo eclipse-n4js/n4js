@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -97,6 +98,8 @@ public class TargetURIKey {
 				Type t = EcoreUtil2.getContainerOfType(object.eContainer(), Type.class);
 				fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(t);
 			} else if (object instanceof Type) {
+				fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(object);
+			} else if (object instanceof TFunction) {
 				fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(object);
 			} else if (object instanceof TModule) {
 				fullyQualifiedName = qualifiedNameProvider.getFullyQualifiedName(object);

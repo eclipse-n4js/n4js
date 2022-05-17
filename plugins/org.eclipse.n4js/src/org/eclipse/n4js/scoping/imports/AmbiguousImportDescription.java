@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.resource.ErrorAwareLinkingService;
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
@@ -58,6 +59,8 @@ public class AmbiguousImportDescription extends AbstractDescriptionWithError {
 		String typeIdent;
 		if (first instanceof TVariable) {
 			typeIdent = "variable";
+		} else if (first instanceof TFunction) {
+			typeIdent = "function";
 		} else if (first instanceof Type) {
 			typeIdent = "type";
 		} else {

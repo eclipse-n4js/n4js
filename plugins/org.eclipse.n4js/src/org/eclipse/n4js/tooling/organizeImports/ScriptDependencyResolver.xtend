@@ -149,6 +149,11 @@ class ScriptDependencyResolver {
 				if (eo.providedByRuntime) {
 					return false;
 				}
+			} else if (eo instanceof TFunction) {
+				// TODO is this dead code
+				if (eo.providedByRuntime) {
+					return false;
+				}
 			} else if (eo instanceof TVariable) {
 				// TODO is this dead code
 				if (eo.providedByRuntime) {

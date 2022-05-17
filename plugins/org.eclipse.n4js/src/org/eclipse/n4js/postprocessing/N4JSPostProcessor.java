@@ -31,6 +31,7 @@ import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.ElementExportDefinition;
 import org.eclipse.n4js.ts.types.ExportDefinition;
 import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
@@ -274,8 +275,8 @@ public class N4JSPostProcessor implements PostProcessor {
 	}
 
 	/**
-	 * If 'object' is a type or a constituent of a type (e.g. field of a class) in 'internalTypes', then move the type
-	 * to 'exposedInternalTypes'.
+	 * If 'object' is a type/function or a constituent of a type (e.g. field of a class) in 'internalTypes', then move
+	 * the type to 'exposedInternalTypes'.
 	 */
 	private static void exposeType(Object object) {
 		if (!(object instanceof EObject) || ((EObject) object).eIsProxy()) {
@@ -290,7 +291,7 @@ public class N4JSPostProcessor implements PostProcessor {
 		}
 		final EObject root = rootTMP; // must be final for the lambda below
 
-		if (root instanceof Type
+		if ((root instanceof Type || root instanceof TFunction)
 				&& root.eContainingFeature() == TypesPackage.eINSTANCE.getTModule_InternalTypes()) {
 			final TModule module = (TModule) root.eContainer();
 			EcoreUtilN4.doWithDeliver(false, () -> {

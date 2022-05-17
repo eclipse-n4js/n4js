@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -91,7 +92,7 @@ public class N4JSCrossReferenceComputer {
 							// cases
 							if (TypesPackage.Literals.TYPE.isSuperTypeOf(eReference.getEReferenceType())) {
 								for (EObject to : list) {
-									handleType(resource, acceptor, (Type) to);
+									handleType(resource, acceptor, to);
 								}
 							} else if (TypesPackage.Literals.IDENTIFIABLE_ELEMENT
 									.isSuperTypeOf(eReference.getEReferenceType())) {
@@ -117,8 +118,8 @@ public class N4JSCrossReferenceComputer {
 	 * expression):
 	 */
 	private void handleReferenceObject(Resource resource, IAcceptor<EObject> acceptor, EObject to) {
-		if (to instanceof Type) {
-			handleType(resource, acceptor, (Type) to);
+		if (to instanceof Type || to instanceof TFunction) {
+			handleType(resource, acceptor, to);
 		} else if (to instanceof TMember) {
 			// Special handling of TMember because it can be a composed member
 			handleTMember(resource, acceptor, (TMember) to);
@@ -138,11 +139,10 @@ public class N4JSCrossReferenceComputer {
 		}
 	}
 
-	private void handleType(Resource resource, IAcceptor<EObject> acceptor,
-			Type to) {
-		if (to != null) {
-			if (isLocatedInOtherResource(resource, to)) {
-				acceptor.accept(to);
+	private void handleType(Resource resource, IAcceptor<EObject> acceptor, EObject tof) {
+		if (tof != null) {
+			if (isLocatedInOtherResource(resource, tof)) {
+				acceptor.accept(tof);
 			}
 		}
 	}

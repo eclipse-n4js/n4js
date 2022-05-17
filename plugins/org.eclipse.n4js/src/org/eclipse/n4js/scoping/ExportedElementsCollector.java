@@ -176,7 +176,7 @@ public class ExportedElementsCollector {
 						visibility.accessModifierSuggestion));
 			}
 		} else {
-			if (exportedElem instanceof Type && !(exportedElem instanceof TFunction)) {
+			if (exportedElem instanceof Type) {
 				info.invisible.add(new HollowTypeOrValueDescription(
 						createObjectDescription(exportedName, exportedElem), "type"));
 			} else {

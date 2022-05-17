@@ -336,7 +336,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				if (!it.name.nullOrEmpty) {
 					val hiddenTypeDscr = scope.getSingleElement(QualifiedName.create(it.name));
 					val hiddenType = hiddenTypeDscr?.getEObjectOrProxy;
-					if (hiddenType instanceof Type &&
+					if ((hiddenType instanceof Type || hiddenType instanceof TFunction) &&
 						!(IEObjectDescriptionWithError.isErrorDescription(hiddenTypeDscr))) {
 						val message = getMessageForVIS_TYPE_PARAMETER_HIDES_TYPE(name, hiddenType.keyword);
 						addIssue(message, it, VIS_TYPE_PARAMETER_HIDES_TYPE);

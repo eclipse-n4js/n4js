@@ -153,6 +153,8 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 					for (EObject type : crossRefTypes) {
 						if (type instanceof Type) {
 							handleType(importedNames, type);
+						} else if (type instanceof TFunction) {
+							handleType(importedNames, type);
 						} else if (type instanceof TVariable) {
 							handleTVariable(importedNames, (TVariable) type);
 						} else if (type instanceof TEnumLiteral) {

@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TFormalParameter;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
@@ -716,6 +717,9 @@ public class ProjectCompareHelper {
 			return acc == MemberAccessModifier.PUBLIC || acc == MemberAccessModifier.PUBLIC_INTERNAL;
 		} else if (elem instanceof Type) {
 			final TypeAccessModifier acc = ((Type) elem).getTypeAccessModifier();
+			return acc == TypeAccessModifier.PUBLIC || acc == TypeAccessModifier.PUBLIC_INTERNAL;
+		} else if (elem instanceof TFunction) {
+			final TypeAccessModifier acc = ((TFunction) elem).getTypeAccessModifier();
 			return acc == TypeAccessModifier.PUBLIC || acc == TypeAccessModifier.PUBLIC_INTERNAL;
 		}
 		return true; // n.b.: for other elements we return true

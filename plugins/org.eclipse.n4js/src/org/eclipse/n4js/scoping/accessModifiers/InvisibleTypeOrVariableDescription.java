@@ -11,14 +11,13 @@
 package org.eclipse.n4js.scoping.accessModifiers;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.n4js.validation.IssueUserDataKeys.VIS_ILLEGAL_TYPE_ACCESS;
 import org.eclipse.n4js.validation.IssueUserDataKeys.VIS_ILLEGAL_VARIABLE_ACCESS;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * This description wraps an invisible type or variable.

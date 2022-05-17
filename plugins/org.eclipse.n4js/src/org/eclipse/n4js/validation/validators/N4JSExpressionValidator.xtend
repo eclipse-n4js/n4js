@@ -226,7 +226,11 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 		// check type arguments
 		val prop = propAccessExpression.property;
-		val typeVars = if (prop instanceof Type) prop.typeVars else #[]; // else-case required for TField, TGetter, TSetter
+		val typeVars = switch (prop) {
+			Type: prop.typeVars
+			TFunction: prop.typeVars
+			default: #[]
+		}
 		internalCheckTypeArgumentsNodes(typeVars, propAccessExpression.typeArgs, true, prop, propAccessExpression,
 			N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression_Property);
 

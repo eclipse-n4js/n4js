@@ -19,6 +19,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TFormalParameter;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -290,6 +291,8 @@ public class ProjectComparisonEntry {
 			return ((TFormalParameter) element).getFormalParameterAsString();
 		if (element instanceof Type)
 			return ((Type) element).getTypeAsString();
+		if (element instanceof TFunction)
+			return ((TFunction) element).getFunctionAsString();
 		if (element instanceof TypeRef)
 			return ((TypeRef) element).getTypeRefAsString();
 		if (element instanceof IdentifiableElement)
