@@ -962,6 +962,8 @@ import com.google.inject.Inject;
 					T = ts.substTypeVariables(G2, memberTypeRef);
 				} else if (targetTypeRef.isDynamic()) {
 					T = anyTypeRefDynamic(G);
+				} else if (targetDeclType == objectType(G)) {
+					T = anyTypeRefDynamic(G);
 				} else {
 					T = unknown();
 				}
