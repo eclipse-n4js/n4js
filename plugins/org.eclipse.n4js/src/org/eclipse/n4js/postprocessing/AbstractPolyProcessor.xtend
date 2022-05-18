@@ -42,6 +42,7 @@ import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 
 import static extension org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.*
 
@@ -52,6 +53,8 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 
 	@Inject
 	private N4JSTypeSystem ts;
+	@Inject
+	private TypeSystemHelper tsh;
 
 	/**
 	 * Convenience method for {@link #isPoly(Expression)} and {@link #isPoly(PropertyAssignment)}, accepting any type of
@@ -76,8 +79,9 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				// sure that no significant processing will be triggered by the type judgment invocation below
 				val G = obj.newRuleEnvironment;
 				val TypeRef targetTypeRef = ts.type(G, obj.target); // this is a backward reference (because we type obj's child)
-				if (targetTypeRef instanceof FunctionTypeExprOrRef) {
-					targetTypeRef.generic && obj.typeArgs.size < targetTypeRef.typeVars.size
+				val callableTypeRef = tsh.getCallableTypeRef(G, targetTypeRef);
+				if (callableTypeRef instanceof FunctionTypeExprOrRef) {
+					callableTypeRef.generic && obj.typeArgs.size < callableTypeRef.typeVars.size
 				} else {
 					false
 				}

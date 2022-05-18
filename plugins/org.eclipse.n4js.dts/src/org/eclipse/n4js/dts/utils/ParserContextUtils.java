@@ -68,6 +68,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TAnnotationTypeRefArgument;
@@ -417,6 +418,21 @@ public class ParserContextUtils {
 		TypeReferenceNode<T> result = N4JSFactory.eINSTANCE.createTypeReferenceNode();
 		result.setTypeRefInAST(typeRef);
 		return result;
+	}
+
+	/** @return the element type if given an array type; otherwise <code>typeRef</code> unchanged. */
+	public static TypeRef getElementTypeRefOfArrayTypeRef(TypeRef typeRef) {
+		if (typeRef instanceof ParameterizedTypeRef
+				&& "Array".equals(((ParameterizedTypeRef) typeRef).getDeclaredTypeAsText())
+				&& !typeRef.getDeclaredTypeArgs().isEmpty()) {
+			TypeArgument typeArg = typeRef.getDeclaredTypeArgs().get(0);
+			if (typeArg instanceof Wildcard) {
+				// in .d.ts we should never get a wildcard, but let's cover this case for completeness:
+				return ((Wildcard) typeArg).getDeclaredOrImplicitUpperBound();
+			}
+			return (TypeRef) typeArg;
+		}
+		return typeRef;
 	}
 
 	/** Installs proxy information that is later used for linking */

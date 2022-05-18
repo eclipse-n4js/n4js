@@ -376,15 +376,24 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		if (callExpression?.target === null)
 			return; // invalid AST
+
 		val typeRef = ts.tau(callExpression.target);
 		if (typeRef === null)
 			return; // invalid AST
 		if (typeRef instanceof UnknownTypeRef)
 			return; // suppress error message in case of UnknownTypeRef
+
 		// make sure target can be invoked
 		val G = callExpression.newRuleEnvironment;
-		if (!(callExpression.target instanceof SuperLiteral) && !tsh.isCallable(G, typeRef)) {
-			if (tsh.isClassConstructorFunction(G, typeRef) || isClassifierTypeRefToAbstractClass(G, typeRef)) {
+		val callableTypeRefs = tsh.getCallableTypeRefs(G, typeRef);
+		val callableTypeRefsCount = callableTypeRefs.size;
+		val isCallable = callableTypeRefsCount === 1;
+		if (!isCallable && !(callExpression.target instanceof SuperLiteral)) {
+			if (callableTypeRefsCount > 1) {
+				val callableTypeRefsAsStr = callableTypeRefs.map[typeRefAsString].join(", ");
+				val message = IssueCodes.getMessageForEXP_CALL_CONFLICT_IN_INTERSECTION(callableTypeRefsAsStr);
+				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CONFLICT_IN_INTERSECTION);
+			} else if (tsh.isClassConstructorFunction(G, typeRef) || isClassifierTypeRefToAbstractClass(G, typeRef)) {
 				val message = IssueCodes.getMessageForEXP_CALL_CLASS_CTOR;
 				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CLASS_CTOR);
 			} else {
@@ -400,13 +409,14 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		if (typeRef instanceof FunctionTypeExprOrRef) {
+		val callableTypeRef = if (callableTypeRefsCount === 1) callableTypeRefs.get(0);
+		if (callableTypeRef instanceof FunctionTypeExprOrRef) {
 			// check type arguments
-			internalCheckTypeArgumentsNodes(typeRef.typeVars, callExpression.typeArgs, true, typeRef.declaredType,
+			internalCheckTypeArgumentsNodes(callableTypeRef.typeVars, callExpression.typeArgs, true, callableTypeRef.declaredType,
 				callExpression, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 
 			// check Calling async functions with missing await
-			internalCheckCallingAsyncFunWithoutAwaitingForIt(typeRef, callExpression)
+			internalCheckCallingAsyncFunWithoutAwaitingForIt(callableTypeRef, callExpression)
 		}
 	}
 
@@ -546,10 +556,19 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 					return;
 				}
 			}
-			val constructSig = tsh.getConstructSignature(newExpression.eResource, typeRef);
-			if (constructSig !== null) {
+			val newables = tsh.getConstructorOrConstructSignatures(G, typeRef, newExpression, false);
+			if (newables.size > 1) {
+				val newableTypeRefsAsStr = newables.map[newableTypeRef.typeRefAsString].join(", ");
+				val message = IssueCodes.getMessageForEXP_NEW_CONFLICT_IN_INTERSECTION(newableTypeRefsAsStr);
+				addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
+					IssueCodes.EXP_NEW_CONFLICT_IN_INTERSECTION);
+				return;
+			} else if (newables.size === 1) {
 				// special success case; but perform some further checks
-				internalCheckConstructSignatureInvocation(newExpression, typeRef, constructSig);
+				val newable = newables.get(0);
+				val newableTypeRef = newable.newableTypeRef;
+				val ctorOrConstructSig = newable.ctorOrConstructSig;
+				internalCheckConstructSignatureInvocation(newExpression, newableTypeRef, ctorOrConstructSig);
 				return;
 			}
 			issueNotACtor(typeRef, newExpression);
@@ -622,7 +641,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		} else if (staticType === null || !isCtor || !isConcreteOrCovariant) {
 			// remaining cases
-			val name = classifierTypeRef.typeRefAsString;
+			val name = typeRef.typeRefAsString;
 			val message = IssueCodes.getMessageForEXP_NEW_WILDCARD_OR_TYPEVAR(name);
 			addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee,
 				IssueCodes.EXP_NEW_WILDCARD_OR_TYPEVAR);
@@ -830,10 +849,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val target = callExpression.target
 		if (target !== null) {
 			val targetTypeRef = ts.tau(target); // no context, we only need the number of fpars
-			if (targetTypeRef instanceof FunctionTypeExprOrRef) {
+			val G = callExpression.newRuleEnvironment;
+			val callableTypeRef = tsh.getCallableTypeRef(G, targetTypeRef);
+			if (callableTypeRef instanceof FunctionTypeExprOrRef) {
 
 				// obtain fpars from invoked function/method
-				var fpars = new ArrayList(targetTypeRef.fpars);
+				var fpars = new ArrayList(callableTypeRef.fpars);
 
 				// special case: invoking a promisified function
 				// note: being very liberal in next lines to avoid duplicate error messages

@@ -623,7 +623,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		val newExpr = grandParent as NewExpression;
 		// note: since the @Spec annotation may only be used in the constructor of a class,
 		// we can here skip the handling of construct signatures (i.e. last argument is 'true'):
-		val ctor = tsh.getConstructorOrConstructSignature(G, newExpr, true);
+		val ctor = tsh.getConstructorOrConstructSignature(G, newExpr, true)?.ctorOrConstructSig;
 		if (ctor === null) {
 			return false;
 		}
