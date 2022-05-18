@@ -81,10 +81,11 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TStructMethod
+import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
-import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.DeclMergingHelper
 import org.eclipse.n4js.utils.DeclMergingUtils
@@ -134,6 +135,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	@Inject N4JSTypeSystem ts
+
+	@Inject TypeSystemHelper tsh
 
 	@Inject MemberScopingHelper memberScopingHelper
 
@@ -242,6 +245,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				val namespace = namespaceLikeType === null || namespaceLikeType.eIsProxy ? parentContainer : namespaceLikeType;
 				return new FilteringScope(getTypeScope(namespace, false), [
 					TypesPackage.Literals.MODULE_NAMESPACE_VIRTUAL_TYPE.isSuperTypeOf(it.getEClass)
+					|| TypesPackage.Literals.TCLASS.isSuperTypeOf(it.getEClass) // only included, because classes might have a namespace merged onto them!
 					|| TypesPackage.Literals.TENUM.isSuperTypeOf(it.getEClass)
 					|| TypesPackage.Literals.TNAMESPACE.isSuperTypeOf(it.getEClass)
 				]);
@@ -252,10 +256,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				switch (namespaceLikeType) {
 					ModuleNamespaceVirtualType:
 						return createScopeForNamespaceAccess(namespaceLikeType, context, true, false)
-					TNamespace:
-						return scope_AllTopLevelElementsFromAbstractNamespace(namespaceLikeType, context, true, false)
+					TClass:
+						return createScopeForMergedNamespaces(context, namespaceLikeType) ?: IScope.NULLSCOPE
 					TEnum:
 						return new DynamicPseudoScope()
+					TNamespace:
+						return scope_AllTopLevelElementsFromAbstractNamespace(namespaceLikeType, context, true, false)
 				}
 			}
 			return getTypeScope(context, false);
@@ -615,29 +621,25 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val checkVisibility = true;
 		var result = memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode);
 
+		// functions and classes may be merged with namespaces
+		var Type mergeCandidate;
 		if (declaredType instanceof TFunction) {
-			// a function may be merged with classes and namespaces
-			if (DeclMergingUtils.mayBeMerged(declaredType)) {
-				val mergedElems = declMergingHelper.getMergedElements(propertyAccess.eResource, declaredType);
-				// FIXME here assuming 'mergedElems' to be sorted!!!
-				val firstClass = mergedElems.filter(TClass).head;
-				val firstNamespace = mergedElems.filter(TNamespace).head;
-// FIXME no longer necessary, because class is used as representative
-//				if (firstClass !== null) {
-//					val typeTypeRef = TypeUtils.createTypeTypeRef(firstClass, true);
-//					val scopeClass = memberScopingHelper.createMemberScope(typeTypeRef, propertyAccess, checkVisibility, true /* always static */, structFieldInitMode);
-//					result = new MergedScope(scopeClass, result);
-//				}
-				if (firstNamespace !== null) {
-					val scopeNamespace = scope_AllTopLevelElementsFromAbstractNamespace(firstNamespace, propertyAccess, false, true);
-					result = new MergedScope(scopeNamespace, result);
-				}
+			mergeCandidate = declaredType;
+		} else if (staticAccess) {
+			val staticType = tsh.getStaticType(G, typeRef as TypeTypeRef, true);
+			if (staticType instanceof TClass) {
+				mergeCandidate = staticType;
+			}
+		}
+		if (mergeCandidate !== null) {
+			val scopeNamespace = createScopeForMergedNamespaces(propertyAccess, mergeCandidate);
+			if (scopeNamespace !== null) {
+				result = new MergedScope(scopeNamespace, result);
 			}
 		}
 
 		return result;
 	}
-	
 
 	private def IScope createScopeForNamespaceAccess(ModuleNamespaceVirtualType namespace, EObject context,
 		boolean includeHollows, boolean includeValueOnlyElements
@@ -660,6 +662,19 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			return new DynamicPseudoScope(result);
 		}
 		return result;
+	}
+
+	private def IScope createScopeForMergedNamespaces(EObject context, Type elem) {
+		if (DeclMergingUtils.mayBeMerged(elem)) {
+			val mergedElems = declMergingHelper.getMergedElements(context.eResource, elem);
+			// FIXME here assuming 'mergedElems' to be sorted!!!
+			val firstNamespace = mergedElems.filter(TNamespace).head;
+			if (firstNamespace !== null) {
+				val scopeNamespace = scope_AllTopLevelElementsFromAbstractNamespace(firstNamespace, context, false, true);
+				return scopeNamespace;
+			}
+		}
+		return null;
 	}
 
 	/**

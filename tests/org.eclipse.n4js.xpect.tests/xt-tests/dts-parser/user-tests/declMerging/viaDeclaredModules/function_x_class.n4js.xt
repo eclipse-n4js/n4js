@@ -79,7 +79,7 @@ let value: foo;
 value();
 
 
-// (6) can create instances of class 'foo'
+// (6) can create instances of class 'foo' (and arguments are checked properly)
 
 // XPECT noerrors -->
 // XPECT type of 'instance' --> foo
