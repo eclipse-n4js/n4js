@@ -18,7 +18,7 @@
     "mangelhaft"
   ],
   "engines": {
-    "node": ">= 5.0.0"
+    "node": ">=14"
   },
   "type": "module",
   "n4js": {

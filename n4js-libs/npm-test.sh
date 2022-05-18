@@ -23,6 +23,7 @@ mkdir -p "./build"
 echo "Run mangelhaft ..."
 packages/n4js-mangelhaft-cli/src-gen/org/eclipse/n4js/mangelhaft/runner/node/NodeTestMain.js . \
         --xunitReportFile $REPORT_NAME \
+        --sonarTestExecutionReportFile ./build/sonar-report.xml \
         --xunitReportName test-report \
         --xunitReportPackage n4js-libs-report \
         --nycCoveragePath ./build/coverage.json

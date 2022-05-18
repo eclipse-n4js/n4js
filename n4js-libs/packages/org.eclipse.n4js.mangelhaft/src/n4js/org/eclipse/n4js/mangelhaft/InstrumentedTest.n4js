@@ -38,6 +38,8 @@ export public class InstrumentedTest implements IInstrumentedTest {
     public afters: TestMethodDescriptor[] = [];
 
     @Override
+    public filePath: string;
+    @Override
     public fqn: string = "";
 
     /**
@@ -241,6 +243,7 @@ export public class InstrumentedTest implements IInstrumentedTest {
         .TEST);
         if (info) {
             this.fqn = info.fqn;
+            this.filePath = info.filePath;
         }
         this.fqn = this.fqn || testClass.n4type.fqn;
         this.name = this.fqn;

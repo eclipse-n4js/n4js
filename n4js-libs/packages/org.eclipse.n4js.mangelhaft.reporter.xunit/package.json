@@ -17,12 +17,12 @@
     "mangelhaft"
   ],
   "engines": {
-    "node": ">= 5.0.0"
+    "node": ">=14"
   },
   "type": "module",
   "dependencies": {
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
-    "xmlbuilder": "^10.0.0",
+    "xmlbuilder2": "^3.0.2",
     "n4js-runtime": "^0.1.0",
     "n4js-runtime-node": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0"

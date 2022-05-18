@@ -19,5 +19,10 @@ export public class TestResult {
     public elapsedTime: number = 0;
     public trace: string[] = [];
 
+    public isOK(): boolean {
+        const status = this.testStatus;
+        return status === TestStatus.passed || status.startsWith(TestStatus.skipped);
+    }
+
     public constructor(@Spec spec: ~i~this) {}
 }

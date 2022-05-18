@@ -20,6 +20,7 @@ export public interface IInstrumentedTest {
     public befores: TestMethodDescriptor[];
     public afters: TestMethodDescriptor[];
     public testObject: N4Object;
+    public filePath: string;
     public fqn: string;
     public parent: IInstrumentedTest = null;
     public child: IInstrumentedTest = null;
