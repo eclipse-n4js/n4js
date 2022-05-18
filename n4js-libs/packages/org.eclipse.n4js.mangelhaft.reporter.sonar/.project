@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>org.eclipse.n4js.mangelhaft.reporter.xunit</name>
+	<name>org.eclipse.n4js.mangelhaft.reporter.sonar</name>
 	<comment></comment>
 	<projects>
 	</projects>
