@@ -28,7 +28,6 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions
@@ -57,7 +56,7 @@ package class DestructureProcessor extends AbstractProcessor {
 		// ArrayLiteral or ObjectLiteral, but plays role of a destructuring pattern
 		// -> does not really have a type, but use UnknownTypeRef to avoid having
 		// to deal with this special case whenever asking for type of an expression
-		cache.storeType(node as TypableElement, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
+		cache.storeType(node as TypableElement, G.undefinedTypeRef);
 		// for object literals, some additional hacks are required ...
 		if (node instanceof ObjectLiteral) {
 			// poly expressions in property name/value pairs expect to be processed as part of the outer poly expression
@@ -74,12 +73,12 @@ package class DestructureProcessor extends AbstractProcessor {
 			// the defined type of the object literal may still have some DeferredTypeRefs -> remove them
 			node.definedType.eAllContents.filter(DeferredTypeRef).forEach [ dtr |
 				EcoreUtilN4.doWithDeliver(false, [
-					EcoreUtil.replace(dtr, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
+					EcoreUtil.replace(dtr, G.undefinedTypeRef);
 				], dtr.eContainer);
 			]
 			// add types for property assignments
 			node.propertyAssignments.forEach [
-				cache.storeType(it, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
+				cache.storeType(it, G.undefinedTypeRef);
 			]
 		}
 		// here we basically turn off the fail-fast approach within the destructuring pattern
@@ -90,7 +89,7 @@ package class DestructureProcessor extends AbstractProcessor {
 		] //
 		.filter[cache.getTypeFailSafe(it as TypableElement)===null] //
 		.forEach[
-			cache.storeType(it as TypableElement, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
+			cache.storeType(it as TypableElement, G.undefinedTypeRef);
 		];
 	}
 
