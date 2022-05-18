@@ -136,7 +136,8 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 					for (typeArg : typeRefTypeArgs) {
 						if (varIter.hasNext) {
 							val typeVar = varIter.next;
-							addSubstitution(G, typeVar, typeArg);
+							val typeArgSubst = ts.substTypeVariables(G, typeArg);
+							addSubstitution(G, typeVar, typeArgSubst);
 						}
 					}
 				}
