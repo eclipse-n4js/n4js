@@ -169,6 +169,7 @@ import org.eclipse.n4js.ts.types.util.TypesSwitch;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Newable;
+import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.DestructureHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind;
@@ -191,6 +192,8 @@ import com.google.inject.Inject;
 	private MemberScopingHelper memberScopingHelper;
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
+	@Inject
+	private DeclMergingHelper declMergingHelper;
 	@Inject
 	private DestructureHelper destructureHelper;
 	@Inject
@@ -247,7 +250,9 @@ import com.google.inject.Inject;
 		 */
 		@Override
 		public TypeRef caseType(Type type) {
-			return TypeUtils.wrapTypeInTypeRef(type);
+			TypeRef result = TypeUtils.wrapTypeInTypeRef(type);
+			result = declMergingHelper.handleDeclarationMergingDuringTypeInference(G, result);
+			return result;
 		}
 
 		/**
@@ -317,8 +322,10 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseTypeDefiningElement(TypeDefiningElement elem) {
-			final TypeRef defTypeRef = TypeUtils.wrapTypeInTypeRef(elem.getDefinedType());
-			return defTypeRef != null ? defTypeRef : unknown();
+			Type defType = elem.getDefinedType();
+			TypeRef result = TypeUtils.wrapTypeInTypeRef(defType);
+			result = declMergingHelper.handleDeclarationMergingDuringTypeInference(G, result);
+			return result != null ? result : unknown();
 		}
 
 		@Override

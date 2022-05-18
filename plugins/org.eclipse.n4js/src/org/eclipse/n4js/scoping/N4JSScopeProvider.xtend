@@ -622,11 +622,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				// FIXME here assuming 'mergedElems' to be sorted!!!
 				val firstClass = mergedElems.filter(TClass).head;
 				val firstNamespace = mergedElems.filter(TNamespace).head;
-				if (firstClass !== null) {
-					val typeTypeRef = TypeUtils.createTypeTypeRef(firstClass, true);
-					val scopeClass = memberScopingHelper.createMemberScope(typeTypeRef, propertyAccess, checkVisibility, true /* always static */, structFieldInitMode);
-					result = new MergedScope(scopeClass, result);
-				}
+// FIXME no longer necessary, because class is used as representative
+//				if (firstClass !== null) {
+//					val typeTypeRef = TypeUtils.createTypeTypeRef(firstClass, true);
+//					val scopeClass = memberScopingHelper.createMemberScope(typeTypeRef, propertyAccess, checkVisibility, true /* always static */, structFieldInitMode);
+//					result = new MergedScope(scopeClass, result);
+//				}
 				if (firstNamespace !== null) {
 					val scopeNamespace = scope_AllTopLevelElementsFromAbstractNamespace(firstNamespace, propertyAccess, false, true);
 					result = new MergedScope(scopeNamespace, result);
