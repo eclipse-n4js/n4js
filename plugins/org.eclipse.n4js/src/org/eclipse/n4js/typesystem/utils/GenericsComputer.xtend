@@ -136,8 +136,7 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 					for (typeArg : typeRefTypeArgs) {
 						if (varIter.hasNext) {
 							val typeVar = varIter.next;
-							val typeArgSubst = ts.substTypeVariables(G, typeArg);
-							addSubstitution(G, typeVar, typeArgSubst);
+							addSubstitution(G, typeVar, typeArg);
 						}
 					}
 				}
@@ -176,15 +175,16 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		if(currSubstitute===typeVar)
 			currSubstitute=null;
 
-		G.put(typeVar, mergeTypeArgs(currSubstitute,actualTypeArg));
+		G.put(typeVar, mergeTypeArgs(G, currSubstitute, actualTypeArg));
 	}
-	private def mergeTypeArgs(Object... typeArgs) {
+
+	private def mergeTypeArgs(RuleEnvironment G, Object... typeArgs) {
 		val result = newArrayList
 
 		for(currTypeArg : typeArgs) {
 			val l = if(currTypeArg instanceof Collection<?>) currTypeArg else #[currTypeArg];
 			for(Object currO : l) {
-				if(currO!==null && !typeArgAwareContains(result, currO))
+				if(currO!==null && !typeArgAwareContains(G, result, currO))
 					result.add(currO);
 			}
 		}
@@ -196,12 +196,17 @@ package class GenericsComputer extends TypeSystemHelperStrategy {
 		else
 			null
 	}
-	private def typeArgAwareContains(Collection<?> l, Object o) {
+	private def typeArgAwareContains(RuleEnvironment G, Collection<?> l, Object o) {
 		if(o instanceof TypeArgument) {
-			for(Object currO : l)
-				if(currO instanceof TypeArgument)
-					if(typeCompareHelper.compare(currO,o)===0)
+			val oSubst = ts.substTypeVariables(G, o);
+			for(Object currO : l) {
+				if(currO instanceof TypeArgument) {
+				val currOSubst = ts.substTypeVariables(G, currO);
+					if(typeCompareHelper.compare(currOSubst, oSubst)===0) {
 						return true;
+					}
+				}
+			}
 			return false;
 		}
 		else
