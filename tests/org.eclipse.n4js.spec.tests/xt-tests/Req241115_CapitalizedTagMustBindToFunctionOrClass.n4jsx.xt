@@ -36,7 +36,7 @@ class C extends React.Component<~React.ComponentProps with {prop: int}, Object> 
 	}
 }
 
-// XPECT errors --> "JSX element is expected to bind to either a function or class, but bind to type [unknown] instead." at "MyProp"
+// XPECT errors --> "JSX element is expected to bind to either a function or class, but bind to type string instead." at "MyProp"
 <MyProp/>
 
 const D = 10;
