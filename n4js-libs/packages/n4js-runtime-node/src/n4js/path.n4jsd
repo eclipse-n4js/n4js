@@ -9,12 +9,12 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-export external interface ~PathObject {
-    root: string;
-    dir: string;
-    base: string;
-    ext: string;
-    name: string;
+export external public interface ~PathObject {
+    public root: string;
+    public dir: string;
+    public base: string;
+    public ext: string;
+    public name: string;
 }
 
 export external public const delimiter: string;
