@@ -139,12 +139,10 @@ export public class TestController {
         const moduleName = parts.join("/");
         try {
             let groupModule: Object;
-            let groupModulePath = info.filePath;
             try {
-                if (!groupModulePath) {
-                    groupModulePath = info.filePath = rekwire.resolve(`${info.origin}/${moduleName}.js`);
-                }
-                groupModule = await import(groupModulePath);
+                const mod = `${info.origin}/${moduleName}.js`;
+                groupModule = await import(mod);
+                info.filePath = rekwire.resolve(mod);
             } catch (exc) { // find package.json
                 const packageJsonPath = findPackageJson(process.cwd());
                 if (!packageJsonPath || readJsonFile(packageJsonPath).name !== info.origin) {
@@ -152,8 +150,8 @@ export public class TestController {
                 }
                 const parts = moduleName.split("/");
                 parts.unshift(lib_path.dirname(packageJsonPath));
-                groupModulePath = info.filePath = `${parts.join(lib_path.sep)}.js`;
-                groupModule = await import(groupModulePath);
+                info.filePath = `${parts.join(lib_path.sep)}.js`;
+                groupModule = await import(info.filePath);
             }
             testClasses = [groupModule[ctorName] as constructor{N4Object}];
         } catch (ex) {
