@@ -20,7 +20,9 @@ class C2 <ValueT_C2, DataSetT_C2 extends D<ValueT_C2>>
     implements I<ValueT_C2, D<ValueT_C2>> {
 
     method() {
-        this.field.foo(); // UnknownTypeRef in dieser Zeile
+		// XPECT type of 'field' --> D<ValueT_C2>
+		// XPECT type of 'foo' --> {function():void}
+        this.field.foo();
     }
 }
 
