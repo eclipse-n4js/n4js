@@ -29,8 +29,9 @@ public class N4JSGlobalsTest {
 	/** Validates constant {@link N4JSGlobals#ALL_N4JS_LIBS} */
 	@Test
 	public void allN4jsLibsTest() {
+		String msg = "value of constant N4JSGlobals#ALL_N4JS_LIBS is incorrect";
 		Set<N4JSPackageName> actualN4jsLibs = N4jsLibsAccess.findAllN4jsLibs().keySet();
-		assertTrue(Sets.difference(N4JSGlobals.ALL_N4JS_LIBS, actualN4jsLibs).isEmpty());
-		assertTrue(Sets.difference(actualN4jsLibs, N4JSGlobals.ALL_N4JS_LIBS).isEmpty());
+		assertTrue(msg, Sets.difference(N4JSGlobals.ALL_N4JS_LIBS, actualN4jsLibs).isEmpty());
+		assertTrue(msg, Sets.difference(actualN4jsLibs, N4JSGlobals.ALL_N4JS_LIBS).isEmpty());
 	}
 }

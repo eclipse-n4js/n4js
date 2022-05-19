@@ -321,6 +321,7 @@ public final class N4JSGlobals {
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert.test"),
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.console"),
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.xunit"),
+			new N4JSPackageName("org.eclipse.n4js.mangelhaft.reporter.sonar"),
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft.test"));
 
 	/**
