@@ -76,7 +76,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 			case N4JSGlobals.N4JSD_FILE_EXTENSION:
 			case N4JSGlobals.DTS_FILE_EXTENSION:
 				issues = new ArrayList<>(issues);
-				checkForUnknownTypeRefs(resource, issues);
+				// checkForUnknownTypeRefs(resource, issues);
 				break;
 			}
 
