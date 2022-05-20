@@ -638,7 +638,7 @@ import com.google.common.collect.Iterables;
 				// constructor{upperBound(T)} <: constructor{X} implies constructor{T} <: constructor{X}
 				// because the subtype relation for ConstructorTypeRefs is not transitive; so we need
 				// the identical type - in this case: the identical type variable - on both sides)
-			} else {
+			} else if (left_staticType instanceof ContainerType && right_staticType instanceof ContainerType) {
 				final TMethod leftCtor = containerTypesHelper.fromContext(getContextResource(G))
 						.findConstructor((ContainerType<?>) left_staticType);
 				final TMethod rightCtor = containerTypesHelper.fromContext(getContextResource(G))
@@ -665,6 +665,8 @@ import com.google.common.collect.Iterables;
 
 				return requireAllSuccess(
 						ts.subtype(G, leftCtorRefSubst, rightCtorRefSubst));
+			} else {
+				return failure();
 			}
 		}
 
