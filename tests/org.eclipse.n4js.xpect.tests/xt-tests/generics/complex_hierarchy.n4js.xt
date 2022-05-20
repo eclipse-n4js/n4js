@@ -16,8 +16,8 @@
 // XPECT noerrors -->
 
 class C2 <ValueT_C2, DataSetT_C2 extends D<ValueT_C2>> 
-    extends C1 <ValueT_C2, DataSetT_C2>
-    implements I<ValueT_C2, D<ValueT_C2>> {
+    	extends C1 <ValueT_C2, DataSetT_C2>
+    	implements I<ValueT_C2, D<ValueT_C2>> {
 
     method() {
 		// XPECT type of 'field' --> D<ValueT_C2>
@@ -26,7 +26,8 @@ class C2 <ValueT_C2, DataSetT_C2 extends D<ValueT_C2>>
     }
 }
 
-class C1 <ValueT_C1, DataSetT_C1 extends D<ValueT_C1>> implements I<ValueT_C1, D<ValueT_C1>> {
+class C1 <ValueT_C1, DataSetT_C1 extends D<ValueT_C1>>
+		implements I<ValueT_C1, D<ValueT_C1>> {
 
 }
 
