@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+   END_SETUP
+ */
+
+// XPECT noerrors -->
+
+
+let qkey = "someFieldName";
+
+// XPECT warnings --> "Computed property name using an expression other than a compile-time expression; this property won't be type-checked at compile time." at "qkey"
+// XPECT type of '[qkey]' --> "text"
+let objLit = {
+	    [qkey]: "text"
+	};
