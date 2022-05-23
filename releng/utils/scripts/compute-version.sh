@@ -162,11 +162,11 @@ echo "This build's language version: ${LANGUAGE_VERSION}"
 echo "This build's language commit : ${LANGUAGE_COMMIT}"
 
 echo "==== STEP 6/7: Check validity ..."
-HISTORY_OF_MASTER=`git log -n 50 --pretty=format:\"%H\" origin/master | grep $N4JS_COMMIT_ID_LOCAL || true`
+HISTORY_OF_MASTER=`git log -n 50 --pretty=format:\"%H\" origin/master-2 | grep $N4JS_COMMIT_ID_LOCAL || true`
 if [ "$HISTORY_OF_MASTER" == "" ]; then
-    # we are not on master (i.e. the HEAD commit N4JS_COMMIT_ID_LOCAL is not in the history of origin/master)
+    # we are not on master-2 (i.e. the HEAD commit N4JS_COMMIT_ID_LOCAL is not in the history of origin/master-2)
     if [ "$N4JS_LIBS_DIST_TAG" == "latest" ]; then
-        echo "ERROR: not allowed to publish with dist-tag 'latest' when not on master (i.e. when HEAD is not in the history of origin/master)"
+        echo "ERROR: not allowed to publish with dist-tag 'latest' when not on master-2 (i.e. when HEAD is not in the history of origin/master-2)"
         exit -1
     fi
 fi
