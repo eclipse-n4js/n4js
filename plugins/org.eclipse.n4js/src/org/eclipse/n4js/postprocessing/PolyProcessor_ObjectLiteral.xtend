@@ -27,7 +27,6 @@ import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.LiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.InferenceVariable
@@ -283,7 +282,12 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 					cache.storeType(currAss, TypeUtils.copy(currAss.definedMember.typeOfMember));
 				}
 			} else {
-				cache.storeType(currAss, TypeRefsFactory.eINSTANCE.createUnknownTypeRef);
+				if (currAss instanceof PropertyNameValuePair && (currAss as PropertyNameValuePair).expression !== null) {
+					val exprType = ts.type(G, (currAss as PropertyNameValuePair).expression);
+					cache.storeType(currAss, exprType);
+				} else {
+					cache.storeType(currAss, anyTypeRefDynamic(G));
+				}
 			}
 		}
 	}

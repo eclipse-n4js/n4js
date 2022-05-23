@@ -61,17 +61,16 @@ public final class ASTMetaInfoCache {
 	private final Map<Pair<EObject, EReference>, Set<String>> linkingIssueCodes = new HashMap<>();
 	private final ASTFlowInfo flowInfo;
 	private final Map<TypableElement, TypeRef> actualTypes = new HashMap<>();
+	private final List<TypableElement> astNodesOfUnknownTypes = new ArrayList<>();
 	private final Map<ParameterizedCallExpression, List<TypeRef>> inferredTypeArgs = new HashMap<>();
 	private final Map<Expression, CompileTimeValue> compileTimeValue = new HashMap<>();
 	private final Map<TVariable, List<EObject>> localVariableReferences = new HashMap<>();
-	private boolean hasUnknownTypeRef;
 
 	/* package */ ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST, ASTFlowInfo flowInfo) {
 		this.resource = resource;
 		this.projectID = resource.getModule().getProjectID();
 		this.hasBrokenAST = hasBrokenAST;
 		this.flowInfo = flowInfo;
-		this.hasUnknownTypeRef = false;
 	}
 
 	/** @return the {@link N4JSResource} the receiving cache belongs to. */
@@ -101,9 +100,14 @@ public final class ASTMetaInfoCache {
 				.add(issueCode);
 	}
 
-	/** @return if one of the actual type refs is a {@link UnknownTypeRef}. */
+	/** @return {@code true} if one of the actual type refs is a {@link UnknownTypeRef}. */
 	public boolean hasUnknownTypeRef() {
-		return hasUnknownTypeRef;
+		return !getAstNodesOfUnknownTypes().isEmpty();
+	}
+
+	/** @return all elements that are typed with {@link UnknownTypeRef} */
+	public List<TypableElement> getAstNodesOfUnknownTypes() {
+		return astNodesOfUnknownTypes;
 	}
 
 	/** @return the flow information for this resource */
@@ -155,7 +159,9 @@ public final class ASTMetaInfoCache {
 					"cache collision: multiple actual types put into cache for AST node: " + astNode +
 							" in resource: " + resource.getURI()));
 		}
-		hasUnknownTypeRef |= actualType.isUnknown();
+		if (actualType.isUnknown()) {
+			astNodesOfUnknownTypes.add(astNode);
+		}
 	}
 
 	/**

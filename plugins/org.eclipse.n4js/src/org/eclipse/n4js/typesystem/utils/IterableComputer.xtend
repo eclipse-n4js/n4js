@@ -82,6 +82,8 @@ class IterableComputer extends TypeSystemHelperStrategy {
 		} else if(declType===G.arrayType || (includeIterableN && G.isArrayN(declType))) {
 			// simple: typeRef directly points to Array<> or an ArrayN<>
 			result = typeRef.declaredTypeArgs.convertTypeArgsToRefs;
+		} else if(declType===G.anyType && typeRef.isDynamic) {
+			result = #[ G.anyTypeRefDynamic ];
 		} else if(declType instanceof PrimitiveType) {
 			// note: the 'elementType' property we read in the next line is also used with certain instances of TClass
 			// (e.g. upper-case 'String'), but we need not and should not handle those within this block, because those
