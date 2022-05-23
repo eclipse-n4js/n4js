@@ -6,6 +6,7 @@
 		"semver": "7.1.1"
 	},
 	"scripts": {
+		"bundle": "yarn workspace n4js-runtime bundle",
 		"test": "./npm-test.sh"
 	},
 	"workspaces": [

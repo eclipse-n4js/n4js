@@ -29,6 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.google.common.base.Joiner;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -65,20 +66,7 @@ public class N4jscSetVersionsTest extends AbstractCliCompileTest {
 		CliCompileResult cliResult = n4jsc(options, SUCCESS);
 		assertTrue(cliResult.getStdOut().contains(
 				"Modified version string of dependencies to:\n"
-						+ " - n4js-cli\n"
-						+ " - n4js-mangelhaft-cli\n"
-						+ " - n4js-runtime\n"
-						+ " - n4js-runtime-ecma402\n"
-						+ " - n4js-runtime-es2015\n"
-						+ " - n4js-runtime-esnext\n"
-						+ " - n4js-runtime-html5\n"
-						+ " - n4js-runtime-v8\n"
-						+ " - org.eclipse.n4js.mangelhaft\n"
-						+ " - org.eclipse.n4js.mangelhaft.assert\n"
-						+ " - org.eclipse.n4js.mangelhaft.assert.test\n"
-						+ " - org.eclipse.n4js.mangelhaft.reporter.console\n"
-						+ " - org.eclipse.n4js.mangelhaft.reporter.xunit\n"
-						+ " - org.eclipse.n4js.mangelhaft.test\n"
+						+ " - " + Joiner.on("\n - ").join(N4JSGlobals.ALL_N4JS_LIBS) + "\n"
 						+ "in the following files:\n"
 						+ " - .../P1/package.json\n"
 						+ " - .../P2/package.json\n"
