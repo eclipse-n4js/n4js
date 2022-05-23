@@ -13,20 +13,20 @@ import * as events from "events";
 import * as stream from "stream";
 
 export external public interface ~Stats {
-    dev: number;
-    ino: number;
-    mode: number;
-    nlink: number;
-    uid: number;
-    gid: number;
-    rdev: number;
-    size: number;
-    blksize: number;
-    blocks: number;
-    atime: Date;
-    mtime: Date;
-    ctime: Date;
-    birthtime: Date;
+    public dev: number;
+    public ino: number;
+    public mode: number;
+    public nlink: number;
+    public uid: number;
+    public gid: number;
+    public rdev: number;
+    public size: number;
+    public blksize: number;
+    public blocks: number;
+    public atime: Date;
+    public mtime: Date;
+    public ctime: Date;
+    public birthtime: Date;
 
     public isFile(): boolean;
     public isDirectory(): boolean;

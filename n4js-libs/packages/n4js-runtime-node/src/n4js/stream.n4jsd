@@ -12,7 +12,8 @@
 import {IEventEmitter, EventEmitter} from "events";
 
 export external public interface ~IReadableStream extends IEventEmitter {
-    readable: boolean;
+    public readable: boolean;
+
     public read(size: number=): union{string, Buffer};
     public setEncoding(encoding: string): void;
     public pause(): void;
@@ -24,7 +25,8 @@ export external public interface ~IReadableStream extends IEventEmitter {
 }
 
 export external public interface ~IWritableStream extends IEventEmitter {
-    writable: boolean;
+    public writable: boolean;
+
     public write(buffer: union{string, Buffer}, encoding: string=, cbOrFd: union{string, Function}=): boolean;
     public end(buffer: union{string, Buffer}, encoding: string=, cb: Function=): void;
 }

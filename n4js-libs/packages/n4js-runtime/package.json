@@ -12,7 +12,7 @@
   },
   "description": "N4JS runtime environment.",
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">=14"
   },
   "main": "./index-bundled.js",
   "types": "./n4jsglobals.d.ts",

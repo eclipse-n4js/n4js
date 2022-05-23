@@ -24,6 +24,16 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     public filter: string[];
 
     /**
+     * Sonar base dir.
+     */
+    public sonarTestExecutionReportBaseDir?: string;
+
+    /**
+     * Output sonarqube test execution report file.
+     */
+    public sonarTestExecutionReportFile?: string;
+
+    /**
      * Write istanbul test coverage into file.
      */
     public nycCoveragePath: string;
