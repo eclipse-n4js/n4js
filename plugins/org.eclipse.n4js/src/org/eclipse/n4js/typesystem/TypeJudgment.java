@@ -1174,7 +1174,7 @@ import com.google.inject.Inject;
 
 		@Override
 		public TypeRef caseNewExpression(NewExpression e) {
-			Newable newable = tsh.getConstructorOrConstructSignature(G, e, false);
+			Newable newable = tsh.getNewableTypeRef(G, e, false);
 			if (newable != null) {
 				TypeRef instanceTypeRef = newable.getInstanceTypeRef();
 				if (instanceTypeRef != null) {

@@ -31,10 +31,9 @@ import org.eclipse.n4js.ts.types.TNamespace;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.utils.DeclMergingHelper;
+import org.eclipse.n4js.utils.DeclMergingUtils;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.RecursionGuard;
-import org.eclipse.n4js.utils.ResourceType;
-import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -113,14 +112,11 @@ public class ExportedElementsCollector {
 		CollectionInfo info = new CollectionInfo(namespace, context, includeHollows, includeValueOnlyElements);
 		doCollectElements(namespace, info);
 
-		if (ResourceType.getResourceType(namespace) == ResourceType.DTS
-				&& URIUtils.isVirtualResourceURI(namespace.eResource().getURI())) {
-
+		if (DeclMergingUtils.mayBeMerged(namespace)) {
 			List<AbstractNamespace> mergedNamespaces = declMergingHelper.getMergedElements(info.context, namespace);
 			for (AbstractNamespace mergedNamespace : mergedNamespaces) {
 				doCollectElements(mergedNamespace, info);
 			}
-
 			return Iterables.concat(
 					declMergingHelper.chooseRepresentatives(info.visible),
 					declMergingHelper.chooseRepresentatives(info.invisible));

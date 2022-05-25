@@ -556,7 +556,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 					return;
 				}
 			}
-			val newables = tsh.getConstructorOrConstructSignatures(G, typeRef, newExpression, false);
+			val newables = tsh.getNewableTypeRefs(G, typeRef, newExpression, false);
 			if (newables.size > 1) {
 				val newableTypeRefsAsStr = newables.map[newableTypeRef.typeRefAsString].join(", ");
 				val message = IssueCodes.getMessageForEXP_NEW_CONFLICT_IN_INTERSECTION(newableTypeRefsAsStr);

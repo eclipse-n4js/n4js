@@ -188,7 +188,7 @@ import com.google.inject.Inject;
 					// expected type of argument
 
 					// obtain constructor or construct signature
-					final Newable newable = tsh.getConstructorOrConstructSignature(G, expr, false);
+					final Newable newable = tsh.getNewableTypeRef(G, expr, false);
 					if (newable == null) {
 						return unknown();
 					}

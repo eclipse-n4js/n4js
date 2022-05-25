@@ -356,6 +356,12 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return ts.substTypeVariables(localG, typeRef);
 	}
 
+	/**
+	 * Checks if a value of the given type is callable. If so, returns a {@link FunctionTypeExprOrRef}
+	 * representing the signature to be used for argument checking and type inference of the return value OR
+	 * a {@link ParameterizedTypeRef} with built-in type {@code Function} as declaredType (in case no signature
+	 * information is available); if not callable, returns <code>null</code>.
+	 */
 	def public TypeRef getCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
 		val result = getCallableTypeRefs(G, typeRef);
 		return if (result.size === 1) result.get(0);
@@ -430,17 +436,23 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		TypeRef instanceTypeRef;
 	}
 
-	def public Newable getConstructorOrConstructSignature(RuleEnvironment G, NewExpression newExpr, boolean ignoreConstructSignatures) {
+	def public Newable getNewableTypeRef(RuleEnvironment G, NewExpression newExpr, boolean ignoreConstructSignatures) {
 		val calleeTypeRef = ts.type(G, newExpr.callee);
-		return getConstructorOrConstructSignature(G, calleeTypeRef, newExpr, ignoreConstructSignatures);
+		return getNewableTypeRef(G, calleeTypeRef, newExpr, ignoreConstructSignatures);
 	}
 
-	def public Newable getConstructorOrConstructSignature(RuleEnvironment G, TypeRef typeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
-		val result = getConstructorOrConstructSignatures(G, typeRef, newExpr, ignoreConstructSignatures);
+	/**
+	 * Checks if a value of the given type is "newable" (i.e. can be instantiated with keyword "new").
+	 * If so, returns a type reference that either represents a class constructor or a value with a construct
+	 * signature, plus some additional information as provided by data class {@link Newable}; if not, returns
+	 * <code>null</code>.
+	 */
+	def public Newable getNewableTypeRef(RuleEnvironment G, TypeRef typeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
+		val result = getNewableTypeRefs(G, typeRef, newExpr, ignoreConstructSignatures);
 		return if (result.size === 1) result.get(0);
 	}
 
-	def public List<Newable> getConstructorOrConstructSignatures(RuleEnvironment G, TypeRef typeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
+	def public List<Newable> getNewableTypeRefs(RuleEnvironment G, TypeRef typeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
 		if (typeRef instanceof UnionTypeExpression) {
 			// TODO implement special handling for unions
 			return Collections.emptyList();
@@ -448,21 +460,21 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 			// TODO improve special handling for intersections
 			val result = <Newable>newArrayList;
 			for (currTypeRef : typeRef.typeRefs) {
-				val curr = internalGetConstructorOrConstructSignature(G, currTypeRef, newExpr, ignoreConstructSignatures);
+				val curr = internalGetNewableTypeRef(G, currTypeRef, newExpr, ignoreConstructSignatures);
 				if (curr !== null) {
 					result += curr;
 				}
 			}
 			return result;
 		}
-		val result = internalGetConstructorOrConstructSignature(G, typeRef, newExpr, ignoreConstructSignatures);
+		val result = internalGetNewableTypeRef(G, typeRef, newExpr, ignoreConstructSignatures);
 		if (result !== null) {
 			return Collections.singletonList(result);
 		}
 		return Collections.emptyList();
 	}
 
-	def private Newable internalGetConstructorOrConstructSignature(RuleEnvironment G, TypeRef calleeTypeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
+	def private Newable internalGetNewableTypeRef(RuleEnvironment G, TypeRef calleeTypeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
 		if (calleeTypeRef instanceof TypeTypeRef) {
 			var ctor = null as TMethod;
 			val staticType = getStaticType(G, calleeTypeRef, true);

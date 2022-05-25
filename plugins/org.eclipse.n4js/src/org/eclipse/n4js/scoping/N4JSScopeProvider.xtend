@@ -85,6 +85,7 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.DeclMergingHelper
@@ -621,22 +622,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val checkVisibility = true;
 		var result = memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode);
 
-		// functions and classes may be merged with namespaces
-		var Type mergeCandidate;
-		if (declaredType instanceof TFunction) {
-			mergeCandidate = declaredType;
-		} else if (staticAccess) {
-			val staticType = tsh.getStaticType(G, typeRef as TypeTypeRef, true);
-			if (staticType instanceof TClass) {
-				mergeCandidate = staticType;
-			}
-		}
-		if (mergeCandidate !== null) {
-			val scopeNamespace = createScopeForMergedNamespaces(propertyAccess, mergeCandidate);
-			if (scopeNamespace !== null) {
-				result = new MergedScope(scopeNamespace, result);
-			}
-		}
+		// functions and classes may have namespaces merged onto them
+		result = handleDeclMergingForPropertyAccess(G, propertyAccess, typeRef, staticAccess, result);
 
 		return result;
 	}
@@ -662,6 +649,32 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			return new DynamicPseudoScope(result);
 		}
 		return result;
+	}
+
+	private def IScope handleDeclMergingForPropertyAccess(RuleEnvironment G, ParameterizedPropertyAccessExpression propertyAccess,
+		TypeRef typeRef, boolean staticAccess, IScope parent) {
+
+		var Type mergeCandidate;
+		if (staticAccess) {
+			val staticType = tsh.getStaticType(G, typeRef as TypeTypeRef, true);
+			if (staticType instanceof TClass) {
+				mergeCandidate = staticType;
+			}
+		} else {
+			val declaredType = typeRef.declaredType;
+			if (declaredType instanceof TFunction) {
+				mergeCandidate = declaredType;
+			}
+		}
+
+		if (mergeCandidate !== null) {
+			val scopeNamespace = createScopeForMergedNamespaces(propertyAccess, mergeCandidate);
+			if (scopeNamespace !== null) {
+				return new MergedScope(scopeNamespace, parent);
+			}
+		}
+
+		return parent;
 	}
 
 	private def IScope createScopeForMergedNamespaces(EObject context, Type elem) {

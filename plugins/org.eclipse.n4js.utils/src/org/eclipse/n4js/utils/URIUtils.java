@@ -48,7 +48,6 @@ public class URIUtils {
 		public int compare(URI uri1, URI uri2) {
 			return URIUtils.compare(uri1, uri2);
 		}
-
 	}
 
 	/** Fix {@link URI#fileExtension()} w.r.t. unsupported d.ts file extension that includes dots */
