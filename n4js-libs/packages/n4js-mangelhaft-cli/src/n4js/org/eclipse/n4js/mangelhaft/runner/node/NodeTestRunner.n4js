@@ -112,6 +112,7 @@ class NodeTestRunner  {
         if (options.sonarTestExecutionReportFile) {
             this.sonarReporter.outputFile = options.sonarTestExecutionReportFile;
             this.sonarReporter.baseDir = options.sonarTestExecutionReportBaseDir;
+            this.sonarReporter.disableSourceMap = options.sonarDisableSourceMap;
             reporters.push(this.sonarReporter);
         }
 

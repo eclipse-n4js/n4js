@@ -34,6 +34,11 @@ export default public class ~NodeTestOptions extends XUnitReportSpec {
     public sonarTestExecutionReportFile?: string;
 
     /**
+     * Don't map to N4JS source file.
+     */
+    public sonarDisableSourceMap?: boolean;
+
+    /**
      * Write istanbul test coverage into file.
      */
     public nycCoveragePath: string;
