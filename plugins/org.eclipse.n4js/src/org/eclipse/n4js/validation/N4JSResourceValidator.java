@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.validation;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.packagejson.PackageJsonUtils;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
@@ -24,14 +26,19 @@ import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
+import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.utils.ResourceType;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.xtext.diagnostics.Severity;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IAcceptor;
+import org.eclipse.xtext.util.LineAndColumn;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.CheckType;
 import org.eclipse.xtext.validation.Issue;
@@ -60,7 +67,20 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	private List<Issue> doValidate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
 		try (Measurement m = N4JSDataCollectors.dcValidations.getMeasurement()) {
-			return doValidateWithMeasurement(resource, mode, cancelIndicator);
+			List<Issue> issues = doValidateWithMeasurement(resource, mode, cancelIndicator);
+
+			String fileExtension = URIUtils.fileExtension(resource.getURI());
+			switch (fileExtension) {
+			case N4JSGlobals.N4JS_FILE_EXTENSION:
+			case N4JSGlobals.N4JSX_FILE_EXTENSION:
+			case N4JSGlobals.N4JSD_FILE_EXTENSION:
+			case N4JSGlobals.DTS_FILE_EXTENSION:
+				issues = new ArrayList<>(issues);
+				// checkForUnknownTypeRefs(resource, issues);
+				break;
+			}
+
+			return issues;
 		}
 	}
 
@@ -119,8 +139,10 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 			}
 		}
 
-		List<Issue> issues = super.validate(resource, mode, cancelIndicator);
+		return super.validate(resource, mode, cancelIndicator);
+	}
 
+	private void checkForUnknownTypeRefs(Resource resource, List<Issue> issues) {
 		if (resource instanceof N4JSResource) {
 			final N4JSResource resourceCasted = (N4JSResource) resource;
 			ASTMetaInfoCache cache = resourceCasted.getASTMetaInfoCache();
@@ -128,11 +150,14 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 				boolean hasErrors = issues.stream().anyMatch(issue -> issue.getSeverity() == Severity.ERROR);
 				if (!hasErrors) {
 					final String msg = IssueCodes.getMessageForTYS_UNKNOWN_TYPE_REF();
-					createFileIssue(resource, msg, IssueCodes.TYS_UNKNOWN_TYPE_REF);
+					for (TypableElement elem : cache.getAstNodesOfUnknownTypes()) {
+						Issue issue = createFileIssue(resource, elem, msg, IssueCodes.TYS_UNKNOWN_TYPE_REF);
+
+						issues.add(issue);
+					}
 				}
 			}
 		}
-		return issues;
 	}
 
 	@Override
@@ -195,6 +220,10 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	}
 
 	private static Issue createFileIssue(Resource res, String message, String issueCode) {
+		return createFileIssue(res, null, message, issueCode);
+	}
+
+	private static Issue createFileIssue(Resource res, TypableElement elem, String message, String issueCode) {
 		final IssueImpl issue = new IssueImpl();
 		issue.setCode(issueCode);
 		issue.setSeverity(IssueCodes.getDefaultSeverity(issueCode));
@@ -202,10 +231,27 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		issue.setUriToProblem(res.getURI());
 		issue.setType(CheckType.FAST); // using CheckType.FAST is important to get proper marker update behavior in ...
 		// ... the editor between persisted and dirty states!
-		issue.setOffset(0);
-		issue.setLength(0);
-		issue.setLineNumber(0);
-		issue.setColumn(0);
+		issue.setOffset(1);
+		issue.setLength(1);
+		issue.setLineNumber(1);
+		issue.setLineNumberEnd(1);
+		issue.setColumn(1);
+		issue.setColumnEnd(1);
+
+		if (elem != null) {
+			ICompositeNode node = NodeModelUtils.findActualNodeFor(elem);
+			if (node != null) {
+				issue.setOffset(node.getOffset());
+				issue.setLength(node.getLength());
+				issue.setLineNumber(node.getStartLine());
+				issue.setLineNumberEnd(node.getEndLine());
+				LineAndColumn lineAndColumn = NodeModelUtils.getLineAndColumn(node, node.getOffset());
+				if (lineAndColumn != null) {
+					issue.setColumn(lineAndColumn.getColumn());
+					issue.setColumnEnd(lineAndColumn.getColumn() + 1);
+				}
+			}
+		}
 		return issue;
 	}
 }

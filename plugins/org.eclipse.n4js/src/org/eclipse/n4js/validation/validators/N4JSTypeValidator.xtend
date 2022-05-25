@@ -640,6 +640,7 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		if (TypeUtils.isUndefined(actualTypeRef) && !TypeUtils.isUndefined(expectedTypeRef)) {
 			val parent = expression.eContainer;
 			if (!(parent instanceof ExpressionStatement) &&
+				!(parent instanceof PropertyNameValuePair) &&
 				!(parent instanceof UnaryExpression && (parent as UnaryExpression).op === UnaryOperator.VOID) &&
 				!(expression instanceof UnaryExpression &&
 					(expression as UnaryExpression).op === UnaryOperator.VOID) &&

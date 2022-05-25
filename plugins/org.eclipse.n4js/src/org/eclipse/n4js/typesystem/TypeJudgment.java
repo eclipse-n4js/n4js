@@ -84,6 +84,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportCallExpression;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.JSXElementName;
 import org.eclipse.n4js.n4JS.JSXFragment;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -729,6 +730,13 @@ import com.google.inject.Inject;
 				}
 			}
 
+			if (T != null && T.isUnknown()) {
+				if (idref.eContainer() instanceof JSXElementName) {
+					// special case for <div> elements
+					T = stringTypeRef(G);
+				}
+			}
+
 			if (!N4JSASTUtils.isWriteAccess(idref)) {
 				T = ts.substTypeVariablesWithFullCapture(G, T);
 			} else {
@@ -955,6 +963,8 @@ import com.google.inject.Inject;
 					setThisBinding(G2, targetTypeRef);
 					T = ts.substTypeVariables(G2, memberTypeRef);
 				} else if (targetTypeRef.isDynamic()) {
+					T = anyTypeRefDynamic(G);
+				} else if (targetDeclType == objectType(G)) {
 					T = anyTypeRefDynamic(G);
 				} else {
 					T = unknown();

@@ -71,7 +71,7 @@ class AvoidFollowUpExceptionsInValidationTest extends AbstractN4JSTest {
 		assertTrue("incorrect beginning of issue string", issueStr.startsWith(
 			"ERROR:exception FailedPostProcessingException thrown during post-processing (please report this!): failure of post-processing as simulated by FailingN4JSPostProcessor\n"));
 		assertTrue("incorrect end of issue string", issueStr.endsWith(
-			" (__synthetic0.n4js line : 0 column : 0)"));
+			" (__synthetic0.n4js line : 1 column : 1)"));
 	}
 
 
