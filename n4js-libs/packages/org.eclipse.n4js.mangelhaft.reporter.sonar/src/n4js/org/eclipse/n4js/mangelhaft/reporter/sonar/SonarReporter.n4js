@@ -18,6 +18,7 @@ import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus";
 import * as xmlbuilder+ from "xmlbuilder2";
 import * as lib_path from "path";
 import {outputTextFile} from "org/eclipse/n4js/mangelhaft/util/fs";
+import {readJsonFile} from "org/eclipse/n4js/mangelhaft/util/fs";
 
 export public class SonarReporter implements ITestReporter {
     @Inject
@@ -25,6 +26,7 @@ export public class SonarReporter implements ITestReporter {
 
     public outputFile: string;
     public baseDir?: string;
+    public disableSourceMap?: boolean;
 
     private startTime: Date;
     private endTime: Date;
@@ -49,7 +51,18 @@ export public class SonarReporter implements ITestReporter {
                 trace
             } = result;
 
-            const filePath = this.fileMap.get(k);
+            let filePath = this.fileMap.get(k);
+            if (filePath && !this.disableSourceMap) {
+                try {
+                    const {dir, name} = lib_path.parse(filePath);
+                    const mapFile = readJsonFile(lib_path.join(dir, `${name}.map`));
+                    const [src] = mapFile.sources as string[] || [];
+                    if (src) {
+                        filePath = lib_path.resolve(dir, src);
+                    }
+                } catch (exc) {} // file not found etc.
+            }
+
             const path = filePath ? lib_path.relative(baseDir, filePath) : k /* better than nothing */;
             let fileElem = fileElems.get(path);
             if (!fileElem) {
