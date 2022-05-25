@@ -490,6 +490,12 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 
 				// standard case: read access
 				val result = ts.subtype(G, inferredType, expectedTypeRef)
+if (result.failure) {
+	if (expectedTypeRef.typeRefAsString == "Array<any>") {
+		return; // ignore
+	}
+}
+
 				// not working, as primitive types are not part of currently validated resource:
 				// errorGenerator.generateErrors(this, result, expression)
 				// so we create error here differently:
