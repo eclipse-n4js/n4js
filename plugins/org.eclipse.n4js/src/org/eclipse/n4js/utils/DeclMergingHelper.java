@@ -21,6 +21,7 @@ import java.util.Map.Entry;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
@@ -176,7 +177,23 @@ public class DeclMergingHelper {
 		return result;
 	}
 
-	private void cleanListOfMergedElements(EObject startElem, List<? extends EObject> mergedElems) {
-		mergedElems.removeIf(e -> e == startElem || !DeclMergingUtils.mayBeMerged(e));
+	/**
+	 * Since package names are not included in qualified names, equality of qualified names is not a sufficient
+	 * requirement for finding merged elements. Therefore, the list of elements we obtain from the scoping contains
+	 * false positives. This method will remove them.
+	 * <p>
+	 * In addition, this method removes the start element, because we do not want to include it in the result list.
+	 */
+	private void cleanListOfMergedElements(EObject targetElem, List<? extends EObject> mergedElemsFromScoping) {
+		if (DeclMergingUtils.isGlobal(targetElem) || DeclMergingUtils.isContainedInDeclaredModule(targetElem)) {
+			// for global elements and elements in declared modules, name equality is sufficient
+			mergedElemsFromScoping.removeIf(e -> e == targetElem || !DeclMergingUtils.mayBeMerged(e));
+		} else {
+			// in all other cases, we have to require both elements to be contained in the same package/project
+			// (we here actually require them to be contained in the same module, because checking this is simpler and
+			// faster and leads to equivalent results)
+			EObject tModule = EcoreUtil.getRootContainer(targetElem);
+			mergedElemsFromScoping.removeIf(e -> e == targetElem || EcoreUtil.getRootContainer(e) != tModule);
+		}
 	}
 }

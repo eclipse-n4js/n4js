@@ -46,40 +46,28 @@ public class DeclMergingUtils {
 	});
 
 	/**
-	 * Tells whether the given element <em>may potentially</em> be merged with other elements by way of declaration
-	 * merging. Does <b>not</b> tell whether the element is actually merged with other elements.
-	 */
-	public static boolean mayBeMerged(EObject elem) {
-		return ResourceType.getResourceType(elem) == ResourceType.DTS
-				&& (isGlobal(elem) || isContainedInDeclaredModule(elem));
-	}
-
-	/**
 	 * Tells whether the element represented by the given {@link IEObjectDescription} <em>may potentially</em> be merged
 	 * with other elements by way of declaration merging. Does <b>not</b> tell whether the element is actually merged
 	 * with other elements.
 	 */
 	public static boolean mayBeMerged(IEObjectDescription desc) {
-		return ResourceType.getResourceType(desc.getEObjectURI()) == ResourceType.DTS
-				&& (isGlobal(desc) || isContainedInDeclaredModule(desc));
+		if (TypesPackage.Literals.TMODULE.isSuperTypeOf(desc.getEClass())
+				&& !(isGlobal(desc) || isContainedInDeclaredModule(desc))) {
+			return false;
+		}
+		return ResourceType.getResourceType(desc.getEObjectURI()) == ResourceType.DTS;
 	}
 
-	private static boolean isGlobal(EObject elem) {
-		EObject root = EcoreUtil.getRootContainer(elem);
-		return root instanceof TModule && AnnotationDefinition.GLOBAL.hasAnnotation((TModule) root);
-	}
-
-	private static boolean isGlobal(IEObjectDescription desc) {
-		return QualifiedNameUtils.isGlobal(desc.getQualifiedName());
-	}
-
-	private static boolean isContainedInDeclaredModule(EObject elem) {
-		Resource resource = elem != null ? elem.eResource() : null;
-		return resource != null && URIUtils.isVirtualResourceURI(resource.getURI());
-	}
-
-	private static boolean isContainedInDeclaredModule(IEObjectDescription desc) {
-		return desc != null && URIUtils.isVirtualResourceURI(desc.getEObjectURI());
+	/**
+	 * Tells whether the given element <em>may potentially</em> be merged with other elements by way of declaration
+	 * merging. Does <b>not</b> tell whether the element is actually merged with other elements.
+	 */
+	public static boolean mayBeMerged(EObject elem) {
+		if (elem instanceof TModule
+				&& !(isGlobal(elem) || isContainedInDeclaredModule(elem))) {
+			return false;
+		}
+		return ResourceType.getResourceType(elem) == ResourceType.DTS;
 	}
 
 	/**
@@ -97,4 +85,25 @@ public class DeclMergingUtils {
 		return URIUtils.compare(d1.getEObjectURI(), d2.getEObjectURI());
 	}
 
+	/** Returns <code>true</code> iff the element represented by the given description is global. */
+	public static boolean isGlobal(IEObjectDescription desc) {
+		return QualifiedNameUtils.isGlobal(desc.getQualifiedName());
+	}
+
+	/** Returns <code>true</code> iff the given element is global. */
+	public static boolean isGlobal(EObject elem) {
+		EObject root = EcoreUtil.getRootContainer(elem);
+		return root instanceof TModule && AnnotationDefinition.GLOBAL.hasAnnotation((TModule) root);
+	}
+
+	/** Returns <code>true</code> iff the element represented by the given description is from a declared module. */
+	public static boolean isContainedInDeclaredModule(IEObjectDescription desc) {
+		return desc != null && URIUtils.isVirtualResourceURI(desc.getEObjectURI());
+	}
+
+	/** Returns <code>true</code> iff the given element is from a declared module. */
+	public static boolean isContainedInDeclaredModule(EObject elem) {
+		Resource resource = elem != null ? elem.eResource() : null;
+		return resource != null && URIUtils.isVirtualResourceURI(resource.getURI());
+	}
 }
