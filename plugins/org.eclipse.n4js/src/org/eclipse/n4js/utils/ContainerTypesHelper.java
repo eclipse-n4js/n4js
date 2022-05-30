@@ -34,13 +34,11 @@ import java.util.stream.Stream;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.members.TMemberEntry;
 import org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource;
 import org.eclipse.n4js.scoping.utils.PolyfillUtils;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.NameAndAccess;
@@ -61,8 +59,6 @@ import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
@@ -95,7 +91,7 @@ public class ContainerTypesHelper {
 	 * the N4JS language.
 	 */
 	@Inject
-	private ImportedNamesRecordingScopeAccess polyfillScopeAccess;
+	private ImportedNamesRecordingGlobalScopeAccess globalScopeAccess;
 
 	@Inject
 	private IResourceScopeCache cache;
@@ -459,29 +455,7 @@ public class ContainerTypesHelper {
 		}
 
 		private List<Type> getPolyfillTypesFromScope(QualifiedName fqn) {
-
-			IScope contextScope = polyfillScopeAccess.getRecordingPolyfillScope(contextResource,
-					TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
-			List<Type> types = new ArrayList<>();
-
-			// contextScope.getElements(fqn) returns all polyfills, since shadowing is handled differently
-			// for them!
-			for (IEObjectDescription descr : contextScope.getElements(fqn)) {
-				Type polyfillType = (Type) descr.getEObjectOrProxy();
-				if (polyfillType.eIsProxy()) {
-					// TODO review: this seems odd... is this a test setup problem (since we do not use the
-					// index
-					// there and load the resource separately)?
-					polyfillType = (Type) EcoreUtil.resolve(polyfillType, contextResource);
-					if (polyfillType.eIsProxy()) {
-						throw new IllegalStateException("unexpected proxy");
-					}
-				}
-				types.add(polyfillType);
-			}
-			// }
-
-			return types;
+			return globalScopeAccess.getTypesFromGlobalScope(contextResource, fqn);
 		}
 
 		/**

@@ -10,12 +10,14 @@
  */
 package org.eclipse.n4js.utils;
 
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.N4JSMetaModelUtils.N4JSMetaModelCache;
 import org.eclipse.n4js.scoping.utils.QualifiedNameUtils;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -25,11 +27,38 @@ import org.eclipse.xtext.resource.IEObjectDescription;
  */
 public class DeclMergingUtils {
 
+	private static final N4JSMetaModelCache<Integer> cachedKindIndices = new N4JSMetaModelCache<>(eClass -> {
+		if (TypesPackage.Literals.TCLASS.isSuperTypeOf(eClass)) {
+			return 1;
+		} else if (TypesPackage.Literals.TINTERFACE.isSuperTypeOf(eClass)) {
+			return 2;
+		} else if (TypesPackage.Literals.TENUM.isSuperTypeOf(eClass)) {
+			return 3;
+		} else if (TypesPackage.Literals.TYPE_ALIAS.isSuperTypeOf(eClass)) {
+			return 4;
+		} else if (TypesPackage.Literals.TFUNCTION.isSuperTypeOf(eClass)) {
+			return 5;
+		} else if (TypesPackage.Literals.TVARIABLE.isSuperTypeOf(eClass)) {
+			return 6;
+		} else {
+			return 7; // e.g. namespaces
+		}
+	});
+
+	/**
+	 * Tells whether the given element <em>may potentially</em> be merged with other elements by way of declaration
+	 * merging. Does <b>not</b> tell whether the element is actually merged with other elements.
+	 */
 	public static boolean mayBeMerged(EObject elem) {
 		return ResourceType.getResourceType(elem) == ResourceType.DTS
 				&& (isGlobal(elem) || isContainedInDeclaredModule(elem));
 	}
 
+	/**
+	 * Tells whether the element represented by the given {@link IEObjectDescription} <em>may potentially</em> be merged
+	 * with other elements by way of declaration merging. Does <b>not</b> tell whether the element is actually merged
+	 * with other elements.
+	 */
 	public static boolean mayBeMerged(IEObjectDescription desc) {
 		return ResourceType.getResourceType(desc.getEObjectURI()) == ResourceType.DTS
 				&& (isGlobal(desc) || isContainedInDeclaredModule(desc));
@@ -53,30 +82,18 @@ public class DeclMergingUtils {
 		return desc != null && URIUtils.isVirtualResourceURI(desc.getEObjectURI());
 	}
 
+	/**
+	 * Compares the elements represented by the two given {@link IEObjectDescription}s (see
+	 * {@link Comparable#compareTo(Object)}) such that the first element in a collection of merged elements sorted
+	 * according to this comparison will be the <em>representative</em> of these merged elements, i.e. the element that
+	 * should be used whenever a single element is required (e.g. the target element of an {@link IdentifierRef}, the
+	 * declared type of a {@link ParameterizedTypeRef}).
+	 */
 	public static int compareForMerging(IEObjectDescription d1, IEObjectDescription d2) {
-		int cmp = Integer.compare(getKindIndex(d1.getEClass()), getKindIndex(d2.getEClass()));
+		int cmp = Integer.compare(cachedKindIndices.get(d1.getEClass()), cachedKindIndices.get(d2.getEClass()));
 		if (cmp != 0) {
 			return cmp;
 		}
 		return URIUtils.compare(d1.getEObjectURI(), d2.getEObjectURI());
-	}
-
-	private static int getKindIndex(EClass kind) {
-		// FIXME improve performance
-		if (TypesPackage.Literals.TCLASS.isSuperTypeOf(kind)) {
-			return 1;
-		} else if (TypesPackage.Literals.TINTERFACE.isSuperTypeOf(kind)) {
-			return 2;
-		} else if (TypesPackage.Literals.TENUM.isSuperTypeOf(kind)) {
-			return 3;
-		} else if (TypesPackage.Literals.TYPE_ALIAS.isSuperTypeOf(kind)) {
-			return 4;
-		} else if (TypesPackage.Literals.TFUNCTION.isSuperTypeOf(kind)) {
-			return 5;
-		} else if (TypesPackage.Literals.TVARIABLE.isSuperTypeOf(kind)) {
-			return 6;
-		} else {
-			return 7; // e.g. namespaces
-		}
 	}
 }

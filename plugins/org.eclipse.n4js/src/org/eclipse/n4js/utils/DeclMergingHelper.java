@@ -19,24 +19,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.types.AbstractNamespace;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.Iterables;
@@ -53,11 +49,27 @@ public class DeclMergingHelper {
 	private IQualifiedNameProvider qualifiedNameProvider;
 
 	@Inject
-	private ImportedNamesRecordingScopeAccess globalScopeAccess;
+	private ImportedNamesRecordingGlobalScopeAccess globalScopeAccess;
 
 	@Inject
 	private TypeSystemHelper tsh;
 
+	/**
+	 * For each set of merged elements in the given list, this method will retain the
+	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative} of these
+	 * merged elements and remove the others. The given list may contain more than one such set of merged elements.
+	 * Elements without merged elements will be retained. Order will be preserved, except that representatives are moved
+	 * to the position of the first of their merged elements.
+	 * <p>
+	 * ASSUMPTIONS:
+	 * <ul>
+	 * <li>for each set S of elements that are merged into each other, the given list is expected to contain
+	 * <em>all</em> elements in S if it contains one of them. The index is not queried for additional merged elements.
+	 * <li>the {@link IEObjectDescription}s in the given list are expected to return a global, fully qualified name
+	 * (such as the ones provided by {@link N4JSQualifiedNameProvider}) from method
+	 * {@link IEObjectDescription#getQualifiedName() #getQualifiedName()}, not some temporary, local name.
+	 * </ul>
+	 */
 	@SuppressWarnings("null")
 	public List<IEObjectDescription> chooseRepresentatives(List<IEObjectDescription> descs) {
 		int len = descs.size();
@@ -77,7 +89,8 @@ public class DeclMergingHelper {
 					mergedElements = MultimapBuilder.linkedHashKeys().arrayListValues().build();
 					firstIndex = new HashMap<>();
 				}
-				QualifiedName qn = curr.getQualifiedName(); // FIXME maybe need to ask global scope provider here!
+				// do not use #getName() in next line! (see AliasedEObjectDescription for the difference)
+				QualifiedName qn = curr.getQualifiedName();
 				if (!mergedElements.containsKey(qn)) {
 					firstIndex.put(qn, idx);
 					idx++;
@@ -136,48 +149,29 @@ public class DeclMergingHelper {
 		return typeRef;
 	}
 
+	/**
+	 * Returns those elements merged with the given namespace that are also {@link AbstractNamespace}s.
+	 * <p>
+	 * The given namespace does not have to be the
+	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 */
 	public List<AbstractNamespace> getMergedElements(Resource context, AbstractNamespace namespace) {
-		List<EObject> result = getMergedElements(context, TypesPackage.Literals.ABSTRACT_NAMESPACE, namespace);
-		return (List<AbstractNamespace>) ((List<?>) result);
+		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(namespace);
+		List<AbstractNamespace> result = globalScopeAccess.getNamespacesFromGlobalScope(context, qn);
+		result.removeIf(ns -> ns == namespace);
+		return result;
 	}
 
+	/**
+	 * Returns those elements merged with the given type that are also {@link Type}s.
+	 * <p>
+	 * The given type does not have to be the
+	 * {@link DeclMergingUtils#compareForMerging(IEObjectDescription, IEObjectDescription) representative}.
+	 */
 	public List<Type> getMergedElements(Resource context, Type type) {
-		List<EObject> result = getMergedElements(context, TypesPackage.Literals.TYPE, type);
-		return (List<Type>) ((List<?>) result);
-	}
-
-	private List<EObject> getMergedElements(Resource context, EClass elementType, EObject elem) {
-		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(elem);
-		List<EObject> mergedElems = getMergedElementsFromScope(context, elementType, qn);
-		mergedElems.removeIf(t -> t == elem);
-		return mergedElems;
-	}
-
-	// taken from ContainerTypesHelper.MemberCollector
-	private List<EObject> getMergedElementsFromScope(Resource context, EClass elementType, QualifiedName fqn) {
-
-		IScope contextScope = globalScopeAccess.getRecordingPolyfillScope(context, elementType);
-		List<EObject> types = new ArrayList<>();
-
-		// contextScope.getElements(fqn) returns all polyfills, since shadowing is handled differently
-		// for them!
-		for (IEObjectDescription descr : contextScope.getElements(fqn)) {
-			EObject polyfillType = descr.getEObjectOrProxy();
-			if (polyfillType.eIsProxy()) {
-				// TODO review: this seems odd... is this a test setup problem (since we do not use the
-				// index
-				// there and load the resource separately)?
-				polyfillType = EcoreUtil.resolve(polyfillType, context);
-				if (polyfillType.eIsProxy()) {
-					throw new IllegalStateException("unexpected proxy");
-				}
-			}
-			if (DeclMergingUtils.mayBeMerged(polyfillType)) {
-				types.add(polyfillType);
-			}
-		}
-		// }
-
-		return types;
+		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(type);
+		List<Type> result = globalScopeAccess.getTypesFromGlobalScope(context, qn);
+		result.removeIf(t -> t == type);
+		return result;
 	}
 }
