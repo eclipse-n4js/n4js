@@ -151,7 +151,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 				List<ParameterizedTypeRef> polyfills = getPolyfills(object);
 				try {
 					registerSuppressedTraversal(polyfills);
-					if (doSwitchTypeRefs(getPolyfills(object))) {
+					if (doSwitchTypeRefs(polyfills)) {
 						return Boolean.TRUE;
 					}
 				} finally {
