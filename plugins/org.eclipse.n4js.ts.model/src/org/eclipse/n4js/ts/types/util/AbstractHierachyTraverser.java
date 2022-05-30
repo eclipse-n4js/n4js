@@ -148,7 +148,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	@Override
 	public Boolean caseTClass(TClass object) {
 		if (guard.tryNext(object)) {
-			if (!suppressTraversal) {
+			if (!suppressTraversal && !object.isPolyfill()) {
 				List<ParameterizedTypeRef> polyfills = getPolyfills(object);
 				try {
 					suppressTraversal = true;
@@ -162,7 +162,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 			if (process(object)) {
 				return Boolean.TRUE;
 			}
-			if (!suppressTraversal) {
+			if (!suppressTraversal && !object.isPolyfill()) {
 				if (doSwitchSuperTypes(object)) {
 					return Boolean.TRUE;
 				}
@@ -191,7 +191,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	@Override
 	public Boolean caseTInterface(TInterface object) {
 		if (guard.tryNext(object)) {
-			if (!suppressTraversal) {
+			if (!suppressTraversal && !object.isPolyfill()) {
 				List<ParameterizedTypeRef> polyfills = getPolyfills(object);
 				try {
 					suppressTraversal = true;
@@ -205,7 +205,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 			if (process(object)) {
 				return Boolean.TRUE;
 			}
-			if (!suppressTraversal) {
+			if (!suppressTraversal && !object.isPolyfill()) {
 				if (doSwitchSuperInterfaces(object)) {
 					return Boolean.TRUE;
 				}
