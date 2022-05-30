@@ -20,7 +20,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayT
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.booleanType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.booleanTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.containsNumericOperand;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getDeclaredOrImplicitSuperType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.getPredefinedTypes;
@@ -169,6 +168,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
 import org.eclipse.n4js.ts.types.util.TypesSwitch;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Callable;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Newable;
 import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.DestructureHelper;
@@ -1094,9 +1094,9 @@ import com.google.inject.Inject;
 		@Override
 		public TypeRef caseParameterizedCallExpression(ParameterizedCallExpression expr) {
 			final TypeRef targetTypeRef = ts.type(G, expr.getTarget());
-			final TypeRef callableTypeRef = tsh.getCallableTypeRef(G, targetTypeRef);
-			if (callableTypeRef instanceof FunctionTypeExprOrRef) {
-				final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) callableTypeRef;
+			final Callable callable = tsh.getCallableTypeRef(G, targetTypeRef);
+			if (callable != null && callable.getSignatureTypeRef().isPresent()) {
+				final FunctionTypeExprOrRef F = callable.getSignatureTypeRef().get();
 				final TFunction tFunction = F.getFunctionType();
 
 				TypeRef T;
@@ -1153,8 +1153,9 @@ import com.google.inject.Inject;
 					}
 				}
 				return T;
-			} else if (callableTypeRef != null && callableTypeRef.getDeclaredType() == functionType(G)) {
-				return anyTypeRef(G, callableTypeRef.isDynamic());
+			} else if (callable != null) {
+				// targetTypeRef is callable, but no signature information available
+				return anyTypeRef(G, callable.isDynamic());
 			} else if (targetTypeRef.isDynamic()) {
 				return anyTypeRefDynamic(G);
 			} else {

@@ -385,12 +385,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 
 		// make sure target can be invoked
 		val G = callExpression.newRuleEnvironment;
-		val callableTypeRefs = tsh.getCallableTypeRefs(G, typeRef);
-		val callableTypeRefsCount = callableTypeRefs.size;
-		val isCallable = callableTypeRefsCount === 1;
+		val callables = tsh.getCallableTypeRefs(G, typeRef);
+		val callablesCount = callables.size;
+		val isCallable = callablesCount === 1;
 		if (!isCallable && !(callExpression.target instanceof SuperLiteral)) {
-			if (callableTypeRefsCount > 1) {
-				val callableTypeRefsAsStr = callableTypeRefs.map[typeRefAsString].join(", ");
+			if (callablesCount > 1) {
+				val callableTypeRefsAsStr = callables.map[callableTypeRef.typeRefAsString].join(", ");
 				val message = IssueCodes.getMessageForEXP_CALL_CONFLICT_IN_INTERSECTION(callableTypeRefsAsStr);
 				addIssue(message, callExpression.target, null, IssueCodes.EXP_CALL_CONFLICT_IN_INTERSECTION);
 			} else if (tsh.isClassConstructorFunction(G, typeRef) || isClassifierTypeRefToAbstractClass(G, typeRef)) {
@@ -409,14 +409,16 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			return;
 		}
 
-		val callableTypeRef = if (callableTypeRefsCount === 1) callableTypeRefs.get(0);
-		if (callableTypeRef instanceof FunctionTypeExprOrRef) {
+		val callable = if (callablesCount === 1) callables.get(0);
+		if (callable !== null && callable.signatureTypeRef.present) {
+			val sigTypeRef = callable.signatureTypeRef.get();
+
 			// check type arguments
-			internalCheckTypeArgumentsNodes(callableTypeRef.typeVars, callExpression.typeArgs, true, callableTypeRef.declaredType,
+			internalCheckTypeArgumentsNodes(sigTypeRef.typeVars, callExpression.typeArgs, true, sigTypeRef.declaredType,
 				callExpression, N4JSPackage.Literals.EXPRESSION_WITH_TARGET__TARGET);
 
 			// check Calling async functions with missing await
-			internalCheckCallingAsyncFunWithoutAwaitingForIt(callableTypeRef, callExpression)
+			internalCheckCallingAsyncFunWithoutAwaitingForIt(sigTypeRef, callExpression)
 		}
 	}
 
@@ -850,11 +852,12 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (target !== null) {
 			val targetTypeRef = ts.tau(target); // no context, we only need the number of fpars
 			val G = callExpression.newRuleEnvironment;
-			val callableTypeRef = tsh.getCallableTypeRef(G, targetTypeRef);
-			if (callableTypeRef instanceof FunctionTypeExprOrRef) {
+			val callable = tsh.getCallableTypeRef(G, targetTypeRef);
+			if (callable !== null && callable.signatureTypeRef.present) {
+				val signatureTypeRef = callable.signatureTypeRef.get();
 
 				// obtain fpars from invoked function/method
-				var fpars = new ArrayList(callableTypeRef.fpars);
+				var fpars = new ArrayList(signatureTypeRef.fpars);
 
 				// special case: invoking a promisified function
 				// note: being very liberal in next lines to avoid duplicate error messages

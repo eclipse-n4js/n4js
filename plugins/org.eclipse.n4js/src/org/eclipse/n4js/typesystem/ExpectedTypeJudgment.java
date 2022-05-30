@@ -18,7 +18,6 @@ import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.arrayT
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.asyncIterableTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.booleanTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.bottomTypeRef;
-import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionType;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.functionTypeRef;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.isNumeric;
 import static org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions.iterableTypeRef;
@@ -95,6 +94,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Callable;
 import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Newable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
@@ -247,9 +247,9 @@ import com.google.inject.Inject;
 				}
 
 				final TypeRef targetTypeRef = ts.type(G, expr.getTarget());
-				final TypeRef callableTypeRef = tsh.getCallableTypeRef(G, targetTypeRef);
-				if (callableTypeRef instanceof FunctionTypeExprOrRef) {
-					final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) callableTypeRef;
+				final Callable callable = tsh.getCallableTypeRef(G, targetTypeRef);
+				if (callable != null && callable.getSignatureTypeRef().isPresent()) {
+					final FunctionTypeExprOrRef F = callable.getSignatureTypeRef().get();
 					final int argIndex = ECollections.indexOf(expr.getArguments(), argument, 0);
 					final TFormalParameter fpar = F.getFparForArgIdx(argIndex);
 					if (fpar == null) {
@@ -294,8 +294,9 @@ import com.google.inject.Inject;
 							return paramTypeRefSubst;
 						}
 					}
-				} else if (callableTypeRef != null && callableTypeRef.getDeclaredType() == functionType(G)) {
-					return anyTypeRef(G, callableTypeRef.isDynamic());
+				} else if (callable != null) {
+					// targetTypeRef is callable, but no signature information available
+					return anyTypeRef(G, callable.isDynamic());
 				} else if (targetTypeRef.isDynamic()) {
 					return anyTypeRefDynamic(G);
 				} else {

@@ -29,7 +29,6 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.n4JS.PropertySpread
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.InferenceVariable
 import org.eclipse.n4js.ts.types.TField
@@ -79,9 +78,10 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				// sure that no significant processing will be triggered by the type judgment invocation below
 				val G = obj.newRuleEnvironment;
 				val TypeRef targetTypeRef = ts.type(G, obj.target); // this is a backward reference (because we type obj's child)
-				val callableTypeRef = tsh.getCallableTypeRef(G, targetTypeRef);
-				if (callableTypeRef instanceof FunctionTypeExprOrRef) {
-					callableTypeRef.generic && obj.typeArgs.size < callableTypeRef.typeVars.size
+				val callable = tsh.getCallableTypeRef(G, targetTypeRef);
+				if (callable !== null && callable.signatureTypeRef.present) {
+					val signatureTypeRef = callable.signatureTypeRef.get();
+					signatureTypeRef.generic && obj.typeArgs.size < signatureTypeRef.typeVars.size
 				} else {
 					false
 				}

@@ -356,43 +356,56 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return ts.substTypeVariables(localG, typeRef);
 	}
 
+	@Data
+	public static class Callable {
+		/** The actual type reference that contributed function/method. Used for error reporting. */
+		TypeRef callableTypeRef
+		/**
+		 * The signature of the function/method being invoked. Used for argument checking and to obtain
+		 * the type of the return value. If absent, the invocation is possible, but no information about
+		 * the parameters or the return value is available (e.g. when invoking values of built-in type
+		 * {@code Function}).
+		 */
+		Optional<? extends FunctionTypeExprOrRef> signatureTypeRef
+		/**
+		 * Tells whether the function/method being invoked is {@link TypeRef#isDynamic() dynamic}.
+		 */
+		boolean dynamic
+	}
+
 	/**
-	 * Checks if a value of the given type is callable. If so, returns a {@link FunctionTypeExprOrRef}
-	 * representing the signature to be used for argument checking and type inference of the return value OR
-	 * a {@link ParameterizedTypeRef} with built-in type {@code Function} as declaredType (in case no signature
-	 * information is available); if not callable, returns <code>null</code>.
+	 * Checks if a value of the given type is "callable" (i.e. can be invoked with a call expression).
+	 * If so, returns an instance of class {@link Callable) with further information; if not, returns
+	 * <code>null</code>.
 	 */
-	def public TypeRef getCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
+	def public Callable getCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
 		val result = getCallableTypeRefs(G, typeRef);
 		return if (result.size === 1) result.get(0);
 	}
 
-	def public List<TypeRef> getCallableTypeRefs(RuleEnvironment G, TypeRef typeRef) {
+	def public List<Callable> getCallableTypeRefs(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef instanceof UnionTypeExpression) {
 			// TODO implement special handling for unions
 		} else if (typeRef instanceof IntersectionTypeExpression) {
 			// TODO improve special handling for intersections
-			val functionType = G.functionType;
-			val callableTypeRefs = <TypeRef>newArrayList;
-			var foundFunctionType = false;
-			var foundFunctionTypeDynamic = false;
+			val result = <Callable>newArrayList;
+			var foundWithoutSignature = false;
+			var foundWithoutSignatureDynamic = false;
 			for (currTypeRef : typeRef.typeRefs) {
-				val currCallableTypeRef = internalGetCallableTypeRef(G, currTypeRef);
-				if (currCallableTypeRef !== null) {
-					if (currCallableTypeRef.declaredType === functionType) {
-						foundFunctionType = true;
-						foundFunctionTypeDynamic = foundFunctionTypeDynamic || currCallableTypeRef.dynamic;
+				val currCallable = internalGetCallableTypeRef(G, currTypeRef);
+				if (currCallable !== null) {
+					if (!currCallable.signatureTypeRef.isPresent()) {
+						foundWithoutSignature = true;
+						foundWithoutSignatureDynamic = foundWithoutSignatureDynamic || currCallable.dynamic;
 					} else {
-						callableTypeRefs += currCallableTypeRef;
+						result += currCallable;
 					}
 				}
 			}
-			if (callableTypeRefs.empty && foundFunctionType) {
-				val ftr = G.functionTypeRef;
-				ftr.dynamic = foundFunctionTypeDynamic;
-				return Collections.singletonList(ftr);
+			if (result.empty && foundWithoutSignature) {
+				return Collections.singletonList(new Callable(typeRef, Optional.absent(), foundWithoutSignatureDynamic));
 			}
-			return callableTypeRefs;
+			return result;
 		}
 		val result = internalGetCallableTypeRef(G, typeRef);
 		if (result !== null) {
@@ -401,38 +414,41 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 		return Collections.emptyList();
 	}
 
-	def private TypeRef internalGetCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
+	def private Callable internalGetCallableTypeRef(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef instanceof UnknownTypeRef) {
 			return null;
 		}
 		if (typeRef instanceof FunctionTypeExprOrRef) {
-			return typeRef;
+			return new Callable(typeRef, Optional.of(typeRef), typeRef.dynamic);
 		}
 		if (isClassConstructorFunction(G, typeRef)) {
 			// don't allow direct invocation of class constructors
 			val callableCtor = getCallableClassConstructorFunction(G, typeRef);
 			if (callableCtor !== null) {
 				// exception: this is a class that provides a call signature
-				return TypeUtils.createTypeRef(callableCtor) as FunctionTypeRef;
+				return new Callable(typeRef, Optional.of(TypeUtils.createTypeRef(callableCtor) as FunctionTypeRef), typeRef.dynamic);
 			}
 			return null;
 		}
 		val callSig = getCallSignature(G, typeRef);
 		if (callSig !== null) {
-			return TypeUtils.createTypeRef(callSig) as FunctionTypeRef;
+			return new Callable(typeRef, Optional.of(TypeUtils.createTypeRef(callSig) as FunctionTypeRef), typeRef.dynamic);
 		}
 		if (ts.subtypeSucceeded(G, typeRef, G.functionTypeRef)
 			|| ts.subtypeSucceeded(G, typeRef, G.structuralFunctionTypeRef)
 			|| (typeRef.dynamic && ts.subtypeSucceeded(G, G.functionTypeRef, typeRef))) {
-			return G.functionTypeRef => [dynamic = typeRef.dynamic];
+			return new Callable(typeRef, Optional.absent(), typeRef.dynamic);
 		}
 		return null;
 	}
 
 	@Data
 	public static class Newable {
+		/** The actual type reference that contributed constructor or construct signature. Used for error reporting. */
 		TypeRef newableTypeRef;
+		/** The constructor or construct signature. Used for argument checking. */
 		TMethod ctorOrConstructSig;
+		/** The type of the newly created instance. */
 		TypeRef instanceTypeRef;
 	}
 
@@ -443,8 +459,7 @@ def StructuralTypesHelper getStructuralTypesHelper() {
 
 	/**
 	 * Checks if a value of the given type is "newable" (i.e. can be instantiated with keyword "new").
-	 * If so, returns a type reference that either represents a class constructor or a value with a construct
-	 * signature, plus some additional information as provided by data class {@link Newable}; if not, returns
+	 * If so, returns an instance of class {@link Newable) with further information; if not, returns
 	 * <code>null</code>.
 	 */
 	def public Newable getNewableTypeRef(RuleEnvironment G, TypeRef typeRef, NewExpression newExpr, boolean ignoreConstructSignatures) {
