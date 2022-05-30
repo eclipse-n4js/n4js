@@ -36,7 +36,7 @@ v01("hello");
 
 
 let v02: IfcWithCallSig & (p: string)=>number;
-// XPECT errors --> "More than one callable type in intersection: {function(Ifc):number}, {function(string):number}." at "v02"
+// XPECT errors --> "More than one callable type in intersection: IfcWithCallSig, {function(string):number}." at "v02"
 v02();
 
 
@@ -56,7 +56,7 @@ let v13: Cls & (p: string)=>number;
 v13("hello");
 
 let v14: constructor{ClsWithCallableCtor} & (p: string)=>number; // the ctor of ClsWithCallableCtor is callable; thus we have a conflict here!
-// XPECT errors --> "More than one callable type in intersection: {function(Cls):number}, {function(string):number}." at "v14"
+// XPECT errors --> "More than one callable type in intersection: constructor{ClsWithCallableCtor}, {function(string):number}." at "v14"
 v14();
 
 
