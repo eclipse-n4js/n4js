@@ -96,4 +96,5 @@ public class DeclMergingUtils {
 		}
 		return URIUtils.compare(d1.getEObjectURI(), d2.getEObjectURI());
 	}
+
 }

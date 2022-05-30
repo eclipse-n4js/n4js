@@ -13,11 +13,14 @@ package org.eclipse.n4js.scoping
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.name.Named
+import java.util.Collections
+import java.util.Comparator
 import java.util.Iterator
 import java.util.List
 import java.util.concurrent.atomic.AtomicBoolean
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
+import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -94,6 +97,7 @@ import org.eclipse.n4js.utils.EObjectDescriptionHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.utils.TameAutoClosable
+import org.eclipse.n4js.utils.URIUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.workspace.WorkspaceAccess
 import org.eclipse.n4js.xtext.scoping.FilteringScope
@@ -573,10 +577,16 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * @param contextResource Receiver context {@link EObject} which is importing elements
 	 */
 	private def IScope scope_AllTopLevelElementsFromAbstractNamespace(AbstractNamespace ns, EObject context,
-		boolean includeHollows, boolean includeValueOnlyElements
-	) {
+		boolean includeHollows, boolean includeValueOnlyElements) {
+
+		return scope_AllTopLevelElementsFromAbstractNamespace(ns, context, IScope.NULLSCOPE, includeHollows, includeValueOnlyElements);
+	}
+
+	private def IScope scope_AllTopLevelElementsFromAbstractNamespace(AbstractNamespace ns, EObject context, IScope parent,
+		boolean includeHollows, boolean includeValueOnlyElements) {
+
 		if (ns === null) {
-			return IScope.NULLSCOPE;
+			return parent;
 		}
 
 		val resource = context.eResource;
@@ -585,12 +595,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val guard = cache.get("scope_AllTopLevelElementsFromAbstractNamespace__exportedElementsComputationGuard" -> context, resource, [new AtomicBoolean(false)]);
 		val alreadyInProgress = guard.getAndSet(true);
 		if (alreadyInProgress) {
-			return IScope.NULLSCOPE;
+			return parent;
 		}
 		try {
 			// get regular top-level elements scope
 			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, includeHollows, includeValueOnlyElements);
-			val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromAbstractNamespace", ns, IScope.NULLSCOPE, false, tlElems);
+			val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromAbstractNamespace", ns, parent, false, tlElems);
 			return topLevelElementsScope;
 		} finally {
 			guard.set(false);
@@ -677,17 +687,22 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return parent;
 	}
 
+	/** Returns <code>null</code> if no namespaces are merged onto 'elem'. */
 	private def IScope createScopeForMergedNamespaces(EObject context, Type elem) {
+		var result = null as IScope;
 		if (DeclMergingUtils.mayBeMerged(elem)) {
 			val mergedElems = declMergingHelper.getMergedElements(context.eResource, elem);
-			// FIXME here assuming 'mergedElems' to be sorted!!!
-			val firstNamespace = mergedElems.filter(TNamespace).head;
-			if (firstNamespace !== null) {
-				val scopeNamespace = scope_AllTopLevelElementsFromAbstractNamespace(firstNamespace, context, false, true);
-				return scopeNamespace;
+			val mergedNamespaces = mergedElems.filter(TNamespace).toList;
+			if (mergedNamespaces.size > 1) {
+				Collections.sort(mergedNamespaces, Comparator.comparing([(it as InternalEObject).eProxyURI], new URIUtils.URIComparator()));
+			}
+			for (mergedNS : mergedNamespaces.reverseView) {
+				if (mergedNS !== null) {
+					result = scope_AllTopLevelElementsFromAbstractNamespace(mergedNS, context, result ?: IScope.NULLSCOPE, false, true);
+				}
 			}
 		}
-		return null;
+		return result;
 	}
 
 	/**
