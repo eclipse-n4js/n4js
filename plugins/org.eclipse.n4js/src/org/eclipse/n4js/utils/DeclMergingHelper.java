@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -158,7 +159,7 @@ public class DeclMergingHelper {
 	public List<AbstractNamespace> getMergedElements(Resource context, AbstractNamespace namespace) {
 		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(namespace);
 		List<AbstractNamespace> result = globalScopeAccess.getNamespacesFromGlobalScope(context, qn);
-		result.removeIf(ns -> ns == namespace);
+		cleanListOfMergedElements(namespace, result);
 		return result;
 	}
 
@@ -171,7 +172,11 @@ public class DeclMergingHelper {
 	public List<Type> getMergedElements(Resource context, Type type) {
 		QualifiedName qn = qualifiedNameProvider.getFullyQualifiedName(type);
 		List<Type> result = globalScopeAccess.getTypesFromGlobalScope(context, qn);
-		result.removeIf(t -> t == type);
+		cleanListOfMergedElements(type, result);
 		return result;
+	}
+
+	private void cleanListOfMergedElements(EObject startElem, List<? extends EObject> mergedElems) {
+		mergedElems.removeIf(e -> e == startElem || !DeclMergingUtils.mayBeMerged(e));
 	}
 }
