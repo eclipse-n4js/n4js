@@ -582,11 +582,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return scope_AllTopLevelElementsFromAbstractNamespace(ns, context, IScope.NULLSCOPE, includeHollows, includeValueOnlyElements);
 	}
 
-	private def IScope scope_AllTopLevelElementsFromAbstractNamespace(AbstractNamespace ns, EObject context, IScope parent,
+	private def IScope scope_AllTopLevelElementsFromAbstractNamespace(AbstractNamespace ns, EObject context, IScope parentOrNull,
 		boolean includeHollows, boolean includeValueOnlyElements) {
 
 		if (ns === null) {
-			return parent;
+			return parentOrNull;
 		}
 
 		val resource = context.eResource;
@@ -595,12 +595,12 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val guard = cache.get("scope_AllTopLevelElementsFromAbstractNamespace__exportedElementsComputationGuard" -> context, resource, [new AtomicBoolean(false)]);
 		val alreadyInProgress = guard.getAndSet(true);
 		if (alreadyInProgress) {
-			return parent;
+			return parentOrNull;
 		}
 		try {
 			// get regular top-level elements scope
 			val tlElems = exportedElementCollector.getExportedElements(ns, context.eResource, includeHollows, includeValueOnlyElements);
-			val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromAbstractNamespace", ns, parent, false, tlElems);
+			val topLevelElementsScope = scopeSnapshotHelper.scopeFor("scope_AllTopLevelElementsFromAbstractNamespace", ns, parentOrNull ?: IScope.NULLSCOPE, false, tlElems);
 			return topLevelElementsScope;
 		} finally {
 			guard.set(false);
@@ -698,7 +698,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			}
 			for (mergedNS : mergedNamespaces.reverseView) {
 				if (mergedNS !== null) {
-					result = scope_AllTopLevelElementsFromAbstractNamespace(mergedNS, context, result ?: IScope.NULLSCOPE, false, true);
+					result = scope_AllTopLevelElementsFromAbstractNamespace(mergedNS, context, result, false, true);
 				}
 			}
 		}
