@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -40,8 +41,17 @@ public class URIUtils {
 
 	static final Map<String, Set<String>> extensionPrefixes = Map.of("ts", Set.of("d"));
 
+	/** Comparator for {@link URI}s. See {@link URIUtils#compare(URI, URI)}. */
+	public static class URIComparator implements Comparator<URI> {
+
+		@Override
+		public int compare(URI uri1, URI uri2) {
+			return URIUtils.compare(uri1, uri2);
+		}
+	}
+
 	/** Fix {@link URI#fileExtension()} w.r.t. unsupported d.ts file extension that includes dots */
-	static public String fileExtension(org.eclipse.emf.common.util.URI uri) {
+	static public String fileExtension(URI uri) {
 		if (uri == null) {
 			return null;
 		}
@@ -57,7 +67,7 @@ public class URIUtils {
 	}
 
 	/** Fix {@link URI#trimFileExtension()} w.r.t. unsupported d.ts file extension that includes dots */
-	static public URI trimFileExtension(org.eclipse.emf.common.util.URI uri) {
+	static public URI trimFileExtension(URI uri) {
 		if (uri == null) {
 			return null;
 		}
@@ -79,7 +89,7 @@ public class URIUtils {
 	 *
 	 * @return true iff the given {@link URI}s are equal
 	 */
-	static public boolean equals(org.eclipse.emf.common.util.URI uri1, org.eclipse.emf.common.util.URI uri2) {
+	static public boolean equals(URI uri1, URI uri2) {
 		if (uri1 == uri2) {
 			return true;
 		}
@@ -93,7 +103,7 @@ public class URIUtils {
 	 *
 	 * @return a hash code of the given {@link URI}s
 	 */
-	static public int hashCode(org.eclipse.emf.common.util.URI uri) {
+	static public int hashCode(URI uri) {
 		return toString(uri).hashCode();
 	}
 
@@ -102,7 +112,7 @@ public class URIUtils {
 	 *
 	 * @return true iff the given {@link URI}s are equal
 	 */
-	static public String toString(org.eclipse.emf.common.util.URI uri) {
+	static public String toString(URI uri) {
 		String result = null;
 
 		if (uri.isFile()) {
@@ -128,8 +138,69 @@ public class URIUtils {
 	}
 
 	/** Creates new URI from the provided one, with symlinks resolved. */
-	static public org.eclipse.emf.common.util.URI normalize(org.eclipse.emf.common.util.URI uri) {
+	static public URI normalize(URI uri) {
 		return addEmptyAuthority(URI.createURI(toString(uri)));
+	}
+
+	/**
+	 * Compares the given {@link URI}s.
+	 * <p>
+	 * Does not normalize them, so many semantically equivalent URIs will yield a non-zero return value.
+	 */
+	static public int compare(URI uri1, URI uri2) {
+		if (uri1 == uri2) {
+			return 0;
+		} else if (uri1 == null) {
+			return -1;
+		} else if (uri2 == null) {
+			return 1;
+		}
+		int cmp = doCompare(uri1.scheme(), uri2.scheme());
+		if (cmp != 0) {
+			return cmp;
+		}
+		// note: authority includes userInfo, host, and port
+		cmp = doCompare(uri1.authority(), uri2.authority());
+		if (cmp != 0) {
+			return cmp;
+		}
+		cmp = doCompare(uri1.device(), uri2.device());
+		if (cmp != 0) {
+			return cmp;
+		}
+		String[] segs1 = uri1.segments();
+		String[] segs2 = uri2.segments();
+		int len = Math.min(segs1.length, segs2.length);
+		for (int i = 0; i < len; i++) {
+			cmp = doCompare(segs1[i], segs2[i]);
+			if (cmp != 0) {
+				return cmp;
+			}
+		}
+		cmp = Integer.compare(segs1.length, segs2.length);
+		if (cmp != 0) {
+			return cmp;
+		}
+		cmp = doCompare(uri1.query(), uri2.query());
+		if (cmp != 0) {
+			return cmp;
+		}
+		cmp = doCompare(uri1.fragment(), uri2.fragment());
+		if (cmp != 0) {
+			return cmp;
+		}
+		return 0;
+	}
+
+	static private int doCompare(String s1, String s2) {
+		if (s1 == s2) {
+			return 0;
+		} else if (s1 == null) {
+			return -1;
+		} else if (s2 == null) {
+			return 1;
+		}
+		return s1.compareTo(s2);
 	}
 
 	/** @return a complete URI for a given project */
@@ -180,25 +251,23 @@ public class URIUtils {
 	}
 
 	/**
-	 * Converts the given URI to a {@link File} iff it is a {@link org.eclipse.emf.common.util.URI#isFile() file URI};
-	 * otherwise returns <code>null</code>.
+	 * Converts the given URI to a {@link File} iff it is a {@link URI#isFile() file URI}; otherwise returns
+	 * <code>null</code>.
 	 * <p>
-	 * Same as {@link org.eclipse.emf.common.util.URI#toFileString()}, but returns a {@link File} instance instead of a
-	 * string.
+	 * Same as {@link URI#toFileString()}, but returns a {@link File} instance instead of a string.
 	 */
 	static public File toFile(URI uri) {
 		return uri != null && uri.isFile() ? new File(uri.toFileString()) : null;
 	}
 
 	/**
-	 * Converts the given URI to a {@link Path} iff it is a {@link org.eclipse.emf.common.util.URI#isFile() file URI};
-	 * otherwise returns <code>null</code>.
+	 * Converts the given URI to a {@link Path} iff it is a {@link URI#isFile() file URI}; otherwise returns
+	 * <code>null</code>.
 	 * <p>
-	 * Same as {@link org.eclipse.emf.common.util.URI#toFileString()}, but returns a {@link Path} instance instead of a
-	 * string.
+	 * Same as {@link URI#toFileString()}, but returns a {@link Path} instance instead of a string.
 	 * <p>
 	 * <b>Attention: This fails on platform Windows:</b><br>
-	 * <code>Paths.get(org.eclipse.emf.common.util.URI#toFileString());</code><br>
+	 * <code>Paths.get(URI#toFileString());</code><br>
 	 * The reason is that {@link URI#toFileString()} returns a string like "\\c:\\dir" which cannot be parsed by
 	 * {@link Paths#get(java.net.URI)} due to the starting "\\".
 	 */
@@ -301,17 +370,19 @@ public class URIUtils {
 	 * Extracts the path of a {@link #isVirtualResourceURI(URI) virtual resource URI}, i.e. the segments following the
 	 * {@link #VIRTUAL_RESOURCE_SEGMENT}.
 	 * <p>
-	 * The returned segments will still be {@link URI#encodeSegment(String, boolean) URI-encoded}; caller has to decode
-	 * them, if desired.
-	 * <p>
 	 * Returns <code>null</code> iff the given URI isn't a virtual resource URI.
 	 */
-	public static String[] getPathOfVirtualResource(URI uri) {
+	public static String[] getPathOfVirtualResource(URI uri, boolean decode) {
 		String[] segs = uri.segments();
 		int len = segs.length;
 		for (int i = 0; i < len; i++) {
 			if (URIUtils.VIRTUAL_RESOURCE_SEGMENT.equals(segs[i])) {
 				String[] segsRemaining = Arrays.copyOfRange(segs, ++i, len);
+				if (decode) {
+					for (int j = 0; j < segsRemaining.length; j++) {
+						segsRemaining[j] = URI.decode(segsRemaining[j]);
+					}
+				}
 				return segsRemaining;
 			}
 		}

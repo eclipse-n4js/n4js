@@ -33,7 +33,8 @@ public abstract class DefaultN4GlobalScopeProvider extends DefaultGlobalScopePro
 	 * If the type is a {@link Type} a new {@link BuiltInTypeScope} is created.
 	 */
 	@Override
-	protected IScope getScope(Resource context, boolean ignoreCase, EClass type,
+	// visibility increased from 'protected' to 'public' to allow access from ImportedNamesRecordingGlobalScopeAccess
+	public IScope getScope(Resource context, boolean ignoreCase, EClass type,
 			Predicate<IEObjectDescription> filter) {
 		if (isSubtypeOfType(type)) {
 			return getScope(getBuiltInTypeScope(context), context, ignoreCase, type, filter);

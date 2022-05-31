@@ -124,7 +124,7 @@ class MultipleModulesScopingTest extends AbstractIdeTest {
 		startAndWaitForLspServer();
 		assertIssues(
 			"Module" -> #["(Error, [0:0 - 0:19], A duplicate module Module is also defined in test-project/src-js/Module.js.)"],
-			"Client" -> #["(Error, [0:19 - 0:27], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/src-js/Module.js, test-project/src/Module.n4js.)"]);
+			"Client" -> #["(Error, [0:19 - 0:27], Cannot resolve plain module specifier (without project name as first segment): multiple matching modules found: test-project/src/Module.n4js, test-project/src-js/Module.js.)"]);
 	}
 
 	@Test

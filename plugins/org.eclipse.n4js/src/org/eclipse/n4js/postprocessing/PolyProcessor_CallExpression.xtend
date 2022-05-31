@@ -27,6 +27,7 @@ import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 
 /**
@@ -43,6 +44,8 @@ package class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 
 	@Inject
 	private N4JSTypeSystem ts;
+	@Inject
+	private TypeSystemHelper tsh;
 
 	/**
 	 * BEFORE CHANGING THIS METHOD, READ THIS:
@@ -54,10 +57,11 @@ package class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 		val target = callExpr.target;
 		// IMPORTANT: do not use #processExpr() here (if target is a PolyExpression, it has been processed in a separate, independent inference!)
 		val targetTypeRef = ts.type(G, target);
-		if (!(targetTypeRef instanceof FunctionTypeExprOrRef))
+		val callable = tsh.getCallableTypeRef(G, targetTypeRef);
+		if (callable === null || !callable.signatureTypeRef.present)
 			return TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
-		val fteor = targetTypeRef as FunctionTypeExprOrRef;
-		val isPoly = fteor.generic && callExpr.typeArgs.size < fteor.typeVars.size
+		val sigTypeRef = callable.signatureTypeRef.get();
+		val isPoly = sigTypeRef.generic && callExpr.typeArgs.size < sigTypeRef.typeVars.size;
 
 		if (!isPoly) {
 			val result = ts.type(G, callExpr);
@@ -67,14 +71,14 @@ package class PolyProcessor_CallExpression extends AbstractPolyProcessor {
 
 		// create an inference variable for each type parameter of fteor
 		val Map<TypeVariable, InferenceVariable> typeParam2infVar = newLinkedHashMap // type parameter of fteor -> inference variable
-		for (typeParam : fteor.typeVars) {
+		for (typeParam : sigTypeRef.typeVars) {
 			typeParam2infVar.put(typeParam, infCtx.newInferenceVariable);
 		}
 
-		processParameters(G, cache, infCtx, callExpr, fteor, typeParam2infVar);
+		processParameters(G, cache, infCtx, callExpr, sigTypeRef, typeParam2infVar);
 
 		// create temporary type (i.e. may contain inference variables)
-		val resultTypeRefRaw = fteor.getReturnTypeRef();
+		val resultTypeRefRaw = sigTypeRef.getReturnTypeRef();
 		val resultTypeRef = resultTypeRefRaw.subst(G, typeParam2infVar);
 
 		// register onSolved handlers to add final types to cache (i.e. may not contain inference variables)

@@ -1,0 +1,80 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "def1.d.ts" {
+
+		declare module "a/b/someModule" {
+			export interface Ifc {
+				field1: string;
+			}
+		}
+	}
+
+	File "def2.d.ts" {
+		declare module "a/b/someModule" {
+			export class Ifc {
+				fieldInstance: number;
+				static fieldStatic: string;
+
+				constructor(p: number)
+			}
+		}
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import { Ifc } from "a/b/someModule"
+
+
+// (1) can access static members of class 'Ifc' (but not instance members)
+
+// XPECT noerrors -->
+let v01: string = Ifc.fieldStatic;
+// XPECT errors --> "string is not a subtype of number." at "Ifc.fieldStatic"
+let v02: number = Ifc.fieldStatic;
+// XPECT errors --> "The non-static member fieldInstance cannot be accessed from a static context." at "fieldInstance"
+Ifc.fieldInstance;
+
+
+// (2) can use 'Ifc' as type
+
+// XPECT noerrors -->
+let value: Ifc;
+
+
+// (3) can access instance members of values of type 'Ifc'
+
+// XPECT noerrors -->
+let v11: string = value.field1;
+// XPECT errors --> "string is not a subtype of number." at "value.field1"
+let v12: number = value.field1;
+
+// XPECT errors --> "number is not a subtype of string." at "value.fieldInstance"
+let v21: string = value.fieldInstance;
+// XPECT noerrors -->
+let v22: number = value.fieldInstance;
+
+
+// (4) can create instances of class 'Ifc'
+
+// XPECT noerrors -->
+let instance = new Ifc(42);
+// XPECT errors --> ""str" is not a subtype of number." at ""str""
+new Ifc("str");
+
+// XPECT noerrors -->
+value = instance;
+// XPECT noerrors -->
+instance = value;

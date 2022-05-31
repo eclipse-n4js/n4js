@@ -1,0 +1,95 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "def1.d.ts" {
+
+		declare module "a/b/someModule" {
+			export function foo(p: string): number;
+		}
+	}
+
+	File "def2.d.ts" {
+		declare module "a/b/someModule" {
+			export class foo {
+				fieldInstance: string;
+				static fieldStatic: string;
+
+				constructor(p: number)
+			}
+		}
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import { foo } from "a/b/someModule"
+
+
+// (1) can invoke function 'foo' (and arguments are checked properly)
+
+// XPECT noerrors -->
+// XPECT type of 'v01' --> number
+let v01 = foo("hello");
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "foo()"
+let v02 = foo();
+// XPECT errors --> "42 is not a subtype of string." at "42"
+let v03 = foo(42);
+// XPECT errors --> "number is not a subtype of string." at "foo("hello")"
+let v04: string = foo("hello");
+
+
+// (2) can access instance members of Function
+
+// XPECT noerrors -->
+let v11: Function = foo.bind(null);
+// XPECT errors --> "{function(...any):any} is not a subtype of boolean." at "foo.bind(null)"
+let v12: boolean = foo.bind(null);
+
+
+// (3) can access static members of class 'foo' (but not instance members)
+
+// XPECT noerrors -->
+let v21: string = foo.fieldStatic;
+// XPECT errors --> "string is not a subtype of number." at "foo.fieldStatic"
+let v22: number = foo.fieldStatic;
+// XPECT errors --> "The non-static member fieldInstance cannot be accessed from a static context in constructor{foo}." at "fieldInstance"
+foo.fieldInstance;
+
+
+// (4) can use class 'foo' as type
+
+// XPECT noerrors -->
+let value: foo;
+
+
+// (5) values of type 'foo' cannot be invoked
+
+// XPECT errors --> "Not a function or method: foo." at "value"
+value();
+
+
+// (6) can create instances of class 'foo' (and arguments are checked properly)
+
+// XPECT noerrors -->
+// XPECT type of 'instance' --> foo
+let instance = new foo(42);
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "new foo()"
+new foo();
+// XPECT errors --> ""str" is not a subtype of number." at ""str""
+new foo("str");
+
+// XPECT noerrors -->
+value = instance;
+// XPECT noerrors -->
+instance = value;

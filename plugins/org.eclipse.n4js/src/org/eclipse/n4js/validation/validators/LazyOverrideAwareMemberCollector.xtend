@@ -147,8 +147,8 @@ public class LazyOverrideAwareMemberCollector extends AbstractCompleteHierarchyT
 			}
 
 			// add and merge
-			doProcess(getSuperTypes(object));
-			doProcess(object.getImplementedInterfaceRefs());
+			doSwitchTypeRefs(getSuperTypes(object));
+			doSwitchTypeRefs(object.getImplementedInterfaceRefs());
 
 			// add and replace
 			if (!onlyInheritedMembers || object!=bottomType) { // do not add
@@ -175,8 +175,8 @@ public class LazyOverrideAwareMemberCollector extends AbstractCompleteHierarchyT
 				result = createResultInstance();
 			}
 
-			doProcess(object.getSuperInterfaceRefs());
-			doProcess(object.getSuperInterfaceRefs());
+			doSwitchTypeRefs(object.getSuperInterfaceRefs());
+			doSwitchTypeRefs(object.getSuperInterfaceRefs());
 			if (!onlyInheritedMembers || object!=bottomType) { // do not add
 				processAndReplace(object);
 			}

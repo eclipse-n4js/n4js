@@ -1,0 +1,89 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "def1.d.ts" {
+
+		declare module "a/b/someModule" {
+			export class Cls {
+				fieldInstance: string;
+				static fieldStatic: string;
+
+				constructor(p: number)
+			}
+		}
+	}
+
+	File "def2.d.ts" {
+		declare module "a/b/someModule" {
+			export namespace Cls {
+				export class ClsInNS {}
+			}
+		}
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import { Cls } from "a/b/someModule"
+
+
+// (1) can use class/namespace 'Cls' as type
+
+// XPECT noerrors -->
+let value: Cls;
+
+// XPECT noerrors -->
+let v01: string = value.fieldInstance;
+// XPECT errors --> "The static member fieldStatic cannot be accessed from a non-static context." at "fieldStatic"
+let v02: string = value.fieldStatic;
+// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'ClsInNS'." at "ClsInNS"
+let v03: constructor{?} = value.ClsInNS;
+
+// XPECT noerrors -->
+let ctor: constructor{Cls};
+
+// XPECT errors --> "The non-static member fieldInstance cannot be accessed from a static context." at "fieldInstance"
+let v04: string = ctor.fieldInstance;
+// XPECT noerrors -->
+let v05: string = ctor.fieldStatic;
+// XPECT noerrors -->
+let v06: constructor{?} = ctor.ClsInNS;
+
+
+// (2) can create instances of class 'Cls' (and arguments are checked properly)
+
+// XPECT noerrors -->
+// XPECT type of 'instance' --> Cls
+let instance = new Cls(42);
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "new Cls()"
+new Cls();
+// XPECT errors --> ""str" is not a subtype of number." at ""str""
+new Cls("str");
+
+// XPECT noerrors -->
+value = instance;
+// XPECT noerrors -->
+instance = value;
+
+
+// (3) can access elements of namespace 'Cls' as types and values
+
+// XPECT noerrors -->
+let v11: Cls.ClsInNS;
+// XPECT noerrors -->
+let v12: constructor{?} = Cls.ClsInNS;
+// XPECT errors --> "constructor{ClsInNS} is not a subtype of number." at "Cls.ClsInNS"
+let v13: number = Cls.ClsInNS;
+// XPECT noerrors -->
+new Cls.ClsInNS();

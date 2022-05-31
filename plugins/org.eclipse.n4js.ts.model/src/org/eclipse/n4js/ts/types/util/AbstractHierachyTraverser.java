@@ -13,6 +13,7 @@ package org.eclipse.n4js.ts.types.util;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -51,6 +52,13 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	 * The recursion guard
 	 */
 	protected final RecursionGuard<Type> guard;
+
+	/**
+	 * If <code>true</code>, the current type will be processed but its polyfills and super types won't be traversed.
+	 * More precisely, the case methods will invoke the abstract process methods for the current type, but won't
+	 * recursively invoke {@link #doSwitch(EObject)} for its polyfills and super types.
+	 */
+	protected boolean suppressTraversal;
 
 	/**
 	 * The type which the traverser has to traverse, that is the bottom type of the hierarchy.
@@ -124,7 +132,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 			if (assignmentCompatible != null) {
 				ParameterizedTypeRef typeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
 				typeRef.setDeclaredType(assignmentCompatible);
-				Boolean result = doProcess(typeRef);
+				Boolean result = doSwitchTypeRef(typeRef);
 				if (Boolean.TRUE.equals(result)) {
 					return result;
 				}
@@ -140,20 +148,25 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	@Override
 	public Boolean caseTClass(TClass object) {
 		if (guard.tryNext(object)) {
-			if (!object.isPolyfill()) {
-				if (doProcess(getPolyfills(object))) {
-					return Boolean.TRUE;
+			if (!suppressTraversal && !object.isPolyfill()) {
+				List<ParameterizedTypeRef> polyfills = getPolyfills(object);
+				try {
+					suppressTraversal = true;
+					if (doSwitchTypeRefs(polyfills)) {
+						return Boolean.TRUE;
+					}
+				} finally {
+					suppressTraversal = false;
 				}
 			}
 			if (process(object)) {
 				return Boolean.TRUE;
 			}
-			if (!object.isPolyfill() || object.isStaticPolyfill()) {
-				// enqueueInterface(object.getConsumedRoles());
-				if (doProcessSuperTypes(object)) {
+			if (!suppressTraversal && !object.isPolyfill()) {
+				if (doSwitchSuperTypes(object)) {
 					return Boolean.TRUE;
 				}
-				if (doProcessImplementedInterfaces(object)) {
+				if (doSwitchImplementedInterfaces(object)) {
 					return Boolean.TRUE;
 				}
 			}
@@ -164,30 +177,36 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	/**
 	 * Process the super type of a class.
 	 */
-	protected boolean doProcessSuperTypes(TClass object) {
-		return doProcess(getSuperTypes(object));
+	protected boolean doSwitchSuperTypes(TClass object) {
+		return doSwitchTypeRefs(getSuperTypes(object));
 	}
 
 	/**
 	 * Process the consumed roles of a class.
 	 */
-	protected boolean doProcessImplementedInterfaces(TClass object) {
-		return doProcess(object.getImplementedInterfaceRefs());
+	protected boolean doSwitchImplementedInterfaces(TClass object) {
+		return doSwitchTypeRefs(object.getImplementedInterfaceRefs());
 	}
 
 	@Override
 	public Boolean caseTInterface(TInterface object) {
 		if (guard.tryNext(object)) {
-			if (!object.isPolyfill()) {
-				if (doProcess(getPolyfills(object))) {
-					return Boolean.TRUE;
+			if (!suppressTraversal && !object.isPolyfill()) {
+				List<ParameterizedTypeRef> polyfills = getPolyfills(object);
+				try {
+					suppressTraversal = true;
+					if (doSwitchTypeRefs(polyfills)) {
+						return Boolean.TRUE;
+					}
+				} finally {
+					suppressTraversal = false;
 				}
 			}
 			if (process(object)) {
 				return Boolean.TRUE;
 			}
-			if (!object.isPolyfill()) {
-				if (doProcessSuperInterfaces(object)) {
+			if (!suppressTraversal && !object.isPolyfill()) {
+				if (doSwitchSuperInterfaces(object)) {
 					return Boolean.TRUE;
 				}
 			}
@@ -198,8 +217,8 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	/**
 	 * Process the super interfaces of an interface.
 	 */
-	protected boolean doProcessSuperInterfaces(TInterface object) {
-		return doProcess(getSuperTypes(object));
+	protected boolean doSwitchSuperInterfaces(TInterface object) {
+		return doSwitchTypeRefs(getSuperTypes(object));
 	}
 
 	@Override
@@ -215,12 +234,12 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	 *
 	 * @return {@code true} if the processing is finished and no further types should be considered.
 	 */
-	protected boolean doProcess(List<ParameterizedTypeRef> typeRefs) {
+	protected boolean doSwitchTypeRefs(List<ParameterizedTypeRef> typeRefs) {
 		if (typeRefs == null) {
 			return false;
 		}
 		for (ParameterizedTypeRef typeRef : typeRefs) {
-			if (doProcess(typeRef)) {
+			if (doSwitchTypeRef(typeRef)) {
 				return true;
 			}
 		}
@@ -232,7 +251,7 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	 *
 	 * @return {@code true} if the processing is finished and no further types should be considered.
 	 */
-	protected boolean doProcess(ParameterizedTypeRef typeRef) {
+	protected boolean doSwitchTypeRef(ParameterizedTypeRef typeRef) {
 		if (typeRef == null)
 			return false;
 		Type type = typeRef.getDeclaredType();
@@ -271,5 +290,4 @@ public abstract class AbstractHierachyTraverser<Result> extends TypesSwitch<Bool
 	protected List<ParameterizedTypeRef> getPolyfills(Type filledType) {
 		return Collections.emptyList(); // polyfills not supported by default
 	}
-
 }

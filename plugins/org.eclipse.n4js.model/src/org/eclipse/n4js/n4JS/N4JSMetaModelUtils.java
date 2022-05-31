@@ -26,6 +26,7 @@ import static org.eclipse.n4js.ts.types.TypesPackage.Literals.IDENTIFIABLE_ELEME
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
@@ -42,6 +43,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.ListMultimap;
@@ -107,6 +109,34 @@ public class N4JSMetaModelUtils {
 			}
 		}
 		cachedAllEClassesContributingContentAssistProposals = resultBuilder.build();
+	}
+
+	/** Caching information for each EClass of the {@link N4JSMetaModelUtils#N4JS_EPACKAGES N4JS-related EPackages}. */
+	public static class N4JSMetaModelCache<T> {
+
+		private final ImmutableMap<EClass, T> infoPerEClass;
+
+		/** Creates a new {@link N4JSMetaModelCache}. */
+		public N4JSMetaModelCache(Function<EClass, T> infoProvider) {
+			ImmutableMap.Builder<EClass, T> declMergingKindIndexBuilder = ImmutableMap.builder();
+			for (EPackage ePkg : N4JS_EPACKAGES) {
+				for (EClassifier eClassifier : ePkg.getEClassifiers()) {
+					if (eClassifier instanceof EClass) {
+						EClass eClass = (EClass) eClassifier;
+						T value = infoProvider.apply(eClass);
+						if (value != null) {
+							declMergingKindIndexBuilder.put(eClass, value);
+						}
+					}
+				}
+			}
+			infoPerEClass = declMergingKindIndexBuilder.build();
+		}
+
+		/** Obtain the information for the given {@link EClass}. May be called from any thread. */
+		public T get(EClass eClass) {
+			return infoPerEClass.get(eClass); // can share the map across threads because it is immutable
+		}
 	}
 
 	/**

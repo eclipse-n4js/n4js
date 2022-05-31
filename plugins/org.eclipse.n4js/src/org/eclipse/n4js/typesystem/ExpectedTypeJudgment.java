@@ -84,7 +84,6 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
-import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TClass;
@@ -95,6 +94,8 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.types.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
 import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Callable;
+import org.eclipse.n4js.typesystem.utils.TypeSystemHelper.Newable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.PromisifyHelper;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
@@ -187,9 +188,13 @@ import com.google.inject.Inject;
 					// expected type of argument
 
 					// obtain constructor or construct signature
-					final TypeRef calleeTypeRef = ts.type(G, expr.getCallee());
-					final TMethod ctorOrConstructSig = tsh.getConstructorOrConstructSignature(G, calleeTypeRef, false);
-					if (ctorOrConstructSig == null) {
+					final Newable newable = tsh.getNewableTypeRef(G, expr, false);
+					if (newable == null) {
+						return unknown();
+					}
+					final TMethod ctorOrConstructSig = newable.getCtorOrConstructSig();
+					final TypeRef typeRefOfInstanceToCreate = newable.getInstanceTypeRef();
+					if (ctorOrConstructSig == null || typeRefOfInstanceToCreate == null) {
 						return unknown();
 					}
 
@@ -199,23 +204,17 @@ import com.google.inject.Inject;
 						// special case: interface with construct signature
 						typeSystemHelper.addSubstitutions(G2, expr, ctorOrConstructSig);
 
-					} else if (calleeTypeRef instanceof TypeTypeRef) {
+					} else {
 						// standard case:
-						final TypeTypeRef calleeTypeRefCasted = (TypeTypeRef) calleeTypeRef;
 
 						// add type variable mappings based on the type
 						// of the instance to be created
 						// --> for this, create a ParameterizedTypeRef taking the staticType from
 						// the CtorTypeRef and the type arguments from the NewExpression
-						final TypeRef typeRefOfInstanceToCreate = typeSystemHelper.createTypeRefFromStaticType(
-								G, calleeTypeRefCasted, expr);
 						typeSystemHelper.addSubstitutions(G2, typeRefOfInstanceToCreate);
 
 						// required if we refer to a ctor with a parameter of type [~]~this (esp. default ctor)
 						setThisBinding(G2, typeRefOfInstanceToCreate);
-
-					} else {
-						return unknown();
 					}
 
 					final int argIdx = ECollections.indexOf(expr.getArguments(), argument, 0);
@@ -248,8 +247,9 @@ import com.google.inject.Inject;
 				}
 
 				final TypeRef targetTypeRef = ts.type(G, expr.getTarget());
-				if (targetTypeRef instanceof FunctionTypeExprOrRef) {
-					final FunctionTypeExprOrRef F = (FunctionTypeExprOrRef) targetTypeRef;
+				final Callable callable = tsh.getCallableTypeRef(G, targetTypeRef);
+				if (callable != null && callable.getSignatureTypeRef().isPresent()) {
+					final FunctionTypeExprOrRef F = callable.getSignatureTypeRef().get();
 					final int argIndex = ECollections.indexOf(expr.getArguments(), argument, 0);
 					final TFormalParameter fpar = F.getFparForArgIdx(argIndex);
 					if (fpar == null) {
@@ -294,6 +294,9 @@ import com.google.inject.Inject;
 							return paramTypeRefSubst;
 						}
 					}
+				} else if (callable != null) {
+					// targetTypeRef is callable, but no signature information available
+					return anyTypeRef(G, callable.isDynamic());
 				} else if (targetTypeRef.isDynamic()) {
 					return anyTypeRefDynamic(G);
 				} else {

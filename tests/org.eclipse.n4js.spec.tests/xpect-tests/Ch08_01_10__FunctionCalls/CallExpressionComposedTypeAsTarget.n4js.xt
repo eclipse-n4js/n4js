@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest
+
+	ResourceSet {
+		ThisFile {}
+		File "Ext.n4jsd" { from="CallExpressionComposedTypeAsTarget__Ext.n4jsd" }
+	}
+
+END_SETUP */
+
+
+import { Ifc } from "Ch08_01_10__FunctionCalls/Ext"
+import { IfcWithCallSig } from "Ch08_01_10__FunctionCalls/Ext"
+import { Cls } from "Ch08_01_10__FunctionCalls/Ext"
+import { ClsWithCallableCtor } from "Ch08_01_10__FunctionCalls/Ext"
+
+
+let v01: Ifc & (p: string)=>number;
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "v01()"
+v01();
+// XPECT errors --> "42 is not a subtype of string." at "42"
+v01(42);
+// XPECT noerrors -->
+// XPECT type of 'v01("hello")' --> number
+v01("hello");
+
+
+let v02: IfcWithCallSig & (p: string)=>number;
+// XPECT errors --> "More than one callable type in intersection: IfcWithCallSig, {function(string):number}." at "v02"
+v02();
+
+
+let v11: Cls & (p: string)=>number;
+// XPECT noerrors -->
+// XPECT type of 'v11("hello")' --> number
+v11("hello");
+
+let v12: ClsWithCallableCtor & (p: string)=>number; // instances of ClsWithCallableCtor are not callable; thus no conflict here!
+// XPECT noerrors -->
+// XPECT type of 'v12("hello")' --> number
+v12("hello");
+
+let v13: Cls & (p: string)=>number;
+// XPECT noerrors -->
+// XPECT type of 'v13("hello")' --> number
+v13("hello");
+
+let v14: constructor{ClsWithCallableCtor} & (p: string)=>number; // the ctor of ClsWithCallableCtor is callable; thus we have a conflict here!
+// XPECT errors --> "More than one callable type in intersection: constructor{ClsWithCallableCtor}, {function(string):number}." at "v14"
+v14();
+
+
+let v21: Ifc & Function;
+// XPECT noerrors -->
+// XPECT type of 'v21("arg1", "arg2", "arg3")' --> any
+v21("arg1", "arg2", "arg3");
+
+let v22: Ifc & Function+;
+// XPECT noerrors -->
+// XPECT type of 'v22("arg1", "arg2", "arg3")' --> any+
+v22("arg1", "arg2", "arg3");
+
+let v23: Function & (p: string)=>number;
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "v23()"
+v23();
+// XPECT errors --> "42 is not a subtype of string." at "42"
+v23(42);
+// XPECT noerrors -->
+// XPECT type of 'v23("hello")' --> number
+v23("hello");
+
+
+let v31: (p: string)=>number & (p: string)=>number; // because merging is not implemented yet, even identical callable type refs produce a conflict (for now)!
+// XPECT errors --> "More than one callable type in intersection: {function(string):number}, {function(string):number}." at "v31"
+v31();

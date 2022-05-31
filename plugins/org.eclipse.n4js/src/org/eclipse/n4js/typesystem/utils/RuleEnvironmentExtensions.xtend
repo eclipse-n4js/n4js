@@ -471,15 +471,20 @@ class RuleEnvironmentExtensions {
 
 	/* Returns newly created reference to built-in type {@code any} */
 	public def static anyTypeRef(RuleEnvironment G) {
-		G.getPredefinedTypes().builtInTypeScope.anyTypeRef
+		return anyTypeRef(G, false);
 	}
 
 	/* Returns newly created dynamic reference to built-in type {@code any}, that is {@code any+}.
 	 * This is the default type used in JavaScript modes.
 	 */
 	public def static anyTypeRefDynamic(RuleEnvironment G) {
-		val ParameterizedTypeRef result = G.anyType.createTypeRef
-		result.dynamic = true;
+		return anyTypeRef(G, true);
+	}
+
+	/* Returns newly created reference to built-in type {@code any} */
+	public def static anyTypeRef(RuleEnvironment G, boolean dynamic) {
+		val ParameterizedTypeRef result = G.getPredefinedTypes().builtInTypeScope.anyTypeRef
+		result.dynamic = dynamic;
 		return result;
 	}
 
