@@ -26,6 +26,7 @@
     "mocha": "^8.3.2"
   },
   "dependencies": {
+    "@types/node": "^17",
     "@types/debug": "*",
     "follow-redirects": "1.14.9",
     "decompress": "4.2.1",
@@ -33,7 +34,6 @@
     "esm": "3.2.25",
     "npmlog": "4.1.2",
     "n4js-runtime": "^0.1.0",
-    "n4js-runtime-node": "^0.1.0",
     "n4js-runtime-es2015": "^0.1.0",
     "n4js-runtime-esnext": "^0.1.0"
   },
@@ -49,7 +49,6 @@
       ]
     },
     "requiredRuntimeLibraries": [
-        "n4js-runtime-node",
         "n4js-runtime-es2015",
         "n4js-runtime-esnext"
     ]
