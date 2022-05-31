@@ -54,6 +54,7 @@ import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
+import org.eclipse.n4js.n4JS.LiteralAnnotationArgument;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
@@ -162,6 +163,16 @@ public class ParserContextUtils {
 	public static void makeGlobal(Script script) {
 		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
 		ann.setName(AnnotationDefinition.GLOBAL.name);
+		script.getAnnotations().add(0, ann);
+	}
+
+	/** Add an <code>@ExportEquals()</code> annotation to the given script. */
+	public static void addAnnotationExportEquals(Script script, String elementName) {
+		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+		ann.setName(AnnotationDefinition.EXPORT_EQUALS.name);
+		LiteralAnnotationArgument arg = N4JSFactory.eINSTANCE.createLiteralAnnotationArgument();
+		arg.setLiteral(createStringLiteral(elementName, elementName));
+		ann.getArgs().add(arg);
 		script.getAnnotations().add(0, ann);
 	}
 
@@ -377,9 +388,17 @@ public class ParserContextUtils {
 		if (stringLiteral == null) {
 			return null;
 		}
+		return createStringLiteral(stringLiteral.getText(), trimAndUnescapeStringLiteral(stringLiteral));
+	}
+
+	/** @return the newly created string literal. Null safe. */
+	public static StringLiteral createStringLiteral(String rawValue, String value) {
+		if (rawValue == null || value == null) {
+			return null;
+		}
 		StringLiteral sl = N4JSFactory.eINSTANCE.createStringLiteral();
-		sl.setRawValue(stringLiteral.getText());
-		sl.setValue(trimAndUnescapeStringLiteral(stringLiteral));
+		sl.setRawValue(rawValue);
+		sl.setValue(value);
 		return sl;
 	}
 

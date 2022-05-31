@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
@@ -32,6 +33,7 @@ import org.eclipse.n4js.n4JS.JSXElementName
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.LabelledStatement
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
+import org.eclipse.n4js.n4JS.MemberAccess
 import org.eclipse.n4js.n4JS.ModuleRef
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
@@ -84,6 +86,7 @@ import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TNamespace
 import org.eclipse.n4js.ts.types.TStructMethod
+import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ts.types.TypingStrategy
@@ -627,13 +630,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			return createScopeForNamespaceAccess(declaredType, propertyAccess, false, true);
 		}
 
-		val staticAccess = typeRef instanceof TypeTypeRef;
-		val structFieldInitMode = typeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
-		val checkVisibility = true;
-		var result = memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess, structFieldInitMode);
+		var result = createScopeForMemberAccess(typeRef, propertyAccess);
 
 		// functions and classes may have namespaces merged onto them
-		result = handleDeclMergingForPropertyAccess(G, propertyAccess, typeRef, staticAccess, result);
+		result = handleDeclMergingForPropertyAccess(G, propertyAccess, typeRef, result);
 
 		return result;
 	}
@@ -642,8 +642,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		boolean includeHollows, boolean includeValueOnlyElements
 	) {
 		val module = namespace.module;
+
 		val result = if (module !== null && !module.eIsProxy) {
-				scope_AllTopLevelElementsFromAbstractNamespace(module, context, includeHollows, includeValueOnlyElements);
+				doCreateScopeForNamespaceAccess(module, context, includeHollows, includeValueOnlyElements);
 			} else {
 				// error cases
 				if (namespace.eIsProxy) {
@@ -661,8 +662,46 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return result;
 	}
 
+	private def IScope doCreateScopeForNamespaceAccess(TModule targetModule, EObject context, boolean includeHollows, boolean includeValueOnlyElements) {
+		var result = scope_AllTopLevelElementsFromAbstractNamespace(targetModule, context, includeHollows, includeValueOnlyElements);
+
+		val exportEqualsIdentifier = AnnotationDefinition.EXPORT_EQUALS.getAnnotation(targetModule)?.args?.head?.argAsString;
+		if (exportEqualsIdentifier !== null) {
+			val allowMemberAccess = context instanceof MemberAccess;
+			val elems = (targetModule.exportedVariables + targetModule.namespaces)
+				.filter[name == exportEqualsIdentifier]
+				.toList;
+			for (elem : elems.reverseView) {
+				switch (elem) {
+					TNamespace: {
+						result = scope_AllTopLevelElementsFromAbstractNamespace(elem, context, result, includeHollows, includeValueOnlyElements)
+					}
+					TVariable case allowMemberAccess && elem.const: {
+						val typeRef = elem.typeRef;
+						val scopeVariable = createScopeForMemberAccess(typeRef, context as MemberAccess);
+						if (scopeVariable !== null) {
+							result = new MergedScope(scopeVariable, result);
+						}
+					}
+				}
+			}
+		}
+
+		return result;
+	}
+
+	private def IScope createScopeForMemberAccess(TypeRef targetTypeRef, MemberAccess context) {
+		val staticAccess = targetTypeRef instanceof TypeTypeRef;
+		val structFieldInitMode = targetTypeRef.typingStrategy === TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+		val checkVisibility = true;
+		val result = memberScopingHelper.createMemberScope(targetTypeRef, context, checkVisibility, staticAccess, structFieldInitMode);
+		return result;
+	}
+
 	private def IScope handleDeclMergingForPropertyAccess(RuleEnvironment G, ParameterizedPropertyAccessExpression propertyAccess,
-		TypeRef typeRef, boolean staticAccess, IScope parent) {
+		TypeRef typeRef, IScope parent) {
+
+		val staticAccess = typeRef instanceof TypeTypeRef;
 
 		var Type mergeCandidate;
 		if (staticAccess) {

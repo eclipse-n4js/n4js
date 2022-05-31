@@ -258,6 +258,16 @@ public final class AnnotationDefinition {
 			.targets(FUNCTION_DECLARATION, N4_METHOD_DECLARATION)
 			.retention(RetentionPolicy.TYPE).end();
 
+	/**
+	 * Represents {@code export = x;} in .d.ts files. Only to be used in .d.ts.
+	 */
+	public final static AnnotationDefinition EXPORT_EQUALS = define("ExportEquals")
+			.targets(SCRIPT)
+			.args(STRING_LITERAL)
+			.transitive()
+			.retention(RetentionPolicy.TYPE)
+			.end();
+
 	// <---- TEST support annotations (at some point should be moved to concrete test plugin) ---->
 
 	/**
