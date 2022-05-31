@@ -24,7 +24,6 @@ Runtime definition files::
 	* n4js-runtime-es2015
 	* n4js-runtime-esnext
 	* n4js-runtime-html5
-	* n4js-runtime-node
 	* n4js-runtime-v8
 
 Mangelhaft::
