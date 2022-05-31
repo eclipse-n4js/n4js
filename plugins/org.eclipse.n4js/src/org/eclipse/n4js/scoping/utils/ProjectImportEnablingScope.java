@@ -189,12 +189,6 @@ public class ProjectImportEnablingScope implements IScope {
 			return null;
 		}
 
-		// handle special defaults
-		IEObjectDescription defaultModule = handleDefaults(descriptionsToProject);
-		if (defaultModule != null) {
-			return defaultModule;
-		}
-
 		// handle error cases to help user fix the issue
 		StringBuilder sbErrrorMessage = new StringBuilder("Cannot resolve ");
 
@@ -356,18 +350,6 @@ public class ProjectImportEnablingScope implements IScope {
 			}
 		}
 
-		return null;
-	}
-
-	private IEObjectDescription handleDefaults(
-			Map<IEObjectDescription, N4JSProjectConfigSnapshot> descriptionsToProject) {
-
-		for (Map.Entry<IEObjectDescription, N4JSProjectConfigSnapshot> entry : descriptionsToProject.entrySet()) {
-			N4JSProjectConfigSnapshot prj = entry.getValue();
-			if (N4JSGlobals.N4JS_RUNTIME_NODE.toString().equals(prj.getPackageName())) {
-				return entry.getKey();
-			}
-		}
 		return null;
 	}
 

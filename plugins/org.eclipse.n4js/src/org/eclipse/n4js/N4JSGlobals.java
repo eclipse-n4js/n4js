@@ -211,11 +211,6 @@ public final class N4JSGlobals {
 	public static final N4JSPackageName N4JS_RUNTIME_ECMA402 = new N4JSPackageName("n4js-runtime-ecma402");
 
 	/**
-	 * Runtime for node.js
-	 */
-	public static final N4JSPackageName N4JS_RUNTIME_NODE = new N4JSPackageName("n4js-runtime-node");
-
-	/**
 	 * Runtime for HTML5 DOM definitions, i.e. <code>window</code>, <code>document</code>, etc.
 	 */
 	public static final N4JSPackageName N4JS_RUNTIME_HTML5 = new N4JSPackageName("n4js-runtime-html5");
@@ -318,8 +313,6 @@ public final class N4JSGlobals {
 			new N4JSPackageName("n4js-runtime-es2015"),
 			new N4JSPackageName("n4js-runtime-esnext"),
 			N4JS_RUNTIME_HTML5,
-			N4JS_RUNTIME_NODE,
-			new N4JSPackageName("n4js-runtime-node-tests"),
 			new N4JSPackageName("n4js-runtime-v8"),
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft"),
 			new N4JSPackageName("org.eclipse.n4js.mangelhaft.assert"),
