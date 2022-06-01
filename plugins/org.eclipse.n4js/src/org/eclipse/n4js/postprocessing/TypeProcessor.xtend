@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FieldAccessor
@@ -22,6 +23,7 @@ import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.NewExpression
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -32,8 +34,10 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TypableElement
+import org.eclipse.n4js.ts.types.util.SuperTypesMapper
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -152,6 +156,38 @@ public class TypeProcessor extends AbstractProcessor {
 		log(indentLevel, cache.getTypeFailSafe(node));
 	}
 
+	def private <T extends TypeRef> T adjustResultForLocationInAST(RuleEnvironment G, T typeRef, TypableElement astNode) {
+		var result = typeRef;
+		result = adjustForIndexSignatures(G, result, astNode);
+		result = adjustForLocationDependentSpecialProperties(G, result, astNode);
+		return result;
+	}
+
+	/**
+	 * Poor man's support for index signatures (intended only for .d.ts but must also be checked in N4JS,
+	 * because N4JS may contain classifiers that extends a classifier from .d.ts containing an index signature).
+	 */
+	def private <T extends TypeRef> T adjustForIndexSignatures(RuleEnvironment G, T typeRef, TypableElement astNode) {
+		val parent = astNode?.eContainer;
+		if (parent instanceof ParameterizedPropertyAccessExpression) {
+			if (astNode === parent.target && !typeRef.dynamic) {
+				if (typeRef instanceof ParameterizedTypeRef) {
+					val declType = typeRef.declaredType;
+					if (declType instanceof ContainerType<?>) {
+						val containsIndexSig = AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.hasAnnotation(declType)
+							|| SuperTypesMapper.exists(declType, [AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.hasAnnotation(it)]);
+						if (containsIndexSig) {
+							val typeRefCpy = TypeUtils.copy(typeRef);
+							typeRefCpy.dynamic = true;
+							return typeRefCpy;
+						}
+					}
+				}
+			}
+		}
+		return typeRef;
+	}
+
 	/**
 	 * Make sure that the value of the two location-dependent special properties <code>typeOfObjectLiteral</code> and
 	 * <code>typeOfNewExpressionOrFinalNominal</code> in {@link ParameterizedTypeRef} correctly reflect the current
@@ -160,7 +196,7 @@ public class TypeProcessor extends AbstractProcessor {
 	 * <p>
 	 * For more details see {@link TypeRef#isTypeOfObjectLiteral()}.
 	 */
-	def private <T extends TypeRef> T adjustResultForLocationInAST(RuleEnvironment G, T result, TypableElement astNode) {
+	def private <T extends TypeRef> T adjustForLocationDependentSpecialProperties(RuleEnvironment G, T result, TypableElement astNode) {
 		val typeRef = result;
 		if (typeRef instanceof ParameterizedTypeRef) {
 			val optionalFieldStrategy = N4JSLanguageUtils.

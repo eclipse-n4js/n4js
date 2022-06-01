@@ -49,13 +49,16 @@ import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentListContext;
 import org.eclipse.n4js.dts.TypeScriptParser.TypeArgumentsContext;
 import org.eclipse.n4js.n4JS.AnnotableElement;
+import org.eclipse.n4js.n4JS.AnnotableScriptElement;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.LiteralAnnotationArgument;
 import org.eclipse.n4js.n4JS.ModifiableElement;
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
@@ -173,7 +176,27 @@ public class ParserContextUtils {
 		LiteralAnnotationArgument arg = N4JSFactory.eINSTANCE.createLiteralAnnotationArgument();
 		arg.setLiteral(createStringLiteral(elementName, elementName));
 		ann.getArgs().add(arg);
-		script.getAnnotations().add(0, ann);
+		script.getAnnotations().add(ann);
+	}
+
+	/** Add a <code>@ContainsIndexSignature</code> annotation to the given classifier. */
+	public static void addAnnotationContainsIndexSignature(N4ClassifierDeclaration classifierDecl) {
+		Annotation ann = N4JSFactory.eINSTANCE.createAnnotation();
+		ann.setName(AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.name);
+		addAnnotation(classifierDecl, ann);
+	}
+
+	/** Add the given annotation to the given element. */
+	public static void addAnnotation(AnnotableScriptElement elem, Annotation ann) {
+		if (elem == null || ann == null) {
+			return;
+		}
+		AnnotationList al = elem.getAnnotationList();
+		if (al == null) {
+			al = N4JSFactory.eINSTANCE.createAnnotationList();
+			elem.setAnnotationList(al);
+		}
+		al.getAnnotations().add(ann);
 	}
 
 	/** Sets the given element's "declared this type" by adding a {@code @This()} annotation. */

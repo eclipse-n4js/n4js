@@ -53,6 +53,7 @@ import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
+import org.eclipse.n4js.ts.types.TClassifier;
 
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
@@ -259,11 +260,24 @@ public final class AnnotationDefinition {
 			.retention(RetentionPolicy.TYPE).end();
 
 	/**
-	 * Represents {@code export = x;} in .d.ts files. Only to be used in .d.ts.
+	 * Represents {@code export = x;} in .d.ts files.
+	 * <p>
+	 * Only to be used in .d.ts.
 	 */
 	public final static AnnotationDefinition EXPORT_EQUALS = define("ExportEquals")
 			.targets(SCRIPT)
 			.args(STRING_LITERAL)
+			.transitive()
+			.retention(RetentionPolicy.TYPE)
+			.end();
+
+	/**
+	 * States that the annotated {@link TClassifier classifier} owns an index signature on the .d.ts side.
+	 * <p>
+	 * Only to be used in .d.ts.
+	 */
+	public final static AnnotationDefinition CONTAINS_INDEX_SIGNATURE = define("ContainsIndexSignature")
+			.targets(N4_CLASSIFIER_DECLARATION)
 			.transitive()
 			.retention(RetentionPolicy.TYPE)
 			.end();
