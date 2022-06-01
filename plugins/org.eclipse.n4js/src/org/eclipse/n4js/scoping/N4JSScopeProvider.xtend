@@ -265,7 +265,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 					ModuleNamespaceVirtualType:
 						return createScopeForNamespaceAccess(namespaceLikeType, context, true, false)
 					TClass:
-						return createScopeForMergedNamespaces(context, namespaceLikeType) ?: IScope.NULLSCOPE
+						return createScopeForMergedNamespaces(context, namespaceLikeType, IScope.NULLSCOPE)
 					TEnum:
 						return new DynamicPseudoScope()
 					TNamespace:
@@ -717,7 +717,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 
 		if (mergeCandidate !== null) {
-			val scopeNamespace = createScopeForMergedNamespaces(propertyAccess, mergeCandidate);
+			val scopeNamespace = createScopeForMergedNamespaces(propertyAccess, mergeCandidate, null);
 			if (scopeNamespace !== null) {
 				return new MergedScope(scopeNamespace, parent);
 			}
@@ -726,9 +726,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return parent;
 	}
 
-	/** Returns <code>null</code> if no namespaces are merged onto 'elem'. */
-	private def IScope createScopeForMergedNamespaces(EObject context, Type elem) {
-		var result = null as IScope;
+	/** Returns <code>parentOrNull</code> unchanged if no namespaces are merged onto 'elem'. */
+	private def IScope createScopeForMergedNamespaces(EObject context, Type elem, IScope parentOrNull) {
+		var result = parentOrNull;
 		if (DeclMergingUtils.mayBeMerged(elem)) {
 			val mergedElems = declMergingHelper.getMergedElements(context.eResource, elem);
 			val mergedNamespaces = mergedElems.filter(TNamespace).toList;
@@ -764,11 +764,18 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				]);
 			}
 			N4NamespaceDeclaration: {
-				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
+				var parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
+				val ns = context.definedNamespace;
+				if (ns !== null && DeclMergingUtils.mayBeMerged(ns)) {
+					parent = createScopeForMergedNamespaces(context, ns, parent);
+				}
 				return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredTypes(context, parent);
 			}
 			TNamespace: {
-				val parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
+				var parent = getTypeScopeInternal(context.eContainer, fromStaticContext);
+				if (DeclMergingUtils.mayBeMerged(context)) {
+					parent = createScopeForMergedNamespaces(context, context, parent);
+				}
 				return locallyKnownTypesScopingHelper.scopeWithLocallyDeclaredTypes(context, parent);
 			}
 			TModule: {

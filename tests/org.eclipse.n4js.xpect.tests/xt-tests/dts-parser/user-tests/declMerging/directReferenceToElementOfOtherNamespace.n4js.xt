@@ -1,0 +1,81 @@
+/*
+ * Copyright (c) 2022 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4jsXtTest
+
+	File "def1.d.ts" {
+
+		declare module "a/b/someModule" {
+			namespace N {
+				namespace NN {
+					interface IfcInNN {
+						methodInIfcInNN(p: string): number;
+					}
+				}
+				interface Ifc {
+					methodInIfc(p: string): number;
+				}
+			}
+		}
+	}
+
+	File "def2.d.ts" {
+		declare module "a/b/someModule" {
+			namespace N {
+				interface IfcTest1 extends Ifc {}         // <-- test #1: can directly access 'Ifc'
+				interface IfcTest2 extends NN.IfcInNN {}  // <-- test #2: can directly access 'NN'
+				const cnstTest3: Ifc;                     // <-- test #3: can directly access 'Ifc'
+				const cnstTest4: NN.IfcInNN;              // <-- test #4: can directly access 'NN'
+			}
+		}
+	}
+
+	END_SETUP
+ */
+
+// XPECT noerrors -->
+import { N } from "a/b/someModule"
+
+
+// NOTE: the point of all the following assertions is to ensure that the references "Ifc" / "NN.IfcInNN"
+// from file "def2.d.ts" to file "def1.d.ts" were correctly resolved when building "def2.d.ts".
+
+
+let test1: N.IfcTest1;
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "test1.methodInIfc()"
+test1.methodInIfc();
+// XPECT noerrors -->
+// XPECT type of 'result1' --> number
+let result1 = test1.methodInIfc("");
+
+
+let test2: N.IfcTest2;
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "test2.methodInIfcInNN()"
+test2.methodInIfcInNN();
+// XPECT noerrors -->
+// XPECT type of 'result2' --> number
+let result2 = test2.methodInIfcInNN("");
+
+
+let test3 = N.cnstTest3;
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "test3.methodInIfc()"
+test3.methodInIfc();
+// XPECT noerrors -->
+// XPECT type of 'result3' --> number
+let result3 = test3.methodInIfc("");
+
+
+let test4 = N.cnstTest4;
+// XPECT errors --> "Incorrect number of arguments: expected 1, got 0." at "test4.methodInIfcInNN()"
+test4.methodInIfcInNN();
+// XPECT noerrors -->
+// XPECT type of 'result4' --> number
+let result4 = test2.methodInIfcInNN("");
