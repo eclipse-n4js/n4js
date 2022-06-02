@@ -14,8 +14,13 @@ import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Collections.emptyList;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.utils.DeclMergingHelper;
+import org.eclipse.n4js.utils.DeclMergingUtils;
+import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.utils.collections.Iterables2;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -25,16 +30,23 @@ import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
 import org.eclipse.xtext.scoping.impl.ImportScope;
 
+import com.google.common.base.Optional;
+
 /** Custom import scope that does not trigger resolving imported elements. */
 class NonResolvingImportScope extends ImportScope {
 
 	private List<ImportNormalizer> myNormalizers;
 	private final EClass myType;
+	private final DeclMergingHelper declMergingHelper;
+	private final Optional<BuiltInTypeScope> builtInTypeScope;
 
 	public NonResolvingImportScope(List<ImportNormalizer> namespaceResolvers, IScope parent, ISelectable importFrom,
-			EClass type, boolean ignoreCase) {
+			EClass type, boolean ignoreCase, DeclMergingHelper declMergingHelper,
+			Optional<BuiltInTypeScope> builtInTypeScope) {
 		super(namespaceResolvers, parent, importFrom, type, ignoreCase);
 		this.myType = type;
+		this.declMergingHelper = declMergingHelper;
+		this.builtInTypeScope = builtInTypeScope;
 	}
 
 	@Override
@@ -74,7 +86,23 @@ class NonResolvingImportScope extends ImportScope {
 				}
 			}
 		}
+		result = removeGlobalDtsElementsClashingWithBuiltInTypes(result);
+		result = declMergingHelper.chooseRepresentatives(result);
 		return result;
+	}
+
+	/**
+	 * To give built-in types priority over custom global elements in .d.ts files, we remove global elements defined in
+	 * .d.ts files with a name that conflicts with a built-in type.
+	 */
+	private List<IEObjectDescription> removeGlobalDtsElementsClashingWithBuiltInTypes(List<IEObjectDescription> descs) {
+		if (builtInTypeScope.isPresent()) {
+			Set<QualifiedName> builtInTypeNames = builtInTypeScope.get().getAllElementNames();
+			descs.removeIf(desc -> DeclMergingUtils.isGlobal(desc)
+					&& ResourceType.getResourceType(desc.getEObjectURI()) == ResourceType.DTS
+					&& builtInTypeNames.contains(desc.getName()));
+		}
+		return descs;
 	}
 
 	/*
