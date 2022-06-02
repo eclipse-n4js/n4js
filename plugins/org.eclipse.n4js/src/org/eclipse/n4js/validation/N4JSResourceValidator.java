@@ -71,42 +71,49 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	private List<Issue> doValidate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
 		try (Measurement m = N4JSDataCollectors.dcValidations.getMeasurement()) {
-			List<Issue> issues = doValidateWithMeasurement(resource, mode, cancelIndicator);
 
+			List<Issue> unknownTypeRefIssues = new ArrayList<>();
 			String fileExtension = URIUtils.fileExtension(resource.getURI());
 			switch (fileExtension) {
+			case N4JSGlobals.DTS_FILE_EXTENSION:
+				return Collections.emptyList(); // comment out for debugging
 			case N4JSGlobals.N4JS_FILE_EXTENSION:
 			case N4JSGlobals.N4JSX_FILE_EXTENSION:
 			case N4JSGlobals.N4JSD_FILE_EXTENSION:
-			case N4JSGlobals.DTS_FILE_EXTENSION:
 				if (N4JSLanguageUtils.isDefaultLanguageVersion()) {
-					issues = new ArrayList<>(issues);
-					checkForUnknownTypeRefs(resource, issues);
+					// checkForUnknownTypeRefs(resource, unknownTypeRefIssues);
 				}
 				break;
 			}
 
-			return issues;
+			List<Issue> issues = doValidateWithMeasurement(resource, mode, cancelIndicator);
+			unknownTypeRefIssues.addAll(issues);
+			return unknownTypeRefIssues;
 		}
 	}
 
 	private List<Issue> doValidateWithMeasurement(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
-		// QUICK EXIT #1: in case of invalid file type (e.g. js file in a project with project type definition)
 		final N4JSWorkspaceConfigSnapshot ws = workspaceAccess.getWorkspaceConfig(resource);
 		final N4JSProjectConfigSnapshot project = ws.findProjectContaining(resource.getURI());
+
+		// QUICK EXIT #1: in case of invalid file type (e.g. js file in a project with project type definition)
 		if (project != null && !isValidFileTypeForProjectType(resource, project)) {
 			final Issue issue = createInvalidFileTypeError(resource, project);
 			return Collections.singletonList(issue);
 		}
-
-		// QUICK EXIT #2: for files that match a "noValidate" module filter from package.json
+		// QUICK EXIT #2: for external projects
+		if (project != null && project.isExternal()) {
+			return Collections.emptyList();
+		}
+		// QUICK EXIT #3: for files that match a "noValidate" module filter from package.json
 		if (ws.isNoValidate(resource.getURI())) {
 			return Collections.emptyList();
 		}
+
 		if (resource instanceof N4JSResource) {
 			final N4JSResource resourceCasted = (N4JSResource) resource;
 
-			// QUICK EXIT #3: for "opaque" modules (e.g. js files)
+			// QUICK EXIT #4: for "opaque" modules (e.g. js files)
 			// (pure performance tweak, because those resources have an empty AST anyway; see N4JSResource#doLoad())
 			if (resourceCasted.isOpaque()) {
 				return Collections.emptyList();
@@ -119,7 +126,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 				// ignore this exception/error (we will create an issue for it below)
 			}
 
-			// QUICK EXIT #4: if post-processing failed
+			// QUICK EXIT #5: if post-processing failed
 			if (resourceCasted.isFullyProcessed()
 					&& resourceCasted.getPostProcessingThrowable() != null) {
 				// When getting here, we have an attempt to validate a resource that was post-processed but the
@@ -143,11 +150,12 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		return super.validate(resource, mode, cancelIndicator);
 	}
 
+	@SuppressWarnings("unused")
 	private void checkForUnknownTypeRefs(Resource resource, List<Issue> issues) {
 		if (resource instanceof N4JSResource) {
 			final N4JSResource resourceCasted = (N4JSResource) resource;
 			ASTMetaInfoCache cache = resourceCasted.getASTMetaInfoCache();
-			if (cache.hasUnknownTypeRef()) {
+			if (cache != null && cache.hasUnknownTypeRef()) {
 				boolean hasErrors = issues.stream().anyMatch(issue -> issue.getSeverity() == Severity.ERROR);
 				if (!hasErrors) {
 					final String msg = IssueCodes.getMessageForTYS_UNKNOWN_TYPE_REF();
@@ -175,8 +183,10 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 		String fileExtension = URIUtils.fileExtension(resource.getURI());
 		if (N4JSGlobals.DTS_FILE_EXTENSION.equals(fileExtension)) {
+			// disable these validations in dts files
 			return;
 		}
+
 		operationCanceledManager.checkCanceled(cancelIndicator);
 		List<EObject> contents = resource.getContents();
 		if (!contents.isEmpty()) {
