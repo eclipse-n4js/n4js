@@ -30,7 +30,6 @@ import org.eclipse.emf.ecore.xmi.XMIResource;
 import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
-import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
@@ -96,11 +95,6 @@ public final class UserDataMapper {
 	public static final String USER_DATA_KEY_AST_MD5 = "astMD5";
 
 	/**
-	 * The key in the user data map for storing the uri of the host resource iff this resource was nested.
-	 */
-	public static final String USER_DATA_KEY_NESTED_MODULE_PARENT = "nestedModuleParent";
-
-	/**
 	 * Flag indicating whether the string representation contains binary or human readable data.
 	 */
 	private final static Boolean BINARY = Boolean.TRUE;
@@ -163,11 +157,11 @@ public final class UserDataMapper {
 			// proxies will have no serialized TModule in the index and thus the fall-back behavior of "load from
 			// source" will apply when proxies to such a resource are being resolved.
 			Map<String, String> ret = createTimestampUserData(exportedModule);
-			writeNestedToUserData(originalResource, ret);
 			if (exportedModule.isMainModule()) {
 				ret.put(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY,
 						Boolean.toString(exportedModule.isMainModule()));
 			}
+			System.out.println("Unresolved Proxies in " + originalResource.getURI().toString());
 			return ret;
 		}
 
@@ -203,7 +197,6 @@ public final class UserDataMapper {
 			final String contentHash = Integer.toHexString(originalResource.getParseResult().getRootNode().hashCode());
 			ret.put(USER_DATA_KEY_STATIC_POLYFILL_CONTENTHASH, contentHash);
 		}
-		writeNestedToUserData(originalResource, ret);
 		return ret;
 	}
 
@@ -302,29 +295,6 @@ public final class UserDataMapper {
 	 */
 	public static boolean hasSerializedModule(IEObjectDescription eObjectDescription) {
 		return eObjectDescription.getUserData(USER_DATA_KEY_SERIALIZED_SCRIPT) != null;
-	}
-
-	private static void writeNestedToUserData(N4JSResource originalResource, Map<String, String> ret) {
-		if (originalResource.isNested()) {
-			NestedResourceAdapter nestedResourceAdapter = NestedResourceAdapter.get(originalResource);
-			URI hostUri = nestedResourceAdapter.getHostUri();
-			URI resourceURI = originalResource.getURI();
-			URI relHostUri = hostUri.deresolve(resourceURI);
-			ret.put(USER_DATA_KEY_NESTED_MODULE_PARENT, relHostUri.toFileString());
-		}
-	}
-
-	/** Returns true iff the {@link EObject} of given description is inside a nested/virtual resource */
-	public static boolean isNested(IEObjectDescription eObjectDescription) {
-		return eObjectDescription.getUserData(USER_DATA_KEY_NESTED_MODULE_PARENT) != null;
-	}
-
-	/** Returns the URI of the host of the given description */
-	public static URI getHostUri(IEObjectDescription eObjectDescription) {
-		URI resourceUri = eObjectDescription.getEObjectURI().trimFragment();
-		URI relHostUri = URI.createFileURI(eObjectDescription.getUserData(USER_DATA_KEY_NESTED_MODULE_PARENT));
-		URI hostUri = relHostUri.resolve(resourceUri);
-		return hostUri;
 	}
 
 	private static Joiner joiner = Joiner.on(",");
