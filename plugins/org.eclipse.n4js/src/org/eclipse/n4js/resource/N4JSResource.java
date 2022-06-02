@@ -442,11 +442,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		TModule deserializedModule = null;
 		Iterable<IEObjectDescription> modules = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
 		for (IEObjectDescription module : modules) {
-			if (URIUtils.isVirtualResourceURI(module.getEObjectURI())) {
-				// load the host first that will install adapters to load this nested resource
-				URI host = URIUtils.getBaseOfVirtualResourceURI(module.getEObjectURI());
-				// resourceSet.getResource(host, true);
-			}
 			deserializedModule = UserDataMapper.getDeserializedModuleFromDescription(module, getURI());
 			if (deserializedModule != null) {
 				break;
@@ -733,11 +728,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (!optionClearFunctionBodies) {
 			return;
 		}
-		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
-			return; // There are no function bodies in n4jsd files.
+		String fExt = URIUtils.fileExtension(getURI());
+		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, fExt)
+				|| Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, fExt)) {
+			return; // There are no function bodies in definition files.
 		}
 		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(this);
-		if (project == null || project.isExternal()) {
+		if (project == null || !project.isExternal()) {
 			return;
 		}
 

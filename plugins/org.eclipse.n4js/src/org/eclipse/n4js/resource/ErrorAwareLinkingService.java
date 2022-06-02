@@ -60,8 +60,6 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 
 	private static final EReference PARAMETERIZED_TYPE_REF__DECLARED_TYPE = TypeRefsPackage.eINSTANCE
 			.getParameterizedTypeRef_DeclaredType();
-	private static final EReference PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY = N4JSPackage.eINSTANCE
-			.getParameterizedPropertyAccessExpression_Property();
 	private static final EReference NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT = N4JSPackage.eINSTANCE
 			.getNamedImportSpecifier_ImportedElement();
 
