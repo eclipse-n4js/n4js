@@ -284,11 +284,6 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return null;
 	}
 
-	@Override
-	public boolean indexOnly() {
-		return isInNodeModulesFolder();
-	}
-
 	/** @return true iff this project is located inside a node_modules folder */
 	public boolean isInNodeModulesFolder() {
 		return isInNodeModulesFolder;
