@@ -45,14 +45,16 @@ public class N4JSDocumentExtensions extends DocumentExtensions {
 		}
 		if (Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, URIUtils.fileExtension(uri))) {
 			obj = locationProvider.convertToSource(obj);
-			for (Adapter adapter : obj.eAdapters()) {
-				if (adapter instanceof XITextRegionWithLineInformation) {
-					XITextRegionWithLineInformation nodeInfo = (XITextRegionWithLineInformation) adapter;
-					// convert to 0-based line numbers
-					Position start = new Position(nodeInfo.getLineNumber() - 1, nodeInfo.getCharacter());
-					Position end = new Position(nodeInfo.getEndLineNumber() - 1, nodeInfo.getEndCharacter());
-					Range range = new Range(start, end);
-					return new Location(uri.toString(), range);
+			for (EObject elem2 = obj; elem2 != null; elem2 = elem2.eContainer()) {
+				for (Adapter adapter : elem2.eAdapters()) {
+					if (adapter instanceof XITextRegionWithLineInformation) {
+						XITextRegionWithLineInformation nodeInfo = (XITextRegionWithLineInformation) adapter;
+						// convert to 0-based line numbers
+						Position start = new Position(nodeInfo.getLineNumber() - 1, nodeInfo.getCharacter());
+						Position end = new Position(nodeInfo.getEndLineNumber() - 1, nodeInfo.getEndCharacter());
+						Range range = new Range(start, end);
+						return new Location(uri.toString(), range);
+					}
 				}
 			}
 		}

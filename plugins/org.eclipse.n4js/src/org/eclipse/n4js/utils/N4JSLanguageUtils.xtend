@@ -218,6 +218,14 @@ public class N4JSLanguageUtils {
 		}
 		return languageVersionStr;
 	}
+	
+	/**
+	 * Returns true iff the current version is the default version. True indicates that this version is running
+	 * locally or was created from a local workspace (instead on Gitlab).
+	 */
+	def public static boolean isDefaultLanguageVersion() {
+		return DEFAULT_LANGUAGE_VERSION == getLanguageVersion();
+	}
 
 	/** Like {@link #getLanguageVersion()}, but for the git commit hash the language version was built from. */
 	def public static String getLanguageCommit() {
