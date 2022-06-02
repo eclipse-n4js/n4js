@@ -107,14 +107,20 @@ public class StringLiteralTypeRefImpl extends LiteralTypeRefImpl implements Stri
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
-		String _value = this.getValue();
-		boolean _tripleEquals = (_value == null);
-		if (_tripleEquals) {
-			return "null";
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
+		if (((this.getValue() == null) && (this.getAstValue() == null))) {
+			return "\u00ABnull\u00BB";
 		}
-		String _escapeNonPrintable = Strings.escapeNonPrintable(this.getValue());
-		String _plus = ("\"" + _escapeNonPrintable);
+		String _xifexpression = null;
+		String _value = this.getValue();
+		boolean _tripleNotEquals = (_value != null);
+		if (_tripleNotEquals) {
+			_xifexpression = Strings.escapeNonPrintable(this.getValue());
+		}
+		else {
+			_xifexpression = this.getAstValue().toString();
+		}
+		String _plus = ("\"" + _xifexpression);
 		return (_plus + "\"");
 	}
 
@@ -184,8 +190,8 @@ public class StringLiteralTypeRefImpl extends LiteralTypeRefImpl implements Stri
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.STRING_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.STRING_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

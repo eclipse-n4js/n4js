@@ -117,7 +117,7 @@ public class N4JSElementSignatureProvider {
 			name = ((TVariable) o).isConst() ? "const" : "var";
 		}
 
-		String str = name + ": " + typeRef.getTypeRefAsStringWithAliasResolution();
+		String str = name + ": " + typeRef.getTypeRefAsStringWithAliasExpansion();
 		return str;
 	}
 

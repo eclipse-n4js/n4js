@@ -105,17 +105,28 @@ public class BooleanLiteralTypeRefImpl extends LiteralTypeRefImpl implements Boo
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
 		String _elvis = null;
+		String _elvis_1 = null;
 		Boolean _value = this.getValue();
 		String _string = null;
 		if (_value!=null) {
 			_string=_value.toString();
 		}
 		if (_string != null) {
-			_elvis = _string;
+			_elvis_1 = _string;
 		} else {
-			_elvis = "null";
+			Object _astValue = this.getAstValue();
+			String _string_1 = null;
+			if (_astValue!=null) {
+				_string_1=_astValue.toString();
+			}
+			_elvis_1 = _string_1;
+		}
+		if (_elvis_1 != null) {
+			_elvis = _elvis_1;
+		} else {
+			_elvis = "\u00ABnull\u00BB";
 		}
 		return _elvis;
 	}
@@ -186,8 +197,8 @@ public class BooleanLiteralTypeRefImpl extends LiteralTypeRefImpl implements Boo
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.BOOLEAN_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

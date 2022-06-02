@@ -64,8 +64,8 @@ public class UnknownTypeRefImpl extends TypeRefImpl implements UnknownTypeRef {
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
-		return "[unknown]";
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
+		return "\u00ABunknown\u00BB";
 	}
 
 	/**
@@ -77,7 +77,7 @@ public class UnknownTypeRefImpl extends TypeRefImpl implements UnknownTypeRef {
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.UNKNOWN_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.UNKNOWN_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -100,8 +100,8 @@ public class UnknownTypeRefImpl extends TypeRefImpl implements UnknownTypeRef {
 		switch (operationID) {
 			case TypeRefsPackage.UNKNOWN_TYPE_REF___IS_UNKNOWN:
 				return isUnknown();
-			case TypeRefsPackage.UNKNOWN_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.UNKNOWN_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

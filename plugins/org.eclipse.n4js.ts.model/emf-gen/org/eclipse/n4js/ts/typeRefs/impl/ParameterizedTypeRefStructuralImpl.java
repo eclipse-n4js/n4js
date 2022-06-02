@@ -47,7 +47,6 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TStructMethod;
 import org.eclipse.n4js.ts.types.TStructuralType;
-import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
@@ -275,15 +274,11 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
 		final EList<TStructMember> membersWithCallConstructSigs = this.getStructuralMembersWithCallConstructSignatures();
 		TypingStrategy _typingStrategy = this.getTypingStrategy();
-		Type _declaredType = this.getDeclaredType();
-		String _rawTypeAsString = null;
-		if (_declaredType!=null) {
-			_rawTypeAsString=_declaredType.getRawTypeAsString();
-		}
-		String _plus = (_typingStrategy + _rawTypeAsString);
+		String _internalGetDeclaredTypeAsString = this.internalGetDeclaredTypeAsString(resolveProxies);
+		String _plus = (_typingStrategy + _internalGetDeclaredTypeAsString);
 		String _xifexpression = null;
 		boolean _isEmpty = this.getDeclaredTypeArgs().isEmpty();
 		if (_isEmpty) {
@@ -292,7 +287,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 		else {
 			final Function1<TypeArgument, String> _function = new Function1<TypeArgument, String>() {
 				public String apply(final TypeArgument it) {
-					return it.getTypeRefAsString();
+					return it.getTypeRefAsString(resolveProxies);
 				}
 			};
 			String _join = IterableExtensions.join(XcoreEListExtensions.<TypeArgument, String>map(this.getDeclaredTypeArgs(), _function), ",");
@@ -324,7 +319,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 					public String apply(final TypeVariableMapping it) {
 						String _typeAsString = it.getTypeVar().getTypeAsString();
 						String _plus = (_typeAsString + "->");
-						String _typeRefAsString = it.getTypeArg().getTypeRefAsString();
+						String _typeRefAsString = it.getTypeArg().getTypeRefAsString(resolveProxies);
 						return (_plus + _typeRefAsString);
 					}
 				};
@@ -549,7 +544,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -563,7 +558,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 		if (baseClass == ParameterizedTypeRef.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY;
-				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -595,8 +590,8 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 				return null;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS:
 				return getStructuralMembers();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES:
 				return getStructuralMembersWithCallConstructSignatures();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE:

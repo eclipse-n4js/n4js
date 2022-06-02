@@ -52,8 +52,8 @@ public class DeferredTypeRefImpl extends TypeRefImpl implements DeferredTypeRef 
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
-		return "*deferred*";
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
+		return "\u00ABdeferred\u00BB";
 	}
 
 	/**
@@ -64,8 +64,8 @@ public class DeferredTypeRefImpl extends TypeRefImpl implements DeferredTypeRef 
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.DEFERRED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.DEFERRED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

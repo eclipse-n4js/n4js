@@ -318,7 +318,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
 		TypingStrategy _typingStrategy = this.getTypingStrategy();
 		String _plus = (_typingStrategy + "this");
 		String _modifiersAsString = this.getModifiersAsString();
@@ -547,7 +547,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -561,7 +561,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 		}
 		if (baseClass == ThisTypeRef.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				case TypeRefsPackage.THIS_TYPE_REF___GET_TYPING_STRATEGY: return TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___GET_TYPING_STRATEGY;
 				case TypeRefsPackage.THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS: return TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS;
 				case TypeRefsPackage.THIS_TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING: return TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___IS_USE_SITE_STRUCTURAL_TYPING;
@@ -598,8 +598,8 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 				return isUseSiteStructuralTyping();
 			case TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS:
 				return getStructuralMembers();
-			case TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 			case TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___GET_STRUCTURAL_MEMBERS_WITH_CALL_CONSTRUCT_SIGNATURES:
 				return getStructuralMembersWithCallConstructSignatures();
 			case TypeRefsPackage.THIS_TYPE_REF_STRUCTURAL___HAS_POSTPONED_SUBSTITUTION_FOR__TYPEVARIABLE:

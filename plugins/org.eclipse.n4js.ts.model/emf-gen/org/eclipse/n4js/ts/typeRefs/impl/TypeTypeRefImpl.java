@@ -164,7 +164,7 @@ public class TypeTypeRefImpl extends BaseTypeRefImpl implements TypeTypeRef {
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
 		String _xifexpression = null;
 		boolean _isConstructorRef = this.isConstructorRef();
 		if (_isConstructorRef) {
@@ -174,14 +174,13 @@ public class TypeTypeRefImpl extends BaseTypeRefImpl implements TypeTypeRef {
 			_xifexpression = "type";
 		}
 		final String kwd = _xifexpression;
+		final TypeArgument _typeArg = this.getTypeArg();
 		String _xifexpression_1 = null;
-		TypeArgument _typeArg = this.getTypeArg();
-		boolean _tripleEquals = (null == _typeArg);
-		if (_tripleEquals) {
+		if ((_typeArg == null)) {
 			_xifexpression_1 = "";
 		}
 		else {
-			_xifexpression_1 = this.getTypeArg().getTypeRefAsString();
+			_xifexpression_1 = _typeArg.getTypeRefAsString(resolveProxies);
 		}
 		final String refName = _xifexpression_1;
 		String _modifiersAsString = this.getModifiersAsString();
@@ -278,8 +277,8 @@ public class TypeTypeRefImpl extends BaseTypeRefImpl implements TypeTypeRef {
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.TYPE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.TYPE_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

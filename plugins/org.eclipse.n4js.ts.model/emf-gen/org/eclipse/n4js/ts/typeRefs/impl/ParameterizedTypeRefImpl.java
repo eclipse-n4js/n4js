@@ -39,6 +39,8 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage.Literals;
+
 import org.eclipse.n4js.ts.types.TN4Classifier;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.Type;
@@ -480,12 +482,8 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
-		Type _declaredType = this.getDeclaredType();
-		String _rawTypeAsString = null;
-		if (_declaredType!=null) {
-			_rawTypeAsString=_declaredType.getRawTypeAsString();
-		}
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
+		String _internalGetDeclaredTypeAsString = this.internalGetDeclaredTypeAsString(resolveProxies);
 		String _xifexpression = null;
 		boolean _isEmpty = this.getDeclaredTypeArgs().isEmpty();
 		if (_isEmpty) {
@@ -494,16 +492,51 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		else {
 			final Function1<TypeArgument, String> _function = new Function1<TypeArgument, String>() {
 				public String apply(final TypeArgument it) {
-					return it.getTypeRefAsString();
+					return it.getTypeRefAsString(resolveProxies);
 				}
 			};
 			String _join = IterableExtensions.join(XcoreEListExtensions.<TypeArgument, String>map(this.getDeclaredTypeArgs(), _function), ",");
 			String _plus = ("<" + _join);
 			_xifexpression = (_plus + ">");
 		}
-		String _plus_1 = (_rawTypeAsString + _xifexpression);
+		String _plus_1 = (_internalGetDeclaredTypeAsString + _xifexpression);
 		String _modifiersAsString = this.getModifiersAsString();
 		return (_plus_1 + _modifiersAsString);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String internalGetDeclaredTypeAsString(final boolean resolveProxies) {
+		Object _eGet = this.eGet(Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, resolveProxies);
+		final Type declType = ((Type) _eGet);
+		String _xifexpression = null;
+		if ((declType == null)) {
+			_xifexpression = "\u00ABnull\u00BB";
+		}
+		else {
+			String _xifexpression_1 = null;
+			boolean _eIsProxy = declType.eIsProxy();
+			if (_eIsProxy) {
+				String _elvis = null;
+				String _declaredTypeAsText = this.getDeclaredTypeAsText();
+				if (_declaredTypeAsText != null) {
+					_elvis = _declaredTypeAsText;
+				} else {
+					_elvis = "";
+				}
+				_xifexpression_1 = (_elvis + "\u00ABproxy\u00BB");
+			}
+			else {
+				_xifexpression_1 = declType.getRawTypeAsString();
+			}
+			_xifexpression = _xifexpression_1;
+		}
+		final String declTypeStr = _xifexpression;
+		return declTypeStr;
 	}
 
 	/**
@@ -737,7 +770,7 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -770,8 +803,10 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 				return getTypingStrategy();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS:
 				return getTypeArgsWithDefaults();
-			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___INTERNAL_GET_DECLARED_TYPE_AS_STRING__BOOLEAN:
+				return internalGetDeclaredTypeAsString((Boolean)arguments.get(0));
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_PARAMETERIZED:
 				return isParameterized();
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_GENERIC:

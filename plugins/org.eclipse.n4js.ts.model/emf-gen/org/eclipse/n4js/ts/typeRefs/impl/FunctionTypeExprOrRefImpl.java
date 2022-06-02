@@ -15,13 +15,17 @@ import java.lang.reflect.InvocationTargetException;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage.Literals;
 
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TFunction;
@@ -198,12 +202,28 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
+		if ((!resolveProxies)) {
+			final FunctionTypeExprOrRef _this = this;
+			if ((_this instanceof FunctionTypeRef)) {
+				Object _eGet = ((FunctionTypeRef)_this).eGet(Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE, false);
+				final EObject declType = ((EObject) _eGet);
+				if (((declType != null) && declType.eIsProxy())) {
+					String _declaredTypeAsText = ((FunctionTypeRef)_this).getDeclaredTypeAsText();
+					boolean _tripleNotEquals = (_declaredTypeAsText != null);
+					if (_tripleNotEquals) {
+						String _declaredTypeAsText_1 = ((FunctionTypeRef)_this).getDeclaredTypeAsText();
+						return (_declaredTypeAsText_1 + "\u00ABproxy\u00BB");
+					}
+					return "{function(???):???}\u00ABproxy\u00BB";
+				}
+			}
+		}
 		String _xifexpression = null;
 		TypeRef _declaredThisType = this.getDeclaredThisType();
-		boolean _tripleNotEquals = (_declaredThisType != null);
-		if (_tripleNotEquals) {
-			String _typeRefAsString = this.getDeclaredThisType().getTypeRefAsString();
+		boolean _tripleNotEquals_1 = (_declaredThisType != null);
+		if (_tripleNotEquals_1) {
+			String _typeRefAsString = this.getDeclaredThisType().getTypeRefAsString(resolveProxies);
 			String _plus = ("@This(" + _typeRefAsString);
 			_xifexpression = (_plus + ") ");
 		}
@@ -239,9 +259,9 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 		String _plus_7 = (_plus_6 + ")");
 		String _xifexpression_2 = null;
 		TypeRef _returnTypeRef = this.getReturnTypeRef();
-		boolean _tripleNotEquals_1 = (_returnTypeRef != null);
-		if (_tripleNotEquals_1) {
-			String _typeRefAsString_1 = this.getReturnTypeRef().getTypeRefAsString();
+		boolean _tripleNotEquals_2 = (_returnTypeRef != null);
+		if (_tripleNotEquals_2) {
+			String _typeRefAsString_1 = this.getReturnTypeRef().getTypeRefAsString(resolveProxies);
 			_xifexpression_2 = (":" + _typeRefAsString_1);
 		}
 		else {
@@ -271,7 +291,7 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -313,8 +333,8 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 				return isRaw();
 			case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___GET_FPAR_FOR_ARG_IDX__INT:
 				return getFparForArgIdx((Integer)arguments.get(0));
-			case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.FUNCTION_TYPE_EXPR_OR_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

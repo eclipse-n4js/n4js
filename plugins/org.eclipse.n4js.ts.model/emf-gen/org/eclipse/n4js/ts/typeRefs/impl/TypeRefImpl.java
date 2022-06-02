@@ -340,28 +340,12 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
-	public String getTypeRefAsString() {
-		final ParameterizedTypeRef oatr = this.getOriginalAliasTypeRef();
-		if ((oatr != null)) {
-			return oatr.getTypeRefAsString();
-		}
-		return this.internalGetTypeRefAsString();
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public String getTypeRefAsStringWithAliasResolution() {
-		final String result = this.getTypeRefAsString();
+	public String getTypeRefAsString(final boolean resolveProxies) {
 		boolean _isAliasResolved = this.isAliasResolved();
 		if (_isAliasResolved) {
-			String _internalGetTypeRefAsString = this.internalGetTypeRefAsString();
-			return ((result + " <=> ") + _internalGetTypeRefAsString);
+			return this.getOriginalAliasTypeRef().getTypeRefAsString(resolveProxies);
 		}
-		return result;
+		return this.internalGetTypeRefAsString(resolveProxies);
 	}
 
 	/**
@@ -370,8 +354,15 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * @generated
 	 */
 	@Override
-	public String toString() {
-		return this.getTypeRefAsStringWithAliasResolution();
+	public String getTypeRefAsStringWithAliasExpansion(final boolean resolveProxies) {
+		boolean _isAliasResolved = this.isAliasResolved();
+		if (_isAliasResolved) {
+			String _typeRefAsString = this.getTypeRefAsString(resolveProxies);
+			String _plus = (_typeRefAsString + " <=> ");
+			String _internalGetTypeRefAsString = this.internalGetTypeRefAsString(resolveProxies);
+			return (_plus + _internalGetTypeRefAsString);
+		}
+		return this.getTypeRefAsString(resolveProxies);
 	}
 
 	/**
@@ -548,7 +539,8 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
 				case TypeRefsPackage.TYPE_ARGUMENT___IS_TYPE_REF: return TypeRefsPackage.TYPE_REF___IS_TYPE_REF;
-				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING: return TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN;
+				case TypeRefsPackage.TYPE_ARGUMENT___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN: return TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -595,12 +587,10 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return getDeclaredTypeArgs();
 			case TypeRefsPackage.TYPE_REF___GET_TYPE_ARGS_WITH_DEFAULTS:
 				return getTypeArgsWithDefaults();
-			case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING:
-				return getTypeRefAsString();
-			case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_RESOLUTION:
-				return getTypeRefAsStringWithAliasResolution();
-			case TypeRefsPackage.TYPE_REF___TO_STRING:
-				return toString();
+			case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return getTypeRefAsString((Boolean)arguments.get(0));
+			case TypeRefsPackage.TYPE_REF___GET_TYPE_REF_AS_STRING_WITH_ALIAS_EXPANSION__BOOLEAN:
+				return getTypeRefAsStringWithAliasExpansion((Boolean)arguments.get(0));
 			case TypeRefsPackage.TYPE_REF___IS_TOP_TYPE:
 				return isTopType();
 			case TypeRefsPackage.TYPE_REF___IS_BOTTOM_TYPE:
@@ -619,6 +609,22 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return getASTNodeOptionalFieldStrategy();
 		}
 		return super.eInvoke(operationID, arguments);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public String toString() {
+		if (eIsProxy()) return super.toString();
+
+		StringBuilder result = new StringBuilder(super.toString());
+		result.append(" (followedByQuestionMark: ");
+		result.append(followedByQuestionMark);
+		result.append(')');
+		return result.toString();
 	}
 
 } //TypeRefImpl

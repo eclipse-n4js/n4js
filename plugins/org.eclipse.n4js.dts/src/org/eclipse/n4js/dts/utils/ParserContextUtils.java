@@ -82,8 +82,8 @@ import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.google.common.primitives.Ints;
 
 /**
@@ -544,7 +544,8 @@ public class ParserContextUtils {
 	public static void removeOverloadingFunctionDefs(LazyLinkingResource resource,
 			Collection<? extends EObject> elements) {
 
-		Multimap<String, FunctionDefinition> functionsByName = HashMultimap.create();
+		Multimap<String, FunctionDefinition> functionsByName = MultimapBuilder.linkedHashKeys().linkedHashSetValues()
+				.build();
 		for (EObject elem : elements) {
 			if (elem instanceof ExportDeclaration) {
 				ExportDeclaration expDecl = (ExportDeclaration) elem;
@@ -570,10 +571,10 @@ public class ParserContextUtils {
 					FormalParameter fPar = survivor.getFpars().get(i);
 					fparNames.put(i, fPar.getName());
 					fparTypes.put(i, fPar.getDeclaredTypeRefInAST() == null ? null
-							: fPar.getDeclaredTypeRefInAST().getTypeRefAsString());
+							: fPar.getDeclaredTypeRefInAST().getTypeRefAsString(false));
 				}
 				returnTypeName = survivor.getDeclaredReturnTypeRefInAST() == null ? null
-						: survivor.getDeclaredReturnTypeRefInAST().getTypeRefAsString();
+						: survivor.getDeclaredReturnTypeRefInAST().getTypeRefAsString(false);
 
 				for (FunctionDefinition fd = iter.next(); fd != null; fd = iter.hasNext() ? iter.next() : null) {
 					int survFPars = survivor.getFpars().size();
@@ -587,17 +588,17 @@ public class ParserContextUtils {
 							}
 							String oldTypeRef = fparTypes.get(i);
 							if (!Objects.equals(oldTypeRef, fPar.getDeclaredTypeRefInAST() == null ? null
-									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString())) {
+									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString(false))) {
 								fparTypes.put(i, null);
 							}
 						} else {
 							fparNames.put(i, fPar.getName());
 							fparTypes.put(i, fPar.getDeclaredTypeRefInAST() == null ? null
-									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString());
+									: fPar.getDeclaredTypeRefInAST().getTypeRefAsString(false));
 						}
 
 						if (!Objects.equals(returnTypeName, fd.getDeclaredReturnTypeRefInAST() == null ? null
-								: fd.getDeclaredReturnTypeRefInAST().getTypeRefAsString())) {
+								: fd.getDeclaredReturnTypeRefInAST().getTypeRefAsString(false))) {
 							returnTypeName = null;
 						}
 					}

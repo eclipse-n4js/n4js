@@ -151,8 +151,9 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
 		String _elvis = null;
+		String _elvis_1 = null;
 		BigDecimal _value = this.getValue();
 		BigDecimal _stripTrailingZeros = null;
 		if (_value!=null) {
@@ -163,9 +164,19 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 			_plainString=_stripTrailingZeros.toPlainString();
 		}
 		if (_plainString != null) {
-			_elvis = _plainString;
+			_elvis_1 = _plainString;
 		} else {
-			_elvis = "null";
+			Object _astValue = this.getAstValue();
+			String _string = null;
+			if (_astValue!=null) {
+				_string=_astValue.toString();
+			}
+			_elvis_1 = _string;
+		}
+		if (_elvis_1 != null) {
+			_elvis = _elvis_1;
+		} else {
+			_elvis = "\u00ABnull\u00BB";
 		}
 		return _elvis;
 	}
@@ -246,8 +257,8 @@ public class NumericLiteralTypeRefImpl extends LiteralTypeRefImpl implements Num
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.NUMERIC_LITERAL_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 		}
 		return super.eInvoke(operationID, arguments);
 	}

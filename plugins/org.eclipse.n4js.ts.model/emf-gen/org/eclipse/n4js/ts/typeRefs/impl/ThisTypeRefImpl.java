@@ -59,7 +59,7 @@ public abstract class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTyp
 	 * @generated
 	 */
 	@Override
-	public String internalGetTypeRefAsString() {
+	public String internalGetTypeRefAsString(final boolean resolveProxies) {
 		String _modifiersAsString = this.getModifiersAsString();
 		return ("this" + _modifiersAsString);
 	}
@@ -103,7 +103,7 @@ public abstract class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTyp
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypeArgument.class) {
 			switch (baseOperationID) {
-				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING: return TypeRefsPackage.THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING;
+				case TypeRefsPackage.TYPE_ARGUMENT___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN: return TypeRefsPackage.THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
 			}
 		}
@@ -126,8 +126,8 @@ public abstract class ThisTypeRefImpl extends BaseTypeRefImpl implements ThisTyp
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
-			case TypeRefsPackage.THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING:
-				return internalGetTypeRefAsString();
+			case TypeRefsPackage.THIS_TYPE_REF___INTERNAL_GET_TYPE_REF_AS_STRING__BOOLEAN:
+				return internalGetTypeRefAsString((Boolean)arguments.get(0));
 			case TypeRefsPackage.THIS_TYPE_REF___GET_TYPING_STRATEGY:
 				return getTypingStrategy();
 			case TypeRefsPackage.THIS_TYPE_REF___GET_STRUCTURAL_MEMBERS:

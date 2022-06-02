@@ -57,15 +57,72 @@ public interface TypeArgument extends EObject {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * Returns this type argument/reference as a string, usually according to N4JS syntax.
-	 * <p>
-	 * Both unresolved and resolved references to a type alias will be represented as a
-	 * reference to a type alias (i.e. only the name of the type alias is included; the
-	 * aliased/actual type is ignored).
+	 * Both unresolved and resolved references to a type alias will be shown as a reference to the type alias
+	 * (i.e. only the name of the type alias is included; the aliased/actual type is ignored).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 * @generated
 	 */
 	String getTypeRefAsString();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  See {@link TypeArgument#getTypeRefAsString()}.
+	 * <!-- end-model-doc -->
+	 * @model unique="false" resolveProxiesUnique="false"
+	 * @generated
+	 */
+	String getTypeRefAsString(boolean resolveProxies);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Same as {@link TypeArgument#getTypeRefAsString()}, except that resolved(!) references to
+	 * a type alias are handled differently: only the aliased/actual type will be shown (the type
+	 * alias will be ignored).
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getTypeRefAsStringWithAliasResolution();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  See {@link TypeArgument#getTypeRefAsStringWithAliasResolution()}.
+	 * <!-- end-model-doc -->
+	 * @model unique="false" resolveProxiesUnique="false"
+	 * @generated
+	 */
+	String getTypeRefAsStringWithAliasResolution(boolean resolveProxies);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Same as {@link TypeArgument#getTypeRefAsString()}, except that resolved(!) references to
+	 * a type alias are handled differently: both the name of the type alias and the aliased/actual
+	 * type are shown, separated by {@code <=>}.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	String getTypeRefAsStringWithAliasExpansion();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 *  See {@link TypeArgument#getTypeRefAsStringWithAliasExpansion()}.
+	 * <!-- end-model-doc -->
+	 * @model unique="false" resolveProxiesUnique="false"
+	 * @generated
+	 */
+	String getTypeRefAsStringWithAliasExpansion(boolean resolveProxies);
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -78,9 +135,17 @@ public interface TypeArgument extends EObject {
 	 * resolved references to a type alias will only include the aliased/actual type
 	 * (the fact that a type alias is involved is not shown at all).
 	 * <!-- end-model-doc -->
+	 * @model unique="false" resolveProxiesUnique="false"
+	 * @generated
+	 */
+	String internalGetTypeRefAsString(boolean resolveProxies);
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
 	 * @model unique="false"
 	 * @generated
 	 */
-	String internalGetTypeRefAsString();
+	String toString();
 
 } // TypeArgument
