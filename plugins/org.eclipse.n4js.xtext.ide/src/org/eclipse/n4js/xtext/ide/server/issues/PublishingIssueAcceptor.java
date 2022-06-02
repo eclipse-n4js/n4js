@@ -31,13 +31,14 @@ import com.google.inject.Singleton;
 @Singleton
 public class PublishingIssueAcceptor implements IssueAcceptor {
 
+	/***/
 	@Inject
-	private UriExtensions uriExtensions;
-
+	protected UriExtensions uriExtensions;
+	/***/
 	@Inject
-	private IssueToDiagnosticConverter diagnosticIssueConverter;
-
-	private LanguageClient client;
+	protected IssueToDiagnosticConverter diagnosticIssueConverter;
+	/***/
+	protected LanguageClient client;
 
 	/** Sets the client to communicate to */
 	public void connect(LanguageClient languageClient) {
