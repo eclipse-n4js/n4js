@@ -67,14 +67,15 @@ public class JSONGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cCommaKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
 		private final Assignment cNameValuePairsAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
 		private final RuleCall cNameValuePairsNameValuePairParserRuleCall_2_1_1_0 = (RuleCall)cNameValuePairsAssignment_2_1_1.eContents().get(0);
-		private final Keyword cRightCurlyBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Keyword cCommaKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		
 		//JSONObject:
-		//    {JSONObject} '{' (nameValuePairs+=NameValuePair (',' nameValuePairs+=NameValuePair)*)? '}'
+		//    {JSONObject} '{' (nameValuePairs+=NameValuePair (',' nameValuePairs+=NameValuePair)*)? ','? '}'
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{JSONObject} '{' (nameValuePairs+=NameValuePair (',' nameValuePairs+=NameValuePair)*)? '}'
+		//{JSONObject} '{' (nameValuePairs+=NameValuePair (',' nameValuePairs+=NameValuePair)*)? ','? '}'
 		public Group getGroup() { return cGroup; }
 		
 		//{JSONObject}
@@ -104,8 +105,11 @@ public class JSONGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//NameValuePair
 		public RuleCall getNameValuePairsNameValuePairParserRuleCall_2_1_1_0() { return cNameValuePairsNameValuePairParserRuleCall_2_1_1_0; }
 		
+		//','?
+		public Keyword getCommaKeyword_3() { return cCommaKeyword_3; }
+		
 		//'}'
-		public Keyword getRightCurlyBracketKeyword_3() { return cRightCurlyBracketKeyword_3; }
+		public Keyword getRightCurlyBracketKeyword_4() { return cRightCurlyBracketKeyword_4; }
 	}
 	public class NameValuePairElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.NameValuePair");
@@ -155,14 +159,15 @@ public class JSONGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		private final Keyword cCommaKeyword_2_1_0 = (Keyword)cGroup_2_1.eContents().get(0);
 		private final Assignment cElementsAssignment_2_1_1 = (Assignment)cGroup_2_1.eContents().get(1);
 		private final RuleCall cElementsJSONValueParserRuleCall_2_1_1_0 = (RuleCall)cElementsAssignment_2_1_1.eContents().get(0);
-		private final Keyword cRightSquareBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Keyword cCommaKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		private final Keyword cRightSquareBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		
 		//JSONArray:
-		//    {JSONArray} '[' (elements+=JSONValue (',' elements+=JSONValue)*)? ']'
+		//    {JSONArray} '[' (elements+=JSONValue (',' elements+=JSONValue)*)? ','? ']'
 		//;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{JSONArray} '[' (elements+=JSONValue (',' elements+=JSONValue)*)? ']'
+		//{JSONArray} '[' (elements+=JSONValue (',' elements+=JSONValue)*)? ','? ']'
 		public Group getGroup() { return cGroup; }
 		
 		//{JSONArray}
@@ -192,8 +197,11 @@ public class JSONGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 		//JSONValue
 		public RuleCall getElementsJSONValueParserRuleCall_2_1_1_0() { return cElementsJSONValueParserRuleCall_2_1_1_0; }
 		
+		//','?
+		public Keyword getCommaKeyword_3() { return cCommaKeyword_3; }
+		
 		//']'
-		public Keyword getRightSquareBracketKeyword_3() { return cRightSquareBracketKeyword_3; }
+		public Keyword getRightSquareBracketKeyword_4() { return cRightSquareBracketKeyword_4; }
 	}
 	public class JSONValueElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.json.JSON.JSONValue");
@@ -422,7 +430,7 @@ public class JSONGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//JSONObject:
-	//    {JSONObject} '{' (nameValuePairs+=NameValuePair (',' nameValuePairs+=NameValuePair)*)? '}'
+	//    {JSONObject} '{' (nameValuePairs+=NameValuePair (',' nameValuePairs+=NameValuePair)*)? ','? '}'
 	//;
 	public JSONObjectElements getJSONObjectAccess() {
 		return pJSONObject;
@@ -446,7 +454,7 @@ public class JSONGrammarAccess extends AbstractElementFinder.AbstractGrammarElem
 	}
 	
 	//JSONArray:
-	//    {JSONArray} '[' (elements+=JSONValue (',' elements+=JSONValue)*)? ']'
+	//    {JSONArray} '[' (elements+=JSONValue (',' elements+=JSONValue)*)? ','? ']'
 	//;
 	public JSONArrayElements getJSONArrayAccess() {
 		return pJSONArray;

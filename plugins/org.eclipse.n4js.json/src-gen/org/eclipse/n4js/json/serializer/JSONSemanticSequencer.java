@@ -76,12 +76,14 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	}
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSONArray returns JSONArray
 	 *     JSONValue returns JSONArray
 	 *
 	 * Constraint:
 	 *     (elements+=JSONValue elements+=JSONValue*)?
+	 * </pre>
 	 */
 	protected void sequence_JSONArray(ISerializationContext context, JSONArray semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -89,12 +91,14 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSONValue returns JSONBooleanLiteral
 	 *     JSONBooleanLiteral returns JSONBooleanLiteral
 	 *
 	 * Constraint:
 	 *     booleanValue?='true'?
+	 * </pre>
 	 */
 	protected void sequence_JSONBooleanLiteral(ISerializationContext context, JSONBooleanLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -102,11 +106,13 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSONDocument returns JSONDocument
 	 *
 	 * Constraint:
 	 *     content=JSONValue?
+	 * </pre>
 	 */
 	protected void sequence_JSONDocument(ISerializationContext context, JSONDocument semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -114,12 +120,14 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSONValue returns JSONNullLiteral
 	 *     JSONNullLiteral returns JSONNullLiteral
 	 *
 	 * Constraint:
 	 *     {JSONNullLiteral}
+	 * </pre>
 	 */
 	protected void sequence_JSONNullLiteral(ISerializationContext context, JSONNullLiteral semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -127,12 +135,14 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSONValue returns JSONNumericLiteral
 	 *     JSONNumericLiteral returns JSONNumericLiteral
 	 *
 	 * Constraint:
 	 *     value=NUMBER
+	 * </pre>
 	 */
 	protected void sequence_JSONNumericLiteral(ISerializationContext context, JSONNumericLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -146,12 +156,14 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSONObject returns JSONObject
 	 *     JSONValue returns JSONObject
 	 *
 	 * Constraint:
 	 *     (nameValuePairs+=NameValuePair nameValuePairs+=NameValuePair*)?
+	 * </pre>
 	 */
 	protected void sequence_JSONObject(ISerializationContext context, JSONObject semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -159,12 +171,14 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     JSONValue returns JSONStringLiteral
 	 *     JSONStringLiteral returns JSONStringLiteral
 	 *
 	 * Constraint:
 	 *     value=STRING
+	 * </pre>
 	 */
 	protected void sequence_JSONStringLiteral(ISerializationContext context, JSONStringLiteral semanticObject) {
 		if (errorAcceptor != null) {
@@ -178,11 +192,13 @@ public class JSONSemanticSequencer extends AbstractDelegatingSemanticSequencer {
 	
 	
 	/**
+	 * <pre>
 	 * Contexts:
 	 *     NameValuePair returns NameValuePair
 	 *
 	 * Constraint:
 	 *     (name=STRING value=JSONValue)
+	 * </pre>
 	 */
 	protected void sequence_NameValuePair(ISerializationContext context, NameValuePair semanticObject) {
 		if (errorAcceptor != null) {
