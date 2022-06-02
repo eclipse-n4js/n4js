@@ -41,6 +41,9 @@ public class ManualParseTreeWalker {
 	}
 
 	private void visit(ParserRuleContext ctx) {
+		if (ctx.exception != null && ctx.exception.getCtx() == ctx) {
+			return;
+		}
 		currentQueue = new ArrayList<>();
 		enter(ctx);
 
