@@ -30,6 +30,11 @@ import org.eclipse.n4js.scoping.validation.ScopeElementIssue;
 import org.eclipse.n4js.scoping.validation.ScopeInfo;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
+import org.eclipse.n4js.ts.types.AnyType;
+import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironment;
+import org.eclipse.n4js.typesystem.utils.RuleEnvironmentExtensions;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
@@ -55,6 +60,8 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 
 	private static final EReference PARAMETERIZED_TYPE_REF__DECLARED_TYPE = TypeRefsPackage.eINSTANCE
 			.getParameterizedTypeRef_DeclaredType();
+	private static final EReference PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY = N4JSPackage.eINSTANCE
+			.getParameterizedPropertyAccessExpression_Property();
 	private static final EReference NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT = N4JSPackage.eINSTANCE
 			.getNamedImportSpecifier_ImportedElement();
 
@@ -155,6 +162,19 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 				markAsUsed(eObjectDescription, context);
 
 				return Collections.singletonList(candidate);
+			}
+		}
+
+		if (N4JSGlobals.DTS_FILE_EXTENSION.equals(URIUtils.fileExtension(context.eResource().getURI()))) {
+			if (ref == PARAMETERIZED_TYPE_REF__DECLARED_TYPE || ref == NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT) {
+				RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(context);
+				AnyType anyType = RuleEnvironmentExtensions.anyType(G);
+				return Collections.singletonList(anyType);
+
+			} else if (ref.getEType() == TypesPackage.eINSTANCE.getType()) {
+				RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(context);
+				AnyType anyType = RuleEnvironmentExtensions.anyType(G);
+				return Collections.singletonList(anyType);
 			}
 		}
 		return Collections.emptyList();
