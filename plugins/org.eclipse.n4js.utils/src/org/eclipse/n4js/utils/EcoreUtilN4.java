@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -376,33 +377,40 @@ public class EcoreUtilN4 {
 	 * @see EcoreUtilN4#hasUnresolvedProxies(EObject)
 	 */
 	private static class BailOutCrossReferencer extends EcoreUtil.ProxyCrossReferencer {
-
-		private static class UnresolvedProxyException extends RuntimeException {
-			// nothing to do
-		}
+		boolean unresolvedProxyFound = false;
 
 		protected BailOutCrossReferencer(EObject eObject) {
 			super(eObject);
 		}
 
-		/**
-		 * Rather than recording the proxy, throw an exception that is handled internally.
-		 */
+		/** Set flag to indicate the unresolved proxy. */
 		@Override
 		protected void add(InternalEObject eObject, EReference eReference, EObject crossReferencedEObject) {
-			throw new UnresolvedProxyException();
+			unresolvedProxyFound = true;
 		}
 
-		/**
-		 * Returns true if the object or any of its children has unresolved proxies.
-		 */
-		protected static boolean hasUnresolvedProxies(EObject object) {
-			try {
-				new BailOutCrossReferencer(object).findProxyCrossReferences();
-			} catch (UnresolvedProxyException e) {
-				return true;
+		@Override
+		protected void crossReference() {
+			for (TreeIterator<Notifier> contents = newContentsIterator(); !unresolvedProxyFound
+					&& contents.hasNext();) {
+
+				Object content = contents.next();
+				if (content instanceof EObject) {
+					EObject eObject = (EObject) content;
+					if (containment(eObject)) {
+						handleCrossReference(eObject);
+					} else {
+						contents.prune();
+					}
+				}
 			}
-			return false;
+		}
+
+		/** Returns true if the object or any of its children has unresolved proxies. */
+		protected static boolean hasUnresolvedProxies(EObject object) {
+			BailOutCrossReferencer bailOutCrossReferencer = new BailOutCrossReferencer(object);
+			bailOutCrossReferencer.findProxyCrossReferences();
+			return bailOutCrossReferencer.unresolvedProxyFound;
 		}
 	}
 
