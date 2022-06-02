@@ -22,7 +22,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
@@ -665,18 +664,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	private def IScope doCreateScopeForNamespaceAccess(TModule targetModule, EObject context, boolean includeHollows, boolean includeValueOnlyElements) {
 		var result = scope_AllTopLevelElementsFromAbstractNamespace(targetModule, context, includeHollows, includeValueOnlyElements);
 
-		val exportEqualsIdentifier = AnnotationDefinition.EXPORT_EQUALS.getAnnotation(targetModule)?.args?.head?.argAsString;
-		if (exportEqualsIdentifier !== null) {
+		val exportEqualsElems = ExportedElementsUtils.getElementsExportedViaExportEquals(targetModule);
+		if (exportEqualsElems.present) {
 			val allowMemberAccess = context instanceof MemberAccess;
-			val elems = (targetModule.exportedVariables + targetModule.namespaces)
-				.filter[name == exportEqualsIdentifier]
-				.toList;
-			for (elem : elems.reverseView) {
+			for (elem : exportEqualsElems.get.reverseView) {
 				switch (elem) {
 					TNamespace: {
 						result = scope_AllTopLevelElementsFromAbstractNamespace(elem, context, result, includeHollows, includeValueOnlyElements)
 					}
-					TVariable case allowMemberAccess && elem.const: {
+					TVariable case allowMemberAccess: {
 						val typeRef = elem.typeRef;
 						val scopeVariable = createScopeForMemberAccess(typeRef, context as MemberAccess);
 						if (scopeVariable !== null) {
