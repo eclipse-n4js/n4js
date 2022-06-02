@@ -133,7 +133,7 @@ public class N4JSLinker extends LazyLinker {
 				preProcessor.process(resource.getScript(), resource);
 
 				// AST structure validation
-				if (!resource.isValidationDisabled()) {
+				if (!isDTS && !resource.isValidationDisabled()) {
 					getStructureValidator().validate(model, consumer);
 				}
 			}

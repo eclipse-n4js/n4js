@@ -27,7 +27,6 @@ import org.eclipse.n4js.packagejson.projectDescription.ProjectDescription;
 import org.eclipse.n4js.packagejson.projectDescription.ProjectType;
 import org.eclipse.n4js.postprocessing.ASTFlowInfo;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.resource.UserDataMapper;
 import org.eclipse.n4js.tooling.tester.TestCatalogSupplier;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -196,7 +195,7 @@ public class N4JSProjectBuilder extends ProjectBuilder {
 		}
 
 		for (IEObjectDescription objDescr : resDescr.getExportedObjectsByType(TypesPackage.eINSTANCE.getTModule())) {
-			if (UserDataMapper.isNested(objDescr)) {
+			if (URIUtils.isVirtualResourceURI(objDescr.getEObjectURI())) {
 				return true;
 			}
 		}
