@@ -271,7 +271,7 @@ public class URIUtils {
 	public static boolean isVirtualResourceURI(URI uri) {
 		String[] segs = uri.segments();
 		int len = segs.length;
-		for (int i = 0; i < len; i++) {
+		for (int i = len - 2; i >= 0; i--) {
 			if (URIUtils.VIRTUAL_RESOURCE_SEGMENT.equals(segs[i])) {
 				return true;
 			}
