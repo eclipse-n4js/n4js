@@ -293,7 +293,9 @@ public class XStatefulIncrementalBuilder {
 		if (generator == null) {
 			return;
 		}
-
+		if (!request.isWriteStorageResources() && !request.canGenerate()) {
+			return;
+		}
 		if (isResourceInOutputDirectory(resource, serviceProvider)) {
 			return;
 		}

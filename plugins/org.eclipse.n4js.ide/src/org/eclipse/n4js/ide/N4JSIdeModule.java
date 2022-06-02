@@ -41,6 +41,7 @@ import org.eclipse.n4js.ide.server.codeActions.N4JSCodeActionService;
 import org.eclipse.n4js.ide.server.commands.N4JSCommandService;
 import org.eclipse.n4js.ide.server.concurrent.N4JSQueuedExecutorService;
 import org.eclipse.n4js.ide.server.hover.N4JSHoverService;
+import org.eclipse.n4js.ide.server.issues.N4JSPublishingIssueAcceptor;
 import org.eclipse.n4js.ide.server.rename.N4JSRenameService;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolMapper;
 import org.eclipse.n4js.ide.server.symbol.N4JSDocumentSymbolService;
@@ -70,6 +71,7 @@ import org.eclipse.n4js.xtext.ide.server.build.WorkspaceAwareResourceSet;
 import org.eclipse.n4js.xtext.ide.server.build.XStatefulIncrementalBuilder;
 import org.eclipse.n4js.xtext.ide.server.build.XWorkspaceManager;
 import org.eclipse.n4js.xtext.ide.server.contentassist.XContentAssistService;
+import org.eclipse.n4js.xtext.ide.server.issues.PublishingIssueAcceptor;
 import org.eclipse.n4js.xtext.ide.server.util.IHeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.xtext.ide.server.util.ServerIncidentLogger;
 import org.eclipse.n4js.xtext.ide.server.util.XOperationCanceledManager;
@@ -300,5 +302,9 @@ public class N4JSIdeModule extends AbstractN4JSIdeModule {
 
 	public Class<? extends DocumentExtensions> bindDocumentExtensions() {
 		return N4JSDocumentExtensions.class;
+	}
+
+	public Class<? extends PublishingIssueAcceptor> bindPublishingIssueAcceptor() {
+		return N4JSPublishingIssueAcceptor.class;
 	}
 }
