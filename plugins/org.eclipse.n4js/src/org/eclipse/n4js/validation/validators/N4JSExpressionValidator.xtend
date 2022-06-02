@@ -123,6 +123,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils.EnumKind
 import org.eclipse.n4js.utils.PromisifyHelper
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -715,7 +716,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			if (typeRef instanceof TypeTypeRef) {
 				val staticType = tsh.getStaticType(G, typeRef);
 				if (staticType instanceof TN4Classifier) {
-					if (staticType.typingStrategy !== TypingStrategy.DEFAULT) {
+					if (staticType.typingStrategy !== TypingStrategy.DEFAULT
+						&& !(ResourceType.getResourceType(staticType) === ResourceType.DTS && staticType instanceof TClass)) {
 						val message = IssueCodes.
 							getMessageForTYS_INSTANCEOF_NOT_SUPPORTED_FOR_STRUCTURAL_TYPES(staticType.name);
 						addIssue(message, relationalExpression, N4JSPackage.eINSTANCE.relationalExpression_Rhs,
