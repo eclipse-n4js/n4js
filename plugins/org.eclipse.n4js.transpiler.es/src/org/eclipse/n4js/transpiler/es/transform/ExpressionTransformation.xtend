@@ -157,37 +157,39 @@ class ExpressionTransformation extends Transformation {
 			val originalTarget = targetSTE.originalTarget;
 			if(originalTarget instanceof TFunction) { // could be a method
 				val originalTargetTypeRef = TypeUtils.createTypeRef(originalTarget) as FunctionTypeRef;
-				val returnTypeRef = promisifyHelper.extractPromisifiedReturnType(state.G, originalTargetTypeRef);
-				val returnTypeRefTypeArgs = returnTypeRef.typeArgsWithDefaults;
-				val hasErrorValue = !TypeUtils.isUndefined(returnTypeRefTypeArgs.drop(1).head); // isUndefined() is null-safe
-				val hasMoreThan1SuccessValue = state.G.isIterableN(returnTypeRefTypeArgs.head); // isIterableN() is null-safe
-				if(target instanceof ParameterizedPropertyAccessExpression_IM && targetSTE.originalTarget instanceof TMethod) {
-					// we have a method invocation, so we need to preserve the 'this' argument:
-
-					// @Promisify cls.meth(a, b)
-					// -->
-					// $n4promisifyMethod(cls, 'meth', [a, b])
-					return _CallExpr(
-						_IdentRef(steFor_$n4promisifyMethod()),
-						(target as ParameterizedPropertyAccessExpression_IM).target, // here we take the "cls" part of "cls.meth" as first argument
-						_StringLiteralForSTE(targetSTE),
-						_ArrLit(callExpr.arguments.map[_ArrayElement(spread, expression)]), // reuse arguments while preserving spread
-						_BooleanLiteral(hasMoreThan1SuccessValue),
-						_BooleanLiteral(!hasErrorValue)
-					);
-				} else {
-					// in all other cases, we do not preserve the 'this' argument:
-
-					// @Promisify fun(a, b)
-					// -->
-					// $n4promisifyFunction(fun, [a, b])
-					return _CallExpr(
-						_IdentRef(steFor_$n4promisifyFunction()),
-						callExpr.target, // reuse target as first argument
-						_ArrLit(callExpr.arguments.map[_ArrayElement(spread,expression)]), // reuse arguments while preserving spread
-						_BooleanLiteral(hasMoreThan1SuccessValue),
-						_BooleanLiteral(!hasErrorValue)
-					);
+				var returnTypeRef = promisifyHelper.extractPromisifiedReturnType(state.G, originalTargetTypeRef);
+				if (returnTypeRef !== null) {
+					val returnTypeRefTypeArgs = returnTypeRef.typeArgsWithDefaults;
+					val hasErrorValue = !TypeUtils.isUndefined(returnTypeRefTypeArgs.drop(1).head); // isUndefined() is null-safe
+					val hasMoreThan1SuccessValue = state.G.isIterableN(returnTypeRefTypeArgs.head); // isIterableN() is null-safe
+					if(target instanceof ParameterizedPropertyAccessExpression_IM && targetSTE.originalTarget instanceof TMethod) {
+						// we have a method invocation, so we need to preserve the 'this' argument:
+	
+						// @Promisify cls.meth(a, b)
+						// -->
+						// $n4promisifyMethod(cls, 'meth', [a, b])
+						return _CallExpr(
+							_IdentRef(steFor_$n4promisifyMethod()),
+							(target as ParameterizedPropertyAccessExpression_IM).target, // here we take the "cls" part of "cls.meth" as first argument
+							_StringLiteralForSTE(targetSTE),
+							_ArrLit(callExpr.arguments.map[_ArrayElement(spread, expression)]), // reuse arguments while preserving spread
+							_BooleanLiteral(hasMoreThan1SuccessValue),
+							_BooleanLiteral(!hasErrorValue)
+						);
+					} else {
+						// in all other cases, we do not preserve the 'this' argument:
+	
+						// @Promisify fun(a, b)
+						// -->
+						// $n4promisifyFunction(fun, [a, b])
+						return _CallExpr(
+							_IdentRef(steFor_$n4promisifyFunction()),
+							callExpr.target, // reuse target as first argument
+							_ArrLit(callExpr.arguments.map[_ArrayElement(spread,expression)]), // reuse arguments while preserving spread
+							_BooleanLiteral(hasMoreThan1SuccessValue),
+							_BooleanLiteral(!hasErrorValue)
+						);
+					}
 				}
 			}
 		}

@@ -31,15 +31,12 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.dts.DtsParseTreeNodeInfo;
-import org.eclipse.n4js.dts.TypeScriptParser;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.DeclarationStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.DeclareStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
-import org.eclipse.n4js.dts.TypeScriptParser.NamespaceDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ReservedWordContext;
@@ -62,11 +59,13 @@ import org.eclipse.n4js.n4JS.N4ClassifierDeclaration;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4Modifier;
+import org.eclipse.n4js.n4JS.N4NamespaceDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument;
 import org.eclipse.n4js.n4JS.TypeReferenceNode;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -76,11 +75,13 @@ import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TAnnotationTypeRefArgument;
+import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils;
 import org.eclipse.n4js.utils.parser.conversion.ValueConverterUtils.StringConverterResult;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
@@ -504,6 +505,11 @@ public class ParserContextUtils {
 		return createParameterizedTypeRef(resource, "any", true);
 	}
 
+	/** @return a new {@code void} type reference. */
+	public static ParameterizedTypeRef createVoidTypeRef(LazyLinkingResource resource) {
+		return createParameterizedTypeRef(resource, "void", false);
+	}
+
 	/** @return a new {@link ParameterizedTypeRef} pointing to the given declared type. */
 	public static ParameterizedTypeRef createParameterizedTypeRef(LazyLinkingResource resource, String declTypeName,
 			boolean dynamic) {
@@ -636,14 +642,35 @@ public class ParserContextUtils {
 						fPar.setDeclaredTypeRefNode(wrapInTypeRefNode(createAnyPlusTypeRef(resource)));
 					}
 				}
+
+				// for @Promisifiable functions, ensure we have a valid callback type
+				// FIXME improve this!
+				if (AnnotationDefinition.PROMISIFIABLE.hasAnnotation(survivor)) {
+					FormalParameter fParLast = IterableExtensions.last(survivor.getFpars());
+					TypeRef typeRef = fParLast != null ? fParLast.getDeclaredTypeRefInAST() : null;
+					if (fParLast != null && !(typeRef instanceof FunctionTypeExpression)) {
+						FunctionTypeExpression callbackTypeRef = TypeRefsFactory.eINSTANCE
+								.createFunctionTypeExpression();
+						TFormalParameter paramError = TypesFactory.eINSTANCE.createTFormalParameter();
+						paramError.setName("error");
+						paramError.setTypeRef(createParameterizedTypeRef(resource, "Error", true));
+						callbackTypeRef.getFpars().add(paramError);
+						TFormalParameter paramSuccess = TypesFactory.eINSTANCE.createTFormalParameter();
+						paramSuccess.setName("success");
+						paramSuccess.setTypeRef(createAnyPlusTypeRef(resource));
+						callbackTypeRef.getFpars().add(paramSuccess);
+						callbackTypeRef.setReturnTypeRef(createVoidTypeRef(resource));
+						fParLast.setDeclaredTypeRefNode(wrapInTypeRefNode(callbackTypeRef));
+					}
+				}
 			}
 		}
 	}
 
-	/**  */
-	public static void transformPromisifiables(EList<ScriptElement> scriptElements) {
-		Map<String, FunctionDefinition> functionsTop = new HashMap<>();
-		List<FunctionDefinition> functionsPrms = new ArrayList<>();
+	public static void transformPromisifiables(List<? extends ScriptElement> scriptElements) {
+		List<N4NamespaceDeclaration> namespaces = new ArrayList<>();
+		Multimap<String, FunctionDefinition> functionsTop = MultimapBuilder.hashKeys().arrayListValues().build();
+		Set<String> namesOfPromisifiedFunctions = new HashSet<>();
 		for (EObject elem : scriptElements) {
 			if (elem instanceof ExportDeclaration) {
 				elem = ((ExportDeclaration) elem).getExportedElement();
@@ -651,44 +678,46 @@ public class ParserContextUtils {
 			if (elem instanceof FunctionDefinition) {
 				FunctionDefinition fd = (FunctionDefinition) elem;
 				if (Objects.equals("__promisify__", fd.getName())) {
-					// fd.remove();
-					functionsPrms.add(fd);
+					// ignore here
 				} else {
 					functionsTop.put(fd.getName(), fd);
+				}
+			} else if (elem instanceof N4NamespaceDeclaration) {
+				N4NamespaceDeclaration ns = (N4NamespaceDeclaration) elem;
+				String nsName = ns.getName();
+				if (nsName == null || nsName.isBlank()) {
+					continue;
+				}
+
+				namespaces.add(ns);
+
+				for (EObject childElem : ns.getOwnedElementsRaw()) {
+					if (childElem instanceof ExportDeclaration) {
+						childElem = ((ExportDeclaration) childElem).getExportedElement();
+					}
+					if (childElem instanceof FunctionDefinition) {
+						FunctionDefinition fd = (FunctionDefinition) childElem;
+						if (Objects.equals("__promisify__", fd.getName())) {
+							namesOfPromisifiedFunctions.add(nsName);
+							break;
+						}
+					}
 				}
 			}
 		}
 
-		for (FunctionDefinition promFd : functionsPrms) {
-			DtsParseTreeNodeInfo dtsParseTreeNodeInfo = DtsParseTreeNodeInfo.get(promFd);
-			if (dtsParseTreeNodeInfo != null) {
-				ParserRuleContext ctx = dtsParseTreeNodeInfo.getParserRuleContext();
-				if (ctx != null) {
-					NamespaceDeclarationContext nsDeclCtx = (NamespaceDeclarationContext) findParentContext(ctx,
-							TypeScriptParser.RULE_namespaceDeclaration);
-					String nsName = null;
-					if (nsDeclCtx != null) {
-						nsName = nsDeclCtx.namespaceName() != null
-								? nsDeclCtx.namespaceName().getText()
-								: null;
-					} else {
-						ModuleDeclarationContext mDeclCtx = (ModuleDeclarationContext) findParentContext(ctx,
-								TypeScriptParser.RULE_moduleDeclaration);
-
-						if (mDeclCtx != null) {
-							nsName = mDeclCtx.moduleName() != null && mDeclCtx.moduleName().Identifier() != null
-									? mDeclCtx.moduleName().Identifier().getText()
-									: null;
-						}
-					}
-					if (nsName != null && functionsTop.containsKey(nsName)) {
-						FunctionDefinition fd = functionsTop.get(nsName);
-						Annotation promisifiable = N4JSFactory.eINSTANCE.createAnnotation();
-						promisifiable.setName(AnnotationDefinition.PROMISIFIABLE.name);
-						N4JSASTUtils.addAnnotation(fd, promisifiable);
-					}
-				}
+		for (String nameOfPromisifiedFunction : namesOfPromisifiedFunctions) {
+			for (FunctionDefinition fd : functionsTop.get(nameOfPromisifiedFunction)) {
+				// add annotation @Promisifiable to 'fd'
+				Annotation promisifiable = N4JSFactory.eINSTANCE.createAnnotation();
+				promisifiable.setName(AnnotationDefinition.PROMISIFIABLE.name);
+				N4JSASTUtils.addAnnotation(fd, promisifiable);
 			}
+		}
+
+		// continue with nested namespaces
+		for (N4NamespaceDeclaration ns : namespaces) {
+			transformPromisifiables(ns.getOwnedElementsRaw());
 		}
 	}
 }
