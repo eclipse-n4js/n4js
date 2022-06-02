@@ -21,7 +21,7 @@ JSONDocument: {JSONDocument}
 ;
 
 JSONObject:
-	{JSONObject} '{' (nameValuePairs+=NameValuePair (',' nameValuePairs+=NameValuePair)*)? '}'
+	{JSONObject} '{' (nameValuePairs+=NameValuePair (',' nameValuePairs+=NameValuePair)*)? ','? '}'
 ;
 
 NameValuePair:
@@ -31,7 +31,7 @@ NameValuePair:
 ;
 
 JSONArray:
-	{JSONArray} '[' (elements+=JSONValue (',' elements+=JSONValue)*)? ']'
+	{JSONArray} '[' (elements+=JSONValue (',' elements+=JSONValue)*)? ','? ']'
 ;
 
 JSONValue:

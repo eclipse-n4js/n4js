@@ -185,9 +185,15 @@ ruleJSONObject returns [EObject current=null]
 				)
 			)*
 		)?
-		otherlv_5='}'
+		(
+			otherlv_5=','
+			{
+				newLeafNode(otherlv_5, grammarAccess.getJSONObjectAccess().getCommaKeyword_3());
+			}
+		)?
+		otherlv_6='}'
 		{
-			newLeafNode(otherlv_5, grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_3());
+			newLeafNode(otherlv_6, grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_4());
 		}
 	)
 ;
@@ -325,9 +331,15 @@ ruleJSONArray returns [EObject current=null]
 				)
 			)*
 		)?
-		otherlv_5=']'
+		(
+			otherlv_5=','
+			{
+				newLeafNode(otherlv_5, grammarAccess.getJSONArrayAccess().getCommaKeyword_3());
+			}
+		)?
+		otherlv_6=']'
 		{
-			newLeafNode(otherlv_5, grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_3());
+			newLeafNode(otherlv_6, grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_4());
 		}
 	)
 ;
