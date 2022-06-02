@@ -76,9 +76,13 @@ class JSONCompletionTest extends AbstractLanguageServerTest {
 			column = 1
 			line = 3
 			expectedCompletionItems = '''
+				[Class, Snippet] dependencies (Dependencies of this npm) -> "dependencies": {
+				    $1
+				}$0 [[3, 1] .. [3, 1]]
 				[Class, Snippet] devDependencies (Development dependencies of this npm) -> "devDependencies": {
 				    $1
 				}$0 [[3, 1] .. [3, 1]]
+				[Property, Snippet] main (Main module. Path is relative to package root) -> "main": "$1"$0 [[3, 1] .. [3, 1]]
 				[Property, Snippet] module (Like "main", but provides a different file with esm code) -> "module": "$1"$0 [[3, 1] .. [3, 1]]
 				[Class, Snippet] n4js (N4JS section) -> "n4js": {
 				    $1
