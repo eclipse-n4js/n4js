@@ -176,6 +176,12 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			final Resource res = EcoreUtilN4.getResource(request.context, composedTypeRef);
 			final RuleEnvironment GwithSubstitutions = ts.createRuleEnvironmentForContext(typeRef, res);
 			final TMember member = findMemberInSubScope(subScope, memberName);
+			if (member == null && typeRef.isDynamic()) {
+				// member is missing in a dynamic type -> not harmful, ignore
+				// (note: this is only preliminary support for dynamic types in composed types!)
+				// TODO IDE-3618 remove this and provide full support for dynamic types in ComposedMemberFactory
+				continue;
+			}
 			final boolean structFieldInitMode = typeRef
 					.getTypingStrategy() == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
 			cmiBuilder.addMember(member, GwithSubstitutions, structFieldInitMode);
