@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.n4js.dts.TypeScriptParser.ImportAliasDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportFromBlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ImportedElementContext;
@@ -132,4 +133,27 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 		}
 	}
 
+	@Override
+	public void enterImportAliasDeclaration(ImportAliasDeclarationContext ctx) {
+		if (ctx.Require() != null) {
+			// import id = require('./someModule.js');
+			String identifier = ParserContextUtils.getIdentifierName(ctx.Identifier());
+			if (identifier == null) {
+				return;
+			}
+			DtsScriptBuilder scriptBuilder = getScriptBuilder();
+			if (scriptBuilder.isExportedEquals()
+					&& identifier.equals(scriptBuilder.getExportEqualsIdentifier())) {
+				// we have this situation:
+				//
+				// import id = require('./someModule.js');
+				// export = id;
+				//
+				// --> ignore here (DtsExportBuilder will create a single re-export on N4JS side for both the import and
+				// the export of DTS)
+			} else {
+				// TODO
+			}
+		}
+	}
 }

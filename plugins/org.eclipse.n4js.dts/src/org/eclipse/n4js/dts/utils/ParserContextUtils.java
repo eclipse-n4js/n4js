@@ -34,8 +34,11 @@ import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.dts.TypeScriptParser.BlockContext;
 import org.eclipse.n4js.dts.TypeScriptParser.DeclarationStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.DeclareStatementContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ExportEqualsContext;
 import org.eclipse.n4js.dts.TypeScriptParser.GlobalScopeAugmentationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.IdentifierNameContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ImportAliasDeclarationContext;
+import org.eclipse.n4js.dts.TypeScriptParser.ImportStatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ModuleDeclarationContext;
 import org.eclipse.n4js.dts.TypeScriptParser.NumericLiteralContext;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
@@ -346,6 +349,48 @@ public class ParserContextUtils {
 			ctx = (ParserRuleContext) ctx.parent;
 		}
 		return false;
+	}
+
+	/**
+	 * @return identifier used in the first {@code export = <identifier>;} of the script or <code>null</code>.
+	 */
+	public static String findExportEqualsIdentifier(ProgramContext ctx) {
+		if (ctx.statementList() != null) {
+			for (StatementContext stmtCtx : ctx.statementList().statement()) {
+				if (stmtCtx.exportStatement() != null
+						&& stmtCtx.exportStatement().exportStatementTail() instanceof ExportEqualsContext) {
+
+					ExportEqualsContext eeCtx = (ExportEqualsContext) stmtCtx.exportStatement().exportStatementTail();
+					return eeCtx.namespaceName().getText().toString();
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @return module specifier of the first {@code import <identifier> = require('<moduleSpecifier>');} of the script
+	 *         or <code>null</code>.
+	 */
+	public static TerminalNode findImportEqualsModuleSpecifier(ProgramContext ctx, String identifier) {
+		if (ctx.statementList() == null) {
+			return null;
+		}
+		for (StatementContext stmtCtx : ctx.statementList().statement()) {
+			ImportStatementContext impStmtCtx = stmtCtx != null ? stmtCtx.importStatement() : null;
+			ImportAliasDeclarationContext impAliasDeclCtx = impStmtCtx != null ? impStmtCtx.importAliasDeclaration()
+					: null;
+			if (impAliasDeclCtx != null && impAliasDeclCtx.Require() != null) {
+				String impIdentifier = getIdentifierName(impAliasDeclCtx.Identifier());
+				if (identifier.equals(impIdentifier)) {
+					TerminalNode strLit = impAliasDeclCtx.StringLiteral();
+					if (strLit != null) {
+						return strLit;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	/** @return the actual value of the given numeric literal. */

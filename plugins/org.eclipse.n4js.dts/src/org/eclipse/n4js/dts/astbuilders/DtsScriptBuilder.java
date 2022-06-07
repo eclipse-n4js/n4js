@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.eclipse.n4js.dts.DtsTokenStream;
 import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.dts.TypeScriptParser.ClassDeclarationContext;
@@ -62,6 +63,7 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 	private NestedResourceAdapter nestedResourceAdapter;
 	private String exportEqualsIdentifier;
+	private TerminalNode moduleSpecifierOfImportEqualsMatchingExportEquals;
 	private int globalScopeAugmentationCounter = 0;
 
 	/** Constructor */
@@ -101,6 +103,20 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 		return exportEqualsIdentifier;
 	}
 
+	/**
+	 * Iff {@link #isExportedEquals()}, then this returns the module specifier of the first import of the form
+	 *
+	 * <pre>
+	 * import id = require('./some/module');
+	 * </pre>
+	 *
+	 * with id == {@link #getExportEqualsIdentifier()} or <code>null</code> if no such import exists. Otherwise, i.e.
+	 * not {@link #isExportedEquals()}, this always returns <code>null</code>.
+	 */
+	public TerminalNode getModuleSpecifierOfImportEqualsMatchingExportEquals() {
+		return moduleSpecifierOfImportEqualsMatchingExportEquals;
+	}
+
 	/** Increments and returns the counter for <code>global { ... }</code> declarations in this script. */
 	public int incrementAndGetGlobalScopeAugmentationCounter() {
 		return ++globalScopeAugmentationCounter;
@@ -135,7 +151,10 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 		result = N4JSFactory.eINSTANCE.createScript();
 
 		nestedResourceAdapter = NestedResourceAdapter.get(resource);
-		exportEqualsIdentifier = DtsExportBuilder.findExportEqualsIdentifier(ctx);
+		exportEqualsIdentifier = ParserContextUtils.findExportEqualsIdentifier(ctx);
+		moduleSpecifierOfImportEqualsMatchingExportEquals = exportEqualsIdentifier != null
+				? ParserContextUtils.findImportEqualsModuleSpecifier(ctx, exportEqualsIdentifier)
+				: null;
 
 		// add @@Global (if necessary)
 		if (isNested()) {
@@ -151,7 +170,11 @@ public class DtsScriptBuilder extends AbstractDtsBuilder<ProgramContext, Script>
 
 		// add @@ExportEquals (if necessary)
 		if (isExportedEquals()) {
-			ParserContextUtils.addAnnotationExportEquals(result, getExportEqualsIdentifier());
+			if (getModuleSpecifierOfImportEqualsMatchingExportEquals() != null) {
+				// a re-export will be created in DtsExportBuilder#enterExportEquals()
+			} else {
+				ParserContextUtils.addAnnotationExportEquals(result, getExportEqualsIdentifier());
+			}
 		}
 
 		List<TripleSlashDirective> tripleSlashDirectives = tokenStream.getTripleSlashDirectives();
