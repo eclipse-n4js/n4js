@@ -128,12 +128,12 @@ function setOutputAppenders(vscode, outputChannel) {
 	const traceOutput = vscode.workspace.getConfiguration('').get('n4js.traceOutput');
 	switch(traceOutput) {
 		case 'off':
-			(n4jscProcess.stdout).removeListener('data', outputAppender);
-			(n4jscProcess.stderr).removeListener('data', outputAppender);
+			n4jscProcess.stdout.removeListener('data', outputAppender);
+			n4jscProcess.stderr.removeListener('data', outputAppender);
 			break;
 		case 'verbose':
-			(n4jscProcess.stdout).on('data', outputAppender);
-			(n4jscProcess.stderr).on('data', outputAppender);
+			n4jscProcess.stdout.on('data', outputAppender);
+			n4jscProcess.stderr.on('data', outputAppender);
 			break;
 	}
 }
@@ -184,11 +184,11 @@ async function startN4jsLspServerAndConnect(port, vscode, vscodeLC, context, out
 			let $opt;
 			let receivedServerOutput = data.toString();
 			if (($opt = receivedServerOutput) == null ? void 0 : $opt.startsWith(LSP_SYNC_MESSAGE)) {
-				(n4jscProcess.stdout).removeListener('data', waitForListenMsg);
+				n4jscProcess.stdout.removeListener('data', waitForListenMsg);
 				resolve();
 			}
 		};
-		(n4jscProcess.stdout).on('data', waitForListenMsg);
+		n4jscProcess.stdout.on('data', waitForListenMsg);
 	});
 	await serverReady;
 }
@@ -215,7 +215,7 @@ async function connectToRunningN4jsLspServer(port, outputChannel) {
 			});
 			clientSocket.on('error', (err)=>{
 				clearTimeout(timer);
-				((clientSocket)).destroy();
+				clientSocket.destroy();
 				resolve(null);
 			});
 			clientSocket.on('disconnect', ()=>{

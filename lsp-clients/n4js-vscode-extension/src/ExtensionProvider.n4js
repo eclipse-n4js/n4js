@@ -13,7 +13,6 @@ import * as n4jscli from 'n4js-cli';
 import * as jreProvider from 'n4js-cli/JreProvider';
 import * as net from 'net';
 import * as fs from 'fs';
-import * as lib_stream from 'stream';
 import * as childProcess from 'child_process';
 
 /** This message is sent from the LSP server. */
@@ -170,16 +169,12 @@ function setOutputAppenders(vscode: any+, outputChannel: any+): void {
     const traceOutput = vscode.workspace.getConfiguration('').get('n4js.traceOutput') as TraceOutputValue;
     switch (traceOutput) {
         case TraceOutputValue.off:
-            // FIXME avoid cast
-            (n4jscProcess.stdout as lib_stream.Readable).removeListener('data', outputAppender);
-            // FIXME avoid cast
-            (n4jscProcess.stderr as lib_stream.Readable).removeListener('data', outputAppender);
+            n4jscProcess.stdout.removeListener('data', outputAppender);
+            n4jscProcess.stderr.removeListener('data', outputAppender);
             break;
-            case TraceOutputValue.verbose:
-            // FIXME avoid cast
-            (n4jscProcess.stdout as lib_stream.Readable).on('data', outputAppender);
-            // FIXME avoid cast
-            (n4jscProcess.stderr as lib_stream.Readable).on('data', outputAppender);
+        case TraceOutputValue.verbose:
+            n4jscProcess.stdout.on('data', outputAppender);
+            n4jscProcess.stderr.on('data', outputAppender);
             break;
     }
 }
@@ -233,14 +228,12 @@ async function startN4jsLspServerAndConnect(port: number, vscode: any+, vscodeLC
         let waitForListenMsg = (data:any+) => {
             let receivedServerOutput = data.toString();
             if (receivedServerOutput?.startsWith(LSP_SYNC_MESSAGE)) {
-                // FIXME avoid cast
-                (n4jscProcess.stdout as lib_stream.Readable).removeListener('data', waitForListenMsg);
+                n4jscProcess.stdout.removeListener('data', waitForListenMsg);
                 resolve();
             }
         };
 
-        // FIXME avoid cast
-        (n4jscProcess.stdout as lib_stream.Readable).on('data', waitForListenMsg);
+        n4jscProcess.stdout.on('data', waitForListenMsg);
     });
     await serverReady;
     // now connected to LSP server (the server will log a welcome message)
@@ -269,8 +262,7 @@ async function connectToRunningN4jsLspServer(port: number, outputChannel: any+):
                 })
             clientSocket.on('error', (err: any+) => {
                     clearTimeout(timer);
-                    // FIXME avoid cast
-                    ((clientSocket as Object) as lib_stream.Readable).destroy();
+                    clientSocket.destroy();
                     resolve(null);
                 })
             clientSocket.on('disconnect', () => {
