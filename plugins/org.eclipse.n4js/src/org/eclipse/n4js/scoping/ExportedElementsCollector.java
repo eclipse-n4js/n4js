@@ -114,10 +114,6 @@ public class ExportedElementsCollector {
 
 		CollectionInfo info = new CollectionInfo(namespace, context, includeHollows, includeValueOnlyElements);
 
-		if (namespace instanceof TModule) {
-			handleExportEquals((TModule) namespace, info);
-		}
-
 		doCollectElements(namespace, info);
 
 		if (DeclMergingUtils.mayBeMerged(namespace)) {
@@ -154,6 +150,10 @@ public class ExportedElementsCollector {
 	}
 
 	private void doCollectElements(AbstractNamespace namespace, CollectionInfo info) {
+
+		if (namespace instanceof TModule) {
+			handleExportEquals((TModule) namespace, info);
+		}
 
 		for (ExportDefinition exportDef : Lists.reverse(namespace.getExportDefinitions())) {
 			if (exportDef instanceof ElementExportDefinition) {
