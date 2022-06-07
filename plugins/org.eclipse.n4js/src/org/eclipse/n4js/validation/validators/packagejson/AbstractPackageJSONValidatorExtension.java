@@ -301,6 +301,9 @@ public abstract class AbstractPackageJSONValidatorExtension extends AbstractDecl
 			// LOGGER.error("no containing project found for package.json URI:" + pckjsonUri);
 			return false;
 		}
+		if (project.isExternal()) {
+			return false;
+		}
 		URI expectedLocation = project.getPathAsFileURI().appendSegment(N4JSGlobals.PACKAGE_JSON).toURI();
 
 		// In test Xpect scenarios (see bundle packagejson.xpect.tests) package.json files can be named package.json.xt

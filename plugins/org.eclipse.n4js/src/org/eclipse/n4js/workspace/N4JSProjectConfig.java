@@ -58,6 +58,8 @@ public class N4JSProjectConfig implements XIProjectConfig {
 
 	private final N4JSWorkspaceConfig workspace;
 	private final FileURI path;
+	private final boolean isInNodeModulesFolder;
+
 	// the following are not immutable, because an existing project might have its properties changed:
 	private ProjectDescription projectDescription;
 	private Set<? extends IN4JSSourceFolder> sourceFolders;
@@ -74,6 +76,7 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		this.path = Objects.requireNonNull(path);
 		this.projectDescriptionLoader = Objects.requireNonNull(projectDescriptionLoader);
 		this.semanticDependencySupplier = Objects.requireNonNull(semanticDependencySupplier);
+		this.isInNodeModulesFolder = computeIsInNodeModulesFolder(path.toURI());
 
 		this.projectDescription = Objects.requireNonNull(pd);
 		this.sourceFolders = createSourceFolders(pd);
@@ -281,38 +284,16 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		return null;
 	}
 
-	/**
-	 * Projects are indexed but not transpiled if they are located in node_modules folders.
-	 *
-	 * @return true iff this project should be indexed only
-	 */
-	@Override
-	public boolean indexOnly() {
-		return isInNodeModulesFolder();
-	}
-
 	/** @return true iff this project is located inside a node_modules folder */
 	public boolean isInNodeModulesFolder() {
-		URI projectBase = getPath();
-		String lastSegment = projectBase.lastSegment();
-		if (lastSegment == null || lastSegment.isBlank()) {
-			projectBase = projectBase.trimSegments(1);
-		}
-		projectBase = projectBase.trimSegments(1); // trim the project name
-		lastSegment = projectBase.lastSegment();
-		if (lastSegment != null && lastSegment.startsWith("@")) {
-			projectBase = projectBase.trimSegments(1);
-			lastSegment = projectBase.lastSegment();
-		}
-		if (lastSegment != null && N4JSGlobals.NODE_MODULES.equals(lastSegment)) {
-			// index only true for npm libraries
-			return true;
-		}
-		return false;
+		return isInNodeModulesFolder;
 	}
 
 	@Override
 	public boolean isGeneratorEnabled() {
+		if (isInNodeModulesFolder()) {
+			return false;
+		}
 		ProjectType projectType = projectDescription.getProjectType();
 		return !N4JSGlobals.PROJECT_TYPES_WITHOUT_GENERATION.contains(projectType);
 	}
@@ -354,6 +335,25 @@ public class N4JSProjectConfig implements XIProjectConfig {
 		}
 
 		return computeChanges(oldProjectConfig, newProjectConfig);
+	}
+
+	/** @return true iff this project is located inside a node_modules folder */
+	static boolean computeIsInNodeModulesFolder(URI projectBase) {
+		String lastSegment = projectBase.lastSegment();
+		if (lastSegment == null || lastSegment.isBlank()) {
+			projectBase = projectBase.trimSegments(1);
+		}
+		projectBase = projectBase.trimSegments(1); // trim the project name
+		lastSegment = projectBase.lastSegment();
+		if (lastSegment != null && lastSegment.startsWith("@")) {
+			projectBase = projectBase.trimSegments(1);
+			lastSegment = projectBase.lastSegment();
+		}
+		if (lastSegment != null && N4JSGlobals.NODE_MODULES.equals(lastSegment)) {
+			// index only true for npm libraries
+			return true;
+		}
+		return false;
 	}
 
 	/**

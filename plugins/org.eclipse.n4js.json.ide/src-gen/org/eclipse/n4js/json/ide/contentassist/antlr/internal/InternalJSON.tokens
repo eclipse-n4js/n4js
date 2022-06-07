@@ -1,4 +1,4 @@
-','=35
+','=34
 ':'=36
 '['=37
 ']'=38
@@ -6,7 +6,7 @@
 'null'=39
 'true'=40
 '{'=33
-'}'=34
+'}'=35
 RULE_ANY_OTHER=31
 RULE_BOM=24
 RULE_DECIMAL_DIGIT_FRAGMENT=12

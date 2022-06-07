@@ -16,6 +16,7 @@ import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 
 /**
  * This parse tree walker is a variant of the {@link ParseTreeWalker} with the difference that it will not visit all
@@ -41,6 +42,13 @@ public class ManualParseTreeWalker {
 	}
 
 	private void visit(ParserRuleContext ctx) {
+		// do not visit AST nodes that have parser errors
+		if (ctx.exception != null && ctx.exception.getCtx() == ctx) {
+			// however, still visit the root to make sure that a Script will be created
+			if (!(ctx instanceof ProgramContext)) {
+				return;
+			}
+		}
 		currentQueue = new ArrayList<>();
 		enter(ctx);
 

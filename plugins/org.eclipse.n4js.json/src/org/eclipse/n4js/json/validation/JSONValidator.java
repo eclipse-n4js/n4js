@@ -10,12 +10,17 @@
  */
 package org.eclipse.n4js.json.validation;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.common.util.DiagnosticChain;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.json.JSON.JSONArray;
 import org.eclipse.n4js.json.JSON.JSONDocument;
 import org.eclipse.n4js.json.JSON.JSONObject;
 import org.eclipse.n4js.json.JSON.JSONPackage;
@@ -24,10 +29,14 @@ import org.eclipse.n4js.json.JSON.NameValuePair;
 import org.eclipse.n4js.json.extension.JSONExtensionRegistry;
 import org.eclipse.n4js.json.services.JSONGrammarAccess;
 import org.eclipse.n4js.json.validation.extension.IJSONValidatorExtension;
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.TerminalRule;
+import org.eclipse.xtext.nodemodel.BidiTreeIterator;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.impl.CompositeNode;
 import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode;
+import org.eclipse.xtext.nodemodel.impl.LeafNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.validation.Check;
 
@@ -107,4 +116,47 @@ public class JSONValidator extends AbstractJSONValidator {
 		}
 		return false;
 	}
+
+	/**
+	 * Checks the document for trailing commas which are not valid JSON constructs but accepted by our parser.
+	 */
+	@Check
+	public void checkDocumentForTrailingCommas(JSONObject object) {
+		internalCheckDocumentForTrailingCommas(object, "}", ",");
+	}
+
+	/**
+	 * Checks the document for trailing commas which are not valid JSON constructs but accepted by our parser.
+	 */
+	@Check
+	public void checkDocumentForTrailingCommas(JSONArray array) {
+		internalCheckDocumentForTrailingCommas(array, "]", ",");
+	}
+
+	private void internalCheckDocumentForTrailingCommas(JSONValue value, String... expectedKeywordsArr) {
+		List<String> expectedKeywords = new ArrayList<>(Arrays.asList(expectedKeywordsArr));
+		ICompositeNode documentNode = NodeModelUtils.findActualNodeFor(value);
+		BidiTreeIterator<INode> revIter = documentNode.getAsTreeIterable().reverse().iterator();
+		INode node = null;
+		while (revIter.hasNext() && (node = revIter.next()) instanceof CompositeNode) {
+			/* skip starting nodes */}
+
+		while (revIter.hasNext() && !expectedKeywords.isEmpty()) {
+			if (node instanceof LeafNode && node.getGrammarElement() instanceof Keyword) {
+				Keyword keyword = (Keyword) node.getGrammarElement();
+				if (Objects.equals(keyword.getValue(), expectedKeywords.get(0))) {
+					expectedKeywords.remove(0);
+					if (expectedKeywords.isEmpty()) {
+						addIssue(JSONIssueCodes.getMessageForJSON_TRAILING_COMMAS_UNSUPPORTED(), value,
+								node.getOffset(), node.getLength(), JSONIssueCodes.JSON_TRAILING_COMMAS_UNSUPPORTED);
+						return;
+					}
+				}
+			} else if (node instanceof CompositeNode) {
+				return;
+			}
+			node = revIter.next();
+		}
+	}
+
 }
