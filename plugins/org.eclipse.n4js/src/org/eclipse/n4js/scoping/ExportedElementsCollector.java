@@ -139,10 +139,15 @@ public class ExportedElementsCollector {
 		Optional<List<IdentifiableElement>> exportEqualsElems = ExportedElementsUtils
 				.getElementsExportedViaExportEquals(module);
 		if (exportEqualsElems.isPresent()) {
+			boolean haveDefaultExport = false;
 			for (IdentifiableElement elem : exportEqualsElems.get()) {
-				if (elem instanceof TFunction || elem instanceof TVariable) {
-					doCollectElement("default", (TExportableElement) elem, info);
-					break;
+				if (elem instanceof TNamespace) {
+					doCollectElements((TNamespace) elem, info);
+				} else if (elem instanceof TFunction || elem instanceof TVariable) {
+					if (!haveDefaultExport) {
+						doCollectElement("default", (TExportableElement) elem, info);
+						haveDefaultExport = true;
+					}
 				}
 			}
 		}

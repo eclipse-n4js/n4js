@@ -423,7 +423,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 */
 	protected def IScope scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
 		val impDecl = EcoreUtil2.getContainerOfType(specifier, ImportDeclaration);
-		return scope_AllTopLevelElementsFromAbstractNamespace(impDecl.module, impDecl, true, true);
+		val targetModule = impDecl.module; // may trigger reentrant scoping for module specifier (cf. #scope_ImportedModule())
+		return scope_AllTopLevelElementsFromAbstractNamespace(targetModule, impDecl, true, true);
 	}
 
 	/**
@@ -433,7 +434,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 */
 	protected def IScope scope_ImportedElement(NamedExportSpecifier specifier, EReference reference) {
 		val expDecl = EcoreUtil2.getContainerOfType(specifier, ExportDeclaration);
-		return scope_AllTopLevelElementsFromAbstractNamespace(expDecl.module, expDecl, true, true);
+		val targetModule = expDecl.module; // may trigger reentrant scoping for module specifier (cf. #scope_ImportedModule())
+		return scope_AllTopLevelElementsFromAbstractNamespace(targetModule, expDecl, true, true);
 	}
 
 	/**
@@ -661,24 +663,19 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return result;
 	}
 
-	private def IScope doCreateScopeForNamespaceAccess(TModule targetModule, EObject context, boolean includeHollows, boolean includeValueOnlyElements) {
+	private def IScope doCreateScopeForNamespaceAccess(TModule targetModule, EObject context,
+		boolean includeHollows, boolean includeValueOnlyElements
+	) {
 		var result = scope_AllTopLevelElementsFromAbstractNamespace(targetModule, context, includeHollows, includeValueOnlyElements);
 
-		val exportEqualsElems = ExportedElementsUtils.getElementsExportedViaExportEquals(targetModule);
-		if (exportEqualsElems.present) {
-			val allowMemberAccess = context instanceof MemberAccess;
-			for (elem : exportEqualsElems.get.reverseView) {
-				switch (elem) {
-					TNamespace: {
-						result = scope_AllTopLevelElementsFromAbstractNamespace(elem, context, result, includeHollows, includeValueOnlyElements)
-					}
-					TVariable case allowMemberAccess: {
-						val typeRef = elem.typeRef;
-						val scopeVariable = createScopeForMemberAccess(typeRef, context as MemberAccess);
-						if (scopeVariable !== null) {
-							result = new MergedScope(scopeVariable, result);
-						}
-					}
+		if (context instanceof MemberAccess) {
+			val exportEqualsElems = ExportedElementsUtils.getElementsExportedViaExportEquals(targetModule);
+			if (exportEqualsElems.present) {
+				val variable = exportEqualsElems.get.filter(TVariable).head;
+				val typeRef = variable?.typeRef;
+				val scopeVariable = if (typeRef !== null) createScopeForMemberAccess(typeRef, context);
+				if (scopeVariable !== null) {
+					result = new MergedScope(scopeVariable, result);
 				}
 			}
 		}
