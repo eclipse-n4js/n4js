@@ -181,8 +181,8 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	protected void validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator,
 			IAcceptor<Issue> acceptor) {
 
-		String fileExtension = URIUtils.fileExtension(resource.getURI());
-		if (N4JSGlobals.DTS_FILE_EXTENSION.equals(fileExtension)) {
+		ResourceType resourceType = ResourceType.getResourceType(resource);
+		if (resourceType == ResourceType.DTS) {
 			// disable these validations in dts files
 			return;
 		}
