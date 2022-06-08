@@ -20,6 +20,8 @@
 
 @@Global @@ProvidedByRuntime
 
+export external public const global: Object+;
+
 /**
  * Base class for all N4 reflective elements.
  */
