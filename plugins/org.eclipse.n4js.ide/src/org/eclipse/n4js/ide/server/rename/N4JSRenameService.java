@@ -241,6 +241,7 @@ public class N4JSRenameService extends RenameService2 {
 				&& eRef != N4JSPackage.eINSTANCE.getNamedImportSpecifier_ImportedElement()
 				&& eRef != N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property()
 				&& eRef != N4JSPackage.eINSTANCE.getLabelRef_Label()
+				&& eRef != N4JSPackage.eINSTANCE.getJSXPropertyAttribute_Property()
 				&& eRef != TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType()) {
 			return null;
 		}
