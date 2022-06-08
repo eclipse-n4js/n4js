@@ -16,7 +16,6 @@ import org.antlr.v4.runtime.TokenStream;
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.Notifier;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
@@ -61,7 +60,6 @@ public class NestedResourceAdapter implements Adapter {
 		return adapter;
 	}
 
-	final URI hostUri;
 	final DtsTokenStream tokenStream;
 	final ParserRuleContext ctx;
 	final StatementListContext statements;
@@ -74,9 +72,7 @@ public class NestedResourceAdapter implements Adapter {
 	 * @param statements
 	 *            see {@link #getStatements()}.
 	 */
-	public NestedResourceAdapter(URI hostUri, DtsTokenStream tokenStream, ParserRuleContext ctx,
-			StatementListContext statements) {
-		this.hostUri = hostUri;
+	public NestedResourceAdapter(DtsTokenStream tokenStream, ParserRuleContext ctx, StatementListContext statements) {
 		this.tokenStream = tokenStream;
 		this.ctx = ctx;
 		this.statements = statements;
@@ -98,11 +94,6 @@ public class NestedResourceAdapter implements Adapter {
 	@Override
 	public boolean isAdapterForType(Object type) {
 		return false;
-	}
-
-	/** Returns the host that nests the resource this adapter is installed on. */
-	public URI getHostUri() {
-		return hostUri;
 	}
 
 	/** Returns the {@link ParserRuleContext} that belongs to the resource this adapter is installed on. */

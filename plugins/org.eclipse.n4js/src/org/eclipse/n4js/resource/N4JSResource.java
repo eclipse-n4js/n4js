@@ -55,7 +55,6 @@ import org.eclipse.emf.ecore.util.EContentAdapter;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.dts.DtsParser;
-import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -443,11 +442,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		TModule deserializedModule = null;
 		Iterable<IEObjectDescription> modules = description.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
 		for (IEObjectDescription module : modules) {
-			if (UserDataMapper.isNested(module)) {
-				// load the host first that will install adapters to load this nested resource
-				URI host = UserDataMapper.getHostUri(module);
-				resourceSet.getResource(host, true);
-			}
 			deserializedModule = UserDataMapper.getDeserializedModuleFromDescription(module, getURI());
 			if (deserializedModule != null) {
 				break;
@@ -506,11 +500,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		final Script script = getScript();
 		final TModule module = getModule();
 		return script != null && module != null && isASTProxy(script) && !module.eIsProxy();
-	}
-
-	/** Returns true iff this resource is nested/virtual */
-	public boolean isNested() {
-		return NestedResourceAdapter.isInstalled(this);
 	}
 
 	/**
@@ -733,11 +722,16 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * </ul>
 	 */
 	private void clearUnnecessaryFunctionBodies(EObject newRootAstElement) {
+		if (newRootAstElement == null) {
+			return;
+		}
 		if (!optionClearFunctionBodies) {
 			return;
 		}
-		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, URIUtils.fileExtension(getURI()))) {
-			return; // There are no function bodies in n4jsd files.
+		String fExt = URIUtils.fileExtension(getURI());
+		if (Objects.equals(N4JSGlobals.N4JSD_FILE_EXTENSION, fExt)
+				|| Objects.equals(N4JSGlobals.DTS_FILE_EXTENSION, fExt)) {
+			return; // There are no function bodies in definition files.
 		}
 		N4JSProjectConfigSnapshot project = workspaceAccess.findProjectContaining(this);
 		if (project == null || !project.isExternal()) {
@@ -787,27 +781,25 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		if (isOpaque()) {
 			IParseResult result = new JSParseResult(inputStream);
 			updateInternalState(this.getParseResult(), result);
-		} else {
-			ResourceType resourceType = ResourceType.getResourceType(getURI());
-			if (resourceType == ResourceType.DTS) {
-				// load from dts but also mimic normal loading behavior/state transitions
-				setValidationDisabled(true);
-				IParseResult result = null;
-				if (inputStream == null) {
-					// this happens in case of virtual resources
-					result = new DtsParser().parse(null, this);
-				} else {
-					try (Reader reader = createReader(inputStream);) {
-						result = new DtsParser().parse(reader, this);
-					}
-				}
-				if (fullyInitialized) {
-					discardDerivedState();
-				}
-				updateInternalState(this.getParseResult(), result);
+
+		} else if (ResourceType.getResourceType(getURI()) == ResourceType.DTS) {
+			// load from dts but also mimic normal loading behavior/state transitions
+			// setValidationDisabled(true); // disable validations to avoid Exceptions
+			IParseResult result = null;
+			if (URIUtils.isVirtualResourceURI(uri)) {
+				result = new DtsParser().parse(null, this);
 			} else {
-				super.doLoad(inputStream, options);
+				try (Reader reader = createReader(inputStream);) {
+					result = new DtsParser().parse(reader, this);
+				}
 			}
+			if (fullyInitialized) {
+				discardDerivedState();
+			}
+			updateInternalState(this.getParseResult(), result);
+
+		} else {
+			super.doLoad(inputStream, options);
 		}
 	}
 
@@ -1749,12 +1741,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
+	/** Returns true iff this resource is nested/virtual */
+	public boolean isNested() {
+		return URIUtils.isVirtualResourceURI(getURI());
+	}
+
 	/** Returns the URI of the resource this resource is nested in, or null */
 	public URI getHostUri() {
-		NestedResourceAdapter nestedResourceAdapter = NestedResourceAdapter.get(this);
-		if (nestedResourceAdapter == null) {
-			return null;
-		}
-		return nestedResourceAdapter.getHostUri();
+		return URIUtils.getBaseOfVirtualResourceURI(getURI());
 	}
 }

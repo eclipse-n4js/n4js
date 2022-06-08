@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
@@ -27,11 +29,13 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.smith.N4JSDataCollectors;
 import org.eclipse.n4js.ts.types.TypableElement;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.workspace.N4JSProjectConfigSnapshot;
 import org.eclipse.n4js.workspace.N4JSWorkspaceConfigSnapshot;
 import org.eclipse.n4js.workspace.WorkspaceAccess;
+import org.eclipse.n4js.xtext.resource.XITextRegionWithLineInformation;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -67,47 +71,51 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	private List<Issue> doValidate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
 		try (Measurement m = N4JSDataCollectors.dcValidations.getMeasurement()) {
-			List<Issue> issues = doValidateWithMeasurement(resource, mode, cancelIndicator);
 
+			List<Issue> unknownTypeRefIssues = new ArrayList<>();
 			String fileExtension = URIUtils.fileExtension(resource.getURI());
 			switch (fileExtension) {
+			case N4JSGlobals.DTS_FILE_EXTENSION:
+				return Collections.emptyList(); // comment out for debugging
 			case N4JSGlobals.N4JS_FILE_EXTENSION:
 			case N4JSGlobals.N4JSX_FILE_EXTENSION:
 			case N4JSGlobals.N4JSD_FILE_EXTENSION:
-			case N4JSGlobals.DTS_FILE_EXTENSION:
-				issues = new ArrayList<>(issues);
-				// checkForUnknownTypeRefs(resource, issues);
+				if (N4JSLanguageUtils.isDefaultLanguageVersion()) {
+					// checkForUnknownTypeRefs(resource, unknownTypeRefIssues);
+				}
 				break;
 			}
 
-			return issues;
+			List<Issue> issues = doValidateWithMeasurement(resource, mode, cancelIndicator);
+			unknownTypeRefIssues.addAll(issues);
+			return unknownTypeRefIssues;
 		}
 	}
 
 	private List<Issue> doValidateWithMeasurement(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
-		// QUICK EXIT #1: in case of invalid file type (e.g. js file in a project with project type definition)
 		final N4JSWorkspaceConfigSnapshot ws = workspaceAccess.getWorkspaceConfig(resource);
 		final N4JSProjectConfigSnapshot project = ws.findProjectContaining(resource.getURI());
+
+		// QUICK EXIT #1: in case of invalid file type (e.g. js file in a project with project type definition)
 		if (project != null && !isValidFileTypeForProjectType(resource, project)) {
 			final Issue issue = createInvalidFileTypeError(resource, project);
 			return Collections.singletonList(issue);
 		}
-
-		// QUICK EXIT #2: for files that match a "noValidate" module filter from package.json
+		// QUICK EXIT #2: for external projects
+		if (project != null && project.isExternal()) {
+			return Collections.emptyList();
+		}
+		// QUICK EXIT #3: for files that match a "noValidate" module filter from package.json
 		if (ws.isNoValidate(resource.getURI())) {
 			return Collections.emptyList();
 		}
+
 		if (resource instanceof N4JSResource) {
 			final N4JSResource resourceCasted = (N4JSResource) resource;
 
-			// QUICK EXIT #3: for "opaque" modules (e.g. js files)
+			// QUICK EXIT #4: for "opaque" modules (e.g. js files)
 			// (pure performance tweak, because those resources have an empty AST anyway; see N4JSResource#doLoad())
 			if (resourceCasted.isOpaque()) {
-				return Collections.emptyList();
-			}
-
-			// QUICK EXIT #4: resources with disabled validation (e.g. d.ts files)
-			if (resourceCasted.isValidationDisabled()) {
 				return Collections.emptyList();
 			}
 
@@ -118,7 +126,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 				// ignore this exception/error (we will create an issue for it below)
 			}
 
-			// QUICK EXIT #4: if post-processing failed
+			// QUICK EXIT #5: if post-processing failed
 			if (resourceCasted.isFullyProcessed()
 					&& resourceCasted.getPostProcessingThrowable() != null) {
 				// When getting here, we have an attempt to validate a resource that was post-processed but the
@@ -142,11 +150,12 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		return super.validate(resource, mode, cancelIndicator);
 	}
 
+	@SuppressWarnings("unused")
 	private void checkForUnknownTypeRefs(Resource resource, List<Issue> issues) {
 		if (resource instanceof N4JSResource) {
 			final N4JSResource resourceCasted = (N4JSResource) resource;
 			ASTMetaInfoCache cache = resourceCasted.getASTMetaInfoCache();
-			if (cache.hasUnknownTypeRef()) {
+			if (cache != null && cache.hasUnknownTypeRef()) {
 				boolean hasErrors = issues.stream().anyMatch(issue -> issue.getSeverity() == Severity.ERROR);
 				if (!hasErrors) {
 					final String msg = IssueCodes.getMessageForTYS_UNKNOWN_TYPE_REF();
@@ -171,6 +180,13 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	@Override
 	protected void validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator,
 			IAcceptor<Issue> acceptor) {
+
+		ResourceType resourceType = ResourceType.getResourceType(resource);
+		if (resourceType == ResourceType.DTS) {
+			// disable these validations in dts files
+			return;
+		}
+
 		operationCanceledManager.checkCanceled(cancelIndicator);
 		List<EObject> contents = resource.getContents();
 		if (!contents.isEmpty()) {
@@ -224,11 +240,12 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	}
 
 	private static Issue createFileIssue(Resource res, TypableElement elem, String message, String issueCode) {
+		URI uri = res.getURI();
 		final IssueImpl issue = new IssueImpl();
 		issue.setCode(issueCode);
 		issue.setSeverity(IssueCodes.getDefaultSeverity(issueCode));
 		issue.setMessage(message);
-		issue.setUriToProblem(res.getURI());
+		issue.setUriToProblem(URIUtils.getBaseOfVirtualResourceURI(uri));
 		issue.setType(CheckType.FAST); // using CheckType.FAST is important to get proper marker update behavior in ...
 		// ... the editor between persisted and dirty states!
 		issue.setOffset(1);
@@ -239,16 +256,32 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		issue.setColumnEnd(1);
 
 		if (elem != null) {
-			ICompositeNode node = NodeModelUtils.findActualNodeFor(elem);
-			if (node != null) {
-				issue.setOffset(node.getOffset());
-				issue.setLength(node.getLength());
-				issue.setLineNumber(node.getStartLine());
-				issue.setLineNumberEnd(node.getEndLine());
-				LineAndColumn lineAndColumn = NodeModelUtils.getLineAndColumn(node, node.getOffset());
-				if (lineAndColumn != null) {
-					issue.setColumn(lineAndColumn.getColumn());
-					issue.setColumnEnd(lineAndColumn.getColumn() + 1);
+			if (N4JSGlobals.DTS_FILE_EXTENSION.equals(URIUtils.fileExtension(uri))) {
+				for (EObject elem2 = elem; elem2 != null; elem2 = elem2.eContainer()) {
+					for (Adapter adapter : elem2.eAdapters()) {
+						if (adapter instanceof XITextRegionWithLineInformation) {
+							XITextRegionWithLineInformation nodeInfo = (XITextRegionWithLineInformation) adapter;
+							issue.setOffset(nodeInfo.getOffset());
+							issue.setLength(nodeInfo.getLength());
+							issue.setLineNumber(nodeInfo.getLineNumber());
+							issue.setLineNumberEnd(nodeInfo.getEndLineNumber());
+							issue.setColumn(nodeInfo.getCharacter());
+							issue.setColumnEnd(nodeInfo.getEndCharacter());
+						}
+					}
+				}
+			} else {
+				ICompositeNode node = NodeModelUtils.findActualNodeFor(elem);
+				if (node != null) {
+					issue.setOffset(node.getOffset());
+					issue.setLength(node.getLength());
+					issue.setLineNumber(node.getStartLine());
+					issue.setLineNumberEnd(node.getEndLine());
+					LineAndColumn lineAndColumn = NodeModelUtils.getLineAndColumn(node, node.getOffset());
+					if (lineAndColumn != null) {
+						issue.setColumn(lineAndColumn.getColumn());
+						issue.setColumnEnd(lineAndColumn.getColumn() + 1);
+					}
 				}
 			}
 		}

@@ -488,6 +488,7 @@ rule__JSONObject__Group__3
 	}
 :
 	rule__JSONObject__Group__3__Impl
+	rule__JSONObject__Group__4
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -499,9 +500,35 @@ rule__JSONObject__Group__3__Impl
 	}
 :
 (
-	{ before(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_3()); }
+	{ before(grammarAccess.getJSONObjectAccess().getCommaKeyword_3()); }
+	(',')?
+	{ after(grammarAccess.getJSONObjectAccess().getCommaKeyword_3()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__JSONObject__Group__4
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__JSONObject__Group__4__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__JSONObject__Group__4__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_4()); }
 	'}'
-	{ after(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_3()); }
+	{ after(grammarAccess.getJSONObjectAccess().getRightCurlyBracketKeyword_4()); }
 )
 ;
 finally {
@@ -785,6 +812,7 @@ rule__JSONArray__Group__3
 	}
 :
 	rule__JSONArray__Group__3__Impl
+	rule__JSONArray__Group__4
 ;
 finally {
 	restoreStackSize(stackSize);
@@ -796,9 +824,35 @@ rule__JSONArray__Group__3__Impl
 	}
 :
 (
-	{ before(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_3()); }
+	{ before(grammarAccess.getJSONArrayAccess().getCommaKeyword_3()); }
+	(',')?
+	{ after(grammarAccess.getJSONArrayAccess().getCommaKeyword_3()); }
+)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__JSONArray__Group__4
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	rule__JSONArray__Group__4__Impl
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
+rule__JSONArray__Group__4__Impl
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+(
+	{ before(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_4()); }
 	']'
-	{ after(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_3()); }
+	{ after(grammarAccess.getJSONArrayAccess().getRightSquareBracketKeyword_4()); }
 )
 ;
 finally {

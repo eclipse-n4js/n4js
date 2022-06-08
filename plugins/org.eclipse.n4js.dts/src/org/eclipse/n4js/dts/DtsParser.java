@@ -31,6 +31,7 @@ import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.TypeScriptParser.ProgramContext;
 import org.eclipse.n4js.dts.TypeScriptParser.StatementListContext;
 import org.eclipse.n4js.dts.astbuilders.DtsScriptBuilder;
@@ -39,6 +40,7 @@ import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
+import org.eclipse.n4js.utils.URIUtils;
 import org.eclipse.n4js.xtext.ide.server.build.ILoadResultInfoAdapter;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.nodemodel.INode;
@@ -88,11 +90,18 @@ public class DtsParser {
 
 	/** Parses d.ts files */
 	public DtsParseResult parse(Reader reader, LazyLinkingResource resource) throws IOException {
-		NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
-		if (adapter == null) {
-			return parseScript(reader, resource);
-		} else {
+		URI uri = resource.getURI();
+		if (URIUtils.isVirtualResourceURI(uri)) {
+			NestedResourceAdapter adapter = NestedResourceAdapter.get(resource);
+			if (adapter == null) {
+				URI host = URIUtils.getBaseOfVirtualResourceURI(uri);
+				resource.getResourceSet().getResource(host, true);
+				adapter = NestedResourceAdapter.get(resource);
+			}
+
 			return parseNestedScript(resource, adapter);
+		} else {
+			return parseScript(reader, resource);
 		}
 	}
 
