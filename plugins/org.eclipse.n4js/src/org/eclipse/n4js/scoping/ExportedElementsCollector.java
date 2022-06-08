@@ -131,24 +131,6 @@ public class ExportedElementsCollector {
 		return Iterables.concat(info.visible, info.invisible);
 	}
 
-	private void handleExportEquals(TModule module, CollectionInfo info) {
-		Optional<List<IdentifiableElement>> exportEqualsElems = ExportedElementsUtils
-				.getElementsExportedViaExportEquals(module);
-		if (exportEqualsElems.isPresent()) {
-			boolean haveDefaultExport = false;
-			for (IdentifiableElement elem : exportEqualsElems.get()) {
-				if (elem instanceof TNamespace) {
-					doCollectElements((TNamespace) elem, info);
-				} else if (elem instanceof TFunction || elem instanceof TVariable) {
-					if (!haveDefaultExport) {
-						doCollectElement("default", (TExportableElement) elem, info);
-						haveDefaultExport = true;
-					}
-				}
-			}
-		}
-	}
-
 	private void doCollectElements(AbstractNamespace namespace, CollectionInfo info) {
 
 		if (namespace instanceof TModule) {
@@ -225,6 +207,24 @@ public class ExportedElementsCollector {
 				 * is false) compared to includeHollows because: ParameterizedTypeRef#declaredType is of type Type.
 				 * Since TVariable is no subtype of Type, it cannot be linked to that property 'declaredType'.
 				 */
+			}
+		}
+	}
+
+	private void handleExportEquals(TModule module, CollectionInfo info) {
+		Optional<List<IdentifiableElement>> exportEqualsElems = ExportedElementsUtils
+				.getElementsExportedViaExportEquals(module);
+		if (exportEqualsElems.isPresent()) {
+			boolean haveDefaultExport = false;
+			for (IdentifiableElement elem : exportEqualsElems.get()) {
+				if (elem instanceof TNamespace) {
+					doCollectElements((TNamespace) elem, info);
+				} else if (elem instanceof TFunction || elem instanceof TVariable) {
+					if (!haveDefaultExport) {
+						doCollectElement("default", (TExportableElement) elem, info);
+						haveDefaultExport = true;
+					}
+				}
 			}
 		}
 	}
