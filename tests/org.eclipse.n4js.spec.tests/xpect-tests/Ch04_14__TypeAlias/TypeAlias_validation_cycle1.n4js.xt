@@ -27,12 +27,12 @@ type D = C;
 export public let x: A;
 export public let y = x;
 
-// must not be inferred to A XPECT type of 'x' --> [unknown]
+// must not be inferred to A XPECT type of 'x' --> «unknown»
 x;
-// must not be inferred to A XPECT type of 'y' --> [unknown]
+// must not be inferred to A XPECT type of 'y' --> «unknown»
 y;
 
-// XPECT type of 'foo' --> {function([unknown]):[unknown]}
+// XPECT type of 'foo' --> {function(«unknown»):«unknown»}
 function foo(p: A): A {
 	return null;
 }

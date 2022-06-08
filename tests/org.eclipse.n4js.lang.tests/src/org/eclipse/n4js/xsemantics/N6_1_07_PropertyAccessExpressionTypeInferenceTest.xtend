@@ -42,7 +42,7 @@ class N6_1_07_PropertyAccessExpressionTypeInferenceTest extends AbstractTypesyst
 
 	@Test
 	def void testUnknownFieldType() {
-		"".assertTypeNameOfPropertyAccess("g.doesNotExist", "[unknown]")
+		"".assertTypeNameOfPropertyAccess("g.doesNotExist", "«unknown»")
 	}
 
 	@Test

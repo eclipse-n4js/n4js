@@ -22,7 +22,7 @@ function f () {
 
 /* TODO GHOLD-204 remove when fully supported  XPECT errors ---
 "Couldn't resolve reference to Type 'f'." at "f"
-"{function():void} is not a subtype of null." at "f"
+"{function():void} is not a subtype of f«proxy»." at "f"
 --- */
 var myF : f = f;
 // XPECT noerrors --> "Not a function or method: f."

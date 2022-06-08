@@ -37,12 +37,12 @@ class N6_1_09_FunctionCallTypeInferenceTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testUnknownTargetFunctionCall() {
-		"a.unknown()".assertTypeNameOfFunctionCall("[unknown]")
+		"a.unknown()".assertTypeNameOfFunctionCall("«unknown»")
 	}
 
 	@Test
 	def void testFunctionCallOnNonFunctionType() {
-		"''()".assertTypeNameOfFunctionCall("[unknown]")
+		"''()".assertTypeNameOfFunctionCall("«unknown»")
 	}
 
 	@Test
@@ -119,7 +119,7 @@ class N6_1_09_FunctionCallTypeInferenceTest extends AbstractTypesystemTest {
 
 	@Test
 	def void testFunctionCallWithParameterizedUnknownGenericParam() {
-		"a.fWithGenericInReturn(unknown)".assertTypeNameOfFunctionCall("G<[unknown]>")
+		"a.fWithGenericInReturn(unknown)".assertTypeNameOfFunctionCall("G<«unknown»>")
 	}
 
 	@Test
@@ -271,7 +271,7 @@ class N6_1_09_FunctionCallTypeInferenceTest extends AbstractTypesystemTest {
 			// old expectation:
 			// "intersection{A,B,C}"
 			// TODO IDE-2226 revisit test case
-			"[unknown]"
+			"«unknown»"
 		)
 	}
 
