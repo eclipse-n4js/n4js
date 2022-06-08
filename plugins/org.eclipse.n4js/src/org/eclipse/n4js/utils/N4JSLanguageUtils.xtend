@@ -91,6 +91,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
+import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.PrimitiveType
@@ -112,6 +113,7 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable
+import org.eclipse.n4js.ts.types.util.SuperTypesMapper
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.types.utils.TypeCompareUtils
 import org.eclipse.n4js.types.utils.TypeUtils
@@ -881,6 +883,17 @@ public class N4JSLanguageUtils {
 	 * See also {@link N4JSLanguageUtils#isContainedInStaticPolyfillModule(TAnnotableElement) }*/
 	def static boolean isContainedInStaticPolyfillAware(TAnnotableElement tsElement) {
 		return AnnotationDefinition.STATIC_POLYFILL_AWARE.hasAnnotation( tsElement ); // transitively inherited
+	}
+
+	/** Checks presence of {@link AnnotationDefinition#CONTAINS_INDEX_SIGNATURE} annotation on the declaredType of
+	 * the given type reference and all its direct and indirect super types. */
+	def static boolean hasIndexSignature(TypeRef typeRef) {
+		val declType = typeRef?.declaredType;
+		if (declType instanceof ContainerType<?>) {
+			return AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.hasAnnotation(declType)
+				|| SuperTypesMapper.exists(declType, [AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.hasAnnotation(it)])
+		}
+		return false;
 	}
 
 	/** checks if the qualifiedName has a last segment named 'default' {@link N4JSLanguageConstants#EXPORT_DEFAULT_NAME} */

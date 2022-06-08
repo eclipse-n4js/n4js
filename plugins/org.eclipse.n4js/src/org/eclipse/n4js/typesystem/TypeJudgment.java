@@ -966,10 +966,14 @@ import com.google.inject.Inject;
 					T = anyTypeRefDynamic(G);
 				} else if (targetDeclType == objectType(G)) {
 					T = anyTypeRefDynamic(G);
+				} else if (N4JSLanguageUtils.hasIndexSignature(targetTypeRef)) {
+					T = anyTypeRefDynamic(G);
 				} else {
 					T = unknown();
 				}
 			} else if (targetTypeRef.isDynamic()) {
+				T = anyTypeRefDynamic(G);
+			} else if (N4JSLanguageUtils.hasIndexSignature(targetTypeRef)) {
 				T = anyTypeRefDynamic(G);
 			} else {
 				T = anyTypeRef(G);

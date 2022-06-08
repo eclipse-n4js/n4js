@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.DestructureUtils
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FieldAccessor
@@ -34,10 +33,8 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
-import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TypableElement
-import org.eclipse.n4js.ts.types.util.SuperTypesMapper
 import org.eclipse.n4js.types.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.utils.RuleEnvironment
@@ -165,22 +162,17 @@ public class TypeProcessor extends AbstractProcessor {
 
 	/**
 	 * Poor man's support for index signatures (intended only for .d.ts but must also be checked in N4JS,
-	 * because N4JS may contain classifiers that extends a classifier from .d.ts containing an index signature).
+	 * because N4JS may contain classifiers that extend a classifier from .d.ts containing an index signature).
 	 */
 	def private <T extends TypeRef> T adjustForIndexSignatures(RuleEnvironment G, T typeRef, TypableElement astNode) {
 		val parent = astNode?.eContainer;
 		if (parent instanceof ParameterizedPropertyAccessExpression) {
 			if (astNode === parent.target && !typeRef.dynamic) {
 				if (typeRef instanceof ParameterizedTypeRef) {
-					val declType = typeRef.declaredType;
-					if (declType instanceof ContainerType<?>) {
-						val containsIndexSig = AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.hasAnnotation(declType)
-							|| SuperTypesMapper.exists(declType, [AnnotationDefinition.CONTAINS_INDEX_SIGNATURE.hasAnnotation(it)]);
-						if (containsIndexSig) {
-							val typeRefCpy = TypeUtils.copy(typeRef);
-							typeRefCpy.dynamic = true;
-							return typeRefCpy;
-						}
+					if (N4JSLanguageUtils.hasIndexSignature(typeRef)) {
+						val typeRefCpy = TypeUtils.copy(typeRef);
+						typeRefCpy.dynamic = true;
+						return typeRefCpy;
 					}
 				}
 			}

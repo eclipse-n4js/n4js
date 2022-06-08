@@ -1572,6 +1572,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			// we have something like: myObj[Symbol.iterator]
 			// -> delegate to special method
 			internalCheckIndexedAccessWithSymbol(G, indexedAccess, targetTypeRef, accessedBuiltInSymbol);
+		} else if (N4JSLanguageUtils.hasIndexSignature(targetTypeRef)) {
+			// allowed: index into type with index signature
 		} else {
 			// all other cases:
 			// treat this as an ordinary member access where the member name is given as a compile-time expression

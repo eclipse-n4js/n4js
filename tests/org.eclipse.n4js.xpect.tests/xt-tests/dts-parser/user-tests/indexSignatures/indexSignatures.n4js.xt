@@ -47,15 +47,27 @@ let cls2: Cls2;
 // XPECT noerrors -->
 // return type not yet supported XPECT type of 'v01' --> any+
 let v01 = ifc.DUMMY;
-
 // XPECT noerrors -->
 // return type not yet supported XPECT type of 'v02' --> any+
-let v02 = subIfc.DUMMY;
+let v02 = ifc['DUMMY'];
 
 // XPECT noerrors -->
-// return type not yet supported XPECT type of 'v03' --> any+
-let v03 = cls1.DUMMY;
+// return type not yet supported XPECT type of 'v11' --> any+
+let v11 = subIfc.DUMMY;
+// XPECT noerrors -->
+// return type not yet supported XPECT type of 'v12' --> any+
+let v12 = subIfc['DUMMY'];
 
 // XPECT noerrors -->
-// return type not yet supported XPECT type of 'v04' --> any+
-let v04 = cls2.DUMMY;
+// return type not yet supported XPECT type of 'v21' --> any+
+let v21 = cls1.DUMMY;
+// XPECT noerrors -->
+// return type not yet supported XPECT type of 'v22' --> any+
+let v22 = cls1['DUMMY'];
+
+// XPECT noerrors -->
+// return type not yet supported XPECT type of 'v31' --> any+
+let v31 = cls2.DUMMY;
+// XPECT noerrors -->
+// return type not yet supported XPECT type of 'v32' --> any+
+let v32 = cls2['DUMMY'];
