@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -139,6 +140,17 @@ public class ParserContextUtils {
 		return result;
 	}
 
+	/**
+	 * @return the {@link BlockContext block} if the given context contains one (functions, methods, namespace/module
+	 *         declarations, etc.); the given context if it is itself a block; <code>null</code> otherwise.
+	 */
+	public static BlockContext getBlock(ParserRuleContext ctx) {
+		if (ctx instanceof BlockContext) {
+			return (BlockContext) ctx;
+		}
+		return ctx != null ? ctx.getRuleContext(BlockContext.class, 0) : null;
+	}
+
 	/** @return the statements in the given block or an empty list if not available. */
 	public static List<StatementContext> getStatements(BlockContext block) {
 		if (block != null) {
@@ -151,6 +163,38 @@ public class ParserContextUtils {
 			}
 		}
 		return Collections.emptyList();
+	}
+
+	/** @return first ancestor context of 'ctx' that is a subtype of 'expectedType' or <code>null</code>. */
+	public static <T extends ParserRuleContext> T getContainerOfType(ParserRuleContext ctx, Class<T> expectedType) {
+		if (ctx == null) {
+			return null;
+		}
+		ctx = ctx.getParent();
+		while (ctx != null) {
+			if (expectedType.isInstance(ctx)) {
+				return expectedType.cast(ctx);
+			}
+			ctx = ctx.getParent();
+		}
+		return null;
+	}
+
+	/** @return all ancestor contexts of 'ctx' that are a subtype of 'expectedType' or <code>null</code>. */
+	public static <T extends ParserRuleContext> List<T> getContainersOfType(ParserRuleContext ctx,
+			Class<T> expectedType) {
+		if (ctx == null) {
+			return null;
+		}
+		LinkedList<T> result = new LinkedList<>();
+		ctx = ctx.getParent();
+		while (ctx != null) {
+			if (expectedType.isInstance(ctx)) {
+				result.addFirst(expectedType.cast(ctx));
+			}
+			ctx = ctx.getParent();
+		}
+		return result;
 	}
 
 	/** Sets the given accessibility, avoiding duplicate modifiers. */
