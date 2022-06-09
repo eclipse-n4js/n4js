@@ -556,14 +556,15 @@ public class N4JSLanguageUtils {
 		if (elem === null) {
 			return false;
 		}
+		if (BuiltInTypeScope.isPrimitivesResource(elem.eResource)) {
+			// primitives act like global types, but their module does not contain @@Global:
+			return true;
+		}
 		val root = EcoreUtil.getRootContainer(elem);
 		if (root instanceof TModule) {
 			return AnnotationDefinition.GLOBAL.hasAnnotation(root);
 		} else if (root instanceof Script) {
 			return AnnotationDefinition.GLOBAL.hasAnnotation(root);
-		} else if (BuiltInTypeScope.isPrimitivesResource(elem.eResource)) {
-			// primitives act like global types, but their module does not contain @@Global:
-			return true;
 		}
 		return false;
 	}
