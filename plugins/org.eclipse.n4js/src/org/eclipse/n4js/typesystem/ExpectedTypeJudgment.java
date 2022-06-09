@@ -87,6 +87,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.TClass;
+import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TFormalParameter;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TVariable;
@@ -468,9 +469,25 @@ import com.google.inject.Inject;
 					if (otherSideTR == null) {
 						return unknown();
 					}
+
 					if (ts.subtype(G, otherSideTR, primsTR).isSuccess()
 							&& !ts.subtype(G, otherSideTR, nullTypeRef(G)).isSuccess()) {
-						return ts.upperBoundWithReopenAndResolveBoth(G, otherSideTR);
+
+						TypeRef result = ts.upperBoundWithReopenAndResolveBoth(G, otherSideTR);
+
+						// allow comparison like: (E.LitE < 42) or like: (F.LitF >= "str");
+						if (result.getDeclaredType() instanceof TEnum) {
+							switch (N4JSLanguageUtils.getEnumKind((TEnum) result.getDeclaredType())) {
+							case StringBased:
+								return RuleEnvironmentExtensions.stringTypeRef(G);
+							case NumberBased:
+								return RuleEnvironmentExtensions.numberTypeRef(G);
+							default:
+								return result;
+							}
+						}
+
+						return result;
 					} else {
 						return primsTR;
 					}
