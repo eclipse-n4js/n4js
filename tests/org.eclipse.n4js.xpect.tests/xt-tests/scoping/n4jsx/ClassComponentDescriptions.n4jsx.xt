@@ -69,7 +69,7 @@ export public class MyComponent extends React.Component<~React.ComponentProps wi
 		String, StringConstructor, Symbol, SyntaxError, SyntaxErrorConstructor, ThisType, TypeError, TypeErrorConstructor, TypedPropertyDescriptor,
 		URIError, URIErrorConstructor,
 		Uint16Array, Uint16ArrayConstructor, Uint32Array, Uint32ArrayConstructor, Uint8Array, Uint8ArrayConstructor, Uint8ClampedArray, Uint8ClampedArrayConstructor,
-		__proto__, arguments, console, constText, constructor,
+		__proto__, arguments, console, global, constText, constructor,
 		decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, eval, hasOwnProperty,
 		index.Component, index.ComponentProps, index.Fragment, index.PropConstraint,
 		index.PropType, index.PropTypes, index.PureComponent, index.ReactElement, index.cloneElement, index.createElement,
