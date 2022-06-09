@@ -30,19 +30,21 @@ public class DeclMergingUtils {
 	private static final N4JSMetaModelCache<Integer> cachedKindIndices = new N4JSMetaModelCache<>(eClass -> {
 		if (TypesPackage.Literals.TCLASS.isSuperTypeOf(eClass)) {
 			return 1;
-		} else if (TypesPackage.Literals.TINTERFACE.isSuperTypeOf(eClass)) {
-			return 2;
 		} else if (TypesPackage.Literals.TENUM.isSuperTypeOf(eClass)) {
-			return 3;
-		} else if (TypesPackage.Literals.TYPE_ALIAS.isSuperTypeOf(eClass)) {
-			return 4;
+			return 2;
 		} else if (TypesPackage.Literals.TFUNCTION.isSuperTypeOf(eClass)) {
-			return 5;
+			return 3;
 		} else if (TypesPackage.Literals.TVARIABLE.isSuperTypeOf(eClass)) {
-			return 6;
-		} else {
-			return 7; // e.g. namespaces
+			return 4;
 		}
+		// hollow elements come last:
+		if (TypesPackage.Literals.TINTERFACE.isSuperTypeOf(eClass)) {
+			return 5;
+		} else if (TypesPackage.Literals.TYPE_ALIAS.isSuperTypeOf(eClass)) {
+			return 6;
+		}
+		// other cases (e.g. namespaces)
+		return 7;
 	});
 
 	/**
