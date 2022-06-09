@@ -184,9 +184,8 @@ public class ExportedElementsCollector {
 
 	private void doCollectElement(String exportedName, TExportableElement exportedElem, CollectionInfo info) {
 
-		boolean include = (info.includeHollows || !N4JSLanguageUtils.isHollowElement(exportedElem, variantHelper))
-				&& (info.includeValueOnlyElements
-						|| !N4JSLanguageUtils.isValueOnlyElement(exportedElem, variantHelper));
+		boolean include = N4JSLanguageUtils.checkInclude(exportedElem,
+				info.includeHollows, info.includeValueOnlyElements, variantHelper);
 
 		if (include) {
 			TypeVisibility visibility = isVisible(info.context, exportedElem);

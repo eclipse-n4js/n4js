@@ -17,6 +17,7 @@ import java.util.Properties
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSLanguageConstants
@@ -99,6 +100,7 @@ import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TInterface
@@ -545,6 +547,25 @@ public class N4JSLanguageUtils {
 	 */
 	def static isReadOnlyField(TMember m) {
 		return m instanceof TField && !m.writeable;
+	}
+
+	/**
+	 * Tells whether the given element is global. Works for AST nodes and TModule elements.
+	 */
+	def static boolean isGlobal(EObject elem) {
+		if (elem === null) {
+			return false;
+		}
+		val root = EcoreUtil.getRootContainer(elem);
+		if (root instanceof TModule) {
+			return AnnotationDefinition.GLOBAL.hasAnnotation(root);
+		} else if (root instanceof Script) {
+			return AnnotationDefinition.GLOBAL.hasAnnotation(root);
+		} else if (BuiltInTypeScope.isPrimitivesResource(elem.eResource)) {
+			// primitives act like global types, but their module does not contain @@Global:
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -1218,8 +1239,15 @@ public class N4JSLanguageUtils {
 			&& getEnumKind(element as TEnum) !== EnumKind.Normal;
 		return element !== null && !isNumberOrStringBasedEnum && !isHollowElement(element, javaScriptVariantHelper);
 	}
-	
-	
+
+	def static boolean checkInclude(TExportableElement elem, boolean includeHollows, boolean includeValueOnlyElements,
+		JavaScriptVariantHelper variantHelper) {
+
+		val include = (includeHollows || !N4JSLanguageUtils.isHollowElement(elem, variantHelper))
+				&& (includeValueOnlyElements || !N4JSLanguageUtils.isValueOnlyElement(elem, variantHelper));
+		return include;
+	}
+
 	/**
 	 * Elements can have a type-only semantic (called 'hollow'), a value-only semantic, or can have both of them.
 	 * A typical example for a hollow element is a shape, a typical example for a value-only element is a

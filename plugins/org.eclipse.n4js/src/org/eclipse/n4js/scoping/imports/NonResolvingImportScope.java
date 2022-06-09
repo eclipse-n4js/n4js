@@ -16,12 +16,18 @@ import static java.util.Collections.emptyList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.scoping.builtin.BuiltInTypeScope;
+import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.DeclMergingHelper;
 import org.eclipse.n4js.utils.DeclMergingUtils;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.n4js.utils.collections.Iterables2;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
@@ -35,18 +41,46 @@ import com.google.common.base.Optional;
 /** Custom import scope that does not trigger resolving imported elements. */
 class NonResolvingImportScope extends ImportScope {
 
+	private static final Logger LOGGER = Logger.getLogger(NonResolvingImportScope.class);
+
 	private List<ImportNormalizer> myNormalizers;
 	private final EClass myType;
 	private final DeclMergingHelper declMergingHelper;
+	private final JavaScriptVariantHelper jsVariantHelper;
 	private final Optional<BuiltInTypeScope> builtInTypeScope;
 
+	private final boolean includeHollows;
+	private final boolean includeValueOnlyElements;
+
 	public NonResolvingImportScope(List<ImportNormalizer> namespaceResolvers, IScope parent, ISelectable importFrom,
-			EClass type, boolean ignoreCase, DeclMergingHelper declMergingHelper,
+			EClass type, boolean ignoreCase,
+			DeclMergingHelper declMergingHelper, JavaScriptVariantHelper jsVariantHelper,
 			Optional<BuiltInTypeScope> builtInTypeScope) {
 		super(namespaceResolvers, parent, importFrom, type, ignoreCase);
 		this.myType = type;
 		this.declMergingHelper = declMergingHelper;
+		this.jsVariantHelper = jsVariantHelper;
 		this.builtInTypeScope = builtInTypeScope;
+
+		// derive the "include hollows/value-only-elements" configuration from the type
+		// (would be better to let clients configure this, but we cannot easily channel this info through the Xtext API)
+		if (TypesPackage.Literals.TYPE.isSuperTypeOf(type)) {
+			includeHollows = true;
+			includeValueOnlyElements = false;
+		} else if (TypesPackage.Literals.IDENTIFIABLE_ELEMENT.isSuperTypeOf(type)) {
+			includeHollows = false;
+			includeValueOnlyElements = true;
+		} else if (TypesPackage.Literals.TMODULE.isSuperTypeOf(type)) {
+			// not applicable here, so include both to turn off the filtering
+			includeHollows = true;
+			includeValueOnlyElements = true;
+		} else {
+			LOGGER.warn("unable to derive includeHollows/includeValueOnlyElements from EClass: "
+					+ type.getName());
+			// turn off the filtering as fall back
+			includeHollows = true;
+			includeValueOnlyElements = true;
+		}
 	}
 
 	@Override
@@ -67,6 +101,13 @@ class NonResolvingImportScope extends ImportScope {
 				Iterable<IEObjectDescription> resolvedElements = importFrom.getExportedObjects(myType, resolvedName,
 						isIgnoreCase());
 				for (IEObjectDescription resolvedElement : resolvedElements) {
+
+					// change is here
+					if (!checkInclude(resolvedElement)) {
+						continue;
+					}
+					// change is here
+
 					if (resolvedQualifiedName == null)
 						resolvedQualifiedName = resolvedName;
 					else if (!resolvedQualifiedName.equals(resolvedName)) {
@@ -89,6 +130,19 @@ class NonResolvingImportScope extends ImportScope {
 		result = removeGlobalDtsElementsClashingWithBuiltInTypes(result);
 		result = declMergingHelper.chooseRepresentatives(result);
 		return result;
+	}
+
+	private boolean checkInclude(IEObjectDescription desc) {
+		if (includeHollows && includeValueOnlyElements) {
+			return true;
+		}
+		EObject elem = desc.getEObjectOrProxy();
+		if (elem != null && !elem.eIsProxy() && elem instanceof TExportableElement) {
+			boolean include = N4JSLanguageUtils.checkInclude((TExportableElement) elem, includeHollows,
+					includeValueOnlyElements, jsVariantHelper);
+			return include;
+		}
+		return true;
 	}
 
 	/**
