@@ -14,8 +14,16 @@
 
 @NumberBased
 export public enum E {
+	K,
 	L
 }
+
+@StringBased
+export public enum F {
+	M,
+	N
+}
+
 
 // XPECT noerrors -->
 class G<T extends E> {}
@@ -82,3 +90,15 @@ E.L.charAt(0);
 -E.L;
 // XPECT noerrors -->
 42*E.L;
+
+// XPECT noerrors -->
+(E.L <= 100);
+
+// XPECT noerrors -->
+(E.L < E.K);
+
+// XPECT noerrors -->
+(F.M >= "hello");
+
+// XPECT noerrors -->
+(F.M > F.N);
