@@ -56,18 +56,22 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		final String newName;
 		/** Test expectation for the source code after the rename happened. */
 		final Map<String, Map<String, String>> projectsModulesExpectedSourcesAfter;
+		/** Array of expected issues */
+		final Pair<String, List<String>>[] expectedIssues;
 
 		/** Creates a new {@link RenameTestConfiguration}. */
 		public RenameTestConfiguration(
 				Map<String, Map<String, String>> projectsModulesSourcesBefore,
 				List<RenamePosition> positions,
 				String newName,
-				Map<String, Map<String, String>> projectsModulesExpectedSourcesAfter) {
+				Map<String, Map<String, String>> projectsModulesExpectedSourcesAfter,
+				Pair<String, List<String>>[] expectedIssues) {
 
 			this.projectsModulesSourcesBefore = projectsModulesSourcesBefore;
 			this.positions = ImmutableList.copyOf(positions);
 			this.newName = newName;
 			this.projectsModulesExpectedSourcesAfter = projectsModulesExpectedSourcesAfter;
+			this.expectedIssues = expectedIssues;
 		}
 	}
 
@@ -102,7 +106,8 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		testAtCursors(
 				Collections.singletonList(sourceBeforeAsPair),
 				newName,
-				Collections.singletonList(expectedSourceAfterAsPair));
+				Collections.singletonList(expectedSourceAfterAsPair),
+				null);
 	}
 
 	/** Call this method in a single-project, multi-file test. */
@@ -110,6 +115,16 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 			Iterable<Pair<String, String>> modulesSourcesBefore,
 			String newName,
 			Iterable<Pair<String, String>> modulesExpectedSourcesAfter) {
+
+		testAtCursors(modulesSourcesBefore, newName, modulesExpectedSourcesAfter, null);
+	}
+
+	/** Call this method in a single-project, multi-file test. */
+	protected void testAtCursors(
+			Iterable<Pair<String, String>> modulesSourcesBefore,
+			String newName,
+			Iterable<Pair<String, String>> modulesExpectedSourcesAfter,
+			Pair<String, List<String>>[] expectedIssues) {
 
 		Pair<String, ? extends Iterable<Pair<String, String>>> sourceBeforeAsPair = Pair.of(
 				DEFAULT_PROJECT_NAME,
@@ -120,14 +135,16 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 		testAtCursorsWS(
 				Collections.singletonList(sourceBeforeAsPair),
 				newName,
-				Collections.singletonList(expectedSourceAfterAsPair));
+				Collections.singletonList(expectedSourceAfterAsPair),
+				expectedIssues);
 	}
 
 	/** Call this method in a multi-project test. */
 	protected void testAtCursorsWS(
 			Iterable<Pair<String, ? extends Iterable<Pair<String, String>>>> projectsModulesSourcesBefore,
 			String newName,
-			Iterable<Pair<String, ? extends Iterable<Pair<String, String>>>> projectsModulesExpectedSourcesAfter) {
+			Iterable<Pair<String, ? extends Iterable<Pair<String, String>>>> projectsModulesExpectedSourcesAfter,
+			Pair<String, List<String>>[] expectedIssues) {
 
 		Map<String, Map<String, String>> projectsModulesSourcesBeforeAsMap = new LinkedHashMap<>();
 		TestWorkspaceManager.convertProjectsModulesContentsToMap(
@@ -157,7 +174,7 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 				projectsModulesExpectedSourcesAfter, projectsModulesExpectedSourcesAfterAsMap, false);
 
 		RenameTestConfiguration config = new RenameTestConfiguration(projectsModulesSourcesBeforeAsMap, positions,
-				newName, projectsModulesExpectedSourcesAfterAsMap);
+				newName, projectsModulesExpectedSourcesAfterAsMap, expectedIssues);
 
 		String selectedProject = positions.get(0).projectName;
 		String selectedModule = positions.get(0).moduleName;
@@ -168,7 +185,11 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 	protected void performTest(Project project, String moduleName, RenameTestConfiguration config)
 			throws InterruptedException, ExecutionException, URISyntaxException {
 
-		assertNoIssues();
+		if (config.expectedIssues == null) {
+			assertNoIssues();
+		} else {
+			assertIssues(config.expectedIssues);
+		}
 
 		for (RenamePosition pos : config.positions) {
 			performTestAtPosition(pos, config);
@@ -311,7 +332,7 @@ abstract public class AbstractRenameTest extends AbstractStructuredIdeTest<Renam
 			sb.append('\n');
 			sb.append(actualCodeAfter.trim());
 		}
-		Assert.fail(sb.toString());
+		Assert.assertEquals(sb.toString(), expectedCodeAfter, actualCodeAfter);
 	}
 
 	private String insertCursorSymbol(String source, RenamePosition pos) {
