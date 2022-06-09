@@ -174,46 +174,6 @@ public class ModuleCollisionMultipleProjectsTest extends AbstractIdeTest {
 		assertNoErrors();
 	}
 
-	/** */
-	@Test
-	public void testModuleNoCollisionsDefault1() {
-		test(Map.of("P1", Map.of(
-				"util.n4js",
-				"export const K = 0;"),
-				CFG_NODE_MODULES + "n4js-runtime-node", Map.of(
-						"util.n4jsd",
-						"export external public const K_Other;"),
-				"Client", Map.of(
-						"Client",
-						"import {K_Other} from \"util\";\n"
-								+ "K_Other;",
-
-						CFG_DEPENDENCIES, "P1, n4js-runtime-node")));
-
-		assertNoErrors();
-	}
-
-	/** */
-	@Test
-	public void testModuleNoCollisionsDefault2() {
-		test(Map.of("P1", Map.of(
-				"util.n4js",
-				"export const K1 = 0;"),
-				CFG_NODE_MODULES + "n4js-runtime-node", Map.of(
-						"util.n4jsd",
-						"export external public const K2;"),
-				"ClientP", Map.of(
-						"Client",
-						"import {K3} from \"ClientP/util\";\n"
-								+ "K3;",
-						"util",
-						"export const K3 = 0;",
-
-						CFG_DEPENDENCIES, "P1, n4js-runtime-node")));
-
-		assertNoErrors();
-	}
-
 	final void test(Map<String, ? extends Map<String, ? extends CharSequence>> projectsModulesContents) {
 		testWorkspaceManager.createTestYarnWorkspaceOnDisk(projectsModulesContents);
 		startAndWaitForLspServer();
