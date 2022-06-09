@@ -136,7 +136,7 @@ public class TypeProcessor extends AbstractProcessor {
 				log(indentLevel, "asking Xsemantics ...");
 				val result = invokeTypeJudgmentToInferType(G, node);
 
-				val resultAdjusted = adjustResultForLocationInAST(G, result, N4JSASTUtils.skipParenExpressionDownward(node));
+				val resultAdjusted = adjustResultForLocationInAST(G, result, node);
 
 				// in this case, we are responsible for storing the type in the cache
 				// (Xsemantics does not know of the cache)
@@ -191,8 +191,8 @@ public class TypeProcessor extends AbstractProcessor {
 	def private <T extends TypeRef> T adjustForLocationDependentSpecialProperties(RuleEnvironment G, T result, TypableElement astNode) {
 		val typeRef = result;
 		if (typeRef instanceof ParameterizedTypeRef) {
-			val optionalFieldStrategy = N4JSLanguageUtils.
-				calculateOptionalFieldStrategy(astNode, typeRef);
+			val astNodeSkipParen = N4JSASTUtils.skipParenExpressionDownward(astNode);
+			val optionalFieldStrategy = N4JSLanguageUtils.calculateOptionalFieldStrategy(astNodeSkipParen, typeRef);
 			if (typeRef.ASTNodeOptionalFieldStrategy !== optionalFieldStrategy) {
 				val typeRefCpy = TypeUtils.copy(typeRef);
 				typeRefCpy.ASTNodeOptionalFieldStrategy = optionalFieldStrategy;
