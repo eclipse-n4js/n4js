@@ -639,7 +639,7 @@ importAliasDeclaration
 // Export Statement
 
 exportStatement
-    : Export exportStatementTail
+    : Export Declare? exportStatementTail
     ;
 
 exportStatementTail
