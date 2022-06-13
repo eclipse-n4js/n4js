@@ -77,7 +77,7 @@ public class DtsClassBuilder
 	@Override
 	public void enterClassDeclaration(ClassDeclarationContext ctx) {
 		result = N4JSFactory.eINSTANCE.createN4ClassDeclaration();
-		result.setName(ctx.identifierOrKeyWord().getText());
+		result.setName(ctx.identifierName().getText());
 		result.getDeclaredModifiers().add(N4Modifier.EXTERNAL);
 		result.setTypingStrategy(TypingStrategy.STRUCTURAL);
 

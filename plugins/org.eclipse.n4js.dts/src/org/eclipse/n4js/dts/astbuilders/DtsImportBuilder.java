@@ -137,7 +137,7 @@ public class DtsImportBuilder extends AbstractDtsModuleRefBuilder<ImportStatemen
 	public void enterImportAliasDeclaration(ImportAliasDeclarationContext ctx) {
 		if (ctx.Require() != null) {
 			// import id = require('./someModule.js');
-			String identifier = ParserContextUtils.getIdentifierName(ctx.Identifier());
+			String identifier = ParserContextUtils.getIdentifierName(ctx.identifierName());
 			if (identifier == null) {
 				return;
 			}

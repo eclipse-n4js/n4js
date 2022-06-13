@@ -425,7 +425,7 @@ public class ParserContextUtils {
 			ImportAliasDeclarationContext impAliasDeclCtx = impStmtCtx != null ? impStmtCtx.importAliasDeclaration()
 					: null;
 			if (impAliasDeclCtx != null && impAliasDeclCtx.Require() != null) {
-				String impIdentifier = getIdentifierName(impAliasDeclCtx.Identifier());
+				String impIdentifier = getIdentifierName(impAliasDeclCtx.identifierName());
 				if (identifier.equals(impIdentifier)) {
 					TerminalNode strLit = impAliasDeclCtx.StringLiteral();
 					if (strLit != null) {
