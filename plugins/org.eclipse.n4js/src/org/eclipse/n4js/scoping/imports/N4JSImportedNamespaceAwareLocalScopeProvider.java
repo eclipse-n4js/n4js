@@ -120,6 +120,9 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 				declMergingHelper, jsVariantHelper, Optional.absent());
 	}
 
+	/**
+	 *
+	 */
 	protected ImportScope createImportScope(IScope parent, List<ImportNormalizer> namespaceResolvers,
 			ISelectable importFrom, EClass type, boolean ignoreCase, ResourceSet contextResourceSet) {
 		BuiltInTypeScope builtInTypeScope = contextResourceSet != null ? BuiltInTypeScope.get(contextResourceSet)

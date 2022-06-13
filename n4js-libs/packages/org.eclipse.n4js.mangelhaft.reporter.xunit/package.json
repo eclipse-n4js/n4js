@@ -21,7 +21,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@types/node": "^17",
+    "@types/node": "^16",
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "xmlbuilder": "^10.0.0",
     "n4js-runtime": "^0.1.0",

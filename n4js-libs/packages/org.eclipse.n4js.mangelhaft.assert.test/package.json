@@ -40,7 +40,7 @@
     }
   },
   "dependencies": {
-    "@types/node": "^17",
+    "@types/node": "^16",
     "org.eclipse.n4js.mangelhaft": "^0.1.0",
     "org.eclipse.n4js.mangelhaft.assert": "^0.1.0",
     "n4js-runtime": "^0.1.0",

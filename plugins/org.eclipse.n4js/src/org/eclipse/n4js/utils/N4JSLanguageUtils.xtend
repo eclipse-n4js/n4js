@@ -1241,6 +1241,10 @@ public class N4JSLanguageUtils {
 		return element !== null && !isNumberOrStringBasedEnum && !isHollowElement(element, javaScriptVariantHelper);
 	}
 
+	/**
+	 * Tells whether the given element should be included (usually in a scope), based on the given includeHollows /
+	 * includeValueOnlyElements configuration.
+	 */
 	def static boolean checkInclude(TExportableElement elem, boolean includeHollows, boolean includeValueOnlyElements,
 		JavaScriptVariantHelper variantHelper) {
 

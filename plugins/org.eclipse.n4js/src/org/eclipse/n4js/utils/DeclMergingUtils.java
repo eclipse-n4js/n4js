@@ -23,11 +23,13 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
- *
+ * Utilities for handling declaration merging in .d.ts files. See {@link DeclMergingHelper} for details.
  */
 public class DeclMergingUtils {
 
 	private static final N4JSMetaModelCache<Integer> cachedKindIndices = new N4JSMetaModelCache<>(eClass -> {
+		// non-hollow elements come first
+		// (and within this group, first the classifiers and then the other elements)
 		if (TypesPackage.Literals.TCLASS.isSuperTypeOf(eClass)) {
 			return 1;
 		} else if (TypesPackage.Literals.TENUM.isSuperTypeOf(eClass)) {
@@ -37,13 +39,14 @@ public class DeclMergingUtils {
 		} else if (TypesPackage.Literals.TVARIABLE.isSuperTypeOf(eClass)) {
 			return 4;
 		}
-		// hollow elements come last:
+		// hollow elements come next
+		// (again, first the classifiers and then the other elements)
 		if (TypesPackage.Literals.TINTERFACE.isSuperTypeOf(eClass)) {
 			return 5;
 		} else if (TypesPackage.Literals.TYPE_ALIAS.isSuperTypeOf(eClass)) {
 			return 6;
 		}
-		// other cases (e.g. namespaces)
+		// other cases (esp. namespaces)
 		return 7;
 	});
 

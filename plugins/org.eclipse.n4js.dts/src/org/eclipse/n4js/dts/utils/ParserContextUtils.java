@@ -733,7 +733,11 @@ public class ParserContextUtils {
 				}
 
 				// for @Promisifiable functions, ensure we have a valid callback type
-				// FIXME improve this!
+				// (preliminary implementation: always assumes an event handler of type (err: Error, succ: any+)=>void;
+				// however, deriving a better type would require logic very similar to the handling of overloading
+				// above, but for TModule elements instead of AST nodes, so doing this without duplication would
+				// require a non-trivial refactoring)
+				// TODO IDE-3621 improve this
 				if (AnnotationDefinition.PROMISIFIABLE.hasAnnotation(survivor)) {
 					FormalParameter fParLast = IterableExtensions.last(survivor.getFpars());
 					TypeRef typeRef = fParLast != null ? fParLast.getDeclaredTypeRefInAST() : null;
@@ -756,6 +760,7 @@ public class ParserContextUtils {
 		}
 	}
 
+	/**  */
 	public static void transformPromisifiables(List<? extends ScriptElement> scriptElements) {
 		List<N4NamespaceDeclaration> namespaces = new ArrayList<>();
 		Multimap<String, FunctionDefinition> functionsTop = MultimapBuilder.hashKeys().arrayListValues().build();

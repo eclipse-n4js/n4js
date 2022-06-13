@@ -24,10 +24,27 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
 /**
- *
+ * Utility methods related to helper {@link ExportedElementsCollector}.
  */
 public class ExportedElementsUtils {
 
+	/**
+	 * Collect the elements exported from the given .d.ts module via syntax {@code export = <identifier>;}. Returns
+	 * {@link Optional#absent() absent} if the given module does not have such an export.
+	 * <p>
+	 * In the special case of exporting a variable (or constant) of a certain type <em>T</em>, type <em>T</em> and the
+	 * members of type <em>T</em> won't be returned by this method. For example:
+	 *
+	 * <pre>
+	 * interface Ifc {
+	 *   m(): void;
+	 * }
+	 * const value: Ifc;
+	 * export = value;
+	 * </pre>
+	 *
+	 * This method will return only const variable "value", neither interface "Ifc" nor its members.
+	 */
 	public static Optional<List<IdentifiableElement>> getElementsExportedViaExportEquals(TModule module) {
 		TAnnotation ann = AnnotationDefinition.EXPORT_EQUALS.getAnnotation(module);
 		TAnnotationArgument arg = ann != null ? IterableExtensions.head(ann.getArgs()) : null;

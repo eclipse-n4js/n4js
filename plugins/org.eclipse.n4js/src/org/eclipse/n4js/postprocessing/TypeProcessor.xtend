@@ -163,6 +163,8 @@ public class TypeProcessor extends AbstractProcessor {
 	/**
 	 * Poor man's support for index signatures (intended only for .d.ts but must also be checked in N4JS,
 	 * because N4JS may contain classifiers that extend a classifier from .d.ts containing an index signature).
+	 * <p>
+	 * TODO IDE-3620 remove this method once index signatures are properly supported
 	 */
 	def private <T extends TypeRef> T adjustForIndexSignatures(RuleEnvironment G, T typeRef, TypableElement astNode) {
 		val parent = astNode?.eContainer;

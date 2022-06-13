@@ -71,7 +71,7 @@ class NonResolvingImportScope extends ImportScope {
 			includeHollows = false;
 			includeValueOnlyElements = true;
 		} else if (TypesPackage.Literals.TMODULE.isSuperTypeOf(type)) {
-			// not applicable here, so include both to turn off the filtering
+			// not applicable to TModules, so include both to effectively turn off the filtering
 			includeHollows = true;
 			includeValueOnlyElements = true;
 		} else {

@@ -16,7 +16,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@types/node": "^17",
+    "@types/node": "^16",
     "@types/debug": "*",
     "@types/glob": "*",
     "@types/minimatch": "*",
