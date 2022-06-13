@@ -154,7 +154,8 @@ public final class ASTMetaInfoCache {
 		if (astNode.eResource() != resource) {
 			throw new IllegalArgumentException("astNode must be from this resource");
 		}
-		if (actualTypes.put(astNode, actualType) != null) {
+		TypeRef oldValue = actualTypes.put(astNode, actualType);
+		if (oldValue != null) {
 			throw UtilN4.reportError(new IllegalStateException(
 					"cache collision: multiple actual types put into cache for AST node: " + astNode +
 							" in resource: " + resource.getURI()));
