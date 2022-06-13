@@ -91,6 +91,13 @@ import org.eclipse.xtext.xbase.lib.Pair;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
+/**
+ * Note that 'left' and 'right' denote the two arguments in the following relation: <br/>
+ * <code>
+ *  left <: right
+ *  </code><br/>
+ * That means that <b>left is the subtype of right</b>.
+ */
 /* package */ final class SubtypeJudgment extends AbstractJudgment {
 
 	/** See {@link N4JSTypeSystem#subtype(RuleEnvironment, TypeArgument, TypeArgument)}. */

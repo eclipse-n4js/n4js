@@ -28,6 +28,7 @@ import org.eclipse.n4js.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.BooleanLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
+import org.eclipse.n4js.ts.typeRefs.EnumLiteralTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef
@@ -898,6 +899,9 @@ class RuleEnvironmentExtensions {
 		}
 		if (typeRef instanceof IntersectionTypeExpression) {
 			return typeRef.typeRefs.exists[e|isNumericOperand(G, e)];
+		}
+		if (typeRef instanceof EnumLiteralTypeRef) {
+			return typeRef.value?.valueNumber !== null;
 		}
 		return false;
 	}

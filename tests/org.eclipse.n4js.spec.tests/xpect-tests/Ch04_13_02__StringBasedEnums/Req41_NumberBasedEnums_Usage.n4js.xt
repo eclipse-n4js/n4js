@@ -14,8 +14,16 @@
 
 @NumberBased
 export public enum E {
+	K,
 	L
 }
+
+@StringBased
+export public enum F {
+	M,
+	N
+}
+
 
 // XPECT noerrors -->
 class G<T extends E> {}
@@ -82,3 +90,28 @@ E.L.charAt(0);
 -E.L;
 // XPECT noerrors -->
 42*E.L;
+
+// XPECT noerrors -->
+(E.L <= 100);
+
+// XPECT noerrors -->
+(E.L < E.K);
+
+// XPECT noerrors -->
+(F.M >= "hello");
+
+// XPECT noerrors -->
+(F.M > F.N);
+
+// XPECT type of 'r1' --> number
+let r1 = E.L + 5; r1;
+
+// XPECT type of 'r2' --> string
+let r2 = E.L + "hello"; r2;
+
+// XPECT type of 's1' --> string
+let s1 = F.M + "hello"; s1;
+
+// XPECT type of 's2' --> string
+let s2 = F.M + 42; s2;
+

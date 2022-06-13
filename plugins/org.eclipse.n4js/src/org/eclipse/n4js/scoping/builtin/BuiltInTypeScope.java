@@ -637,9 +637,12 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 * Returns true iff the given type is number, int, boolean, null or even undefined.
 	 */
 	public final boolean isNumericOperand(Type type) {
-		return type == getNumberType() || type == getIntType()
-				|| type == getBooleanType() || type == getNullType()
-				|| type == getUndefinedType();
+		return type == getNumberType()
+				|| type == getIntType()
+				|| type == getBooleanType()
+				|| type == getNullType()
+				|| type == getUndefinedType()
+				|| type == getN4NumberBasedEnumType();
 	}
 
 	/**

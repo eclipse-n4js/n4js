@@ -70,6 +70,11 @@ public class LoadResultInfoAdapter implements ILoadResultInfoAdapter {
 		return nestedResources.keySet();
 	}
 
+	/** Returns the {@link NestedResourceAdapter} for the given {@link URI} or null */
+	public NestedResourceAdapter getNestedResourceAdapter(URI uri) {
+		return nestedResources.get(uri);
+	}
+
 	@Override
 	public void ensureNestedResourcesExist(Resource resource) {
 		ResourceSet resourceSet = resource.getResourceSet();

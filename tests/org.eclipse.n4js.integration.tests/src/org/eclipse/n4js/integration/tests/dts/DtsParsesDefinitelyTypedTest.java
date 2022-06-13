@@ -26,11 +26,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.dts.DtsParseResult;
 import org.eclipse.n4js.dts.DtsParser;
+import org.eclipse.n4js.dts.LoadResultInfoAdapter;
+import org.eclipse.n4js.dts.NestedResourceAdapter;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.workspace.locations.FileURI;
 import org.junit.Assert;
@@ -103,65 +106,62 @@ public class DtsParsesDefinitelyTypedTest {
 				.collect(Collectors.toList());
 		Collections.sort(files, (p1, p2) -> p1.toString().compareTo(p2.toString()));
 
-		Set<Path> badFilesExpected = null;
+		Set<Path> badFilesExpected;
 		if (LOAD_BAD_FILES_FROM != null) {
 			badFilesExpected = FluentIterable.from(Files.readString(LOAD_BAD_FILES_FROM).split("\\n"))
 					.transform(s -> Path.of(s))
 					.toSet();
+		} else {
+			badFilesExpected = null;
 		}
-		PrintWriter w = null;
+		PrintWriter w;
 		if (SAVE_BAD_FILES_TO != null) {
 			Files.deleteIfExists(SAVE_BAD_FILES_TO);
 			w = new PrintWriter(new BufferedWriter(new FileWriter(SAVE_BAD_FILES_TO.toFile())));
+		} else {
+			w = null;
 		}
 
-		int filesCount = files.size();
-		int pass = 0;
-		int fail = 0;
-		int error = 0;
-		int unexpectedBad = 0;
-		System.out.println("Processing " + filesCount + " files ...");
+		class ResultCounts {
+			int filesCount = files.size();
+			int pass = 0;
+			int fail = 0;
+			int error = 0;
+			int unexpectedBad = 0;
+		}
+		ResultCounts counts = new ResultCounts();
+		System.out.println("Processing " + counts.filesCount + " files ...");
 		Stopwatch sw = Stopwatch.createStarted();
 
 		for (Path file : files) {
 			try (BufferedReader buf = new BufferedReader(new InputStreamReader(new FileInputStream(file.toFile())))) {
 
-				N4JSResource resource = new N4JSResource();
-				URI fileUri = new FileURI(file).toURI();
-				resource.setURI(fileUri);
-				DtsParseResult parseResult = new DtsParser().parse(buf, resource);
-
-				if (parseResult.hasSyntaxErrors()) {
-					fail++;
-					if (w != null) {
-						w.println(file);
-						w.flush();
+				parseFile(file, (result) -> {
+					if (result.hasSyntaxErrors()) {
+						counts.fail++;
+						if (w != null) {
+							w.println(file);
+							w.flush();
+						}
+						if (badFilesExpected != null && !badFilesExpected.contains(file)) {
+							counts.unexpectedBad++;
+							System.out.println("UNEXPECTED FAILURE: " + file);
+						}
+					} else {
+						counts.pass++;
 					}
-					if (badFilesExpected != null && !badFilesExpected.contains(file)) {
-						unexpectedBad++;
-						System.out.println("UNEXPECTED FAILURE: " + file);
-					}
-				} else {
-					pass++;
-				}
+				});
 
-			} catch (Throwable e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 
-				if (e instanceof Error) {
-					if (w != null) {
-						w.close();
-					}
-					throw e;
-				}
-
-				error++;
+				counts.error++;
 				if (w != null) {
 					w.println(file);
 					w.flush();
 				}
 				if (badFilesExpected != null && !badFilesExpected.contains(file)) {
-					unexpectedBad++;
+					counts.unexpectedBad++;
 					System.out.println("UNEXPECTED ERROR: " + file);
 				}
 			}
@@ -171,25 +171,52 @@ public class DtsParsesDefinitelyTypedTest {
 			w.close();
 		}
 
-		System.out.println("Done processing " + filesCount + " files in " + sw.elapsed(TimeUnit.SECONDS) + "s");
-		System.out.println("  passed:  " + pass + " (" + percent(pass, filesCount) + ")");
-		System.out.println("  failed:  " + fail + " (" + percent(fail, filesCount) + ")");
-		System.out.println("  errors:  " + error + " (" + percent(error, filesCount) + ")");
+		System.out.println("Done processing " + counts.filesCount + " files in " + sw.elapsed(TimeUnit.SECONDS) + "s");
+		System.out.println("  passed:  " + counts.pass + " (" + percent(counts.pass, counts.filesCount) + ")");
+		System.out.println("  failed:  " + counts.fail + " (" + percent(counts.fail, counts.filesCount) + ")");
+		System.out.println("  errors:  " + counts.error + " (" + percent(counts.error, counts.filesCount) + ")");
 
-		if (error > maxError) {
-			Assert.fail("More errors detected than expected: " + error);
+		if (counts.error > maxError) {
+			Assert.fail("More errors detected than expected: " + counts.error);
 		}
 
-		if (fail > maxFail) {
-			Assert.fail("More failures detected than expected: " + fail);
+		if (counts.fail > maxFail) {
+			Assert.fail("More failures detected than expected: " + counts.fail);
 		}
 
-		if (pass < minPass) {
-			Assert.fail("Less passes detected than expected: " + pass);
+		if (counts.pass < minPass) {
+			Assert.fail("Less passes detected than expected: " + counts.pass);
 		}
 
-		if (unexpectedBad > 0) {
-			Assert.fail("Encountered failure(s)/error(s) in " + unexpectedBad + " unexpected files.");
+		if (counts.unexpectedBad > 0) {
+			Assert.fail("Encountered failure(s)/error(s) in " + counts.unexpectedBad + " unexpected files.");
+		}
+	}
+
+	/**
+	 * Parses the given file including all nested resources i.e. all declared modules
+	 */
+	static public void parseFile(Path file, Consumer<DtsParseResult> onResult) throws Exception {
+		try (BufferedReader buf = new BufferedReader(new InputStreamReader(new FileInputStream(file.toFile())))) {
+			N4JSResource resource = new N4JSResource();
+			URI fileUri = new FileURI(file).toURI();
+			resource.setURI(fileUri);
+			DtsParseResult parseResult = new DtsParser().parse(buf, resource);
+
+			onResult.accept(parseResult);
+
+			LoadResultInfoAdapter resultInfoAdapter = LoadResultInfoAdapter.getOrInstall(resource);
+
+			for (URI uri : resultInfoAdapter.getNewUris()) {
+				N4JSResource newResource = new N4JSResource();
+				newResource.setURI(uri);
+				NestedResourceAdapter nestedResourceAdapter = resultInfoAdapter.getNestedResourceAdapter(uri);
+
+				NestedResourceAdapter.update(newResource, nestedResourceAdapter);
+				DtsParseResult newParseResult = new DtsParser().parse(null, newResource);
+
+				onResult.accept(newParseResult);
+			}
 		}
 	}
 

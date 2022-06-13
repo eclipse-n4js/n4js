@@ -175,17 +175,25 @@ class DelegationAssistant extends TransformationAssistant {
 			// the target member:
 			createAccessToMemberFunction(ctorOfClassOfTarget, false, delegator)
 		};
-
-		return _Block(
-			_ReturnStmnt(_CallExpr(
+		
+		val callExpr = _CallExpr(
 				_PropertyAccessExpr(
 					targetAccess,
 					getSymbolTableEntryForMember(state.G.functionType, "apply", false, false, true)
 				),
 				_ThisLiteral,
 				_IdentRef(steFor_arguments)
-			))
-		);
+			);
+
+		if (delegator instanceof DelegatingSetterDeclaration) {
+			return _Block(
+				_ExprStmnt(callExpr)
+			);
+		} else {
+			return _Block(
+				_ReturnStmnt(callExpr)
+			);
+		}
 	}
 
 	/**
