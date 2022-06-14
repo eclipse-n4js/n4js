@@ -67,54 +67,26 @@ public final class N4JSGlobals {
 	 */
 	public static final String HASHBANG_PREFIX = "#!";
 
-	/**
-	 * Files extension of JS source files (<b>not</b> including the separator dot).
-	 */
-	public static final String JS_FILE_EXTENSION = "js";
-
-	/**
-	 * File extension of JS source files that contain ES6 modules (<b>not</b> including the separator dot).
-	 */
-	public static final String MJS_FILE_EXTENSION = "mjs";
-
-	/**
-	 * File extension of JS source files that contain CommonJS modules (<b>not</b> including the separator dot).
-	 */
-	public static final String CJS_FILE_EXTENSION = "cjs";
-
-	/**
-	 * Files extension of N4JS source files (<b>not</b> including the separator dot).
-	 */
-	public static final String N4JS_FILE_EXTENSION = "n4js";
-	/**
-	 * Files extension of JSX source files (<b>not</b> including the separator dot).
-	 */
-	public static final String JSX_FILE_EXTENSION = "jsx";
-
-	/**
-	 * Files extension of N4JSX source files (<b>not</b> including the separator dot).
-	 */
-	public static final String N4JSX_FILE_EXTENSION = "n4jsx";
-
-	/**
-	 * Files extension of N4JS definition files (<b>not</b> including the separator dot).
-	 */
-	public static final String N4JSD_FILE_EXTENSION = "n4jsd";
-
-	/**
-	 * Files extension of TS files (<b>not</b> including the separator dot).
-	 */
-	public static final String TS_FILE_EXTENSION = "ts";
-
-	/**
-	 * Files extension of TS definition files (<b>not</b> including the separator dot).
-	 */
-	public static final String DTS_FILE_EXTENSION = "d.ts";
-
-	/**
-	 * Files extension of XT source files (<b>not</b> including the separator dot).
-	 */
-	public static final String XT_FILE_EXTENSION = "xt";
+	/** Files extension of JS source files (<b>not</b> including the separator dot). */
+	public static final String JS_FILE_EXTENSION = UtilN4.JS_FILE_EXTENSION;
+	/** File extension of JS source files that contain ES6 modules (<b>not</b> including the separator dot). */
+	public static final String MJS_FILE_EXTENSION = UtilN4.MJS_FILE_EXTENSION;
+	/** File extension of JS source files that contain CommonJS modules (<b>not</b> including the separator dot). */
+	public static final String CJS_FILE_EXTENSION = UtilN4.CJS_FILE_EXTENSION;
+	/** Files extension of N4JS source files (<b>not</b> including the separator dot). */
+	public static final String N4JS_FILE_EXTENSION = UtilN4.N4JS_FILE_EXTENSION;
+	/** Files extension of JSX source files (<b>not</b> including the separator dot). */
+	public static final String JSX_FILE_EXTENSION = UtilN4.JSX_FILE_EXTENSION;
+	/** Files extension of N4JSX source files (<b>not</b> including the separator dot). */
+	public static final String N4JSX_FILE_EXTENSION = UtilN4.N4JSX_FILE_EXTENSION;
+	/** Files extension of N4JS definition files (<b>not</b> including the separator dot). */
+	public static final String N4JSD_FILE_EXTENSION = UtilN4.N4JSD_FILE_EXTENSION;
+	/** Files extension of TS files (<b>not</b> including the separator dot). */
+	public static final String TS_FILE_EXTENSION = UtilN4.TS_FILE_EXTENSION;
+	/** Files extension of TS definition files (<b>not</b> including the separator dot). */
+	public static final String DTS_FILE_EXTENSION = UtilN4.DTS_FILE_EXTENSION;
+	/** Files extension of XT source files (<b>not</b> including the separator dot). */
+	public static final String XT_FILE_EXTENSION = UtilN4.XT_FILE_EXTENSION;
 
 	/**
 	 * Vendor ID
