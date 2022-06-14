@@ -23,12 +23,13 @@ package class N4JSFormalParameterTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package boolean relinkFormalParameter(FormalParameter astFormalParameter, TFunction functionType, boolean preLinkingPhase, int idx) {
+	def package boolean relinkFormalParameter(FormalParameter astFormalParameter, TFunction functionType, BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase, int idx) {
 		val formalParameterType = functionType.fpars.get(idx);
 		ensureEqualName(astFormalParameter, formalParameterType);
 
 		formalParameterType.astElement = astFormalParameter;
 		astFormalParameter.definedVariable = formalParameterType;
+		setFormalParameterType(formalParameterType, astFormalParameter, null, builtInTypeScope, preLinkingPhase);
 
 		return true;
 	}

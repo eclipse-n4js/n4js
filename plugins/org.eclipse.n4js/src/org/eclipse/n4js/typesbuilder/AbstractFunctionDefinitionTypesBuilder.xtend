@@ -28,8 +28,9 @@ package abstract class AbstractFunctionDefinitionTypesBuilder {
 	@Inject extension N4JSFormalParameterTypesBuilder
 
 	def protected void relinkFormalParameters(TFunction functionType, FunctionDefinition functionDef, boolean preLinkingPhase) {
+		val builtInTypeScope = BuiltInTypeScope.get(functionDef.eResource.resourceSet)
 		functionDef.fpars.fold(0) [ idx, fpar |
-			if (relinkFormalParameter(fpar, functionType, preLinkingPhase, idx)) {
+			if (relinkFormalParameter(fpar, functionType, builtInTypeScope, preLinkingPhase, idx)) {
 				return idx + 1;
 			}
 			return idx;
